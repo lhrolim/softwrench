@@ -1,0 +1,37 @@
+﻿.listgrid-table.unfixed {
+    margin-top: 41px !important;
+}
+
+    .listgrid-table.unfixed > thead {
+        top: 289px;
+    }
+
+.listgrid-table.affixed > thead {
+    position: fixed;
+     top: 266px;
+}
+
+.gridcolumnvalue {
+    color: black;
+    padding-left: 8px;
+    word-wrap: break-word;
+}
+
+.listgrid-table.affixed {
+    margin-top: 126px;
+}
+
+
+@media only screen and (min-width: 1200px) {
+
+    .gridcolumnvalue {
+        max-width: 135px;
+    }
+}
+
+@media only screen and (max-width: 1199px) {
+
+    .gridcolumnvalue {
+        max-width: 100px;
+    }
+}

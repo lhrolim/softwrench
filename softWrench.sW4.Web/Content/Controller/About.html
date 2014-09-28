@@ -1,0 +1,21 @@
+﻿<article class="container" ng-controller="AboutController" data-page="about">
+    <section ng-show="aboutData != undefined">
+        <div class="form-horizontal">
+            <br />
+            <div class="form-group" ng-repeat="data in aboutData">
+                <label class="control-label col-sm-2">
+                    {{data.key}}
+                </label>
+                <div class="col-sm-10">
+                    <label class="form-control">
+                        {{data.value}}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </section>
+    <p class="text-center" ng-show="aboutData == undefined">
+        <br />
+        {{i18N('general.noinformation','No information available')}}
+    </p>
+</article>

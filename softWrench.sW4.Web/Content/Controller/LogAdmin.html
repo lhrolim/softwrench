@@ -1,0 +1,84 @@
+﻿<article ng-controller="LogAdminController">
+    <form class="form-horizontal">
+
+        <div class="form-group">
+            <label class="control-label col-lg-2">Select:</label>
+            <div class="col-lg-10">
+                <div>
+                    <label class="control-label" for="changeviewlogid">
+                        <input type="radio" id="changeviewlogid" ng-model="chooselog" value="changeviewlog">
+                        Change Log Level
+                    </label>
+                    <br />
+                    <label class="control-label" for="viewdownloadlogid">
+                        <input type="radio" id="viewdownloadlogid" ng-model="chooselog" value="viewdownloadlog" ng-change="setDefaultAppender()">
+                        View/Download Log
+                    </label>
+                    <br />
+                </div>
+            </div>
+        </div>
+
+        <section ng-if="chooselog == 'viewdownloadlog'">
+            <div class="form-group">
+                <label class="control-label col-lg-2">Select Log Appender</label>
+                <div class="col-lg-10">
+                    <div>
+                        <select ng-model="selectedappender"
+                            ng-options="appender.name for appender in appenders"
+                            ng-change="viewAppenderContent(selectedappender)" />
+                    </div>
+                </div>
+                <div class="col-lg-offset-2 col-lg-10" ng-if="selectedappender.value != null">
+                    <button type="submit" class="btn btn-primary " ng-click="downloadFile(selectedappender)">
+                        <i style="margin-right: 0.5em" class="glyphicon glyphicon-ok"></i>Download
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-11">
+                <textarea ng-model="appendercontent" readonly
+                    class="textarealog" />
+            </div>
+        </section>
+
+        <section ng-if="chooselog == 'changeviewlog'">
+            <div class="form-group">
+                <label class="control-label col-lg-2">Category Filter</label>
+                <div class="col-lg-10">
+                    <div>
+                        <input type="text" class="form-control" ng-model="logname" ng-change="filter(this)" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <table class="table table-hover hidden-phone fixedtable">
+                    <thead id="listgridthread" class="listgrid-thead">
+                        <tr class="header-row">
+                            <th style="width: 50%">Name
+                            </th>
+                            <th><a ng-click="changeAll('none')">None</a></th>
+                            <th><a ng-click="changeAll('debug')">Debug</a></th>
+                            <th><a ng-click="changeAll('info')">Info</a></th>
+                            <th><a ng-click="changeAll('warn')">Warn</a></th>
+                            <th><a ng-click="changeAll('error')">Error</a></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="log in logs">
+                            <td>{{log.name}}</td>
+                            <td><a ng-style="{color: log.level == 'none' ? 'red' : 'blue'}" ng-click="changeLevel(log.name,'none')">None</a></td>
+                            <td><a ng-style="{color: log.level == 'debug' ? 'red' : 'blue'}" ng-click="changeLevel(log.name,'Debug')">Debug</a></td>
+                            <td><a ng-style="{color: log.level == 'info' ? 'red' : 'blue'}" ng-click="changeLevel(log.name,'Info')">Info</a></td>
+                            <td><a ng-style="{color: log.level == 'warn' ? 'red' : 'blue'}" ng-click="changeLevel(log.name,'Warn')">Warn</a></td>
+                            <td><a ng-style="{color: log.level == 'error' ? 'red' : 'blue'}" ng-click="changeLevel(log.name,'Error')">Error</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </form>
+</article>
+
+
+

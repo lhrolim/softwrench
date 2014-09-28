@@ -1,0 +1,832 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="c4cb343b-cd2a-4741-9bcf-e8c2f0eae10d" name="testresults" runUser="rolim-PC\rolim" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="SW" id="f0dbb167-77f5-4991-a445-2387d694f5ca">
+    <Description>These are default test settings for a local test run.</Description>
+    <Deployment userDeploymentRoot="C:\Users\rolim\Copy\swaml4\src\Build" useDefaultDeploymentRoot="false" runDeploymentRoot="testresults">
+      <DeploymentItem filename="softWrench.sW4.Web\App_Data\" />
+      <DeploymentItem filename="softwrench.sW4.test\App_data\" />
+    </Deployment>
+    <NamingScheme baseName="testresults" appendTimeStamp="false" useDefault="false" />
+    <Execution hostProcessPlatform="MSIL">
+      <TestTypeSpecific>
+        <UnitTestRunConfig testTypeId="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b">
+          <AssemblyResolution>
+            <TestDirectory useLoadContext="true" />
+          </AssemblyResolution>
+        </UnitTestRunConfig>
+        <WebTestRunConfiguration testTypeId="4e7599fa-5ecb-43e9-a887-cd63cf72d207">
+          <Browser name="Internet Explorer 9.0" MaxConnections="6">
+            <Headers>
+              <Header name="User-Agent" value="Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)" />
+              <Header name="Accept" value="*/*" />
+              <Header name="Accept-Language" value="{{$IEAcceptLanguage}}" />
+              <Header name="Accept-Encoding" value="GZIP" />
+            </Headers>
+          </Browser>
+        </WebTestRunConfiguration>
+      </TestTypeSpecific>
+      <AgentRule name="LocalMachineDefaultRole">
+      </AgentRule>
+    </Execution>
+    <Properties />
+  </TestSettings>
+  <Times creation="2014-08-11T09:44:15.6182754-03:00" queuing="2014-08-11T09:44:18.8674612-03:00" start="2014-08-11T09:44:20.3735474-03:00" finish="2014-08-11T09:44:36.1244483-03:00" />
+  <ResultSummary outcome="Completed">
+    <Counters total="90" executed="90" passed="90" error="0" failed="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="TestParseWhere" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="2a635ad6-76f8-6bb6-866e-2217b1072759">
+      <Execution id="19df368b-51d6-4b47-8672-3dd7efadbba6" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.Association.DependencyBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestParseWhere" />
+    </UnitTest>
+    <UnitTest name="ConfigThenEnvThenGlobal" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="b34b1695-ae71-155d-66cf-eeeb475a677b">
+      <Execution id="2ad2485f-9132-4753-977a-a53da76cddd2" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.MetadataPropertiesTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ConfigThenEnvThenGlobal" />
+    </UnitTest>
+    <UnitTest name="CheckFieldsOrderOrder2" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="ecf50f5d-1505-8b7d-5392-a60e99531be0">
+      <Execution id="9064881b-ff13-49a7-8b76-7259ff9fd353" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.AbstractSchemaTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="CheckFieldsOrderOrder2" />
+    </UnitTest>
+    <UnitTest name="TestMethod2" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="6967fa50-19a3-b358-2875-068a48bc7d11">
+      <Execution id="ee94d425-c477-4f0a-bf9b-fd85028b90a9" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.PaginationUtilsTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestMethod2" />
+    </UnitTest>
+    <UnitTest name="TestProjectionFieldWithQuery" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="a3f31eec-7b4a-07c8-4e24-061ae3cab06f">
+      <Execution id="972af733-9acd-43ff-909d-c2b0ffd043c8" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic.QuerySelectBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestProjectionFieldWithQuery" />
+    </UnitTest>
+    <UnitTest name="SimulateFaqRealData" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="0af06012-3841-913f-698b-cbdd9adfe552">
+      <Execution id="1c6af3c4-0f4a-477e-a79f-44d0c713a059" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Util.FaqTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="SimulateFaqRealData" />
+    </UnitTest>
+    <UnitTest name="TestMethod1" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="d1c9e1a2-c791-6f91-f773-49741e5ecfdc">
+      <Execution id="bffa00dc-c522-41da-b4ab-4eae29242bd6" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.Entities.ParentEntityTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestMethod1" />
+    </UnitTest>
+    <UnitTest name="TestReplaceInner" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="6203c23b-2b32-7bab-0f88-4832a355bd8a">
+      <Execution id="565cc6d0-25c1-4957-abb5-8a9d2386570a" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic.QuerySelectBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestReplaceInner" />
+    </UnitTest>
+    <UnitTest name="TestCreationNewWorkLog" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="42e40acf-3810-c590-2c93-aee312a7d3ba">
+      <Execution id="87a29c54-3bbe-4573-85ef-fd12756ca665" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Entities.EntityBuilderTest2, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestCreationNewWorkLog" />
+    </UnitTest>
+    <UnitTest name="TestRelationshipQueryField" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="5dcf0036-21e9-84de-c458-a6b89095045d">
+      <Execution id="a925067c-c3e7-40ea-8f6a-f8659d9685d2" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic.QueryFromBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestRelationshipQueryField" />
+    </UnitTest>
+    <UnitTest name="Simple" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="e0ebff6d-f10f-7498-cdda-c1bd9e383256">
+      <Execution id="8a937083-8f2f-4869-9926-bef5392f7b77" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Category.CategoryUtilTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Simple" />
+    </UnitTest>
+    <UnitTest name="IncidentHardwareReport" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="640af98e-ea30-bb3f-f9af-2abd1cdf33b7">
+      <Execution id="03250bd1-6268-47cc-871a-0c1058dac677" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic.QueryFromBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="IncidentHardwareReport" />
+    </UnitTest>
+    <UnitTest name="InstallLan" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="24d219c9-c5c3-351e-02d3-6efbc82b3d2d">
+      <Execution id="37cf67e4-1768-4683-803f-d63c6d827493" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.WS.Ism.ImacDescriptionHandlerTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="InstallLan" />
+    </UnitTest>
+    <UnitTest name="AskAndDoNotFind" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="df2ba56c-c6ca-a1cd-d66f-fac28fb4adb2">
+      <Execution id="5310d58b-40d4-4b96-b274-47285b01ee44" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Configuration.Service.ConfigurationServiceTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="AskAndDoNotFind" />
+    </UnitTest>
+    <UnitTest name="TestFrom" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="b9c290de-e0fe-9da0-ed5b-f442123483ee">
+      <Execution id="70358597-3def-44a0-a170-3140fbebf848" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.Entities.SlicedEntityMetadataBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestFrom" />
+    </UnitTest>
+    <UnitTest name="PropertyKey" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="dbee27cc-8118-7726-07fc-feb202eb3348">
+      <Execution id="48865526-d323-40bd-8a3b-e07c5864dfc0" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Category.CategoryUtilTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="PropertyKey" />
+    </UnitTest>
+    <UnitTest name="DateSearchDtoGteTest" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="bd551a90-f138-445a-cc09-66e1047940e2">
+      <Execution id="ac914cdc-042a-4892-b988-07e0fa795586" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Search.ApplicationSearchTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="DateSearchDtoGteTest" />
+    </UnitTest>
+    <UnitTest name="TestMethod3" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="dba5467f-1e97-4998-fba3-b71343cfde2f">
+      <Execution id="429a44bd-3741-4442-b37d-439564bf6299" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.PaginationUtilsTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestMethod3" />
+    </UnitTest>
+    <UnitTest name="TestQueryGenerator" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="3e847722-9b65-4102-ba58-bf1fe444bed0">
+      <Execution id="8b164872-73e1-4fdb-a8cd-2a1e5e1f371c" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Hapag.Security.HlagGroupedLocationTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestQueryGenerator" />
+    </UnitTest>
+    <UnitTest name="MultipleFieldsSearchDtoTest" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="0ceedc9a-fafe-a1d2-269b-78553163e453">
+      <Execution id="dbb8dada-4162-4ec5-b84b-df5aa5b24643" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Search.ApplicationSearchTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="MultipleFieldsSearchDtoTest" />
+    </UnitTest>
+    <UnitTest name="TestMethod1" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="2ccc5849-fe9d-ffc5-c877-9e28427a4330">
+      <Execution id="ffe03fcc-1d98-497b-b0e7-3a26e15c5312" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.ToStringElParserTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestMethod1" />
+    </UnitTest>
+    <UnitTest name="TestMethod2" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="79ce1f70-64ff-be37-7e0d-989ae55ae541">
+      <Execution id="0324796f-94b0-4883-af3b-74928adc76a9" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic.QuerySelectBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestMethod2" />
+    </UnitTest>
+    <UnitTest name="MetadataAskTest" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="9cc87e19-8502-dc92-21f2-9e2c9ff97a55">
+      <Execution id="34ccd82b-3e03-43a9-9f3d-e9cdbd696613" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Configuration.Service.ConfigurationServiceTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="MetadataAskTest" />
+    </UnitTest>
+    <UnitTest name="TestAllCatalogsOk" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="da13500b-fd77-6dbc-e99f-be00c510ca6a">
+      <Execution id="77ca4fa2-e521-4732-ae46-de3e64d4801d" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Util.I18NResolverTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestAllCatalogsOk" />
+    </UnitTest>
+    <UnitTest name="TestWebMenuParsing" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="f07df37d-90e4-087a-a292-d0b5f1ea8755">
+      <Execution id="4a883b5f-e364-4604-babf-1ea630bcdcac" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.MenuParsingTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestWebMenuParsing" />
+    </UnitTest>
+    <UnitTest name="ThreeLevels" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="7c2666c2-422b-e734-1b7f-67ece0ad5d47">
+      <Execution id="3458eb32-f204-4d59-a1ce-3fc32b973834" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Category.CategoryUtilTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ThreeLevels" />
+    </UnitTest>
+    <UnitTest name="TestAddFk" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="9da10d2c-99b7-4eb2-a14a-fee15fd6b52a">
+      <Execution id="d3fdc56b-3024-4a20-9995-5ee218912bd7" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.MissingSchemaFieldsTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestAddFk" />
+    </UnitTest>
+    <UnitTest name="TestSelect4" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="8601e6da-742d-5583-1d13-1444a3b96b01">
+      <Execution id="2c6df5e0-d99f-46f0-bd9f-f2deed3c53c2" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.Entities.SlicedEntityMetadataBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestSelect4" />
+    </UnitTest>
+    <UnitTest name="Move" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="e65bc6e1-59c6-47f3-db18-afd367994c2a">
+      <Execution id="a39998b0-b840-4160-b6a9-bb97f22df685" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.WS.Ism.ImacDescriptionHandlerTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Move" />
+    </UnitTest>
+    <UnitTest name="TestParameterReplacement" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="219d335f-0870-4220-8e61-3f41d8c43f86">
+      <Execution id="a8da4ab2-2dfc-4fec-a414-50a7f37e8c59" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Util.LoggingUtilTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestParameterReplacement" />
+    </UnitTest>
+    <UnitTest name="TestSelectNullAttributes" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="f0ee1762-55e4-c1b7-35fc-49ac44f7772e">
+      <Execution id="543666e4-6323-4b8e-a8bd-4d124fd66de6" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.Entities.SlicedEntityMetadataBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestSelectNullAttributes" />
+    </UnitTest>
+    <UnitTest name="ModuleAskTestCombination" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="6b36e6d8-292b-c774-7d37-856a0cd8f3f0">
+      <Execution id="6edb9bed-974b-4130-804f-ca33777c6db0" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Configuration.Service.ConfigurationServiceTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ModuleAskTestCombination" />
+    </UnitTest>
+    <UnitTest name="SearchWithQueryParameter" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="b519b0dd-c920-4dd8-64fe-8cc0189a57a6">
+      <Execution id="64447cb3-3720-4c6b-bcda-8bfab6d11be0" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Search.ApplicationSearchTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="SearchWithQueryParameter" />
+    </UnitTest>
+    <UnitTest name="SearchWithFixedParam_Hapag_SEARCH_TEST" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="26ef22f7-16e4-fc2c-0534-9721d0a60367">
+      <Execution id="b753de2e-1f00-4554-9aba-873d1c4d664f" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Search.ApplicationSearchTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="SearchWithFixedParam_Hapag_SEARCH_TEST" />
+    </UnitTest>
+    <UnitTest name="TestAddWorkLogToIncident" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="f73a787c-a23b-780e-8e7b-138c77bf9b01">
+      <Execution id="6a1977c2-fbfd-4b2c-9cc0-39cd5c86e035" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Entities.EntityBuilderTestGric, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestAddWorkLogToIncident" />
+    </UnitTest>
+    <UnitTest name="AskForSchemaWithProfile" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="7a5cdedc-490e-b120-1c33-25cb05e51a80">
+      <Execution id="4ad23adc-044a-49c8-8630-74780dcac098" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Configuration.Service.ConfigurationServiceTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="AskForSchemaWithProfile" />
+    </UnitTest>
+    <UnitTest name="Simple" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="af8947f1-fb3b-289d-9396-563c859c86d0">
+      <Execution id="abf84dbe-7c73-40c1-bff6-cbcd11c3ff9c" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.Relational.DataConstraintWhereBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Simple" />
+    </UnitTest>
+    <UnitTest name="TestMethod3_only_var" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="50e6540e-2a88-ed1c-1a43-14f2c488cd81">
+      <Execution id="cb72f4d0-fa0b-4975-95d8-0919b2c4dbc7" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.ToStringElParserTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestMethod3_only_var" />
+    </UnitTest>
+    <UnitTest name="UpdateAsset" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="bcafc904-2f6a-a8dc-9875-4674e06860f9">
+      <Execution id="93be08fa-3ad1-4bd2-bb7b-291e77fea708" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.WS.Ism.ImacDescriptionHandlerTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="UpdateAsset" />
+    </UnitTest>
+    <UnitTest name="MetadataAskTest2" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="b73bedac-7c7a-56d8-3ab1-6cc9cd6d5b56">
+      <Execution id="c898fcb1-2faf-460d-93c9-a12413bdce3e" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Configuration.Service.ConfigurationServiceTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="MetadataAskTest2" />
+    </UnitTest>
+    <UnitTest name="TestMethod1" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="0389179e-26b8-6e86-ea59-f0ffa6b7cf03">
+      <Execution id="8cb799fd-90f9-4a00-872e-5933d24f83a0" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic.QueryFromBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestMethod1" />
+    </UnitTest>
+    <UnitTest name="TestCreation" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="95f1bef3-68e4-1b17-b985-c5bc01c1d500">
+      <Execution id="860028bf-f7a3-4ebd-affe-0d334b897519" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Entities.EntityBuilderTest2, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestCreation" />
+    </UnitTest>
+    <UnitTest name="SiteId" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="2aa945b0-8a0c-047c-22ba-89b39080e9b4">
+      <Execution id="41134006-0a62-4981-a5a6-cbf56780c02c" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.Relational.DataConstraintWhereBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="SiteId" />
+    </UnitTest>
+    <UnitTest name="TestMethod1" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="27b5564a-4b1c-bc34-cdda-f84fa9a7751e">
+      <Execution id="02f8c85d-08a3-4bee-aae2-95264db769c1" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.PaginationUtilsTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestMethod1" />
+    </UnitTest>
+    <UnitTest name="TestMethod2" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="ab5ef0c4-4676-92ba-5b5c-b3edc2f8e558">
+      <Execution id="2ea0dba5-d1dd-4040-84c7-4d1b4b723130" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.ToStringElParserTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestMethod2" />
+    </UnitTest>
+    <UnitTest name="TestParseWhere2" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="9fbe5469-6512-aa7d-2fdc-c8be71dac349">
+      <Execution id="570564b6-e0b4-4528-bc2e-949c39bda911" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.Association.DependencyBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestParseWhere2" />
+    </UnitTest>
+    <UnitTest name="TestNestedGetAttribute" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="ac73e394-f3c5-3328-c189-777634c29010">
+      <Execution id="37bd1546-b8e4-47a5-8bb0-e78c7d395c2f" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Entities.EntityBuilderTestHapag, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestNestedGetAttribute" />
+    </UnitTest>
+    <UnitTest name="SR_HAPAG_CONDITION" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="cd8c146c-dbc6-0e8a-c3e4-cda875b7d88a">
+      <Execution id="d11573ee-2251-4afa-bdee-570374ef9557" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Configuration.Service.ConfigurationServiceTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="SR_HAPAG_CONDITION" />
+    </UnitTest>
+    <UnitTest name="TestQuestionMark" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="4988fb77-d19b-a1c4-7211-49326cebe459">
+      <Execution id="9aefc29b-f603-4da7-90e8-24a49fbe2321" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Util.LoggingUtilTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestQuestionMark" />
+    </UnitTest>
+    <UnitTest name="TestReplace_Nulls" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="d152a551-5397-a869-2a68-6828ef50c3fe">
+      <Execution id="3556e40a-88a1-4b21-b2b1-3ba4594de7b5" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic.QuerySelectBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestReplace_Nulls" />
+    </UnitTest>
+    <UnitTest name="AskForModule_DoNotConsiderDefault" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="eae5e7a0-61f9-bb9e-5837-61a982aa884e">
+      <Execution id="12a3d5f8-3202-4dbd-9921-0c7ccba52066" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Configuration.Service.ConfigurationServiceTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="AskForModule_DoNotConsiderDefault" />
+    </UnitTest>
+    <UnitTest name="TestQueryTranslation" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="0570c3a1-164a-8720-ab47-d3feb9cadb85">
+      <Execution id="beeb79a7-b1cb-4ea4-9749-662993cad6ca" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Util.HibernateUtilTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestQueryTranslation" />
+    </UnitTest>
+    <UnitTest name="TestUpdate" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="b4039629-7dd4-fbec-450a-227199cb12b7">
+      <Execution id="c2b74ac6-39fe-4fd1-8ed5-255c0c029e9d" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Entities.EntityBuilderTest2, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestUpdate" />
+    </UnitTest>
+    <UnitTest name="TwoLevels" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="6169f114-6249-3adc-5951-08c68f0c55e7">
+      <Execution id="94dd215a-462e-447d-b839-7d94b25b1eb9" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Category.CategoryUtilTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TwoLevels" />
+    </UnitTest>
+    <UnitTest name="DateSearchDtoLTTest" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="058e27e7-a60a-540c-3a8e-4bf7ccdc4123">
+      <Execution id="f8d19d03-2e67-4f94-93df-77cf681fdf5f" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Search.ApplicationSearchTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="DateSearchDtoLTTest" />
+    </UnitTest>
+    <UnitTest name="TestSchemaTitle" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="16f7b9df-3e74-1b0e-bd2f-0aae808f916b">
+      <Execution id="be8ac1ff-c21b-404e-b554-034eca9c6024" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Util.I18NResolverTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestSchemaTitle" />
+    </UnitTest>
+    <UnitTest name="TestMethod1" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="d0527def-4469-3bef-c311-54ce24aea28b">
+      <Execution id="e6688d4f-5baf-4639-bcfa-2df73b255c7c" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Hapag.Data.Connector.Imac.ImacServicePlanHelperTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestMethod1" />
+    </UnitTest>
+    <UnitTest name="TestAddWorkLogToIncident" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="54460b47-3039-8cb9-e7af-3a4280f8ce78">
+      <Execution id="dfb5fef1-c38e-4f60-89c4-3867911fa47a" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Entities.EntityBuilderTestHapag, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestAddWorkLogToIncident" />
+    </UnitTest>
+    <UnitTest name="TestMethod1" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="db5a8b8d-463f-1e29-75d3-7c22f150f79f">
+      <Execution id="2ad037df-45aa-4ed9-a8eb-91c30492b141" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.Entities.TargetConstantHandlerTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestMethod1" />
+    </UnitTest>
+    <UnitTest name="TestUserGenericProperties" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="fcd2d0b5-5fce-84b9-ceb5-2d1e72e52721">
+      <Execution id="0e19555b-5217-4788-977c-46388ffb9b21" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.Relational.DataConstraintWhereBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestUserGenericProperties" />
+    </UnitTest>
+    <UnitTest name="TestStringToBytes" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="db90e7b4-7edb-e986-5eaa-4312b542d56a">
+      <Execution id="6835e679-f61d-4470-9d55-816752a1b94d" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Util.CompressorUtilTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestStringToBytes" />
+    </UnitTest>
+    <UnitTest name="BasicSearchDtoTest" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="98020f3d-3d67-95ba-3ae7-3b514b0bc5dc">
+      <Execution id="917f9f0f-0614-4610-968f-9064a0b995f4" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Search.ApplicationSearchTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="BasicSearchDtoTest" />
+    </UnitTest>
+    <UnitTest name="TestStringToBytesCompressed" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="ac59350e-b94c-3929-6c72-637148e3a7a0">
+      <Execution id="ff2cecf6-3d75-4613-ab5d-a223aa934cc4" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Util.CompressorUtilTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestStringToBytesCompressed" />
+    </UnitTest>
+    <UnitTest name="TestMethod1" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="2ab63181-cbc7-c789-2f93-81c5121479ff">
+      <Execution id="b572c7ee-29be-469b-b58d-7013955fc7ef" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.Entities.TargetAttributeHandlerTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestMethod1" />
+    </UnitTest>
+    <UnitTest name="TestMethod4" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="9177643c-7d01-dccf-b4c7-e2e78cd26785">
+      <Execution id="0ea21f5a-564a-4ed5-abb6-2da07ce4a67a" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.PaginationUtilsTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestMethod4" />
+    </UnitTest>
+    <UnitTest name="NumberSearchDtoGteTest" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="47ee8c2f-44b5-76ff-37ac-fdbc6fcd06fc">
+      <Execution id="9d2bb81e-4708-49cc-aa56-7108105aeb5b" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Search.SearchTest2, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="NumberSearchDtoGteTest" />
+    </UnitTest>
+    <UnitTest name="TestSelect" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="d7c9835a-fd6c-6e57-5647-1dc9dd816644">
+      <Execution id="d9d77506-f68d-4834-8127-567b5601cb41" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.Entities.SlicedEntityMetadataBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestSelect" />
+    </UnitTest>
+    <UnitTest name="_2ConditionsOneWithModuleAnotherWithout_returnDefault" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="8989b33b-1d9d-bc18-8fd0-7ab53f8461aa">
+      <Execution id="7682359d-0004-4d85-8c98-e1a167bb5652" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Configuration.Service.ConfigurationServiceTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="_2ConditionsOneWithModuleAnotherWithout_returnDefault" />
+    </UnitTest>
+    <UnitTest name="TestReplace" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="a096724d-407b-870b-181f-95da6417f9c3">
+      <Execution id="a19208fd-586e-4a41-a095-275f59fa64c8" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic.QuerySelectBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestReplace" />
+    </UnitTest>
+    <UnitTest name="TestConversion" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="5056a224-4cae-e816-70f1-bf880c8ec319">
+      <Execution id="c35b63b9-a511-4c2c-8af5-0445f26eafcb" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.Entities.TargetConstantHandlerTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestConversion" />
+    </UnitTest>
+    <UnitTest name="CheckFieldsOrderOrder" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="9f8da57b-4ad8-fa25-5e9a-a17945c7e8e1">
+      <Execution id="4d0c115b-f149-42b6-adbb-b9d0ab475036" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.AbstractSchemaTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="CheckFieldsOrderOrder" />
+    </UnitTest>
+    <UnitTest name="DateSearchDtoTest" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="7d3385f6-7b2f-d410-9880-4d1883c8cb0b">
+      <Execution id="ac74e48e-88d7-4f88-9364-e9857672143e" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Search.ApplicationSearchTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="DateSearchDtoTest" />
+    </UnitTest>
+    <UnitTest name="ModuleAskTest2" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="9d11ee99-f131-c210-9c25-1751a393e388">
+      <Execution id="8d800aef-4f2d-44da-961b-ffe89fe7cf76" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Configuration.Service.ConfigurationServiceTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ModuleAskTest2" />
+    </UnitTest>
+    <UnitTest name="RemoveAsset" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="3149a8f1-6952-39ad-2ebc-3e6a54a0aea3">
+      <Execution id="66e7f07e-a9f8-4749-93a3-d3e6e297feef" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.WS.Ism.ImacDescriptionHandlerTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="RemoveAsset" />
+    </UnitTest>
+    <UnitTest name="LocateFiles" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="63252ef7-222a-c0ee-6c32-93c3bf0f63f9">
+      <Execution id="d8f6c4a5-7e4f-430a-a3df-f66b355e262b" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Util.I18NResolverTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="LocateFiles" />
+    </UnitTest>
+    <UnitTest name="TestSelect2" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="d6e9bf59-c2cf-533b-5773-bee69226a51c">
+      <Execution id="61564360-e909-4d7a-9a49-98f4052b567f" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.Entities.SlicedEntityMetadataBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestSelect2" />
+    </UnitTest>
+    <UnitTest name="SearchWithFixedParam_Hapag_SEARCH_TEST_NOTEQ" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="442c99c8-19a0-3c2e-f9ca-d8141de7b70e">
+      <Execution id="7d9489d4-1664-42fc-8e24-210959cbaf5a" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Search.ApplicationSearchTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="SearchWithFixedParam_Hapag_SEARCH_TEST_NOTEQ" />
+    </UnitTest>
+    <UnitTest name="ModuleAskTest" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="5871b9f2-b834-d9f5-e2a7-f39e50608557">
+      <Execution id="9aa89868-6e31-48f2-8461-4d5bd8e7e7ad" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Configuration.Service.ConfigurationServiceTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ModuleAskTest" />
+    </UnitTest>
+    <UnitTest name="TestUpdate" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="d668a843-f5f7-eb48-baf2-f9b98ffd5466">
+      <Execution id="ea457802-62d0-4912-b007-0e48f501fbcd" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Category.CategoryTreeCacheTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestUpdate" />
+    </UnitTest>
+    <UnitTest name="TestRelationshipQuery" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="a1a523c7-9759-8f77-6ae9-b109b4aaf0b5">
+      <Execution id="93d6af64-d049-4e38-ac0f-606ee48ab9b8" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic.QueryFromBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestRelationshipQuery" />
+    </UnitTest>
+    <UnitTest name="TestGlobal" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="ba295fcb-945a-c550-00ac-183980d3d980">
+      <Execution id="fe6a197a-9cb3-403a-9b27-8a43786fa9b8" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Category.CategoryTreeCacheTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestGlobal" />
+    </UnitTest>
+    <UnitTest name="TestAlreadyFilledValues" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="c6c54fdd-371c-b9db-6c48-929480530129">
+      <Execution id="4cc22060-cf37-4425-aa8b-7907d752d48a" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.Entities.TargetConstantHandlerTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestAlreadyFilledValues" />
+    </UnitTest>
+    <UnitTest name="TestCollection" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="c47e7cfc-14d7-9cda-3c43-f788fc8fca98">
+      <Execution id="0896edd8-ae84-4d63-84af-f0efdde9db54" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Util.LoggingUtilTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestCollection" />
+    </UnitTest>
+    <UnitTest name="TestMethod1" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="2ebabb6e-1e4f-c138-ba59-840386aaf13c">
+      <Execution id="d226f994-2d8d-4a6b-8c4d-af19875f27c9" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic.QuerySelectBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestMethod1" />
+    </UnitTest>
+    <UnitTest name="TestExpanding" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="cf0cd8ff-1cfd-a319-12ba-b6f3da205756">
+      <Execution id="3f904bd2-404f-452d-ae38-20ddbb1886f4" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Relationship.CompositionExpanderHelperTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestExpanding" />
+    </UnitTest>
+    <UnitTest name="AskForSchemaWithProfile2" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="8772b11d-5cd5-13a8-471c-c89ebec994ea">
+      <Execution id="848997c7-46fb-49d3-8fe5-5e6b0472c97a" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Configuration.Service.ConfigurationServiceTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="AskForSchemaWithProfile2" />
+    </UnitTest>
+    <UnitTest name="TestParseWhereNull" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="f5728043-1b0e-9f39-2376-5e1d076ce8ca">
+      <Execution id="11d5be20-6db2-4b49-85c9-bf46f45c7864" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.Association.DependencyBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestParseWhereNull" />
+    </UnitTest>
+    <UnitTest name="TestSelect3" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="dc83f19c-ae37-7206-8989-5f1d08a51573">
+      <Execution id="68f549df-b1e2-40a3-9a8c-1709363cb23c" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Metadata.Entities.SlicedEntityMetadataBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestSelect3" />
+    </UnitTest>
+    <UnitTest name="TestInverseRelationship" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="3a5db01a-2ddf-73dd-cf67-c69566563f6f">
+      <Execution id="832dea68-6f59-46ea-8f93-46ea45eea2ad" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic.QueryFromBuilderTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestInverseRelationship" />
+    </UnitTest>
+    <UnitTest name="TestExpandingNoId" storage="../softwrench.sw4.test/bin/debug/softwrench.sw4.test.dll" id="d13125df-1d4a-a431-5428-12c0d4a5ad99">
+      <Execution id="70aea77e-4428-408f-bc13-bf4edc6ecc18" />
+      <TestMethod codeBase="C:/Users/rolim/Copy/swaml4/src/softwrench.sW4.test/bin/Debug/softwrench.sW4.test.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="softwrench.sW4.test.Data.Relationship.CompositionExpanderHelperTest, softwrench.sW4.test, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestExpandingNoId" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="ba295fcb-945a-c550-00ac-183980d3d980" executionId="fe6a197a-9cb3-403a-9b27-8a43786fa9b8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d668a843-f5f7-eb48-baf2-f9b98ffd5466" executionId="ea457802-62d0-4912-b007-0e48f501fbcd" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="dbee27cc-8118-7726-07fc-feb202eb3348" executionId="48865526-d323-40bd-8a3b-e07c5864dfc0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e0ebff6d-f10f-7498-cdda-c1bd9e383256" executionId="8a937083-8f2f-4869-9926-bef5392f7b77" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7c2666c2-422b-e734-1b7f-67ece0ad5d47" executionId="3458eb32-f204-4d59-a1ce-3fc32b973834" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6169f114-6249-3adc-5951-08c68f0c55e7" executionId="94dd215a-462e-447d-b839-7d94b25b1eb9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8989b33b-1d9d-bc18-8fd0-7ab53f8461aa" executionId="7682359d-0004-4d85-8c98-e1a167bb5652" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="df2ba56c-c6ca-a1cd-d66f-fac28fb4adb2" executionId="5310d58b-40d4-4b96-b274-47285b01ee44" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="eae5e7a0-61f9-bb9e-5837-61a982aa884e" executionId="12a3d5f8-3202-4dbd-9921-0c7ccba52066" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7a5cdedc-490e-b120-1c33-25cb05e51a80" executionId="4ad23adc-044a-49c8-8630-74780dcac098" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8772b11d-5cd5-13a8-471c-c89ebec994ea" executionId="848997c7-46fb-49d3-8fe5-5e6b0472c97a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9cc87e19-8502-dc92-21f2-9e2c9ff97a55" executionId="34ccd82b-3e03-43a9-9f3d-e9cdbd696613" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b73bedac-7c7a-56d8-3ab1-6cc9cd6d5b56" executionId="c898fcb1-2faf-460d-93c9-a12413bdce3e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5871b9f2-b834-d9f5-e2a7-f39e50608557" executionId="9aa89868-6e31-48f2-8461-4d5bd8e7e7ad" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9d11ee99-f131-c210-9c25-1751a393e388" executionId="8d800aef-4f2d-44da-961b-ffe89fe7cf76" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6b36e6d8-292b-c774-7d37-856a0cd8f3f0" executionId="6edb9bed-974b-4130-804f-ca33777c6db0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="cd8c146c-dbc6-0e8a-c3e4-cda875b7d88a" executionId="d11573ee-2251-4afa-bdee-570374ef9557" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="95f1bef3-68e4-1b17-b985-c5bc01c1d500" executionId="860028bf-f7a3-4ebd-affe-0d334b897519" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="42e40acf-3810-c590-2c93-aee312a7d3ba" executionId="87a29c54-3bbe-4573-85ef-fd12756ca665" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b4039629-7dd4-fbec-450a-227199cb12b7" executionId="c2b74ac6-39fe-4fd1-8ed5-255c0c029e9d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f73a787c-a23b-780e-8e7b-138c77bf9b01" executionId="6a1977c2-fbfd-4b2c-9cc0-39cd5c86e035" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="54460b47-3039-8cb9-e7af-3a4280f8ce78" executionId="dfb5fef1-c38e-4f60-89c4-3867911fa47a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ac73e394-f3c5-3328-c189-777634c29010" executionId="37bd1546-b8e4-47a5-8bb0-e78c7d395c2f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="af8947f1-fb3b-289d-9396-563c859c86d0" executionId="abf84dbe-7c73-40c1-bff6-cbcd11c3ff9c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2aa945b0-8a0c-047c-22ba-89b39080e9b4" executionId="41134006-0a62-4981-a5a6-cbf56780c02c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fcd2d0b5-5fce-84b9-ceb5-2d1e72e52721" executionId="0e19555b-5217-4788-977c-46388ffb9b21" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="640af98e-ea30-bb3f-f9af-2abd1cdf33b7" executionId="03250bd1-6268-47cc-871a-0c1058dac677" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3a5db01a-2ddf-73dd-cf67-c69566563f6f" executionId="832dea68-6f59-46ea-8f93-46ea45eea2ad" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0389179e-26b8-6e86-ea59-f0ffa6b7cf03" executionId="8cb799fd-90f9-4a00-872e-5933d24f83a0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a1a523c7-9759-8f77-6ae9-b109b4aaf0b5" executionId="93d6af64-d049-4e38-ac0f-606ee48ab9b8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5dcf0036-21e9-84de-c458-a6b89095045d" executionId="a925067c-c3e7-40ea-8f6a-f8659d9685d2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2ebabb6e-1e4f-c138-ba59-840386aaf13c" executionId="d226f994-2d8d-4a6b-8c4d-af19875f27c9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="79ce1f70-64ff-be37-7e0d-989ae55ae541" executionId="0324796f-94b0-4883-af3b-74928adc76a9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a3f31eec-7b4a-07c8-4e24-061ae3cab06f" executionId="972af733-9acd-43ff-909d-c2b0ffd043c8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a096724d-407b-870b-181f-95da6417f9c3" executionId="a19208fd-586e-4a41-a095-275f59fa64c8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d152a551-5397-a869-2a68-6828ef50c3fe" executionId="3556e40a-88a1-4b21-b2b1-3ba4594de7b5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6203c23b-2b32-7bab-0f88-4832a355bd8a" executionId="565cc6d0-25c1-4957-abb5-8a9d2386570a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="24d219c9-c5c3-351e-02d3-6efbc82b3d2d" executionId="37cf67e4-1768-4683-803f-d63c6d827493" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e65bc6e1-59c6-47f3-db18-afd367994c2a" executionId="a39998b0-b840-4160-b6a9-bb97f22df685" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3149a8f1-6952-39ad-2ebc-3e6a54a0aea3" executionId="66e7f07e-a9f8-4749-93a3-d3e6e297feef" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bcafc904-2f6a-a8dc-9875-4674e06860f9" executionId="93be08fa-3ad1-4bd2-bb7b-291e77fea708" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="cf0cd8ff-1cfd-a319-12ba-b6f3da205756" executionId="3f904bd2-404f-452d-ae38-20ddbb1886f4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d13125df-1d4a-a431-5428-12c0d4a5ad99" executionId="70aea77e-4428-408f-bc13-bf4edc6ecc18" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="98020f3d-3d67-95ba-3ae7-3b514b0bc5dc" executionId="917f9f0f-0614-4610-968f-9064a0b995f4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bd551a90-f138-445a-cc09-66e1047940e2" executionId="ac914cdc-042a-4892-b988-07e0fa795586" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="058e27e7-a60a-540c-3a8e-4bf7ccdc4123" executionId="f8d19d03-2e67-4f94-93df-77cf681fdf5f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7d3385f6-7b2f-d410-9880-4d1883c8cb0b" executionId="ac74e48e-88d7-4f88-9364-e9857672143e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0ceedc9a-fafe-a1d2-269b-78553163e453" executionId="dbb8dada-4162-4ec5-b84b-df5aa5b24643" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="26ef22f7-16e4-fc2c-0534-9721d0a60367" executionId="b753de2e-1f00-4554-9aba-873d1c4d664f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="442c99c8-19a0-3c2e-f9ca-d8141de7b70e" executionId="7d9489d4-1664-42fc-8e24-210959cbaf5a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b519b0dd-c920-4dd8-64fe-8cc0189a57a6" executionId="64447cb3-3720-4c6b-bcda-8bfab6d11be0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="47ee8c2f-44b5-76ff-37ac-fdbc6fcd06fc" executionId="9d2bb81e-4708-49cc-aa56-7108105aeb5b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d0527def-4469-3bef-c311-54ce24aea28b" executionId="e6688d4f-5baf-4639-bcfa-2df73b255c7c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3e847722-9b65-4102-ba58-bf1fe444bed0" executionId="8b164872-73e1-4fdb-a8cd-2a1e5e1f371c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9f8da57b-4ad8-fa25-5e9a-a17945c7e8e1" executionId="4d0c115b-f149-42b6-adbb-b9d0ab475036" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ecf50f5d-1505-8b7d-5392-a60e99531be0" executionId="9064881b-ff13-49a7-8b76-7259ff9fd353" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2a635ad6-76f8-6bb6-866e-2217b1072759" executionId="19df368b-51d6-4b47-8672-3dd7efadbba6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9fbe5469-6512-aa7d-2fdc-c8be71dac349" executionId="570564b6-e0b4-4528-bc2e-949c39bda911" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f5728043-1b0e-9f39-2376-5e1d076ce8ca" executionId="11d5be20-6db2-4b49-85c9-bf46f45c7864" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d1c9e1a2-c791-6f91-f773-49741e5ecfdc" executionId="bffa00dc-c522-41da-b4ab-4eae29242bd6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b9c290de-e0fe-9da0-ed5b-f442123483ee" executionId="70358597-3def-44a0-a170-3140fbebf848" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d7c9835a-fd6c-6e57-5647-1dc9dd816644" executionId="d9d77506-f68d-4834-8127-567b5601cb41" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d6e9bf59-c2cf-533b-5773-bee69226a51c" executionId="61564360-e909-4d7a-9a49-98f4052b567f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="dc83f19c-ae37-7206-8989-5f1d08a51573" executionId="68f549df-b1e2-40a3-9a8c-1709363cb23c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8601e6da-742d-5583-1d13-1444a3b96b01" executionId="2c6df5e0-d99f-46f0-bd9f-f2deed3c53c2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f0ee1762-55e4-c1b7-35fc-49ac44f7772e" executionId="543666e4-6323-4b8e-a8bd-4d124fd66de6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2ab63181-cbc7-c789-2f93-81c5121479ff" executionId="b572c7ee-29be-469b-b58d-7013955fc7ef" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c6c54fdd-371c-b9db-6c48-929480530129" executionId="4cc22060-cf37-4425-aa8b-7907d752d48a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5056a224-4cae-e816-70f1-bf880c8ec319" executionId="c35b63b9-a511-4c2c-8af5-0445f26eafcb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="db5a8b8d-463f-1e29-75d3-7c22f150f79f" executionId="2ad037df-45aa-4ed9-a8eb-91c30492b141" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f07df37d-90e4-087a-a292-d0b5f1ea8755" executionId="4a883b5f-e364-4604-babf-1ea630bcdcac" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b34b1695-ae71-155d-66cf-eeeb475a677b" executionId="2ad2485f-9132-4753-977a-a53da76cddd2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9da10d2c-99b7-4eb2-a14a-fee15fd6b52a" executionId="d3fdc56b-3024-4a20-9995-5ee218912bd7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="27b5564a-4b1c-bc34-cdda-f84fa9a7751e" executionId="02f8c85d-08a3-4bee-aae2-95264db769c1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6967fa50-19a3-b358-2875-068a48bc7d11" executionId="ee94d425-c477-4f0a-bf9b-fd85028b90a9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="dba5467f-1e97-4998-fba3-b71343cfde2f" executionId="429a44bd-3741-4442-b37d-439564bf6299" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9177643c-7d01-dccf-b4c7-e2e78cd26785" executionId="0ea21f5a-564a-4ed5-abb6-2da07ce4a67a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2ccc5849-fe9d-ffc5-c877-9e28427a4330" executionId="ffe03fcc-1d98-497b-b0e7-3a26e15c5312" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ab5ef0c4-4676-92ba-5b5c-b3edc2f8e558" executionId="2ea0dba5-d1dd-4040-84c7-4d1b4b723130" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="50e6540e-2a88-ed1c-1a43-14f2c488cd81" executionId="cb72f4d0-fa0b-4975-95d8-0919b2c4dbc7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="db90e7b4-7edb-e986-5eaa-4312b542d56a" executionId="6835e679-f61d-4470-9d55-816752a1b94d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ac59350e-b94c-3929-6c72-637148e3a7a0" executionId="ff2cecf6-3d75-4613-ab5d-a223aa934cc4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0af06012-3841-913f-698b-cbdd9adfe552" executionId="1c6af3c4-0f4a-477e-a79f-44d0c713a059" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0570c3a1-164a-8720-ab47-d3feb9cadb85" executionId="beeb79a7-b1cb-4ea4-9749-662993cad6ca" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="63252ef7-222a-c0ee-6c32-93c3bf0f63f9" executionId="d8f6c4a5-7e4f-430a-a3df-f66b355e262b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="da13500b-fd77-6dbc-e99f-be00c510ca6a" executionId="77ca4fa2-e521-4732-ae46-de3e64d4801d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="16f7b9df-3e74-1b0e-bd2f-0aae808f916b" executionId="be8ac1ff-c21b-404e-b554-034eca9c6024" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c47e7cfc-14d7-9cda-3c43-f788fc8fca98" executionId="0896edd8-ae84-4d63-84af-f0efdde9db54" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="219d335f-0870-4220-8e61-3f41d8c43f86" executionId="a8da4ab2-2dfc-4fec-a414-50a7f37e8c59" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4988fb77-d19b-a1c4-7211-49326cebe459" executionId="9aefc29b-f603-4da7-90e8-24a49fbe2321" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="fe6a197a-9cb3-403a-9b27-8a43786fa9b8" testId="ba295fcb-945a-c550-00ac-183980d3d980" testName="TestGlobal" computerName="ROLIM-PC" duration="00:00:00.7555184" startTime="2014-08-11T09:44:20.7155669-03:00" endTime="2014-08-11T09:44:26.0938746-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fe6a197a-9cb3-403a-9b27-8a43786fa9b8">
+    </UnitTestResult>
+    <UnitTestResult executionId="ea457802-62d0-4912-b007-0e48f501fbcd" testId="d668a843-f5f7-eb48-baf2-f9b98ffd5466" testName="TestUpdate" computerName="ROLIM-PC" duration="00:00:00.0036177" startTime="2014-08-11T09:44:26.0988749-03:00" endTime="2014-08-11T09:44:26.1078754-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ea457802-62d0-4912-b007-0e48f501fbcd">
+    </UnitTestResult>
+    <UnitTestResult executionId="48865526-d323-40bd-8a3b-e07c5864dfc0" testId="dbee27cc-8118-7726-07fc-feb202eb3348" testName="PropertyKey" computerName="ROLIM-PC" duration="00:00:00.0007138" startTime="2014-08-11T09:44:26.2508835-03:00" endTime="2014-08-11T09:44:26.2548838-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="48865526-d323-40bd-8a3b-e07c5864dfc0">
+    </UnitTestResult>
+    <UnitTestResult executionId="8a937083-8f2f-4869-9926-bef5392f7b77" testId="e0ebff6d-f10f-7498-cdda-c1bd9e383256" testName="Simple" computerName="ROLIM-PC" duration="00:00:00.4169792" startTime="2014-08-11T09:44:26.2758850-03:00" endTime="2014-08-11T09:44:26.6959090-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8a937083-8f2f-4869-9926-bef5392f7b77">
+    </UnitTestResult>
+    <UnitTestResult executionId="3458eb32-f204-4d59-a1ce-3fc32b973834" testId="7c2666c2-422b-e734-1b7f-67ece0ad5d47" testName="ThreeLevels" computerName="ROLIM-PC" duration="00:00:00.0022657" startTime="2014-08-11T09:44:26.7009093-03:00" endTime="2014-08-11T09:44:26.7059096-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3458eb32-f204-4d59-a1ce-3fc32b973834">
+    </UnitTestResult>
+    <UnitTestResult executionId="94dd215a-462e-447d-b839-7d94b25b1eb9" testId="6169f114-6249-3adc-5951-08c68f0c55e7" testName="TwoLevels" computerName="ROLIM-PC" duration="00:00:00.0020091" startTime="2014-08-11T09:44:26.7109099-03:00" endTime="2014-08-11T09:44:26.7169102-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="94dd215a-462e-447d-b839-7d94b25b1eb9">
+    </UnitTestResult>
+    <UnitTestResult executionId="7682359d-0004-4d85-8c98-e1a167bb5652" testId="8989b33b-1d9d-bc18-8fd0-7ab53f8461aa" testName="_2ConditionsOneWithModuleAnotherWithout_returnDefault" computerName="ROLIM-PC" duration="00:00:00.4538613" startTime="2014-08-11T09:44:26.7219105-03:00" endTime="2014-08-11T09:44:27.1789366-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7682359d-0004-4d85-8c98-e1a167bb5652">
+    </UnitTestResult>
+    <UnitTestResult executionId="5310d58b-40d4-4b96-b274-47285b01ee44" testId="df2ba56c-c6ca-a1cd-d66f-fac28fb4adb2" testName="AskAndDoNotFind" computerName="ROLIM-PC" duration="00:00:00.0015542" startTime="2014-08-11T09:44:27.1839369-03:00" endTime="2014-08-11T09:44:27.1889372-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5310d58b-40d4-4b96-b274-47285b01ee44">
+    </UnitTestResult>
+    <UnitTestResult executionId="12a3d5f8-3202-4dbd-9921-0c7ccba52066" testId="eae5e7a0-61f9-bb9e-5837-61a982aa884e" testName="AskForModule_DoNotConsiderDefault" computerName="ROLIM-PC" duration="00:00:00.0014549" startTime="2014-08-11T09:44:27.1949375-03:00" endTime="2014-08-11T09:44:27.1999378-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="12a3d5f8-3202-4dbd-9921-0c7ccba52066">
+    </UnitTestResult>
+    <UnitTestResult executionId="4ad23adc-044a-49c8-8630-74780dcac098" testId="7a5cdedc-490e-b120-1c33-25cb05e51a80" testName="AskForSchemaWithProfile" computerName="ROLIM-PC" duration="00:00:00.1889976" startTime="2014-08-11T09:44:27.2059382-03:00" endTime="2014-08-11T09:44:27.3979492-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4ad23adc-044a-49c8-8630-74780dcac098">
+    </UnitTestResult>
+    <UnitTestResult executionId="848997c7-46fb-49d3-8fe5-5e6b0472c97a" testId="8772b11d-5cd5-13a8-471c-c89ebec994ea" testName="AskForSchemaWithProfile2" computerName="ROLIM-PC" duration="00:00:00.0013124" startTime="2014-08-11T09:44:27.4039495-03:00" endTime="2014-08-11T09:44:27.4099498-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="848997c7-46fb-49d3-8fe5-5e6b0472c97a">
+    </UnitTestResult>
+    <UnitTestResult executionId="34ccd82b-3e03-43a9-9f3d-e9cdbd696613" testId="9cc87e19-8502-dc92-21f2-9e2c9ff97a55" testName="MetadataAskTest" computerName="ROLIM-PC" duration="00:00:00.0017513" startTime="2014-08-11T09:44:27.4159502-03:00" endTime="2014-08-11T09:44:27.4209505-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="34ccd82b-3e03-43a9-9f3d-e9cdbd696613">
+    </UnitTestResult>
+    <UnitTestResult executionId="c898fcb1-2faf-460d-93c9-a12413bdce3e" testId="b73bedac-7c7a-56d8-3ab1-6cc9cd6d5b56" testName="MetadataAskTest2" computerName="ROLIM-PC" duration="00:00:00.0007172" startTime="2014-08-11T09:44:27.4259508-03:00" endTime="2014-08-11T09:44:27.4289509-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c898fcb1-2faf-460d-93c9-a12413bdce3e">
+    </UnitTestResult>
+    <UnitTestResult executionId="9aa89868-6e31-48f2-8461-4d5bd8e7e7ad" testId="5871b9f2-b834-d9f5-e2a7-f39e50608557" testName="ModuleAskTest" computerName="ROLIM-PC" duration="00:00:00.0005137" startTime="2014-08-11T09:44:27.4329512-03:00" endTime="2014-08-11T09:44:27.4349513-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9aa89868-6e31-48f2-8461-4d5bd8e7e7ad">
+    </UnitTestResult>
+    <UnitTestResult executionId="8d800aef-4f2d-44da-961b-ffe89fe7cf76" testId="9d11ee99-f131-c210-9c25-1751a393e388" testName="ModuleAskTest2" computerName="ROLIM-PC" duration="00:00:00.0005170" startTime="2014-08-11T09:44:27.4389515-03:00" endTime="2014-08-11T09:44:27.4409516-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8d800aef-4f2d-44da-961b-ffe89fe7cf76">
+    </UnitTestResult>
+    <UnitTestResult executionId="6edb9bed-974b-4130-804f-ca33777c6db0" testId="6b36e6d8-292b-c774-7d37-856a0cd8f3f0" testName="ModuleAskTestCombination" computerName="ROLIM-PC" duration="00:00:00.0012366" startTime="2014-08-11T09:44:27.4439518-03:00" endTime="2014-08-11T09:44:27.4469520-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6edb9bed-974b-4130-804f-ca33777c6db0">
+    </UnitTestResult>
+    <UnitTestResult executionId="d11573ee-2251-4afa-bdee-570374ef9557" testId="cd8c146c-dbc6-0e8a-c3e4-cda875b7d88a" testName="SR_HAPAG_CONDITION" computerName="ROLIM-PC" duration="00:00:00.0011470" startTime="2014-08-11T09:44:27.4499521-03:00" endTime="2014-08-11T09:44:27.4529523-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d11573ee-2251-4afa-bdee-570374ef9557">
+    </UnitTestResult>
+    <UnitTestResult executionId="860028bf-f7a3-4ebd-affe-0d334b897519" testId="95f1bef3-68e4-1b17-b985-c5bc01c1d500" testName="TestCreation" computerName="ROLIM-PC" duration="00:00:00.8831710" startTime="2014-08-11T09:44:27.4569525-03:00" endTime="2014-08-11T09:44:30.1011038-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="860028bf-f7a3-4ebd-affe-0d334b897519">
+    </UnitTestResult>
+    <UnitTestResult executionId="87a29c54-3bbe-4573-85ef-fd12756ca665" testId="42e40acf-3810-c590-2c93-aee312a7d3ba" testName="TestCreationNewWorkLog" computerName="ROLIM-PC" duration="00:00:00.0032041" startTime="2014-08-11T09:44:30.1041039-03:00" endTime="2014-08-11T09:44:30.1091042-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="87a29c54-3bbe-4573-85ef-fd12756ca665">
+    </UnitTestResult>
+    <UnitTestResult executionId="c2b74ac6-39fe-4fd1-8ed5-255c0c029e9d" testId="b4039629-7dd4-fbec-450a-227199cb12b7" testName="TestUpdate" computerName="ROLIM-PC" duration="00:00:00.0041245" startTime="2014-08-11T09:44:30.1131045-03:00" endTime="2014-08-11T09:44:30.1191048-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c2b74ac6-39fe-4fd1-8ed5-255c0c029e9d">
+    </UnitTestResult>
+    <UnitTestResult executionId="6a1977c2-fbfd-4b2c-9cc0-39cd5c86e035" testId="f73a787c-a23b-780e-8e7b-138c77bf9b01" testName="TestAddWorkLogToIncident" computerName="ROLIM-PC" duration="00:00:00.0379289" startTime="2014-08-11T09:44:30.1211049-03:00" endTime="2014-08-11T09:44:30.1951091-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6a1977c2-fbfd-4b2c-9cc0-39cd5c86e035">
+    </UnitTestResult>
+    <UnitTestResult executionId="dfb5fef1-c38e-4f60-89c4-3867911fa47a" testId="54460b47-3039-8cb9-e7af-3a4280f8ce78" testName="TestAddWorkLogToIncident" computerName="ROLIM-PC" duration="00:00:00.5941326" startTime="2014-08-11T09:44:30.1991094-03:00" endTime="2014-08-11T09:44:30.7951435-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="dfb5fef1-c38e-4f60-89c4-3867911fa47a">
+    </UnitTestResult>
+    <UnitTestResult executionId="37bd1546-b8e4-47a5-8bb0-e78c7d395c2f" testId="ac73e394-f3c5-3328-c189-777634c29010" testName="TestNestedGetAttribute" computerName="ROLIM-PC" duration="00:00:00.3322624" startTime="2014-08-11T09:44:30.7981436-03:00" endTime="2014-08-11T09:44:31.1321627-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="37bd1546-b8e4-47a5-8bb0-e78c7d395c2f">
+    </UnitTestResult>
+    <UnitTestResult executionId="abf84dbe-7c73-40c1-bff6-cbcd11c3ff9c" testId="af8947f1-fb3b-289d-9396-563c859c86d0" testName="Simple" computerName="ROLIM-PC" duration="00:00:00.0085204" startTime="2014-08-11T09:44:31.1351629-03:00" endTime="2014-08-11T09:44:31.1461635-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="abf84dbe-7c73-40c1-bff6-cbcd11c3ff9c">
+    </UnitTestResult>
+    <UnitTestResult executionId="41134006-0a62-4981-a5a6-cbf56780c02c" testId="2aa945b0-8a0c-047c-22ba-89b39080e9b4" testName="SiteId" computerName="ROLIM-PC" duration="00:00:00.0007359" startTime="2014-08-11T09:44:31.1491637-03:00" endTime="2014-08-11T09:44:31.1521639-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="41134006-0a62-4981-a5a6-cbf56780c02c">
+    </UnitTestResult>
+    <UnitTestResult executionId="0e19555b-5217-4788-977c-46388ffb9b21" testId="fcd2d0b5-5fce-84b9-ceb5-2d1e72e52721" testName="TestUserGenericProperties" computerName="ROLIM-PC" duration="00:00:00.0006918" startTime="2014-08-11T09:44:31.1561641-03:00" endTime="2014-08-11T09:44:31.1591643-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0e19555b-5217-4788-977c-46388ffb9b21">
+    </UnitTestResult>
+    <UnitTestResult executionId="03250bd1-6268-47cc-871a-0c1058dac677" testId="640af98e-ea30-bb3f-f9af-2abd1cdf33b7" testName="IncidentHardwareReport" computerName="ROLIM-PC" duration="00:00:00.0100279" startTime="2014-08-11T09:44:31.1631645-03:00" endTime="2014-08-11T09:44:31.2221679-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="03250bd1-6268-47cc-871a-0c1058dac677">
+    </UnitTestResult>
+    <UnitTestResult executionId="832dea68-6f59-46ea-8f93-46ea45eea2ad" testId="3a5db01a-2ddf-73dd-cf67-c69566563f6f" testName="TestInverseRelationship" computerName="ROLIM-PC" duration="00:00:00.0007968" startTime="2014-08-11T09:44:31.2251681-03:00" endTime="2014-08-11T09:44:31.2281682-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="832dea68-6f59-46ea-8f93-46ea45eea2ad">
+    </UnitTestResult>
+    <UnitTestResult executionId="8cb799fd-90f9-4a00-872e-5933d24f83a0" testId="0389179e-26b8-6e86-ea59-f0ffa6b7cf03" testName="TestMethod1" computerName="ROLIM-PC" duration="00:00:00.0006272" startTime="2014-08-11T09:44:31.2311684-03:00" endTime="2014-08-11T09:44:31.2331685-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8cb799fd-90f9-4a00-872e-5933d24f83a0">
+    </UnitTestResult>
+    <UnitTestResult executionId="93d6af64-d049-4e38-ac0f-606ee48ab9b8" testId="a1a523c7-9759-8f77-6ae9-b109b4aaf0b5" testName="TestRelationshipQuery" computerName="ROLIM-PC" duration="00:00:00.0088380" startTime="2014-08-11T09:44:31.3381745-03:00" endTime="2014-08-11T09:44:31.3501752-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="93d6af64-d049-4e38-ac0f-606ee48ab9b8">
+    </UnitTestResult>
+    <UnitTestResult executionId="a925067c-c3e7-40ea-8f6a-f8659d9685d2" testId="5dcf0036-21e9-84de-c458-a6b89095045d" testName="TestRelationshipQueryField" computerName="ROLIM-PC" duration="00:00:00.0575827" startTime="2014-08-11T09:44:31.3551755-03:00" endTime="2014-08-11T09:44:31.4161790-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a925067c-c3e7-40ea-8f6a-f8659d9685d2">
+    </UnitTestResult>
+    <UnitTestResult executionId="d226f994-2d8d-4a6b-8c4d-af19875f27c9" testId="2ebabb6e-1e4f-c138-ba59-840386aaf13c" testName="TestMethod1" computerName="ROLIM-PC" duration="00:00:00.0115860" startTime="2014-08-11T09:44:31.4221793-03:00" endTime="2014-08-11T09:44:31.4401804-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d226f994-2d8d-4a6b-8c4d-af19875f27c9">
+    </UnitTestResult>
+    <UnitTestResult executionId="0324796f-94b0-4883-af3b-74928adc76a9" testId="79ce1f70-64ff-be37-7e0d-989ae55ae541" testName="TestMethod2" computerName="ROLIM-PC" duration="00:00:00.0014208" startTime="2014-08-11T09:44:31.4451806-03:00" endTime="2014-08-11T09:44:31.4501809-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0324796f-94b0-4883-af3b-74928adc76a9">
+    </UnitTestResult>
+    <UnitTestResult executionId="972af733-9acd-43ff-909d-c2b0ffd043c8" testId="a3f31eec-7b4a-07c8-4e24-061ae3cab06f" testName="TestProjectionFieldWithQuery" computerName="ROLIM-PC" duration="00:00:00.0011102" startTime="2014-08-11T09:44:31.4551812-03:00" endTime="2014-08-11T09:44:31.4591814-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="972af733-9acd-43ff-909d-c2b0ffd043c8">
+    </UnitTestResult>
+    <UnitTestResult executionId="a19208fd-586e-4a41-a095-275f59fa64c8" testId="a096724d-407b-870b-181f-95da6417f9c3" testName="TestReplace" computerName="ROLIM-PC" duration="00:00:00.0022276" startTime="2014-08-11T09:44:31.4641817-03:00" endTime="2014-08-11T09:44:31.4701821-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a19208fd-586e-4a41-a095-275f59fa64c8">
+    </UnitTestResult>
+    <UnitTestResult executionId="3556e40a-88a1-4b21-b2b1-3ba4594de7b5" testId="d152a551-5397-a869-2a68-6828ef50c3fe" testName="TestReplace_Nulls" computerName="ROLIM-PC" duration="00:00:00.0008400" startTime="2014-08-11T09:44:31.4751824-03:00" endTime="2014-08-11T09:44:31.4791826-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3556e40a-88a1-4b21-b2b1-3ba4594de7b5">
+    </UnitTestResult>
+    <UnitTestResult executionId="565cc6d0-25c1-4957-abb5-8a9d2386570a" testId="6203c23b-2b32-7bab-0f88-4832a355bd8a" testName="TestReplaceInner" computerName="ROLIM-PC" duration="00:00:00.0006719" startTime="2014-08-11T09:44:31.4821828-03:00" endTime="2014-08-11T09:44:31.4851829-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="565cc6d0-25c1-4957-abb5-8a9d2386570a">
+    </UnitTestResult>
+    <UnitTestResult executionId="37cf67e4-1768-4683-803f-d63c6d827493" testId="24d219c9-c5c3-351e-02d3-6efbc82b3d2d" testName="InstallLan" computerName="ROLIM-PC" duration="00:00:00.0093098" startTime="2014-08-11T09:44:31.4881831-03:00" endTime="2014-08-11T09:44:31.5511867-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="37cf67e4-1768-4683-803f-d63c6d827493">
+      <Output>
+        <DebugTrace>
+=====================================================================
+Request Details
+
+Location:   MT4
+Asset:   B4000
+Child Asset:   A7800
+Moved Asset:   A6002
+=====================================================================
+Service Attributes
+
+Paper Format:   A0
+LAN Type (printers only):   lan
+Paper Orientation:   landscape
+IBM technician – Yes/No:   yes
+DHCP Address:   100.100.100.100
+Installation date:   27/06/2014
+Reference Printer:   test
+Remarks:   test
+
+test
+Usage:   TEST
+=====================================================================
+Location
+
+Building:   
+Floor:   
+Room:   
+=====================================================================
+Cost Center:   6200-300-000
+=====================================================================
+</DebugTrace>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a39998b0-b840-4160-b6a9-bb97f22df685" testId="e65bc6e1-59c6-47f3-db18-afd367994c2a" testName="Move" computerName="ROLIM-PC" duration="00:00:00.0051771" startTime="2014-08-11T09:44:31.5551869-03:00" endTime="2014-08-11T09:44:31.5621873-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a39998b0-b840-4160-b6a9-bb97f22df685">
+      <Output>
+        <DebugTrace>
+=====================================================================
+Request Details
+
+Location:   MT4 --&gt; MT3
+Asset:   B4000
+Child Asset:   A7800
+to ITC:   WILSON
+=====================================================================
+Service Attributes
+
+Installation date:   19/06/2014
+LAN Type (printers only):   lan
+Remarks:   test
+Usage:   TEST
+=====================================================================
+Location
+
+Building:   
+Floor:   
+Room:   
+=====================================================================
+</DebugTrace>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="66e7f07e-a9f8-4749-93a3-d3e6e297feef" testId="3149a8f1-6952-39ad-2ebc-3e6a54a0aea3" testName="RemoveAsset" computerName="ROLIM-PC" duration="00:00:00.0052812" startTime="2014-08-11T09:44:31.5731880-03:00" endTime="2014-08-11T09:44:31.5811884-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="66e7f07e-a9f8-4749-93a3-d3e6e297feef">
+      <Output>
+        <DebugTrace>
+=====================================================================
+Request Details
+
+Location:   MT4
+Asset:   A5006
+Child Asset:   
+=====================================================================
+Service Attributes
+
+Installation date:   
+Remarks:   
+Usage:   TEST
+=====================================================================
+Asset Data
+
+Parent Asset Status:   
+Building:   
+Floor:   
+Room:   
+=====================================================================
+Child Asset Data
+
+Building:   
+Floor:   
+Room:   
+=====================================================================
+</DebugTrace>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="93be08fa-3ad1-4bd2-bb7b-291e77fea708" testId="bcafc904-2f6a-a8dc-9875-4674e06860f9" testName="UpdateAsset" computerName="ROLIM-PC" duration="00:00:01.1220462" startTime="2014-08-11T09:44:31.5831885-03:00" endTime="2014-08-11T09:44:32.7072528-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="93be08fa-3ad1-4bd2-bb7b-291e77fea708">
+      <Output>
+        <DebugTrace>
+=====================================================================
+Request Details
+
+Location:   MT4
+Asset:   A8005
+Update Child Asset:   update
+=====================================================================
+Service Attributes
+
+Remarks:   Remark Test
+Usage:   TEST
+=====================================================================
+Location
+
+Building:   
+Floor:   
+Room:   
+=====================================================================
+Services
+
+Asset owened by HLAG
+Commodity Test
+=====================================================================
+Specifications
+
+Computer Name:   Unix Server --&gt; Unix Server Test
+Serial Number:   FT-88654343 --&gt; FT-88654343 Test
+Product:   Unix Server --&gt; Unix Server Test
+Install Date:   07/21/2004 04:00:00 --&gt; 2014-06-30
+Model:    --&gt; Test
+Type:    --&gt; Test
+HL Invent Number:    --&gt; Test
+Comment:    --&gt; Test
+=====================================================================
+Asset Attributes
+
+Application Server Version:   4.0000000000 --&gt; 3
+DISK SIZE:   500.0000000000 --&gt; 500
+Disk 2 Size:   250.0000000000 --&gt; 300
+Disk 3 Size:   250.0000000000 --&gt; 200
+Disk 4 Size:   250.0000000000 --&gt; 350
+MEMORY SIZE:   2000.0000000000 --&gt; 4000
+PROCESSOR SPEED:   4.5000000000 --&gt; 5
+=====================================================================
+</DebugTrace>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="3f904bd2-404f-452d-ae38-20ddbb1886f4" testId="cf0cd8ff-1cfd-a319-12ba-b6f3da205756" testName="TestExpanding" computerName="ROLIM-PC" duration="00:00:00.0044810" startTime="2014-08-11T09:44:32.7132532-03:00" endTime="2014-08-11T09:44:32.7202536-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3f904bd2-404f-452d-ae38-20ddbb1886f4">
+    </UnitTestResult>
+    <UnitTestResult executionId="70aea77e-4428-408f-bc13-bf4edc6ecc18" testId="d13125df-1d4a-a431-5428-12c0d4a5ad99" testName="TestExpandingNoId" computerName="ROLIM-PC" duration="00:00:00.0008542" startTime="2014-08-11T09:44:32.7262539-03:00" endTime="2014-08-11T09:44:32.7302541-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="70aea77e-4428-408f-bc13-bf4edc6ecc18">
+    </UnitTestResult>
+    <UnitTestResult executionId="917f9f0f-0614-4610-968f-9064a0b995f4" testId="98020f3d-3d67-95ba-3ae7-3b514b0bc5dc" testName="BasicSearchDtoTest" computerName="ROLIM-PC" duration="00:00:00.0112223" startTime="2014-08-11T09:44:32.7362545-03:00" endTime="2014-08-11T09:44:32.7992581-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="917f9f0f-0614-4610-968f-9064a0b995f4">
+    </UnitTestResult>
+    <UnitTestResult executionId="ac914cdc-042a-4892-b988-07e0fa795586" testId="bd551a90-f138-445a-cc09-66e1047940e2" testName="DateSearchDtoGteTest" computerName="ROLIM-PC" duration="00:00:00.0041716" startTime="2014-08-11T09:44:32.8032583-03:00" endTime="2014-08-11T09:44:32.8102587-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ac914cdc-042a-4892-b988-07e0fa795586">
+    </UnitTestResult>
+    <UnitTestResult executionId="f8d19d03-2e67-4f94-93df-77cf681fdf5f" testId="058e27e7-a60a-540c-3a8e-4bf7ccdc4123" testName="DateSearchDtoLTTest" computerName="ROLIM-PC" duration="00:00:00.0013326" startTime="2014-08-11T09:44:32.8142590-03:00" endTime="2014-08-11T09:44:32.8182592-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f8d19d03-2e67-4f94-93df-77cf681fdf5f">
+    </UnitTestResult>
+    <UnitTestResult executionId="ac74e48e-88d7-4f88-9364-e9857672143e" testId="7d3385f6-7b2f-d410-9880-4d1883c8cb0b" testName="DateSearchDtoTest" computerName="ROLIM-PC" duration="00:00:00.0008892" startTime="2014-08-11T09:44:32.8222594-03:00" endTime="2014-08-11T09:44:32.8242595-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ac74e48e-88d7-4f88-9364-e9857672143e">
+    </UnitTestResult>
+    <UnitTestResult executionId="dbb8dada-4162-4ec5-b84b-df5aa5b24643" testId="0ceedc9a-fafe-a1d2-269b-78553163e453" testName="MultipleFieldsSearchDtoTest" computerName="ROLIM-PC" duration="00:00:00.0008608" startTime="2014-08-11T09:44:32.8282598-03:00" endTime="2014-08-11T09:44:32.8302599-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="dbb8dada-4162-4ec5-b84b-df5aa5b24643">
+    </UnitTestResult>
+    <UnitTestResult executionId="b753de2e-1f00-4554-9aba-873d1c4d664f" testId="26ef22f7-16e4-fc2c-0534-9721d0a60367" testName="SearchWithFixedParam_Hapag_SEARCH_TEST" computerName="ROLIM-PC" duration="00:00:00.0019010" startTime="2014-08-11T09:44:32.8342601-03:00" endTime="2014-08-11T09:44:32.8382603-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b753de2e-1f00-4554-9aba-873d1c4d664f">
+    </UnitTestResult>
+    <UnitTestResult executionId="7d9489d4-1664-42fc-8e24-210959cbaf5a" testId="442c99c8-19a0-3c2e-f9ca-d8141de7b70e" testName="SearchWithFixedParam_Hapag_SEARCH_TEST_NOTEQ" computerName="ROLIM-PC" duration="00:00:00.0006073" startTime="2014-08-11T09:44:32.8412605-03:00" endTime="2014-08-11T09:44:32.8432606-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7d9489d4-1664-42fc-8e24-210959cbaf5a">
+    </UnitTestResult>
+    <UnitTestResult executionId="64447cb3-3720-4c6b-bcda-8bfab6d11be0" testId="b519b0dd-c920-4dd8-64fe-8cc0189a57a6" testName="SearchWithQueryParameter" computerName="ROLIM-PC" duration="00:00:00.0006296" startTime="2014-08-11T09:44:32.8472608-03:00" endTime="2014-08-11T09:44:32.8492610-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="64447cb3-3720-4c6b-bcda-8bfab6d11be0">
+    </UnitTestResult>
+    <UnitTestResult executionId="9d2bb81e-4708-49cc-aa56-7108105aeb5b" testId="47ee8c2f-44b5-76ff-37ac-fdbc6fcd06fc" testName="NumberSearchDtoGteTest" computerName="ROLIM-PC" duration="00:00:00.0007971" startTime="2014-08-11T09:44:32.8522611-03:00" endTime="2014-08-11T09:44:32.8972637-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9d2bb81e-4708-49cc-aa56-7108105aeb5b">
+    </UnitTestResult>
+    <UnitTestResult executionId="e6688d4f-5baf-4639-bcfa-2df73b255c7c" testId="d0527def-4469-3bef-c311-54ce24aea28b" testName="TestMethod1" computerName="ROLIM-PC" duration="00:00:00.6385475" startTime="2014-08-11T09:44:32.9002639-03:00" endTime="2014-08-11T09:44:33.5403005-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e6688d4f-5baf-4639-bcfa-2df73b255c7c">
+    </UnitTestResult>
+    <UnitTestResult executionId="8b164872-73e1-4fdb-a8cd-2a1e5e1f371c" testId="3e847722-9b65-4102-ba58-bf1fe444bed0" testName="TestQueryGenerator" computerName="ROLIM-PC" duration="00:00:00.0019653" startTime="2014-08-11T09:44:33.5433007-03:00" endTime="2014-08-11T09:44:33.5473009-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8b164872-73e1-4fdb-a8cd-2a1e5e1f371c">
+    </UnitTestResult>
+    <UnitTestResult executionId="4d0c115b-f149-42b6-adbb-b9d0ab475036" testId="9f8da57b-4ad8-fa25-5e9a-a17945c7e8e1" testName="CheckFieldsOrderOrder" computerName="ROLIM-PC" duration="00:00:00.0053977" startTime="2014-08-11T09:44:33.5503011-03:00" endTime="2014-08-11T09:44:33.5833029-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4d0c115b-f149-42b6-adbb-b9d0ab475036">
+    </UnitTestResult>
+    <UnitTestResult executionId="9064881b-ff13-49a7-8b76-7259ff9fd353" testId="ecf50f5d-1505-8b7d-5392-a60e99531be0" testName="CheckFieldsOrderOrder2" computerName="ROLIM-PC" duration="00:00:00.0025561" startTime="2014-08-11T09:44:33.5913034-03:00" endTime="2014-08-11T09:44:33.5963037-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9064881b-ff13-49a7-8b76-7259ff9fd353">
+    </UnitTestResult>
+    <UnitTestResult executionId="19df368b-51d6-4b47-8672-3dd7efadbba6" testId="2a635ad6-76f8-6bb6-866e-2217b1072759" testName="TestParseWhere" computerName="ROLIM-PC" duration="00:00:00.0004346" startTime="2014-08-11T09:44:33.5993039-03:00" endTime="2014-08-11T09:44:33.6013040-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="19df368b-51d6-4b47-8672-3dd7efadbba6">
+    </UnitTestResult>
+    <UnitTestResult executionId="570564b6-e0b4-4528-bc2e-949c39bda911" testId="9fbe5469-6512-aa7d-2fdc-c8be71dac349" testName="TestParseWhere2" computerName="ROLIM-PC" duration="00:00:00.0003739" startTime="2014-08-11T09:44:33.6053042-03:00" endTime="2014-08-11T09:44:33.6073043-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="570564b6-e0b4-4528-bc2e-949c39bda911">
+    </UnitTestResult>
+    <UnitTestResult executionId="11d5be20-6db2-4b49-85c9-bf46f45c7864" testId="f5728043-1b0e-9f39-2376-5e1d076ce8ca" testName="TestParseWhereNull" computerName="ROLIM-PC" duration="00:00:00.0002831" startTime="2014-08-11T09:44:33.6103045-03:00" endTime="2014-08-11T09:44:33.6123046-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="11d5be20-6db2-4b49-85c9-bf46f45c7864">
+    </UnitTestResult>
+    <UnitTestResult executionId="bffa00dc-c522-41da-b4ab-4eae29242bd6" testId="d1c9e1a2-c791-6f91-f773-49741e5ecfdc" testName="TestMethod1" computerName="ROLIM-PC" duration="00:00:00.0015482" startTime="2014-08-11T09:44:33.6153048-03:00" endTime="2014-08-11T09:44:33.6613074-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bffa00dc-c522-41da-b4ab-4eae29242bd6">
+    </UnitTestResult>
+    <UnitTestResult executionId="70358597-3def-44a0-a170-3140fbebf848" testId="b9c290de-e0fe-9da0-ed5b-f442123483ee" testName="TestFrom" computerName="ROLIM-PC" duration="00:00:00.0013127" startTime="2014-08-11T09:44:33.6643076-03:00" endTime="2014-08-11T09:44:33.7093101-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="70358597-3def-44a0-a170-3140fbebf848">
+      <Output>
+        <DebugTrace>from asset as asset left join asset as parentasset_ on (asset.parent = parentasset_.assetnum and asset.siteid = parentasset_.siteid)left join AssetUserCust as primaryuser_ on (asset.assetnum = primaryuser_.assetnum and asset.siteid = primaryuser_.siteid and primaryuser_.isprimary = 1)left join assettrans as assettrans_ on (asset.assetnum = assettrans_.assetnum and asset.siteid = assettrans_.siteid)left join locations as location_ on (asset.location = location_.location and asset.siteid = location_.siteid)left join address as location_shipto_ on (location_.shiptoaddresscode = location_shipto_.addresscode and location_.orgid = location_shipto_.orgid)left join address as location_billto_ on (location_.billtoaddresscode = location_billto_.addresscode and location_.orgid = location_billto_.orgid)left join address as location_serv_ on (location_.serviceaddresscode = location_serv_.addresscode and location_.orgid = location_serv_.orgid)</DebugTrace>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="d9d77506-f68d-4834-8127-567b5601cb41" testId="d7c9835a-fd6c-6e57-5647-1dc9dd816644" testName="TestSelect" computerName="ROLIM-PC" duration="00:00:00.0025953" startTime="2014-08-11T09:44:33.7133104-03:00" endTime="2014-08-11T09:44:33.7183107-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d9d77506-f68d-4834-8127-567b5601cb41">
+      <Output>
+        <DebugTrace>select asset.assetnum as "assetnum", asset.siteid as "siteid", '('||asset.assetnum ||') ' || asset.Description || case when asset.serialnum is null then '' else ' // ' || asset.serialnum end  as "hlagdescription2", asset.classstructureid as "classstructureid", asset.itdextid as "itdextid", CASE WHEN asset.PLUSPCUSTOMER IS NOT NULL AND asset.PLUSPCUSTOMER = 'HLC-00' then 'HLC-00'  WHEN asset.PLUSPCUSTOMER IS NOT NULL AND LENGTH(asset.PLUSPCUSTOMER) &gt;= 3 THEN SUBSTR(asset.PLUSPCUSTOMER, LENGTH(asset.PLUSPCUSTOMER) - 2, 3) ELSE '' END as "hlagpluspcustomer", asset.description as "description", asset.status as "status", asset.serialnum as "serialnum", asset.installdate as "installdate", asset.location as "location", asset.usage as "usage", asset.pluspcostcenter as "pluspcostcenter", asset.assetid as "assetid", asset.rowstamp as "rowstamp", parentasset_.assetid as "parentasset_.assetid", '('||parentasset_.assetnum ||') ' || parentasset_.Description || case when parentasset_.serialnum is null then '' else ' // ' || parentasset_.serialnum end  as "parentasset_.hlagdescription2", parentasset_.rowstamp as "parentasset_.rowstamp", primaryuser_.personid as "primaryuser_.personid", primaryuser_.assetlocusercustid as "primaryuser_.assetlocusercustid", primaryuser_.rowstamp as "primaryuser_.rowstamp", assettrans_.ponum as "assettrans_.ponum", assettrans_.assettransid as "assettrans_.assettransid", assettrans_.rowstamp as "assettrans_.rowstamp", location_.billtoaddresscode as "location_.billtoaddresscode", location_.shiptoaddresscode as "location_.shiptoaddresscode", location_.serviceaddresscode as "location_.serviceaddresscode", location_.locationsid as "location_.locationsid", location_.rowstamp as "location_.rowstamp", location_shipto_.address1 as "location_shipto_.address1", location_shipto_.address3 as "location_shipto_.address3", location_shipto_.address4 as "location_shipto_.address4", location_shipto_.address5 as "location_shipto_.address5", location_shipto_.description as "location_shipto_.description", location_shipto_.addressid as "location_shipto_.addressid", location_shipto_.rowstamp as "location_shipto_.rowstamp", location_billto_.address1 as "location_billto_.address1", location_billto_.address3 as "location_billto_.address3", location_billto_.address4 as "location_billto_.address4", location_billto_.address5 as "location_billto_.address5", location_billto_.description as "location_billto_.description", location_billto_.addressid as "location_billto_.addressid", location_billto_.rowstamp as "location_billto_.rowstamp", location_serv_.address1 as "location_serv_.address1", location_serv_.address3 as "location_serv_.address3", location_serv_.address4 as "location_serv_.address4", location_serv_.address5 as "location_serv_.address5", location_serv_.description as "location_serv_.description", location_serv_.addressid as "location_serv_.addressid", location_serv_.rowstamp as "location_serv_.rowstamp" </DebugTrace>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="61564360-e909-4d7a-9a49-98f4052b567f" testId="d6e9bf59-c2cf-533b-5773-bee69226a51c" testName="TestSelect2" computerName="ROLIM-PC" duration="00:00:00.0010649" startTime="2014-08-11T09:44:33.7213108-03:00" endTime="2014-08-11T09:44:33.7263111-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="61564360-e909-4d7a-9a49-98f4052b567f">
+      <Output>
+        <DebugTrace>select asset.assetnum as "assetnum", asset.siteid as "siteid", '('||asset.assetnum ||') ' || asset.Description || case when asset.serialnum is null then '' else ' // ' || asset.serialnum end  as "hlagdescription2", asset.classstructureid as "classstructureid", asset.itdextid as "itdextid", CASE WHEN asset.PLUSPCUSTOMER IS NOT NULL AND asset.PLUSPCUSTOMER = 'HLC-00' then 'HLC-00'  WHEN asset.PLUSPCUSTOMER IS NOT NULL AND LENGTH(asset.PLUSPCUSTOMER) &gt;= 3 THEN SUBSTR(asset.PLUSPCUSTOMER, LENGTH(asset.PLUSPCUSTOMER) - 2, 3) ELSE '' END as "hlagpluspcustomer", asset.description as "description", asset.status as "status", asset.serialnum as "serialnum", asset.installdate as "installdate", asset.location as "location", asset.usage as "usage", asset.pluspcostcenter as "pluspcostcenter", asset.assetid as "assetid", asset.rowstamp as "rowstamp", parentasset_.assetid as "parentasset_.assetid", '('||parentasset_.assetnum ||') ' || parentasset_.Description || case when parentasset_.serialnum is null then '' else ' // ' || parentasset_.serialnum end  as "parentasset_.hlagdescription2", parentasset_.rowstamp as "parentasset_.rowstamp", primaryuser_.personid as "primaryuser_.personid", primaryuser_.assetlocusercustid as "primaryuser_.assetlocusercustid", primaryuser_.rowstamp as "primaryuser_.rowstamp", assettrans_.ponum as "assettrans_.ponum", assettrans_.assettransid as "assettrans_.assettransid", assettrans_.rowstamp as "assettrans_.rowstamp", location_.billtoaddresscode as "location_.billtoaddresscode", location_.shiptoaddresscode as "location_.shiptoaddresscode", location_.serviceaddresscode as "location_.serviceaddresscode", location_.locationsid as "location_.locationsid", location_.rowstamp as "location_.rowstamp", location_shipto_.address1 as "location_shipto_.address1", location_shipto_.address3 as "location_shipto_.address3", location_shipto_.address4 as "location_shipto_.address4", location_shipto_.address5 as "location_shipto_.address5", location_shipto_.description as "location_shipto_.description", location_shipto_.addressid as "location_shipto_.addressid", location_shipto_.rowstamp as "location_shipto_.rowstamp", location_billto_.address1 as "location_billto_.address1", location_billto_.address3 as "location_billto_.address3", location_billto_.address4 as "location_billto_.address4", location_billto_.address5 as "location_billto_.address5", location_billto_.description as "location_billto_.description", location_billto_.addressid as "location_billto_.addressid", location_billto_.rowstamp as "location_billto_.rowstamp", location_serv_.address1 as "location_serv_.address1", location_serv_.address3 as "location_serv_.address3", location_serv_.address4 as "location_serv_.address4", location_serv_.address5 as "location_serv_.address5", location_serv_.description as "location_serv_.description", location_serv_.addressid as "location_serv_.addressid", location_serv_.rowstamp as "location_serv_.rowstamp" </DebugTrace>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="68f549df-b1e2-40a3-9a8c-1709363cb23c" testId="dc83f19c-ae37-7206-8989-5f1d08a51573" testName="TestSelect3" computerName="ROLIM-PC" duration="00:00:00.0011914" startTime="2014-08-11T09:44:33.7303113-03:00" endTime="2014-08-11T09:44:33.7333115-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="68f549df-b1e2-40a3-9a8c-1709363cb23c">
+      <Output>
+        <DebugTrace>select wochange.workorderid as "workorderid", wochange.wonum as "wonum", wochange.ownergroup as "ownergroup", wochange.location as "location", CASE WHEN wochange.PLUSPCUSTOMER IS NOT NULL AND wochange.PLUSPCUSTOMER = 'HLC-00' then 'HLC-00'  WHEN wochange.PLUSPCUSTOMER IS NOT NULL AND LENGTH(wochange.PLUSPCUSTOMER) &gt;= 3 THEN SUBSTR(wochange.PLUSPCUSTOMER, LENGTH(wochange.PLUSPCUSTOMER) - 2, 3) ELSE '' END as "hlagpluspcustomer", wochange.description as "description", wochange.reportedby as "reportedby", wochange.classstructureid as "classstructureid", wochange.cinum as "cinum", wochange.worktype as "worktype", wochange.pmcomimpact as "pmcomimpact", wochange.pmcomurgency as "pmcomurgency", wochange.reasonforchange as "reasonforchange", wochange.itdchgbusimpct as "itdchgbusimpct", wochange.verification as "verification", wochange.itdbckoutdur as "itdbckoutdur", wochange.backoutplan as "backoutplan", wochange.itdchgpretstdtl as "itdchgpretstdtl", wochange.schedstart as "schedstart", wochange.schedfinish as "schedfinish", wochange.targstartdate as "targstartdate", wochange.targcompdate as "targcompdate", wochange.itdcreatedate as "itdcreatedate", wochange.wopriority as "wopriority", wochange.status as "status", wochange.itdclosurecode as "itdclosurecode", wochange.rowstamp as "rowstamp", workorder_.status as "workorder_.status", workorder_.wonum as "workorder_.wonum", workorder_.workorderid as "workorder_.workorderid", workorder_.rowstamp as "workorder_.rowstamp", sr_.ticketid as "sr_.ticketid", sr_.rowstamp as "sr_.rowstamp", reasonforchange_.ldtext as "reasonforchange_.ldtext", reasonforchange_.longdescriptionid as "reasonforchange_.longdescriptionid", reasonforchange_.rowstamp as "reasonforchange_.rowstamp", backoutplan_.ldtext as "backoutplan_.ldtext", backoutplan_.longdescriptionid as "backoutplan_.longdescriptionid", backoutplan_.rowstamp as "backoutplan_.rowstamp", pretestdetail_.ldtext as "pretestdetail_.ldtext", pretestdetail_.longdescriptionid as "pretestdetail_.longdescriptionid", pretestdetail_.rowstamp as "pretestdetail_.rowstamp", longdescription_.ldtext as "longdescription_.ldtext", longdescription_.longdescriptionid as "longdescription_.longdescriptionid", longdescription_.rowstamp as "longdescription_.rowstamp", sr_asset_.serialnum as "sr_asset_.serialnum", sr_asset_.assetid as "sr_asset_.assetid", sr_asset_.rowstamp as "sr_asset_.rowstamp" </DebugTrace>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="2c6df5e0-d99f-46f0-bd9f-f2deed3c53c2" testId="8601e6da-742d-5583-1d13-1444a3b96b01" testName="TestSelect4" computerName="ROLIM-PC" duration="00:00:00.0015156" startTime="2014-08-11T09:44:33.7373117-03:00" endTime="2014-08-11T09:44:33.7403119-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2c6df5e0-d99f-46f0-bd9f-f2deed3c53c2">
+      <Output>
+        <DebugTrace>select imac.ticketid as "ticketid", CASE WHEN LOCATE('//',imac.Description) &gt; 0 THEN LTRIM(RTRIM(SUBSTR(imac.Description,1,LOCATE('//',imac.Description)-1))) ELSE LTRIM(RTRIM(imac.Description)) END as "hlagsummary", imac.description as "description", SUBSTR(classstructure_.description, LOCATE('\', classstructure_.description) + 1) as "service", imac.reportdate as "reportdate", imac.status as "status", imac.classificationid as "classificationid", imac.assetnum as "assetnum", imac.affectedperson as "affectedperson", imac.reportedby as "reportedby", imac.rowstamp as "rowstamp", asset_.description as "asset_.description", asset_.glaccount as "asset_.glaccount", asset_.serialnum as "asset_.serialnum", '('||asset_.assetnum ||') ' || asset_.Description || case when asset_.serialnum is null then '' else ' // ' || asset_.serialnum end  as "asset_.hlagdescription2", asset_.assetid as "asset_.assetid", asset_.rowstamp as "asset_.rowstamp", longdescription_.ldtext as "longdescription_.ldtext", longdescription_.longdescriptionid as "longdescription_.longdescriptionid", longdescription_.rowstamp as "longdescription_.rowstamp", classstructure_.description as "classstructure_.description", classstructure_.classstructureuid as "classstructure_.classstructureuid", classstructure_.rowstamp as "classstructure_.rowstamp", asset_assetglaccount_.glaccount as "asset_assetglaccount_.glaccount", asset_assetglaccount_.chartofaccountsid as "asset_assetglaccount_.chartofaccountsid", asset_assetglaccount_.rowstamp as "asset_assetglaccount_.rowstamp", asset_location_.description as "asset_location_.description", asset_location_.locationsid as "asset_location_.locationsid", asset_location_.rowstamp as "asset_location_.rowstamp", asset_primaryuser_.personid as "asset_primaryuser_.personid", asset_primaryuser_.assetlocusercustid as "asset_primaryuser_.assetlocusercustid", asset_primaryuser_.rowstamp as "asset_primaryuser_.rowstamp" </DebugTrace>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="543666e4-6323-4b8e-a8bd-4d124fd66de6" testId="f0ee1762-55e4-c1b7-35fc-49ac44f7772e" testName="TestSelectNullAttributes" computerName="ROLIM-PC" duration="00:00:00.0010604" startTime="2014-08-11T09:44:33.7443121-03:00" endTime="2014-08-11T09:44:33.7473123-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="543666e4-6323-4b8e-a8bd-4d124fd66de6">
+      <Output>
+        <DebugTrace>select null, '-666' as "zeroedattr", srforchange.description as "description", srforchange.ticketid as "ticketid", null, null, null, CASE WHEN srforchange.PLUSPCUSTOMER IS NOT NULL AND srforchange.PLUSPCUSTOMER = 'HLC-00' then 'HLC-00'  WHEN srforchange.PLUSPCUSTOMER IS NOT NULL AND LENGTH(srforchange.PLUSPCUSTOMER) &gt;= 3 THEN SUBSTR(srforchange.PLUSPCUSTOMER, LENGTH(srforchange.PLUSPCUSTOMER) - 2, 3) ELSE '' END as "hlagpluspcustomer", null, null </DebugTrace>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="b572c7ee-29be-469b-b58d-7013955fc7ef" testId="2ab63181-cbc7-c789-2f93-81c5121479ff" testName="TestMethod1" computerName="ROLIM-PC" duration="00:00:00.8554870" startTime="2014-08-11T09:44:33.7503125-03:00" endTime="2014-08-11T09:44:34.6283627-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b572c7ee-29be-469b-b58d-7013955fc7ef">
+    </UnitTestResult>
+    <UnitTestResult executionId="4cc22060-cf37-4425-aa8b-7907d752d48a" testId="c6c54fdd-371c-b9db-6c48-929480530129" testName="TestAlreadyFilledValues" computerName="ROLIM-PC" duration="00:00:00.0170381" startTime="2014-08-11T09:44:34.6343631-03:00" endTime="2014-08-11T09:44:34.6533641-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4cc22060-cf37-4425-aa8b-7907d752d48a">
+    </UnitTestResult>
+    <UnitTestResult executionId="c35b63b9-a511-4c2c-8af5-0445f26eafcb" testId="5056a224-4cae-e816-70f1-bf880c8ec319" testName="TestConversion" computerName="ROLIM-PC" duration="00:00:00.0435827" startTime="2014-08-11T09:44:34.6573644-03:00" endTime="2014-08-11T09:44:34.7023669-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c35b63b9-a511-4c2c-8af5-0445f26eafcb">
+    </UnitTestResult>
+    <UnitTestResult executionId="2ad037df-45aa-4ed9-a8eb-91c30492b141" testId="db5a8b8d-463f-1e29-75d3-7c22f150f79f" testName="TestMethod1" computerName="ROLIM-PC" duration="00:00:00.0081078" startTime="2014-08-11T09:44:34.7123675-03:00" endTime="2014-08-11T09:44:34.7233681-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2ad037df-45aa-4ed9-a8eb-91c30492b141">
+    </UnitTestResult>
+    <UnitTestResult executionId="4a883b5f-e364-4604-babf-1ea630bcdcac" testId="f07df37d-90e4-087a-a292-d0b5f1ea8755" testName="TestWebMenuParsing" computerName="ROLIM-PC" duration="00:00:00.1697242" startTime="2014-08-11T09:44:34.7263683-03:00" endTime="2014-08-11T09:44:34.8983782-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4a883b5f-e364-4604-babf-1ea630bcdcac">
+    </UnitTestResult>
+    <UnitTestResult executionId="2ad2485f-9132-4753-977a-a53da76cddd2" testId="b34b1695-ae71-155d-66cf-eeeb475a677b" testName="ConfigThenEnvThenGlobal" computerName="ROLIM-PC" duration="00:00:00.0004775" startTime="2014-08-11T09:44:34.9013783-03:00" endTime="2014-08-11T09:44:34.9173792-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2ad2485f-9132-4753-977a-a53da76cddd2">
+    </UnitTestResult>
+    <UnitTestResult executionId="d3fdc56b-3024-4a20-9995-5ee218912bd7" testId="9da10d2c-99b7-4eb2-a14a-fee15fd6b52a" testName="TestAddFk" computerName="ROLIM-PC" duration="00:00:00.0016834" startTime="2014-08-11T09:44:34.9203794-03:00" endTime="2014-08-11T09:44:34.9363803-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d3fdc56b-3024-4a20-9995-5ee218912bd7">
+    </UnitTestResult>
+    <UnitTestResult executionId="02f8c85d-08a3-4bee-aae2-95264db769c1" testId="27b5564a-4b1c-bc34-cdda-f84fa9a7751e" testName="TestMethod1" computerName="ROLIM-PC" duration="00:00:00.0007156" startTime="2014-08-11T09:44:34.9393805-03:00" endTime="2014-08-11T09:44:34.9423807-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="02f8c85d-08a3-4bee-aae2-95264db769c1">
+    </UnitTestResult>
+    <UnitTestResult executionId="ee94d425-c477-4f0a-bf9b-fd85028b90a9" testId="6967fa50-19a3-b358-2875-068a48bc7d11" testName="TestMethod2" computerName="ROLIM-PC" duration="00:00:00.0003090" startTime="2014-08-11T09:44:34.9453808-03:00" endTime="2014-08-11T09:44:34.9473810-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ee94d425-c477-4f0a-bf9b-fd85028b90a9">
+    </UnitTestResult>
+    <UnitTestResult executionId="429a44bd-3741-4442-b37d-439564bf6299" testId="dba5467f-1e97-4998-fba3-b71343cfde2f" testName="TestMethod3" computerName="ROLIM-PC" duration="00:00:00.0002958" startTime="2014-08-11T09:44:34.9493811-03:00" endTime="2014-08-11T09:44:34.9513812-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="429a44bd-3741-4442-b37d-439564bf6299">
+    </UnitTestResult>
+    <UnitTestResult executionId="0ea21f5a-564a-4ed5-abb6-2da07ce4a67a" testId="9177643c-7d01-dccf-b4c7-e2e78cd26785" testName="TestMethod4" computerName="ROLIM-PC" duration="00:00:00.0003090" startTime="2014-08-11T09:44:34.9543814-03:00" endTime="2014-08-11T09:44:34.9563815-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0ea21f5a-564a-4ed5-abb6-2da07ce4a67a">
+    </UnitTestResult>
+    <UnitTestResult executionId="ffe03fcc-1d98-497b-b0e7-3a26e15c5312" testId="2ccc5849-fe9d-ffc5-c877-9e28427a4330" testName="TestMethod1" computerName="ROLIM-PC" duration="00:00:00.0020200" startTime="2014-08-11T09:44:34.9593816-03:00" endTime="2014-08-11T09:44:34.9633819-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ffe03fcc-1d98-497b-b0e7-3a26e15c5312">
+    </UnitTestResult>
+    <UnitTestResult executionId="2ea0dba5-d1dd-4040-84c7-4d1b4b723130" testId="ab5ef0c4-4676-92ba-5b5c-b3edc2f8e558" testName="TestMethod2" computerName="ROLIM-PC" duration="00:00:00.0004727" startTime="2014-08-11T09:44:34.9673821-03:00" endTime="2014-08-11T09:44:34.9693822-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2ea0dba5-d1dd-4040-84c7-4d1b4b723130">
+    </UnitTestResult>
+    <UnitTestResult executionId="cb72f4d0-fa0b-4975-95d8-0919b2c4dbc7" testId="50e6540e-2a88-ed1c-1a43-14f2c488cd81" testName="TestMethod3_only_var" computerName="ROLIM-PC" duration="00:00:00.0004144" startTime="2014-08-11T09:44:34.9713823-03:00" endTime="2014-08-11T09:44:34.9733824-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cb72f4d0-fa0b-4975-95d8-0919b2c4dbc7">
+    </UnitTestResult>
+    <UnitTestResult executionId="6835e679-f61d-4470-9d55-816752a1b94d" testId="db90e7b4-7edb-e986-5eaa-4312b542d56a" testName="TestStringToBytes" computerName="ROLIM-PC" duration="00:00:00.0007591" startTime="2014-08-11T09:44:34.9773827-03:00" endTime="2014-08-11T09:44:34.9793828-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6835e679-f61d-4470-9d55-816752a1b94d">
+    </UnitTestResult>
+    <UnitTestResult executionId="ff2cecf6-3d75-4613-ab5d-a223aa934cc4" testId="ac59350e-b94c-3929-6c72-637148e3a7a0" testName="TestStringToBytesCompressed" computerName="ROLIM-PC" duration="00:00:00.6889168" startTime="2014-08-11T09:44:34.9823830-03:00" endTime="2014-08-11T09:44:35.6724224-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ff2cecf6-3d75-4613-ab5d-a223aa934cc4">
+    </UnitTestResult>
+    <UnitTestResult executionId="1c6af3c4-0f4a-477e-a79f-44d0c713a059" testId="0af06012-3841-913f-698b-cbdd9adfe552" testName="SimulateFaqRealData" computerName="ROLIM-PC" duration="00:00:00.0082599" startTime="2014-08-11T09:44:35.6784228-03:00" endTime="2014-08-11T09:44:35.6894234-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1c6af3c4-0f4a-477e-a79f-44d0c713a059">
+    </UnitTestResult>
+    <UnitTestResult executionId="beeb79a7-b1cb-4ea4-9749-662993cad6ca" testId="0570c3a1-164a-8720-ab47-d3feb9cadb85" testName="TestQueryTranslation" computerName="ROLIM-PC" duration="00:00:00.0053063" startTime="2014-08-11T09:44:35.6944237-03:00" endTime="2014-08-11T09:44:35.7034242-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="beeb79a7-b1cb-4ea4-9749-662993cad6ca">
+    </UnitTestResult>
+    <UnitTestResult executionId="d8f6c4a5-7e4f-430a-a3df-f66b355e262b" testId="63252ef7-222a-c0ee-6c32-93c3bf0f63f9" testName="LocateFiles" computerName="ROLIM-PC" duration="00:00:00.0299370" startTime="2014-08-11T09:44:35.7074244-03:00" endTime="2014-08-11T09:44:35.7394263-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d8f6c4a5-7e4f-430a-a3df-f66b355e262b">
+    </UnitTestResult>
+    <UnitTestResult executionId="77ca4fa2-e521-4732-ae46-de3e64d4801d" testId="da13500b-fd77-6dbc-e99f-be00c510ca6a" testName="TestAllCatalogsOk" computerName="ROLIM-PC" duration="00:00:00.0047354" startTime="2014-08-11T09:44:35.7424264-03:00" endTime="2014-08-11T09:44:35.7484268-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="77ca4fa2-e521-4732-ae46-de3e64d4801d">
+    </UnitTestResult>
+    <UnitTestResult executionId="be8ac1ff-c21b-404e-b554-034eca9c6024" testId="16f7b9df-3e74-1b0e-bd2f-0aae808f916b" testName="TestSchemaTitle" computerName="ROLIM-PC" duration="00:00:00.0484763" startTime="2014-08-11T09:44:35.7514269-03:00" endTime="2014-08-11T09:44:35.8014298-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="be8ac1ff-c21b-404e-b554-034eca9c6024">
+    </UnitTestResult>
+    <UnitTestResult executionId="0896edd8-ae84-4d63-84af-f0efdde9db54" testId="c47e7cfc-14d7-9cda-3c43-f788fc8fca98" testName="TestCollection" computerName="ROLIM-PC" duration="00:00:00.0117943" startTime="2014-08-11T09:44:35.8044300-03:00" endTime="2014-08-11T09:44:35.8174307-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0896edd8-ae84-4d63-84af-f0efdde9db54">
+    </UnitTestResult>
+    <UnitTestResult executionId="a8da4ab2-2dfc-4fec-a414-50a7f37e8c59" testId="219d335f-0870-4220-8e61-3f41d8c43f86" testName="TestParameterReplacement" computerName="ROLIM-PC" duration="00:00:00.0004301" startTime="2014-08-11T09:44:35.8274313-03:00" endTime="2014-08-11T09:44:35.8294314-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a8da4ab2-2dfc-4fec-a414-50a7f37e8c59">
+    </UnitTestResult>
+    <UnitTestResult executionId="9aefc29b-f603-4da7-90e8-24a49fbe2321" testId="4988fb77-d19b-a1c4-7211-49326cebe459" testName="TestQuestionMark" computerName="ROLIM-PC" duration="00:00:00.0007386" startTime="2014-08-11T09:44:35.8334316-03:00" endTime="2014-08-11T09:44:35.8354318-03:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9aefc29b-f603-4da7-90e8-24a49fbe2321">
+    </UnitTestResult>
+  </Results>
+</TestRun>

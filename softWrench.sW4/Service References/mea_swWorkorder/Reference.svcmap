@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="93c53bd7-d919-4a3a-bb28-b2d303113e10" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://66.235.236.237/meaweb/services/SWWO?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="MXDataTypes.xsd" MetadataType="Schema" ID="4c4f3150-a17a-4255-8892-763aca086dd8" SourceId="1" SourceUrl="http://66.235.236.237/meaweb/schema/MetaData/MXDataTypes.xsd" />
+    <MetadataFile FileName="SWWO.xsd" MetadataType="Schema" ID="e90cb924-910b-49ad-831b-94c92081f934" SourceId="1" SourceUrl="http://66.235.236.237/meaweb/schema/Interfaces/SWWO.xsd" />
+    <MetadataFile FileName="SWWO2.xsd" MetadataType="Schema" ID="fbf55faa-77ab-4623-8386-aed9c988df41" SourceId="1" SourceUrl="http://66.235.236.237/meaweb/schema/IntegrationObjects/SWWO2.xsd" />
+    <MetadataFile FileName="MXIntegrationMeta.xsd" MetadataType="Schema" ID="ef4a8bb7-f990-467b-ab05-823c903eecfa" SourceId="1" SourceUrl="http://66.235.236.237/meaweb/schema/MetaData/MXIntegrationMeta.xsd" />
+    <MetadataFile FileName="SWWO.wsdl" MetadataType="Wsdl" ID="73f8cd50-25a7-424c-b561-7b9c20569516" SourceId="1" SourceUrl="http://66.235.236.237/meaweb/services/SWWO?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

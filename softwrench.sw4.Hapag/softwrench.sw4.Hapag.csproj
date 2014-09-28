@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{22D901FC-310E-4F14-9506-D9433CF192CF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>softwrench.sw4.Hapag</RootNamespace>
+    <AssemblyName>softwrench.sw4.Hapag</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=6.1.0.0, Culture=neutral, PublicKeyToken=3f033448d4bb5376, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\JetBrains.Annotations.7.0\lib\net45\JetBrains.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\AssetRamControlWhereClauseProvider.cs" />
+    <Compile Include="Data\ChangeWhereClauseProvider.cs" />
+    <Compile Include="Data\Configuration\HapagConfigurationConstants.cs" />
+    <Compile Include="Data\Configuration\HapagConfigurationRegistry.cs" />
+    <Compile Include="Data\Configuration\HapagQueryConstants.cs" />
+    <Compile Include="Data\Configuration\HapagQueryUtils.cs" />
+    <Compile Include="Data\Connector\Imac\ImacServicePlanHelper.cs" />
+	<Compile Include="Data\DataSet\Helper\ApproverConstants.cs" />
+	<Compile Include="Data\InMemoryUserExtensions.cs" />
+    <Compile Include="Data\SsoWhereClauseProvider.cs" />
+    <Compile Include="Data\DashboardWhereClauseProvider.cs" />
+    <Compile Include="Data\DataSet\Helper\AssetConstants.cs" />
+    <Compile Include="Data\DataSet\Helper\ImacAssetHelper.cs" />
+    <Compile Include="Data\DataSet\Helper\BuildingFloorRoomManager.cs" />
+    <Compile Include="Data\DataSet\HapagChangeDataSet.cs" />
+    <Compile Include="Data\DataSet\HapagNewChangeDataSet.cs" />
+    <Compile Include="Data\DataSet\Helper\DataSetUtil.cs" />
+    <Compile Include="Data\DataSet\HapagAssetListReportDataSet.cs" />
+    <Compile Include="Data\DataSet\HapagAssetDataSet.cs" />
+    <Compile Include="Data\DataSet\HapagBaseApplicationDataSet.cs" />
+    <Compile Include="Data\DataSet\HapagIncidentDataSet.cs" />
+    <Compile Include="Data\DataSet\HapagPersonGroupDataSet.cs" />
+    <Compile Include="Data\DataSet\HapagProblemDataSet.cs" />
+    <Compile Include="Data\DataSet\HapagImacDataSet.cs" />
+    <Compile Include="Data\DataSet\HapagServiceRequestDataSet.cs" />
+    <Compile Include="Data\DataSet\HapagSolutionDataSet.cs" />
+    <Compile Include="Data\DataSet\Helper\ImacConstants.cs" />
+    <Compile Include="Data\HapagDashBoardsConstants.cs" />
+    <Compile Include="Data\HapagErrorCatalog.cs" />
+    <Compile Include="Data\FunctionalRole.cs" />
+    <Compile Include="Data\Init\HapagInitializer.cs" />
+    <Compile Include="Data\Init\HapagProfileInitializer.cs" />
+    <Compile Include="Data\Init\HapagRoleInitializer.cs" />
+    <Compile Include="Data\Init\RoleExtensions.cs" />
+    <Compile Include="Data\ReportWhereClauseProvider.cs" />
+    <Compile Include="Data\RoleType.cs" />
+    <Compile Include="Data\ProfileType.cs" />
+    <Compile Include="Data\R0017WhereClauseProvider.cs" />
+    <Compile Include="Data\Sync\HapagPersonGroupConstants.cs" />
+    <Compile Include="Data\Sync\HapagPersonGroupHelper.cs" />
+    <Compile Include="Data\Sync\PersonGroupAssociationSyncManager.cs" />
+    <Compile Include="Data\Sync\PersonGroupSyncManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\ImacConfigs\WoActivityGroup.cs" />
+    <Compile Include="Security\HlagGroupedLocation.cs" />
+    <Compile Include="Security\HlagLocation.cs" />
+    <Compile Include="Security\HlagLocationManager.cs" />
+    <Compile Include="Security\HlagLocationUtil.cs" />
+    <Compile Include="Security\IHlagLocationManager.cs" />
+    <Compile Include="Security\UserHlagLocation.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
+      <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
+      <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
+      <Project>{ce228c26-938d-4d6f-95fa-12cc5241afb5}</Project>
+      <Name>softWrench.sW4</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAADDCOMH.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAADDCOMS.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAADDCOMW.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAINOTHER.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAINPCH.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAINPCS.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAINPCW.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAINPRH.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAINPRHHP.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAINPRS.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAINPRSEP.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAINPRW.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAINPRWWP.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAINVPCS.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAMVINCOH.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAMVINCOS.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAMVINH.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAMVINS.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAMVINW.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAMVOTCOS.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAMVOTS.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARMPCHIO.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARMPCSIO.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARMPCSOO.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARMPCSOS.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARMPCWIO.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARMPPHIO.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARMPPSIO.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARMPPSOO.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARMPPSOS.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARMPPWIO.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARMPRHIO.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARMPRSIO.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARMPRSOO.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARMPRSOS.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARMPRWIO.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARPOTHER.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARPPCH.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARPPCS.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARPPCW.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARPPRH.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARPPRHHP.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARPPRS.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARPPRSEP.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARPPRW.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARPPRWWP.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARVOTHER.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARVPCH.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARVPCS.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARVPCW.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARVPRH.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARVPRHHP.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARVPRS.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARVPRSEP.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARVPRW.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLARVPRWWP.txt" />
+    <EmbeddedResource Include="Resources\ImacConfigs\HLAUPDASSD.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

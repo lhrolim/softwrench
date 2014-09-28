@@ -1,0 +1,22 @@
+﻿
+=====================================================================
+Request Details
+
+Location:   MT4 --> MT3
+Asset:   B4000
+Child Asset:   A7800
+to ITC:   WILSON
+=====================================================================
+Service Attributes
+
+Installation date:   19/06/2014
+LAN Type (printers only):   lan
+Remarks:   test
+Usage:   TEST
+=====================================================================
+Location
+
+Building:   
+Floor:   
+Room:   
+=====================================================================

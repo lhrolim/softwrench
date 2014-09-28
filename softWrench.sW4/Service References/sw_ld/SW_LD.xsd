@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="http://www.mro.com/mx/integration" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.mro.com/mx/integration" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="http://66.235.236.237/meaweb/schema/IntegrationObjects/SW_LD_OBJ.xsd" />
+  <xsd:complexType name="SW_LD">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="MXNotifyInterface">
+        <xsd:sequence>
+          <xsd:element name="Content" type="SW_LD_OBJ" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="SW_LD" type="SW_LD" />
+</xsd:schema>

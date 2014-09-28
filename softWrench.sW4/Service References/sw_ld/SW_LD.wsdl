@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mxws="http://www.mro.com/mx/wsdl" xmlns:mxint="http://www.mro.com/mx/integration" name="SW_LD" targetNamespace="http://www.mro.com/mx/wsdl" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema>
+      <xsd:import schemaLocation="http://66.235.236.237/meaweb/schema/Interfaces/SW_LD.xsd" namespace="http://www.mro.com/mx/integration" />
+    </xsd:schema>
+  </types>
+  <message name="SW_LD">
+    <part name="input" element="mxint:SW_LD" />
+  </message>
+  <message name="SW_LDResponse" />
+  <portType name="SW_LDPortType">
+    <operation name="processDocument">
+      <input message="mxws:SW_LD" />
+      <output message="mxws:SW_LDResponse" />
+    </operation>
+  </portType>
+  <binding name="SW_LDBinding" type="mxws:SW_LDPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="processDocument">
+      <soap:operation soapAction="" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="SW_LD">
+    <port name="SW_LDPort" binding="mxws:SW_LDBinding">
+      <soap:address location="http://66.235.236.237/meaweb/services/SW_LD" />
+    </port>
+  </service>
+</definitions>

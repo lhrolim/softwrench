@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Results>
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://66.235.236.237/meaweb/schema/Interfaces/SWWO.xsd" filename="SWWO.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="http://66.235.236.237/meaweb/services/SWWO?wsdl" filename="SWWO.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://66.235.236.237/meaweb/schema/MetaData/MXDataTypes.xsd" filename="MXDataTypes.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://66.235.236.237/meaweb/schema/MetaData/MXIntegrationMeta.xsd" filename="MXIntegrationMeta.xsd" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.SchemaReference" url="http://66.235.236.237/meaweb/schema/IntegrationObjects/MXWO.xsd" filename="MXWO.xsd" />
+  </Results>
+</DiscoveryClientResultsFile>

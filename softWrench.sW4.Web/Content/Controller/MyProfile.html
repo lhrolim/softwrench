@@ -1,0 +1,172 @@
+﻿<article class="container" ng-controller="MyProfileController">
+
+    <!--SM - 08/30 - Start, fix labels when zoomed (label, col-lg-3 & input, col-lg-9)-->
+    <section ng-if="isMyProfile && isHapag">
+        <br />
+        <div id="Div1" class="form-horizontal test">
+            <div class="form-group">
+                <label class="control-label col-lg-3"><span>{{i18N('general.firstname','First Name')}}:</span></label>
+                <div class="col-lg-9">
+                    <label class="control-label">
+                        {{currentUser.firstName}}
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-3"><span>{{i18N('general.lastname','Last Name')}}:</span></label>
+                <div class="col-lg-9">
+                    <label class="control-label">
+                        {{currentUser.lastName}}
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-3"><span>{{i18N('general.primaryphone','Primary Phone')}}:</span></label>
+                <div class="col-lg-9">
+                    <label class="control-label">
+                        {{currentUser.phone}}
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-3"><span>{{i18N('general.primaryemail','Primary E-Mail')}}:</span></label>
+                <div class="col-lg-9">
+                    <label class="control-label">
+                        {{currentUser.email}}
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-3"><span>{{i18N('general.department','Department')}}:</span></label>
+                <div class="col-lg-9">
+                    <label class="control-label">
+                        {{currentUser.department}}
+                    </label>
+                </div>
+            </div>
+            <div class="form-group" ng-show="canChangeLanguage">
+                <label class="control-label col-lg-3"><span>{{i18N('general.language','Language')}}:</span></label>
+                <div class="col-lg-9">
+                    <select id="userLanguage" ng-model="language.selected"
+                        class="form-control"
+                        ng-options="language.text for language in languages">
+                    </select>
+                </div>
+            </div>
+
+            <section ng-show="canViewRestrictions">
+                <div class="form-group">
+                    <div class="col-lg-offset-1 col-lg-11">
+                        <label style="width: 100%; text-align: center;">
+                            <span>{{i18N('general.locationcostcenterrestriction','Location-Costcenter Restriction')}}</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <div class="col-lg-offset-1 col-lg-11">
+                        <table class="table table-hover hidden-phone">
+                            <thead class="table table-striped table-hover hidden-phone myprofile-restrictions">
+                                <tr>
+                                    <th>{{i18N('general.location','Location')}} 
+                                    </th>
+                                    <th>{{i18N('general.costCenter','Cost Center')}}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="restriction in restrictions">
+                                    <td>{{restriction.customer}} <span ng-if="restriction.customerDescription != ''">({{restriction.customerDescription}})</span></td>
+                                    <td>{{restriction.costCenter}} <span ng-if="restriction.costCenterDescription != ''">({{restriction.costCenterDescription}})</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <div class="form-actions form-group" ng-show="canChangeLanguage">
+                <div class="col-lg-offset-1 col-lg-11">
+                    <button type="submit" id="saveMyProfileBTN" class="btn btn-primary " ng-click="saveMyProfile()">
+                        <i style="margin-right: 0.5em" class="glyphicon glyphicon-ok"></i>{{i18N('general.save','Save')}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section ng-if="isMyProfile && !isHapag">
+        <br />
+        <div id="dvDetail" class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-lg-2"><span style="font-family: Arial Round">* </span><span>{{i18N('general.username','User Name')}}</span></label>
+                <div class="col-lg-10">
+                    <input type="text" style="text-transform: lowercase;" ng-model="currentUser.login" placeholder="{{i18N('placeholder.required.username','User name is required')}}!" class="form-control" readonly />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-2"><span style="font-family: Arial Round">* </span><span>{{i18N('general.password','Password')}}</span></label>
+                <div class="col-lg-10">
+                    <input type="password" ng-model="currentUser.password" placeholder="password" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-2"><span>{{i18N('general.firstname','First Name')}}:</span></label>
+                <div class="col-lg-10">
+                    <input type="text" ng-model="currentUser.firstName" placeholder="{{i18N('placeholder.required.firstname','First name is required')}}!" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-2"><span>{{i18N('general.lastname','Last Name')}}:</span></label>
+                <div class="col-lg-10">
+                    <input type="text" ng-model="currentUser.lastName" placeholder="{{i18N('placeholder.required.lastname','Last name is required')}}!" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-2"><span style="font-family: Arial Round"></span><span>ORGID</span></label>
+                <div class="col-lg-10">
+                    <input type="text" ng-model="currentUser.orgId" placeholder="{{i18N('placeholder.warn.orgid','Default OrgId Value')}}" class="form-control" readonly />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-lg-2"><span style="font-family: Arial Round"></span><span>SiteId</span></label>
+                <div class="col-lg-10">
+                    <input type="text" ng-model="currentUser.siteId" placeholder="{{i18N('placeholder.warn.siteid','Default SiteId Value')}}" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-2"><span>{{i18N('general.primaryemail','Primary E-Mail')}}:</span></label>
+                <div class="col-lg-10">
+                    <label class="control-label">
+                        <input type="email" ng-model="currentUser.email" placeholder="{{i18N('general.email','Email')}}" class="form-control" />
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-lg-2"><span>{{i18N('general.department','Department')}}:</span></label>
+                <div class="col-lg-10">
+                    <label class="control-label">
+                        <input type="text" ng-model="currentUser.department" placeholder="{{i18N('general.department','Department')}}" class="form-control" />
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-2"><span>{{i18N('general.primaryphone','Primary Phone')}}:</span></label>
+                <div class="col-lg-10">
+                    <label class="control-label">
+                        <input type="text" ng-model="currentUser.phone" placeholder="{{i18N('general.phone','Phone')}}" class="form-control" />
+                    </label>
+                </div>
+            </div>
+            <div class="form-actions form-group">
+                <div class="col-lg-offset-3 col-lg-9">
+                    <button type="submit" id="Button1" class="btn btn-primary " ng-click="saveMyProfile()">
+                        <i style="margin-right: 0.5em" class="glyphicon glyphicon-ok"></i>{{i18N('general.save','Save')}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+</article>

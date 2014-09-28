@@ -1,0 +1,160 @@
+﻿.vertical-menu-container > ul,
+.horizontal-menu-container > ul {
+    width: 100%;
+    display: block;
+}
+
+/***************************** 
+    Horizontal orientation
+ *****************************/
+
+.horizontal-menu-container {
+    height: 45px;
+    background-color: #878787;
+    border-bottom: #000000 1px solid;
+    height: 100%;
+    padding: 0 20px 5px;
+}
+
+    .horizontal-menu-container > ul > li > a,
+    .horizontal-menu-container .btn-default,
+    .horizontal-menu-container .open .dropdown-toggle.btn-default {
+        background-color: #c9c7c7;
+        border-color: #c9c7c7;
+        background-image: none;
+        text-shadow: none;
+        color: #000000;
+        text-transform: uppercase;
+    }
+
+        .horizontal-menu-container > ul > li > a:hover,
+        .horizontal-menu-container .btn-default:hover,
+        .horizontal-menu-container .open .dropdown-toggle.btn-default:hover {
+            background-color: #b5b2b2;
+            border-color: #aba8a8;
+        }
+    
+    .horizontal-menu-container > ul > li > a.selected,
+    .horizontal-menu-container .btn-default.selected,
+    .horizontal-menu-container .open .dropdown-toggle.btn-default.selected {
+        background-color: #34a7e0;
+        border-color: #34a7e0;
+        color: #ffffff;
+    }
+
+        .horizontal-menu-container > ul > li > a.selected:hover,
+        .horizontal-menu-container .btn-default.selected:hover,
+        .horizontal-menu-container .open .dropdown-toggle.btn-default.selected:hover {
+            background-color: #1f93cc;
+            border-color: #1c86ba;
+            color: #ffffff;
+        }
+
+        .horizontal-menu-container .btn-default.selected > .bottom-caret {
+            border-top-color: #ffffff;
+        }
+
+        .horizontal-menu-container > ul > li {
+            margin: 5px 4px 0 0;
+        }
+
+            .horizontal-menu-container > ul > li > a {
+                padding-bottom: 7px;
+                padding-top: 7px;
+                border-radius: 4px;
+            }
+
+/***************************** 
+    Vertical orientation
+ *****************************/
+
+.vertical-menu-container .dropdown-menu {
+    background-color: #003878;
+    /*width: 195px;*/
+    color: #ffffff;
+    margin: 0 0 0 0;
+    border-radius: 0;
+}
+
+    .vertical-menu-container .dropdown-menu:first-child {
+        background-color: #003878;
+        /*width: 195px;*/
+        color: #ffffff;
+        padding: 32px 0 32px 0;
+        position: relative;
+    }
+
+    .vertical-menu-container .dropdown-menu .submenu {
+        left: 0;
+        z-index: 1000;
+        min-width: 160px;
+        max-width: 193px !important;
+        padding: 5px 0;
+        font-size: 14px;
+        list-style: none;
+        border: 0px;
+        -webkit-box-shadow: 0 0px 0px rgba(0,0,0,0);
+        box-shadow: 0 0px 0px rgba(0,0,0,0);
+        position: relative;
+        top: 0;
+    }
+
+    .vertical-menu-container .dropdown-menu > li div {
+        display: table;
+    }
+
+.vertical-menu-container a.level0,
+.vertical-menu-container label.level0,
+.vertical-menu-container div.level0 {
+    color: #ffffff;
+    padding-left: 17px;
+}
+
+.vertical-menu-container a.level1,
+.vertical-menu-container label.level1,
+.vertical-menu-container div.level1 {
+    color: #ffffff;
+    padding-left: 17px;
+}
+
+.vertical-menu-container a.level2,
+.vertical-menu-container label.level2,
+.vertical-menu-container div.level2 {
+    color: #ffffff;
+    padding-left: 34px;
+}
+
+.vertical-menu-container span.level1.bottom-caret,
+.vertical-menu-container span.level2.bottom-caret {
+    border-top-color: #ffffff !important;
+}
+
+.vertical-menu-container span.level1.right-caret,
+.vertical-menu-container span.level2.right-caret {
+    border-left-color: #ffffff !important;
+}
+
+.vertical-menu-container .dropdown-toggle {
+    padding-left: 6px;
+    margin-left: 12px;
+    margin-bottom: 5px;
+    background-color: #E1EAF7;
+    font-size: 12px;
+    width: 181px;
+    text-align: left;
+    border-radius: 4px 0px 0px 4px;
+}
+
+.vertical-menu-container .menusearchinput {
+    padding-right: 10px;
+}
+
+.vertical-menu-container .divider {
+    background-color: #184C86 !important;
+    display: block !important;
+}
+
+.vertical-menu-container a {
+    text-decoration: none;
+    color: #262626;
+}

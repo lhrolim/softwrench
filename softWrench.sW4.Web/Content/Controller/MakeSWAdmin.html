@@ -1,0 +1,32 @@
+﻿<article ng-controller="MakeSWAdminController">
+    <form class="form-horizontal">
+
+        <section>
+            <br />
+            <div class="form-group">
+                <label class="control-label col-lg-2" style="color: red;">{{msg}}</label>
+                <label class="control-label col-lg-2" style="color: green;">{{msgsuccess}}</label>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-2">Password:</label>
+                <div class="col-lg-10">
+                    <div>
+                        <input type="password" ng-model="password" />
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="col-lg-offset-2 col-lg-10">
+                    <button type="submit" class="btn btn-primary " ng-click="submit()">
+                        <i style="margin-right: 0.5em" class="glyphicon glyphicon-ok"></i>Submit
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+    </form>
+</article>
+
+
+

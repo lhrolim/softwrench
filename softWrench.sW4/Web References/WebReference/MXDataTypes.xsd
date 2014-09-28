@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="http://www.mro.com/mx/integration" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.mro.com/mx/integration" version="0.02" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:complexType name="MXString">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="changed" type="ChangeIndicator" use="optional" />
+        <xsd:attribute name="operator" type="QueryOperator" use="optional" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MXDouble">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:double">
+        <xsd:attribute name="changed" type="ChangeIndicator" use="optional" />
+        <xsd:attribute name="operator" type="QueryOperator" use="optional" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MXFloat">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:float">
+        <xsd:attribute name="changed" type="ChangeIndicator" use="optional" />
+        <xsd:attribute name="operator" type="QueryOperator" use="optional" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MXLong">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:long">
+        <xsd:attribute name="changed" type="ChangeIndicator" use="optional" />
+        <xsd:attribute name="operator" type="QueryOperator" use="optional" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MXInt">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:int">
+        <xsd:attribute name="changed" type="ChangeIndicator" use="optional" />
+        <xsd:attribute name="operator" type="QueryOperator" use="optional" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MXGLComponent">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="glorder" use="required">
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:int">
+              <xsd:minInclusive value="0" />
+              <xsd:maxExclusive value="20" />
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MXGLAccount">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="VALUE" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="20" name="GLCOMP" type="MXGLComponent" />
+    </xsd:sequence>
+    <xsd:attribute name="changed" type="ChangeIndicator" use="optional" />
+    <xsd:attribute name="operator" type="QueryOperator" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="MXBoolean">
+    <xsd:simpleContent>
+      <xsd:extension base="Boolean">
+        <xsd:attribute name="changed" type="ChangeIndicator" use="optional" />
+        <xsd:attribute name="operator" type="QueryOperator" use="optional" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MXDateTime">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:dateTime">
+        <xsd:attribute name="changed" type="ChangeIndicator" use="optional" />
+        <xsd:attribute name="operator" type="QueryOperator" use="optional" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MXDomain">
+    <xsd:simpleContent>
+      <xsd:extension base="MXString">
+        <xsd:attribute name="maxvalue" type="xsd:string" use="optional" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:simpleType name="ChangeIndicator">
+    <xsd:restriction base="xsd:boolean">
+      <xsd:pattern value="1" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Boolean">
+    <xsd:restriction base="xsd:boolean">
+      <xsd:pattern value="0|1" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="QueryOperator">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="=" />
+      <xsd:enumeration value="!=" />
+      <xsd:enumeration value="&lt;" />
+      <xsd:enumeration value="&lt;=" />
+      <xsd:enumeration value="&gt;" />
+      <xsd:enumeration value="&gt;=" />
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

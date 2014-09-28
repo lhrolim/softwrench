@@ -1,0 +1,78 @@
+
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Create new client name for virtual pc</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">10</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTELCONFIG</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Install virtual client via TPM and provide S/N</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">20</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-EUS-DE-CSC-SDK-HLCFRONTDESK</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Add user to virtual client</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">30</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-EUS-DE-CSC-SDK-HLCFRONTDESK</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Configure Tivoli allow list and update your DB with the S/N</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">40</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTELCONFIG</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Review asset attributes and service approval</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">50</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">C-HLC-WW-ITCALL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Enter delivery related asset attributes and final check</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">60</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-EUS-DE-CSC-IMC-HLCIMAC</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Review asset attributes and approval</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">70</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-EUS-DE-CSC-SDK-ASSET</FlexField> 
+ 	</FlexFields> 
+ </Activity>

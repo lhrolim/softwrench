@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="http://www.mro.com/mx/integration" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.mro.com/mx/integration" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="http://66.235.236.237/meaweb/schema/MetaData/MXIntegrationMeta.xsd" />
+  <xsd:include schemaLocation="http://66.235.236.237/meaweb/schema/MetaData/MXDataTypes.xsd" />
+  <xsd:complexType name="SWWOSTATUS_OBJ2">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="SWWOSTATUS_OBJ2">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="WOSTATUS" type="SWWOSTATUS_OBJ2_WOSTATUS" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="SWWOSTATUS_OBJ2_WOSTATUS">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="MXMBO">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="WONUM" type="MXString" />
+          <xsd:element minOccurs="0" name="STATUS" type="MXString" />
+          <xsd:element minOccurs="0" name="CHANGEDATE" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="CHANGEBY" type="MXString" />
+          <xsd:element minOccurs="0" name="MEMO" type="MXString" />
+          <xsd:element minOccurs="0" name="GLACCOUNT" type="MXGLAccount" />
+          <xsd:element minOccurs="0" name="FINCNTRLID" type="MXString" />
+          <xsd:element minOccurs="0" name="ORGID" type="MXString" />
+          <xsd:element minOccurs="0" name="SITEID" type="MXString" />
+          <xsd:element minOccurs="0" name="WOSTATUSID" type="MXLong">
+            <xsd:annotation>
+              <xsd:documentation>WOSTATUSID is a key field</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="PARENT" type="MXString" />
+          <xsd:element minOccurs="0" name="WOAPPROVER" type="MXString" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

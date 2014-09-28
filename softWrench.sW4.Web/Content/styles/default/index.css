@@ -1,0 +1,110 @@
+﻿input:focus, select:focus, textarea:focus {
+    outline: none;
+}
+
+.page-signin {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background: #122c51 url(../../Images/background.jpg) no-repeat center top fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+    .page-signin .form-signin {
+        max-width: 800px;
+        padding: 40px 15px;
+        margin: 0 auto;
+        background-color: rgba(1, 62, 91, 0.43);
+        box-shadow: 0 0 30px 5px rgba(0, 0, 0, 0.6);
+    }
+
+        .page-signin .form-signin input[type="text"], .page-signin .form-signin input[type="email"], .page-signin .form-signin input[type="password"] {
+            margin-bottom: 20px;
+        }
+
+        .page-signin .form-signin button[type="submit"] {
+            background: none;
+            border: #fff 2px solid;
+            color: #fff;
+            border-radius: 40px;
+            margin-left: 20px;
+        }
+
+            .page-signin .form-signin button[type="submit"]:hover {
+                background-color: rgba(255, 255, 255, 0.4);
+            }
+
+        .page-signin .form-signin a {
+            color: #fff;
+            font-size: 11px;
+        }
+
+            .page-signin .form-signin a:hover {
+                color: #fff;
+            }
+
+        .page-signin .form-signin .links {
+            margin-top: 20px;
+        }
+
+        .page-signin .form-signin .logo {
+            margin-bottom: 40px;
+            padding: 0 20px;
+             background-repeat: no-repeat;
+        }
+
+        .page-signin .form-signin img.logo {
+            max-width: 100%;
+            height: auto;
+            width: auto;
+        }
+
+        /*SM - 06/28 - ADD - Start update error message display*/
+        .page-signin .form-signin .text-danger {
+            padding: 10px 20px;
+        }
+        
+        .page-signin .form-signin .alert-warning, .page-signin .form-signin .text-danger {
+            background: rgba(255, 0, 0, 0.75);
+            color: #fff;
+        }
+
+        .page-signin .form-signin .alert, .page-signin .form-signin .text-danger {
+            text-shadow: none;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            margin-bottom: 40px;
+            border: none;
+            border-left: 5px solid #f00;
+            border-radius: 0;
+        }
+        /*SM - 06/28 - ADD - End update error message display*/
+
+@media all and (min-width: 768px) {
+    .page-signin {
+        padding-top: 40px;
+    }
+
+        .page-signin .logo {
+            margin-bottom: 60px;
+            padding: 0;
+        }
+
+        .page-signin .links {
+            margin-top: -5px;
+        }
+}
+
+@media all and (min-width: 992px) {
+    .page-signin {
+        padding-top: 60px;
+    }
+}
+
+@media all and (min-width: 1200px) {
+    .page-signin {
+        padding-top: 120px;
+    }
+}

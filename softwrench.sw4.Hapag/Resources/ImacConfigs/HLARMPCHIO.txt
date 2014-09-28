@@ -1,0 +1,122 @@
+
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Align schedule with End User/ITC</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">10</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">V-PSB-DE-HLC-HWSUPPORT</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Remove (uninstall) client</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">20</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">V-PSB-DE-HLC-HWSUPPORT</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Free and reallocate IP range</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">30</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTELCONFIG</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Delete and update client name</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">40</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTELCONFIG</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Configure Tivoli allow list</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">50</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTELCONFIG</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Review asset move attributes and service acceptance</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">60</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">C-HLC-WW-ITCALL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Align schedule with End User/ITC</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">70</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">C-HLC-WW-ITCALL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Move asset</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">80</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">C-HLC-WW-ITCALL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Review final asset move attributes and service approval</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">90</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">C-HLC-WW-ITCALL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Enter delivery related asset attributes and final check</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">100</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-EUS-DE-CSC-IMC-HLCIMAC</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Review asset attributes and approval</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">110</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-EUS-DE-CSC-SDK-ASSET</FlexField> 
+ 	</FlexFields> 
+ </Activity>

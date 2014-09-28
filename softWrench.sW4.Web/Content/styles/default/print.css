@@ -1,0 +1,48 @@
+﻿@media print {
+
+    .no-print, .col-lg-2, .affix, .filter-row, .glyphicon {
+        display: none !important;
+    }
+
+    #top-affix {
+        display:none !important;
+        border: none;
+    }
+
+    .add-on {
+        font-size: 11px;
+    }
+
+    
+    #listgrid {
+        border: none;
+        font-size: 10px;
+    }
+
+    .hapag-topbar {
+        text-shadow: none;
+        box-shadow: none;
+    }
+
+    #listgrid tbody > tr {
+    border-top: none;
+    border-bottom: none;
+    }
+
+    .hapag-body-loaded {
+    border: 0px;
+    border: 0px;
+    margin: auto;
+    }
+
+    .hapag-body {
+
+    margin: 0px 0px 0px 0px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    }
+    
+
+
+}

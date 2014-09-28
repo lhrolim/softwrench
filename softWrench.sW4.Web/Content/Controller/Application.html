@@ -1,0 +1,44 @@
+﻿<article ng-controller="ApplicationController" id="applicationSection">
+
+    <form class="form-horizontal">
+        <div ng-show="multipleSchema" class="form-group" style="margin-bottom: 0">
+            <label class="control-label col-md-4">{{schemaSelectionLabel}}</label>
+            <div class="col-md-8">
+                <select ng-model="selectedSchema.value"
+                        ng-options="schema.title for schema in schemas"
+                        ng-change="renderSelectedSchema()"
+                        style="margin-left: 10px; margin-top: 8px" />
+            </div>
+
+        </div>
+    </form>
+    <div ng-show="schema">
+        <div ng-if="modalincluded">
+            <crud-body-modal-wrapper></crud-body-modal-wrapper>
+        </div>
+
+        <crud-body ismodal="false"
+                   schema="schema"
+                   datamap="datamap"
+                   is-dirty="isDirty"
+                   original-datamap="originalDatamap"
+                   is-list="isList"
+                   is-detail="isDetail"
+                   association-options="associationOptions"
+                   association-schemas="associationSchemas"
+                   blockedassociations="blockedassociations"
+                   paginationdata="paginationData"
+                   search-data="searchData"
+                   search-operator="searchOperator"
+                   search-sort="searchSort"
+                   previousschema="previousschema"
+                   previousdata="previousdata" />
+
+    </div>
+
+    <div ng-if="crudsubtemplate!=null">
+        <div ng-include src="crudsubtemplate" />
+    </div>
+
+
+</article>

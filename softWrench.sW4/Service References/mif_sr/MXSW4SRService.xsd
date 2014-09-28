@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="http://www.ibm.com/maximo" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.ibm.com/maximo" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="http://66.235.236.8:80/meaweb/schema/common/meta/MXMeta.xsd" />
+  <xsd:include schemaLocation="http://66.235.236.8:80/meaweb/schema/common/mos/MXSW4SR.xsd" />
+  <xsd:include schemaLocation="http://66.235.236.8:80/meaweb/schema/common/mbo/sr.xsd" />
+  <xsd:complexType name="CreateMXSW4SRType">
+    <xsd:sequence>
+      <xsd:element ref="MXSW4SRSet" />
+    </xsd:sequence>
+    <xsd:attributeGroup ref="CommonContentGroup" />
+  </xsd:complexType>
+  <xsd:complexType name="InvokeMXSW4SRType">
+    <xsd:sequence>
+      <xsd:element ref="MXSW4SRSet" />
+    </xsd:sequence>
+    <xsd:attributeGroup ref="CommonContentGroup" />
+  </xsd:complexType>
+  <xsd:complexType name="QueryMXSW4SRType">
+    <xsd:sequence>
+      <xsd:element ref="MXSW4SRQuery" />
+    </xsd:sequence>
+    <xsd:attributeGroup ref="CommonContentGroup" />
+    <xsd:attributeGroup ref="QueryContentGroup" />
+  </xsd:complexType>
+  <xsd:complexType name="SyncMXSW4SRType">
+    <xsd:sequence>
+      <xsd:element ref="MXSW4SRSet" />
+    </xsd:sequence>
+    <xsd:attributeGroup ref="CommonContentGroup" />
+  </xsd:complexType>
+  <xsd:complexType name="PublishMXSW4SRType">
+    <xsd:sequence>
+      <xsd:element ref="MXSW4SRSet" />
+    </xsd:sequence>
+    <xsd:attributeGroup ref="CommonContentGroup" />
+    <xsd:attributeGroup ref="PublishingContentGroup" />
+  </xsd:complexType>
+  <xsd:complexType name="UpdateMXSW4SRType">
+    <xsd:sequence>
+      <xsd:element ref="MXSW4SRSet" />
+    </xsd:sequence>
+    <xsd:attributeGroup ref="CommonContentGroup" />
+  </xsd:complexType>
+  <xsd:complexType name="DeleteMXSW4SRType">
+    <xsd:sequence>
+      <xsd:element ref="MXSW4SRSet" />
+    </xsd:sequence>
+    <xsd:attributeGroup ref="CommonContentGroup" />
+  </xsd:complexType>
+  <xsd:complexType name="InvokeMXSW4SRResponseType">
+    <xsd:sequence>
+      <xsd:element ref="MXSW4SRSet" />
+    </xsd:sequence>
+    <xsd:attributeGroup ref="CommonContentGroup" />
+  </xsd:complexType>
+  <xsd:complexType name="CreateMXSW4SRResponseType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" ref="SRMboKeySet" />
+    </xsd:sequence>
+    <xsd:attributeGroup ref="CommonContentGroup" />
+  </xsd:complexType>
+  <xsd:complexType name="QueryMXSW4SRResponseType">
+    <xsd:sequence>
+      <xsd:element ref="MXSW4SRSet" />
+    </xsd:sequence>
+    <xsd:attributeGroup ref="CommonContentGroup" />
+    <xsd:attributeGroup ref="ResponseContentGroup" />
+  </xsd:complexType>
+  <xsd:complexType name="SyncMXSW4SRResponseType">
+    <xsd:sequence />
+    <xsd:attributeGroup ref="CommonContentGroup" />
+  </xsd:complexType>
+  <xsd:complexType name="DeleteMXSW4SRResponseType">
+    <xsd:sequence />
+    <xsd:attributeGroup ref="CommonContentGroup" />
+  </xsd:complexType>
+  <xsd:complexType name="UpdateMXSW4SRResponseType">
+    <xsd:sequence />
+    <xsd:attributeGroup ref="CommonContentGroup" />
+  </xsd:complexType>
+  <xsd:element name="UpdateMXSW4SR" type="UpdateMXSW4SRType" />
+  <xsd:element name="QueryMXSW4SR" type="QueryMXSW4SRType" />
+  <xsd:element name="CreateMXSW4SR" type="CreateMXSW4SRType" />
+  <xsd:element name="SyncMXSW4SR" type="SyncMXSW4SRType" />
+  <xsd:element name="DeleteMXSW4SR" type="DeleteMXSW4SRType" />
+  <xsd:element name="PublishMXSW4SR" type="PublishMXSW4SRType" />
+  <xsd:element name="InvokeMXSW4SR" type="InvokeMXSW4SRType" />
+  <xsd:element name="InvokeMXSW4SRResponse" type="InvokeMXSW4SRResponseType" />
+  <xsd:element name="QueryMXSW4SRResponse" type="QueryMXSW4SRResponseType" />
+  <xsd:element name="CreateMXSW4SRResponse" type="CreateMXSW4SRResponseType" />
+  <xsd:element name="SyncMXSW4SRResponse" type="SyncMXSW4SRResponseType" />
+  <xsd:element name="UpdateMXSW4SRResponse" type="UpdateMXSW4SRResponseType" />
+  <xsd:element name="DeleteMXSW4SRResponse" type="DeleteMXSW4SRResponseType" />
+</xsd:schema>

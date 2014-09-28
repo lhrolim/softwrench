@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/Menu"
+	xmlns:tns="http://www.example.org/Menu" elementFormDefault="qualified">
+
+  <element name="Menu">
+    <complexType>
+      <choice maxOccurs="unbounded" minOccurs="0">
+        <element name="container" type="tns:MenuContainer"
+          maxOccurs="unbounded" minOccurs="0">
+        </element>
+        <element name="application"
+          type="tns:MenuApplicationItem" maxOccurs="unbounded"
+          minOccurs="0">
+        </element>
+        <element name="resourceref" type="tns:MenuResourceItem"
+          maxOccurs="unbounded" minOccurs="0">
+          <annotation>
+            <documentation>
+              Specifies a resource to be renderized inside
+              the menu.
+            </documentation>
+          </annotation>
+        </element>
+        <element name="action" type="tns:MenuActionItem"
+          maxOccurs="unbounded" minOccurs="0">
+          <annotation>
+            <documentation>
+              Specifies an action to be executed when the
+              menu gets clicked
+            </documentation>
+          </annotation>
+        </element>
+        <element name="divider" type="tns:MenuDividerItem"
+         maxOccurs="unbounded" minOccurs="0">
+          <annotation>
+            <documentation>
+              Draw a line divider
+            </documentation>
+          </annotation>
+        </element>
+
+
+
+      </choice>
+      <attribute name="mainmenudisplacement"
+        type="tns:displayment" default="vertical">
+      </attribute>
+      <attribute name="indexitem" type="string" >
+        <annotation>
+          <documentation>The Id of a item to be displayed when the menu gets renderized.</documentation>
+        </annotation>
+      </attribute>
+    </complexType>
+  </element>
+
+
+
+  <attribute name="displacement" type="string"></attribute>
+
+
+
+  <simpleType name="displayment">
+    <restriction base="string">
+      <enumeration value="vertical"></enumeration>
+      <enumeration value="horizontal"></enumeration>
+    </restriction>
+  </simpleType>
+
+  <complexType name="MenuApplicationItem">
+    <complexContent>
+      <extension base="tns:MenuBase">
+        <attribute name="ref" type="string" use="optional">
+          <annotation>
+            <documentation>
+              The name of the application
+            </documentation>
+          </annotation>
+        </attribute>
+        <attribute name="schema" type="string" default="list"
+          use="optional">
+          <annotation>
+            <documentation>
+              name of the view of the application to
+              render when the item is clicked. If not
+              specified, the list view will be assumed
+            </documentation>
+          </annotation>
+        </attribute>
+        <attribute name="mode" use="optional">
+          <simpleType>
+            <restriction base="string">
+              <enumeration value="input"></enumeration>
+              <enumeration value="output"></enumeration>
+            </restriction>
+          </simpleType>
+        </attribute>
+        <attribute name="parameters" type="string"/>
+      </extension>
+    </complexContent>
+  </complexType>
+
+
+  <complexType name="MenuBase" abstract="true">
+    <attribute name="title" type="string" use="required">
+      <annotation>
+        <documentation>
+          The value to display on screen. If a I18n catalog is
+          found for the current language, it will override
+          this value with the value found on the catalog.
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="id" type="string" use="optional">
+      <annotation>
+        <documentation>
+          An id of the menu structure. must be unique along
+          the entire menu declaration. Its used, among other,
+          for authorization (role matching) and I18n (catalog
+          key matching) purposes.
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="tooltip" type="string">
+      <annotation>
+        <documentation>
+          The value of the tip to be exhibited when the mouse
+          is over this item. If a 18n catalog is present, the
+          tooltip must be identified by the element´s id.tip
+          (ex: workorder.tip, asset.tip) catalog key
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="role" type="string" use="optional">
+      <annotation>
+        <documentation>
+          If present, overrides the id attribute as the role
+          matching property
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="icon" type="string"></attribute>
+  </complexType>
+
+
+  <complexType name="MenuResourceItem">
+    <attribute name="id" type="string" use="optional">
+      <annotation>
+        <documentation>
+          an id of the menu structure. must be unique along
+          the entire menu declaration
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="role" type="string" use="optional">
+      <annotation>
+        <documentation>If present, overrides the id attribute as the role matching property</documentation>
+      </annotation>
+    </attribute>
+    <attribute name="path" type="string">
+      <annotation>
+        <documentation>
+          The path to the resource to be rendered inside the
+          menu at the specified position
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="params" type="string">
+      <annotation>
+        <documentation>
+          list key=value parameters separeted by ; (ex:
+          name=bbb;controller=yyy). These parameters might be
+          used by the underlying resource
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="tooltip" type="string">
+      <annotation>
+        <documentation>
+          The value of the tip to be exhibited when the mouse
+          is over this item. If a 18n catalog is present, the
+          tooltip must be identified by the element´s id.tip
+          (ex: workorder.tip, asset.tip) catalog key
+        </documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+
+  <complexType name="MenuActionItem">
+    <annotation>
+      <documentation>a list of key=value pairs, separated by ;</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="tns:MenuBase">
+        <attribute name="action" type="string" use="optional"
+  				default="index">
+        </attribute>
+        <attribute name="controller" type="string"
+  				use="required">
+        </attribute>
+        <attribute name="parameters" type="string"/>
+        <attribute name="target" default="self">
+          <simpleType>
+            <restriction base="string">
+              <enumeration value="self"></enumeration>
+              <enumeration value="new"></enumeration>
+            </restriction>
+          </simpleType>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="MenuDividerItem">
+    <attribute name="role" type="string" use="optional">
+    </attribute>
+  </complexType>
+
+  <complexType name="MenuContainer">
+    <complexContent>
+      <extension base="tns:MenuBase">
+        <choice minOccurs="0" maxOccurs="unbounded">
+          <element name="container" type="tns:MenuContainer"
+  					maxOccurs="unbounded" minOccurs="0">
+          </element>
+          <element name="application"
+  					type="tns:MenuApplicationItem" maxOccurs="unbounded"
+  					minOccurs="0" />
+          <element name="resourceref"
+  					type="tns:MenuResourceItem" maxOccurs="unbounded"
+  					minOccurs="0">
+          </element>
+          <element name="action" type="tns:MenuActionItem"
+  					maxOccurs="unbounded" minOccurs="0">
+            <annotation>
+              <documentation>
+                Specifies an action to be executed when
+                the menu gets clicked
+              </documentation>
+            </annotation>
+          </element>
+          <element name="divider" type="tns:MenuDividerItem"
+  					maxOccurs="unbounded" minOccurs="0">
+            <annotation>
+              <documentation>
+                Draw a line divider
+              </documentation>
+            </annotation>
+          </element>
+        </choice>
+        <attribute name="modulename" type="string"/>
+        <attribute name="modulealias" type="string"/>
+        <attribute name="action" type="string"/>
+        <attribute name="controller" type="string"/>
+      </extension>
+    </complexContent>
+  </complexType>
+</schema>

@@ -1,0 +1,45 @@
+
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Add subcomponent</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">10</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">C-HLC-WW-ITCALL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Final check</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">20</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-EUS-DE-CSC-IMC-HLCIMAC</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Review asset attributes and approval</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">30</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-EUS-DE-CSC-SDK-ASSET</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Check and Confirm installation and all asset attribs</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">40</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">C-HLC-WW-ITCALL</FlexField> 
+ 	</FlexFields> 
+ </Activity>

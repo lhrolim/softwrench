@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "Report";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <style>
+        html, body, form {
+            height: 100%;
+            margin: 0px;
+        }
+    </style>
+    @Scripts.Render("~/Content/Scripts/jquery/jquery")
+</head>
+<body>
+
+@{ Html.RenderPartial("~/UserControls/Report.ascx"); }
+
+</body>
+</html>

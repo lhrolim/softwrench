@@ -1,0 +1,44 @@
+﻿
+=====================================================================
+Request Details
+
+Location:   MT4
+Asset:   A8005
+Update Child Asset:   update
+=====================================================================
+Service Attributes
+
+Remarks:   Remark Test
+Usage:   TEST
+=====================================================================
+Location
+
+Building:   
+Floor:   
+Room:   
+=====================================================================
+Services
+
+Asset owened by HLAG
+Commodity Test
+=====================================================================
+Specifications
+
+Computer Name:   Unix Server --> Unix Server Test
+Serial Number:   FT-88654343 --> FT-88654343 Test
+Product:   Unix Server --> Unix Server Test
+Model:    --> Test
+Type:    --> Test
+HL Invent Number:    --> Test
+Comment:    --> Test
+=====================================================================
+Asset Attributes
+
+Application Server Version:   4.0000000000 --> 3
+DISK SIZE:   500.0000000000 --> 500
+Disk 2 Size:   250.0000000000 --> 300
+Disk 3 Size:   250.0000000000 --> 200
+Disk 4 Size:   250.0000000000 --> 350
+MEMORY SIZE:   2000.0000000000 --> 4000
+PROCESSOR SPEED:   4.5000000000 --> 5
+=====================================================================

@@ -1,0 +1,6 @@
+﻿<div ng-controller="AssetRemarksController">
+    <textarea cols="120" rows="10" ng-model="datamap['remarks']" maxlength="500" />
+    <button ng-click="saveRemark()" class="hiddenonprint">
+        <i style="margin-right: 0.5em" class="glyphicon glyphicon-ok"></i>{{i18N('general.savenotsubmit','Save')}}
+    </button>
+</div>

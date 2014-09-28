@@ -1,0 +1,117 @@
+﻿<div class="modal fade lookupModal modalLock" data-class="lookupModal" tabindex="-1" role="dialog" data-backdrop="static"
+    data-keyboard="false" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <div>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">{{i18N('general.select','Select')}} {{lookupObj.fieldMetadata.label}}</h4>
+                </div>
+                <div>
+                    <pagination pagination-data="modalPaginationData"
+                        disable-export="true"
+                        disable-print="true"
+                        renderfn="lookupModalSearch(pageNumber)" ng-cloak />
+                </div>
+
+            </div>
+            <div class="modal-body">
+
+                <table class="table table-hover hidden-phone" ng-show="lookupObj.schema == null">
+                    <thead>
+                        <tr class="header-row">
+                            <th>
+                                <span>{{lookupObj.fieldMetadata.label}}</span>
+                            </th>
+                            <th>
+                                <span>{{getLookUpDescriptionLabel(lookupObj.fieldMetadata)}}</span>
+                            </th>
+                        </tr>
+                        <tr class="filter-row">
+                            <th>
+                                <span class="input-group">
+                                    <input type="search"
+                                        placeholder="{{lookupObj.fieldMetadata.label}} Search"
+                                        class="form-control" ng-model="lookupObj.code" ng-enter="lookupModalSearch()" />
+                                    <span class="input-group-addon"
+                                        ng-click="lookupModalSearch()"
+                                        rel="tooltip" data-original-title="{{i18N('search.click','Click to search')}}">
+                                        <i class="glyphicon glyphicon-filter"></i>
+                                    </span>
+                                </span>
+                            </th>
+                            <th>
+                                <span class="input-group">
+                                    <input type="search"
+                                        placeholder="Description Search"
+                                        class="form-control"
+                                        ng-model="lookupObj.description"
+                                        ng-enter="lookupModalSearch()" />
+                                    <span class="input-group-addon"
+                                        ng-click="lookupModalSearch()"
+                                        rel="tooltip" data-original-title="{{i18N('search.click','Click to search')}}">
+                                        <i class="glyphicon glyphicon-filter"></i>
+                                    </span>
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="option in lookupObj.options" ng-click="lookupModalSelect(option)">
+                            <td>
+                                <span>{{option.value}}</span>
+                            </td>
+                            <td>
+                                <span>{{option.label}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <table class="table table-hover hidden-phone" ng-show="lookupObj.schema != null">
+                    <thead>
+                        <tr class="header-row">
+                            <th ng-repeat="column in lookupObj.schema.displayables" ng-hide="column.isHidden"
+                                ng-style="{'min-width': column.rendererParameters['minwidth'], 'max-width': column.rendererParameters['maxwidth']}">
+                                <span>{{i18NLabel(column)}}</span>
+                            </th>
+                        </tr>
+                        <tr class="filter-row">
+                            <th ng-repeat="column in lookupObj.schema.displayables" ng-hide="column.isHidden">
+                                <span class="input-group">
+                                    <input type="search"
+                                        placeholder="{{i18NLabel(column)}} Search"
+                                        class="form-control" ng-model="searchObj[column.attribute]" ng-enter="lookupModalSearch()" />
+                                    <span class="input-group-addon"
+                                        ng-click="lookupModalSearch()"
+                                        rel="tooltip" data-original-title="{{i18N('search.click','Click to search')}}">
+                                        <i class="glyphicon glyphicon-filter"></i>
+                                    </span>
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="option in lookupObj.options" ng-click="lookupModalSelect(option)">
+
+                            <td ng-repeat="column in lookupObj.schema.displayables" ng-hide="column.isHidden">
+                                <span>{{option.extrafields[column.attribute]}}</span>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p class="text-center" ng-show="lookupObj.options.length == 0">
+                    {{i18N("search.noresult","No criteria matches your search query")}}
+                </p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{i18N('general.cancel','Cancel')}}</button>
+            </div>
+        </div>
+    </div>
+</div>

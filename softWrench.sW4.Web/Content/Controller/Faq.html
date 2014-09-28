@@ -1,0 +1,33 @@
+﻿<form ng-submit="filterFaq()" ng-controller="FaqController">
+    <article class="container" style="margin-bottom: 10px;">
+        <section ng-show="isFaqOk">
+            <div style="margin-top: 5px; display: inline-block; width: 100%;">
+                <select ng-model="faqLanguageFilter" ng-change="filterFaq()">
+                    <option value="en">{{i18N('language.english','English')}}</option>
+                    <option value="de">{{i18N('language.german','German')}}</option>
+                    <option value="es">{{i18N('language.spanish','Spanish')}}</option>
+                </select>
+                &nbsp;
+                <span style="float: right;">{{i18N('general.search','Search')}}&nbsp;
+                    <input id="textFilter" type="text" ng-model="faqTextFilter" style="width: 150px; display: inline-block;" rel="tooltip" data-original-title="{{i18N('search.faqsearch_tooltip','Enter text to search for FAQ')}}" />
+                    <button class="add-on" id="btnPanel1" style="height: 30px;" ng-click="filterFaq()"><i class="glyphicon glyphicon-search" rel="tooltip" data-original-title="{{i18N('general.search','Search')}}"></i></button>
+                </span>
+            </div>
+            <div
+                ng-show="isSearchOk"
+                data-angular-treeview="true"
+                data-tree-model="roleList"
+                data-node-id="id"
+                data-node-label="Name"
+                data-node-children="children">
+            </div>
+            <div ng-show="!isSearchOk">
+                {{i18N("search.noresult","No criteria matches your search query")}}
+            </div>
+        </section>
+    </article>
+</form>
+
+
+
+

@@ -1,0 +1,57 @@
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using Iesi.Collections;
+using Iesi.Collections.Generic;
+using log4net;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Metadata;
+using softwrench.sW4.Shared2.Metadata;
+using softWrench.sW4.SimpleInjector.Core.Order;
+using softWrench.sW4.SimpleInjector.Events;
+using softWrench.sW4.Util;
+
+namespace softWrench.sW4.Configuration.Services {
+    public class ApplicationWhereClauseRegistry : ISWEventListener<ApplicationStartedEvent>, IPriorityOrdered {
+
+        private readonly IWhereClauseFacade _facade;
+
+        private readonly ILog _log = LogManager.GetLogger(typeof(ApplicationWhereClauseRegistry));
+
+        public ApplicationWhereClauseRegistry(IWhereClauseFacade facade) {
+            _facade = facade;
+        }
+
+        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+            var before = new Stopwatch();
+            var applications = MetadataProvider.Applications();
+            var completeApplicationMetadataDefinitions = applications as CompleteApplicationMetadataDefinition[] ?? applications.ToArray();
+            ISet<String> namesToRegister = new HashedSet<string>();
+
+            AddAllApplicationsAndUsedEntities(namesToRegister, completeApplicationMetadataDefinitions);
+
+            foreach (var name in namesToRegister) {
+                _facade.Register(name, "", null, false);
+            }
+            _log.Info(LoggingUtil.BaseDurationMessage("finished registering whereclauses in {0}", before));
+        }
+
+        private static void AddAllApplicationsAndUsedEntities(ISet<string> namesToRegister,
+            CompleteApplicationMetadataDefinition[] completeApplicationMetadataDefinitions) {
+            foreach (var application in MetadataProvider.Applications()) {
+                namesToRegister.Add(application.ApplicationName);
+                foreach (var schema in application.Schemas()) {
+                    foreach (var association in schema.Value.Associations) {
+                        var entityName = association.EntityAssociation.To;
+                        var associationApplication =
+                            completeApplicationMetadataDefinitions.FirstOrDefault(a => a.Entity == entityName);
+                        var toAdd = associationApplication == null ? association.EntityAssociation.To : associationApplication.ApplicationName;
+                        namesToRegister.Add(toAdd);
+                    }
+                }
+            }
+        }
+
+        public int Order { get { return -1; } }
+    }
+}

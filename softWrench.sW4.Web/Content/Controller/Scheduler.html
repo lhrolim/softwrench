@@ -1,0 +1,92 @@
+﻿<article class="container" ng-controller="SchedulerSetupController">
+
+    <section ng-show="isList">
+
+        <div id="dvSchedulerList">
+            <form id="roleForm">
+
+                <table class="table table-striped table-hover hidden-phone">
+                    <thead>
+                        <tr>
+                            <th>{{i18N('general.name','Name')}}</th>
+                            <th>{{i18N('general.description','Description')}}</th>
+                            <th>{{i18N('general.cron','Cron')}}</th>
+                            <th style="display: none;">{{i18N('general.active','Active')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody id="gvUsers">
+                        <tr ng-repeat="scheduler in listObjects">
+                            <td><a ng-click="edit(scheduler)" style="cursor: pointer">{{scheduler.name}}</a></td>
+                            <td><a ng-click="edit(scheduler)" style="cursor: pointer">{{scheduler.description}}</a></td>
+                            <td><a ng-click="edit(scheduler)" style="cursor: pointer">{{scheduler.cron}}</a></td>
+                            <td style="display: none;"><a>{{scheduler.active}}</a></td>
+                            <td>
+                                <a ng-click="pause(scheduler)" href="#" ng-show="scheduler.isScheduled">
+                                    <img ng-src="{{contextPath('/Content/Images/pause-icon.png')}}" style="width: 10px;" alt="pause" rel="tooltip" data-original-title="{{i18N('scheduler.pause_tooltip','Pause job')}}" /></a>
+
+                                <a ng-click="schedule(scheduler)" href="#" ng-show="!scheduler.isScheduled">
+                                    <img ng-src="{{contextPath('/Content/Images/start-icon.png')}}" style="width: 10px;" alt="schedule" rel="tooltip" data-original-title="{{i18N('scheduler.schedule_tooltip','Schedule job')}}" /></a>
+
+                                <a ng-click="execute(scheduler)" href="#" ng-show="scheduler.active">
+                                    <img ng-src="{{contextPath('/Content/Images/executeNow-icon.png')}}" style="width: 17px;"
+                                        alt="execute" rel="tooltip" data-original-title="{{i18N('scheduler.execute_tooltip','Execute job now')}}" /></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </section>
+
+    <section ng-show="isDetail">
+
+        <div id="dvDetail" class="form-horizontal">
+
+            <div class="form-group">
+                <label class="control-label col-lg-2"><span style="font-family: Arial Round"></span><span>{{i18N('general.name','Name')}}</span></label>
+                <div class="col-lg-10">
+                    <label class="control-label">
+                        {{scheduler.name}}
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-lg-2"><span style="font-family: Arial Round"></span><span>{{i18N('general.description','Description')}}</span></label>
+                <div class="col-lg-10">
+                    <label class="control-label">
+                        {{scheduler.description}}
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-lg-2"><span style="font-family: Arial Round">* </span><span>{{i18N('general.cron','Cron')}}</span></label>
+                <div class="col-lg-10">
+                    <input type="text" ng-model="scheduler.cron" placeholder="{{i18N('placeholder.required.cron','Cron is required')}}!" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group" style="display: none;">
+                <label class="control-label col-lg-2"><span style="font-family: Arial Round">* </span><span>{{i18N('general.active','Active')}}</span></label>
+                <div class="col-lg-10">
+                    <input type="checkbox" ng-model="scheduler.active" />
+                </div>
+            </div>
+
+            <div class="form-actions form-group">
+                <div class="col-lg-offset-2 col-lg-10">
+                    <button type="submit" id="saveBTN" class="btn btn-primary " ng-click="changeCron(scheduler)">
+                        <i style="margin-right: 0.5em" class="glyphicon glyphicon-ok"></i>{{i18N('general.save','Save')}}
+                    </button>
+                    <button type="button" class="btn" ng-click="cancel()" class="btn ">
+                        <i style="margin-right: 0.5em" class="glyphicon glyphicon-backward"></i>{{i18N('general.cancel','Cancel')}}
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+</article>

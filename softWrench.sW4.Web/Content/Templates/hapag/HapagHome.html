@@ -1,0 +1,75 @@
+﻿<article ng-controller="DashboardController">
+
+    <section class="container" ng-show="loaded">
+
+        <br />
+
+        <div class="clearfix">
+            <!--
+            <span class="pull-left">
+                <button type="button" class="btn btn-link disabled">Info Board</button>
+            </span>
+            -->
+            <span class="pull-right">
+                <a class="btn hapag-btn" href="https://hip.hlcl.com/en/hip/information/company.html?snid=719915_1" target="_blank"
+                    rel="tooltip"
+                    data-original-title="{{i18N('dashboard.linkhip_tooltip','Click HIP to access the Hapag-Lloyd Information Portal')}}">{{i18N('dashboard.linkhip','Link to HIP')}}</a>
+            </span>
+        </div>
+
+        <br />
+
+        <div class="clearfix">
+
+            <ul class="nav nav-tabs hapag-dashboardtab">
+                <li ng-class="{active: currentDashboardIndex == $index}" ng-repeat="dashboard in dashboards">
+                    <a ng-href="#{{dashboard.id}}" data-toggle="tab" ng-click="renderDashboard($index,true)" rel="tooltip" data-original-title="{{dashboard.tooltip}}">{{dashboard.title + ' (' + dashboard.totalCount + ')'}}</a>
+                </li>
+            </ul>
+
+            <div class="tab-content hapag-dashboardtabcontent">
+                <div class="tab-pane" ng-class="{active: currentDashboardIndex == $index}"
+                    ng-repeat="dashboard in dashboards" id="{{dashboard.id}}" dashboardsdone>
+
+                    <div class="pull-left">
+                        <strong>{{dashboard.title}}</strong>
+                    </div>
+                    <div class="pull-left featured">
+                        <span>{{totalCount}}</span>
+                    </div>
+
+                    <br />
+                    <br />
+
+                    <table class="table table-hover hidden-phone" id="dashboardgrid">
+                        <thead>
+                            <tr>
+                                <th ng-repeat="column in schema.displayables" ng-hide="column.isHidden">
+                                    <span class="add-on">{{i18NLabel(column)}}</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="dm in datamap" ng-click="showDetail(dm.fields)" style="cursor: pointer">
+                                <td ng-repeat="column in schema.displayables" ng-hide="column.isHidden"><a style="color: black">{{format(dm.fields[column.attribute],column)}}</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="pull-right">
+                        <!-- Change made to make view all visible even if pagesize=0   old code : ng-show="pagesize > 0 && totalCount > pageSize"-->
+                        <button type="button"  class="btn hapag-btn" ng-click="viewAll($index)"
+                                rel="tooltip"
+                                data-original-title="{{i18N('dashboard.viewall_tooltip','Click View All to access your Requests')}}">
+                            {{i18N('dashboard.viewall','View All')}}
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+</article>

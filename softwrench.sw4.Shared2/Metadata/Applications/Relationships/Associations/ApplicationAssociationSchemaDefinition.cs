@@ -1,0 +1,44 @@
+﻿using System;
+using System.Collections.Generic;
+using softwrench.sW4.Shared2.Metadata.Applications.UI;
+using softwrench.sw4.Shared2.Metadata.Applications.UI;
+
+namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations {
+
+    public class ApplicationAssociationSchemaDefinition {
+
+        public AssociationDataProvider DataProvider { get; set; }
+        public FieldRenderer Renderer { get; set; }
+        public IDictionary<string, string> RendererParameters {
+            get { return Renderer == null ? new Dictionary<string, string>() : Renderer.ParametersAsDictionary(); }
+        }
+
+        public FieldFilter Filter { get; set; }
+        public IDictionary<string, string> FilterParameters {
+            get { return Filter == null ? new Dictionary<string, string>() : Filter.ParametersAsDictionary(); }
+        }
+
+        protected HashSet<string> _dependantFields = new HashSet<string>();
+
+        public ApplicationAssociationSchemaDefinition(AssociationDataProvider dataProvider, FieldRenderer renderer, FieldFilter filter) {
+            DataProvider = dataProvider;
+            Renderer = renderer ?? new AssociationFieldRenderer(AssociationFieldRenderer.AssociationRendererType.COMBO.ToString(), null, null);
+            Filter = Filter;
+        }
+
+        public Boolean IsLazyLoaded {
+            get { return ((AssociationFieldRenderer)Renderer).IsLazyLoaded; }
+        }
+
+        public HashSet<string> DependantFields {
+            get { return _dependantFields; }
+            set { _dependantFields = value; }
+        }
+
+        public bool IsPaginated { get { return ((AssociationFieldRenderer)Renderer).IsPaginated; } }
+
+        public override string ToString() {
+            return string.Format("DataProvider: {0}, Renderer: {1}, IsLazyLoaded: {2}", DataProvider, Renderer, IsLazyLoaded);
+        }
+    }
+}

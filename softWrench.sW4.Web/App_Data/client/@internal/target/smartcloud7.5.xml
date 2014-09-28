@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TargetEntities xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Target.xsd ">
+
+	<!-- The following items still need to be mapped for all ticket entities. Looking at the JSON being submitted by softwrench, 
+  it is not yet clear which softwrench fields map to the below ISM fields
+  
+    -ProviderPriority
+    -Problem FlexField: CHANGEBY
+    -Problem FlexField: CHANGEDATE
+    -Problem FlexField: CINUM
+    -Problem FlexField: TemplateID
+    -Activity ActionID
+    -Activity ActionLog
+    -Activity ActionLogSummary
+    -Activity UserID
+    -Activity FlexField: STATUS
+    -Activity FlexField: WOSEQUENCE
+    -Activity FlexField: OWNERGROUP
+  
+  -->
+
+	
+  <entity name="workorder">
+
+		<attributes>
+      <const targetpath="actliccost" type="double" value="0"/>
+      <const targetpath="estatapprliccost" type="double" value="0"/>
+      <const targetpath="estliccost" type="double" value="0"/>
+		</attributes>
+
+		<connectorParameters>
+			<connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
+		</connectorParameters>
+	</entity>
+  
+
+</TargetEntities>

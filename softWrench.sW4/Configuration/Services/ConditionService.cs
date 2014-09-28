@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using softWrench.sW4.Configuration.Definitions;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.SimpleInjector;
+
+namespace softWrench.sW4.Configuration.Services {
+
+    public class ConditionService : ISingletonComponent {
+
+        private SWDBHibernateDAO _dao;
+        public ConditionService(SWDBHibernateDAO dao) {
+            _dao = dao;
+        }
+
+        public IList<Condition> RemoveCondition(WhereClauseRegisterCondition condition, string currentCategoryKey) {
+            var values = _dao.FindByQuery<PropertyValue>(PropertyValue.ByCondition, condition);
+            var canDeleteCondition = !condition.Global || values.Count <= 1;
+            foreach (var propertyValue in values) {
+                if (propertyValue.Definition.FullKey.StartsWith(currentCategoryKey) || !condition.Global) {
+                    _dao.Delete(propertyValue);
+                }
+            }
+            if (canDeleteCondition) {
+                _dao.Delete(condition.RealCondition);
+            }
+            return _dao.FindAll<Condition>(typeof(Condition));
+        }
+    }
+}

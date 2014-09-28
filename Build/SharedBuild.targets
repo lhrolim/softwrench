@@ -1,0 +1,57 @@
+﻿<Project  DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- This represents a re-usable build file -->
+  <Target Name="SharedBuild_Validate">
+    <!-- See http://sedodream.com/2009/06/30/ElementsOfReusableMSBuildScriptsValidation.aspx for more info
+         about this validation pattern
+    -->
+    <ItemGroup>
+      <_RequiredProperties Include ="Configuration">
+          <Value>$(Configuration)</Value>
+      </_RequiredProperties>    
+      <_RequiredProperties Include ="OutputPath">
+          <Value>$(OutputPath)</Value>
+      </_RequiredProperties>
+      
+      <_RequiredItems Include="Projects">
+        <RequiredValue>%(Projects.Identity)</RequiredValue>
+        <RequiredFilePath>%(Projects.Identity)</RequiredFilePath>
+      </_RequiredItems>
+    </ItemGroup>
+
+    <!-- Raise an error if any value in _RequiredProperties is missing -->
+    <Error Condition="'%(_RequiredProperties.Value)'==''"
+           Text="Missing required property [%(_RequiredProperties.Identity)]"/>
+
+    <!-- Raise an error if any value in _RequiredItems is empty -->
+    <Error Condition="'%(_RequiredItems.RequiredValue)'==''"
+           Text="Missing required item value [%(_RequiredItems.Identity)]" />
+
+    <!-- Validate any file/directory that should exist -->
+    <Error Condition="'%(_RequiredItems.RequiredFilePath)' != '' and !Exists('%(_RequiredItems.RequiredFilePath)')"
+           Text="Unable to find expeceted path [%(_RequiredItems.RequiredFilePath)] on item [%(_RequiredItems.Identity)]" />
+  </Target>
+
+  <PropertyGroup>
+    <BuildDependsOn>
+      SharedBuild_Validate;
+      BeforeBuild;
+      CoreBuild;
+      AfterBuild;
+    </BuildDependsOn>
+  </PropertyGroup>
+  <Target Name="Build" DependsOnTargets="$(BuildDependsOn)"/>
+  <Target Name="BeforeBuild"/>
+  <Target Name="AfterBuild"/>
+  <Target Name="CoreBuild">
+    <!-- Make sure output folder exists -->
+    <PropertyGroup>
+      <_FullOutputPath>$(OutputPath)$(Configuration)\</_FullOutputPath>
+    </PropertyGroup>
+    <MakeDir Directories="$(_FullOutputPath)"/>
+    <MSBuild Projects="@(Projects)"
+             BuildInParallel="true"
+             Properties="OutputPath=$(_FullOutputPath)"/>
+  </Target>
+
+
+</Project>

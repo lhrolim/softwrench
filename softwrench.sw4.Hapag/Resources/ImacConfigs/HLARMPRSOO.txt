@@ -1,0 +1,144 @@
+
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Empty, delete and update server queue</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">10</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTEL2LEVEL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Delete server port</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">20</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTEL2LEVEL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Configure printer NIC IP address</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">30</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTEL2LEVEL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Delete and update printer (port) name</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">40</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTELCONFIG</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Delete and update fixed IP address</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">50</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTELCONFIG</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Print configuration</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">60</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">C-HLC-WW-ITCALL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Remove (uninstall) printer</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">70</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">C-HLC-WW-ITCALL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Review asset move attributes and service acceptance</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">80</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">C-HLC-WW-ITCALL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Confirm shipping</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">90</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">C-HLC-WW-ITCALL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Goods received</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">100</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">C-HLC-WW-ITCALL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Review asset attributes and service approval</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">110</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">C-HLC-WW-ITCALL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Enter delivery related asset attributes and final check</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">120</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-EUS-DE-CSC-IMC-HLCIMAC</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Review asset attributes and approval</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">130</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-EUS-DE-CSC-SDK-ASSET</FlexField> 
+ 	</FlexFields> 
+ </Activity>

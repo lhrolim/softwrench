@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Imports>
+  <Import>
+    <Name>Workorder Historical</Name>
+    <Table>hist_workorder</Table>
+    <IO>
+      <InputFolder>C:\Users\rolim\Copy\swaml4\src\softwrench.SW4.CSVImport\Samples\</InputFolder>
+      <OutputFolder>C:\Users\rolim\workspace\vs\</OutputFolder>
+      <StaticInputFileName>WorkOrder_</StaticInputFileName>
+      <InputFileExt>csv</InputFileExt>
+      <FirstDataRow>3</FirstDataRow>
+    </IO>
+    <FieldMappings>
+      <Field name="wonum" uniqueID="true">1</Field>
+      <Field name="description">2</Field>
+      <Field name="location">3</Field>
+      <Field name="assetnum">4</Field>
+      <Field name="status">5</Field>
+      <Field name="statusdate" type="datetime">6</Field>
+    </FieldMappings>
+    <StaticFields>
+      <Field name="importdate" property="datetime.now" />
+    </StaticFields>
+  </Import>
+  <Import>
+    <Name>Service Request Historical</Name>
+    <Table>hist_ticket</Table>
+    <IO>
+    <InputFolder>C:\Users\rolim\Copy\swaml4\src\softwrench.SW4.CSVImport\Samples\</InputFolder>
+      <OutputFolder>C:\Users\rolim\workspace\vs\</OutputFolder>
+      <StaticInputFileName>Service_Request_</StaticInputFileName>
+      <InputFileExt>csv</InputFileExt>
+      <FirstDataRow>3</FirstDataRow>
+    </IO>
+    <FieldMappings>
+      <Field name="ticketid" uniqueID="true">1</Field>
+      <Field name="description">2</Field>
+      <Field name="reportedby">3</Field>
+      <Field name="affectedperson">4</Field>
+      <Field name="status">5</Field>
+      <Field name="assignedto">6</Field>
+      <Field name="ownergroup">7</Field>
+      <Field name="closedate" type="datetime">8</Field>
+      <Field name="assetnum">9</Field>
+      <Field name="assetsiteid">10</Field>
+    </FieldMappings>
+    <StaticFields>
+      <Field name="classification">SR</Field>
+      <Field name="importdate" property="datetime.now" />
+    </StaticFields>
+  </Import>
+  <Import>
+    <Name>Incident Historical</Name>
+    <Table>hist_ticket</Table>
+    <IO>
+      <InputFolder>C:\Users\rolim\Copy\swaml4\src\softwrench.SW4.CSVImport\Samples\</InputFolder>
+      <OutputFolder>C:\Users\rolim\workspace\vs\</OutputFolder>
+      <StaticInputFileName>Incident_</StaticInputFileName>
+      <InputFileExt>csv</InputFileExt>
+      <FirstDataRow>3</FirstDataRow>
+    </IO>
+    <FieldMappings>
+      <Field name="ticketid" uniqueID="true">1</Field>
+      <Field name="description">2</Field>
+      <Field name="reportedby">3</Field>
+      <Field name="affectedperson">4</Field>
+      <Field name="status">5</Field>
+      <Field name="assignedto">6</Field>
+      <Field name="ownergroup">7</Field>
+      <Field name="closedate" type="datetime">8</Field>
+      <Field name="assetnum">9</Field>
+      <Field name="assetsiteid">10</Field>
+    </FieldMappings>
+    <StaticFields>
+      <Field name="classification">Incident</Field>
+      <Field name="importdate" property="datetime.now" />
+    </StaticFields>
+  </Import>
+  <Import>
+    <Name>Problem Historical</Name>
+    <Table>hist_ticket</Table>
+    <IO>
+      <InputFolder>C:\Users\rolim\Copy\swaml4\src\softwrench.SW4.CSVImport\Samples\</InputFolder>
+      <OutputFolder>C:\Users\rolim\workspace\vs\</OutputFolder>
+      <StaticInputFileName>Problem_</StaticInputFileName>
+      <InputFileExt>csv</InputFileExt>
+      <FirstDataRow>3</FirstDataRow>
+    </IO>
+    <FieldMappings>
+      <Field name="ticketid" uniqueID="true">1</Field>
+      <Field name="description">2</Field>
+      <Field name="reportedby">3</Field>
+      <Field name="affectedperson">4</Field>
+      <Field name="status">5</Field>
+      <Field name="assignedto">6</Field>
+      <Field name="ownergroup">7</Field>
+      <Field name="closedate" type="datetime">8</Field>
+      <Field name="assetnum">9</Field>
+      <Field name="assetsiteid">10</Field>
+    </FieldMappings>
+    <StaticFields>
+      <Field name="classification">Problem</Field>
+      <Field name="importdate" property="datetime.now" />
+    </StaticFields>
+  </Import>
+</Imports>

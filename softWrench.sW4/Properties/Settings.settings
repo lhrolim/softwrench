@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="softWrench.sW4.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="softWrench_sW4_WebReference_MXSW3WORKORDER" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://localhost/meaweb/services/MXSW3WORKORDER</Value>
+    </Setting>
+    <Setting Name="softWrench_sW4_wsAssets_MXSW3ASSET" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://localhost/meaweb/services/MXSW3ASSET</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

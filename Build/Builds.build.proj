@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<!-- This uses a .targets file to off load performing the build -->
+	<PropertyGroup>
+		<Configuration Condition=" '$(Configuration)'=='' ">Release</Configuration>
+		<OutputPath Condition=" '$(OutputPath)'=='' ">$(MSBuildProjectDirectory)\BuildArtifacts\bin\</OutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Projects Include="$(MSBuildProjectDirectory)\..\softwrench.sW4.test\softwrench.sW4.test.csproj"/>
+		<Projects Include="$(MSBuildProjectDirectory)\..\softWrench.sW4.Web\softWrench.sW4.Web.csproj"/>
+	</ItemGroup>
+
+	<Import Project="SharedBuild.targets"/>
+</Project>

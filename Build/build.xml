@@ -1,0 +1,207 @@
+<project name="Softwrench" default="build" basedir="." xmlns="http://nant.sf.net/release/0.92/nant.xsd" >
+
+  <description>Softwrench</description>
+  <property name="debug" value="true" overwrite="false" />
+
+
+  <property name="MSBuildPath" value="c:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe" />
+  <property name="MSDeployPath" value="C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe" />
+  <!--  <property name="MSTestPath" value="c:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSTest.exe" />-->
+  <property name="SolutionFile" value="../softWrench.sW4.sln" />
+  <property name="TestSettingsPath" value="../TestSettings1.testsettings" />
+  <property name="TestPath" value="../softwrench.sW4.test/bin/Debug/softwrench.sW4.test.dll" />
+  <if test="${environment::variable-exists('outputdir')}">
+    <property name="OutputDir" value="${environment::get-variable('outputdir')}" />
+  </if>
+
+  <ifnot test="${environment::variable-exists('outputdir')}">
+    <property name="OutputDir" value="c:\" />
+  </ifnot>
+
+
+  <!--These will come from jenkins-->
+  <if test="${environment::variable-exists('clientsw4')}">
+    <property name="client" value="${environment::get-variable('clientsw4')}" />
+  </if>
+  <if test="${environment::variable-exists('environmentsw4')}">
+    <property name="profile" value="${environment::get-variable('environmentsw4')}" />
+  </if>
+
+  <target name="fulldeploy" depends="compile,copydlls,deploy"/>
+
+  <target name="fullbuildlocal" depends="compile,zip"/>
+
+  <target name="compile">
+    <exec program="${MSBuildPath}">
+      <arg line='"${SolutionFile}"' />
+      <arg line="/property:Configuration=Debug" />
+      <arg value="/target:Rebuild" />
+      <arg value="/verbosity:normal" />
+      <arg value="/nologo" />
+    </exec>
+  </target>
+
+  <target name="test">
+    <delete dir="${OutputDir}/testresults" failonerror="false"/>
+    <delete file="TestResults.trx"/>
+    <if propertyexists="MsTestPath">
+      <exec program="${MsTestPath}">
+        <arg line="/testcontainer:${TestPath}" />
+        <arg line="/testsettings:${TestSettingsPath}" />
+        <arg line="/resultsfile:TestResults.trx" />
+      </exec>
+    </if>
+    <ifnot propertyexists="MsTestPath">
+      <exec program="MsTest.exe">
+        <arg line="/testcontainer:${TestPath}" />
+        <arg line="/testsettings:${TestSettingsPath}" />
+        <arg line="/resultsfile:TestResults.trx" />
+      </exec>
+    </ifnot>
+
+  </target>
+
+  <target name="mkdir">
+    <delete includeemptydirs="true">
+      <fileset basedir="${OutputDir}/deploy">
+        <include name="**\*" />
+      </fileset>
+    </delete>
+
+    <mkdir dir="${OutputDir}/deploy"/>
+    <mkdir dir="${OutputDir}/deploy/bin"/>
+   
+  </target>
+
+  <target name="copydlls" depends="mkdir">
+    <copy todir="${OutputDir}/deploy/" includeemptydirs="false">
+      <fileset basedir="../softWrench.sW4.Web/">
+        <include name="**/*" />
+        <exclude name="**/*.cs"/>
+        <exclude name="*.dll"/>
+        <exclude name="*.suo"/>
+        <exclude name="*.csproj"/>
+        <exclude name="App_Data/client/**"/>
+        <exclude name="**.csproj.*"/>
+        <exclude name=".nuget/**"/>
+        <exclude name="Dependencies/**"/>
+        <exclude name="bin/Dependencies/**"/>
+        <exclude name="obj/**"/>
+      </fileset>
+    </copy>
+    <copy todir="${OutputDir}/deploy/bin">
+      <fileset basedir="../softWrench.sW4.Web/Dependencies">
+        <include name="**/*" />
+      </fileset>
+    </copy>
+      
+    <copy todir="${OutputDir}/deploy/App_Data/Client/@internal">
+      <fileset basedir="../softWrench.sW4.Web/App_Data/Client/@internal">
+        <include name="*.*" />
+      </fileset>
+    </copy>
+    <copy todir="${OutputDir}/deploy/App_Data/Client/${client}">
+      <fileset basedir="../softWrench.sW4.Web/App_Data/Client/${client}">
+        <include name="*.*" />
+      </fileset>
+    </copy>
+    <attrib readonly="false">
+      <fileset basedir="${OutputDir}/deploy">
+        <include name="**"/>
+      </fileset>
+    </attrib>
+  </target>
+
+  <target name="copydllssw" depends="mkdir">
+    <copy todir="${OutputDir}/deploy/">
+      <fileset basedir="../softWrench.sW4.Web/">
+        <include name="**/*" />
+        <exclude name="App_Data/client/**"/>
+        <exclude name="**.csproj"/>
+        <exclude name=".nuget/**"/>
+        <exclude name="Dependencies/**"/>
+        <exclude name="bin/Dependencies/**"/>
+        <exclude name="obj/**"/>
+      </fileset>
+    </copy>
+    <copy todir="${OutputDir}/deploy/App_Data/Client/@internal">
+      <fileset basedir="../softWrench.sW4.Web/App_Data/Client/@internal">
+        <include name="*.*" />
+      </fileset>
+    </copy>
+    <copy todir="${OutputDir}/deploy/App_Data/Client/${client}">
+      <fileset basedir="../softWrench.sW4.Web/App_Data/Client/${client}">
+        <include name="*.*" />
+      </fileset>
+    </copy>
+    <attrib readonly="false">
+      <fileset basedir="${OutputDir}/deploy">
+        <include name="**"/>
+      </fileset>
+    </attrib>
+  </target>
+
+  
+
+  <target name="setclient">
+
+    <xmlpoke file="${OutputDir}/deploy/Web.config"
+               xpath="/configuration/appSettings/add[@key = 'clientkey']/@value"
+               value="${client}" failonerror="true"/>
+
+  </target>
+
+  <target name="setenv">
+
+    <xmlpoke file="${OutputDir}/deploy/Web.config"
+               xpath="/configuration/appSettings/add[@key = 'profile']/@value"
+               value="${profile}" failonerror="true"/>
+  </target>
+
+  <target name="zip" depends="copydlls,setclient,setenv">
+    
+    <tstamp property="build.date" pattern="yyyy_MM_dd_hhmm" verbose="true" />
+      
+    <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/sw4_${build.date}.zip">
+      <fileset basedir="${OutputDir}/deploy/">
+        <include name="**/*" />
+      </fileset>
+    </zip>
+  </target>
+
+  <target name="zipsw" depends="copydllssw,setclient,setenv">
+    <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/sw4.zip">
+      <fileset basedir="${OutputDir}/deploy/">
+        <include name="**/*" />
+      </fileset>
+    </zip>
+  </target>
+
+  <target name="deploypeek" depends="setenv,setclient">
+    <xmlpeek property="iispath" file="${OutputDir}/deploy/App_Data/Client/${client}/deploy.xml"
+             xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'iispath']/@value">
+      <namespaces>
+        <namespace prefix="x" uri="http://www.example.org/metadata" />
+      </namespaces>
+    </xmlpeek>
+    <xmlpeek property="msdeploy_url" file="${OutputDir}/deploy/App_Data/Client/${client}/deploy.xml"
+             xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'msdeploy_url']/@value">
+      <namespaces>
+        <namespace prefix="x" uri="http://www.example.org/metadata" />
+      </namespaces>
+    </xmlpeek>
+    <echo message="urlPath: + ${msdeploy_url}"/>
+    <echo message="iisPath:  + ${iispath}"/>
+  </target>
+
+  <target name="deploy" depends="setenv,setclient,deploypeek">
+    <exec program="${MSDeployPath}">
+      <arg line="-verb:sync" />
+      <arg line="-source:iisApp=${OutputDir}/deploy,includeAcls=true" />
+      <arg line="-dest:iisApp=${iispath},wmsvc=${msdeploy_url}" />
+      <arg line="-allowUntrusted=true" />
+      <arg line="-verbose" />
+    </exec>
+  </target>
+
+</project>

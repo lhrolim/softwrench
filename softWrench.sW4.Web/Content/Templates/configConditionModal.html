@@ -1,0 +1,106 @@
+﻿<div class="modal fade conditionModal"
+     data-class="conditionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="row">
+                        <label class="control-label col-md-5">
+                            <span class="requiredfieldmark">* </span>
+                            {{i18N('configuration.condition.alias','Alias')}}
+                        </label>
+                        <div class="col-md-7">
+                            <input class="form-control" ng-model="condition.alias" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label class="control-label col-md-5">{{i18N('configuration.condition.global','Global')}}</label>
+                        <div class="col-md-7">
+                            <input type="checkbox" ng-model="condition.global" ng-change="changeGlobal()" />
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <label class="control-label col-md-5">{{i18N('configuration.condition.siteId','SiteId')}}</label>
+                        <div class="col-md-7">
+                            <input class="form-control" ng-model="condition.siteId" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-md-5">{{i18N('configuration.condition.metadataId','Metadata Id')}}</label>
+                        <div class="col-md-7">
+                            <input class="form-control" ng-model="condition.metadataId" />
+                        </div>
+                    </div>
+                    
+
+                    <div ng-show="!condition.global && type=='1'">
+
+                        <div class="row">
+                            <label class="control-label col-md-5">{{i18N('configuration.condition.mode','Schema')}}</label>
+                            <div class="col-md-7">
+                                <input class="form-control" ng-model="condition.appContext.schema" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <label class="control-label col-md-5">{{i18N('configuration.condition.mode','Mode')}}</label>
+                            <div class="col-md-7">
+                                <input class="form-control" ng-model="condition.appContext.mode" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <label class="control-label col-md-5">{{i18N('configuration.condition.parentApp','Parent Application')}}</label>
+                            <div class="col-md-7">
+                                <input class="form-control" ng-model="condition.appContext.parentApplication" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <label class="control-label col-md-5">{{i18N('configuration.condition.parentschema','Parent Schema')}}</label>
+                            <div class="col-md-7">
+                                <input class="form-control" ng-model="condition.appContext.parentschema" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <label class="control-label col-md-5">{{i18N('configuration.condition.parentmode','Parent Mode')}}</label>
+                            <div class="col-md-7">
+                                <input class="form-control" ng-model="condition.appContext.parentmode" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <label class="control-label col-md-5">{{i18N('configuration.condition.attribute','Attribute')}}</label>
+                            <div class="col-md-7">
+                                <input class="form-control" ng-model="condition.appContext.attribute" />
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="form-actions">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="text-align: center; vertical-align: middle;">
+                                <button type="button" class="btn pull-left commandButton" ng-click="saveCondition()">
+                                    <i style="margin-right: 0.5em" class="glyphicon glyphicon-ok"></i>{{i18N('general.save','Save')}}
+                                </button>
+                                <button type="button" class="btn pull-left commandButton" data-dismiss="modal">{{i18N('general.cancel','Cancel')}}</button>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

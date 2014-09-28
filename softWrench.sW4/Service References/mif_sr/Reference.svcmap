@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="86f3043d-7425-4ca8-bb80-7adc57ed3485" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://66.235.236.8/meaweb/wsdl/MXSW4SR.wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="MXMeta.xsd" MetadataType="Schema" ID="c9662faf-f783-47b0-b568-513ee7c1384f" SourceId="1" SourceUrl="http://66.235.236.8/meaweb/schema/common/meta/MXMeta.xsd" />
+    <MetadataFile FileName="MXSW4SRService.xsd" MetadataType="Schema" ID="c5556ddb-28a2-447f-97fd-428e38a669c0" SourceId="1" SourceUrl="http://66.235.236.8/meaweb/schema/service/MXSW4SRService.xsd" />
+    <MetadataFile FileName="sr.xsd" MetadataType="Schema" ID="2c7514a2-3503-4eba-bf90-2edd49a291f3" SourceId="1" SourceUrl="http://66.235.236.8/meaweb/schema/common/mbo/sr.xsd" />
+    <MetadataFile FileName="MXSW4SR.xsd" MetadataType="Schema" ID="c95e9bac-9747-4ac1-997a-c98873e708ef" SourceId="1" SourceUrl="http://66.235.236.8/meaweb/schema/common/mos/MXSW4SR.xsd" />
+    <MetadataFile FileName="MXSW4SR.wsdl" MetadataType="Wsdl" ID="0057940d-cf96-4833-971e-f24924d23161" SourceId="1" SourceUrl="http://66.235.236.8/meaweb/wsdl/MXSW4SR.wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -1,0 +1,164 @@
+﻿{
+  "#service": "Update Asset Data",
+  "fromlocation": "MT4",
+  "asset": "A8005",
+  "updatechildasset": [
+    "update"
+  ],
+  "#attributeSubtitle": "Value",
+  "titleoforder": "Title Test",
+  "remarks": "Remark Test",
+  "usage": "TEST",
+  "building": null,
+  "floor": null,
+  "room": null,
+  "asset_.primaryuser_.person_.hlagdisplayname": "(RAMSDALE) George Ramsdale",
+  "itc": "STORM",
+  "asset_.status": "OPERATING",
+  "assetCommodities": [
+    "Asset owened by HLAG",
+    "Commodity Test"
+  ],
+  "costcenter": "6690-810-300",
+  "asset_.description": "Unix Server",
+  "asset_.serialnum": "FT-88654343",
+  "asset_.item_.description": "Unix Server",
+  "asset_.item_.itdmodel": null,
+  "asset_.item_.itdmachtype": null,
+  "asset_.assettag": null,
+  "assetattributes": [
+    {
+      "assetattribute_.description": "Application Server Version",
+      "value": "4.0000000000",
+      "#newvalue": "3",
+      "assetspecid": 667,
+      "assetnum": "A8005",
+      "siteid": "BEDFORD"
+    },
+    {
+      "assetattribute_.description": "DISK SIZE",
+      "value": "500.0000000000",
+      "#newvalue": "500",
+      "assetspecid": 666,
+      "assetnum": "A8005",
+      "siteid": "BEDFORD"
+    },
+    {
+      "assetattribute_.description": "Disk 2 Size",
+      "value": "250.0000000000",
+      "#newvalue": "300",
+      "assetspecid": 668,
+      "assetnum": "A8005",
+      "siteid": "BEDFORD"
+    },
+    {
+      "assetattribute_.description": "Disk 3 Size",
+      "value": "250.0000000000",
+      "#newvalue": "200",
+      "assetspecid": 669,
+      "assetnum": "A8005",
+      "siteid": "BEDFORD"
+    },
+    {
+      "assetattribute_.description": "Disk 4 Size",
+      "value": "250.0000000000",
+      "#newvalue": "350",
+      "assetspecid": 670,
+      "assetnum": "A8005",
+      "siteid": "BEDFORD"
+    },
+    {
+      "assetattribute_.description": "MEMORY SIZE",
+      "value": "2000.0000000000",
+      "#newvalue": "4000",
+      "assetspecid": 665,
+      "assetnum": "A8005",
+      "siteid": "BEDFORD"
+    },
+    {
+      "assetattribute_.description": "PROCESSOR SPEED",
+      "value": "4.5000000000",
+      "#newvalue": "5",
+      "assetspecid": 664,
+      "assetnum": "A8005",
+      "siteid": "BEDFORD"
+    }
+  ],
+  "ticketid": null,
+  "specification": [
+    {
+      "label": "Computer Name",
+      "value": "Unix Server",
+      "#newvalue": "Unix Server Test"
+    },
+    {
+      "label": "Serial Number",
+      "value": "FT-88654343",
+      "#newvalue": "FT-88654343 Test"
+    },
+    {
+      "label": "Product",
+      "value": "Unix Server",
+      "#newvalue": "Unix Server Test"
+    },
+    {
+      "label": "Model",
+      "value": null,
+      "#newvalue": "Test"
+    },
+    {
+      "label": "Type",
+      "value": null,
+      "#newvalue": "Test"
+    },
+    {
+      "label": "HL Invent Number",
+      "value": null,
+      "#newvalue": "Test"
+    },
+    {
+      "label": "Comment",
+      "value": null,
+      "#newvalue": "Test"
+    }
+  ],
+  "asset_": {
+    "primaryuser_": {
+      "personid": "RAMSDALE",
+      "person_": {
+        "hlagdisplayname": "(RAMSDALE) George Ramsdale"
+      }
+    },
+    "primaryuser_.personid": "RAMSDALE",
+    "primaryuser_person_.hlagdisplayname": "(RAMSDALE) George Ramsdale",
+    "location_": {
+      "description": "3rd Floor Computer Lab"
+    },
+    "location_.description": "3rd Floor Computer Lab",
+    "assetglaccount_": {
+      "displaycostcenter": " // "
+    },
+    "assetglaccount_.displaycostcenter": " // ",
+    "status": "OPERATING",
+    "assetid": 1201,
+    "description": "Unix Server",
+    "serialnum": "FT-88654343",
+    "item_": {
+      "description": "Unix Server",
+      "itdmachtype": null,
+      "itdmodel": null
+    },
+    "item_.description": "Unix Server",
+    "item_.itdmachtype": null,
+    "item_.itdmodel": null,
+    "assettag": null
+  },
+  "asset_.primaryuser_.personid": "RAMSDALE",
+  "asset_.location_.description": "3rd Floor Computer Lab",
+  "asset_.assetglaccount_.displaycostcenter": " // ",
+  "asset_.assetid": 1201,
+  "assetspec_": {
+    "": null
+  },
+  "assetspec_.": null
+}

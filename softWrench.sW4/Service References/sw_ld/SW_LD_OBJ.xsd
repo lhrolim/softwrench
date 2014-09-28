@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="http://www.mro.com/mx/integration" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.mro.com/mx/integration" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="http://66.235.236.237/meaweb/schema/MetaData/MXIntegrationMeta.xsd" />
+  <xsd:include schemaLocation="http://66.235.236.237/meaweb/schema/MetaData/MXDataTypes.xsd" />
+  <xsd:complexType name="SW_LD_OBJ">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="SW_LD_OBJ">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="LONGDESCRIPTION" type="SW_LD_OBJ_LONGDESCRIPTION" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="SW_LD_OBJ_LONGDESCRIPTION">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="MXMBO">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="LDKEY" type="MXLong">
+            <xsd:annotation>
+              <xsd:documentation>LDKEY is a key field</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="LDOWNERTABLE" type="MXString">
+            <xsd:annotation>
+              <xsd:documentation>LDOWNERTABLE is a key field</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="LDOWNERCOL" type="MXString">
+            <xsd:annotation>
+              <xsd:documentation>LDOWNERCOL is a key field</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="LDTEXT" type="MXString" />
+          <xsd:element minOccurs="0" name="LONGDESCRIPTIONID" type="MXLong" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

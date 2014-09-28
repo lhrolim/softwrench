@@ -1,0 +1,21 @@
+﻿@using softWrench.sW4.Metadata.Security
+
+<article ng-controller="MetadataController">
+
+    @model softWrench.sW4.Web.Models.Generic.GenericModel
+
+    <input type="hidden" id="userLanguage" value="@((User as InMemoryUser).Language)" />
+
+    @*    <input type="hidden" id="crud_InitialSearchDTO" value="@Model.SearchDtoJSON"/>*@
+    
+    <input type="hidden" id="hddn_InitialTitle" value="@Model.Title" />
+    <input type="hidden" id="hddn_InitialData" value="@Model.InitialDataJSON" />
+    <input type="hidden" id="hddn_InitialMetaData" value="@Model.InitialMetadataJSON" />
+    <input type="hidden" id="hddn_includeURL" value="@Model.IncludeURL" />
+    
+    
+        
+    <ng-include src="includeURL"/>
+        
+    
+</article>

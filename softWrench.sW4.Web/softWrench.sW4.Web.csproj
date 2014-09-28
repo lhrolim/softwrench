@@ -1,0 +1,1468 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8F237B59-E434-4A10-9B53-B982CAC34551}</ProjectGuid>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>softWrench.sW4.Web</RootNamespace>
+    <AssemblyName>softWrench.sW4.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Common.Logging">
+      <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dependencies\DocumentFormat.OpenXml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentMigrator, Version=1.1.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\FluentMigrator.1.1.1.0\lib\40\FluentMigrator.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentMigrator.Runner, Version=1.1.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dependencies\FluentMigrator.Runner.dll</HintPath>
+    </Reference>
+    <Reference Include="IBM.Data.DB2, Version=9.0.0.2, Culture=neutral, PublicKeyToken=7c307b91aa13d208, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dependencies\IBM.Data.DB2.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=6.1.0.0, Culture=neutral, PublicKeyToken=3f033448d4bb5376, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\JetBrains.Annotations.7.0\lib\net40\JetBrains.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>Dependencies\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dependencies\Microsoft.ReportViewer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dependencies\Microsoft.ReportViewer.WebForms.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dependencies\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz, Version=2.2.1.400, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Quartz.2.2.1\lib\net40\Quartz.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SimpleInjector">
+      <HintPath>..\packages\SimpleInjector.2.4.0\lib\net45\SimpleInjector.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Integration.Web">
+      <HintPath>..\packages\SimpleInjector.Integration.Web.2.4.0\lib\net40\SimpleInjector.Integration.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Integration.Web.Mvc">
+      <HintPath>..\packages\SimpleInjector.Integration.Web.Mvc.2.4.0\lib\net40\SimpleInjector.Integration.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="softWrench.sW4.Controls.ActiveX, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d722d4e8b402a55a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dependencies\softWrench.sW4.Controls.ActiveX.dll</HintPath>
+    </Reference>
+    <Reference Include="SpreadsheetLight">
+      <HintPath>..\packages\SpreadsheetLight.3.4.1\lib\SpreadsheetLight.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Mvc.FixedDisplayModes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.FixedDisplayModes.1.0.0\lib\net40\Microsoft.Web.Mvc.FixedDisplayModes.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.0.0\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Providers">
+      <HintPath>..\packages\Microsoft.AspNet.Providers.Core.1.2\lib\net40\System.Web.Providers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20715.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Tracing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Tracing.4.0.0\lib\net40\System.Web.Http.Tracing.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.OData, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.OData.4.0.0\lib\net40\System.Web.Http.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Spatial, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\System.Spatial.5.2.0\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.3.0\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Common\ClientAwareRazorViewEngine.cs" />
+    <Compile Include="Common\ErrorDto.cs" />
+    <Compile Include="Common\GenericExceptionFilter.cs" />
+    <Compile Include="Common\LogInfo.cs" />
+    <Compile Include="Common\LogFilter.cs" />
+    <Compile Include="Common\Log\CaptureResponseFilter.cs" />
+    <Compile Include="Common\Log\LogInfo.cs" />
+    <Compile Include="Common\Log\MVCLogFilter.cs" />
+    <Compile Include="Common\SWControllerConfiguration.cs" />
+    <Compile Include="Common\TestProxy.cs" />
+    <Compile Include="Common\Utils.cs" />
+    <Compile Include="Common\WebAPIUtil.cs" />
+    <Compile Include="Controllers\ExtendedDataController.cs" />
+    <Compile Include="Controllers\Log\LogAdminController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Controllers\ReportFilterController.cs" />
+    <Compile Include="Controllers\Security\MakeSWAdminController.cs" />
+    <Compile Include="DB_Migration\1.0\20140324_SWWEB-93.cs" />
+    <Compile Include="DB_Migration\1.0\Issue20140314_HAP_113.cs" />
+    <Compile Include="DB_Migration\4.0\20140422Swweb112_2.cs" />
+    <Compile Include="DB_Migration\4.0\20140428_SWWEB_193_2.cs" />
+    <Compile Include="DB_Migration\4.0\20140415_SWWEB_193.cs" />
+    <Compile Include="DB_Migration\4.0\20140422Swweb112.cs" />
+    <Compile Include="DB_Migration\4.0\20140409_SWWEB_118.cs" />
+    <Compile Include="DB_Migration\4.0\20140428_SWWEB_115.cs" />
+    <Compile Include="DB_Migration\4.0\20140515Hap187.cs" />
+    <Compile Include="DB_Migration\4.0\20140505Hap202.cs" />
+    <Compile Include="DB_Migration\4.0\20140516_SWWEB118_2.cs" />
+    <Compile Include="DB_Migration\4.0\20140519Hap209.cs" />
+    <Compile Include="DB_Migration\4.0\20140519_SWWEB_115_2.cs" />
+    <Compile Include="DB_Migration\4.0\20140724_HAP_331.cs" />
+    <Compile Include="Formatting\ResponseJsonFormatter.cs" />
+    <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
+    <Compile Include="Models\MyProfile\MyProfileModel.cs" />
+    <Compile Include="Models\Report\ReportModel.cs" />
+    <Compile Include="Security\ContextLookuper.cs" />
+    <Compile Include="SPF\Filters\MvcContextFilter.cs" />
+    <Compile Include="SPF\Filters\ContextFilter.cs" />
+    <Compile Include="UserControls\RichTextBox.aspx.cs">
+      <DependentUpon>RichTextBox.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserControls\RichTextBox.aspx.designer.cs">
+      <DependentUpon>RichTextBox.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Util\ExcelUtil.cs" />
+    <Compile Include="Util\I18NUtil.cs" />
+    <Compile Include="Util\MigrationUtil.cs" />
+    <Compile Include="Util\RequestUtil.cs" />
+    <Compile Include="Util\RowStampScriptHelper.cs" />
+    <Content Include="App_Data\Client\%40internal\source\maximo7.2.1.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\source\smartcloud7.5.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\source\maximo7.5.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\target\smartcloud7.5.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\target\ism.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\target\maximo7.2.1.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\target\maximo7.5.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\entegra\menu.mobile.xml" />
+    <Content Include="App_Data\Client\entegra\menu.web.xml" />
+    <Content Include="App_Data\Client\entegra\properties.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\Client\entegra\metadata.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\Client\gric\deploy.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\Client\gric\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\hapag\deploy.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\Client\hapag\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\manchester\menu.web.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\manchester\metadata.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\manchester\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\otb\deploy.xml" />
+    <Content Include="App_Data\Client\otb\menu.mobile.xml" />
+    <Content Include="App_Data\Client\otb\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\scottsdale\menu.web.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\scottsdale\metadata.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\scottsdale\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bootstrap\css\bootstrap-multiselect.css" />
+    <Content Include="Content\bootstrap\css\typeahead.js-bootstrap.css" />
+    <Content Include="Content\Controller\About.html" />
+    <Content Include="Content\Controller\MakeSWAdmin.html" />
+    <Content Include="Content\Controller\LogAdmin.html" />
+    <Content Include="Content\Controller\ReportFilter.html" />
+    <Content Include="Content\Controller\RoleGroup.html" />
+    <Content Include="Content\font-awesome-4.0.3\css\font-awesome.css" />
+    <Content Include="Content\font-awesome-4.0.3\css\font-awesome.min.css" />
+    <Content Include="Content\font-awesome-4.0.3\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\Images\background.jpg" />
+    <Content Include="Content\Images\file.png" />
+    <Content Include="Content\Images\folder-closed.png" />
+    <Content Include="Content\Images\folder.png" />
+    <Content Include="Content\Images\icon-background-select.png" />
+    <Content Include="Content\Images\icon-combobox.png" />
+    <Content Include="Content\Images\icon-opendetails.png" />
+    <Content Include="Content\Images\login-gric-gilariver.jpg" />
+    <Content Include="Content\Images\manchester.png" />
+    <Content Include="Content\Images\otb-branding.png" />
+    <Content Include="Content\Images\otb-header.png" />
+    <Content Include="Content\Images\scottsdale.png" />
+    <Content Include="Content\Images\softwrench.png" />
+    <Content Include="Content\Images\tree-leaf.png" />
+    <Content Include="Content\Images\tree-node-collapsed.png" />
+    <Content Include="Content\Images\tree-node-expanded.png" />
+    <Content Include="Content\Scripts\angulartreeview.js" />
+    <Compile Include="Controllers\Application\ApplicationController.cs" />
+    <Compile Include="Controllers\AttachmentController.cs" />
+    <Compile Include="Controllers\Configuration\ConfigurationController.cs" />
+    <Compile Include="Controllers\FaqApiController.cs" />
+    <Compile Include="Controllers\Faq\FaqController.cs" />
+    <Compile Include="Controllers\FileDownloadController.cs" />
+    <Compile Include="Controllers\HapagHomeController.cs" />
+    <Compile Include="Common\MockingUtils.cs" />
+    <Compile Include="Controllers\MyProfile\MyProfileController.cs" />
+    <Compile Include="Controllers\Mobile\MobileController.cs" />
+    <Compile Include="Controllers\Routing\NextSchemaRouter.cs" />
+    <Compile Include="Controllers\Routing\SuccessMessageHandler.cs" />
+    <Compile Include="Controllers\SchedulerSetup\SchedulerController.cs" />
+    <Compile Include="Controllers\DataController.cs" />
+    <Compile Include="Controllers\DataRequestValueProviderFactory.cs" />
+    <Compile Include="Controllers\MenuController.cs" />
+    <Compile Include="Controllers\Security\UserController.cs" />
+    <Compile Include="Controllers\Security\UserProfileController.cs" />
+    <Compile Include="Controllers\Security\RoleController.cs" />
+    <Compile Include="Controllers\SignInController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SignoutController.cs" />
+    <Compile Include="Controllers\StubController.cs" />
+    <Compile Include="Controllers\Utilities\EntityMetadataController.cs" />
+    <Compile Include="Controllers\Utilities\EntityMetadataEditorResult.cs" />
+    <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DB_Migration\1.0\Issue20140113ModifyingSwUser2.cs" />
+    <Compile Include="DB_Migration\1.0\Issue20131224Configuration.cs" />
+    <Compile Include="DB_Migration\1.0\Issue20140101ModifyingSwUser2.cs" />
+    <Compile Include="DB_Migration\1.0\Issue20140106Configuration2.cs" />
+    <Compile Include="DB_Migration\1.0\Issue20131219MaxUserSync.cs" />
+    <Compile Include="DB_Migration\1.0\HapagMyProfileMigration.cs" />
+    <Compile Include="DB_Migration\1.0\Initial.cs" />
+    <Compile Include="DB_Migration\MigratorExecutor.cs" />
+    <Compile Include="Formatting\DataMapXmlFormatter.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Application\ApplicationModel.cs" />
+    <Compile Include="Models\Faq\FaqModel.cs" />
+    <Compile Include="Models\Generic\GenericModel.cs" />
+    <Compile Include="Models\Hapag\DashboardDefinitionModel.cs" />
+    <Compile Include="Models\Home\HomeConfigs.cs" />
+    <Compile Include="Models\Home\HomeModel.cs" />
+    <Compile Include="Models\LoginHandler\LoginHandlerModel.cs" />
+    <Compile Include="Models\SchedulerSetup\SchedulerSetupModel.cs" />
+    <Compile Include="Models\User\UserModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleInjector\SimpleInjectorInterceptor.cs" />
+    <Compile Include="SimpleInjector\SimpleInjectorScanner.cs" />
+    <Compile Include="SimpleInjector\SimpleInjectorWebApiDependencyResolver.cs" />
+    <Compile Include="SimpleInjector\WebApi\IAPIControllerFactory.cs" />
+    <Compile Include="SimpleInjector\WebApi\SimpleInjectorWebAPIUtil.cs" />
+    <Compile Include="SPF\Filters\RedirectUrlFilter.cs" />
+    <Compile Include="SPF\SPFRedirectAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\Client\%40internal\source\maximo7.1.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\otb\menu.web.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\otb\metadata.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\gric\metadata.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\gric\menu.web.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\hapag\menu.web.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\hapag\metadata.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bootstrap\css\bootstrap-responsive.css" />
+    <Content Include="Content\bootstrap\css\bootstrap-responsive.min.css" />
+    <Content Include="Content\bootstrap\css\bootstrap-select.css" />
+    <Content Include="Content\bootstrap\css\bootstrap-theme-min.css" />
+    <Content Include="Content\bootstrap\css\bootstrap-min.css" />
+    <Content Include="Content\bootstrap\css\datepicker.css" />
+    <Content Include="Content\bootstrap\css\datetimepicker.css" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\bootstrap\img\glyphicons-halflings-white.png" />
+    <Content Include="Content\bootstrap\img\glyphicons-halflings.png" />
+    <Content Include="Content\Images\login-header2.jpg" />
+    <Content Include="Content\Scripts\angular\angular-sanitize.js" />
+    <Content Include="Content\Scripts\angular\angular-sanitize.min.js" />
+    <Content Include="Content\Scripts\angular\bindonce.js" />
+    <Content Include="Content\Scripts\bootbox.js" />
+    <Content Include="Content\Scripts\bootbox.min.js" />
+    <Content Include="Content\Scripts\bootstrap-multiselect.js" />
+    <Content Include="Content\Scripts\client\aa_dateutils.js" />
+    <Content Include="Content\Scripts\client\aa_stringutils.js" />
+    <Content Include="Content\Scripts\client\about.js" />
+    <Content Include="Content\Scripts\client\components\componentsfacade.js" />
+    <Content Include="Content\Scripts\client\components\autocompleteserver.js" />
+    <Content Include="Content\Scripts\client\components\autocompleteclient.js" />
+    <Content Include="Content\Scripts\client\components\combodropdown.js" />
+    <Content Include="Content\Scripts\client\components\richtext.js" />
+    <Content Include="Content\Scripts\client\crud_body_modal.js" />
+    <Content Include="Content\Scripts\client\makeSWAdmin.js" />
+    <Content Include="Content\Scripts\client\crud_base_controller.js" />
+    <Content Include="Content\Scripts\client\crud_list.js" />
+    <Content Include="Content\Scripts\client\logAdmin.js" />
+    <Content Include="Content\Scripts\client\services\localstorage_service.js" />
+    <Content Include="Content\Scripts\client\services\modal_service.js" />
+    <Content Include="Content\Scripts\client\services\detailService.js" />
+    <Content Include="Content\Scripts\client\services\statuscolor_service.js" />
+    <Content Include="Content\Scripts\client\util\log_enhacer.js" />
+    <Content Include="Content\Scripts\client\samelinepickers.js" />
+    <Content Include="Content\Scripts\client\crud_output_fields.js" />
+    <Content Include="Content\Scripts\client\directives\commandBar.js" />
+    <Content Include="Content\Scripts\client\error.js" />
+    <Content Include="Content\Scripts\client\datetime.js" />
+    <Content Include="Content\Scripts\client\directives\fileread.js" />
+    <Content Include="Content\Scripts\client\directives\menuitem.js" />
+    <Content Include="Content\Scripts\client\directives\printSection.js" />
+    <Content Include="Content\Scripts\client\directives\printModal.js" />
+    <Content Include="Content\Scripts\client\download.js" />
+    <Content Include="Content\Scripts\client\inlinecompositionlist.js" />
+    <Content Include="Content\Scripts\client\crud_input_fields.js" />
+    <Content Include="Content\Scripts\client\lookupModal.js" />
+    <Content Include="Content\Scripts\client\services\schema_service.js" />
+    <Content Include="Content\Scripts\client\services\mock_service.js" />
+    <Content Include="Content\Scripts\client\services\style_service.js" />
+    <Content Include="Content\Scripts\client\services\screenshot_service.js" />
+    <Content Include="Content\Scripts\client\services\context_service.js" />
+    <Content Include="Content\Scripts\client\services\associationService.js" />
+    <Content Include="Content\Scripts\client\services\crud_extra_service.js" />
+    <Content Include="Content\Scripts\client\services\submit_service.js" />
+    <Content Include="Content\Scripts\client\services\menu_service.js" />
+    <Content Include="Content\Scripts\client\services\applicationFacade.js" />
+    <Content Include="Content\Scripts\client\services\alert_service.js" />
+    <Content Include="Content\Scripts\client\services\expression_service.js" />
+    <Content Include="Content\Scripts\client\services\validation_service.js" />
+    <Content Include="Content\Scripts\client\services\i18n_service.js" />
+    <Content Include="Content\Scripts\client\services\redirect_service.js" />
+    <Content Include="Content\Scripts\client\services\command_service.js" />
+    <Content Include="Content\Scripts\client\services\field_service.js" />
+    <Content Include="Content\Scripts\client\services\compositionService.js" />
+    <Content Include="Content\Scripts\client\services\tabs_service.js" />
+    <Content Include="Content\Scripts\client\services\search_service.js" />
+    <Content Include="Content\Scripts\client\services\fixheader_service.js" />
+    <Content Include="Content\Scripts\client\services\print_service.js" />
+    <Content Include="Content\Scripts\client\services\format_service.js" />
+    <Content Include="Content\Scripts\customers\gric\sr_service.js" />
+    <Content Include="Content\Scripts\customers\hapag\createFromAsset.js" />
+    <Content Include="Content\Scripts\customers\hapag\change_service.js" />
+    <Content Include="Content\Scripts\customers\hapag\jobplan_completeaction.js" />
+    <Content Include="Content\Scripts\customers\hapag\asset_remarks.js" />
+    <Content Include="Content\Scripts\customers\hapag\imac_service.js" />
+    <Content Include="Content\Scripts\customers\hapag\report_service.js" />
+    <Content Include="Content\Scripts\customers\hapag\sr_service.js" />
+    <Content Include="Content\Scripts\customers\hapag\sr_summary_service.js" />
+    <Content Include="Content\Scripts\customers\otb\commlogactions.js" />
+    <Content Include="Content\Scripts\customers\otb\sr_service.js" />
+    <Content Include="Content\Scripts\bindonce.js" />
+    <Content Include="Content\Scripts\jquery\jquery-filedownload-1.2.0.js" />
+    <Content Include="Content\Scripts\jquery\jquery-fileupload-5.40.1.js" />
+    <Content Include="Content\Scripts\jquery\jquery.iframe-transport.js" />
+    <Content Include="Content\Scripts\responsive.js" />
+    <Content Include="Content\Scripts\thirdparty\moment.js" />
+    <Content Include="Content\Scripts\thirdparty\textAngular-sanitize-min.js" />
+    <Content Include="Content\Scripts\thirdparty\textAngular-min.js" />
+    <Content Include="Content\scss\forms.css">
+      <DependentUpon>forms.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\scss\grids.css">
+      <DependentUpon>grids.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\styles\default\application\forms.css" />
+    <Content Include="Content\styles\default\application\grids.css" />
+    <Content Include="Content\styles\default\application\pages.css" />
+    <Content Include="Content\styles\default\index.css" />
+    <Content Include="Content\styles\default\menu.css" />
+    <Content Include="Content\styles\default\print.css" />
+    <Content Include="Content\styles\default\search.css" />
+    <Content Include="Content\Controller\Configuration.html" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\bootstrap\css\submenu.css" />
+    <Content Include="Content\Images\1386143954_info.png" />
+    <Content Include="Content\Images\1386143956_info.png" />
+    <Content Include="Content\Images\downarrow.png" />
+    <Content Include="Content\Images\executeNow-icon.png" />
+    <Content Include="Content\Images\login-header.jpg" />
+    <Content Include="Content\Images\pause-icon.png" />
+    <Content Include="Content\Images\rightarrowtree.png" />
+    <Content Include="Content\Images\scheduler-icon.png" />
+    <Content Include="Content\Images\softwrench-logo-small.gif" />
+    <Content Include="Content\Images\start-icon.png" />
+    <Content Include="Content\Scripts\angular\angular.js" />
+    <Content Include="Content\Scripts\angular\angular-min.js" />
+    <Content Include="Content\Scripts\bootstrap-combobox.js" />
+    <Content Include="Content\Scripts\client\ajax_interceptor.js" />
+    <Content Include="Content\Scripts\client\crud_output.js" />
+    <Content Include="Content\Scripts\client\configuration.js" />
+    <Content Include="Content\Scripts\client\pagination.js" />
+    <Content Include="Content\Scripts\client\crud_input.js" />
+    <Content Include="Content\Scripts\client\crud_body.js" />
+    <Content Include="Content\Scripts\client\home.js" />
+    <Content Include="Content\Scripts\client\compositionlist.js" />
+    <Content Include="Content\Scripts\client\schedulerSetup.js" />
+    <Content Include="Content\Scripts\client\messagehandler.js" />
+    <Content Include="Content\Scripts\client\myProfile.js" />
+    <Content Include="Content\Scripts\client\faq.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.ar.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.bg.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.ca.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.cs.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.cy.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.da.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.de.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.el.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.es.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.et.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.fa.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.fi.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.fr.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.gl.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.he.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.hr.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.hu.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.id.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.is.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.it.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.ja.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.ka.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.kk.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.kr.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.lt.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.lv.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.mk.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.ms.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.nb.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.nl-BE.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.nl.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.no.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.pl.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.pt-BR.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.pt.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.ro.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.rs-latin.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.rs.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.ru.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.sk.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.sl.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.sq.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.sv.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.sw.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.th.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.tr.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.ua.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.uk.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.zh-CN.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datepicker.zh-TW.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.bg.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.ca.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.cs.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.da.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.de.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.el.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.es.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.fi.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.fr.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.he.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.hr.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.hu.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.id.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.is.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.it.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.ja.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.kr.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.lt.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.lv.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.ms.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.nb.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.nl.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.no.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.pl.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.pt-BR.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.pt.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.ro.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.rs-latin.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.rs.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.ru.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.sk.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.sl.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.sv.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.sw.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.th.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.tr.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.ua.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.uk.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.zh-CN.js" />
+    <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.zh-TW.js" />
+    <Content Include="Content\Scripts\spin-min.js" />
+    <Content Include="Content\Scripts\typeahead.js" />
+    <Content Include="Content\styles\hapag\index.css" />
+    <Content Include="Content\styles\hapag\site.css" />
+    <Content Include="Content\styles\manchester\index.css" />
+    <Content Include="Content\styles\manchester\site.css" />
+    <Content Include="Content\styles\scottsdale\index.css" />
+    <Content Include="Content\styles\scottsdale\site.css" />
+    <Content Include="Content\styles\gric\index.css" />
+    <Content Include="Content\styles\gric\site.css" />
+    <Content Include="Content\bootstrap\css\textAngular-min.css" />
+    <Content Include="Content\Templates\crud\advanced_filter_toogle.html" />
+    <Content Include="Content\Templates\crud\association_list_input.html" />
+    <Content Include="Content\Templates\crud\crud_body_modal.html" />
+    <Content Include="Content\Templates\crud\crud_list.html" />
+    <Content Include="Content\Templates\directives\angulartreeview.html" />
+    <Content Include="Content\Templates\directives\commandBar.html" />
+    <Content Include="Content\Templates\crud\inline_composition_list.html" />
+    <Content Include="Content\Templates\crud\crud_input_fields.html" />
+    <Content Include="Content\Templates\crud\crud_output_fields.html" />
+    <Content Include="Content\Templates\directives\printSection.html" />
+    <Content Include="Content\Templates\hapag\Actionentry.html" />
+    <Content Include="Content\Templates\hapag\createfromasset.html" />
+    <Content Include="Content\Templates\hapag\HapagHome.html" />
+    <Content Include="Content\Templates\hapag\jobplancompleteaction.html" />
+    <Content Include="Content\Templates\hapag\assetremarks.html" />
+    <Content Include="Content\Templates\crud\update_section.html" />
+    <Content Include="Content\Templates\hapag\commaseparatedcomposition.html" />
+    <Content Include="Content\Templates\otb\commlogaction.html" />
+    <Content Include="Content\Templates\samelinepickers.html" />
+    <Content Include="Content\Templates\hapag\conditionalfield.html" />
+    <Content Include="Content\Templates\configConditionModal.html" />
+    <Content Include="Content\Templates\printModal.html" />
+    <Content Include="Content\Templates\lookupModal.html" />
+    <Content Include="Content\Templates\usefulFaqLinks.html" />
+    <Content Include="Content\Templates\message_section.html" />
+    <Content Include="Content\styles\default\treeview.css" />
+    <Content Include="Content\Templates\downloadattachment.html" />
+    <Content Include="Dependencies\DocumentFormat.OpenXml.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dependencies\FluentMigrator.Runner.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dependencies\IBM.Data.DB2.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dependencies\Microsoft.Office.Interop.Excel.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dependencies\Microsoft.ReportViewer.Common.dll" />
+    <Content Include="Dependencies\Microsoft.ReportViewer.WebForms.dll" />
+    <Content Include="Dependencies\MySql.Data.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Dependencies\softWrench.sW4.Controls.ActiveX.dll" />
+    <Content Include="App_Data\Client\hapag\i18n\de\labels.json" />
+    <Content Include="App_Data\Client\entegra\deploy.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="App_Data\Client\hapag\i18n\en\labels.json" />
+    <Content Include="IBM.Data.DB2.dll" />
+    <Content Include="Content\Images\update_16.png" />
+    <Content Include="Content\Images\previous.png" />
+    <Content Include="Content\Images\next.png" />
+    <Content Include="Content\Images\first.png" />
+    <Content Include="Content\Images\last.png" />
+    <Content Include="Content\Images\excel_small.gif" />
+    <Content Include="Content\Images\logo_hapag.gif" />
+    <Content Include="Content\Images\print_small.gif" />
+    <Content Include="Content\Images\refresh_sm.gif" />
+    <Content Include="Content\Images\softWrench-phone.gif" />
+    <Content Include="Content\styles\default\site.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap\datepicker\less\datepicker.less">
+      <Compile>False</Compile>
+      <Minify>False</Minify>
+      <IgnoreWarnings>True</IgnoreWarnings>
+      <IgnoreErrors>True</IgnoreErrors>
+    </Content>
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="App_Data\Client\hapag\i18n\es\labels.json" />
+    <Content Include="App_Data\Client\otb\statuscolors.json" />
+    <None Include="App_Data\Schema\Deploy_Metadata.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_Data\Schema\Menu.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_Data\Schema\Metadata.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Content\Controller\Application.html" />
+    <Content Include="Content\Controller\Faq.html" />
+    <Content Include="Content\Controller\Role.html" />
+    <Content Include="Content\Controller\UserProfile.html" />
+    <Content Include="Content\Controller\User.html" />
+    <Content Include="Content\Controller\Scheduler.html" />
+    <None Include="App_Data\Schema\Properties.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_Data\Schema\Target.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Content\Customers\hapag\html\Shared\_Layout.cshtml" />
+    <Content Include="Content\Customers\hapag\html\SignIn\Index.cshtml" />
+    <Content Include="Content\Customers\Web.config" />
+    <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\font-awesome-4.1.0\fonts\FontAwesome.otf" />
+    <Content Include="Content\scss\forms.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <IgnoreWarnings>True</IgnoreWarnings>
+      <IgnoreErrors>True</IgnoreErrors>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
+    <Content Include="Content\scss\grids.scss">
+      <Compile>True</Compile>
+      <Minify>True</Minify>
+      <IgnoreWarnings>True</IgnoreWarnings>
+      <IgnoreErrors>True</IgnoreErrors>
+      <CompileStyle>Nested</CompileStyle>
+      <DebugInfo>False</DebugInfo>
+    </Content>
+    <Content Include="Content\scss\forms.css.map">
+      <DependentUpon>forms.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\scss\grids.css.map">
+      <DependentUpon>grids.scss</DependentUpon>
+    </Content>
+    <None Include="job_scheduling_data_2_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\PublishProfiles\softWrench QA.pubxml" />
+    <Content Include="Content\Images\softWrench.gif" />
+    <Content Include="Content\Images\update_24.png" />
+    <Content Include="Content\Scripts\ace\ace.js" />
+    <Content Include="Content\Scripts\ace\ext-elastic_tabstops_lite.js" />
+    <Content Include="Content\Scripts\ace\ext-emmet.js" />
+    <Content Include="Content\Scripts\ace\ext-keybinding_menu.js" />
+    <Content Include="Content\Scripts\ace\ext-modelist.js" />
+    <Content Include="Content\Scripts\ace\ext-options.js" />
+    <Content Include="Content\Scripts\ace\ext-searchbox.js" />
+    <Content Include="Content\Scripts\ace\ext-settings_menu.js" />
+    <Content Include="Content\Scripts\ace\ext-spellcheck.js" />
+    <Content Include="Content\Scripts\ace\ext-static_highlight.js" />
+    <Content Include="Content\Scripts\ace\ext-statusbar.js" />
+    <Content Include="Content\Scripts\ace\ext-textarea.js" />
+    <Content Include="Content\Scripts\ace\ext-themelist.js" />
+    <Content Include="Content\Scripts\ace\ext-whitespace.js" />
+    <Content Include="Content\Scripts\ace\keybinding-emacs.js" />
+    <Content Include="Content\Scripts\ace\keybinding-vim.js" />
+    <Content Include="Content\Scripts\ace\mode-abap.js" />
+    <Content Include="Content\Scripts\ace\mode-actionscript.js" />
+    <Content Include="Content\Scripts\ace\mode-ada.js" />
+    <Content Include="Content\Scripts\ace\mode-asciidoc.js" />
+    <Content Include="Content\Scripts\ace\mode-assembly_x86.js" />
+    <Content Include="Content\Scripts\ace\mode-autohotkey.js" />
+    <Content Include="Content\Scripts\ace\mode-batchfile.js" />
+    <Content Include="Content\Scripts\ace\mode-c9search.js" />
+    <Content Include="Content\Scripts\ace\mode-clojure.js" />
+    <Content Include="Content\Scripts\ace\mode-cobol.js" />
+    <Content Include="Content\Scripts\ace\mode-coffee.js" />
+    <Content Include="Content\Scripts\ace\mode-coldfusion.js" />
+    <Content Include="Content\Scripts\ace\mode-csharp.js" />
+    <Content Include="Content\Scripts\ace\mode-css.js" />
+    <Content Include="Content\Scripts\ace\mode-curly.js" />
+    <Content Include="Content\Scripts\ace\mode-c_cpp.js" />
+    <Content Include="Content\Scripts\ace\mode-d.js" />
+    <Content Include="Content\Scripts\ace\mode-dart.js" />
+    <Content Include="Content\Scripts\ace\mode-diff.js" />
+    <Content Include="Content\Scripts\ace\mode-django.js" />
+    <Content Include="Content\Scripts\ace\mode-dot.js" />
+    <Content Include="Content\Scripts\ace\mode-ejs.js" />
+    <Content Include="Content\Scripts\ace\mode-erlang.js" />
+    <Content Include="Content\Scripts\ace\mode-forth.js" />
+    <Content Include="Content\Scripts\ace\mode-ftl.js" />
+    <Content Include="Content\Scripts\ace\mode-glsl.js" />
+    <Content Include="Content\Scripts\ace\mode-golang.js" />
+    <Content Include="Content\Scripts\ace\mode-groovy.js" />
+    <Content Include="Content\Scripts\ace\mode-haml.js" />
+    <Content Include="Content\Scripts\ace\mode-haskell.js" />
+    <Content Include="Content\Scripts\ace\mode-haxe.js" />
+    <Content Include="Content\Scripts\ace\mode-html.js" />
+    <Content Include="Content\Scripts\ace\mode-html_ruby.js" />
+    <Content Include="Content\Scripts\ace\mode-ini.js" />
+    <Content Include="Content\Scripts\ace\mode-jade.js" />
+    <Content Include="Content\Scripts\ace\mode-java.js" />
+    <Content Include="Content\Scripts\ace\mode-javascript.js" />
+    <Content Include="Content\Scripts\ace\mode-json.js" />
+    <Content Include="Content\Scripts\ace\mode-jsoniq.js" />
+    <Content Include="Content\Scripts\ace\mode-jsp.js" />
+    <Content Include="Content\Scripts\ace\mode-jsx.js" />
+    <Content Include="Content\Scripts\ace\mode-julia.js" />
+    <Content Include="Content\Scripts\ace\mode-latex.js" />
+    <Content Include="Content\Scripts\ace\mode-less.js" />
+    <Content Include="Content\Scripts\ace\mode-liquid.js" />
+    <Content Include="Content\Scripts\ace\mode-lisp.js" />
+    <Content Include="Content\Scripts\ace\mode-livescript.js" />
+    <Content Include="Content\Scripts\ace\mode-logiql.js" />
+    <Content Include="Content\Scripts\ace\mode-lsl.js" />
+    <Content Include="Content\Scripts\ace\mode-lua.js" />
+    <Content Include="Content\Scripts\ace\mode-luapage.js" />
+    <Content Include="Content\Scripts\ace\mode-lucene.js" />
+    <Content Include="Content\Scripts\ace\mode-makefile.js" />
+    <Content Include="Content\Scripts\ace\mode-markdown.js" />
+    <Content Include="Content\Scripts\ace\mode-matlab.js" />
+    <Content Include="Content\Scripts\ace\mode-mushcode.js" />
+    <Content Include="Content\Scripts\ace\mode-mushcode_high_rules.js" />
+    <Content Include="Content\Scripts\ace\mode-mysql.js" />
+    <Content Include="Content\Scripts\ace\mode-objectivec.js" />
+    <Content Include="Content\Scripts\ace\mode-ocaml.js" />
+    <Content Include="Content\Scripts\ace\mode-pascal.js" />
+    <Content Include="Content\Scripts\ace\mode-perl.js" />
+    <Content Include="Content\Scripts\ace\mode-pgsql.js" />
+    <Content Include="Content\Scripts\ace\mode-php.js" />
+    <Content Include="Content\Scripts\ace\mode-powershell.js" />
+    <Content Include="Content\Scripts\ace\mode-prolog.js" />
+    <Content Include="Content\Scripts\ace\mode-properties.js" />
+    <Content Include="Content\Scripts\ace\mode-python.js" />
+    <Content Include="Content\Scripts\ace\mode-r.js" />
+    <Content Include="Content\Scripts\ace\mode-rdoc.js" />
+    <Content Include="Content\Scripts\ace\mode-rhtml.js" />
+    <Content Include="Content\Scripts\ace\mode-ruby.js" />
+    <Content Include="Content\Scripts\ace\mode-rust.js" />
+    <Content Include="Content\Scripts\ace\mode-sass.js" />
+    <Content Include="Content\Scripts\ace\mode-scad.js" />
+    <Content Include="Content\Scripts\ace\mode-scala.js" />
+    <Content Include="Content\Scripts\ace\mode-scheme.js" />
+    <Content Include="Content\Scripts\ace\mode-scss.js" />
+    <Content Include="Content\Scripts\ace\mode-sh.js" />
+    <Content Include="Content\Scripts\ace\mode-snippets.js" />
+    <Content Include="Content\Scripts\ace\mode-sql.js" />
+    <Content Include="Content\Scripts\ace\mode-stylus.js" />
+    <Content Include="Content\Scripts\ace\mode-svg.js" />
+    <Content Include="Content\Scripts\ace\mode-tcl.js" />
+    <Content Include="Content\Scripts\ace\mode-tex.js" />
+    <Content Include="Content\Scripts\ace\mode-text.js" />
+    <Content Include="Content\Scripts\ace\mode-textile.js" />
+    <Content Include="Content\Scripts\ace\mode-tmsnippet.js" />
+    <Content Include="Content\Scripts\ace\mode-toml.js" />
+    <Content Include="Content\Scripts\ace\mode-twig.js" />
+    <Content Include="Content\Scripts\ace\mode-typescript.js" />
+    <Content Include="Content\Scripts\ace\mode-vbscript.js" />
+    <Content Include="Content\Scripts\ace\mode-velocity.js" />
+    <Content Include="Content\Scripts\ace\mode-verilog.js" />
+    <Content Include="Content\Scripts\ace\mode-xml.js" />
+    <Content Include="Content\Scripts\ace\mode-xquery.js" />
+    <Content Include="Content\Scripts\ace\mode-yaml.js" />
+    <Content Include="Content\Scripts\ace\theme-ambiance.js" />
+    <Content Include="Content\Scripts\ace\theme-chaos.js" />
+    <Content Include="Content\Scripts\ace\theme-chrome.js" />
+    <Content Include="Content\Scripts\ace\theme-clouds.js" />
+    <Content Include="Content\Scripts\ace\theme-clouds_midnight.js" />
+    <Content Include="Content\Scripts\ace\theme-cobalt.js" />
+    <Content Include="Content\Scripts\ace\theme-crimson_editor.js" />
+    <Content Include="Content\Scripts\ace\theme-dawn.js" />
+    <Content Include="Content\Scripts\ace\theme-dreamweaver.js" />
+    <Content Include="Content\Scripts\ace\theme-eclipse.js" />
+    <Content Include="Content\Scripts\ace\theme-github.js" />
+    <Content Include="Content\Scripts\ace\theme-idle_fingers.js" />
+    <Content Include="Content\Scripts\ace\theme-kr.js" />
+    <Content Include="Content\Scripts\ace\theme-merbivore.js" />
+    <Content Include="Content\Scripts\ace\theme-merbivore_soft.js" />
+    <Content Include="Content\Scripts\ace\theme-monokai.js" />
+    <Content Include="Content\Scripts\ace\theme-mono_industrial.js" />
+    <Content Include="Content\Scripts\ace\theme-pastel_on_dark.js" />
+    <Content Include="Content\Scripts\ace\theme-solarized_dark.js" />
+    <Content Include="Content\Scripts\ace\theme-solarized_light.js" />
+    <Content Include="Content\Scripts\ace\theme-terminal.js" />
+    <Content Include="Content\Scripts\ace\theme-textmate.js" />
+    <Content Include="Content\Scripts\ace\theme-tomorrow.js" />
+    <Content Include="Content\Scripts\ace\theme-tomorrow_night.js" />
+    <Content Include="Content\Scripts\ace\theme-tomorrow_night_blue.js" />
+    <Content Include="Content\Scripts\ace\theme-tomorrow_night_bright.js" />
+    <Content Include="Content\Scripts\ace\theme-tomorrow_night_eighties.js" />
+    <Content Include="Content\Scripts\ace\theme-twilight.js" />
+    <Content Include="Content\Scripts\ace\theme-vibrant_ink.js" />
+    <Content Include="Content\Scripts\ace\theme-xcode.js" />
+    <Content Include="Content\Scripts\ace\worker-coffee.js" />
+    <Content Include="Content\Scripts\ace\worker-css.js" />
+    <Content Include="Content\Scripts\ace\worker-javascript.js" />
+    <Content Include="Content\Scripts\ace\worker-json.js" />
+    <Content Include="Content\Scripts\ace\worker-lua.js" />
+    <Content Include="Content\Scripts\ace\worker-php.js" />
+    <Content Include="Content\Scripts\ace\worker-xquery.js" />
+    <None Include="Content\Scripts\angular%281.15%29.jsa" />
+    <Content Include="Content\Scripts\angular%281.0.8%29.min.js" />
+    <Content Include="Content\Scripts\bootstrap-datepicker.js" />
+    <Content Include="Content\Scripts\bootstrap-datetimepicker.js" />
+    <Content Include="Content\Scripts\bootstrap-datetimepicker.min.js" />
+    <None Include="Content\Scripts\bootstrap3.0.0.js.bck" />
+    <Content Include="Content\Scripts\angular-datepicker.js" />
+    <Content Include="Content\Scripts\angular\angular-strap.js" />
+    <Content Include="Content\Scripts\angular\angular-strap-min.js" />
+    <Content Include="Content\Scripts\angular-strap-timepicker.js" />
+    <Content Include="Content\Scripts\bootstrap.max.js" />
+    <Content Include="Content\Scripts\bootstrap.js" />
+    <Content Include="Content\Scripts\client\aaa_layout.js" />
+    <Content Include="Content\Scripts\client\aa_utils.js" />
+    <Content Include="Content\Scripts\client\dashboard.js" />
+    <Content Include="Content\Scripts\client\user.js" />
+    <Content Include="Content\Scripts\client\userprofile.js" />
+    <Content Include="Content\Scripts\client\role.js" />
+    <None Include="Content\Scripts\jquery-1.8.2.js.bck" />
+    <None Include="Content\Scripts\jquery-1.8.2.intellisense.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_af-na.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_af-za.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_af.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_am-et.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_am.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-001.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-ae.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-bh.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-dz.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-eg.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-iq.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-jo.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-kw.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-lb.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-ly.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-ma.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-om.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-qa.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-sa.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-sd.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-sy.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-tn.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar-ye.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ar.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_bg-bg.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_bg.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_bn-bd.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_bn-in.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_bn.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ca-ad.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ca-es.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ca.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_chr.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_cs-cz.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_cs.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_cy.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_da-dk.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_da.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_de-at.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_de-be.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_de-ch.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_de-de.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_de-li.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_de-lu.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_de.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_el-cy.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_el-gr.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_el-polyton.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_el.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-as.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-au.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-bb.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-be.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-bm.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-bw.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-bz.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-ca.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-dsrt-us.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-dsrt.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-fm.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-gb.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-gu.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-gy.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-hk.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-ie.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-in.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-iso.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-jm.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-mh.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-mp.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-mt.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-mu.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-na.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-nz.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-ph.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-pk.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-pr.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-pw.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-sg.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-tc.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-tt.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-um.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-us.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-vg.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-vi.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-za.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-zw.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en-zz.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_en.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-419.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-ar.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-bo.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-cl.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-co.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-cr.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-do.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-ea.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-ec.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-es.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-gq.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-gt.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-hn.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-ic.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-mx.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-ni.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-pa.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-pe.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-pr.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-py.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-sv.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-us.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-uy.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es-ve.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_es.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_et-ee.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_et.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_eu-es.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_eu.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fa-af.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fa-ir.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fa.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fi-fi.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fi.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fil-ph.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fil.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-be.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-bf.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-bi.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-bj.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-bl.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-ca.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-cd.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-cf.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-cg.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-ch.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-ci.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-cm.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-dj.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-fr.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-ga.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-gf.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-gn.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-gp.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-gq.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-km.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-lu.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-mc.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-mf.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-mg.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-ml.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-mq.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-ne.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-re.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-rw.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-sn.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-td.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-tg.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr-yt.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_fr.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_gl-es.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_gl.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_gsw-ch.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_gsw.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_gu-in.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_gu.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_haw.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_he-il.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_he.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_hi-in.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_hi.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_hr-hr.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_hr.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_hu-hu.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_hu.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_id-id.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_id.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_in.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_is-is.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_is.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_it-ch.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_it-it.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_it-sm.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_it.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_iw.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ja-jp.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ja.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_kn-in.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_kn.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ko-kr.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ko.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ln-cd.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ln-cg.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ln.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_lt-lt.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_lt.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_lv-lv.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_lv.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ml-in.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ml.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_mo.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_mr-in.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_mr.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ms-bn.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ms-my.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ms.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_mt-mt.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_mt.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_nl-aw.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_nl-be.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_nl-cw.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_nl-nl.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_nl-sx.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_nl.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_no.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_or-in.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_or.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_pl-pl.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_pl.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_pt-ao.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_pt-br.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_pt-gw.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_pt-mz.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_pt-pt.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_pt-st.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_pt.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ro-md.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ro-ro.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ro.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_sr-cyrl-ba.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_sr-cyrl-me.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_sr-cyrl-rs.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_sr-cyrl.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_sr-latn-ba.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_sr-latn-me.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_sr-latn-rs.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_sr-latn.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_sr-rs.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_sv-fi.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_sv-se.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_sv.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_sw-ke.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_sw-tz.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_sw.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ta-in.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ta-lk.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ta.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_te-in.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_te.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_th-th.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_th.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_tl-ph.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_tl.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_tr-tr.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_tr.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_uk-ua.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_uk.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ur-in.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ur-pk.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_ur.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_vi-vn.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_vi.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_zh-cn.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_zh-hans-cn.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_zh-hans-hk.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_zh-hans-mo.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_zh-hans-sg.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_zh-hans.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_zh-hant-hk.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_zh-hant-mo.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_zh-hant-tw.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_zh-hant.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_zh-hk.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_zh-tw.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_zh.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_zu-za.js" />
+    <Content Include="Content\Scripts\i18n\angular-locale_zu.js" />
+    <Content Include="Content\Scripts\jquery-1.8.2.js" />
+    <Content Include="Content\Scripts\jquery-1.8.2.min.js" />
+    <None Include="Content\Scripts\jquery-2.0.3.intellisense.js" />
+    <Content Include="Content\Scripts\jquery\jquery-2.0.3-max.js" />
+    <Content Include="Content\Scripts\jquery-2.0.3.min.js" />
+    <Content Include="Content\Scripts\jquery.tmpl.min.js" />
+    <Content Include="Content\Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Content\Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Content\Scripts\jquery\jquery-file-style.js" />
+    <Content Include="Content\Scripts\jquery\jquery-2.0.3.js" />
+    <Content Include="Content\Scripts\jquery\jquery-ui-1.10.3.js" />
+    <Content Include="Content\Scripts\knockout-2.2.0.debug.js" />
+    <Content Include="Content\Scripts\knockout-2.2.0.js" />
+    <Content Include="Content\Scripts\modal.js" />
+    <Content Include="Content\Scripts\modernizr-2.6.2.js" />
+    <Content Include="Content\Scripts\client\settings.js" />
+    <Content Include="Content\Scripts\client\dummy-data.txt" />
+    <Content Include="Content\Scripts\client\application.js" />
+    <Content Include="Content\Templates\hapag\statuscolorpicker.html" />
+    <Content Include="Content\Templates\pagination_bkp.html" />
+    <Content Include="Content\Templates\crud\composition_list.html" />
+    <Content Include="Content\Scripts\multiselect.js" />
+    <None Include="Content\Templates\header.cshtml" />
+    <Content Include="Content\Templates\crud\crud_body.html" />
+    <Content Include="Content\Templates\menu.html" />
+    <Content Include="Content\Templates\pagination.html" />
+    <Content Include="Content\Templates\crud\crud_output.html" />
+    <Content Include="Content\Templates\crud\crud_input.html" />
+    <Content Include="Content\Templates\hapag\hapagsearch.html" />
+    <Content Include="Content\Templates\menuitem.html" />
+    <Content Include="softWrench.sW4.Controls.WebForms.dll" />
+    <Content Include="Content\Scripts\signin.js" />
+    <Content Include="UserControls\Report.ascx" />
+    <Content Include="UserControls\RichTextBox.aspx" />
+    <Content Include="UserControls\SasActiveX.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UserControls\softWrench.sW4.Controls.WebForms.dll" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Content\Images\accent.png" />
+    <Content Include="Content\Images\bullet.png" />
+    <Content Include="Content\Images\heroAccent.png" />
+    <Content Include="Content\Images\orderedList0.png" />
+    <Content Include="Content\Images\orderedList1.png" />
+    <Content Include="Content\Images\orderedList2.png" />
+    <Content Include="Content\Images\orderedList3.png" />
+    <Content Include="Content\Images\orderedList4.png" />
+    <Content Include="Content\Images\orderedList5.png" />
+    <Content Include="Content\Images\orderedList6.png" />
+    <Content Include="Content\Images\orderedList7.png" />
+    <Content Include="Content\Images\orderedList8.png" />
+    <Content Include="Content\Images\orderedList9.png" />
+    <Content Include="Content\Scripts\_references.js" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\SignIn\Index.cshtml" />
+    <Content Include="Content\Scripts\jquery-2.0.3.min.map" />
+    <Content Include="Content\Controller\EntityMetadataBuilder.html" />
+    <Content Include="Views\Generic\Index.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Content\Controller\MyProfile.html" />
+    <Content Include="Content\Controller\EntityMetadataEditor.html" />
+    <Content Include="Views\Configuration\Index.cshtml" />
+    <Content Include="Views\SignIn\Index_old.cshtml" />
+    <Content Include="Views\Report\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\Client\gric\i18n\en\" />
+    <Folder Include="Content\Customers\gric\" />
+    <Folder Include="Views\HapagHome\" />
+    <Folder Include="Views\SchedulerSetup\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\softwrench.sw4.Hapag\softwrench.sw4.Hapag.csproj">
+      <Project>{22d901fc-310e-4f14-9506-d9433cf192cf}</Project>
+      <Name>softwrench.sw4.Hapag</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
+      <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
+      <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
+      <Project>{ce228c26-938d-4d6f-95fa-12cc5241afb5}</Project>
+      <Name>softWrench.sW4</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Reports\CategoriesReport.rdlc">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\EscalationIncidentReport.rdlc">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\HardwareRepairReport.rdlc">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\IncidentDetailReport.rdlc" />
+    <EmbeddedResource Include="Reports\IncidentPerLocationSCIMReport.rdlc" />
+    <EmbeddedResource Include="Reports\ITCReport.rdlc">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptAssetListReport.rdlc">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\TestReport.rdlc">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>8080</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:8080/sw4</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+   </Target> -->
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Web\Microsoft.Web.Publishing.Tasks.dll" />
+  <Target Name="Transform">
+    <MakeDir Directories="obj\$(Configuration)" Condition="!Exists('obj\$(Configuration)')" />
+    <TransformXml Source="Web.Config" Transform="Web.Debug.config" Destination="obj\Debug\Web.config" StackTrace="true" />
+  </Target>
+  <PropertyGroup>
+    <PostBuildEvent>$(MSBUILDBINPATH)\msbuild $(ProjectPath) /t:Transform /p:Configuration=Debug;Platform=AnyCPU&lt;BR&gt;xcopy "$(ProjectDir)obj\Debug\Web.Config" $(ProjectDir). /F /R /Y</PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+</Project>

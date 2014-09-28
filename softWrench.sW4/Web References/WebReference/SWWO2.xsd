@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="http://www.mro.com/mx/integration" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.mro.com/mx/integration" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="http://66.235.236.237/meaweb/schema/MetaData/MXIntegrationMeta.xsd" />
+  <xsd:include schemaLocation="http://66.235.236.237/meaweb/schema/MetaData/MXDataTypes.xsd" />
+  <xsd:complexType name="SWWO2">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="SWWO2">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="WORKORDER" type="SWWO2_WORKORDER" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="SWWO2_WORKORDER">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="MXMBO">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="WONUM" type="MXString">
+            <xsd:annotation>
+              <xsd:documentation>WONUM is a key field</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="PARENT" type="MXString" />
+          <xsd:element minOccurs="0" name="STATUS" type="MXDomain" />
+          <xsd:element minOccurs="0" name="STATUSDATE" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="WORKTYPE" type="MXString" />
+          <xsd:element minOccurs="0" name="LEADCRAFT" type="MXString" />
+          <xsd:element minOccurs="0" name="DESCRIPTION" type="MXString" />
+          <xsd:element minOccurs="0" name="LOCATION" type="MXString" />
+          <xsd:element minOccurs="0" name="JPNUM" type="MXString" />
+          <xsd:element minOccurs="0" name="FAILDATE" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="CHANGEBY" type="MXString" />
+          <xsd:element minOccurs="0" name="CHANGEDATE" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="ESTDUR" type="MXDouble" />
+          <xsd:element minOccurs="0" name="ESTLABHRS" type="MXDouble" />
+          <xsd:element minOccurs="0" name="ESTMATCOST" type="MXDouble" />
+          <xsd:element minOccurs="0" name="ESTLABCOST" type="MXDouble" />
+          <xsd:element minOccurs="0" name="ESTTOOLCOST" type="MXDouble" />
+          <xsd:element minOccurs="0" name="PMNUM" type="MXString" />
+          <xsd:element minOccurs="0" name="ACTLABHRS" type="MXDouble" />
+          <xsd:element minOccurs="0" name="ACTMATCOST" type="MXDouble" />
+          <xsd:element minOccurs="0" name="ACTLABCOST" type="MXDouble" />
+          <xsd:element minOccurs="0" name="ACTTOOLCOST" type="MXDouble" />
+          <xsd:element minOccurs="0" name="HASCHILDREN" type="MXBoolean" />
+          <xsd:element minOccurs="0" name="OUTLABCOST" type="MXDouble" />
+          <xsd:element minOccurs="0" name="OUTMATCOST" type="MXDouble" />
+          <xsd:element minOccurs="0" name="OUTTOOLCOST" type="MXDouble" />
+          <xsd:element minOccurs="0" name="HISTORYFLAG" type="MXBoolean" />
+          <xsd:element minOccurs="0" name="CONTRACT" type="MXString" />
+          <xsd:element minOccurs="0" name="WOPRIORITY" nillable="true" type="MXLong" />
+          <xsd:element minOccurs="0" name="TARGCOMPDATE" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="TARGSTARTDATE" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="WOEQ1" type="MXString" />
+          <xsd:element minOccurs="0" name="WOEQ2" type="MXString" />
+          <xsd:element minOccurs="0" name="WOEQ3" type="MXString" />
+          <xsd:element minOccurs="0" name="WOEQ4" type="MXString" />
+          <xsd:element minOccurs="0" name="WOEQ5" nillable="true" type="MXDouble" />
+          <xsd:element minOccurs="0" name="WOEQ6" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="WOEQ7" nillable="true" type="MXDouble" />
+          <xsd:element minOccurs="0" name="WOEQ8" type="MXString" />
+          <xsd:element minOccurs="0" name="WOEQ9" type="MXString" />
+          <xsd:element minOccurs="0" name="WOEQ10" type="MXString" />
+          <xsd:element minOccurs="0" name="WOEQ11" type="MXString" />
+          <xsd:element minOccurs="0" name="WOEQ12" nillable="true" type="MXDouble" />
+          <xsd:element minOccurs="0" name="WO1" type="MXString" />
+          <xsd:element minOccurs="0" name="REPORTEDBY" type="MXString" />
+          <xsd:element minOccurs="0" name="REPORTDATE" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="PHONE" type="MXString" />
+          <xsd:element minOccurs="0" name="PROBLEMCODE" type="MXString" />
+          <xsd:element minOccurs="0" name="CALENDAR" type="MXString" />
+          <xsd:element minOccurs="0" name="DOWNTIME" type="MXBoolean" />
+          <xsd:element minOccurs="0" name="ACTSTART" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="ACTFINISH" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="SCHEDSTART" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="SCHEDFINISH" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="REMDUR" nillable="true" type="MXDouble" />
+          <xsd:element minOccurs="0" name="CREWID" type="MXString" />
+          <xsd:element minOccurs="0" name="SUPERVISOR" type="MXString" />
+          <xsd:element minOccurs="0" name="WOEQ13" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="WOEQ14" nillable="true" type="MXDouble" />
+          <xsd:element minOccurs="0" name="WOJP1" type="MXString" />
+          <xsd:element minOccurs="0" name="WOJP2" type="MXString" />
+          <xsd:element minOccurs="0" name="WOJP3" type="MXString" />
+          <xsd:element minOccurs="0" name="WOJP4" nillable="true" type="MXDouble" />
+          <xsd:element minOccurs="0" name="WOJP5" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="WOL1" type="MXString" />
+          <xsd:element minOccurs="0" name="WOL2" type="MXString" />
+          <xsd:element minOccurs="0" name="WOL3" nillable="true" type="MXDouble" />
+          <xsd:element minOccurs="0" name="WOL4" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="WOLABLNK" type="MXString" />
+          <xsd:element minOccurs="0" name="RESPONDBY" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="CALCPRIORITY" nillable="true" type="MXLong" />
+          <xsd:element minOccurs="0" name="CHARGESTORE" type="MXBoolean" />
+          <xsd:element minOccurs="0" name="FAILURECODE" type="MXString" />
+          <xsd:element minOccurs="0" name="WOLO1" type="MXString" />
+          <xsd:element minOccurs="0" name="WOLO2" type="MXString" />
+          <xsd:element minOccurs="0" name="WOLO3" type="MXString" />
+          <xsd:element minOccurs="0" name="WOLO4" type="MXString" />
+          <xsd:element minOccurs="0" name="WOLO5" type="MXString" />
+          <xsd:element minOccurs="0" name="WOLO6" nillable="true" type="MXDouble" />
+          <xsd:element minOccurs="0" name="WOLO7" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="WOLO8" nillable="true" type="MXDouble" />
+          <xsd:element minOccurs="0" name="WOLO9" type="MXString" />
+          <xsd:element minOccurs="0" name="WOLO10" nillable="true" type="MXLong" />
+          <xsd:element minOccurs="0" name="GLACCOUNT" type="MXGLAccount" />
+          <xsd:element minOccurs="0" name="ESTSERVCOST" type="MXDouble" />
+          <xsd:element minOccurs="0" name="ACTSERVCOST" type="MXDouble" />
+          <xsd:element minOccurs="0" name="DISABLED" type="MXBoolean" />
+          <xsd:element minOccurs="0" name="ESTATAPPRLABHRS" type="MXDouble" />
+          <xsd:element minOccurs="0" name="ESTATAPPRLABCOST" type="MXDouble" />
+          <xsd:element minOccurs="0" name="ESTATAPPRMATCOST" type="MXDouble" />
+          <xsd:element minOccurs="0" name="ESTATAPPRTOOLCOST" type="MXDouble" />
+          <xsd:element minOccurs="0" name="ESTATAPPRSERVCOST" type="MXDouble" />
+          <xsd:element minOccurs="0" name="WOSEQUENCE" nillable="true" type="MXLong" />
+          <xsd:element minOccurs="0" name="HASFOLLOWUPWORK" type="MXBoolean" />
+          <xsd:element minOccurs="0" name="WORTS1" type="MXString" />
+          <xsd:element minOccurs="0" name="WORTS2" type="MXString" />
+          <xsd:element minOccurs="0" name="WORTS3" type="MXString" />
+          <xsd:element minOccurs="0" name="WORTS4" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="WORTS5" nillable="true" type="MXDouble" />
+          <xsd:element minOccurs="0" name="SOURCESYSID" type="MXString" />
+          <xsd:element minOccurs="0" name="OWNERSYSID" type="MXString" />
+          <xsd:element minOccurs="0" name="PMDUEDATE" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="PMEXTDATE" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="PMNEXTDUEDATE" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="WORKLOCATION" type="MXString" />
+          <xsd:element minOccurs="0" name="WO20" type="MXBoolean" />
+          <xsd:element minOccurs="0" name="EXTERNALREFID" type="MXString" />
+          <xsd:element minOccurs="0" name="APISEQ" type="MXString" />
+          <xsd:element minOccurs="0" name="SENDERSYSID" type="MXString" />
+          <xsd:element minOccurs="0" name="FINCNTRLID" type="MXString" />
+          <xsd:element minOccurs="0" name="GENERATEDFORPO" type="MXString" />
+          <xsd:element minOccurs="0" name="GENFORPOLINEID" nillable="true" type="MXLong" />
+          <xsd:element minOccurs="0" name="ORGID" type="MXString" />
+          <xsd:element minOccurs="0" name="SITEID" type="MXString">
+            <xsd:annotation>
+              <xsd:documentation>SITEID is a key field</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="TASKID" nillable="true" type="MXLong" />
+          <xsd:element minOccurs="0" name="INSPECTOR" type="MXString" />
+          <xsd:element minOccurs="0" name="MEASUREMENTVALUE" nillable="true" type="MXDouble" />
+          <xsd:element minOccurs="0" name="MEASUREDATE" nillable="true" type="MXDateTime" />
+          <xsd:element minOccurs="0" name="OBSERVATION" type="MXString" />
+          <xsd:element minOccurs="0" name="POINTNUM" type="MXString" />
+          <xsd:element minOccurs="0" name="WOJO1" type="MXString" />
+          <xsd:element minOccurs="0" name="WOJO2" type="MXString" />
+          <xsd:element minOccurs="0" name="WOJO3" type="MXString" />
+          <xsd:element minOccurs="0" name="WOJO4" nillable="true" type="MXDouble" />
+          <xsd:element minOccurs="0" name="WOJO5" type="MXString" />
+          <xsd:element minOccurs="0" name="WOJO6" type="MXString" />
+          <xsd:element minOccurs="0" name="WOJO7" type="MXString" />
+          <xsd:element minOccurs="0" name="WOJO8" type="MXString" />
+          <xsd:element minOccurs="0" name="ISTASK" type="MXBoolean" />
+          <xsd:element minOccurs="0" name="ASSETLOCPRIORITY" nillable="true" type="MXLong" />
+          <xsd:element minOccurs="0" name="ASSETNUM" type="MXString" />
+          <xsd:element minOccurs="0" name="BACKOUTPLAN" type="MXString" />
+          <xsd:element minOccurs="0" name="CLASSSTRUCTUREID" type="MXString" />
+          <xsd:element minOccurs="0" name="COMMODITY" type="MXString" />
+          <xsd:element minOccurs="0" name="COMMODITYGROUP" type="MXString" />
+          <xsd:element minOccurs="0" name="ENVIRONMENT" type="MXString" />
+          <xsd:element minOccurs="0" name="INTERRUPTIBLE" type="MXBoolean" />
+          <xsd:element minOccurs="0" name="JUSTIFYPRIORITY" type="MXString" />
+          <xsd:element minOccurs="0" name="LEAD" type="MXString" />
+          <xsd:element minOccurs="0" name="MOVETOBINNUM" type="MXString" />
+          <xsd:element minOccurs="0" name="MOVETOLOC" type="MXString" />
+          <xsd:element minOccurs="0" name="MOVETOPARENT" type="MXString" />
+          <xsd:element minOccurs="0" name="ONBEHALFOF" type="MXString" />
+          <xsd:element minOccurs="0" name="ORIGRECORDCLASS" type="MXString" />
+          <xsd:element minOccurs="0" name="ORIGRECORDID" type="MXString" />
+          <xsd:element minOccurs="0" name="OWNER" type="MXString" />
+          <xsd:element minOccurs="0" name="OWNERGROUP" type="MXString" />
+          <xsd:element minOccurs="0" name="PARENTCHGSSTATUS" type="MXBoolean" />
+          <xsd:element minOccurs="0" name="PERFORMMOVETO" type="MXBoolean" />
+          <xsd:element minOccurs="0" name="PERSONGROUP" type="MXString" />
+          <xsd:element minOccurs="0" name="REASONFORCHANGE" type="MXString" />
+          <xsd:element minOccurs="0" name="RISK" type="MXString" />
+          <xsd:element minOccurs="0" name="VENDOR" type="MXString" />
+          <xsd:element minOccurs="0" name="VERIFICATION" type="MXString" />
+          <xsd:element minOccurs="0" name="WHOMISCHANGEFOR" type="MXString" />
+          <xsd:element minOccurs="0" name="WOACCEPTSCHARGES" type="MXBoolean" />
+          <xsd:element minOccurs="0" name="WOCLASS" type="MXDomain" />
+          <xsd:element minOccurs="0" name="WOGROUP" type="MXString" />
+          <xsd:element minOccurs="0" name="WORKORDERID" type="MXLong" />
+          <xsd:element minOccurs="0" name="BKPCONTRACT" type="MXString" />
+          <xsd:element minOccurs="0" name="ACTTOTCOST" nillable="true" type="MXDouble" />
+          <xsd:element minOccurs="0" name="ESTATAPPRTOTCOST" nillable="true" type="MXDouble" />
+          <xsd:element minOccurs="0" name="OUTTOTCOST" nillable="true" type="MXDouble" />
+          <xsd:element minOccurs="0" name="SWTEST" type="MXString" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

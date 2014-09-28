@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="8ed2f830-23cb-423c-9c31-31b8d2765df8" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://66.235.236.237/meaweb/services/SW_LD?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="MXDataTypes.xsd" MetadataType="Schema" ID="0cd93b89-997a-4c8c-ad58-5dd23ff935d4" SourceId="1" SourceUrl="http://66.235.236.237/meaweb/schema/MetaData/MXDataTypes.xsd" />
+    <MetadataFile FileName="SW_LD.wsdl" MetadataType="Wsdl" ID="e30eba2c-b66e-4e8f-86e0-122654ec12ad" SourceId="1" SourceUrl="http://66.235.236.237/meaweb/services/SW_LD?wsdl" />
+    <MetadataFile FileName="SW_LD_OBJ.xsd" MetadataType="Schema" ID="d35ac82b-aecf-4b21-b2ec-20fc5461732b" SourceId="1" SourceUrl="http://66.235.236.237/meaweb/schema/IntegrationObjects/SW_LD_OBJ.xsd" />
+    <MetadataFile FileName="SW_LD.xsd" MetadataType="Schema" ID="72db1482-07e4-41c4-ad16-559dd3f043d9" SourceId="1" SourceUrl="http://66.235.236.237/meaweb/schema/Interfaces/SW_LD.xsd" />
+    <MetadataFile FileName="MXIntegrationMeta.xsd" MetadataType="Schema" ID="2e7962d1-72fb-44ee-8d15-63ace9e7b592" SourceId="1" SourceUrl="http://66.235.236.237/meaweb/schema/MetaData/MXIntegrationMeta.xsd" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

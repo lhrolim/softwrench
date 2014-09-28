@@ -1,0 +1,46 @@
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using FluentMigrator;
+using softWrench.sW4.Util;
+using softWrench.sW4.Web.Util;
+
+namespace softWrench.sW4.Web.DB_Migration._4._0 {
+    [Migration(201407241400)]
+    public class Migration201407241400SWWEB319 : FluentMigrator.Migration
+    {
+        public override void Up() {
+            if (ApplicationConfiguration.ClientName == "hapag") {
+                Create.Table("hist_ticket")
+                    .WithColumn("id").AsInt32().PrimaryKey().Identity()
+                    .WithColumn("ticketid").AsString(MigrationUtil.StringMedium).NotNullable()
+                    .WithColumn("description").AsString(MigrationUtil.StringLarge).Nullable()
+                    .WithColumn("reportedby").AsString(MigrationUtil.StringMedium).Nullable()
+                    .WithColumn("affectedperson").AsString(MigrationUtil.StringMedium).Nullable()
+                    .WithColumn("status").AsString(MigrationUtil.StringMedium).Nullable()
+                    .WithColumn("assignedto").AsString(MigrationUtil.StringMedium).Nullable()
+                    .WithColumn("ownergroup").AsString(MigrationUtil.StringMedium).Nullable()
+                    .WithColumn("closedate").AsDateTime().Nullable()
+                    .WithColumn("assetnum").AsString(MigrationUtil.StringMedium).Nullable()
+                    .WithColumn("assetsiteid").AsString(MigrationUtil.StringMedium).Nullable()
+                    .WithColumn("classification").AsString(MigrationUtil.StringMedium).Nullable()
+                    .WithColumn("importdate").AsDateTime().Nullable();
+
+                Create.Table("hist_workorder")
+                    .WithColumn("id").AsInt32().PrimaryKey().Identity()
+                    .WithColumn("wonum").AsString(MigrationUtil.StringMedium).NotNullable()
+                    .WithColumn("description").AsString(MigrationUtil.StringLarge).Nullable()
+                    .WithColumn("location").AsString(MigrationUtil.StringMedium).Nullable()
+                    .WithColumn("assetnum").AsString(MigrationUtil.StringMedium).Nullable()
+                    .WithColumn("status").AsString(MigrationUtil.StringMedium).Nullable()
+                    .WithColumn("statusdate").AsDateTime().Nullable()
+                    .WithColumn("importdate").AsDateTime().Nullable();
+            }
+        }
+
+        public override void Down() {
+            if (ApplicationConfiguration.ClientName == "hapag") {
+                Delete.Table("hist_ticket");
+                Delete.Table("hist_workorder");
+            }
+        }
+    }
+}

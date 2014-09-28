@@ -1,0 +1,42 @@
+﻿using System;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Security.Init;
+using softWrench.sW4.Security.Init.Com;
+using softWrench.sW4.SimpleInjector;
+using softWrench.sW4.SimpleInjector.Events;
+using softWrench.sW4.Util;
+
+namespace softWrench.sW4.Data.Configuration {
+    class ComConfigurationRegistry : ISingletonComponent, ISWEventListener<ApplicationStartedEvent> {
+        private readonly IWhereClauseFacade _wcFacade;
+        private readonly IConfigurationFacade _facade;
+
+        public ComConfigurationRegistry(IConfigurationFacade facade, IWhereClauseFacade wcFacade, SWDBHibernateDAO dao) {
+            _wcFacade = wcFacade;
+            _facade = facade;
+        }
+
+        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+            if (ApplicationConfiguration.ClientName != "manchester") {
+                return;
+            }
+            CreateBaseWhereClauses();
+        }
+
+        private void CreateBaseWhereClauses() {
+            _wcFacade.Register("servicerequest", ComWhereClause("SrGridQuery"), ForProfile(ProfileType.DefaultComUsers));
+            _wcFacade.Register("workorder", ComWhereClause("WorkOrderGridQuery"), ForProfile(ProfileType.DefaultComUsers));
+        }
+
+        private static WhereClauseRegisterCondition ForProfile(ProfileType profile) {
+            return new WhereClauseRegisterCondition {
+                UserProfile = profile.GetName(),
+            };
+        }
+
+        private string ComWhereClause(String methodName) {
+            return "@comWhereClauseProvider." + methodName;
+        }
+    }
+}

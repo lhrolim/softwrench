@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns="http://www.mro.com/mx/integration" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.mro.com/mx/integration" version="0.02" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:complexType name="MXHeader">
+    <xsd:sequence>
+      <xsd:element name="SenderID" type="MXSender">
+        <xsd:annotation>
+          <xsd:documentation>Identifies the originator of the message</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CreationDateTime" type="xsd:dateTime">
+        <xsd:annotation>
+          <xsd:documentation>DateTime of creation of the message</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="RecipientID" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>Identifies the intended recipient of the message</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="MessageID" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>A unique identifier for the message</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MXNotifyHeader">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="MXHeader">
+        <xsd:attribute fixed="Notify" name="operation" type="xsd:token" use="optional" />
+        <xsd:attribute name="event" type="Event" use="optional" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="MXQueryHeader">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="MXHeader">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="ResponseCriteria" type="MXResponseCriteria" />
+        </xsd:sequence>
+        <xsd:attribute fixed="Query" name="operation" type="xsd:token" use="optional" />
+        <xsd:attribute name="uniqueResult" type="Event" use="optional" />
+        <xsd:attribute name="maxItems" type="xsd:positiveInteger" use="optional" />
+        <xsd:attribute name="rsStart" type="xsd:integer" use="optional" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="MXResponseHeader">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="MXHeader">
+        <xsd:attribute fixed="Response" name="operation" type="xsd:string" use="required" />
+        <xsd:attribute name="event" type="Event" use="optional" />
+        <xsd:attribute name="rsStart" type="xsd:integer" use="optional" />
+        <xsd:attribute name="rsCount" type="xsd:integer" use="optional" />
+        <xsd:attribute name="rsTotal" type="xsd:integer" use="optional" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="MXInterfaceBase" abstract="true">
+    <xsd:annotation>
+      <xsd:documentation>This is an abstract base type for all MAXIMO type interfaces. All interfaces will have a header and the following two attributes: 
+
+language: Identifies the base language applicable to the interface instance. For outbound interface this will be set as the base language of the MAXIMO system. For inbound interfaces, if a language is specified, and it is different from the base language, we will have a processing error. 
+
+version: This is an optional attribute that identifies the version of an interface.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="language" type="xsd:string" use="optional" />
+    <xsd:attribute name="version" type="xsd:string" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="MXNotifyInterface">
+    <xsd:annotation>
+      <xsd:documentation>This type is used to identify all non-query interfaces. It has the following attributes:
+
+operation: Identifies the action associated with the Notification message. Possible values are:
+
+- Notify - The data has been updated and needs to be changed. Outbound interfaces generated via the event listener mechanism or Data Export will always have the operation specified as "Notify"
+			</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="MXInterfaceBase">
+        <xsd:sequence>
+          <xsd:element name="Header" type="MXNotifyHeader" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="MXQueryInterface">
+    <xsd:annotation>
+      <xsd:documentation>This identifies query type interfaces and has the following attributes:
+
+operation: will always have a fixed value of "Query"
+
+uniqueResult: Is an optional attribute to identify if the result of a query is expected to be unique. If this is not specified, or if it is specified with value "0", the processing can return multiple resutls. If this is specified with value as "1", it means that the response to the query can have only a single result
+
+maxItems: This indicates the maximum number number of records to be returned in the query response.
+
+rsStart:  This is a number of the starting record for the next section of the result set. If it is omitted, it is to be assumed to be 1
+
+</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="MXInterfaceBase">
+        <xsd:sequence>
+          <xsd:element name="Header" type="MXQueryHeader" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="MXResponseInterface">
+    <xsd:annotation>
+      <xsd:documentation>This identifies a response interface. This is only supported outbound from MAXIMO, aalways the result of an inbound query i.e. a Response is never independent of a Request. The following attributes can be specified:
+
+operation: Will always be "Response"
+
+rsCount: This is a number that indicates the number of records returned in the message. The subsequent request for additional records should have a rsstart value of rscount + 1.
+
+rsTotal: This is a number that indicates the total number of records in the result set.
+
+rsStart: This is a number of the starting record for the next section of the result set. If it is omitted, it is to be assumed the first of the maxitems
+
+</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="MXInterfaceBase">
+        <xsd:sequence>
+          <xsd:element name="Header" type="MXResponseHeader" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="MXMBO" abstract="true">
+    <xsd:annotation>
+      <xsd:documentation>This is an abstract base type for all MBOs that are part of an integration object. The "action" attribute identifies the specific processing instruction applicable for that corresponding MBO, and is set based on the MBO's action attribute. Possible values for this are "Add", "Change", "Replace", "Delete", "AddChange"l</xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="action" type="ProcessingAction" use="optional" />
+  </xsd:complexType>
+  <xsd:complexType name="MXResponseCriteria">
+    <xsd:annotation>
+      <xsd:documentation>This identifies the selection criteria that applies to a query. 
+
+The "expressionLanguage " attribute is required and is always set as XPath. THis identifies the language in which the "SelectExpression" is identified.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element maxOccurs="unbounded" name="ResponseContent" type="Expression">
+        <xsd:annotation>
+          <xsd:documentation>This identifies specific content required in the response, defined using XPath expressions</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute fixed="XPath" name="expressionLanguage" type="xsd:string" use="required" />
+  </xsd:complexType>
+  <xsd:simpleType name="Expression">
+    <xsd:restriction base="xsd:string" />
+  </xsd:simpleType>
+  <xsd:simpleType name="ProcessingAction">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="Add" />
+      <xsd:enumeration value="Change" />
+      <xsd:enumeration value="Replace" />
+      <xsd:enumeration value="Delete" />
+      <xsd:enumeration value="AddChange" />
+      <xsd:enumeration value="" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Event">
+    <xsd:restriction base="xsd:boolean">
+      <xsd:pattern value="0|1" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="MXSender">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="type" type="xsd:string" use="optional" />
+        <xsd:attribute name="majorversion" type="xsd:string" use="optional" />
+        <xsd:attribute name="minorversion" type="xsd:string" use="optional" />
+        <xsd:attribute name="build" type="xsd:string" use="optional" />
+        <xsd:attribute name="dbbuild" type="xsd:string" use="optional" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+</xsd:schema>

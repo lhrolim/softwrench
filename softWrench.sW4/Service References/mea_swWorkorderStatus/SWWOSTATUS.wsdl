@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mxws="http://www.mro.com/mx/wsdl" xmlns:mxint="http://www.mro.com/mx/integration" name="SWWOSTATUS" targetNamespace="http://www.mro.com/mx/wsdl" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema>
+      <xsd:import schemaLocation="http://66.235.236.237/meaweb/schema/Interfaces/SWWOSTATUS.xsd" namespace="http://www.mro.com/mx/integration" />
+    </xsd:schema>
+  </types>
+  <message name="SWWOSTATUS">
+    <part name="input" element="mxint:SWWOSTATUS" />
+  </message>
+  <message name="SWWOSTATUSResponse" />
+  <portType name="SWWOSTATUSPortType">
+    <operation name="processDocument">
+      <input message="mxws:SWWOSTATUS" />
+      <output message="mxws:SWWOSTATUSResponse" />
+    </operation>
+  </portType>
+  <binding name="SWWOSTATUSBinding" type="mxws:SWWOSTATUSPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="processDocument">
+      <soap:operation soapAction="" style="document" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="SWWOSTATUS">
+    <port name="SWWOSTATUSPort" binding="mxws:SWWOSTATUSBinding">
+      <soap:address location="http://66.235.236.237/meaweb/services/SWWOSTATUS" />
+    </port>
+  </service>
+</definitions>

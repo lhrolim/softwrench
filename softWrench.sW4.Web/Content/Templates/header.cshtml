@@ -1,0 +1,43 @@
+<div id="top-affix" class="affix">
+    <div class="navbar navbar-inverse hapag-topbar" role="banner" id="top">
+        <div class="container">
+            <nav class="collapse navbar-collapse" role="navigation">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#">{{i18N('_headermenu.welcome','Welcome')}} @User.Identity.Name | </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("MyProfile", "MyProfile")">{{i18N('_headermenu.myprofile','My Profile')}} | </a>
+                    </li>
+                    <li class="dropdown" ng-show="isSysAdmin">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-wrench">{{i18N('_headermenu.utilities','Utilities')}}<b class="caret"></b></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.Action("EntityMetadataBuilder", "Utilities")">{{i18N('_headermenu.metadatabuilder','Metadata Builder')}}</a></li>
+                            <li class="hidden-phone"><a href="@Url.Action("EntityMetadataEditor", "Utilities")">{{i18N('_headermenu.metadataeditor','Metadata Editor')}}</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" ng-show="isClientAdmin">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.Action("UserSetup", "Security")">{{i18N('_headermenu.usersetup','User Setup')}}</a></li>
+                            <li><a href="@Url.Action("UserProfileSetup", "Security")">{{i18N('_headermenu.userprofilesetup','User Profile Setup')}}</a></li>
+                            <li><a href="@Url.Action("RoleSetup", "Security")">{{i18N('_headermenu.rolesetup','Role Setup')}}</a></li>
+                            <li><a href="@Url.Action("Index", "SchedulerSetup")">{{i18N('_headermenu.schedulersetup','Scheduler Setup')}}</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="hapag-topbar-btn">
+                        <a href="@Url.Action("SignOut", "Security")" >
+                            <i class="glyphicon glyphicon-log-out"></i>
+                            {{i18N('_headermenu.logout','Logout')}}
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="hapag-subtitle gric-subtitle">
+        <h1>{{title}}</h1>
+    </div>
+</div>

@@ -1,0 +1,144 @@
+
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Create order for ITS</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">10</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-EUS-DE-CSC-IMC-HLCIMAC</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Create and update printer (port) name for new printer</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">20</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTELCONFIG</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Reserve and update fixed IP address for new printer</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">30</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTELCONFIG</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Align schedule with ITC</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">40</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-EUS-DE-CSC-IMC-HLCIMAC</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Delete print queue and port for old printer from server</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">50</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTEL2LEVEL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Delete LU name, port name and IP address for old printer</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">60</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTELCONFIG</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Update DHCP address into Maximo and confirm ITS action</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">70</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-EUS-DE-CSC-SDK-ASSET</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Configure printer NIC IP address for new printer</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">80</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTEL2LEVEL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Create server port for new printer</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">90</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTEL2LEVEL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Create and update server queue for new printer</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">100</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-SSO-HU-SMD-INT-WINTEL2LEVEL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Enter final asset installation/removal attributes and service approval</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">110</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">C-HLC-WW-ITCALL</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Enter delivery related asset attributes and final check</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">120</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-EUS-DE-CSC-IMC-HLCIMAC</FlexField> 
+ 	</FlexFields> 
+ </Activity>
+<Activity type="WOActivity"> 
+ 	<ActionID></ActionID> 
+ 	<ActionLog></ActionLog> 
+ 	<ActionLogSummary>Review asset attributes and approval</ActionLogSummary> 
+ 	<UserID></UserID> 
+ 	<FlexFields> 
+ 		<FlexField mappedTo="STATUS" id="0">WAPPR</FlexField> 
+ 		<FlexField mappedTo="WOSEQUENCE" id="0">130</FlexField> 
+ 		<FlexField mappedTo="OWNERGROUP" id="0">I-EUS-DE-CSC-IMC-HLCIMAC</FlexField> 
+ 	</FlexFields> 
+ </Activity>

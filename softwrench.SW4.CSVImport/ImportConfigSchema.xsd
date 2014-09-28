@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ImportConfigSchema"
+    targetNamespace="http://tempuri.org/ImportConfigSchema.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/ImportConfigSchema.xsd"
+    xmlns:mstns="http://tempuri.org/ImportConfigSchema.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:element name="Imports">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Import" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="Name"/>
+              <xs:element type="xs:string" name="Table"/>
+              <xs:element name="IO">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="InputFolder"/>
+                    <xs:element type="xs:string" name="OutputFolder"/>
+                    <xs:element type="xs:string" name="StaticInputFileName"/>
+                    <xs:element type="xs:string" name="InputFileExt"/>
+                    <xs:element type="xs:integer" name="FirstDataRow"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="FieldMappings">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Field" type="MappingFieldAttr" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="StaticFields">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Field" type="StaticFieldAttr" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="MappingFieldAttr">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="name" type="xs:string">
+        </xs:attribute>
+        <xs:attribute name="uniqueID" type="xs:boolean">
+        </xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="StaticFieldAttr">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="name" type="xs:string">
+        </xs:attribute>
+        <xs:attribute name="property" type="xs:string">
+        </xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>

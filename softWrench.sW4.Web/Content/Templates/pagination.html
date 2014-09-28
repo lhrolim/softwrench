@@ -1,0 +1,57 @@
+<div class="context clearfix hiddenonprint header-menu">
+    <div class="pagination-grid-left left">
+        <label>{{i18N('_grid.pagination.resultsperpage','Results Per Page')}}: </label>
+        <select id="pagesize"
+            ng-model="paginationData.pageSize"
+            ng-options="option as option for option in paginationData.paginationOptions"
+            ng-change="selectPage(1)">
+        </select>
+        <span ng-if="!isHapag()">
+            <button type="button" class="btn btn-default btn-sm" ng-click="exportToPrint()" href="#" rel="tooltip"
+                data-original-title="{{i18N('_grid.pagination.actions.print','Print')}}" ng-hide="disablePrint">
+                <i class="fa fa-print"></i>&ensp;Print
+            </button>
+            <button type="button" class="btn btn-default btn-sm" ng-click="exportToExcel(schema)" href="#" rel="tooltip"
+                data-original-title="{{i18N('_grid.pagination.actions.excel','Export to Excel')}}" ng-hide="disableExport">
+                <i class="fa fa-file-text-o"></i>&ensp;Export
+            </button>
+        </span>
+        <span class="pagination-pager">
+            <a ng-click="selectPage(1)" href="#">
+                <img ng-src="{{contextPath('/Content/Images/first.png')}}" alt="first" />
+            </a>
+            <a ng-click="previousPage()" href="#">
+                <img ng-src="{{contextPath('/Content/Images/previous.png')}}" alt="previous" />
+            </a>
+            <label>{{i18N('_grid.pagination.page','Page')}}: </label>
+            <input type="text" ng-model="paginationData.pageNumber" ng-change="selectPage(paginationData.pageNumber)" style="width: 25px !important; text-align: center" />
+            <label>{{i18N('_grid.pagination.of','of')}} {{paginationData.pageCount}}</label>
+            <a ng-click="nextPage()" href="#">
+                <img ng-src="{{contextPath('/Content/Images/next.png')}}" alt="next" />
+            </a>
+            <a ng-click="selectPage(paginationData.pageCount)" href="#">
+                <img ng-src="{{contextPath('/Content/Images/last.png')}}" alt="last" />
+            </a>
+        </span>
+        <span ng-if="isHapag()" class="pagination-actions">
+            <a ng-click="exportToPrint()" href="#" rel="tooltip" data-original-title="{{i18N('_grid.pagination.actions.print','Print')}}" ng-hide="disablePrint">
+                <img ng-src="{{contextPath('/Content/Images/print_small.gif')}}" alt="print" />
+            </a>
+            <a ng-click="exportToExcel()" href="#" rel="tooltip" data-original-title="{{i18N('_grid.pagination.actions.excel','Export to Excel')}}" ng-hide="disableExport">
+                <img ng-src="{{contextPath('/Content/Images/excel_small.gif')}}" alt="excel" />
+            </a>
+            <a ng-click="selectPage(1)" href="#" rel="tooltip" data-original-title="{{i18N('_grid.pagination.actions.refresh','Refresh content')}}">
+                <img ng-src="{{contextPath('/Content/Images/refresh_sm.gif')}}" alt="refresh" />
+            </a>
+        </span>
+    </div>
+
+    <div class="pagination-grid-right right">
+        <div class="pagination-grid-right-text">
+            <label>{{i18N('_grid.pagination.display',"Displaying Page {0} of {1}, Total items {2}",[paginationData.selectedPage,paginationData.pageCount,paginationData.totalCount])}}</label>
+        </div>
+    </div>
+
+
+
+</div>

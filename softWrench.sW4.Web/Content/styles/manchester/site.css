@@ -1,0 +1,55 @@
+﻿.gric-subtitle {
+    background-color: #333299 !important;
+}
+
+.commandButton {
+    background-color: #333299 !important;
+}
+
+.vertical-menu-container .dropdown-menu {
+    background-color: #333299 !important;
+}
+
+    .vertical-menu-container .dropdown-menu:first-child {
+        background-color: #333299 !important;
+    }
+
+#listgrid thead tr.header-row {
+    border-color: #333299 !important;
+}
+
+.header-row {
+    background-color: #333299 !important;
+}
+
+#top .navbar-nav > li:last-child {
+    background-color: #333299;
+}
+
+.nav > li > a:hover, .nav > li > a:focus {
+    background-color: #DF8D3F;
+    border-color: #DF8D3F !important;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    border: 1px solid #ddd !important;
+}
+
+.navbar-inverse {
+    background-color: #DF8D3F !important;
+    border-color: #DF8D3F !important;
+    background: rgb(223, 141, 63);
+    background: -moz-linear-gradient(208deg, rgb(223, 141, 63) 52%, rgb(223, 141, 63) 70%);
+    background: -webkit-linear-gradient(208deg, rgb(223, 141, 63) 52%, rgb(223, 141, 63) 70%);
+    background: -o-linear-gradient(208deg, rgb(223, 141, 63) 52%, rgb(223, 141, 63) 70%);
+    background: -ms-linear-gradient(208deg, rgb(223, 141, 63) 52%, rgb(223, 141, 63) 70%);
+    background: linear-gradient(298deg, rgb(223, 141, 63) 52%, rgb(223, 141, 63) 70%);
+}
+
+.compositiondetailtab {
+    background-color: #DF8D3F !important;
+}
+
+.alignment-logo img {
+    margin-top: 12px;
+}
