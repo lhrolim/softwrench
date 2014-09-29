@@ -460,6 +460,10 @@ textarea .readonly {
     width: 800px;
 }
 
+.assetnum .modal-dialog {
+    width: 1000px;
+}
+
 /************************ 
     Config
  ************************/
