@@ -97,76 +97,14 @@ input:focus, select:focus, textarea:focus {
     width: 100%;
 }
 
-/*.hapag-topbar {
-    text-shadow: 0 -1px 0 rgba(0,0,0,.15);
-    background-color: #003878;
-    box-shadow: 0 1px 0 rgba(255,255,255,.1);
-    min-height: 0;
-    width: 100%;
-    border-radius: 0;
-    margin-bottom: 0;
-    padding-bottom: 2px;
-    max-height: 26px;
-    height: 26px;
-}*/
-
 .helptext {
     color: gray;
     font-size: 13px;
 }
 
-/*SM - 07/02 - REMOVE - Start move to conbine with other listgrid styles*/
-/*#listgrid {
-    color: #000;
-    width: 100%;
-    border-spacing: 0px;
-    margin: 0;
-}
-
-    #listgrid thead {
-        width: 942px;
-    }
-
-        #listgrid thead tr.header-row {
-            background-color: #FFF;
-            color: #000;
-        }
-
-            #listgrid thead tr.header-row th {
-                cursor: pointer;
-            }
-
-        #listgrid thead tr.filter-row {
-            background-color: #FFF;
-            color: #000;
-        }
-
-    #listgrid tbody > tr:nth-child(odd) > td,
-    #listgrid tbody > tr:nth-child(odd) > th,
-    #listgrid tbody > tr:nth-child(even) > th,
-    #listgrid tbody > tr:nth-child(even) > td {
-    }
-
-.affix-thead {
-    position: fixed;
-}*/
-/*SM - 07/02 - REMOVE - Start move to conbine with other listgrid styles*/
-
 .advanced-filter-toogle {
     cursor: pointer;
     text-align: center;
-}
-
-/*SM - 06/28 - REMOVE - Start move to combine header styles*/
-/*.menu-grid {
-    margin-left: auto !important;
-    margin-right: auto !important;
-    max-width: 1139px;
-    width: 100%;
-}*/
-/*SM - 06/28 - REMOVE - End move to combine header styles*/
-
-.advanced-filter {
 }
 
     .advanced-filter > div.advanced-filter-item {
@@ -205,37 +143,9 @@ input:focus, select:focus, textarea:focus {
     padding: 4px;
 }
 
-/*.hapag-subtitle {
-    background-color: #003878;
-    color: #fff;
-    padding: 1px 0 9px 0;
-    text-align: center;
-    width: 100%;
-    height: 57px;
-}*/
-
 .detail-body {
     padding-top: 20px;
 }
-
-/*.hapag-body-popup,
-.hapag-body {
-    margin-left: 1px;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-}*/
-
-/*.hapag-body-popup {
-    margin-top: auto;
-}*/
-
-/*.hapag-body {
-    margin-top: 225px;
-}*/
-
-/*.hapag-body-loaded {
-}*/
 
 .form-horizontal {
     /*padding-right: 10px;*/
@@ -245,21 +155,8 @@ input:focus, select:focus, textarea:focus {
     /*SM - 07/05 - ADD - End fix detail form padding*/
 }
 
-/*.hapag-subtitle h1 {
-    margin-top: 7px;
-}*/
-
-/*.hapag-topbar > .container {
-    float: right;
-    padding-right: 10px;
-}*/
-
 #top .navbar-nav > li:last-child > a {
     text-align: center;
-}
-
-.nav > li > a {
-    /*color: #ffffff;*/
 }
 
 #top .navbar-nav > li:last-child {
@@ -268,58 +165,6 @@ input:focus, select:focus, textarea:focus {
     border-color: #003878;
 }
 
-/*nav.hapag-topbar {
-    position: static !important; /* Overrides the position from 'nav' bootstrap class due to compatibility on ie9 */
-}
-
-*/
-/*.hapag-topbar .navbar-brand {
-    color: #fff;
-}*/
-/*.hapag-topbar .navbar-nav {
-    line-height: 0px;
-}*/
-/*.hapag-topbar .navbar-nav > li > a,
-    .hapag-topbar .navbar-nav > li > a:hover {
-        color: #ffffff;
-        line-height: 15px;
-    }*/
-/*.hapag-topbar .navbar-nav > .active > a,
-    .hapag-topbar .navbar-nav > .active > a:hover {
-        color: #fff;
-        background-color: #463265;
-    }*/
-/*.hapag-topbar-btn .navbar-nav > .active > a,
-.hapag-topbar-btn .navbar-nav > .active > a:hover,
-.hapag-btn {
-    color: #fff;
-    background-color: #E75200;
-    border-color: #E75200;
-}*/
-/*.hapag-topbar-btn a:hover {
-    color: #fff;
-    background-color: #E75200;
-}*/
-/*.hapag-topbar .navbar-toggle {
-    border-color: #563d7c;
-}*/
-/*.hapag-topbar .navbar-toggle:hover {
-        background-color: #463265;
-        border-color: #463265;
-    }*/
-/*.hapag-topbar-btn .navbar-toggle:hover {
-    background-color: #E75200;
-    border-color: #463265;
-}*/
-/*.hapag-topbar .nav > li > a {
-    position: relative;
-    display: block;
-    padding: 5px 4px;
-    font-size: 12px;
-}*/
-/*.hapag-topbar .nav > li > a > span {
-        margin-right: 10px;
-    }*/
 .alignment-logo {
     display: block;
     height: 83px;
@@ -452,13 +297,6 @@ input:focus, select:focus, textarea:focus {
     padding: 0px !important;
 }
 
-/************************ 
-    Hapag Dashboard 
- ************************/
-/*.hapag-dashboardtab {
-    border-bottom: 5px solid #E75200;
-}*/
-
 /*SM - 09/24 - SWWEB-452 fix*/
 .nav-tabs {
     border-bottom: 1px solid #999;
@@ -474,9 +312,7 @@ input:focus, select:focus, textarea:focus {
         border: 1px solid #999;
         border-bottom: 1px solid #fff;
     }
-
-
-
+    
     .nav-tabs > li > a:hover {
         border-color: #eee #eee #999;
     }
@@ -512,43 +348,6 @@ input:focus, select:focus, textarea:focus {
             }*/
 
 /*SM - 09/24 - SWWEB-452 fix*/
-
-/*.hapag-dashboardtab > li.active > a {
-    background-color: #E75200;
-    border-color: #E75200;
-    color: #fff;
-}*/
-
-/*.hapag-dashboardtab > li > a,
-.hapag-dashboardtabcontent {
-    background-color: #E1EAF7;
-    border-color: #E1EAF7;
-    color: #000;
-}*/
-
-/*.hapag-dashboardtab > li > a,
-.hapag-btn {
-    padding: 2px 20px;
-}*/
-
-/*.hapag-dashboardtabcontent {
-    width: 100%;
-    display: table;
-    padding: 15px 10px 10px 10px;
-    margin-bottom: 10px;
-}*/
-
-/*.hapag-dashboardtabcontent .table {
-        margin-bottom: 0px;
-    }*/
-
-/*.hapag-dashboardtabcontent .featured {
-        background-color: #003878;
-        color: #fff;
-        min-width: 76px;
-        text-align: center;
-        margin: 0px 10px;
-    }*/
 
 #dashboardgrid thead tr:first-child {
     font-weight: bold;
@@ -764,11 +563,6 @@ textarea .readonly {
         float: none !important;
         position: relative;
     }
-
-    /*.hapag-body {
-        margin-top: 0px !important; 
-        float: none !important;
-    }*/
 
     .form-control {
         border: none;
@@ -1373,3 +1167,10 @@ Header
     max-width: 859px; /*add max-width to stop richtext from moving off the screen horizontally*/
 }
 /*SM - 09/24 - SWWEB-450 fix*/
+
+/*SM - 0/26 - Fix label control hight with multiple lines*/
+label.form-control {
+    height: auto;
+    min-height: 34px;
+}
+/*SM - 0/26 - Fix label control hight with multiple lines*/
