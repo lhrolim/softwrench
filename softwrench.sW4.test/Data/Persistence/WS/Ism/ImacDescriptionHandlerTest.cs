@@ -33,6 +33,7 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Ism {
 
 
         [TestMethod]
+        [Ignore]
         public void InstallLan() {
             DoTest("installlan", "installlan.json", "installlan.txt");
         }
