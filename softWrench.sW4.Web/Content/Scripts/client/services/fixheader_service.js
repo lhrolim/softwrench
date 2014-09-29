@@ -72,21 +72,23 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
     };
 
     var buildTheadArray = function (log, table, emptyGrid) {
-        //var thead = [];
-        //// loop over the first row of td's in &lt;tbody> and get the widths of individual &lt;td>'s
-        //var classToUse = emptyGrid ? 'thead tr:eq(0) th' : 'tbody tr:eq(0) td';
+        if ($rootScope.clientName == 'hapag') {
+            var thead = [];
+            // loop over the first row of td's in &lt;tbody> and get the widths of individual &lt;td>'s
+            var classToUse = emptyGrid ? 'thead tr:eq(0) th' : 'tbody tr:eq(0) td';
 
-        //$(classToUse, table).each(function (i, firstrow) {
-        //    var width = $(firstrow).width();
-        //    thead.push(width);
-        //});
-        //log.trace('thead array: ' + thead);
-        //var total = 0;
-        //for (var i = 0; i < thead.length; i++) {
-        //    total += thead[i] << 0;
-        //}
-        //log.trace('total ' + total);
-        //return thead;
+            $(classToUse, table).each(function (i, firstrow) {
+                var width = $(firstrow).width();
+                thead.push(width);
+            });
+            log.trace('thead array: ' + thead);
+            var total = 0;
+            for (var i = 0; i < thead.length; i++) {
+                total += thead[i] << 0;
+            }
+            log.trace('total ' + total);
+            return thead;
+        }
     }
 
     return {
@@ -97,8 +99,6 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             /// </summary>
             this.fixThead(null, { empty: true });
         },
-
-
 
         updateFilterVisibility: function (schema, theadArray) {
             /// <summary>
@@ -125,7 +125,6 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
                 return;
             }
 
-
             //                        thead tr:eq(2) th ==> picks all the elements of the second line of the thead of the table, i.e the filters
             $('thead tr:eq(2) th', table).each(function (i, v) {
                 var inputGroupElements = $('.input-group', v).children();
@@ -148,52 +147,56 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
 
 
         fixTableTop: function (tableElement, params) {
-            //var thead = $('thead', tableElement);
-            //params = instantiateIfUndefined(params);
-            //$(".listgrid-table").addClass("affixed");
-            //$(".listgrid-table").removeClass("unfixed");
-            //var theadHeight = thead.height();
-            //$log.getInstance("fixheaderService#fixTableTop").debug("head height: " + theadHeight);
-            //if (isIe9() && "true" != sessionStorage.mockie9) {
-            //    //if mocking ie9, lets keep default behaviour, otherwise will break all the grids
-            //    tableElement.css('margin-top', theadHeight + 19);
-            //    thead.css('top', 111 - (theadHeight + 19));
-            //} else if (contextService.isClient("hapag")) {
-            //    tableElement.css('margin-top', theadHeight + 23);
-            //    thead.css('top', 114);
-            //}
+            if ($rootScope.clientName == 'hapag') {
+                var thead = $('thead', tableElement);
+                params = instantiateIfUndefined(params);
+                $(".listgrid-table").addClass("affixed");
+                $(".listgrid-table").removeClass("unfixed");
+                var theadHeight = thead.height();
+                $log.getInstance("fixheaderService#fixTableTop").debug("head height: " + theadHeight);
+                if (isIe9() && "true" != sessionStorage.mockie9) {
+                    //if mocking ie9, lets keep default behaviour, otherwise will break all the grids
+                    tableElement.css('margin-top', theadHeight + 19);
+                    thead.css('top', 111 - (theadHeight + 19));
+                } else if (contextService.isClient("hapag")) {
+                    tableElement.css('margin-top', theadHeight + 23);
+                    thead.css('top', 114);
+                }
+            }
         },
 
         fixThead: function (schema, params) {
-            //var log = $log.getInstance('sw4.fixheader_service#fixThead');
-            //log.debug('starting fix Thead');
-            //if (!params || !params.resizing) {
-            //    this.unfix();
-            //}
-            //var table = $(".listgrid-table");
-            //var thead = buildTheadArray(log, table, params.empty);
+            if ($rootScope.clientName == 'hapag') {
+                var log = $log.getInstance('sw4.fixheader_service#fixThead');
+                log.debug('starting fix Thead');
+                if (!params || !params.resizing) {
+                    this.unfix();
+                }
+                var table = $(".listgrid-table");
+                var thead = buildTheadArray(log, table, params.empty);
 
-            //$('thead tr:eq(0) th', table).each(function (i, v) {
-            //    $(v).width(thead[i]);
-            //});
-            //$('thead tr:eq(2) th', table).each(function (i, v) {
-            //    $(v).width(thead[i]);
-            //});
+                $('thead tr:eq(0) th', table).each(function (i, v) {
+                    $(v).width(thead[i]);
+                });
+                $('thead tr:eq(2) th', table).each(function (i, v) {
+                    $(v).width(thead[i]);
+                });
 
-            //// set the columns width back
-            //$('tbody tr:eq(0) td', table).each(function (i, v) {
-            //    $(v).width(thead[i]);
-            //});
-            
-            //log.debug('updating filter visibility');
-            //this.updateFilterVisibility(schema, thead);
-            //contextService.insertIntoContext('currentgridarray', thead);
-            //log.debug('updated filter visibility');
+                // set the columns width back
+                $('tbody tr:eq(0) td', table).each(function (i, v) {
+                    $(v).width(thead[i]);
+                });
 
-            //update the style, to fixed
-            //this.fixTableTop(table, params);
+                log.debug('updating filter visibility');
+                this.updateFilterVisibility(schema, thead);
+                contextService.insertIntoContext('currentgridarray', thead);
+                log.debug('updated filter visibility');
 
-            //log.debug('finishing fix Thead');
+                //update the style, to fixed
+                this.fixTableTop(table, params);
+
+                log.debug('finishing fix Thead');
+            }
         },
 
         activateResizeHandler: function () {
