@@ -43,7 +43,7 @@ namespace softWrench.sW4.Web.Util {
 
             BuildHeader(excelFile, headerStyle, applicationFields);
 
-            var rowIndex = 2;
+            var rowIndex = 1;
             var currentPage = 1;
 
             //while (currentPage <= result.PageCount) {
@@ -143,6 +143,9 @@ namespace softWrench.sW4.Web.Util {
             foreach (var applicationField in applicationFields) {
                 double excelWidthAux;
                 string excelwidthAux;
+                if (applicationField.IsHidden) {
+                    continue;
+                }
                 applicationField.RendererParameters.TryGetValue("excelwidth", out excelwidthAux);
                 double.TryParse(excelwidthAux, out excelWidthAux);
                 var excelWidth = excelWidthAux > 0 ? excelWidthAux : (applicationField.Label.Length * 1.5);

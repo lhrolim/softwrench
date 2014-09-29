@@ -13,9 +13,6 @@ app.directive('crudBody', function (contextService) {
             associationSchemas: '=',
             schema: '=',
             datamap: '=',
-            isDirty: '=',
-            originalDatamap: '=',
-            savefn: '&',
             cancelfn: '&',
             previousschema: '=',
             previousdata: '=',
@@ -25,23 +22,17 @@ app.directive('crudBody', function (contextService) {
             searchSort: '=',
             ismodal: '@',
             checked: '='
-           
-        },
-
-        link: function (scope, element, attrs) {
-            scope.$name = 'crudbody';
-            
         },
 
         controller: function ($scope, $http, $rootScope, $filter, $injector,
             formatService, fixHeaderService,
             searchService, tabsService,
             fieldService, commandService, i18NService,
-            submitService, redirectService,
-            associationService, contextService, alertService, validationService) {
+            validationService, submitService, redirectService,
+            associationService, contextService) {
 
-           
-           
+            $scope.$name = 'crudbody' + ($scope.ismodal ? 'modal' : '');
+
             $scope.getFormattedValue = function (value, column) {
                 var formattedValue = formatService.format(value, column);
                 if (formattedValue == "-666") {
@@ -52,17 +43,9 @@ app.directive('crudBody', function (contextService) {
                 return formattedValue;
             };
 
-            $scope.hasTabs = function (schema) {          
+            $scope.hasTabs = function (schema) {
                 return tabsService.hasTabs(schema);
             };
-            $scope.isEditDetail = function (datamap, schema) {
-                return datamap.fields[schema.idFieldName] != null;
-            };
-            $scope.request = function (datamap, schema) {
-                return datamap.fields[schema.idFieldName];
-            };
-           
-           
             $scope.isCommand = function (schema) {
                 if ($scope.schema.properties['command.select'] == "true") {
                     return true;
@@ -107,7 +90,6 @@ app.directive('crudBody', function (contextService) {
                 return id != null;
             };
 
-          
 
             $scope.shouldShowField = function (expression) {
                 if (expression == "true") {
@@ -135,62 +117,30 @@ app.directive('crudBody', function (contextService) {
                 }
                 $scope.$parent.renderView($scope.$parent.applicationname, listSchema, 'none', $scope.title, parameters);
             };
-            $scope.toConfirmCancel = function (data, schema) {
-                
-                if (validationService.getDirty()) {
-                    alertService.confirmCancel(null, null, function () {
-                        $scope.toListSchema(data, schema);
-                        $scope.$digest();
-                    }, "Are you sure you want to cancel ?", function () { return; });
-                }
-                else {
-                    $scope.toListSchema(data, schema);
-                }
-            }
-            $scope.crawl = function (direction) {
-                var value = contextService.fetchFromContext("crud_context", true);
-                var id = direction == 1 ? value.detail_previous : value.detail_next;
-                if (id == undefined) {
-                    return;
-                }
 
-                    var mode = $scope.$parent.mode;
-                    var popupmode = $scope.$parent.popupmode;
-                    var schemaid = $scope.$parent.schema.schemaId;
-                    var applicationname = $scope.$parent.schema.applicationName;
-                    var title = $scope.$parent.title;
-                 
-                    $scope.$emit("sw_renderview", applicationname, schemaid, mode, title, { id: id, popupmode: popupmode });
-                
-            };
             $scope.toListSchema = function (data, schema) {
                 /*if (schema instanceof Array) {
                     $scope.$parent.multipleSchemaHandling($scope.$parent.resultObject);
                 } else {*/
                 $scope.$parent.multipleSchema = false;
                 $scope.$parent.schemas = null;
-//                $('#crudmodal').modal('hide');
+                $('#crudmodal').modal('hide');
                 $scope.showingModal = false;
                 if (GetPopUpMode() == 'browser') {
                     open(location, '_self').close();
                 }
-                if (schema != null && data != null) {
-                //if they are both null, it means that the previous data does not exist (F5 on browser). 
-                //Let´s keep them untouched until the new one comes from server, otherwise after the $http call there will be errors on the $digest evalution
-                    $scope.schema = schema;
-                    $scope.datamap = data;
-                }
-                // at this point, usually schema should be a list schema, on cancel call for instance, where we pass the previous schema. same goes for the datamap
-                // this first if is more of an unexpected case
+                $scope.schema = schema;
+                $scope.datamap = data;
                 if ($scope.schema == null || $scope.datamap == null || $scope.schema.stereotype == 'Detail') {
                     $scope.renderListView(null);
+                    return;
                 } else {
                     $scope.$emit('sw_titlechanged', schema.title);
                     $scope.$parent.toList(null);
                 }
                 //}
             };
-          
+
             $scope.delete = function () {
 
                 var schema = $scope.schema;
@@ -215,13 +165,6 @@ app.directive('crudBody', function (contextService) {
             };
 
             $scope.save = function (selecteditem, parameters) {
-                if ($rootScope.showingModal && $scope.$parent.$parent.$name == "crudbodymodal") {
-                    //workaround to invoke the original method that was passed to the modal, instead of the default save.
-                    //TODO: use angular's & support
-                    $scope.$parent.$parent.originalsavefn(selecteditem);
-                    return;
-                }
-
                 if (parameters == undefined) {
                     parameters = {};
                 }
@@ -306,9 +249,8 @@ app.directive('crudBody', function (contextService) {
                 fieldService: fieldService,
                 commandService: commandService
             });
-            
-        }
 
+        }
     };
 });
 

@@ -1,7 +1,6 @@
-﻿using NHibernate.Mapping.Attributes;
+﻿using System;
+using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Interfaces;
-using softWrench.sW4.Util;
-using System;
 
 namespace softWrench.sW4.Security.Entities {
 
@@ -14,7 +13,7 @@ namespace softWrench.sW4.Security.Entities {
         [ManyToOne(Column = "constraint_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
         public virtual DataConstraint Constraint { get; set; }
 
-        [Property(TypeType = typeof(BooleanToIntUserType))]
+        [Property]
         public virtual Boolean Exclusion { get; set; }
 
     }

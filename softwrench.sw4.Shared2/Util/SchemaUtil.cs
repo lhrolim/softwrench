@@ -37,5 +37,7 @@ namespace softwrench.sw4.Shared2.Util {
             var idx = key.IndexOf('.');
             return new Tuple<string, ApplicationMetadataSchemaKey>(key.Substring(0, idx), ParseKey(key.Substring(idx + 1)));
         }
+
+       
     }
 }

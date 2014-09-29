@@ -56,8 +56,6 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
             _wcFacade.Register("incident", qc.DefaultIncidentGridQuery);
             // applied for XITC,TOM and ITOM
             _wcFacade.Register("problem", qc.DefaultProblemGridQuery);
-            _wcFacade.Register("asset", qc.DefaultAsset);
-
         }
 
         private void CreateEndUserWhereClause() {

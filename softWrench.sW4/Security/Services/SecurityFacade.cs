@@ -1,23 +1,23 @@
-﻿using log4net;
-using softwrench.sW4.Shared2.Util;
-using softWrench.sW4.AUTH;
-using softWrench.sW4.Data.Persistence.SWDB;
-using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Security.Entities;
-using softWrench.sW4.SimpleInjector;
-using softWrench.sW4.SimpleInjector.Events;
-using softWrench.sW4.Util;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Security.Principal;
+using log4net;
+using softWrench.sW4.AUTH;
+using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Metadata.Security;
+using softWrench.sW4.Security.Entities;
+using softwrench.sW4.Shared2.Util;
+using softWrench.sW4.SimpleInjector;
+using softWrench.sW4.SimpleInjector.Events;
+using softWrench.sW4.Util;
 using LogicalThreadContext = Quartz.Util.LogicalThreadContext;
 
 
 namespace softWrench.sW4.Security.Services {
     public class SecurityFacade {
-        private const string LoginQuery = "from User where userName =? and IsActive=1";
+        private const string LoginQuery = "from User where userName =? and IsActive=true";
 
         private static SecurityFacade _instance = null;
 

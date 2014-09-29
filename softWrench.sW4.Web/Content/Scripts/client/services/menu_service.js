@@ -146,14 +146,6 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
             }
             return i18NService.getI18nMenuLabel(menuItem, tooltip);
         },
-        getI18nMenuIcon: function (menuItem) {
-
-            if (menuItem.module != null) {
-                return menuItem.icon;
-            }
-            return i18NService.getI18nMenuIcon(menuItem);
-        },
-
 
         setActiveLeafByUrl: function (menu, url) {
             if (menu.displacement == 'horizontal') {

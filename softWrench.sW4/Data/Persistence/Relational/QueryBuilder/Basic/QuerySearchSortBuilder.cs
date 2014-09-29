@@ -6,6 +6,7 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Schema;
 using softWrench.sW4.Metadata.Entities.Sliced;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
     class QuerySearchSortBuilder {
@@ -20,7 +21,10 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
         public static string BuildSearchSort(EntityMetadata entityMetadata, SearchRequestDto dto) {
             var searchSort = dto.SearchSort;
             if (String.IsNullOrWhiteSpace(searchSort)) {
-                return String.Format(" order by {1} desc", entityMetadata.Name, entityMetadata.Schema.IdAttribute.Name);
+                if (entityMetadata.HasUnion()) {
+                    return " order by {0} desc".Fmt(entityMetadata.Schema.IdAttribute.Name);
+                }
+                return String.Format(" order by {0}.{1} desc", entityMetadata.Name, entityMetadata.Schema.IdAttribute.Name);
             }
             var suffix = dto.SearchAscending ? " asc " : " desc ";
             if (searchSort.EndsWith("asc") || searchSort.EndsWith("desc")) {
@@ -35,13 +39,16 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             }
 
             if (!searchSort.Contains(".")) {
-                //                if (!dto.ExpressionSort) {
-                //                    return String.Format(" order by {0}.{1} {2}", entityMetadata.Name, searchSort, suffix);
-                //                }
+                //if union we cannot use full qualified names
+                if (!dto.ExpressionSort && !entityMetadata.HasUnion()) {
+                    return String.Format(" order by {0}.{1} {2}", entityMetadata.Name, searchSort, suffix);
+                }
                 return String.Format(" order by {0} {1}", searchSort, suffix);
             }
-
-
+            if (entityMetadata.HasUnion()) {
+                //this might replace sr_.ticketid for sr_ticketid, which is the right alias for paginated queries with union...
+                searchSort = searchSort.Replace(".", "");
+            }
             return String.Format(" order by {0} {1}", searchSort, suffix);
         }
 

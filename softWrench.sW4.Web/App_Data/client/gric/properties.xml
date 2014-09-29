@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Properties xmlns="http://www.example.org/Properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://www.example.org/Properties ../../Schema/Properties.xsd ">
-
+  
   <property key="baseWSPrefix" value="SW"/>
   <property key="externalSystemName" value="SW" />
   <property key="wsprovider" value="mif" />
@@ -17,9 +17,9 @@
 
 
   <environment key="dev">
-    <property key="basewsURL" value="http://66.235.236.5/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=192.168.1.226;Initial Catalog=DEMO2MAX;User Id=MAXIMO;password=MAXIMO;" />
-    <property key="swdb_url" value="Data Source=192.168.1.226;Initial Catalog=SWDB;User Id=sw;password=softwrench;" />
+    <property key="basewsURL" value="http://192.168.2.105:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=192.168.2.105;Initial Catalog=SWMAX;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="swdb_url" value="Data Source=192.168.2.105;Initial Catalog=SWDB_SWMAX;User Id=sw;password=softwrench;" />
   </environment>
 
   <environment key="qa">
@@ -47,8 +47,9 @@
     <property key="mifcredentials.user" value="mxintadm"/>
     <property key="mifcredentials.password" value="M@x1mo23"/>
   </environment>
-
+  
 </Properties>
+  
  
   
 

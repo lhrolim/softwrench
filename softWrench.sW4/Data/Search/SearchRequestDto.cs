@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Entities;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
@@ -49,6 +51,13 @@ namespace softWrench.sW4.Data.Search {
 
         public String Title { get; set; }
 
+        public SearchRequestDto unionDTO;
+
+        public virtual bool ShouldPaginate {
+            get { return false; }
+            set {}
+        }
+
         public string FilterFixedWhereClause { get; set; }
 
 
@@ -57,6 +66,13 @@ namespace softWrench.sW4.Data.Search {
             var columns = schema.Fields;
             foreach (var column in columns) {
                 AppendProjectionField(new ProjectionField { Name = column.Attribute, Alias = column.Attribute });
+            }
+        }
+
+        internal void BuildProjection(SlicedEntityMetadata metadata) {
+            var columns = metadata.Attributes(EntityMetadata.AttributesMode.NoCollections);
+            foreach (var column in columns) {
+                AppendProjectionField(new ProjectionField { Name = column.Name, Alias = column.Name });
             }
         }
 
@@ -84,37 +100,53 @@ namespace softWrench.sW4.Data.Search {
             return searchRequestDto;
         }
 
-        public static SearchRequestDto GetUnionSearchRequestDto(SearchRequestDto originalSearchRequestDto, SlicedEntityMetadata unionSchema) {
-            var unionSearchRequestDto = new SearchRequestDto();
+        public void BuildUnionDTO(ApplicationSchemaDefinition originalSchema) {
+            var unionSchema = MetadataProvider.FindSchemaDefinition(originalSchema.UnionSchema);
+            unionDTO = new SearchRequestDto();
+            unionDTO.BuildProjection(unionSchema);
+            if (String.IsNullOrWhiteSpace(SearchParams)) {
+                return;
+            }
 
-            if (!String.IsNullOrWhiteSpace(originalSearchRequestDto.SearchParams)) {
+            var sb = new StringBuilder(SearchParams);
+            var sbReplacingIdx = 0;
+            var nullParamCounter = 0;
 
-                var sb = new StringBuilder(originalSearchRequestDto.SearchParams);
-                var sbReplacingIdx = 0;
-                var nullParamCounter = 0;
+            foreach (var parameter in GetParameters()) {
 
-                foreach (var parameter in originalSearchRequestDto.GetParameters()) {
+                var key = parameter.Key.Split('.').Last();
 
-                    var key = parameter.Key.Split('.').Last();
-                    var unionParameter = unionSchema.Schema.Attributes.Where(f => f.Name.EndsWith(key)).FirstOrDefault();
+                var fields = originalSchema.Fields;
+                var idx = 0;
 
-                    var newSearchParam = String.Empty;
-                    if (unionParameter != null) {
-                        newSearchParam = unionParameter.Name + "_union";
-                    } else {
-                        newSearchParam = "null" + nullParamCounter++;
+                ApplicationFieldDefinition unionParameter = null;
+                foreach (var field in fields) {
+                    // need to recover field from the original schema, since on the client side it will pass this as the parameter name.
+                    // the union schema has to be declared on the same order, but could have different field aliases
+                    if (field.Attribute.EndsWith(key)) {
+                        unionParameter = unionSchema.Fields[idx];
+                        break;
                     }
-
-                    var idxToReplace = sb.ToString().IndexOf(parameter.Key, sbReplacingIdx, StringComparison.Ordinal);
-                    sb.Replace(parameter.Key, newSearchParam, idxToReplace, parameter.Key.Length);
-                    sbReplacingIdx += newSearchParam.Length;
+                    idx++;
                 }
 
-                unionSearchRequestDto.SearchParams = sb.ToString();
-                unionSearchRequestDto.SearchValues = originalSearchRequestDto.SearchValues;
+                string newSearchParam;
+                if (unionParameter != null) {
+                    newSearchParam = unionParameter.Attribute + "_union";
+                } else {
+                    newSearchParam = "null" + nullParamCounter++;
+                }
+
+                var idxToReplace = sb.ToString().IndexOf(parameter.Key, sbReplacingIdx, StringComparison.Ordinal);
+                sb.Replace(parameter.Key, newSearchParam, idxToReplace, parameter.Key.Length);
+                sbReplacingIdx += newSearchParam.Length;
             }
-            return unionSearchRequestDto;
+
+            unionDTO.SearchParams = sb.ToString();
+            unionDTO.SearchValues = SearchValues;
         }
+
+
 
         public SearchRequestDto AppendSearchEntry(string searchParam, string searchValue) {
             AppendSearchParam(searchParam);

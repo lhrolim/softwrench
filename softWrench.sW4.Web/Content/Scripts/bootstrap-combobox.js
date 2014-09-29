@@ -462,11 +462,10 @@
         });
     };
 
-    /*SM - 09/24 - SWWEB-446 (added "input-group" class & changed "add-on btn" to input-group-addon class)*/
     $.fn.combobox.defaults = {
-        template: '<div class="combobox-container input-group" >' +
+        template: '<div class="combobox-container" >' +
             '<input type="hidden" /><input type="text" autocomplete="off"/>' +
-            '<span class="input-group-addon dropdown-toggle" data-dropdown="dropdown">' +
+            '<span class="add-on btn dropdown-toggle" data-dropdown="dropdown">' +
             '<span class="caret"/>' +
             '</span></div>'
     , menu: '<ul class="typeahead typeahead-long dropdown-menu" style="width:94%"></ul>'

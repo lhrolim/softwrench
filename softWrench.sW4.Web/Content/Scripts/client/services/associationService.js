@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('associationService', function ($injector, $http, $timeout, $log, $rootScope, submitService, fieldService) {
+app.factory('associationService', function ($injector, $http, $timeout, $log,$rootScope, submitService, fieldService) {
 
     var doUpdateExtraFields = function (associationFieldMetadata, underlyingValue, datamap) {
         var log = $log.getInstance('sw4.associationservice#doUpdateExtraFields');
@@ -71,7 +71,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
     return {
 
-        getFullObject: function (associationFieldMetadata, datamap, associationOptions) {
+        getFullObject : function (associationFieldMetadata, datamap, associationOptions) {
             //we need to locate the value from the list of association options
             // we only have the "value" on the datamap 
             var target = associationFieldMetadata.target;
@@ -156,7 +156,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             scope.associationSchemas = instantiateIfUndefined(scope.associationSchemas);
             scope.disabledassociations = instantiateIfUndefined(scope.disabledassociations);
             for (var dependantFieldName in serverOptions) {
-
+                
                 //this iterates for list of fields which were dependant of a first one. 
                 var array = instantiateIfUndefined(serverOptions[dependantFieldName]);
 
@@ -266,7 +266,6 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
 
             var parameters = {
-                application : applicationName ,
                 key: {
                     schemaId: schema.schemaId,
                     mode: schema.mode,
@@ -276,7 +275,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 id: fields[schema.idFieldName]
             };
             var fieldsTosubmit = submitService.removeExtraFields(fields, true, scope.schema);
-            var urlToUse = url("/api/generic/Data/UpdateAssociation?" + $.param(parameters));
+            var urlToUse = url("/api/data/" + applicationName + "?" + $.param(parameters));
             var jsonString = angular.toJson(fieldsTosubmit);
             var log = $log.getInstance('sw4.associationservice#updateAssociations');
             log.info('going to server for dependat associations of {0}'.format(triggerFieldName));

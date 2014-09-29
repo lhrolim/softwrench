@@ -1,0 +1,77 @@
+﻿/****************************
+ * resolutions handler - begin *
+ ****************************/
+
+@media (min-width: 1200px) {
+    /* some CSS for large resolution */
+    .container {
+        max-width: 1080px !important;
+    }
+
+    .col-main-content {
+        min-width: 895px;
+    }
+
+        .col-main-content > .affix {
+            min-width: 895px;
+        }
+
+    .textarealog {
+        margin-left: -27px;
+        min-width: 884px !important;
+    }
+
+    #userLanguage {
+        max-width: 630px;
+    }
+
+
+    #listgrid thead th {
+        height: 47px;
+    }
+
+    .affix-pagination {
+        width: 893.5px !important;
+        margin-left: -10px !important;
+    }
+
+    .pagination-grid-left {
+        margin-left: 10px;
+    }
+
+    .pagination-grid-right {
+        margin-right: 10px;
+        width: 370px;
+    }
+
+    .pagination-grid-right-text {
+        float: right;
+    }
+
+    .topMessageAux {
+        min-width: 891px !important;
+        top: 83px !important;
+    }
+
+    .pagination-errormessage {
+        top: 137px !important;
+    }
+
+
+    .listgrid-table-errormessage {
+        margin-top: 175px !important;
+    }
+
+    .printModal {
+        left: 42% !important;
+        top: 20% !important;
+    }
+
+    .modal-open, .modal-open .navbar-fixed-top {
+        margin-right: 0 !important;
+    }
+}
+
+/****************************
+ * resolutions handler - end *
+ ****************************/

@@ -1,6 +1,9 @@
-﻿using NHibernate.Mapping.Attributes;
-using softWrench.sW4.Util;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using NHibernate.Mapping.Attributes;
 
 namespace softWrench.sW4.Security.Entities {
 
@@ -21,7 +24,7 @@ namespace softWrench.sW4.Security.Entities {
         [ManyToOne(Column = "persongroup_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
         public virtual PersonGroup PersonGroup { get; set; }
 
-        [Property(TypeType = typeof(BooleanToIntUserType))]
+        [Property]
         public virtual Boolean Delegate { get; set; }
 
         [ManyToOne(Column = "user_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]

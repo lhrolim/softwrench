@@ -23,13 +23,11 @@ namespace softWrench.sW4.Web.Controllers {
 
         private readonly IConfigurationFacade _facade;
         private readonly I18NResolver _i18NResolver;
-        private readonly StatusColorResolver _statusColorResolver;
 
-        public HomeController(IConfigurationFacade facade, I18NResolver i18NResolver, StatusColorResolver statusColorResolver) {
+        public HomeController(IConfigurationFacade facade, I18NResolver i18NResolver) {
             //            _controllerFactory = (IAPIControllerFactory)GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IAPIControllerFactory));
             _facade = facade;
             _i18NResolver = i18NResolver;
-            _statusColorResolver = statusColorResolver;
         }
 
         public ActionResult Index() {
@@ -38,22 +36,16 @@ namespace softWrench.sW4.Web.Controllers {
             var indexItem = securedMenu.IndexItem;
 
             HomeModel model = null;
-            string url;
-            string title;
             if (indexItem is ApplicationMenuItemDefinition) {
                 var app = (ApplicationMenuItemDefinition)indexItem;
                 var key = new ApplicationMetadataSchemaKey(app.Schema, app.Mode, ClientPlatform.Web);
                 var adapter = new DataRequestAdapter(null, key);
-                url = GetUrlFromApplication(app.Application, adapter);
-                title = app.Title;
+                model = new HomeModel(GetUrlFromApplication(app.Application, adapter), app.Title, FetchConfigs(), user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), ApplicationConfiguration.ClientName);
             } else if (indexItem is ActionMenuItemDefinition) {
                 var actItem = (ActionMenuItemDefinition)indexItem;
-                url = GetUrlFromAction(actItem);
-                title = actItem.Title;
-            } else {
-                throw ExceptionUtil.InvalidOperation("index item should be either application or action");
+                var action = actItem.Action;
+                model = new HomeModel(GetUrlFromAction(actItem), actItem.Title, FetchConfigs(), user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), ApplicationConfiguration.ClientName);
             }
-            model = new HomeModel(url, title, FetchConfigs(), user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), ApplicationConfiguration.ClientName);
             return View(model);
         }
 
@@ -83,7 +75,7 @@ namespace softWrench.sW4.Web.Controllers {
             return timeout;
         }
 
-        public ActionResult RedirectToAction(string application, string controllerToRedirect, string popupmode, string actionToRedirect, string queryString, string message) {
+        public ActionResult RedirectToAction(string application, string controllerToRedirect, string popupmode, string actionToRedirect, string queryString, string message, string messageType) {
             string actionURL;
             var user = SecurityFacade.CurrentUser();
             if (application != null) {
@@ -96,11 +88,11 @@ namespace softWrench.sW4.Web.Controllers {
 
             var windowTitle = GetWindowTitle(redirectURL);
             var hasPopupLogo = HasPopupLogo(application, popupmode);
-            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(), user, hasPopupLogo, _i18NResolver.FetchCatalogs(),_statusColorResolver.FetchCatalogs(), ApplicationConfiguration.ClientName, windowTitle, message));
+            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(), user, hasPopupLogo, _i18NResolver.FetchCatalogs(), ApplicationConfiguration.ClientName, windowTitle, message, messageType));
         }
 
         public ActionResult MakeSWAdmin() {
-            return RedirectToAction(null, "MakeSWAdmin", null, "Index", null, null);
+            return RedirectToAction(null, "MakeSWAdmin", null, "Index", null, null, null);
         }
 
         private string GetWindowTitle(string redirectUrl) {

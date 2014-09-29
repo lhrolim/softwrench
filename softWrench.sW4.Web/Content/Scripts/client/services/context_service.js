@@ -50,27 +50,6 @@ app.factory('contextService', function ($rootScope) {
             return this.retrieveFromContext('isLocal');
         },
 
-        client: function () {
-            return this.retrieveFromContext('clientName');
-        },
-
-        isClient: function (name) {
-
-            var clientName = this.client();
-            if (name == clientName) {
-                return true;
-            }
-            if (typeof (name) === 'array') {
-                if (jQuery.inArray(clientName, name)) {
-                    return true;
-                }
-            }
-            if (name == null) {
-                $log.getInstance('contextService#isClient').warn("asked for null client name")
-                return false;
-            }
-            return false;
-        },
         getUserData: function () {
             if ($rootScope.user != null) {
                 //caching

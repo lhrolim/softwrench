@@ -50,7 +50,6 @@ app.directive('sectionElementInput', function ($compile) {
         scope: {
             schema: '=',
             datamap: '=',
-            isDirty: '=',
             displayables: '=',
             associationOptions: '=',
             associationSchemas: '=',
@@ -67,7 +66,6 @@ app.directive('sectionElementInput', function ($compile) {
                     "<crud-input-fields displayables='displayables'" +
                                 "schema='schema'" +
                                 "datamap='datamap'" +
-                                "is-dirty='isDirty'" +
                                 "displayables='displayables'" +
                                 "association-options='associationOptions'" +
                                 "association-schemas='associationSchemas'" +
@@ -90,7 +88,6 @@ app.directive('crudInputFields', function (contextService) {
         scope: {
             schema: '=',
             datamap: '=',
-            isDirty: '=',
             displayables: '=',
             associationOptions: '=',
             associationSchemas: '=',
@@ -103,7 +100,7 @@ app.directive('crudInputFields', function (contextService) {
         controller: function ($scope, $http, $element, $injector, $timeout,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
-            cmpfacade,cmpComboDropdown, redirectService,validationService, contextService) {
+            cmpfacade, cmpComboDropdown, redirectService) {
 
             $scope.$name = 'crud_input_fields';
 
@@ -159,26 +156,18 @@ app.directive('crudInputFields', function (contextService) {
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();
                     $scope.configureAssociationChangeEvents();
-                    
-                    $scope.configureDirtyWatcher();
                 }
 
                 $('.datetimereadonly').datepicker("remove");
+
                 // Configure input files
                 $('#uploadBtn').on('change', function (e) {
                     if (this != null) {
-                        $('#uploadFile').attr("value", this.value);}});
+                        $('#uploadFile').attr("value", this.value);
+                    }
+                });
             });
 
-            $scope.configureDirtyWatcher = function () {
-                $timeout(function () {
-                    $scope.$watch('datamap', function (newValue, oldValue) {
-                        if (newValue != oldValue) {
-                            validationService.setDirty();
-                        }
-                    }, true);
-                }, 0, false);
-            }
             /* Association (COMBO, AUTOCOMPLETECLIENT) functions */
             $scope.configureAssociationChangeEvents = function () {
                 var associations = fieldService.getDisplayablesOfTypes($scope.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
@@ -199,7 +188,18 @@ app.directive('crudInputFields', function (contextService) {
                             var ignoreWatchIdx = newValue.indexOf('$ignorewatch');
                             if (ignoreWatchIdx != -1) {
                                 shouldDoWatch = false;
-                                $scope.datamap[association.attribute] = newValue.substring(0, ignoreWatchIdx);
+                                newValue = newValue.substring(0, ignoreWatchIdx);
+                                if (newValue == '$null') {
+                                    newValue = null;
+                                }
+                                $scope.datamap[association.attribute] = newValue;
+                                cmpfacade.digestAndrefresh(association, $scope);
+                                
+                                $timeout(function () {
+                                    shouldDoWatch = true;
+                                }, 0, false);
+
+                                /*
                                 try {
                                     $scope.$digest();
                                     shouldDoWatch = true;
@@ -208,7 +208,7 @@ app.directive('crudInputFields', function (contextService) {
                                     $timeout(function () {
                                         shouldDoWatch = true;
                                     }, 0, false);
-                                }
+                                }*/
                                 return;
                             }
                         }
@@ -351,9 +351,7 @@ app.directive('crudInputFields', function (contextService) {
                     associationService.updateUnderlyingAssociationObject(fieldMetadata, null, $scope);
                 }
             };
-            $scope.getLookUpDescriptionLabel = function (fieldMetadata) {
-               return i18NService.getLookUpDescriptionLabel(fieldMetadata);
-            };
+
             $scope.lookupCodeBlur = function (fieldMetadata) {
                 var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                 var targetValue = $scope.datamap[fieldMetadata.target];
@@ -483,13 +481,13 @@ app.directive('crudInputFields', function (contextService) {
                     if (!nullOrUndef(length)) {
                         switch (length) {
                             case 'full':
-                                lengthclass = 'col-md-10';
+                                lengthclass = GetBootstrapFormClass(10);
                                 break;
                             case 'half':
-                                lengthclass = 'col-md-5';
+                                lengthclass = GetBootstrapFormClass(5);
                                 break;
                             case 'quarter':
-                                lengthclass = 'col-md-2';
+                                lengthclass = GetBootstrapFormClass(2);
                                 break;
                         }
                     }
@@ -501,7 +499,6 @@ app.directive('crudInputFields', function (contextService) {
                 if (fieldMetadata.type == "OptionField") {
                     return $scope.GetOptionFieldOptions(fieldMetadata);
                 }
-                $scope.associationOptions = instantiateIfUndefined($scope.associationOptions);
                 return $scope.associationOptions[fieldMetadata.associationKey];
             }
 
@@ -533,22 +530,24 @@ app.directive('crudInputFields', function (contextService) {
                 return result;
             }
 
-            //SM - 09/24 - SWWEB-441 change OTM column classes
+            //SM - 08/30 - Start, fix label width
             $scope.getLabelClass = function (fieldMetadata) {
                 //return $scope.hasSameLineLabel(fieldMetadata) ? 'col-md-2' : 'col-md-12';
                 if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
                     return null;
-            }
-                return $scope.hasSameLineLabel(fieldMetadata) ? 'col-sm-3 col-md-2' : 'col-xs-12';
+                }
+
+                return $scope.hasSameLineLabel(fieldMetadata) ? GetBootstrapFormClass(2) : GetBootstrapFormClass(12);
             }
 
             $scope.getFieldClass = function (fieldMetadata) {
                 if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
-                    return 'col-md-12';
+                    return GetBootstrapFormClass(12);;
+                }
+                return $scope.hasSameLineLabel(fieldMetadata) ? GetBootstrapFormClass(10) : GetBootstrapFormClass(12);
+                //                return $scope.hasSameLineLabel(fieldMetadata) ? 'col-md-8' : 'col-md-12';
             }
-                return $scope.hasSameLineLabel(fieldMetadata) ? 'col-sm-9 col-md-10' : 'col-xs-12';
-            }
-            //SM - 09/24 - SWWEB-441 change OTM column classes
+            //SM - 08/30 - End, fix label width
 
             ///
             // legendevaluation is boolean indicating the mode we are calling this method, either for an ordinary field or for a header with legend
@@ -568,21 +567,11 @@ app.directive('crudInputFields', function (contextService) {
             }
 
 
-            $scope.isVerticalOrientation = function () {
-                return $scope.orientation == 'vertical';
-            };
-
             $scope.isSectionWithoutLabel = function (fieldMetadata) {
                 return fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null && fieldMetadata.header == null;
             };
 
-            $scope.hasSameLineLabel = function (fieldMetadata) {
-                return ($scope.isVerticalOrientation()) &&
-                       (
-                            (fieldMetadata.header != null && fieldMetadata.header.displacement != 'ontop') ||
-                            (fieldMetadata.header == null)
-                       );
-            };
+         
 
             $scope.sectionHasSameLineLabel = function (fieldMetadata) {
                 return $scope.hasSameLineLabel(fieldMetadata) && fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null;
@@ -595,24 +584,23 @@ app.directive('crudInputFields', function (contextService) {
                 }
 
                 if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
-                    return 'col-md-12';
+                    return GetBootstrapFormClass(12);
                 }
                 if ($scope.isSectionWithoutLabel(fieldMetadata)) {
                     //                    classes += 'col-md-12 ';
                 } else if (!$scope.hasSameLineLabel(fieldMetadata)) {
-                    classes += 'col-md-12 ';
+                    classes += GetBootstrapFormClass(12);
                 } else if ($scope.isVerticalOrientation()) {
                     //SM - 08/30 - Start, fix label width
                     var lengthparam = $scope.getLengthParam(fieldMetadata);
                     if (lengthparam != null) {
                         classes += lengthparam;
                     } else {
-                        classes += 'col-md-10 ';
+                        classes += GetBootstrapFormClass(10);
                     }
                     //                    classes += 'col-md-8 ';
                     //SM - 08/30 - End, fix label width
                 }
-
                 return classes;
             };
 
@@ -625,6 +613,13 @@ app.directive('crudInputFields', function (contextService) {
             };
 
             function init() {
+           
+                $injector.invoke(BaseController, this, {
+                    $scope: $scope,
+                    i18NService: i18NService,
+                    fieldService: fieldService
+                });
+
                 if (!$scope.isVerticalOrientation()) {
                     var countVisibleDisplayables = fieldService.countVisibleDisplayables($scope.datamap, $scope.schema, $scope.displayables);
                     if (countVisibleDisplayables > 0) {
@@ -633,46 +628,27 @@ app.directive('crudInputFields', function (contextService) {
                         };
                     }
                 }
-                $injector.invoke(BaseController, this, {
-                    $scope: $scope,
-                    i18NService: i18NService,
-                    fieldService: fieldService
-                });
             }
-
             init();
         }
-    }
-});
 
-app.directive('numberSpinner', function () {
-    return {
-        restrict: 'A',
-        link: function (scope, element, attr) {
-            $(element).spinner({
-                change: function (event, ui) {
-                    $(element).change();
-                },
-                min: attr.min,
-                max: attr.max
-            });
-            console.log(attr);
-        }
-    }
-});
 
-app.directive('selectCombo', function () {
-    return {
-        restrict: 'A',
-        link: function (scope, element, attr) {
-            $(element).on('click', 'input', function (e) {
-                console.log('click');
-
-                $(element).find('[data-dropdown="dropdown"]').click();
-                //return false;
-                //e.stopPropagation();
-            });
          
     }
-    };
 });
+
+//No longer used
+//app.directive('selectCombo', function () {
+//    return {
+//        restrict: 'A',
+//        link: function (scope, element, attr) {
+//            $(element).on('click', 'input', function (e) {
+//                console.log('click');
+
+//                $(element).find('[data-dropdown="dropdown"]').click();
+//                //return false;
+//                //e.stopPropagation();
+//            });
+//        }
+//    };
+//});

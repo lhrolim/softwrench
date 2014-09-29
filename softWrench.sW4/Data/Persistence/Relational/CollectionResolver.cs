@@ -16,7 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace softWrench.sW4.Data.Persistence.Relational {
-    public class CollectionResolver {
+    class CollectionResolver {
 
         private readonly EntityRepository _entityRepository = new EntityRepository();
 
@@ -37,10 +37,8 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
         public void ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
             AttributeHolder mainEntity) {
-            ResolveCollections(entityMetadata, compositionSchemas, new List<AttributeHolder> { mainEntity });
+            ResolveCollections(entityMetadata, compositionSchemas, new List<AttributeHolder>() { mainEntity });
         }
-
-
 
         public void ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
             IReadOnlyList<AttributeHolder> entitiesList) {

@@ -8,11 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
-using System.Net.Mail;
-using System.Net;
-using softWrench.sW4.Configuration.Services.Api;
-using softWrench.sW4.SimpleInjector;
-using softWrench.sW4.Email;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
@@ -20,25 +15,22 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         protected AttachmentHandler _attachmentHandler;
 
-        private readonly EmailService _emailService;
-
         public BaseServiceRequestCrudConnector() {
             _attachmentHandler = new AttachmentHandler();
-            _emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
         }
+
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var user = SecurityFacade.CurrentUser();
             var sr = maximoTemplateData.IntegrationObject;
+            
             w.SetValueIfNull(sr, "ACTLABHRS", 0.0);
             w.SetValueIfNull(sr, "ACTLABCOST", 0.0);
             w.SetValueIfNull(sr, "CHANGEDATE", DateTime.Now.FromServerToRightKind(), true);
             w.SetValueIfNull(sr, "CHANGEBY", user.Login);
             w.SetValueIfNull(sr, "REPORTDATE", DateTime.Now.FromServerToRightKind());
-            var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
-            var mailObject = maximoTemplateData.Properties;
-            WorkLogHandler.HandleWorkLogs(crudData, sr);
-            CommLogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
+            WorkLogHandler.HandleWorkLogs((CrudOperationData)maximoTemplateData.OperationData, sr);
 
+            var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
             LongDescriptionHandler.HandleLongDescription(sr, crudData);
             var attachments = crudData.GetRelationship("attachment");
             foreach (var attachment in (IEnumerable<CrudOperationData>)attachments) {
@@ -61,15 +53,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             base.BeforeCreation(maximoTemplateData);
         }
-
-        public override void AfterUpdate(MaximoOperationExecutionContext maximoTemplateData) {
-            if (maximoTemplateData.Properties.ContainsKey("mailObject")) {
-                _emailService.SendEmail((EmailService.EmailData)maximoTemplateData.Properties["mailObject"]);
-            }
-
-            //TODO: Delete the failed commlog entry or marked as failed : Input from JB needed 
-            base.AfterUpdate(maximoTemplateData);
-        }
+        
         private void HandleAttachmentAndScreenshot(CrudOperationData data, object maximoObj, ApplicationMetadata applicationMetadata) {
 
             // Check if Attachment is present

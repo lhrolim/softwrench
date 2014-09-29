@@ -54,16 +54,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
                 {
                     if (ReflectionUtil.IsNull(integrationObject, "PRLINENUM"))
                     {
-                        //Need to generate a unique PR Line number for each PR
-                        //Web sevice doesn't do it and hence do a native query to get the 
-                        // maximum value and increment it by 1. 
-                        BaseHibernateDAO _dao = new MaximoHibernateDAO();
-                        String queryst = "Select MAX(prline.prlinenum) from prline where prnum like ";
-                        var prnum = w.GetRealValue(sr, "PRNUM");
-                        queryst = queryst + Convert.ToString(prnum);
-                        var id = _dao.FindSingleByNativeQuery<object>(queryst, null);
-                        int prlinenum = Convert.ToInt32(id)+1;
-                        w.SetValue(integrationObject, "PRLINENUM", prlinenum);
+                        w.SetValue(integrationObject, "PRLINENUM", 1);
                     }
                     var enterdate = sr;
                     w.SetValueIfNull(integrationObject, "ENTERDATE", DateTime.Now.FromServerToRightKind());

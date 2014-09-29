@@ -253,6 +253,7 @@
     <Compile Include="Common\TestProxy.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\WebAPIUtil.cs" />
+    <Compile Include="Controllers\ExportApiController.cs" />
     <Compile Include="Controllers\ExtendedDataController.cs" />
     <Compile Include="Controllers\Log\LogAdminController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
@@ -294,15 +295,7 @@
     <Content Include="App_Data\Client\%40internal\source\maximo7.2.1.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="App_Data\Client\%40internal\source\smartcloud7.5.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="App_Data\Client\%40internal\source\maximo7.5.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\target\smartcloud7.5.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -506,16 +499,11 @@
     <Content Include="Content\Scripts\client\components\autocompleteserver.js" />
     <Content Include="Content\Scripts\client\components\autocompleteclient.js" />
     <Content Include="Content\Scripts\client\components\combodropdown.js" />
-    <Content Include="Content\Scripts\client\components\richtext.js" />
-    <Content Include="Content\Scripts\client\crud_body_modal.js" />
     <Content Include="Content\Scripts\client\makeSWAdmin.js" />
     <Content Include="Content\Scripts\client\crud_base_controller.js" />
     <Content Include="Content\Scripts\client\crud_list.js" />
     <Content Include="Content\Scripts\client\logAdmin.js" />
     <Content Include="Content\Scripts\client\services\localstorage_service.js" />
-    <Content Include="Content\Scripts\client\services\modal_service.js" />
-    <Content Include="Content\Scripts\client\services\detailService.js" />
-    <Content Include="Content\Scripts\client\services\statuscolor_service.js" />
     <Content Include="Content\Scripts\client\util\log_enhacer.js" />
     <Content Include="Content\Scripts\client\samelinepickers.js" />
     <Content Include="Content\Scripts\client\crud_output_fields.js" />
@@ -562,7 +550,6 @@
     <Content Include="Content\Scripts\customers\hapag\report_service.js" />
     <Content Include="Content\Scripts\customers\hapag\sr_service.js" />
     <Content Include="Content\Scripts\customers\hapag\sr_summary_service.js" />
-    <Content Include="Content\Scripts\customers\otb\commlogactions.js" />
     <Content Include="Content\Scripts\customers\otb\sr_service.js" />
     <Content Include="Content\Scripts\bindonce.js" />
     <Content Include="Content\Scripts\jquery\jquery-filedownload-1.2.0.js" />
@@ -570,17 +557,6 @@
     <Content Include="Content\Scripts\jquery\jquery.iframe-transport.js" />
     <Content Include="Content\Scripts\responsive.js" />
     <Content Include="Content\Scripts\thirdparty\moment.js" />
-    <Content Include="Content\Scripts\thirdparty\textAngular-sanitize-min.js" />
-    <Content Include="Content\Scripts\thirdparty\textAngular-min.js" />
-    <Content Include="Content\scss\forms.css">
-      <DependentUpon>forms.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\scss\grids.css">
-      <DependentUpon>grids.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\styles\default\application\forms.css" />
-    <Content Include="Content\styles\default\application\grids.css" />
-    <Content Include="Content\styles\default\application\pages.css" />
     <Content Include="Content\styles\default\index.css" />
     <Content Include="Content\styles\default\menu.css" />
     <Content Include="Content\styles\default\print.css" />
@@ -705,7 +681,11 @@
     <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.zh-TW.js" />
     <Content Include="Content\Scripts\spin-min.js" />
     <Content Include="Content\Scripts\typeahead.js" />
+    <Content Include="Content\styles\hapag\application\forms.css" />
+    <Content Include="Content\styles\hapag\application\grids.css" />
     <Content Include="Content\styles\hapag\index.css" />
+    <Content Include="Content\styles\hapag\grid.css" />
+    <Content Include="Content\styles\hapag\site-largemonitors.css" />
     <Content Include="Content\styles\hapag\site.css" />
     <Content Include="Content\styles\manchester\index.css" />
     <Content Include="Content\styles\manchester\site.css" />
@@ -713,10 +693,8 @@
     <Content Include="Content\styles\scottsdale\site.css" />
     <Content Include="Content\styles\gric\index.css" />
     <Content Include="Content\styles\gric\site.css" />
-    <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <Content Include="Content\Templates\crud\advanced_filter_toogle.html" />
     <Content Include="Content\Templates\crud\association_list_input.html" />
-    <Content Include="Content\Templates\crud\crud_body_modal.html" />
     <Content Include="Content\Templates\crud\crud_list.html" />
     <Content Include="Content\Templates\directives\angulartreeview.html" />
     <Content Include="Content\Templates\directives\commandBar.html" />
@@ -731,7 +709,6 @@
     <Content Include="Content\Templates\hapag\assetremarks.html" />
     <Content Include="Content\Templates\crud\update_section.html" />
     <Content Include="Content\Templates\hapag\commaseparatedcomposition.html" />
-    <Content Include="Content\Templates\otb\commlogaction.html" />
     <Content Include="Content\Templates\samelinepickers.html" />
     <Content Include="Content\Templates\hapag\conditionalfield.html" />
     <Content Include="Content\Templates\configConditionModal.html" />
@@ -781,17 +758,11 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\bootstrap\datepicker\less\datepicker.less">
-      <Compile>False</Compile>
-      <Minify>False</Minify>
-      <IgnoreWarnings>True</IgnoreWarnings>
-      <IgnoreErrors>True</IgnoreErrors>
-    </Content>
+    <Content Include="Content\bootstrap\datepicker\less\datepicker.less" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="App_Data\Client\hapag\i18n\es\labels.json" />
-    <Content Include="App_Data\Client\otb\statuscolors.json" />
     <None Include="App_Data\Schema\Deploy_Metadata.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -813,35 +784,13 @@
     <None Include="App_Data\Schema\Target.xsd">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Content\font-awesome-4.0.3\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\font-awesome-4.0.3\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\font-awesome-4.0.3\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\font-awesome-4.0.3\fonts\FontAwesome.otf" />
     <Content Include="Content\Customers\hapag\html\Shared\_Layout.cshtml" />
     <Content Include="Content\Customers\hapag\html\SignIn\Index.cshtml" />
     <Content Include="Content\Customers\Web.config" />
-    <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.eot" />
-    <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.ttf" />
-    <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.woff" />
-    <Content Include="Content\font-awesome-4.1.0\fonts\FontAwesome.otf" />
-    <Content Include="Content\scss\forms.scss">
-      <Compile>True</Compile>
-      <Minify>True</Minify>
-      <IgnoreWarnings>True</IgnoreWarnings>
-      <IgnoreErrors>True</IgnoreErrors>
-      <CompileStyle>Nested</CompileStyle>
-      <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="Content\scss\grids.scss">
-      <Compile>True</Compile>
-      <Minify>True</Minify>
-      <IgnoreWarnings>True</IgnoreWarnings>
-      <IgnoreErrors>True</IgnoreErrors>
-      <CompileStyle>Nested</CompileStyle>
-      <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="Content\scss\forms.css.map">
-      <DependentUpon>forms.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\scss\grids.css.map">
-      <DependentUpon>grids.scss</DependentUpon>
-    </Content>
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>

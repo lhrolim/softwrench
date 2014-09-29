@@ -174,9 +174,6 @@ $.extend({
     }
 });
 
-function isString(o) {
-    return typeof o == "string" || (typeof o == "object" && o.constructor === String);
-}
 
 function nullOrUndef(obj) {
     return obj === undefined || obj == null;
@@ -281,12 +278,27 @@ function url(path) {
     return value + path;
 }
 
+function GetBootstrapFormClass(size) {
+    var popupmode = GetPopUpMode();
+    if (popupmode == "browser" || popupmode == "nomenu") {
+        return 'col-xs-' + size;
+    }
+    return 'col-md-' + size;
+}
+
+
+
 function GetPopUpMode() {
     var popupMode = $(hddn_popupmode)[0].value;
     if (popupMode === undefined || popupMode == 'null' || popupMode == "") {
         popupMode = 'none';
     }
     return popupMode;
+}
+
+function IsPopup() {
+    var popup = GetPopUpMode();
+    return "browser" == popup || "nomenu" == popup;
 }
 
 function BuildDataObject() {
@@ -369,7 +381,7 @@ function addSchemaDataToParameters(parameters, schema, nextSchema) {
         }
         parameters["nextSchemaKey"] += "." + platform();
     }
-    if (schema.properties != null && schema.properties['nextschema.schemaid'] != null && !parameters["nextSchemaKey"]) {
+    if (schema.properties != null && schema.properties['nextschema.schemaid'] != null) {
         parameters["nextSchemaKey"] = schema.properties['nextschema.schemaid'];
     }
 

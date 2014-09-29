@@ -1,7 +1,5 @@
-﻿using NHibernate.Mapping.Attributes;
-using softWrench.sW4.Util;
-using System;
-
+﻿using System;
+using NHibernate.Mapping.Attributes;
 namespace softWrench.sW4.Security.Entities {
     [Class(Table = "SW_DATACONSTRAINT")]
     public class DataConstraint {
@@ -14,7 +12,7 @@ namespace softWrench.sW4.Security.Entities {
         [Property]
         public virtual string EntityName { get; set; }
 
-        [Property(TypeType = typeof(BooleanToIntUserType))]
+        [Property]
         public virtual Boolean Isactive { get; set; }
 
 

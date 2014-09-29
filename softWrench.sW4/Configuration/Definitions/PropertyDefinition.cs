@@ -1,9 +1,9 @@
-﻿using Iesi.Collections.Generic;
+﻿using System;
+using Iesi.Collections.Generic;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Configuration.Util;
 using softWrench.sW4.Util;
-using System;
 
 namespace softWrench.sW4.Configuration.Definitions {
 
@@ -41,13 +41,13 @@ namespace softWrench.sW4.Configuration.Definitions {
         [Property]
         public virtual string Renderer { get; set; }
 
-        [Property(TypeType = typeof(BooleanToIntUserType))]
+        [Property]
         public virtual Boolean Visible { get; set; }
 
-        [Property(TypeType = typeof(BooleanToIntUserType))]
+        [Property]
         public virtual Boolean Contextualized { get; set; }
 
-//        [Property(Type = "BinaryBlob")]
+        [Property(Type = "BinaryBlob")]
         public virtual byte[] DefaultBlobValue { get; set; }
 
         [Property(Column = "alias_")]

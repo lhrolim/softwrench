@@ -1,12 +1,15 @@
-﻿using Iesi.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using Iesi.Collections.Generic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NHibernate.Mapping.Attributes;
+using Newtonsoft.Json.Linq;
 using softWrench.sW4.AUTH;
 using softWrench.sW4.Security.Interfaces;
-using softWrench.sW4.Util;
-using System;
-using System.Linq;
+using Newtonsoft.Json;
 
 
 namespace softWrench.sW4.Security.Entities {
@@ -66,7 +69,7 @@ namespace softWrench.sW4.Security.Entities {
         public virtual string SiteId { get; set; }
         [Property]
         public virtual string OrgId { get; set; }
-        [Property(TypeType = typeof(BooleanToIntUserType))]
+        [Property]
         public virtual Boolean IsActive { get; set; }
 
         [Property]

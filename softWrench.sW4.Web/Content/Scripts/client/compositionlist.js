@@ -52,8 +52,8 @@ app.directive('expandedItemInput', function ($compile) {
     }
 });
 
-app.directive('newItemInput', function ($compile, fieldService) {
-    
+app.directive('newItemInput', function ($compile) {
+
     return {
         restrict: "E",
         replace: true,
@@ -65,12 +65,22 @@ app.directive('newItemInput', function ($compile, fieldService) {
             associationOptions: '=',
             cancelfn: '&',
             savefn: '&'
-            
+
         },
         template: "<div></div>",
         link: function (scope, element, attrs) {
             if (angular.isArray(scope.displayables)) {
-                fieldService.fillDefaultValues(scope.displayables, scope.datamap);
+
+                $.each(scope.displayables, function (key, value) {
+                    var target = value.attribute;
+                    if (value.defaultValue != undefined && target != undefined) {
+                        if (scope.datamap[target] == null) {
+                            //TODO: extract a service here, to be able to use @user, @person, @date, etc...
+                            scope.datamap[target] = value.defaultValue;
+                        }
+                    }
+                });
+
                 element.append(
                     "<crud-input schema='schema'" +
                                 "datamap='datamap'" +
@@ -106,8 +116,7 @@ app.directive('compositionList', function (contextService) {
 
         controller: function ($scope, $log, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
-            expressionService, $timeout,modalService) {
-            
+            expressionService, $timeout) {
 
             function init() {
                 //Extra variables
@@ -122,10 +131,10 @@ app.directive('compositionList', function (contextService) {
                 $scope.clonedCompositionData = [];
                 jQuery.extend($scope.clonedCompositionData, $scope.compositiondata);
                 $scope.isNoRecords = $scope.clonedCompositionData.length > 0 ? false : true;
-                $scope.detailData = {};                
+                $scope.detailData = {};
                 $scope.noupdateallowed = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
                 $scope.expanded = false;
-                $scope.wasExpandedBefore = false;                
+                $scope.wasExpandedBefore = false;
                 $scope.isReadonly = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
 
                 $injector.invoke(BaseController, this, {
@@ -174,24 +183,10 @@ app.directive('compositionList', function (contextService) {
 
 
             $scope.newDetailFn = function () {
-                $scope.edit({});
-            };
-
-            $scope.$on("sw.composition.edit", function (event, datamap) {
-                $scope.edit(datamap);
-            });
-
-
-            $scope.edit = function (datamap) {
-                if ($scope.compositionlistschema.properties && "modal" == $scope.compositionlistschema.properties["list.click.popup"]) {
-                    modalService.show($scope.compositiondetailschema, datamap, $scope.save);
-                } else {
-                    //TODO: switch to edit
                 $scope.newDetail = true;
-                }
-                $scope.selecteditem = datamap;
+                $scope.selecteditem = {};
                 $scope.collapseAll();
-            }
+            };
 
             var doToggle = function (id, item, forcedState) {
                 if ($scope.detailData[id] == undefined) {
@@ -248,25 +243,13 @@ app.directive('compositionList', function (contextService) {
                 return expressionService.evaluate(value, $scope.parentdata) && $scope.inline;
             };
 
-
-            $scope.save = function (selecteditem) {
-                if (!selecteditem) {
-                    //if the function is called inside a modal, then we would receive the item as a parameter, otherwise it would be on the scope of the page itself
-                    selecteditem = $scope.selecteditem;
-                }
-                if (selecteditem == undefined) {
-                    //this is for the call to submit without having any item on composition selected, due to having the submit as the default button
-                    $log.getInstance("compositionlist#save").debug("calling save on server without composition selected");
-                    //this flag must be true for the spin to work properly... TODO: improve this
-                    $scope.$parent.save(null, { isComposition: true });
-                    return;
-                }
-
+            $scope.save = function () {
+                var selecteditem = $scope.selecteditem;
                 //todo:update
                 if ($scope.compositiondata == null) {
                     $scope.compositiondata = [];
                 }
-                $scope.compositiondata.push(selecteditem);                
+                $scope.compositiondata.push(selecteditem);
                 if ($scope.collectionproperties.autoCommit) {
                     var validationErrors = validationService.validate($scope.compositionschemadefinition.schemas.detail.displayables, selecteditem);
                     if (validationErrors.length > 0) {
@@ -283,7 +266,7 @@ app.directive('compositionList', function (contextService) {
                                 var compositiontabaftersave = '#' + compositions[compositions.length - 1].replace('/', '');
                                 sessionStorage.compositiontabaftersave = compositiontabaftersave;
                                 window.location.reload();
-                                    return;
+                                return;
                             }
                             $scope.clonedCompositionData = updatedArray;
                             $scope.compositiondata = updatedArray;
@@ -291,10 +274,6 @@ app.directive('compositionList', function (contextService) {
                             $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
                             $scope.selecteditem = {};
                             $scope.collapseAll();
-                            if ($rootScope.showingModal) {
-                                //hides the modal after submiting it
-                                modalService.hide();
-                            }
                         },
                         failureCbk: function (data) {
                             var idx = $scope.compositiondata.indexOf(selecteditem);
@@ -384,7 +363,7 @@ app.directive('compositionList', function (contextService) {
                 return i18NService.getI18nLabel(fieldMetadata, $scope.compositionlistschema);
             };
 
-           
+
         }
     };
 });

@@ -2,11 +2,11 @@
 <metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
-<!--GRIC-->
+
   <entities>
     <entity name="SR" idAttribute="ticketid">
       <relationships>
-        <relationship to="person" >
+        <relationship to="person" qualifier="affectedperson">
           <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
           <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true" />
         </relationship>
@@ -19,9 +19,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
         </relationship>
-        <relationship to ="persongroup">
-          <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
-        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWSR" />
@@ -29,34 +26,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </connectorParameters>
     </entity>
 
-    <entity name="workorder" idAttribute="wonum" whereclause="woclass like 'WORKORDER'">
-      <relationships> 
+    <entity name="workorder" idAttribute="wonum" whereclause="( historyflag = 0 and istask = 0 )">
+      <relationships>
+        <relationship to="site" qualifier="site">
+          <relationshipAttribute from="siteid" to="siteid" primary="true"/>
+        </relationship>
         <relationship to="person" qualifier="reportedbyperson">
           <relationshipAttribute from="reportedby" to="personid" primary="true"/>
         </relationship>
-        <relationship to="failurelistonly" qualifier="failurelist">
+        <relationship to="failurelist">
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
-        </relationship>
-        <relationship to="problemlist" qualifier="problemlist">
-          <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
-          <relationshipAttribute from="orgid" to="orgid"/>
-        </relationship>
-        <relationship to="person" qualifier="ownerperson">
-          <relationshipAttribute from="owner" to="personid" primary="true"/>
-        </relationship>
-        <relationship to ="persongroup">
-          <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
-        </relationship>
-        <relationship to ="person" qualifier="onbehalfofperson">
-          <relationshipAttribute from="onbehalfof" to ="personid" primary="true"/>
-        </relationship>
-        <relationship to="woactivity" collection="true">
-          <relationshipAttribute from="wonum" to="parent" primary="true" />
-          <relationshipAttribute from="siteid" to="siteid" />
-        </relationship>
-        <relationship to="site">
-          <relationshipAttribute from="siteid" to="siteid" primary="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -65,7 +45,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </connectorParameters>
     </entity>
     
-    <entity name ="failurelist" idAttribute="failurecode" >
+    <entity name ="failurelist" idAttribute="failurecode" whereclause="((failurelist.TYPE is null)) " >
       <attributes>
         <attribute name="failurelist" type="bigint" required="true" />
         <attribute name="failurecode" type="varchar" required="true" />
@@ -78,51 +58,36 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <connectorParameter key="dbtable" value="failurelist" />
       </connectorParameters>
     </entity>
-
-    <entity name ="failurelistonly" parententity="failurelist" idAttribute="failurelist" whereclause="((failurelistonly.TYPE is null)) " >
-
-    </entity>
-    
-    <entity name ="problemlist" parententity="failurelist" idAttribute="failurelist" whereclause="((problemlist.TYPE like 'PROBLEM')) " >
-
-    </entity>
   </entities>
-  
+
   <applications>
     <application entity="SR" name="servicerequest" title="Service Request">
-      <properties>
-        <property key="mobile.disabled" value="true"/>
-      </properties>
       <schemas>
         <list title="Service Request Grid">
-          <field attribute="ticketid" label="SR No">
+          <field attribute="ticketid" label="Request #">
             <renderer type="default" params="minwidth=110px" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="minwidth=150px" />
+          <field attribute="reportedbyperson_.displayname" label="Reported By">
+            <renderer type="default" params="minwidth=150px"/>
           </field>
           <field attribute="status" label="Status">
             <renderer type="default" params="minwidth=150px" />
           </field>
-          <field attribute="owner" label="Owner">
+          <field attribute="affectedperson" label="Affected Person">
             <renderer type="default" params="minwidth=150px" />
-          </field>
-          <field attribute="#color" label="">
-            <renderer type="color" params="grid=servicerequest;column=status"/>
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
           </properties>
-
         </list>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
-          <section id ="siteidsection"/>
-          <field attribute="ticketid" label="SR No:" readonly="true"/>
-          <field attribute="ticketuid" label="SR No:" hidden="true"/>
+
+          <section id="siteidsection"/>
+          <field attribute="ticketuid" label="Request #" hidden="true"/>
           <field attribute="class" label="" hidden="true"/>
           <field attribute="actlabcost" hidden="true" />
           <field attribute="actlabhrs" hidden="true"/>
@@ -130,24 +95,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="orgid" hidden="true"/>
           <field attribute="createby" hidden="true"/>
 
-          <!--field attribute="owner" label="Owner" readonly="true" hidden="true"/-->
-
           <section id="statussection"/>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname"  enableexpression="@ownergroup==null">
+          <section id="reportbysection"/>
+          <association label="Owner" target="owner" labelfield="ownerperson_.displayname" default="@username">
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeowner"/>
           </association>
-          <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeownergroup"/>
-          </association>
-          <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
-          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" >
-            <renderer type="lookup" params="columnlabel=Name"/>
-          </association>
-          <!--Added Reported Date just the way it was in gric to otb  Dt: 06/20/2014 -->
-          <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+          <field label="Reported Date &amp; Time" attribute="reportdate" readonly="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
 
@@ -176,74 +130,82 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
 
-          <field attribute="description" label="Summary:" required="true"/>
-          <field label="Details:" attribute="longdescription_.ldtext">
-            <renderer type="richtext"/>
-          </field>
-          <!-- Code added from gric metadata.xml SWWEB 173-->
-          <section id="attachmentsection" />
-          <!-- SWWEB 173-->
-          <!-- SWWEB 172: Changed the location and asset to make them look similar to gric-->
-          <association label="Location:" target="location" labelfield="location_.description" >
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
+
+          <association label="Affected Person" target="affectedperson" labelfield="affectedperson_.displayname" default="@username">
+            <renderer type="lookup"/>
           </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+          <field attribute="description" label="Summary" required="true"/>
+          <field label="Details" attribute="longdescription_.ldtext" required="true">
+            <renderer type="textarea"/>
+          </field>
+          <section id="attachmentsection" />
+          <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
+            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+          </association>
+          <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location_.description">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
           </association>
 
-
           <section id="compositions"/>
-      </schema>
+        </schema>
 
-      <schema parentschema="adetail" title="New Service Request" id="newdetail">
-        <section id="siteidsection">
-          <field attribute="ticketid" label="Request #:" hidden="true"/>
-          <association label="Site:" target="siteid" labelfield="site_.description" required="true">
-            <!-- removed default='@usersite' from the above association label-->
-            <renderer type="lookup"/>
-          </association>
-        </section>
-        <section id="statussection">
-          <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
-        </section>
-        <!--SSWEB 173-->
-        <section id="attachmentsection">
-          <field label="Attachment:" attribute="newattachment" >
-            <renderer type="upload"/>
-          </field>
-        </section>
-      </schema>
+        <schema title="New Service Request" id="newdetail" parentschema="adetail">
+          <section id="siteidsection">
+            <field attribute="ticketid" label="Request #" hidden="true"/>
+            <association label="Site" target="siteid" labelfield="site_.description" required="true">
+              <!-- removed default='@usersite' from the above association label-->
+              <renderer type="lookup"/>
+            </association>
+          </section>
+          <section id="statussection">
+            <field label="Status" attribute="status" readonly="true" default="NEW" hidden="true"/>
+          </section>
+          <section id="reportbysection">
+            <field attribute="reportedby" label="Reported By" default="@username" readonly="true" />
+          </section>
+          <section id="attachmentsection">
+            <field label="Attachment:" attribute="newattachment" >
+              <renderer type="upload"/>
+            </field>
+          </section>
+        </schema>
 
-      <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
+        <schema id="editdetail" title="Service Request Detail" parentschema="adetail">
+          <section id="siteidsection">
+            <field attribute="reportdate" hidden="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            </field>
+            <field attribute="ticketid" label="Request #" readonly="true"/>
+            <field label="Site" attribute="siteid" readonly="true"/>
+          </section>
 
-        <section id="siteidsection">
-          <field attribute="ticketid" label="Request #:" readonly="true" required="true"/>
-          <field label="Site:" attribute="siteid" readonly="true"/>
-        </section>
-        <section id="statussection">
-          <association label="Status:" target="status" labelfield="synstatus.description" required="true">
-            <renderer type="combo" />
-          </association>
-        </section>
+          <section id="statussection">
+            <association label="Status" target="status" labelfield="synstatus.description">
+              <renderer type="combo" />
+							<event type="beforechange" service="srService" method="beforeChangeStatus"/>
+            </association>
+          </section>
 
-        <section id="compositions">
-          <composition relationship="worklog" label="Work Logs">
-            <collectionproperties allowcreation="true" allowupdate="true"/>
-          </composition>
+          <section id="reportbysection">
+            <field attribute="reportedby" label="Reported By" default="@username" readonly="true" hidden="true"/>
+            <field attribute="reportedbyperson_.displayname" label="Reported By" default="@username" readonly="true" />
+          </section>
+
+          <section id="compositions">
+            <composition relationship="worklog" label="Work Log"/>
+            <composition relationship="attachment" label="Attachments"/>
+          </section>
+
+          <commands>
+            <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap" 
+                     showexpression="@status=='NEW'" successmessage="SR deleted" icon="glyphicon-remove"/>
+          </commands>
+        </schema>
 
 
-          <composition relationship="attachment" label="Attachments"/>
-        </section>
 
-        <commands>
-          <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
-                   showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>
-        </commands>
-
-      </schema>
       </schemas>
 
     </application>
@@ -396,9 +358,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="status" label="Status">
             <renderer type="default" params="minwidth=150px" />
           </field>
-          <field attribute="#color" label="">
-            <renderer type="color" params="grid=servicerequest;column=status"/>
-          </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
           </properties>
@@ -431,59 +390,36 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="outtoolcost"       hidden="true"/>
           <field attribute="outservcost"       hidden="true"/>
           <field attribute="workorderid"  readonly="true" hidden="true"/>
-
+          <field attribute="wonum" label="WO No" readonly="true" />
           <field attribute="orgid"  required="true" readonly="true" hidden="true"/>
-          <section id ="siteidsection"/>
-          <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
+          
+          <field attribute="siteid" hidden="true" />
           <field attribute="woclass" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-          <!--section id="ownerstatussection"/-->
-          <field attribute="wonum" label="WO No:" readonly="true"/>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeowner"/>
-          </association>
-          <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeownergroup"/>
-          </association>
-          <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
-          <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-          </field>
-          <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
-            <renderer type="lookup"/>
-          </association>
-          <field attribute="wopriority" label="Priority:" required="true" default="1">
+          <section id="ownerstatussection"/>
+          <field attribute="wopriority" label="Priority" required="true" default="1">
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
           </field>
-          <association label="Location:" target="location" labelfield="location_.description" >
+          
+          <association label="Location" target="location" labelfield="location_.description" >
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             <!--renderer type="lookup"/-->
           </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+          <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
           </association>
-          <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
-            <renderer type="lookup"/>
-          </association>
-          <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist">
+          <section id="reportbysection"/>
+          <association label="Failure Code" target="failurecode" labelfield="failurelist_.failurecode" >
             <!--renderer type="lookup"/-->
           </association>
-          <field hidden="true" attribute="failurelist_.failurelist"/>
-          <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode">
-            <renderer type="lookup"/>
-            <dataprovider prefilterfunction="FilterProblemCodes"/>
-          </association>
-          <field label="Job Plan:" attribute="jpnum" readonly="true" />
-          <association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
+          <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" >
             <renderer type="lookup"/>
           </association>
-
-
+          <association label="GL Account" target="glaccount" labelfield="chartofaccounts_.accountname" >
+            <renderer type="lookup"/>
+          </association>
           <!-- Adding target start finish date-->
           <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
           <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
@@ -512,30 +448,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 
 
-          <field attribute="description" label="Summary:"/>
-          <field label="Details:" attribute="longdescription_.ldtext" >
-            <renderer type="richtext"/>
+          <field attribute="description" label="Description" required="true" />
+          <field label="Details" attribute="longdescription_.ldtext" required="true">
+            <renderer type="textarea"/>
           </field>
           <section id="compositions"/>
-          <!--					<section id="matusetranssection"/>-->
-          <!--					<section id="labtranssection"/>-->
         </schema>
 
-
         <schema parentschema="adetail" title="New Work Order" id="newdetail" platform="web">
-          <section id="siteidsection">
-            <association label="Site:" target="siteid" labelfield="site_.description" required="true">
+          <section id="ownerstatussection">
+            <field attribute="owner" label="Owner"/>
+            <field label="Status" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
+            <association label="Site" target="siteid" labelfield="site_.description" required="true">
               <!-- removed default='@usersite' from the above association label-->
               <renderer type="lookup"/>
             </association>
+            
           </section>
-          <section id="ownerstatussection">
-            <!--field attribute="owner" label="Owner:"/-->
-
-
-            <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
+          <section id="reportbysection">
+            <field attribute="reportedby" label="Reported By" default="@username" readonly="true" />
           </section>
-          
         </schema>
 
         <schema parentschema="adetail" id="editdetail" title="Work Order Detail" platform="web">
@@ -546,7 +478,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </association>
             <field label="Site" attribute="siteid" readonly="true"/>
           </section>
-         
+          <section id="reportbysection">
+            <!--field attribute="reportedby" label="Reported By" default="@username" readonly="true" hidden="true"/-->
+            <field attribute="reportedbyperson_.displayname" label="Reported By" default="@username" readonly="true" />
+          </section>
           <section id="compositions">
             <composition relationship="worklog" label="Work Log">
               <collectionproperties allowupdate="false" allowcreation="true" />

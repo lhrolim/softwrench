@@ -36,7 +36,7 @@ namespace softWrench.sW4.Data.Pagination {
         ///  as .net would be lost with json conversion.
         /// if the association is not defined, this should be false 
         /// </summary>
-        public bool ShouldPaginate {
+        public override bool ShouldPaginate {
             get { return _shouldPaginate; }
             set { _shouldPaginate = value; }
         }
@@ -131,5 +131,7 @@ namespace softWrench.sW4.Data.Pagination {
             }
             return new PaginatedSearchRequestDto(defaultSize, paginationOptions);
         }
+
+       
     }
 }

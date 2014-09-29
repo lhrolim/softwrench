@@ -1,6 +1,6 @@
-﻿using NHibernate.Mapping.Attributes;
-using softWrench.sW4.Util;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using NHibernate.Mapping.Attributes;
 
 namespace softWrench.sW4.Security.Entities {
 
@@ -9,7 +9,7 @@ namespace softWrench.sW4.Security.Entities {
 
         public const string PersonGroupByName = "from PersonGroup where Name =?";
         public const string PersonGroupByNames = "from PersonGroup where Name in (:p0)";
-        public const string SuperGroups = "from PersonGroup where supergroup=1";
+        public const string SuperGroups = "from PersonGroup where supergroup=true";
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
@@ -21,7 +21,7 @@ namespace softWrench.sW4.Security.Entities {
         [Property]
         public virtual string Description { get; set; }
 
-        [Property(TypeType = typeof(BooleanToIntUserType))]
+        [Property]
         public virtual Boolean SuperGroup { get; set; }
 
 

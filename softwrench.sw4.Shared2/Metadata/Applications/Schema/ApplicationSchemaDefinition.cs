@@ -81,8 +81,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public string IdFieldName { get; set; }
 
-        public string IdDisplayable { get; set; }
-
         private Boolean lazyFksResolved = false;
 
         private Boolean referencesResolved = false;
@@ -113,15 +111,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             _properties = schemaProperties;
             IdFieldName = idFieldName;
             UnionSchema = unionSchema;
-            for (int i = 0; i < displayables.Count; i++)
-            {
-                if (displayables[i].Role == ApplicationName + "." + IdFieldName)
-                {
-                    IdDisplayable = displayables[i].ToolTip;
-                }
-            }
-
-            
         }
 
 

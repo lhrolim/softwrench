@@ -23,7 +23,7 @@ app.directive('printSection', function (contextService) {
             datamap: '=',
         },
 
-        controller: function ($scope, $timeout, $log, printService, tabsService, i18NService, compositionService, fieldService, fixHeaderService) {
+        controller: function ($scope, $timeout, $log, printService, tabsService, i18NService, compositionService, fieldService) {
 
             $scope.compositionstoprint = [];
             $scope.shouldPageBreak = true;
@@ -32,7 +32,6 @@ app.directive('printSection', function (contextService) {
 
             $scope.$on('sw_readytoprintevent', function (event, compositionData, shouldPageBreak, shouldPrintMain) {
                 
-                fixHeaderService.unfix();
                 var compositionstoprint = [];
                 $scope.shouldPageBreak = shouldPageBreak;
                 $scope.shouldPrintMain = shouldPrintMain;
@@ -57,7 +56,6 @@ app.directive('printSection', function (contextService) {
                 $scope.printDatamap = Array.isArray($scope.datamap) ? $scope.datamap : new Array($scope.datamap);
                 $scope.showPrintSection = true;
                 $scope.showPrintSectionCompostions = compositionstoprint.length > 0;
-                fixHeaderService.fixThead($scope.schema);
             });
 
             $scope.$on('sw_readytoprintdetailedlistevent', function (event, detailedListData, compositionsToExpand, shouldPageBreak, shouldPrintMain) {

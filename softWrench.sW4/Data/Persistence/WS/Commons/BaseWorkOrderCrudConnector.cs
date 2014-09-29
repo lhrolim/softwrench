@@ -62,7 +62,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             WsUtil.SetValueIfNull(maximoWo, "ESTAPPRLABHRS", 0);
             WsUtil.SetValueIfNull(maximoWo, "ESTAPPRMATCOST", 0);
             WsUtil.SetValueIfNull(maximoWo, "ESTAPPRLABCOST", 0);
-            WsUtil.SetValueIfNull(maximoWo, "WOCLASS", "WORKORDER");
+
             WsUtil.SetValueIfNull(maximoWo, "ESTLABCOST", 0);
             WsUtil.SetValueIfNull(maximoWo, "ESTTOOLCOST", 0);
             WsUtil.SetValueIfNull(maximoWo, "ESTSERVCOST", 0);

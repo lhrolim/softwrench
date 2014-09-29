@@ -141,23 +141,9 @@ namespace softWrench.sW4.Data.Persistence {
             }
         }
 
-        public T FindSingleByNativeQuery<T>(String queryst, params object[] parameters) where T : class {
-            using (var session = GetSessionManager().OpenSession()) {
-                using (session.BeginTransaction()) {
-                    var query = BuildQuery(queryst, parameters, session, true);
-                    return (T)query.UniqueResult();
-                }
-            }
-        }
 
-        //public int FindSingleByQuery(String queryst, params object[] parameters)  {
-        //    using (var session = GetSessionManager().OpenSession()) {
-        //        using (session.BeginTransaction()) {
-        //            var query = BuildQuery(queryst, parameters, session);
-        //            return (int)query.UniqueResult();
-        //        }
-        //    }
-        //}
+
+
         public int CountByNativeQuery(String queryst, ExpandoObject parameters) {
             var before = Stopwatch.StartNew();
             using (var session = GetSessionManager().OpenSession()) {

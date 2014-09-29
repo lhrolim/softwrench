@@ -11,7 +11,6 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
         public String Id { get; set; }
         public String ApplicationName { get; set; }
         public string Label { get; set; }
-        public string Icon { get; set; }
         private List<IApplicationDisplayable> _displayables = new List<IApplicationDisplayable>();
 
         public ApplicationTabDefinition(string id, string applicationName, string label, List<IApplicationDisplayable> displayables, string toolTip,
@@ -22,7 +21,6 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
             ToolTip = toolTip;
             ShowExpression = showExpression;
             _displayables = displayables;
-            Icon = "fa fa-lightbulb-o";
         }
 
 

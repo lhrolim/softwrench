@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Menu xmlns="http://www.example.org/Menu" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmenudisplacement="horizontal" indexitem
-  ="SR">
+xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmenudisplacement="horizontal" indexitem="SR">
   <!--  <application title="Workorder Grid" ref="workorder" schema="detail"  tooltip="Workorders" id="workorder"/>-->
-  <container title="Service Requests" tooltip="Click to access your request tasks" icon ="fa fa-ticket" id="servicereq" role="sr">
+  <container title="Request Tasks" tooltip="Click to access your request tasks" icon ="fa fa-paper-plane-o">
     <application id="SR" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid"/>
     <application id="NSR" title="New Service Request" ref="servicerequest" schema="newdetail" tooltip="Click to Create a New Service Request"/>
   </container>
-
-  <container title="Work Orders" tooltip="Click to access your work orders" icon="fa fa-wrench" id="workorder" role="workorders">
+ 
+  <container title="Work Order Tasks" tooltip="Click to access your work order tasks" icon="fa fa-gavel">
     <application id="WO" title="Work Order Grid" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid"/>
     <application id="NWO" title="New Work Order" ref="workorder" schema="newdetail" tooltip="Click to Create a New Work Order"/>
   </container>
-  <container title="Changes" role="changes" id="change" icon="fa fa-random" >
+  <container title="Change Grid" role="change" id="change" icon="fa fa-refresh" >
     <application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
     <application id="CHNEW" title="New Change" ref="change" schema="newdetail" tooltip="Click to Create a New Changes"/>
+    <!--resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchchange;application=change;label=Change Search;
+                 searchFields=wochange_.wonum,ticketid,hlagchangesummary" tooltip="Change Search"/-->
   </container>
-  <container title="Purchasing" id="purchase" tooltip="Click to access your purchases" icon="fa fa-dollar" role="purchasing">
-    <application id ="PGRID" title="Purchase Request Grid" ref="pr" schema="list" tooltip="Click to view your Purchase Request Grid"/>
-    <application id ="PNEW" title="New Purchase Request" ref="pr" schema="newdetail" tooltip="Click to create a new Purchase Request"/>
+  <container title="Purchase Tasks" id="purchase" tooltip="Click to access your purchase tasks" icon="fa fa-plus-square">
+    <application id ="PGRID" title="Purchase Requests Grid" ref="pr" schema="list" tooltip="Click to view your Purchase Request Grid"/>
+    <application id ="PNEW" title="New Purchase" ref="pr" schema="newdetail" tooltip="Click to create a new Purchase Request"/>
   </container>
-  <container title="Incidents" tooltip="Click to access your incidents" icon="fa fa-warning" id="Incident"  role="incidents">
+  <container title="Incident Tasks" tooltip="Click to access your incident tasks" icon="fa fa-wrench" >
     <application id="ING" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents"/>
     <application id="INNEW" title="New Incident" ref="incident" schema="newdetail" tooltip="Click to create new Incidents" />
   </container>
-  <container title="Inventory" tooltip="Click to access your inventory" icon="fa fa-cube" id="Inventory" role="inventory" >
-    <application id="IN" title="Inventory Grid" ref="invbalances" schema="list" tooltip="Click to view your Inventory Grid" />
-  </container>
+  <divider/>
+  <application id="IN" title="Inventory Grid" ref="invbalances" schema="list" tooltip="Click to view your Inventory Grid" icon="fa fa-cube"/>
 </Menu>

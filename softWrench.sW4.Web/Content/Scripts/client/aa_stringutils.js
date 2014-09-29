@@ -22,11 +22,6 @@ String.prototype.format = String.prototype.f = function () {
     return s;
 };
 
-String.prototype.in = String.prototype.f = function () {
-    var s = this;
-    return s.equalsAny(arguments);
-};
-
 String.prototype.equalsAny = String.prototype.f = function () {
     var s = this,
     i = arguments.length;

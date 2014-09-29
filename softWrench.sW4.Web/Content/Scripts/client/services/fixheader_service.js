@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextService, fieldService) {
+app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextService,fieldService) {
 
     var addClassErrorMessageListHander = function (showerrormessage) {
         var affixpaginationid = $("#affixpagination");
@@ -74,7 +74,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
     var buildTheadArray = function (log, table, emptyGrid) {
         var thead = [];
         // loop over the first row of td's in &lt;tbody> and get the widths of individual &lt;td>'s
-        var classToUse = emptyGrid ? 'thead tr:eq(0) th' : 'tbody tr:eq(0) td';
+        var classToUse = emptyGrid ?  'thead tr:eq(0) th' : 'tbody tr:eq(0) td';
 
         $(classToUse, table).each(function (i, firstrow) {
             var width = $(firstrow).width();
@@ -159,7 +159,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
                 //if mocking ie9, lets keep default behaviour, otherwise will break all the grids
                 tableElement.css('margin-top', theadHeight + 19);
                 thead.css('top', 111 - (theadHeight + 19));
-            } else if (contextService.isClient("hapag")) {
+            } else {
                 tableElement.css('margin-top', theadHeight + 23);
                 thead.css('top', 114);
             }

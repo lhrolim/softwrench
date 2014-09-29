@@ -24,6 +24,7 @@ using System.Text;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using SpreadsheetLight;
 
 namespace softWrench.sW4.Web.Controllers.Application {
     [System.Web.Mvc.Authorize]
@@ -79,12 +80,10 @@ namespace softWrench.sW4.Web.Controllers.Application {
                 .ApplyPolicies(currentSchema, user, ClientPlatform.Web);
             var queryStrings = HttpUtility.ParseQueryString(Request.UrlReferrer.Query);
             var popupmode = queryStrings["popupmode"];
+            var datamap = JObject.Parse(json);
+            var entityId = datamap[applicationMetadata.Schema.IdFieldName].ToString();
 
             try {
-                var datamap = JObject.Parse(json);
-                var entityId = datamap[applicationMetadata.Schema.IdFieldName].ToString();
-
-
                 PopulateFilesInJson(datamap, String.IsNullOrWhiteSpace(entityId));
                 PopulateInputsInJson(datamap);
                 var mockMaximo = MockingUtils.IsMockingMaximoModeActive(datamap);
@@ -98,26 +97,27 @@ namespace softWrench.sW4.Web.Controllers.Application {
                     response = _dataController.Put(application, entityId, datamap, platform, currentSchemaKey,
                         nextSchemaKey, mockMaximo);
                 }
-                return RedirectToAction("RedirectToAction", "Home", BuildParameter(application, platform, response, popupmode, applicationMetadata));
+                return RedirectToAction("RedirectToAction", "Home", BuildParameter(entityId, application, platform, response, popupmode, applicationMetadata));
             } catch (Exception e) {
                 var rootException = ExceptionUtil.DigRootException(e);
                 //TODO: handle error properly
                 Log.Error(rootException, e);
-                return RedirectToAction("RedirectToAction", "Home", BuildErrorParameter(application, platform, popupmode, applicationMetadata, e));
+                return RedirectToAction("RedirectToAction", "Home", BuildErrorParameter(entityId, application, platform, popupmode, applicationMetadata, e));
             }
         }
 
-        private object BuildErrorParameter(string application, ClientPlatform platform, string popupmode,
+        private object BuildErrorParameter(string entityid, string application, ClientPlatform platform, string popupmode,
             ApplicationMetadata applicationMetadata, Exception e) {
             return new {
                 application = application,
                 popupmode = popupmode ?? "none",
-                queryString = BuildQueryString(null, application, platform, applicationMetadata),
-                message = "Error: " + e.Message
+                queryString = BuildQueryString(null, entityid, application, platform, applicationMetadata, popupmode),
+                message = "Error: " + e.Message,
+                messageType = "error"
             };
         }
 
-        private object BuildParameter(string application, ClientPlatform platform, IApplicationResponse response,
+        private object BuildParameter(string entityid, string application, ClientPlatform platform, IApplicationResponse response,
             string popupmode, ApplicationMetadata applicationMetadata) {
             object parameters;
             if (response is ActionRedirectResponse) {
@@ -136,7 +136,7 @@ namespace softWrench.sW4.Web.Controllers.Application {
                 parameters = new {
                     application = application,
                     popupmode = popupmode ?? "none",
-                    queryString = BuildQueryString(response, application, platform, applicationMetadata),
+                    queryString = BuildQueryString(response, entityid, application, platform, applicationMetadata, popupmode),
                     message = response.SuccessMessage
                 };
             }
@@ -197,7 +197,7 @@ namespace softWrench.sW4.Web.Controllers.Application {
             }
         }
 
-        private String BuildQueryString(IApplicationResponse response, string application, ClientPlatform platform, ApplicationMetadata applicationMetadata) {
+        private String BuildQueryString(IApplicationResponse response, string id, string application, ClientPlatform platform, ApplicationMetadata applicationMetadata, string popupmode) {
 
             var title = _i18NResolver.I18NSchemaTitle(applicationMetadata.Schema);
 
@@ -208,31 +208,34 @@ namespace softWrench.sW4.Web.Controllers.Application {
                 schema = response.Schema;
                 WebAPIUtil.AppendToQueryString(sb, "id", ((ApplicationDetailResult)response).Id);
             } else {
+                if (!String.IsNullOrWhiteSpace(id)) {
+                    WebAPIUtil.AppendToQueryString(sb, "id", id);
+                }
                 schema = applicationMetadata.Schema;
             }
+            WebAPIUtil.AppendToQueryString(sb, "popupmode", popupmode);
             WebAPIUtil.AppendToQueryString(sb, "key.schemaId", schema.SchemaId);
             WebAPIUtil.AppendToQueryString(sb, "key.platform", schema.Platform);
-            WebAPIUtil.AppendToQueryString(sb, "title", title);
+            WebAPIUtil.AppendToQueryString(sb, "key.mode", schema.Mode);
+            WebAPIUtil.AppendToQueryString(sb, "title", title);            
 
             return sb.ToString();
         }
 
+        private static SLDocument _excelFile;
 
-        public void ExportToExcel(string application, [FromUri]ApplicationMetadataSchemaKey key, [FromUri] PaginatedSearchRequestDto searchDTO, string module) {
-            searchDTO.PageSize = searchDTO.TotalCount + 1;
-            if (module != null) {
-                _contextLookuper.LookupContext().Module = module;
+        public static void SetExcelFile(SLDocument excelFile) {
+            _excelFile = excelFile;
+        }
+
+        public void ExportToExcel(string fileName) {
+            if (_excelFile == null) {
+                return;
             }
-            var dataResponse = _dataController.Get(application,
-                                                      new DataRequestAdapter {
-                                                          Key = key,
-                                                          SearchDTO = searchDTO
-                                                      });
-            var excelFile = _excelUtil.ConvertGridToExcel(application, key, (ApplicationListResult)dataResponse);
             Response.Clear();
             Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            Response.AddHeader("content-disposition", "attachment;filename=GridExport.xlsx");
-            excelFile.SaveAs(Response.OutputStream);
+            Response.AddHeader("content-disposition", "attachment;filename=" + fileName + ".xlsx");
+            _excelFile.SaveAs(Response.OutputStream);
             Response.End();
         }
 

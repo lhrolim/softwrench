@@ -1,8 +1,7 @@
-﻿using NHibernate.Mapping.Attributes;
+﻿using System;
+using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Interfaces;
-using softWrench.sW4.Util;
-using System;
 
 namespace softWrench.sW4.Configuration.Definitions {
 
@@ -10,7 +9,7 @@ namespace softWrench.sW4.Configuration.Definitions {
     public class Condition : IBaseEntity {
 
         public const string ByAlias = "from Condition where Alias =?";
-        public const string GlobalConditions = "from Condition where Global = 1";
+        public const string GlobalConditions = "from Condition where Global =true";
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
@@ -28,7 +27,7 @@ namespace softWrench.sW4.Configuration.Definitions {
         [Property]
         public virtual string Environment { get; set; }
 
-        [Property(TypeType = typeof(BooleanToIntUserType))]
+        [Property]
         public Boolean Global { get; set; }
 
         [Property]

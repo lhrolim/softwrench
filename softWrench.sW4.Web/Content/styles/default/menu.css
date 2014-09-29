@@ -13,7 +13,7 @@
     background-color: #878787;
     border-bottom: #000000 1px solid;
     height: 100%;
-    padding: 0 20px 5px;
+    padding: 5px 20px 5px;
 }
 
     .horizontal-menu-container > ul > li > a,
@@ -55,7 +55,7 @@
         }
 
         .horizontal-menu-container > ul > li {
-            margin: 5px 4px 0 0;
+            margin: 0 4px 0 0;
         }
 
             .horizontal-menu-container > ul > li > a {

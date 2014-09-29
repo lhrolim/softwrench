@@ -20,32 +20,32 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 
 		<container title="New IMAC Request" tooltip="Click to create a new IMAC Request" id="newimac" role="newimac">
 
-			<application id="newaddimac" title="Add Subcomponent" tooltip="Click to create a new Add IMAC Request" schema="add" ref="imac"/>
+			<application id="newaddimac" title="Add Subcomponent" tooltip="Click to create a new Add IMAC Request" schema="add" ref="imac" parameters="popupmode=browser"/>
 
 			<action id="newinstallimac"
 					title="Install" tooltip="Click to create a new Install IMAC Request"
 					   action="ListSchemas" controller="Data"
 					   parameters="application=imac;
             title=Install;label=Service;placeholder=--Select One--;
-            filter.stereotype=detail;filter.mode=input;filter.namePattern=install"/>
+            filter.stereotype=detail;filter.mode=input;filter.namePattern=install;popupmode=browser"/>
 
-			<application id="newmoveimac" title="Move" tooltip="Click to create a new Move IMAC Request" schema="move" ref="imac"/>
+			<application id="newmoveimac" title="Move" tooltip="Click to create a new Move IMAC Request" schema="move" ref="imac" parameters="popupmode=browser"/>
 
 			<action id="newremoveimac"
 						  title="Remove" tooltip="Click to create a new Remove IMAC Request"
 							 action="ListSchemas" controller="Data"
 							 parameters="application=imac;
             title=Remove;label=Service;placeholder=--Select One--;
-            filter.stereotype=detail;filter.mode=input;filter.namePattern=remove"/>
+            filter.stereotype=detail;filter.mode=input;filter.namePattern=remove;popupmode=browser"/>
 
 			<action id="newreplaceimac"
 						  title="Replace" tooltip="Click to create a new Replace IMAC Request"
 							 action="ListSchemas" controller="Data"
 							 parameters="application=imac;
             title=Replace;label=Service;placeholder=--Select One--;
-            filter.stereotype=detail;filter.mode=input;filter.namePattern=replace"/>
+            filter.stereotype=detail;filter.mode=input;filter.namePattern=replace;popupmode=browser"/>
 
-			<application id="newupdateimac" title="Update" tooltip="Click to create a new Update IMAC Request" schema="update" ref="imac"/>
+			<application id="newupdateimac" title="Update" tooltip="Click to create a new Update IMAC Request" schema="update" ref="imac" parameters="popupmode=browser"/>
 
 		</container>
 
@@ -59,7 +59,8 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<application id="incidentdetailreport" title="Incident Detail Report" tooltip="Click to view Incident Detail Report" schema="incidentdetailreportfilters" ref="incident" role="incidentdetailsreport"/>
     <application id="incidentperlocationscimreport" title="Incident Per Location/SCIM Report" tooltip="Click to view Incident Per Location/SCIM Report" schema="incidentperlocationreportfilters" ref="incident" role="incidentperlocationreport"/>
 		<application id="hardwarerepairreport" title="Hardware Repair Report" tooltip="Click to view Hardware Repair Report" schema="hardwarerepairreportfilters" ref="incident" role="hardwarerepairreport"/>
-		<action id="categoriesreport" title="Asset Categories" tooltip="Click here to view Asset Categories report" controller="Report" action="Index" parameters="application=asset;reportName=CategoriesReport;key.schemaId=categories" role="assetcategoriesreport" target="new" />
+		<action id="categoriesreport" title="Asset Categories" tooltip="Click here to view Asset Categories report" controller="Report" action="Index" 
+            parameters="application=asset;reportName=CategoriesReport;key.schemaId=categories" role="assetcategoriesreport" target="new" />
     <application id="itcreport" title="ITC Report" tooltip="Click to view ITC Report" schema="itcreportfilters" ref="persongroupview" role="itcreport"/>
   
 	</container>
@@ -72,7 +73,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Incidents" role="itcsearch"
 					 params="id=incidentsearch;application=incident;label=Incident Search;searchFields=ticketid,description" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Assets" role="itcsearch"
-					 params="id=assetmenusearch;application=asset;label=Asset Search;searchFields=description,serialnum,computername" />
+					 params="id=assetmenusearch;application=asset;label=Asset Search;searchFields=hlagdescription,serialnum,computername" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search IMACS" role="itcsearch"
 					 params="id=imacsearch;application=imac;label=IMAC Search;searchFields=ticketid,description"/>
 
@@ -84,7 +85,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<application title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />
 		<divider/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=assetmenusearchcontrol;application=asset;label=Asset Search;
-                 searchFields=description,serialnum,computername" tooltip="Search Assets"/>
+                 searchFields=hlagdescription,serialnum,computername" tooltip="Search Assets"/>
 	</container>
 
 	<divider role="assetramcontrol"/>
@@ -93,7 +94,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<application title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />
 		<divider/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html"
-							 params="id=assetrammenusearchcontrolram;application=asset;label=Asset Search;searchFields=description,serialnum,computername"
+							 params="id=assetrammenusearchcontrolram;application=asset;label=Asset Search;searchFields=hlagdescription,serialnum,computername"
 								 tooltip="Search Assets"/>
 	</container>
 
@@ -110,7 +111,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=incidentsearchpur;application=incident;label=Incident Search;
                  searchFields=ticketid,description" tooltip="Search Incidents"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=assetmenusearchpur;application=asset;label=Asset Search;
-                 searchFields=description,serialnum,computername" tooltip="Search Assets"/>
+                 searchFields=hlagdescription,serialnum,computername" tooltip="Search Assets"/>
 
 	</container>
 
@@ -131,31 +132,32 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<application id="ImacGrid" title="IMAC Grid" ref="imac" schema="list" tooltip="Click to view your Imacs"/>
 		<container title="New IMAC Request" tooltip="Click to create a new IMAC Request" id="newimac">
 
-			<application id="newaddimac" title="Add SubComponent" tooltip="Click to create a new Add IMAC Request" schema="add" ref="imac"/>
+			<application id="newaddimac" title="Add SubComponent" tooltip="Click to create a new Add IMAC Request" schema="add" ref="imac" parameters="popupmode=browser"/>
 
 			<action id="newinstallimac"
 						  title="Install" tooltip="Click to create a new Install IMAC Request"
 							 action="ListSchemas" controller="Data"
 							 parameters="application=imac;
             title=Install;label=Service;placeholder=--Select One--;
-            filter.stereotype=detail;filter.mode=input;filter.namePattern=install"/>
-			<application id="newmoveimac" title="Move" tooltip="Click to create a new Move IMAC Request" schema="move" ref="imac"/>
+            filter.stereotype=detail;filter.mode=input;filter.namePattern=install;popupmode=browser" />
+      
+			<application id="newmoveimac" title="Move" tooltip="Click to create a new Move IMAC Request" schema="move" ref="imac" parameters="popupmode=browser"/>
 
 			<action id="newremoveimac"
 				  title="Remove" tooltip="Click to create a new Remove IMAC Request"
 				   action="ListSchemas" controller="Data"
 				   parameters="application=imac;
             title=Remove;label=Service;placeholder=--Select One--;
-            filter.stereotype=detail;filter.mode=input;filter.namePattern=remove"/>
+            filter.stereotype=detail;filter.mode=input;filter.namePattern=remove;popupmode=browser"/>
 
 			<action id="newreplaceimac"
 						  title="Replace" tooltip="Click to create a new Replace IMAC Request"
 							 action="ListSchemas" controller="Data"
 							 parameters="application=imac;
             title=Replace;label=Service;placeholder=--Select One--;
-            filter.stereotype=detail;filter.mode=input;filter.namePattern=replace"/>
+            filter.stereotype=detail;filter.mode=input;filter.namePattern=replace;popupmode=browser"/>
 
-			<application id="newupdateimac" title="Update" tooltip="Click to create a new Update IMAC Request" schema="update" ref="imac"/>
+			<application id="newupdateimac" title="Update" tooltip="Click to create a new Update IMAC Request" schema="update" ref="imac" parameters="popupmode=browser"/>
 		</container>
 
     <container title="Reports" tooltip="Click Here to access your Reports" id="Reports">
@@ -173,7 +175,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=incidentsearchxitc;application=incident;label=Incident Search;
                  searchFields=ticketid,description" tooltip="Search Incidents"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=assetmenusearchxitc;application=asset;label=Asset Search;
-                 searchFields=description,serialnum" tooltip="Search Assets"/>
+                 searchFields=hlagdescription,serialnum" tooltip="Search Assets"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchxitc;application=problem;label=Problem Search;
                  searchFields=ticketid,description" tooltip="Search Problems"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=imacsearch_xitc;application=imac;label=IMAC Search;
@@ -184,7 +186,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 
 	<container title="Change" role="change" id="change" modulename="change" modulealias="Change" controller="HapagHome" action="ChangeHome">
 		<application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
-		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes"/>
+		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchchange;application=change;label=Change Search;
                  searchFields=wonum,sr_.ticketid,hlagchangesummary" tooltip="Change Search"/>
 	</container>
@@ -203,7 +205,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" />
 		<application id="AssetMenu" title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />
 		<application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
-		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes"/>
+		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser"/>
 		<application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
 
 		<container title="Reports" tooltip="Click Here to access your Reports" id="Reports">
@@ -212,7 +214,8 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 			<application id="hardwarerepairreport" title="Hardware Repair Report" tooltip="Click to view Hardware Repair Report" schema="hardwarerepairreportfilters" ref="incident" />
 			<application id="tapebackupreport" title="Tape BackUp Report" tooltip="Click to view Tape Back Up Report" schema="tapebackupreport" ref="incident" />
       <application id="itcreport" title="ITC Report" tooltip="Click to view ITC Report" schema="itcreportfilters" ref="persongroupview" />
-      <action id="escalationhlagincidentreport" title="Escalation HLAG Incident Report" controller="Report" action="Index" tooltip="Click to view Escalation HLAG Incident Report" parameters="application=incident;reportName=EscalationIncidentReport;key.schemaId=escalationincident" />
+      <action id="escalationhlagincidentreport" title="Escalation HLAG Incident Report" controller="Report" action="Index" tooltip="Click to view Escalation HLAG Incident Report" 
+              parameters="application=incident;reportName=EscalationIncidentReport;key.schemaId=escalationincident" target="new" />
       <application id="groupreport" title="Group Report" tooltip="Click to view Group Report" schema="groupreport" ref="persongroupview"/>
 		</container>
 
@@ -223,7 +226,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchtom;application=problem;label=Problem Search;
                  searchFields=ticketid,description" tooltip="Search Problems"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=assetmenusearchtom;application=asset;label=Asset Search;
-                 searchFields=description,serialnum" tooltip="Search Assets"/>
+                 searchFields=hlagdescription,serialnum" tooltip="Search Assets"/>
 	</container>
 
 	<divider role="itom"/>
@@ -240,7 +243,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" />
 		<application id="AssetMenu" title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />
 		<application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
-		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes"/>
+		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser"/>
 		<application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
 		<application id="ImacGrid" title="IMAC Grid" ref="imac" schema="list" tooltip="Click to view your Imacs" />
 
@@ -250,7 +253,8 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 			<application id="hardwarerepairreport" title="Hardware Repair Report" tooltip="Click to view Hardware Repair Report" schema="hardwarerepairreportfilters" ref="incident" />
 			<application id="tapebackupreport" title="Tape BackUp Report" tooltip="Click to view Tape Back Up Report" schema="tapebackupreport" ref="incident" />
       <application id="itcreport" title="ITC Report" tooltip="Click to view ITC Report" schema="itcreportfilters" ref="persongroupview" />
-      <action id="escalationhlagincidentreport" title="Escalation HLAG Incident Report" controller="Report" action="Index" tooltip="Click to view Escalation HLAG Incident Report" parameters="application=incident;reportName=EscalationIncidentReport;key.schemaId=escalationincident" />
+      <action id="escalationhlagincidentreport" title="Escalation HLAG Incident Report" controller="Report" action="Index" tooltip="Click to view Escalation HLAG Incident Report" 
+              parameters="application=incident;reportName=EscalationIncidentReport;key.schemaId=escalationincident" target="new" />
       <application id="groupreport" title="Group Report" tooltip="Click to view Group Report" schema="groupreport" ref="persongroupview"/>
 		</container>
 
@@ -263,7 +267,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=imacsearchitom;application=imac;label=IMAC Search;
                  searchFields=ticketid,description" tooltip="Search IMACS"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=assetmenusearchitom;application=asset;label=Asset Search;
-                 searchFields=description,serialnum" tooltip="Search Assets"/>
+                 searchFields=hlagdescription,serialnum" tooltip="Search Assets"/>
 	</container>
 
 	<divider role="ad"/>
@@ -293,7 +297,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		</container>
 		<application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" />
 		<application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
-		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes"/>
+		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser"/>
 		<application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
 
 		<container title="Reports" tooltip="Click Here to access your Reports" id="Reports">
@@ -315,7 +319,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 
 	<container title="TUI Infotec" role="tui" id="tui" modulename="tui" modulealias="TUI Infotec" controller="HapagHome" action="TUIHome">
 		<application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
-		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes"/>
+		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser"/>
 
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchtui;application=change;label=Change Search;
                  searchFields=wonum,sr_.ticketid,hlagchangesummary" tooltip="Change Search"/>

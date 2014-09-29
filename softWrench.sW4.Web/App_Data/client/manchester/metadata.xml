@@ -794,7 +794,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <composition relationship="matusetrans" label="Materials">
               <collectionproperties allowupdate="false" allowcreation="true"  />
             </composition>
-            <!--<composition relationship="labtrans" label="Labor">
+            <!--<composition relationship="labtrans" label="Labors">
 							<collectionproperties allowupdate="false" allowcreation="true" />
 						</composition>-->
             <composition relationship="attachment" label="Attachments" >

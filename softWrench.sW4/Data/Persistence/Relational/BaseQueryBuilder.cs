@@ -1,4 +1,5 @@
 ﻿using log4net;
+using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
@@ -39,20 +40,20 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                 return HandleUnion(entityMetadata as SlicedEntityMetadata, queryParameter, queryString, queryMode, compositeWhereBuilder.GetParameters());
             }
 
-            _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "query for {0}:{1} built",entityMetadata.Name,queryMode.ToString()));
+            _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "query for {0}:{1} built", entityMetadata.Name, queryMode.ToString()));
 
             return new BindedEntityQuery(queryString, compositeWhereBuilder.GetParameters());
         }
 
         private BindedEntityQuery HandleUnion(SlicedEntityMetadata slicedEntityMetadata, InternalQueryRequest queryParameter, string queryString, QueryCacheKey.QueryMode queryMode,
             IEnumerable<KeyValuePair<string, object>> parameters) {
-            
+
             var queryModeToPropagate = queryMode == QueryCacheKey.QueryMode.Count
                 ? QueryCacheKey.QueryMode.Count
                 : QueryCacheKey.QueryMode.Union;
-            
-            var unionSearchRequestDto = SearchRequestDto.GetUnionSearchRequestDto(queryParameter.SearchDTO, slicedEntityMetadata.UnionSchema);
-            var unionQuery = TemplateQueryBuild(slicedEntityMetadata.UnionSchema, new InternalQueryRequest() { SearchDTO = unionSearchRequestDto }, queryModeToPropagate);
+
+
+            var unionQuery = TemplateQueryBuild(slicedEntityMetadata.UnionSchema, new InternalQueryRequest() { SearchDTO = queryParameter.SearchDTO.unionDTO }, queryModeToPropagate);
 
             queryString += (" union all " + unionQuery.Sql + " ");
             if (queryMode == QueryCacheKey.QueryMode.Count) {

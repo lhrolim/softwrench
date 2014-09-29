@@ -37,7 +37,7 @@
     <div class="container" ng-controller="LayoutController">
         <header class="site-header navbar-fixed-top hiddenonprint">
             @*SM - 06/28 - CHANGE - remove classes .header-menu & clearfix*@
-            <div class="menu-expand"><i class="fa fa-bars"></i> Admin</div>
+            <div class="menu-expand"><i class="fa fa-bars"></i>Admin</div>
             @*SM - 06/29 - ADD - add responsive menu item*@
             <div class="menu-items">
                 @*SM - 06/29 - ADD - wrap menu to hide menu on small screens*@
@@ -54,7 +54,7 @@
                         </a>
                         <div class="btn-group" ng-show="isSysAdmin">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-cogs"></i>
+                                <i class="fa fa-cog"></i>
                                 {{i18N('_headermenu.utilities','Utilities')}}&ensp;<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
@@ -65,7 +65,7 @@
                         </div>
                         <div class="btn-group" ng-show="isClientAdmin">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-gear"></i>
+                                <i class="fa fa-tachometer"></i>
                                 Admin&ensp;<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
@@ -80,9 +80,7 @@
                         </div>
                         <a href="#" ng-click="doAction(null,'Configuration','About',null,$event.target)" ng-show="isClientAdmin">
                             <button type="button" class="btn btn-default btn-sm">
-                                <i class="fa fa-info-circle"></i>
-                                {{i18N('_headermenu.about','About')}}
-                            </button>
+                                <i class="fa fa-info-circle"></i>{{i18N('_headermenu.about','About')}}</button>
                         </a>
                         <a href="@Url.Action("SignOut", "Signout")" ng-click="logout()">
                             <button type="button" class="btn btn-default btn-sm">
@@ -101,7 +99,7 @@
             </div>
             <div class="menu menu-grid">
                 @*SM - 06/28 - CHANGE - class .header-menu to .menu-grid, remove affix class*@
-                <div class="menu-expand"><i class="fa fa-bars"></i> Menu</div>
+                <div class="menu-expand"><i class="fa fa-bars"></i>Menu</div>
                 @*SM - 06/29 - ADD - add responsive menu item*@
                 <div class="menu-items">
                     @*SM - 06/29 - ADD - wrap menu to hide menu on small screens*@

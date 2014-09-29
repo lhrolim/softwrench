@@ -48,8 +48,9 @@
                 <label class="control-label col-lg-3"><span>{{i18N('general.language','Language')}}:</span></label>
                 <div class="col-lg-9">
                     <select id="userLanguage" ng-model="language.selected"
-                        class="form-control"
-                        ng-options="language.text for language in languages">
+                        class="hidden-phone form-control combobox"
+                        ng-options="language.text for language in languages"
+                        ng-change="fixselecttext()">
                     </select>
                 </div>
             </div>

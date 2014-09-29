@@ -1,17 +1,17 @@
-﻿<article class="container" ng-controller="AboutController" data-page="about">
+﻿<article class="container" ng-controller="AboutController">
+
     <section ng-show="aboutData != undefined">
         <div class="form-horizontal">
             <br />
             <div class="form-group" ng-repeat="data in aboutData">
-                <label class="control-label col-sm-2">
-                    {{data.key}}
-                </label>
-                <div class="col-sm-10">
-                    <label class="form-control">
+                <label class="control-label col-lg-2"><span>{{data.key}}</span></label>
+                <div class="col-lg-10">
+                    <label class="control-label">
                         {{data.value}}
                     </label>
                 </div>
             </div>
+
         </div>
     </section>
     <p class="text-center" ng-show="aboutData == undefined">

@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
 using softWrench.sW4.Metadata;
@@ -22,7 +23,7 @@ namespace softwrench.sW4.test.Metadata.Entities {
             Assert.AreEqual(result.Problem.System, "21030000");
             Assert.IsNotNull(result.Problem.ProviderAssignedGroup);
             Assert.IsNotNull(result.Problem.ProviderAssignedGroup.Group);
-            Assert.AreEqual(result.Problem.ProviderAssignedGroup.Group.GroupID, "I-EUS-DE-CSC-SDK-HLCFRONTDESKI");
+            Assert.AreEqual(result.Problem.ProviderAssignedGroup.Group.GroupID, "I-EUS-DE-CSC-SDK-HLCFRONTDESK");
             Assert.IsNotNull(result.Problem.ProviderAssignedGroup.Group.Address);
             Assert.AreEqual(result.Problem.ProviderAssignedGroup.Group.Address.OrganizationID, "ITD-ESS6");
             Assert.AreEqual(result.Problem.ProviderAssignedGroup.Group.Address.LocationID, "ESS6");

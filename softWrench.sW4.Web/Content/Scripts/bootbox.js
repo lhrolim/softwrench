@@ -344,30 +344,6 @@
     return exports.dialog(options);
   };
 
-  exports.cancelDialog = function () {
-      var options;
-
-      options = mergeDialogOptions("confirm", ["no", "yes"], ["message", "callback"], arguments);
-
-      /**
-       * overrides; undo anything the user tried to set they shouldn't have
-       */
-      options.buttons.no.callback = options.onEscape = function () {
-          return options.callback(false);
-      };
-
-      options.buttons.yes.callback = function () {
-          return options.callback(true);
-      };
-
-      // confirm specific validation
-      if (!$.isFunction(options.callback)) {
-          throw new Error("confirm requires a callback");
-      }
-
-      return exports.dialog(options);
-  };
-
   exports.prompt = function() {
     var options;
     var defaults;

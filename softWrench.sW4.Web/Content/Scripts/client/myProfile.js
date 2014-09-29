@@ -36,6 +36,21 @@
         }
     }
 
+    $scope.fixselecttext = function () {
+        angular.forEach($("#userLanguage"), function (currSelect) {
+            currSelect.options[currSelect.selectedIndex].text += ' ';
+        });
+    };
+
+    $scope.$watch('languages', function (newValue, oldValue) {
+        if (newValue !== oldValue) {
+            $scope.languages = newValue;
+            angular.forEach($("#userLanguage"), function (currSelect) {
+                currSelect.options[currSelect.selectedIndex].text = newValue[currSelect.selectedIndex].text;
+            });
+        }
+    });
+
     $scope.i18N = function (key, defaultValue, paramArray) {
         return i18NService.get18nValue(key, defaultValue, paramArray);
     };
@@ -63,7 +78,8 @@
     };
 
     function resetuserinfo() {
-        var urlToInvoke = redirectService.getActionUrl('User', 'MyProfile', null);
+        var parameters = {};
+        var urlToInvoke = redirectService.getActionUrl('User', 'MyProfile', parameters);
         $http.get(urlToInvoke).
         success(function (data, status, headers, config) {
             init(data.resultObject);

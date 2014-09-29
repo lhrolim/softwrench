@@ -13,7 +13,15 @@
             disableExport: '@'
         },
 
-        controller: function ($scope, $rootScope, $timeout, printService, searchService, i18NService, contextService) {
+        controller: function ($scope,
+            $http,
+            $rootScope,
+            $timeout,
+            printService,
+            searchService,
+            i18NService,
+            redirectService,
+            contextService) {
 
             $scope.contextPath = function (path) {
                 return url(path);
@@ -42,6 +50,9 @@
             };
 
             $scope.exportToExcel = function (schemaId) {
+                if ($scope.paginationData.totalCount == 0) {
+                    return null;
+                }
                 printPageSize = null;
                 var parameters = {};
                 parameters.key = {};
@@ -67,6 +78,7 @@
                 searchDTO.pageSize = $scope.paginationData.pageSize;
 
                 parameters.searchDTO = searchDTO;
+
                 var parameterstoexcel = {
                     application: parameters.application,
                     key: parameters.key,

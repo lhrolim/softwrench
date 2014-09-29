@@ -1,9 +1,9 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
-using System.Collections.Generic;
 
 namespace softWrench.sW4.Data.Persistence.Operation {
     public sealed class CrudOperationData : Entity, IOperationData {
@@ -27,9 +27,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             return new List<CrudOperationData>();
         }
 
-        public IDictionary<string, object> Fields {
-            get { return Attributes; }
-        }
+
 
         public string TableName {
             get { return EntityMetadata.GetTableName().ToUpper(); }

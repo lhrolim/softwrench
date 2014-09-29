@@ -33,20 +33,6 @@ app.factory('validationService', function (i18NService,fieldService, $rootScope)
             return validationArray;
         },
 
-        setDirty: function () {
-            $rootScope.isDirty = true;
-
-        },
-
-        getDirty: function () {
-            return $rootScope.isDirty;
-
-        },
-
-        clearDirty: function () {
-            $rootScope.isDirty = false;
-
-        }
         
 
     };

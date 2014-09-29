@@ -1,6 +1,6 @@
-﻿using NHibernate.Mapping.Attributes;
-using softWrench.sW4.Util;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using NHibernate.Mapping.Attributes;
 
 namespace softWrench.sW4.Security.Entities {
     [Class(Table = "SW_ROLE")]
@@ -36,14 +36,13 @@ namespace softWrench.sW4.Security.Entities {
         [Property]
         public virtual string Description { get; set; }
 
-        [Property(Column = "deletable",TypeType = typeof(BooleanToIntUserType))]
+        [Property(Column = "deletable")]
         public virtual Boolean Deletable { get; set; }
 
         [ManyToOne(Column = "rolegroup_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
         public virtual RoleGroup RoleGroup { get; set; }
 
-        
-        [Property(Column = "isactive", TypeType = typeof(BooleanToIntUserType))]
+        [Property(Column = "isactive")]
         public virtual Boolean Active { get; set; }
 
         protected bool Equals(Role other) {

@@ -35,23 +35,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             }
             return new List<AssociationOption> { currentOption };
         }
-        /* Need to add this prefilter function for the problem codes !! */
-        public SearchRequestDto FilterProblemCodes(AssociationPreFilterFunctionParameters parameters)
-        {
-            return ProblemCodeFilterByFailureClassFunction(parameters);
-        }
 
-        private SearchRequestDto ProblemCodeFilterByFailureClassFunction(AssociationPreFilterFunctionParameters parameters)
-        {
-            var filter = parameters.BASEDto;
-            var failurecodeid = parameters.OriginalEntity.GetAttribute("failurelist_.failurelist");
-            if (failurecodeid == null)
-            {
-                return filter;
-            }
-            filter.AppendSearchEntry("parent", failurecodeid.ToString());
-            return filter;
-        }
         public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters)
         {
             return AssetFilterBySiteFunction(parameters);

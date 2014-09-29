@@ -96,10 +96,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             ISet<IAssociationOption> options = new SortedSet<IAssociationOption>();
             foreach (var attributeHolder1 in queryResponse) {
                 var attributeHolder = (DataMap)attributeHolder1;
-                var value =attributeHolder.GetAttribute(projectionResult.ValueKey);
-                if(value.GetType() == typeof(decimal)){
-                  value = Convert.ToInt32(value);
-                }
+                var value = attributeHolder.GetAttribute(projectionResult.ValueKey);
 
                 var labelNumber = association.LabelFields.Count;
                 var label = labelNumber == 1
@@ -109,8 +106,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 if (association.ExtraProjectionFields.Count > 0) {
                     options.Add(new MultiValueAssociationOption((string)value, label, attributeHolder));
                 } else {
-                    
-                    options.Add(new AssociationOption(Convert.ToString(value), label));
+                    options.Add(new AssociationOption((string)value, label));
                 }
             }
             return options;

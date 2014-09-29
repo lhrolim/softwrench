@@ -1,16 +1,16 @@
-﻿using Iesi.Collections.Generic;
-using log4net;
-using Newtonsoft.Json;
-using softwrench.sW4.Shared2.Metadata.Applications;
-using softwrench.sW4.Shared2.Metadata.Menu.Containers;
-using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
-using softWrench.sW4.Metadata.Menu.Containers;
-using softWrench.sW4.Security.Entities;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
+using Iesi.Collections.Generic;
+using log4net;
+using Newtonsoft.Json;
+using softWrench.sW4.Metadata.Menu.Containers;
+using softWrench.sW4.Security.Entities;
+using softwrench.sW4.Shared2.Metadata.Applications;
+using softwrench.sW4.Shared2.Metadata.Menu.Containers;
+using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
 
 namespace softWrench.sW4.Metadata.Security {
     public class InMemoryUser : IPrincipal {
@@ -229,9 +229,6 @@ namespace softWrench.sW4.Metadata.Security {
             return strPersonGroups;
         }
 
-
-        public bool IsSwAdmin() {
-            return IsInRole(Role.SysAdmin);
-        }
+       
     }
 }

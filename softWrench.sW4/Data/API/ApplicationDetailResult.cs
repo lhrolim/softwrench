@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Metadata.Applications.Schema;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
@@ -15,6 +17,20 @@ namespace softWrench.sW4.Data.API {
 
         private readonly IDictionary<string, BaseAssociationUpdateResult> _associationOptions
                     = new Dictionary<string, BaseAssociationUpdateResult>();
+
+
+        private bool _allassociatiosFetched;
+
+        public bool AllassociatiosFetched {
+            get {
+                if (!_allassociatiosFetched && Schema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.PreFetchAssociations)) {
+                    return "#all".Equals(Schema.Properties[ApplicationSchemaPropertiesCatalog.PreFetchAssociations]);
+                }
+                return _allassociatiosFetched;
+            }
+            set { _allassociatiosFetched = value; }
+        }
+
 
         public ApplicationDetailResult(DataMap dataMap, IDictionary<string, BaseAssociationUpdateResult> associationOptions,
             ApplicationSchemaDefinition main, IDictionary<string, ApplicationCompositionSchema> compositions, string id)
@@ -56,6 +72,5 @@ namespace softWrench.sW4.Data.API {
             get { return _main; }
         }
 
-        public bool AllassociatiosFetched { get; set; }
     }
 }

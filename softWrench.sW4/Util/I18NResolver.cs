@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using log4net;
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Security.Services;
@@ -6,6 +7,7 @@ using softWrench.sW4.SimpleInjector;
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace softWrench.sW4.Util {
 
@@ -19,6 +21,8 @@ namespace softWrench.sW4.Util {
 
         private const string TestI18NdirPattern = "{0}\\Client\\{1}\\i18n";
 
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(I18NResolver));
 
         public JObject FetchCatalogs() {
             if (_cachedCatalogs != null && !ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsUnitTest) {
@@ -36,12 +40,66 @@ namespace softWrench.sW4.Util {
                     var language = l.Replace(i18NDir + "\\", "");
                     var files = Directory.GetFiles(l, "labels.json");
                     if (files.Length != 0) {
-                        resultCatalogs.Add(language, JSonUtil.BuildJSon(files[0]));
+                        resultCatalogs.Add(language, BuildJSon(files[0]));
                     }
                 }
             }
             _cachedCatalogs = resultCatalogs;
             return _cachedCatalogs;
+        }
+
+        private JObject BuildJSon(string filePath) {
+            string line;
+            var sb = new StringBuilder();
+            FileUtils.DoWithLines(filePath, s => NormalizeJson(s, sb));
+            var json = "{" + sb + "}";
+            Log.Debug("Parsing labels JSON: \n " + json);
+            return JObject.Parse(json);
+        }
+
+        private static void NormalizeJson(string s, StringBuilder sb) {
+            if (String.IsNullOrEmpty(s)) {
+                return;
+            }
+
+            if ((s.Contains("{") || s.Contains("}")) && !(s.Contains("{") && s.Contains("}"))) {
+                //both at same line could indicate parameters {0}
+                if (!s.Contains(",") && s.Contains("}")) {
+                    //append , to indicate the end of an object
+                    sb.AppendLine(s + ",");
+                } else {
+                    var idx = s.IndexOf(':');
+                    if (idx != -1) {
+                        var splitObj = new string[2] { s.Substring(0, idx), s.Substring(idx + 1, s.Length - idx - 1) };
+                        s = s.Replace(splitObj[0], "'" + splitObj[0].Trim() + "'");
+                    }
+                    sb.AppendLine(s);
+                }
+                return;
+            }
+            var keySeparatorIdx = s.IndexOf(':');
+            if (keySeparatorIdx == -1) {
+                //no :, could be } or {
+                sb.AppendLine(s);
+                return;
+            }
+
+            var split = new string[2] { s.Substring(0, keySeparatorIdx), s.Substring(keySeparatorIdx + 1, s.Length - keySeparatorIdx - 1) };
+
+            if (split.Count() != 2) {
+                sb.AppendLine(s);
+                return;
+            }
+            var key = split[0].Trim();
+            key = "'" + key + "'";
+            var value = split[1].Trim();
+            if (!value.EndsWith(",")) {
+                value = "'" + value + "',";
+            } else {
+                value = "'" + value.Substring(0, value.Length - 1) + "',";
+            }
+            var result = key + ":" + value;
+            sb.AppendLine(result);
         }
 
         public JObject CachedCatalogs {

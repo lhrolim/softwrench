@@ -22,7 +22,7 @@
 	<property key="targetmapping" value="ism"/>
 	<property key="multitenantprefix" value="HLC-%"/>
 	<property key="globaservletpath" value="https://170.225.28.205/HAPAGLLOYDINCTestWS/DocHandlerServlet"/>
-	<property key="ignorewscerterrors" value="true"/>
+	<property key="ignoreWsCertErrors" value="true"/>
 
 	<property key="faqusefullinksPath" value="C:\ServiceIT\config\SR_FAQ.txt"/>
 	<property key="serviceItLoginPath" value="C:\ServiceIT\config\ServiceITLogin.properties"/>

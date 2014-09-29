@@ -13,7 +13,6 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             foreach (var attributeHolder in resultObject) {
                 LocationDescriptionHandler(attributeHolder);
                 FillDepartmentField(attributeHolder);
-                FillFieldsHandler(attributeHolder);
                 DescriptionHandler(attributeHolder);
                 FillNoIdField(attributeHolder);
             }
@@ -63,17 +62,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             } catch {
                 DataSetUtil.FillBlank(attributeHolder, field);
             }
-        }
-
-        private static void FillFieldsHandler(AttributeHolder attributeHolder) {
-            DataSetUtil.FillField(attributeHolder, "#country", "location_.pluspservaddr_.country");
-            DataSetUtil.FillField(attributeHolder, "#manufacturer", "item_.invvendor_.manufacturer");
-            DataSetUtil.FillField(attributeHolder, "#billable", "companies_.warrantyview_.description");
-            DataSetUtil.FillField(attributeHolder, "#category", "classstructure_.category_.description");
-            DataSetUtil.FillField(attributeHolder, "#subcategory", "classstructure_.description");
-        }
-
-      
+        }      
 
         private static void DescriptionHandler(AttributeHolder attributeHolder) {
             FillDescriptionFields(attributeHolder, "#computername", false);

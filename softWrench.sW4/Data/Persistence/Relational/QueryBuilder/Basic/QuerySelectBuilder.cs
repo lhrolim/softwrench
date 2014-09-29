@@ -41,10 +41,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                             //this way we can map null attributes, that can be used for unions
                             //see changeunionschema of hapag´s metadata.xml
                             buffer.AppendFormat("null" + SelectSeparator);
-                        } else {
-                            //this is an unmapped attribute
-                            continue;
                         }
+                        //this is an unmapped attribute
+                        continue;
                     }
                     var result = LocateAttribute(entityMetadata, attributes, field);
                     if (!field.Name.Contains('.') && result == null) {

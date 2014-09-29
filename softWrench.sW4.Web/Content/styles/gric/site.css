@@ -27,8 +27,8 @@
 }
 
 .nav > li > a:hover, .nav > li > a:focus {
-    /*background-color: #C69105;
-    border-color: #C69105 !important;*/
+    background-color: #C69105;
+    border-color: #C69105 !important;
 }
 
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
@@ -47,7 +47,7 @@
 }
 
 .compositiondetailtab {
-    /*background-color: #623A17 !important;*/
+    background-color: #623A17 !important;
 }
 
 /*.alignment-logo img {

@@ -165,8 +165,6 @@
     <Compile Include="Data\API\ActionRedirectResponse.cs" />
     <Compile Include="Data\API\Association\IAssociationPrefetcherRequest.cs" />
     <Compile Include="Data\API\AttachmentRequest.cs" />
-    <Compile Include="Data\API\Composition\CompositionFetchRequest.cs" />
-    <Compile Include="Data\API\Composition\CompositionFetchResult.cs" />
     <Compile Include="Data\API\BlankApplicationResponse.cs" />
     <Compile Include="Data\API\ReportRequest.cs" />
     <Compile Include="Data\Configuration\ComWhereClauseProvider.cs" />
@@ -185,7 +183,6 @@
     <Compile Include="Data\Persistence\WS\Commons\BaseChangeRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseIncidentCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePurchaseRequestCrudConnector.cs" />
-    <Compile Include="Data\Persistence\WS\Commons\CommLogHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\HapagChangeHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\HapagSRLongDescriptionHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\MifFindByIdCrudConnector.cs" />
@@ -215,7 +212,6 @@
     <Compile Include="Data\Persistence\WS\Manchester\ComWorkOrderCrudConnector.cs" />
     <Compile Include="Exceptions\InvalidAttachmentException.cs" />
     <Compile Include="Metadata\Applications\Association\AssociationHelper.cs" />
-    <Compile Include="Email\EmailService.cs" />
     <Compile Include="Metadata\Applications\Association\BaseDependableResolver.cs" />
     <Compile Include="Metadata\Applications\Association\DynamicOptionFieldResolver.cs" />
     <Compile Include="Metadata\Applications\DataSet\AssociationPostFilterFunctionParameters.cs" />
@@ -323,7 +319,6 @@
     <Compile Include="Security\Init\DbUserInitializer.cs" />
     <Compile Include="Security\Init\Com\ProfileType.cs" />
     <Compile Include="Security\Init\RoleExtensions.cs" />
-    <Compile Include="Security\Services\ClearCacheEvent.cs" />
     <Compile Include="Security\Services\UserLoginEvent.cs" />
     <Compile Include="Security\UserType.cs" />
     <Compile Include="SimpleInjector\ComponentAttribute.cs" />
@@ -331,6 +326,7 @@
     <Compile Include="SimpleInjector\Events\ISWEvent.cs" />
     <Compile Include="SimpleInjector\Events\IEventDispatcher.cs" />
     <Compile Include="SimpleInjector\Events\ISWEventListener.cs" />
+    <Compile Include="SimpleInjector\Events\MultiThreadedSWEventListener.cs" />
     <Compile Include="SimpleInjector\Events\SimpleInjectorDomainEventDispatcher.cs" />
     <Compile Include="SimpleInjector\Core\Order\OrderComparator.cs" />
     <Compile Include="SimpleInjector\IComponent.cs" />
@@ -504,7 +500,6 @@
     <Compile Include="Util\ApplicationConfiguration.cs" />
     <Compile Include="Util\ArrayUtil.cs" />
     <Compile Include="Util\AssemblyLocator.cs" />
-    <Compile Include="Util\BooleanToIntUserType.cs" />
     <Compile Include="Util\CollectionExtensions.cs" />
     <Compile Include="Util\CollectionUtil.cs" />
     <Compile Include="Util\CompressionUtil.cs" />
@@ -518,13 +513,11 @@
     <Compile Include="Util\FileUtils.cs" />
     <Compile Include="Util\HibernateUtil.cs" />
     <Compile Include="Util\I18NResolver.cs" />
-    <Compile Include="Util\JSonUtil.cs" />
     <Compile Include="Util\LoggingUtil.cs" />
     <Compile Include="Util\NhAppender.cs" />
     <Compile Include="Util\ReflectionUtil.cs" />
     <Compile Include="Util\ReportUtil.cs" />
     <Compile Include="Util\Scripting\ScriptingUtil.cs" />
-    <Compile Include="Util\StatusColorResolver.cs" />
     <Compile Include="Util\StreamUtils.cs" />
     <Compile Include="Util\StringExtensions.cs" />
     <Compile Include="Util\SwConstants.cs" />

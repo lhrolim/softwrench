@@ -14,7 +14,7 @@ using softWrench.sW4.Web.Controllers;
 namespace softWrench.sW4.Web.Common {
     public class GenericExceptionFilter : ExceptionFilterAttribute, System.Web.Mvc.IExceptionFilter {
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(GenericExceptionFilter));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(DataController));
 
         public override void OnException(HttpActionExecutedContext context) {
             var e = context.Exception;

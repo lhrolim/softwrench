@@ -19,16 +19,14 @@ namespace softWrench.sW4.Web.Models.Home {
         public String UserJSON { get; set; }
 
         public string I18NJsons { get; set; }
-
-        public string StatusColorJson { get; set; }
-
         public string Message { get; set; }
+        public string MessageType { get; set; }
         public string WindowTitle { get; set; }
 
         public long InitTimeMillis { get; set; }
 
-        public HomeModel(string url, string title, HomeConfigs configs, InMemoryUser user, bool hasLogoPopup,
-            JObject i18NJsons, JObject statusColorJson, string clientName, string windowTitle = null, string message = null) {
+        public HomeModel(string url, string title, HomeConfigs configs, InMemoryUser user, bool hasLogoPopup, 
+            JObject i18NJsons, string clientName, string windowTitle = null, string message = null, string messageType = null) {
             Url = url;
             InitTimeMillis = configs.InitTimeMillis;
             Title = title;
@@ -43,11 +41,9 @@ namespace softWrench.sW4.Web.Models.Home {
        });
             HasPopupLogo = hasLogoPopup;
             I18NJsons = i18NJsons.ToString(Newtonsoft.Json.Formatting.Indented);
-            if (statusColorJson != null) {
-                StatusColorJson = statusColorJson.ToString(Newtonsoft.Json.Formatting.Indented);
-            }
             WindowTitle = windowTitle;
             Message = message;
+            MessageType = messageType;
         }
 
 

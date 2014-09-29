@@ -15,6 +15,8 @@ namespace softWrench.sW4.Data {
         public const String ByMaximoTABLEId = "from ExtraAttributes where MaximoTable =? and MaximoId =?";
 
         public const String ByMaximoTABLEIdAndAttribute = "from ExtraAttributes where MaximoTable =? and MaximoId =? and AttributeName =?";
+        //fetching all of this kind
+        public const String ByMaximoTABLEAndAttribute = "from ExtraAttributes where MaximoTable =? and AttributeName =?";
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]

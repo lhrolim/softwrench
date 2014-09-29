@@ -20,7 +20,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         public static WsProvider WsProvider() {
             var target = MetadataProvider.TargetMapping();
-            if (target == "maximo7.5" || target == "maximo7.1" || target == "maximo7.2.1" || target == "smartcloud7.5") {
+            if (target == "maximo7.5" || target == "maximo7.1" || target == "maximo7.2.1") {
                 return Constants.WsProvider.MIF;
             }
             if (target == "ism") {
@@ -41,15 +41,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             }
             var value = r.GetProperty(property, "Value");
             return value;
-        }
-
-        public static T GetRealValue<T>(Object integrationObject, string propertyName) {
-            object property = r.GetProperty(integrationObject, propertyName);
-            if (property == null) {
-                return default(T);
-            }
-            var value = r.GetProperty(property, "Value");
-            return (T) value;
         }
 
         public static T GetRealValue<T>(Object mxObject) where T : class {

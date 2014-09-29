@@ -59,10 +59,10 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
                     if (resultString.indexOf(data) != -1) {
                         resultString += data + "&&";
                     } else {
-                resultString += data + "___";
-            }
-            continue;
-            }
+                        resultString += data + "___";
+                    }
+                    continue;
+                }
 
                 resultString += data + "&&";
             }
@@ -80,84 +80,60 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
         return resultString;
     };
 
-    var specialCharactersHandler = function (searchData, searchOperator) {
-        var specialcharacter = "*";
-        for (var data in searchData) {
-            if (searchData[data] == null || searchData[data] == '' || data == "lastSearchedValues") {
-                continue;
-            }
-            var search = searchData[data];
-            if (search.indexOf(specialcharacter) > -1) {
-                var indexSearchOperator = null;
-                var searchreplaced = search.replace(/\*/g, '');
-                if (search.indexOf(specialcharacter) == 0 && search.lastIndexOf(specialcharacter) == search.length - specialcharacter.length) {
-                    indexSearchOperator = 1; /* contains */
-                } else if (search.indexOf(specialcharacter) == 0) {
-                    indexSearchOperator = 3; /* start with */
-                } else if (search.lastIndexOf(specialcharacter) == search.length - specialcharacter.length) {
-                    indexSearchOperator = 4; /* end with */
-                }
-                searchData[data] = searchreplaced;
-                if (indexSearchOperator != null) {
-                    searchOperator[data] = buildArray()[indexSearchOperator];
-                }
-            }
-        }
-    };
+   
 
     return {
 
 
         buildSearchValuesString: function (searchData, searchOperator) {
-        var resultString = "";
-        var value = "";
-          var beginAlreadySet = false;
-        for (var data in searchData) {
+            var resultString = "";
+            var value = "";
+            var beginAlreadySet = false;
+            for (var data in searchData) {
                 if ((searchData[data] == null || searchData[data] == '' || data == "lastSearchedValues") &&
                     (searchOperator[data] == null || searchOperator[data].id != "BLANK")) {
-                continue;
-            }
+                    continue;
+                }
 
-            value = searchData[data];
-            if (data.indexOf('___') != -1) {
-                  data = data.substring(0, data.indexOf('___'));
-              }
-            if (searchOperator[data] == null) {
-                searchOperator[data] = this.defaultSearchOperation();
-            }
-              if (searchOperator[data].begin != '' && !beginAlreadySet) {
-                value = searchOperator[data].begin + value;
-                  if (searchOperator[data].id == 'BTW') {
-                      beginAlreadySet = true;
-                      resultString += value + "___";
-                      continue;
-            }
-              }
-            if (searchOperator[data].end != '') {
-                  if (searchOperator[data].id == 'BTW') {
-                      value = searchOperator[data].end + value;
-                      beginAlreadySet = false;
-                  }
-                  else {
-                value = value + searchOperator[data].end;
-            }
+                value = searchData[data];
+                if (data.indexOf('___') != -1) {
+                    data = data.substring(0, data.indexOf('___'));
+                }
+                if (searchOperator[data] == null) {
+                    searchOperator[data] = this.defaultSearchOperation();
+                }
+                if (searchOperator[data].begin != '' && !beginAlreadySet) {
+                    value = searchOperator[data].begin + value;
+                    if (searchOperator[data].id == 'BTW') {
+                        beginAlreadySet = true;
+                        resultString += value + "___";
+                        continue;
+                    }
+                }
+                if (searchOperator[data].end != '') {
+                    if (searchOperator[data].id == 'BTW') {
+                        value = searchOperator[data].end + value;
+                        beginAlreadySet = false;
+                    }
+                    else {
+                        value = value + searchOperator[data].end;
+                    }
                 }
                 if (searchOperator[data] != null && searchOperator[data].id == 'BLANK') {
                     value = 'IS NULL';
-              }
+                }
 
-            resultString += value + ",,,";
+                resultString += value + ",,,";
             }
-        resultString = resultString.substring(0, resultString.lastIndexOf(",,,"));
+            resultString = resultString.substring(0, resultString.lastIndexOf(",,,"));
 
-        return resultString;
+            return resultString;
         },
 
         buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause) {
             var btwFlag = false;
             var searchDto = {};
             searchDto.searchParams = buildSearchParamsString(searchData, searchOperator);
-            specialCharactersHandler(searchData, searchOperator);
             searchDto.searchValues = this.buildSearchValuesString(searchData, searchOperator);
             searchDto.searchSort = buildSearchSortString(searchSort);
             searchDto.SearchAscending = searchSort.order == "asc";

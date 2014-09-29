@@ -29,11 +29,11 @@
 
     <section ng-show="isDetail">
         <div id="dvDetail" class="form-horizontal" style="padding-top: 10px">
-            
+
             <div class="form-group">
                 <label class="control-label col-lg-2"><span style="font-family: Arial Round">* </span><span>{{i18N('general.username','User Name')}}</span></label>
                 <div class="col-lg-10">
-                    <input type="text" style="text-transform: lowercase;" ng-model="user.userName" placeholder="{{i18N('placeholder.required.username','User name is required')}}!" class="form-control" ng-readonly="user.id != null" />
+                    <input type="text" style="text-transform: lowercase;" ng-model="user.userName" placeholder="{{i18N('placeholder.required.username','User name is required')}}!" class="form-control" readonly />
                 </div>
             </div>
 

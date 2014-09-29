@@ -15,12 +15,6 @@
     <table class="table table-hover" id="compositionlistgrid">
         <thead>
             <tr class="hapag-table-header">
-                <th ng-if="compositionlistschema.properties['list.selectionstyle'] == 'multipleselection'">
-                    <!--Multiselect-->
-                </th>
-                <th ng-if="compositionlistschema.properties['list.selectionstyle'] == 'singleselection'">
-                    <!--Singleselect-->
-                </th>
                 <th ng-repeat="column in compositionlistschema.displayables"
                     ng-show="!isFieldHidden(compositionlistschema,column)">
                     <span class="add-on">{{i18NLabel(column)}}</span>
@@ -29,41 +23,17 @@
         </thead>
         <tbody ng-show="clonedCompositionData.length > 0">
             <tr ng-repeat-start="compositionitem in clonedCompositionData">
-                <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'multipleselection'" style="text-align: center;">
-                    <!--Multiselect-->
-                    <!-- TODO: Move style to css -->
-                    <input type="checkbox" 
-                        name="compositionlistschema.properties['list.selectionstyle']"
-                        value="{{option.value}}"
-                        ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)"
-                        ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)">
-                </td>
-                <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'singleselection'">
-                    <!--Singleselect--> 
-                </td>
                 <td ng-repeat="column in compositionlistschema.displayables" ng-show="!isFieldHidden(compositionlistschema,column)">
                     <ng-switch on="column.type">
                         <div ng-switch-when="ApplicationSection">
                             <div ng-include="contextPath(column.resourcepath)" href="#" style="width: 100%" />
                         </div>
-
                         <div ng-switch-when="ApplicationFieldDefinition">
-                            <ng-switch on="column.rendererType">
-                                <div ng-switch-when="checkbox">
-                                    <i class="fa" ng-class="{'fa-check-square-o' : compositionitem[column.attribute] == 'true', 'fa-square-o' :  compositionitem[column.attribute] == 'false'}" />
-                                </div>
-
-                                <a style="color: black; cursor: pointer; word-break:break-all;"
-                                   ng-switch-default
-                                   ng-click="toggleDetails(compositionitem,collectionproperties.allowUpdate)">
-                                    {{getFormattedValue(compositionitem[column.attribute],column)}}
-                                </a>
-                            </ng-switch>
-                            
-
+                            <a style="color: black; cursor: pointer; word-break:break-all;" ng-click="toggleDetails(compositionitem,collectionproperties.allowUpdate)">
+                                {{getFormattedValue(compositionitem[column.attribute],column)}}
+                            </a>
                         </div>
                     </ng-switch>
-
                 </td>
             </tr>
             <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">

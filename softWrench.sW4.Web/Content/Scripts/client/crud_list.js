@@ -32,7 +32,7 @@ app.directive('crudList', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             validationService, submitService, redirectService,
-            associationService, contextService, statuscolorService) {
+            associationService, contextService) {
 
             $scope.$name = 'crudlist';
 
@@ -89,9 +89,7 @@ app.directive('crudList', function (contextService) {
 
                 // fix status column height
                 $('.statuscolumncolor').each(function (key, value) {
-                    if (contextService.isClient('hapag')) {
-                        $(value).height($(value).parent().parent().parent().parent().parent().height());
-                    }
+                    $(value).height($(value).parent().parent().parent().parent().parent().height());
                 });
 
                 $('[rel=tooltip]').tooltip({ container: 'body' });
@@ -277,7 +275,27 @@ app.directive('crudList', function (contextService) {
             }
 
             $scope.statusColor = function (status, gridname) {
-                return statuscolorService.getColor(status, $scope.schema.applicationName);
+                if (status.equalsAny("NEW", "WAPPR", "WSCH")) {
+                    return "orange";
+                }
+                if (status.equalsAny("QUEUED", "INPROG", "null")) {
+                    return "yellow";
+                }
+
+                if (status.equalsAny("CANCELLED", "FAIL", "CAN", "FAILPIR", "REJECTED", "NOTREQ")) {
+                    return "red";
+                }
+
+                if (status.equalsAny("RESOLVED", "SLAHOLD", "SCHED", "APPR", "AUTHORIZED", "AUTH", "HOLDINPRG", "INPRG", "PLANNED", "ACC_CAT", "ASSESSES")) {
+                    return "blue";
+                }
+                if (status.equalsAny("CLOSED", "RESOLVCONF", "IMPL", "REVIEW", "CLOSE", "HISTEDIT", "COMP", "INPRG", "PLANNED")) {
+                    return "green";
+                }
+                if (status.equalsAny("DRAFT")) {
+                    return "white";
+                }
+                return "transparent";
             }
 
 
@@ -287,7 +305,9 @@ app.directive('crudList', function (contextService) {
                     return;
                 }
                 var columnName = column.attribute;
-
+                if (column.rendererParameters && column.rendererParameters.sortattribute) {
+                    columnName = column.rendererParameters.sortattribute;
+                }
                 var sorting = $scope.searchSort;
                 if (sorting.field != null && sorting.field == columnName) {
                     sorting.order = sorting.order == 'desc' ? 'asc' : 'desc';

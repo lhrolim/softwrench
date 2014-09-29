@@ -12,9 +12,7 @@
   <property key="defaultOrgId" value="EAGLENA"/>
   <property key="defaultSiteId" value="BEDFORD"/>
   <property key="sourcemapping" value="maximo7.5"/>
-  <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
-  <!--property key="email.smtp.port" value="587"/-->
-  <property key="email.stmp.enableSSL" value="true"/>
+  
 
   <environment key="dev">
     <property key="swdb_url" value="Data Source=192.168.2.105;Initial Catalog=SWDB_SWMAX;User Id=sw;password=softwrench;" />

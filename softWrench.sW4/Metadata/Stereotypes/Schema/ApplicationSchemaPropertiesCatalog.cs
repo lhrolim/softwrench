@@ -6,12 +6,7 @@
         /// 1) datamap of the row 
         /// 2) fieldmetadata of the clicked column
         /// </summary>
-        public const string ListClickService = "list.click.service"; 
-        
-        /// <summary>
-        ///
-        /// </summary>
-        public const string ListClickPopup = "list.click.popup";
+        public const string ListClickService = "list.click.service";
 
         /// <summary>
         /// Specify a different order by field to be applied by default to the grid, instead of the entity id
@@ -44,12 +39,6 @@
         ///  This is a optimization property, that should be marked only if the schema has very few associations, and they are not heavy
         /// </summary>
         public const string PreFetchAssociations = "associationstoprefetch";
-
-        /// <summary>
-        ///  if true, the compositions will be prefetched on the same request to the server to get the details itself.
-        ///  This is a optimization property, that should be marked only if the schema has very few associations, and they are not heavy
-        /// </summary>
-        public const string PreFetchCompositions = "prefetchcompositions";
 
         /// <summary>
         ///  property for specifying the success message time out

@@ -24,11 +24,11 @@ app.factory('alertService', function ($rootScope, $timeout, i18NService) {
                 }
             });
         },
-        confirmCancel: function (applicationName, applicationId, callbackFunction, msg, cancelcallback) {
+        confirmCancel: function (scope, prevdata, prevschema, applicationName, applicationId, callbackFunction, msg, cancelcallback) {
             var defaultConfirmMsg = "Are you sure you want to cancel {0} {1}?".format(applicationName, applicationId);
             bootbox.setDefaults({ locale: i18NService.getCurrentLanguage() });
             var defaultDeleteMsg = i18NService.get18nValue('general.defaultcommands.delete.confirmmsg', defaultConfirmMsg, [applicationName, applicationId]);
-            bootbox.cancelDialog({
+            bootbox.confirm({
                 message: msg == null ? defaultDeleteMsg : msg,
                 title: i18NService.get18nValue('general.defaultcommands._confirmationtitle', 'Confirmation'),
                 className: 'smallmodal',
@@ -41,8 +41,10 @@ app.factory('alertService', function ($rootScope, $timeout, i18NService) {
                         }
                         return;
                     }
-                    callbackFunction();
-                       
+                    
+                        scope.cancelfn({ data: scope.previousdata, schema: scope.previousschema });
+                        scope.$emit('sw_cancelclicked');
+                        return;
                 }
                 
             });
@@ -56,10 +58,9 @@ app.factory('alertService', function ($rootScope, $timeout, i18NService) {
                 className: 'smallmodal',
             });
         },
-        
+
         success: function (message, autoHide) {
-            var data = {}
-            data.successMessage = message;
+            var data = { successMessage: message };
             $rootScope.$broadcast('sw_successmessage', data);
             if (autoHide) {
                 $timeout(function () {
@@ -67,10 +68,19 @@ app.factory('alertService', function ($rootScope, $timeout, i18NService) {
                     $rootScope.$broadcast('sw_successmessage', data);
                 }, 5000);
             }
-        }
-        
-    };
+        },
 
+        error: function (message, autoHide) {
+            var data = { errorMessage: message };
+            $rootScope.$broadcast('sw_errormessage', data);
+            if (autoHide) {
+                $timeout(function () {
+                    data.errorMessage = null;
+                    $rootScope.$broadcast('sw_errormessage', data);
+                }, 5000);
+            }
+        }
+    };
 });
 
 

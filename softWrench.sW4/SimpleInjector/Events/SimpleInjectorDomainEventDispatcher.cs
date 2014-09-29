@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using log4net;
 using SimpleInjector;
 using softWrench.sW4.SimpleInjector.Core.Order;
@@ -20,13 +21,18 @@ namespace softWrench.sW4.SimpleInjector.Events {
             _container = container;
         }
 
-        
+
         public void Dispatch<T>(T eventToDispatch) where T : class {
             var handlers = FindHandlers<T>(eventToDispatch);
-            //TODO: MultiThreading
+            
             foreach (var item in handlers) {
                 var before = Stopwatch.StartNew();
-                item.HandleEvent(eventToDispatch);
+                if (item is MultiThreadedSWEventListener<T>) {
+                    var item1 = item;
+                    var task = Task.Factory.StartNew(() => item1.HandleEvent(eventToDispatch));
+                } else {
+                    item.HandleEvent(eventToDispatch);
+                }
                 Log.Debug(LoggingUtil.BaseDurationMessage(item.GetType() + "runned in {0} ms", before));
             }
 
@@ -38,7 +44,7 @@ namespace softWrench.sW4.SimpleInjector.Events {
                 return (List<ISWEventListener<T>>)_cachedHandlers[eventToDispatch.GetType()];
             }
             var handlers = _container.GetAllInstances<ISWEventListener<T>>();
-            var swEventListeners = new List<ISWEventListener<T>>((IEnumerable<ISWEventListener<T>>) handlers);
+            var swEventListeners = new List<ISWEventListener<T>>((IEnumerable<ISWEventListener<T>>)handlers);
             _cachedHandlers.Add(eventToDispatch.GetType(), swEventListeners);
             OrderComparator<ISWEventListener<T>>.Sort(swEventListeners);
             return swEventListeners;

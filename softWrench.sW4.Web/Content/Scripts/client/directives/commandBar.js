@@ -14,7 +14,7 @@
             datamap: '='
         },
 
-        controller: function ($scope, $http, $element,$log, printService, i18NService, commandService, redirectService, alertService,modalService, $rootScope) {
+        controller: function ($scope, $http, $element, $log, $rootScope, printService, i18NService, commandService, redirectService, alertService) {
 
             $scope.defaultCommands = function () {
 
@@ -112,7 +112,13 @@
             };
 
             $scope.cancel = function () {
+                if (GetPopUpMode() == "browser" || GetPopUpMode() == "nomenu") {
+                    window.close();
+                    return;
+                }
+
                 $scope.cancelfn({ data: $scope.previousdata, schema: $scope.previousschema });
+                $scope.$emit('sw_cancelclicked');
             };
 
             $scope.printDetail = function () {
@@ -233,7 +239,7 @@
             };
 
             $scope.isEditing = function (schema, datamap) {
-                return datamap && datamap[schema.idFieldName] != null;
+                return datamap[schema.idFieldName] != null;
             };
 
         }

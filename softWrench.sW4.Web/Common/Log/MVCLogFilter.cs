@@ -61,9 +61,11 @@ namespace softWrench.sW4.Web.Common.Log {
 
         public override void OnResultExecuted(ResultExecutedContext filterContext) {
             base.OnResultExecuted(filterContext);
+
             if (!filterContext.HttpContext.User.Identity.IsAuthenticated) {
-                return;            
+                return;
             }
+
             var response = filterContext.HttpContext.Response;
             var sb = new StringBuilder();
             for (int i = 0; i < response.Headers.Count; i++) {

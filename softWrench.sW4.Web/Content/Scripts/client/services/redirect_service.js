@@ -22,43 +22,37 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
         return removeEncoding(crudUrl);
     };
 
-    var getActionUrl = function (controller, action, parameters) {
-        action = (action === undefined || action == null) ? 'get' : action;
-        var params = parameters == null ? {} : parameters;
-        return url("/api/generic/" + controller + "/" + action + "?" + $.param(params));
-    };
+    var buildActionURLForBrowser = function (controller, action, parameters) {
+        var crudUrl = $(routes_homeurl)[0].value;
+        var currentModule = contextService.retrieveFromContext('currentmodule');
+        var currentMetadata = contextService.retrieveFromContext('currentmetadata');
 
-    var getApplicationUrl = function (applicationName, schemaId, mode, title, parameters, jsonData) {
-        if (parameters === undefined || parameters == null) {
-            parameters = {};
+        parameters.currentmodule = currentModule;
+        parameters.currentmetadata = currentMetadata;
+        var params = $.param(parameters);
+        params = replaceAll(params, "=", "$");
+        params = replaceAll(params, "&", "@");
+        crudUrl = crudUrl + "?controllerToRedirect=" + controller + "&actionToRedirect=" + action + "&popupmode=browser";
+        if (!nullOrUndef(currentModule)) {
+            crudUrl += "&currentModule=" + currentModule;
         }
-        parameters.key = {
-            schemaId: schemaId,
-            mode: mode,
-            platform: platform()
-        };
-
-
-        if (parameters.popupmode == "browser") {
-            return buildApplicationURLForBrowser(applicationName, parameters);
-        } else {
-            if (title != null && title.trim() != "") {
-                parameters.title = title;
-            }
-            if (jsonData == undefined) {
-                return url("/api/data/" + applicationName + "?" + $.param(parameters));
-            } else {
-                parameters.application = applicationName;
-                return url("/api/generic/ExtendedData/OpenDetailWithInitialData" + "?" + $.param(parameters));
-            }
+        if (!nullOrUndef(currentMetadata)) {
+            crudUrl += "&currentMetadata=" + currentMetadata;
         }
+        crudUrl = crudUrl + "&querystring=" + params;
+        return removeEncoding(crudUrl);
     };
-
 
     return {
 
         getActionUrl: function (controller, action, parameters) {
-            return getActionUrl(controller, action, parameters);
+            if (parameters.popupmode == "browser") {
+                return buildActionURLForBrowser(controller, action, parameters);
+            } else {
+                action = (action === undefined || action == null) ? 'get' : action;
+                var params = parameters == null ? {} : parameters;
+                return url("/api/generic/" + controller + "/" + action + "?" + $.param(params));
+            }
         },
 
         redirectToAction: function (title, controller, action, parameters, target) {
@@ -74,7 +68,22 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
                 var w = window.open(redirectURL);
                 w.moveTo(0, 0);
             } else {
-                var redirectURL = getActionUrl(controller, action, parameters);
+                var redirectURL = this.getActionUrl(controller, action, parameters);
+
+                if (parameters.popupmode == "browser") {
+                    if ($rootScope.isLocal && "true" != sessionStorage.defaultpopupsize) {
+                        //easier to debug on chrome like this
+                        var w = window.open(redirectURL);
+                        //                    w.moveto(0, 0);
+                    } else {
+                        var x = screen.width / 2 - 800 / 2;
+                        var y = screen.height / 2 - 600 / 2;
+                        var w = window.open(redirectURL, '_blank', 'height=600px,width=800px,left=' + x + ',top=' + y + ',resizable=no,scrollbars=yes', false);
+                        w.focus();
+                    }
+                    return;
+                }
+
                 sessionStorage.swGlobalRedirectURL = redirectURL;
                 $http.get(redirectURL).success(
                     function (data) {
@@ -90,8 +99,33 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             }
         },
 
-        getApplicationUrl: function (applicationName, schemaId, mode, title, parameters) {
-            return getApplicationUrl(applicationName, schemaId, mode, title, parameters);
+        getApplicationUrl: function (applicationName, schemaId, mode, title, parameters, jsonData) {
+            if (parameters === undefined || parameters == null) {
+                parameters = {};
+            }
+            parameters.key = {
+                schemaId: schemaId,
+                mode: mode,
+                platform: platform()
+            };
+
+
+            if (parameters.popupmode == "browser") {
+                return buildApplicationURLForBrowser(applicationName, parameters);
+            } else {
+                if (title != null && title.trim() != "") {
+                    parameters.title = title;
+                }
+                if (jsonData == undefined) {
+                    return url("/api/data/" + applicationName + "?" + $.param(parameters));
+                } else {
+                    parameters.application = applicationName;
+                    if (title != null && title.trim() != "") {
+                        parameters.title = title;
+                    }
+                    return url("/api/generic/ExtendedData/OpenDetailWithInitialData" + "?" + $.param(parameters));
+                }
+            }
         },
 
         goToApplicationView: function (applicationName, schemaId, mode, title, parameters, jsonData) {
@@ -102,7 +136,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             }
             $rootScope.$broadcast('sw_applicationredirected', parameters);
 
-            var redirectURL = getApplicationUrl(applicationName, schemaId, mode, title, parameters, jsonData);
+            var redirectURL = this.getApplicationUrl(applicationName, schemaId, mode, title, parameters, jsonData);
             var popupMode = parameters.popupmode;
             if (popupMode == "report") {
                 //does not popup any window for incident detail report
@@ -111,14 +145,14 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             }
 
             if (popupMode == "browser") {
-                if ($rootScope.isLocal) {
+                if ($rootScope.isLocal && "true" != sessionStorage.defaultpopupsize) {
                     //easier to debug on chrome like this
                     var w = window.open(redirectURL);
                     //                    w.moveto(0, 0);
                 } else {
                     var x = screen.width / 2 - 800 / 2;
                     var y = screen.height / 2 - 600 / 2;
-                    var w = window.open(redirectURL, '_blank', 'height=600px,width=800px,left=' + x + ',top=' + y + ',resizable=yes,scrollbars=yes', false);
+                    var w = window.open(redirectURL, '_blank', 'height=600px,width=800px,left=' + x + ',top=' + y + ',resizable=1,scrollbars=yes', false);
                     w.focus();
                 }
                 return;

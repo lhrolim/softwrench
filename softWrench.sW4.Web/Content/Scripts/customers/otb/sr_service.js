@@ -53,40 +53,21 @@ app.factory('srService', function (alertService, associationService, fieldServic
             if (event.fields['owner'] == null) {
                 return;
             }
-            if (event.fields['owner'] == ' ') {
-                event.fields['owner'] = null;
-                return;
-            }
+
             if (event.fields['status'] == 'NEW') {
                 event.fields['status'] = 'QUEUED';
-                alertService.alert("Owner Group Field will be disabled if the owner is selected");
-                return;
             }
-            
         },
 
         afterchangeownergroup: function (event) {
-            
             if (event.fields['ownergroup'] == null) {
                 return;
             }
-            if (event.fields['ownergroup'] == ' ') {
-                event.fields['ownergroup'] = null;
-                return;
-            }
+
             if (event.fields['status'] == 'NEW') {
                 event.fields['status'] = 'QUEUED';
-                alertService.alert("Owner Field will be disabled if the Owner Group is selected");
-                return;
             }
-            
-            
         },
-        beforechangeownergroup: function (event) {
-            if (event.fields['owner'] != null) {
-                alertService.alert("You may select an Owner or an Owner Group; not both");
-            }
-        }
 
     };
 

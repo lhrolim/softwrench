@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3EBB8488-B208-4D5A-AE7E-8AEE88FE4FAB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>softwrench.sW4.Shared</RootNamespace>
+    <AssemblyName>softwrench.sW4.Shared</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\Association\AssociationOption.cs" />
+    <Compile Include="Data\Association\GenericAssociationOption.cs" />
+    <Compile Include="Data\Association\IAssociationOption.cs" />
+    <Compile Include="Data\Association\MultiValueAssociationOption.cs" />
+    <Compile Include="Data\AttributeHolder.cs" />
+    <Compile Include="Data\DataMapDefinition.cs" />
+    <Compile Include="Metadata\ApplicationMetadataDefinition.cs" />
+    <Compile Include="Metadata\ApplicationMetadataConstants.cs" />
+    <Compile Include="Metadata\Applications\Relationships\Associations\ApplicationAssociationDefinition.cs" />
+    <Compile Include="Metadata\Applications\Relationships\Associations\ApplicationAssociationSchemaDefinition.cs" />
+    <Compile Include="Metadata\Applications\Relationships\Associations\AssociationFieldRenderer.cs" />
+    <Compile Include="Metadata\Applications\Relationships\Compositions\ApplicationCompositionCollectionSchema.cs" />
+    <Compile Include="Metadata\Applications\Relationships\Compositions\ApplicationCompositionDefinition.cs" />
+    <Compile Include="Metadata\Applications\Relationships\Associations\ApplicationRelationship.cs" />
+    <Compile Include="Metadata\Applications\Relationships\Associations\AssociationDataProvider.cs" />
+    <Compile Include="Metadata\Applications\ClientPlatform.cs" />
+    <Compile Include="Metadata\Applications\Command\ApplicationCommand.cs" />
+    <Compile Include="Metadata\Applications\Command\ApplicationCommandSchema.cs" />
+    <Compile Include="Metadata\Applications\Command\ApplicationCommandStereotype.cs" />
+    <Compile Include="Metadata\Applications\Relationships\Compositions\ApplicationCompositionSchema.cs" />
+    <Compile Include="Metadata\Applications\Relationships\Compositions\CompositionCollectionProperties.cs" />
+    <Compile Include="Metadata\Applications\Relationships\Compositions\CompositionFieldRenderer.cs" />
+    <Compile Include="Metadata\Applications\Relationships\Compositions\CompositionSchemas.cs" />
+    <Compile Include="Metadata\Applications\Schema\ApplicationFieldDefinition.cs" />
+    <Compile Include="Metadata\Applications\Schema\ApplicationMetadataSchemaKey.cs" />
+    <Compile Include="Metadata\Applications\Schema\ApplicationSchemaDefinition.cs" />
+    <Compile Include="Metadata\Applications\Schema\ApplicationSection.cs" />
+    <Compile Include="Metadata\Applications\Schema\BaseApplicationFieldDefinition.cs" />
+    <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationAttributeDisplayable.cs" />
+    <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationDisplayable.cs" />
+    <Compile Include="Metadata\Applications\Schema\Interfaces\IDataProviderContainer.cs" />
+    <Compile Include="Metadata\Applications\Schema\Interfaces\IDefaultValueApplicationDisplayable.cs" />
+    <Compile Include="Metadata\Applications\Schema\OptionField.cs" />
+    <Compile Include="Metadata\Applications\Schema\SchemaMode.cs" />
+    <Compile Include="Metadata\Applications\Schema\SchemaStereotype.cs" />
+    <Compile Include="Metadata\Applications\UI\DateWidgetDefinition.cs" />
+    <Compile Include="Metadata\Applications\UI\FieldRenderer.cs" />
+    <Compile Include="Metadata\Applications\UI\HiddenWidgetDefinition.cs" />
+    <Compile Include="Metadata\Applications\UI\IWidgetDefinition.cs" />
+    <Compile Include="Metadata\Applications\UI\LookupWidgetDefinition.cs" />
+    <Compile Include="Metadata\Applications\UI\NumberWidgetDefinition.cs" />
+    <Compile Include="Metadata\Applications\UI\TextWidgetDefinition.cs" />
+    <Compile Include="Metadata\CompleteApplicationMetadataDefinition.cs" />
+    <Compile Include="Metadata\Entity\Association\EntityAssociation.cs" />
+    <Compile Include="Metadata\Entity\Association\EntityAssociationAttribute.cs" />
+    <Compile Include="Metadata\FieldRendererMetadata.cs" />
+    <Compile Include="Metadata\IDefinition.cs" />
+    <Compile Include="Metadata\Menu\ActionMenuItemDefinition.cs" />
+    <Compile Include="Metadata\Menu\ApplicationMenuItemDefinition.cs" />
+    <Compile Include="Metadata\Menu\Containers\MenuContainerDefinition.cs" />
+    <Compile Include="Metadata\Menu\Containers\MenuDefinition.cs" />
+    <Compile Include="Metadata\Menu\Interfaces\IMenuLeaf.cs" />
+    <Compile Include="Metadata\Menu\Interfaces\MenuBaseDefinition.cs" />
+    <Compile Include="Metadata\Offline\MobileMetadataDownloadResponse.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\DisplayableUtil.cs" />
+    <Compile Include="Util\EntityUtil.cs" />
+    <Compile Include="Util\PropertyUtil.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

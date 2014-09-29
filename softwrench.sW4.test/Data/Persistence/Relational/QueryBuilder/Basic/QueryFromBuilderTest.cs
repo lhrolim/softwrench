@@ -107,5 +107,19 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
 
         }
 
+        [TestMethod]
+        public void ChangeSRUnionSearch() {
+            var dto = new SearchRequestDto();
+            var completeOne = MetadataProvider.Application("srforchange");
+            var metadata = completeOne.ApplyPolicies(new ApplicationMetadataSchemaKey("changeunionschema"), InMemoryUser.TestInstance(),
+                ClientPlatform.Web);
+            ApplicationSchemaDefinition schema;
+            var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("srforchange"), metadata.Schema);
+            var result = QueryFromBuilder.Build(sliced, dto);
+            Assert.AreEqual("from SR as srforchange left join asset as asset_ on (srforchange.assetnum = asset_.assetnum and srforchange.siteid = asset_.siteid)", result);
+        }
+
+
+
     }
 }

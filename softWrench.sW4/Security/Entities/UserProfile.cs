@@ -1,9 +1,8 @@
-﻿using Iesi.Collections.Generic;
-using Newtonsoft.Json.Linq;
-using NHibernate.Mapping.Attributes;
-using softWrench.sW4.Util;
-using System;
+﻿using System;
 using System.Linq;
+using Iesi.Collections.Generic;
+using NHibernate.Mapping.Attributes;
+using Newtonsoft.Json.Linq;
 
 namespace softWrench.sW4.Security.Entities {
     [Class(Table = "SW_USERPROFILE")]
@@ -17,7 +16,7 @@ namespace softWrench.sW4.Security.Entities {
         [Property]
         public virtual string Name { get; set; }
 
-        [Property(Column = "deletable",TypeType = typeof(BooleanToIntUserType))]
+        [Property(Column = "deletable")]
         public virtual Boolean Deletable { get; set; }
 
         [Property(Column = "description")]

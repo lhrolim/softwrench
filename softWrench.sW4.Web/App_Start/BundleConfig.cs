@@ -26,8 +26,7 @@ namespace softWrench.sW4.Web {
                 "~/Content/bootstrap/css/datetimepicker.css",
                 "~/Content/bootstrap/css/submenu.css",
                 "~/Content/bootstrap/css/typeahead.js-bootstrap.css",
-                "~/Content/bootstrap/css/bootstrap-multiselect.css",
-                "~/Content/bootstrap/css/textAngular-min.css"
+                "~/Content/bootstrap/css/bootstrap-multiselect.css"
                 ));
             AddClientBundle(bundles);
 
@@ -48,7 +47,7 @@ namespace softWrench.sW4.Web {
 
 
             bundles.Add(new StyleBundle("~/Content/themes/base/font-awesome").Include(
-                "~/Content/font-awesome-4.1.0/css/font-awesome.css"
+                "~/Content/font-awesome-4.0.3/css/font-awesome.css"
                 ));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/fonts").Include(
@@ -56,7 +55,6 @@ namespace softWrench.sW4.Web {
         }
 
         private static void AddScripts(BundleCollection bundles) {
-            // When try
             bundles.Add(new ScriptBundle("~/Content/Scripts/jquery/jquery").Include(
                 "~/Content/Scripts/jquery/jquery-2.0.3-max.js",
                 "~/Content/Scripts/jquery/jquery-ui-1.10.3.js",
@@ -67,9 +65,7 @@ namespace softWrench.sW4.Web {
                 ));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/thirdparty").Include(
-                "~/Content/Scripts/thirdparty/moment.js",
-                "~/Content/Scripts/thirdparty/textAngular-sanitize-min.js",
-                "~/Content/Scripts/thirdparty/textAngular-min.js"));
+                "~/Content/Scripts/thirdparty/*.js"));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/jqueryui").Include(
                 "~/Content/Scripts/jquery-ui-{version}.js"));
@@ -96,7 +92,6 @@ namespace softWrench.sW4.Web {
                 "~/Content/Scripts/bootstrap-combobox.js",
                 "~/Content/Scripts/bootstrap-datetimepicker.js",
                 "~/Content/Scripts/bootstrap-collapse.js",
-                "~/Content/Scripts/bootstrap-richtext.js",
                 "~/Content/Scripts/bootbox.js",
                 "~/Content/Scripts/typeahead.js",
                 "~/Content/Scripts/hogan.js",
@@ -137,30 +132,16 @@ namespace softWrench.sW4.Web {
         private static void AddClientBundle(BundleCollection bundles) {
             var clientName = ApplicationConfiguration.ClientName;
             const string basePath = "~/Content/styles/default/";
-            var baseAppPath = basePath + "/application";
-
-            //            var clientPath = String.Format("~/Content/Customers/{0}/css", clientName);
             var clientPath = String.Format("~/Content/styles/{0}", clientName);
-            var clientPathAppCustom = clientPath + "/application";
-
+            var clientPathAppCustom = String.Format("~/Content/styles/{0}/application", clientName);
             var styleBundle = new StyleBundle("~/Content/styles/client/client-css");
-            
             bundles.Add(styleBundle.IncludeDirectory(basePath, "*.css"));
-            bundles.Add(styleBundle.IncludeDirectory(baseAppPath, "*.css"));
-
             //client specific scripts go after, so they can override default styles
             try {
                 bundles.Add(styleBundle.IncludeDirectory(clientPath, "*.css"));
-            }
-            catch {
-                //nothing to do
-            }
-            try
-            {
                 bundles.Add(styleBundle.IncludeDirectory(clientPathAppCustom, "*.css"));
             }
-            catch
-            {
+            catch {
                 //nothing to do
             }
         }

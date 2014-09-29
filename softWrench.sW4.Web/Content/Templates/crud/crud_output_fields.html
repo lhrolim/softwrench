@@ -16,8 +16,8 @@
             <ng-switch on="fieldMetadata.type">
                 <div ng-switch-when="ApplicationCompositionDefinition">
                     <inline-composition-list-wrapper compositionschemadefinition="fieldMetadata.schema"
-                                             compositiondata="datamap[fieldMetadata.relationship]"
-                                             iscollection="fieldMetadata.collection" />
+                                                     compositiondata="datamap[fieldMetadata.relationship]"
+                                                     iscollection="fieldMetadata.collection" />
                 </div>
                 <div ng-switch-when="ApplicationSection">
                     <div ng-if="fieldMetadata.resourcepath != null" ng-include="contextPath(fieldMetadata.resourcepath)" href="#" style="width: 100%" />
@@ -32,8 +32,6 @@
 
                     </div>
                 </div>
-
-                
                 <div ng-switch-default>
                     <div ng-switch on="fieldMetadata.isHidden">
                         <div ng-switch-when="true">
@@ -51,7 +49,6 @@
                                          data-node-label="{{fieldMetadata.rendererParameters.labelField == null && 'label' || fieldMetadata.rendererParameters.labelField}}"
                                          data-node-children="{{fieldMetadata.rendererParameters.childrenField == null && 'children' || fieldMetadata.rendererParameters.childrenField}}">
                                     </div>
-
 
                                     <!--nasty workaround for HAP-356 -->
                                     <div ng-if="isIE9()" class="hiddenonscreen">
@@ -73,26 +70,8 @@
 
                                 </div>
 
-                                <div ng-switch-when="fieldwithbuttons">
-                                    <div ng-if="isbtnLeft(fieldMetadata)">
-                                        <button class="{{fieldMetadata.rendererParameters.icon}} fieldButton" ></button>
-                                        <label class="form-control " style="text-align:left; word-break:break-word;width: 96.35%;display: inline-block;"
-                                            ng-bind-html="getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata) | linebreak"
-                                            ng-init="bindEvalExpression(fieldMetadata)">
-                                        </label>
-                                    </div>
-                                    <div ng-if="!isbtnLeft(fieldMetadata)"
-                                        <label class="form-control " style="text-align:left; word-break:break-word;width: 96.35%;display: inline-block;"
-                                            ng-bind-html="getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata) | linebreak"
-                                            ng-init="bindEvalExpression(fieldMetadata)">
-                                        </label>
-                                        <button class="{{fieldMetadata.rendererParameters.icon}} fieldButton" ></button>
-                                    </div>
-                                 </div>   
-                                    
-
                                 <div ng-switch-default>
-                                    <label class="form-control" style="text-align:left; word-break:break-word;"
+                                    <label class="control-label" style="text-align:left; word-break:break-word;"
                                            ng-bind-html="getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata) | linebreak"
                                            ng-init="bindEvalExpression(fieldMetadata)"
                                            data-attribute="{{fieldMetadata.attribute}}">

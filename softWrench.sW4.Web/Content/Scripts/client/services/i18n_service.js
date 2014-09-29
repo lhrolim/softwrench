@@ -146,14 +146,6 @@ app.factory('i18NService', function ($rootScope, contextService) {
             }
             return doGetValue(key, defaultValue, true);
         },
-        getI18nMenuIcon: function (menuitem) {
-            if (nullOrUndef(menuitem.id)) {
-                return menuitem.icon;
-            }
-            var defaultValue = menuitem.icon;
-            var key = "_menu." + menuitem.id + "_icon" ;
-            return doGetValue(key, defaultValue, true);
-        },
 
         getI18nTitle: function (schema) {
             var applicationName = schema.applicationName;
@@ -189,16 +181,6 @@ app.factory('i18NService', function ($rootScope, contextService) {
             return valueConsideringSchemas(value, schema);
         },
 
-        getLookUpDescriptionLabel: function(fieldMetadata){
-                
-            if (fieldMetadata && fieldMetadata.rendererParameters && fieldMetadata.rendererParameters.columnlabel) {
-                return fieldMetadata.rendererParameters.columnlabel.toUpperCase();
-            }
-            
-            return this.get18nValue('general.description', 'Description', null);
-            
-        },
-       
         load: function (jsonString, language) {
             var languages = JSON.parse(jsonString);
             var catalogs = {};

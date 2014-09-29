@@ -13,15 +13,30 @@
         </div>
     </form>
     <div ng-show="schema">
-        <div ng-if="modalincluded">
-            <crud-body-modal-wrapper></crud-body-modal-wrapper>
-        </div>
+<!--        <div class="modal fade" id="crudmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-if="modalactive">-->
+<!--            <div class="modal-dialog">-->
+<!--                <div class="modal-content">-->
+<!--                    <div class="modal-header">-->
+<!--                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="showingModal=false">&times;</button>-->
+<!--                    </div>-->
+<!--                    <div class="modal-body">-->
+<!--                        <crud-body ismodal="true"-->
+<!--                                   schema="modal.schema"-->
+<!--                                   datamap="modal.datamap"-->
+<!--                                   association-options="modal.associationOptions"-->
+<!--                                   association-schemas="associationSchemas"-->
+<!--                                   blockedassociations="blockedassociations"-->
+<!--                                   title="modal.title"-->
+<!--                                   is-list="modal.isList"-->
+<!--                                   is-detail="modal.isDetail" />-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
 
         <crud-body ismodal="false"
                    schema="schema"
                    datamap="datamap"
-                   is-dirty="isDirty"
-                   original-datamap="originalDatamap"
                    is-list="isList"
                    is-detail="isDetail"
                    association-options="associationOptions"

@@ -124,9 +124,6 @@ app.directive('lookupModal', function (contextService) {
                 return i18NService.getI18nLabel(fieldMetadata, $scope.lookupObj.schema);
             };
 
-            $scope.getLookUpDescriptionLabel = function (fieldMetadata) {
-                return i18NService.getLookUpDescriptionLabel(fieldMetadata);
-            };
             $scope.lookupModalSelect = function (option) {
 
                 var fieldMetadata = $scope.lookupObj.fieldMetadata;

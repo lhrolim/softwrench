@@ -30,7 +30,7 @@ namespace softwrench.sW4.test.Metadata.Entities {
             Assert.IsNotNull(result.Problem);
             Assert.AreEqual(result.WorkflowStatus, "new");
             Assert.AreEqual(result.Problem.Abstract, "test");
-//            Assert.IsNotNull(result.Metrics.ProblemOccurredDateTime);
+            Assert.IsNotNull(result.Metrics.ProblemOccurredDateTime);
             
         }
 

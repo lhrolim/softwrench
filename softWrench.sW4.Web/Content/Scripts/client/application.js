@@ -49,7 +49,7 @@ app.directive('filterrowrendered', function ($timeout) {
     };
 });
 
-function ApplicationController($scope, $http, $log, $templateCache, $timeout, fixHeaderService, $rootScope, associationService, validationService, contextService) {
+function ApplicationController($scope, $http, $templateCache, $timeout, $log, fixHeaderService, $rootScope, associationService, alertService) {
     $scope.$name = 'applicationController';
 
     function switchMode(mode, scope) {
@@ -58,34 +58,6 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         }
         scope.isDetail = mode;
         scope.isList = !mode;
-        
-        if (scope.isList) {
-            var elements = [];
-            for (var i = 0; i < $scope.datamap.length; i++) {
-
-                elements.push($scope.datamap[i].fields[$scope.schema.idFieldName]);
-            }
-            
-            var crud_context = {
-                list_elements: elements,
-                detail_next: "0",
-                detail_previous: "-1"
-            }
-            contextService.insertIntoContext("crud_context", crud_context);
-        }
-        if (scope.isDetail) {
-            var crud_context = contextService.fetchFromContext("crud_context", true);
-            var id = $scope.datamap.fields[$scope.schema.idFieldName];
-            if (crud_context.list_elements.indexOf(id) != -1) {
-                var previous = crud_context.list_elements.indexOf(id) - 1;
-                var next = crud_context.list_elements.indexOf(id) + 1;
-                crud_context.detail_previous = crud_context.list_elements[previous];
-                crud_context.detail_next = crud_context.list_elements[next];
-               
-                contextService.insertIntoContext("crud_context", crud_context)
-            }
-        }
-       
     }
 
     $scope.toList = function (data, scope) {
@@ -110,7 +82,6 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
 
 
     function toDetail(scope) {
-        
         switchMode(true, scope);
     };
 
@@ -132,8 +103,6 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
 
     //this code will get called when the user is already on a crud page and tries to switch view only.
     $scope.renderView = function (applicationName, schemaId, mode, title, parameters) {
-        //Make a list of ticket ids in array to find the adjacent ones
-        
         if (parameters === undefined || parameters == null) {
             parameters = {};
         }
@@ -201,11 +170,10 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
             window.document.title = id;
         } else if (strategy == "nameandid") {
             window.document.title = scope.schema.applicationName + " " + id;
+        } else if (strategy == "schematitle") {
+            window.document.title = scope.schema.title;
         }
     }
-
-
-
 
     $scope.renderData = function renderData(result) {
         $scope.isList = $scope.isDetail = false;
@@ -238,21 +206,21 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         }
         if (result.title != null) {
             $scope.$emit('sw_titlechanged', result.title);
-            if (GetPopUpMode() == 'browser') {
+            if (IsPopup()) {
                 setWindowTitle(scope);
             }
         }
         var log = $log.getInstance("applicationcontroller#renderData");
-        validationService.clearDirty();
         if (result.type == 'ApplicationDetailResult') {
             log.debug("Application Detail Result handled");
-            if (result.schema.properties['associationstoprefetch'] != "#all") {
+            if (!result.allassociatiosFetched) {
+                //if the server has already returned all the needed associations, we dont need to hit it again
                 $timeout(function () {
                     log.info('fetching eager associations of {0}'.format(scope.schema.applicationName));
                     associationService.getEagerAssociations(scope);
                 });
             }
-                associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, scope.datamap.fields);
+            associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, scope.datamap.fields);
             scope.compositions = result.compositions;
             toDetail(scope);
         } else if (result.type == 'ApplicationListResult') {
@@ -275,13 +243,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         $scope.$on('sw_renderview', function (event, applicationName, schemaId, mode, title, parameters) {
             $scope.renderView(applicationName, schemaId, mode, title, parameters);
         });
-        $scope.$on('sw.modal.show', function (event, modaldata) {
-            if (!$scope.modalincluded) {
-                $scope.modalincluded = true;
-                //required because we need to store somewhere while the directive is not yet compiled, and retrieve on postcompile...
-                $rootScope.modalTempData = modaldata;
-            }
-        });
+
         $scope.$on('sw_applicationredirected', function (event, parameters) {
             if (parameters.popupmode == "browser" || parameters.popupmode == "modal") {
                 return;
@@ -360,6 +322,9 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         $scope.selectedSchema.value = dataObject.schemas[0];
         $scope.schemas = dataObject.schemas;
         $scope.$emit('sw_titlechanged', title);
+        if (GetPopUpMode() == 'browser') {
+            window.document.title = title;
+        }
         $scope.applicationname = applicationName;
         $scope.selectedModeRequest = mode;
         $scope.schemaSelectionLabel = dataObject.schemaSelectionLabel;

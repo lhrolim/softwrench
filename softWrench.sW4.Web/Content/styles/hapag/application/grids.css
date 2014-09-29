@@ -1,0 +1,15 @@
+﻿/******************************************************************************
+ ******************************************************************************
+ * Place form specific CSS (based on data-application/data-schema attributes  *
+ ******************************************************************************
+ ******************************************************************************/
+#listgrid[data-application="asset"][data-schema="list"] {
+  /*width: 50px !important;
+  overflow: hidden;*/
+  color: #f00;
+}
+
+#listgrid[data-application="asset"][data-schema="list"] td:nth-child(3) {
+  width: 50px !important; 
+  color: #f00;
+}

@@ -3,7 +3,7 @@
     
     <input type="hidden" ng-model="datamap[fieldMetadata.parameters['joinattribute']]" />
 
-    <div class="col-md-6">
+    <div ng-class="formClass()">
         <div class="input-group" data-datepicker="true" style="float: left">
             <input type="text" ng-model="date1"
                    data-original-attribute="{{date1}}"
@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <div class="col-md-6">
+    <div ng-class="formClass()">
         <div class="input-group" data-datepicker="true">
             <input type="text" ng-model="date2"
                    data-original-attribute="{{date2}}"

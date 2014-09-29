@@ -3,8 +3,6 @@ using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using softWrench.sW4.Data.API.Composition;
-using softWrench.sW4.Data.Persistence.Relational;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
@@ -18,7 +16,6 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Controllers.Routing;
@@ -42,11 +39,11 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly SuccessMessageHandler _successMessageHandler = new SuccessMessageHandler();
         protected readonly CompositionExpander COMPOSITIONExpander = new CompositionExpander();
         private readonly I18NResolver _i18NResolver;
-        protected readonly IContextLookuper ContextLookuper;
+        private readonly IContextLookuper _contextLookuper;
 
         public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper) {
             _i18NResolver = i18NResolver;
-            ContextLookuper = contextLookuper;
+            _contextLookuper = contextLookuper;
         }
 
         private const string MockingMaximoKey = "%%mockmaximo";
@@ -70,7 +67,7 @@ namespace softWrench.sW4.Web.Controllers {
             var applicationMetadata = MetadataProvider
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web);
-            ContextLookuper.FillContext(request.Key);
+            _contextLookuper.FillContext(request.Key);
             var response = DataSetProvider.LookupAsBaseDataSet(application).Get(applicationMetadata, user, request);
             response.Title = _i18NResolver.I18NSchemaTitle(response.Schema);
             var schemaMode = request.Key.Mode ?? response.Schema.Mode;
@@ -78,28 +75,6 @@ namespace softWrench.sW4.Web.Controllers {
             return response;
         }
 
-     
-        /// <summary>
-        ///  Returns the datamap populated with composition data
-        /// </summary>
-        /// <param name="application"></param>
-        /// <param name="request"></param>
-        /// <param name="currentData"></param>
-        /// <returns></returns>
-        [NotNull]
-        [HttpPost]
-        public IGenericResponseResult GetCompositionData(string application, [FromUri] CompositionFetchRequest request, JObject currentData) {
-            var user = SecurityFacade.CurrentUser();
-            if (null == user) {
-                throw new HttpResponseException(HttpStatusCode.Unauthorized);
-            }
-            var applicationMetadata = MetadataProvider
-                .Application(application)
-                .ApplyPolicies(request.Key, user, ClientPlatform.Web);
-            ContextLookuper.FillContext(request.Key);
-            return DataSetProvider.LookupAsBaseDataSet(application)
-                .GetCompositionData(applicationMetadata, request, currentData);
-        }
 
 
 
@@ -117,13 +92,13 @@ namespace softWrench.sW4.Web.Controllers {
             if (null == user) {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
-            ContextLookuper.FillContext(request.Key);
+            _contextLookuper.FillContext(request.Key);
             var applicationMetadata = MetadataProvider
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web);
 
             var baseDataSet = DataSetProvider.LookupAsBaseDataSet(application);
-           
+
 
             var response = baseDataSet.UpdateAssociations(applicationMetadata, request, currentData);
 
@@ -139,7 +114,7 @@ namespace softWrench.sW4.Web.Controllers {
             ClientPlatform platform, [NotNull] string currentSchemaKey, string nextSchemaKey = null, bool mockmaximo = false) {
 
             var schemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, currentSchemaKey, platform);
-            ContextLookuper.FillContext(schemaKey);
+            _contextLookuper.FillContext(schemaKey);
             var nextschemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, nextSchemaKey, platform);
             var response = DoExecute(application, new JObject(), id, OperationConstants.CRUD_DELETE, schemaKey, mockmaximo, nextschemaKey, platform);
             var defaultMsg = String.Format("{0} {1} deleted successfully", application, id);
@@ -156,7 +131,7 @@ namespace softWrench.sW4.Web.Controllers {
              ClientPlatform platform, string currentSchemaKey = null, string nextSchemaKey = null, bool mockmaximo = false) {
 
             var schemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, currentSchemaKey, platform);
-            ContextLookuper.FillContext(schemaKey);
+            _contextLookuper.FillContext(schemaKey);
             var nextschemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, nextSchemaKey, platform);
             return DoExecute(application, json, id, OperationConstants.CRUD_UPDATE, schemaKey, mockmaximo, nextschemaKey, platform);
         }
@@ -170,7 +145,7 @@ namespace softWrench.sW4.Web.Controllers {
                 Log.DebugFormat("json received: " + json.ToString());
             }
             var schemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, currentSchemaKey, platform);
-            ContextLookuper.FillContext(schemaKey);
+            _contextLookuper.FillContext(schemaKey);
             var nextschemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, nextSchemaKey, platform);
             return DoExecute(application, json, null, OperationConstants.CRUD_CREATE, schemaKey, mockmaximo, nextschemaKey, platform);
         }
@@ -221,8 +196,8 @@ namespace softWrench.sW4.Web.Controllers {
                     platform, currentschemaKey, nextSchemaKey, mockMaximo);
                 response.SuccessMessage = _successMessageHandler.FillSucessMessage(applicationMetadata, maximoResult.Id,
                     operation);
-            return response;
-        }
+                return response;
+            }
             return new BlankApplicationResponse() {
                 SuccessMessage = _successMessageHandler.FillSucessMessage(applicationMetadata, maximoResult.Id, operation)
             };
@@ -251,7 +226,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             var searchRequestDto = PaginatedSearchRequestDto.DefaultInstance(appSchema);
             searchRequestDto.SetFromSearchString(appSchema, searchFields.Split(','), searchText);
-            
+
             var dataResponse = Get(application, new DataRequestAdapter() { Key = key, SearchDTO = searchRequestDto });
             //fixing the filter parameters used so that it is applied on next queries
             ((ApplicationListResult)dataResponse).PageResultDto.BuildFixedWhereClause(app.Entity);

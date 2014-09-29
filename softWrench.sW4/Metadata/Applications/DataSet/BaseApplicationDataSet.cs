@@ -8,13 +8,11 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Association;
-using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Data.Search;
@@ -46,7 +44,6 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
         private readonly ApplicationAssociationResolver _associationOptionResolver = new ApplicationAssociationResolver();
         private readonly DynamicOptionFieldResolver _dynamicOptionFieldResolver = new DynamicOptionFieldResolver();
-        private CollectionResolver _collectionResolver = new CollectionResolver();
 
         private IContextLookuper _contextLookuper;
 
@@ -112,22 +109,10 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var id = request.Id;
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
-            var dataMap = id != null ? (DataMap)_maximoConnectorEngine.FindById(application.Schema,entityMetadata, id, applicationCompositionSchemas) : DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues);
+            var dataMap = id != null ? (DataMap)_maximoConnectorEngine.FindById(entityMetadata, id, applicationCompositionSchemas) : DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues);
             var associationResults = BuildAssociationOptions(dataMap, application, request);
             var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, id);
             return detailResult;
-        }
-
-        public CompositionFetchResult GetCompositionData(ApplicationMetadata application,CompositionFetchRequest request,JObject currentData) {
-
-            var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
-            var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
-
-            var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata,
-               application, currentData, request.Id);
-            
-            _collectionResolver.ResolveCollections(entityMetadata, applicationCompositionSchemas, cruddata);
-            return new CompositionFetchResult(cruddata);
         }
 
 
@@ -140,6 +125,9 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var schema = application.Schema;
             searchDto.BuildProjection(schema);
+            if (schema.UnionSchema != null) {
+                searchDto.BuildUnionDTO(schema);
+            }
             var propertyValue = schema.GetProperty(ApplicationSchemaPropertiesCatalog.ListSchemaOrderBy);
             if (searchDto.SearchSort == null && propertyValue != null) {
                 //if the schema has a default sort defined, and we didn´t especifally asked for any sort column, apply the default schema
@@ -319,8 +307,8 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                     var optionField = application.Schema.OptionFields.First(f => f.AssociationKey == associationToUpdate);
                     tasks.Add(Task.Factory.StartNew(c => {
                         Quartz.Util.LogicalThreadContext.SetData("context", c);
-                    var data = _dynamicOptionFieldResolver.ResolveOptions(application, optionField, cruddata);
-                    resultObject.Add(optionField.AssociationKey, new LookupAssociationUpdateResult(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
+                        var data = _dynamicOptionFieldResolver.ResolveOptions(application, optionField, cruddata);
+                        resultObject.Add(optionField.AssociationKey, new LookupAssociationUpdateResult(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
                     }, ctx));
                 } else {
                     var associationApplicationMetadata =
@@ -336,12 +324,12 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
                     tasks.Add(Task.Factory.StartNew(c => {
                         Quartz.Util.LogicalThreadContext.SetData("context", c);
-                    var options = _associationOptionResolver.ResolveOptions(application, cruddata, association,
-                        searchRequest);
+                        var options = _associationOptionResolver.ResolveOptions(application, cruddata, association,
+                           searchRequest);
 
-                    resultObject.Add(association.AssociationKey,
-                        new LookupAssociationUpdateResult(searchRequest.TotalCount, searchRequest.PageNumber,
-                            searchRequest.PageSize, options, associationApplicationMetadata, PaginatedSearchRequestDto.DefaultPaginationOptions));
+                        resultObject.Add(association.AssociationKey,
+                            new LookupAssociationUpdateResult(searchRequest.TotalCount, searchRequest.PageNumber,
+                                searchRequest.PageSize, options, associationApplicationMetadata, PaginatedSearchRequestDto.DefaultPaginationOptions));
                     }, ctx));
                 }
             }

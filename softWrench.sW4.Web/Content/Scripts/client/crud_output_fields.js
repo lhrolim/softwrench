@@ -64,7 +64,7 @@ app.directive('crudOutputFields', function (contextService) {
                     return result;
                 }
                 for (var i = 0; i < root.children.length; i++) {
-                    
+
                 }
             },
 

@@ -1,13 +1,15 @@
-﻿using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Data.Persistence.WS.Internal;
-using softWrench.sW4.Security.Services;
-using softWrench.sW4.Util;
-using System;
+﻿using System;
 using System.Collections;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Security.Policy;
+using System.Web.Services.Discovery;
 using WcfSamples.DynamicProxy;
+using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.Internal;
+using softWrench.sW4.Security.Services;
+using softWrench.sW4.Util;
 using r = softWrench.sW4.Util.ReflectionUtil;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
@@ -20,11 +22,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
             : base(operationData) {
             Proxy = proxy ?? DynamicProxyUtil.LookupProxy(operationData.EntityMetadata);
             CheckCredentials(Proxy);
-
+            
             var curUser = SecurityFacade.CurrentUser();
             var operationType = operationData.OperationType;
             var isCreation = OperationType.Add == operationType;
-            _methodName = MifMethodNameUtils.GetMethodName(Metadata, operationType);
+            _methodName = MifMethodNameUtils.GetMethodName(Metadata, operationType);            
             var type = Proxy.ProxyType;
 
             var mi = type.GetMethod(_methodName);
@@ -41,7 +43,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
                 notifyInterface = ReflectionUtil.InstanceFromType(parameterType);
                 integrationObject = notifyInterface;
             }
-
+                        
             r.SetProperty(integrationObject, "actionSpecified", true);
             r.InstantiateProperty(integrationObject, "CHANGEDATE", new { Value = DateTime.Now.FromServerToRightKind() });
             //TODO: get current user, in the mobile case below code may be wrong
@@ -50,7 +52,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
             r.InstantiateProperty(integrationObject, "ORGID", new { Value = curUser.OrgId });
             r.InstantiateProperty(integrationObject, "SITEID", new { Value = curUser.SiteId });
             r.SetProperty(integrationObject, "action", operationType.ToString());
-
+            
             IntegrationObject = integrationObject;
             RootInterfaceObject = notifyInterface;
         }
@@ -82,10 +84,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
         }
 
         public override object InvokeProxy() {
-            if (ApplicationConfiguration.IgnoreWsCertErrors) {
-                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-            }
-
             var parameterList = MifUtils.GetParameterList(RootInterfaceObject);
             var types = new Type[parameterList.Length];
             try {
@@ -95,7 +93,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
                 }
                 var result = Proxy.CallMethod(MethodName(), types, parameterList);
                 return result;
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 var rootException = ExceptionUtil.DigRootException(e);
                 throw rootException;
             }

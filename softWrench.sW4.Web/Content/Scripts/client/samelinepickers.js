@@ -7,6 +7,10 @@ function SamelinePickersController($scope, $rootScope, formatService) {
         return date.mmddyyyy();
     }
     
+    $scope.formClass = function () {
+        return GetBootstrapFormClass(6);
+    }
+
     var joinDates = function (fields) {
         if ($scope.date1 == undefined && $scope.date2 == undefined) {
             return;

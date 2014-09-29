@@ -4,13 +4,13 @@ namespace softWrench.sW4.Data.Persistence {
     class NHibernatePaginationUtil {
 
         const string ManualPaginationUnionTemplate = @"select * from(
-            select tempresult.*, rownumber() over(order by {0} ) as rownum from(
+            select tempresult.*, rownumber() over({0}) as rownum from(
             {1}
             ) as tempresult) paging 
             where {2}";
 
         private const string ManualPaginationTemplate =
-            "select * from (select rownumber() over(order by {0}) as rownum, {1}) as tempresult where {2}";
+            "select * from (select rownumber() over({0}) as rownum, {1}) as tempresult where {2}";
 
         //needed because nhibernate paging is buggy
         public static string ApplyManualPaging(string queryst, PaginationData paginationData) {
@@ -19,7 +19,7 @@ namespace softWrench.sW4.Data.Persistence {
             var hasUnion = queryst.Contains("union");
             var templateToUse = hasUnion ? ManualPaginationUnionTemplate : ManualPaginationTemplate;
             var pagingCondition = hasUnion ? "paging.rownum" : "rownum";
-            var orderBy1 = hasUnion ? paginationData.OrderByColumn : paginationData.QualifiedOrderByColumn;
+            var orderBy1 = paginationData.SortString;
             var orderBy = orderBy1;
             if (!hasUnion) {
                 //need to remove the select keyword here

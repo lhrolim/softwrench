@@ -18,6 +18,7 @@ app.directive('dateTime', function ($timeout, formatService) {
             }
 
             var showTime = parseBooleanValue(attrs.showTime);
+            var originalAttribute = attrs.originalAttribute;
             var showDate = parseBooleanValue(attrs.showDate);
             var dateFormat = formatService.adjustDateFormatForPicker(attrs.dateFormat, showTime);
             attrs.language = (userLanguage != '') ? userLanguage : "en-US";
@@ -32,7 +33,11 @@ app.directive('dateTime', function ($timeout, formatService) {
                     var value = formatService.formatDate(ngModel.$modelValue, attrs.dateFormat);
                     ngModel.$setViewValue(value);
                     element.val(value);
-                    if (scope.datamap != undefined && scope.fieldMetadata != undefined) {
+                    if (originalAttribute != undefined) {
+                        //this is useful on sections, like samelinepickers.html
+                        scope.datamap[originalAttribute] = value;
+                    }
+                    else if (scope.datamap != undefined && scope.fieldMetadata != undefined) {
                         scope.datamap[scope.fieldMetadata.attribute] = value;
                     }
                     ngModel.$render();

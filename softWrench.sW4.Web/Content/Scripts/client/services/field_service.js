@@ -34,11 +34,11 @@ app.factory('fieldService', function (expressionService) {
 
 
     return {
-        isFieldHidden: function(datamap, application, fieldMetadata) {
+        isFieldHidden: function (datamap, application, fieldMetadata) {
             return isFieldHidden(datamap, application, fieldMetadata);
         },
 
-        nonTabFields: function(displayables) {
+        nonTabFields: function (displayables) {
             var result = [];
             for (var i = 0; i < displayables.length; i++) {
                 var displayable = displayables[i];
@@ -49,19 +49,6 @@ app.factory('fieldService', function (expressionService) {
                 }
             }
             return result;
-        },
-
-        fillDefaultValues: function(displayables, datamap) {
-            $.each(displayables, function (key, value) {
-                var target = value.attribute;
-                if (value.defaultValue != undefined && target != undefined) {
-                    if (datamap[target] == null) {
-                        //TODO: extract a service here, to be able to use @user, @person, @date, etc...
-                        datamap[target] = value.defaultValue;
-                    }
-                }
-            });
-            return datamap;
         },
 
         isTabComposition: function (displayable) {

@@ -20,8 +20,8 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
 using softwrench.sw4.Shared2.Metadata.Modules;
+using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.Util;
-using System.Net;
 
 namespace softWrench.sW4.Metadata {
     public class MetadataProvider {
@@ -50,9 +50,6 @@ namespace softWrench.sW4.Metadata {
             DataSetProvider.GetInstance();
             var msDelta = LoggingUtil.MsDelta(before);
             Log.Info(String.Format("Finished metadata registry in {0}", msDelta));
-            if (ApplicationConfiguration.IgnoreWsCertErrors) {
-                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-            }
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -114,6 +111,12 @@ namespace softWrench.sW4.Metadata {
 
         }
 
+        public static ApplicationSchemaDefinition FindSchemaDefinition(string fullKey) {
+            var appAndSchema = SchemaUtil.ParseApplicationAndKey(fullKey);
+            var appName = appAndSchema.Item1;
+            var app = Application(appName);
+            return app.Schema(appAndSchema.Item2);
+        }
 
         /// <summary>
         ///     Returns metadata related to all applications in the catalog.

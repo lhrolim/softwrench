@@ -1,4 +1,4 @@
-﻿function HomeController($scope, $http, $templateCache, $rootScope, $timeout, contextService, menuService, i18NService, alertService, statuscolorService) {
+﻿function HomeController($scope, $http, $templateCache, $rootScope, $timeout,contextService, menuService, i18NService, alertService) {
 
     $scope.$name = 'HomeController';
 
@@ -7,7 +7,6 @@
 
         var redirectUrl = url(homeModel.Url);
         i18NService.load(homeModel.I18NJsons, userLanguage);
-        statuscolorService.load(homeModel.StatusColorJson);
 
         var sessionRedirectURL = sessionStorage.swGlobalRedirectURL;
         if (sessionRedirectURL != null && ((redirectUrl.indexOf("popupmode=browser") == -1) && (redirectUrl.indexOf("MakeSWAdmin") == -1))) {
@@ -34,7 +33,16 @@
             $scope.$emit('sw_titlechanged', result.title);
 
             if (homeModel.Message != undefined) {
-                alertService.success(homeModel.Message, true);
+                /*if (homeModel.MessageType == 'error') {
+                    var error = { errorMessage: homeModel.Message }
+
+                    $timeout(function () {                        
+                        $rootScope.$broadcast('sw_ajaxerror', error);
+                    }, 1000);
+                    
+                } else {*/
+                    alertService.success(homeModel.Message, false);
+                //}
                 homeModel.Message = null;
             }
         });

@@ -92,8 +92,8 @@ namespace softWrench.sW4.Util {
 
         public static bool IgnoreWsCertErrors {
             get {
-                return "true".EqualsIc(MetadataProvider.GlobalProperty("ignorewscerterrors")) ||
-                    "true".EqualsIc(MetadataProvider.GlobalProperty("ignoreWsCertErrors")) ; //for legacy support
+                var strIgnoreWsCertErrors = MetadataProvider.GlobalProperty("ignoreWsCertErrors");
+                return "true".Equals(strIgnoreWsCertErrors, StringComparison.CurrentCultureIgnoreCase);
             }
         }
 
@@ -231,7 +231,7 @@ namespace softWrench.sW4.Util {
             get { return GetProfile() == UnitTestProfile; }
         }
 
-
+        
 
         public static long StartTimeMillis { get; set; }
 

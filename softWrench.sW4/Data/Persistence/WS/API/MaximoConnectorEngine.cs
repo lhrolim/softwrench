@@ -1,6 +1,5 @@
 ﻿using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Operation;
@@ -12,7 +11,6 @@ using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
-using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
 using System;
@@ -89,15 +87,13 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
             return _entityRepository.Count(entityMetadata, searchDto);
         }
 
-        public AttributeHolder FindById(ApplicationSchemaDefinition schema, SlicedEntityMetadata entityMetadata, string id,
+        public AttributeHolder FindById(SlicedEntityMetadata entityMetadata, string id,
             IDictionary<string, ApplicationCompositionSchema> compositionSchemas) {
             var mainEntity = _entityRepository.Get(entityMetadata, id);
             if (mainEntity == null) {
                 return null;
             }
-//            if ("true".EqualsIc(schema.GetProperty(ApplicationSchemaPropertiesCatalog.PreFetchCompositions))){
-                _collectionResolver.ResolveCollections(entityMetadata, compositionSchemas, mainEntity);
-//            }
+            _collectionResolver.ResolveCollections(entityMetadata, compositionSchemas, mainEntity);
 
             return mainEntity;
         }
