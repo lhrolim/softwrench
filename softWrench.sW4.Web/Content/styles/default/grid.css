@@ -1,14 +1,15 @@
-﻿.listgrid-table.unfixed {
+﻿/*SM - 09/29 - SWWEB-439 Make Grid Columns Response*/
+/*.listgrid-table.unfixed {
     margin-top: 41px !important;
 }
 
     .listgrid-table.unfixed > thead {
         top: 289px;
-    }
+    }*/
 
 .listgrid-table.affixed > thead {
-    position: fixed;
-     top: 266px;
+    /*position: fixed;
+    top: 266px;*/
 }
 
 .gridcolumnvalue {
@@ -18,20 +19,18 @@
 }
 
 .listgrid-table.affixed {
-    margin-top: 126px;
+    /*margin-top: 126px;*/
 }
 
-
 @media only screen and (min-width: 1200px) {
-
     .gridcolumnvalue {
         max-width: 135px;
     }
 }
 
 @media only screen and (max-width: 1199px) {
-
     .gridcolumnvalue {
         max-width: 100px;
     }
 }
+/*SM - 09/29 - SWWEB-439 Make Grid Columns Response*/

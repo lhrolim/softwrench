@@ -178,10 +178,10 @@ input:focus, select:focus, textarea:focus {
 }
 
 .affix-pagination {
-    position: fixed;
+    /*position: fixed;*/
     width: 100%;
     max-width: 1139px;
-    top: 225px;
+    /*top: 225px;*/
     /*z-index: 2000;*/
     /*SM - 06/28 - CHANGE - Start fix menu spacing*/
     /*margin-top: -2px;*/
@@ -855,9 +855,9 @@ Header
 
 @media all and (min-width: 780px) {
     /*SM - 09/23 - Removed until SWWEB-434, SWWEB-436 & SWWEB-443 can be resolved*/
-    .container header {
+    /*.container header {
         position: fixed;
-    }
+    }*/
         /*SM - 09/23 - Removed until SWWEB-434, SWWEB-436 & SWWEB-443 can be resolved*/
 
         .container header .menu-expand {
@@ -890,7 +890,7 @@ Header
             }
 
     /*SM - 09/23 - Removed until SWWEB-434, SWWEB-436 & SWWEB-443 can be resolved*/
-    .container .content {
+    /*.container .content {
         margin-top: 225px;
     }
 
@@ -906,7 +906,7 @@ Header
     }
 
     .listgrid-table {
-    }
+    }*/
     /*SM - 09/23 - Removed until SWWEB-434, SWWEB-436 & SWWEB-443 can be resolved*/
 }
 
