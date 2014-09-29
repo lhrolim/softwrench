@@ -1020,6 +1020,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <field attribute="location" label="Location"/>
           <field attribute="siteid"  label="Site"/>
+          <field attribute="status" label="Status"/>
         </schema>
       </schemas>
 
