@@ -37,7 +37,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </relationships>
     </entity>
     
-    <entity name="xyz" parententity="classstructure" idAttribute="classstructureid" >
+    <entity name="incidentclassifications" parententity="classstructure" idAttribute="classstructureid" >
       <attributes>
         <attribute name="classstructureid" type="varchar" query="CASE WHEN (xyz.classstructureid = classusewith.classstructureid) and (classusewith.objectvalue='INCIDENT')) "/>
       </attributes>
@@ -321,7 +321,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="classification" qualifier="classification">
           <relationshipAttribute from="classificationid" to ="classificationid" primary="true"/>
         </relationship>
-        <relationship to="xyz" qualifier="incidentclassifications">
+        <relationship to="incidentclassifications" qualifier="incidentclassifications">
           <relationshipAttribute from="classificationid" to="classificationid" primary="true"/>
         </relationship>
         <relationship to ="solution" qualifier="solution" >
@@ -390,36 +390,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseChangeRequestCrudConnector" />
       </connectorParameters>
 		</entity>
-    
-    <!--entity name="person" idAttribute="personuid">
-      <attributes>
-        <attribute name="hlagdisplayname" type="varchar" required="false" query="'(' || !@PERSONID || ') ' || COALESCE(!@DISPLAYNAME,' Name Not Set )"/>
-      </attributes>
-      <relationships>
-        <relationship to="chartofaccounts" qualifier="personglaccount">
-          <relationshipAttribute from="replace(@itdcomment,'/','-')" to="glaccount" primary="true"/>
-        </relationship>
-      </relationships>
-    </entity>
-    <entity name="problem" idAttribute="ticketid">
-      <attributes>
-        <attribute name="hlagpluspcustomer" type="varchar" required="false" query="ref:pluspcustomer"/>
-      </attributes>
-      <relationships>
-        <relationship to="longdescription" >
-          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
-          <relationshipAttribute to="ldownertable" literal="PROBLEM" quoteLiteral="true" />
-          <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
-        </relationship>
-        <relationship to="location">
-          <relationshipAttribute from="location" to="location" primary="true"/>
-        </relationship>
-        <relationship to="relatedrecord" collection="true">
-          <relationshipAttribute from="ticketid" to="recordkey" primary="true"/>
-          <relationshipAttribute to="class" literal="PROBLEM" quoteLiteral="true"/>
-        </relationship>
-      </relationships>
-    </entity-->
     
     <entity name="commodities" idAttribute="commoditiesid">
       <relationships>
@@ -531,8 +501,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </entity>
   </entities>
   
-  
-
   <applications>
 
     <application entity="SR" name="servicerequest" title="Service Request">
@@ -1166,7 +1134,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label ="Priority" target="internalpriority" labelfield="numericdomain_.description">
             <renderer type="lookup"/>
           </association>
-          <association label="Classification:" target="classificationid" labelfield="incidentclassifications_.classificationid">
+          <association label="Classification:" target="classificationid" labelfield="incidentclassifications_.description">
             <renderer type="lookup"/>
           </association>
           <association label="Location:" target="location" labelfield="location_.description" >
