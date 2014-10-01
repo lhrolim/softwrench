@@ -13,11 +13,25 @@ input:focus, select:focus, textarea:focus {
     color: red;
 }
 
+/*SM - 10/01 - SWWEB-507*/
 .smallmodal {
-    width: 350px;
-    top: 50%;
-    left: 50%;
+    width: 300px;
+    top: 20%;
+    margin: 0 auto;
 }
+
+.smallmodal .modal-dialog {
+    overflow: hidden;
+    padding: 0;
+}
+
+@media all and (min-width: 480px) {
+    .smallmodal {
+        width: 360px;
+        top: 30%;
+    }
+}
+/*SM - 10/01 - SWWEB-507*/
 
 .spinner {
     position: fixed; /*HAP-508 T-EU-044 fix*/
