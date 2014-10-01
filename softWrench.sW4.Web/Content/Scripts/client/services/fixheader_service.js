@@ -200,23 +200,25 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         },
 
         activateResizeHandler: function () {
-            var resolutionBarrier = 1200;
-            var width = $(window).width();
-            var highResolution = width >= resolutionBarrier;
-            var fn = this;
-            $(window).resize(function () {
-                var newWidth = $(this).width();
-                var isNewHighResolution = newWidth > resolutionBarrier + 15; // lets add some margin to give the browser time to render the new table...
-                var isNewLowResolution = newWidth < resolutionBarrier - 15; // lets add some margin to give the browser time to render the new table...
-                if ((isNewHighResolution && !highResolution) || (isNewLowResolution && highResolution)) {
-                    $log.getInstance("crudlistdir#resize").debug('switching resolutions');
-                    fn.fixThead(null, {
-                        resizing: true
-                    });
-                    width = newWidth;
-                    highResolution = width >= resolutionBarrier;
-                }
-            });
+            if ($rootScope.clientName == 'hapag') {
+                var resolutionBarrier = 1200;
+                var width = $(window).width();
+                var highResolution = width >= resolutionBarrier;
+                var fn = this;
+                $(window).resize(function () {
+                    var newWidth = $(this).width();
+                    var isNewHighResolution = newWidth > resolutionBarrier + 15; // lets add some margin to give the browser time to render the new table...
+                    var isNewLowResolution = newWidth < resolutionBarrier - 15; // lets add some margin to give the browser time to render the new table...
+                    if ((isNewHighResolution && !highResolution) || (isNewLowResolution && highResolution)) {
+                        $log.getInstance("crudlistdir#resize").debug('switching resolutions');
+                        fn.fixThead(null, {
+                            resizing: true
+                        });
+                        width = newWidth;
+                        highResolution = width >= resolutionBarrier;
+                    }
+                });
+            }
         },
 
         FixHeader: function () {

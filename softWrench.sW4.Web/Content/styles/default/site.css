@@ -1,5 +1,4 @@
-﻿/*SM - 07/02 - REMOVE - General remove all Hapag prefixed rules*/
-body {
+﻿body {
     font-family: "Arial";
     overflow-y: scroll;
     -webkit-transition: all 0.5s;
@@ -107,27 +106,27 @@ input:focus, select:focus, textarea:focus {
     text-align: center;
 }
 
-    .advanced-filter > div.advanced-filter-item {
-        float: left;
-        margin: 4px;
-        margin-right: 14px;
+.advanced-filter > div.advanced-filter-item {
+    float: left;
+    margin: 4px;
+    margin-right: 14px;
+}
+
+    .advanced-filter > div.advanced-filter-item .filter-label {
+        color: black;
     }
 
-        .advanced-filter > div.advanced-filter-item .filter-label {
-            color: black;
-        }
+    .advanced-filter > div.advanced-filter-item .filter-input {
+        float: left;
+    }
 
-        .advanced-filter > div.advanced-filter-item .filter-input {
-            float: left;
-        }
+    .advanced-filter > div.advanced-filter-item div.text-input {
+        width: 150px;
+    }
 
-        .advanced-filter > div.advanced-filter-item div.text-input {
-            width: 150px;
-        }
-
-        .advanced-filter > div.advanced-filter-item div.datetime-input {
-            width: 140px;
-        }
+    .advanced-filter > div.advanced-filter-item div.datetime-input {
+        width: 140px;
+    }
 
 .input-group .glyphicon,
 .grid-filter-button {
@@ -148,11 +147,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 .form-horizontal {
-    /*padding-right: 10px;*/
-    /*SM - 07/05 - ADD - Start fix detail form padding*/
     padding-left: 15px;
     padding-right: 15px;
-    /*SM - 07/05 - ADD - End fix detail form padding*/
 }
 
 #top .navbar-nav > li:last-child > a {
@@ -173,20 +169,13 @@ input:focus, select:focus, textarea:focus {
     vertical-align: middle;
 }
 
-.alignment-logo img {
-    vertical-align: middle;
-}
+    .alignment-logo img {
+        vertical-align: middle;
+    }
 
 .affix-pagination {
-    /*position: fixed;*/
     width: 100%;
     max-width: 1139px;
-    /*top: 225px;*/
-    /*z-index: 2000;*/
-    /*SM - 06/28 - CHANGE - Start fix menu spacing*/
-    /*margin-top: -2px;*/
-    /*margin-left: -15px;*/
-    /*SM - 06/28 - CHANGE - End fix menu spacing*/
 }
 
     .affix-pagination .pagination-pager a:hover {
@@ -202,25 +191,19 @@ input:focus, select:focus, textarea:focus {
     margin-bottom: 0;
 }
 
-    #listgrid thead {
-        /*SM - 07/12 - REMOVE - Start responsive table*/
-        /*width: 942px;*/
-        /*SM - 07/12 - REMOVE - End responsive table*/
+    #listgrid thead tr.header-row {
+        background-color: #FFF;
+        color: #000;
     }
 
-        #listgrid thead tr.header-row {
-            background-color: #FFF;
-            color: #000;
+        #listgrid thead tr.header-row th {
+            cursor: pointer;
         }
 
-            #listgrid thead tr.header-row th {
-                cursor: pointer;
-            }
-
-        #listgrid thead tr.filter-row {
-            background-color: #FFF;
-            color: #000;
-        }
+    #listgrid thead tr.filter-row {
+        background-color: #FFF;
+        color: #000;
+    }
 
     #listgrid tbody > tr:nth-child(odd) > td,
     #listgrid tbody > tr:nth-child(odd) > th,
@@ -230,27 +213,7 @@ input:focus, select:focus, textarea:focus {
 
 .affix-thead {
     position: fixed;
-    /*width: 100%;
-    max-width: 1139px;*/
 }
-
-.listgrid-thead {
-    /*SM - 06/28 - CHANGE - Start fix menu spacing*/
-    /*top: 265px;*/
-    /*top: 267px !important;*/
-    /*SM - 06/28 - CHANGE - End fix menu spacing*/
-}
-
-.listgrid-table {
-    /*SM - 06/28 - CHANGE - Start fix menu spacing*/
-    /*margin-top: 84px;*/
-    /*margin-top: 84px !important;*/
-    /*SM - 06/28 - CHANGE - End fix menu spacing*/
-}
-
-/*.listgrid-table tbody {
-    margin-top: 84px;
-}*/
 
 .pagination-container {
     font-size: 11px;
@@ -312,41 +275,10 @@ input:focus, select:focus, textarea:focus {
         border: 1px solid #999;
         border-bottom: 1px solid #fff;
     }
-    
+
     .nav-tabs > li > a:hover {
         border-color: #eee #eee #999;
     }
-
-
-/*.nav-tabs {
-    border-bottom: none;
-}
-
-    .nav-tabs > li {
-        margin-bottom: 0px;
-        border-bottom: 1px solid #999;
-    }
-
-        .nav-tabs > li.active {
-            border-bottom: none;
-            border: 1px solid #999;
-            border-bottom: none;
-        }
-
-        .nav-tabs > li > a {
-            margin-right: 0;
-            border: none;
-             padding-bottom: 12px;
-        }
-
-        .nav-tabs > li.active > a {
-             padding-bottom: 10px;
-        }
-
-            .nav-tabs > li > a:hover {
-                border-color: #eee #eee;
-            }*/
-
 /*SM - 09/24 - SWWEB-452 fix*/
 
 #dashboardgrid thead tr:first-child {
@@ -361,7 +293,6 @@ input:focus, select:focus, textarea:focus {
 }
 
 .compositiondetailtab {
-    /*background-color: #BBD7FA;*/
     margin-bottom: 30px;
 }
 
@@ -376,21 +307,6 @@ input:focus, select:focus, textarea:focus {
 span.combobox-clear {
     height: 26px;
 }
-
-/******************************
- * style form auto completeclient, see bootstrap-combobox.js
- ******************************/
-/*SM - 09/24 - SWWEB-446*/
-/*.combobox-container .add-on {
-    width: 4% !important;
-    height: 34px !important;
-}*/
-
-/*.combobox-container > input {
-    width: 96% !important 
-}*/
-/*SM - 09/24 - SWWEB-446*/
-/********End auto complete*********/
 
 .control-label {
     color: #000;
@@ -408,11 +324,7 @@ span.combobox-clear {
 }
 
 .commandButton {
-    /*background-color: #003878;*/
-    /*color: white;*/
     margin-right: 8px;
-    /*border: none;*/
-    /*border-radius: 0px;*/
     min-width: 100px;
 }
 
@@ -507,12 +419,6 @@ textarea .readonly {
     font-weight: bold !important;
 }
 
-/*SM - 09/24 - SWWEB-460*/
-/*.detail-output span {
-        float: right;
-    }*/
-/*SM - 09/24 - SWWEB-460*/
-
 @media screen {
     .hideRows {
         display: none;
@@ -539,7 +445,6 @@ textarea .readonly {
 
     .listgrid-firefox {
         width: 700px !important;
-        /*margin-left: -190px !important;*/
     }
 
     .pagebreak-before {
@@ -658,7 +563,6 @@ Header
         color: #fff;
         padding: 10px 20px;
         cursor: pointer;
-        /*background: #34a7e0;*/
         background-color: rgba(52, 167, 224, 0.5);
         border-bottom: rgba(0, 0, 0, 0.3) 3px solid;
     }
@@ -682,7 +586,6 @@ Header
     }
 
     .container header .menu-admin {
-        /*background: #34a7e0;*/
         background-color: rgba(52, 167, 224, 0.5);
         border-bottom: rgba(0, 0, 0, 0.3) 3px solid;
         padding: 0 20px;
@@ -728,10 +631,6 @@ Header
             text-align: center;
         }
 
-/*.container header .menu-grid .dropdown .submenu {
-            z-index: 9999;
-        }*/
-
 .container .context {
     background: #eee;
     border-bottom: #000 1px solid;
@@ -776,21 +675,12 @@ Header
         }
 
             .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
-                /*margin-top: 5px;*/
                 width: 100%;
             }
-
-                .container header .menu-admin .buttons .btn-group .btn {
-                    /*margin-top: 0;*/
-                }
 
         .container header .menu-grid li {
             width: 100%;
         }
-
-            .container header .menu-grid li .dropdown, .container header .menu-grid li a {
-                /*margin-top: 5px;*/
-            }
 
             .container header .menu-grid li:last-child .dropdown, .container header .menu-grid li:last-child a {
                 margin-bottom: 5px;
@@ -800,7 +690,6 @@ Header
             width: 100%;
         }
 
-    /*SM - 09/23 - Removed until SWWEB-434, SWWEB-436 & SWWEB-443 can be resolved*/
     .container .content {
         margin-top: 0;
     }
@@ -820,7 +709,6 @@ Header
     .listgrid-table {
         margin-top: 0px;
     }
-    /*SM - 09/23 - Removed until SWWEB-434, SWWEB-436 & SWWEB-443 can be resolved*/
 }
 
 @media all and (min-width: 330px) {
@@ -854,11 +742,9 @@ Header
 }
 
 @media all and (min-width: 780px) {
-    /*SM - 09/23 - Removed until SWWEB-434, SWWEB-436 & SWWEB-443 can be resolved*/
-    /*.container header {
+    .container header {
         position: fixed;
-    }*/
-        /*SM - 09/23 - Removed until SWWEB-434, SWWEB-436 & SWWEB-443 can be resolved*/
+    }
 
         .container header .menu-expand {
             display: none;
@@ -873,7 +759,6 @@ Header
         }
 
             .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
-                /*margin-top: 0;*/
                 width: auto;
             }
 
@@ -881,80 +766,32 @@ Header
             width: auto;
         }
 
-            .container header .menu-grid li .dropdown, .container header .menu-grid li a {
-                /*margin-top: 0px;*/
-            }
-
             .container header .menu-grid li:last-child .dropdown, .container header .menu-grid li:last-child a {
                 margin-bottom: 0px;
             }
-
-    /*SM - 09/23 - Removed until SWWEB-434, SWWEB-436 & SWWEB-443 can be resolved*/
-    /*.container .content {
-        margin-top: 225px;
-    }
 
     .affix-pagination {
         position: fixed;
     }
 
-    .affix-thead {
+    .listgrid-thead {
         position: fixed;
+        max-width: 1139px;
+        width: 100%;
     }
-
-    .listgrid-thead {
-    }
-
-    .listgrid-table {
-    }*/
-    /*SM - 09/23 - Removed until SWWEB-434, SWWEB-436 & SWWEB-443 can be resolved*/
 }
-
-@media all and (min-width: 848px) {
-    /*SM - 09/23 - Removed until SWWEB-434, SWWEB-436 & SWWEB-443 can be resolved*/
-    .listgrid-thead {
-    }
-
-    .listgrid-table {
-    }
-    /*SM - 09/23 - Removed until SWWEB-434, SWWEB-436 & SWWEB-443 can be resolved*/
-}
-
-
-/*#listgrid thead tr th, #listgrid tr td {
-    width: 21% !important;
-    min-width: 21% !important;
-}
-
-    #listgrid thead tr th input {
-        width: 100% !important;
-    }*/
-
-.container header .menu-grid li a {
-    /*border: 1px solid #ccc;*/
-    /*padding: 1px 5px;*/
-}
-
-    .container header .menu-grid li a:hover {
-        /*border: 1px solid #adadad;*/
-    }
 
 .legend-label {
     display: inline;
     padding: .2em .6em .3em;
     font-size: 75%;
-    /* font-weight: bold; */
     line-height: 1;
-    /* color: #fff; */
-    /* text-align: center; */
     white-space: nowrap;
     vertical-align: baseline;
-    /* border-radius: .25em; */
     font: 12px/24px Arial, Helvetica, sans-serif;
 }
 
 /*SUCCESS MESSAGE - BEGIN */
-
 .pagination-successmessage {
     top: 412px !important;
 }
@@ -985,13 +822,10 @@ Header
     margin-right: auto !important;
     max-width: 1139px;
     width: 100%;
-    /*top: 225px;*/
 }
-
 /*SUCCESS MESSAGE - END */
 
 /*ERROR MESSAGE - BEGIN */
-
 .pagination-errormessage {
     top: 412px !important;
 }
@@ -1003,7 +837,6 @@ Header
 .listgrid-table-errormessage {
     margin-top: 186px !important;
 }
-
 /*ERROR MESSAGE - END */
 
 /*SM - 09/12 - Start, Update Bootstrap tooltips*/
