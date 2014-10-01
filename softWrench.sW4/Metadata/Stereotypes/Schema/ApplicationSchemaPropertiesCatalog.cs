@@ -6,8 +6,14 @@
         /// 1) datamap of the row 
         /// 2) fieldmetadata of the clicked column
         /// </summary>
-        public const string ListClickService = "list.click.service"; 
-        
+        public const string ListClickService = "list.click.service";
+
+        /// <summary>
+        /// if false the search icon would remain static (true by default)
+        /// </summary>
+        public const string ListShowSearchIcon = "list.advancedfilter.showsearchicon";
+
+
         /// <summary>
         ///
         /// </summary>
