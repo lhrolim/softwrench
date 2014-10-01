@@ -501,6 +501,7 @@
     <Compile Include="SimpleInjector\SimpleInjectorGenericFactory.cs" />
     <Compile Include="SPF\IGenericResponseResult.cs" />
     <Compile Include="SPF\RedirectResponseResult.cs" />
+    <Compile Include="Util\AttributeUtil.cs" />
     <Compile Include="Util\ApplicationConfiguration.cs" />
     <Compile Include="Util\ArrayUtil.cs" />
     <Compile Include="Util\AssemblyLocator.cs" />
