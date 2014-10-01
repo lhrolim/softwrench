@@ -4,7 +4,13 @@ $(function () {
         jQuery(this).toggleClass('menu-open');
     });
 
+    //$(window).on("DOMContentLoaded", function () {
+    //    console.log('DOMContentLoaded');
+    //});
+
     $(window).resize(function () {
+        //console.log('Resize Window');
+
         if ($('.site-header').css('position') == 'fixed') {
             var headerHeight = $('.site-header').height();
             var paginationHeight = $('.affix-pagination').height();
