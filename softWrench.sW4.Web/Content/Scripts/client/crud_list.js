@@ -216,14 +216,9 @@ app.directive('crudList', function (contextService) {
             };
 
             $scope.getSearchIcon = function (columnName) {
-                var showSearchIcon = $scope.schema.properties["list.advancedfilter.showsearchicon"] == "true";
+                var showSearchIcon = $scope.schema.properties["list.advancedfilter.showsearchicon"] != "false";
                 var operator = $scope.getOperator(columnName);
-
-                if (showSearchIcon && operator.symbol != "") {
-                    return operator.symbol;
-                } else {
-                    return "";
-                }
+                return showSearchIcon ? operator.symbol : "";
             }
 
             $scope.searchOperations = function () {
