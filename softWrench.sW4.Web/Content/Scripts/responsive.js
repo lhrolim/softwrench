@@ -4,10 +4,6 @@ $(function () {
         jQuery(this).toggleClass('menu-open');
     });
 
-    //$(window).on("DOMContentLoaded", function () {
-    //    console.log('DOMContentLoaded');
-    //});
-
     $(window).resize(function () {
         //console.log('Resize Window');
 
