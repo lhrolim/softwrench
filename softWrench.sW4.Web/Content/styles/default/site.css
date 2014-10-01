@@ -106,9 +106,11 @@ input:focus, select:focus, textarea:focus {
     overflow-y: auto !important;
 }
 
-.modal-dialog {
+/*SM - 10/01 - SWWEB-508*/
+/*.modal-dialog {
     width: 100%;
-}
+}*/
+/*SM - 10/01 - SWWEB-508*/
 
 .helptext {
     color: gray;
@@ -382,13 +384,19 @@ textarea .readonly {
     width: 100%;
 }
 
-.lookupModal .modal-dialog {
-    width: 800px;
+/*SM - 10/01 - SWWEB-508*/
+@media all and (min-width: 992px) {
+    .lookupModal .modal-dialog {
+        width: 800px;
+    }
 }
 
-.assetnum .modal-dialog {
-    width: 1000px;
+@media all and (min-width: 1140px) {
+    .assetnum .modal-dialog {
+        width: 1000px;
+    }
 }
+/*SM - 10/01 - SWWEB-508*/
 
 /************************ 
     Config
