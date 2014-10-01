@@ -13,7 +13,15 @@
             disableExport: '@'
         },
 
-        controller: function ($scope, $rootScope, $timeout, printService, searchService, i18NService, contextService) {
+        controller: function ($scope,
+            $http,
+            $rootScope,
+            $timeout,
+            printService,
+            searchService,
+            i18NService,
+            redirectService,
+            contextService) {
 
             $scope.contextPath = function (path) {
                 return url(path);
@@ -67,38 +75,21 @@
                 searchDTO.pageSize = $scope.paginationData.pageSize;
 
                 parameters.searchDTO = searchDTO;
-                var parameterstoexcel = {
-                    application: parameters.application,
-                    key: parameters.key,
-                    searchDTO: parameters.searchDTO,
-                    module: parameters.module
-                };
-
-                var urlToInvoke = redirectService.getActionUrl('ExportApi', 'SetExcelFile', parameterstoexcel);
-                $http.get(urlToInvoke).
-                success(function (data, status, headers, config) {
-                    var parameterstogetfile = {
-                        fileName: getFileName(parameterstoexcel.application, parameterstoexcel.key.schemaId) + 'Export'
-                    };
-                    window.location = removeEncoding(url("/Application/ExportToExcel" + "?" + $.param(parameterstogetfile)));
-                }).
-                error(function (data, status, headers, config) {
-                    return null;
-                });
+                parameters.fileName = getFileName(parameters.application, parameters.key.schemaId);
+                window.location = removeEncoding(url("/Application/ExportToExcel" + "?" + $.param(parameters)));
             };
 
             function getFileName(application, schemaId) {
-                if (application == 'asset') {
-                    var assetname = '';
-                    if (schemaId == 'categories') {
-                        assetname = 'Categories';
-                    } else if (schemaId == 'exportallthecolumns') {
-                        assetname = 'List';
-                    }
-                    return 'Asset' + assetname;
-                } else {
-                    return capitaliseFirstLetter(application);
+                if (application != 'asset') {
+                    return capitaliseFirstLetter(application) + "Export";
                 }
+                if (schemaId == 'categories') {
+                    return "AssetCategoriesExport";
+                }
+                if (schemaId == 'exportallthecolumns') {
+                    return "AssetListExport";
+                }
+                return 'AssetExport';
             }
 
             function showModalExportToExcel(parameters) {

@@ -218,7 +218,7 @@ namespace softWrench.sW4.Web.Controllers.Application {
         }
 
 
-        public void ExportToExcel(string application, [FromUri]ApplicationMetadataSchemaKey key, [FromUri] PaginatedSearchRequestDto searchDTO, string module) {
+        public void ExportToExcel(string application, [FromUri]ApplicationMetadataSchemaKey key, [FromUri] PaginatedSearchRequestDto searchDTO, string module, string fileName) {
             searchDTO.PageSize = searchDTO.TotalCount + 1;
             if (module != null) {
                 _contextLookuper.LookupContext().Module = module;
@@ -231,7 +231,7 @@ namespace softWrench.sW4.Web.Controllers.Application {
             var excelFile = _excelUtil.ConvertGridToExcel(application, key, (ApplicationListResult)dataResponse);
             Response.Clear();
             Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            Response.AddHeader("content-disposition", "attachment;filename=GridExport.xlsx");
+            Response.AddHeader("content-disposition", "attachment;filename={0}.xlsx".Fmt(fileName));
             excelFile.SaveAs(Response.OutputStream);
             Response.End();
         }
