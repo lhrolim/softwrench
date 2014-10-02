@@ -1033,3 +1033,11 @@ label.form-control {
     min-height: 34px;
 }
 /*SM - 0/26 - Fix label control hight with multiple lines*/
+
+
+.green {
+    color: green;
+}
+.orange {
+    color: orange;
+}

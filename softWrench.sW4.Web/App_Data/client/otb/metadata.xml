@@ -2136,6 +2136,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key ="list.schema.icon" value="fa fa-envelope-o"/>
             <property key="list.click.popup" value="modal"/>
           </properties>
+          <!--<field attribute="#inboundicon">
+            <renderer type="icon" params="iconcss=fa fa-mail-forward"/>
+          </field>-->
+          <field attribute="inbound">
+            <renderer type="icon" params="iconcss=fa fa-mail-forward"/>
+          </field>
           <field attribute="orgobject" label="Origination"/>
           <field attribute="sendto" label="To"/>
           <field attribute="cc" hidden="true"/>

@@ -6,7 +6,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
 
 
     public class FieldRenderer {
-        private const string WrongRenderer = "renderer {0} not found. Possible options are radio,numericinput,datetime,textarea,screenshot,upload,default,image,treeview,label,richtext,fieldwithbuttons ,color and color";
+        private const string WrongRenderer = "renderer {0} not found. Possible options are radio,numericinput,datetime,textarea,screenshot,upload,default,image,treeview,label,richtext,fieldwithbuttons,icon,color and color";
 
         public FieldRenderer() { }
 
@@ -36,7 +36,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
 
 
         public enum BaseRendererType {
-            RADIO, NUMERICINPUT, DATETIME, SCREENSHOT, UPLOAD, TEXTAREA, DEFAULT, IMAGE, TREEVIEW, LABEL, CUSTOM,COLOR, RICHTEXT,CHECKBOX,FIELDWITHBUTTONS
+            RADIO, NUMERICINPUT, DATETIME, SCREENSHOT, UPLOAD, TEXTAREA, DEFAULT, IMAGE, TREEVIEW, LABEL, CUSTOM,COLOR, RICHTEXT,CHECKBOX,FIELDWITHBUTTONS, ICON
         }
 
 
