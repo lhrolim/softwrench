@@ -64,8 +64,6 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
     $scope.$name = 'LayoutController';
 
-    
-
     $rootScope.$on('sw_ajaxinit', function (ajaxinitevent) {
         var savingMain = true === $rootScope.savingMain;
         if (!$rootScope.avoidspin) {
@@ -78,7 +76,6 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             spin.stop();
         }
         $rootScope.savingMain = undefined;
-
     });
 
     $rootScope.$on('sw_ajaxerror', function (data) {
@@ -86,7 +83,6 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             spin.stop();
         }
         $rootScope.savingMain = undefined;
-
     });
 
     $scope.$on('sw_titlechanged', function (titlechangedevent, title) {

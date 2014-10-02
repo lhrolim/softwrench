@@ -13,6 +13,7 @@
 	<property key="i18nrequired" value="true" />
 	<property key="list.paginationsize" value="100"/>
 	<property key="list.paginationoptions" value="10,30,100"/>
+	<property key="list.advancedfilter.showsearchicon" value="false"/>
 	<property key="successmessagetimeout" value="10000"/>
 
 	<property key="maximo_DB_provider" value="IBM.Data.DB2" />

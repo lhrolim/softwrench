@@ -166,8 +166,9 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         },
 
         fixThead: function (schema, params) {
+            var log = $log.getInstance('sw4.fixheader_service#fixThead');
+
             if ($rootScope.clientName == 'hapag') {
-                var log = $log.getInstance('sw4.fixheader_service#fixThead');
                 log.debug('starting fix Thead');
                 if (!params || !params.resizing) {
                     this.unfix();
@@ -194,29 +195,35 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
 
                 //update the style, to fixed
                 this.fixTableTop(table, params);
-
+                
                 log.debug('finishing fix Thead');
             }
+
+            //SM - 10/01 - trigger resize to setup header
+            $(window).trigger('resize');
+            log.debug('Trigger Window Resize');
         },
 
         activateResizeHandler: function () {
-            var resolutionBarrier = 1200;
-            var width = $(window).width();
-            var highResolution = width >= resolutionBarrier;
-            var fn = this;
-            $(window).resize(function () {
-                var newWidth = $(this).width();
-                var isNewHighResolution = newWidth > resolutionBarrier + 15; // lets add some margin to give the browser time to render the new table...
-                var isNewLowResolution = newWidth < resolutionBarrier - 15; // lets add some margin to give the browser time to render the new table...
-                if ((isNewHighResolution && !highResolution) || (isNewLowResolution && highResolution)) {
-                    $log.getInstance("crudlistdir#resize").debug('switching resolutions');
-                    fn.fixThead(null, {
-                        resizing: true
-                    });
-                    width = newWidth;
-                    highResolution = width >= resolutionBarrier;
-                }
-            });
+            if ($rootScope.clientName == 'hapag') {
+                var resolutionBarrier = 1200;
+                var width = $(window).width();
+                var highResolution = width >= resolutionBarrier;
+                var fn = this;
+                $(window).resize(function () {
+                    var newWidth = $(this).width();
+                    var isNewHighResolution = newWidth > resolutionBarrier + 15; // lets add some margin to give the browser time to render the new table...
+                    var isNewLowResolution = newWidth < resolutionBarrier - 15; // lets add some margin to give the browser time to render the new table...
+                    if ((isNewHighResolution && !highResolution) || (isNewLowResolution && highResolution)) {
+                        $log.getInstance("crudlistdir#resize").debug('switching resolutions');
+                        fn.fixThead(null, {
+                            resizing: true
+                        });
+                        width = newWidth;
+                        highResolution = width >= resolutionBarrier;
+                    }
+                });
+            }
         },
 
         FixHeader: function () {

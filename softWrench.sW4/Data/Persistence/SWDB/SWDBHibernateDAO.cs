@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using log4net;
 using NHibernate;
+using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Audit;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
@@ -189,31 +190,13 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
                 properties.Add(NHibernate.Cfg.Environment.ConnectionProvider, "NHibernate.Connection.DriverConnectionProvider");
                 properties.Add(NHibernate.Cfg.Environment.ProxyFactoryFactoryClass, "NHibernate.Bytecode.DefaultProxyFactoryFactory, NHibernate");
                 properties.Add(NHibernate.Cfg.Environment.CurrentSessionContextClass, "managed_web");
-
-
-
                 configuration.SetProperties(properties);
-                //TODO: make this modular
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(User)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(Role)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(RoleGroup)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(DataConstraint)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(UserProfile)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(UserCustomConstraint)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(UserCustomRole)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(Category)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(PropertyDefinition)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(PropertyValue)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(Condition)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(WhereClauseCondition)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(PersonGroup)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(PersonGroupAssociation)));
 
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(AuditTrail)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(ISMAuditTrail)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(ExtraAttributes)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(HistWorkorder)));
-                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(HistTicket)));
+                var findTypesAnnotattedWith = AttributeUtil.FindTypesAnnotattedWith(typeof(ClassAttribute), typeof(JoinedSubclassAttribute));
+                foreach (var nHibernateType in findTypesAnnotattedWith) {
+                    configuration.AddInputStream(HbmSerializer.Default.Serialize(nHibernateType));
+                }
+
 
                 _sessionFactory = configuration.BuildSessionFactory();
             }
