@@ -36,6 +36,7 @@ namespace softWrench.sW4.Web.Controllers {
             var excelFile = _excelUtil.ConvertGridToExcel(application, key, (ApplicationListResult)dataResponse);
             var stream = new MemoryStream();
             excelFile.SaveAs(stream);
+            stream.Close();
 
             var result = new FileContentResult(stream.ToArray(), System.Net.Mime.MediaTypeNames.Application.Octet) {
                 FileDownloadName = fileName
