@@ -21,6 +21,7 @@
             searchService,
             i18NService,
             redirectService,
+            fileService,
             contextService) {
 
             $scope.contextPath = function (path) {
@@ -49,7 +50,7 @@
                 }
             };
 
-            $scope.exportToExcel = function (schemaId) {
+            $scope.exportToExcel = function(schemaId) {
                 printPageSize = null;
                 var parameters = {};
                 parameters.key = {};
@@ -76,7 +77,14 @@
 
                 parameters.searchDTO = searchDTO;
                 parameters.fileName = getFileName(parameters.application, parameters.key.schemaId);
-                window.location = removeEncoding(url("/Application/ExportToExcel" + "?" + $.param(parameters)));
+                $rootScope.$broadcast('sw_ajaxinit');
+                fileService.download(removeEncoding(url("/Excel/Export" + "?" + $.param(parameters))),
+                    function(html, url) {
+                        $rootScope.$broadcast('sw_ajaxend');
+                    },
+                    function(html, url) {
+                        $rootScope.$broadcast('sw_ajaxend');
+                    });
             };
 
             function getFileName(application, schemaId) {
