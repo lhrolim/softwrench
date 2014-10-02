@@ -547,6 +547,7 @@
     <Content Include="Content\Scripts\customers\hapag\jobplan_completeaction.js" />
     <Content Include="Content\Scripts\customers\hapag\asset_remarks.js" />
     <Content Include="Content\Scripts\customers\hapag\imac_service.js" />
+    <Content Include="Content\Scripts\customers\hapag\relatedrecord_service.js" />
     <Content Include="Content\Scripts\customers\hapag\report_service.js" />
     <Content Include="Content\Scripts\customers\hapag\sr_service.js" />
     <Content Include="Content\Scripts\customers\hapag\sr_summary_service.js" />

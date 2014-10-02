@@ -750,14 +750,12 @@ textarea .readonly {
 
 
 /*SM - 07-02 - ADD - Start rules to fix Hapag pagination & table header location*/
-
 /******************************
  * 1024px Compatibility BEGIN *
  ******************************/
 body {
     overflow-x: hidden;
 }
-
 
 body,
 .form-control,
@@ -768,7 +766,7 @@ body,
 }
 
 .combobox-container > span.dropdown-toggle {
-    font-size: 14px;
+    /*font-size: 14px;*/
 }
 
 .container {
@@ -916,13 +914,13 @@ select {
 /*SM - 08/30 - Start, fix input widths*/
 .combobox-container .add-on {
     /*width: 18px !important;*/
-    width: 4% !important;
+    /*width: 4% !important;*/
     height: 26px !important;
 }
 /*SM - 08/30 - End, fix input widths*/
 
 .combobox-container > input {
-    width: 96% !important;
+    width: 100% !important;
 }
 
 /********End auto complete*********/
@@ -1309,73 +1307,6 @@ select {
         cursor: pointer;
     }
 /*SM - 09/02 - End, Fix upload button*/
-
-/*SM - 09/15 - Start, fix bootstrap combobox widths (workaround)*/
-.col-xs-2 input, .col-md-2 input {
-    width: 82% !important;
-}
-
-.col-xs-2 .add-on, .col-md-2 .add-on {
-    width: 18% !important;
-}
-
-.col-xs-3 input, .col-md-3 input {
-    width: 86% !important;
-}
-
-.col-xs-3 .add-on, .col-md-3 .add-on {
-    width: 14% !important;
-}
-
-.col-xs-4 input, .col-md-4 input {
-    width: 90% !important;
-}
-
-.col-xs-4 .add-on, .col-md-4 .add-on {
-    width: 10% !important;
-}
-
-.col-xs-5 input, .col-md-5 input {
-    width: 92% !important;
-}
-
-.col-xs-5 .add-on, .col-md-5 .add-on {
-    width: 8% !important;
-}
-
-/*this will break the samelinepickers
-.col-xs-6 input, .col-md-6 input {
-    width: 93% !important;
-}
-
-.col-xs-6 .add-on, .col-md-6 .add-on {
-    width: 7% !important;
-}*/
-
-.col-md-6 input {
-    width: 93% !important;
-}
-
-.col-md-6 .add-on {
-    width: 7% !important;
-}
-
-.col-xs-7 input, .col-md-7 input {
-    width: 94% !important;
-}
-
-.col-xs-7 .add-on, .col-md-7 .add-on {
-    width: 6% !important;
-}
-
-.col-xs-8 input, .col-md-8 input {
-    width: 95% !important;
-}
-
-.col-xs-8 .add-on, .col-md-8 .add-on {
-    width: 5% !important;
-}
-/*SM - 09/15 - End, fix bootstrap combobox widths*/
 
 /*SM - 09/17 - HAP-546 #T-ITC-025*/
 .btn.new-asset {

@@ -16,7 +16,7 @@ namespace softwrench.sw4.Hapag.Data {
 
         internal const string ChangeTemplateId = @"change.templateid IN ({0})";
 
-        internal const string ChangeOpenTasks = @"woactivity.status = 'INPRG' AND woactivity.ownergroup IN ({0})";
+        internal const string ChangeOpenTasks = @"woactivity.status = 'INPRG' AND woactivity.ownergroup IN ({0}) AND wochange_.wonum is not null";
 
         internal const string ChangeOpenTasksViewAll = @"exists(select 1 from WOACTIVITY as woactivity_ where wochange.wonum = woactivity_.parent and woactivity_.status = 'INPRG' AND woactivity_.ownergroup IN ({0}))";
 
@@ -31,7 +31,8 @@ namespace softwrench.sw4.Hapag.Data {
         //used on the sr union schema
         public String ChangeSRUnionGridQuery() {
             var templateIds = GetTemplateIds();
-            return "srforchange.templateid in ({0})".Fmt(templateIds);
+            return @"not exists (select 1 from wochange wo4sr_ where wo4sr_.origrecordid = srforchange.ticketid and wo4sr_.origrecordclass = 'SR' and wo4sr_.woclass = 'CHANGE')
+                and srforchange.templateid in ({0})".Fmt(templateIds);
         }
 
         public string DashboardChangeTasksWhereClause() {

@@ -35,6 +35,9 @@
         var typeofticket = $scope.typeofticket;
         var typeofimac = $scope.typeofimac;
         var schemaid = typeofticket == 'servicerequest' ? 'general' : 'add';
+        if (!$scope.isvalid(schemaid, typeofimac)) {
+            return;
+        }
         var initialData = {};
         initialData['typeofimac'] = typeofimac;
         initialData['assetnum'] = datamap['assetnum'];
@@ -51,7 +54,13 @@
         redirectService.goToApplicationView(typeofticket, schemaid, 'input', title, parameters, initialData);
     };
 
-
+    $scope.isvalid = function (schemaid, typeofimac) {
+        var isvalid = false;
+        if (schemaid == 'general' || !nullOrUndef(typeofimac)) {
+            isvalid = true;
+        }
+        return isvalid;
+    };
 
     init();
 

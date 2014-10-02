@@ -563,6 +563,10 @@ textarea .readonly {
     overflow: hidden;
 }
 
+#imgHolder_newscreenshot {
+    max-width: 626px;
+}
+
 .richtextbox {
     width: 100%;
 }

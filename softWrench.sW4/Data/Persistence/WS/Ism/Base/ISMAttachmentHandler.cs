@@ -70,7 +70,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             }
             if (screenshotName.ToLower().EndsWith("rtf")) {
                 //converting rtf to doc to handle IE9 scenario
-                screenshotString = ConvertRtfToDoc(screenshotString, ref screenshotName);
+                screenshotString = ConvertRtfToHtml(screenshotString, ref screenshotName);
             }
             attachmentList.Add(new Attachment {
                 AttachmentName = screenshotName,
@@ -78,13 +78,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             });
         }
 
-        private static string ConvertRtfToDoc(string screenshotString, ref string screenshotName) {
+        private static string ConvertRtfToHtml(string screenshotString, ref string screenshotName) {
             var bytes = Convert.FromBase64String(screenshotString);
             var decodedString = Encoding.UTF8.GetString(bytes);
             var compressedScreenshot = CompressionUtil.CompressRtf(decodedString);
-            bytes = Encoding.UTF8.GetBytes(compressedScreenshot);
+            var convertedScreeshot = RTFUtil.ConvertToHTML(compressedScreenshot);
+
+            bytes = Encoding.UTF8.GetBytes(convertedScreeshot);
             screenshotString = Convert.ToBase64String(bytes);
-            screenshotName = screenshotName.Substring(0, screenshotName.Length - 3) + "doc";
+            screenshotName = screenshotName.Substring(0, screenshotName.Length - 3) + "html";
             return screenshotString;
         }
 

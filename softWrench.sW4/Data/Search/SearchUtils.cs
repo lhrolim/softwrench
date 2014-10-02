@@ -146,6 +146,8 @@ namespace softWrench.sW4.Data.Search {
                         statement.Append(operatorPrefix).Append(String.Format(HibernateUtil.ListParameterPrefixPattern, param));
                     } else if (searchParameter.IsDate || parameterData.Item2 == ParameterType.Date) {
                         statement.Append(HandleDateAttribute(param, searchParameter, operatorPrefix));
+                    } else if (searchParameter.SearchOperator == SearchOperator.BLANK && (searchParameter.IsNumber || searchParameter.IsDate)) {
+                        statement.Append(" IS NULL ");
                     } else {
                         statement.Append(GetDefaultParam(operatorPrefix, param));
                     }

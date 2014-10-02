@@ -37,26 +37,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         /// Path where the files are stored in the maximo´s server fs, must be removed from the url path
         /// </summary>
         private string _baseMaximoPath;
+        
+        public void HandleAttachments(object maximoObj, string attachmentData, string attachmentPath, ApplicationMetadata applicationMetadata) {
 
-        //        public delegate byte[] Base64Delegate(string attachmentData);
+            if (!String.IsNullOrWhiteSpace(attachmentData) && !String.IsNullOrWhiteSpace(attachmentPath)) {
 
-        /// <summary>
-        /// Used for parsing the base64 string from the html input="file" element
-        /// </summary>
-        //        public static Base64Delegate InputFile = delegate(string attachmentAsString) {
-        //            var indexOf = attachmentAsString.IndexOf(',');
-        //            var base64String = attachmentAsString.Substring(indexOf + 1);
-        //            return System.Convert.FromBase64String(base64String);
-        //        };
+                var user = SecurityFacade.CurrentUser();
+                if (String.IsNullOrEmpty(attachmentData)) {
+                    return;
+                }
+                var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
+                CommonCode(maximoObj, docLink, user, attachmentPath);
+                HandleAttachmentDataAndPath(attachmentData, docLink, attachmentPath);
 
-        public void HandleAttachments(object maximoObj, String attachmentData, string attachmentPath, ApplicationMetadata applicationMetadata) {
-            var user = SecurityFacade.CurrentUser();
-            if (String.IsNullOrEmpty(attachmentData)) {
-                return;
             }
-            var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
-            CommonCode(maximoObj, docLink, user, attachmentPath);
-            HandleAttachmentDataAndPath(attachmentData, docLink, attachmentPath);
         }
 
         private void CommonCode(object maximoObj, object docLink, InMemoryUser user, string attachmentPath) {

@@ -1,13 +1,18 @@
 ﻿using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.Data;
+using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
+using softWrench.sW4.Metadata.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagNewChangeDataSet : HapagBaseApplicationDataSet {
@@ -31,6 +36,32 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         }
 
         #endregion
+
+        protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {            
+            var dbDetail = base.GetApplicationDetail(application, user, request);
+            var resultObject = dbDetail.ResultObject;
+            if (resultObject == null) {
+                //it happens only if we´re pointint to a database different then the ws impl
+                return dbDetail;
+            }
+
+            if (application.Schema.SchemaId == "creationSummary") {
+                HandleCreationSummary(resultObject);
+            }
+            
+            return dbDetail;
+        }
+
+        private static void HandleCreationSummary(DataMap resultObject) {
+            var list = resultObject.GetAttribute("attachment_");
+            var sb = new StringBuilder();
+            foreach (var dictionary in (IEnumerable<Dictionary<string, object>>)list) {
+                sb.Append("<p>");
+                sb.Append(dictionary["docinfo_.description"]);
+                sb.Append("</p>");
+            }
+            resultObject.Attributes.Add("#attachmentsummary", sb.ToString());
+        }
 
         public override string ApplicationName() {
             return "newchange";

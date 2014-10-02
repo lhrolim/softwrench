@@ -294,8 +294,7 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
         if (dataObject.schemas == null) {
             if (dataObject.resultObject == null) {
                 //this means, most likely a security issue
-                var error = { errorMessage: 'You don´t have permission to see that register, contact your administrator' }
-                $rootScope.$broadcast('sw_ajaxerror', error);
+                alertService.alert('You don´t have permission to see that register, contact your administrator');
                 return;
             }
             $scope.renderViewWithData(applicationName, schemaId, mode, title, dataObject);

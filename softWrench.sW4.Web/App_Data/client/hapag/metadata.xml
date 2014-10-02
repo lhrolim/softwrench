@@ -546,7 +546,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<field attribute="ownergroup" label="Owner Group"/>
 					<field attribute="owner" hidden="true"/>
 					<composition relationship="relatedrecord" label="Related Records" inline="true" >
-						<renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey" />
+						<renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey;onClickService=relatedrecordservice.opendetail" />
 					</composition>
 					<composition relationship="worklog" label="Work Log">
 						<collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
@@ -973,7 +973,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<field label="Owner Group" attribute="ownergroup" />
 					<!--This field is mapped as a composition because the framework only allows joins on compositions-->
 					<composition relationship="relatedrecord" label="Related Records" inline="true" >
-						<renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey" />
+						<renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey;onClickService=relatedrecordservice.opendetail" />
 					</composition>
 					<composition relationship="worklog" label="Work Log">
 						<collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
@@ -1379,6 +1379,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<field attribute="status" label="Status"/>
 					<field attribute="longdescription_.ldtext" label="Remarks"/>
 					<field attribute="itdclosurecode" label="Implementation Result"/>
+          <composition relationship="relatedrecord" label="Related Records" inline="true" >
+						<renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey;onClickService=relatedrecordservice.opendetail" />
+					</composition>
 					<composition relationship="worklog" label="Work Log" >
 						<collectionproperties allowcreation="true"/>
 					</composition>
@@ -2194,7 +2197,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
 					</field>
 					<composition relationship="relatedrecord" label="Related Records" inline="true" >
-						<renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey" />
+						<renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey;onClickService=relatedrecordservice.opendetail" />
 					</composition>
 					<composition relationship="worklog" label="Work Log">
 						<collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
@@ -2237,25 +2240,25 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<field attribute="assetnum" label="" qualifier="title" hidden="true" />
 					<field attribute="siteid" label="" qualifier="title" hidden="true"/>
 					<field label="Location Code" attribute="hlagpluspcustomer">
-						<renderer type="default" params="minwidth=109px;excelwidth=15"/>
+						<renderer type="default" params="minwidth=79px;excelwidth=15"/>
 					</field>
 					<field label="User Id" attribute="aucisowner_.hlagdisplayname">
-						<renderer type="default" params="minwidth=109px;excelwidth=15"/>
+						<renderer type="default" params="minwidth=99px;excelwidth=15"/>
 					</field>
 					<field label="Description" attribute="hlagdescription">
-						<renderer type="default" params="minwidth=109px;excelwidth=15"/>
+						<renderer type="default" params="minwidth=200px;excelwidth=15"/>
 					</field>
 					<field label="Serial Number"  attribute="serialnum">
-						<renderer type="default" params="minwidth=109px;excelwidth=15"/>
+						<renderer type="default" params="minwidth=98px;excelwidth=15"/>
 					</field>
 					<field label="Computer Name" attribute="computername">
 						<renderer type="default" params="minwidth=109px;excelwidth=15"/>
 					</field>
 					<field label="Usage" attribute="usage">
-						<renderer type="default" params="minwidth=109px;excelwidth=15"/>
+						<renderer type="default" params="minwidth=79px;excelwidth=15"/>
 					</field>
 					<field label="Status" attribute="status">
-						<renderer type="default" params="minwidth=89px;excelwidth=15"/>
+						<renderer type="default" params="minwidth=79px;excelwidth=15"/>
 					</field>
 				</list>
 
@@ -2719,6 +2722,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<field attribute="ticketuid" hidden="true"/>
 					<field label="SR Number:" attribute="ticketid"/>
 					<field label="Summary:" attribute="description"/>
+          <field label="Details:" attribute="longdescription_.ldtext">
+            <renderer type="textarea"/>
+          </field>
 					<composition relationship="attachment" label="Attachments" hidden="true"/>
 					<field label="Attachment:" attribute="#attachmentsummary" />
 
@@ -2808,7 +2814,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<field attribute="pmchgotherapproversid" hidden="true"/>
 					<field  attribute="approver" label="Approver Person" />
 					<field  attribute="approvergroup" label="Approver Group" />
-					<field  attribute="#changedby" label="Changed By" />
+					<field  attribute="#changeby" label="Changed By" />
 					<field attribute="#changedate" label="Change Date">
 						<renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
 					</field>

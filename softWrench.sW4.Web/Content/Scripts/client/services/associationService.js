@@ -41,6 +41,8 @@ app.factory('associationService', function ($injector, $http, $timeout, $log,$ro
     var doGetFullObject = function (associationFieldMetadata, associationOptions, selectedValue) {
         if (selectedValue == null) {
             return null;
+        } else if (Array.isArray(selectedValue)) { // for 'checkbox' option fields (multi value selection)
+            return selectedValue;
         }
 
         //we need to locate the value from the list of association options

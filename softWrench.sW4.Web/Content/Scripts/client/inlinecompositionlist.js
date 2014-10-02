@@ -25,7 +25,7 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
 });
 
 
-app.directive('inlineCompositionList', function (contextService) {
+app.directive('inlineCompositionList', function (contextService, commandService) {
 
     return {
         restrict: 'E',
@@ -42,6 +42,12 @@ app.directive('inlineCompositionList', function (contextService) {
             $scope.contextPath = function (path) {
                 return url(path);
             };
+
+            $scope.handleItemClick = function (item, schema) {
+                if (!nullOrUndef(schema.rendererParameters) && !nullOrEmpty(schema.rendererParameters.onClickService)) {
+                    commandService.executeClickCustomCommand(schema.rendererParameters.onClickService, item, schema);
+                }
+            }
 
         }
     };

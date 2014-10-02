@@ -10,8 +10,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             sb.AppendFormat("Category: {0}\n", entity.GetAttribute("category"));
             sb.AppendFormat("Impact: {0}\n", entity.GetAttribute("#impact_label"));
-            sb.AppendFormat("Urgency: {0}\n", entity.GetAttribute("urgency"));
+            sb.AppendFormat("Urgency: {0}\n", entity.GetAttribute("urgency"));            
             sb.AppendFormat("Reason: {0}\n", entity.GetAttribute("reasonforchange"));
+            sb.AppendFormat("Reason Details: {0}\n", entity.GetAttribute("reasondetails"));
             sb.AppendFormat("Priority: {0}\n", entity.GetAttribute("#priority_label"));
             sb.AppendFormat("Exception Reason: {0}\n", entity.GetAttribute("exceptionreason"));
             sb.AppendFormat("Exception Code: {0}\n", entity.GetAttribute("exceptioncode"));

@@ -463,9 +463,9 @@
     };
 
     $.fn.combobox.defaults = {
-        template: '<div class="combobox-container" >' +
+        template: '<div class="combobox-container input-group" >' +
             '<input type="hidden" /><input type="text" autocomplete="off"/>' +
-            '<span class="add-on btn dropdown-toggle" data-dropdown="dropdown">' +
+            '<span class="input-group-addon dropdown-toggle" data-dropdown="dropdown">' +
             '<span class="caret"/>' +
             '</span></div>'
     , menu: '<ul class="typeahead typeahead-long dropdown-menu" style="width:94%"></ul>'

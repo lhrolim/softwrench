@@ -91,8 +91,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             approval["#shouldshowaction"] = LevelMatches(result, approval);
 
             if (apprWl != null || rejWl != null) {
-                approval[c.ChangeByColumn] = apprWl[c.CreateByColumn];
-                approval[c.ChangeDateColumn] = apprWl[c.CreateDate];
+                approval[c.ChangeByColumn] = apprWl != null ? apprWl[c.CreateByColumn] : rejWl[c.CreateByColumn];
+                approval[c.ChangeDateColumn] = apprWl != null ? apprWl[c.CreateDate] : rejWl[c.CreateDate];
                 approval[c.StatusColumn] = apprWl != null ? c.ApprovedStatus : c.RejectedStatus;
                 approval["#shouldshowaction"] = false;
             } else if (anyrejWl != null) {
