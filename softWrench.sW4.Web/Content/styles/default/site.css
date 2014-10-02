@@ -1,18 +1,3 @@
-Skip to content
- This repository
-Explore
-Gist
-Blog
-Help
-jdamerow jdamerow
- 
-5  Unwatch 
-  Star 0
- Fork 0controltechnologysolutions/softwrench PRIVATE
- branch: master  softwrench / softWrench.sW4.Web / Content / styles / default / site.css
-Scott A. Matthewssmatthews02 a day ago SWWEB-508 Search modal dialog to big for phone
-2 contributors Scott A. Matthewslhrolim
-1036 lines (841 sloc)  20.142 kb RawBlameHistory   
 body {
     font-family: "Arial";
     overflow-y: scroll;
@@ -1048,5 +1033,3 @@ label.form-control {
     min-height: 34px;
 }
 /*SM - 0/26 - Fix label control hight with multiple lines*/
-Status API Training Shop Blog About
-© 2014 GitHub, Inc. Terms Privacy Security Contact
