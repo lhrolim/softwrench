@@ -314,7 +314,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 		<entity name="wochange" idAttribute="wonum">
 			<attributes>
-				<attribute name="hlagchangesummary" type="varchar" required="false" query="CASE WHEN sr_.ticketid IS NOT NULL THEN sr_.DESCRIPTION ELSE !@description END" />
+				<attribute name="hlagchangesummary" type="varchar" required="false" query="CASE WHEN relatedsr_.relatedreckey IS NOT NULL THEN relatedsr_sr_.DESCRIPTION WHEN sr_.ticketid IS NOT NULL THEN sr_.DESCRIPTION ELSE !@description END" />
+        <attribute name="hlagchangeticketid" type="varchar" required="false" query="CASE WHEN sr_.ticketid IS NOT NULL THEN sr_.ticketid ELSE relatedsr_.relatedreckey END" />        
 				<attribute name="hlagpluspcustomer" type="varchar" required="false" query="ref:pluspcustomer"/>
 				<attribute name="hlagsrid" type="varchar" required="false" query="CASE WHEN !@ORIGRECORDCLASS IS NOT NULL AND !@ORIGRECORDCLASS = 'SR' THEN !@ORIGRECORDID ELSE '' END"/>
 				<attribute name="hlagreportedby" type="varchar" required="false" query="ref:reportedbycustom"/>
@@ -325,7 +326,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<relationshipAttribute from="origrecordclass" literal="SR" quoteLiteral="true"/>
 					<relationshipAttribute from="woclass" literal="CHANGE" quoteLiteral="true"/>
 				</relationship>
-				<relationship to="longdescription">
+        <relationship to="relatedrecord" qualifier="relatedsr" collection="true">
+          <relationshipAttribute from="wonum" to="recordkey" primary="true"/>
+          <relationshipAttribute to="relatedrecclass" literal="SR" quoteLiteral="true"/>
+          <relationshipAttribute to="class" literal="CHANGE" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="longdescription">
 					<relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
 					<relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
 					<relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
@@ -432,6 +438,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 				<attribute name="hlagreportedby" type="varchar" required="false" query="ref:reportedbycustom"/>
 			</attributes>
 		</entity>
+
+    <entity name="relatedrecord" idAttribute="relatedrecordid">
+      <relationships>
+        <relationship to="sr">
+          <relationshipAttribute from="relatedreckey" to="ticketid" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
 	</entities>
 
 	<applications>
@@ -836,13 +850,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 		<application entity="srforchange" name="srforchange" title="Service Request">
 			<schemas>
 				<schema id="changeunionschema" stereotype="list">
-					<field attribute="#null" hidden="true"/>
+          <field attribute="#null" hidden="true"/>
+          <field attribute="#null2" hidden="true"/>
+          <field attribute="#null3" hidden="true"/>
+					<field attribute="#null4" hidden="true"/>
+          
 					<field attribute="zeroedattr" hidden="true"/>
 					<field attribute="hlagchangesummary" hidden="true"/>
 					<field attribute="ticketid" hidden="true"/>
 					<field attribute="asset_.description" hidden="true"/>
-					<field attribute="#null2" hidden="true"/>
-					<field attribute="#null3" hidden="true"/>
+					<field attribute="#null5" hidden="true"/>
+					<field attribute="#null6" hidden="true"/>
 					<field attribute="hlagpluspcustomer" hidden="true"/>
 					<field attribute="hlagreportedby" hidden="true"/>
 					<field attribute="status" hidden="true"/>
@@ -1255,13 +1273,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 				<schema abstract="true" id="parentgrid">
 					<field attribute="workorderid" hidden="true" />
-					<field attribute="wonum" label="Change ID">
+          <field attribute="sr_.ticketid" hidden="true" />
+          <field attribute="relatedsr_.recordkey" hidden="true" />
+          <field attribute="relatedsr_sr_.ticketid" hidden="true" />         
+
+          <field attribute="wonum" label="Change ID">
 						<renderer type="default" params="minwidth=63px;wordwrap=break-word;" />
 					</field>
 					<field attribute="hlagchangesummary" label="Summary">
 						<renderer type="default" params="minwidth=84px;excelwidth=50;wordwrap=break-word" />
 					</field>
-					<field attribute="sr_.ticketid" label="SR ID">
+					<field attribute="hlagchangeticketid" label="SR ID">
 						<renderer type="default" params="minwidth=84px;wordwrap=break-word" />
 					</field>
 					<field attribute="cinum" label="Asset">
@@ -1341,8 +1363,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<property key="list.click.popup" value="browserwindow"/>
 					</properties>
 				</schema>
-
-
 
 				<detail id="detail" mode="output" title="Change Details">
 					<field attribute="workorderid" hidden="true" />
