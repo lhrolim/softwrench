@@ -1874,10 +1874,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="fieldwithbuttons" params="idField=hie; icon=fa fa-barcode; btnposition=left"/>
           </field>
           <field label="Site:" attribute="siteid" />
-          <!--Create a hidden section to access on the modal-->
-          <section id="modalSection" >
-            <field label="Update Balance:" attribute="curbal" hidden="true"/>
-          </section>
         </schema>
       </schemas>
     </application>
