@@ -41,6 +41,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         public static void FillDefaultValuesUpadteChange(ChangeRequest webServiceObject) {
             webServiceObject.Change = new Change() { CustomerID = CustomerId, Description = "@@Use Case for updating a Change record" };
+
+            var address = new Address() { OrganizationID = OrganizationId, LocationID = LocationId };
+            var group = new Group1() { GroupID = GroupId, Address = address };
+            var assignedGroup = new RequesterAssignedGroup() { Group = group };
+            webServiceObject.AssignedToGroup = new RequesterAssignedGroup[] { assignedGroup };
         }
     }
 }
