@@ -508,7 +508,6 @@
     <Content Include="Content\Scripts\client\components\combodropdown.js" />
     <Content Include="Content\Scripts\client\components\richtext.js" />
     <Content Include="Content\Scripts\client\crud_body_modal.js" />
-    <Content Include="Content\Scripts\client\inputModal.js" />
     <Content Include="Content\Scripts\client\makeSWAdmin.js" />
     <Content Include="Content\Scripts\client\crud_base_controller.js" />
     <Content Include="Content\Scripts\client\crud_list.js" />
@@ -735,7 +734,6 @@
     <Content Include="Content\Templates\hapag\assetremarks.html" />
     <Content Include="Content\Templates\crud\update_section.html" />
     <Content Include="Content\Templates\hapag\commaseparatedcomposition.html" />
-    <Content Include="Content\Templates\inputModal.html" />
     <Content Include="Content\Templates\otb\commlogaction.html" />
     <Content Include="Content\Templates\samelinepickers.html" />
     <Content Include="Content\Templates\hapag\conditionalfield.html" />
