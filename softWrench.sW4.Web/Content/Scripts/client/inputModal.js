@@ -17,9 +17,18 @@ app.directive('inputModal', function(contextService) {
                 return formatService.format(value, column);
             };
 
-            $scope.isbtnLeft = function(fieldMetadata) {
-                return true;
+            $scope.isbtnLeft = function (fieldMetadata) {
+                if (fieldMetadata.rendererParameters.btnposition == 'left') {
+                    return true;
+                }
+                return false;
             };
+
+            $scope.click = function () {
+                
+                alert("Button Clicked");
+                return;
+            }
             $scope.bindEvalExpression = function(fieldMetadata) {
                 if (fieldMetadata.evalExpression == null) {
                     return;
