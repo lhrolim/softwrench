@@ -320,6 +320,15 @@ app.directive('compositionList', function (contextService) {
                 return !$scope.detail || $scope.expanded;
             };
 
+            $scope.loadIcon = function (detailData, attribute) {
+                if (attribute == 'inbound') {
+                    if (detailData[attribute] == '1')
+                        return 'fa-long-arrow-left green';
+                    return 'fa-long-arrow-right orange';
+                }
+                return 'fa-picture-o';
+            };
+
             function buildExpandAllParams() {
                 var params = {};
                 params.key = {};

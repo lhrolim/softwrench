@@ -52,6 +52,10 @@
                                 <div ng-switch-when="checkbox">
                                     <i class="fa" ng-class="{'fa-check-square-o' : compositionitem[column.attribute] == 'true', 'fa-square-o' :  compositionitem[column.attribute] == 'false'}" />
                                 </div>
+                                <div ng-switch-when="icon">
+                                    <i class="fa" ng-class="loadIcon(compositionitem, column.attribute)"></i>
+                                </div>
+
 
                                 <a style="color: black; cursor: pointer; word-break:break-all;"
                                    ng-switch-default
