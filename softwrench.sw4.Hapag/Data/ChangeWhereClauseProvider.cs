@@ -32,6 +32,7 @@ namespace softwrench.sw4.Hapag.Data {
         public String ChangeSRUnionGridQuery() {
             var templateIds = GetTemplateIds();
             return @"not exists (select 1 from wochange wo4sr_ where wo4sr_.origrecordid = srforchange.ticketid and wo4sr_.origrecordclass = 'SR' and wo4sr_.woclass = 'CHANGE')
+                and not exists (select 1 from relatedrecord relatedcr_ where relatedcr_.relatedreckey = srforchange.ticketid and relatedcr_.relatedrecclass = 'SR' and relatedcr_.class = 'CHANGE')
                 and srforchange.templateid in ({0})".Fmt(templateIds);
         }
 
