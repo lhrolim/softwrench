@@ -23,6 +23,7 @@ input:focus, select:focus, textarea:focus {
 .smallmodal .modal-dialog {
     overflow: hidden;
     padding: 0;
+    width: 100%
 }
 
 @media all and (min-width: 480px) {
