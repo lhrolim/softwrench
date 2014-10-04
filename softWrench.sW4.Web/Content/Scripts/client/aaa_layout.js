@@ -63,6 +63,7 @@ app.directive("ngEnabled", function () {
 function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService) {
 
     $scope.$name = 'LayoutController';
+    var log = $log.getInstance('sw4.LayoutController');
 
     $rootScope.$on('sw_ajaxinit', function (ajaxinitevent) {
         var savingMain = true === $rootScope.savingMain;
@@ -76,6 +77,11 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             spin.stop();
         }
         $rootScope.savingMain = undefined;
+        
+        //SM - 10/01 - trigger resize to setup header
+        log = $log.getInstance('sw4.LayoutController#sw_ajaxend');
+        $(window).trigger('resize');
+        log.debug('Trigger Window Resize');
     });
 
     $rootScope.$on('sw_ajaxerror', function (data) {
@@ -83,6 +89,11 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             spin.stop();
         }
         $rootScope.savingMain = undefined;
+
+        //SM - 10/01 - trigger resize to setup header
+        log = $log.getInstance('sw4.LayoutController#sw_ajaxerror');
+        $(window).trigger('resize');
+        log.debug('Trigger Window Resize');
     });
 
     $scope.$on('sw_titlechanged', function (titlechangedevent, title) {

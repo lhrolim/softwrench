@@ -125,7 +125,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
                 return;
             }
 
-            //                        thead tr:eq(2) th ==> picks all the elements of the second line of the thead of the table, i.e the filters
+            //thead tr:eq(2) th ==> picks all the elements of the second line of the thead of the table, i.e the filters
             $('thead tr:eq(2) th', table).each(function (i, v) {
                 var inputGroupElements = $('.input-group', v).children();
                 //filtering only the inputs (ignoring divs...)
