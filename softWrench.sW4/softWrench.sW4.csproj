@@ -241,6 +241,8 @@
     <Compile Include="Metadata\Validator\MetadataParsingUtils.cs" />
     <Compile Include="Metadata\Validator\MenuXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\PropertiesXmlInitializer.cs" />
+    <Compile Include="Preferences\UserPreferences.cs" />
+    <Compile Include="Preferences\UserFilter.cs" />
     <Compile Include="Scheduler\ASwJob.cs" />
     <Compile Include="Security\Context\ApplicationLookupContext.cs" />
     <Compile Include="Configuration\Definitions\WhereClause\WhereClauseCondition.cs" />
