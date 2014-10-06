@@ -804,6 +804,12 @@ Header
     }
 }
 
+/*SM - 10/06 - SWWEB-506*/
+.container header .menu-grid .submenu li {
+    width: 100%;
+}
+/*SM - 10/06 - SWWEB-506*/
+
 .legend-label {
     display: inline;
     padding: .2em .6em .3em;
