@@ -395,6 +395,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 			</connectorParameters>
 		</entity>
 
+    <entity name="newchange" idAttribute="ticketid" parententity="SR">
+      <attributes>
+        <attribute name="hlagaffectedperson" type="varchar" required="false" query="ref:affectedpersoncustom"/>
+      </attributes>
+		</entity>
+    
 		<entity name="workorder" idAttribute="workorderid">
 			<relationships>
 				<relationship to="worktype" qualifier="changecategory">
@@ -2740,11 +2746,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 				<schema id="creationSummary" mode="output" stereotype="detail" title="Change Request Detail">
 					<field attribute="ticketuid" hidden="true"/>
-					<field label="SR Number:" attribute="ticketid"/>
+					<field label="Request#:" attribute="ticketid"/>
 					<field label="Summary:" attribute="description"/>
+          <field label="Date and Time:" attribute="reportdate">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
+          </field>
+          <field label="Requester:" attribute="hlagaffectedperson"/>
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="textarea"/>
           </field>
+          <field label="Status:" attribute="status"/>          
 					<composition relationship="attachment" label="Attachments" hidden="true"/>
 					<field label="Attachment:" attribute="#attachmentsummary" />
 
