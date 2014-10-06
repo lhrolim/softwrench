@@ -27,7 +27,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
         private static readonly AttachmentDao AttachmentDao = new AttachmentDao();
 
-        private static readonly string[] AllowedFiles = { "pdf", "zip", "txt", "jpg", "bmp", "doc", "docx", "dwg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "html", "rtf" };
+        private static readonly string[] AllowedFiles = { "pdf", "zip", "txt", "jpg", "bmp", "doc", "docx", "dwg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "html", "rtf", "png" };
 
         /// <summary>
         /// url specifying where the attachments could be downloaded from maximo in the http mode
@@ -81,7 +81,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (attachmentPath != null && attachmentPath.IndexOf('.') != -1 &&
                 !AllowedFiles.Contains(attachmentPath.Substring(attachmentPath.LastIndexOf('.') + 1).ToLower())) {
                 throw new Exception(
-                    "Invalid Attachment Must be of the Following type [.pdf,.zip,.txt,.jpg,.bmp,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,xml,.xsl,.html,.rtf]");
+                    "Invalid Attachment Must be of the Following type [.pdf,.zip,.txt,.jpg,.bmp,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,xml,.xsl,.html,.rtf,.png]");
             }
             return true;
         }
