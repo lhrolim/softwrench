@@ -1041,15 +1041,6 @@ Header
     }
 /*SM - 09/02 - ADD - Fix file upload button*/
 
-/*SM - 09/23 - Start SWWEB-447 fix*/
-/*.input-group-addon:not(:first-child):not(:last-child) {
-    border-radius: 4px;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-    border-left: none;
-}*/
-/*SM - 09/23 - Start SWWEB-447 fix*/
-
 /*SM - 09/24 - SWWEB-450 fix*/
 .richtext .ta-editor {
     max-width: 859px; /*add max-width to stop richtext from moving off the screen horizontally*/
@@ -1076,3 +1067,11 @@ input[type=search] {
     -webkit-appearance: none;
 }
 /*SM - 10/06 - SWWEB-492*/
+
+/*SM - 10/06 - SWWEB-447*/
+.input-group-addon.last {
+    border-left: none;
+    border-top-right-radius: 3px !important;
+    border-bottom-right-radius: 3px !important;
+}
+/*SM - 10/06 - SWWEB-447*/
