@@ -232,51 +232,6 @@ input:focus, select:focus, textarea:focus {
     position: fixed;
 }
 
-.pagination-container {
-    font-size: 11px;
-    background-color: #EEEEEE;
-    height: 34px;
-    width: 100%;
-    padding: 10px 16px 33px 16px;
-}
-
-    .pagination-container .pagination-results-page {
-        float: left;
-        width: 25%;
-        text-align: left;
-    }
-
-        .pagination-container .pagination-results-page select {
-            display: inline-block;
-        }
-
-.pagination-pager {
-    margin-left: 30px;
-}
-
-.pagination-container .pagination-pager input {
-}
-
-.pagination-container .pagination-pager label {
-    margin-left: 2px;
-}
-
-.pagination-actions {
-    margin-left: 30px;
-}
-
-.pagination-container .pagination-results {
-    line-height: 2;
-    float: left;
-    width: 37%;
-    text-align: right;
-}
-
-.pagination-container label {
-    color: #000000 !important;
-    padding: 0px !important;
-}
-
 /*SM - 09/24 - SWWEB-452 fix*/
 .nav-tabs {
     border-bottom: 1px solid #999;
@@ -654,23 +609,43 @@ Header
             text-align: center;
         }
 
+/*SM - 10/06 - SWWEB-435*/
+/*.affix-pagination:hover {
+    z-index: 9999;
+}*/
+
 .container .context {
+    width: 100%;
     background: #eee;
     border-bottom: #000 1px solid;
-    padding: 5px 20px;
+    padding: 5px 20px 10px;
 }
 
-    .container .context .left {
-        float: left;
+/*.container .context .tooltip {
+    z-index: 99999;
+    background: #f00;
+}*/
+
+    .container .context .group {
+        margin: 5px 10px 0;
     }
 
-    .container .context .right {
-        float: right;
-    }
+        .container .context .group.actions {
+            display: none;
+        }
 
-    .container .context .text {
-        margin-top: 6px;
-    }
+        .container .context .group.pagesize {
+            padding-top: 5px;
+        }
+
+        .container .context .group.pagination {
+            padding-top: 3px;
+        }
+
+        .container .context .group.total {
+            display: none;
+            margin-top: 10px;
+        }
 
     .container .context label {
         font-weight: normal;
@@ -679,6 +654,53 @@ Header
 .container button {
     text-transform: uppercase;
 }
+
+@media all and (min-width: 480px) {
+    .container .context {
+        padding: 5px 20px;
+    }
+
+        .container .context .group {
+            float: left;
+        }
+
+        .container .context .group {
+            height: 34px;
+        }
+
+            .container .context .group.total {
+                display: block;
+            }
+}
+
+@media all and (min-width: 768px) {
+    .container .context .group {
+        margin: 5px 10px 0;
+    }
+
+    .container .context .right {
+        float: right;
+    }
+
+    .container .context .group.actions {
+        display: block;
+    }
+
+    .container .context .group.total {
+        height: auto;
+    }
+
+        .container .context .group.total label {
+            margin: 0;
+        }
+}
+
+@media all and (min-width: 992px) {
+    .container .context .group {
+        margin: 5px 20px 0;
+    }
+}
+/*SM - 10/06 - SWWEB-435*/
 
 @media all and (min-width: 1px) {
     .container header {
