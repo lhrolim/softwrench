@@ -5,8 +5,7 @@ $(function () {
     });
 
     $(window).resize(function () {
-        //console.log('Resize Window');
-
+        //if the header is fixed to the top of the page, set the location of the content, context menu, grid header and filter bar
         if ($('.site-header').css('position') == 'fixed') {
             var headerHeight = $('.site-header').height();
             var paginationHeight = $('.affix-pagination').height();
@@ -17,6 +16,7 @@ $(function () {
             $('.listgrid-thead').css('top', headerHeight + paginationHeight);
             $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight - 1);
         }
+            //reset the lcoation of the content, context menu, grid header and filter bar
         else {
             $('.content').css('margin-top', 'auto');
             $('.affix-pagination').css('top', 'auto');

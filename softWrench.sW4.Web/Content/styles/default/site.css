@@ -1028,17 +1028,23 @@ Header
 }
 /*SM - 09/24 - SWWEB-450 fix*/
 
-/*SM - 0/26 - Fix label control hight with multiple lines*/
+/*SM - 09/26 - Fix label control hight with multiple lines*/
 label.form-control {
     height: auto;
     min-height: 34px;
 }
-/*SM - 0/26 - Fix label control hight with multiple lines*/
-
+/*SM - 09/26 - Fix label control hight with multiple lines*/
 
 .green {
     color: green;
 }
+
 .orange {
     color: orange;
 }
+
+/*SM - 10/06 - SWWEB-492*/
+input[type=search] {
+    -webkit-appearance: none;
+}
+/*SM - 10/06 - SWWEB-492*/
