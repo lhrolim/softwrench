@@ -12,7 +12,7 @@
     @RowStampScriptHelper.RenderCss("~/Content/themes/base/fonts")
     @RowStampScriptHelper.RenderCss("~/Content/styles/client/client-css")
     
-    @*    <base href="@Request.ApplicationPath" />*@
+    @*<base href="@Request.ApplicationPath" />*@
 </head>
 <body class="otb">
     @model softWrench.sW4.Web.Models.Home.HomeModel
@@ -23,7 +23,7 @@
     @RowStampScriptHelper.Render("~/Content/Scripts/client/application")
     @RowStampScriptHelper.Render("~/Content/Scripts/client/client-js")
     @RowStampScriptHelper.Render("~/Content/Scripts/angulartreeview.js")
-    @RowStampScriptHelper.Render("~/Content/Scripts/responsive.js") @*SM - 07/03 - ADD - responsive jQuery*@
+    @RowStampScriptHelper.Render("~/Content/Scripts/responsive.js")
     @RowStampScriptHelper.Render("~/Content/Scripts/thirdparty")
 
     <input type="hidden" id="hddn_configs" value="@Model.ConfigJSON" />
@@ -36,13 +36,9 @@
 
     <div class="container" ng-controller="LayoutController">
         <header class="site-header navbar-fixed-top hiddenonprint">
-            @*SM - 06/28 - CHANGE - remove classes .header-menu & clearfix*@
             <div class="menu-expand"><i class="fa fa-bars"></i> Admin</div>
-            @*SM - 06/29 - ADD - add responsive menu item*@
             <div class="menu-items">
-                @*SM - 06/29 - ADD - wrap menu to hide menu on small screens*@
                 <div class="menu menu-admin" ng-if="popupmode == 'none'">
-                    @*SM - 06/28 - CHANGE - class .persitant to .menu-admin*@
                     <div class="text"><span class="glyphicon glyphicon-log-out"></span>&ensp;{{i18N('_headermenu.loggedinas','Logged in as')}} @((User as InMemoryUser).FirstName) @((User as InMemoryUser).LastName)</div>
                     <div class="buttons">
                         <a href="#" ng-click="doAction(null,'User','MyProfile',null,$event.target)" ng-show="myprofileenabled"
@@ -100,11 +96,8 @@
                 </div>
             </div>
             <div class="menu menu-grid">
-                @*SM - 06/28 - CHANGE - class .header-menu to .menu-grid, remove affix class*@
                 <div class="menu-expand"><i class="fa fa-bars"></i> Menu</div>
-                @*SM - 06/29 - ADD - add responsive menu item*@
                 <div class="menu-items">
-                    @*SM - 06/29 - ADD - wrap menu to hide menu on small screens*@
                     <menu menu="menu" />
                 </div>
             </div>
@@ -117,11 +110,6 @@
         $(document).on('touch click', '*[data-calendericon="true"]', function (e) {
             $('input[type="text"]', $(this).parent()).focus();
         });
-
-        //$(function () {
-        //    $(window).trigger('resize');
-        //    alert('resize');
-        //}
     </script>
     @RenderSection("scripts", required: false)
 </body>

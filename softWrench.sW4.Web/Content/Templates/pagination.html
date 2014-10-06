@@ -53,8 +53,8 @@
 
     <div class="right">
         <div class="group total">
-            <!--<label>{{i18N('_grid.pagination.display',"Displaying Page {0} of {1}, Total items {2}",[paginationData.selectedPage,paginationData.pageCount,paginationData.totalCount])}}</label>-->
-            <label>{{i18N('_grid.pagination.display',"Total Items: {0}",[paginationData.totalCount])}}</label>
+            <label ng-if="isHapag()">{{i18N('_grid.pagination.display',"Displaying Page {0} of {1}, Total items {2}",[paginationData.selectedPage,paginationData.pageCount,paginationData.totalCount])}}</label>
+            <label ng-if="!isHapag()">{{i18N('_grid.pagination.display',"Total Items: {0}",[paginationData.totalCount])}}</label>
         </div>
     </div>
 </div>
