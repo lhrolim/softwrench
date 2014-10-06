@@ -54,6 +54,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 		<entity name="srforchange" idAttribute="ticketid" parententity="SR" whereclause="(srforchange.classificationid is null or srforchange.classificationid not like '8151%')">
 			<attributes>
 				<attribute name="hlagchangesummary" type="varchar" required="false" query="!@description" />
+        <attribute name="hlagchangeticketid" type="varchar" required="false" query="!@ticketid" />
 				<attribute name="zeroedattr" type="varchar" query="'-666'"/>
 			</attributes>
 		</entity>
