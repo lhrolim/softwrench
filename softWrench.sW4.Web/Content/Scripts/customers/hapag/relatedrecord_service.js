@@ -9,14 +9,14 @@ app.factory('relatedrecordservice', function ($http, redirectService, alertServi
             var id = datamap['relatedreckey'];
             var entity = datamap['relatedrecclass'];
             var application = null;
-            if (entity = 'SR') {
-                application = 'servicerequest'
-            } else if (entity = 'CHANGE') {
-                application = 'change'
-            } else if (entity = 'INCIDENT') {
-                application = 'incident'
-            } else if (entity = 'PROBLEM') {
-                application = 'problem'
+            if (entity == 'SR') {
+                application = 'servicerequest';
+            } else if (entity == 'CHANGE') {
+                application = 'change';
+            } else if (entity == 'INCIDENT') {
+                application = 'incident';
+            } else if (entity == 'PROBLEM') {
+                application = 'problem';
             }
 
             if (application != null) {

@@ -19,9 +19,9 @@ app.factory('changeservice', function ($http, redirectService) {
 
             var wonum = datamap['wonum'];
             //this "wild" number (-666) is used because we have a custom join of 2 tables inside of a grid, and we need a way to sort it properly
-            var isSr = wonum == null || wonum == "-666" || column.attribute == 'sr_.ticketid';
+            var isSr = wonum == null || wonum == "-666" || column.attribute == 'hlagchangeticketid';
             var application = isSr ? 'servicerequest' : 'change';
-            var id = isSr ? datamap['sr_.ticketid'] : wonum;
+            var id = isSr ? datamap['hlagchangeticketid'] : wonum;
             var parameters = { id: id, popupmode: 'browser' };
             redirectService.goToApplicationView(application, 'detail', 'output', null, parameters);
         }
