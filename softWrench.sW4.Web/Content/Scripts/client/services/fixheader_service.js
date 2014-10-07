@@ -229,14 +229,14 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         FixHeader: function () {
             var table;
             var originalOffset;
-            $(window).scroll(function () {
-                if (table == null) {
-                    table = $("#listgrid");
-                    originalOffset = $("thead", table).top;
-                }
-                var windowTop = $(window).scrollTop();
-                $("thead", table).css("top", windowTop + originalOffset);
-            });
+//            $(window).scroll(function () {
+//                if (table == null) {
+//                    table = $("#listgrid");
+//                    originalOffset = $("thead", table).top;
+//                }
+//                var windowTop = $(window).scrollTop();
+//                $("thead", table).css("top", windowTop + originalOffset);
+//            });
         },
 
         unfix: function () {

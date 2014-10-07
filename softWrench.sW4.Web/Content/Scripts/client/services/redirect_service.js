@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('redirectService', function ($http, $rootScope, $log, contextService, fixHeaderService) {
+app.factory('redirectService', function ($http, $rootScope, $log, contextService, fixHeaderService, restService) {
     var buildApplicationURLForBrowser = function (applicationName, parameters) {
         var crudUrl = $(routes_homeurl)[0].value;
         var currentModule = contextService.retrieveFromContext('currentmodule');
@@ -22,11 +22,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
         return removeEncoding(crudUrl);
     };
 
-    var getActionUrl = function (controller, action, parameters) {
-        action = (action === undefined || action == null) ? 'get' : action;
-        var params = parameters == null ? {} : parameters;
-        return url("/api/generic/" + controller + "/" + action + "?" + $.param(params));
-    };
+  
 
     var getApplicationUrl = function (applicationName, schemaId, mode, title, parameters, jsonData) {
         if (parameters === undefined || parameters == null) {
@@ -58,7 +54,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
     return {
 
         getActionUrl: function (controller, action, parameters) {
-            return getActionUrl(controller, action, parameters);
+            return restService.getActionUrl(controller, action, parameters);
         },
 
         redirectToAction: function (title, controller, action, parameters, target) {
@@ -74,7 +70,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
                 var w = window.open(redirectURL);
                 w.moveTo(0, 0);
             } else {
-                var redirectURL = getActionUrl(controller, action, parameters);
+                var redirectURL = restService.getActionUrl(controller, action, parameters);
                 sessionStorage.swGlobalRedirectURL = redirectURL;
                 $http.get(redirectURL).success(
                     function (data) {
