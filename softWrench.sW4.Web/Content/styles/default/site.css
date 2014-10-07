@@ -199,6 +199,11 @@ input:focus, select:focus, textarea:focus {
         text-decoration: none;
     }
 
+.divAuxTable {
+    /*z-index: 1;
+    position: relative;*/
+}
+
 #listgrid {
     color: #000;
     width: 100%;
@@ -621,7 +626,7 @@ Header
     padding: 5px 20px 10px;
 }
 
-/*.container .context .tooltip {
+    /*.container .context .tooltip {
     z-index: 99999;
     background: #f00;
 }*/
@@ -640,6 +645,10 @@ Header
 
         .container .context .group.pagination {
             padding-top: 3px;
+        }
+
+        .container .context .group.filter .btn-group {
+            margin-top: -2px;
         }
 
         .container .context .group.total {
@@ -662,24 +671,13 @@ Header
 
         .container .context .group {
             float: left;
-        }
-
-        .container .context .group {
             height: 34px;
         }
-
-            .container .context .group.total {
-                display: block;
-            }
 }
 
 @media all and (min-width: 768px) {
     .container .context .group {
         margin: 5px 10px 0;
-    }
-
-    .container .context .right {
-        float: right;
     }
 
     .container .context .group.actions {
@@ -697,7 +695,17 @@ Header
 
 @media all and (min-width: 992px) {
     .container .context .group {
-        margin: 5px 20px 0;
+        margin: 5px 0 0 20px;
+    }
+}
+
+@media all and (min-width: 1170px) {
+    .container .context .right {
+        float: right;
+    }
+
+    .container .context .group.total {
+        display: block;
     }
 }
 /*SM - 10/06 - SWWEB-435*/
@@ -705,6 +713,7 @@ Header
 @media all and (min-width: 1px) {
     .container header {
         position: relative;
+        z-index: 6000;
     }
 
         .container header .menu-expand {
@@ -817,6 +826,7 @@ Header
 
     .affix-pagination {
         position: fixed;
+        z-index: 5000;
     }
 
     .listgrid-thead {
