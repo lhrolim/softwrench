@@ -457,6 +457,34 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
+    <entity name="invbalances" idAttribute="invbalancesid">
+      <attributes>
+        <attribute name="itemnum" type="varchar" required="true" />
+        <attribute name="location" type="varchar" required="true" />
+        <attribute name="binnum" type="varchar" required="false" />
+        <attribute name="lotnum" type="varchar" required="false" />
+        <attribute name="curbal" type="double" required="true" />
+        <attribute name="physcnt" type="double" required="true" />
+        <attribute name="physcntdate" type="datetime" required="false" />
+        <attribute name="reconciled" type="smallint" required="true" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="itemsetid" type="varchar" required="true" />
+        <attribute name="conditioncode" type="varchar" required="false" />
+        <attribute name="invbalancesid" type="bigint" required="true" />
+        <attribute name="stagingbin" type="smallint" required="true" />
+        <attribute name="stagedcurbal" type="decimal" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="invbalances" />
+      </connectorParameters>
+    </entity>
+
     <entity name="commlog" idAttribute="commloguid">
       <attributes>
         <attribute name="commlogid" type="int" required="true" />

@@ -162,27 +162,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </attributes>
     </entity>
     
-    <entity name="invbalances" idAttribute="itemnum">
+    <entity name="invbalances" idAttribute="invbalancesid">
       <attributes>
-        <attribute name="itemnum" type="varchar" required="true" />
-        <attribute name="location" type="varchar" required="true" />
-        <attribute name="binnum" type="varchar" required="false" />
-        <attribute name="lotnum" type="varchar" required="false" />
-        <attribute name="curbal" type="decimal" required="true" />
-        <attribute name="physcnt" type="decimal" required="true" />
-        <attribute name="physcntdate" type="datetime" required="false" />
         <attribute name="ib1" type="varchar" required="false" />
-        <attribute name="reconciled" type="smallint" required="true" />
-        <attribute name="sourcesysid" type="varchar" required="false" />
-        <attribute name="ownersysid" type="varchar" required="false" />
-        <attribute name="externalrefid" type="varchar" required="false" />
-        <attribute name="sendersysid" type="varchar" required="false" />
-        <attribute name="orgid" type="varchar" required="true" />
-        <attribute name="siteid" type="varchar" required="true" />
-        <attribute name="conditioncode" type="varchar" required="false" />
-        <attribute name="invbalancesid" type="int" required="true" />
-        <attribute name="itemsetid" type="varchar" required="true" />
-        <attribute name="rowstamp" type="timestamp" required="false" />
       </attributes>
       <relationships>
         <relationship to="item" >
@@ -196,7 +178,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
       </relationships>
       <connectorParameters>
-        <connectorParameter key="dbtable" value="invbalances" />
+        <connectorParameter key="integration_interface" value="SWINVBAL" />
       </connectorParameters>
     </entity>
     
@@ -1861,19 +1843,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=100px" />
           </field>
           <properties>
-            <property key="list.click.mode" value="output"/>
+            <property key="list.click.schema" value="detail"/>
           </properties>
         </list>
 
-        <schema id="detail" mode="output" platform="web" title="Inventory Details">
-          <field label="Item:" attribute="itemnum" />
-          <field label="Description:" attribute="item_.description" />
-          <field label="Storeroom:" attribute="location" />
-          <field label="Bin:" attribute="binnum" />
-          <field label="Balance:" attribute="curbal" >
-            <renderer type="fieldwithbuttons" params="idField=hie; icon=fa fa-barcode; btnposition=left"/>
-          </field>
-          <field label="Site:" attribute="siteid" />
+        <schema id="detail" stereotype="detail" title="Inventory Balance Details">
+          <field label="Inventory Balances ID:" attribute="invbalancesid" required="true" readonly="true" hidden="true"/>
+          <field label="Item:" attribute="itemnum" readonly="true"/>
+          <field label="Description:" attribute="item_.description" readonly="true"/>
+          <field label="Storeroom:" attribute="location" readonly="true"/>
+          <field label="Bin:" attribute="binnum" readonly="true"/>
+          <field label="Balance:" attribute="curbal"/>
+          <field label="Site:" attribute="siteid" readonly="true"/>
+          <field attribute="physcnt" hidden="true"/>
         </schema>
       </schemas>
     </application>
