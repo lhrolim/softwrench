@@ -10,8 +10,7 @@ using System;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
     class IsmSRCrudConnectorDecorator : BaseISMTicketDecorator {
-
-
+        
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             base.BeforeCreation(maximoTemplateData);
             var jsonObject = (CrudOperationData)maximoTemplateData.OperationData;
@@ -26,6 +25,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
             var webServiceObject = (ServiceIncident)maximoTemplateData.IntegrationObject;
             HandleStatus(jsonObject, webServiceObject);
             ISMAttachmentHandler.HandleAttachmentsForUpdate(jsonObject, webServiceObject);
+
+            HapagChangeHandler.CheckSR4ChangeGroupID(jsonObject, webServiceObject);            
         }
 
         protected override Metrics PopulateMetrics(ServiceIncident webServiceObject, CrudOperationData jsonObject) {

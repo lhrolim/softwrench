@@ -1,9 +1,23 @@
-﻿using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
+﻿using System;
 using System.Text;
+using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class HapagChangeHandler {
+
+        public static void CheckSR4ChangeGroupID(CrudOperationData entity, ServiceIncident webServiceObject) {
+            // If SR is a SR4Change...
+            var templateId = entity.GetAttribute("templateid") as string; 
+            if (!String.IsNullOrWhiteSpace(templateId) &&
+                (templateId.Equals("HLCDECHG") || templateId.Equals("HLCDECHTUI") || templateId.Equals("HLCDECHSSO"))) {
+
+                //...update the Group ID
+                webServiceObject.Problem.ProviderAssignedGroup.Group.GroupID = GroupId;
+                webServiceObject.Problem.ProviderAssignedGroup.Group.Address.OrganizationID = OrganizationId;
+                webServiceObject.Problem.ProviderAssignedGroup.Group.Address.LocationID = LocationId;
+            }
+        }
 
         public static string ParseSchemaBasedLongDescription(CrudOperationData entity, string schemaId) {
             var sb = new StringBuilder();
@@ -41,11 +55,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         public static void FillDefaultValuesUpadteChange(ChangeRequest webServiceObject) {
             webServiceObject.Change = new Change() { CustomerID = CustomerId, Description = "@@Use Case for updating a Change record" };
-
+            /*
             var address = new Address() { OrganizationID = OrganizationId, LocationID = LocationId };
             var group = new Group1() { GroupID = GroupId, Address = address };
             var assignedGroup = new RequesterAssignedGroup() { Group = group };
             webServiceObject.AssignedToGroup = new RequesterAssignedGroup[] { assignedGroup };
+            */
         }
     }
 }
