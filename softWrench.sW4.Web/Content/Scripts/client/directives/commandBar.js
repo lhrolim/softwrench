@@ -112,6 +112,11 @@
             };
 
             $scope.cancel = function () {
+                if ($rootScope.showingModal) {
+                    //Hide the modal calling the modal service and not use the general cancel function 
+                    modalService.hide();
+                    return;
+                }
                 $scope.cancelfn({ data: $scope.previousdata, schema: $scope.previousschema });
             };
 
