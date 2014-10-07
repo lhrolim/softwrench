@@ -219,6 +219,8 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
       <application id="groupreport" title="Group Report" tooltip="Click to view Group Report" schema="groupreport" ref="persongroupview"/>
 		</container>
 
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Request ID &amp; Summary"
+                 params="id=servicerequestmenusearchtom;application=servicerequest;label=Service Request Search;searchFields=ticketid,description;schema=list" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Incidents"
 							 params="id=incidentsearchtom;application=incident;label=Incident Search;searchFields=ticketid,description" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchtom;application=change;label=Change Search;
@@ -258,6 +260,8 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
       <application id="groupreport" title="Group Report" tooltip="Click to view Group Report" schema="groupreport" ref="persongroupview"/>
 		</container>
 
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Request ID &amp; Summary"
+                 params="id=servicerequestmenusearchitom;application=servicerequest;label=Service Request Search;searchFields=ticketid,description;schema=list" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Incidents"
 							 params="id=incidentsearchitom;application=incident;label=Incident Search;searchFields=ticketid,description" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchitom;application=change;label=Change Search;
@@ -301,10 +305,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
 
 		<container title="Reports" tooltip="Click Here to access your Reports" id="Reports">
-			<application id="incidentperlocationscimreport" title="Incident Per Location/SCIM Report" tooltip="Click to view Incident Per Location/SCIM Report" schema="incidentperlocationreportfilters" ref="incident" />
 			<application id="incidentdetailreport" title="Incident Detail Report" tooltip="Click to view Incident Detail Report" schema="incidentdetailreportfilters" ref="incident" />
-			<application id="hardwarerepairreport" title="Hardware Repair Report" tooltip="Click to view Hardware Repair Report" schema="hardwarerepairreportfilters" ref="incident" />
-			<application id="tapebackupreport" title="Tape BackUp Report" tooltip="Click to view Tape Back Up Report" schema="tapebackupreport" ref="incident" />
 		</container>
 
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Request ID &amp; Summary"
@@ -313,6 +314,8 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 							 params="id=incidentsearchsso;application=incident;label=Incident Search;searchFields=ticketid,description" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchsso;application=change;label=Change Search;
                  searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search"/>
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchsso;application=problem;label=Problem Search;
+                 searchFields=ticketid,description" tooltip="Search Problems"/>
 	</container>
 
 	<divider role="tui"/>
