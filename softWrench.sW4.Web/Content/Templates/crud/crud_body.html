@@ -22,29 +22,29 @@
 
             <div ng-switch-when="true" class="hiddenonprint detail-body">
 
-                <ul class="nav nav-tabs compositiondetailtab hapag-composition">
-                    <li class="active">
-                        <a href="#main" data-toggle="tab"><i class="fa fa-file-text-o"></i> {{schema.title}}</a>
-                    </li>
-                    <li ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type">
-                        <a ng-switch-when="ApplicationCompositionDefinition"
-                           ng-href="#{{tab.tabId}}" data-toggle="tab" ng-show="!composition.hidden">
-                           <i class="{{tab.schema.schemas.list.properties['list.schema.icon']}}"></i> {{i18N(tab.tabId + '._title',tab.label)}}
-                        </a>
-                        <a ng-switch-when="ApplicationTabDefinition"
-                           ng-href="#{{tab.tabId}}" data-toggle="tab" ng-show="!composition.hidden">
-                            <i class="{{tab.icon}}"></i> 
-                            {{i18NTabLabel(tab)}}
-                        </a>
-                    </li>
-                    <div ng-if="isNotHapagTest()">
-                        <div class="pull-right">
-                            <button type="button" class="btn btn-primary" ng-click="toConfirmCancel(previousdata,previousschema)"><i style="margin-right: 0.5em" class="glyphicon ng-scope glyphicon-backward"></i>Back&emsp;</button>
-                            <button type="button" class="btn btn-primary" ng-click="crawl(1)"> <i class ="fa fa-arrow-left"></i> PREVIOUS&emsp; </button>
-                            <button type="button" id="forward" class="btn btn-primary" ng-click="crawl(0)"><i class ="fa fa-arrow-right"></i>  NEXT </button>
-                        </div>
+                <div class="detail-header clearfix">
+                    <ul class="nav nav-tabs compositiondetailtab hapag-composition">
+                        <li class="active">
+                            <a href="#main" data-toggle="tab"><i class="fa fa-file-text-o"></i> {{schema.title}}</a>
+                        </li>
+                        <li ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type">
+                            <a ng-switch-when="ApplicationCompositionDefinition"
+                               ng-href="#{{tab.tabId}}" data-toggle="tab" ng-show="!composition.hidden">
+                               <i class="{{tab.schema.schemas.list.properties['list.schema.icon']}}"></i> {{i18N(tab.tabId + '._title',tab.label)}}
+                            </a>
+                            <a ng-switch-when="ApplicationTabDefinition"
+                               ng-href="#{{tab.tabId}}" data-toggle="tab" ng-show="!composition.hidden">
+                                <i class="{{tab.icon}}"></i> 
+                                {{i18NTabLabel(tab)}}
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="buttons" ng-if="isNotHapagTest()">
+                        <button type="button" class="btn btn-primary" ng-click="toConfirmCancel(previousdata,previousschema)"><i style="margin-right: 0.5em" class="glyphicon ng-scope glyphicon-backward"></i>Back</button>
+                        <button type="button" class="btn btn-primary" ng-click="crawl(1)"> <i style="margin-right: 0.5em" class ="fa fa-arrow-left"></i>PREVIOUS</button>
+                        <button type="button" id="forward" class="btn btn-primary" ng-click="crawl(0)"><i style="margin-right: 0.5em" class="fa fa-arrow-right"></i>NEXT</button>
                     </div>
-                </ul>
+                </div>
 
                 <div class="tab-content">
                     <div class="tab-pane active" id="main">
