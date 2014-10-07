@@ -610,21 +610,12 @@ Header
         }
 
 /*SM - 10/06 - SWWEB-435*/
-/*.affix-pagination:hover {
-    z-index: 9999;
-}*/
-
 .container .context {
     width: 100%;
     background: #eee;
     border-bottom: #000 1px solid;
     padding: 5px 20px 10px;
 }
-
-/*.container .context .tooltip {
-    z-index: 99999;
-    background: #f00;
-}*/
 
     .container .context .group {
         margin: 5px 10px 0;
@@ -653,52 +644,6 @@ Header
 
 .container button {
     text-transform: uppercase;
-}
-
-@media all and (min-width: 480px) {
-    .container .context {
-        padding: 5px 20px;
-    }
-
-        .container .context .group {
-            float: left;
-        }
-
-        .container .context .group {
-            height: 34px;
-        }
-
-            .container .context .group.total {
-                display: block;
-            }
-}
-
-@media all and (min-width: 768px) {
-    .container .context .group {
-        margin: 5px 10px 0;
-    }
-
-    .container .context .right {
-        float: right;
-    }
-
-    .container .context .group.actions {
-        display: block;
-    }
-
-    .container .context .group.total {
-        height: auto;
-    }
-
-        .container .context .group.total label {
-            margin: 0;
-        }
-}
-
-@media all and (min-width: 992px) {
-    .container .context .group {
-        margin: 5px 20px 0;
-    }
 }
 /*SM - 10/06 - SWWEB-435*/
 
@@ -778,12 +723,50 @@ Header
     .container header .menu-grid li {
         width: 49%;
     }
+
+    .container .context {
+        padding: 5px 20px;
+    }
+
+        .container .context .group {
+            float: left;
+        }
+
+        .container .context .group {
+            height: 34px;
+        }
+
+            .container .context .group.total {
+                display: block;
+            }
 }
 
 @media all and (min-width: 640px) {
     .container header .menu-grid li {
         width: 32%;
     }
+}
+
+@media all and (min-width: 768px) {
+    .container .context .group {
+        margin: 5px 10px 0;
+    }
+
+    .container .context .right {
+        float: right;
+    }
+
+    .container .context .group.actions {
+        display: block;
+    }
+
+    .container .context .group.total {
+        height: auto;
+    }
+
+        .container .context .group.total label {
+            margin: 0;
+        }
 }
 
 @media all and (min-width: 780px) {
@@ -823,6 +806,12 @@ Header
         position: fixed;
         max-width: 1139px;
         width: 100%;
+    }
+}
+
+@media all and (min-width: 992px) {
+    .container .context .group {
+        margin: 5px 20px 0;
     }
 }
 
