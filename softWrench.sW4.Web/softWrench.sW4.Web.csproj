@@ -353,6 +353,19 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\Client\kongsberg\menu.mobile.xml" />
+    <Content Include="App_Data\Client\kongsberg\menu.web.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\kongsberg\metadata.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\kongsberg\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_Data\Client\otb\deploy.xml" />
     <Content Include="App_Data\Client\otb\menu.mobile.xml" />
     <Content Include="App_Data\Client\otb\properties.xml">
@@ -795,6 +808,7 @@
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="App_Data\Client\hapag\i18n\es\labels.json" />
     <Content Include="App_Data\Client\otb\statuscolors.json" />
+    <Content Include="App_Data\Client\kongsberg\statuscolors.json" />
     <None Include="App_Data\Schema\Deploy_Metadata.xsd">
       <SubType>Designer</SubType>
     </None>

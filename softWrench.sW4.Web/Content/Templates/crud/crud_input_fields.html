@@ -63,31 +63,41 @@
                 </div>
 
                 <div ng-switch-when="checkbox">
-                    <div ng-if="fieldMetadata.providerAttribute == null">
+                    <!--div ng-if="fieldMetadata.providerAttribute == null">
                         <label ng-repeat="option in fieldMetadata.options" class="checkbox-inline">
                             <input type="checkbox"
-                                class="check"
-                                name="datamap[fieldMetadata.attribute]"
-                                value="{{option.value}}"
-                                ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)"
-                                ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)">
+                                   class="check"
+                                   name="datamap[fieldMetadata.attribute]"
+                                   value="{{option.value}}"
+                                   ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)"
+                                   ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)">
                             {{i18NOptionField(option,fieldMetadata,schema)}}
                         </label>
-                    </div>
-                    <table ng-if="fieldMetadata.providerAttribute != null" style="min-width: 200px;">
-                        <tr ng-repeat="option in associationOptions[fieldMetadata.associationKey]">
-                            <td>
+                    </div-->
+                    <table ng-if="fieldMetadata.type == 'OptionField'" style="min-width: 200px;">
+                        <tr ng-repeat="option in getCheckboxOptions(fieldMetadata)">
+                            <td ng-if="fieldMetadata.providerAttribute != null">
                                 {{i18NOptionField(option,fieldMetadata,schema)}}
                             </td>
                             <td>
                                 <input type="checkbox"
-                                    name="datamap[fieldMetadata.attribute]"
-                                    value="{{option.value}}"
-                                    ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)"
-                                    ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)">
+                                       name="datamap[fieldMetadata.attribute]"
+                                       value="{{option.value}}"
+                                       ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)"
+                                       ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)">
+                            </td>
+                            <td ng-if="fieldMetadata.providerAttribute == null">
+                                {{i18NOptionField(option,fieldMetadata,schema)}}
                             </td>
                         </tr>
                     </table>
+                    <div ng-if="fieldMetadata.type != 'OptionField'" style="min-width: 200px;">
+                        <input type="checkbox"
+                               id="checkbox"
+                               ng-model="datamap[fieldMetadata.attribute]"
+                               value="getCheckBoxValue(datamap,fieldMetadata)"
+                                />
+                    </div>
                 </div>
 
 

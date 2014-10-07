@@ -123,6 +123,19 @@ app.directive('crudInputFields', function (contextService) {
                 return title;
             };
 
+            $scope.getCheckboxOptions = function(fieldMetadata){
+                if (fieldMetadata.providerAttribute == null) {
+                    return fieldMetadata.options;
+                }
+                return associationOptions[fieldMetadata.associationKey];
+            }
+
+            $scope.getCheckBoxValue = function (datamap,fieldMetadata) {
+                if (datamap[fieldMetadata.attribute]== '1') {
+                    $('#checkbox').prop('checked',true);
+                } 
+            }
+
             $scope.$on('sw_associationsupdated', function (event, associationoptions) {
                 //this in scenarios where a section is compiled before the association has returned from the server... angular seems to get lost in the bindings
                 $scope.associationOptions = associationoptions;
