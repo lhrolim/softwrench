@@ -65,7 +65,7 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
 
         public bool IsNumber {
             get {
-                return Type == "int" || Type == "bigint" || Type == "float" || Type == "integer" || Type == "decimal" || Type == "double";
+                return Type.EqualsAny("int", "bigint", "float", "integer", "decimal", "double");
             }
         }
 
