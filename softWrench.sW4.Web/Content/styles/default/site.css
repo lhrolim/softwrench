@@ -360,6 +360,16 @@ span.combobox-clear {
     margin-top: 60px;
 }
 
+    .commandbar .print {
+        display: none;
+    }
+
+@media all and (min-width: 768px) {
+        .commandbar .print {
+        display: inline-block;
+    }
+}
+
 .commandButton {
     margin-right: 8px;
     min-width: 100px;
@@ -686,9 +696,9 @@ Header
         margin: 5px 10px 0;
     }
 
-        .container .context .group.actions {
+        /*.container .context .group.actions {
             display: none;
-        }
+        }*/
 
         .container .context .group.pagesize {
             padding-top: 5px;
@@ -699,7 +709,7 @@ Header
         }
 
         .container .context .group.total {
-            display: none;
+            /*display: none;*/
             margin-top: 10px;
         }
 
@@ -801,9 +811,9 @@ Header
             height: 34px;
         }
 
-            .container .context .group.total {
+            /*.container .context .group.total {
                 display: block;
-            }
+            }*/
 }
 
 @media all and (min-width: 640px) {
@@ -821,9 +831,9 @@ Header
         float: right;
     }
 
-    .container .context .group.actions {
+    /*.container .context .group.actions {
         display: block;
-    }
+    }*/
 
     .container .context .group.total {
         height: auto;

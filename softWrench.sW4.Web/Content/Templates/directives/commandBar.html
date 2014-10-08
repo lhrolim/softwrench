@@ -6,7 +6,7 @@
         <tr>
             <td style="text-align: center; vertical-align: middle;" data-class="commandbar">
                 <button ng-repeat="command in getCommands()"
-                    type="button" class="btn btn-primary commandButton navbar-btn" ng-click="doCommand(command)"
+                    type="button" class="btn btn-primary commandButton navbar-btn {{command.id}}" ng-click="doCommand(command)"
                     ng-show="!isCommandHidden(schema,command)">
                     <i style="margin-right: 0.5em" class="glyphicon" ng-class="[command.icon]"
                         ng-if="command.icon!=null"></i>{{i18NCommandLabel(command)}}
