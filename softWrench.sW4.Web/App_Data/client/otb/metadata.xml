@@ -459,7 +459,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <entity name="commlog" idAttribute="commloguid">
       <attributes>
         <attribute name="commlogid" type="int" required="true"/>
-        <attribute name="sendto" type="text" required="false" />
+        <attribute name="sendto" type="varchar" required="false" />
         <attribute name="sendfrom" type="varchar" required="true" />
         <attribute name="subject" type="varchar" required="false" />
         <attribute name="createby" type="varchar" required="true" />
@@ -479,6 +479,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="keepfailed" type="smallint" required="true" />
         <attribute name="ccflag" query="CASE WHEN !@cc is not null THEN 'true' ELSE 'false' end " type="bool"/>
       </attributes>
+      <relationships>
+        <relationship to ="email">
+          <relationshipAttribute from="sendto" to="emailaddress" primary="true"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="commlog" />
       </connectorParameters>
@@ -2148,7 +2153,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <schema id="detail" stereotype="compositiondetail">
           <field attribute="commlogid" hidden="true" />
-          <field attribute="sendto" label="To:" />
+          <!--field attribute="sendto" label="To:" /-->
+          <association label="To:" target="sendto" labelfield="email_.emailaddress">
+            <renderer type="lookup"/>
+          </association>
           <field attribute="cc" label="Cc:"/>
           <field attribute="sendfrom" label="From:"  />
           <field attribute="subject" label="Subject:" />
