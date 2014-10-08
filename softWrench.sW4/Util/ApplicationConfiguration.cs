@@ -216,6 +216,54 @@ namespace softWrench.sW4.Util {
 
         #endregion
 
+        #region Attachments
+
+        public static string[] AllowedFilesExtensions {
+            get {
+                var ext = MetadataProvider.GlobalProperty("allowedAttachmentExtensions");
+                if (!String.IsNullOrWhiteSpace(ext)) {
+                    return ext.Split(',');
+                } else {
+                    return new string[0];
+                }               
+            }
+        }
+
+        /// <summary>
+        /// Gets the maximum screenshot size in megabytes
+        /// </summary>
+        public static int MaxScreenshotSize {
+            get {
+                var maxScreenshotSizeStr = MetadataProvider.GlobalProperty("maxScreenshotSize");
+                int maxScreenshotSizeInt = 5;
+                Int32.TryParse(maxScreenshotSizeStr, out maxScreenshotSizeInt);
+                return maxScreenshotSizeInt;
+            }
+        }
+
+        /// <summary>
+        /// Gets the maximum attachment size in megabytes
+        /// </summary>
+        public static int MaxAttachmentSize {
+            get {
+                var maxAttachmentSizeStr = MetadataProvider.GlobalProperty("maxAttachmentSize");
+                int maxAttachmentSizeInt = 10;
+                Int32.TryParse(maxAttachmentSizeStr, out maxAttachmentSizeInt);
+                return maxAttachmentSizeInt;
+            }
+        }
+
+        #endregion
+
+        public static Int32 MaximoRequestTimeout {
+            get {
+                var timeoutStr = MetadataProvider.GlobalProperty("maximoRequestTimeout");
+                var timeoutInt = 100000;
+                Int32.TryParse(timeoutStr, out timeoutInt);
+                return timeoutInt;
+            }
+        }
+
         public static DBMS? _swdbType = null;
         public static DBMS? _maximodbType = null;
 
@@ -230,9 +278,7 @@ namespace softWrench.sW4.Util {
         public static Boolean IsUnitTest {
             get { return GetProfile() == UnitTestProfile; }
         }
-
         
-
         public static long StartTimeMillis { get; set; }
 
         public static Boolean IsLocal() {

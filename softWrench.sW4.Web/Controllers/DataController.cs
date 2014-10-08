@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
 using softWrench.sW4.Web.Util;
+using System.Diagnostics;
 
 namespace softWrench.sW4.Web.Controllers {
 
@@ -72,6 +73,7 @@ namespace softWrench.sW4.Web.Controllers {
             response.Title = _i18NResolver.I18NSchemaTitle(response.Schema);
             var schemaMode = request.Key.Mode ?? response.Schema.Mode;
             response.Mode = schemaMode.ToString().ToLower();
+
             return response;
         }
 
@@ -141,13 +143,22 @@ namespace softWrench.sW4.Web.Controllers {
         /// </summary>
         public IApplicationResponse Post([NotNull] string application, JObject json,
             ClientPlatform platform, [NotNull] string currentSchemaKey, string nextSchemaKey = null, bool mockmaximo = false) {
+            
+            Log.InfoFormat("PERFORMANCE - Data controller POST started at {0}.", DateTime.Now);
+            var before = Stopwatch.StartNew();
+
             if (Log.IsDebugEnabled) {
                 Log.DebugFormat("json received: " + json.ToString());
             }
             var schemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, currentSchemaKey, platform);
             _contextLookuper.FillContext(schemaKey);
-            var nextschemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, nextSchemaKey, platform);
-            return DoExecute(application, json, null, OperationConstants.CRUD_CREATE, schemaKey, mockmaximo, nextschemaKey, platform);
+            var nextschemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, nextSchemaKey, platform);            
+            var response = DoExecute(application, json, null, OperationConstants.CRUD_CREATE, schemaKey, mockmaximo, nextschemaKey, platform);
+
+            var msDelta = LoggingUtil.MsDelta(before);
+            Log.InfoFormat("PERFORMANCE - Data controller POST executed in {0} ms.", msDelta);
+
+            return response;
         }
 
         /// <summary>

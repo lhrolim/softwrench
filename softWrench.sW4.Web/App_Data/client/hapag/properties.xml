@@ -23,6 +23,7 @@
 	<property key="multitenantprefix" value="HLC-%"/>
 	<property key="globaservletpath" value="https://170.225.28.205/HAPAGLLOYDINCTestWS/DocHandlerServlet"/>
 	<property key="ignoreWsCertErrors" value="true"/>
+  <property key="maximoRequestTimeout" value="600000"/> <!-- in ms -->
 
 	<property key="faqusefullinksPath" value="C:\ServiceIT\config\SR_FAQ.txt"/>
 	<property key="serviceItLoginPath" value="C:\ServiceIT\config\ServiceITLogin.properties"/>
@@ -34,7 +35,10 @@
 	<property key="defaultChangeTeamplateId" value="HLCDECHG"/>
 	<property key="ssoChangeTeamplateId" value="HLCDECHSSO"/>
 	<property key="tuiChangeTeamplateId" value="HLCDECHTUI"/>
-
+  <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf"/>
+  <property key="maxScreenshotSize" value="5"/>  <!-- in mb -->
+  <property key="maxAttachmentSize" value="10"/>  <!-- in mb -->
+  
 	<environment key="dev">
 		<!--    <property key="wsprovider" value="mif" />-->
 		<!--    <property key="targetmapping" value="maximo7.2.1"/>-->

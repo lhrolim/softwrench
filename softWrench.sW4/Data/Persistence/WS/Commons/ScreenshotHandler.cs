@@ -1,4 +1,5 @@
-﻿using softWrench.sW4.Metadata.Applications;
+﻿using log4net;
+using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class ScreenshotHandler {
 
         protected AttachmentHandler _attachmentHandler;
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ScreenshotHandler));
 
         public ScreenshotHandler(AttachmentHandler attachmentHandler) {
             _attachmentHandler = attachmentHandler;
@@ -31,8 +34,23 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     screenshotName = screenshotName.Substring(0, screenshotName.Length - 3) + "html";
                 }
 
+                Validate(screenshotName, screenshotString);
+
                 _attachmentHandler.HandleAttachments(maximoObj, screenshotString, screenshotName, applicationMetadata);
             }
+        }
+
+        public static bool Validate(string screenshotPath, string screenshotData) {
+            
+            var maxSSSizeInBytes = ApplicationConfiguration.MaxScreenshotSize * 1024 * 1024;
+            Log.InfoFormat("Screenshot size: {0}", screenshotData.Length);
+            if (screenshotData != null && screenshotData.Length > maxSSSizeInBytes) {
+                var screenshotLength = screenshotData.Length / 1024 / 1024;
+                throw new Exception(String.Format(
+                    "Screenshot is too large ({0} MB). Max screenshot size is {1} MB).", screenshotLength, ApplicationConfiguration.MaxAttachmentSize));
+            }           
+
+            return true;
         }
     }
 }
