@@ -74,10 +74,11 @@
                             {{i18NOptionField(option,fieldMetadata,schema)}}
                        
                         </label>
-                    </div>
-                    <table ng-if="fieldMetadata.providerAttribute != null" style="min-width: 200px;">
-                        <tr ng-repeat="option in associationOptions[fieldMetadata.associationKey]">
-                            <td>{{i18NOptionField(option,fieldMetadata,schema)}}
+                    </div-->
+                    <table ng-if="fieldMetadata.type == 'OptionField'" style="min-width: 200px;">
+                        <tr ng-repeat="option in getCheckboxOptions(fieldMetadata)">
+                            <td ng-if="fieldMetadata.providerAttribute != null">
+                                {{i18NOptionField(option,fieldMetadata,schema)}}
                             </td>
                             <td>
                                 <input type="checkbox"
