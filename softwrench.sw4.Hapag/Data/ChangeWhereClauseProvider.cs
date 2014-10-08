@@ -4,6 +4,7 @@ using softWrench.sW4.Security.Services;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
 using System;
+using softWrench.sW4.Data.Persistence.WS.Commons;
 
 namespace softwrench.sw4.Hapag.Data {
     public class ChangeWhereClauseProvider : ISingletonComponent {
@@ -68,12 +69,12 @@ namespace softwrench.sw4.Hapag.Data {
         private string GetTemplateIds() {
             var module = _contextLookuper.LookupContext().Module;
             if (module.Equals(FunctionalRole.Sso.ToString(), StringComparison.InvariantCultureIgnoreCase)) {
-                return "'HLCDECHSSO'";
+                return HapagChangeHandler.GetSSOTemplateString();
             }
             if (module.Equals(FunctionalRole.Tui.ToString(), StringComparison.InvariantCultureIgnoreCase)) {
-                return "'HLCDECHTUI'";
+                return HapagChangeHandler.GetTUITemplateString();
             }
-            return "'HLCDECHG','HLCDECHTUI','HLCDECHSSO'";
+            return HapagChangeHandler.GetAllTemplateString();
         }
     }
 }

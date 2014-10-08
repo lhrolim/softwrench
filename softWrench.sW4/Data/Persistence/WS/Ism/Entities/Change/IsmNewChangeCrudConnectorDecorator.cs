@@ -78,13 +78,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
             var module = ContextManager.LookupContext().Module;
             if (!string.IsNullOrEmpty(module)) {
                 if (module.Equals("sso", StringComparison.InvariantCultureIgnoreCase)) {
-                    return "HLCDECHSSO";
+                    return ApplicationConfiguration.SsoChangeTeamplateId[0];
                 }
                 if (module.Equals("tui", StringComparison.InvariantCultureIgnoreCase)) {
-                    return "HLCDECHTUI";
+                    return ApplicationConfiguration.TuiChangeTeamplateId[0];
                 }
             }
-            return "HLCDECHG";
+            return ApplicationConfiguration.DefaultChangeTeamplateId[0];
         }
 
         protected override ISMServiceEntities.Problem PopulateProblem(CrudOperationData jsonObject, ServiceIncident webServiceObject,

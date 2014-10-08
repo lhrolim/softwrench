@@ -32,9 +32,9 @@
 	<property key="loginErrorMessage" value="Ungültiger Username oder falsches Passwort \n Invalid Username or Bad Password \n No válido Nombre de usuario o contraseña incorreta"/>
 	<property key="loginUserNameMessage" value="Username is required \n Username wird benötigt \n nombre de usuario es necessario"/>
 	<property key="loginPasswordMessage" value="Password is required \n Passwort wird benötigt \n se requiere contraseña"/>
-	<property key="defaultChangeTeamplateId" value="HLCDECHG"/>
-	<property key="ssoChangeTeamplateId" value="HLCDECHSSO"/>
-	<property key="tuiChangeTeamplateId" value="HLCDECHTUI"/>
+	<property key="defaultChangeTeamplateId" value="HLCDECHG"/> <!-- comma-separated list of templates; the first one will be used when inserting a new change -->
+	<property key="ssoChangeTeamplateId" value="HLCDECHSSO"/> <!-- comma-separated list of templates; the first one will be used when inserting a new change -->
+	<property key="tuiChangeTeamplateId" value="HLCDECHTUI"/> <!-- comma-separated list of templates; the first one will be used when inserting a new change -->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf"/>
   <property key="maxScreenshotSize" value="5"/>  <!-- in mb -->
   <property key="maxAttachmentSize" value="10"/>  <!-- in mb -->

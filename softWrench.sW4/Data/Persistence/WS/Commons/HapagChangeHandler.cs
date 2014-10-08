@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
-    class HapagChangeHandler {
+    public class HapagChangeHandler {
 
         public static void CheckSR4ChangeGroupID(CrudOperationData entity, ServiceIncident webServiceObject) {
             // If SR is a SR4Change...
             var templateId = entity.GetAttribute("templateid") as string; 
-            if (!String.IsNullOrWhiteSpace(templateId) &&
-                (templateId.Equals("HLCDECHG") || templateId.Equals("HLCDECHTUI") || templateId.Equals("HLCDECHSSO"))) {
+            if (!String.IsNullOrWhiteSpace(templateId) && GetAllChangeTemplates().Contains(templateId)) {
 
                 //...update the Group ID
                 webServiceObject.Problem.ProviderAssignedGroup.Group.GroupID = GroupId;
@@ -61,6 +62,31 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var assignedGroup = new RequesterAssignedGroup() { Group = group };
             webServiceObject.AssignedToGroup = new RequesterAssignedGroup[] { assignedGroup };
             */
+        }
+
+        public static string[] GetAllChangeTemplates() {
+            return ApplicationConfiguration.DefaultChangeTeamplateId
+                .Union(ApplicationConfiguration.SsoChangeTeamplateId)
+                .Union(ApplicationConfiguration.TuiChangeTeamplateId)
+                .ToArray(); 
+        }
+
+        public static string GetSSOTemplateString() {
+            return TemplateIdHandler(ApplicationConfiguration.SsoChangeTeamplateId);
+        }
+
+        public static string GetTUITemplateString() {
+            return TemplateIdHandler(ApplicationConfiguration.TuiChangeTeamplateId);
+        }
+        public static string GetAllTemplateString() {
+            return TemplateIdHandler(GetAllChangeTemplates());
+        }
+
+        private static string TemplateIdHandler(string[] templateids) {
+            var strtemplateids = String.Join("','", templateids);
+            strtemplateids = "'" + strtemplateids + "'";
+
+            return strtemplateids;
         }
     }
 }

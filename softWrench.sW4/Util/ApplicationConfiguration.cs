@@ -185,32 +185,24 @@ namespace softWrench.sW4.Util {
 
         #region Change
 
-        internal static string TemplateIdHandler(string templateid) {
-            var templateids = templateid.Split(',');
-            var strtemplateids = String.Join("','", templateids);
-            strtemplateids = "'" + strtemplateids + "'";
-
-            return strtemplateids;
-        }
-
-        public static string DefaultChangeTeamplateId {
+        public static string[] DefaultChangeTeamplateId {
             get {
                 var t = MetadataProvider.GlobalProperty("defaultChangeTeamplateId");
-                return TemplateIdHandler(t);
+                return t.Split(',');
             }
         }
 
-        public static string SsoChangeTeamplateId {
+        public static string[] SsoChangeTeamplateId {
             get {
                 var t = MetadataProvider.GlobalProperty("ssoChangeTeamplateId");
-                return TemplateIdHandler(t);
+                return t.Split(',');
             }
         }
 
-        public static string TuiChangeTeamplateId {
+        public static string[] TuiChangeTeamplateId {
             get {
                 var t = MetadataProvider.GlobalProperty("tuiChangeTeamplateId");
-                return TemplateIdHandler(t);
+                return t.Split(',');
             }
         }
 
