@@ -20,12 +20,14 @@ namespace softWrench.sW4.Preferences {
             _gridFilterManager = gridFilterManager;
         }
 
-        public IGenericResponseResult CreateNewFilter([NotNull]String application, string schema, [NotNull]string queryString, [NotNull]string alias) {
-            Validate.NotNull(application,"application");
-            Validate.NotNull(queryString,"queryString");
-            Validate.NotNull(alias,"alias");
+        public IGenericResponseResult CreateNewFilter([NotNull]String application, string schema, string fields, string operators, string values, [NotNull]string alias) {
+            Validate.NotNull(application, "application");
+            Validate.NotNull(fields, "fields");
+            Validate.NotNull(operators, "operators");
+            Validate.NotNull(values, "values");
+            Validate.NotNull(alias, "alias");
 
-            var association = _gridFilterManager.CreateNewFilter(SecurityFacade.CurrentUser(), application, queryString, alias, schema);
+            var association = _gridFilterManager.CreateNewFilter(SecurityFacade.CurrentUser(), application, fields, operators, values, alias, schema);
             return new GenericResponseResult<GridFilterAssociation>(association) {
                 SuccessMessage = "Filter {0} created successfully".Fmt(alias)
             };

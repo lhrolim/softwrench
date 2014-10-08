@@ -19,23 +19,30 @@ namespace softWrench.sW4.Preferences {
         [Generator(1, Class = "native")]
         public virtual int? Id { get; set; }
 
-        [Property]
+        [Property(Column = "alias_")]
         public string Alias { get; set; }
 
         [Property]
-        public string QueryString { get; set; }
+        public string Fields { get; set; }
+
+        [Property]
+        public string Operators { get; set; }
+
+        [Property(Column = "values_")]
+        public string Values { get; set; }
+
 
         [Property]
         public string Application { get; set; }
 
-        [Property]
+        [Property(Column = "schema_")]
         public string Schema { get; set; }
 
         [Property]
         public DateTime CreationDate { get; set; }
 
         public override string ToString() {
-            return string.Format("Alias: {0}, Application: {1}, QueryString: {2}", Alias, Application, QueryString);
+            return string.Format("Alias: {0}, Application: {4}, Fields: {1}, Operators: {2}, Values: {3}", Alias, Fields, Operators, Values, Application);
         }
 
         protected bool Equals(GridFilter other) {

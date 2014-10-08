@@ -18,7 +18,7 @@ namespace softWrench.sW4.Preferences {
         [ManyToOne(Column = "user_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
         public virtual User User { get; set; }
 
-        [ManyToOne(Column = "gridfilter_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
+        [ManyToOne(Column = "gridfilter_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "save-update")]
         public virtual GridFilter Filter { get; set; }
 
         [Property(TypeType = typeof(BooleanToIntUserType))]

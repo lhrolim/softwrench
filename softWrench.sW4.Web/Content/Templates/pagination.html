@@ -3,22 +3,21 @@
         <div class="group pagesize">
             <label>{{i18N('_grid.pagination.resultsperpage','Results Per Page')}}: </label>
             <select id="pagesize"
-                ng-model="paginationData.pageSize"
-                ng-options="option as option for option in paginationData.paginationOptions"
-                ng-change="selectPage(1)">
-            </select>
+                    ng-model="paginationData.pageSize"
+                    ng-options="option as option for option in paginationData.paginationOptions"
+                    ng-change="selectPage(1)"></select>
         </div>
 
         <div class="group actions" ng-if="!isHapag()">
             <button type="button" class="btn btn-default btn-sm" ng-click="exportToPrint()" href="#" rel="tooltip"
-                data-original-title="{{i18N('_grid.pagination.actions.print','Print')}}" ng-hide="disablePrint">
+                    data-original-title="{{i18N('_grid.pagination.actions.print','Print')}}" ng-hide="disablePrint">
                 <i class="fa fa-print"></i>&ensp;Print
-           
+
             </button>
             <button type="button" class="btn btn-default btn-sm" ng-click="exportToExcel(schema)" href="#" rel="tooltip"
-                data-original-title="{{i18N('_grid.pagination.actions.excel','Export to Excel')}}" ng-hide="disableExport">
+                    data-original-title="{{i18N('_grid.pagination.actions.excel','Export to Excel')}}" ng-hide="disableExport">
                 <i class="fa fa-file-text-o"></i>&ensp;Export
-           
+
             </button>
         </div>
 
@@ -52,40 +51,72 @@
             </a>
         </div>
 
+
         <div ng-if="!isHapag()" class="group filter divider-vertical">
             <div class="divider-vertical"></div>
 
             <div class="btn-group">
-                <button type="button" class="btn btn-default">Advanced Filter</button>
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <button type="button" class="btn btn-default" ng-click="selectPage(paginationData.pageNumber)">
+                    <i class="fa fa-filter"></i>&ensp;{{selectedfilter}}
+                </button>
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-show="hasFilter()">
                     <span class="caret"></span>
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Separated link</a></li>
+                    <li ng-if="selectedfilter">
+                        <a href="#" ng-click="clearFilter()">{{i18N('_grid.filter.clear','Clear Filter')}}</a>
+                    </li>
+                    <li class="divider" ng-if="selectedfilter" ng-if="selectedfilter"></li>
+                    <li ng-repeat="filter in nonSharedFilters()">
+                        <a href="#" ng-click="applyFilter(filter)">{{filter.alias}}</a>
+                    </li>
+                    <li class="divider" ng-if="hasSharedFilter()"></li>
+                    <li ng-repeat="filter in sharedFilters()">
+                        <a href="#" ng-click="applyFilter(filter)">{{filter.alias}}</a>
+                    </li>
                 </ul>
             </div>
 
             <div class="btn-group">
-                <button type="button" class="btn btn-default">Save Filter</button>
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <button type="button" class="btn">
+                    <i class="fa fa-rocket"></i>&ensp;Advanced
+                </button>
+                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Share</a></li>
+                    <li><a href="#" ng-click="saveFilter()"><i class="fa fa-save"></i>&ensp;Save</a></li>
+                    <li><a href="#"><i class="fa fa-share"></i>&ensp;Share</a></li>
                 </ul>
+            </div>
+
+        </div>
+
+        <div class="right">
+            <div class="group total">
+                <label ng-if="isHapag()">{{i18N('_grid.pagination.display',"Displaying Page {0} of {1}, Total items {2}",[paginationData.selectedPage,paginationData.pageCount,paginationData.totalCount])}}</label>
+                <label ng-if="!isHapag()">{{i18N('_grid.pagination.display',"Total Items: {0}",[paginationData.totalCount])}}</label>
             </div>
         </div>
     </div>
-    <div class="right">
-        <div class="group total">
-            <label ng-if="isHapag()">{{i18N('_grid.pagination.display',"Displaying Page {0} of {1}, Total items {2}",[paginationData.selectedPage,paginationData.pageCount,paginationData.totalCount])}}</label>
-            <label ng-if="!isHapag()">{{i18N('_grid.pagination.display',"Total Items: {0}",[paginationData.totalCount])}}</label>
+
+    <!--to be shown as a modal only-->
+    <form id='savefilterform' class="form-horizontal" style="display: none">
+        <div class="form-group">
+            <label class='control-label col-xs-6'>{{i18N('_grid.filter.savefiltername',"Filter Name")}}</label>
+            <div class="col-xs-6">
+                <input type='text' name='filtername' id='savefiltername'
+                       value="{{selectedfilter}}"
+                       class="form-control" />
+            </div>
         </div>
-    </div>
+    </form>
+
+
 </div>
+
+
+
+

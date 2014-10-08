@@ -11,10 +11,12 @@ namespace softWrench.sW4.Web.DB_Migration._4._0 {
 
             Create.Table("PREF_GRIDFILTER")
                 .WithColumn("id").AsInt32().PrimaryKey().Identity()
-                .WithColumn("alias").AsString(MigrationUtil.StringSmall).NotNullable()
+                .WithColumn("alias_").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("application").AsString(MigrationUtil.StringSmall).NotNullable()
-                .WithColumn("schema").AsString(MigrationUtil.StringSmall).Nullable()
-                .WithColumn("whereclause").AsString(MigrationUtil.StringSmall).NotNullable()
+                .WithColumn("schema_").AsString(MigrationUtil.StringSmall).Nullable()
+                .WithColumn("fields").AsString(MigrationUtil.StringMedium).NotNullable()
+                .WithColumn("operators").AsString(MigrationUtil.StringMedium).NotNullable()
+                .WithColumn("values_").AsString(MigrationUtil.StringLarge).NotNullable()
                 .WithColumn("creationdate").AsDateTime().NotNullable();
 
             Create.Table("PREF_GRIDFILTERASSOCIATION")

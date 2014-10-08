@@ -14,12 +14,14 @@ namespace softWrench.sW4.Preferences {
             _dao = dao;
         }
 
-        public GridFilterAssociation CreateNewFilter(InMemoryUser user, String application, string queryString, string alias, string schema = "list") {
+        public GridFilterAssociation CreateNewFilter(InMemoryUser user, String application, string fields, string operators, string values, string alias, string schema = "list") {
             var filter = new GridFilter {
                 Alias = alias,
                 Application = application,
                 CreationDate = DateTime.Now,
-                QueryString = queryString,
+                Fields = fields,
+                Operators = operators,
+                Values = values,
                 Schema = schema
             };
 
