@@ -115,7 +115,7 @@
         });
         //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
         $(document).scroll(function () {
-            $('[rel=tooltip]').tooltip('hide');
+            $('.no-touch [rel=tooltip]').tooltip('hide');
         });
     </script>
     @RenderSection("scripts", required: false)

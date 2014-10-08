@@ -307,15 +307,19 @@ input:focus, select:focus, textarea:focus {
 }
 
 @media all and (min-width: 992px) {
-    .detail-header .nav-tabs {
-        float: left;
-        margin-bottom: 0;
+    .detail-header {
+        margin-bottom: 30px;
+        border-bottom: 1px solid #999;
     }
 
-    .detail-header .buttons {
-        float: right;
-        margin-top: 8px;
-    }
+        .detail-header .nav-tabs {
+            float: left;
+            margin-bottom: 0;
+        }
+
+        .detail-header .buttons {
+            float: right;
+        }
 }
 
 #dashboardgrid thead tr:first-child {

@@ -136,7 +136,7 @@ app.directive('crudInputFields', function (contextService) {
                     return;
                 }
                 // Configure tooltips
-                $('[rel=tooltip]', bodyElement).tooltip({ container: 'body' });
+                $('.no-touch [rel=tooltip]', bodyElement).tooltip({ container: 'body' });
 
                 $scope.configureLookupModals(bodyElement);
                 cmpfacade.init(bodyElement, $scope);

@@ -94,7 +94,7 @@ app.directive('crudList', function (contextService) {
                     }
                 });
 
-                $('[rel=tooltip]').tooltip({ container: 'body' });
+                $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
                 log.debug('finish table rendered listener');
             });
 
