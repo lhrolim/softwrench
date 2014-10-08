@@ -19,13 +19,8 @@ namespace softWrench.sW4.Util {
                 return stValue;
             }
             if (type == "smallint" || type == "int" || type == "integer") {
-                if (stValue == "True")
-                {
+                if (stValue.EqualsAny("True","False")){
                     return Convert.ToBoolean(stValue);
-                }
-                else if(stValue == "False")
-                {
-                    return Convert.ToBoolean(stValue); 
                 }
                 return Convert.ToInt32(stValue);
             }

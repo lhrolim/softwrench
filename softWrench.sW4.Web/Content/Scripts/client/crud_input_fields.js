@@ -130,10 +130,11 @@ app.directive('crudInputFields', function (contextService) {
                 return associationOptions[fieldMetadata.associationKey];
             }
 
-            $scope.getCheckBoxValue = function (datamap,fieldMetadata) {
-                if (datamap[fieldMetadata.attribute]== '1') {
-                    $('#checkbox').prop('checked',true);
-                } 
+            $scope.isPositionLeft = function(fieldMetadata) {
+                if (fieldMetadata.rendererParameters['position'] == 'left') {
+                    return true;
+                }
+                return false;
             }
 
             $scope.$on('sw_associationsupdated', function (event, associationoptions) {
