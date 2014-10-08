@@ -131,10 +131,7 @@ app.directive('crudInputFields', function (contextService) {
             }
 
             $scope.isPositionLeft = function(fieldMetadata) {
-                if (fieldMetadata.rendererParameters['position'] == 'left') {
-                    return true;
-                }
-                return false;
+                return "left".equalIc(fieldMetadata.rendererParameters['position']);
             }
 
             $scope.$on('sw_associationsupdated', function (event, associationoptions) {
