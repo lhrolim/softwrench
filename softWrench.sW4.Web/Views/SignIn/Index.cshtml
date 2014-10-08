@@ -48,11 +48,6 @@
 
             @if (Model.IsLoginEnabled) {
                 <div class="row">
-
-
-
-
-
                     <form class="col-sm-offset-1 col-sm-11" role="form" action="@Request.RawUrl" method="post" name="value">
                         @if (Model.IncorrectLogin) {
                             if (string.IsNullOrEmpty(Model.LoginMessage)) {
@@ -79,7 +74,7 @@
 
                         <div class="row">
                             <div class="col-sm-5">
-                                <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autofocus>
+                                <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
                                 <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
                                     Username is required<br />
                                     Username wird benötigt<br />
@@ -102,9 +97,6 @@
                             </div>
                         </div>
                     </form>
-
-
-
                 </div>
             }
         </div>
