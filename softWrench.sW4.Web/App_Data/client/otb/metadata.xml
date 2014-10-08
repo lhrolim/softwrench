@@ -2125,6 +2125,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="icon" params="iconcss=fa fa-mail-forward"/>
           </field>
           <field attribute="orgobject" label="Origination"/>
+          <field attribute="createdate" label="Created Date/Time"/>
           <field attribute="sendto" label="To"/>
           <field attribute="cc" hidden="true"/>
           <field attribute="ccflag" label="Cc">
