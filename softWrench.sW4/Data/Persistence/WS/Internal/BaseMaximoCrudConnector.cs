@@ -22,10 +22,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             object integrationObject = maximoExecutionContext.IntegrationObject;
             var operationData = (CrudOperationData)maximoExecutionContext.OperationData;
             var entityMetadata = maximoExecutionContext.OperationData.EntityMetadata;
-            var idFieldName = entityMetadata.IdFieldName;
-            if (operationData.Id != null) {
-                w.SetValueIfNull(integrationObject, idFieldName, operationData.Id);
-            }
             w.SetValueIfNull(integrationObject, "class", operationData.Class);
             TargetConstantHandler.SetConstantValues(integrationObject, entityMetadata);
             TargetAttributesHandler.SetValuesFromJSON(integrationObject, entityMetadata, operationData);
@@ -43,6 +39,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                                                                       attribute.Key.ToUpper(), entityName, e.Message), e);
                 }
             }
+            var idFieldName = entityMetadata.IdFieldName;
+            if (operationData.Id != null) {
+                w.SetValueIfNull(integrationObject, idFieldName, operationData.Id);
+            }
+
             var curUser = SecurityFacade.CurrentUser();
             w.SetValueIfNull(integrationObject, "ORGID", curUser.OrgId);
             w.SetValueIfNull(integrationObject, "SITEID", curUser.SiteId);
