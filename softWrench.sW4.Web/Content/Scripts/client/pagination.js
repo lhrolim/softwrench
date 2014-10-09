@@ -16,7 +16,7 @@
         },
 
         controller: function ($scope, $http, $rootScope, $timeout, printService,
-            searchService, i18NService, redirectService, fileService, userPreferenceService) {
+            searchService, i18NService, redirectService, fileService, userPreferenceService, alertService) {
 
             $scope.contextPath = function (path) {
                 return url(path);
@@ -223,8 +223,35 @@
                 });
             }
 
+            $scope.hasFilterData = function () {
+                var searchData = $scope.searchData;
+                for (var data in searchData) {
+                    if (data == "lastSearchedValues") {
+                        continue;
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            $scope.deleteFilter = function () {
+                var filter = $scope.selectedfilter;
+                alertService.confirm(null, null, function () {
+                    userPreferenceService.deleteFilter(filter.id, filter.creatorId,function() {
+                        $scope.selectedfilter = null;
+                    });
+                }, "Are you sure that you want to remove filter {0}?".format(filter.alias), null);
+            }
+
             $scope.createFilter = function (alias) {
-                return userPreferenceService.saveFilter($scope.applicationName, $scope.schemaId, $scope.searchData,$scope.searchOperator, alias);
+                var id = $scope.selectedfilter ? $scope.selectedfilter.id : null;
+                var owner = $scope.selectedfilter ? $scope.selectedfilter.creatorId : null;
+                userPreferenceService.saveFilter($scope.applicationName, $scope.schemaId, $scope.searchData, $scope.searchOperator, alias, id, owner,
+                    function (filter) {
+                        $scope.selectedfilter = filter;
+                    });
+
+
             }
 
             $scope.applyFilter = function (filter) {
@@ -238,7 +265,7 @@
                     $scope.searchOperator[field] = searchService.getSearchOperationBySymbol(operatorsArray[i]);
                 }
                 $scope.selectPage($scope.paginationData.pageNumber);
-                $scope.selectedfilter = filter.alias;
+                $scope.selectedfilter = filter;
             }
 
             $scope.clearFilter = function () {

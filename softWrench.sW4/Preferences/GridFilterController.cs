@@ -33,5 +33,26 @@ namespace softWrench.sW4.Preferences {
             };
         }
 
+        public IGenericResponseResult UpdateFilter(int? id, string alias, string fields, string operators, string values) {
+            Validate.NotNull(fields, "fields");
+            Validate.NotNull(operators, "operators");
+            Validate.NotNull(values, "values");
+            Validate.NotNull(id, "id");
+
+            var filter = _gridFilterManager.UpdateFilter(SecurityFacade.CurrentUser(), fields, alias, operators, values, id);
+            return new GenericResponseResult<GridFilter>(filter) {
+                SuccessMessage = "Filter {0} updated successfully".Fmt(filter.Alias)
+            };
+        }
+
+        [HttpPost]
+        public IGenericResponseResult DeleteFilter(int? filterId, int? creatorId) {
+            Validate.NotNull(filterId, "filterId");
+            var association = _gridFilterManager.DeleteFilter(SecurityFacade.CurrentUser(), filterId, creatorId);
+            return new GenericResponseResult<GridFilterAssociation>(association) {
+                SuccessMessage = "Filter {0} removed successfully".Fmt(association.Filter.Alias)
+            };
+        }
+
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Properties xmlns="http://www.example.org/Properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.example.org/Properties Properties.xsd ">
+  <property key="test" value="globalvalue"/>
+  <property key="global" value="globalvalue"/>
+  <property key="config" value="globalvalue"/>
+  <property key="sourcemapping" value="maximo7.5"/>
+  
+
+  <environment key="unittest">
+    <property key="test" value="envvalue"/>
+    <property key="config" value="envvalue"/>
+  </environment>
+
+  <environment key="qa">
+    <property key="global" value="qavalue"/>
+  </environment>
+
+</Properties>
+  
+ 
+  
+

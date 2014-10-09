@@ -18,10 +18,11 @@ namespace softWrench.sW4.Metadata.Security {
         /// 
         /// </summary>
         /// <param name="filter"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
-        public bool ContainsFilter(GridFilter filter) {
+        public bool ContainsFilter(GridFilter filter, InMemoryUser user) {
             return GridFilters != null &&
-                   GridFilters.Any(g => (g.Creator && filter.Alias.EqualsIc(g.Filter.Alias) && filter.Application.EqualsIc(g.Filter.Application)));
+                   GridFilters.Any(g => (g.User.Id == user.DBId && filter.Alias.EqualsIc(g.Filter.Alias) && filter.Application.EqualsIc(g.Filter.Application)));
         }
     }
 }

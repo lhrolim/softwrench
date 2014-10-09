@@ -57,17 +57,35 @@
 
             <div class="btn-group">
                 <button type="button" class="btn btn-default" ng-click="selectPage(paginationData.pageNumber)">
-                    <i class="fa fa-filter"></i>&ensp;{{selectedfilter}}
+                    <i class="fa fa-filter"></i>&ensp;{{selectedfilter.alias}}
                 </button>
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-show="hasFilter()">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-show="hasFilter() || hasFilterData() ">
                     <span class="caret"></span>
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li ng-if="selectedfilter">
-                        <a href="#" ng-click="clearFilter()">{{i18N('_grid.filter.clear','Clear Filter')}}</a>
+                        <a href="#" ng-click="clearFilter()">
+                            {{i18N('_grid.filter.clear','Clear Filter')}}
+                        </a>
                     </li>
-                    <li class="divider" ng-if="selectedfilter" ng-if="selectedfilter"></li>
+                    <li>
+                        <a href="#" ng-click="saveFilter()" ng-if="selectedfilter || hasFilterData()">
+                            <i class="fa fa-save"></i>&ensp;Save
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" ng-click="deleteFilter()" ng-if="selectedfilter">
+                            <i class="fa fa-times"></i>&ensp;Delete
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" ng-if="selectedfilter">
+                            <i class="fa fa-share"></i>&ensp;Share
+                        </a>
+                    </li>
+
+                    <li class="divider" ng-if="selectedfilter"></li>
                     <li ng-repeat="filter in nonSharedFilters()">
                         <a href="#" ng-click="applyFilter(filter)">{{filter.alias}}</a>
                     </li>
@@ -77,20 +95,10 @@
                     </li>
                 </ul>
             </div>
-
-            <div class="btn-group">
-                <button type="button" class="btn">
-                    <i class="fa fa-rocket"></i>&ensp;Advanced
-                </button>
-                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="#" ng-click="saveFilter()"><i class="fa fa-save"></i>&ensp;Save</a></li>
-                    <li><a href="#"><i class="fa fa-share"></i>&ensp;Share</a></li>
-                </ul>
-            </div>
+            
+            <button type="button" class="btn" data-original-title="Advanced Mode" rel="tooltip">
+                <i class="fa fa-rocket"></i>
+            </button>
 
         </div>
 
@@ -105,11 +113,12 @@
     <!--to be shown as a modal only-->
     <form id='savefilterform' class="form-horizontal" style="display: none">
         <div class="form-group">
-            <label class='control-label col-xs-6'>{{i18N('_grid.filter.savefiltername',"Filter Name")}}</label>
-            <div class="col-xs-6">
+            <label class='control-label col-md-5'>{{i18N('_grid.filter.savefiltername',"Filter Name")}}</label>
+            <div class="col-md-7">
                 <input type='text' name='filtername' id='savefiltername'
-                       value="{{selectedfilter}}"
-                       class="form-control" />
+                       value="{{selectedfilter.alias}}"
+                       class="form-control"
+                       maxlength="20" />
             </div>
         </div>
     </form>

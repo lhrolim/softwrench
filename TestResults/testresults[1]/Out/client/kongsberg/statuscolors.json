@@ -1,0 +1,11 @@
+﻿servicerequest:{
+    new: orange,
+    wappr: orange,
+    closed: green
+},
+
+workorder:{
+    new: orange,
+    wappr: orange,
+    close: green
+}

@@ -1,5 +1,7 @@
 ﻿using System;
+using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
+using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Interfaces;
 
 namespace softWrench.sW4.Preferences {
@@ -41,8 +43,17 @@ namespace softWrench.sW4.Preferences {
         [Property]
         public DateTime CreationDate { get; set; }
 
+        [Property]
+        public DateTime UpdateDate { get; set; }
+
+        [JsonIgnore]
+        [ManyToOne(Column = "creator", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
+        public User Creator { get; set; }
+
+        public int? CreatorId { get { return Creator.Id; }}
+
         public override string ToString() {
-            return string.Format("Alias: {0}, Application: {4}, Fields: {1}, Operators: {2}, Values: {3}", Alias, Fields, Operators, Values, Application);
+            return String.Format("Alias: {0}, Application: {4}, Fields: {1}, Operators: {2}, Values: {3}", Alias, Fields, Operators, Values, Application);
         }
 
         protected bool Equals(GridFilter other) {

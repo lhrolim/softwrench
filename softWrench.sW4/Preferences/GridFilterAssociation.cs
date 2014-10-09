@@ -10,6 +10,10 @@ namespace softWrench.sW4.Preferences {
     public class GridFilterAssociation : IBaseEntity {
 
         public const string ByUserId = "from GridFilterAssociation where User.id =?";
+        public const string ByUserIdAndFilter = "from GridFilterAssociation where User.id =? and Filter.id =?";
+        public const string CountByFilter = "select count(*) from GridFilterAssociation where Filter.id =?";
+        
+        
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
@@ -21,11 +25,10 @@ namespace softWrench.sW4.Preferences {
         [ManyToOne(Column = "gridfilter_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "save-update")]
         public virtual GridFilter Filter { get; set; }
 
-        [Property(TypeType = typeof(BooleanToIntUserType))]
-        public virtual Boolean Creator { get; set; }
-
         [Property]
         public virtual DateTime JoiningDate { get; set; }
+
+        
 
         protected bool Equals(GridFilterAssociation other) {
             return Equals(User, other.User) && Equals(Filter, other.Filter);
@@ -45,7 +48,7 @@ namespace softWrench.sW4.Preferences {
         }
 
         public override string ToString() {
-            return string.Format("User: {0}, Filter: {1}, Creator: {2}", User, Filter, Creator);
+            return string.Format("User: {0}, Filter: {1}", User, Filter);
         }
     }
 }

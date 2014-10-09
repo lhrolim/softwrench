@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using NHibernate.SqlCommand;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.SimpleInjector;
@@ -22,15 +24,15 @@ namespace softWrench.sW4.Preferences {
                 Fields = fields,
                 Operators = operators,
                 Values = values,
-                Schema = schema
+                Schema = schema,
+                Creator = user.DBUser
             };
 
-            if (user.UserPreferences.ContainsFilter(filter)) {
+            if (user.UserPreferences.ContainsFilter(filter, user)) {
                 throw GridFilterException.FilterWithSameAliasAlreadyExists(alias, application);
             }
 
             var association = new GridFilterAssociation {
-                Creator = true,
                 Filter = filter,
                 User = user.DBUser,
                 JoiningDate = DateTime.Now
@@ -42,6 +44,42 @@ namespace softWrench.sW4.Preferences {
 
         public ISet<GridFilterAssociation> LoadAllOfUser(int? userId) {
             return new HashSet<GridFilterAssociation>(_dao.FindByQuery<GridFilterAssociation>(GridFilterAssociation.ByUserId, userId));
+        }
+
+        public GridFilter UpdateFilter(InMemoryUser user, string fields, string alias, string operators, string values, int? id) {
+            var filter = _dao.FindByPK<GridFilter>(typeof(GridFilter), id);
+            if (filter == null) {
+                throw GridFilterException.FilterNotFound(id);
+            }
+            filter.Operators = operators;
+            filter.Fields = fields;
+            filter.Values = values;
+            filter.Alias = alias;
+            var updateFilter = _dao.Save(filter);
+            var memoryAssociation = user.UserPreferences.GridFilters.FirstOrDefault(a => a.Filter.Id == id);
+            if (memoryAssociation != null) {
+                //update the filter of the user, no logout required
+                memoryAssociation.Filter = updateFilter;
+            }
+            return updateFilter;
+        }
+
+        public GridFilterAssociation DeleteFilter(InMemoryUser currentUser, int? id, int? creatorId) {
+
+            var association = _dao.FindSingleByQuery<GridFilterAssociation>(GridFilterAssociation.ByUserIdAndFilter, currentUser.DBId, id);
+            _dao.Delete(association);
+            if (currentUser.DBId == creatorId) {
+                //lets see if it´s safe to delete the filter it self or just the association
+                var count = _dao.FindSingleByQuery<long>(GridFilterAssociation.CountByFilter, id);
+                if (count == 0) {
+                    _dao.Delete(association.Filter);
+                }
+
+            }
+            //remove it from memory as well
+            currentUser.UserPreferences.GridFilters.Remove(association);
+            return association;
+
         }
     }
 }
