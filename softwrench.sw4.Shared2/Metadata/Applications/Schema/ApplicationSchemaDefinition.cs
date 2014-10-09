@@ -23,6 +23,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private List<IApplicationDisplayable> _displayables = new List<IApplicationDisplayable>();
 
+        private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
+
+        private ISet<ApplicationEvent> _eventsSet;
+
         /// <summary>
         /// This fields can only be resolved once the entire metadata.xml are parsed, so that´s why we are using this Lazy strategy.
         /// 
@@ -96,7 +100,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             String applicationName, string title, string schemaId, SchemaStereotype stereotype,
             SchemaMode? mode, ClientPlatform? platform, bool @abstract,
             List<IApplicationDisplayable> displayables, IDictionary<string, string> schemaProperties,
-            ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema, string idFieldName, string unionSchema) {
+            ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema, string idFieldName, string unionSchema, ISet<ApplicationEvent> events = null) {
             if (displayables == null) throw new ArgumentNullException("displayables");
 
             ApplicationName = applicationName;
@@ -121,7 +125,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 }
             }
 
-            
+            _eventsSet = events;
+            if (events != null) {
+                _events = events.ToDictionary(f => f.Type, f => f);
+            }
         }
 
 
@@ -300,7 +307,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
 
-
+        public IDictionary<string, ApplicationEvent> Events {
+            get { return _events; }
+            set { _events = value; }
+        }
 
 
 

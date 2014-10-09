@@ -570,6 +570,7 @@
     <Content Include="Content\Scripts\jquery\jquery-fileupload-5.40.1.js" />
     <Content Include="Content\Scripts\jquery\jquery.iframe-transport.js" />
     <Content Include="Content\Scripts\responsive.js" />
+    <Content Include="Content\Scripts\thirdparty\jquery.scannerdetection.js" />
     <Content Include="Content\Scripts\thirdparty\moment.js" />
     <Content Include="Content\Scripts\thirdparty\textAngular-sanitize-min.js" />
     <Content Include="Content\Scripts\thirdparty\textAngular-min.js" />
