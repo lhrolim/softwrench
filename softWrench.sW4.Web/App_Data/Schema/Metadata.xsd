@@ -12,6 +12,7 @@
         <element name="applications" type="tns:Applications"
 					maxOccurs="1" minOccurs="1">
         </element>
+        <element name="templates" type="tns:TemplatesType"></element>
       </choice>
     </complexType>
   </element>
@@ -24,6 +25,18 @@
 				maxOccurs="1"></element>
       <element name="entity" type="tns:Entity" maxOccurs="unbounded"
 				minOccurs="1">
+      </element>
+    </choice>
+  </complexType>
+
+  <complexType name="TemplatesType">
+
+    <choice>
+      <element name="template" maxOccurs="unbounded"
+				minOccurs="1">
+        <complexType>
+          <attribute name="path" type="string"></attribute>
+        </complexType>
       </element>
     </choice>
   </complexType>
@@ -152,11 +165,10 @@
     <complexContent>
       <extension base="tns:SchemaRequest">
         <choice minOccurs="0" maxOccurs="unbounded">
-          <element name="field" type="tns:Field"
-						maxOccurs="unbounded" minOccurs="0">
+          <element name="field" type="tns:Field" maxOccurs="unbounded"
+						minOccurs="0">
           </element>
-          <element maxOccurs="unbounded" minOccurs="0"
-						ref="tns:section">
+          <element maxOccurs="unbounded" minOccurs="0" ref="tns:section">
 
           </element>
           <element name="association" type="tns:Association"
@@ -168,30 +180,28 @@
           <element name="optionfield" type="tns:OptionField"
 						maxOccurs="unbounded" minOccurs="0">
           </element>
-          <element name="properties" maxOccurs="unbounded"
-						minOccurs="0">
+          <element name="properties" maxOccurs="unbounded" minOccurs="0">
             <complexType>
               <sequence>
-                <element name="property"
-									type="tns:Parameter" maxOccurs="unbounded" minOccurs="1">
+                <element name="property" type="tns:Parameter" maxOccurs="unbounded"
+									minOccurs="1">
                 </element>
               </sequence>
             </complexType>
           </element>
-          <element maxOccurs="unbounded" minOccurs="0"
-						ref="tns:commands">
+          <element maxOccurs="unbounded" minOccurs="0" ref="tns:commands">
 
           </element>
-          <element name="tab" type="tns:TabType"
-						minOccurs="0">
+          <element name="tab" type="tns:TabType" minOccurs="0">
 
           </element>
-          <element name="reference" minOccurs="0" maxOccurs="unbounded" type="tns:referenceComplexType">
+          <element name="reference" minOccurs="0" maxOccurs="unbounded"
+						type="tns:referenceComplexType">
           </element>
         </choice>
         <attribute name="platform" type="string" use="optional">
         </attribute>
-        <attribute name="unionschema" type="string" use="optional"/>
+        <attribute name="unionschema" type="string" use="optional" />
         <attribute name="stereotype" type="tns:StereotypeType">
           <annotation>
             <documentation>
@@ -224,7 +234,7 @@
 				minOccurs="0">
       </element>
       <element name="filter" type="tns:Filter" maxOccurs="1"
-        minOccurs="0">
+				minOccurs="0">
       </element>
       <element name="number" maxOccurs="1" minOccurs="0">
         <complexType>
@@ -312,7 +322,7 @@
 				minOccurs="0">
       </element>
       <element name="filter" type="tns:Filter" maxOccurs="1"
-        minOccurs="0">
+				minOccurs="0">
       </element>
       <element name="event" type="tns:Event" minOccurs="0"
 				maxOccurs="unbounded">
@@ -323,33 +333,39 @@
     <attribute name="target" type="string" use="required">
       <annotation>
         <documentation>
-          The name of the datamap property to which the selected value will be setted. This will be passed to the server on the json string
+          The name of the datamap property to which the selected value will be
+          setted. This will be passed to the server on the json string
         </documentation>
       </annotation>
     </attribute>
     <attribute name="labelfield" type="string" use="required">
       <annotation>
         <documentation>
-          should be a pattern like x_.y where x_ is the name of the relationship and y is the column to use as the label field.
+          should be a pattern like x_.y where x_ is the name of the relationship
+          and y is the column to use as the label field.
         </documentation>
       </annotation>
     </attribute>
     <attribute name="default" type="string"></attribute>
     <attribute name="labelpattern" type="string"></attribute>
     <attribute name="placeholder" type="string"></attribute>
-    <attribute name="extraprojectionvalues" type="string"
-			use="optional">
+    <attribute name="extraprojectionvalues" type="string" use="optional">
       <annotation>
         <documentation>
           Comma separeted list of extra fields to be fetched
           from the relationship besides the target and label
           ones. Those fields will be available to the
           application for read-only use, and shall not be
-          submited back to the server.<br/>
+          submited back to the server.
+          <br />
 
-          If you need to submit such values to server side, use a hidden field <br/>
+          If you need to submit such values to server side, use a hidden
+          field
+          <br />
 
-          The column is related to the to relationship (so if labelfield = a_.b you could use any value of a_ relationship).<br/>
+          The column is related to the to relationship (so if labelfield =
+          a_.b you could use any value of a_ relationship).
+          <br />
 
         </documentation>
       </annotation>
@@ -357,8 +373,7 @@
     <attribute name="showexpression" type="string"></attribute>
     <attribute name="dependantfields" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
-    <attribute name="enableexpression" type="string"
-			use="optional">
+    <attribute name="enableexpression" type="string" use="optional">
     </attribute>
     <attribute name="required" type="boolean"></attribute>
     <attribute name="qualifier" type="string"></attribute>
@@ -392,8 +407,8 @@
             <attribute name="allowcreation" type="string" default="true">
             </attribute>
             <attribute name="listschema" type="string"></attribute>
-            <attribute name="autocommit" type="boolean" use="optional"/>
-            <attribute name="orderbyfield" type="string" use="optional"/>
+            <attribute name="autocommit" type="boolean" use="optional" />
+            <attribute name="orderbyfield" type="string" use="optional" />
           </complexType>
         </element>
       </choice>
@@ -442,10 +457,10 @@
 				minOccurs="0">
       </element>
       <element name="filter" type="tns:Filter" maxOccurs="1"
-        minOccurs="0">
+				minOccurs="0">
       </element>
-      <element name="option" type="tns:OptionType"
-				maxOccurs="unbounded" minOccurs="0">
+      <element name="option" type="tns:OptionType" maxOccurs="unbounded"
+				minOccurs="0">
       </element>
       <element name="event" type="tns:Event" minOccurs="0"
 				maxOccurs="unbounded">
@@ -458,8 +473,7 @@
     <attribute name="showexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
 
-    <attribute name="providerattribute" type="string"
-			use="optional">
+    <attribute name="providerattribute" type="string" use="optional">
       <annotation>
         <documentation>
           If this attribute is present the list will be
@@ -628,22 +642,23 @@
 				maxOccurs="1">
       </element>
       <choice minOccurs="0" maxOccurs="unbounded">
-        <element minOccurs="0" maxOccurs="unbounded"
-					name="field" type="tns:Field">
+        <element minOccurs="0" maxOccurs="unbounded" name="field"
+					type="tns:Field">
         </element>
-        <element minOccurs="0" maxOccurs="unbounded"
-					name="association" type="tns:Association">
+        <element minOccurs="0" maxOccurs="unbounded" name="association"
+					type="tns:Association">
         </element>
-        <element minOccurs="0" maxOccurs="unbounded"
-					name="composition" type="tns:Composition">
+        <element minOccurs="0" maxOccurs="unbounded" name="composition"
+					type="tns:Composition">
         </element>
-        <element minOccurs="0" maxOccurs="unbounded"
-					name="optionfield" type="tns:OptionField">
+        <element minOccurs="0" maxOccurs="unbounded" name="optionfield"
+					type="tns:OptionField">
         </element>
         <element name="section" type="tns:sectionComplexType"
 					minOccurs="0" maxOccurs="unbounded">
         </element>
-        <element name="reference" type="tns:referenceComplexType" minOccurs="0" maxOccurs="unbounded"></element>
+        <element name="reference" type="tns:referenceComplexType"
+					minOccurs="0" maxOccurs="unbounded"></element>
       </choice>
     </sequence>
     <attribute name="id" type="string"></attribute>
@@ -720,8 +735,8 @@
 
   <complexType name="displayablesType">
     <sequence>
-      <element name="componentdisplayable" type="tns:DisplayableComponentType" minOccurs="1"
-				maxOccurs="unbounded"></element>
+      <element name="componentdisplayable" type="tns:DisplayableComponentType"
+				minOccurs="1" maxOccurs="unbounded"></element>
     </sequence>
   </complexType>
 

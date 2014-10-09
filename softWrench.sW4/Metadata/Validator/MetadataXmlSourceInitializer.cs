@@ -34,7 +34,7 @@ namespace softWrench.sW4.Metadata.Validator {
         }
 
 
-        internal static IReadOnlyCollection<EntityMetadata> InitializeEntityInternalMetadata() {
+        internal static IEnumerable<EntityMetadata> InitializeEntityInternalMetadata() {
             using (var stream = MetadataParsingUtils.GetInternalStreamImpl(true)) {
                 return new XmlEntitySourceMetadataParser().Parse(stream).Item1;
             }
@@ -45,7 +45,7 @@ namespace softWrench.sW4.Metadata.Validator {
 
             var resultEntities = new HashSet<EntityMetadata>();
 
-            IReadOnlyCollection<EntityMetadata> clientEntities;
+            IEnumerable<EntityMetadata> clientEntities;
             using (var stream = MetadataParsingUtils.GetStreamImpl(Metadata, false, streamValidator)) {
                 var parsingResult = new XmlEntitySourceMetadataParser().Parse(stream);
                 clientEntities = parsingResult.Item1;
