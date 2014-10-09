@@ -6,6 +6,7 @@ using System.Web.Http;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Web.Util;
+using softwrench.sw4.Shared2.Util;
 
 namespace softWrench.sW4.Web.Controllers {
 
@@ -37,12 +38,14 @@ namespace softWrench.sW4.Web.Controllers {
             var stream = new MemoryStream();
             excelFile.SaveAs(stream);
             stream.Close();
+
             var excelFileExtension = ".xls";
             if (!fileName.EndsWith(excelFileExtension)) {
                 fileName += excelFileExtension;
             }
+
             var result = new FileContentResult(stream.ToArray(), System.Net.Mime.MediaTypeNames.Application.Octet) {
-                FileDownloadName = fileName
+                FileDownloadName = (string)StringUtil.FirstLetterToUpper(fileName)
             };
             return result;
         }

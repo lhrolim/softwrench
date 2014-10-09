@@ -89,7 +89,7 @@
 
             function getFileName(application, schemaId) {
                 if (application != 'asset') {
-                    return capitaliseFirstLetter(application) + "Export";
+                    return application + "Export";
                 }
                 if (schemaId == 'categories') {
                     return "AssetCategoriesExport";
