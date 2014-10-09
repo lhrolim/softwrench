@@ -10,11 +10,12 @@
         </div>
 
         <div class="group actions hidden-xs" ng-if="!isHapag()">
-            <button type="button" class="btn btn-default btn-sm" ng-click="exportToPrint()" href="#" rel="tooltip"
+            <!--removed rel="tooltip" from button until z-index can be resolved-->
+            <button type="button" class="btn btn-default btn-sm" ng-click="exportToPrint()" href="#"
                 data-original-title="{{i18N('_grid.pagination.actions.print','Print')}}" ng-hide="disablePrint">
                 <i class="fa fa-print"></i>&ensp;Print
             </button>
-            <button type="button" class="btn btn-default btn-sm" ng-click="exportToExcel(schema)" href="#" rel="tooltip"
+            <button type="button" class="btn btn-default btn-sm" ng-click="exportToExcel(schema)" href="#"
                 data-original-title="{{i18N('_grid.pagination.actions.excel','Export to Excel')}}" ng-hide="disableExport">
                 <i class="fa fa-file-text-o"></i>&ensp;Export
             </button>
