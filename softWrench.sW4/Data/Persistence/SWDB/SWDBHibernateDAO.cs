@@ -70,7 +70,7 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
         }
 
 
-        public T FindSingleByQuery<T>(String queryst, params object[] parameters) where T : class {
+        public T FindSingleByQuery<T>(String queryst, params object[] parameters) {
             using (var session = SessionManager.Instance.OpenSession()) {
                 using (session.BeginTransaction()) {
                     var query = BuildQuery(queryst, parameters, session);

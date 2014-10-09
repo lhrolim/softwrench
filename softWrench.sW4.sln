@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softWrench.sW4", "softWrench.sW4\softWrench.sW4.csproj", "{CE228C26-938D-4D6F-95FA-12CC5241AFB5}"
 EndProject
@@ -43,33 +43,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softWrench.sW4.Controls.WebForms", "softWrench.sW4.Controls.WebForms\softWrench.sW4.Controls.WebForms.csproj", "{C4202D98-E67C-4AEA-B295-225ED65AD5F2}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 8
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://66.235.236.86:8080/tfs/softwrench
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = softWrench.sW4\\softWrench.sW4.csproj
-		SccProjectName1 = softWrench.sW4
-		SccLocalPath1 = softWrench.sW4
-		SccProjectUniqueName2 = softWrench.sW4.Web\\softWrench.sW4.Web.csproj
-		SccProjectName2 = softWrench.sW4.Web
-		SccLocalPath2 = softWrench.sW4.Web
-		SccProjectUniqueName3 = softwrench.sW4.test\\softwrench.sW4.test.csproj
-		SccProjectName3 = softwrench.sW4.test
-		SccLocalPath3 = softwrench.sW4.test
-		SccProjectUniqueName4 = softwrench.sw4.Shared2\\softwrench.sw4.Shared2.csproj
-		SccProjectName4 = softwrench.sw4.Shared2
-		SccLocalPath4 = softwrench.sw4.Shared2
-		SccProjectUniqueName5 = softwrench.sw4.Hapag\\softwrench.sw4.Hapag.csproj
-		SccProjectName5 = softwrench.sw4.Hapag
-		SccLocalPath5 = softwrench.sw4.Hapag
-		SccProjectUniqueName6 = WCFDynamicProxy\\src\\DynamicProxyLibrary.csproj
-		SccProjectName6 = WCFDynamicProxy/src
-		SccLocalPath6 = WCFDynamicProxy\\src
-		SccProjectUniqueName7 = softWrench.sW4.Controls.WebForms\\softWrench.sW4.Controls.WebForms.csproj
-		SccProjectName7 = softWrench.sW4.Controls.WebForms
-		SccLocalPath7 = softWrench.sW4.Controls.WebForms
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
 		Ad-Hoc|iPhone = Ad-Hoc|iPhone

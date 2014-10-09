@@ -272,6 +272,7 @@
     <Compile Include="DB_Migration\4.0\20140516_SWWEB118_2.cs" />
     <Compile Include="DB_Migration\4.0\20140519Hap209.cs" />
     <Compile Include="DB_Migration\4.0\20140519_SWWEB_115_2.cs" />
+    <Compile Include="DB_Migration\4.0\20141001_SWWEB-505.cs" />
     <Compile Include="DB_Migration\4.0\20140724_HAP_331.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
@@ -525,6 +526,8 @@
     <Content Include="Content\Scripts\client\crud_base_controller.js" />
     <Content Include="Content\Scripts\client\crud_list.js" />
     <Content Include="Content\Scripts\client\logAdmin.js" />
+    <Content Include="Content\Scripts\client\services\rest_service.js" />
+    <Content Include="Content\Scripts\client\services\userpreference_service.js" />
     <Content Include="Content\Scripts\client\services\file_service.js" />
     <Content Include="Content\Scripts\client\services\localstorage_service.js" />
     <Content Include="Content\Scripts\client\services\modal_service.js" />

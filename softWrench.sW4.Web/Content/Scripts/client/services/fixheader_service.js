@@ -22,42 +22,12 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
     };
 
     var addClassSuccessMessageListHander = function (showerrormessage) {
-        var affixpaginationid = $("#affixpagination");
-        var listgridtheadid = $("#listgridthread");
-        var listgridid = $("#listgrid");
-
-        var paginationsuccessrmessageclass = "pagination-successmessage";
-        var listtheadsuccessmessageclass = "listgrid-thead-successmessage";
-        var listgridsuccessmessageclass = "listgrid-table-successmessage";
-        var listgridtheadreset = "listgrid-thead-reset";
-        var listgridtablereset = "listgrid-table-reset";
-
-        var listtheadsuccessmessageieclass = "listgrid-thead-successmessage-ie";
-        var listgridsuccessmessageieclass = "listgrid-table-successmessage-ie";
-
-        if (showerrormessage) {
-            affixpaginationid.addClass(paginationsuccessrmessageclass);
-            if (isIe9() && $rootScope.clientName == 'hapag') {
-                listgridtheadid.addClass(listtheadsuccessmessageieclass);
-                listgridid.addClass(listgridsuccessmessageieclass);
-            } else {
-                listgridtheadid.removeClass(listgridtheadreset);
-                listgridtheadid.addClass(listtheadsuccessmessageclass);
-                listgridid.removeClass(listgridtablereset);
-                listgridid.addClass(listgridsuccessmessageclass);
-            }
-        } else {
-            affixpaginationid.removeClass(paginationsuccessrmessageclass);
-            if (isIe9() && $rootScope.clientName == 'hapag') {
-                listgridtheadid.removeClass(listtheadsuccessmessageieclass);
-                listgridid.removeClass(listgridsuccessmessageieclass);
-            } else {
-                listgridtheadid.removeClass(listtheadsuccessmessageclass);
-                listgridtheadid.addClass(listgridtheadreset);
-                listgridid.removeClass(listgridsuccessmessageclass);
-                listgridid.addClass(listgridtablereset);
-            }
-        }
+        var headerHeight = $('.site-header').height() +70;
+        var paginationHeight = $('.affix-pagination').height();
+        var theaderHeight = $('.listgrid-thead').height();
+        $('.affix-pagination').css('top', headerHeight);
+        $('.listgrid-thead').css('top', headerHeight + paginationHeight);
+        $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight - 1);
     };
 
     var topMessageAddClass = function (div) {
