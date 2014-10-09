@@ -11,6 +11,7 @@ bin
 obj
 /Releases
 /tmp
+TestResults
 
 # 3rd-party stuff copied during build
 /packages

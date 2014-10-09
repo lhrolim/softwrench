@@ -193,6 +193,11 @@
                 return userPreferenceService.hasFilter($scope.applicationName, $scope.schemaId);
             }
 
+            $scope.$on("sw_redirectapplicationsuccess", function(event) {
+                $scope.selectedfilter = null;
+                $scope.searchData = {};
+            });
+
             $scope.saveFilter = function () {
                 var saveFormSt = $("#savefilterform").prop('outerHTML');
                 //TODO: use angularjs?!
@@ -237,7 +242,7 @@
             $scope.deleteFilter = function () {
                 var filter = $scope.selectedfilter;
                 alertService.confirm(null, null, function () {
-                    userPreferenceService.deleteFilter(filter.id, filter.creatorId,function() {
+                    userPreferenceService.deleteFilter(filter.id, filter.creatorId, function () {
                         $scope.selectedfilter = null;
                     });
                 }, "Are you sure that you want to remove filter {0}?".format(filter.alias), null);

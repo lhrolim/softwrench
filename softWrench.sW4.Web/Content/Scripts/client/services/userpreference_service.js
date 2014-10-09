@@ -32,7 +32,10 @@ app.factory('userPreferenceService', function (contextService, restService, $log
         hasFilter: function (application, schema) {
             var user = contextService.getUserData();
             var preferences = user.userPreferences;
-            var filters = preferences.gridFilters;
+            var associations = preferences.gridFilters;
+            var filters = $.grep(associations, function (e) {
+                return e.filter.application == application && e.filter.schema == schema;
+            });
             return filters.length > 0;
         },
 
@@ -89,7 +92,7 @@ app.factory('userPreferenceService', function (contextService, restService, $log
             }
         },
 
-        deleteFilter: function (filterId, creatorId,cbk) {
+        deleteFilter: function (filterId, creatorId, cbk) {
             var parameters = {
                 filterId: filterId,
                 creatorId: creatorId,
