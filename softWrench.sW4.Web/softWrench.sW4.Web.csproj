@@ -587,8 +587,8 @@
     <Content Include="Content\Scripts\jquery\jquery.iframe-transport.js" />
     <Content Include="Content\Scripts\responsive.js" />
     <Content Include="Content\Scripts\thirdparty\moment.js" />
-    <Content Include="Content\Scripts\thirdparty\textAngular-sanitize-min.js" />
     <Content Include="Content\Scripts\thirdparty\textAngular-min.js" />
+    <Content Include="Content\Scripts\thirdparty\textAngular-sanitize-min.js" />
     <Content Include="Content\scss\forms.css">
       <DependentUpon>forms.scss</DependentUpon>
     </Content>
