@@ -182,15 +182,9 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
 
         private static ApplicationSchemaDefinition OnApplyPlatformPolicy(ApplicationSchemaDefinition schema, ClientPlatform platform, List<IApplicationDisplayable> displayables) {
-            // Convert the schema.Events IDictionary to an ISet
-            ISet<ApplicationEvent> events = new HashSet<ApplicationEvent>();
-            foreach (ApplicationEvent item in schema.Events.Values.ToList()) {
-                events.Add(item);
-            }
-            
             //pass null on ParentSchema to avoid reMerging the parentSchemaData
             return GetInstance(schema.ApplicationName, schema.Title, schema.SchemaId, schema.Stereotype, schema.Mode, platform, schema.Abstract, displayables,
-                schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UnionSchema, events);
+                schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UnionSchema, schema.EventSet);
         }
 
         //        protected abstract ApplicationSchema OnApplyPlatformPolicy(ClientPlatform platform, IList<IApplicationDisplayable> fields);

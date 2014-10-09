@@ -312,7 +312,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             set { _events = value; }
         }
 
-
+        [JsonIgnore]
+        public ISet<ApplicationEvent> EventSet {
+            get { return _eventsSet; }
+        }
 
         protected bool Equals(ApplicationSchemaDefinition other) {
             return string.Equals(SchemaId, other.SchemaId) && Mode == other.Mode
