@@ -237,26 +237,96 @@ input:focus, select:focus, textarea:focus {
     position: fixed;
 }
 
-/*SM - 09/24 - SWWEB-452 fix*/
-.nav-tabs {
-    border-bottom: 1px solid #999;
+.detail-header {
+    margin-bottom: 30px;
 }
 
-    .nav-tabs > li > a {
-        margin-right: 0;
-        border: 1px solid #eee;
+    .detail-header .nav-tabs {
+        border-bottom: none;
+        margin-bottom: 10px;
+    }
+
+        .detail-header .nav-tabs > li {
+            float: none;
+        }
+
+            .detail-header .nav-tabs > li.active > a, .detail-header .nav-tabs > li > a {
+                border: 1px solid #999;
+                border-radius: 0;
+            }
+
+                .detail-header .nav-tabs > li.active > a:hover, .detail-header .nav-tabs > li > a:hover {
+                    border-color: #999;
+                }
+
+            .detail-header .nav-tabs > li:first-child > a {
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+            }
+
+            .detail-header .nav-tabs > li:last-child > a {
+                border-bottom-left-radius: 3px;
+                border-bottom-right-radius: 3px;
+            }
+
+    .detail-header .buttons .btn {
+        margin-top: 10px;
+        width: 32%;
+    }
+
+@media all and (min-width: 480px) {
+    .detail-header .buttons .btn {
+        width: auto;
+    }
+}
+
+@media all and (min-width: 768px) {
+    .detail-header {
+        margin-bottom: 30px;
         border-bottom: 1px solid #999;
     }
 
-    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-        border: 1px solid #999;
-        border-bottom: 1px solid #fff;
-    }
+        .detail-header .nav-tabs > li {
+            float: left;
+        }
 
-    .nav-tabs > li > a:hover {
-        border-color: #eee #eee #999;
-    }
-/*SM - 09/24 - SWWEB-452 fix*/
+            .detail-header .nav-tabs > li > a {
+                margin-right: 0;
+                border: 1px solid #ddd;
+                border-bottom: 1px solid #999;
+                border-left: none;
+                border-radius: 0;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+            }
+
+            .detail-header .nav-tabs > li:last-child > a {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            .detail-header .nav-tabs > li.active > a, .detail-header .nav-tabs > li.active > a:hover, .detail-header .nav-tabs > li.active > a:focus {
+                border: 1px solid #999;
+                border-bottom: 1px solid #fff;
+            }
+
+            .detail-header .nav-tabs > li > a:hover {
+                border-color: #eee #eee #999;
+            }
+
+        .detail-header .nav-tabs {
+            float: left;
+            margin-bottom: 0;
+        }
+
+        .detail-header .buttons {
+            float: right;
+        }
+
+            .detail-header .buttons .btn {
+                margin-top: 0;
+            }
+}
 
 #dashboardgrid thead tr:first-child {
     font-weight: bold;
@@ -267,10 +337,6 @@ input:focus, select:focus, textarea:focus {
     border-top: 0px;
     border-bottom: 0px;
     padding: 2px;
-}
-
-.compositiondetailtab {
-    margin-bottom: 30px;
 }
 
 .combobox-aux {
@@ -298,6 +364,16 @@ span.combobox-clear {
 
 .commandbar {
     margin-top: 60px;
+}
+
+    .commandbar .print {
+        display: none;
+    }
+
+@media all and (min-width: 768px) {
+        .commandbar .print {
+        display: inline-block;
+    }
 }
 
 .commandButton {
@@ -615,10 +691,6 @@ Header
         }
 
 /*SM - 10/06 - SWWEB-435*/
-/*.affix-pagination:hover {
-    z-index: 9999;
-}*/
-
 .container .context {
     width: 100%;
     background: #eee;
@@ -626,18 +698,13 @@ Header
     padding: 5px 20px 10px;
 }
 
-    /*.container .context .tooltip {
-    z-index: 99999;
-    background: #f00;
-}*/
-
     .container .context .group {
         margin: 5px 10px 0;
     }
 
-        .container .context .group.actions {
+        /*.container .context .group.actions {
             display: none;
-        }
+        }*/
 
         .container .context .group.pagesize {
             padding-top: 5px;
@@ -652,7 +719,7 @@ Header
         }
 
         .container .context .group.total {
-            display: none;
+            /*display: none;*/
             margin-top: 10px;
         }
 
@@ -662,41 +729,7 @@ Header
 
 .container button {
     text-transform: uppercase;
-}
-
-@media all and (min-width: 480px) {
-    .container .context {
-        padding: 5px 20px;
-    }
-
-        .container .context .group {
-            float: left;
-            height: 34px;
-        }
-}
-
-@media all and (min-width: 768px) {
-    .container .context .group {
-        margin: 5px 10px 0;
-    }
-
-    .container .context .group.actions {
-        display: block;
-    }
-
-    .container .context .group.total {
-        height: auto;
-    }
-
-        .container .context .group.total label {
-            margin: 0;
-        }
-}
-
-@media all and (min-width: 992px) {
-    .container .context .group {
-        margin: 5px 0 0 20px;
-    }
+        margin: 5px 20px 0;
 }
 
 @media all and (min-width: 1170px) {
@@ -787,12 +820,50 @@ Header
     .container header .menu-grid li {
         width: 49%;
     }
+
+    .container .context {
+        padding: 5px 20px;
+    }
+
+        .container .context .group {
+            float: left;
+        }
+
+        .container .context .group {
+            height: 34px;
+        }
+
+            /*.container .context .group.total {
+                display: block;
+            }*/
 }
 
 @media all and (min-width: 640px) {
     .container header .menu-grid li {
         width: 32%;
     }
+}
+
+@media all and (min-width: 768px) {
+    .container .context .group {
+        margin: 5px 10px 0;
+    }
+
+    .container .context .right {
+        float: right;
+    }
+
+    /*.container .context .group.actions {
+        display: block;
+    }*/
+
+    .container .context .group.total {
+        height: auto;
+    }
+
+        .container .context .group.total label {
+            margin: 0;
+        }
 }
 
 @media all and (min-width: 780px) {
@@ -833,6 +904,12 @@ Header
         position: fixed;
         max-width: 1139px;
         width: 100%;
+    }
+}
+
+@media all and (min-width: 992px) {
+    .container .context .group {
+        margin: 5px 20px 0;
     }
 }
 

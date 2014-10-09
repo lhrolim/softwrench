@@ -5,7 +5,7 @@ app.directive('dashboardsdone', function ($timeout) {
         link: function (scope, element, attr) {
             if (scope.$last === true) {
                 $timeout(function () {
-                    $('[rel=tooltip]').tooltip({ container: 'body' });
+                    $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
                 });
             }
         }

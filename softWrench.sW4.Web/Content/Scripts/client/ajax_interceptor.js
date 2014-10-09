@@ -23,7 +23,7 @@ app.config(['$httpProvider', function ($httpProvider) {
         };
         var endedok = function (response) {
             //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
-            $('[rel=tooltip]').tooltip('hide');
+            $('.no-touch [rel=tooltip]').tooltip('hide');
             activeRequests--;
             unLockCommandBars();
             unLockTabs();
@@ -49,7 +49,7 @@ app.config(['$httpProvider', function ($httpProvider) {
 
         var endederror = function (rejection) {
             //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
-            $('[rel=tooltip]').tooltip('hide');
+            $('.no-touch [rel=tooltip]').tooltip('hide');
             if (rejection.status == 401) {
                 window.location = url('');
                 return;

@@ -215,7 +215,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             var table = $(".listgrid-table");
             table.removeClass("affixed");
             table.addClass("unfixed");
-            $('[rel=tooltip]').tooltip('hide');
+            $('.no-touch [rel=tooltip]').tooltip('hide');
             log.debug('unfix finished');
         },
 
