@@ -89,15 +89,15 @@
 
             function getFileName(application, schemaId) {
                 if (application != 'asset') {
-                    return capitaliseFirstLetter(application) + "Export.xls";
+                    return capitaliseFirstLetter(application) + "Export";
                 }
                 if (schemaId == 'categories') {
-                    return "AssetCategoriesExport.xls";
+                    return "AssetCategoriesExport";
                 }
                 if (schemaId == 'exportallthecolumns') {
-                    return "AssetListExport.xls";
+                    return "AssetListExport";
                 }
-                return 'AssetExport.xls';
+                return 'AssetExport';
             }
 
             function showModalExportToExcel(parameters) {

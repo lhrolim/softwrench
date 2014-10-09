@@ -37,7 +37,10 @@ namespace softWrench.sW4.Web.Controllers {
             var stream = new MemoryStream();
             excelFile.SaveAs(stream);
             stream.Close();
-
+            var excelFileExtension = ".xls";
+            if (!fileName.EndsWith(excelFileExtension)) {
+                fileName += excelFileExtension;
+            }
             var result = new FileContentResult(stream.ToArray(), System.Net.Mime.MediaTypeNames.Application.Octet) {
                 FileDownloadName = fileName
             };
