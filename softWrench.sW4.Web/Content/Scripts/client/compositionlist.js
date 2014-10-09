@@ -167,6 +167,12 @@ app.directive('compositionList', function (contextService) {
                 addCommand.label = $scope.i18N($scope.relationship + '.add', 'Add ' + $scope.title);
                 addCommand.method = $scope.newDetailFn;
                 addCommand.defaultPosition = 'left';
+                var iconCompoistionAddbutton = $scope.compositionschemadefinition.schemas.list.properties['icon.composition.addbutton'];
+                if (!iconCompoistionAddbutton) {
+                    //use the same as the tab by default
+                    iconCompoistionAddbutton = $scope.compositionschemadefinition.schemas.list.properties['icon.composition.tab'];
+                }
+                addCommand.icon = iconCompoistionAddbutton;
                 toAdd.push(addCommand);
                 log.debug('local commands: {0} '.format(JSON.stringify(localCommands)));
                 return localCommands;

@@ -71,5 +71,14 @@
         /// </summary>
         public static string ShowPrintCommandStrategy = "show.printcommand";
 
+        /// <summary>
+        /// Describes the icon that will appear on the compoisition tab
+        /// </summary>
+        public static string CompositionTabIcon = "icon.composition.tab";
+
+        /// <summary>
+        /// Describes the icon that will appear on the compoisition add button (add worklog)
+        /// </summary>
+        public static string CompositionAddIcon = "icon.composition.addbutton";
     }
 }
