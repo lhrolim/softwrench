@@ -1,9 +1,0 @@
-﻿{"#service":"Move","fromlocation":"MT4",
- "asset":"B4000",
- "childasset":null,"tolocation":null,"toitc":null,"#subtitle":"Value",
- "titleoforder":null,"ibmtechnician":null,"installationdate":null,"lantype":null,"remarks":null,
- "usage":"STANDARD","buildingToLocation":null,"floor":null,"room":null,"costcenter":null,"ticketid":null,
- "asset_":{"primaryuser_":{"personid":"MILLER","person_":{}},"primaryuser_.personid":"MILLER",
-           "location_":{"description":"Atlanta Domocile Terminal"},"location_.description":"Atlanta Domocile Terminal"},
- "asset_.primaryuser_.personid":"MILLER",
- "asset_.location_.description":"Atlanta Domocile Terminal"}
