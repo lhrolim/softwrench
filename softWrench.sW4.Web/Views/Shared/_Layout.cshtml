@@ -16,7 +16,7 @@
     @RowStampScriptHelper.RenderCss("~/Content/styles/client/client-css")   
     @*<base href="@Request.ApplicationPath" />*@
 </head>
-<body class="otb">
+<body>
     @model softWrench.sW4.Web.Models.Home.HomeModel
     @RowStampScriptHelper.Render("~/Content/Scripts/modernizr")
     @RowStampScriptHelper.Render("~/Content/Scripts/jquery/jquery")
@@ -36,7 +36,7 @@
 
     <div class="spinner" data-class="spinner" id="mainspinner"></div>
 
-    <div class="container" ng-controller="LayoutController">
+    <div ng-controller="LayoutController" class="container {{clientName}}">
         <header class="site-header navbar-fixed-top hiddenonprint">
             <div class="menu-expand"><i class="fa fa-bars"></i> Admin</div>
             <div class="menu-items">
