@@ -33,6 +33,7 @@ app.directive('messagesection', function (contextService) {
                     }
                     $scope.successMsg = data.successMessage;
                     $rootScope.showSuccessMessage = true;
+                    fixHeaderService.fixSuccessMessageTop(true);
                 } else {
                     hideSuccessMessage();
                 }
