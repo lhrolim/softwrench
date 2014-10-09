@@ -55,6 +55,12 @@
                                 <div ng-switch-when="icon">
                                     <i class="fa" ng-class="loadIcon(compositionitem, column.attribute)"></i>
                                 </div>
+                                <div ng-switch-when="datetime">
+                                    <a style="color: black; cursor: pointer; word-break:break-all;"
+                                       ng-click="toggleDetails(compositionitem,collectionproperties.allowUpdate)">
+                                        {{getFormattedValue(compositionitem[column.attribute],column)}}
+                                    </a>
+                                </div>
 
 
                                 <a style="color: black; cursor: pointer; word-break:break-all;"
