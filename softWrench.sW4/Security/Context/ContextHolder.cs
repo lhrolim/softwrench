@@ -40,8 +40,7 @@ namespace softWrench.sW4.Security.Context {
             return null;
         }
 
-        protected bool Equals(ContextHolder other)
-        {
+        protected bool Equals(ContextHolder other) {
 
             var baseEqual = string.Equals(OrgId, other.OrgId) &&
                             string.Equals(SiteId, other.SiteId) &&
@@ -88,15 +87,17 @@ namespace softWrench.sW4.Security.Context {
 
         public override string ToString() {
             var userProfiles = new StringBuilder();
-            foreach (var profileId in UserProfiles) {
-                userProfiles.Append(profileId);
-                userProfiles.Append(",");
+            if (UserProfiles != null) {
+                foreach (var profileId in UserProfiles) {
+                    userProfiles.Append(profileId);
+                    userProfiles.Append(",");
+                }
+                if (userProfiles.Length > 0) userProfiles.Remove(userProfiles.Length - 1, 1);
             }
-            if (userProfiles.Length > 0) userProfiles.Remove(userProfiles.Length-1,1);
             return string.Format("OrgId: {0}, SiteId: {1}, UserProfiles: {{{2}}}, User: {3}, Mode: {4}, Platform: {5}, Environment: {6}, Module: {7}, ApplicationLookupContext: {{{8}}}",
                 OrgId, SiteId, userProfiles.ToString(), User, Mode, Platform, Environment, Module, ApplicationLookupContext);
         }
 
-        
+
     }
 }
