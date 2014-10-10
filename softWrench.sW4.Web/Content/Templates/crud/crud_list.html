@@ -1,7 +1,10 @@
 
 <form>
     <div id="affixpagination" class="affix-pagination hiddenonprint">
-        <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)" />
+        <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
+                    schema-id="{{schema.schemaId}}" application-name="{{schema.applicationName}}"
+                    search-data="searchData"
+                    search-operator="searchOperator" />
     </div>
 
     <div class="divAuxTable">
@@ -70,7 +73,7 @@
 
                 <!-- Filter row shown when there are few columns to be displayed -->
                 <tr class="filter-row hidden-too-much-columns hiddenonprint">
-                    <th ng-repeat="column in schema.displayables" 
+                    <th ng-repeat="column in schema.displayables"
                         ng-style="{'min-width': column.rendererParameters['minwidth'],
                                 'max-width': column.rendererParameters['maxwidth'],
                                 'width': column.rendererParameters['width']}" filterrowrendered>
@@ -150,7 +153,8 @@
                             <div ng-switch-when="ApplicationFieldDefinition">
 
                                 <ng-switch on="column.rendererType">
-                                    <div ng-switch-when="color" class="statuscolumncolor" bo-style="{'background-color':statusColor(dm.fields[column.rendererParameters['column']] || 'null',null)}">
+                                    <div ng-switch-when="color" class="statuscolumncolor"
+                                         bo-style="{'background-color':statusColor(dm.fields[column.rendererParameters['column']] || 'null',null)}">
 
                                     </div>
 
@@ -181,7 +185,10 @@
         <br />
         <br />
         <div id="affixpagination1" class="hiddenonprint">
-            <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)" />
+            <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
+                        schema-id="{{schema.schemaId}}" application-name="{{schema.applicationName}}"
+                        search-data="searchData"
+                        search-operator="searchOperator" />
         </div>
     </div>
 

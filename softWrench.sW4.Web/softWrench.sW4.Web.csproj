@@ -272,6 +272,7 @@
     <Compile Include="DB_Migration\4.0\20140516_SWWEB118_2.cs" />
     <Compile Include="DB_Migration\4.0\20140519Hap209.cs" />
     <Compile Include="DB_Migration\4.0\20140519_SWWEB_115_2.cs" />
+    <Compile Include="DB_Migration\4.0\20141001_SWWEB-505.cs" />
     <Compile Include="DB_Migration\4.0\20140724_HAP_331.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
@@ -350,6 +351,19 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\Client\manchester\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\kongsberg\menu.mobile.xml" />
+    <Content Include="App_Data\Client\kongsberg\menu.web.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\kongsberg\metadata.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\kongsberg\properties.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -512,6 +526,8 @@
     <Content Include="Content\Scripts\client\crud_base_controller.js" />
     <Content Include="Content\Scripts\client\crud_list.js" />
     <Content Include="Content\Scripts\client\logAdmin.js" />
+    <Content Include="Content\Scripts\client\services\rest_service.js" />
+    <Content Include="Content\Scripts\client\services\userpreference_service.js" />
     <Content Include="Content\Scripts\client\services\eventdispatcher_service.js" />
     <Content Include="Content\Scripts\client\services\file_service.js" />
     <Content Include="Content\Scripts\client\services\localstorage_service.js" />
@@ -798,6 +814,7 @@
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="App_Data\Client\hapag\i18n\es\labels.json" />
     <Content Include="App_Data\Client\otb\statuscolors.json" />
+    <Content Include="App_Data\Client\kongsberg\statuscolors.json" />
     <None Include="App_Data\Schema\Deploy_Metadata.xsd">
       <SubType>Designer</SubType>
     </None>

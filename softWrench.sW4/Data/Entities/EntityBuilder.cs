@@ -41,7 +41,7 @@ namespace softWrench.sW4.Data.Entities {
                 HandleRelationship<T>(entityType, metadata, associationAttributes, property);
                 var attribute = metadata.Schema.Attributes.FirstOrDefault(a => a.Name == name);
                 if (attribute != null) {
-                    attributes.Add(property.Name, GetValueFromJson(GetType(metadata, attribute),  property.Value));
+                    attributes.Add(property.Name, GetValueFromJson(GetType(metadata, attribute), property.Value));
                 }
             } else if (collectionAssociation != null) {
                 HandleCollections<T>(entityType, metadata, applicationMetadata, collectionAssociation, associationAttributes, property);
@@ -52,7 +52,7 @@ namespace softWrench.sW4.Data.Entities {
                     return;
                 }
                 if (attribute != null) {
-                    attributes.Add(property.Name, GetValueFromJson(GetType(metadata, attribute),  property.Value));
+                    attributes.Add(property.Name, GetValueFromJson(GetType(metadata, attribute), property.Value));
                 } else if (property.Value.Type == JTokenType.Array) {
                     var array = property.Value.ToObject<Object[]>();
                     entity.UnmappedAttributes.Add(property.Name, String.Join(", ", array));
@@ -82,7 +82,7 @@ namespace softWrench.sW4.Data.Entities {
                 JToken idTkn;
                 String idValue = null;
                 if (jToken.TryGetValue(collectionType.Schema.IdAttribute.Name, out idTkn)) {
-                    var valueFromJson = GetValueFromJson(collectionType.Schema.IdAttribute.Type,  idTkn);
+                    var valueFromJson = GetValueFromJson(collectionType.Schema.IdAttribute.Type, idTkn);
                     idValue = valueFromJson == null ? null : valueFromJson.ToString();
                 }
                 var entity = BuildFromJson<T>(entityType, collectionType, null, jToken, idValue);
@@ -97,7 +97,7 @@ namespace softWrench.sW4.Data.Entities {
             var relationshipName = EntityUtil.GetRelationshipName(property.Name, out attributeName);
             var relationship = metadata.RelatedEntityMetadata(relationshipName);
             if (relationship == null) {
-//                throw new InvalidOperationException(String.Format(RelationshipNotFound, relationshipName, metadata.Name));
+                //                throw new InvalidOperationException(String.Format(RelationshipNotFound, relationshipName, metadata.Name));
                 return;
             }
             object relatedEntity;
@@ -137,17 +137,15 @@ namespace softWrench.sW4.Data.Entities {
 
                 return ConversionUtil.ConvertFromMetadataType(type, stValue);
 
-            } else {
-
-                var array = value.ToObject<Object[]>();
-                for (var i = 0; i < array.Length; i++) {
-                    if (array[i] != null) {
-                        array[i] = ConversionUtil.ConvertFromMetadataType(type, array[i].ToString());
-                    }
-                }
-
-                return array;
             }
+            var array = value.ToObject<Object[]>();
+            for (var i = 0; i < array.Length; i++) {
+                if (array[i] != null) {
+                    array[i] = ConversionUtil.ConvertFromMetadataType(type, array[i].ToString());
+                }
+            }
+
+            return array;
         }
     }
 }

@@ -34,11 +34,12 @@
                                     <input type="search"
                                         placeholder="{{lookupObj.fieldMetadata.label}} Search"
                                         class="form-control" ng-model="lookupObj.code" ng-enter="lookupModalSearch()" />
-                                    <span class="input-group-addon"
+                                    <span class="input-group-addon last"
                                         ng-click="lookupModalSearch()"
                                         rel="tooltip" data-original-title="{{i18N('search.click','Click to search')}}">
-                                       <i class="fa fa-search-plus"></i>
+                                       <i class="glyphicon glyphicon-filter"></i>
                                     </span>
+                                    <div></div><!--stop addon from moving on hover-->
                                 </span>
                             </th>
                             <th>
@@ -48,11 +49,12 @@
                                         class="form-control"
                                         ng-model="lookupObj.description"
                                         ng-enter="lookupModalSearch()" />
-                                    <span class="input-group-addon"
+                                    <span class="input-group-addon last"
                                         ng-click="lookupModalSearch()"
                                         rel="tooltip" data-original-title="{{i18N('search.click','Click to search')}}">
-                                        <i class="fa fa-search-plus"></i>
+                                        <i class="glyphicon glyphicon-filter"></i>
                                     </span>
+                                    <div></div><!--stop addon from moving on hover-->
                                 </span>
                             </th>
                         </tr>
@@ -87,7 +89,7 @@
                                     <span class="input-group-addon"
                                         ng-click="lookupModalSearch()"
                                         rel="tooltip" data-original-title="{{i18N('search.click','Click to search')}}">
-                                       <i class="fa fa-search-plus"></i>
+                                       <i class="glyphicon glyphicon-filter"></i>
                                     </span>
                                 </span>
                             </th>

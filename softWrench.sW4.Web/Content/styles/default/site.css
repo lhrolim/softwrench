@@ -20,11 +20,11 @@ input:focus, select:focus, textarea:focus {
     margin: 0 auto;
 }
 
-.smallmodal .modal-dialog {
-    overflow: hidden;
-    padding: 0;
-    width: 100%
-}
+    .smallmodal .modal-dialog {
+        overflow: hidden;
+        padding: 0;
+        width: 100%;
+    }
 
 @media all and (min-width: 480px) {
     .smallmodal {
@@ -38,7 +38,7 @@ input:focus, select:focus, textarea:focus {
     position: fixed; /*HAP-508 T-EU-044 fix*/
     top: 50%;
     left: 50%;
-    z-index: 2000;
+    z-index: 9999;
 }
 
 #crudmodal {
@@ -199,6 +199,11 @@ input:focus, select:focus, textarea:focus {
         text-decoration: none;
     }
 
+.divAuxTable {
+    /*z-index: 1;
+    position: relative;*/
+}
+
 #listgrid {
     color: #000;
     width: 100%;
@@ -266,51 +271,48 @@ input:focus, select:focus, textarea:focus {
 
     .detail-header .buttons .btn {
         margin-top: 10px;
-        width: 100%;
+        width: 32%;
     }
 
 @media all and (min-width: 480px) {
     .detail-header .buttons .btn {
-        margin-top: 0;
         width: auto;
     }
 }
 
 @media all and (min-width: 768px) {
-    .detail-header .nav-tabs > li {
-        float: left;
-    }
-
-        .detail-header .nav-tabs > li > a {
-            margin-right: 0;
-            border: 1px solid #ddd;
-            border-bottom: 1px solid #999;
-            border-left: none;
-            border-radius: 0;
-            border-top-left-radius: 3px;
-            border-top-right-radius: 3px;
-        }
-
-        .detail-header .nav-tabs > li:last-child > a {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-
-        .detail-header .nav-tabs > li.active > a, .detail-header .nav-tabs > li.active > a:hover, .detail-header .nav-tabs > li.active > a:focus {
-            border: 1px solid #999;
-            border-bottom: 1px solid #fff;
-        }
-
-        .detail-header .nav-tabs > li > a:hover {
-            border-color: #eee #eee #999;
-        }
-}
-
-@media all and (min-width: 992px) {
     .detail-header {
         margin-bottom: 30px;
         border-bottom: 1px solid #999;
     }
+
+        .detail-header .nav-tabs > li {
+            float: left;
+        }
+
+            .detail-header .nav-tabs > li > a {
+                margin-right: 0;
+                border: 1px solid #ddd;
+                border-bottom: 1px solid #999;
+                border-left: none;
+                border-radius: 0;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+            }
+
+            .detail-header .nav-tabs > li:last-child > a {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            .detail-header .nav-tabs > li.active > a, .detail-header .nav-tabs > li.active > a:hover, .detail-header .nav-tabs > li.active > a:focus {
+                border: 1px solid #999;
+                border-bottom: 1px solid #fff;
+            }
+
+            .detail-header .nav-tabs > li > a:hover {
+                border-color: #eee #eee #999;
+            }
 
         .detail-header .nav-tabs {
             float: left;
@@ -320,6 +322,10 @@ input:focus, select:focus, textarea:focus {
         .detail-header .buttons {
             float: right;
         }
+
+            .detail-header .buttons .btn {
+                margin-top: 0;
+            }
 }
 
 #dashboardgrid thead tr:first-child {
@@ -358,6 +364,16 @@ span.combobox-clear {
 
 .commandbar {
     margin-top: 60px;
+}
+
+    .commandbar .print {
+        display: none;
+    }
+
+@media all and (min-width: 768px) {
+    .commandbar .print {
+        display: inline-block;
+    }
 }
 
 .commandButton {
@@ -634,45 +650,49 @@ Header
         padding: 0 20px;
     }
 
-        .container header .menu-admin .text {
-            float: left;
-            color: #fff;
-            margin-top: 16px;
-        }
+.container .context .group.filter .btn-group {
+    margin-top: -2px;
+}
 
-            .container header .menu-admin .text a {
-                color: #fff;
-            }
+.container header .menu-admin .text {
+    float: left;
+    color: #fff;
+    margin-top: 16px;
+}
 
-                .container header .menu-admin .text a:hover {
-                    text-decoration: none;
-                }
-
-        .container header .menu-admin .buttons {
-            padding-top: 20px;
-            float: right;
-        }
-
-    .container header .branding {
-        background: url(../../Images/otb-branding.png) no-repeat top left;
-        min-height: 100px;
-        padding: 20px 20px;
+    .container header .menu-admin .text a {
+        color: #fff;
     }
 
-        .container header .branding .logo img {
-            max-width: 100%;
-            height: auto;
-            width: auto;
+        .container header .menu-admin .text a:hover {
+            text-decoration: none;
         }
 
-    .container header .menu-grid {
-        max-width: 1139px;
-        width: 100%;
+.container header .menu-admin .buttons {
+    padding-top: 20px;
+    float: right;
+}
+
+.container header .branding {
+    background: url(../../Images/otb-branding.png) no-repeat top left;
+    min-height: 100px;
+    padding: 20px 20px;
+}
+
+    .container header .branding .logo img {
+        max-width: 100%;
+        height: auto;
+        width: auto;
     }
 
-        .container header .menu-grid li a {
-            text-align: center;
-        }
+.container header .menu-grid {
+    max-width: 1139px;
+    width: 100%;
+}
+
+    .container header .menu-grid li a {
+        text-align: center;
+    }
 
 /*SM - 10/06 - SWWEB-435*/
 .container .context {
@@ -686,9 +706,9 @@ Header
         margin: 5px 10px 0;
     }
 
-        .container .context .group.actions {
+        /*.container .context .group.actions {
             display: none;
-        }
+        }*/
 
         .container .context .group.pagesize {
             padding-top: 5px;
@@ -699,7 +719,7 @@ Header
         }
 
         .container .context .group.total {
-            display: none;
+            /*display: none;*/
             margin-top: 10px;
         }
 
@@ -715,6 +735,7 @@ Header
 @media all and (min-width: 1px) {
     .container header {
         position: relative;
+         z-index: 6000;
     }
 
         .container header .menu-expand {
@@ -751,6 +772,7 @@ Header
 
     .affix-pagination {
         position: relative;
+        z-index: 5000;
     }
 
         .affix-pagination + br, .affix-pagination + br + br {
@@ -793,17 +815,15 @@ Header
         padding: 5px 20px;
     }
 
+      
         .container .context .group {
             float: left;
-        }
-
-        .container .context .group {
             height: 34px;
         }
 
-            .container .context .group.total {
+    /*.container .context .group.total {
                 display: block;
-            }
+            }*/
 }
 
 @media all and (min-width: 640px) {
@@ -821,9 +841,9 @@ Header
         float: right;
     }
 
-    .container .context .group.actions {
+    /*.container .context .group.actions {
         display: block;
-    }
+    }*/
 
     .container .context .group.total {
         height: auto;
@@ -876,7 +896,17 @@ Header
 
 @media all and (min-width: 992px) {
     .container .context .group {
-        margin: 5px 20px 0;
+         margin: 5px 0 0 20px;
+    }
+}
+
+@media all and (min-width: 1170px) {
+    .container .context .right {
+        float: right;
+    }
+
+    .container .context .group.total {
+        display: block;
     }
 }
 

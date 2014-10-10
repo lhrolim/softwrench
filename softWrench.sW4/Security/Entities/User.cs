@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.AUTH;
+using softWrench.sW4.Preferences;
 using softWrench.sW4.Security.Interfaces;
 using softWrench.sW4.Util;
 using System;
@@ -86,6 +87,7 @@ namespace softWrench.sW4.Security.Entities {
 
         [Property]
         public virtual string MaximoPersonId { get; set; }
+
 
         [JsonIgnore]
         [Set(0, Table = "SEC_PERSONGROUPASSOCIATION",

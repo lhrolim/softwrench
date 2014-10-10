@@ -28,11 +28,12 @@ namespace softWrench.sW4.Metadata.Parsing {
             var parentEntity = entity.Attribute(XmlMetadataSchema.EntityAttributeParentEntity).ValueOrDefault((string)null);
             var associations = XmlAssociationsParser.Parse(entity);
             return new EntityMetadata(name,
-                XmlSchemaParser.Parse(name,entity, idAttributeName, associations.Item2, whereClause, parentEntity),
+                XmlSchemaParser.Parse(name, entity, idAttributeName, associations.Item2, whereClause, parentEntity),
                 associations.Item1,
                 XmlConnectorParametersParser.Parse(entity)
                 );
         }
+
 
         /// <summary>
         ///     Parses the XML document provided by the specified
@@ -40,31 +41,39 @@ namespace softWrench.sW4.Metadata.Parsing {
         /// </summary>
         /// <param name="stream">The input stream containing the XML representation of the metadata file.</param>
         [NotNull]
-        public Tuple<IReadOnlyCollection<EntityMetadata>, EntityQueries> Parse([NotNull] TextReader stream) {
+        public Tuple<IEnumerable<EntityMetadata>, EntityQueries> Parse([NotNull] TextReader stream) {
             if (stream == null) throw new ArgumentNullException("stream");
 
             var document = XDocument.Load(stream);
             if (null == document.Root) throw new InvalidDataException();
 
-            var entities = document
-                .Root
-                .Elements().FirstOrDefault(e => e.Name.LocalName == XmlMetadataSchema.EntitiesElement);
+            var xElements = document.Root.Elements();
 
+            var enumerable = xElements as XElement[] ?? xElements.ToArray();
 
+            var templates = enumerable.FirstOrDefault(e => e.Name.LocalName.Equals(XmlMetadataSchema.TemplatesElement));
 
-            IReadOnlyCollection<EntityMetadata> entityMetadatas;
-            if (null == entities) {
-                entityMetadatas = new ReadOnlyCollection<EntityMetadata>(Enumerable
-                    .Empty<EntityMetadata>()
-                    .ToList());
-                return new Tuple<IReadOnlyCollection<EntityMetadata>, EntityQueries>(entityMetadatas, new EntityQueries(new Dictionary<string, string>()));
+            IList<EntityMetadata> entityMetadatas = new List<EntityMetadata>();
+            var result = new Tuple<IEnumerable<EntityMetadata>, EntityQueries>(entityMetadatas, new EntityQueries(new Dictionary<string, string>()));
+
+            if (templates != null) {
+                foreach (var template in templates.Elements()) {
+
+                }
             }
-            entityMetadatas = (from entitiesEl in entities.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.EntityElement)
+
+
+            var entities = enumerable.FirstOrDefault(e => e.IsNamed(XmlMetadataSchema.EntitiesElement));
+
+            if (null == entities) {
+                return result;
+            }
+            entityMetadatas = (from entitiesEl in entities.Elements().Where(e => e.IsNamed(XmlMetadataSchema.EntityElement))
                                select ParseEntity(entitiesEl)).ToList();
             var queries = entities
-                .Elements().FirstOrDefault(e => e.Name.LocalName == XmlMetadataSchema.QueriesElement);
+                .Elements().FirstOrDefault(e => e.IsNamed(XmlMetadataSchema.QueriesElement));
             var resultQueries = new EntityQueries(ParseQueries(queries));
-            return new Tuple<IReadOnlyCollection<EntityMetadata>, EntityQueries>(entityMetadatas, resultQueries);
+            return new Tuple<IEnumerable<EntityMetadata>, EntityQueries>(entityMetadatas, resultQueries);
         }
 
         private Dictionary<string, string> ParseQueries(XElement queries) {
@@ -72,7 +81,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             if (queries == null) {
                 return result;
             }
-            var queriesElements = queries.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.QueryElement);
+            var queriesElements = queries.Elements().Where(e => e.IsNamed(XmlMetadataSchema.QueryElement));
             foreach (var queryElement in queriesElements) {
                 var key = queryElement.Attribute(XmlMetadataSchema.ApplicationPropertyKeyAttribute).Value;
                 var value = queryElement.Attribute(XmlMetadataSchema.ApplicationPropertyValueAttribute).Value;
@@ -109,14 +118,14 @@ namespace softWrench.sW4.Metadata.Parsing {
             /// <param name="whereclause"></param>
             /// <param name="parentEntity"></param>
             public static EntitySchema Parse(string name, XElement entity, string idAttributeName, bool excludeUndeclaredAssociations, string whereclause, string parentEntity) {
-                var attributes = entity.Elements().FirstOrDefault(e => e.Name.LocalName == XmlMetadataSchema.AttributesElement);
+                var attributes = entity.Elements().FirstOrDefault(e => e.IsNamed(XmlMetadataSchema.AttributesElement));
                 if (attributes == null) {
-                    return new EntitySchema(name,null, idAttributeName, false, excludeUndeclaredAssociations, whereclause, parentEntity);
+                    return new EntitySchema(name, null, idAttributeName, false, excludeUndeclaredAssociations, whereclause, parentEntity);
                 }
-                var entityAttributes = attributes.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.AttributeElement).Select(ParseAttribute).ToList();
+                var entityAttributes = attributes.Elements().Where(e => e.IsNamed(XmlMetadataSchema.AttributeElement)).Select(ParseAttribute).ToList();
                 var excludeUndeclared = attributes.Attribute(XmlMetadataSchema.ExcludeUndeclared).ValueOrDefault(false);
                 var tuple = new Tuple<Boolean, ICollection<EntityAttribute>>(excludeUndeclared, entityAttributes);
-                return new EntitySchema(name,tuple.Item2, idAttributeName, tuple.Item1, excludeUndeclaredAssociations, whereclause, parentEntity);
+                return new EntitySchema(name, tuple.Item2, idAttributeName, tuple.Item1, excludeUndeclaredAssociations, whereclause, parentEntity);
             }
         }
 
@@ -147,7 +156,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             /// <param name="association">The `association` element to parse.</param>
             public static IEnumerable<EntityAssociationAttribute> ParseAssociationAttributes(XContainer association) {
                 return association
-                    .Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.RelationshipAttributeElement)
+                    .Elements().Where(e => e.IsNamed(XmlMetadataSchema.RelationshipAttributeElement))
                     .Select(ParseAssociationAttribute)
                     .ToList();
             }
@@ -172,14 +181,14 @@ namespace softWrench.sW4.Metadata.Parsing {
             /// <param name="entity">The `entity` element to parse.</param>
             public static Tuple<IEnumerable<EntityAssociation>, Boolean> Parse(XContainer entity) {
                 var associations =
-                    entity.Elements().FirstOrDefault(e => e.Name.LocalName == XmlMetadataSchema.RelationshipsElement);
+                    entity.Elements().FirstOrDefault(e => e.IsNamed(XmlMetadataSchema.RelationshipsElement));
 
                 if (null == associations) {
                     return new Tuple<IEnumerable<EntityAssociation>, Boolean>(Enumerable.Empty<EntityAssociation>(), false);
                 }
 
                 var entityAssociations = associations
-                    .Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.RelationshipElement)
+                    .Elements().Where(e => e.IsNamed(XmlMetadataSchema.RelationshipElement))
                     .Select(ParseAssociation)
                     .ToList();
                 var excludeUndeclared = associations.Attribute(XmlMetadataSchema.ExcludeUndeclared).ValueOrDefault(false);

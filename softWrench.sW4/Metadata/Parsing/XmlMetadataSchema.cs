@@ -39,6 +39,11 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string QueryElement = "query";
 
 
+
+        public const string TemplatesElement= "templates";
+        public const string TemplateElement= "template";
+        public const string TemplatePathAttribute= "path";
+
         public const string EntitiesElement = "entities";
         public const string EntityElement = "entity";
         public const string EntityAttributeId = "id";

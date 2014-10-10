@@ -17,13 +17,19 @@ namespace softWrench.sW4.Web.Controllers {
         //
         // GET: /Signout/
         public ActionResult SignOut() {
-            var user = SecurityFacade.CurrentUser();
-            if (ApplicationConfiguration.IsDev() || user.IsSwAdmin()) {
-                MetadataProvider.StubReset();
-                _eventDispatcher.Dispatch(new ClearCacheEvent());
+            try {
+                var user = SecurityFacade.CurrentUser();
+                if (ApplicationConfiguration.IsDev() || user.IsSwAdmin()) {
+                    MetadataProvider.StubReset();
+                    _eventDispatcher.Dispatch(new ClearCacheEvent());
+                }
+                FormsAuthentication.SignOut();
+                return Redirect("~");
+            } catch {
+                FormsAuthentication.SignOut();
+                return Redirect("~");
             }
-            FormsAuthentication.SignOut();
-            return Redirect("~");
+
         }
 
     }
