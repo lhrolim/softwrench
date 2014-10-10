@@ -6,6 +6,8 @@
         scope: {
             renderfn: "&",
             paginationData: '=',
+            searchData: '=',
+            searchOperator: '=',
             schemaId: '@',
             applicationName: '@',
             mode: '@',
@@ -13,7 +15,8 @@
             disableExport: '@'
         },
 
-        controller: function ($scope, $rootScope, $timeout, printService, searchService, i18NService, contextService) {
+        controller: function ($scope, $http, $rootScope, $timeout, printService,
+            searchService, i18NService, redirectService, fileService, userPreferenceService, alertService) {
 
             $scope.contextPath = function (path) {
                 return url(path);
@@ -67,38 +70,28 @@
                 searchDTO.pageSize = $scope.paginationData.pageSize;
 
                 parameters.searchDTO = searchDTO;
-                var parameterstoexcel = {
-                    application: parameters.application,
-                    key: parameters.key,
-                    searchDTO: parameters.searchDTO,
-                    module: parameters.module
-                };
-
-                var urlToInvoke = redirectService.getActionUrl('ExportApi', 'SetExcelFile', parameterstoexcel);
-                $http.get(urlToInvoke).
-                success(function (data, status, headers, config) {
-                    var parameterstogetfile = {
-                        fileName: getFileName(parameterstoexcel.application, parameterstoexcel.key.schemaId) + 'Export'
-                    };
-                    window.location = removeEncoding(url("/Application/ExportToExcel" + "?" + $.param(parameterstogetfile)));
-                }).
-                error(function (data, status, headers, config) {
-                    return null;
-                });
+                parameters.fileName = getFileName(parameters.application, parameters.key.schemaId);
+                $rootScope.$broadcast('sw_ajaxinit');
+                fileService.download(removeEncoding(url("/Excel/Export" + "?" + $.param(parameters))),
+                    function (html, url) {
+                        $rootScope.$broadcast('sw_ajaxend');
+                    },
+                    function (html, url) {
+                        $rootScope.$broadcast('sw_ajaxend');
+                    });
             };
 
             function getFileName(application, schemaId) {
-                if (application == 'asset') {
-                    var assetname = '';
-                    if (schemaId == 'categories') {
-                        assetname = 'Categories';
-                    } else if (schemaId == 'exportallthecolumns') {
-                        assetname = 'List';
-                    }
-                    return 'Asset' + assetname;
-                } else {
-                    return capitaliseFirstLetter(application);
+                if (application != 'asset') {
+                    return capitaliseFirstLetter(application) + "Export";
                 }
+                if (schemaId == 'categories') {
+                    return "AssetCategoriesExport";
+                }
+                if (schemaId == 'exportallthecolumns') {
+                    return "AssetListExport";
+                }
+                return 'AssetExport';
             }
 
             function showModalExportToExcel(parameters) {
@@ -183,6 +176,110 @@
                 }
                 $('.pagination-pager').css({ 'margin-left': marginLeft });
             }
+
+            $scope.nonSharedFilters = function () {
+                return userPreferenceService.loadUserNonSharedFilters($scope.applicationName, $scope.schemaId);
+            }
+
+            $scope.sharedFilters = function () {
+                return userPreferenceService.loadUserSharedFilters($scope.applicationName, $scope.schemaId);
+            }
+
+            $scope.hasSharedFilter = function () {
+                return $scope.sharedFilters().length > 0;
+            }
+
+            $scope.hasFilter = function () {
+                return userPreferenceService.hasFilter($scope.applicationName, $scope.schemaId);
+            }
+
+            $scope.$on("sw_redirectapplicationsuccess", function(event) {
+                $scope.selectedfilter = null;
+                $scope.searchData = {};
+            });
+
+            $scope.saveFilter = function () {
+                var saveFormSt = $("#savefilterform").prop('outerHTML');
+                //TODO: use angularjs?!
+                saveFormSt = saveFormSt.replace('none', '');
+                saveFormSt = saveFormSt.replace('savefiltername', 'savefiltername2');
+                bootbox.dialog({
+                    message: saveFormSt,
+                    title: "Save Filter",
+                    buttons: {
+                        cancel: {
+                            label: $scope.i18N('.cancel', 'Cancel'),
+                            className: "btn btn-default",
+                            callback: function () {
+                                return null;
+                            }
+                        },
+                        main: {
+                            label: $scope.i18N('_grid.filter.savefiltebtn', 'Save'),
+                            className: "btn-primary",
+                            callback: function (result) {
+                                if (result) {
+                                    $scope.createFilter($('#savefiltername2').val());
+                                }
+                            }
+                        }
+                    },
+                    className: "smallmodal"
+                });
+            }
+
+            $scope.hasFilterData = function () {
+                var searchData = $scope.searchData;
+                for (var data in searchData) {
+                    if (data == "lastSearchedValues") {
+                        continue;
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            $scope.deleteFilter = function () {
+                var filter = $scope.selectedfilter;
+                alertService.confirm(null, null, function () {
+                    userPreferenceService.deleteFilter(filter.id, filter.creatorId, function () {
+                        $scope.selectedfilter = null;
+                    });
+                }, "Are you sure that you want to remove filter {0}?".format(filter.alias), null);
+            }
+
+            $scope.createFilter = function (alias) {
+                var id = $scope.selectedfilter ? $scope.selectedfilter.id : null;
+                var owner = $scope.selectedfilter ? $scope.selectedfilter.creatorId : null;
+                userPreferenceService.saveFilter($scope.applicationName, $scope.schemaId, $scope.searchData, $scope.searchOperator, alias, id, owner,
+                    function (filter) {
+                        $scope.selectedfilter = filter;
+                    });
+
+
+            }
+
+            $scope.applyFilter = function (filter) {
+                var fieldsArray = filter.fields.split(',');
+                var operatorsArray = filter.operators.split(',');
+                var valuesArray = filter.values.split(',,,');
+
+                for (var i = 0; i < fieldsArray.length; i++) {
+                    var field = fieldsArray[i];
+                    $scope.searchData[field] = valuesArray[i];
+                    $scope.searchOperator[field] = searchService.getSearchOperationBySymbol(operatorsArray[i]);
+                }
+                $scope.selectPage($scope.paginationData.pageNumber);
+                $scope.selectedfilter = filter;
+            }
+
+            $scope.clearFilter = function () {
+                $scope.selectedfilter = null;
+                $scope.searchData = {};
+                $scope.searchOperator = {};
+                $scope.selectPage($scope.paginationData.pageNumber);
+            }
+
 
             $scope.adjustMargin(i18NService.getCurrentLanguage());
         }

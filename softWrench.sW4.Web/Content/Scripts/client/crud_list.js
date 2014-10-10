@@ -32,7 +32,7 @@ app.directive('crudList', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             validationService, submitService, redirectService,
-            associationService, contextService, statuscolorService) {
+            associationService, contextService, statuscolorService, eventdispatcherService) {
 
             $scope.$name = 'crudlist';
 
@@ -77,6 +77,9 @@ app.directive('crudList', function (contextService) {
             $scope.$on('listTableRenderedEvent', function (listTableRenderedEvent) {
                 var log = $log.getInstance('sw4.crud_list_dir#on#listTableRenderedEvent');
                 log.debug('init table rendered listener');
+
+                eventdispatcherService.onload($scope.schema)
+
                 if ($scope.ismodal == 'true' && !(true === $scope.$parent.showingModal)) {
                     return;
                 }
@@ -94,7 +97,7 @@ app.directive('crudList', function (contextService) {
                     }
                 });
 
-                $('[rel=tooltip]').tooltip({ container: 'body' });
+                $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
                 log.debug('finish table rendered listener');
             });
 
@@ -216,14 +219,9 @@ app.directive('crudList', function (contextService) {
             };
 
             $scope.getSearchIcon = function (columnName) {
-                var showSearchIcon = $scope.schema.properties["list.advancedfilter.showsearchicon"] == "true";
+                var showSearchIcon = $scope.schema.properties["list.advancedfilter.showsearchicon"] != "false";
                 var operator = $scope.getOperator(columnName);
-
-                if (showSearchIcon && operator.symbol != "") {
-                    return operator.symbol;
-                } else {
-                    return "";
-                }
+                return showSearchIcon ? operator.symbol : "";
             }
 
             $scope.searchOperations = function () {

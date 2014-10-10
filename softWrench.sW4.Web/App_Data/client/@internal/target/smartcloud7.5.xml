@@ -33,6 +33,13 @@
 			<connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
 		</connectorParameters>
 	</entity>
+  <entity name="SR">
+    <attributes>
+      <const targetpath="ACTLABHRS" value="0.0" type="double"/>
+      <const targetpath="ACTLABCOST" value="0.0" type="double"/>
+      <attribute name="ACTLABCOST" targetpath="ACTLABCOST" type="double"/>
+    </attributes>
+  </entity>
   
 
 </TargetEntities>

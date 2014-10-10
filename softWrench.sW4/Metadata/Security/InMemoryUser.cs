@@ -25,6 +25,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly string _language;
         private readonly string _maximoPersonId;
         private readonly int? _timezoneOffset;
+        private readonly UserPreferences _userPreferences;
         private readonly IList<Role> _roles;
         private readonly ICollection<UserProfile> _profiles;
         private readonly Iesi.Collections.Generic.ISet<PersonGroupAssociation> _personGroups;
@@ -45,7 +46,7 @@ namespace softWrench.sW4.Metadata.Security {
             _roles = new List<Role>();
         }
 
-        public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, int? timezoneOffset) {
+        public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, UserPreferences userPreferences, int? timezoneOffset) {
             DBUser = dbUser;
             _login = dbUser.UserName;
             SiteId = dbUser.SiteId;
@@ -95,6 +96,7 @@ namespace softWrench.sW4.Metadata.Security {
             _roles = roles;
             _dataConstraints = dataConstraints;
             Identity = new GenericIdentity(_login);
+            _userPreferences = userPreferences;
         }
 
         public string Login {
@@ -140,6 +142,10 @@ namespace softWrench.sW4.Metadata.Security {
             get { return _maximoPersonId; }
         }
 
+        public UserPreferences UserPreferences {
+            get { return _userPreferences; }
+        }
+
         /// <summary>
         /// Time difference between UTC time and the user local time, in minutes
         /// (UTCTime - ClientTime)
@@ -180,7 +186,7 @@ namespace softWrench.sW4.Metadata.Security {
                 foreach (var leaf in unsecureMenu.Leafs) {
                     if (!Login.Equals("swadmin") && leaf.Role != null &&
                         (Roles == null || !Roles.Any(r => r.Active && r.Name == leaf.Role))) {
-                        Log.DebugFormat("ignoring leaf {0} for user {1} due to absence of role {2}",leaf.Id,Login,leaf.Role);
+                        Log.DebugFormat("ignoring leaf {0} for user {1} due to absence of role {2}", leaf.Id, Login, leaf.Role);
                         continue;
                     }
                     if (leaf is MenuContainerDefinition) {

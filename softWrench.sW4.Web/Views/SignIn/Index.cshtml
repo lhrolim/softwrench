@@ -12,6 +12,9 @@
     <title>@ViewBag.Title</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta charset="utf-8" />
+    <link rel="Shortcut Icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="icon" sizes="196x196" href="apple-touch-icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @Styles.Render("~/Content/bootstrap/css/twitter-bootstrap")
     @Styles.Render("~/Content/themes/base/font-awesome")
@@ -45,11 +48,6 @@
 
             @if (Model.IsLoginEnabled) {
                 <div class="row">
-
-
-
-
-
                     <form class="col-sm-offset-1 col-sm-11" role="form" action="@Request.RawUrl" method="post" name="value">
                         @if (Model.IncorrectLogin) {
                             if (string.IsNullOrEmpty(Model.LoginMessage)) {
@@ -76,7 +74,7 @@
 
                         <div class="row">
                             <div class="col-sm-5">
-                                <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autofocus>
+                                <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
                                 <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
                                     Username is required<br />
                                     Username wird benötigt<br />
@@ -99,9 +97,6 @@
                             </div>
                         </div>
                     </form>
-
-
-
                 </div>
             }
         </div>

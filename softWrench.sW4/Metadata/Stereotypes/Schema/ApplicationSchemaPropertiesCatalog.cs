@@ -6,8 +6,14 @@
         /// 1) datamap of the row 
         /// 2) fieldmetadata of the clicked column
         /// </summary>
-        public const string ListClickService = "list.click.service"; 
-        
+        public const string ListClickService = "list.click.service";
+
+        /// <summary>
+        /// if false the search icon would remain static (true by default)
+        /// </summary>
+        public const string ListShowSearchIcon = "list.advancedfilter.showsearchicon";
+
+
         /// <summary>
         ///
         /// </summary>
@@ -65,5 +71,14 @@
         /// </summary>
         public static string ShowPrintCommandStrategy = "show.printcommand";
 
+        /// <summary>
+        /// Describes the icon that will appear on the compoisition tab
+        /// </summary>
+        public static string CompositionTabIcon = "icon.composition.tab";
+
+        /// <summary>
+        /// Describes the icon that will appear on the compoisition add button (add worklog)
+        /// </summary>
+        public static string CompositionAddIcon = "icon.composition.addbutton";
     }
 }

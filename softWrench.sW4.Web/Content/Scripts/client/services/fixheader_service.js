@@ -22,42 +22,12 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
     };
 
     var addClassSuccessMessageListHander = function (showerrormessage) {
-        var affixpaginationid = $("#affixpagination");
-        var listgridtheadid = $("#listgridthread");
-        var listgridid = $("#listgrid");
-
-        var paginationsuccessrmessageclass = "pagination-successmessage";
-        var listtheadsuccessmessageclass = "listgrid-thead-successmessage";
-        var listgridsuccessmessageclass = "listgrid-table-successmessage";
-        var listgridtheadreset = "listgrid-thead-reset";
-        var listgridtablereset = "listgrid-table-reset";
-
-        var listtheadsuccessmessageieclass = "listgrid-thead-successmessage-ie";
-        var listgridsuccessmessageieclass = "listgrid-table-successmessage-ie";
-
-        if (showerrormessage) {
-            affixpaginationid.addClass(paginationsuccessrmessageclass);
-            if (isIe9() && $rootScope.clientName == 'hapag') {
-                listgridtheadid.addClass(listtheadsuccessmessageieclass);
-                listgridid.addClass(listgridsuccessmessageieclass);
-            } else {
-                listgridtheadid.removeClass(listgridtheadreset);
-                listgridtheadid.addClass(listtheadsuccessmessageclass);
-                listgridid.removeClass(listgridtablereset);
-                listgridid.addClass(listgridsuccessmessageclass);
-            }
-        } else {
-            affixpaginationid.removeClass(paginationsuccessrmessageclass);
-            if (isIe9() && $rootScope.clientName == 'hapag') {
-                listgridtheadid.removeClass(listtheadsuccessmessageieclass);
-                listgridid.removeClass(listgridsuccessmessageieclass);
-            } else {
-                listgridtheadid.removeClass(listtheadsuccessmessageclass);
-                listgridtheadid.addClass(listgridtheadreset);
-                listgridid.removeClass(listgridsuccessmessageclass);
-                listgridid.addClass(listgridtablereset);
-            }
-        }
+        var headerHeight = $('.site-header').height() +70;
+        var paginationHeight = $('.affix-pagination').height();
+        var theaderHeight = $('.listgrid-thead').height();
+        $('.affix-pagination').css('top', headerHeight);
+        $('.listgrid-thead').css('top', headerHeight + paginationHeight);
+        $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight - 1);
     };
 
     var topMessageAddClass = function (div) {
@@ -125,7 +95,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
                 return;
             }
 
-            //                        thead tr:eq(2) th ==> picks all the elements of the second line of the thead of the table, i.e the filters
+            //thead tr:eq(2) th ==> picks all the elements of the second line of the thead of the table, i.e the filters
             $('thead tr:eq(2) th', table).each(function (i, v) {
                 var inputGroupElements = $('.input-group', v).children();
                 //filtering only the inputs (ignoring divs...)
@@ -166,8 +136,9 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         },
 
         fixThead: function (schema, params) {
+            var log = $log.getInstance('sw4.fixheader_service#fixThead');
+
             if ($rootScope.clientName == 'hapag') {
-                var log = $log.getInstance('sw4.fixheader_service#fixThead');
                 log.debug('starting fix Thead');
                 if (!params || !params.resizing) {
                     this.unfix();
@@ -194,29 +165,35 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
 
                 //update the style, to fixed
                 this.fixTableTop(table, params);
-
+                
                 log.debug('finishing fix Thead');
             }
+
+            //SM - 10/01 - trigger resize to setup header
+            $(window).trigger('resize');
+            log.debug('Trigger Window Resize');
         },
 
         activateResizeHandler: function () {
-            var resolutionBarrier = 1200;
-            var width = $(window).width();
-            var highResolution = width >= resolutionBarrier;
-            var fn = this;
-            $(window).resize(function () {
-                var newWidth = $(this).width();
-                var isNewHighResolution = newWidth > resolutionBarrier + 15; // lets add some margin to give the browser time to render the new table...
-                var isNewLowResolution = newWidth < resolutionBarrier - 15; // lets add some margin to give the browser time to render the new table...
-                if ((isNewHighResolution && !highResolution) || (isNewLowResolution && highResolution)) {
-                    $log.getInstance("crudlistdir#resize").debug('switching resolutions');
-                    fn.fixThead(null, {
-                        resizing: true
-                    });
-                    width = newWidth;
-                    highResolution = width >= resolutionBarrier;
-                }
-            });
+            if ($rootScope.clientName == 'hapag') {
+                var resolutionBarrier = 1200;
+                var width = $(window).width();
+                var highResolution = width >= resolutionBarrier;
+                var fn = this;
+                $(window).resize(function () {
+                    var newWidth = $(this).width();
+                    var isNewHighResolution = newWidth > resolutionBarrier + 15; // lets add some margin to give the browser time to render the new table...
+                    var isNewLowResolution = newWidth < resolutionBarrier - 15; // lets add some margin to give the browser time to render the new table...
+                    if ((isNewHighResolution && !highResolution) || (isNewLowResolution && highResolution)) {
+                        $log.getInstance("crudlistdir#resize").debug('switching resolutions');
+                        fn.fixThead(null, {
+                            resizing: true
+                        });
+                        width = newWidth;
+                        highResolution = width >= resolutionBarrier;
+                    }
+                });
+            }
         },
 
         FixHeader: function () {
@@ -238,7 +215,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             var table = $(".listgrid-table");
             table.removeClass("affixed");
             table.addClass("unfixed");
-            $('[rel=tooltip]').tooltip('hide');
+            $('.no-touch [rel=tooltip]').tooltip('hide');
             log.debug('unfix finished');
         },
 

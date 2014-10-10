@@ -122,7 +122,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         private static ISet<ApplicationEvent> ParseEvents(XElement element) {
             ISet<ApplicationEvent> result = new HashSet<ApplicationEvent>();
 
-            var events = element.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.EventsElement);
+            var events = element.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.EventsElement).ToList();
             foreach (var applicationEvent in events) {
                 result.Add(new ApplicationEvent {
                     Type = applicationEvent.Attribute(XmlMetadataSchema.EventsTypeAttribute).Value,
@@ -381,6 +381,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var parentSchemaValue = xElement.Attribute(XmlMetadataSchema.SchemaParentSchemaAttribute).ValueOrDefault((string)null);
                 var unionSchema = xElement.Attribute(XmlMetadataSchema.SchemaUnionSchemaAttribute).ValueOrDefault((string)null);
                 var stereotype = SchemaStereotype.None;
+                
                 ClientPlatform? platform = null;
                 if (stereotypeAttr != null) {
                     Enum.TryParse(stereotypeAttr, true, out stereotype);
@@ -425,7 +426,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 ApplicationCommandSchema applicationCommandSchema = ParseCommandSchema(xElement);
                 resultDictionary.Add(new ApplicationMetadataSchemaKey(id, modeAttr, platformAttr),
                     ApplicationSchemaFactory.GetInstance(applicationName, title, id, stereotype, mode, platform,
-                    isAbstract, displayables, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName, unionSchema));
+                    isAbstract, displayables, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName, unionSchema, ParseEvents(xElement)));
             }
             return resultDictionary;
         }

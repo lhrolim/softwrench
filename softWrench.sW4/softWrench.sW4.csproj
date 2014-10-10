@@ -232,8 +232,10 @@
     <Compile Include="Metadata\Entities\Schema\EntityTargetRelationship.cs" />
     <Compile Include="Metadata\Entities\Schema\EntityTargetSchema.cs" />
     <Compile Include="Metadata\Entities\Sliced\SlicedEntityAssociation.cs" />
+    <Compile Include="Metadata\Parsing\XElementExtensions.cs" />
     <Compile Include="Metadata\Parsing\XmlConnectorParametersParser.cs" />
     <Compile Include="Metadata\Parsing\XmlEntityTargetMetadataParser.cs" />
+    <Compile Include="Metadata\Security\UserPreferences.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\OutputDetailStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\ApplicationSchemaPropertiesCatalog.cs" />
     <Compile Include="Metadata\Validator\MetadataXmlTargetInitializer.cs" />
@@ -241,6 +243,11 @@
     <Compile Include="Metadata\Validator\MetadataParsingUtils.cs" />
     <Compile Include="Metadata\Validator\MenuXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\PropertiesXmlInitializer.cs" />
+    <Compile Include="Preferences\GridFilterAssociation.cs" />
+    <Compile Include="Preferences\GridFilter.cs" />
+    <Compile Include="Preferences\GridFilterController.cs" />
+    <Compile Include="Preferences\GridFilterExceptions.cs" />
+    <Compile Include="Preferences\GridFilterManager.cs" />
     <Compile Include="Scheduler\ASwJob.cs" />
     <Compile Include="Security\Context\ApplicationLookupContext.cs" />
     <Compile Include="Configuration\Definitions\WhereClause\WhereClauseCondition.cs" />
@@ -501,6 +508,7 @@
     <Compile Include="SimpleInjector\SimpleInjectorGenericFactory.cs" />
     <Compile Include="SPF\IGenericResponseResult.cs" />
     <Compile Include="SPF\RedirectResponseResult.cs" />
+    <Compile Include="Util\AttributeUtil.cs" />
     <Compile Include="Util\ApplicationConfiguration.cs" />
     <Compile Include="Util\ArrayUtil.cs" />
     <Compile Include="Util\AssemblyLocator.cs" />

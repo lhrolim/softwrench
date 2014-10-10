@@ -1,22 +1,28 @@
 <div class="context clearfix hiddenonprint header-menu">
-    <div class="pagination-grid-left left">
-        <label>{{i18N('_grid.pagination.resultsperpage','Results Per Page')}}: </label>
-        <select id="pagesize"
-            ng-model="paginationData.pageSize"
-            ng-options="option as option for option in paginationData.paginationOptions"
-            ng-change="selectPage(1)">
-        </select>
-        <span ng-if="!isHapag()">
-            <button type="button" class="btn btn-default btn-sm" ng-click="exportToPrint()" href="#" rel="tooltip"
-                data-original-title="{{i18N('_grid.pagination.actions.print','Print')}}" ng-hide="disablePrint">
+    <div class="left">
+        <div class="group pagesize">
+            <label>{{i18N('_grid.pagination.resultsperpage','Results Per Page')}}: </label>
+            <select id="pagesize"
+                    ng-model="paginationData.pageSize"
+                    ng-options="option as option for option in paginationData.paginationOptions"
+                    ng-change="selectPage(1)"></select>
+        </div>
+
+        <div class="group actions hidden-xs" ng-if="!isHapag()">
+            <!--removed rel="tooltip" from button until z-index can be resolved-->
+            <button type="button" class="btn btn-default btn-sm" ng-click="exportToPrint()" href="#"
+                    data-original-title="{{i18N('_grid.pagination.actions.print','Print')}}" ng-hide="disablePrint">
                 <i class="fa fa-print"></i>&ensp;Print
+
             </button>
-            <button type="button" class="btn btn-default btn-sm" ng-click="exportToExcel(schema)" href="#" rel="tooltip"
-                data-original-title="{{i18N('_grid.pagination.actions.excel','Export to Excel')}}" ng-hide="disableExport">
+            <button type="button" class="btn btn-default btn-sm" ng-click="exportToExcel(schema)" href="#"
+                    data-original-title="{{i18N('_grid.pagination.actions.excel','Export to Excel')}}" ng-hide="disableExport">
                 <i class="fa fa-file-text-o"></i>&ensp;Export
+
             </button>
-        </span>
-        <span class="pagination-pager">
+        </div>
+
+        <div class="group pagination">
             <a ng-click="selectPage(1)" href="#">
                 <img ng-src="{{contextPath('/Content/Images/first.png')}}" alt="first" />
             </a>
@@ -32,8 +38,9 @@
             <a ng-click="selectPage(paginationData.pageCount)" href="#">
                 <img ng-src="{{contextPath('/Content/Images/last.png')}}" alt="last" />
             </a>
-        </span>
-        <span ng-if="isHapag()" class="pagination-actions">
+        </div>
+
+        <div class="group pagination-actions" ng-if="isHapag()">
             <a ng-click="exportToPrint()" href="#" rel="tooltip" data-original-title="{{i18N('_grid.pagination.actions.print','Print')}}" ng-hide="disablePrint">
                 <img ng-src="{{contextPath('/Content/Images/print_small.gif')}}" alt="print" />
             </a>
@@ -43,15 +50,83 @@
             <a ng-click="selectPage(1)" href="#" rel="tooltip" data-original-title="{{i18N('_grid.pagination.actions.refresh','Refresh content')}}">
                 <img ng-src="{{contextPath('/Content/Images/refresh_sm.gif')}}" alt="refresh" />
             </a>
-        </span>
-    </div>
+        </div>
 
-    <div class="pagination-grid-right right">
-        <div class="pagination-grid-right-text">
-            <label>{{i18N('_grid.pagination.display',"Displaying Page {0} of {1}, Total items {2}",[paginationData.selectedPage,paginationData.pageCount,paginationData.totalCount])}}</label>
+
+        <div ng-if="!isHapag()" class="group filter divider-vertical">
+            <div class="divider-vertical"></div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default" ng-click="selectPage(paginationData.pageNumber)">
+                    <i class="fa fa-filter"></i>&ensp;{{selectedfilter.alias}}
+                </button>
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-show="hasFilter() || hasFilterData() ">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li ng-if="selectedfilter">
+                        <a href="#" ng-click="clearFilter()">
+                            {{i18N('_grid.filter.clear','Clear Filter')}}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" ng-click="saveFilter()" ng-if="selectedfilter || hasFilterData()">
+                            <i class="fa fa-save"></i>&ensp;Save
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" ng-click="deleteFilter()" ng-if="selectedfilter">
+                            <i class="fa fa-times"></i>&ensp;Delete
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" ng-if="selectedfilter && false">
+                            <i class="fa fa-share"></i>&ensp;Share
+                        </a>
+                    </li>
+
+                    <li class="divider" ng-if="selectedfilter"></li>
+                    <li ng-repeat="filter in nonSharedFilters()">
+                        <a href="#" ng-click="applyFilter(filter)">{{filter.alias}}</a>
+                    </li>
+                    <li class="divider" ng-if="hasSharedFilter()"></li>
+                    <li ng-repeat="filter in sharedFilters()">
+                        <a href="#" ng-click="applyFilter(filter)">{{filter.alias}}</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <button type="button" class="btn" data-original-title="Advanced Mode" rel="tooltip" ng-show="false">
+                <i class="fa fa-rocket"></i>
+            </button>
+
+        </div>
+
+        <div class="right">
+        <div class="group total hidden-xs">
+                <label ng-if="isHapag()">{{i18N('_grid.pagination.display',"Displaying Page {0} of {1}, Total items {2}",[paginationData.selectedPage,paginationData.pageCount,paginationData.totalCount])}}</label>
+                <label ng-if="!isHapag()">{{i18N('_grid.pagination.display',"Total Items: {0}",[paginationData.totalCount])}}</label>
+            </div>
         </div>
     </div>
 
+    <!--to be shown as a modal only-->
+    <form id='savefilterform' class="form-horizontal" style="display: none">
+        <div class="form-group">
+            <label class='control-label col-md-5'>{{i18N('_grid.filter.savefiltername',"Filter Name")}}</label>
+            <div class="col-md-7">
+                <input type='text' name='filtername' id='savefiltername'
+                       value="{{selectedfilter.alias}}"
+                       class="form-control"
+                       maxlength="20" />
+            </div>
+        </div>
+    </form>
 
 
 </div>
+
+
+
+

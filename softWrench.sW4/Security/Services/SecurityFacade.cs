@@ -1,4 +1,5 @@
 ﻿using log4net;
+using softWrench.sW4.Preferences;
 using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.AUTH;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -23,6 +24,8 @@ namespace softWrench.sW4.Security.Services {
 
         private static IEventDispatcher _eventDispatcher;
 
+        private static GridFilterManager _gridFilterManager;
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(SecurityFacade));
 
 
@@ -36,6 +39,7 @@ namespace softWrench.sW4.Security.Services {
         private SecurityFacade() {
             _eventDispatcher =
                 SimpleInjectorGenericFactory.Instance.GetObject<IEventDispatcher>(typeof(IEventDispatcher));
+            _gridFilterManager = SimpleInjectorGenericFactory.Instance.GetObject<GridFilterManager>(typeof(GridFilterManager));
         }
 
 
@@ -84,7 +88,10 @@ namespace softWrench.sW4.Security.Services {
             }
 
             var profiles = UserProfileManager.FindUserProfiles(dbUser);
-            var inMemoryUser = new InMemoryUser(dbUser, profiles, userTimezoneOffsetInt);
+            var userPreferences = new UserPreferences() {
+                GridFilters = _gridFilterManager.LoadAllOfUser(dbUser.Id)
+            };
+            var inMemoryUser = new InMemoryUser(dbUser, profiles, userPreferences, userTimezoneOffsetInt);
             if (_users.ContainsKey(inMemoryUser.Login)) {
                 _users.Remove(inMemoryUser.Login);
             }

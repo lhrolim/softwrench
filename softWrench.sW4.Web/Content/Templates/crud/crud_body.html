@@ -1,14 +1,11 @@
 <div>
-
     <section class="container" ng-if="isList">
-
         <crud-list datamap="datamap"
                    schema="schema"
                    pagination-data="paginationdata"
                    search-data="searchData"
                    search-operator="searchOperator"
                    search-sort="searchSort" />
-
     </section>
 
     <form id="crudbodyform" class="form-horizontal" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" method="post" enctype="multipart/form-data" ng-if="isDetail">
@@ -21,31 +18,29 @@
              </div>
 
             <div ng-switch-when="true" class="hiddenonprint detail-body">
-
-                <ul class="nav nav-tabs compositiondetailtab hapag-composition">
-                    <li class="active">
-                        <a href="#main" data-toggle="tab"><i class="fa fa-file-text-o"></i> {{schema.title}}</a>
-                    </li>
-                    <li ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type">
-                        <a ng-switch-when="ApplicationCompositionDefinition"
-                           ng-href="#{{tab.tabId}}" data-toggle="tab" ng-show="!composition.hidden">
-                           <i class="{{tab.schema.schemas.list.properties['list.schema.icon']}}"></i> {{i18N(tab.tabId + '._title',tab.label)}}
-                        </a>
-                        <a ng-switch-when="ApplicationTabDefinition"
-                           ng-href="#{{tab.tabId}}" data-toggle="tab" ng-show="!composition.hidden">
-                            <i class="{{tab.icon}}"></i> 
-                            {{i18NTabLabel(tab)}}
-                        </a>
-                    </li>
-                    <div ng-if="isNotHapagTest()">
-                        <div class="pull-right">
-                            <button type="button" class="btn btn-primary" ng-click="toConfirmCancel(previousdata,previousschema)"><i style="margin-right: 0.5em" class="glyphicon ng-scope glyphicon-backward"></i>Back&emsp;</button>
-                            <button type="button" class="btn btn-primary" ng-click="crawl(1)"> <i class ="fa fa-arrow-left"></i> PREVIOUS&emsp; </button>
-                            <button type="button" id="forward" class="btn btn-primary" ng-click="crawl(0)"><i class ="fa fa-arrow-right"></i>  NEXT </button>
-                        </div>
+                <div class="detail-header clearfix">
+                    <ul class="nav nav-tabs compositiondetailtab hapag-composition">
+                        <li class="active">
+                            <a href="#main" data-toggle="tab"><i class="fa fa-file-text-o"></i> {{schema.title}}</a>
+                        </li>
+                        <li ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type">
+                            <a ng-switch-when="ApplicationCompositionDefinition"
+                               ng-href="#{{tab.tabId}}" data-toggle="tab" ng-show="!composition.hidden">
+                               <i class="{{tab.schema.schemas.list.properties['icon.composition.tab']}}"></i> {{i18N(tab.tabId + '._title',tab.label)}}
+                            </a>
+                            <a ng-switch-when="ApplicationTabDefinition"
+                               ng-href="#{{tab.tabId}}" data-toggle="tab" ng-show="!composition.hidden">
+                                <i class="{{tab.icon}}"></i> 
+                                {{i18NTabLabel(tab)}}
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="buttons" ng-if="isNotHapagTest()">
+                        <button type="button" class="btn btn-primary" ng-click="toConfirmCancel(previousdata,previousschema)" rel="tooltip" data-original-title="Back"><i class="glyphicon ng-scope glyphicon-backward"></i></button>
+                        <button type="button" class="btn btn-primary" ng-click="crawl(1)" rel="tooltip" data-original-title="Previous"><i class ="fa fa-arrow-left"></i></button>
+                        <button type="button" class="btn btn-primary" ng-click="crawl(0)" rel="tooltip" data-original-title="Next"><i class="fa fa-arrow-right"></i></button>
                     </div>
-                </ul>
-
+                </div>
                 <div class="tab-content">
                     <div class="tab-pane active" id="main">
                         <ng-switch on="schema.mode">
@@ -70,15 +65,10 @@
                                 <crud-output schema="schema" datamap="datamap.fields"
                                              displayables="schema.displayables"
                                              cancelfn="toListSchema(data,schema)" previousschema="previousschema" previousdata="previousdata" />
-
-
-
                             </div>
                         </ng-switch>
-
                     </div>
                     <div class="tab-pane" ng-repeat="tab in tabsDisplayables(schema)" id="{{tab.tabId}}" ng-switch on="tab.type">
-
                         <div ng-switch-when="ApplicationCompositionDefinition" ng-switch on="tab.collection">
                             <div ng-switch-when="true" class="hiddenonprint">
                                 <composition-list title="{{i18N(tab.schema.schemas.detail.applicationName + '._title',tab.label)}}"
@@ -89,16 +79,11 @@
                                                   parentdata="datamap"
                                                   cancelfn="toListSchema(data,schema)"
                                                   previousschema="previousschema" previousdata="previousdata"></composition-list>
-
-
-
                             </div>
                             <div ng-switch-when="false">
-
                             </div>
                         </div>
                         <div class="tab-pane" ng-switch-when="ApplicationTabDefinition" ng-switch on="schema.mode">
-
                             <div ng-switch-when="input">
                                 <crud-input elementid="crudInputMainComposition"
                                             displayables="tab.displayables"
@@ -142,11 +127,7 @@
                     </div>
                 </ng-switch>
             </div>
-
         </ng-switch>
-
-
-
     </form>
 
     <!-- had to divide the 'print-modal' and 'print-seciton' in two diferent divs, otherwise the 'print-section' was totally ignored (really dont know why) -->
