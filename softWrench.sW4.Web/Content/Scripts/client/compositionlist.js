@@ -322,10 +322,7 @@ app.directive('compositionList', function (contextService) {
                 });
             };
 
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
             $scope.showListCommands = function () {
                 return !$scope.detail || $scope.expanded;
             };
