@@ -2117,7 +2117,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="icon" params="iconcss=fa fa-mail-forward"/>
           </field>-->
           <field attribute="inbound">
-            <renderer type="icon" params="iconcss=fa fa-mail-forward"/>
+            <renderer type="icon" params="expression={'1':'fa-long-arrow-left green','0':'fa-long-arrow-right orange'} "/>
           </field>
           <field attribute="orgobject" label="Origination"/>
           <field attribute="createdate" label="Created Date/Time">

@@ -53,7 +53,7 @@ app.directive('expandedItemInput', function ($compile) {
 });
 
 app.directive('newItemInput', function ($compile, fieldService) {
-    
+
     return {
         restrict: "E",
         replace: true,
@@ -65,7 +65,7 @@ app.directive('newItemInput', function ($compile, fieldService) {
             associationOptions: '=',
             cancelfn: '&',
             savefn: '&'
-            
+
         },
         template: "<div></div>",
         link: function (scope, element, attrs) {
@@ -106,8 +106,8 @@ app.directive('compositionList', function (contextService) {
 
         controller: function ($scope, $log, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
-            expressionService, $timeout,modalService) {
-            
+            expressionService, $timeout, modalService) {
+
 
             function init() {
                 //Extra variables
@@ -122,10 +122,10 @@ app.directive('compositionList', function (contextService) {
                 $scope.clonedCompositionData = [];
                 jQuery.extend($scope.clonedCompositionData, $scope.compositiondata);
                 $scope.isNoRecords = $scope.clonedCompositionData.length > 0 ? false : true;
-                $scope.detailData = {};                
+                $scope.detailData = {};
                 $scope.noupdateallowed = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
                 $scope.expanded = false;
-                $scope.wasExpandedBefore = false;                
+                $scope.wasExpandedBefore = false;
                 $scope.isReadonly = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
 
                 $injector.invoke(BaseController, this, {
@@ -193,7 +193,7 @@ app.directive('compositionList', function (contextService) {
                     modalService.show($scope.compositiondetailschema, datamap, $scope.save);
                 } else {
                     //TODO: switch to edit
-                $scope.newDetail = true;
+                    $scope.newDetail = true;
                 }
                 $scope.selecteditem = datamap;
                 $scope.collapseAll();
@@ -272,7 +272,7 @@ app.directive('compositionList', function (contextService) {
                 if ($scope.compositiondata == null) {
                     $scope.compositiondata = [];
                 }
-                $scope.compositiondata.push(selecteditem);                
+                $scope.compositiondata.push(selecteditem);
                 if ($scope.collectionproperties.autoCommit) {
                     var validationErrors = validationService.validate($scope.compositionschemadefinition.schemas.detail.displayables, selecteditem);
                     if (validationErrors.length > 0) {
@@ -289,7 +289,7 @@ app.directive('compositionList', function (contextService) {
                                 var compositiontabaftersave = '#' + compositions[compositions.length - 1].replace('/', '');
                                 sessionStorage.compositiontabaftersave = compositiontabaftersave;
                                 window.location.reload();
-                                    return;
+                                return;
                             }
                             $scope.clonedCompositionData = updatedArray;
                             $scope.compositiondata = updatedArray;
@@ -322,17 +322,36 @@ app.directive('compositionList', function (contextService) {
                 });
             };
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
             $scope.showListCommands = function () {
                 return !$scope.detail || $scope.expanded;
             };
 
-            $scope.loadIcon = function (detailData, attribute) {
-                if (attribute == 'inbound') {
-                    if (detailData[attribute] == '1')
-                        return 'fa-long-arrow-left green';
-                    return 'fa-long-arrow-right orange';
+            $scope.loadIcon = function (value, metadata) {
+                var expression = metadata.rendererParameters['expression'];
+                if (expression != null) {
+                    expression = replaceAll(expression, '\'', "\"");
+                    try {
+                        var expressionObj = JSON.parse(expression);
+                        var result = expressionObj[value];
+                        if (result == null) {
+                            //switch case deafult
+                            return expressionObj["#default"];
+                        }
+                        return result;
+                    } catch (e) {
+                        $log.getInstance('compositionlist#loadicon').warn('invalid expression definition {0}'.format(expression));
+                    }
                 }
-                return 'fa-picture-o';
+                var iconvalue = metadata.rendererParameters['value'];
+                if (iconvalue != null) {
+                    return iconvalue;
+                }
+                //forgot to declare it, just return
+                return '';
             };
 
             function buildExpandAllParams() {
@@ -399,7 +418,7 @@ app.directive('compositionList', function (contextService) {
                 return i18NService.getI18nLabel(fieldMetadata, $scope.compositionlistschema);
             };
 
-           
+
         }
     };
 });

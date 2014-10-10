@@ -7,7 +7,11 @@
             </button>
             <button type="button" class="btn commandButton"
                 ng-show="noupdateallowed && clonedCompositionData.length > 1" ng-click="collapseAll()">
+<<<<<<< Updated upstream
                 {{i18N('composition.collapseall','Collapse All')}}
+=======
+                <i class="fa fa-minus"></i> {{i18N('composition.collapseall','Collapse All')}}
+>>>>>>> Stashed changes
             </button>
         </div>
     </div>
@@ -53,7 +57,7 @@
                                     <i class="fa" ng-class="{'fa-check-square-o' : compositionitem[column.attribute] == 'true', 'fa-square-o' :  compositionitem[column.attribute] == 'false'}" />
                                 </div>
                                 <div ng-switch-when="icon">
-                                    <i class="fa" ng-class="loadIcon(compositionitem, column.attribute)"></i>
+                                    <i class="fa" ng-class="loadIcon(compositionitem[column.attribute],column)"></i>
                                 </div>
                                 <div ng-switch-when="datetime">
                                     <a style="color: black; cursor: pointer; word-break:break-all;"
