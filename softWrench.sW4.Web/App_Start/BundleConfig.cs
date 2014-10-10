@@ -69,7 +69,8 @@ namespace softWrench.sW4.Web {
             bundles.Add(new ScriptBundle("~/Content/Scripts/thirdparty").Include(
                 "~/Content/Scripts/thirdparty/moment.js",
                 "~/Content/Scripts/thirdparty/textAngular-sanitize-min.js",
-                "~/Content/Scripts/thirdparty/textAngular-min.js"));
+                "~/Content/Scripts/thirdparty/textAngular-min.js",
+                "~/Content/Scripts/thirdparty/jquery.scannerdetection.js"));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/jqueryui").Include(
                 "~/Content/Scripts/jquery-ui-{version}.js"));

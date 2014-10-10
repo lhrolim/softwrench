@@ -198,6 +198,9 @@
           <element name="reference" minOccurs="0" maxOccurs="unbounded"
 						type="tns:referenceComplexType">
           </element>
+          <element name="event" type="tns:Event" minOccurs="0"
+            maxOccurs="unbounded">
+          </element>
         </choice>
         <attribute name="platform" type="string" use="optional">
         </attribute>
@@ -719,6 +722,7 @@
         <restriction base="string">
           <enumeration value="afterchange"></enumeration>
           <enumeration value="beforechange"></enumeration>
+          <enumeration value="onload"></enumeration>
         </restriction>
       </simpleType>
     </attribute>

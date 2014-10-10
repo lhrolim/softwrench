@@ -528,10 +528,12 @@
     <Content Include="Content\Scripts\client\logAdmin.js" />
     <Content Include="Content\Scripts\client\services\rest_service.js" />
     <Content Include="Content\Scripts\client\services\userpreference_service.js" />
+    <Content Include="Content\Scripts\client\services\eventdispatcher_service.js" />
     <Content Include="Content\Scripts\client\services\file_service.js" />
     <Content Include="Content\Scripts\client\services\localstorage_service.js" />
     <Content Include="Content\Scripts\client\services\modal_service.js" />
     <Content Include="Content\Scripts\client\services\detailService.js" />
+    <Content Include="Content\Scripts\client\services\scannerdetection_service.js" />
     <Content Include="Content\Scripts\client\services\statuscolor_service.js" />
     <Content Include="Content\Scripts\client\util\log_enhacer.js" />
     <Content Include="Content\Scripts\client\samelinepickers.js" />
@@ -586,9 +588,10 @@
     <Content Include="Content\Scripts\jquery\jquery-fileupload-5.40.1.js" />
     <Content Include="Content\Scripts\jquery\jquery.iframe-transport.js" />
     <Content Include="Content\Scripts\responsive.js" />
+    <Content Include="Content\Scripts\thirdparty\jquery.scannerdetection.js" />
     <Content Include="Content\Scripts\thirdparty\moment.js" />
-    <Content Include="Content\Scripts\thirdparty\textAngular-min.js" />
     <Content Include="Content\Scripts\thirdparty\textAngular-sanitize-min.js" />
+    <Content Include="Content\Scripts\thirdparty\textAngular-min.js" />
     <Content Include="Content\scss\forms.css">
       <DependentUpon>forms.scss</DependentUpon>
     </Content>

@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Metadata;
+using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Command;
@@ -36,10 +37,10 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
           SchemaMode? mode, ClientPlatform? platform, bool @abstract,
           [NotNull] List<IApplicationDisplayable> displayables, [NotNull]IDictionary<string, string> schemaProperties,
           ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, [NotNull] ApplicationCommandSchema commandSchema,
-          string idFieldName, string unionSchema) {
+          string idFieldName, string unionSchema, ISet<ApplicationEvent> events) {
 
             var schema = new ApplicationSchemaDefinition(applicationName, title, schemaId, stereotype, mode, platform,
-                @abstract, displayables, schemaProperties, parentSchema, printSchema, commandSchema, idFieldName, unionSchema);
+                @abstract, displayables, schemaProperties, parentSchema, printSchema, commandSchema, idFieldName, unionSchema, events);
 
             if (schema.ParentSchema != null) {
                 schema.Displayables = MergeParentSchemaDisplayables(schema);
@@ -183,7 +184,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
         private static ApplicationSchemaDefinition OnApplyPlatformPolicy(ApplicationSchemaDefinition schema, ClientPlatform platform, List<IApplicationDisplayable> displayables) {
             //pass null on ParentSchema to avoid reMerging the parentSchemaData
             return GetInstance(schema.ApplicationName, schema.Title, schema.SchemaId, schema.Stereotype, schema.Mode, platform, schema.Abstract, displayables,
-                schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UnionSchema);
+                schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UnionSchema, schema.EventSet);
         }
 
         //        protected abstract ApplicationSchema OnApplyPlatformPolicy(ClientPlatform platform, IList<IApplicationDisplayable> fields);
