@@ -945,28 +945,34 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Service Request Grid">
           <field attribute="ticketid" label="SR No">
-            <renderer type="default" params="minwidth=110px" />
+            <renderer type="default"  params="minwidth=60px;maxwidth=90px;wordwrap=break-word" />
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="excelwidth=50" />
+            <renderer type="default" params="minwidth=100px;maxwidth=160px;excelwidth=50;wordwrap=break-word" />
           </field>
           <field attribute="classificationid" label="Project Description">
-            <renderer type="default" params="minwidth=150px"/>
+            <renderer type="default" params="minwidth=100px;maxwidth=160px;excelwidth=50;wordwrap=break-word"/>
           </field>
           <field attribute="area" label="Area">
-            <renderer type="default" params="minwidth=150px"/>
+            <renderer type="default" params="minwidth=100px;maxwidth=160px;excelwidth=50;wordwrap=break-word"/>
           </field>
           <field attribute="problemtype" label="Problem Type">
-            <renderer type="default" params="minwidth=150px"/>
+            <renderer type="default" params="minwidth=100px;maxwidth=160px;excelwidth=50;wordwrap=break-word"/>
           </field>
           <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="minwidth=150px" />
+            <renderer type="default" params="minwidth=50px;maxwidth=100px;wordwrap=break-word" />
+          </field>
+          <field attribute="internalpriority" label="Internal Priority">
+            <renderer type="default" params="minwidth=50px;maxwidth=100px;wordwrap=break-word" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="minwidth=150px" />
+            <renderer type="default" params="minwidth=75px;maxwidth=175px;wordwrap=break-word" />
           </field>
           <field attribute="owner" label="Owner">
-            <renderer type="default" params="minwidth=150px" />
+            <renderer type="default" params="minwidth=85px;maxwidth=185px;wordwrap=break-word" />
+          </field>
+          <field attribute="changedate" label="Changed Date">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=110px;maxwidth=180px;wordwrap=break-word;showtime=false"/>
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="grid=servicerequest;column=status"/>
@@ -1532,9 +1538,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="description" label="Summary">
             <renderer type="default" params="minwidth=100px;maxwidth=160px;excelwidth=50;wordwrap=break-word" />
           </field>
-          <field attribute="asset_.description" label="Asset">
+          <!--field attribute="asset_.description" label="Asset">
             <renderer type="default" params="minwidth=90px;maxwidth=1600px;wordwrap=break-word" />
-          </field>
+          </field-->
           <field attribute="classificationid" label="Project Description">
             <renderer type="default" params="minwidth=100px;maxwidth=160px;excelwidth=50;wordwrap=break-word" />
           </field>
@@ -1544,11 +1550,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="problemtype" label="Problem Type">
             <renderer type="default" params="minwidth=100px;maxwidth=160px;excelwidth=50;wordwrap=break-word" />
           </field>
-          <field attribute="internalpriority" label="Priority">
+          <field attribute="reportedby" label="Reported By">
+            <renderer type="default" params="minwidth=50px;maxwidth=100px;wordwrap=break-word" />
+          </field>
+          <field attribute="reportedpriority" label="Reported Priority">
+            <renderer type="default" params="minwidth=50px;maxwidth=100px;wordwrap=break-word"/>
+          </field>
+          <field attribute="internalpriority" label="Internal Priority">
             <renderer type="default" params="minwidth=50px;maxwidth=100px;wordwrap=break-word" />
           </field>
           <field attribute="reportdate" label="Reported Date">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=110px;maxwidth=180px;wordwrap=break-word;showtime=false" />
+          </field>
+          <field attribute="owner" label="Owner">
+            <renderer type="default" params="minwidth=85px;maxwidth=185px;wordwrap=break-word" />
           </field>
           <field attribute="ownergroup" label="Owner Group">
             <renderer type="default" params="minwidth=85px;maxwidth=185px;wordwrap=break-word" />
