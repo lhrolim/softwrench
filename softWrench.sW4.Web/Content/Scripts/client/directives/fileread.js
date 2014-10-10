@@ -6,7 +6,7 @@
         },
         link: function (scope, element, attributes) {
             element.bind("change", function (changeEvent) {
-                var validFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html"];
+                var validFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html" , "png"];
                 var fileName;
                 var flag = -1;
                 if (!isIe9()) {
@@ -16,7 +16,7 @@
                         var temp = changeEvent.target.files[0].name.split(".").pop().toLowerCase();
                         if (validFileTypes.indexOf(temp) == -1) {
                             changeEvent.currentTarget.value = "";
-                            alertService.alert("Invalid file. Chose another please");
+                            alertService.alert("Invalid file. Choose another please");
                             //Updating the model
                             scope.$apply(function () {
                                 scope.fileread = undefined;

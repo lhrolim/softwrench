@@ -196,11 +196,13 @@
                         <div class="input-group-addon fileUpload">
                             <span>Choose File</span>
                             <input class="form-control uploadfile_tooltip upload" name="{{fieldMetadata.attribute}}"
-                                id="uploadBtn"
-                                type="file" accept=".jpg,.bmp,.pdf,.zip,text/plain,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,application/xml,.xsl,text/html"
-                                fileread="datamap[fieldMetadata.attribute]"
-                                path="datamap.newattachment_path"
-                                title="{{handlerTitleInputFile('uploadfile_tooltip')}}" />
+
+                                   id="uploadBtn"
+                                   type="file" accept=".jpg,.bmp,.png,.pdf,.zip,text/plain,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,application/xml,.xsl,text/html"
+                                   fileread="datamap[fieldMetadata.attribute]"
+                                   path="datamap.newattachment_path"
+                                   title="{{handlerTitleInputFile('uploadfile_tooltip')}}" />
+
                         </div>
                     </div>
                 </div>
