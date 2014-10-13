@@ -1,5 +1,23 @@
 ﻿function JobPlanCompleteActionController($scope, $http, i18NService, contextService) {
 
+    var imacOption = [
+                { label: 'Select One', value: 'Select One' },
+                { label: 'Completed', value: 'COMP' },
+    ];
+
+    var woactivityOptions = [
+                { label: '-- Select One --', value: 'Select One' },
+                { label: 'Completed', value: 'COMP' },
+                { label: 'Not Required', value: 'NOTREQ' },
+                { label: 'Failed', value: 'FAIL' }
+    ];
+
+    var approvalsOptions = [
+                { label: '-- Select One --', value: 'Select One' },
+                { label: 'Approved', value: 'Approved' },
+                { label: 'Rejected', value: 'Rejected' }
+    ];
+
     function isMemberOfOwnerGroup(ownerGroup) {
         if (ownerGroup == null && contextService.isLocal()) {
             return true;
@@ -18,32 +36,18 @@
     $scope.i18N = function (key, defaultValue, paramArray) {
         return i18NService.get18nValue(key, defaultValue, paramArray);
     };
-
+    
     $scope.getAvailableOptions = function (schema, compositionschema) {
         var applicationName = schema.applicationName;
         var schemaId = compositionschema.schemaId;
         if (applicationName == "imac") {
-            return [
-                { label: 'Select One', value: 'Select One' },
-                { label: 'Completed', value: 'COMP' },
-            ];
+            return imacOptions;
         }
-
         if (compositionschema.applicationName == "woactivity") {
-            return [
-                { label: '-- Select One --', value: 'Select One' },
-                { label: 'Completed', value: 'COMP' },
-                { label: 'Not Required', value: 'NOTREQ' },
-                { label: 'Failed', value: 'FAIL' }
-            ];
+            return woactivityOptions;
         }
-
         if (compositionschema.applicationName == "approvals") {
-            return [
-                { label: '-- Select One --', value: 'Select One' },
-                { label: 'Approved', value: 'Approved' },
-                { label: 'Rejected', value: 'Rejected' }
-            ];
+            return approvalsOptions;
         }
     }
 

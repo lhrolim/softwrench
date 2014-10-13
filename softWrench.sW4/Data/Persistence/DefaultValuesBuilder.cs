@@ -53,7 +53,14 @@ namespace softWrench.sW4.Data.Persistence {
         }
 
         private static DataMap MergeWithPrefilledValues(DataMap schemaDefaultValues, Entity initialValues) {
-            foreach (var attribute in initialValues.Attributes) {
+            foreach (var attribute in initialValues.Attributes.Where(f => f.Value != null)) {
+                var key = attribute.Key;
+                if (schemaDefaultValues.ContainsAttribute(key)) {
+                    schemaDefaultValues.Attributes.Remove(key);
+                }
+                schemaDefaultValues.Attributes.Add(key, attribute.Value);
+            }
+            foreach (var attribute in initialValues.UnmappedAttributes.Where(f => f.Value != null)) {
                 var key = attribute.Key;
                 if (schemaDefaultValues.ContainsAttribute(key)) {
                     schemaDefaultValues.Attributes.Remove(key);

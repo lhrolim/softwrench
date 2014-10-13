@@ -24,6 +24,29 @@ app.factory('changeservice', function ($http, redirectService) {
             var id = isSr ? datamap['hlagchangeticketid'] : wonum;
             var parameters = { id: id, popupmode: 'browser' };
             redirectService.goToApplicationView(application, 'detail', 'output', null, parameters);
+        },
+
+        duplicate: function (column, datamap) {
+            
+            var initialData = {};
+
+            initialData['description'] = datamap['description'];
+            initialData['infrastructureasset'] = datamap['cinum'];
+            initialData['category'] = datamap['worktype'];
+            initialData['impact'] = datamap['pmcomimpact'];
+            initialData['urgency'] = datamap['pmcomurgency'];
+            initialData['reasonforchange'] = datamap['reasonforchange'];
+            initialData['reasondetails'] = datamap['reasonforchange_.ldtext'];
+            initialData['targstartdate'] = datamap['targstartdate'];
+            initialData['targcompdate'] = datamap['targcompdate'];
+            initialData['priority'] = datamap['wopriority'];
+            initialData['remarks'] = datamap['longdescription_.ldtext'];
+                        
+            var parameters = {
+                popupmode: 'nomenu'
+            };
+
+            redirectService.goToApplicationView('newchange', 'newchange', 'input', 'New Change Request', parameters, initialData);
         }
     };
 

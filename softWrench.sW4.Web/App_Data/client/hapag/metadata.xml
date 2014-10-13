@@ -1406,20 +1406,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<field attribute="status" label="Status"/>
 					<field attribute="longdescription_.ldtext" label="Remarks"/>
 					<field attribute="itdclosurecode" label="Implementation Result"/>
+                    
           <composition relationship="relatedrecord" label="Related Records" inline="true" >
 						<renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey;onClickService=relatedrecordservice.opendetail" />
 					</composition>
-					<composition relationship="worklog" label="Work Log" >
+          
+          <composition relationship="worklog" label="Work Log" >
 						<collectionproperties allowcreation="true"/>
 					</composition>
 					<composition relationship="woactivity" label="Job Plan" detailschema="">
 						<collectionproperties allowcreation="false" orderbyfield="wosequence asc, workorderid asc"/>
 					</composition>
-					<composition relationship="approvals" label="Approvals" detailschema="">
-						<collectionproperties allowcreation="false"/>
-					</composition>
+          <composition relationship="approvals" label="Approvals" detailschema="">
+              <collectionproperties allowcreation="false"/>
+          </composition>
 
-					<!-- need to force query!-->
+          <!-- need to force query!-->
 					<composition relationship="apprwftransaction" label="Approvals" hidden="true">
 						<collectionproperties allowcreation="false" orderbyfield="transdate desc"/>
 					</composition>
@@ -1428,7 +1430,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<composition relationship="attachment" label="Attachments">
 						<collectionproperties allowcreation="true"/>
 					</composition>
-				</detail>
+
+          <commands>
+            <command id="duplicate" label="Duplicate" method="duplicate" service="changeservice" parameters="schema,datamap" />
+          </commands>        
+        </detail>
 			</schemas>
 		</application>
 
@@ -3103,21 +3109,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
 					</field>
 					<field attribute="description" label="Summary"/>
-					<section resourcepath="/Content/Templates/hapag/jobplancompleteaction.html"/>
-					<!--          <optionfield attribute="actiontoperform">-->
-					<!--            <option label="Select One" value=""/>-->
-					<!--            <option label="Completed" value="Completed"/>-->
-					<!--          </optionfield>-->
-
-
+					<section resourcepath="/Content/Templates/hapag/jobplancompleteaction.html"/>					
 				</list>
-				<!---->
-				<!--        <detail stereotype="compositiondetail">-->
-				<!--          <field attribute="description" label="Summary" required="true"/>-->
-				<!--          <field attribute="longdescription_.ldtext" label="Details" >-->
-				<!--            <renderer type="textarea"/>-->
-				<!--          </field>-->
-				<!--        </detail>-->
 
 				<schema id="changeTasksDashboardList" stereotype="list">
 					<field attribute="wonum" label="WoNum">
