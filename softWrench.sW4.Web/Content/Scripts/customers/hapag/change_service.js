@@ -33,13 +33,19 @@ app.factory('changeservice', function ($http, redirectService, formatService, fi
             var changeid = datamap['wonum'];
 
             /* workaround to make samelinepicker work - REFACTOR */
-            var targstartdateColumn = fieldService.getDisplayableByKey(schema, 'targstartdate');
-            var targstartdate = formatService.format(datamap['targstartdate'], targstartdateColumn);
-            targstartdate = Date.parse(targstartdate).toString('MM/dd/yyyy HH:mm');
+            var targstartdate = datamap['targstartdate'];
+            if (targstartdate != null) {
+                var targstartdateColumn = fieldService.getDisplayableByKey(schema, 'targstartdate');
+                targstartdate = formatService.format(targstartdate, targstartdateColumn);
+                targstartdate = Date.parse(targstartdate).toString('MM/dd/yyyy HH:mm');
+            }
 
-            var targcompdateColumn = fieldService.getDisplayableByKey(schema, 'targcompdate');
-            var targcompdate = formatService.format(datamap['targcompdate'], targcompdateColumn);
-            targcompdate = Date.parse(targcompdate).toString('MM/dd/yyyy HH:mm');
+            var targcompdate = datamap['targcompdate'];
+            if (targcompdate != null) {
+                var targcompdateColumn = fieldService.getDisplayableByKey(schema, 'targcompdate');
+                targcompdate = formatService.format(targcompdate, targcompdateColumn);
+                targcompdate = Date.parse(targcompdate).toString('MM/dd/yyyy HH:mm');
+            }
             /* workaround end */
 
             initialData['description'] = datamap['description'];
