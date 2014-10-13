@@ -87,11 +87,14 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 return;
             }
 
+            // The workorder grid was replaced by IMAC grid
+            /* 
             var woData = GetDAO().FindByQuery<HistWorkorder>(HistWorkorder.ByAssetnum, assetId.ToString());
             foreach (var row in woData) {
                 var list = (IList<Dictionary<string, object>>)resultObject.Attributes["workorder_"];
                 list.Add(row.toAttributeHolder());
             }
+             */
 
             var ticketData = GetDAO().FindByQuery<HistTicket>(HistTicket.ByAssetnum, assetId.ToString());
             foreach (var row in ticketData) {

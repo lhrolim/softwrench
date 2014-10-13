@@ -1070,10 +1070,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 					<relationshipAttribute from="location" to="location" primary="true"/>
 					<relationshipAttribute from="siteid" to="siteid" />
 				</relationship>
+        <!--
 				<relationship to="ticket" collection="true">
 					<relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
 					<relationshipAttribute from="siteid" to="siteid"/>
 				</relationship>
+        -->
 				<relationship to="workorder" collection="true">
 					<relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
 					<relationshipAttribute from="siteid" to="siteid"/>

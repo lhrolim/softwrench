@@ -51,7 +51,11 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
             redirectService.goToApplicationView("imac", "list", "input", i18NService.get18nValue("IMAC Grid", "IMAC Grid", null), null);
         },
 
+        opendetail: function (datamap, displayables) {
+
+            var id = datamap['ticketid'];            
+            var parameters = { id: id, popupmode: 'browser' };
+            redirectService.goToApplicationView('imac', 'detail', 'output', null, parameters);
+        }
     };
-
-
 });

@@ -154,6 +154,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
 					<relationshipAttribute from="siteid" to="siteid" />
 				</relationship>
+      	<relationship to="ticket" collection="true">
+					<relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+					<relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute query="(!@classificationid is null or !@classificationid not like '8151%')"/>
+				</relationship>
+				<relationship to="imac" collection="true">
+					<relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+					<relationshipAttribute from="siteid" to="siteid"/>
+				</relationship>
 			</relationships>
 			<connectorParameters>
 				<connectorParameter key="saveremarks_customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.SaveRemarkCrudConnector" />
@@ -2171,6 +2180,25 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<property key="detail.cancel.lbl" value="Close"/>
 					</properties>
 				</schema>
+      
+        <schema stereotype="compositionlist" id="asset_composition">
+					<properties>
+						<property key="detail.cancel.lbl" value="Close"/>
+						<property key="expansible" value="false"/>
+            <property key="list.click.service" value="imacservice.opendetail"/>
+					</properties>
+					<field label="TickedID" attribute="ticketid"/>
+					<field label="Class" attribute="class"/>
+					<field label="Description" attribute="description"/>
+					<field label="Location" attribute="location"/>
+					<field label="Asset" attribute="assetnum"/>
+					<field label="Status" attribute="status"/>
+					<field label="Date" attribute="reportdate">
+						<renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
+					</field>
+        	<reference id="R017RequiredFields"/>
+				</schema>    
+    
 			</schemas>
 		</application>
 
@@ -2428,8 +2456,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <header label="Tickets" displacement="ontop"/>
               <collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false"/>
             </composition>
-            <composition relationship="workorder" inline="true" label="" detailschema="">
-              <header label="Work Orders" displacement="ontop"/>
+            <composition relationship="imac" inline="true" label="" detailschema="">
+              <header label="IMAC" displacement="ontop"/>
               <collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false"/>
             </composition>
           </tab>
