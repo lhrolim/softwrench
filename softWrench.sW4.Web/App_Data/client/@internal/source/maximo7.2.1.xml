@@ -1108,6 +1108,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 					<relationshipAttribute from="vendor" to="company" primary="true"/>
 					<relationshipAttribute from="orgid" to="orgid" />
 				</relationship>
+        <relationship to="warrantyasset">
+          <relationshipAttribute from="assetid" to="assetid" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
 			</relationships>
 			<connectorParameters>
 				<connectorParameter key="integration_interface" value="MXSW3Asset" />
@@ -3016,6 +3020,30 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 			</connectorParameters>
 		</entity>
 
+    <entity name="warrantyasset" idAttribute="warrantyassetid">
+      <attributes>
+        <attribute name="assetid" type="integer" required="false" />
+        <attribute name="assettype" type="varchar" required="false" />
+        <attribute name="contractnum" type="varchar" required="true" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="locationsite" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="revisionnum" type="integer" required="true" />
+        <attribute name="rowstamp" type="integer" required="true" />
+        <attribute name="warrantyassetid" type="integer" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="warrantyview">
+          <relationshipAttribute from="contractnum" to="contractnum" primary="true"/>
+          <relationshipAttribute from="revisionnum" to="revisionnum" />
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="warrantyasset" />
+      </connectorParameters>
+    </entity>
+
 		<entity name="warrantyview" idAttribute="contractid">
 			<attributes>
 				<attribute name="autoextendperiod" type="integer" required="false" />
@@ -3279,7 +3307,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 				<connectorParameter key="dbtable" value="WFASSIGNMENT" />
 			</connectorParameters>
 		</entity>
-
+    
 	</entities>
 
 </metadata>

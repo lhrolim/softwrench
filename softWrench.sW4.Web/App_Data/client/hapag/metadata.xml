@@ -2509,7 +2509,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="EOS_Date" attribute="assetspeceosdate_.alnvalue">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
-          <field label="Billable" attribute="companies_warrantyview_.description">
+          <field label="Billable" attribute="warrantyasset_warrantyview_.description">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
           <field label="Owned by" attribute="ownedby">
