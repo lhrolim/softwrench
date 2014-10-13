@@ -1406,11 +1406,21 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<field attribute="backoutplan_.ldtext" label="Back Out Plan Detail"/>
 					<field attribute="itdchgpretstdtl" label="Pretest"/>
 					<field attribute="pretestdetail_.ldtext" label="Pretest Details"/>
-					<field attribute="schedstart" label="Scheduled Start Date"/>
-					<field attribute="schedfinish" label="Scheduled Finish Date"/>
-					<field attribute="targstartdate" label="Target Start Date"/>
-					<field attribute="targcompdate" label="Target Finish Date"/>
-					<field attribute="itdcreatedate" label="CR Activation Date/Time"/>
+          <field attribute="schedstart" label="Scheduled Start Date">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
+          </field>
+          <field attribute="schedfinish" label="Scheduled Finish Date">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
+          </field>
+          <field attribute="targstartdate" label="Target Start Date">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
+          </field>
+          <field attribute="targcompdate" label="Target Finish Date">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
+          </field>
+          <field attribute="itdcreatedate" label="CR Activation Date/Time">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
+          </field>
 					<field attribute="wopriority" label="Priority"/>
 					<field attribute="status" label="Status"/>
 					<field attribute="longdescription_.ldtext" label="Remarks"/>

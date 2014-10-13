@@ -58,14 +58,14 @@ namespace softWrench.sW4.Data.Persistence {
                 if (schemaDefaultValues.ContainsAttribute(key)) {
                     schemaDefaultValues.Attributes.Remove(key);
                 }
-                schemaDefaultValues.Attributes.Add(key, attribute.Value);
+                schemaDefaultValues.Attributes.Add(key, attribute.Value.ToString());
             }
             foreach (var attribute in initialValues.UnmappedAttributes.Where(f => f.Value != null)) {
                 var key = attribute.Key;
                 if (schemaDefaultValues.ContainsAttribute(key)) {
                     schemaDefaultValues.Attributes.Remove(key);
                 }
-                schemaDefaultValues.Attributes.Add(key, attribute.Value);
+                schemaDefaultValues.Attributes.Add(key, attribute.Value.ToString());
             }
             return schemaDefaultValues;
         }

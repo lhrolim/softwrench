@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('changeservice', function ($http, redirectService) {
+app.factory('changeservice', function ($http, redirectService, formatService, fieldService) {
 
     return {
 
@@ -26,9 +26,21 @@ app.factory('changeservice', function ($http, redirectService) {
             redirectService.goToApplicationView(application, 'detail', 'output', null, parameters);
         },
 
-        duplicate: function (column, datamap) {
+        duplicate: function (schema, datamap) {
             
             var initialData = {};
+            
+            var changeid = datamap['wonum'];
+
+            /* workaround to make samelinepicker work - REFACTOR */
+            var targstartdateColumn = fieldService.getDisplayableByKey(schema, 'targstartdate');
+            var targstartdate = formatService.format(datamap['targstartdate'], targstartdateColumn);
+            targstartdate = Date.parse(targstartdate).toString('MM/dd/yyyy HH:mm');
+
+            var targcompdateColumn = fieldService.getDisplayableByKey(schema, 'targcompdate');
+            var targcompdate = formatService.format(datamap['targcompdate'], targcompdateColumn);
+            targcompdate = Date.parse(targcompdate).toString('MM/dd/yyyy HH:mm');
+            /* workaround end */
 
             initialData['description'] = datamap['description'];
             initialData['infrastructureasset'] = datamap['cinum'];
@@ -37,16 +49,18 @@ app.factory('changeservice', function ($http, redirectService) {
             initialData['urgency'] = datamap['pmcomurgency'];
             initialData['reasonforchange'] = datamap['reasonforchange'];
             initialData['reasondetails'] = datamap['reasonforchange_.ldtext'];
-            initialData['targstartdate'] = datamap['targstartdate'];
-            initialData['targcompdate'] = datamap['targcompdate'];
+            initialData['targstartdate'] = targstartdate;
+            initialData['targcompdate'] = targcompdate;
             initialData['priority'] = datamap['wopriority'];
-            initialData['remarks'] = datamap['longdescription_.ldtext'];
+            initialData['remarks'] = 'Copy of ' + changeid + '\n' + datamap['longdescription_.ldtext'];
                         
             var parameters = {
                 popupmode: 'nomenu'
-            };
+            };            
 
             redirectService.goToApplicationView('newchange', 'newchange', 'input', 'New Change Request', parameters, initialData);
+
+            
         }
     };
 
