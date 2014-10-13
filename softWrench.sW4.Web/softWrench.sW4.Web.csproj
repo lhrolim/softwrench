@@ -551,6 +551,7 @@
     <Content Include="Content\Scripts\customers\hapag\report_service.js" />
     <Content Include="Content\Scripts\customers\hapag\sr_service.js" />
     <Content Include="Content\Scripts\customers\hapag\sr_summary_service.js" />
+    <Content Include="Content\Scripts\customers\hapag\ticket_service.js" />
     <Content Include="Content\Scripts\customers\otb\sr_service.js" />
     <Content Include="Content\Scripts\bindonce.js" />
     <Content Include="Content\Scripts\jquery\jquery-filedownload-1.2.0.js" />

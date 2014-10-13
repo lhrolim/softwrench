@@ -13,15 +13,24 @@
         return i18NService.get18nValue(key, defaultValue, paramArray);
     };
 
+    var allTicketOptions = [
+        { label: '--Select One--', value: 'Select One' },
+        { label: 'Service Request', value: 'servicerequest' },
+        { label: 'Imac Service', value: 'imac' }
+    ];
+    var imacTicketOption = [
+            { label: '--Select One--', value: 'Select One' },
+            { label: 'Service Request', value: 'servicerequest' },
+            { label: 'Imac Service', value: 'imac' }
+    ];
+
     $scope.getTicketOptions = function (datamap) {
         //TODO: review logic of when to select what
-        var status = datamap.status;
-        var options = [{ label: '--Select One--', value: 'Select One' }];
+        var status = datamap.status;        
         if (status.equalsAny(ACTIVE, OPERATING)) {
-            options.push({ label: 'Service Request', value: 'servicerequest' });
-        }
-        options.push({ label: 'Imac Service', value: 'imac' });
-        return options;
+            return allTicketOptions;
+        }        
+        return imacTicketOption;
     }
 
     $scope.getTypeOfImac = function (datamap) {

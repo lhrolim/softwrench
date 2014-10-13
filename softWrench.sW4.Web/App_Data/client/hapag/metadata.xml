@@ -2342,10 +2342,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<header label="Create New" />
 					</section>
 
-
-					<!-- compositions-->
-
-
+          
+          <!-- compositions-->
+          
 					<tab label="Specification" id="specification">
 						<field label="Asset" attribute="assetnum"/>
 						<field label="Asset Description" attribute="description"/>
@@ -2360,80 +2359,82 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<header displacement="ontop" label=""/>
 						<collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false" />
 					</composition>
+          
 
-					<tab label="Addresses" id="addresses">
-						<section id="shipto" parameters="padding-left=80px;">
-							<header label="Ship To Address" params="margin-left=-100px" displacement="ontop"/>
-							<section id="shiptopaddress" orientation="horizontal">
-								<header label="Address" displacement="sameline"/>
-								<field label="" attribute="location_.shiptoaddresscode">
-									<renderer type="default" params="width=33%"/>
-								</field>
-								<field label="" attribute="location_shipto_.description">
-									<renderer type="default" params="width=67%"/>
-								</field>
-							</section>
-							<field label="Street" attribute="location_shipto_.address1"/>
-							<section id="shiptopaddress2" orientation="horizontal">
-								<header label="Postal Code / City" displacement="sameline"/>
-								<field label="" attribute="location_shipto_.address4"/>
-								<field label="" attribute="location_shipto_.address3"/>
-							</section>
-							<field label="Country" attribute="location_shipto_.address5"/>
-						</section>
+          <tab label="Addresses" id="addresses">
+            <section id="shipto" parameters="padding-left=80px;">
+              <header label="Ship To Address" params="margin-left=-100px" displacement="ontop"/>
+              <section id="shiptopaddress" orientation="horizontal">
+                <header label="Address" displacement="sameline"/>
+                <field label="" attribute="location_.shiptoaddresscode">
+                  <renderer type="default" params="width=33%"/>
+                </field>
+                <field label="" attribute="location_shipto_.description">
+                  <renderer type="default" params="width=67%"/>
+                </field>
+              </section>
+              <field label="Street" attribute="location_shipto_.address1"/>
+              <section id="shiptopaddress2" orientation="horizontal">
+                <header label="Postal Code / City" displacement="sameline"/>
+                <field label="" attribute="location_shipto_.address4"/>
+                <field label="" attribute="location_shipto_.address3"/>
+              </section>
+              <field label="Country" attribute="location_shipto_.address5"/>
+            </section>
 
-						<section id="billto" parameters="padding-left=80px;">
-							<header label="Bill To Address" params="margin-left=-100px" displacement="ontop"/>
-							<section id="billtoaddress" orientation="horizontal">
-								<header label="Address" displacement="sameline"/>
-								<field label="" attribute="location_.billtoaddresscode">
-									<renderer type="default" params="width=33%"/>
-								</field>
-								<field label="" attribute="location_billto_.description">
-									<renderer type="default" params="width=67%"/>
-								</field>
-							</section>
-							<field label="Street" attribute="location_billto_.address1"/>
-							<section id="billtoaddress2" orientation="horizontal">
-								<header label="Postal Code / City" displacement="sameline"/>
-								<field label="" attribute="location_billto_.address4"/>
-								<field label="" attribute="location_billto_.address3"/>
-							</section>
-							<field label="Country" attribute="location_billto_.address5"/>
-						</section>
+            <section id="billto" parameters="padding-left=80px;">
+              <header label="Bill To Address" params="margin-left=-100px" displacement="ontop"/>
+              <section id="billtoaddress" orientation="horizontal">
+                <header label="Address" displacement="sameline"/>
+                <field label="" attribute="location_.billtoaddresscode">
+                  <renderer type="default" params="width=33%"/>
+                </field>
+                <field label="" attribute="location_billto_.description">
+                  <renderer type="default" params="width=67%"/>
+                </field>
+              </section>
+              <field label="Street" attribute="location_billto_.address1"/>
+              <section id="billtoaddress2" orientation="horizontal">
+                <header label="Postal Code / City" displacement="sameline"/>
+                <field label="" attribute="location_billto_.address4"/>
+                <field label="" attribute="location_billto_.address3"/>
+              </section>
+              <field label="Country" attribute="location_billto_.address5"/>
+            </section>
 
-						<section id="serviceaddress" parameters="padding-left=80px;">
-							<header label="Service Address" params="margin-left=-100px" displacement="ontop"/>
-							<section id="serviceaddress2" orientation="horizontal">
-								<header label="Address" displacement="sameline"/>
-								<field label="" attribute="location_.serviceaddresscode">
-									<renderer type="default" params="width=33%"/>
-								</field>
-								<field label="" attribute="location_serv_.description">
-									<renderer type="default" params="width=67%"/>
-								</field>
-							</section>
-							<field label="Street" attribute="location_serv_.address1"/>
-							<section id="serviceaddress3" orientation="horizontal">
-								<header label="Postal Code / City" displacement="sameline"/>
-								<field label="" attribute="location_serv_.address4"/>
-								<field label="" attribute="location_serv_.address3"/>
-							</section>
-							<field label="Country" attribute="location_serv_.address5"/>
-						</section>
+            <section id="serviceaddress" parameters="padding-left=80px;">
+              <header label="Service Address" params="margin-left=-100px" displacement="ontop"/>
+              <section id="serviceaddress2" orientation="horizontal">
+                <header label="Address" displacement="sameline"/>
+                <field label="" attribute="location_.serviceaddresscode">
+                  <renderer type="default" params="width=33%"/>
+                </field>
+                <field label="" attribute="location_serv_.description">
+                  <renderer type="default" params="width=67%"/>
+                </field>
+              </section>
+              <field label="Street" attribute="location_serv_.address1"/>
+              <section id="serviceaddress3" orientation="horizontal">
+                <header label="Postal Code / City" displacement="sameline"/>
+                <field label="" attribute="location_serv_.address4"/>
+                <field label="" attribute="location_serv_.address3"/>
+              </section>
+              <field label="Country" attribute="location_serv_.address5"/>
+            </section>
 
-					</tab>
-					<tab label="History" id="history">
-						<composition relationship="ticket" inline="true" label="" detailschema="">
-							<header label="Tickets" displacement="ontop"/>
-							<collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false"/>
-						</composition>
-						<composition relationship="workorder" inline="true" label="" detailschema="">
-							<header label="Work Orders" displacement="ontop"/>
-							<collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false"/>
-						</composition>
-					</tab>
-				</detail>
+          </tab>
+          <tab label="History" id="history">
+            <composition relationship="ticket" inline="true" label="" detailschema="">
+              <header label="Tickets" displacement="ontop"/>
+              <collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false"/>
+            </composition>
+            <composition relationship="workorder" inline="true" label="" detailschema="">
+              <header label="Work Orders" displacement="ontop"/>
+              <collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false"/>
+            </composition>
+          </tab>
+
+        </detail>
 
 				<schema id="exportallthecolumns" stereotype="list">
           <field label="Region" attribute="aucisnotowner_person_.department">
@@ -2799,7 +2800,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<properties>
 						<property key="detail.cancel.lbl" value="Close"/>
 						<property key="expansible" value="false"/>
-					</properties>
+            <property key="list.click.service" value="ticketservice.opendetail"/>
+          </properties>
 					<field label="Ticket ID" attribute="ticketid"/>
 					<field label="Class" attribute="class"/>
 					<field label="Description" attribute="description"/>

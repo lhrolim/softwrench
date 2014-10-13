@@ -199,6 +199,13 @@ app.directive('compositionList', function (contextService) {
             };
 
             $scope.toggleDetails = function (item, updating) {
+
+                var fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
+                if (fullServiceName != null) {
+                    commandService.executeClickCustomCommand(fullServiceName, item, $scope.compositionlistschema.displayables);
+                    return;
+                };
+                
                 $scope.isReadOnly = !updating;
                 var compositionId = item[$scope.compositionlistschema.idFieldName];
                 var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
