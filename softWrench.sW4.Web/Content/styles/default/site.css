@@ -13,6 +13,10 @@ input:focus, select:focus, textarea:focus {
     color: red;
 }
 
+.modal {
+    z-index: 8000;
+}
+
 /*SM - 10/01 - SWWEB-507*/
 .smallmodal {
     width: 300px;
@@ -977,6 +981,7 @@ Header
 /*SM - 09/12 - Start, Update Bootstrap tooltips*/
 .tooltip {
     font-size: 11px;
+    z-index: 9999;
 }
 
     .tooltip.in {
