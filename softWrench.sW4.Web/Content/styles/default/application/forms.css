@@ -13,3 +13,86 @@
         width: auto;
     }
 }
+
+/*Status*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(1), [data-schema="editdetail"] #compositionlistgrid td:nth-child(1) {
+    /*display: none;*/
+}
+
+/*Origination*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(2), [data-schema="editdetail"] #compositionlistgrid td:nth-child(2) {
+    display: none;
+}
+
+/*Date/Time*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(3), [data-schema="editdetail"] #compositionlistgrid td:nth-child(3) {
+    width: 30%;
+}
+
+/*To*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(4), [data-schema="editdetail"] #compositionlistgrid td:nth-child(4) {
+    display: none;
+}
+
+/*CC*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(6), [data-schema="editdetail"] #compositionlistgrid td:nth-child(6) {
+    display: none;
+}
+
+/*From*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(8), [data-schema="editdetail"] #compositionlistgrid td:nth-child(8) {
+    display: none;
+}
+
+/*Subject*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(9), [data-schema="editdetail"] #compositionlistgrid td:nth-child(9) {
+
+}
+
+/*Actions*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(10), [data-schema="editdetail"] #compositionlistgrid td:nth-child(10) {
+        width: 30%;
+}
+
+@media all and (min-width: 480px) {
+    /*Status*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(1), [data-schema="editdetail"] #compositionlistgrid td:nth-child(1) {
+    /*width: 20%;*/
+    /*display: block;*/
+}
+
+/*Origination*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(2), [data-schema="editdetail"] #compositionlistgrid td:nth-child(2) {
+    /*display: none;*/
+}
+
+/*Date/Time*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(3), [data-schema="editdetail"] #compositionlistgrid td:nth-child(3) {
+    /*width: 30%;*/
+}
+
+/*To*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(4), [data-schema="editdetail"] #compositionlistgrid td:nth-child(4) {
+    /*display: none;*/
+}
+
+/*CC*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(6), [data-schema="editdetail"] #compositionlistgrid td:nth-child(6) {
+    /*display: none;*/
+}
+
+/*From*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(8), [data-schema="editdetail"] #compositionlistgrid td:nth-child(8) {
+    /*display: none;*/
+}
+
+/*Subject*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(9), [data-schema="editdetail"] #compositionlistgrid td:nth-child(9) {
+
+}
+
+/*Actions*/
+[data-schema="editdetail"] #compositionlistgrid th:nth-child(10), [data-schema="editdetail"] #compositionlistgrid td:nth-child(10) {
+        /*width: 25%;*/
+}
+}
