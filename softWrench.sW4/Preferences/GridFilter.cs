@@ -41,10 +41,10 @@ namespace softWrench.sW4.Preferences {
         public string Schema { get; set; }
 
         [Property]
-        public DateTime CreationDate { get; set; }
+        public DateTime? CreationDate { get; set; }
 
         [Property]
-        public DateTime UpdateDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
 
         [JsonIgnore]
         [ManyToOne(Column = "creator", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]

@@ -55,6 +55,7 @@ namespace softWrench.sW4.Preferences {
             filter.Fields = fields;
             filter.Values = values;
             filter.Alias = alias;
+            filter.UpdateDate = DateTime.Now;
             var updateFilter = _dao.Save(filter);
             var memoryAssociation = user.UserPreferences.GridFilters.FirstOrDefault(a => a.Filter.Id == id);
             if (memoryAssociation != null) {
