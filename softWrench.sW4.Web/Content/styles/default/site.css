@@ -893,6 +893,10 @@ Header
         position: fixed;
     }
 
+    .affix-thead {
+        position: fixed;
+    }
+
     .listgrid-thead {
         position: fixed;
         max-width: 1139px;
@@ -932,25 +936,25 @@ Header
     font: 12px/24px Arial, Helvetica, sans-serif;
 }
 
-/*SUCCESS MESSAGE - BEGIN */
+/*SUCCESS MESSAGE - BEGIN*/ 
 .pagination-successmessage {
-    top: 412px !important;
+    top: 275px !important;
 }
 
 .listgrid-thead-successmessage {
-    top: 326px !important;
+    top: 326px ;
 }
 
 .listgrid-thead-reset {
-    top: 263px !important;
+    top: 263px ;
 }
 
 .listgrid-table-successmessage {
-    margin-top: 186px !important;
+    margin-top: 186px ;
 }
 
 .listgrid-table-reset {
-    margin-top: 123px !important;
+    margin-top: 123px ;
 }
 
 .fix-successmessage {
@@ -968,15 +972,15 @@ Header
 
 /*ERROR MESSAGE - BEGIN */
 .pagination-errormessage {
-    top: 412px !important;
+    top: 275px !important;
 }
 
 .listgrid-thead-errormessage {
-    top: 326px !important;
+    top: 326px ;
 }
 
 .listgrid-table-errormessage {
-    margin-top: 186px !important;
+    margin-top: 186px ;
 }
 /*ERROR MESSAGE - END */
 
