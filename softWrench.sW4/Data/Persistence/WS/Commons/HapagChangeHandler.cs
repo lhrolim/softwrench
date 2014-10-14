@@ -23,14 +23,29 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         public static string ParseSchemaBasedLongDescription(CrudOperationData entity, string schemaId) {
             var sb = new StringBuilder();
 
+            var exceptioncode = String.Empty;
+            if (!String.IsNullOrWhiteSpace(entity.GetAttribute("exceptioncode") as String)) {
+                exceptioncode = String.Format("{0} - {1}", entity.GetAttribute("exceptioncode"), entity.GetAttribute("#exceptioncode_label"));
+            }
+
+            var impact = String.Empty;
+            if (entity.GetAttribute("impact") != null) {
+                impact = String.Format("{0} - {1}", entity.GetAttribute("impact"), entity.GetAttribute("#impact_label"));
+            }
+
+            var urgency = String.Empty;
+            if (entity.GetAttribute("urgency") != null) {
+                urgency = String.Format("{0} - {1}", entity.GetAttribute("urgency"), entity.GetAttribute("#urgency_label"));
+            }
+
             sb.AppendFormat("Category: {0}\n", entity.GetAttribute("category"));
-            sb.AppendFormat("Impact: {0}\n", entity.GetAttribute("#impact_label"));
-            sb.AppendFormat("Urgency: {0}\n", entity.GetAttribute("urgency"));            
+            sb.AppendFormat("Impact: {0}\n", impact);
+            sb.AppendFormat("Urgency: {0}\n", urgency);
             sb.AppendFormat("Reason: {0}\n", entity.GetAttribute("reasonforchange"));
             sb.AppendFormat("Reason Details: {0}\n", entity.GetAttribute("reasondetails"));
             sb.AppendFormat("Priority: {0}\n", entity.GetAttribute("#priority_label"));
-            sb.AppendFormat("Exception Reason: {0}\n", entity.GetAttribute("exceptionreason"));
-            sb.AppendFormat("Exception Code: {0}\n", entity.GetAttribute("exceptioncode"));
+            sb.AppendFormat("Exception Reason: {0}\n", entity.GetAttribute("exceptionreason"));            
+            sb.AppendFormat("Exception Code: {0}\n", exceptioncode);
             sb.AppendFormat("Exception Details: {0}\n", entity.GetAttribute("exceptiondetails"));
             sb.AppendFormat("Target Start Date: {0}\n", entity.GetAttribute("targstartdate"));
             sb.AppendFormat("Target Finish Date: {0}\n", entity.GetAttribute("targcompdate"));

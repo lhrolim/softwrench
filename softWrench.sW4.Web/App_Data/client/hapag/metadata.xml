@@ -397,7 +397,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<relationshipAttribute to="ownertable" literal="WOCHANGE" quoteLiteral="true"/>
 					<relationshipAttribute query="!@assignstatus in (select value from synonymdomain where domainid='WFASGNSTATUS' and maxvalue='ACTIVE')"/>
 					<relationshipAttribute query="!@description like 'Other approvers for Approval Level%'"/>
-				</relationship>
+				</relationship>        
 			</relationships>
 			<connectorParameters>
 				<connectorParameter key="integration_interface" value="MXISWOCHANGE2" />
@@ -462,6 +462,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
       </relationships>
     </entity>
+  
+  	<entity name="ci" idAttribute="ciid" whereclause="pluspcustomer like 'HLC%'">
+		</entity>
 	</entities>
 
 	<applications>
@@ -1389,7 +1392,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<field attribute="description" label="Summary"/>
 					<field attribute="hlagreportedby" label="Reported By"/>
 					<field attribute="classstructureid" label="Classification"/>
-					<field attribute="cinum" label="Asset"/>
+					<field attribute="cinum" hidden="true"/>
+          <field attribute="ci_.ciname" label="Asset"/>          
 					<field attribute="sr_asset_.serialnum" label="Serial Number"/>
 					<field attribute="pmchgapprovallevel" hidden="true"/>
 					<field attribute="worktype" label="Category"/>
@@ -2728,22 +2732,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<optionfield label="Category:" attribute="category" default ="" required="true">
 						<!--<option label="Select One" value=""  />-->
 						<option label="CRIT" value="CRIT"/>
-						<option label="MAJOR" value="MAJOR"/>
+						<option label="MAJ" value="MAJ"/>
 						<option label="MED" value="MED"/>
-						<option label="MINOR" value="MINOR"/>
-						<option label="STD" value="STD"/>
+						<option label="MIN" value="MIN"/>
+						<option label="BAU" value="BAU"/>
 					</optionfield>
 					<optionfield label="Impact:" attribute="impact" default="" required="true">
 						<!--<option label="Select One" value=""  />-->
-						<option label="High" value="1"/>
-						<option label="Low" value="2"/>
-						<option label="Med" value="3"/>
+						<option label="Critical" value="1"/>
+						<option label="High" value="2"/>
+						<option label="Medium" value="3"/>
+            <option label="Low" value="4"/>
+            <option label="Planning" value="5"/>
 					</optionfield>
 					<optionfield label="Urgency:" attribute="urgency" default="" required="true">
 						<!--<option label="Select One" value=""  />-->
-						<option label="High" value="1"/>
-						<option label="Low" value="2"/>
-						<option label="Med" value="3"/>
+						<option label="Critical" value="1"/>
+						<option label="High" value="2"/>
+						<option label="Medium" value="3"/>
+            <option label="Low" value="4"/>
+            <option label="Planning" value="5"/>
 					</optionfield>
 					<field attribute="reasonforchange" label="Reason" required="true"/>
 					<field label="Reason Details:" attribute="reasondetails" enableexpression="@reasonforchange!=null&amp;&amp;@reasonforchange!=''">
@@ -2759,11 +2767,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<field attribute="exceptionreason" label="Exception Reason"/>
 					<optionfield label="Exception Code:" attribute="exceptioncode" default="">
 						<option label="Select One" value=""/>
-						<option label="CUSTOMER" value="CUSTOMER"/>
-						<option label="EMERGENCY" value="EMERGENCY"/>
-						<option label="PROBLEM" value="PROBLEM"/>
-						<option label="SCHEDCON" value="SCHEDCON"/>
-						<option label="URGENT" value="URGENT"/>
+						<option label="Customer" value="1"/>
+						<option label="Emergency" value="2"/>
+						<option label="Problem" value="3"/>
+						<option label="Scheduling Conflict" value="4"/>
+						<option label="Urgent" value="5"/>
 					</optionfield>
 					<field label="Exception Details:" attribute="exceptiondetails" enableexpression="@exceptioncode!=null &amp;&amp;@exceptioncode!='Select One'&amp;&amp;@exceptioncode!=''">
 						<renderer type="textarea" params="maxlength=8000" />

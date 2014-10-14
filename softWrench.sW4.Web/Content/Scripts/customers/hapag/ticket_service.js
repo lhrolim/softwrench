@@ -6,6 +6,10 @@ app.factory('ticketservice', function ($http, redirectService) {
                 
         opendetail: function (datamap, displayables) {
 
+            if (datamap['history'] == 'true') {
+                return;
+            }            
+
             var id = datamap['ticketid'];
             var entity = datamap['class'];
             var application = null;

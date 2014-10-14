@@ -856,7 +856,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <relationship to="relatedrecord" collection="true">
           <relationshipAttribute from="wonum" to="recordkey" primary="true"/>
           <relationshipAttribute to="class" literal="CHANGE" quoteLiteral="true"/>
-        </relationship>			
+        </relationship>
+        <relationship to="ci">
+          <relationshipAttribute from="cinum" to="cinum" primary="true"/>
+        </relationship>
       </relationships>
 			<connectorParameters>
 				<connectorParameter key="dbtable" value="wochange" />
