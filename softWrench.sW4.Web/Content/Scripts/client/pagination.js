@@ -131,10 +131,6 @@
                               "<label class='control-label' for='allthecolumnsid'>" +
                               "<input type='radio' name='exportMode' id='allthecolumnsid' value='exportallthecolumns' /> "
                               + exportModeAllTheColumnsText +
-                              "</label><br>" +
-                              "<label class='control-label' for='categoriesid'>" +
-                              "<input type='radio' name='exportMode' id='categoriesid' value='categories' /> "
-                              + exportModeCategoriesText +
                               "</label>" +
                               "</form>",
                     title: modalTitle,
