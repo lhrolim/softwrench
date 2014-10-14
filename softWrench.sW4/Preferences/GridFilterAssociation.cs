@@ -26,7 +26,7 @@ namespace softWrench.sW4.Preferences {
         public virtual GridFilter Filter { get; set; }
 
         [Property]
-        public virtual DateTime JoiningDate { get; set; }
+        public virtual DateTime? JoiningDate { get; set; }
 
         
 
