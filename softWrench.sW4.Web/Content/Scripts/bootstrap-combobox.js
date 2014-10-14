@@ -298,10 +298,12 @@
     , refresh: function () {
         this.source = this.parse();
         this.options.items = this.source.length;
-        var val = this.$element.val();
-        if (!this.source || $.inArray(val, this.source) == -1) {
-            this.clearElement();
-        }
+
+        //SM - 09/24 - Stop autofocus on detail page load (update to v1.1.6)
+        //var val = this.$element.val();
+        //if (!this.source || $.inArray(val, this.source) == -1) {
+        //    this.clearElement();
+        //}
     }
 
     , listen: function () {
