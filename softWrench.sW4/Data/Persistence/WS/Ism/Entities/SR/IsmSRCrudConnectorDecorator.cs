@@ -64,8 +64,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
         protected override ISMServiceEntities.Problem PopulateProblem(CrudOperationData jsonObject, ServiceIncident webServiceObject,
             string entityName, Boolean update) {
             var problem = base.PopulateProblem(jsonObject, webServiceObject, entityName, update);
+            
+            var customer = jsonObject.GetAttribute("asset_.pluspcustomer") as string;
+            if (customer == null) {
+                //for general and outlook templates, there might be only an itc asset selected
+                //lets fallback to this
+                customer = jsonObject.GetAttribute("2asset_.pluspcustomer") as string;
+            }
+            if (customer == null) {
+                //if no asset was selected, get the customer attribute from the Affected Person
+                customer = jsonObject.GetAttribute("person_.pluspcustomer") as string;
+            }
+            problem.CustomerID = customer;            
 
-            problem.CustomerID = jsonObject.GetAttribute("person_.pluspcustomer") as string;
             return problem;
         }
 

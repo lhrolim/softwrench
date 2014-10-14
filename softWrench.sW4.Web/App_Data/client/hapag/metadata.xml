@@ -894,19 +894,21 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<section>
 						<header label="User-Personal Asset" params="fieldset=true" displacement="ontop" showexpression="@isitc==true"/>
 						<association label="Asset:" target="assetnum" labelfield="asset_.hlagdescription2"
-												 extraprojectionvalues="location, location_.description" >
+												 extraprojectionvalues="location, location_.description, pluspcustomer" >
 							<dataprovider prefilterfunction="FilterAssets"/>
 							<event type="afterchange" service="srservice" method="afterUserAssetChange"/>
 						</association>
+            <field hidden="true" attribute="asset_.pluspcustomer"></field>
 					</section>
 
 					<section showexpression="@isitc==true">
 						<header label="ITC-Responsible Asset" params="fieldset=true" displacement="ontop"/>
 						<optionfield providerattribute="hlagUserLocations" attribute="itcassetlocation" label="Location" />
-						<association label="Asset:" target="itcassetnum" labelfield="2asset_.hlagdescription2" extraprojectionvalues="location, location_.description" dependantfields="itcassetlocation">
+						<association label="Asset:" target="itcassetnum" labelfield="2asset_.hlagdescription2" extraprojectionvalues="location, location_.description, pluspcustomer" dependantfields="itcassetlocation">
 							<dataprovider prefilterfunction="FilterAssetsByItcLocation" />
 							<event type="afterchange" service="srservice" method="afterITCAssetChange" />
 						</association>
+            <field hidden="true" attribute="2asset_.pluspcustomer"></field>
 					</section>
 
 					<field showexpression="@isitc==true &amp;&amp; !nullOrEmpty(@assetnum)" attribute="asset_.location_.description" readonly="true" label="Asset Location">
@@ -1086,10 +1088,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<association label="Printer Location:" target="printerpluspcustomer" labelfield="2pluspcustomer_.hlagpluspcustomer"/>
 
 						<field attribute="asset_.assetid" hidden="true" />
-						<association label="Affected Printer:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location,assetid" dependantfields="printerpluspcustomer">
+						<association label="Affected Printer:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location,assetid,pluspcustomer" dependantfields="printerpluspcustomer">
 							<dataprovider prefilterfunction="FilterAssets"/>
 							<renderer type="autocompleteclient" params="opendetails=true;idtopendetails=asset_.assetid"/>
 						</association>
+            <field hidden="true" attribute="asset_.pluspcustomer"></field>
 
 						<optionfield label="Printer Connection:" attribute="printerconnection" >
 							<option label="Local" value="Local"/>
@@ -1189,9 +1192,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<association label="Phone Location:" target="phonepluspcustomer" labelfield="2pluspcustomer_.hlagpluspcustomer"
 															 enableexpression="@affectedDevice == 'Cisco-IP-Phone'"/>
 
-						<association label="Affected Phone:" target="assetnum" labelfield="asset_.description" dependantfields="phonepluspcustomer">
+						<association label="Affected Phone:" target="assetnum" labelfield="asset_.description" dependantfields="phonepluspcustomer" extraprojectionvalues="pluspcustomer">
 							<dataprovider prefilterfunction="FilterAssets"/>
 						</association>
+            <field hidden="true" attribute="asset_.pluspcustomer"></field>
 
 						<optionfield label="Who has this problem:" attribute="whohasproblem">
 							<option label="Select One" value="" />

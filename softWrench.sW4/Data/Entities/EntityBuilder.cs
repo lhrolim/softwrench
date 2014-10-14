@@ -42,6 +42,9 @@ namespace softWrench.sW4.Data.Entities {
                 var attribute = metadata.Schema.Attributes.FirstOrDefault(a => a.Name == name);
                 if (attribute != null) {
                     attributes.Add(property.Name, GetValueFromJson(GetType(metadata, attribute),  property.Value));
+                } else {
+                    var value = property.Value.Type == JTokenType.Null ? null : property.Value.ToString();
+                    entity.UnmappedAttributes.Add(property.Name, value);
                 }
             } else if (collectionAssociation != null) {
                 HandleCollections<T>(entityType, metadata, applicationMetadata, collectionAssociation, associationAttributes, property);
