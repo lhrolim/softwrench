@@ -206,8 +206,8 @@ input:focus, select:focus, textarea:focus {
     }
 
 .divAuxTable {
-    /*z-index: 1;
-    position: relative;*/
+    z-index: 990;
+    position: relative;
 }
 
 #listgrid {
