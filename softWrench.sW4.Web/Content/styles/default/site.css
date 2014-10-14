@@ -741,7 +741,7 @@ Header
 @media all and (min-width: 1px) {
     .container header {
         position: relative;
-        z-index: 6000;
+        z-index: 1010;
     }
 
         .container header .menu-expand {
@@ -784,7 +784,7 @@ Header
 
     .affix-pagination {
         position: relative;
-        z-index: 5000;
+        z-index: 1000;
     }
 
         .affix-pagination + br, .affix-pagination + br + br {
