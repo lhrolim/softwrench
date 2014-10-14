@@ -741,7 +741,7 @@ Header
 @media all and (min-width: 1px) {
     .container header {
         position: relative;
-         z-index: 6000;
+        z-index: 6000;
     }
 
         .container header .menu-expand {
@@ -759,6 +759,12 @@ Header
             .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
                 width: 100%;
             }
+
+        .container header .logout.mobile {
+            float: right;
+            margin-top: 10px;
+            margin-right: 20px;
+        }
 
         .container header .menu-grid li {
             width: 100%;
@@ -821,7 +827,7 @@ Header
         padding: 5px 20px;
     }
 
-      
+
         .container .context .group {
             float: left;
             height: 34px;
@@ -839,28 +845,6 @@ Header
 }
 
 @media all and (min-width: 768px) {
-    .container .context .group {
-        margin: 5px 10px 0;
-    }
-
-    .container .context .right {
-        float: right;
-    }
-
-    /*.container .context .group.actions {
-        display: block;
-    }*/
-
-    .container .context .group.total {
-        height: auto;
-    }
-
-        .container .context .group.total label {
-            margin: 0;
-        }
-}
-
-@media all and (min-width: 780px) {
     .container header {
         position: fixed;
     }
@@ -881,6 +865,10 @@ Header
                 width: auto;
             }
 
+            .container header .menu-admin .buttons .logout {
+                display: inline-block !important;
+            }
+
         .container header .menu-grid li {
             width: auto;
         }
@@ -888,6 +876,22 @@ Header
             .container header .menu-grid li:last-child .dropdown, .container header .menu-grid li:last-child a {
                 margin-bottom: 0px;
             }
+
+    .container .context .group {
+        margin: 5px 10px 0;
+    }
+
+    .container .context .right {
+        float: right;
+    }
+
+    .container .context .group.total {
+        height: auto;
+    }
+
+        .container .context .group.total label {
+            margin: 0;
+        }
 
     .affix-pagination {
         position: fixed;
@@ -902,7 +906,7 @@ Header
 
 @media all and (min-width: 992px) {
     .container .context .group {
-         margin: 5px 0 0 20px;
+        margin: 5px 0 0 20px;
     }
 }
 

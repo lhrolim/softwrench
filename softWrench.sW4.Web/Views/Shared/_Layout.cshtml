@@ -38,6 +38,12 @@
 
     <div ng-controller="LayoutController" class="container {{clientName}}">
         <header class="site-header navbar-fixed-top hiddenonprint">
+                                    <a href="@Url.Action("SignOut", "Signout")" ng-click="logout()" class="logout mobile hidden-sm hidden-md hidden-lg">
+                            <button type="button" class="btn btn-default btn-sm">
+                                <i class="fa fa-sign-out"></i>
+                                {{i18N('_headermenu.logout','Logout')}}
+                            </button>
+                        </a>
             <div class="menu-expand"><i class="fa fa-bars"></i> Admin</div>
             <div class="menu-items">
                 <div class="menu menu-admin" ng-if="popupmode == 'none'">
@@ -82,7 +88,7 @@
                                 {{i18N('_headermenu.about','About')}}
                             </button>
                         </a>
-                        <a href="@Url.Action("SignOut", "Signout")" ng-click="logout()">
+                        <a href="@Url.Action("SignOut", "Signout")" ng-click="logout()" class="logout hidden-xs">
                             <button type="button" class="btn btn-default btn-sm">
                                 <i class="fa fa-sign-out"></i>
                                 {{i18N('_headermenu.logout','Logout')}}
@@ -92,6 +98,9 @@
                     <div class="clear"></div>
                 </div>
             </div>
+
+
+
             <div class="branding">
                 <div class="logo">
                     <img src="~/Content/Images/softwrench.png" width="274" height="89">
