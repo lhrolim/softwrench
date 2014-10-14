@@ -1589,9 +1589,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
           <field attribute="ticketid" label="Incident Number:" readonly="true"/>
           <field attribute="description" label="Summary:"/>
-          <field label="Details:" attribute="longdescription_.ldtext">
-            <renderer type="richtext"/>
-          </field>
+          
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
             <renderer type="lookup"/>
@@ -1663,6 +1661,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
           <field label="Status:" attribute="status" readonly="true" default="NEW" required="true"/>
           <field attribute="statusdate" hidden="true" />
+          <field label="Details:" attribute="longdescription_.ldtext">
+            <renderer type="richtext"/>
+          </field>
         </schema>
 
         <schema stereotype="detail" id="detail" mode="input" title="Incident Details">
@@ -1672,9 +1673,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
           <field attribute="ticketid" label="Incident Number:" readonly="true" required="true"/>
           <field attribute="description" label="Summary:"/>
-          <field label="Details:" attribute="longdescription_.ldtext">
-            <renderer type="richtext"/>
-          </field>
+          
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
             <renderer type="lookup"/>
@@ -1743,6 +1742,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
           <field label="Status:" attribute="status" readonly="true" />
+          <field label="Details:" attribute="longdescription_.ldtext">
+            <renderer type="richtext"/>
+          </field>
           <tab label="Solution" id="solution">
             
             <field attribute="solution" hidden="true"/>
