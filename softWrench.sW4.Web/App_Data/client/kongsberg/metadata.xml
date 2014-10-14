@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
-<!--otb-->
+<!--kongsberg-->
   <entities>
 
     
@@ -537,7 +537,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <entity name="incident" idAttribute="ticketid">
       <attributes>
         <attribute name="accumulatedholdtime" type="float" required="false" />
-        <attribute name="actlabcost" type="decimal" required="true" />
+        <attribute name="actlabcost" type="double" required="true" />
         <attribute name="actlabhrs" type="float" required="true" />
         <attribute name="actualcontactdate" type="datetime" required="false" />
         <attribute name="actualfinish" type="datetime" required="false" />
