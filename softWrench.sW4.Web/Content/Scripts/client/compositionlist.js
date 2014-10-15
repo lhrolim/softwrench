@@ -106,7 +106,7 @@ app.directive('compositionList', function (contextService) {
 
         controller: function ($scope, $log, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
-            expressionService, $timeout, modalService) {
+            expressionService, $timeout, modalService, eventdispatcherService) {
 
 
             function init() {
@@ -203,10 +203,26 @@ app.directive('compositionList', function (contextService) {
                 if ($scope.detailData[id] == undefined) {
                     $scope.detailData[id] = {};
                     $scope.detailData[id].expanded = false;
+
                 }
                 $scope.detailData[id].data = item;
                 var newState = forcedState != undefined ? forcedState : !$scope.detailData[id].expanded;
                 $scope.detailData[id].expanded = newState;
+
+                if(newState) {
+                    //parentschema, parentdata, schema, data
+                    var parameters = {};
+                    parameters.compositionId = id;
+                    parameters.parentData = $scope.parentdata;
+                    parameters.compositionItem = item;
+                    parameters.application = $scope.parentdata["application"];
+                    var parentIdFieldName = $scope.parentschema.idFieldName;
+                    parameters.applicationItemId = $scope.parentdata["fields"][parentIdFieldName];
+                    parameters.parentCompositionData = $scope.parentdata["fields"][parameters.relationship];
+
+                    var compositionSchema = $scope.parentschema.cachedCompositions[$scope.relationship];
+                    eventdispatcherService.onviewdetail(compositionSchema, parameters);
+                }
             };
 
             $scope.toggleDetails = function (item, updating) {
