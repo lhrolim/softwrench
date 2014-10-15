@@ -5,7 +5,7 @@ app.factory('contextService', function ($rootScope) {
     return {
         //using sessionstorage instead of rootscope, as the later would be lost upon F5.
         //see SWWEB-239
-        insertIntoContext: function (key, value, userootscope) {
+        insertIntoContext: function(key, value, userootscope) {
             if (userootscope) {
                 $rootScope['ctx_' + key] = value;
             } else {
@@ -16,9 +16,8 @@ app.factory('contextService', function ($rootScope) {
             }
 
 
-
         },
-        fetchFromContext: function (key, isJson, userootscope) {
+        fetchFromContext: function(key, isJson, userootscope) {
             //shortcut method
             var value = this.retrieveFromContext(key, userootscope);
             if (value == "undefined") {
@@ -31,11 +30,11 @@ app.factory('contextService', function ($rootScope) {
         },
 
         //shortcut method
-        getFromContext: function (key, isJson, userootscope) {
+        getFromContext: function(key, isJson, userootscope) {
             return this.fetchFromContext(key, isJson, userootscope);
         },
 
-        retrieveFromContext: function (key, userootscope) {
+        retrieveFromContext: function(key, userootscope) {
             if (userootscope) {
                 return $rootScope['ctx_' + key];
             }
@@ -46,15 +45,15 @@ app.factory('contextService', function ($rootScope) {
             return sessionContextValue;
         },
 
-        isLocal: function () {
+        isLocal: function() {
             return this.retrieveFromContext('isLocal');
         },
 
-        client: function () {
+        client: function() {
             return this.retrieveFromContext('clientName');
         },
 
-        isClient: function (name) {
+        isClient: function(name) {
 
             var clientName = this.client();
             if (name == clientName) {
@@ -71,7 +70,7 @@ app.factory('contextService', function ($rootScope) {
             }
             return false;
         },
-        getUserData: function () {
+        getUserData: function() {
             if ($rootScope.user != null) {
                 //caching
                 return $rootScope.user;
@@ -81,7 +80,7 @@ app.factory('contextService', function ($rootScope) {
             return user;
         },
 
-        InModule: function (moduleArray) {
+        InModule: function(moduleArray) {
             if (moduleArray == null) {
                 return false;
             }
@@ -90,7 +89,7 @@ app.factory('contextService', function ($rootScope) {
             if (nullOrUndef(currModule)) {
                 return false;
             }
-            $.each(moduleArray, function (key, value) {
+            $.each(moduleArray, function(key, value) {
                 if (value.equalIc(currModule)) {
                     result = true;
                     return;
@@ -101,15 +100,15 @@ app.factory('contextService', function ($rootScope) {
         },
 
         //determines whether the current user has one of the roles specified on the array
-        HasRole: function (roleArray) {
+        HasRole: function(roleArray) {
             if (roleArray == null) {
                 return true;
             }
             var user = this.getUserData();
             var userroles = user.roles;
             var result = false;
-            $.each(roleArray, function (key, value) {
-                $.each(userroles, function (k, v) {
+            $.each(roleArray, function(key, value) {
+                $.each(userroles, function(k, v) {
                     if (v.name == value) {
                         result = true;
                         return;
@@ -119,13 +118,13 @@ app.factory('contextService', function ($rootScope) {
             return result;
         },
 
-        loadUserContext: function (userData) {
+        loadUserContext: function(userData) {
             //clear cache
             $rootScope.user = null;
             this.insertIntoContext('user', JSON.stringify(userData));
         },
 
-        loadConfigs: function (config) {
+        loadConfigs: function(config) {
             this.insertIntoContext('clientName', config.clientName);
             this.insertIntoContext('environment', config.environment);
             this.insertIntoContext('isLocal', config.isLocal);
@@ -140,7 +139,7 @@ app.factory('contextService', function ($rootScope) {
             this.insertIntoContext('defaultlevel', config.clientSideLogLevel.toLowerCase());
         },
 
-        getResourceUrl: function (path) {
+        getResourceUrl: function(path) {
             var baseURL = url(path);
             if (!this.isLocal()) {
                 var initTime = this.getFromContext("systeminittime");
@@ -153,26 +152,34 @@ app.factory('contextService', function ($rootScope) {
         },
 
 
-        currentModule: function () {
+        currentModule: function() {
             return this.retrieveFromContext('currentmodule');
         },
 
-        clearContext: function () {
-            $.each(sessionStorage, function (key, value) {
+        clearContext: function() {
+            $.each(sessionStorage, function(key, value) {
                 if (key.startsWith('ctx_')) {
                     delete sessionStorage[key];
                 }
             });
         },
 
-        insertReportSearchDTO: function (reportSchemaId, searchDTO) {
+        insertReportSearchDTO: function(reportSchemaId, searchDTO) {
             this.insertIntoContext('repSearchDTO_' + reportSchemaId, searchDTO);
         },
 
-        retrieveReportSearchDTO: function (reportSchemaId) {
+        retrieveReportSearchDTO: function(reportSchemaId) {
             return this.retrieveFromContext('repSearchDTO_' + reportSchemaId);
         },
-    };
+
+        setActiveTab: function(tabId) {
+            this.insertIntoContext('currenttab', tabId);
+        },
+
+        getActiveTab: function(tabId) {
+            return this.fetchFromContext('currenttab');
+        }
+    }
 
 });
 

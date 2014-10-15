@@ -21,16 +21,17 @@
                 <div class="detail-header clearfix">
                     <ul class="nav nav-tabs compositiondetailtab hapag-composition">
                         <li class="active">
-                            <a href="#main" data-toggle="tab"><i class="fa fa-file-text-o"></i> {{schema.title}}</a>
+                            <a href="#main" data-toggle="tab" ng-click="setActiveTab(null)"><i class="fa fa-file-text-o"></i> {{schema.title}}</a>
                         </li>
                         <li ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type">
                             <a ng-switch-when="ApplicationCompositionDefinition"
-                               ng-href="#{{tab.tabId}}" data-toggle="tab" ng-show="!composition.hidden">
-                               <i class="{{tab.schema.schemas.list.properties['icon.composition.tab']}}"></i> {{i18N(tab.tabId + '._title',tab.label)}}
+                               ng-href="#{{tab.tabId}}" data-toggle="tab" ng-show="!composition.hidden" ng-click="setActiveTab(tab.tabId)">
+                                <i class="{{tab.schema.schemas.list.properties['icon.composition.tab']}}"></i> {{i18N(tab.tabId + '._title',tab.label)}}
                             </a>
                             <a ng-switch-when="ApplicationTabDefinition"
-                               ng-href="#{{tab.tabId}}" data-toggle="tab" ng-show="!composition.hidden">
-                                <i class="{{tab.icon}}"></i> 
+                               ng-href="#{{tab.tabId}}" data-toggle="tab" ng-show="!composition.hidden" ng-click="setActiveTab(tab.tabId)">
+                                <i class=" {{tab.icon}}">
+                                </i>
                                 {{i18NTabLabel(tab)}}
                             </a>
                         </li>

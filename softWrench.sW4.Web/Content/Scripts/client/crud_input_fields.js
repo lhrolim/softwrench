@@ -141,6 +141,10 @@ app.directive('crudInputFields', function (contextService) {
 
             //this will get called when the input form is done rendering
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
+                var tab = contextService.getActiveTab();
+                if (tab != null) {
+                    redirectService.redirectToTab(tab);
+                }
 
                 var bodyElement = $('#' + parentElementId);
                 if (bodyElement.length <= 0) {

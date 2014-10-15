@@ -289,9 +289,10 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
 
             $scope.multipleSchema = false;
             $scope.schemas = null;
-            //            fixHeaderService.unfix();
             $scope.isDetail = false;
-            //            $scope.isList = false;
+            contextService.setActiveTab(null);
+            //            fixHeaderService.unfix();
+
         });
 
         $scope.$on('sw_applicationrenderviewwithdata', function (event, data) {

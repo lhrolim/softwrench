@@ -89,7 +89,13 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
         getApplicationUrl: function (applicationName, schemaId, mode, title, parameters) {
             return getApplicationUrl(applicationName, schemaId, mode, title, parameters);
         },
+       
 
+        redirectToTab: function (tabId) {
+            var tab = $('a[href="#' + tabId + '"]');
+            tab.trigger('click');;
+        },
+        
         goToApplicationView: function (applicationName, schemaId, mode, title, parameters, jsonData) {
             var log = $log.getInstance('redirectService#goToApplication');
 

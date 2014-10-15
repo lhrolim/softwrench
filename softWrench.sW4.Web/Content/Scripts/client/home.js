@@ -1,4 +1,4 @@
-﻿function HomeController($scope, $http, $templateCache, $rootScope, $timeout, contextService, menuService, i18NService, alertService, statuscolorService) {
+﻿function HomeController($scope, $http, $templateCache, $rootScope, $timeout, contextService, menuService, i18NService, alertService, statuscolorService,redirectService) {
 
     $scope.$name = 'HomeController';
 
@@ -32,7 +32,6 @@
 
             $scope.$emit('sw_indexPageLoaded', redirectUrl);
             $scope.$emit('sw_titlechanged', result.title);
-
             if (homeModel.Message != undefined) {
                 alertService.success(homeModel.Message, true);
                 homeModel.Message = null;
