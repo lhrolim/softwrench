@@ -1,11 +1,9 @@
 <span ng-controller="GridFilterController">
-
-
-    <div class="btn-group">
-        <button type="button" class="btn btn-primary" ng-click="refreshGrid()">
+    <div class="btn-group" ng-show="hasFilter() || hasFilterData()">
+        <button type="button" class="btn btn-sm btn-primary" ng-click="refreshGrid()">
             <i class="fa fa-filter"></i><span ng-show="!selectedfilter.alias">&ensp;Filters</span><span ng-show="selectedfilter.alias">&ensp;{{selectedfilter.alias}}</span>
         </button>
-        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" ng-show="hasFilter() || hasFilterData() ">
+        <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
             <span class="caret"></span>
             <span class="sr-only">Toggle Dropdown</span>
         </button>
@@ -46,9 +44,6 @@
         <i class="fa fa-rocket"></i>
     </button>
 
-
-
-
     <!--to be shown as a modal only-->
     <div id='savefilterform' class="form-horizontal" style="display: none">
         <div class="form-group">
@@ -61,8 +56,6 @@
             </div>
         </div>
     </div>
-
-
 </span>
 
 
