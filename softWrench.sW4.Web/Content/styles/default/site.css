@@ -782,6 +782,15 @@ Header
         margin-top: 0;
     }
 
+        messagesection .alerts {
+        position: relative;
+        z-index: 1000;
+    }
+
+            messagesection .alert {
+                margin-bottom: 0;
+            }
+
     .affix-pagination {
         position: relative;
         z-index: 1000;
@@ -827,15 +836,10 @@ Header
         padding: 5px 20px;
     }
 
-
         .container .context .group {
             float: left;
             height: 34px;
         }
-
-    /*.container .context .group.total {
-                display: block;
-            }*/
 }
 
 @media all and (min-width: 640px) {
@@ -893,11 +897,13 @@ Header
             margin: 0;
         }
 
-    .affix-pagination {
+            messagesection .alerts {
         position: fixed;
+                width: 100%;
+        max-width: 1139px;
     }
 
-    .affix-thead {
+    .affix-pagination {
         position: fixed;
     }
 
@@ -941,30 +947,6 @@ Header
 }
 
 /*SUCCESS MESSAGE - BEGIN*/ 
-.pagination-successmessage {
-    top: 275px !important;
-}
-
-.listgrid-thead-successmessage {
-    top: 326px ;
-}
-
-.listgrid-thead-reset {
-    top: 263px ;
-}
-
-.listgrid-table-successmessage {
-    margin-top: 186px ;
-}
-
-.listgrid-table-reset {
-    margin-top: 123px ;
-}
-
-.fix-successmessage {
-    position: fixed;
-}
-
 .topMessageAux {
     z-index: 1000;
     margin-left: auto !important;
@@ -973,20 +955,6 @@ Header
     width: 100%;
 }
 /*SUCCESS MESSAGE - END */
-
-/*ERROR MESSAGE - BEGIN */
-.pagination-errormessage {
-    top: 275px !important;
-}
-
-.listgrid-thead-errormessage {
-    top: 326px ;
-}
-
-.listgrid-table-errormessage {
-    margin-top: 186px ;
-}
-/*ERROR MESSAGE - END */
 
 /*SM - 09/12 - Start, Update Bootstrap tooltips*/
 .tooltip {
@@ -1140,11 +1108,29 @@ Header
     }
 /*SM - 09/02 - ADD - Fix file upload button*/
 
-/*SM - 09/24 - SWWEB-450 fix*/
-.richtext .ta-editor {
-    max-width: 859px; /*add max-width to stop richtext from moving off the screen horizontally*/
+
+    .richtext .ta-editor {
+        max-width: 225px;
+    }
+
+    @media all and (min-width: 480px) {
+    .richtext .ta-editor {
+        max-width: 405px;
+    }
 }
-/*SM - 09/24 - SWWEB-450 fix*/
+
+        @media all and (min-width: 758px) {
+    .richtext .ta-editor {
+        max-width: 508px;
+    }
+}
+
+@media all and (min-width: 992px) {
+    .richtext .ta-editor {
+        max-width: 859px; /*add max-width to stop richtext from moving off the screen horizontally*/
+    }
+}
+
 
 /*SM - 09/26 - Fix label control hight with multiple lines*/
 label.form-control {

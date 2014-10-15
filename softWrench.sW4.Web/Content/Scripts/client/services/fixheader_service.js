@@ -136,8 +136,6 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         },
 
         fixThead: function (schema, params) {
-            var log = $log.getInstance('sw4.fixheader_service#fixThead');
-
             if ($rootScope.clientName == 'hapag') {
                 log.debug('starting fix Thead');
                 if (!params || !params.resizing) {
@@ -165,13 +163,19 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
 
                 //update the style, to fixed
                 this.fixTableTop(table, params);
-                
-                log.debug('finishing fix Thead');
             }
 
-            //SM - 10/01 - trigger resize to setup header
-            $(window).trigger('resize');
-            log.debug('Trigger Window Resize');
+            this.callWindowResize();
+        },
+
+        callWindowResize: function () {
+            var log = $log.getInstance('sw4.fixheader_service');
+
+            //trigger resize to postition fixed header elements
+            $timeout(function () {
+                log.debug('callWindowResize');
+                $(window).trigger('resize');
+            });
         },
 
         activateResizeHandler: function () {
