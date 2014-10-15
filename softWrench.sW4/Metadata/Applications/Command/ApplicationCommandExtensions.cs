@@ -14,7 +14,7 @@ namespace softWrench.sW4.Metadata.Applications.Command {
         public static ContainerCommand Secure(this ContainerCommand container, InMemoryUser user) {
             var secureLeafs = new List<ICommandDisplayable>();
             foreach (var leaf in container.Displayables) {
-                if (leaf.Role != null && (user.Roles == null || !user.Roles.Any(r => r.Active && r.Name == leaf.Role))) {
+                if (!user.IsSwAdmin() && leaf.Role != null && (user.Roles == null || !user.Roles.Any(r => r.Active && r.Name == leaf.Role))) {
                     continue;
                 }
                 if (leaf is ContainerCommand) {

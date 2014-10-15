@@ -19,6 +19,6 @@ namespace softWrench.sW4.Security.Entities {
 
         public Boolean Authorized { get; set; }
 
-
+        public override bool Active { get { return true; } }
     }
 }
