@@ -103,7 +103,7 @@ body {
         width: 942px;
     }*/
 
-    #listgrid thead tr.header-row {
+    #listgrid thead tr.header-row, #listgrid tfoot tr.footer-row {
         background-color: #FFF;
         color: #000;
     }
@@ -829,7 +829,7 @@ body,
     font-size: 11px !important;
 }
 
-    #listgrid thead tr.header-row {
+    #listgrid thead tr.header-row, #listgrid tfoot tr.footer-row {
         background-color: #003878;
         color: #fff;
     }
