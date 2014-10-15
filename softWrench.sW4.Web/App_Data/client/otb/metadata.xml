@@ -1840,6 +1840,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="siteid" label="Site">
             <renderer type="default" params="minwidth=100px" />
           </field>
+          <field attribute="invbalancesid" hidden="true"/>
           <properties>
             <property key="list.click.schema" value="detail"/>
           </properties>

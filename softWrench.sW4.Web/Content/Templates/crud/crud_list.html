@@ -115,11 +115,11 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div ng-switch-default class="input-group input-group-sm">
+                                <div ng-switch-default ng-show="!isFieldHidden(schema,column)" class="input-group input-group-sm">
                                     <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
                                            ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" />
                                     <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                        The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+            The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                     <div class="input-group-addon dropdown">
                                         <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                               data-toggle="dropdown" rel="tooltip"
