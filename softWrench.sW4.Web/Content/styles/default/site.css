@@ -782,18 +782,19 @@ Header
         margin-top: 0;
     }
 
-        messagesection .alerts {
+    messagesection .alerts {
         position: relative;
         z-index: 1000;
     }
 
-            messagesection .alert {
-                margin-bottom: 0;
-            }
+    messagesection .alert {
+        margin-bottom: 0;
+    }
 
     .affix-pagination {
         position: relative;
         z-index: 1000;
+        box-sizing: border-box;
     }
 
         .affix-pagination + br, .affix-pagination + br + br {
@@ -897,9 +898,9 @@ Header
             margin: 0;
         }
 
-            messagesection .alerts {
+    messagesection .alerts {
         position: fixed;
-                width: 100%;
+        width: 100%;
         max-width: 1139px;
     }
 

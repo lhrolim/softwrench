@@ -12,11 +12,16 @@ $(function () {
             var paginationHeight = $('.affix-pagination').height();
             var theaderHeight = $('.listgrid-thead').height();
 
+            //console.log('headerHeight: ', headerHeight);
+            //console.log('messageHeight: ', messageHeight);
+            //console.log('paginationHeight: ', paginationHeight);
+            //console.log('theaderHeight: ', theaderHeight);
+
             $('.content').css('margin-top', headerHeight + messageHeight);
             $('messagesection .alerts').css('margin-top', 0 - messageHeight);
             $('.affix-pagination').css('top', headerHeight + messageHeight);
-            $('.listgrid-thead').css('top', headerHeight + messageHeight + paginationHeight +8);
-            $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight +7);
+            $('.listgrid-thead').css('top', headerHeight + messageHeight + paginationHeight);
+            $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight - 1);
         }
         //reset the lcoation of the content, context menu, grid header and filter bar
         else {
