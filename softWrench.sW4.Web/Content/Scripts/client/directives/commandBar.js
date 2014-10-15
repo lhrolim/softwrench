@@ -55,6 +55,10 @@
                 }
 
                 var schemaDeclaredCommands = $scope.schema.commandSchema.commands;
+                if (!schemaDeclaredCommands) {
+                    //TODO: fix this
+                    schemaDeclaredCommands = {};
+                }
                 var ignoreUndeclared = $scope.schema.commandSchema.ignoreUndeclaredCommands;
                 if (!ignoreUndeclared) {
                     $.each($scope.defaultCommands(), function (key, defaultCommand) {
@@ -152,7 +156,9 @@
                     resultCommands = resultCommands.concat(localCommands.toAdd);
                 }
                 addDefault(resultCommands);
-
+                if (!$scope.schema.commandSchema.commands) {
+                    $scope.schema.commandSchema.commands = {};
+                }
                 if (isArrayNullOrEmpty(localCommands.toKeep) || localCommands.toKeep[0] == "all") {
                     resultCommands = resultCommands.concat($scope.schema.commandSchema.commands);
                     $scope.cachedCommands = resultCommands;

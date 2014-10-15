@@ -165,6 +165,9 @@ String.format = function () {
 
 $.extend({
     findFirst: function (elems, validateCb) {
+        if (elems == null) {
+            return undefined;
+        }
         var i;
         for (i = 0 ; i < elems.length ; ++i) {
             if (validateCb(elems[i], i))

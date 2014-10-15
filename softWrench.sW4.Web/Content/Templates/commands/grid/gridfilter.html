@@ -2,10 +2,10 @@
 
 
     <div class="btn-group">
-        <button type="button" class="btn btn-default" ng-click="refreshGrid()">
-            <i class="fa fa-filter"></i>&ensp;{{selectedfilter.alias}}
+        <button type="button" class="btn btn-primary" ng-click="refreshGrid()">
+            <i class="fa fa-filter"></i><span ng-show="!selectedfilter.alias">&ensp;Filters</span><span ng-show="selectedfilter.alias">&ensp;{{selectedfilter.alias}}</span>
         </button>
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-show="hasFilter() || hasFilterData() ">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" ng-show="hasFilter() || hasFilterData() ">
             <span class="caret"></span>
             <span class="sr-only">Toggle Dropdown</span>
         </button>
