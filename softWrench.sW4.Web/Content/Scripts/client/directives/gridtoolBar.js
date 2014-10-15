@@ -24,6 +24,10 @@
                 return contextService.getResourceUrl(path);
             }
 
+            $scope.commandtooltip = function (command) {
+                return i18NService.get18nValue('_bars.gridtop' + command.id, command.tooltip);
+            }
+
         }
     };
 });
