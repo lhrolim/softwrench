@@ -63,7 +63,7 @@ app.directive('crudList', function (contextService) {
                 return tabsService.tabsDisplayables(schema);
             };
 
-
+            
 
 
             $scope.$on('filterRowRenderedEvent', function (filterRowRenderedEvent) {

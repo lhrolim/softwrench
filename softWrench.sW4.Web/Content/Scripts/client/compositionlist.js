@@ -53,7 +53,7 @@ app.directive('expandedItemInput', function ($compile) {
 });
 
 app.directive('newItemInput', function ($compile, fieldService) {
-
+    
     return {
         restrict: "E",
         replace: true,
@@ -65,7 +65,7 @@ app.directive('newItemInput', function ($compile, fieldService) {
             associationOptions: '=',
             cancelfn: '&',
             savefn: '&'
-
+            
         },
         template: "<div></div>",
         link: function (scope, element, attrs) {
@@ -106,8 +106,8 @@ app.directive('compositionList', function (contextService) {
 
         controller: function ($scope, $log, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
-            expressionService, $timeout, modalService) {
-
+            expressionService, $timeout, modalService, redirectService) {
+            
 
             function init() {
                 //Extra variables
@@ -122,10 +122,10 @@ app.directive('compositionList', function (contextService) {
                 $scope.clonedCompositionData = [];
                 jQuery.extend($scope.clonedCompositionData, $scope.compositiondata);
                 $scope.isNoRecords = $scope.clonedCompositionData.length > 0 ? false : true;
-                $scope.detailData = {};
+                $scope.detailData = {};                
                 $scope.noupdateallowed = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
                 $scope.expanded = false;
-                $scope.wasExpandedBefore = false;
+                $scope.wasExpandedBefore = false;                
                 $scope.isReadonly = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
 
                 $injector.invoke(BaseController, this, {
@@ -193,7 +193,7 @@ app.directive('compositionList', function (contextService) {
                     modalService.show($scope.compositiondetailschema, datamap, $scope.save);
                 } else {
                     //TODO: switch to edit
-                    $scope.newDetail = true;
+                $scope.newDetail = true;
                 }
                 $scope.selecteditem = datamap;
                 $scope.collapseAll();
@@ -272,7 +272,7 @@ app.directive('compositionList', function (contextService) {
                 if ($scope.compositiondata == null) {
                     $scope.compositiondata = [];
                 }
-                $scope.compositiondata.push(selecteditem);
+                $scope.compositiondata.push(selecteditem);                
                 if ($scope.collectionproperties.autoCommit) {
                     var validationErrors = validationService.validate($scope.compositionschemadefinition.schemas.detail.displayables, selecteditem);
                     if (validationErrors.length > 0) {
@@ -289,7 +289,7 @@ app.directive('compositionList', function (contextService) {
                                 var compositiontabaftersave = '#' + compositions[compositions.length - 1].replace('/', '');
                                 sessionStorage.compositiontabaftersave = compositiontabaftersave;
                                 window.location.reload();
-                                return;
+                                    return;
                             }
                             $scope.clonedCompositionData = updatedArray;
                             $scope.compositiondata = updatedArray;
@@ -322,6 +322,12 @@ app.directive('compositionList', function (contextService) {
                 });
             };
 
+            $scope.refresh = function () {
+                //TODO: make a composition refresh only --> now it will be samething as F5
+                window.location.reload();
+            };
+           
+            
 
             $scope.showListCommands = function () {
                 return !$scope.detail || $scope.expanded;
@@ -414,8 +420,8 @@ app.directive('compositionList', function (contextService) {
             $scope.i18NLabel = function (fieldMetadata) {
                 return i18NService.getI18nLabel(fieldMetadata, $scope.compositionlistschema);
             };
-
-
+            
+           
         }
     };
 });
