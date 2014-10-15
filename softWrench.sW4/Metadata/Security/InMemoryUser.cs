@@ -13,6 +13,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Security {
     public class InMemoryUser : IPrincipal {
@@ -33,6 +34,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly Iesi.Collections.Generic.ISet<PersonGroupAssociation> _personGroups;
         private readonly IList<DataConstraint> _dataConstraints;
         private readonly IDictionary<ClientPlatform, MenuDefinition> _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
+        private readonly IDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>> _cachedBars = new ConcurrentDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>>();
         private IDictionary<string, object> _genericproperties = new Dictionary<string, object>();
 
         private const string BlankUser = "menu is blank for user {0} review his security configuration";
@@ -219,7 +221,7 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         public bool IsInRole(string role) {
-            return _roles.Contains(new Role() { Name = role });
+            return _roles.Any(r => r.Name.EqualsIc(role));
         }
         [JsonIgnore]
         public IIdentity Identity { get; private set; }
@@ -242,8 +244,13 @@ namespace softWrench.sW4.Metadata.Security {
             return IsInRole(Role.SysAdmin);
         }
 
-        public IDictionary<string, CommandBarDefinition> SecuredBars(IDictionary<string, CommandBarDefinition> commandBars) {
-            return ApplicationCommandUtils.SecuredBars(this, commandBars);
+        public IDictionary<string, CommandBarDefinition> SecuredBars(ClientPlatform platform, IDictionary<string, CommandBarDefinition> commandBars) {
+            if (_cachedBars.ContainsKey(platform)) {
+                return _cachedBars[platform];
+            }
+            var commandBarDefinitions = ApplicationCommandUtils.SecuredBars(this, commandBars);
+            _cachedBars[platform] = commandBarDefinitions;
+            return commandBarDefinitions;
         }
     }
 }

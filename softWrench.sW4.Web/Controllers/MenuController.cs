@@ -16,10 +16,10 @@ namespace softWrench.sW4.Web.Controllers {
         public SecuredDisplayables Get(ClientPlatform platform) {
             try {
                 var user = SecurityFacade.CurrentUser();
-                var isSysAdmin = user.Roles.Any(r => r.Name == "sysadmin") || ApplicationConfiguration.IsLocal();
-                var isClientAdmin = user.Roles.Any(r => r.Name == "clientadmin") || ApplicationConfiguration.IsLocal();
+                var isSysAdmin = user.IsInRole("sysadmin") || ApplicationConfiguration.IsLocal();
+                var isClientAdmin = user.IsInRole("clientadmin") || ApplicationConfiguration.IsLocal();
                 var securedMenu = user.Menu(platform);
-                var securedBars = user.SecuredBars(MetadataProvider.CommandBars());
+                var securedBars = user.SecuredBars(platform,MetadataProvider.CommandBars());
                 return new SecuredDisplayables(securedMenu, securedBars, isSysAdmin, isClientAdmin);
             } catch (InvalidOperationException) {
                 FormsAuthentication.SignOut();

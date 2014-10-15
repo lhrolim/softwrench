@@ -8,10 +8,11 @@
 
         public string Type { get { return typeof(ResourceCommand).Name; } }
 
-        public ResourceCommand(string id, string path, string role) {
+        public ResourceCommand(string id, string path, string role,string position) {
             Id = id;
             Path = path;
             Role = role;
+            Position = position;
         }
 
     }

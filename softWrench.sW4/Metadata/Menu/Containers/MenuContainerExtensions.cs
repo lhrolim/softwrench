@@ -9,7 +9,7 @@ namespace softWrench.sW4.Metadata.Menu.Containers {
         public static MenuBaseDefinition Secure(this MenuContainerDefinition container, InMemoryUser user) {
             var secureLeafs = new List<MenuBaseDefinition>();
             foreach (var leaf in container.Leafs) {
-                if (!user.Login.Equals("swadmin") && leaf.Role != null && (user.Roles == null || !user.Roles.Any(r => r.Active && r.Name == leaf.Role))) {
+                if (!user.IsSwAdmin() && leaf.Role != null && (user.Roles == null || !user.Roles.Any(r => r.Active && r.Name == leaf.Role))) {
                     continue;
                 }
                 if (leaf is MenuContainerDefinition) {

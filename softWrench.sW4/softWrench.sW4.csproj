@@ -328,7 +328,7 @@
     <Compile Include="Security\Context\IContextLookuper.cs" />
     <Compile Include="Security\Entities\PersonGroupAssociation.cs" />
     <Compile Include="Security\Entities\PersonGroup.cs" />
-    <Compile Include="Security\Entities\RoleEvalResult.cs" />
+    <Compile Include="Security\Entities\RoleWithErrorMessage.cs" />
     <Compile Include="Security\Entities\RoleGroup.cs" />
     <Compile Include="Data\Configuration\ComConfigurationRegistry.cs" />
     <Compile Include="Security\Init\Com\ComInitializer.cs" />
@@ -336,6 +336,7 @@
     <Compile Include="Security\Init\DbUserInitializer.cs" />
     <Compile Include="Security\Init\Com\ProfileType.cs" />
     <Compile Include="Security\Init\RoleExtensions.cs" />
+    <Compile Include="Security\Interfaces\AfterLoginRoleEvaluator.cs" />
     <Compile Include="Security\Interfaces\IRoleEvaluator.cs" />
     <Compile Include="Security\Services\ClearCacheEvent.cs" />
     <Compile Include="Security\Services\UserLoginEvent.cs" />

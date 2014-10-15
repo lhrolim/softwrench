@@ -6,6 +6,9 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
 
     [Class(Table = "BATCH", Lazy = false)]
     public class Batch : IBaseEntity {
+
+        [Id(0, Name = "Id")]
+        [Generator(1, Class = "native")]
         public int? Id { get; set; }
 
         [Property]
