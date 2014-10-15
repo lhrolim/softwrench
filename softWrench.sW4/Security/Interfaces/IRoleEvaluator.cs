@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using softWrench.sW4.Security.Entities;
+using softWrench.sW4.SimpleInjector;
 
 namespace softWrench.sW4.Security.Interfaces {
-    interface IRoleEvaluator {
+    public interface IRoleEvaluator : IComponent {
 
         /// <summary>
         /// the role name this evaluator refers to
         /// </summary>
         string RoleName { get; }
 
-        RoleEvalResult Eval();
+        Role Eval();
 
     }
 }

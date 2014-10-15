@@ -531,6 +531,7 @@
     <Content Include="Content\Scripts\client\crud_base_controller.js" />
     <Content Include="Content\Scripts\client\crud_list.js" />
     <Content Include="Content\Scripts\client\logAdmin.js" />
+    <Content Include="Content\Scripts\client\services\securityService.js" />
     <Content Include="Content\Scripts\client\services\rest_service.js" />
     <Content Include="Content\Scripts\client\services\userpreference_service.js" />
     <Content Include="Content\Scripts\client\services\eventdispatcher_service.js" />
@@ -741,6 +742,8 @@
     <Content Include="Content\styles\gric\index.css" />
     <Content Include="Content\styles\gric\site.css" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
+    <Content Include="Content\Templates\commands\batches\batches.html" />
+    <Content Include="Content\Templates\commands\batches\batchesmenu.js" />
     <Content Include="Content\Templates\commands\grid\gridfilter.html" />
     <Content Include="Content\Templates\commands\grid\gridfilter.js" />
     <Content Include="Content\Templates\crud\advanced_filter_toogle.html" />
@@ -1418,6 +1421,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\softwrench.sW4.batches\softwrench.sW4.batches.csproj">
+      <Project>{653d15fd-96ca-4e5d-b147-39ad01e59006}</Project>
+      <Name>softwrench.sW4.batches</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Hapag\softwrench.sw4.Hapag.csproj">
       <Project>{22d901fc-310e-4f14-9506-d9433cf192cf}</Project>
       <Name>softwrench.sw4.Hapag</Name>

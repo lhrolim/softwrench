@@ -13,7 +13,7 @@
             position: '@'
         },
 
-        controller: function ($scope, commandService,$log, i18NService, $rootScope) {
+        controller: function ($scope, commandService,$log, i18NService, securityService) {
 
             $scope.getGridToolbar = function () {
                 var schema = $scope.schema;
@@ -26,6 +26,10 @@
 
             $scope.commandtooltip = function (command) {
                 return i18NService.get18nValue('_bars.gridtop' + command.id, command.tooltip);
+            }
+
+            $scope.validateRole = function (command) {
+                securityService.validateRoleWithErrorMessage(command.role);
             }
 
         }

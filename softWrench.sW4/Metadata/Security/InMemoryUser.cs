@@ -13,6 +13,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Security {
     public class InMemoryUser : IPrincipal {
@@ -219,7 +220,7 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         public bool IsInRole(string role) {
-            return _roles.Contains(new Role() { Name = role });
+            return _roles.Any(r => r.Name.EqualsIc(role));
         }
         [JsonIgnore]
         public IIdentity Identity { get; private set; }

@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('menuService', function ($rootScope, redirectService, contextService, i18NService, $log) {
+app.factory('menuService', function ($rootScope, redirectService, contextService, i18NService,securityService, $log) {
 
     var cleanSelectedLeaf = function () {
         var menu = $("#applicationmenu");
@@ -88,6 +88,10 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
 
 
         doAction: function (leaf, target) {
+            if (!securityService.validateRoleWithErrorMessage(leaf.role)) {
+                return;
+            }
+
             if (target != undefined) {
                 this.setActiveLeaf(target);
             }
@@ -100,7 +104,9 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
         },
 
         goToApplication: function (leaf, target) {
-
+            if (!securityService.validateRoleWithErrorMessage(leaf.role)) {
+                return;
+            }
             $rootScope.$broadcast('sw_checksuccessmessage', leaf);
             if (target != undefined) {
                 this.setActiveLeaf(target);

@@ -14,10 +14,10 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
 
         private readonly CommandBarDefinition _commandBarDefinition = new CommandBarDefinition(null, "detail", new List<ICommandDisplayable>
             {
-                new ResourceCommand("c1","","role1"),
-                new ResourceCommand("c2","","role2"),
-                new ResourceCommand("c3","",null),
-                new ResourceCommand("c4","",null),
+                new ResourceCommand("c1","","role1",null),
+                new ResourceCommand("c2","","role2",null),
+                new ResourceCommand("c3","",null,null),
+                new ResourceCommand("c4","",null,null),
             });
 
         [TestMethod]

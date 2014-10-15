@@ -34,11 +34,11 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
             });
             var result = ApplicationCommandMerger.MergeCommands(commandBarDefinitions, bars);
             Assert.IsTrue(result.Keys.Any());
-            Assert.AreEqual(1,result.Keys.Count);
+            Assert.AreEqual(1, result.Keys.Count);
             var commandBarDefinition = result["detail"];
-            Assert.AreEqual(2,commandBarDefinition.Commands.Count());
-            Assert.AreEqual("c1",commandBarDefinition.Commands[0].Id);
-            Assert.AreEqual("c3",commandBarDefinition.Commands[1].Id);
+            Assert.AreEqual(2, commandBarDefinition.Commands.Count());
+            Assert.AreEqual("c1", commandBarDefinition.Commands[0].Id);
+            Assert.AreEqual("c3", commandBarDefinition.Commands[1].Id);
         }
 
         [TestMethod]
@@ -59,6 +59,26 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
             Assert.AreEqual("c2", commandBarDefinition.Commands[1].Id);
             Assert.AreEqual("c4", commandBarDefinition.Commands[2].Id);
             Assert.AreEqual("c3", commandBarDefinition.Commands[3].Id);
+        }
+
+        [TestMethod]
+        public void TestAddCommandRightTo2() {
+            var bars = new Dictionary<string, CommandBarDefinition>();
+            bars["detail"] = _commandBarDefinition;
+            var commandBarDefinitions = new Dictionary<string, CommandBarDefinition>();
+            commandBarDefinitions["detail"] = new CommandBarDefinition(null, "detail", new List<ICommandDisplayable>
+            {
+                new ResourceCommand("c4","","",">c3")
+            });
+            var result = ApplicationCommandMerger.MergeCommands(commandBarDefinitions, bars);
+            Assert.IsTrue(result.Keys.Any());
+            Assert.AreEqual(1, result.Keys.Count);
+            var commandBarDefinition = result["detail"];
+            Assert.AreEqual(4, commandBarDefinition.Commands.Count());
+            Assert.AreEqual("c1", commandBarDefinition.Commands[0].Id);
+            Assert.AreEqual("c2", commandBarDefinition.Commands[1].Id);
+            Assert.AreEqual("c3", commandBarDefinition.Commands[2].Id);
+            Assert.AreEqual("c4", commandBarDefinition.Commands[3].Id);
         }
 
         [TestMethod]

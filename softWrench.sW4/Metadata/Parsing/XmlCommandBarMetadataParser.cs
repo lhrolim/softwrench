@@ -64,10 +64,11 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         public static ICommandDisplayable GetCommandDisplayable(XElement xElement) {
             var id = xElement.AttributeValue(XmlBaseSchemaConstants.IdAttribute, true);
-            var role = xElement.AttributeValue(cnst.RemoveAttribute);
+            var role = xElement.AttributeValue(XmlBaseSchemaConstants.RoleAttribute);
+            var position = xElement.AttributeValue(cnst.PositionAttribute);
             if (xElement.IsNamed(cnst.ResourceCommand)) {
                 var path = xElement.AttributeValue(cnst.ResourceCommandPath);
-                return new ResourceCommand(id, path, role);
+                return new ResourceCommand(id, path, role,position);
             }
             if (xElement.IsNamed(cnst.CommandElement)) {
                 return GetApplicationCommand(xElement, id, role, null);
@@ -75,7 +76,6 @@ namespace softWrench.sW4.Metadata.Parsing {
             if (xElement.IsNamed(cnst.ContainerCommand)) {
                 var label = xElement.AttributeValue(XmlBaseSchemaConstants.LabelAttribute);
                 var tooltip = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableToolTipAtribute);
-                var position = xElement.AttributeValue(cnst.PositionAttribute);
                 return new ContainerCommand(id, label, tooltip, role, position, ParseCommandDisplayables(xElement.Elements()));
             }
             if (xElement.IsNamed(cnst.RemoveCommand)) {
