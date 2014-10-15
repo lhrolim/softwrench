@@ -7,7 +7,7 @@ app.factory('statuscolorService', function ($rootScope, contextService) {
         if (status.equalsAny("NEW", "WAPPR", "WSCH")) {
             return "orange";
         }
-        if (status.equalsAny("QUEUED", "INPROG", "null")) {
+        if (status.equalsAny("QUEUED", "INPROG", "PENDING","null")) {
             return "yellow";
         }
 
