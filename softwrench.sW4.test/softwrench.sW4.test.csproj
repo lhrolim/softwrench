@@ -91,6 +91,8 @@
     <Compile Include="Hapag\Data\Connector\Imac\ImacServicePlanHelperTest.cs" />
     <Compile Include="Hapag\Security\HlagGroupedLocationTest.cs" />
     <Compile Include="Metadata\AbstractSchemaTest.cs" />
+    <Compile Include="Metadata\Applications\Command\ApplicationCommandMergerTest.cs" />
+    <Compile Include="Metadata\Applications\Command\ApplicationCommandUtilsTest.cs" />
     <Compile Include="Metadata\Association\DependencyBuilderTest.cs" />
     <Compile Include="Metadata\Association\AssociationHelperTest.cs" />
     <Compile Include="Metadata\Entities\SlicedEntityMetadataBuilderTest.cs" />

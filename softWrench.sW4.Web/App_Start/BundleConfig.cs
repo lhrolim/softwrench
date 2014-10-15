@@ -122,7 +122,7 @@ namespace softWrench.sW4.Web {
                 "~/Content/Scripts/client/directives/*.js",
                 "~/Content/Scripts/client/components/*.js",
                 "~/Content/Scripts/client/util/*.js"
-                ));
+                ).IncludeDirectory("~/Content/Templates/commands","*.js",true));
 
             var clientName = ApplicationConfiguration.ClientName;
             var clientPath = String.Format("~/Content/Scripts/customers/{0}", clientName);

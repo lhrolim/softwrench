@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
+
+
   <!--otb-->
   <entities>
 
@@ -641,11 +643,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </composition>
           </section>
 
-          <commands>
-            <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
-                     showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>
-          </commands>
-
+          <commandbars>
+            <commandgroup position="detailform">
+              <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                       showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted" position="left"/>
+            </commandgroup>
+          </commandbars>
         </schema>
       </schemas>
     </application>
@@ -657,6 +660,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Work Order Grid" platform="web">
 
+          <commandbars>
+            <commandgroup position="gridtop">
+              <resourcecommand id="batches" position=">filter" path="/Content/Templates/commandgroup/batches/batches.html" role="allowbatches"/>
+            </commandgroup>
+          </commandbars>
 
           <field attribute="wonum" label="WO No" >
             <renderer type="default" params="minwidth=110px" />
@@ -1775,7 +1783,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Id" hidden="true" attribute="docinfoid"/>
           <field hidden="true" attribute="doclinksid"/>
           <field label="Document" hidden="true" attribute="document"/>
-          <section label="Document" attribute="document"
+          <section attribute="document"
 									   resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=http"/>
           <field label="Created Date" attribute="createdate"/>
         </list>
@@ -1784,7 +1792,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Id" hidden="true" attribute="docinfoid"/>
           <field hidden="true" attribute="doclinksid"/>
           <field label="Document" hidden="true" attribute="document"/>
-          <section label="Document" attribute="document" resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Faq;action=Download;idcolumn=docinfoid"/>
+          <section attribute="document" resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Faq;action=Download;idcolumn=docinfoid"/>
         </schema>
 
         <schema id="detail" title="Attachments">
@@ -1797,11 +1805,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!--          <field hidden="true" attribute="ownerid"/>-->
           <!--          <field hidden="true" attribute="ownertable"/>-->
           <field hidden="true" attribute="createdate"/>
-
-          <commands>
-            <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
-                     showexpression="@status=='NEW'" successmessage="Attachment deleted"/>
-          </commands>
+          <commandbars>
+            <commandgroup position="compositionbottom"  >
+              <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                       showexpression="@status=='NEW'" successmessage="Attachment deleted"/>
+            </commandgroup>
+          </commandbars>
         </schema>
 
       </schemas>
@@ -1887,10 +1896,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </properties>
       <schemas>
         <list stereotype="compositionlist">
-
-          <commands>
-            <command id="print" remove="true" label=""/>
-          </commands>
+          <commandbars>
+            <commandgroup position="compositionbottom"  >
+              <removecommand id="print"/>
+            </commandgroup>
+          </commandbars>
           <properties>
             <property key="detail.cancel.lbl" value="Close"/>
           </properties>
@@ -1999,12 +2009,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
           <composition relationship="prline" label="PR Lines" ></composition>
           <!--composition relationship="prterm" label="Terms and Conditions"></composition-->
-
-          <commands>
-            <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
-                     showexpression="@status=='NEW'" successmessage="Attachment deleted"/>
-          </commands>
-
+          <commandbars>
+            <commandgroup position="detailform">
+              <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                       showexpression="@status=='NEW'" successmessage="Purchase Request Deleted" position="left"/>
+            </commandgroup>
+          </commandbars>
         </schema>
 
 

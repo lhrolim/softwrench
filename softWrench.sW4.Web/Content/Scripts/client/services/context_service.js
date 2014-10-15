@@ -24,7 +24,7 @@ app.factory('contextService', function ($rootScope) {
             if (value == "undefined") {
                 return undefined;
             }
-            if (value != null && isJson == true) {
+            if (value != null && isJson == true && isString(value)) {
                 return JSON.parse(value);
             }
             return value;

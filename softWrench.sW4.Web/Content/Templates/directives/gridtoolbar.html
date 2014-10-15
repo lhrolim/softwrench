@@ -1,0 +1,14 @@
+<div class="group hidden-xs">
+    <span ng-repeat="command in getGridToolbar()">
+        <ng-switch on="command.type">
+            <button ng-switch-when="ApplicationCommand" type="button" class="btn btn-default btn-sm" ng-click="executeService(command.service,command.method,command.parameters)" href="#"
+                    data-original-title="{{i18N('_grid.pagination.actions.print','Print')}}" ng-hide="disablePrint">
+                <i class="fa" ng-class="command.icon"></i>&ensp;{{command.label}}
+            </button>
+            <span ng-switch-when="ResourceCommand">
+                <ng-include src="url(command.path)" />
+            </span>
+
+        </ng-switch>
+    </span>
+</div>

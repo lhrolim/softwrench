@@ -13,8 +13,8 @@ $(function () {
 
             $('.content').css('margin-top', headerHeight);
             $('.affix-pagination').css('top', headerHeight);
-            $('.listgrid-thead').css('top', headerHeight + paginationHeight);
-            $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight - 1);
+            $('.listgrid-thead').css('top', headerHeight + paginationHeight + 8);
+            $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight +7);
         }
             //reset the lcoation of the content, context menu, grid header and filter bar
         else {

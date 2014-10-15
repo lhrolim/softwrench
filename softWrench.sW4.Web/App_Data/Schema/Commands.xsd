@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/metadata"
+	xmlns:tns="http://www.example.org/metadata" elementFormDefault="qualified">
+
+
+  <element name="commands">
+    <complexType>
+      <choice minOccurs="0" maxOccurs="unbounded">
+
+
+
+        <element name="commandgroup" type="tns:commandsComplexType"></element>
+      </choice>
+    </complexType>
+  </element>
+
+
+
+  <complexType name="CommandsDeclarationsType">
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="toolbar" type="tns:commandsComplexType" minOccurs="0"
+				maxOccurs="unbounded"></element>
+    </choice>
+  </complexType>
+
+
+
+
+
+
+
+
+
+
+  <simpleType name="modeType">
+    <restriction base="string">
+      <enumeration value="input"></enumeration>
+      <enumeration value="output"></enumeration>
+    </restriction>
+  </simpleType>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <simpleType name="StereotypeType">
+    <restriction base="string">
+      <enumeration value="list"></enumeration>
+      <enumeration value="detail"></enumeration>
+      <enumeration value="compositionlist"></enumeration>
+      <enumeration value="compositiondetail"></enumeration>
+    </restriction>
+  </simpleType>
+
+  <simpleType name="SchemaModeType">
+    <restriction base="string">
+      <enumeration value="input"></enumeration>
+      <enumeration value="output"></enumeration>
+    </restriction>
+  </simpleType>
+
+
+  <complexType name="Command">
+    <attribute name="id" type="string" use="required"></attribute>
+    <attribute name="label" type="string" use="optional"></attribute>
+    <attribute name="tooltip" type="string"></attribute>
+    <attribute name="service" type="string"></attribute>
+    <attribute name="method" type="string"></attribute>
+    <attribute name="parameters" type="string" use="optional">
+      <annotation>
+        <documentation>
+          comma separeted list of parameter names of the $scope
+          variable to pass through the command
+        </documentation>
+      </annotation>
+    </attribute>
+
+    <attribute name="showexpression" type="string"></attribute>
+    <attribute name="role" type="string" use="optional"></attribute>
+    <attribute name="stereotype">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="print"></enumeration>
+          <enumeration value="confirm"></enumeration>
+          <enumeration value="cancel"></enumeration>
+          <enumeration value="delete"></enumeration>
+        </restriction>
+      </simpleType>
+    </attribute>
+
+
+    <attribute name="successmessage" type="string"
+  		default="data successfully saved">
+    </attribute>
+    <attribute name="cssclasses" type="string"></attribute>
+
+    <attribute name="nextSchemaId" type="string"></attribute>
+
+
+    <attribute name="position">
+      <annotation>
+        <documentation>
+          The position will inform where to place the command,
+          relative to another command present on the default
+          command bar.
+
+          It should have the syntax:
+
+          * C1 --> gruop this command with existing command C1 *
+          >C1--> place this command right to the command C1 *
+          &lt;C1 --> place this command left to the command C1
+
+          If none provided, the command will be placed at the
+          end of the bar.
+
+          Note, inside a "commands" declaration the order should
+          be set declaratively, by the order of the children
+
+
+
+          besides, as a legacy mode, it accepts values left or
+          right to place the command relatively to the default
+          commands on screen
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="icon" type="string"></attribute>
+
+  </complexType>
+
+  <simpleType name="NewSimpleType">
+    <restriction base="string">
+      <enumeration value="input"></enumeration>
+      <enumeration value="output"></enumeration>
+    </restriction>
+  </simpleType>
+
+
+  <element name="section" type="string">
+  </element>
+
+  <complexType name="commandsComplexType">
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element minOccurs="0" maxOccurs="unbounded" name="command"
+    		type="tns:Command">
+      </element>
+      <element name="container" type="tns:CommandContainer"
+    		maxOccurs="unbounded" minOccurs="0">
+      </element>
+      <element name="resourcecommand" type="tns:ResourceCommand"
+    		minOccurs="0" maxOccurs="unbounded">
+        <annotation>
+          <documentation>
+            This is a command that is complex enough to nned a
+            custom html to define it
+          </documentation>
+        </annotation>
+      </element>
+      <element name="removecommand" type="tns:RemoveCommand" minOccurs="0" maxOccurs="unbounded"></element>
+    </choice>
+    <attribute use="optional" default="false"
+			name="removeundeclared" type="boolean">
+    </attribute>
+
+    <attribute name="position">
+      <simpleType>
+        <restriction base="string">
+          <enumeration value="gridtop"></enumeration>
+          <enumeration value="gridrows"></enumeration>
+          <enumeration value="compositiontop"></enumeration>
+          <enumeration value="detailform"></enumeration>
+          <enumeration value="compositionbottom"></enumeration>
+        </restriction>
+      </simpleType>
+    </attribute>
+
+    <attribute name="id" type="string">
+      <annotation>
+        <documentation>The id describes a way to point to a completely different commandbar, other than the one declared in the </documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+
+  <complexType name="CommandContainer">
+    <choice>
+      <element minOccurs="0" maxOccurs="unbounded" name="command"
+     		type="tns:Command">
+      </element>
+      <element name="container" type="tns:CommandContainer" minOccurs="0" maxOccurs="unbounded"></element>
+      <element name="resourcecommand" type="tns:ResourceCommand" minOccurs="0" maxOccurs="unbounded"></element>
+    </choice>
+  </complexType>
+
+
+
+
+  <complexType name="displayablesType">
+    <sequence>
+      <element name="componentdisplayable" type="string"
+				minOccurs="1" maxOccurs="unbounded"></element>
+    </sequence>
+  </complexType>
+
+
+
+  <complexType name="ResourceCommand">
+    <attribute name="id" type="string"></attribute>
+    <attribute name="path" type="string"></attribute>
+    <attribute name="position" type="string">
+      <annotation>
+        <documentation>
+          The position will inform where to place the command,
+          relative to another command present on the default
+          command bar.
+
+          It should have the syntax:
+
+          * C1 --&gt; gruop this command with existing command
+          C1 * &gt;C1--&gt; place this command right to the
+          command C1 * &amp;lt;C1 --&gt; place this command left
+          to the command C1
+
+          If none provided, the command will be placed at the
+          end of the bar.
+
+          Note, inside a &quot;commands&quot; declaration the
+          order should be set declaratively, by the order of the
+          children
+
+
+
+          besides, as a legacy mode, it accepts values left or
+          right to place the command relatively to the default
+          commands on screen
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="role" type="string"></attribute>
+    <attribute name="remove" type="boolean"></attribute>
+  </complexType>
+
+  <complexType name="RemoveCommand">
+    <attribute name="id" type="string"></attribute>
+  </complexType>
+</schema>

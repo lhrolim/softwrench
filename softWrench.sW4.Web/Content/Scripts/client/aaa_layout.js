@@ -197,23 +197,25 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         $scope.mainlogo = config.logo;
         $scope.myprofileenabled = config.myProfileEnabled;
 
+        $scope.$on('sw_goToApplicationView', function (event, data) {
+            if (data != null) {
+                $scope.goToApplicationView(data.applicationName, data.schemaId, data.mode, data.title, data.parameters);
+            }
+        });
+
+       
         $http({
             method: "GET",
             url: url("/api/menu?" + platformQS()),
             cache: $templateCache
         })
         .success(function (menuAndNav) {
-            $scope.$on('sw_goToApplicationView', function (event, data) {
-                if (data != null) {
-                    $scope.goToApplicationView(data.applicationName, data.schemaId, data.mode, data.title, data.parameters);
-                }
-            });
-
             $scope.$on('sw_indexPageLoaded', function (event, url) {
                 if (url != null) {
                     menuService.setActiveLeafByUrl(menuAndNav.menu, url);
                 }
             });
+            contextService.insertIntoContext("commandbars", menuAndNav.commandBars);
             $rootScope.menu = menuAndNav.menu;
             $scope.menu = menuAndNav.menu;
             $scope.isSysAdmin = menuAndNav.isSysAdmin;

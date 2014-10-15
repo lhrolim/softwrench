@@ -6,21 +6,12 @@ namespace softWrench.sW4.Metadata.Parsing {
     ///     constants related to the metadata file
     ///     (e.g. elements names, attributes names).
     /// </summary>
-    internal static class XmlMetadataSchema {
+    internal class XmlMetadataSchema :XmlBaseSchemaConstants {
         public static readonly char[] ItemDelimeter = { ',' };
 
 
 
-        public const string RootElement = "metadata";
-        public const string BaseDisplayableShowExpressionAtribute = "showexpression";
-        public const string BaseDisplayableEnableExpressionAtribute = "enableexpression";
-        public const string BaseDisplayableEvalExpressionAtribute = "evalexpression";
-        public const string BaseDisplayableToolTipAtribute = "tooltip";
-        public const string BaseDisplayableHiddenAttribute = "hidden";
-        public const string BaseDisplayableLabelAttribute = "label";
-        public const string BaseDisplayableIdAttribute = "id";
-        public const string BaseDisplayableRequiredAttribute = "required";
-        public const string BaseParametersAttribute = "parameters";
+    
 
 
         public const string EventsElement = "event";
@@ -133,7 +124,6 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ApplicationCompositionCollectionOrderByField = "orderbyfield";
 
 
-        public const string ApplicationCommandsElement = "commands";
         public const string ApplicationCommandElement = "command";
         public const string ApplicationCommandRemoveUndeclaredAttribute = "removeundeclared";
         public const string ApplicationCommandIdAttribute = "id";

@@ -7,6 +7,7 @@ using log4net;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Parsing;
 using softwrench.sW4.Shared2.Metadata;
+using softwrench.sw4.Shared2.Metadata.Applications.Command;
 
 namespace softWrench.sW4.Metadata.Validator {
     internal class MetadataXmlSourceInitializer {
@@ -14,8 +15,10 @@ namespace softWrench.sW4.Metadata.Validator {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MetadataProvider));
 
         private const string Metadata = "metadata.xml";
+        private const string CommandsPath = "commands.xml";
 
         internal ICollection<EntityMetadata> Entities;
+        internal IDictionary<string, CommandBarDefinition> CommandBars;
         internal IReadOnlyCollection<CompleteApplicationMetadataDefinition> Applications;
         public EntityQueries Queries { get; set; }
 
@@ -26,7 +29,11 @@ namespace softWrench.sW4.Metadata.Validator {
                 foreach (var entityMetadata in Entities.Where(e => e.HasParent)) {
                     entityMetadata.MergeWithParent();
                 }
-                Applications = InitializeApplicationMetadata(Entities, data);
+                using (var stream = MetadataParsingUtils.GetStream(data, CommandsPath)) {
+                    CommandBars = new XmlCommandBarMetadataParser().Parse(stream);
+                }
+
+                Applications = InitializeApplicationMetadata(Entities, CommandBars, data);
             } catch (Exception e) {
                 Log.Error("error validating metadata", e);
                 throw;
@@ -101,12 +108,13 @@ namespace softWrench.sW4.Metadata.Validator {
             }
         }
 
-        internal static IReadOnlyCollection<CompleteApplicationMetadataDefinition> InitializeApplicationMetadata([NotNull] IEnumerable<EntityMetadata> entityMetadata, Stream streamValidator = null) {
+        internal static IReadOnlyCollection<CompleteApplicationMetadataDefinition> InitializeApplicationMetadata([NotNull] IEnumerable<EntityMetadata> entityMetadata,
+            IDictionary<string,CommandBarDefinition> commandBars, Stream streamValidator = null) {
             if (entityMetadata == null) {
                 throw new ArgumentNullException("entityMetadata");
             }
             var applicationMetadata = new List<CompleteApplicationMetadataDefinition>();
-            var parser = new XmlApplicationMetadataParser(entityMetadata);
+            var parser = new XmlApplicationMetadataParser(entityMetadata, commandBars);
             using (var stream = MetadataParsingUtils.GetStream(streamValidator, Metadata)) {
                 applicationMetadata.AddRange(parser.Parse(stream));
             }

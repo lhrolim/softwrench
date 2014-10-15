@@ -27,7 +27,7 @@ app.factory('eventdispatcherService', function ($injector, $log) {
             if (!fn) {
                 return;
             }
-            fn(schema, datamap)
+            fn(schema, datamap);
         }
     }
 

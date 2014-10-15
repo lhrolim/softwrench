@@ -1,34 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using softwrench.sw4.Shared2.Metadata.Applications.Command;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
-    public class ApplicationCommand {
+    public class ApplicationCommand : ICommandDisplayable {
 
         private readonly string _id;
         private readonly string _label;
 
         public string Service { get; set; }
         public string Icon { get; set; }
+        public string Tooltip { get; set; }
         public string Method { get; set; }
 
-        public string DefaultPosition { get; set; }
+        public string Position { get; set; }
+        public string Type { get { return typeof (ApplicationCommand).Name; } }
 
         public List<string> ScopeParameters { get; set; }
 
-        private readonly bool _remove;
         private readonly string _role;
         private readonly string _showExpression;
         private readonly string _successMessage;
         private readonly string _nextSchemaId;
-        
+
 
         private readonly ApplicationCommandStereotype _stereotype;
 
-        public ApplicationCommand(string id, string label, string service, string method, bool remove, string role, string stereotype, string showExpression, string successMessage, string nextSchemaId, string scopeParameters, string defaultPosition, string icon) {
+        public ApplicationCommand(string id, string label, string service, string method, string role, string stereotype, string showExpression, string successMessage,
+            string nextSchemaId, string scopeParameters, string defaultPosition, string icon, string tooltip) {
             _id = id;
             _label = label;
             Service = service;
-            _remove = remove;
             _role = role;
             Method = method;
             if (!String.IsNullOrEmpty(stereotype)) {
@@ -40,8 +42,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
             if (scopeParameters != null) {
                 ScopeParameters = new List<string>(scopeParameters.Split(','));
             }
-            DefaultPosition = defaultPosition;
+            Position = defaultPosition;
             Icon = icon;
+            Tooltip = tooltip;
         }
 
         public string Id {
@@ -53,10 +56,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         }
 
 
-
-        public bool Remove {
-            get { return _remove; }
-        }
 
 
 
@@ -81,7 +80,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
         }
 
         public override string ToString() {
-            return string.Format("Id: {0}, Label: {1}, Stereotype: {2}, Remove: {3}, Service: {4},Method: {5} ", _id, _label, _stereotype, _remove, Service, Method);
+            return string.Format("Id: {0}, Label: {1}, Stereotype: {2}, Service: {3},Method: {4} ", _id, _label, _stereotype,  Service, Method);
         }
 
         protected bool Equals(ApplicationCommand other) {
@@ -97,6 +96,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
 
         public override int GetHashCode() {
             return (_id != null ? _id.GetHashCode() : 0);
+        }
+
+        public static ApplicationCommand TestInstance(String id, string position = "",string label = "") {
+            return new ApplicationCommand(id, label, null, null, null, null, null, null, null, null, position, null, null);
         }
     }
 }

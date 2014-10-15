@@ -200,8 +200,9 @@
             </complexType>
           </element>
           <element name="tab" type="tns:TabType" minOccurs="0">
-            <element name="commandbars" maxOccurs="unbounded" minOccurs="0" type="tns:CommandsDeclarationsType"/>
+           
           </element>
+          <element name="commandbars" maxOccurs="unbounded" minOccurs="0" type="tns:CommandsDeclarationsType"/>
           <element name="reference" minOccurs="0" maxOccurs="unbounded"
 						type="tns:referenceComplexType">
           </element>

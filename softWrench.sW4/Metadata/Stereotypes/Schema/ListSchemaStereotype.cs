@@ -7,9 +7,9 @@ namespace softWrench.sW4.Metadata.Stereotypes.Schema {
 
     class ListSchemaStereotype : ASchemaStereotype {
 
-        public const string ListClickMode = "list.click.mode";
-        public const string ListClickPopup = "list.click.popupmode";
-        public const string ListClickService = "list.click.service";
+        public const string ListClickMode = ApplicationSchemaPropertiesCatalog.ListClickMode;
+        public const string ListClickPopup = ApplicationSchemaPropertiesCatalog.ListClickPopup;
+        public const string ListClickService = ApplicationSchemaPropertiesCatalog.ListClickService;
         public const string ListPaginationSize = ApplicationSchemaPropertiesCatalog.DefaultPaginationSize;
         public const string ListPaginationOptions = ApplicationSchemaPropertiesCatalog.PaginationOptions;
 
@@ -26,8 +26,8 @@ namespace softWrench.sW4.Metadata.Stereotypes.Schema {
 
             var defaultValues = new Dictionary<string, string>();
 
-            if (!defaultValues.Keys.Contains(ListClickMode)) {
-                defaultValues.Add(ListClickMode, SchemaMode.input.ToString());
+            if (!defaultValues.Keys.Contains(ApplicationSchemaPropertiesCatalog.ListClickMode)) {
+                defaultValues.Add(ApplicationSchemaPropertiesCatalog.ListClickMode, SchemaMode.input.ToString());
             }
             if (!defaultValues.Keys.Contains(ListClickPopup)) {
                 defaultValues.Add(ListClickPopup, PopupMode.none.ToString());
@@ -39,6 +39,7 @@ namespace softWrench.sW4.Metadata.Stereotypes.Schema {
                 defaultValues.Add(ListPaginationOptions, "10,30,100");
             }
 
+            //TODO: review these
             var propPaginationSize = MetadataProvider.GlobalProperties.GlobalProperty(ListPaginationSize);
             if (propPaginationSize != null) {
                 defaultValues[ListPaginationSize] = propPaginationSize;

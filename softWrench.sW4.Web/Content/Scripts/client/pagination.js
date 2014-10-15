@@ -193,92 +193,16 @@
                 return userPreferenceService.hasFilter($scope.applicationName, $scope.schemaId);
             }
 
-            $scope.$on("sw_redirectapplicationsuccess", function(event) {
-                $scope.selectedfilter = null;
+            $scope.$on("sw_redirectapplicationsuccess", function (event) {
                 $scope.searchData = {};
             });
 
-            $scope.saveFilter = function () {
-                var saveFormSt = $("#savefilterform").prop('outerHTML');
-                //TODO: use angularjs?!
-                saveFormSt = saveFormSt.replace('none', '');
-                saveFormSt = saveFormSt.replace('savefiltername', 'savefiltername2');
-                bootbox.dialog({
-                    message: saveFormSt,
-                    title: "Save Filter",
-                    buttons: {
-                        cancel: {
-                            label: $scope.i18N('.cancel', 'Cancel'),
-                            className: "btn btn-default",
-                            callback: function () {
-                                return null;
-                            }
-                        },
-                        main: {
-                            label: $scope.i18N('_grid.filter.savefiltebtn', 'Save'),
-                            className: "btn-primary",
-                            callback: function (result) {
-                                if (result) {
-                                    $scope.createFilter($('#savefiltername2').val());
-                                }
-                            }
-                        }
-                    },
-                    className: "smallmodal"
-                });
-            }
-
-            $scope.hasFilterData = function () {
-                var searchData = $scope.searchData;
-                for (var data in searchData) {
-                    if (data == "lastSearchedValues") {
-                        continue;
-                    }
-                    return true;
-                }
-                return false;
-            }
-
-            $scope.deleteFilter = function () {
-                var filter = $scope.selectedfilter;
-                alertService.confirm(null, null, function () {
-                    userPreferenceService.deleteFilter(filter.id, filter.creatorId, function () {
-                        $scope.selectedfilter = null;
-                    });
-                }, "Are you sure that you want to remove filter {0}?".format(filter.alias), null);
-            }
-
-            $scope.createFilter = function (alias) {
-                var id = $scope.selectedfilter ? $scope.selectedfilter.id : null;
-                var owner = $scope.selectedfilter ? $scope.selectedfilter.creatorId : null;
-                userPreferenceService.saveFilter($scope.applicationName, $scope.schemaId, $scope.searchData, $scope.searchOperator, alias, id, owner,
-                    function (filter) {
-                        $scope.selectedfilter = filter;
-                    });
-
-
-            }
-
-            $scope.applyFilter = function (filter) {
-                var fieldsArray = filter.fields.split(',');
-                var operatorsArray = filter.operators.split(',');
-                var valuesArray = filter.values.split(',,,');
-
-                for (var i = 0; i < fieldsArray.length; i++) {
-                    var field = fieldsArray[i];
-                    $scope.searchData[field] = valuesArray[i];
-                    $scope.searchOperator[field] = searchService.getSearchOperationBySymbol(operatorsArray[i]);
+            $scope.$on("sw_refreshgrid", function (event, searchData) {
+                if (searchData) {
+                    $scope.searchData = searchData;
                 }
                 $scope.selectPage($scope.paginationData.pageNumber);
-                $scope.selectedfilter = filter;
-            }
-
-            $scope.clearFilter = function () {
-                $scope.selectedfilter = null;
-                $scope.searchData = {};
-                $scope.searchOperator = {};
-                $scope.selectPage($scope.paginationData.pageNumber);
-            }
+            });
 
 
             $scope.adjustMargin(i18NService.getCurrentLanguage());
