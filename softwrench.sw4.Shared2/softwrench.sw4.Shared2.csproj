@@ -48,6 +48,11 @@
     <Compile Include="Data\Association\MultiValueAssociationOption.cs" />
     <Compile Include="Data\AttributeHolder.cs" />
     <Compile Include="Data\DataMapDefinition.cs" />
+    <Compile Include="Metadata\Applications\Command\ApplicationCommandMerger.cs" />
+    <Compile Include="Metadata\Applications\Command\ContainerCommand.cs" />
+    <Compile Include="Metadata\Applications\Command\ICommandDisplayable.cs" />
+    <Compile Include="Metadata\Applications\Command\RemoveCommandDefinition.cs" />
+    <Compile Include="Metadata\Applications\Command\ResourceCommand.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationEvent.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationHeader.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationSectionOrientation.cs" />
@@ -59,6 +64,8 @@
     <Compile Include="Metadata\Applications\UI\FieldRendererConstants.cs" />
     <Compile Include="Metadata\Applications\UI\OptionFieldRenderer.cs" />
     <Compile Include="Metadata\Applications\UI\ApplicationTabDefinition.cs" />
+    <Compile Include="Metadata\Applications\Command\CommandBarDefinition.cs" />
+    <Compile Include="Metadata\Exception\MetadataException.cs" />
     <Compile Include="Metadata\IApplicationIdentifier.cs" />
     <Compile Include="Metadata\ApplicationMetadataConstants.cs" />
     <Compile Include="Metadata\ApplicationMetadataDefinition.cs" />

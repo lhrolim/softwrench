@@ -51,7 +51,7 @@ namespace softwrench.sW4.test.Metadata {
 
             Assert.AreEqual(SchemaMode.input, new1.Mode);
             Assert.AreEqual(SchemaStereotype.Detail, new1.Stereotype);
-            Assert.IsNotNull(new1.Properties.FirstOrDefault(p => p.Key == ListSchemaStereotype.ListClickMode));
+            Assert.IsNotNull(new1.Properties.FirstOrDefault(p => p.Key == ApplicationSchemaPropertiesCatalog.ListClickMode));
 
             var displayables = new1.Displayables;
             Assert.AreEqual(8, displayables.Count);

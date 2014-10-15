@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<commands xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Commands.xsd ">
+
+  <commandgroup position="gridtop">
+    <command id="print" icon="fa-print" service="printservice" method="printGrid" parameters="paginationData,renderfn,schema" label="Print" tooltip="Print" showexpression=""/>
+    <command id="export" icon="fa-file-text-o" service="excelservice" method="exporttoexcel" parameters="paginationData,renderfn,schema" label="Export" tooltip="Export to Excel" showexpression=""/>
+    <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html"/>
+  </commandgroup>
+
+  <!--TODO: finish bars-->
+  <commandgroup position="detailform">
+    <command id="save" icon="glyphicon glyphicon-ok" service="printservice" method="printGrid" parameters="paginationData,renderfn,schema" label="Submit" tooltip="Submit"/>
+    <command id="print" icon="fa-print" service="printservice" method="printGrid" parameters="paginationData,renderfn,schema" label="Print" tooltip="Print"/>
+    <command id="cancel" icon="glyphicon glyphicon-backward" service="printservice" method="printGrid" parameters="paginationData,renderfn,schema" label="Cancel" tooltip="Cancel"/>
+  </commandgroup>
+
+  <commandgroup position="compositionbottom">
+
+  </commandgroup>
+
+
+
+
+
+</commands>

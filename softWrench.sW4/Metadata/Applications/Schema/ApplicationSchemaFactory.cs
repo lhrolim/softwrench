@@ -4,6 +4,7 @@ using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Command;
+using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Metadata.Applications.Association;
@@ -70,11 +71,13 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
         }
 
         private static void MergeWithParentCommands(ApplicationSchemaDefinition schema) {
-            foreach (var parentCommand in schema.ParentSchema.CommandSchema.Commands) {
-                if (!schema.CommandSchema.Commands.Contains(parentCommand)) {
-                    schema.CommandSchema.Commands.Add(parentCommand);
-                }
+            var parentDefinitions = schema.ParentSchema.CommandSchema.ApplicationCommands;
+            if (!parentDefinitions.Keys.Any()) {
+                //TODO: review
+                return;
             }
+            var childDefinition = schema.CommandSchema.ApplicationCommands;
+            schema.CommandSchema.ApplicationCommands = ApplicationCommandMerger.MergeCommands(childDefinition, parentDefinitions);
         }
 
         private static List<IApplicationDisplayable> MergeParentSchemaDisplayables(ApplicationSchemaDefinition schema) {
@@ -113,7 +116,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
         }
 
         private static void MergeWithStereotypeSchema(ApplicationSchemaDefinition schema) {
-            var stereotypeProvider = StereotypeFactory.LookupStereotype(schema.Stereotype,schema.Mode);
+            var stereotypeProvider = StereotypeFactory.LookupStereotype(schema.Stereotype, schema.Mode);
             var stereotypeProperties = stereotypeProvider.StereotypeProperties();
 
             foreach (var stereotypeProperty in stereotypeProperties) {

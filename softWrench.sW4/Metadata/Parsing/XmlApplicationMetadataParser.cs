@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.UI;
 using softwrench.sW4.Shared2.Metadata;
@@ -86,7 +87,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var operation = renderer.Attribute(XmlMetadataSchema.FilterOperationType).Value;
             var parameters = renderer.Attribute(XmlMetadataSchema.FilterAttributeParams).ValueOrDefault((string)null);
             var defaultValue = renderer.Attribute(XmlMetadataSchema.FilterAttributeDefault).ValueOrDefault((string)null);
-            
+
             return new FieldFilter(operation, parameters, defaultValue, targetName);
         }
 
@@ -100,11 +101,11 @@ namespace softWrench.sW4.Metadata.Parsing {
         private static ApplicationFieldDefinition ParseField(string applicationName, XElement field, EntityMetadata entityMetadata) {
             var attribute = field.Attribute(XmlMetadataSchema.FieldAttributeAttribute).Value;
             var label = field.Attribute(XmlMetadataSchema.FieldAttributeLabel).ValueOrDefault("");
-            var isRequired = field.Attribute(XmlMetadataSchema.BaseDisplayableRequiredAttribute).ValueOrDefault(false);
+            var isRequired = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableRequiredAttribute).ValueOrDefault(false);
             var isReadOnly = field.Attribute(XmlMetadataSchema.FieldAttributeReadOnly).ValueOrDefault(false);
             var isHidden = field.Attribute(XmlMetadataSchema.FieldAttributeHidden).ValueOrDefault(false);
-            var showExpression = field.Attribute(XmlMetadataSchema.BaseDisplayableShowExpressionAtribute).ValueOrDefault("true");
-            var toolTip = field.Attribute(XmlMetadataSchema.BaseDisplayableToolTipAtribute).ValueOrDefault(label);
+            var showExpression = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAtribute).ValueOrDefault("true");
+            var toolTip = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAtribute).ValueOrDefault(label);
             var defaultValue = field.Attribute(XmlMetadataSchema.FieldAttributeDefaultValue).ValueOrDefault((string)null);
             var renderer = ParseRendererNew(field.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.RendererElement),
                 attribute, FieldRendererType.BASE, entityMetadata);
@@ -113,10 +114,10 @@ namespace softWrench.sW4.Metadata.Parsing {
             var attributeToServer = field.Attribute(XmlMetadataSchema.FieldAttributeAttributeToServer).ValueOrDefault((string)null);
             var events = ParseEvents(field);
             var filterElement = field.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.FilterElement);
-            var enableExpression = field.Attribute(XmlMetadataSchema.BaseDisplayableEnableExpressionAtribute).ValueOrDefault("true");
-            var evalExpression = field.Attribute(XmlMetadataSchema.BaseDisplayableEvalExpressionAtribute).ValueOrDefault((string)null);
+            var enableExpression = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAtribute).ValueOrDefault("true");
+            var evalExpression = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEvalExpressionAtribute).ValueOrDefault((string)null);
             return new ApplicationFieldDefinition(applicationName, attribute, label, isRequired, isReadOnly, isHidden, renderer,
-                ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression,evalExpression);
+                ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression);
         }
 
         private static ISet<ApplicationEvent> ParseEvents(XElement element) {
@@ -154,25 +155,25 @@ namespace softWrench.sW4.Metadata.Parsing {
         }
 
         private static ReferenceDisplayable ParseReference(XElement xElement) {
-            var id = xElement.Attribute(XmlMetadataSchema.BaseDisplayableIdAttribute).Value;
+            var id = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableIdAttribute).Value;
             var readOnly = xElement.Attribute(XmlMetadataSchema.FieldAttributeReadOnly).ValueOrDefault((bool?)null);
 
             return new ReferenceDisplayable {
                 Id = id,
-                ShowExpression = xElement.Attribute(XmlMetadataSchema.BaseDisplayableShowExpressionAtribute).ValueOrDefault((string)null),
-                Label = xElement.Attribute(XmlMetadataSchema.BaseDisplayableLabelAttribute).ValueOrDefault((string)null),
+                ShowExpression = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAtribute).ValueOrDefault((string)null),
+                Label = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableLabelAttribute).ValueOrDefault((string)null),
                 Attribute = xElement.Attribute(XmlMetadataSchema.AttributeElement).ValueOrDefault((string)null),
                 PropertiesString = xElement.Attribute(XmlMetadataSchema.ApplicationPropertiesElement).ValueOrDefault((string)null),
                 ReadOnly = readOnly,
-                EnableExpression = xElement.Attribute(XmlMetadataSchema.BaseDisplayableEnableExpressionAtribute).ValueOrDefault((string)null)
+                EnableExpression = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAtribute).ValueOrDefault((string)null)
             };
         }
 
         private static IApplicationDisplayable ParseTab(string applicationName, XElement tabElement, string entityName) {
-            var id = tabElement.Attribute(XmlMetadataSchema.BaseDisplayableIdAttribute).ValueOrDefault((string)null);
-            var label = tabElement.Attribute(XmlMetadataSchema.BaseDisplayableLabelAttribute).ValueOrDefault((String)null);
-            var showExpression = tabElement.Attribute(XmlMetadataSchema.BaseDisplayableShowExpressionAtribute).ValueOrDefault("true");
-            var toolTip = tabElement.Attribute(XmlMetadataSchema.BaseDisplayableToolTipAtribute).ValueOrDefault(label);
+            var id = tabElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableIdAttribute).ValueOrDefault((string)null);
+            var label = tabElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableLabelAttribute).ValueOrDefault((String)null);
+            var showExpression = tabElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAtribute).ValueOrDefault("true");
+            var toolTip = tabElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAtribute).ValueOrDefault(label);
             var displayables = ParseDisplayables(applicationName, tabElement, entityName);
             return new ApplicationTabDefinition(id, applicationName, label, displayables, toolTip, showExpression);
         }
@@ -184,8 +185,8 @@ namespace softWrench.sW4.Metadata.Parsing {
             var parameters = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionParametersAttribute).ValueOrDefault((String)null);
             var label = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionLabelAttribute).ValueOrDefault((String)null);
             var attribute = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionAttributeAttribute).ValueOrDefault((String)null);
-            var showExpression = sectionElement.Attribute(XmlMetadataSchema.BaseDisplayableShowExpressionAtribute).ValueOrDefault("true");
-            var toolTip = sectionElement.Attribute(XmlMetadataSchema.BaseDisplayableToolTipAtribute).ValueOrDefault(label);
+            var showExpression = sectionElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAtribute).ValueOrDefault("true");
+            var toolTip = sectionElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAtribute).ValueOrDefault(label);
             var displayables = ParseDisplayables(applicationName, sectionElement, entityName);
             var header = ParseHeader(sectionElement);
             var orientation = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionOrientationAttribute).ValueOrDefault((String)null);
@@ -204,7 +205,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                     var label = xElement.Attribute(XmlMetadataSchema.ApplicationHeaderLabelAttribute).ValueOrDefault("");
                     var parameters = xElement.Attribute(XmlMetadataSchema.ApplicationHeaderParametersAttribute).ValueOrDefault((string)null);
                     var displacement = xElement.Attribute(XmlMetadataSchema.ApplicationHeaderDisplacementAttribute).ValueOrDefault((string)null);
-                    var showExpression = xElement.Attribute(XmlMetadataSchema.BaseDisplayableShowExpressionAtribute).ValueOrDefault((string)"true");
+                    var showExpression = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAtribute).ValueOrDefault((string)"true");
 
                     return new ApplicationHeader(label, parameters, displacement, showExpression);
                 }
@@ -215,17 +216,17 @@ namespace softWrench.sW4.Metadata.Parsing {
         private static IApplicationDisplayable ParseOptions(XElement xElement, string applicationName) {
             var attribute = xElement.Attribute(XmlMetadataSchema.FieldAttributeAttribute).Value;
             var label = xElement.Attribute(XmlMetadataSchema.FieldAttributeLabel).ValueOrDefault("");
-            var isRequired = xElement.Attribute(XmlMetadataSchema.BaseDisplayableRequiredAttribute).ValueOrDefault(false);
+            var isRequired = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableRequiredAttribute).ValueOrDefault(false);
             var isReadOnly = xElement.Attribute(XmlMetadataSchema.FieldAttributeReadOnly).ValueOrDefault(false);
             var isHidden = xElement.Attribute(XmlMetadataSchema.FieldAttributeHidden).ValueOrDefault(false);
             var defaultValue = xElement.Attribute(XmlMetadataSchema.FieldAttributeDefaultValue).ValueOrDefault((string)null);
-            var showExpression = xElement.Attribute(XmlMetadataSchema.BaseDisplayableShowExpressionAtribute).ValueOrDefault("true");
-            var toolTip = xElement.Attribute(XmlMetadataSchema.BaseDisplayableToolTipAtribute).ValueOrDefault(label);
+            var showExpression = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAtribute).ValueOrDefault("true");
+            var toolTip = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAtribute).ValueOrDefault(label);
             var attributeToServer = xElement.Attribute(XmlMetadataSchema.FieldAttributeAttributeToServer).ValueOrDefault((string)null);
             var providerAttribute = xElement.Attribute(XmlMetadataSchema.OptionFieldProviderAttribute).ValueOrDefault((string)null);
             var sort = xElement.Attribute(XmlMetadataSchema.OptionFieldSortAttribute).ValueOrDefault(providerAttribute != null);
             var dependantFields = xElement.Attribute(XmlMetadataSchema.ApplicationAssociationDependantFieldsAttribute).ValueOrDefault((string)null);
-            var isEnabled = xElement.Attribute(XmlMetadataSchema.BaseDisplayableEnableExpressionAtribute).ValueOrDefault("true");
+            var isEnabled = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAtribute).ValueOrDefault("true");
             var qualifier = xElement.Attribute(XmlMetadataSchema.FieldAttributeQualifier).ValueOrDefault((string)null);
             var rendererElement = xElement.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.RendererElement);
             var renderer = new OptionFieldRenderer();
@@ -260,12 +261,12 @@ namespace softWrench.sW4.Metadata.Parsing {
             var target = association.Attribute(XmlMetadataSchema.ApplicationAssociationTargetAttribute).Value;
             var defaultValue = association.Attribute(XmlMetadataSchema.ApplicationAssociationDefaultValueAttribute).ValueOrDefault((string)null);
             var labelData = new ApplicationAssociationDefinition.LabelData(label, labelPattern, labelField, applicationName);
-            var showExpression = association.Attribute(XmlMetadataSchema.BaseDisplayableShowExpressionAtribute).ValueOrDefault("true");
-            var enableExpression = association.Attribute(XmlMetadataSchema.BaseDisplayableEnableExpressionAtribute).ValueOrDefault("true");
-            var tooltip = association.Attribute(XmlMetadataSchema.BaseDisplayableToolTipAtribute).ValueOrDefault(label);
+            var showExpression = association.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAtribute).ValueOrDefault("true");
+            var enableExpression = association.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAtribute).ValueOrDefault("true");
+            var tooltip = association.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAtribute).ValueOrDefault(label);
             var extraProjectionFields = association.Attribute(XmlMetadataSchema.ApplicationAssociationExtraProjectionFieldsAttribute).ValueOrDefault((string)null);
             var qualifier = association.Attribute(XmlMetadataSchema.FieldAttributeQualifier).ValueOrDefault((string)null);
-            var required = association.Attribute(XmlMetadataSchema.BaseDisplayableRequiredAttribute).ValueOrDefault(false);
+            var required = association.Attribute(XmlBaseSchemaConstants.BaseDisplayableRequiredAttribute).ValueOrDefault(false);
 
             return ApplicationAssociationFactory.GetInstance(applicationName, labelData, target, qualifier, ParseAssociationSchema(association, target), showExpression, tooltip, required, ParseEvents(association), defaultValue, extraProjectionFields, enableExpression);
         }
@@ -301,9 +302,9 @@ namespace softWrench.sW4.Metadata.Parsing {
         private static ApplicationCompositionDefinition ParseComposition(XElement composition, string applicationName, string entityName) {
             var label = composition.Attribute(XmlMetadataSchema.ApplicationCompositionLabelAttribute).ValueOrDefault("");
             var relationship = composition.Attribute(XmlMetadataSchema.ApplicationCompositionRelationshipAttribute).Value;
-            var showExpression = composition.Attribute(XmlMetadataSchema.BaseDisplayableShowExpressionAtribute).ValueOrDefault("true");
-            var toolTip = composition.Attribute(XmlMetadataSchema.BaseDisplayableToolTipAtribute).ValueOrDefault(label);
-            var hidden = composition.Attribute(XmlMetadataSchema.BaseDisplayableHiddenAttribute).ValueOrDefault(false);
+            var showExpression = composition.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAtribute).ValueOrDefault("true");
+            var toolTip = composition.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAtribute).ValueOrDefault(label);
+            var hidden = composition.Attribute(XmlBaseSchemaConstants.BaseDisplayableHiddenAttribute).ValueOrDefault(false);
             var schema = ParseCompositionSchema(entityName, applicationName, relationship, composition);
             return ApplicationCompositionFactory.GetInstance(applicationName, relationship, label, schema, showExpression, toolTip, hidden, ParseHeader(composition));
         }
@@ -366,7 +367,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         /// <param name="entityName"></param>
         /// <param name="application">The `application` element containing the web schema to be deserialized.</param>
         /// <param name="idFieldName"></param>
-        private static IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> ParseSchemas(string applicationName, string entityName, XElement application, string idFieldName) {
+        private IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> ParseSchemas(string applicationName, string entityName, XElement application, string idFieldName) {
             var schemasElement = application.Elements().First(f => f.Name.LocalName == XmlMetadataSchema.SchemasElement);
             var xElements = schemasElement.Elements();
             var resultDictionary = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
@@ -393,8 +394,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 if (platformAttr != null) {
                     if (platformAttr == "web") {
                         platform = ClientPlatform.Web;
-                    }
-                    else if (platformAttr == "mobile") {
+                    } else if (platformAttr == "mobile") {
                         platform = ClientPlatform.Mobile;
                     }
                 }
@@ -404,8 +404,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                         stereotype = SchemaStereotype.Detail;
                     }
 
-                }
-                else if (localName == XmlMetadataSchema.ListElement) {
+                } else if (localName == XmlMetadataSchema.ListElement) {
                     id = ApplicationMetadataConstants.List;
                     if (stereotype == SchemaStereotype.None) {
                         stereotype = SchemaStereotype.List;
@@ -453,35 +452,13 @@ namespace softWrench.sW4.Metadata.Parsing {
             return schema;
         }
 
-        private static ApplicationCommandSchema ParseCommandSchema(XElement xElement) {
-            var commandsSchemaEl = xElement.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.ApplicationCommandsElement);
-            if (commandsSchemaEl == null) {
-                return new ApplicationCommandSchema();
-            }
-            var removeUndeclared = commandsSchemaEl.Attribute(XmlMetadataSchema.ApplicationCommandRemoveUndeclaredAttribute).ValueOrDefault(false);
-            var commands = ParseCommands(commandsSchemaEl);
-            return new ApplicationCommandSchema(removeUndeclared, commands);
+        private ApplicationCommandSchema ParseCommandSchema(XElement xElement) {
+            var commandsSchemaEl = xElement.Elements().FirstOrDefault(f => f.IsNamed(XmlCommandSchema.CommandToolBarElements));
+            return new ApplicationCommandSchema(XmlCommandBarMetadataParser.DoParse(commandsSchemaEl), _commandBars);
         }
 
-        private static IList<ApplicationCommand> ParseCommands(XElement commandsSchemaEl) {
-            IList<ApplicationCommand> commands = new List<ApplicationCommand>();
-            foreach (var xElement in commandsSchemaEl.Elements()) {
-                var id = xElement.Attribute(XmlMetadataSchema.ApplicationCommandIdAttribute).Value;
-                var label = xElement.Attribute(XmlMetadataSchema.ApplicationCommandLabelAttribute).ValueOrDefault((String)null);
-                var service = xElement.Attribute(XmlMetadataSchema.EventsServiceAttribute).ValueOrDefault((String)null);
-                var method = xElement.Attribute(XmlMetadataSchema.EventsMethodAttribute).ValueOrDefault((String)null);
-                var remove = xElement.Attribute(XmlMetadataSchema.ApplicationCommandRemoveAttribute).ValueOrDefault(false);
-                var role = xElement.Attribute(XmlMetadataSchema.ApplicationCommandRoleAttribute).ValueOrDefault((String)null);
-                var stereotype = xElement.Attribute(XmlMetadataSchema.ApplicationCommandStereotypeAttribute).ValueOrDefault((String)null);
-                var showExpression = xElement.Attribute(XmlMetadataSchema.BaseDisplayableShowExpressionAtribute).ValueOrDefault((String)null);
-                var successMessage = xElement.Attribute(XmlMetadataSchema.ApplicationCommandSuccessMessage).ValueOrDefault((String)null);
-                var nextSchemaId = xElement.Attribute(XmlMetadataSchema.ApplicationCommandNextSchemaId).ValueOrDefault((String)null);
-                var scopeParameters = xElement.Attribute(XmlMetadataSchema.BaseParametersAttribute).ValueOrDefault((String)null);
-                var defaultPosition = xElement.Attribute(XmlMetadataSchema.ApplicationCommandDefaultPositionAttribute).ValueOrDefault("left");
-                var icon = xElement.Attribute(XmlMetadataSchema.ApplicationCommandIconAttribute).ValueOrDefault((String)null);
-                commands.Add(new ApplicationCommand(id, label, service, method, remove, role, stereotype, showExpression, successMessage, nextSchemaId, scopeParameters, defaultPosition, icon));
-            }
-            return commands;
+        private static IList<ICommandDisplayable> ParseCommands(XElement commandsSchemaEl) {
+            return commandsSchemaEl.Elements().Select(XmlCommandBarMetadataParser.GetCommandDisplayable).ToList();
         }
 
         /// <summary>
@@ -490,7 +467,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         /// </summary>
         /// <param name="application">The `application` element to be deserialized.</param>
         /// <param name="entityMetadata">The catalog of entity metadata to aid in the application parsing.</param>
-        private static CompleteApplicationMetadataDefinition ParseApplication(XElement application, IEnumerable<EntityMetadata> entityMetadata) {
+        private CompleteApplicationMetadataDefinition ParseApplication(XElement application, IEnumerable<EntityMetadata> entityMetadata) {
             string guid = application.Attribute(XmlMetadataSchema.ApplicationIdAttribute).ValueOrDefault((string)null);
             var id = guid != null ? Guid.Parse(guid) : (Guid?)null;
             var name = application.Attribute(XmlMetadataSchema.ApplicationNameAttribute).Value;
@@ -522,7 +499,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         private static DisplayableComponent ParseComponent(XElement component, string applicationName, string entityName) {
             var resultComponent = new DisplayableComponent {
-                Id = component.Attribute(XmlMetadataSchema.BaseDisplayableIdAttribute).Value,
+                Id = component.Attribute(XmlBaseSchemaConstants.BaseDisplayableIdAttribute).Value,
                 RealDisplayables = ParseDisplayables(applicationName, component, entityName),
             };
             return resultComponent;
@@ -575,11 +552,13 @@ namespace softWrench.sW4.Metadata.Parsing {
         }
 
         private readonly IEnumerable<EntityMetadata> _entityMetadata;
+        private IDictionary<string, CommandBarDefinition> _commandBars;
 
-        public XmlApplicationMetadataParser([NotNull] IEnumerable<EntityMetadata> entityMetadata) {
+        public XmlApplicationMetadataParser([NotNull] IEnumerable<EntityMetadata> entityMetadata, IDictionary<string, CommandBarDefinition> commandBars) {
             if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
 
             _entityMetadata = entityMetadata;
+            _commandBars = commandBars;
         }
 
         /// <summary>

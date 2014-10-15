@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('commandService', function (i18NService, $injector, expressionService) {
+app.factory('commandService', function (i18NService, $injector, expressionService, contextService,$log) {
 
 
 
@@ -36,7 +36,7 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
             if (expression == undefined || expression == "") {
                 return false;
             }
-            var expressionToEval = expressionService.getExpression(expression,datamap);
+            var expressionToEval = expressionService.getExpression(expression, datamap);
             return !eval(expressionToEval);
         },
 
@@ -73,7 +73,7 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
 
         },
         //TODO: make it generic
-        executeClickCustomCommand: function (fullServiceName, rowdm,column) {
+        executeClickCustomCommand: function (fullServiceName, rowdm, column) {
             var idx = fullServiceName.indexOf(".");
             var serviceName = fullServiceName.substring(0, idx);
             var methodName = fullServiceName.substring(idx + 1);
@@ -93,7 +93,29 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
             method.apply(this, args);
             return;
 
+        },
+
+        getBarCommands: function (schema, position) {
+            schema.jscache = instantiateIfUndefined(schema.jscache);
+            schema.jscache.commandbars = instantiateIfUndefined(schema.jscache.commandbars);
+            var log = $log.getInstance("commandService#getBarCommands");
+            if (schema.jscache.commandbars[position] !== undefined) {
+                //null should be considered as a cache hit also
+                return schema.jscache.commandbars[position];
+            }
+            var isOverriden = schema.commandSchema.hasDeclaration;
+            var bar = contextService.fetchFromContext("commandbars", true);
+            var commandKey = isOverriden ? "{0}_{1}_{2}.#{3}".format(schema.applicationName, schema.schemaId, schema.mode.toLowerCase(), position) : "#" + position;
+            var commandbar = bar[commandKey];
+            if (commandbar == null) {
+                log.warn("command bar {0} not found".format(commandKey));
+            }
+            var commands = commandbar != null ? bar[commandKey].commands : null;
+            schema.jscache.commandbars[position] = commands;
+
+            return commands;
         }
+
 
     };
 

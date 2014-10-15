@@ -20,6 +20,11 @@
         public const string ListClickPopup = "list.click.popup";
 
         /// <summary>
+        /// controls whether to open details in input or output mode
+        /// </summary>
+        public const string ListClickMode = "list.click.mode";
+
+        /// <summary>
         /// Specify a different order by field to be applied by default to the grid, instead of the entity id
         /// </summary>
         public const string ListSchemaOrderBy = "list.defaultorderby";
