@@ -26,8 +26,11 @@ namespace softWrench.sW4.Metadata.Parsing {
         /// </summary>
         /// <param name="stream">The input stream containing the XML representation of the metadata file.</param>
         [NotNull]
-        public IDictionary<string, CommandBarDefinition> Parse([NotNull] TextReader stream) {
-            Validate.NotNull(stream, "stream");
+        public IDictionary<string, CommandBarDefinition> Parse(TextReader stream) {
+            if (stream == null) {
+                //since the commands.xml is a new concept its not needed to have it for every customer
+                return new Dictionary<string, CommandBarDefinition>();
+            }
 
             var document = XDocument.Load(stream);
             if (null == document.Root) throw new InvalidDataException();
@@ -86,7 +89,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var id = xElement.AttributeValue(XmlBaseSchemaConstants.IdAttribute, true);
             var role = xElement.AttributeValue(cnst.RemoveAttribute);
             var position = xElement.AttributeValue(cnst.PositionAttribute);
-            return GetApplicationCommand(xElement, id,  role, position);
+            return GetApplicationCommand(xElement, id, role, position);
         }
 
         private static ApplicationCommand GetApplicationCommand(XElement xElement, string id, string role, string position) {
