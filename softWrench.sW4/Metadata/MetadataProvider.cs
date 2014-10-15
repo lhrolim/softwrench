@@ -182,6 +182,10 @@ namespace softWrench.sW4.Metadata {
         [NotNull]
         public static ICommandDisplayable Command(string commandId) {
             Validate.NotNull(commandId, "commandId");
+            if (commandId.StartsWith("crud_")){
+                //TODO: This is workaround to avoid exception when crud_
+                return null;
+            }
             var commandParts = commandId.Split('.');
             if (commandParts.Length != 2) {
                 throw new InvalidOperationException("command Id should be in the form 'bar.command'");

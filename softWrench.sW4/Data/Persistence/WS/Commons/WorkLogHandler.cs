@@ -24,10 +24,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 w.SetValueIfNull(integrationObject, "worklogid", -1);
                 w.SetValue(integrationObject,"recordkey",recordKey);
                 w.SetValueIfNull(integrationObject,"class",entity.TableName);
-                
+                w.SetValueIfNull(integrationObject,"createby",user.Login);
                 w.CopyFromRootEntity(rootObject,integrationObject,"siteid",user.SiteId);
                 w.CopyFromRootEntity(rootObject,integrationObject,"orgid",user.OrgId);
-                w.CopyFromRootEntity(rootObject, integrationObject, "createby", user.Login, "CHANGEBY");
+               // w.CopyFromRootEntity(rootObject, integrationObject, "createby", user.Login, "CHANGEBY");
                 w.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind());
                 w.CopyFromRootEntity(rootObject, integrationObject, "modifydate", DateTime.Now.FromServerToRightKind());
                 w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
