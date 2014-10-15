@@ -50,7 +50,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             sb.AppendFormat("Target Start Date: {0}\n", entity.GetAttribute("targstartdate"));
             sb.AppendFormat("Target Finish Date: {0}\n", entity.GetAttribute("targcompdate"));
             sb.AppendFormat("Remarks: {0}\n", entity.GetAttribute("remarks"));
-            sb.AppendFormat("Infrastructure Asset: {0}\n", entity.GetAttribute("infrastructureasset"));
+            sb.AppendFormat("Infrastructure Asset: {0}\n", entity.GetAttribute("cinum"));
 
             return sb.ToString();
         }

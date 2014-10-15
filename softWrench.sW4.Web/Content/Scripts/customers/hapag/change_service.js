@@ -49,7 +49,7 @@ app.factory('changeservice', function ($http, redirectService, formatService, fi
             /* workaround end */
 
             initialData['description'] = datamap['description'];
-            initialData['infrastructureAssetToChange'] = datamap['cinum'];
+            initialData['cinum'] = datamap['cinum'];
             initialData['category'] = datamap['worktype'];
             initialData['impact'] = datamap['pmcomimpact'];
             initialData['urgency'] = datamap['pmcomurgency'];

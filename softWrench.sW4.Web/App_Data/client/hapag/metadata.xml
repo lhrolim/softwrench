@@ -409,6 +409,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <attributes>
         <attribute name="hlagaffectedperson" type="varchar" required="false" query="ref:affectedpersoncustom"/>
       </attributes>
+      <relationships>
+        <relationship to="ci">
+          <relationshipAttribute from="cinum" to="cinum" primary="true"/>
+        </relationship>
+      </relationships>
 		</entity>
     
 		<entity name="workorder" idAttribute="workorderid">
@@ -2791,8 +2796,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<field label="Remarks:" attribute="remarks">
 						<renderer type="textarea" params="maxlength=8000" />
 					</field>
-					<!--<field label="Infrastructure Asset:" attribute="infrastructureasset" />-->
-					<optionfield label="Infrastructure Asset:" attribute="infrastructureasset" required="true" providerattribute="infrastructureAssetToChange" />
+          
+          <association label="Infrastructure Asset:" target="cinum" labelfield="ci_.ciname" required="true">
+          </association>
+          
 					<field label="Attachment:" attribute="newattachment" >
 						<renderer type="upload"/>
 					</field>
