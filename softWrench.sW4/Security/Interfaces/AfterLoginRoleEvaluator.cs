@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SimpleInjector.Events;
@@ -15,10 +16,10 @@ namespace softWrench.sW4.Security.Interfaces {
     /// </summary>
     public abstract class AfterLoginRoleEvaluator : IRoleEvaluator, ISWEventListener<UserLoginEvent> {
         public abstract string RoleName { get; }
-        public abstract Role Eval();
+        public abstract Role Eval(InMemoryUser user);
         public void HandleEvent(UserLoginEvent userLoginEvent) {
             var user = userLoginEvent.InMemoryUser;
-            var result = Eval();
+            var result = Eval(user);
             if (result == null) {
                 return;
             }
