@@ -171,19 +171,6 @@
                     </td>
                 </tr>
             </tbody>
-            <tfoot>
-                <tr class="footer-row">
-                    <th ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)"
-                        ng-style="{'min-width': column.rendererParameters['minwidth'],
-                                           'max-width': column.rendererParameters['maxwidth'],
-                                           'width': column.rendererParameters['width'],
-                                           'word-wrap': column.rendererParameters['wordwrap']}">
-                        <div ng-if="shouldShowFilter(column)">
-                           <span class="add-on">{{i18NLabel(column)}}</span>
-                        </div>
-                    </th>
-                </tr>
-            </tfoot>
         </table>
     </div>
     <p class="text-center" ng-show="datamap.length == 0">
