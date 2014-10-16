@@ -79,27 +79,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
      
-        /// <summary>
-        ///  Returns the datamap populated with composition data
-        /// </summary>
-        /// <param name="application"></param>
-        /// <param name="request"></param>
-        /// <param name="currentData"></param>
-        /// <returns></returns>
-        [NotNull]
-        [HttpPost]
-        public IGenericResponseResult GetCompositionData(string application, [FromUri] CompositionFetchRequest request, JObject currentData) {
-            var user = SecurityFacade.CurrentUser();
-            if (null == user) {
-                throw new HttpResponseException(HttpStatusCode.Unauthorized);
-            }
-            var applicationMetadata = MetadataProvider
-                .Application(application)
-                .ApplyPolicies(request.Key, user, ClientPlatform.Web);
-            ContextLookuper.FillContext(request.Key);
-            return DataSetProvider.LookupAsBaseDataSet(application)
-                .GetCompositionData(applicationMetadata, request, currentData);
-        }
+      
 
 
 

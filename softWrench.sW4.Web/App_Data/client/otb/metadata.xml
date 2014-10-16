@@ -2155,7 +2155,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="commlogid" hidden="true" />
           <!--field attribute="sendto" label="To:" /-->
           <association label="To:" target="sendto" labelfield="email_.emailaddress">
-            <renderer type="lookup"/>
+            <renderer type="autocompleteserver"/>
           </association>
           <field attribute="cc" label="Cc:"/>
           <field attribute="sendfrom" label="From:"  />
