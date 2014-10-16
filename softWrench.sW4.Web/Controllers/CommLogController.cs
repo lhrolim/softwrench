@@ -8,7 +8,7 @@ namespace softWrench.sW4.Web.Controllers {
 
     public class CommLogController : ApiController {
 
-        private static SWDBHibernateDAO _swdbDao = new SWDBHibernateDAO();
+        private readonly SWDBHibernateDAO _swdbDao;
 
         public CommLogController(SWDBHibernateDAO dao) {
             _swdbDao = dao;
