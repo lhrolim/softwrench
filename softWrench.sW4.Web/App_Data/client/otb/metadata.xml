@@ -2159,7 +2159,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="message" label="Message:" >
             <renderer type="richtext"/>
           </field>
-
         </schema>
       </schemas>
     </application>

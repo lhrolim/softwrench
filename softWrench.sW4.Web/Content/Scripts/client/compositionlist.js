@@ -199,7 +199,7 @@ app.directive('compositionList', function (contextService) {
                 $scope.collapseAll();
             }
 
-            var doToggle = function (id, item, forcedState) {
+            var doToggle = function (id, item, originalListItem, forcedState) {
                 if ($scope.detailData[id] == undefined) {
                     $scope.detailData[id] = {};
                     $scope.detailData[id].expanded = false;
@@ -210,15 +210,11 @@ app.directive('compositionList', function (contextService) {
                 $scope.detailData[id].expanded = newState;
 
                 if(newState) {
-                    //parentschema, parentdata, schema, data
                     var parameters = {};
-                    parameters.compositionId = id;
+                    parameters.compositionItemId = id;
+                    parameters.compositionItemData = originalListItem;
                     parameters.parentData = $scope.parentdata;
-                    parameters.compositionItem = item;
-                    parameters.application = $scope.parentdata["application"];
-                    var parentIdFieldName = $scope.parentschema.idFieldName;
-                    parameters.applicationItemId = $scope.parentdata["fields"][parentIdFieldName];
-                    parameters.parentCompositionData = $scope.parentdata["fields"][parameters.relationship];
+                    parameters.parentSchema = $scope.parentschema;
 
                     var compositionSchema = $scope.parentschema.cachedCompositions[$scope.relationship];
                     eventdispatcherService.onviewdetail(compositionSchema, parameters);
@@ -230,7 +226,7 @@ app.directive('compositionList', function (contextService) {
                 var compositionId = item[$scope.compositionlistschema.idFieldName];
                 var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
                 if (!needServerFetching) {
-                    doToggle(compositionId, item);
+                    doToggle(compositionId, item, item);
                     return;
                 }
                 var compositiondetailschema = $scope.compositiondetailschema;
@@ -247,7 +243,7 @@ app.directive('compositionList', function (contextService) {
                 var urlToCall = url("/api/data/" + applicationName + "?" + $.param(parameters));
                 $http.get(urlToCall).success(
                     function (result) {
-                        doToggle(compositionId, result.resultObject.fields);
+                        doToggle(compositionId, result.resultObject.fields, item);
                         $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
                     });
             };
@@ -400,10 +396,19 @@ app.directive('compositionList', function (contextService) {
                     return;
                 }
 
+                var compositionListData = [];
+                for (var i = 0; i < $scope.compositiondata.length; i++) {
+                    var data = $scope.compositiondata[i];
+                    var id = data[$scope.compositiondetailschema.idFieldName];
+                    compositionListData[id] = data;
+                }
+
                 var urlToInvoke = removeEncoding(url("/api/generic/ExtendedData/ExpandCompositions?" + $.param(buildExpandAllParams())));
                 $http.get(urlToInvoke).success(function (result) {
                     $.each(result.resultObject[$scope.relationship], function (key, value) {
-                        doToggle(value[$scope.compositiondetailschema.idFieldName], value, true);
+                        //TODO: This function is not utilizing the needServerFetching optimization as found in the toggleDetails function
+                        var itemId = value[$scope.compositiondetailschema.idFieldName];
+                        doToggle(itemId, value, compositionListData[itemId], true);
                     });
                     $scope.wasExpandedBefore = true;
                 });

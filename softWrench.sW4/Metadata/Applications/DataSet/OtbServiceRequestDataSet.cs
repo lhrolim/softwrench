@@ -36,11 +36,12 @@ namespace softWrench.sW4.Metadata.Applications.DataSet
             var result = base.GetApplicationDetail(application, user, request);
             var datamap = result.ResultObject;
             var idFieldName = result.Schema.IdFieldName;
-            JoinCommLogData(datamap, idFieldName);
+            var applicationName = result.ApplicationName;
+            JoinCommLogData(datamap, idFieldName, applicationName);
             return result;
         }
 
-        private void JoinCommLogData(DataMap resultObject, string parentIdFieldName) {
+        private void JoinCommLogData(DataMap resultObject, string parentIdFieldName, string applicationName) {
             var applicationItemID = resultObject.GetAttribute(parentIdFieldName);
             var user = SecurityFacade.CurrentUser();
 
@@ -48,7 +49,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet
                 return;
             }
 
-            var commData = GetSWDBDAO().FindByQuery<MaxCommReadFlag>(MaxCommReadFlag.ByItemIdAndUserId, application, applicationItemID, user.DBId);
+            var commData = GetSWDBDAO().FindByQuery<MaxCommReadFlag>(MaxCommReadFlag.ByItemIdAndUserId, applicationName, applicationItemID, user.DBId);
 
             var commlogs = (IList<Dictionary<string, object>>)resultObject.Attributes["commlog_"];
 
