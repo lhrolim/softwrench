@@ -590,7 +590,7 @@
     <Content Include="Content\Scripts\customers\hapag\sr_service.js" />
     <Content Include="Content\Scripts\customers\hapag\sr_summary_service.js" />
     <Content Include="Content\Scripts\customers\otb\commlogactions.js" />
-    <Content Include="Content\Scripts\customers\otb\commlog_service.js" />
+    <Content Include="Content\Scripts\client\services\commlog_service.js" />
     <Content Include="Content\Scripts\customers\otb\sr_service.js" />
     <Content Include="Content\Scripts\bindonce.js" />
     <Content Include="Content\Scripts\jquery\jquery-filedownload-1.2.0.js" />
