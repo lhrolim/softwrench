@@ -104,7 +104,7 @@ app.directive('crudList', function (contextService) {
             $scope.$on('sw_refreshgrid', function (event, searchData) {
                 var pagetogo = $scope.paginationData.pageNumber;
                 if (searchData) {
-                    $scope.searchData.itemnum = searchData;
+                    $scope.searchData = searchData;
                     pagetogo = 1;
                 }
                 $scope.selectPage(pagetogo);
