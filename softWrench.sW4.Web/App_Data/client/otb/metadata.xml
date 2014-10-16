@@ -1846,6 +1846,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=100px" />
           </field>
           <field attribute="invbalancesid" hidden="true"/>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
           <properties>
             <property key="list.click.schema" value="detail"/>
           </properties>
