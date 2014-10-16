@@ -31,7 +31,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return _swdbDao;
         }
 
-        protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var result = base.GetApplicationDetail(application, user, request);
             var datamap = result.ResultObject;
             var idFieldName = result.Schema.IdFieldName;
