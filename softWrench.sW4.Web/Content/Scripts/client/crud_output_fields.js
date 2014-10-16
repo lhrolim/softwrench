@@ -93,23 +93,17 @@ app.directive('crudOutputFields', function (contextService) {
                 return style;
             };
 
-     
-
-
             $scope.getFieldClass = function (fieldMetadata) {
                 if ($scope.hasSameLineLabel(fieldMetadata)) {
-                    return 'col-xs-9';
+                    return 'col-sm-9';
                 }
 
                 if (fieldMetadata.rendererType== "TABLE") {
                     //workaround because compositions are appending "" as default label values, but we dont want it!
                     return null;
                 }
-                return 'col-xs-12';
+                return 'col-sm-12';
             };
-
-
-
 
             $scope.bindEvalExpression = function (fieldMetadata) {
                 if (fieldMetadata.evalExpression == null) {

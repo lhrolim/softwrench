@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions {
     public class ApplicationCompositionCollectionSchema : ApplicationCompositionSchema {
@@ -12,9 +14,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         public Boolean FetchFromServer { get; set; }
 
 
-        public ApplicationCompositionCollectionSchema(bool inline, string detailSchema, CompositionCollectionProperties collectionProperties, 
-            SchemaMode renderMode, CompositionFieldRenderer renderer,string printSchema, string dependantfield) :
-            base(inline, detailSchema, renderMode, renderer, printSchema, dependantfield) {
+        public ApplicationCompositionCollectionSchema(bool inline, string detailSchema, CompositionCollectionProperties collectionProperties,
+            SchemaMode renderMode, CompositionFieldRenderer renderer, string printSchema, string dependantfield, ISet<ApplicationEvent> events = null) :
+            base(inline, detailSchema, renderMode, renderer, printSchema, dependantfield, events) {
             _collectionProperties = collectionProperties;
         }
 

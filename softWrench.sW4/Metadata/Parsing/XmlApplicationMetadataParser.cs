@@ -331,12 +331,13 @@ namespace softWrench.sW4.Metadata.Parsing {
             }
             var isCollection = entityAssociation.Collection;
             var collectionProperties = ParseCollectionProperties(composition);
+            ISet<ApplicationEvent> applicationEvents = ParseEvents(composition);
             if (collectionProperties != null || isCollection) {
                 return new ApplicationCompositionCollectionSchema(inline, schemaId, collectionProperties, mode,
-                    (CompositionFieldRenderer)ParseRendererNew(rendererElement, e.Name, FieldRendererType.COMPOSITION), printSchema, dependantfields);
+                    (CompositionFieldRenderer)ParseRendererNew(rendererElement, e.Name, FieldRendererType.COMPOSITION), printSchema, dependantfields, applicationEvents);
             }
             return new ApplicationCompositionSchema(inline, schemaId, mode,
-                    (CompositionFieldRenderer)ParseRendererNew(rendererElement, e.Name, FieldRendererType.COMPOSITION), printSchema, dependantfields);
+                    (CompositionFieldRenderer)ParseRendererNew(rendererElement, e.Name, FieldRendererType.COMPOSITION), printSchema, dependantfields, applicationEvents);
 
         }
 

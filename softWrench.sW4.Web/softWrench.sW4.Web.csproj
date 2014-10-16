@@ -253,6 +253,7 @@
     <Compile Include="Common\TestProxy.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\WebAPIUtil.cs" />
+    <Compile Include="Controllers\CommLogController.cs" />
     <Compile Include="Controllers\ExcelController.cs" />
     <Compile Include="Controllers\ExtendedDataController.cs" />
     <Compile Include="Controllers\Log\LogAdminController.cs" />
@@ -274,6 +275,7 @@
     <Compile Include="DB_Migration\4.0\20140519_SWWEB_115_2.cs" />
     <Compile Include="DB_Migration\4.0\20141001_SWWEB-505.cs" />
     <Compile Include="DB_Migration\4.0\20140724_HAP_331.cs" />
+    <Compile Include="DB_Migration\4.0\20141002_SWWEB_478.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
     <Compile Include="Models\MyProfile\MyProfileModel.cs" />
@@ -592,6 +594,7 @@
     <Content Include="Content\Scripts\customers\hapag\sr_service.js" />
     <Content Include="Content\Scripts\customers\hapag\sr_summary_service.js" />
     <Content Include="Content\Scripts\customers\otb\commlogactions.js" />
+    <Content Include="Content\Scripts\client\services\commlog_service.js" />
     <Content Include="Content\Scripts\customers\otb\sr_service.js" />
     <Content Include="Content\Scripts\bindonce.js" />
     <Content Include="Content\Scripts\jquery\jquery-filedownload-1.2.0.js" />

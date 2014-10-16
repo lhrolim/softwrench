@@ -641,6 +641,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
             <composition relationship="commlog" label="Communication">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
+              <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
 
             <composition relationship="attachment" label="Attachments">
@@ -2126,6 +2127,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="inbound">
             <renderer type="icon" params="expression={'1':'fa-long-arrow-left green','0':'fa-long-arrow-right orange'} "/>
           </field>
+          <field attribute="read">
+            <renderer type="icon" params="expression={'#default':'fa-envelope envelopeYellow','true':''}"/>
+          </field>
           <field attribute="orgobject" label="Origination"/>
           <field attribute="createdate" label="Created Date/Time">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;"/>
@@ -2154,7 +2158,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="message" label="Message:" >
             <renderer type="richtext"/>
           </field>
-
         </schema>
       </schemas>
     </application>

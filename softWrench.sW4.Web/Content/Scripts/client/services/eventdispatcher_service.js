@@ -28,6 +28,13 @@ app.factory('eventdispatcherService', function ($injector, $log) {
                 return;
             }
             fn(schema, datamap);
+        },
+        onviewdetail: function(schema, parameters) {
+            var fn = loadService(schema, 'onviewdetail');
+            if (!fn) {
+                return;
+            }
+            fn(parameters);
         }
     }
 

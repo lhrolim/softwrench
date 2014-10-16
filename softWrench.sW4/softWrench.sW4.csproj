@@ -173,6 +173,7 @@
     <Compile Include="Data\API\BlankApplicationResponse.cs" />
     <Compile Include="Data\API\ReportRequest.cs" />
     <Compile Include="Data\Configuration\ComWhereClauseProvider.cs" />
+    <Compile Include="Data\Entities\MaxCommReadFlag.cs" />
     <Compile Include="Data\Entities\Historical\HistTicket.cs" />
     <Compile Include="Data\Entities\Historical\HistWorkorder.cs" />
     <Compile Include="Data\Entities\LocationCostCenterRestrictionDao.cs" />

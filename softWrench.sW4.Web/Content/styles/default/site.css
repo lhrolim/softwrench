@@ -1140,6 +1140,8 @@ label.form-control {
 }
 /*SM - 09/26 - Fix label control hight with multiple lines*/
 
+
+/*JV - ~10/03 - SWWEB-472 - Add green & orange color CSS that can be used for icons*/
 .green {
     color: green;
 }
@@ -1147,6 +1149,13 @@ label.form-control {
 .orange {
     color: orange;
 }
+/*JV - ~10/03 - SWWEB-472 - Add green & orange color CSS that can be used for icons*/
+
+/*JV - 10/08 - SWWEB-472 - Add yellow color CSS that can be used for icons*/
+.envelopeYellow {
+    color: rgb(239, 198, 99);
+}
+/*JV - 10/08 - SWWEB-472 - Add yellow color CSS that can be used for icons*/
 
 /*SM - 10/06 - SWWEB-492*/
 input[type=search] {
