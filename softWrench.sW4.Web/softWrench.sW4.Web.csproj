@@ -415,6 +415,10 @@
     <Content Include="Content\Images\manchester.png" />
     <Content Include="Content\Images\otb-branding.png" />
     <Content Include="Content\Images\otb-header.png" />
+    <Content Include="Content\Images\pagination-first.png" />
+    <Content Include="Content\Images\pagination-last.png" />
+    <Content Include="Content\Images\pagination-next.png" />
+    <Content Include="Content\Images\pagination-previous.png" />
     <Content Include="Content\Images\scottsdale.png" />
     <Content Include="Content\Images\softwrench.png" />
     <Content Include="Content\Images\tree-leaf.png" />
@@ -806,10 +810,6 @@
     <None Include="App_Data\Client\hapag\i18n\en\labels.json" />
     <Content Include="IBM.Data.DB2.dll" />
     <Content Include="Content\Images\update_16.png" />
-    <Content Include="Content\Images\previous.png" />
-    <Content Include="Content\Images\next.png" />
-    <Content Include="Content\Images\first.png" />
-    <Content Include="Content\Images\last.png" />
     <Content Include="Content\Images\excel_small.gif" />
     <Content Include="Content\Images\logo_hapag.gif" />
     <Content Include="Content\Images\print_small.gif" />

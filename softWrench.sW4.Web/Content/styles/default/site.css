@@ -656,9 +656,9 @@ Header
         padding: 0 20px;
     }
 
-.container .context .group.filter .btn-group {
+/*.container .context .group.filter .btn-group {
     margin-top: -2px;
-}
+}*/
 
 .container header .menu-admin .text {
     float: left;
@@ -705,7 +705,7 @@ Header
     width: 100%;
     background: #eee;
     border-bottom: #000 1px solid;
-    padding: 5px 20px 10px;
+    padding: 5px 20px 10px 10px;
 }
 
     .container .context .group {
@@ -834,7 +834,7 @@ Header
     }
 
     .container .context {
-        padding: 5px 20px;
+        padding: 5px 20px 5px 10px;
     }
 
         .container .context .group {
@@ -882,13 +882,23 @@ Header
                 margin-bottom: 0px;
             }
 
-    .container .context .group {
+    .container .context .hidden-xs {
+        display: inline-block !important;
+    }
+            
+     .container .context .group {
         margin: 5px 10px 0;
     }
 
     .container .context .right {
+        /*width: 60%;*/
+        /*float: right;*/
+    }
+
+     .container .context .right .group {
         float: right;
     }
+
 
     .container .context .group.total {
         height: auto;
@@ -922,9 +932,9 @@ Header
 }
 
 @media all and (min-width: 1170px) {
-    .container .context .right {
+    /*.container .context .right {
         float: right;
-    }
+    }*/
 
     .container .context .group.total {
         display: block;
