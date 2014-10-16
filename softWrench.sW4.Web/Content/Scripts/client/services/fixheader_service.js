@@ -22,12 +22,14 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
     };
 
     var addClassSuccessMessageListHander = function (showerrormessage) {
-        var headerHeight = $('.site-header').height() +70;
-        var paginationHeight = $('.affix-pagination').height();
-        var theaderHeight = $('.listgrid-thead').height();
-        $('.affix-pagination').css('top', headerHeight);
-        $('.listgrid-thead').css('top', headerHeight + paginationHeight);
-        $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight - 1);
+        if ($rootScope.clientName == 'hapag') {
+            var headerHeight = $('.site-header').height() + 70;
+            var paginationHeight = $('.affix-pagination').height();
+            var theaderHeight = $('.listgrid-thead').height();
+            $('.affix-pagination').css('top', headerHeight);
+            $('.listgrid-thead').css('top', headerHeight + paginationHeight);
+            $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight - 1);
+        }
     };
 
     var topMessageAddClass = function (div) {

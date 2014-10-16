@@ -39,9 +39,7 @@ app.directive('messagesection', function (contextService) {
                     }
                     $scope.successMsg = data.successMessage;
                     $rootScope.showSuccessMessage = true;
-
-                    //let fixHeaderService.callWindowResize() handle the message positioning
-                    //fixHeaderService.fixSuccessMessageTop(true);
+                    fixHeaderService.fixSuccessMessageTop(true);
                 } else {
                     hideSuccessMessage();
                 }
@@ -143,10 +141,7 @@ app.directive('messagesection', function (contextService) {
             $scope.hideModal = function () {
                 $('#errorModal').modal('hide');
 
-                //$timeout(function () {
                 fixHeaderService.callWindowResize();
-            //, 500
-                //});
             };
 
             $scope.i18N = function (key, defaultValue, paramArray) {
