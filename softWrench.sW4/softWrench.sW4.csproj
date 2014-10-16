@@ -184,7 +184,7 @@
     <Compile Include="Data\Persistence\Relational\QueryBuilder\EntityWhereClauseBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\FixedSearchWhereClauseBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\MultiTenantCustomerWhereBuilder.cs" />
-    <Compile Include="Data\Persistence\Dataset\Commons\IConnectorEngine.cs" />
+    <Compile Include="Data\Persistence\Engine\IConnectorEngine.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseChangeRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseIncidentCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePurchaseRequestCrudConnector.cs" />

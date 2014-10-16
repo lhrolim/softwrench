@@ -14,7 +14,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SimpleInjector;
 
-namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
+namespace softWrench.sW4.Data.Persistence.Engine {
     public interface IConnectorEngine : IComponent {
         int Count(EntityMetadata entityMetadata, SearchRequestDto searchDto);
         AttributeHolder FindById(ApplicationSchemaDefinition schema, SlicedEntityMetadata entityMetadata, string id, IDictionary<string, ApplicationCompositionSchema> applicationCompositionSchemas);
