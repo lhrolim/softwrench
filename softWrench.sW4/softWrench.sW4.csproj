@@ -141,6 +141,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
+    <Reference Include="XDesigner.RTF">
+      <HintPath>Dependencies\XDesigner.RTF.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audit\AuditTrail.cs" />
@@ -193,6 +196,7 @@
     <Compile Include="Data\Persistence\WS\Commons\HapagSRLongDescriptionHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\MifFindByIdCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\SaveRemarkCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\ScreenshotHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\SubmitactionCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Gric\GricServiceRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Internal\TargetAttributesHandler.cs" />
@@ -543,6 +547,7 @@
     <Compile Include="Util\NhAppender.cs" />
     <Compile Include="Util\ReflectionUtil.cs" />
     <Compile Include="Util\ReportUtil.cs" />
+    <Compile Include="Util\RTFUtil.cs" />
     <Compile Include="Util\Scripting\ScriptingUtil.cs" />
     <Compile Include="Util\StatusColorResolver.cs" />
     <Compile Include="Util\StreamUtils.cs" />
@@ -809,6 +814,9 @@
       <Project>{20fd2b93-bd84-48d7-a7fb-4231972d3e26}</Project>
       <Name>DynamicProxyLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="deps\XDesigner.RTF.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

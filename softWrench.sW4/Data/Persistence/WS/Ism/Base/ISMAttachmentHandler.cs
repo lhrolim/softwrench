@@ -19,7 +19,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             var attachmentString = jsonObject.GetAttribute("newattachment") as string;
             var attachmentPath = jsonObject.GetAttribute("newattachment_path") as string;
             var attachmentList = new List<Attachment>();
-            if (attachmentString != null && AttachmentHandler.ValidatePath(attachmentPath)) {
+            if (attachmentString != null && AttachmentHandler.Validate(attachmentPath, attachmentString)) {
                 var b64PartOnly = FileUtils.GetB64PartOnly(attachmentString);
                 AttachmentHandler.ValidateNotEmpty(b64PartOnly);
 
@@ -35,10 +35,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
 
         private static IEnumerable<Attachment> DoHandleAttachment(CrudOperationData jsonObject, object webServiceObject) {
             var attachmentList = GetAttachments(jsonObject);
-            HandleScreenshots(jsonObject, attachmentList);
 
-           
-
+            var screenshotString = jsonObject.GetAttribute("newscreenshot") as string;
+            var screenshotName = jsonObject.GetAttribute("newscreenshot_path") as string;
+            HandleScreenshots(screenshotString, screenshotName, attachmentList);
+            
             return attachmentList;
         }
 
@@ -54,14 +55,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             ((ServiceIncident)webServiceObject).Activity = ArrayUtil.Push(((ServiceIncident)webServiceObject).Activity,
                 activity);
         }
-
-
-        private static void HandleScreenshots(CrudOperationData jsonObject, List<Attachment> attachmentList) {
-            var screenshotString = jsonObject.GetAttribute("newscreenshot") as string;
-            var screenshotName = jsonObject.GetAttribute("newscreenshot_path") as string;
-            HandleScreenshots(screenshotString, screenshotName, attachmentList);
-        }
-
+        
         private static void HandleScreenshots(string screenshotString, string screenshotName, List<Attachment> attachmentList) {
 
             if (String.IsNullOrWhiteSpace(screenshotString) || String.IsNullOrWhiteSpace(screenshotName)) {
@@ -72,6 +66,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
                 //converting rtf to doc to handle IE9 scenario
                 screenshotString = ConvertRtfToDoc(screenshotString, ref screenshotName);
             }
+
+            ScreenshotHandler.Validate(screenshotName, screenshotString);
+
             attachmentList.Add(new Attachment {
                 AttachmentName = screenshotName,
                 Attachment1 = screenshotString
