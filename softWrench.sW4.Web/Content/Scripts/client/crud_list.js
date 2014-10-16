@@ -101,6 +101,15 @@ app.directive('crudList', function (contextService) {
                 log.debug('finish table rendered listener');
             });
 
+            $scope.$on('sw_refreshgrid', function (event, searchData) {
+                var pagetogo = $scope.paginationData.pageNumber;
+                if (searchData) {
+                    $scope.searchData.itemnum = searchData;
+                    pagetogo = 1;
+                }
+                $scope.selectPage(pagetogo);
+            });
+
             $scope.$on('sw_successmessagetimeout', function (event, data) {
                 if (!$rootScope.showSuccessMessage) {
                     fixHeaderService.resetTableConfig($scope.schema);

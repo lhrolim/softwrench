@@ -1,13 +1,12 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('scannerdetectionService', function (redirectService) {
+app.factory('scannerdetectionService', function (searchService) {
 
     return {
-        initListener: function (schema, datamap) {            
-            //$(document).scannerDetection(function (data) {
-            //    alert(data);
-                
-            //})
+        initInventoryGridListener: function (schema, datamap) {
+            $(document).scannerDetection(function(data){
+                searchService.refreshGrid(data);
+            })
         },
         
     };

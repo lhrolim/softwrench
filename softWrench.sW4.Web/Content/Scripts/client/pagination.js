@@ -197,14 +197,6 @@
                 $scope.searchData = {};
             });
 
-            $scope.$on("sw_refreshgrid", function (event, searchData) {
-                if (searchData) {
-                    $scope.searchData = searchData;
-                }
-                $scope.selectPage($scope.paginationData.pageNumber);
-            });
-
-
             $scope.adjustMargin(i18NService.getCurrentLanguage());
         }
     };
