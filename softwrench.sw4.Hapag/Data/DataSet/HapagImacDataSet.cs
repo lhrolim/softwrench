@@ -1,4 +1,5 @@
-﻿using softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac;
+﻿using softWrench.sW4.Data.Persistence.WS.API;
+using softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac;
 using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Data.Sync;
 using softwrench.sw4.Shared2.Data.Association;
@@ -26,13 +27,12 @@ using System.Linq;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagImacDataSet : HapagBaseApplicationDataSet {
-
-        protected override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var result = base.GetList(application, searchDto);
             return result;
         }
 
-        protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application,
+        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application,
             InMemoryUser user, DetailRequest request) {
             var isCreationFromAsset = request.InitialValues != null && request.InitialValues.ContainsAttribute("assetnum");
             if (isCreationFromAsset) {
@@ -311,7 +311,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             // This value is added due to a inserted parameter in a relatioship clause (from 'commodities' to 'assetloccomm') 
             searchDto.ValuesDictionary.Add("commodityassetnum", new SearchParameter(assetnum));
 
-            var entities = _maximoConnectorEngine.Find(entityMetadata, searchDto);
+            var entities = ((MaximoConnectorEngine)Engine()).Find(entityMetadata, searchDto);
 
             var options = new HashSet<IAssociationOption>();
 

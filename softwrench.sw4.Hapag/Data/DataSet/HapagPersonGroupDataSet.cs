@@ -18,8 +18,7 @@ using System.Threading.Tasks;
 namespace softwrench.sw4.Hapag.Data.DataSet {
 
     class HapagPersonGroupDataSet : HapagBaseApplicationDataSet {
-
-        protected override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var dbList = base.GetList(application, searchDto);
             var resultObject = dbList.ResultObject;
             if ((application.Schema.SchemaId == "itcreport")) {

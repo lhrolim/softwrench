@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -128,7 +129,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var applicationMetadata = MetadataProvider
                 .Application(parentApplication)
                 .ApplyPolicies(new ApplicationMetadataSchemaKey(parentSchemaId), user, ClientPlatform.Web);
-            var response = _dataSetProvider.LookupAsBaseDataSet(parentApplication).Execute(applicationMetadata, new JObject(), parentId, OperationConstants.CRUD_FIND_BY_ID);
+            var response = _dataSetProvider.LookupDataSet(parentApplication).Execute(applicationMetadata, new JObject(), parentId, OperationConstants.CRUD_FIND_BY_ID);
 
             var parent = response.ResultObject;
             if (parent != null) {

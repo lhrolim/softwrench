@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
@@ -10,8 +11,8 @@ using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
-    class HapagSolutionDataSet : BaseApplicationDataSet {
-        protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+    class HapagSolutionDataSet : MaximoApplicationDataSet {
+        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var dataResponse = base.GetApplicationDetail(application, user, request);
             var lang = !string.IsNullOrEmpty(request.Lang) ? request.Lang : "E";
             BuildAttachments(request.Faqid, dataResponse);

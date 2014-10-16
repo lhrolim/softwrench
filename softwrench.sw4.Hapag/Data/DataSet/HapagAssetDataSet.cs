@@ -1,4 +1,5 @@
-﻿using softwrench.sW4.Shared2.Data;
+﻿using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
@@ -13,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
-    class HapagAssetDataSet : BaseApplicationDataSet {
+    class HapagAssetDataSet : MaximoApplicationDataSet {
 
         private SWDBHibernateDAO _dao;
 
@@ -26,7 +27,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         private HapagImacDataSet GetImacDataSet() {
             if (_imacDataSet == null) {
-                _imacDataSet = (HapagImacDataSet)DataSetProvider.GetInstance().LookupAsBaseDataSet("imac");
+                _imacDataSet = (HapagImacDataSet)DataSetProvider.GetInstance().LookupDataSet("imac");
             }
             return _imacDataSet;
         }
@@ -38,7 +39,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             return _dao;
         }
 
-        protected override ApplicationListResult GetList(ApplicationMetadata application, softWrench.sW4.Data.Pagination.PaginatedSearchRequestDto searchDto) {
+        public override ApplicationListResult GetList(ApplicationMetadata application, softWrench.sW4.Data.Pagination.PaginatedSearchRequestDto searchDto) {
             var dbList = base.GetList(application, searchDto);
             var resultObject = dbList.ResultObject;
             SchemaIdHandler(application.Schema.SchemaId, resultObject);
@@ -55,7 +56,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         }
 
 
-        protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var dbDetail = base.GetApplicationDetail(application, user, request);
             var resultObject = dbDetail.ResultObject;
             if (application.Schema.SchemaId == "detail" && application.Schema.Mode == SchemaMode.output) {

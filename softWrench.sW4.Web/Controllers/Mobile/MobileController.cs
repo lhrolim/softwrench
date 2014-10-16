@@ -3,6 +3,7 @@ using System.Net;
 using System.Web.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -70,7 +71,7 @@ namespace softWrench.sW4.Web.Controllers.Mobile {
                 var applicationMetadata = MetadataProvider
                     .Application(application.appName)
                     .ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(), user, ClientPlatform.Mobile);
-                var syncAppData = _dataSetProvider.LookupAsBaseDataSet(application.appName)
+                var syncAppData = _dataSetProvider.LookupDataSet(application.appName)
                     .Sync(applicationMetadata, application);
                 if (!application.FetchMetadata) {
                     //used to reduce the amount of data sent

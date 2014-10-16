@@ -1,39 +1,56 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
 using log4net;
 using Newtonsoft.Json.Linq;
-using softwrench.sW4.Shared2.Data;
-using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
-using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Pagination;
-using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Data.Sync;
+using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.Association;
+using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Security.Context;
+using softwrench.sW4.Shared2.Data;
+using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
+using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace softWrench.sW4.Metadata.Applications.DataSet {
-    public class BaseApplicationDataSet : IDataSet {
+namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
+
+    /// <summary>
+    /// 
+    /// This class defines the base contract for all persistence operations via the metadata-portion of the framework, 
+    /// regardless if on maximo or swdb engines.
+    /// 
+    /// <remarks>
+    /// This class should not be inherited by clients
+    /// 
+    /// Use either <see cref="MaximoApplicationDataSet"/> or <see cref="SWDBApplicationDataset"/>
+    /// </remarks>
+    /// 
+    /// <seealso cref="MaximoApplicationDataSet"/>
+    /// <seealso cref="SWDBApplicationDataset"/>
+    /// 
+    /// </summary>
+    public abstract class BaseApplicationDataSet : IDataSet {
 
         /// <summary>
         /// if this constant is present we´re interested in getting all the eagerassociations of the schema, rather then a specific association dependency
@@ -42,13 +59,13 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
         protected readonly ILog Log = LogManager.GetLogger(typeof(BaseApplicationDataSet));
 
-        protected readonly MaximoConnectorEngine _maximoConnectorEngine = new MaximoConnectorEngine();
-
         private readonly ApplicationAssociationResolver _associationOptionResolver = new ApplicationAssociationResolver();
         private readonly DynamicOptionFieldResolver _dynamicOptionFieldResolver = new DynamicOptionFieldResolver();
-        private CollectionResolver _collectionResolver = new CollectionResolver();
+        private readonly CollectionResolver _collectionResolver = new CollectionResolver();
 
         private IContextLookuper _contextLookuper;
+
+        internal BaseApplicationDataSet() { }
 
         protected IContextLookuper ContextLookuper {
             get {
@@ -61,14 +78,14 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             }
         }
 
-
+        protected abstract IConnectorEngine Engine();
 
 
         public Int32 GetCount(ApplicationMetadata application, [CanBeNull]IDataRequest request) {
 
 
             SearchRequestDto searchDto = null;
-            if (request is DataRequestAdapter && request != null) {
+            if (request is DataRequestAdapter) {
                 searchDto = ((DataRequestAdapter)request).SearchDTO;
             } else if (request is SearchRequestDto) {
                 searchDto = (SearchRequestDto)request;
@@ -78,7 +95,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             searchDto.BuildProjection(application.Schema);
 
-            return _maximoConnectorEngine.Count(entityMetadata, searchDto);
+            return Engine().Count(entityMetadata, searchDto);
         }
 
         public IApplicationResponse Get(ApplicationMetadata application, InMemoryUser user, IDataRequest request) {
@@ -108,32 +125,30 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
 
-        protected virtual ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+        public virtual ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var id = request.Id;
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
-            var dataMap = id != null ? (DataMap)_maximoConnectorEngine.FindById(application.Schema,entityMetadata, id, applicationCompositionSchemas) : DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues);
+            var dataMap = id != null ? (DataMap)Engine().FindById(application.Schema, entityMetadata, id, applicationCompositionSchemas) : DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues);
             var associationResults = BuildAssociationOptions(dataMap, application, request);
             var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, id);
             return detailResult;
         }
 
-        public CompositionFetchResult GetCompositionData(ApplicationMetadata application,CompositionFetchRequest request,JObject currentData) {
+        public CompositionFetchResult GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
 
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
 
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata,
                application, currentData, request.Id);
-            
+
             _collectionResolver.ResolveCollections(entityMetadata, applicationCompositionSchemas, cruddata);
             return new CompositionFetchResult(cruddata);
         }
 
 
-
-
-        protected virtual ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+        public virtual ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var totalCount = searchDto.TotalCount;
             IReadOnlyList<AttributeHolder> entities = null;
 
@@ -154,7 +169,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 Quartz.Util.LogicalThreadContext.SetData("context", c);
                 if (searchDto.NeedsCountUpdate) {
                     Log.DebugFormat("BaseApplicationDataSet#GetList calling Count method on maximo engine. Application Schema \"{0}\" / Context \"{1}\"", schema, c);
-                    totalCount = _maximoConnectorEngine.Count(entityMetadata, searchDto);
+                    totalCount = Engine().Count(entityMetadata, searchDto);
                 }
             }, ctx);
 
@@ -172,7 +187,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                     }
                 }
                 Log.DebugFormat("BaseApplicationDataSet#GetList calling Find method on maximo engine. Application Schema \"{0}\" / Context \"{1}\"", schema, c);
-                entities = _maximoConnectorEngine.Find(entityMetadata, searchDto, applicationCompositionSchemata);
+                entities = Engine().Find(entityMetadata, searchDto, applicationCompositionSchemata);
             }, ctx);
 
             Task.WaitAll(tasks);
@@ -264,13 +279,13 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
 
         public virtual SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData) {
-            return _maximoConnectorEngine.Sync(applicationMetadata, applicationSyncData);
+            return Engine().Sync(applicationMetadata, applicationSyncData);
         }
 
         public MaximoResult Execute(ApplicationMetadata application, JObject json, string id, string operation) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
-            return _maximoConnectorEngine.Execute(operationWrapper);
+            return Engine().Execute(operationWrapper);
         }
 
         public GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>> UpdateAssociations(ApplicationMetadata application,
@@ -319,8 +334,8 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                     var optionField = application.Schema.OptionFields.First(f => f.AssociationKey == associationToUpdate);
                     tasks.Add(Task.Factory.StartNew(c => {
                         Quartz.Util.LogicalThreadContext.SetData("context", c);
-                    var data = _dynamicOptionFieldResolver.ResolveOptions(application, optionField, cruddata);
-                    resultObject.Add(optionField.AssociationKey, new LookupAssociationUpdateResult(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
+                        var data = _dynamicOptionFieldResolver.ResolveOptions(application, optionField, cruddata);
+                        resultObject.Add(optionField.AssociationKey, new LookupAssociationUpdateResult(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
                     }, ctx));
                 } else {
                     var associationApplicationMetadata =
@@ -336,12 +351,12 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
                     tasks.Add(Task.Factory.StartNew(c => {
                         Quartz.Util.LogicalThreadContext.SetData("context", c);
-                    var options = _associationOptionResolver.ResolveOptions(application, cruddata, association,
-                        searchRequest);
+                        var options = _associationOptionResolver.ResolveOptions(application, cruddata, association,
+                            searchRequest);
 
-                    resultObject.Add(association.AssociationKey,
-                        new LookupAssociationUpdateResult(searchRequest.TotalCount, searchRequest.PageNumber,
-                            searchRequest.PageSize, options, associationApplicationMetadata, PaginatedSearchRequestDto.DefaultPaginationOptions));
+                        resultObject.Add(association.AssociationKey,
+                            new LookupAssociationUpdateResult(searchRequest.TotalCount, searchRequest.PageNumber,
+                                searchRequest.PageSize, options, associationApplicationMetadata, PaginatedSearchRequestDto.DefaultPaginationOptions));
                     }, ctx));
                 }
             }
@@ -417,20 +432,6 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             sbValue.Remove(sbValue.Length - SearchUtils.SearchValueSeparator.Length, SearchUtils.SearchValueSeparator.Length);
             sbParam.Append(")");
             searchRequest.AppendSearchEntry(sbParam.ToString(), sbValue.ToString());
-        }
-
-
-        protected virtual void Dispose(bool disposing) {
-            _maximoConnectorEngine.Dispose();
-
-        }
-
-        public void Dispose() {
-            Dispose(true);
-        }
-
-        internal MaximoConnectorEngine MaximoConnectorEngine {
-            get { return _maximoConnectorEngine; }
         }
 
 

@@ -56,7 +56,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                     }";
         #endregion
 
-        protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             //this means that we are creating the service request from an asset
             var isCreationFromAsset = request.InitialValues != null && request.InitialValues.ContainsAttribute("assetnum");
             if (isCreationFromAsset) {
