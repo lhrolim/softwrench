@@ -728,7 +728,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-          <!--section id="ownerstatussection"/-->
           <field attribute="wonum" label="WO No:" readonly="true"/>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
             <renderer type="lookup"/>
@@ -818,11 +817,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <!-- removed default='@usersite' from the above association label-->
               <renderer type="lookup"/>
             </association>
-          </section>
-          <section id="ownerstatussection">
-            <!--field attribute="owner" label="Owner:"/-->
-
-
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
           </section>
         </schema>
@@ -830,14 +824,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema parentschema="adetail" id="editdetail" title="Work Order Detail" platform="web">
           <section id="siteidsection">
             <field label="Site:" attribute="siteid" readonly="true"/>
-          </section>
-          <section id="ownerstatussection">
-            <!--field attribute="owner" label="Owner:" readonly="true"/-->
             <association label="Status:" target="status" labelfield="synstatus.description">
               <renderer type="combo"/>
             </association>
           </section>
-
           <section id="compositions">
             <composition relationship="worklog" label="Work Log">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
