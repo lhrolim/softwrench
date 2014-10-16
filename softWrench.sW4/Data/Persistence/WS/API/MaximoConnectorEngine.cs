@@ -1,4 +1,5 @@
-﻿using softwrench.sW4.Shared2.Data;
+﻿using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Offline;
@@ -19,13 +20,14 @@ using System;
 using System.Collections.Generic;
 
 namespace softWrench.sW4.Data.Persistence.WS.API {
-    public sealed class MaximoConnectorEngine : ISingletonComponent {
+    public sealed class MaximoConnectorEngine : IConnectorEngine {
 
         private readonly EntityRepository _entityRepository = new EntityRepository();
 
         private readonly SyncItemHandler _syncHandler = new SyncItemHandler();
 
         private readonly CollectionResolver _collectionResolver = new CollectionResolver();
+     
 
         public MaximoResult Execute(OperationWrapper operationWrapper) {
             var entityMetadata = operationWrapper.EntityMetadata;
@@ -89,6 +91,12 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
             return _entityRepository.Count(entityMetadata, searchDto);
         }
 
+       
+
+     
+
+     
+
         public AttributeHolder FindById(ApplicationSchemaDefinition schema, SlicedEntityMetadata entityMetadata, string id,
             IDictionary<string, ApplicationCompositionSchema> compositionSchemas) {
             var mainEntity = _entityRepository.Get(entityMetadata, id);
@@ -106,6 +114,8 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
             return Find(slicedEntityMetadata, searchDto, null);
         }
 
+
+
         public IReadOnlyList<AttributeHolder> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto,
             IDictionary<string, ApplicationCompositionSchema> compositionSchemas) {
             var list = _entityRepository.Get(slicedEntityMetadata, searchDto);
@@ -117,6 +127,8 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
 
             return list;
         }
+
+    
 
         public SynchronizationApplicationData Sync(ApplicationMetadata appMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData, SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null) {
             return _syncHandler.Sync(appMetadata, applicationSyncData, syncItemHandlerDelegate);

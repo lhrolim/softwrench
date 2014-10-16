@@ -1,8 +1,9 @@
 ﻿using System;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Search;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
-    class GricServiceRequestDataSet : BaseApplicationDataSet {
+    class GricServiceRequestDataSet : MaximoApplicationDataSet {
 
 
         public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {

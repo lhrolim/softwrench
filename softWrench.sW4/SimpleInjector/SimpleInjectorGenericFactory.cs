@@ -28,6 +28,15 @@ namespace softWrench.sW4.SimpleInjector {
             }
         }
 
+        public IEnumerable<T> GetObjectsOfType<T>(Type type) {
+            try {
+                return _container.GetAllInstances<T>();
+            } catch (Exception ex) {
+                throw new SchedulerException(
+                    "Problem instantiating class", ex);
+            }
+        }
+
         public T GetObject<T>(string serviceName) {
             try {
                 // Return job registrated in container

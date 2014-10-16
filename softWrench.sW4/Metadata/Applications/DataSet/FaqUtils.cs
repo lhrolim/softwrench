@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using log4net;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.Relational;
@@ -70,7 +71,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web);
 
-            return _dataSetProvider.LookupAsBaseDataSet(application).Get(applicationMetadata, user, request);
+            return _dataSetProvider.LookupDataSet(application).Get(applicationMetadata, user, request);
         }
 
         #region Public

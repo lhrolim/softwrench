@@ -159,7 +159,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet
 
         #endregion Filter functions
 
-        protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request)
+        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request)
         {
             var dbDetail = base.GetApplicationDetail(application, user, request);
             var resultObject = dbDetail.ResultObject;
@@ -171,7 +171,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet
             return dbDetail;
         }
 
-        protected override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto)
+        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto)
         {
             var dbList = base.GetList(application, searchDto);
             var resultObject = dbList.ResultObject;

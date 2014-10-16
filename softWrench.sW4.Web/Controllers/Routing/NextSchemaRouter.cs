@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Pagination;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -17,7 +18,7 @@ using softWrench.sW4.Web.Common;
 namespace softWrench.sW4.Web.Controllers.Routing {
     public class NextSchemaRouter {
 
-        private readonly BaseApplicationDataSet _dataObjectSet = new BaseApplicationDataSet();
+        private readonly BaseApplicationDataSet _dataObjectSet = new MaximoApplicationDataSet();
         private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             var resultSchema = metadata.Schema(nextSchemaKey, true);
             var user = SecurityFacade.CurrentUser();
             var nextMetadata = metadata.ApplyPolicies(nextSchemaKey, user, ClientPlatform.Web);
-            var dataSet = _dataSetProvider.LookupAsBaseDataSet(applicationName);
+            var dataSet = _dataSetProvider.LookupDataSet(applicationName);
             if (resultSchema.Stereotype == SchemaStereotype.Detail) {
                 if (maximoMocked) {
                     return MockingUtils.GetMockedDataMap(applicationName, resultSchema, nextMetadata);

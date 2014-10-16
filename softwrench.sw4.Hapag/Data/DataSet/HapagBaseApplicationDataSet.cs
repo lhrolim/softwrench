@@ -1,4 +1,5 @@
-﻿using softwrench.sw4.Hapag.Data.DataSet.Helper;
+﻿using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Security;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Persistence;
@@ -13,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
-    class HapagBaseApplicationDataSet : BaseApplicationDataSet {
+    class HapagBaseApplicationDataSet : MaximoApplicationDataSet {
 
         private IHlagLocationManager _locationManager;
 

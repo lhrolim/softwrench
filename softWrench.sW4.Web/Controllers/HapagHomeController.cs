@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softwrench.sw4.Hapag.Data;
 using softwrench.sw4.Hapag.Data.Init;
 using softWrench.sW4.Metadata.Security;
@@ -153,8 +154,8 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         private static GenericResponseResult<IList<DashboardDefinition>> DoGetFromList(List<DashboardDefinition> dashboardDefinitionList) {
-            InMemoryUser user = SecurityFacade.CurrentUser();
-            var dataObjectSet = new BaseApplicationDataSet();
+            var user = SecurityFacade.CurrentUser();
+            var dataObjectSet = new MaximoApplicationDataSet();
 
             DashboardModuleHandler(dashboardDefinitionList);
 

@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using softWrench.sW4.Data;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Search;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
 
-    class WorkorderDataSet : IDataSet {
+    class WorkorderDataSet : MaximoApplicationDataSet {
 
 
 

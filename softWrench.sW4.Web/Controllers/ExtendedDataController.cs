@@ -76,7 +76,7 @@ namespace softWrench.sW4.Web.Controllers {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web);
             ContextLookuper.FillContext(request.Key);
-            return DataSetProvider.LookupAsBaseDataSet(application)
+            return DataSetProvider.LookupDataSet(application)
                 .GetCompositionData(applicationMetadata, request, currentData);
         }
 

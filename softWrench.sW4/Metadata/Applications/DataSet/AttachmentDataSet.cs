@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.Offline;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Sync;
 using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Sync;
@@ -12,13 +13,13 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
-    class AttachmentDataSet : BaseApplicationDataSet {
+    class AttachmentDataSet : MaximoApplicationDataSet {
 
         private static readonly AttachmentHandler _attachmentHandler = new AttachmentHandler();
 
 
         public override SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData) {
-            return MaximoConnectorEngine.Sync(applicationMetadata, applicationSyncData,AttachmentSyncDelegate);
+            return Engine().Sync(applicationMetadata, applicationSyncData,AttachmentSyncDelegate);
         }
 
         public override string ApplicationName() {
