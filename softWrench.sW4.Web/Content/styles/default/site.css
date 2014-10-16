@@ -656,10 +656,6 @@ Header
         padding: 0 20px;
     }
 
-/*.container .context .group.filter .btn-group {
-    margin-top: -2px;
-}*/
-
 .container header .menu-admin .text {
     float: left;
     color: #fff;
@@ -885,8 +881,8 @@ Header
     .container .context .hidden-xs {
         display: inline-block !important;
     }
-            
-     .container .context .group {
+
+    .container .context .group {
         margin: 5px 10px 0;
     }
 
@@ -895,9 +891,9 @@ Header
         /*float: right;*/
     }
 
-     .container .context .right .group {
-        float: right;
-    }
+        .container .context .right .group {
+            float: right;
+        }
 
 
     .container .context .group.total {
@@ -932,10 +928,6 @@ Header
 }
 
 @media all and (min-width: 1170px) {
-    /*.container .context .right {
-        float: right;
-    }*/
-
     .container .context .group.total {
         display: block;
     }
@@ -1119,29 +1111,14 @@ Header
     }
 /*SM - 09/02 - ADD - Fix file upload button*/
 
-
-    .richtext .ta-editor {
-        max-width: 225px;
-    }
-
-    @media all and (min-width: 480px) {
-    .richtext .ta-editor {
-        max-width: 405px;
-    }
+.richtext .ta-editor {
+    max-width: 859px; /*add max-width to stop richtext from moving off the screen horizontally*/
 }
 
-        @media all and (min-width: 758px) {
-    .richtext .ta-editor {
-        max-width: 508px;
+    .richtext .ta-editor p {
+        word-break: break-all;
+        word-break: break-word;
     }
-}
-
-@media all and (min-width: 992px) {
-    .richtext .ta-editor {
-        max-width: 859px; /*add max-width to stop richtext from moving off the screen horizontally*/
-    }
-}
-
 
 /*SM - 09/26 - Fix label control hight with multiple lines*/
 label.form-control {
