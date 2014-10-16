@@ -63,7 +63,7 @@ app.directive('crudList', function (contextService) {
                 return tabsService.tabsDisplayables(schema);
             };
 
-
+            
 
 
             $scope.$on('filterRowRenderedEvent', function (filterRowRenderedEvent) {
@@ -99,6 +99,15 @@ app.directive('crudList', function (contextService) {
 
                 $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
                 log.debug('finish table rendered listener');
+            });
+
+            $scope.$on('sw_refreshgrid', function (event, searchData) {
+                var pagetogo = $scope.paginationData.pageNumber;
+                if (searchData) {
+                    $scope.searchData = searchData;
+                    pagetogo = 1;
+                }
+                $scope.selectPage(pagetogo);
             });
 
             $scope.$on('sw_successmessagetimeout', function (event, data) {

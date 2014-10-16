@@ -52,6 +52,10 @@ app.directive('crudBody', function (contextService) {
                 return formattedValue;
             };
 
+            $scope.setActiveTab=function(tabId) {
+                contextService.setActiveTab(tabId);
+            }
+
             $scope.hasTabs = function (schema) {          
                 return tabsService.hasTabs(schema);
             };
@@ -84,6 +88,13 @@ app.directive('crudBody', function (contextService) {
 
             $scope.$on('sw_errormessage', function (event, show) {
                 fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
+            });
+
+            $scope.$on('sw_bodyrenderedevent', function(ngRepeatFinishedEvent, parentElementId) {
+                var tab = contextService.getActiveTab();
+                if (tab != null) {
+                    redirectService.redirectToTab(tab);
+                }
             });
 
             function defaultSuccessFunction(data) {

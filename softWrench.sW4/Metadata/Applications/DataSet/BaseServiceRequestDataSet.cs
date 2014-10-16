@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using softWrench.sW4.Data;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softwrench.sw4.Shared2.Data.Association;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
-    public class BaseServiceRequestDataSet : BaseApplicationDataSet {
+    public class BaseServiceRequestDataSet : MaximoApplicationDataSet {
 
         public IEnumerable<IAssociationOption> FilterAvailableStatus(DataMap currentSR, IEnumerable<AssociationOption> loadedAssociations) {
             var currentStatus = (string)currentSR.GetAttribute("status");

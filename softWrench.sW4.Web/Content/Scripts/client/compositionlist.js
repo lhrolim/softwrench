@@ -106,8 +106,8 @@ app.directive('compositionList', function (contextService) {
 
         controller: function ($scope, $log, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
-            expressionService, $timeout, modalService, eventdispatcherService) {
-
+            expressionService, $timeout, modalService, redirectService, eventdispatcherService) {
+            
 
             function init() {
                 //Extra variables
@@ -203,7 +203,6 @@ app.directive('compositionList', function (contextService) {
                 if ($scope.detailData[id] == undefined) {
                     $scope.detailData[id] = {};
                     $scope.detailData[id].expanded = false;
-
                 }
                 $scope.detailData[id].data = item;
                 var newState = forcedState != undefined ? forcedState : !$scope.detailData[id].expanded;
@@ -334,6 +333,12 @@ app.directive('compositionList', function (contextService) {
                 });
             };
 
+            $scope.refresh = function () {
+                //TODO: make a composition refresh only --> now it will be samething as F5
+                window.location.reload();
+            };
+           
+            
 
             $scope.showListCommands = function () {
                 return !$scope.detail || $scope.expanded;

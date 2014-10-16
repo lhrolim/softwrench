@@ -53,20 +53,20 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
 
         if (leafs != null) {
             for (var i = 0; i < leafs.length; i++) {
-
-                if (leafs[i].type == "ApplicationMenuItemDefinition") {
-                    leafUrl = redirectService.getApplicationUrl(leafs[i].application, leafs[i].schema, leafs[i].mode, i18NService.getI18nMenuLabel(leafs[i].title, false));
-                } else if (leafs[i].type == "ActionMenuItemDefinition") {
-                    leafUrl = redirectService.getActionUrl(leafs[i].title, leafs[i].controller, leafs[i].action, leafs[i].parameters);
-                } else if (leafs[i].type == "MenuContainerDefinition") {
-                    var leaf = searchMenuLeafByUrl(leafs[i].leafs, url);
+                var menuitem = leafs[i];
+                if (menuitem.type == "ApplicationMenuItemDefinition") {
+                    leafUrl = redirectService.getApplicationUrl(menuitem.application, menuitem.schema, menuitem.mode, i18NService.getI18nMenuLabel(menuitem.title, false));
+                } else if (menuitem.type == "ActionMenuItemDefinition") {
+                    leafUrl = redirectService.getActionUrl(menuitem.controller, menuitem.action, menuitem.parameters);
+                } else if (menuitem.type == "MenuContainerDefinition") {
+                    var leaf = searchMenuLeafByUrl(menuitem.leafs, url);
                     if (leaf != null) {
                         return leaf;
                     }
                 }
 
                 if (leafUrl != null && decodeURI(leafUrl) == decodeURI(url)) {
-                    return leafs[i];
+                    return menuitem;
                 }
             }
         }

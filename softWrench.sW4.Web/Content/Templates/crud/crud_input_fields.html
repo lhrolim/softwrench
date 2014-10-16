@@ -196,25 +196,29 @@
                         <div class="input-group-addon fileUpload">
                             <span>Choose File</span>
                             <input class="form-control uploadfile_tooltip upload" name="{{fieldMetadata.attribute}}"
-
-                                   id="uploadBtn"
-                                   type="file" accept=".jpg,.bmp,.png,.pdf,.zip,text/plain,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,application/xml,.xsl,text/html"
-                                   fileread="datamap[fieldMetadata.attribute]"
-                                   path="datamap.newattachment_path"
-                                   title="{{handlerTitleInputFile('uploadfile_tooltip')}}" />
+                                id="uploadBtn"
+                                type="file" accept=".jpg,.bmp,.png,.pdf,.zip,text/plain,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,application/xml,.xsl,text/html"
+                                fileread="datamap[fieldMetadata.attribute]"
+                                path="datamap.newattachment_path"
+                                title="{{handlerTitleInputFile('uploadfile_tooltip')}}" />
 
                         </div>
                     </div>
                 </div>
 
                 <div ng-switch-when="image">
-                    <div class="input-group">
-                        <input class="form-control uploadimage_tooltip"
-                            type="file"
-                            fileread="datamap[fieldMetadata.attribute]"
-                            path="datamap.newattachment_path"
-                            accept="image/*"
-                            title="{{handlerTitleInputFile('uploadimage_tooltip')}}" />
+                    <div class="input-group" id="{{fieldMetadata.attribute}}">
+                        <input id="uploadFile" class="form-control" placeholder="No file chosen" disabled="disabled" />
+                        <div class="input-group-addon fileUpload">
+                            <span>Choose File</span>
+                            <input class="form-control uploadimage_tooltip upload" name="{{fieldMetadata.attribute}}"
+                                id="uploadBtn"
+                                type="file"
+                                fileread="datamap[fieldMetadata.attribute]"
+                                path="datamap.newattachment_path"
+                                accept="image/*"
+                                title="{{handlerTitleInputFile('uploadimage_tooltip')}}" />
+                        </div>
                     </div>
                 </div>
 

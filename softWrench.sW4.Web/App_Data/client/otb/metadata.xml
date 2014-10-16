@@ -459,7 +459,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <entity name="commlog" idAttribute="commloguid">
       <attributes>
         <attribute name="commlogid" type="int" required="true"/>
-        <attribute name="sendto" type="text" required="false" />
+        <attribute name="sendto" type="varchar" required="false" />
         <attribute name="sendfrom" type="varchar" required="true" />
         <attribute name="subject" type="varchar" required="false" />
         <attribute name="createby" type="varchar" required="true" />
@@ -479,6 +479,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="keepfailed" type="smallint" required="true" />
         <attribute name="ccflag" query="CASE WHEN !@cc is not null THEN 'true' ELSE 'false' end " type="bool"/>
       </attributes>
+      <relationships>
+        <relationship to ="email">
+          <relationshipAttribute from="sendto" to="emailaddress" primary="true"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="commlog" />
       </connectorParameters>
@@ -724,7 +729,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-          <!--section id="ownerstatussection"/-->
           <field attribute="wonum" label="WO No:" readonly="true"/>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
             <renderer type="lookup"/>
@@ -814,11 +818,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <!-- removed default='@usersite' from the above association label-->
               <renderer type="lookup"/>
             </association>
-          </section>
-          <section id="ownerstatussection">
-            <!--field attribute="owner" label="Owner:"/-->
-
-
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
           </section>
         </schema>
@@ -826,14 +825,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema parentschema="adetail" id="editdetail" title="Work Order Detail" platform="web">
           <section id="siteidsection">
             <field label="Site:" attribute="siteid" readonly="true"/>
-          </section>
-          <section id="ownerstatussection">
-            <!--field attribute="owner" label="Owner:" readonly="true"/-->
             <association label="Status:" target="status" labelfield="synstatus.description">
               <renderer type="combo"/>
             </association>
           </section>
-
           <section id="compositions">
             <composition relationship="worklog" label="Work Log">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
@@ -1842,6 +1837,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=100px" />
           </field>
           <field attribute="invbalancesid" hidden="true"/>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
           <properties>
             <property key="list.click.schema" value="detail"/>
           </properties>
@@ -2152,7 +2148,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <schema id="detail" stereotype="compositiondetail">
           <field attribute="commlogid" hidden="true" />
-          <field attribute="sendto" label="To:" />
+          <!--field attribute="sendto" label="To:" /-->
+          <association label="To:" target="sendto" labelfield="email_.emailaddress">
+            <renderer type="autocompleteserver"/>
+          </association>
           <field attribute="cc" label="Cc:"/>
           <field attribute="sendfrom" label="From:"  />
           <field attribute="subject" label="Subject:" />

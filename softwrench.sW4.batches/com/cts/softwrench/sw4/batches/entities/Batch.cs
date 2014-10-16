@@ -22,6 +22,18 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
 
         [Property]
         public string Status { get; set; }
+
+        [Property]
+        public DateTime? CreationDate { get; set; }
+
+        [Property]
+        public DateTime? UpdateDate { get; set; }
+        
+        /// <summary>
+        /// a comma separated list of the item ids inside this batch
+        /// </summary>
+        [Property]
+        public String ItemIds { get; set; }
         
         /// <summary>
         /// this will hold only the editable fields, as the others should be fetched from the database

@@ -9,6 +9,10 @@
                 ng-show="noupdateallowed && clonedCompositionData.length > 1" ng-click="collapseAll()">
                 <i class="fa fa-minus"></i> {{i18N('composition.collapseall','Collapse All')}}
             </button>
+            <button type="button" class="btn commandButton"
+                ng-show="noupdateallowed" ng-click="refresh()">
+                <i class="fa fa-refresh"></i> {{i18N('composition.refreshlog','Refresh')}}
+            </button>
         </div>
     </div>
 
@@ -115,7 +119,7 @@
             <!--This button will only be show at this position in case of an inline composition.
                 Otherwise, it shoul join the default command bar-->
             <button type="button" id="additem" class="btn commandButton" ng-click="newDetailFn()" ng-show="allowButton(collectionproperties.allowInsertion)">
-                <i style="margin-right: 0.5em" class="glyphicon glyphicon-ok"></i>{{i18N(relationship + '.add','Add ' + title)}}
+                <i style="margin-right: 0.5em" class="glyphicon glyphicon-ok {{list.schema.icon}}"></i>{{i18N(relationship + '.add','Add ' + title)}}
             </button>
 
         </div>

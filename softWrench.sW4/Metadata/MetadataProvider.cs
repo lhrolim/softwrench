@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using log4net;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
@@ -50,7 +51,7 @@ namespace softWrench.sW4.Metadata {
             var before = Stopwatch.StartNew();
             InitializeMetadata();
             //force eager initialization to allow eager catching of errors.
-            DataSetProvider.GetInstance();
+//            DataSetProvider.GetInstance();
             var msDelta = LoggingUtil.MsDelta(before);
             Log.Info(String.Format("Finished metadata registry in {0}", msDelta));
             if (ApplicationConfiguration.IgnoreWsCertErrors) {
@@ -182,6 +183,10 @@ namespace softWrench.sW4.Metadata {
         [NotNull]
         public static ICommandDisplayable Command(string commandId) {
             Validate.NotNull(commandId, "commandId");
+            if (commandId.StartsWith("crud_")){
+                //TODO: This is workaround to avoid exception when crud_
+                return null;
+            }
             var commandParts = commandId.Split('.');
             if (commandParts.Length != 2) {
                 throw new InvalidOperationException("command Id should be in the form 'bar.command'");

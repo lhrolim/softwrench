@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('cmpAutocompleteServer', function ($log, associationService) {
+app.factory('cmpAutocompleteServer', function ($log, associationService,restService) {
 
     function beforeSendPostJsonDatamap(jqXhr, settings, datamap) {
         var jsonString = angular.toJson(datamap);
@@ -38,8 +38,10 @@ app.factory('cmpAutocompleteServer', function ($log, associationService) {
                 parameters.key.mode = schema.mode;
                 parameters.key.platform = platform();
                 parameters.associationFieldName = associationKey;
+                parameters.labelSearchString = "%QUERY";
+                parameters.applicationName = applicationName;
 
-                var urlToUse = url("/api/data/" + applicationName + "?labelSearchString=%QUERY&" + $.param(parameters));
+                var urlToUse = restService.getActionUrl("Data","UpdateAssociation",parameters);
 
                 var engine = new Bloodhound({
 

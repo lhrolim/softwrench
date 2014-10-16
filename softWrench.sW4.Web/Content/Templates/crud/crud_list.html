@@ -1,18 +1,18 @@
 
 <form>
-    <div id="affixpagination" class="affix-pagination hiddenonprint  context clearfix hiddenonprint header-menu">
-
-
-        <gridtoolbar position="gridtop"
-                     schema="schema"
-                     pagination-data="paginationData"
-                     search-data="searchData"
-                     search-operator="searchOperator"
-                     renderfn="selectPage(pageNumber,pageSize,printMode)"></gridtoolbar>
-        <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
-                    schema-id="{{schema.schemaId}}" application-name="{{schema.applicationName}}"
-                    search-data="searchData"
-                    search-operator="searchOperator" />
+    <div id="affixpagination" class="affix-pagination hiddenonprint">
+        <div class="context clearfix header-menu">
+            <gridtoolbar position="gridtop"
+                schema="schema"
+                pagination-data="paginationData"
+                search-data="searchData"
+                search-operator="searchOperator"
+                renderfn="selectPage(pageNumber,pageSize,printMode)"></gridtoolbar>
+            <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
+                schema-id="{{schema.schemaId}}" application-name="{{schema.applicationName}}"
+                search-data="searchData"
+                search-operator="searchOperator" />
+        </div>
     </div>
 
     <div class="divAuxTable">

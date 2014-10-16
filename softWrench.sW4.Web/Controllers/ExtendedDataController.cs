@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Http;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -53,6 +56,28 @@ namespace softWrench.sW4.Web.Controllers {
                 response.Schema.Title = newtitle;
             }
             return response;
+        }
+
+        /// <summary>
+        ///  Returns the datamap populated with composition data
+        /// </summary>
+        /// <param name="application"></param>
+        /// <param name="request"></param>
+        /// <param name="currentData"></param>
+        /// <returns></returns>
+        [NotNull]
+        [HttpPost]
+        public IGenericResponseResult GetCompositionData(string application, [FromUri] CompositionFetchRequest request, JObject currentData) {
+            var user = SecurityFacade.CurrentUser();
+            if (null == user) {
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+            }
+            var applicationMetadata = MetadataProvider
+                .Application(application)
+                .ApplyPolicies(request.Key, user, ClientPlatform.Web);
+            ContextLookuper.FillContext(request.Key);
+            return DataSetProvider.LookupDataSet(application)
+                .GetCompositionData(applicationMetadata, request, currentData);
         }
 
 

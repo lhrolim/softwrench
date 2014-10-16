@@ -12,6 +12,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;
 using WcfSamples.DynamicProxy;
+using System.Diagnostics;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
     class IsmExecutionContext : MaximoOperationExecutionContext {
@@ -43,18 +44,22 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
 
         public override object InvokeProxy() {
             var arg0 = SerializeIntegrationObject();
+            var before = Stopwatch.StartNew();
             try {
-
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
 
                 var soapEnvelopeXml = new XmlDocument();
 
                 var isChange = Metadata.Name.Equals("wochange", StringComparison.InvariantCultureIgnoreCase);
                 var path = isChange ? MetadataProvider.GlobalProperty("globaservletpath_chg") : MetadataProvider.GlobalProperty("globaservletpath_inc");
-            
-                Log.DebugFormat("Calling ISM WS on {0}. Content: {1}", path, arg0);
+
+                Log.InfoFormat("PERFORMANCE - ISM WS request started at {0}.", DateTime.Now);
+                Log.DebugFormat("Calling ISM WS on {0}. Content: {1}", path, arg0);                
                 soapEnvelopeXml.LoadXml(@arg0);
                 var webRequest = CreateWebRequest(path);
+
+                webRequest.Timeout = ApplicationConfiguration.MaximoRequestTimeout;
+
                 using (Stream stream = webRequest.GetRequestStream()) {
                     soapEnvelopeXml.Save(stream);
                 }
@@ -74,15 +79,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
                 }
 
                 return result;
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 Log.Error("Error invoking ISM proxy", e);
                 var rootException = ExceptionUtil.DigRootException(e);
                 throw rootException;
             }
+            finally {
+                var msDelta = LoggingUtil.MsDelta(before);
+                Log.InfoFormat("PERFORMANCE - ISM WS request took {0} ms to be executed.", msDelta);
+            }
         }
 
-        private HttpWebRequest CreateWebRequest(string path)
-        {
+        private HttpWebRequest CreateWebRequest(string path) {
             var webRequest = (HttpWebRequest)WebRequest.Create(path);
             webRequest.ContentType = "text/xml;charset=\"utf-8\"";
             webRequest.Accept = "text/xml";

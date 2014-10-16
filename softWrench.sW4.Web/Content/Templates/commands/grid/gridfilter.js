@@ -107,10 +107,10 @@
     }
 
     $scope.clearFilter = function () {
+        contextService.insertIntoContext("selectedfilter", null, true);
         $scope.selectedfilter = null;
-        $scope.searchData = {};
         $scope.searchOperator = {};
-        $scope.selectPage($scope.paginationData.pageNumber);
+        searchService.refreshGrid({});
     }
 
     $scope.$on("sw_redirectapplicationsuccess", function (event) {

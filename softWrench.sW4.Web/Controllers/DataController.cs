@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API.Composition;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Relational;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -71,7 +72,7 @@ namespace softWrench.sW4.Web.Controllers {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web);
             ContextLookuper.FillContext(request.Key);
-            var response = DataSetProvider.LookupAsBaseDataSet(application).Get(applicationMetadata, user, request);
+            var response = DataSetProvider.LookupDataSet(application).Get(applicationMetadata, user, request);
             response.Title = _i18NResolver.I18NSchemaTitle(response.Schema);
             var schemaMode = request.Key.Mode ?? response.Schema.Mode;
             response.Mode = schemaMode.ToString().ToLower();
@@ -79,27 +80,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
      
-        /// <summary>
-        ///  Returns the datamap populated with composition data
-        /// </summary>
-        /// <param name="application"></param>
-        /// <param name="request"></param>
-        /// <param name="currentData"></param>
-        /// <returns></returns>
-        [NotNull]
-        [HttpPost]
-        public IGenericResponseResult GetCompositionData(string application, [FromUri] CompositionFetchRequest request, JObject currentData) {
-            var user = SecurityFacade.CurrentUser();
-            if (null == user) {
-                throw new HttpResponseException(HttpStatusCode.Unauthorized);
-            }
-            var applicationMetadata = MetadataProvider
-                .Application(application)
-                .ApplyPolicies(request.Key, user, ClientPlatform.Web);
-            ContextLookuper.FillContext(request.Key);
-            return DataSetProvider.LookupAsBaseDataSet(application)
-                .GetCompositionData(applicationMetadata, request, currentData);
-        }
+      
 
 
 
@@ -122,7 +103,7 @@ namespace softWrench.sW4.Web.Controllers {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web);
 
-            var baseDataSet = DataSetProvider.LookupAsBaseDataSet(application);
+            var baseDataSet = DataSetProvider.LookupDataSet(application);
            
 
             var response = baseDataSet.UpdateAssociations(applicationMetadata, request, currentData);
@@ -209,7 +190,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             var maximoResult = new MaximoResult(null, null);
             if (!mockMaximo) {
-                maximoResult = DataSetProvider.LookupAsBaseDataSet(application)
+                maximoResult = DataSetProvider.LookupDataSet(application)
                     .Execute(applicationMetadata, json, id, operation);
             }
             if (currentschemaKey.Platform == ClientPlatform.Mobile) {

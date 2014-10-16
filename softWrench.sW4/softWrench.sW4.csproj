@@ -141,6 +141,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
+    <Reference Include="XDesigner.RTF">
+      <HintPath>Dependencies\XDesigner.RTF.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audit\AuditTrail.cs" />
@@ -177,12 +180,15 @@
     <Compile Include="Data\Entities\SyncManagers\AMaximoRowstampManager.cs" />
     <Compile Include="Data\Entities\SyncManagers\IUserSyncManager.cs" />
     <Compile Include="Data\ExtraAttributes.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\DataSetConfigurationException.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\MaximoApplicationDataSet.cs" />
     <Compile Include="Data\Persistence\PaginationData.cs" />
     <Compile Include="Data\Persistence\NHibernatePaginationUtil.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QuerySearchSortBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\EntityWhereClauseBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\FixedSearchWhereClauseBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\MultiTenantCustomerWhereBuilder.cs" />
+    <Compile Include="Data\Persistence\Engine\IConnectorEngine.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseChangeRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseIncidentCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePurchaseRequestCrudConnector.cs" />
@@ -191,6 +197,7 @@
     <Compile Include="Data\Persistence\WS\Commons\HapagSRLongDescriptionHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\MifFindByIdCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\SaveRemarkCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\ScreenshotHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\SubmitactionCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Gric\GricServiceRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Internal\TargetAttributesHandler.cs" />
@@ -227,6 +234,7 @@
     <Compile Include="Metadata\Applications\DataSet\OtbServiceRequestDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\GricServiceRequestDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OptionFieldProviderParameters.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\SWDBApplicationDataset.cs" />
     <Compile Include="Metadata\Applications\Reference\ReferenceHandler.cs" />
     <Compile Include="Metadata\Entities\EntityQueries.cs" />
     <Compile Include="Metadata\Entities\Schema\ContextualEntityAttribute.cs" />
@@ -350,7 +358,7 @@
     <Compile Include="SimpleInjector\Events\SimpleInjectorDomainEventDispatcher.cs" />
     <Compile Include="SimpleInjector\Core\Order\OrderComparator.cs" />
     <Compile Include="SimpleInjector\IComponent.cs" />
-    <Compile Include="Metadata\Applications\DataSet\BaseApplicationDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\BaseApplicationDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Workorder\FollowUpWorkorderHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Workorder\UpdateStatusWorkorderHandler.cs" />
     <Compile Include="Data\Persistence\MaximoHibernateDAO.cs" />
@@ -413,7 +421,7 @@
     <Compile Include="Metadata\Applications\Association\ApplicationAssociationResolver.cs" />
     <Compile Include="Metadata\Applications\ApplicationMetadataExtensions.cs" />
     <Compile Include="Metadata\Applications\ApplicationMetadataPolicyApplier.cs" />
-    <Compile Include="Metadata\Applications\DataSet\DataSetProvider.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\DataSetProvider.cs" />
     <Compile Include="Metadata\Applications\DataSet\IDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\WorkorderDataSet.cs" />
     <Compile Include="Metadata\Applications\Schema\PopupMode.cs" />
@@ -540,6 +548,7 @@
     <Compile Include="Util\NhAppender.cs" />
     <Compile Include="Util\ReflectionUtil.cs" />
     <Compile Include="Util\ReportUtil.cs" />
+    <Compile Include="Util\RTFUtil.cs" />
     <Compile Include="Util\Scripting\ScriptingUtil.cs" />
     <Compile Include="Util\StatusColorResolver.cs" />
     <Compile Include="Util\StreamUtils.cs" />
@@ -772,8 +781,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Entities\Attachment\" />
-    <Folder Include="Data\Persistence\Dataset\MEA\" />
-    <Folder Include="Data\Persistence\Dataset\MIF\" />
     <Folder Include="Data\Persistence\WS\Mea\Entities\" />
     <Folder Include="Data\Persistence\WS\Mif\Entities\" />
     <Folder Include="Metadata\API\" />
@@ -808,6 +815,9 @@
       <Project>{20fd2b93-bd84-48d7-a7fb-4231972d3e26}</Project>
       <Name>DynamicProxyLibrary</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="deps\XDesigner.RTF.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

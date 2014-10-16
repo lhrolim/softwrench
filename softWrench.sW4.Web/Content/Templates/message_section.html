@@ -1,4 +1,5 @@
 <div class="hiddenonprint">
+    <div class="alerts">
     <div id="divsuccessmessagedetail" class="alert alert-success" ng-show="hasSuccessDetail">
         <div>
             <ul>
@@ -22,7 +23,6 @@
         </span>
     </div>
 
-
     <div id="diverrormessagelist" class="alert alert-danger topMessageAux affix-thead" ng-show="$root.hasErrorList" style="height: 62px;">
         <a class="close" ng-click="removeAlert()">x</a>
         <img ng-src="{{contextPath('/Content/Images/1386143956_info.png')}}" alt="details" ng-click="openModal()" />
@@ -39,7 +39,7 @@
             </ul>
         </div>
     </div>
-
+    </div>
     <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" style="width: 900px">

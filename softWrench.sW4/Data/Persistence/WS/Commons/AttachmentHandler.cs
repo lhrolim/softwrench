@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using log4net;
+using Newtonsoft.Json.Linq;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -23,11 +25,13 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
     public class AttachmentHandler {
 
+        private static readonly ILog Log = LogManager.GetLogger(typeof(AttachmentHandler));
+
         private readonly MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
         private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
         private static readonly AttachmentDao AttachmentDao = new AttachmentDao();
 
-        private static readonly string[] AllowedFiles = { "pdf", "zip", "txt", "jpg", "bmp", "doc", "docx", "dwg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "html", "rtf", "png" };
+        private static readonly string[] AllowedFiles = { "pdf", "zip", "txt", "jpg", "bmp", "doc", "docx", "dwg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "html", "rtf" };
 
         /// <summary>
         /// url specifying where the attachments could be downloaded from maximo in the http mode
@@ -37,6 +41,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         /// Path where the files are stored in the maximo´s server fs, must be removed from the url path
         /// </summary>
         private string _baseMaximoPath;
+        
 
         //        public delegate byte[] Base64Delegate(string attachmentData);
 
@@ -54,12 +59,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (String.IsNullOrEmpty(attachmentData)) {
                 return;
             }
-            var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
-            CommonCode(maximoObj, docLink, user, attachmentPath);
-            HandleAttachmentDataAndPath(attachmentData, docLink, attachmentPath);
         }
 
-        private void CommonCode(object maximoObj, object docLink, InMemoryUser user, string attachmentPath) {
+        private void CommonCode(object maximoObj, object docLink, InMemoryUser user, string attachmentPath, string attachmentData) {
             w.SetValue(docLink, "ADDINFO", true);
             w.CopyFromRootEntity(maximoObj, docLink, "CREATEBY", user.Login, "reportedby");
             w.CopyFromRootEntity(maximoObj, docLink, "CREATEDATE", DateTime.Now.FromServerToRightKind());
@@ -69,7 +71,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.CopyFromRootEntity(maximoObj, docLink, "ORGID", user.OrgId);
             w.SetValue(docLink, "URLTYPE", "FILE");
             w.SetValue(docLink, "URLNAME", attachmentPath);
-            ValidatePath(attachmentPath);
+            Validate(attachmentPath, attachmentData);
 
             w.SetValue(docLink, "UPLOAD", true);
             w.SetValue(docLink, "DOCTYPE", "Attachments");
@@ -77,18 +79,28 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValue(docLink, "DESCRIPTION", attachmentPath);
         }
 
-        public static bool ValidatePath(string attachmentPath) {
+        public static bool Validate(string attachmentPath, string attachmentData) {
+            var allowedFiles = ApplicationConfiguration.AllowedFilesExtensions;
+
             if (attachmentPath != null && attachmentPath.IndexOf('.') != -1 &&
-                !AllowedFiles.Contains(attachmentPath.Substring(attachmentPath.LastIndexOf('.') + 1).ToLower())) {
-                throw new Exception(
-                    "Invalid Attachment Must be of the Following type [.pdf,.zip,.txt,.jpg,.bmp,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,xml,.xsl,.html,.rtf,.png]");
+                !allowedFiles.Contains(attachmentPath.Substring(attachmentPath.LastIndexOf('.') + 1).ToLower())) {
+                throw new Exception(String.Format(
+                    "Invalid Attachment extension. Accepted extensions are: {0}.", String.Join(",", allowedFiles)));
             }
+
+            var maxAttSizeInBytes = ApplicationConfiguration.MaxAttachmentSize * 1024 * 1024;
+            Log.InfoFormat("Attachment size: {0}", attachmentData.Length);
+            if (attachmentData != null && attachmentData.Length > maxAttSizeInBytes) {
+                var attachmentLength = attachmentData.Length / 1024 / 1024;
+                throw new Exception(String.Format(
+                    "Attachment is too large ({0} MB). Max attachment size is {1} MB.", attachmentLength, ApplicationConfiguration.MaxAttachmentSize));
+            }
+
             return true;
         }
 
         public static void ValidateNotEmpty(string b64PartOnly) {
-            if (b64PartOnly.Equals("data:"))
-            {
+            if (b64PartOnly.Equals("data:")) {
                 throw InvalidAttachmentException.BlankFileNotAllowed();
             }
         }
@@ -128,7 +140,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var applicationMetadata = MetadataProvider
                 .Application(parentApplication)
                 .ApplyPolicies(new ApplicationMetadataSchemaKey(parentSchemaId), user, ClientPlatform.Web);
-            var response = _dataSetProvider.LookupAsBaseDataSet(parentApplication).Execute(applicationMetadata, new JObject(), parentId, OperationConstants.CRUD_FIND_BY_ID);
+            var response = _dataSetProvider.LookupDataSet(parentApplication).Execute(applicationMetadata, new JObject(), parentId, OperationConstants.CRUD_FIND_BY_ID);
 
             var parent = response.ResultObject;
             if (parent != null) {

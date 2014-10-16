@@ -16,7 +16,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         private static ILog Log = LogManager.GetLogger(typeof(HapagChangeDataSet));
 
-        protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application,
+        public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application,
             InMemoryUser user, DetailRequest request) {
             var result = base.GetApplicationDetail(application, user, request);
             if (request.Id != null) {
