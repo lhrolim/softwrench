@@ -1,6 +1,6 @@
 ﻿function JobPlanCompleteActionController($scope, $http, i18NService, contextService) {
 
-    var imacOption = [
+    var imacOptions = [
                 { label: 'Select One', value: 'Select One' },
                 { label: 'Completed', value: 'COMP' },
     ];
@@ -53,6 +53,7 @@
 
     $scope.submitAction = function (compositionitem, schema, datamap, compositionschema) {
         var schemaId = compositionschema.applicationName;
+        var applicationName = schema.applicationName;
         var isJobPlan = schemaId == "woactivity";
         datamap.fields['WoActivityId'] = compositionitem.wonum;
         datamap.fields['activityownergroup'] = compositionitem.ownergroup;
@@ -60,8 +61,8 @@
         datamap.fields['#tasksummary'] = compositionitem.description;
         datamap.fields['#selectedAction'] = $scope.actiontoexecute;
         datamap.fields['#groupAction'] = getgroup(compositionitem, isJobPlan);
-        var parameters = datamap.fields;
-        var applicationName = schema.applicationName;
+        
+        var parameters = datamap.fields;        
         var actionname = isJobPlan ? "completeaction" : "approvalaction";
         var urlToUse = url("api/data/operation/{0}/{1}?platform=web&id=".format(applicationName, actionname) + parameters.ticketid);
         parameters = addCurrentSchemaDataToJson(parameters, schema);
@@ -93,5 +94,4 @@
         }
         return compositionitem.approvergroup;
     }
-
 }
