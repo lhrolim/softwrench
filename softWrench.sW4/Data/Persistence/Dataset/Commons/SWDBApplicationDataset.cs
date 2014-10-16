@@ -1,4 +1,6 @@
-﻿namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
+﻿using softWrench.sW4.Data.Persistence.Engine;
+
+namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
     public class SWDBApplicationDataset : BaseApplicationDataSet {
 

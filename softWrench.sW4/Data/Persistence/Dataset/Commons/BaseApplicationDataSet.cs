@@ -13,6 +13,7 @@ using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Pagination;
+using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Persistence.WS.API;
