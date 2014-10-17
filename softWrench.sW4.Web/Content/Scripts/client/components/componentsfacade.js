@@ -81,7 +81,7 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmpAutocomp
             var datamap = scope.datamap;
             var schema = scope.schema;
             cmpComboDropdown.init(bodyElement);
-            cmpAutocompleteClient.init(bodyElement, scope);
+            cmpAutocompleteClient.init(bodyElement, datamap, schema, scope);
             cmpAutocompleteServer.init(bodyElement, datamap, schema, scope);
             screenshotService.init(bodyElement, datamap);
         },

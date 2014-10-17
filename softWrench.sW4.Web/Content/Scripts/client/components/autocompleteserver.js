@@ -67,7 +67,7 @@ app.factory('cmpAutocompleteServer', function ($log, associationService) {
                 });
                 engine.initialize();
 
-                jelement.typeahead({ minLength: 2 }, {
+                jelement.typeahead({ minLength: 3 }, {
                     displayKey: 'label',
                     source: engine.ttAdapter()
                 });

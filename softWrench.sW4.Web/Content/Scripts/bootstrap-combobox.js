@@ -162,8 +162,11 @@
     }
 
     , lookup: function (event) {
-        this.query = this.$element.val();
-        return this.process(this.source);
+        var val = this.$element.val();        
+        if (val.length >= this.options.minLength || val == '') {
+            this.query = this.$element.val();
+            return this.process(this.source);
+        }
     }
 
     , process: function (items) {
@@ -407,7 +410,7 @@
                 break;
 
             default:
-                this.clearTarget();
+                this.clearTarget();               
                 this.lookup();
         }
 
@@ -470,6 +473,7 @@
             '</span></div>'
     , menu: '<ul class="typeahead typeahead-long dropdown-menu" style="width:94%"></ul>'
     , item: '<li><a href="#"></a></li>'
+    , minLength : 1
     };
 
     $.fn.combobox.Constructor = Combobox;

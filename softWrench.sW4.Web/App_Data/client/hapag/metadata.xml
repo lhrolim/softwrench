@@ -900,6 +900,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<header label="User-Personal Asset" params="fieldset=true" displacement="ontop" showexpression="@isitc==true"/>
 						<association label="Asset:" target="assetnum" labelfield="asset_.hlagdescription2"
 												 extraprojectionvalues="location, location_.description, pluspcustomer" >
+              <renderer type="autocompleteclient" params="minLength=3;"/>
 							<dataprovider prefilterfunction="FilterAssets"/>
 							<event type="afterchange" service="srservice" method="afterUserAssetChange"/>
 						</association>
@@ -909,7 +910,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<section showexpression="@isitc==true">
 						<header label="ITC-Responsible Asset" params="fieldset=true" displacement="ontop"/>
 						<optionfield providerattribute="hlagUserLocations" attribute="itcassetlocation" label="Location" />
-						<association label="Asset:" target="itcassetnum" labelfield="2asset_.hlagdescription2" extraprojectionvalues="location, location_.description, pluspcustomer" dependantfields="itcassetlocation">
+						<association label="Asset:" target="itcassetnum" labelfield="2asset_.hlagdescription2" 
+                         extraprojectionvalues="location, location_.description, pluspcustomer" dependantfields="itcassetlocation">
+              <renderer type="autocompleteclient" params="minLength=3;"/>
 							<dataprovider prefilterfunction="FilterAssetsByItcLocation" />
 							<event type="afterchange" service="srservice" method="afterITCAssetChange" />
 						</association>
@@ -1093,7 +1096,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<association label="Printer Location:" target="printerpluspcustomer" labelfield="2pluspcustomer_.hlagpluspcustomer"/>
 
 						<field attribute="asset_.assetid" hidden="true" />
-						<association label="Affected Printer:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location,assetid,pluspcustomer" dependantfields="printerpluspcustomer">
+						<association label="Affected Printer:" target="assetnum" labelfield="asset_.description" 
+                         extraprojectionvalues="location,assetid,pluspcustomer" dependantfields="printerpluspcustomer">
+              <renderer type="autocompleteclient" params="minLength=3;"/>
 							<dataprovider prefilterfunction="FilterAssets"/>
 							<renderer type="autocompleteclient" params="opendetails=true;idtopendetails=asset_.assetid"/>
 						</association>
@@ -1197,7 +1202,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<association label="Phone Location:" target="phonepluspcustomer" labelfield="2pluspcustomer_.hlagpluspcustomer"
 															 enableexpression="@affectedDevice == 'Cisco-IP-Phone'"/>
 
-						<association label="Affected Phone:" target="assetnum" labelfield="asset_.description" dependantfields="phonepluspcustomer" extraprojectionvalues="pluspcustomer">
+						<association label="Affected Phone:" target="assetnum" labelfield="asset_.description" 
+                         dependantfields="phonepluspcustomer" extraprojectionvalues="pluspcustomer">
+              <renderer type="autocompleteclient" params="minLength=3;"/>
 							<dataprovider prefilterfunction="FilterAssets"/>
 						</association>
             <field hidden="true" attribute="asset_.pluspcustomer"></field>
@@ -1628,6 +1635,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 				<componentdisplayable id="updateasset">
 					<association target="asset" dependantfields="fromlocation" label="Asset" labelfield="asset_.hlagdescription2" required="true"
 								  extraprojectionvalues="primaryuser_.personid,primaryuser_person_.hlagdisplayname,aucisowner_person_.hlagdisplayname,aucisowner_person_.personid,classification,location_.description,assetglaccount_.displaycostcenter,status,assetid,description,serialnum,item_.description,item_.itdmachtype,item_.itdmodel,installdate,assettag,assetnum,computername,location">
+            <renderer type="autocompleteclient" params="minLength=3;"/>
 						<dataprovider prefilterfunction="FilterAssetByHlagLocation"/>
 						<event type="afterchange" service="imacservice" method="afterChangeAsset"/>
 					</association>
@@ -1641,6 +1649,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 								target="asset" dependantfields="fromlocation" label="Asset" labelfield="asset_.hlagdescription2" required="true"
 																	   extraprojectionvalues="usage, primaryuser_.personid, primaryuser_.hlagdisplayname, primaryuser_person_.displayname,primaryuser_person_.hlagdisplayname
                      ,classification,location,location_.description,aucisowner_person_.hlagdisplayname,aucisowner_person_.personid,pluspcustomer,assetglaccount_.displaycostcenter,assetglaccount_.glaccount,status">
+            <renderer type="autocompleteclient" params="minLength=3;"/>
 						<event type="afterchange" service="imacservice" method="afterChangeAsset"/>
 						<dataprovider prefilterfunction="FilterAssetByHlagLocation"/>
 					</association>
@@ -1651,7 +1660,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 				<componentdisplayable id="nchildasset">
 					<association dependantfields="fromlocation,asset" label="Child Asset" labelfield="childasset_.hlagdescription2" target="childasset" extraprojectionvalues="pluspcustomer,location">
-						<renderer type="combodropdown" params="showvaluesbelow=true;custombuttontext=Asset" />
+						<renderer type="combodropdown" params="showvaluesbelow=true;custombuttontext=Asset" />            
 						<dataprovider prefilterfunction="FilterAssetByHlagLocationAndParentAsset"/>
 					</association>
 				</componentdisplayable>
@@ -1659,6 +1668,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 				<componentdisplayable id="childasset">
 					<association dependantfields="fromlocation,asset" label="Child Asset" labelfield="childasset_.hlagdescription2" target="childasset"
 													 extraprojectionvalues="pluspcustomer,location">
+            <renderer type="autocompleteclient" params="minLength=3;"/>
 						<dataprovider prefilterfunction="FilterAssetByHlagLocationAndParentAsset"/>
 					</association>
 				</componentdisplayable>
@@ -1839,7 +1849,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<reference id="nchildasset" showexpression="@fromlocation!=null"/>
 						<association dependantfields="fromlocation" label="Moved Asset" labelfield="movedasset_.hlagdescription2" target="#movedasset" showexpression="@fromlocation!=null">
 							<dataprovider prefilterfunction="FilterMovedAsset"/>
-							<renderer type="autocompleteclient" params="length=full"/>
+							<renderer type="autocompleteclient" params="minLength=3;length=full"/>              
 						</association>
 					</section>
 
@@ -2012,16 +2022,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<reference id="mainasset"/>
 						<association dependantfields="fromlocation,asset" label="Old Child Asset" labelfield="childasset_.hlagdescription2" target="childasset"
 											   extraprojectionvalues="location">
-							<renderer type="combodropdown"/>
+							<renderer type="combodropdown" />
 							<dataprovider prefilterfunction="FilterAssetByHlagLocationAndParentAsset"/>
 						</association>
 
 						<association dependantfields="fromlocation" label="New Asset" labelfield="2asset_.hlagdescription2" required="true" target="newasset"
 																 extraprojectionvalues="location_.description">
+              <renderer type="autocompleteclient" params="minLength=3;"/>
 							<dataprovider prefilterfunction="FilterAssetByHlagLocation"/>
 						</association>
 						<association dependantfields="fromlocation,newasset" label="New Child Asset" labelfield="2childasset_.hlagdescription2" target="newchildasset">
-							<renderer type="combodropdown"/>
+							<renderer type="combodropdown" />
 							<dataprovider prefilterfunction="FilterAssetByHlagLocation"/>
 						</association>
 					</section>
@@ -2798,6 +2809,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					</field>
           
           <association label="Infrastructure Asset:" target="cinum" labelfield="ci_.ciname" required="true">
+            <renderer type="autocompleteclient" params="minLength=3;"/>
           </association>
           
 					<field label="Attachment:" attribute="newattachment" >

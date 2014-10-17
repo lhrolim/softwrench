@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('cmpAutocompleteClient', function ($rootScope, $timeout) {
+app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldService) {
 
     return {
 
@@ -24,7 +24,7 @@ app.factory('cmpAutocompleteClient', function ($rootScope, $timeout) {
             }
         },
 
-        init: function (bodyElement, scope) {
+        init: function (bodyElement, datamap, schema, scope) {
             var selects = $('select.combobox-dynamic', bodyElement);
             for (var i = 0; i < selects.length; i++) {
                 var select = $(selects[i]);
@@ -33,11 +33,17 @@ app.factory('cmpAutocompleteClient', function ($rootScope, $timeout) {
                 if (parent.data('selectenabled') == false || select.data('alreadyconfigured')) {
                     continue;
                 }
+                
+                var fieldMetadata = fieldService.getDisplayablesByAssociationKey(schema, associationKey);
+                var minLength = null;
+                if (fieldMetadata != null && fieldMetadata.length > 0 && fieldMetadata[0].rendererParameters['minLength'] != null) {
+                    minLength = parseInt(fieldMetadata[0].rendererParameters['minLength']);
+                }
+
                 select.data('alreadyconfigured', true);
-                select.combobox();
-                //                if (scope.blockedassociations[associationKey] == true) {
-                //                    combo.disable();
-                //                }
+                select.combobox({
+                    minLength : minLength
+                });
             }
         }
 
