@@ -23,7 +23,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         public FileContentResult Export(string application, [FromUri]ApplicationMetadataSchemaKey key,
-            [FromUri] PaginatedSearchRequestDto searchDTO, string module, string fileName) {
+            [FromUri] PaginatedSearchRequestDto searchDTO, string module) {
 
 
             searchDTO.PageSize = searchDTO.TotalCount + 1;
@@ -38,16 +38,24 @@ namespace softWrench.sW4.Web.Controllers {
             var stream = new MemoryStream();
             excelFile.SaveAs(stream);
             stream.Close();
-
-            var excelFileExtension = ".xls";
-            if (!fileName.EndsWith(excelFileExtension)) {
-                fileName += excelFileExtension;
-            }
-
+            var fileName = GetFileName(application, key.SchemaId) + ".xls";
             var result = new FileContentResult(stream.ToArray(), System.Net.Mime.MediaTypeNames.Application.Octet) {
                 FileDownloadName = (string)StringUtil.FirstLetterToUpper(fileName)
             };
             return result;
+        }
+
+        public string GetFileName(string application, string schemaId) {
+            if (application != "asset") {
+                return application + "Export";
+            }
+            if (schemaId == "categories") {
+                return "AssetCategoriesExport";
+            }
+            if (schemaId == "exportallthecolumns") {
+                return "AssetListExport";
+            }
+            return "AssetExport";
         }
     }
 }

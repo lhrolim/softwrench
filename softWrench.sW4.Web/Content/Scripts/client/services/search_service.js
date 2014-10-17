@@ -234,8 +234,18 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
             return this.searchOperations()[1];
         },
 
-        refreshGrid:function(searchData) {
-            $rootScope.$broadcast("sw_refreshgrid", searchData);
+        refreshGrid: function (searchData,extraparameters) {
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="event"></param>
+            /// <param name="searchData">a key value pair for modifying the grid query that is present on the screen</param>
+            /// <param name="extraparameters">accepts:
+            ///  pageNumber --> the page to go
+            ///  pageSize --> a different page size than the scope one
+            ///  printMode --> if we need to refresh the grid for printmode
+            /// </param>
+            $rootScope.$broadcast("sw_refreshgrid", searchData, extraparameters);
         }
 
     };

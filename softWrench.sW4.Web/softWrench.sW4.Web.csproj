@@ -541,6 +541,7 @@
     <Content Include="Content\Scripts\client\crud_base_controller.js" />
     <Content Include="Content\Scripts\client\crud_list.js" />
     <Content Include="Content\Scripts\client\logAdmin.js" />
+    <Content Include="Content\Scripts\client\services\excelservice.js" />
     <Content Include="Content\Scripts\client\services\securityService.js" />
     <Content Include="Content\Scripts\client\services\rest_service.js" />
     <Content Include="Content\Scripts\client\services\userpreference_service.js" />

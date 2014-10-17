@@ -27,7 +27,7 @@ app.directive('crudList', function (contextService) {
             checked: '='
         },
 
-        controller: function ($scope, $http, $rootScope, $filter, $injector, $log,$timeout,
+        controller: function ($scope, $http, $rootScope, $filter, $injector, $log, $timeout,
             formatService, fixHeaderService,
             searchService, tabsService,
             fieldService, commandService, i18NService,
@@ -63,7 +63,7 @@ app.directive('crudList', function (contextService) {
                 return tabsService.tabsDisplayables(schema);
             };
 
-            
+
 
 
             $scope.$on('filterRowRenderedEvent', function (filterRowRenderedEvent) {
@@ -101,13 +101,22 @@ app.directive('crudList', function (contextService) {
                 log.debug('finish table rendered listener');
             });
 
-            $scope.$on('sw_refreshgrid', function (event, searchData) {
-                var pagetogo = $scope.paginationData.pageNumber;
+            $scope.$on('sw_refreshgrid', function (event, searchData, extraparameters) {
+                /// <summary>
+                ///  implementation of searchService#refreshgrid see there for details
+                /// </summary>
+                if (extraparameters == null) {
+                    extraparameters = {};
+                }
+                var pagetogo = extraparameters.pageNumber ? extraparameters.pageNumber : $scope.paginationData.pageNumber;
+                var pageSize = extraparameters.pageSize ? extraparameters.pageSize : $scope.paginationData.pageSize;
+                var printmode = extraparameters.printMode;
                 if (searchData) {
+                    // if search data is present, we should go back to first page, as we wont know exactly the new number of pages available
                     $scope.searchData = searchData;
                     pagetogo = 1;
                 }
-                $scope.selectPage(pagetogo);
+                $scope.selectPage(pagetogo,pageSize,printmode);
             });
 
             $scope.$on('sw_successmessagetimeout', function (event, data) {
@@ -250,7 +259,7 @@ app.directive('crudList', function (contextService) {
                 if (operator.id == "") {
                     searchData[columnName] = '';
                     $scope.selectPage(1);
-                } else if (searchData[columnName] != null && searchData[columnName] != '')  {
+                } else if (searchData[columnName] != null && searchData[columnName] != '') {
                     $scope.selectPage(1);
                 } else if (operator.id == "BLANK") {
                     searchData[columnName] = '';
@@ -312,7 +321,7 @@ app.directive('crudList', function (contextService) {
                     $(selector).show();
                 }
                 fixHeaderService.fixTableTop($(".fixedtable"));
-                };
+            };
 
 
 

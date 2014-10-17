@@ -5,7 +5,8 @@
             <gridtoolbar position="gridtop"
                 schema="schema"
                 pagination-data="paginationData"
-                search-data="searchData"
+                         search-data="searchData"
+                         search-sort="searchSort"
                 search-operator="searchOperator"
                 renderfn="selectPage(pageNumber,pageSize,printMode)"></gridtoolbar>
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
@@ -196,6 +197,7 @@
             <gridtoolbar position="gridbottom"
                          schema="schema"
                          pagination-data="paginationData"
+                         search-sort="searchSort"
                          search-data="searchData"
                          search-operator="searchOperator"
                          renderfn="selectPage(pageNumber,pageSize,printMode)"></gridtoolbar>
