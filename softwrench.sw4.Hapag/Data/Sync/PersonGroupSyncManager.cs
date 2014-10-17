@@ -5,6 +5,7 @@ using Iesi.Collections;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Entities.SyncManagers;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
 using softwrench.sw4.Hapag.Security;
@@ -12,15 +13,15 @@ using softWrench.sW4.Security.Entities;
 using softwrench.sW4.Shared2.Data;
 
 namespace softwrench.sw4.Hapag.Data.Sync {
-    public class PersonGroupSyncManager : AMaximoRowstampManager,IUserSyncManager {
+    public class PersonGroupSyncManager : AMaximoRowstampManager, IUserSyncManager {
 
         private const string EntityName = "persongroup";
         private const string PersonGroupColumn = "persongroup";
 
         private readonly HlagLocationManager _hlagLocationManager;
 
-        public PersonGroupSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade, HlagLocationManager hlagLocationManager)
-            : base(dao, facade) {
+        public PersonGroupSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade, HlagLocationManager hlagLocationManager, EntityRepository repository)
+            : base(dao, facade, repository) {
             _hlagLocationManager = hlagLocationManager;
         }
 
@@ -29,7 +30,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             var dto = new SearchRequestDto();
             //let´s search just for persongroups that begin with the prefix
             dto.AppendSearchEntry(PersonGroupColumn, HapagPersonGroupConstants.BaseHapagPrefix);
-            var personGroup = FetchNew(rowstamp, EntityName,dto);
+            var personGroup = FetchNew(rowstamp, EntityName, dto);
             var attributeHolders = personGroup as AttributeHolder[] ?? personGroup.ToArray();
             if (!attributeHolders.Any()) {
                 //nothing to update
@@ -38,7 +39,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             var personGroupToSave = ConvertMaximoPersonGroupToPersonGroupEntity(attributeHolders);
             var resultList = SaveOrUpdatePersonGroup(personGroupToSave);
             _hlagLocationManager.UpdateCache(resultList);
-            SetRowstampIfBigger(ConfigurationConstants.PersonGroupRowstampKey, GetLastRowstamp(attributeHolders),rowstamp);
+            SetRowstampIfBigger(ConfigurationConstants.PersonGroupRowstampKey, GetLastRowstamp(attributeHolders), rowstamp);
         }
 
 

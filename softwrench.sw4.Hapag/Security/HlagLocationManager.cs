@@ -1,4 +1,5 @@
 ﻿using log4net;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softwrench.sw4.Hapag.Data;
 using softwrench.sw4.Hapag.Data.Init;
 using softwrench.sw4.Hapag.Data.Sync;

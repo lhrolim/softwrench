@@ -1,8 +1,11 @@
 ﻿using log4net;
+using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Data.Init;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
+using softwrench.sw4.Hapag.Security;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Util;
@@ -15,6 +18,11 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagChangeDataSet : HapagBaseApplicationDataSet {
 
         private static ILog Log = LogManager.GetLogger(typeof(HapagChangeDataSet));
+
+        public HapagChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao) 
+            : base(locationManager, entityRepository, maxDao)
+        {
+        }
 
         public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application,
             InMemoryUser user, DetailRequest request) {

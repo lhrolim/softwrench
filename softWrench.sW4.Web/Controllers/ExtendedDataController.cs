@@ -22,8 +22,8 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Web.Controllers {
 
     public class ExtendedDataController : DataController {
-        public ExtendedDataController(I18NResolver i18NResolver, IContextLookuper lookuper)
-            : base(i18NResolver, lookuper) {
+        public ExtendedDataController(I18NResolver i18NResolver, IContextLookuper lookuper,CompositionExpander compositionExpander)
+            : base(i18NResolver, lookuper, compositionExpander) {
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace softWrench.sW4.Web.Controllers {
                 .ApplyPolicies(detailRequest.Key, user, ClientPlatform.Web);
             //            var result = (ApplicationDetailResult)DataSetProvider.LookupAsBaseDataSet(application).Get(applicationMetadata, user, detailRequest);
             var compositionSchemas = CompositionBuilder.InitializeCompositionSchemas(applicationMetadata.Schema);
-            return COMPOSITIONExpander.Expand(SecurityFacade.CurrentUser(), compositionSchemas, options);
+            return CompositionExpander.Expand(SecurityFacade.CurrentUser(), compositionSchemas, options);
         }
 
         [HttpPost]

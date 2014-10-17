@@ -18,7 +18,17 @@ using System.Threading.Tasks;
 namespace softWrench.sW4.Data.Persistence.Relational {
     public class CollectionResolver {
 
-        private readonly EntityRepository _entityRepository = new EntityRepository();
+        private EntityRepository.EntityRepository _repository;
+
+        private EntityRepository.EntityRepository EntityRepository {
+            get {
+                if (_repository == null) {
+                    _repository =
+                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository.EntityRepository>(typeof(EntityRepository.EntityRepository));
+                }
+                return _repository;
+            }
+        }
 
         private readonly ILog _log = LogManager.GetLogger(typeof(CollectionResolver));
 
@@ -85,7 +95,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
             var searchRequestDto = BuildSearchRequestDto(applicationCompositionSchema, lookupattributes, matchingResultWrapper, attributeHolders, collectionEntityMetadata);
 
-            var listOfCollections = _entityRepository.GetAsRawDictionary(collectionEntityMetadata, searchRequestDto);
+            var listOfCollections = EntityRepository.GetAsRawDictionary(collectionEntityMetadata, searchRequestDto);
             if (attributeHolders.Count() == 1) {
                 //default scenario, we have just one entity here
                 attributeHolders.First().Attributes.Add(targetCollectionAttribute, listOfCollections);

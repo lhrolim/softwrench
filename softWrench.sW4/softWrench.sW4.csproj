@@ -182,8 +182,11 @@
     <Compile Include="Data\ExtraAttributes.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\DataSetConfigurationException.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\MaximoApplicationDataSet.cs" />
+    <Compile Include="Data\Persistence\Engine\AConnectorEngine.cs" />
+    <Compile Include="Data\Persistence\Engine\SWDBConnectorEngine.cs" />
     <Compile Include="Data\Persistence\PaginationData.cs" />
     <Compile Include="Data\Persistence\NHibernatePaginationUtil.cs" />
+    <Compile Include="Data\Persistence\Relational\EntityRepository\EntityRepository.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QuerySearchSortBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\EntityWhereClauseBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\FixedSearchWhereClauseBuilder.cs" />
@@ -389,7 +392,7 @@
     <Compile Include="Data\Persistence\WS\API\IGenericConnector.cs" />
     <Compile Include="Data\Persistence\WS\Internal\IMaximoConnector.cs" />
     <Compile Include="Data\Persistence\WS\Internal\IMaximoCrudConnector.cs" />
-    <Compile Include="Data\Persistence\WS\API\MaximoConnectorEngine.cs" />
+    <Compile Include="Data\Persistence\Engine\MaximoConnectorEngine.cs" />
     <Compile Include="Data\Persistence\WS\Internal\MaximoOperationExecutionContext.cs" />
     <Compile Include="Data\Persistence\WS\Internal\Constants\WsProvider.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseWorkOrderCrudConnector.cs" />
@@ -465,7 +468,6 @@
     <Compile Include="Data\Search\SearchRequestDto.cs" />
     <Compile Include="Data\Pagination\PaginationUtils.cs" />
     <Compile Include="Data\Pagination\PagingExtension.cs" />
-    <Compile Include="Data\Persistence\Relational\EntityRepository.cs" />
     <Compile Include="Data\Search\SearchUtils.cs" />
     <Compile Include="Data\Persistence\WS\Mif\MifConstants.cs" />
     <Compile Include="Data\Persistence\WS\Mif\MifMethodNameUtils.cs" />

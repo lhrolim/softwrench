@@ -1,16 +1,28 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using softWrench.sW4.Data.Persistence.Relational;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.SimpleInjector;
 
 namespace softWrench.sW4.Data.Entities {
     public class LocationCostCenterRestrictionDao {
         private const string ChartOfAccountsEntity = "chartofaccounts";
         private const string PluspCustomerEntity = "pluspcustomer";
 
-        private readonly EntityRepository _entityRepository = new EntityRepository();
+        private EntityRepository _repository;
+
+        private EntityRepository EntityRepository {
+            get {
+                if (_repository == null) {
+                    _repository =
+                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
+                }
+                return _repository;
+            }
+        }
 
         public void GetCostCenterDescription(Dictionary<string, string> costCenters) {
             var entityMetadata = MetadataProvider.Entity(ChartOfAccountsEntity);
@@ -18,7 +30,7 @@ namespace softWrench.sW4.Data.Entities {
             var searchRequestDto = new SearchRequestDto {
                 WhereClause = BuildIWhereIn(ChartOfAccountsEntity, glAccount, new List<string>(costCenters.Keys))
             };
-            var result = _entityRepository.Get(entityMetadata, searchRequestDto);
+            var result = EntityRepository.Get(entityMetadata, searchRequestDto);
             var attributeHolders = result as AttributeHolder[] ?? result.ToArray();
             if (!attributeHolders.Any()) {
                 return;
@@ -35,7 +47,7 @@ namespace softWrench.sW4.Data.Entities {
             var searchRequestDto = new SearchRequestDto {
                 WhereClause = BuildIWhereIn(PluspCustomerEntity, customer, new List<string>(customers.Keys))
             };
-            var result = _entityRepository.Get(entityMetadata, searchRequestDto);
+            var result = EntityRepository.Get(entityMetadata, searchRequestDto);
             var attributeHolders = result as AttributeHolder[] ?? result.ToArray();
             if (!attributeHolders.Any()) {
                 return;

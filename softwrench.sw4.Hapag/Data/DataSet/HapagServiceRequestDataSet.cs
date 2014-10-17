@@ -1,7 +1,10 @@
 ﻿using log4net;
+using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Data.Init;
 using softwrench.sw4.Hapag.Data.Sync;
+using softwrench.sw4.Hapag.Security;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
@@ -55,6 +58,10 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                         }
                     }";
         #endregion
+
+        public HapagServiceRequestDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao)
+            : base(locationManager, entityRepository, maxDao) {
+        }
 
         public override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             //this means that we are creating the service request from an asset

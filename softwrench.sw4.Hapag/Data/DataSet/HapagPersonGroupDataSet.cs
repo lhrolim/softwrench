@@ -1,4 +1,7 @@
-﻿using softwrench.sw4.Hapag.Data.Sync;
+﻿using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
+using softwrench.sw4.Hapag.Data.Sync;
+using softwrench.sw4.Hapag.Security;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -18,6 +21,11 @@ using System.Threading.Tasks;
 namespace softwrench.sw4.Hapag.Data.DataSet {
 
     class HapagPersonGroupDataSet : HapagBaseApplicationDataSet {
+        public HapagPersonGroupDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao) 
+            : base(locationManager, entityRepository, maxDao)
+        {
+        }
+
         public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var dbList = base.GetList(application, searchDto);
             var resultObject = dbList.ResultObject;
