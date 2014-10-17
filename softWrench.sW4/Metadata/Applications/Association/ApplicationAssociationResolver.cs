@@ -4,11 +4,13 @@ using System.Linq;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
+using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -21,12 +23,24 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
     class ApplicationAssociationResolver : BaseDependableResolver {
 
-        
+
         private const string WrongPostFilterMethod = "PostfilterFunction {0} of dataset {1} was implemented with wrong signature. See IDataSet documentation";
         private const string WrongPreFilterMethod = "PrefilterFunction {0} of dataset {1} was implemented with wrong signature. See IDataSet documentation";
         private const string ValueKeyConst = "value";
 
-        private readonly EntityRepository _entityRepository = new EntityRepository();
+        //        private readonly EntityRepository _entityRepository = new EntityRepository();
+
+        private EntityRepository _repository;
+
+        private EntityRepository EntityRepository {
+            get {
+                if (_repository == null) {
+                    _repository =
+                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
+                }
+                return _repository;
+            }
+        }
 
         public static ApplicationMetadata GetAssociationApplicationMetadata(ApplicationAssociationDefinition association) {
 
@@ -74,12 +88,12 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             }
 
             var entityMetadata = MetadataProvider.Entity(association.EntityAssociation.To);
-            var queryResponse = _entityRepository.Get(entityMetadata, associationFilter);
+            var queryResponse = EntityRepository.Get(entityMetadata, associationFilter);
 
             if (associationFilter is PaginatedSearchRequestDto) {
                 var paginatedFilter = (PaginatedSearchRequestDto)associationFilter;
                 if (paginatedFilter.NeedsCountUpdate) {
-                    paginatedFilter.TotalCount = _entityRepository.Count(entityMetadata, associationFilter);
+                    paginatedFilter.TotalCount = EntityRepository.Count(entityMetadata, associationFilter);
                 }
             }
 
@@ -96,9 +110,9 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             ISet<IAssociationOption> options = new SortedSet<IAssociationOption>();
             foreach (var attributeHolder1 in queryResponse) {
                 var attributeHolder = (DataMap)attributeHolder1;
-                var value =attributeHolder.GetAttribute(projectionResult.ValueKey);
-                if(value.GetType() == typeof(decimal)){
-                  value = Convert.ToInt32(value);
+                var value = attributeHolder.GetAttribute(projectionResult.ValueKey);
+                if (value.GetType() == typeof(decimal)) {
+                    value = Convert.ToInt32(value);
                 }
 
                 var labelNumber = association.LabelFields.Count;
@@ -109,7 +123,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 if (association.ExtraProjectionFields.Count > 0) {
                     options.Add(new MultiValueAssociationOption((string)value, label, attributeHolder));
                 } else {
-                    
+
                     options.Add(new AssociationOption(Convert.ToString(value), label));
                 }
             }
@@ -143,12 +157,10 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             if (mi == null) {
                 throw new InvalidOperationException(String.Format(MethodNotFound, filterFunctionName, dataSet.GetType().Name));
             }
-            if (mi.GetParameters().Count() != 1)
-            {
+            if (mi.GetParameters().Count() != 1) {
                 throw new InvalidOperationException(String.Format(WrongPostFilterMethod, filterFunctionName, dataSet.GetType().Name));
             }
-            var postFilterParam = new AssociationPostFilterFunctionParameters()
-            {
+            var postFilterParam = new AssociationPostFilterFunctionParameters() {
                 Options = options,
                 OriginalEntity = originalEntity,
                 Association = association

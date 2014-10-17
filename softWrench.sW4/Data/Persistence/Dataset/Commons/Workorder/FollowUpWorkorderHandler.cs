@@ -6,14 +6,26 @@ using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.SimpleInjector;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Workorder {
     class FollowUpWorkorderHandler : BaseMaximoCustomConnector {
-        private static readonly EntityRepository EntityRepository = new EntityRepository();
+        private EntityRepository _repository;
+
+        private EntityRepository EntityRepository {
+            get {
+                if (_repository == null) {
+                    _repository =
+                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
+                }
+                return _repository;
+            }
+        }
 
         private const string NotFoundLog = "{0} {1} not found. Impossible to generate FollowUp Workorder";
 

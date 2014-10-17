@@ -1,4 +1,7 @@
-﻿using softwrench.sw4.Shared2.Data.Association;
+﻿using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
+using softwrench.sw4.Hapag.Security;
+using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
@@ -30,6 +33,11 @@ namespace softwrench.sw4.Hapag.Data.DataSet
         private const string KeySeparator = "|";
 
         #region Filter functions
+
+        public HapagIncidentDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao) 
+            : base(locationManager, entityRepository, maxDao)
+        {
+        }
 
         public SearchRequestDto FilterComponent(AssociationPreFilterFunctionParameters parameters)
         {

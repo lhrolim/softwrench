@@ -1,36 +1,24 @@
-﻿using softWrench.sW4.Data.Persistence.Dataset.Commons;
-using softWrench.sW4.Data.Persistence.Engine;
-using softwrench.sW4.Shared2.Data;
-using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.Data.Offline;
-using softWrench.sW4.Data.Pagination;
+﻿using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Data.Persistence.Relational;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.Sync;
+using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
-using softWrench.sW4.Data.Search;
 using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata.Applications;
-using softWrench.sW4.Metadata.Entities;
-using softWrench.sW4.Metadata.Entities.Sliced;
-using softWrench.sW4.Metadata.Stereotypes.Schema;
-using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
-using System;
-using System.Collections.Generic;
 
-namespace softWrench.sW4.Data.Persistence.WS.API {
-    public sealed class MaximoConnectorEngine : IConnectorEngine {
+namespace softWrench.sW4.Data.Persistence.Engine {
+    public sealed class MaximoConnectorEngine : AConnectorEngine {
 
-        private readonly EntityRepository _entityRepository = new EntityRepository();
+        private readonly SyncItemHandler _syncHandler;
 
-        private readonly SyncItemHandler _syncHandler = new SyncItemHandler();
+        public MaximoConnectorEngine(EntityRepository entityRepository, SyncItemHandler syncHandler)
+            : base(entityRepository) {
+            _syncHandler = syncHandler;
+        }
 
-        private readonly CollectionResolver _collectionResolver = new CollectionResolver();
-     
-
-        public MaximoResult Execute(OperationWrapper operationWrapper) {
+        public override MaximoResult Execute(OperationWrapper operationWrapper) {
             var entityMetadata = operationWrapper.EntityMetadata;
             var connector = GenericConnectorFactory.GetConnector(entityMetadata, operationWrapper.OperationName);
             var operationName = operationWrapper.OperationName;
@@ -52,6 +40,8 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
 
             return new MaximoCustomOperatorEngine(connector).InvokeCustomOperation(operationWrapper);
         }
+
+
 
         private static MaximoResult DoExecuteCrud(OperationWrapper operationWrapper, IMaximoConnector connector) {
 
@@ -88,54 +78,11 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
             return Execute(new OperationWrapper(crudOperationData, OperationConstants.CRUD_DELETE));
         }
 
-        public int Count(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
-            return _entityRepository.Count(entityMetadata, searchDto);
-        }
-
-       
-
-     
-
-     
-
-        public AttributeHolder FindById(ApplicationSchemaDefinition schema, SlicedEntityMetadata entityMetadata, string id,
-            IDictionary<string, ApplicationCompositionSchema> compositionSchemas) {
-            var mainEntity = _entityRepository.Get(entityMetadata, id);
-            if (mainEntity == null) {
-                return null;
-            }
-//            if ("true".EqualsIc(schema.GetProperty(ApplicationSchemaPropertiesCatalog.PreFetchCompositions))){
-                _collectionResolver.ResolveCollections(entityMetadata, compositionSchemas, mainEntity);
-//            }
-
-            return mainEntity;
-        }
-
-        public IReadOnlyList<AttributeHolder> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto) {
-            return Find(slicedEntityMetadata, searchDto, null);
-        }
-
-
-
-        public IReadOnlyList<AttributeHolder> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto,
-            IDictionary<string, ApplicationCompositionSchema> compositionSchemas) {
-            var list = _entityRepository.Get(slicedEntityMetadata, searchDto);
-
-            // Get the composition data for the list, only in the case of detailed list (like printing details), otherwise, this is unecessary
-            if (compositionSchemas != null && compositionSchemas.Count > 0) {
-                _collectionResolver.ResolveCollections(slicedEntityMetadata, compositionSchemas, list);
-            }
-
-            return list;
-        }
-
-    
-
-        public SynchronizationApplicationData Sync(ApplicationMetadata appMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData, SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null) {
+        public override SynchronizationApplicationData Sync(ApplicationMetadata appMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData, SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null) {
             return _syncHandler.Sync(appMetadata, applicationSyncData, syncItemHandlerDelegate);
         }
 
-        sealed class MaximoCrudConnectorEngine : IDisposable {
+        sealed class MaximoCrudConnectorEngine {
 
             private readonly IMaximoCrudConnector _crudConnector;
 
@@ -143,7 +90,7 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
                 _crudConnector = crudConnector;
             }
 
-            private readonly EntityRepository _entityRepository = new EntityRepository();
+
 
             public MaximoResult Update(CrudOperationData operationData) {
                 operationData.OperationType = OperationType.AddChange;
@@ -188,16 +135,12 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
                 return maximoTemplateData.ResultObject;
             }
 
-            public void Dispose() {
-                _entityRepository.Dispose();
-            }
+
 
 
         }
 
-        public void Dispose() {
-            _entityRepository.Dispose();
-        }
+
 
 
     }
