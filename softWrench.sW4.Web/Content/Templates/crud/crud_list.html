@@ -171,7 +171,7 @@
                     </td>
                 </tr>
             </tbody>
-            <tfoot>
+            <tfoot ng-show="datamap.length != 0">
                 <tr class="footer-row">
                     <th ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)"
                         ng-style="{'min-width': column.rendererParameters['minwidth'],
@@ -179,7 +179,7 @@
                                            'width': column.rendererParameters['width'],
                                            'word-wrap': column.rendererParameters['wordwrap']}">
                         <div ng-if="shouldShowFilter(column)">
-                           <span class="add-on">{{i18NLabel(column)}}</span>
+                            <span class="add-on">{{i18NLabel(column)}}</span>
                         </div>
                     </th>
                 </tr>
