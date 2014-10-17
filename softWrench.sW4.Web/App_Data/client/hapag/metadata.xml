@@ -1197,13 +1197,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 							<option label="Softphone" value="Softphone"/>
 							<option label="Voicemail" value="Voicemail"/>
 							<option label="Other (please describe)" value="Other"/>
+              <event service="srservice" method="afterPhoneAffectedDeviceChange" type="afterchange" />
 						</optionfield>
 
 						<association label="Phone Location:" target="phonepluspcustomer" labelfield="2pluspcustomer_.hlagpluspcustomer"
 															 enableexpression="@affectedDevice == 'Cisco-IP-Phone'"/>
 
 						<association label="Affected Phone:" target="assetnum" labelfield="asset_.description" 
-                         dependantfields="phonepluspcustomer" extraprojectionvalues="pluspcustomer">
+                         dependantfields="phonepluspcustomer" extraprojectionvalues="pluspcustomer" enableexpression="@affectedDevice == 'Cisco-IP-Phone'">
               <renderer type="autocompleteclient" params="minLength=3;"/>
 							<dataprovider prefilterfunction="FilterAssets"/>
 						</association>

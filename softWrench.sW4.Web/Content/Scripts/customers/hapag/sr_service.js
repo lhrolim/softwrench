@@ -40,6 +40,14 @@ app.factory('srservice', function ($http, alertService, fieldService, searchServ
                 event.fields['itcassetnum'] = '$null$ignorewatch';
             }
             //event.fields['itcassetnum'] = null;
+        },
+
+        afterPhoneAffectedDeviceChange: function (event) {
+            // Clear Phone Location and Affected Phone case Affected Device is not 'Cisco-IP-Phone'
+            if (event.fields['affectedDevice'] != 'Cisco-IP-Phone') {
+                event.fields['phonepluspcustomer'] = '$ignorewatch';
+                event.fields['assetnum'] = '$ignorewatch';
+            }            
         }
     }; 
 });
