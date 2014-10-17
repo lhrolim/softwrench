@@ -23,7 +23,7 @@
         </thead>
         <tbody ng-show="clonedCompositionData.length > 0">
             <tr ng-repeat-start="compositionitem in clonedCompositionData">
-                <td ng-repeat="column in compositionlistschema.displayables" ng-show="!isFieldHidden(compositionlistschema,column)">
+                <td ng-repeat="column in compositionlistschema.displayables" ng-show="!isFieldHidden(compositionlistschema,column)" style="word-break:break-all">
                     <ng-switch on="column.type">
                         <div ng-switch-when="ApplicationSection">
                             <div ng-include="contextPath(column.resourcepath)" href="#" style="width: 100%" />
@@ -38,7 +38,7 @@
             </tr>
 
             <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
-                <td colspan="100%" style="background-color: white">
+                <td colspan="100%" style="background-color: white" >
                     <div class="expanded-item-composition" ng-if="noupdateallowed">
 
                         <expanded-item-output displayables="compositiondetailschema.displayables"
