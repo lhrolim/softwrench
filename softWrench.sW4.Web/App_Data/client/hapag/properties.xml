@@ -76,7 +76,7 @@
 		<property key="ldap.allownonmaximousers" value="true"/>
 		<property key="basewsURL" value="C:\ServiceIT\config\mifwsdl\PROD\" />
 		<property key="mifcredentials.user" value="dey99msy@ww.hl.lan"/>
-		<property key="mifcredentials.password" value="maximo16"/>
+		<property key="mifcredentials.password" value="Richard1303"/>
 		<property key="ismcredentials.user" value="hl2tkbrg"/>
 		<property key="ismcredentials.password" value="xK7AgFqJJQ"/>
 	</environment>

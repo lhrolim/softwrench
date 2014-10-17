@@ -197,6 +197,7 @@ app.directive('crudList', function (contextService) {
                 //TODO Improve this solution
                 var reportDto = contextService.retrieveReportSearchDTO($scope.schema.schemaId);
                 if (reportDto != null) {
+                    reportDto = $.parseJSON(reportDto);
                     searchDTO = searchService.buildReportSearchDTO(reportDto, $scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause);
                 } else {
                     searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause);

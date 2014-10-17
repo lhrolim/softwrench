@@ -14,13 +14,21 @@ namespace softwrench.sw4.Hapag.Data {
         public ReportWhereClauseProvider(R0017WhereClauseProvider r0017WhereClauseProvider) {
             _r0017WhereClauseProvider = r0017WhereClauseProvider;
         }
-        public string HardwareRepairReportWhereClause() {
+        public string HardwareRepairReportWhereClauseWithR17() {
             var r0017 = _r0017WhereClauseProvider.IncidentWhereClause();
             return "(" + r0017 + ")" + " AND " + HapagQueryConstants.DefaultHardwareRepairReportQuery;
         }
-        public string TapeBackupReportWhereClause() {
+        public string TapeBackupReportWhereClauseWithR17() {
             var r0017 = _r0017WhereClauseProvider.IncidentWhereClause();
             return "(" + r0017 + ")" + " AND " + HapagQueryConstants.DefaultTapeBackUpReportQuery;
         }
+        
+        public string HardwareRepairReportWhereClause() {
+            return HapagQueryConstants.DefaultHardwareRepairReportQuery;
+        }
+        public string TapeBackupReportWhereClause() {
+            return HapagQueryConstants.DefaultTapeBackUpReportQuery;
+        }
+
     }
 }

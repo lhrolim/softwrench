@@ -174,6 +174,19 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
             var HardwareReportCondition = new WhereClauseRegisterCondition {
                 Alias = "hardwarerepair",
                 UserProfile = ProfileType.Itc.GetName(),
+                AppContext = new ApplicationLookupContext { Schema = "hardwarerepair" }
+            };
+            _wcFacade.Register("incident", "@reportWhereClauseProvider.HardwareRepairReportWhereClauseWithR17", HardwareReportCondition);
+
+            HardwareReportCondition = new WhereClauseRegisterCondition {
+                Alias = "hardwarerepair",
+                AppContext = new ApplicationLookupContext { Schema = "hardwarerepair" },
+                Module = "xitc"
+            };
+            _wcFacade.Register("incident", "@reportWhereClauseProvider.HardwareRepairReportWhereClauseWithR17", HardwareReportCondition);
+                        
+            HardwareReportCondition = new WhereClauseRegisterCondition {
+                Alias = "hardwarerepair",
                 AppContext = new ApplicationLookupContext { Schema = "hardwarerepair" },
                 Module = Conditions.AnyCondition
             };
@@ -183,10 +196,22 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
             var TapeBackReportCondition = new WhereClauseRegisterCondition {
                 Alias = "tapebackupreport",
                 UserProfile = ProfileType.Itc.GetName(),
+                AppContext = new ApplicationLookupContext { Schema = "tapebackupreport" }
+            };
+            _wcFacade.Register("incident", "@reportWhereClauseProvider.TapeBackupReportWhereClauseWithR17", TapeBackReportCondition);
+
+            TapeBackReportCondition = new WhereClauseRegisterCondition {
+                Alias = "tapebackupreport",
+                AppContext = new ApplicationLookupContext { Schema = "tapebackupreport" },
+                Module = "xitc"
+            };
+            _wcFacade.Register("incident", "@reportWhereClauseProvider.TapeBackupReportWhereClauseWithR17", TapeBackReportCondition);
+
+            TapeBackReportCondition = new WhereClauseRegisterCondition {
+                Alias = "tapebackupreport",
                 AppContext = new ApplicationLookupContext { Schema = "tapebackupreport" },
                 Module = Conditions.AnyCondition
             };
-            _wcFacade.Register("woactivity", "", TapeBackReportCondition); // just to clean the property
             _wcFacade.Register("incident", "@reportWhereClauseProvider.TapeBackupReportWhereClause", TapeBackReportCondition);
 
             //Adding Group Report default where clause
