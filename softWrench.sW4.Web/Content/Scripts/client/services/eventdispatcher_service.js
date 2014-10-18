@@ -22,6 +22,8 @@ app.factory('eventdispatcherService', function ($injector, $log) {
         return fn;
     }
     return {
+
+
         onload: function (schema, datamap) {
             var fn = loadService(schema, 'onload');
             if (!fn) {

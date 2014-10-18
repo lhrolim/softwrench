@@ -8,6 +8,7 @@
             paginationData: '=',
             searchData: '=',
             searchOperator: '=',
+            searchSort:'=',
             schema: '=',
             mode: '@',
             position: '@'
@@ -30,6 +31,10 @@
 
             $scope.validateRole = function (command) {
                 securityService.validateRoleWithErrorMessage(command.role);
+            }
+
+            $scope.executeService = function(command) {
+                commandService.doCommand($scope, command);
             }
 
         }

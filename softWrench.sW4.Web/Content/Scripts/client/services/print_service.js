@@ -2,9 +2,9 @@
 
 //var PRINTMODAL_$_KEY = '[data-class="printModal"]';
 
-app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsService, fixHeaderService, redirectService, searchService) {
+app.factory('printService', function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService, redirectService, searchService) {
 
-   var mergeCompositionData = function (datamap, nonExpansibleData, expansibleData) {
+    var mergeCompositionData = function (datamap, nonExpansibleData, expansibleData) {
         var resultObj = {};
         if (expansibleData != null) {
             resultObj = expansibleData;
@@ -20,27 +20,30 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
             } else {
                 resultObj[value.key] = datamap.fields[value.key];
             }
-            
+
         }
         return resultObj;
-   };
+    };
 
-    var doPrintGrid = function(schema) {
+    var doPrintGrid = function (schema) {
         fixHeaderService.unfix();
         innerDoPrint();
         fixHeaderService.fixThead(schema);
     };
 
-    var innerDoPrint = function() {
+    var innerDoPrint = function () {
         window.print();
     };
 
     return {
-        doPrint: function() {
+        doPrint: function () {
             innerDoPrint();
         },
 
-        printList: function (totalCount, printPageSize, gridRefreshFunction, schema) {
+        printList: function (paginationData, schema) {
+            var totalCount = $scope.paginationData.totalCount;
+            var printPageSize = paginationData.pageSize;
+
 
             $rootScope.printRequested = false;
             if ($rootScope.$$listeners['listTableRenderedEvent'] != undefined) {
@@ -66,7 +69,7 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
                     if (index > printPageSize) {
                         rows[index].className += ' hideRows';
                     }
-                }                
+                }
                 if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
                     listgrid.addClass('listgrid-firefox');
                 }
@@ -80,13 +83,11 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
             }
 
             //otherwise, hit the server asking for the full grid to be print
-            var invokeObj = {
+            searchService.refreshGrid(null, {
                 pageNumber: 1,
                 pageSize: totalCount,
                 printMode: true,
-            };
-
-            gridRefreshFunction(invokeObj);
+            });
         },
 
         printDetail: function (schema, datamap, printOptions) {
@@ -116,14 +117,14 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
             var shouldPageBreak = printOptions == undefined ? true : printOptions.shouldPageBreak;
             var shouldPrintMain = printOptions == undefined ? true : printOptions.shouldPrintMain;
 
-                var emptyCompositions = {};
+            var emptyCompositions = {};
             //TODO: check whether printOptions might or not be null
             if (printOptions != null) {
                 $.each(printOptions.compositionsToExpand, function (key, obj) {
                     if (obj.value == true) {
                         var compositionData = datamap.fields[key];
-                            //TODO: CompositionData might be undefined or not
-                            if (compositionData == undefined || compositionData.length == 0) {
+                        //TODO: CompositionData might be undefined or not
+                        if (compositionData == undefined || compositionData.length == 0) {
                             emptyCompositions[key] = [];
                         }
                     }
@@ -144,13 +145,13 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
                 $.each(emptyCompositions, function (key, obj) {
                     compositions[key] = obj;
                 });
-                
+
                 log.debug('sw_readytoprintevent dispatched after server return');
                 var compositionsToPrint = mergeCompositionData(datamap, notExpansibleCompositions, compositions);
                 $rootScope.$broadcast("sw_readytoprintevent", compositionsToPrint, shouldPageBreak, shouldPrintMain);
             });
         },
-        
+
         printDetailedList: function (schema, datamap, printOptions) {
 
             var printSchema = schema.printSchema != null ? schema.printSchema : schema;
@@ -164,20 +165,20 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
 
 
             var ids = [];
-            
+
             $.grep(datamap, function (element) {
                 if (element.fields['checked'] == true) {
                     ids.push(element.fields[printSchema.idFieldName]);
                 }
             });
-                        
+
             var applicationName = printSchema.name;
             var printSchemaId = printSchema.schemaId;
             var parameters = {};
             var searchData = {};
             var searchOperator = {};
 
-            searchData[printSchema.idFieldName] =  ids.join(',');
+            searchData[printSchema.idFieldName] = ids.join(',');
             searchOperator[printSchema.idFieldName] = searchService.getSearchOperationById('EQ');
 
             parameters.searchDTO = searchService.buildSearchDTO(searchData, {}, searchOperator, {});
@@ -191,7 +192,7 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
                     compositionsToFetch[key] = obj;
                 }
             });
-            
+
             var getDetailsUrl = redirectService.getApplicationUrl(applicationName, printSchemaId, '', '', parameters);
 
             var shouldPageBreak = printOptions == undefined ? true : printOptions.shouldPageBreak;

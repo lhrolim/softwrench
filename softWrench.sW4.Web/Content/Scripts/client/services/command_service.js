@@ -72,6 +72,9 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
             return;
 
         },
+
+
+
         //TODO: make it generic
         executeClickCustomCommand: function (fullServiceName, rowdm, column) {
             var idx = fullServiceName.indexOf(".");

@@ -6,13 +6,28 @@ var app = angular.module('sw_layout');
 app.factory('fileService', function ($rootScope, $timeout, i18NService) {
 
     return {
-        download: function(url, successCallback, failCallback) {
+        download: function (url, successCallback, failCallback) {
+            //needed since this is non-ajax call
+            url = removeEncoding(url);
+
+            //this is for emulating the busy cursor, since this is not an ajax call
+            $rootScope.$broadcast('sw_ajaxinit');
+
+
             $.fileDownload(url, {
                 successCallback: function (html, url) {
-                    successCallback(html,url);
+                    //this is for removing the busy cursor
+                    $rootScope.$broadcast('sw_ajaxend');
+                    if (successCallback) {
+                        successCallback(html, url);
+                    }
                 },
                 failCallback: function (html, url) {
-                    failCallback(html,url);
+                    //this is for removing the busy cursor
+                    $rootScope.$broadcast('sw_ajaxend');
+                    if (failCallback) {
+                        failCallback(html, url);
+                    }
                 }
             });
         }
