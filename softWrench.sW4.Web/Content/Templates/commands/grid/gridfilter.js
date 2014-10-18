@@ -1,4 +1,4 @@
-﻿function GridFilterController($scope, $http, userPreferenceService, searchService, i18NService, alertService,contextService) {
+﻿function GridFilterController($scope, $http, userPreferenceService, searchService, i18NService, alertService, contextService) {
 
     $scope.selectedfilter = contextService.getFromContext("selectedfilter", true, true);
 
@@ -28,6 +28,11 @@
     };
 
     $scope.saveFilter = function () {
+        if (!$scope.selectedfilter && !$scope.hasFilterData()) {
+            alertService.alert('Please, fill any grid filter in order to save it');
+            return;
+        }
+
         var saveFormSt = $("#savefilterform").prop('outerHTML');
         //TODO: use angularjs?!
         //remove display:none
@@ -65,7 +70,7 @@
             if (data == "lastSearchedValues") {
                 continue;
             }
-            return true;
+            return searchData[data]!="";
         }
         return false;
     }
@@ -114,7 +119,7 @@
     }
 
     $scope.$on("sw_redirectapplicationsuccess", function (event) {
-        
+
         contextService.insertIntoContext("selectedfilter", null, true);
         $scope.selectedfilter = null;
     });

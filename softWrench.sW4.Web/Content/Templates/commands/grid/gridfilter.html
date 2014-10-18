@@ -1,5 +1,5 @@
 <span ng-controller="GridFilterController">
-    <div class="btn-group" ng-show="hasFilter() || hasFilterData()">
+    <div class="btn-group">
         <button type="button" class="btn btn-sm btn-primary" ng-click="refreshGrid()">
             <i class="fa fa-filter"></i><span ng-show="!selectedfilter.alias">&ensp;Filters</span><span ng-show="selectedfilter.alias">&ensp;{{selectedfilter.alias}}</span>
         </button>
@@ -14,7 +14,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" ng-click="saveFilter()" ng-if="selectedfilter || hasFilterData()">
+                <a href="#" ng-click="saveFilter()" ng-enabled="">
                     <i class="fa fa-save"></i>&ensp;Save
                 </a>
             </li>
