@@ -1,0 +1,12 @@
+﻿.page-signin {
+    background: #122c51 url(../../Images/kongsberg/signin.jpg) no-repeat center top fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+    .page-signin .form-signin {
+        background-color: none;
+        box-shadow: none;
+    }

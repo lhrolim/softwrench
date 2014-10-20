@@ -160,7 +160,7 @@ input:focus, select:focus, textarea:focus {
     border-top-left-radius: 3px !important;
     border-bottom-left-radius: 3px !important;
 }
- 
+
 #datetimepicker > .input-group-addon {
     padding: 4px;
 }
@@ -619,14 +619,17 @@ Header
     max-width: 1139px;
     width: 100%;
     position: fixed;
-    background: #34a7e0 url(../../Images/otb-header.png) no-repeat top left;
+    background: #34a7e0 url(../../Images/header.jpg) no-repeat top left;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
     background-size: cover;
 }
 
     /*Responsive Menu*/
     .container header .menu-expand {
         color: #fff;
-       padding: 20px 20px 15px;
+        padding: 20px 20px 15px;
         cursor: pointer;
         background-color: rgba(52, 167, 224, 0.5);
         border-bottom: rgba(0, 0, 0, 0.3) 3px solid;
@@ -656,45 +659,45 @@ Header
         padding: 0 20px;
     }
 
-.container header .menu-admin .text {
-    float: left;
-    color: #fff;
-    margin-top: 16px;
-}
-
-    .container header .menu-admin .text a {
-        color: #fff;
-    }
-
-        .container header .menu-admin .text a:hover {
-            text-decoration: none;
+        .container header .menu-admin .text {
+            float: left;
+            color: #fff;
+            margin-top: 16px;
         }
 
-.container header .menu-admin .buttons {
-    padding-top: 20px;
-    float: right;
-}
+            .container header .menu-admin .text a {
+                color: #fff;
+            }
 
-.container header .branding {
-    background: url(../../Images/otb-branding.png) no-repeat top left;
-    min-height: 100px;
-    padding: 20px 20px;
-}
+                .container header .menu-admin .text a:hover {
+                    text-decoration: none;
+                }
 
-    .container header .branding .logo img {
-        max-width: 100%;
-        height: auto;
-        width: auto;
+        .container header .menu-admin .buttons {
+            padding-top: 20px;
+            float: right;
+        }
+
+    .container header .branding {
+        background: url(../../Images/branding.png) no-repeat top left;
+        min-height: 100px;
+        padding: 20px 20px;
     }
 
-.container header .menu-grid {
-    max-width: 1139px;
-    width: 100%;
-}
+        .container header .branding .logo img {
+            max-width: 100%;
+            height: auto;
+            width: auto;
+        }
 
-    .container header .menu-grid li a {
-        text-align: center;
+    .container header .menu-grid {
+        max-width: 1139px;
+        width: 100%;
     }
+
+        .container header .menu-grid li a {
+            text-align: center;
+        }
 
 /*SM - 10/06 - SWWEB-435*/
 .container .context {
@@ -949,7 +952,7 @@ Header
     font: 12px/24px Arial, Helvetica, sans-serif;
 }
 
-/*SUCCESS MESSAGE - BEGIN*/ 
+/*SUCCESS MESSAGE - BEGIN*/
 .topMessageAux {
     z-index: 1000;
     margin-left: auto !important;
