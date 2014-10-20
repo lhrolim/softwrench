@@ -481,7 +481,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </attributes>
       <relationships>
         <relationship to ="email">
-          <relationshipAttribute from="sendto" to="emailaddress" primary="true"/>
+          <relationshipAttribute query="commlog.sendto like email_.emailaddress" primary="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
