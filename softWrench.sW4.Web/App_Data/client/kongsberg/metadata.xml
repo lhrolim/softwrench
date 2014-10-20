@@ -891,7 +891,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </relationships>
     </entity>
 
-    <entity name="solution" idAttribute="solution">
+    <entity name="solution" idAttribute="solution" whereclause="status like 'ACTIVE'">
       <relationships>
         <relationship to="classstructure" qualifier="classstructure">
           <relationshipAttribute from="classstructureid" to ="classstructureid" primary="true"/>
@@ -1016,11 +1016,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="changeby" default="@username" hidden="true"/>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname">
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeowner"/>
+            <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
           </association>
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description">
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+            <event type="afterchange" service="generalsrService" method="afterchangeownergroup"/>
           </association>
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" >
@@ -1086,13 +1086,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!-- SWWEB 173-->
           <!-- SWWEB 172: Changed the location and asset to make them look similar to gric-->
           <association label="Location:" target="location" labelfield="location_.description" >
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+            <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
             <!--renderer type="lookup"/-->
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="srService" method="afterChangeAsset"/>
+            <event type="afterchange" service="generalsrService" method="afterChangeAsset"/>
           </association>
           <section id="compositions"/>
         </schema>
@@ -1214,12 +1214,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="wonum" label="WO No:" readonly="true"/>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeowner"/>
+            <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+            <event type="afterchange" service="generalsrService" method="afterchangeownergroup"/>
           </association>
           <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
           <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
@@ -1232,13 +1232,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
           </field>
           <association label="Location:" target="location" labelfield="location_.description" >
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+            <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
             <!--renderer type="lookup"/-->
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="srService" method="afterChangeAsset"/>
+            <event type="afterchange" service="generalsrService" method="afterChangeAsset"/>
           </association>
           <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
             <renderer type="lookup"/>
@@ -1616,7 +1616,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </association>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname">
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeowner"/>
+            <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description">
@@ -1651,13 +1651,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup"/>
           </association>
           <association label="Location:" target="location" labelfield="location_.description" >
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+            <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
             <!--renderer type="lookup"/-->
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="srService" method="afterChangeAsset"/>
+            <event type="afterchange" service="generalsrService" method="afterChangeAsset"/>
           </association>
           <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
           <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
@@ -1700,7 +1700,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </association>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" default="@username" enableexpression="@ownergroup==null">
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeowner"/>
+            <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
@@ -1733,13 +1733,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup"/>
           </association>
           <association label="Location:" target="location" labelfield="location_.description" >
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+            <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
             <!--renderer type="lookup"/-->
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="srService" method="afterChangeAsset"/>
+            <event type="afterchange" service="generalsrService" method="afterChangeAsset"/>
           </association>
           <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
           <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
