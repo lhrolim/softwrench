@@ -41,7 +41,7 @@ app.factory('printService', function ($rootScope, $http, $timeout, $log, tabsSer
         },
 
         printList: function (paginationData, schema) {
-            var totalCount = $scope.paginationData.totalCount;
+            var totalCount =paginationData.totalCount;
             var printPageSize = paginationData.pageSize;
 
 
