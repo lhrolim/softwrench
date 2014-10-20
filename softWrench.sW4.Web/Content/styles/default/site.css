@@ -626,7 +626,7 @@ Header
     /*Responsive Menu*/
     .container header .menu-expand {
         color: #fff;
-        padding: 10px 20px;
+       padding: 20px 20px 15px;
         cursor: pointer;
         background-color: rgba(52, 167, 224, 0.5);
         border-bottom: rgba(0, 0, 0, 0.3) 3px solid;
@@ -758,7 +758,7 @@ Header
 
         .container header .logout.mobile {
             float: right;
-            margin-top: 10px;
+            margin-top: 25px;
             margin-right: 20px;
         }
 
