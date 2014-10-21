@@ -35,6 +35,7 @@ app.directive('crudList', function (contextService) {
             associationService, contextService, statuscolorService, eventdispatcherService) {
 
             $scope.$name = 'crudlist';
+            
 
             fixHeaderService.activateResizeHandler();
 
@@ -66,6 +67,7 @@ app.directive('crudList', function (contextService) {
 
 
 
+
             $scope.$on('filterRowRenderedEvent', function (filterRowRenderedEvent) {
                 if ($scope.datamap.length == 0) {
                     // only update filter visibility if there are no results to shown on grid... else the filter visibility will be updated on "listTableRenderedEvent"
@@ -78,7 +80,7 @@ app.directive('crudList', function (contextService) {
                 var log = $log.getInstance('sw4.crud_list_dir#on#listTableRenderedEvent');
                 log.debug('init table rendered listener');
 
-                eventdispatcherService.onload($scope.schema)
+                eventdispatcherService.onload($scope.schema);
 
                 if ($scope.ismodal == 'true' && !(true === $scope.$parent.showingModal)) {
                     return;
@@ -101,6 +103,11 @@ app.directive('crudList', function (contextService) {
                 log.debug('finish table rendered listener');
             });
 
+            $scope.$on('sw_togglefiltermode', function (event) {
+                $scope.advancedfiltermode = !$scope.advancedfiltermode;
+                fixHeaderService.callWindowResize();
+            });
+
             $scope.$on('sw_refreshgrid', function (event, searchData, extraparameters) {
                 /// <summary>
                 ///  implementation of searchService#refreshgrid see there for details
@@ -116,7 +123,7 @@ app.directive('crudList', function (contextService) {
                     $scope.searchData = searchData;
                     pagetogo = 1;
                 }
-                $scope.selectPage(pagetogo,pageSize,printmode);
+                $scope.selectPage(pagetogo, pageSize, printmode);
             });
 
             $scope.$on('sw_successmessagetimeout', function (event, data) {
@@ -128,6 +135,11 @@ app.directive('crudList', function (contextService) {
             $scope.$on('sw_errormessage', function (event, show) {
                 fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
             });
+
+            $scope.doAdvancedSearch = function (filterdata) {
+                searchService.advancedSearch($scope.datamap,$scope.schema, filterdata);
+            }
+
 
             $scope.isEditing = function (schema) {
                 var idFieldName = schema.idFieldName;
@@ -234,6 +246,11 @@ app.directive('crudList', function (contextService) {
                 fixHeaderService.unfix();
 
                 $scope.renderListView({ SearchDTO: searchDTO, printMode: printMode });
+                if ($scope.advancedfiltermode) {
+                    //this workaround is used to clear the data after the advanced search has reached, because the code has lots of comes and goes...
+                    //TODO: refatcor search
+                    $scope.searchData = {};
+                }
             };
 
             $scope.getSearchIcon = function (columnName) {
