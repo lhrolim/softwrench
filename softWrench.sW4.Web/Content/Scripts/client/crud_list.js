@@ -78,7 +78,11 @@ app.directive('crudList', function (contextService) {
                 var log = $log.getInstance('sw4.crud_list_dir#on#listTableRenderedEvent');
                 log.debug('init table rendered listener');
 
-                eventdispatcherService.onload($scope.schema)
+                var parameters = {
+                    fullKey: "/Global/Grids/ScanBar",
+                    searchData: $scope.searchData
+                };
+                eventdispatcherService.onload($scope.schema, null, parameters);
 
                 if ($scope.ismodal == 'true' && !(true === $scope.$parent.showingModal)) {
                     return;
@@ -104,8 +108,10 @@ app.directive('crudList', function (contextService) {
             $scope.$on('sw_refreshgrid', function (event, searchData) {
                 var pagetogo = $scope.paginationData.pageNumber;
                 if (searchData) {
-                    $scope.searchData = searchData;
-                    pagetogo = 1;
+                    for (var key in searchData) {
+                        $scope.searchData[key] = searchData[key];
+                        $scope.filterSearch(key);
+                    }
                 }
                 $scope.selectPage(pagetogo);
             });

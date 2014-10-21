@@ -750,6 +750,8 @@
     <Content Include="Content\Templates\commands\batches\batchesmenu.js" />
     <Content Include="Content\Templates\commands\grid\gridfilter.html" />
     <Content Include="Content\Templates\commands\grid\gridfilter.js" />
+    <Content Include="Content\Templates\commands\scan\scanfilter.js" />
+    <Content Include="Content\Templates\commands\scan\scanfilter.html" />
     <Content Include="Content\Templates\crud\advanced_filter_toogle.html" />
     <Content Include="Content\Templates\crud\association_list_input.html" />
     <Content Include="Content\Templates\crud\crud_body_modal.html" />
