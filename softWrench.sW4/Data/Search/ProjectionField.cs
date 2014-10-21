@@ -16,7 +16,7 @@ namespace softWrench.sW4.Data.Search {
         }
         protected bool Equals(ProjectionField other)
         {
-            return string.Equals(_alias, other._alias) && string.Equals(Name, other.Name);
+            return string.Equals(_alias, other._alias,StringComparison.CurrentCultureIgnoreCase) && string.Equals(Name, other.Name,StringComparison.CurrentCultureIgnoreCase);
         }
 
         public override bool Equals(object obj)
@@ -31,7 +31,7 @@ namespace softWrench.sW4.Data.Search {
         {
             unchecked
             {
-                return ((_alias != null ? _alias.GetHashCode() : 0) * 397) ^ (Name != null ? Name.GetHashCode() : 0);
+                return ((_alias != null ? _alias.ToLower().GetHashCode() : 0) * 397) ^ (Name != null ? Name.ToLower().GetHashCode() : 0);
             }
         }
 

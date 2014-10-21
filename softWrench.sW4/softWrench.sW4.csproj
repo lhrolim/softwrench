@@ -255,11 +255,14 @@
     <Compile Include="Metadata\Security\UserPreferences.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\OutputDetailStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\ApplicationSchemaPropertiesCatalog.cs" />
+    <Compile Include="Metadata\Validator\BaseMetadataXmlSourceInitializer.cs" />
+    <Compile Include="Metadata\Validator\CommandsXMLSourceInitializer.cs" />
     <Compile Include="Metadata\Validator\MetadataXmlTargetInitializer.cs" />
     <Compile Include="Metadata\Validator\MetadataXmlSourceInitializer.cs" />
     <Compile Include="Metadata\Validator\MetadataParsingUtils.cs" />
     <Compile Include="Metadata\Validator\MenuXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\PropertiesXmlInitializer.cs" />
+    <Compile Include="Metadata\Validator\SWDBMetadataXmlSourceInitializer.cs" />
     <Compile Include="Preferences\GridFilterAssociation.cs" />
     <Compile Include="Preferences\GridFilter.cs" />
     <Compile Include="Preferences\GridFilterController.cs" />
@@ -310,7 +313,6 @@
     <Compile Include="Data\API\IApplicationResponse.cs" />
     <Compile Include="Data\API\ApplicationListResult.cs" />
     <Compile Include="Data\Entities\EntityBuilder.cs" />
-    <Compile Include="Data\EntitySlicer.cs" />
     <Compile Include="Data\Pagination\PaginatedSearchRequestDto.cs" />
     <Compile Include="Data\Persistence\BaseHibernateDAO.cs" />
     <Compile Include="Data\Persistence\WS\Mea\MeaAttachmentHandler.cs" />

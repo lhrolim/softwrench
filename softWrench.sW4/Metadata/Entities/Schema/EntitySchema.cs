@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using JetBrains.Annotations;
 using softWrench.sW4.Data.Offline;
@@ -9,7 +10,7 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Metadata.Entities.Schema {
     public class EntitySchema {
         private EntityAttribute FindIdAttribute(IEnumerable<EntityAttribute> attributes, string idAttributeName) {
-            return attributes.FirstWithException(a => a.Name == idAttributeName, "Id attribute {0} not found on entity {1}", idAttributeName, EntityName);
+            return attributes.FirstWithException(a => a.Name.EqualsIc(idAttributeName), "Id attribute {0} not found on entity {1}", idAttributeName, EntityName);
         }
 
         private readonly ISet<EntityAttribute> _attributes;
@@ -24,8 +25,13 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
 
         public string EntityName { get; set; }
 
+        /// <summary>
+        /// A type that holds the map for this entity schema, common for SWDB mappings
+        /// </summary>
+        public Type MappingType { get; set; }
+
         public EntitySchema(string entityName, IEnumerable<EntityAttribute> attributes, [NotNull] string idAttributeName, Boolean excludeUndeclaredAttributes,
-             Boolean excludeUndeclaredAssociations, string whereClause, string parentEntity, bool includeRowstamp = true) {
+             Boolean excludeUndeclaredAssociations, string whereClause, string parentEntity, Type mappingType, bool includeRowstamp = true) {
             if (idAttributeName == null) throw new ArgumentNullException("idAttributeName");
             EntityName = entityName;
             _attributes = attributes == null ? new HashSet<EntityAttribute>() : new HashSet<EntityAttribute>(attributes);
@@ -41,6 +47,7 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
             if (ParentEntity != null) {
 
             }
+            MappingType = mappingType;
         }
 
         [NotNull]

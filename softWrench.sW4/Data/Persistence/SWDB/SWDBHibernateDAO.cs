@@ -1,12 +1,8 @@
 ﻿using JetBrains.Annotations;
 using log4net;
 using NHibernate;
+using NHibernate.Cfg.MappingSchema;
 using NHibernate.Mapping.Attributes;
-using softWrench.sW4.Audit;
-using softWrench.sW4.Configuration.Definitions;
-using softWrench.sW4.Configuration.Definitions.WhereClause;
-using softWrench.sW4.Data.Entities.Historical;
-using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Interfaces;
 using softWrench.sW4.Util;
 using System;
@@ -193,7 +189,9 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
                 configuration.SetProperties(properties);
 
                 var findTypesAnnotattedWith = AttributeUtil.FindTypesAnnotattedWith(typeof(ClassAttribute), typeof(JoinedSubclassAttribute));
-                foreach (var nHibernateType in findTypesAnnotattedWith) {
+                foreach (var nHibernateType in findTypesAnnotattedWith)
+                {
+                    
                     configuration.AddInputStream(HbmSerializer.Default.Serialize(nHibernateType));
                 }
 

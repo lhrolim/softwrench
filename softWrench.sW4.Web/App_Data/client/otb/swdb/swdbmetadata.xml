@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
+
+  <entities>
+    <!--This is a batch only for workorders-->
+    <entity name="WOBatch"  whereclause="Application = 'WORKORDER' " idAttribute="Id" parententity="Batch"/>
+  </entities>
+  
+  
+  <applications>
+
+
+    <application entity="WOBatch" name="wobatch" title="Workorder Batch">
+      <schemas>
+        <list title="Workorder Batches">
+          <commandbars>
+            <commandgroup position="gridtop" removeundeclared="true">
+              
+            </commandgroup>
+          </commandbars>
+          <field attribute="id" label="Batch Id"/>
+          <field attribute="alias" label="Alias"/>
+          <field attribute="status" label="Status"/>
+          <field attribute="updatedate" label="Updated">
+            <renderer type="datetime" params="format=MM/dd/yyyy hh:mm"/>
+          </field>
+          <field attribute="#numberofitems" label="Workorders"/>
+          <field attribute="itemids" label="Workorders" hidden="true"/>
+        </list>
+      </schemas>
+    </application>
+     
+  </applications>
+</metadata>

@@ -36,13 +36,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         }
 
         public IDataSet LookupDataSet(String applicationName) {
-            var isSWDBApplication = applicationName.StartsWith("#");
+            var isSWDBApplication = applicationName.StartsWith("_");
             var defaultSet = isSWDBApplication ? _defaultSWDBDataSet : _defaultMaximoDataSet;
             var storageToUse = isSWDBApplication ? _swdbDataSets : _maximoDataSets;
 
-            var key = new DataSetKey(applicationName, ApplicationConfiguration.ClientName);
+            var key = new DataSetKey(applicationName.ToLower(), ApplicationConfiguration.ClientName);
             if (!storageToUse.ContainsKey(key)) {
-                key = new DataSetKey(applicationName, null);
+                key = new DataSetKey(applicationName.ToLower(), null);
             }
             return storageToUse.ContainsKey(key) ? storageToUse[key] : defaultSet;
         }
@@ -63,8 +63,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
 
             private bool Equals(DataSetKey other) {
-                var applicationEquals = string.Equals(_application, other._application);
-                var clientEquals = _client == null || string.Equals(_client, other._client);
+                var applicationEquals = string.Equals(_application, other._application,StringComparison.CurrentCultureIgnoreCase);
+                var clientEquals = _client == null || string.Equals(_client, other._client,StringComparison.CurrentCultureIgnoreCase);
                 return applicationEquals && clientEquals;
             }
 
@@ -77,7 +77,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             public override int GetHashCode() {
                 unchecked {
-                    return ((_application != null ? _application.GetHashCode() : 0) * 397) ^ (_client != null ? _client.GetHashCode() : 0);
+                    return ((_application != null ? _application.ToLower().GetHashCode() : 0) * 397) ^ (_client != null ? _client.ToLower().GetHashCode() : 0);
                 }
             }
 
@@ -100,7 +100,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     continue;
                 }
 
-                var isSWDBApplication = applicationName.StartsWith("#");
+                var isSWDBApplication = applicationName.StartsWith("_");
                 var isSWDDBDataSet = dataSet is SWDBApplicationDataset;
                 if (isSWDDBDataSet && !isSWDBApplication) {
                     throw DataSetConfigurationException.SWDBApplicationRequired(dataSet.GetType());

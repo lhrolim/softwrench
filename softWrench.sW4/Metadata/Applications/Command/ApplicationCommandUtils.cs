@@ -66,7 +66,7 @@ namespace softWrench.sW4.Metadata.Applications.Command {
 
                 }
 
-                result[commandBar.Key] = new CommandBarDefinition(commandBarDefinition.Id, commandBarDefinition.Position, commands);
+                result[commandBar.Key] = new CommandBarDefinition(commandBarDefinition.Id, commandBarDefinition.Position,commandBarDefinition.ExcludeUndeclared, commands);
             }
 
 
