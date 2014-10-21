@@ -8,6 +8,7 @@ using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Parsing;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Validator {
     internal abstract class BaseMetadataXmlSourceInitializer {
@@ -51,7 +52,11 @@ namespace softWrench.sW4.Metadata.Validator {
             var applicationMetadata = new List<CompleteApplicationMetadataDefinition>();
             var parser = new XmlApplicationMetadataParser(entityMetadata, commandBars, IsSWDB());
             using (var stream = MetadataParsingUtils.GetStream(streamValidator, MetadataPath())) {
-                applicationMetadata.AddRange(parser.Parse(stream));
+                if (stream != null) {
+                    applicationMetadata.AddRange(parser.Parse(stream));
+                } else if (!IsSWDB()) {
+                    throw new InvalidOperationException("metadata.xml is required");
+                }
             }
             return applicationMetadata;
         }
@@ -101,15 +106,20 @@ namespace softWrench.sW4.Metadata.Validator {
 
             var resultEntities = new HashSet<EntityMetadata>();
 
-            IEnumerable<EntityMetadata> clientEntities;
-            using (var stream = MetadataParsingUtils.GetStreamImpl(MetadataPath(), false, streamValidator)) {
-                var parsingResult = new XmlEntitySourceMetadataParser(IsSWDB()).Parse(stream);
-                clientEntities = parsingResult.Item1;
-                Queries = parsingResult.Item2;
+            IEnumerable<EntityMetadata> clientEntities = new List<EntityMetadata>();
+            var metadataPath = MetadataPath();
+            using (var stream = MetadataParsingUtils.GetStreamImpl(metadataPath, false, streamValidator)) {
+                if (stream != null) {
+                    var parsingResult = new XmlEntitySourceMetadataParser(IsSWDB()).Parse(stream);
+                    clientEntities = parsingResult.Item1;
+                    Queries = parsingResult.Item2;
+                } else if (!IsSWDB()) {
+                    throw new InvalidOperationException("metadata.xml is required");
+                }
             }
             var entityMetadatas = clientEntities as EntityMetadata[] ?? clientEntities.ToArray();
             foreach (var sourceEntity in sourceEntities) {
-                var overridenEntity = entityMetadatas.FirstOrDefault(a => a.Name == sourceEntity.Name);
+                var overridenEntity = entityMetadatas.FirstOrDefault(a => a.Name.EqualsIc(sourceEntity.Name));
                 if (overridenEntity != null) {
                     MergeEntities(sourceEntity, overridenEntity);
                 }

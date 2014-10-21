@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Schema;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Parsing {
     /// <summary>
@@ -53,8 +54,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         /// <param name="stream">The input stream containing the XML representation of the metadata file.</param>
         [NotNull]
         public Tuple<IEnumerable<EntityMetadata>, EntityQueries> Parse([NotNull] TextReader stream) {
-            if (stream == null) throw new ArgumentNullException("stream");
-
+            Validate.NotNull(stream,"stream");
             var document = XDocument.Load(stream);
             if (null == document.Root) throw new InvalidDataException();
 
