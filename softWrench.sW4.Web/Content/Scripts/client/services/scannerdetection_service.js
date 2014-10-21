@@ -6,7 +6,7 @@ app.factory('scannerdetectionService', function ($http, restService, searchServi
         initInventoryGridListener: function (schema, datamap, parameters) {
             var scanOrder = [];
             var searchData = parameters.searchData;
-            var getUrl = restService.getActionUrl("Configuration", "GetConfiguration", { fullkey: parameters.fullKey });
+            var getUrl = restService.getActionUrl("Configuration", "GetConfiguration", { fullkey: schema.properties['config.fullKey'] });
             $http.get(getUrl).success(function (data) {
                 var scanOrderString = data.substring(1, data.length - 1);
                 scanOrder = scanOrderString.split(',');

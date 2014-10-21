@@ -1,8 +1,15 @@
 ﻿function ScanFilterController($http, $scope, restService, searchService) {
     $scope.scanOrder = [];
     $scope.filterFields = [];
+
+    $scope.closeScanFilterModal = function() {
+        var modal = $('#scanfilterModal');
+        modal.appendTo('#scanFilterController');
+        modal.modal('hide');
+    };
     
     $scope.showScanFilterModal = function (schema) {
+        $scope.fullKey = schema.properties['config.fullKey'];
         if (!$scope.filterFields.length) {
             var filterField;
             var displayables = schema.displayables;
@@ -15,15 +22,12 @@
         }
         
         $scope.loadScanConfiguration();
-        var modal = $('[data-class="scanfilterModal"]');
+        var modal = $('#scanfilterModal');
         modal.appendTo('body').modal('show');
     };
 
     $scope.loadScanConfiguration = function () {
-        var parameters = {
-            fullKey: "/Global/Grids/ScanBar"
-        };
-        var getUrl = restService.getActionUrl("Configuration", "GetConfiguration", parameters);
+        var getUrl = restService.getActionUrl("Configuration", "GetConfiguration", { fullKey: $scope.fullKey });
 
         $http.get(getUrl).success(function (data) {
             if (!data) {
@@ -68,20 +72,15 @@
         }
         var scanAttributesString = scanListAttributes.toString();
         var parameters = {
-            fullKey: "/Global/Grids/ScanBar",
+            fullKey: $scope.fullKey,
             value: scanAttributesString
         };
         restService.invokePost("Configuration", "SetConfiguration", parameters, null, null, null);
-        searchService.refreshGrid();
-        // Once the modal is saved, move the modal back to the controller to avoid appending multiple modals to the body
-        var modal = $('[data-class="scanfilterModal"]');
-        modal.appendTo('#scanFilterController');
+        $scope.closeScanFilterModal();
     };
 
-    // When the modal is hidden append it to its original location in the controller
     $('#scanfilterModal').on('hidden.bs.modal', function() {
-        var modal = $('[data-class="scanfilterModal"]');
-        modal.appendTo('#scanFilterController');
+            searchService.refreshGrid();
     });
 
     $scope.getLabelByAttribute = function(searchAttribute) {
