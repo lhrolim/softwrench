@@ -27,7 +27,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
                     usedAttributes.Add(new EntityAttribute(field.Attribute, "varchar", false, true,
                         ConnectorParameters.DefaultInstance(), null));
                 } else {
-                    var entityAttribute = entityAttributes.FirstOrDefault(r => field.Attribute == r.Name);
+                    var entityAttribute = entityAttributes.FirstOrDefault(r => field.Attribute.EqualsIc(r.Name));
                     if (entityAttribute != null) {
                         usedAttributes.Add(entityAttribute);
                     }
@@ -44,7 +44,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
 
             var result = SlicedRelationshipBuilderHelper.HandleRelationshipFields(appSchema.RelationshipFields.Select(r => r.Attribute), entityMetadata);
             usedRelationships.UnionWith(result.DirectRelationships);
-            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity,!isUnionSchema);
+            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity, entityMetadata.Schema.MappingType, !isUnionSchema);
             SlicedEntityMetadata unionSchema = null;
             if (appSchema.UnionSchema != null) {
                 unionSchema = GetUnionInstance(appSchema.UnionSchema);
@@ -79,7 +79,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
 
             var result = SlicedRelationshipBuilderHelper.HandleRelationshipFields(attributes.Where(r => r.Contains('.')), entityMetadata);
             usedRelationships.UnionWith(result.DirectRelationships);
-            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity);
+            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity,entityMetadata.Schema.MappingType);
             return new SlicedEntityMetadata(entityMetadata.Name, schema,
                 usedRelationships, entityMetadata.ConnectorParameters, null, result.InnerEntityMetadatas);
         }
@@ -120,7 +120,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
             foreach (var association in associations) {
                 var entityAssociation = association.EntityAssociation;
                 if (entityAssociation == null) {
-                    throw ExceptionUtil.InvalidOperation(MissingAssociation, association.Attribute,entityMetadata.Name);
+                    throw ExceptionUtil.InvalidOperation(MissingAssociation, association.Attribute, entityMetadata.Name);
                     //                    throw new InvalidOperationException(String.Format(MissingAssociation, entityAssociation.Qualifier, entityMetadata.Name));
                 }
                 usedRelationships.Add(entityAssociation);
