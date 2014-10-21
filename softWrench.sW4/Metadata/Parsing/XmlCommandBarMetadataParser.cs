@@ -1,10 +1,8 @@
 using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sW4.Shared2.Metadata.Applications.Command;
-using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -55,7 +53,8 @@ namespace softWrench.sW4.Metadata.Parsing {
         private static CommandBarDefinition ParseCommandBar(XElement commandbar) {
             var id = commandbar.AttributeValue(XmlBaseSchemaConstants.IdAttribute);
             var position = commandbar.AttributeValue(cnst.PositionAttribute);
-            return new CommandBarDefinition(id, position, ParseCommandDisplayables(commandbar.Elements()));
+            var excludeUndeclared = commandbar.Attribute(cnst.RemoveUndeclared).ValueOrDefault(false);
+            return new CommandBarDefinition(id, position,excludeUndeclared, ParseCommandDisplayables(commandbar.Elements()));
         }
 
         private static IEnumerable<ICommandDisplayable> ParseCommandDisplayables(IEnumerable<XElement> elements) {

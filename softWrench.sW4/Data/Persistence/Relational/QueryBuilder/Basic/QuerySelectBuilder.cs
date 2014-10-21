@@ -79,16 +79,16 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
         private static Tuple<EntityAttribute, string> LocateAttribute(EntityMetadata entityMetadata, IEnumerable<EntityAttribute> attributes, ProjectionField field) {
             var attributeName = field.Name;
             if (!attributeName.Contains('.')) {
-                var resultAttribute = attributes.FirstOrDefault(f => f.Name.Equals(attributeName));
+                var resultAttribute = attributes.FirstOrDefault(f => f.Name.EqualsIc(attributeName));
                 if (resultAttribute == null) {
                     return null;
                 }
                 return new Tuple<EntityAttribute, string>(resultAttribute, null);
             }
-            string currentAttributeName = attributeName;
+            var currentAttributeName = attributeName;
             string resultName;
-            EntityMetadata innerMetadata = entityMetadata;
-            string context = "";
+            var innerMetadata = entityMetadata;
+            var context = "";
             do {
                 var relationshipName = EntityUtil.GetRelationshipName(currentAttributeName, out resultName);
                 context += relationshipName;
@@ -98,7 +98,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             if (innerMetadata == null) {
                 return null;
             }
-            var attribute = innerMetadata.Attributes(NoCollections).FirstOrDefault(f => f.Name.Equals(resultName));
+            var attribute = innerMetadata.Attributes(NoCollections).FirstOrDefault(f => f.Name.EqualsIc(resultName));
             return new Tuple<EntityAttribute, string>(attribute, context);
         }
 

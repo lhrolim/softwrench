@@ -130,7 +130,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var id = request.Id;
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
-            var dataMap = id != null ? (DataMap)Engine().FindById(application.Schema, entityMetadata, id, applicationCompositionSchemas) : DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues);
+            var dataMap = id != null ? (DataMap)Engine().FindById(application.Schema, entityMetadata, id, applicationCompositionSchemas) 
+                : DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues,entityMetadata.Schema.MappingType);
             var associationResults = BuildAssociationOptions(dataMap, application, request);
             var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, id);
             return detailResult;

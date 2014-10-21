@@ -545,7 +545,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <field attribute="ownergroup" label="Owner Group"/>
           <field attribute="owner" hidden="true"/>
-          <composition relationship="relatedrecord" label="Related Records" inline="true" >
+          <composition relationship="relatedrecord" label="Related Records" inline="true">
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey" />
           </composition>
           <composition relationship="worklog" label="Work Log">

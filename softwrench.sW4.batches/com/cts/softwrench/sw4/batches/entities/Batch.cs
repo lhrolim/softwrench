@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Linq;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Interfaces;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
 
-    [Class(Table = "BATCH", Lazy = false)]
+    [Class(Table = "BAT_BATCH", Lazy = false)]
     public class Batch : IBaseEntity {
 
         [Id(0, Name = "Id")]
@@ -13,6 +14,9 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
 
         [Property]
         public String Application { get; set; }
+
+        [Property(Column = "alias_")]
+        public String Alias { get; set; }
 
         [Property]
         public String Schema { get; set; }
@@ -28,20 +32,24 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
 
         [Property]
         public DateTime? UpdateDate { get; set; }
-        
+
         /// <summary>
         /// a comma separated list of the item ids inside this batch
         /// </summary>
         [Property]
         public String ItemIds { get; set; }
-        
+
+        public int NumberOfItems {
+            get { return ItemIds == null ? 0 : ItemIds.Count(f => f == ','); }
+        }
+
         /// <summary>
         /// this will hold only the editable fields, as the others should be fetched from the database
         /// </summary>
         [Property]
         public string DataMapJson { get; set; }
 
-        
+
 
     }
 }

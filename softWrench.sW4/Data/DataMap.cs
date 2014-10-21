@@ -9,8 +9,9 @@ namespace softWrench.sW4.Data {
     public class DataMap : DataMapDefinition {
 
 
-        public DataMap([NotNull] string application, [NotNull] IDictionary<string, object> fields, bool rowstampsHandled = false)
+        public DataMap([NotNull] string application, [NotNull] IDictionary<string, object> fields, Type mappingType, bool rowstampsHandled = false)
             : base(application, fields) {
+            //TODO: apply mapping type properly
             if (!rowstampsHandled) {
                 HandleRowStamps(fields);
             }
@@ -47,10 +48,10 @@ namespace softWrench.sW4.Data {
                 attributes[pair.Key] = value;
             }
             //true: avoid double rows interation for rowstamp handling
-            return new DataMap(applicationMetadata.Name, attributes, true);
+            return new DataMap(applicationMetadata.Name, attributes, null, true);
         }
 
 
-     
+
     }
 }

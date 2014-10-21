@@ -20,7 +20,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
                 }
                 var commandBar = commandBars[barKey];
                 var schemaBar = schemaCommands[barKey];
-                var listOfCommands = new List<ICommandDisplayable>();
+                var listOfCommands = new HashSet<ICommandDisplayable>();
                 foreach (var leftCommand in schemaBar.Commands.Where(s => "left".Equals(s.Position))) {
                     listOfCommands.Add(leftCommand);
                 }
@@ -33,7 +33,9 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
 
                     var overridenCommand = schemaBar.Commands.FirstOrDefault(c => c.Id == command.Id);
                     if (overridenCommand == null) {
-                        listOfCommands.Add(command);
+                        if (!schemaBar.ExcludeUndeclared) {
+                            listOfCommands.Add(command);
+                        }
                     } else if (!(overridenCommand is RemoveCommand)) {
                         //replaces command unless marked to excluded; in that case we wont do nothing
                         listOfCommands.Add(overridenCommand);
@@ -42,7 +44,14 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
                         listOfCommands.Add(rightCommand);
                     }
                 }
-                result[barKey] = new CommandBarDefinition(barKey, commandBar.Position, listOfCommands);
+                foreach (var rightCommand in schemaBar.Commands.Where(s => s.Position == null || "right".Equals(s.Position))) {
+                    if (listOfCommands.All(a => a.Id != rightCommand.Id) && !(rightCommand is RemoveCommand)) {
+                        //TODO: remove this workaround
+                        listOfCommands.Add(rightCommand);
+                    }
+                }
+
+                result[barKey] = new CommandBarDefinition(barKey, commandBar.Position, commandBar.ExcludeUndeclared, listOfCommands);
             }
             return result;
         }
