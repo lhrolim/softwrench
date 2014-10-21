@@ -80,7 +80,9 @@ namespace softWrench.sW4.Metadata {
                 _metadataXmlInitializer = new MetadataXmlSourceInitializer();
                 _metadataXmlInitializer.Validate(_commandBars);
                 _swdbmetadataXmlInitializer = new SWDBMetadataXmlSourceInitializer();
-                _swdbmetadataXmlInitializer.Validate(_commandBars);
+                if (!ApplicationConfiguration.IsUnitTest) {
+                    _swdbmetadataXmlInitializer.Validate(_commandBars);
+                }
 
                 _menus = new MenuXmlInitializer().Initialize();
                 FillFields();
@@ -99,7 +101,11 @@ namespace softWrench.sW4.Metadata {
 
         private static void BuildSlicedMetadataCache() {
             SlicedEntityMetadataCache.Clear();
-            foreach (var app in _applicationMetadata.Union(_swdbapplicationMetadata)) {
+            IEnumerable<CompleteApplicationMetadataDefinition> apps = _applicationMetadata;
+            if (_swdbapplicationMetadata != null) {
+                apps = apps.Union(_swdbapplicationMetadata);
+            }
+            foreach (var app in apps) {
                 var entityName = app.Entity;
                 var entityMetadata = Entity(entityName);
                 if (app.IsMobileSupported()) {

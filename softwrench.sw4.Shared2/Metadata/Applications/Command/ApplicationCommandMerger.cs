@@ -45,7 +45,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
                     }
                 }
                 foreach (var rightCommand in schemaBar.Commands.Where(s => s.Position == null || "right".Equals(s.Position))) {
-                    if (listOfCommands.All(a => a.Id != rightCommand.Id)) {
+                    if (listOfCommands.All(a => a.Id != rightCommand.Id) && !(rightCommand is RemoveCommand)) {
                         //TODO: remove this workaround
                         listOfCommands.Add(rightCommand);
                     }
