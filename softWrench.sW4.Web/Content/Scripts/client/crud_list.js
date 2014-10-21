@@ -110,8 +110,8 @@ app.directive('crudList', function (contextService) {
                 if (searchData) {
                     for (var key in searchData) {
                         $scope.searchData[key] = searchData[key];
-                        $scope.filterSearch(key);
                     }
+                    pagetogo = 1;
                 }
                 $scope.selectPage(pagetogo);
             });
