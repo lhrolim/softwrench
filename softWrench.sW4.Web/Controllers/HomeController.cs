@@ -72,7 +72,7 @@ namespace softWrench.sW4.Web.Controllers {
                 ClientSideLogLevel = clientSideLogLevel,
                 SuccessMessageTimeOut = GetSuccessMessageTimeOut(),
                 InitTimeMillis = ApplicationConfiguration.SystemBuildDateInMillis,
-                ScanOrder = scanOrder,
+                InvbalancesScanOrder = scanOrder,
             };
         }
 

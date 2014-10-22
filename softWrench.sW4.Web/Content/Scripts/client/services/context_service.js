@@ -137,7 +137,7 @@ app.factory('contextService', function ($rootScope) {
                 config.clientSideLogLevel = 'warn';
             }
             this.insertIntoContext('defaultlevel', config.clientSideLogLevel.toLowerCase());
-            this.insertIntoContext('scanOrder', config.scanOrder);
+            this.insertIntoContext('scanOrder', config.invbalancesScanOrder);
         },
 
         getResourceUrl: function(path) {
