@@ -1,7 +1,23 @@
 ﻿function AceController($scope, $http, $templateCache, $window, i18NService) {
 
     $scope.save = function () {
-        var urlToUse = $scope.type == 'menu' ? "/api/generic/EntityMetadata/SaveMenu" : "/api/generic/EntityMetadata/SaveMetadata";
+       
+        switch ($scope.type) {
+            case 'menu':
+                var urlToUse = "/api/generic/EntityMetadata/SaveMenu";
+                break;
+            case 'statuscolors':
+                var urlToUse = "/api/generic/EntityMetadata/SaveStatuscolor";
+                break;
+            case 'metadata':
+                var urlToUse = "/api/generic/EntityMetadata/SaveMetadata";
+                break;
+            default:
+                var urlToUse = $scope.type;
+                break;
+                
+        }
+       
         $http({
             method: "PUT",
             url: url(urlToUse),

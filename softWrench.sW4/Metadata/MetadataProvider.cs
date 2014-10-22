@@ -42,6 +42,7 @@ namespace softWrench.sW4.Metadata {
 
         private static IList<string> _siteIds;
         private const string Metadata = "metadata.xml";
+        private const string StatusColor = "statuscolors.json";
         private const string MenuPattern = "menu.{0}.xml";
         public static bool FinishedParsing { get; set; }
 
@@ -236,6 +237,7 @@ namespace softWrench.sW4.Metadata {
             try {
                 _metadataXmlInitializer = new MetadataXmlSourceInitializer();
                 _metadataXmlInitializer.Validate(data);
+
                 using (var stream = File.Create(MetadataParsingUtils.GetPath(Metadata, internalFramework))) {
                     data.CopyTo(stream);
                     stream.Flush();
@@ -248,6 +250,26 @@ namespace softWrench.sW4.Metadata {
                 _metadataXmlInitializer = null;
 
             }
+        }
+        public void SaveColor([NotNull] Stream data, bool internalFramework = false)
+        {
+            try
+            {
+             
+
+                using (var stream = File.Create(MetadataParsingUtils.GetPath(StatusColor, internalFramework)))
+                {
+                    data.CopyTo(stream);
+                    stream.Flush();
+                }
+                
+            }
+            catch (Exception e)
+            {
+                Log.Error("error saving statuscolor", e);
+                throw;
+            }
+            
         }
 
         public void SaveMenu([NotNull] Stream data, ClientPlatform platform = ClientPlatform.Web) {
@@ -263,24 +285,7 @@ namespace softWrench.sW4.Metadata {
                 throw;
             }
         }
-        public void SaveStatus([NotNull] Stream data, ClientPlatform platform = ClientPlatform.Web)
-        {
-            try
-            {
-                //var newMenu = new MenuXmlInitializer().InitializeMenu(platform, data);
-                using (var stream = File.Create(Path.GetFullPath("statuscolors.json")))
-                {
-                    data.CopyTo(stream);
-                    stream.Flush();
-                }
-                _menus[platform] = newMenu;
-            }
-            catch (Exception e)
-            {
-                Log.Error("error saving menu", e);
-                throw;
-            }
-        }
+       
 
         private static void FillFields() {
             _siteIds = BuildSiteIds();

@@ -799,6 +799,7 @@ _headermenu:{
 	metadatabuilder:Constructor de metadatos
 	metadataeditor:Editor de metadatos
 	menueditor:Editor de menús
+	statuscoloreditor:Editor de StatusColor
 	serviceit:ServiceIT
 	whereclauses:Where Clauses
     logadmin:administrar los registros
