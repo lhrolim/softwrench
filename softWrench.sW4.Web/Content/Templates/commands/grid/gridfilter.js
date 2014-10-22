@@ -1,6 +1,7 @@
 ﻿function GridFilterController($scope, $http, userPreferenceService, searchService, i18NService, alertService, contextService) {
 
     function init() {
+        //since this is inside a ng-include this controller is getting reevaluated every time we refresh the page
         $scope.selectedfilter = contextService.getFromContext("selectedfilter", true, true);
         var basicMode = contextService.getFromContext("filter_basicmode", true, true);
         if (basicMode == undefined) {
@@ -30,6 +31,7 @@
 
     $scope.toggleFilterMode = function () {
         $scope.basicMode = !$scope.basicMode;
+        contextService.insertIntoContext("filter_basicmode", $scope.basicMode, true);
         searchService.toggleAdvancedFilterMode();
     }
 
@@ -135,9 +137,7 @@
     }
 
     $scope.$on("sw_redirectapplicationsuccess", function (event) {
-
         contextService.insertIntoContext("selectedfilter", null, true);
-        contextService.insertIntoContext("filter_basicmode", null, true);
         $scope.selectedfilter = null;
     });
 

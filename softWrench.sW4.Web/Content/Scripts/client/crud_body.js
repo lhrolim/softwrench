@@ -134,6 +134,9 @@ app.directive('crudBody', function (contextService) {
                 return $rootScope.clientName == "hapag";
             };
 
+            $scope.getTabIcon=function(tab) {
+                return tab.schema.schemas.list.properties['icon.composition.tab'];
+            }
 
 
             $scope.renderListView = function (parameters) {
