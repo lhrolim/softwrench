@@ -46,7 +46,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return filter;
         }
 
-        public string ApplicationName() {
+        public override string ApplicationName() {
             return "incident";
         }
 
