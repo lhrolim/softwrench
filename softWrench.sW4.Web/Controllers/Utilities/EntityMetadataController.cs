@@ -31,7 +31,8 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         [HttpGet]
         [SPFRedirect("Menu Editor", "_headermenu.menueditor", "EntityMetadataEditor")]
         public IGenericResponseResult MenuEditor() {
-            using (var reader = new MetadataProvider().GetStream("menu.web.xml")) {
+            using (var reader = new MetadataProvider().GetStream("statuscolors.json"))
+            {
                 var result = reader.ReadToEnd();
                 return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "menu"));
             }
@@ -54,7 +55,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             .Content
             .ReadAsStreamAsync();
             task.Wait();
-            new MetadataProvider().SaveMenu(task.Result);
+            new MetadataProvider().SaveStatus(task.Result);
         }
 
         [HttpGet]

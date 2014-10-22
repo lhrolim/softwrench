@@ -263,6 +263,24 @@ namespace softWrench.sW4.Metadata {
                 throw;
             }
         }
+        public void SaveStatus([NotNull] Stream data, ClientPlatform platform = ClientPlatform.Web)
+        {
+            try
+            {
+                //var newMenu = new MenuXmlInitializer().InitializeMenu(platform, data);
+                using (var stream = File.Create(Path.GetFullPath("statuscolors.json")))
+                {
+                    data.CopyTo(stream);
+                    stream.Flush();
+                }
+                _menus[platform] = newMenu;
+            }
+            catch (Exception e)
+            {
+                Log.Error("error saving menu", e);
+                throw;
+            }
+        }
 
         private static void FillFields() {
             _siteIds = BuildSiteIds();
