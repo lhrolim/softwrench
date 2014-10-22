@@ -234,8 +234,8 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
             return this.searchOperations()[1];
         },
 
-        refreshGrid:function(searchData) {
-            $rootScope.$broadcast("sw_refreshgrid", searchData);
+        refreshGrid:function(searchData, extraparameters) {
+            $rootScope.$broadcast("sw_refreshgrid", searchData, extraparameters);
         }
 
     };

@@ -105,15 +105,29 @@ app.directive('crudList', function (contextService) {
                 log.debug('finish table rendered listener');
             });
 
-            $scope.$on('sw_refreshgrid', function (event, searchData) {
-                var pagetogo = $scope.paginationData.pageNumber;
+            $scope.$on('sw_refreshgrid', function (event, searchData, extraparameters) {
+                /// <summary>
+                ///  implementation of searchService#refreshgrid see there for details
+                /// </summary>
+                if (extraparameters == null) {
+                    extraparameters = {};
+                }
+                var pagetogo = extraparameters.pageNumber ? extraparameters.pageNumber : $scope.paginationData.pageNumber;
+                var pageSize = extraparameters.pageSize ? extraparameters.pageSize : $scope.paginationData.pageSize;
+                var printmode = extraparameters.printMode;
+                var keepfilterparameters = extraparameters.keepfilterparameters;
+                // if search data is present, we should go back to first page, as we wont know exactly the new number of pages available
                 if (searchData) {
-                    for (var key in searchData) {
-                        $scope.searchData[key] = searchData[key];
+                    if (keepfilterparameters) {
+                        for (var key in searchData) {
+                            $scope.searchData[key] = searchData[key];
+                        }
+                    } else {
+                        $scope.searchData = searchData;
                     }
                     pagetogo = 1;
                 }
-                $scope.selectPage(pagetogo);
+                $scope.selectPage(pagetogo, pageSize, printmode);
             });
 
             $scope.$on('sw_successmessagetimeout', function (event, data) {
