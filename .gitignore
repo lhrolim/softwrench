@@ -12,3 +12,4 @@ TestResults
 /packages
 GitTfs/git2.*
 Thumbs.db
+.DS_Store
