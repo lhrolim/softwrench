@@ -60,12 +60,12 @@
 
                 <!-- Filter row shown when there are too much columns to be displayed -->
                 <tr class="filter-row hidden-few-columns hiddenonprint" style="display: none;">
-                    <th colspan="{{schema.displayables.length}}" ng-show="!isFieldHidden(schema,column)">
-                        <div ng-click=" collapse('.advanced-filter')" class="advanced-filter-toogle">
+                    <th colspan="{{schema.displayables.length}}">
+                        <div ng-click="collapse('.advanced-filter')" class="advanced-filter-toogle">
                             <a>{{i18N('_grid.filter.advancedfilter','Advanced filter')}} </a>
                         </div>
                         <div class="advanced-filter" style="display: none;" id="advancedFilter">
-                            <div ng-repeat="column in schema.displayables" class="advanced-filter-item">
+                            <div ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)" class="advanced-filter-item">
                                 <div ng-if="shouldShowFilter(column)">
                                     <div class="filter-label">{{i18NLabel(column)}}</div>
                                     <ng-switch on="column.rendererType">
@@ -102,12 +102,10 @@
 
                 <!-- Filter row shown when there are few columns to be displayed -->
                 <tr class="filter-row hidden-too-much-columns hiddenonprint">
-                    <th ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)"
-                        ng-style=" {'min-width' column.rendererparameters['minwidth'],
-                        'max-width'
-                        column.rendererparameters['maxwidth'],
-                        'width'
-                        column.rendererparameters['width']}" filterrowrendered>
+                    <th ng-repeat="column in schema.displayables"
+                        ng-style="{'min-width': column.rendererParameters['minwidth'],
+                                'max-width': column.rendererParameters['maxwidth'],
+                                'width': column.rendererParameters['width']}" filterrowrendered>
 
                         <div ng-if="shouldShowFilter(column)">
                             <ng-switch on="column.rendererType">
@@ -123,7 +121,7 @@
                                     <span class="input-group-addon " data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}"><i class="glyphicon glyphicon-calendar"></i></span>
 
                                     <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                    The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                        The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                     <div class="input-group-addon dropdown">
                                         <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                               data-toggle="dropdown" rel="tooltip"
@@ -138,7 +136,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div ng-switch-default class="input-group input-group-sm">
+                                <div ng-switch-default ng-show="!isFieldHidden(schema,column)" class="input-group input-group-sm">
                                     <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
                                            ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" />
                                     <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
@@ -234,6 +232,7 @@
         <commandbar schema="schema" mode="schema.mode" datamap="datamap" />
     </div>
 </form>
+
 
 
 
