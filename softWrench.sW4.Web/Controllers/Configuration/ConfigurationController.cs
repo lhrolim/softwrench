@@ -7,6 +7,7 @@ using softWrench.sW4.Configuration.Util;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
+using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -28,14 +29,16 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         private readonly I18NResolver _resolver;
         private readonly SWDBHibernateDAO _dao;
         private readonly ConditionService _conditionService;
+        private readonly IConfigurationFacade _facade;
 
 
-        public ConfigurationController(CategoryTreeCache cache, ConfigurationService configService, I18NResolver resolver, SWDBHibernateDAO dao, ConditionService conditionService) {
+        public ConfigurationController(CategoryTreeCache cache, ConfigurationService configService, I18NResolver resolver, SWDBHibernateDAO dao, ConditionService conditionService, IConfigurationFacade facade) {
             _cache = cache;
             _configService = configService;
             _resolver = resolver;
             _dao = dao;
             _conditionService = conditionService;
+            _facade = facade;
         }
 
         [SPFRedirect("Configuration", "_headermenu.configuration")]
@@ -117,6 +120,17 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
             aboutData.Add(new KeyValuePair<String, String>(_resolver.I18NValue("maximodb.version", "SW DB"), String.Format("{0}/{1}", swDB.DataSource, swDB.Catalog)));
 
             return new GenericResponseResult<IList<KeyValuePair<String, String>>>(aboutData);
+        }
+
+        [HttpPost]
+        public void SetConfiguration(string fullKey, string value) {
+            _facade.SetValue(fullKey, value);
+        }
+
+        [HttpGet]
+        public string GetConfiguration(string fullKey) {
+            var config = _facade.Lookup<string>(fullKey);
+            return config;
         }
 
         class ConfigurationScreenResult {

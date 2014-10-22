@@ -35,7 +35,6 @@ app.directive('crudList', function (contextService) {
             associationService, contextService, statuscolorService, eventdispatcherService) {
 
             $scope.$name = 'crudlist';
-            
 
             fixHeaderService.activateResizeHandler();
 
@@ -64,8 +63,7 @@ app.directive('crudList', function (contextService) {
                 return tabsService.tabsDisplayables(schema);
             };
 
-
-
+            
 
 
             $scope.$on('filterRowRenderedEvent', function (filterRowRenderedEvent) {
@@ -80,7 +78,11 @@ app.directive('crudList', function (contextService) {
                 var log = $log.getInstance('sw4.crud_list_dir#on#listTableRenderedEvent');
                 log.debug('init table rendered listener');
 
-                eventdispatcherService.onload($scope.schema);
+                var parameters = {
+                    fullKey: "/Global/Grids/ScanBar",
+                    searchData: $scope.searchData
+                };
+                eventdispatcherService.onload($scope.schema, null, parameters);
 
                 if ($scope.ismodal == 'true' && !(true === $scope.$parent.showingModal)) {
                     return;
@@ -118,9 +120,16 @@ app.directive('crudList', function (contextService) {
                 var pagetogo = extraparameters.pageNumber ? extraparameters.pageNumber : $scope.paginationData.pageNumber;
                 var pageSize = extraparameters.pageSize ? extraparameters.pageSize : $scope.paginationData.pageSize;
                 var printmode = extraparameters.printMode;
+                var keepfilterparameters = extraparameters.keepfilterparameters;
+                // if search data is present, we should go back to first page, as we wont know exactly the new number of pages available
                 if (searchData) {
-                    // if search data is present, we should go back to first page, as we wont know exactly the new number of pages available
-                    $scope.searchData = searchData;
+                    if (keepfilterparameters) {
+                        for (var key in searchData) {
+                            $scope.searchData[key] = searchData[key];
+                        }
+                    } else {
+                        $scope.searchData = searchData;
+                    }
                     pagetogo = 1;
                 }
                 $scope.selectPage(pagetogo, pageSize, printmode);

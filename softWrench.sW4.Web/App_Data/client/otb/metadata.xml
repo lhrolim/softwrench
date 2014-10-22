@@ -1824,6 +1824,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </properties>
       <schemas>
         <list title="Inventory Grid" platform="web">
+          <commandbars>
+            <commandgroup position="gridtop">
+              <resourcecommand id="scanfilter" position=">filter" path="/Content/Templates/commands/scan/scanfilter.html" />
+            </commandgroup>
+          </commandbars>
           <field attribute="itemnum" label="Item No">
             <renderer type="default" params="minwidth=110px" />
           </field>
@@ -1846,6 +1851,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
           <properties>
             <property key="list.click.schema" value="detail"/>
+            <property key="config.fullKey" value="/Global/Grids/Scanbar"/>
           </properties>
         </list>
 

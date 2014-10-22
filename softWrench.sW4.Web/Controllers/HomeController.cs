@@ -61,6 +61,7 @@ namespace softWrench.sW4.Web.Controllers {
             var logoIcon = _facade.Lookup<string>(ConfigurationConstants.MainIconKey);
             var myProfileEnabled = _facade.Lookup<Boolean>(ConfigurationConstants.MyProfileEnabled);
             var clientSideLogLevel = _facade.Lookup<string>(ConfigurationConstants.ClientSideLogLevel);
+            var scanOrder = _facade.Lookup<string>(ConfigurationConstants.InventoryGridScanConfig);
             return new HomeConfigs() {
                 Logo = logoIcon,
                 MyProfileEnabled = myProfileEnabled,
@@ -70,7 +71,8 @@ namespace softWrench.sW4.Web.Controllers {
                 IsLocal = ApplicationConfiguration.IsLocal(),
                 ClientSideLogLevel = clientSideLogLevel,
                 SuccessMessageTimeOut = GetSuccessMessageTimeOut(),
-                InitTimeMillis = ApplicationConfiguration.SystemBuildDateInMillis
+                InitTimeMillis = ApplicationConfiguration.SystemBuildDateInMillis,
+                InvbalancesScanOrder = scanOrder,
             };
         }
 
