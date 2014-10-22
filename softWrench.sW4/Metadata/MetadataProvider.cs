@@ -251,26 +251,20 @@ namespace softWrench.sW4.Metadata {
 
             }
         }
-        public void SaveColor([NotNull] Stream data, bool internalFramework = false)
-        {
-            try
-            {
-             
-
-                using (var stream = File.Create(MetadataParsingUtils.GetPath(StatusColor, internalFramework)))
-                {
+        public void SaveColor([NotNull] Stream data, bool internalFramework = false){
+        
+            try{
+                using (var stream = File.Create(MetadataParsingUtils.GetPath(StatusColor, internalFramework))) {
+                
                     data.CopyTo(stream);
                     stream.Flush();
                 }
                 
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Log.Error("error saving statuscolor", e);
                 throw;
             }
-            
-        }
+       }
 
         public void SaveMenu([NotNull] Stream data, ClientPlatform platform = ClientPlatform.Web) {
             try {

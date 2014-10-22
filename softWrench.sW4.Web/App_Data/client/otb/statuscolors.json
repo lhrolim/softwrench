@@ -1,7 +1,7 @@
-servicerequest:{
+﻿servicerequest:{
     new: green,
     wappr: orange,
-    closed: yellow,
+    closed: green,
     queued: yellow,
     pending: yellow,
     inprog: blue,
