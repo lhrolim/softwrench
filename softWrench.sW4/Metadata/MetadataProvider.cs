@@ -253,12 +253,9 @@ namespace softWrench.sW4.Metadata {
         public void Save([NotNull] Stream data, bool internalFramework = false) {
             try {
                 _metadataXmlInitializer = new MetadataXmlSourceInitializer();
-<<<<<<< HEAD
-                _metadataXmlInitializer.Validate(data);
 
-=======
                 _metadataXmlInitializer.Validate(_commandBars, data);
->>>>>>> master
+
                 using (var stream = File.Create(MetadataParsingUtils.GetPath(Metadata, internalFramework))) {
                     data.CopyTo(stream);
                     stream.Flush();
