@@ -964,37 +964,37 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Service Request Grid">
           <field attribute="ticketid" label="SR No">
-            <renderer type="default"  params="minwidth=60px;maxwidth=90px;wordwrap=break-word" />
+            <renderer type="default"  params="width=9%;wordwrap=break-word" />
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="minwidth=100px;maxwidth=160px;excelwidth=50;wordwrap=break-word" />
+            <renderer type="default" params="excelwidth=50;wordwrap=break-word" />
           </field>
           <field attribute="classificationid" label="Project Description">
-            <renderer type="default" params="minwidth=100px;maxwidth=160px;excelwidth=50;wordwrap=break-word"/>
+            <renderer type="default" params="width=9%;excelwidth=50;wordwrap=break-word"/>
           </field>
           <field attribute="area" label="Area">
-            <renderer type="default" params="minwidth=100px;maxwidth=160px;excelwidth=50;wordwrap=break-word"/>
+            <renderer type="default" params="width=9%;excelwidth=50;wordwrap=break-word"/>
           </field>
           <field attribute="problemtype" label="Problem Type">
-            <renderer type="default" params="minwidth=100px;maxwidth=160px;excelwidth=50;wordwrap=break-word"/>
+            <renderer type="default" params="width=9%;excelwidth=50;wordwrap=break-word"/>
           </field>
           <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="minwidth=50px;maxwidth=100px;wordwrap=break-word" />
+            <renderer type="default" params="width=9%;wordwrap=break-word" />
           </field>
           <field attribute="internalpriority" label="Internal Priority">
-            <renderer type="default" params="minwidth=50px;maxwidth=100px;wordwrap=break-word" />
+            <renderer type="default" params="width=9%;wordwrap=break-word" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="minwidth=75px;maxwidth=175px;wordwrap=break-word" />
+            <renderer type="default" params="width=9%;wordwrap=break-word" />
           </field>
           <field attribute="owner" label="Owner">
-            <renderer type="default" params="minwidth=85px;maxwidth=185px;wordwrap=break-word" />
+            <renderer type="default" params="width=9%;wordwrap=break-word" />
           </field>
           <field attribute="changedate" label="Changed Date">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=110px;maxwidth=180px;wordwrap=break-word;showtime=false"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=9%;wordwrap=break-word;showtime=false"/>
           </field>
           <field attribute="#color" label="">
-            <renderer type="color" params="grid=servicerequest;column=status"/>
+            <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
@@ -1151,25 +1151,23 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </properties>
       <schemas>
         <list title="Work Order Grid" platform="web">
-          
-          
           <field attribute="wonum" label="WO No" >
-            <renderer type="default" params="minwidth=110px" />
+            <renderer type="default" params="width=19%" />
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="excelwidth=50" />
+            <renderer type="default" params="width=25%;excelwidth=50" />
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" params="minwidth=150px" />
+            <renderer type="default" params="width=19%" />
           </field>
           <field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="minwidth=150px" />
+            <renderer type="default" params="width=19%" />
           </field>
           <field attribute="status" label="Status" >
-            <renderer type="default" params="minwidth=150px" />
+            <renderer type="default" params="width=19%" />
           </field>
           <field attribute="#color" label="">
-            <renderer type="color" params="grid=servicerequest;column=status"/>
+            <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
           </field>
 
           <properties>
@@ -1553,46 +1551,46 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Incident Grid">
           <field attribute="ticketid" label="Request#">
-            <renderer type="default" params="minwidth=60px;maxwidth=90px;wordwrap=break-word"/>
+            <renderer type="default" params="width=8%;wordwrap=break-word"/>
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="minwidth=100px;maxwidth=160px;excelwidth=50;wordwrap=break-word" />
+            <renderer type="default" params="width=8%;excelwidth=50;wordwrap=break-word" />
           </field>
           <!--field attribute="asset_.description" label="Asset">
             <renderer type="default" params="minwidth=90px;maxwidth=1600px;wordwrap=break-word" />
           </field-->
           <field attribute="classificationid" label="Project Description">
-            <renderer type="default" params="minwidth=100px;maxwidth=160px;excelwidth=50;wordwrap=break-word" />
+            <renderer type="default" params="width=8%;excelwidth=50;wordwrap=break-word" />
           </field>
           <field attribute="area" label="Area">
-            <renderer type="default" params="minwidth=100px;maxwidth=160px;excelwidth=50;wordwrap=break-word" />
+            <renderer type="default" params="width=8%;excelwidth=50;wordwrap=break-word" />
           </field>
           <field attribute="problemtype" label="Problem Type">
-            <renderer type="default" params="minwidth=100px;maxwidth=160px;excelwidth=50;wordwrap=break-word" />
+            <renderer type="default" params="width=8%;excelwidth=50;wordwrap=break-word" />
           </field>
           <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="minwidth=50px;maxwidth=100px;wordwrap=break-word" />
+            <renderer type="default" params="width=8%;wordwrap=break-word" />
           </field>
           <field attribute="reportedpriority" label="Reported Priority">
-            <renderer type="default" params="minwidth=50px;maxwidth=100px;wordwrap=break-word"/>
+            <renderer type="default" params="width=8%;wordwrap=break-word"/>
           </field>
           <field attribute="internalpriority" label="Internal Priority">
-            <renderer type="default" params="minwidth=50px;maxwidth=100px;wordwrap=break-word" />
+            <renderer type="default" params="width=8%;wordwrap=break-word" />
           </field>
           <field attribute="reportdate" label="Reported Date">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=110px;maxwidth=180px;wordwrap=break-word;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mmwidth=8%;wordwrap=break-word;showtime=false" />
           </field>
           <field attribute="owner" label="Owner">
-            <renderer type="default" params="minwidth=85px;maxwidth=185px;wordwrap=break-word" />
+            <renderer type="default" params="width=8%;wordwrap=break-word" />
           </field>
           <field attribute="ownergroup" label="Owner Group">
-            <renderer type="default" params="minwidth=85px;maxwidth=185px;wordwrap=break-word" />
+            <renderer type="default" params="width=8%;wordwrap=break-word" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="minwidth=75px;maxwidth=175px;wordwrap=break-word" />
+            <renderer type="default" params="width=8%;wordwrap=break-word" />
           </field>
           <field attribute="#color" label="">
-            <renderer type="color" params="grid=incident;column=status"/>
+            <renderer type="color" params="width=4%;grid=incident;column=status"/>
           </field>
           <properties>
             <property key="list.click.schema" value="detail"/>
@@ -1797,25 +1795,25 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             
           </field>
           <field attribute="wonum" label="Change ID">
-            <renderer type="default" params="minwidth=110px" />
+            <renderer type="default" params="width=16%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="status" label="Status" >
-            <renderer type="default" params="minwidth=150px" />
+            <renderer type="default" params="width=16%" />
           </field>
           <field attribute="pmchgtype" label="Type" >
-            <renderer type="default" params="minwidth=150px" />
+            <renderer type="default" params="width=16%" />
           </field>
           <field attribute="priority" label="Priority" >
-            <renderer type="default" params="minwidth=150px" />
+            <renderer type="default" params="width=16%" />
           </field>
           <field attribute="risk" label="Risk" >
-            <renderer type="default" params="minwidth=150px" />
+            <renderer type="default" params="width=16%" />
           </field>
           <field attribute="#color" label="">
-            <renderer type="color" params="grid=change;column=status"/>
+            <renderer type="color" params="width=4%;grid=change;column=status"/>
           </field>
 
 
@@ -2329,22 +2327,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Inventory Grid" platform="web">
           <field attribute="itemnum" label="Item No">
-            <renderer type="default" params="minwidth=110px" />
+            <renderer type="default" params="width=16%" />
           </field>
           <field attribute="item_.description" label="Description">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="location" label="Storeroom">
-            <renderer type="default" params="minwidth=120px" />
+            <renderer type="default" params="width=16%" />
           </field>
           <field attribute="binnum" label="Bin">
-            <renderer type="default" params="minwidth=100px" />
+            <renderer type="default" params="width=16%" />
           </field>
           <field attribute="curbal" label="Balance">
-            <renderer type="default" params="minwidth=100px" />
+            <renderer type="default" params="width=16%" />
           </field>
           <field attribute="siteid" label="Site">
-            <renderer type="default" params="minwidth=100px" />
+            <renderer type="default" params="width=16%" />
           </field>
           <properties>
             <property key="list.click.mode" value="output"/>
@@ -2435,28 +2433,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <!--Creating the Grid: SWWEB-232-->
         <list title="Purchase Grid">
           <field attribute="prnum" label="PR No.">
-            <renderer type="default" params="minwidth=60px;wordwrap=break-word"/>
+            <renderer type="default" params="width=13%;wordwrap=break-word"/>
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="minwidth=100px;excelwidth=50;wordwrap=break-word" />
+            <renderer type="default" params="excelwidth=50;wordwrap=break-word" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="minwidth=90px;wordwrap=break-word" />
+            <renderer type="default" params="width=13%;wordwrap=break-word" />
           </field>
           <field attribute="requireddate" label="Required Date">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=110px;wordwrap=break-word;showtime=false" />
+            <renderer type="datetime" params="width=13%format=dd/MM/yyyy HH:mm;wordwrap=break-word;showtime=false" />
           </field>
           <field attribute="vendor" label="Vendor">
-            <renderer type="default" params="minwidth=50px;wordwrap=break-word" />
+            <renderer type="default" params="width=13%;wordwrap=break-word" />
           </field>
           <field attribute="totalcost" label="Total Cost">
-            <renderer type="default" params="minwidth=110px;wordwrap=break-word;" />
+            <renderer type="default" params="width=13%;wordwrap=break-word;" />
           </field>
           <field attribute="siteid" label="Site ID">
-            <renderer type="default" params="minwidth=85px;wordwrap=break-word" />
+            <renderer type="default" params="width=13%;wordwrap=break-word" />
           </field>
           <field attribute="#color" label="">
-            <renderer type="color" params="grid=pr;column=status"/>
+            <renderer type="color" params="width=4%;grid=pr;column=status"/>
           </field>
           
           <properties>
