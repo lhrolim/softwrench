@@ -172,7 +172,7 @@
       <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-	  <Private>True</Private>
+      <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest">
@@ -184,11 +184,11 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-	  <Private>True</Private>
+      <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-	 <Private>True</Private>
+      <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -619,12 +619,6 @@
     <Content Include="Content\Scripts\thirdparty\moment.js" />
     <Content Include="Content\Scripts\thirdparty\textAngular-sanitize-min.js" />
     <Content Include="Content\Scripts\thirdparty\textAngular-min.js" />
-    <Content Include="Content\scss\forms.css">
-      <DependentUpon>forms.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\scss\grids.css">
-      <DependentUpon>grids.scss</DependentUpon>
-    </Content>
     <Content Include="Content\styles\default\application\forms.css" />
     <Content Include="Content\styles\default\application\grids.css" />
     <Content Include="Content\styles\default\application\pages.css" />
@@ -874,28 +868,6 @@
     <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\font-awesome-4.1.0\fonts\FontAwesome.otf" />
-    <Content Include="Content\scss\forms.scss">
-      <Compile>True</Compile>
-      <Minify>True</Minify>
-      <IgnoreWarnings>True</IgnoreWarnings>
-      <IgnoreErrors>True</IgnoreErrors>
-      <CompileStyle>Nested</CompileStyle>
-      <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="Content\scss\grids.scss">
-      <Compile>True</Compile>
-      <Minify>True</Minify>
-      <IgnoreWarnings>True</IgnoreWarnings>
-      <IgnoreErrors>True</IgnoreErrors>
-      <CompileStyle>Nested</CompileStyle>
-      <DebugInfo>False</DebugInfo>
-    </Content>
-    <Content Include="Content\scss\forms.css.map">
-      <DependentUpon>forms.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\scss\grids.css.map">
-      <DependentUpon>grids.scss</DependentUpon>
-    </Content>
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>

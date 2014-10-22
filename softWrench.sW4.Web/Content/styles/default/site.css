@@ -233,10 +233,9 @@ input:focus, select:focus, textarea:focus {
         color: #000;
     }
 
-    #listgrid tbody > tr:nth-child(odd) > td,
-    #listgrid tbody > tr:nth-child(odd) > th,
-    #listgrid tbody > tr:nth-child(even) > th,
-    #listgrid tbody > tr:nth-child(even) > td {
+    #listgrid th, #listgrid td {
+        word-break: break-all;
+        word-break: break-word;
     }
 
 .affix-thead {
