@@ -137,6 +137,7 @@ app.factory('contextService', function ($rootScope) {
                 config.clientSideLogLevel = 'warn';
             }
             this.insertIntoContext('defaultlevel', config.clientSideLogLevel.toLowerCase());
+            this.insertIntoContext('scanOrder', config.invbalancesScanOrder);
         },
 
         getResourceUrl: function(path) {
@@ -178,6 +179,10 @@ app.factory('contextService', function ($rootScope) {
 
         getActiveTab: function(tabId) {
             return this.fetchFromContext('currenttab');
+        },
+
+        scanOrder: function() {
+            return this.retrieveFromContext('scanOrder');
         }
     }
 

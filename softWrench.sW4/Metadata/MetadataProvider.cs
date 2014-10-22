@@ -47,8 +47,8 @@ namespace softWrench.sW4.Metadata {
 
 
         private const string Metadata = "metadata.xml";
-
-
+        private const string StatusColor = "statuscolors.json";
+        private const string MenuPattern = "menu.{0}.xml";
         public static bool FinishedParsing { get; set; }
 
         private static MetadataXmlSourceInitializer _metadataXmlInitializer;
@@ -253,7 +253,9 @@ namespace softWrench.sW4.Metadata {
         public void Save([NotNull] Stream data, bool internalFramework = false) {
             try {
                 _metadataXmlInitializer = new MetadataXmlSourceInitializer();
+
                 _metadataXmlInitializer.Validate(_commandBars, data);
+
                 using (var stream = File.Create(MetadataParsingUtils.GetPath(Metadata, internalFramework))) {
                     data.CopyTo(stream);
                     stream.Flush();
@@ -267,6 +269,20 @@ namespace softWrench.sW4.Metadata {
 
             }
         }
+        public void SaveColor([NotNull] Stream data, bool internalFramework = false){
+        
+            try{
+                using (var stream = File.Create(MetadataParsingUtils.GetPath(StatusColor, internalFramework))) {
+                
+                    data.CopyTo(stream);
+                    stream.Flush();
+                }
+                
+            } catch (Exception e) {
+                Log.Error("error saving statuscolor", e);
+                throw;
+            }
+       }
 
         public void SaveMenu([NotNull] Stream data, ClientPlatform platform = ClientPlatform.Web) {
             try {
@@ -281,6 +297,7 @@ namespace softWrench.sW4.Metadata {
                 throw;
             }
         }
+       
 
         private static void FillFields() {
             _entityMetadata = _metadataXmlInitializer.Entities;

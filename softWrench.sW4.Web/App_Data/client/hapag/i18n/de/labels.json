@@ -782,6 +782,7 @@ _headermenu:{
 	metadatabuilder:Metadaten Bauer
 	metadataeditor:Metadaten-Editor
 	menueditor:Menü-Editor
+	statuscoloreditor:statuscolor Editor
 	serviceit:ServiceIT
 	whereclauses:Where Clauses
     logadmin:Verwalten Logs

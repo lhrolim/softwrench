@@ -1,5 +1,5 @@
 ﻿servicerequest:{
-    new: orange,
+    new: green,
     wappr: orange,
     closed: green,
     queued: yellow,

@@ -51,6 +51,13 @@ namespace softWrench.sW4.Data.Configuration {
                 DataType = "string",
             });
 
+            facade.Register(ConfigurationConstants.InventoryGridScanConfig, new PropertyDefinition() {
+                Description = "Inventory filter field scan order",
+                DataType = "string",
+                DefaultValue = "itemnum",
+                Visible = false,
+            });
+
 //            facade.Register(ConfigurationConstants.LdapAuthNonMaximoUsers, new PropertyDefinition() {
 //                Description = "Allow non maximo users to login into the system",
 //                StringValue = "true",
