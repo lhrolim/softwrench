@@ -14,13 +14,16 @@ app.factory('scannerdetectionService', function ($http, restService, searchServi
 
             $(document).scannerDetection(function (data) {
                 for (var attribute in scanOrder) {
-                    if (!searchData.hasOwnProperty(scanOrder[attribute])) {
+                    var currentAttribute = scanOrder[attribute];
+                    // If the property is not already in th escan data, add it and its value
+                    if (!searchData.hasOwnProperty(currentAttribute)) {
                         var localSearchData = {};
-                        localSearchData[scanOrder[attribute]] = data;
+                        localSearchData[currentAttribute] = data;
                         searchService.refreshGrid(localSearchData);
                         return;
-                    } else if(searchData[scanOrder[attribute]] === '') {
-                        searchData[scanOrder[attribute]] = data;
+                    // Else if the property exists but is blank, set it to its new value
+                    } else if (searchData[currentAttribute] === '') {
+                        searchData[currentAttribute] = data;
                         searchService.refreshGrid(searchData);
                         return;
                     }
