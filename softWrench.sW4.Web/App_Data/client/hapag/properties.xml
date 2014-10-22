@@ -45,9 +45,9 @@
 		<property key="globalwsdlpath" value="https://170.225.28.205/MPWSNTestProxyWS/DocHandler?wsdl"/>
 		<property key="globaservletpath_inc" value="https://170.225.28.205/HAPAGLLOYDINCTestWS/DocHandlerServlet"/>
 		<property key="globaservletpath_chg" value="https://170.225.28.205/HAPAGLLOYDCHGTestWS/DocHandlerServlet"/>
-		<property key="maximo_DB_url" value="Server=66.235.236.8:50005;Database=maxdb71;UID=maximo;PWD=Max1mo;CurrentSchema=maximo" />
-		<property key="basewsURL" value="http://66.235.236.8/meaweb/wsdl/" />
-		<property key="swdb_url" value="server=66.235.236.8;database=swdb_hapagdev;UID=sw;Pwd=sw;" />
+		<property key="maximo_DB_url" value="Server=10.50.100.129:50005;Database=maxdb71;UID=maximo;PWD=Max1mo;CurrentSchema=maximo" />
+		<property key="basewsURL" value="http://10.50.100.129/meaweb/wsdl/" />
+		<property key="swdb_url" value="server=10.50.100.129;database=swdb_hapagdev;UID=sw;Pwd=sw;" />
 		<property key="swdb_provider" value="MySql.Data.MySqlClient" />
 		<property key="ldap.synceverytime" value="true"/>
 		<property key="ldap.allownonmaximousers" value="true"/>
@@ -55,9 +55,9 @@
 		<property key="ismcredentials.password" value="xK7AgFqJJQ"/>
 	</environment>
 	<environment key="qa">
-		<property key="maximo_DB_url" value="Server=66.235.236.8:50005;Database=maxdb71;UID=maximo;PWD=Max1mo;CurrentSchema=maximo" />
-		<property key="basewsURL" value="http://66.235.236.8/meaweb/wsdl/" />
-		<property key="swdb_url" value="server=66.235.236.8;database=swdb_hapagqa;UID=sw;Pwd=sw;" />
+		<property key="maximo_DB_url" value="Server=10.50.100.129:50005;Database=maxdb71;UID=maximo;PWD=Max1mo;CurrentSchema=maximo" />
+		<property key="basewsURL" value="http://10.50.100.129/meaweb/wsdl/" />
+		<property key="swdb_url" value="server=10.50.100.129;database=swdb_hapagqa;UID=sw;Pwd=sw;" />
 		<property key="swdb_provider" value="MySql.Data.MySqlClient" />
 	</environment>
 	<environment key="prod">
