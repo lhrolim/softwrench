@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NHibernate.Mapping;
-using softWrench.sW4.Data;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Interfaces;
 using softWrench.sW4.Util;
 
-namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services {
+namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder {
 
 
 

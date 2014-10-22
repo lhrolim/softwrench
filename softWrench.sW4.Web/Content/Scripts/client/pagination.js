@@ -83,7 +83,7 @@
             }
 
             $scope.$on("sw_redirectapplicationsuccess", function (event) {
-                $scope.searchData = {};
+//                $scope.searchData = {};
             });
 
             $scope.adjustMargin(i18NService.getCurrentLanguage());

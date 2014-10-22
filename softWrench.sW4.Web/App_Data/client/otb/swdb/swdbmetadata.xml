@@ -16,7 +16,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <list title="Workorder Batches">
           <commandbars>
             <commandgroup position="gridtop" removeundeclared="true">
-              
+              <command id="newbatch" position="left" icon="fa fa-plus" label="New Batch" service="wobatchService" method="newBatch"/>
             </commandgroup>
           </commandbars>
           <field attribute="id" label="Batch Id"/>

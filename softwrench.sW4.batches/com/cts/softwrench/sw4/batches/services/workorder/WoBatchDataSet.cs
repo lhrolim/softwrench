@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications;
 
-namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services {
+namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder {
     public class WoBatchDataSet : SWDBApplicationDataset {
 
 

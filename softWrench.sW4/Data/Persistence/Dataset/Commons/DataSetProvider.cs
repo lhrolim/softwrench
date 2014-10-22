@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.SimpleInjector.Events;

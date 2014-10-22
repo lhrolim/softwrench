@@ -550,6 +550,7 @@
     <Content Include="Content\Scripts\client\crud_list.js" />
     <Content Include="Content\Scripts\client\logAdmin.js" />
     <Content Include="Content\Scripts\client\services\excelservice.js" />
+    <Content Include="Content\Scripts\client\services\date_service.js" />
     <Content Include="Content\Scripts\client\services\securityService.js" />
     <Content Include="Content\Scripts\client\services\rest_service.js" />
     <Content Include="Content\Scripts\client\services\generalsr_service.js" />
@@ -611,6 +612,7 @@
     <Content Include="Content\Scripts\client\services\commlog_service.js" />
     <Content Include="Content\Scripts\customers\otb\sr_service.js" />
     <Content Include="Content\Scripts\bindonce.js" />
+    <Content Include="Content\Scripts\customers\shared\wobatch_service.js" />
     <Content Include="Content\Scripts\jquery\jquery-filedownload-1.2.0.js" />
     <Content Include="Content\Scripts\jquery\jquery-fileupload-5.40.1.js" />
     <Content Include="Content\Scripts\jquery\jquery.iframe-transport.js" />

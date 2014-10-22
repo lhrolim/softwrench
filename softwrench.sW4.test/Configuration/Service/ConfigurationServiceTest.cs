@@ -31,6 +31,11 @@ namespace softwrench.sW4.test.Configuration.Service {
                 new PropertyValue {Value = "8",Condition = new WhereClauseCondition{AppContext = new ApplicationLookupContext{Schema = "detail"}}},
             };
 
+        private readonly IEnumerable<PropertyValue> _values4 = new List<PropertyValue>
+            {
+                new PropertyValue {Value = "7",UserProfile = 3,Condition = new WhereClauseCondition{AppContext = new ApplicationLookupContext{Schema = "crazynameschema"}}},
+            };
+
 
         private readonly IEnumerable<PropertyValue> _list2NoDefault = new List<PropertyValue>
             {
@@ -64,7 +69,7 @@ namespace softwrench.sW4.test.Configuration.Service {
 
         [TestMethod]
         public void AskForModule_DoNotConsiderDefault() {
-            var context = new ContextHolder{Module = "yyy"};
+            var context = new ContextHolder { Module = "yyy" };
             IEnumerable<PropertyValue> values = new List<PropertyValue>
             {
                 new PropertyValue {Value = "1"},
@@ -90,7 +95,7 @@ namespace softwrench.sW4.test.Configuration.Service {
             result = ConfigurationService.BuildResultValues<string>(_values, context);
             Assert.AreEqual("7", result.First().Value.Value);
 
-     
+
 
 
 
@@ -119,6 +124,14 @@ namespace softwrench.sW4.test.Configuration.Service {
             };
             var result = ConfigurationService.BuildResultValues<string>(_values3, context);
             Assert.AreEqual("8", result.First().Value.Value);
+        }
+        [TestMethod]
+        public void AskForSchemaDoNotFind() {
+            var context = new ContextHolder {
+                ApplicationLookupContext = new ApplicationLookupContext { Schema = "list" }
+            };
+            var result = ConfigurationService.BuildResultValues<string>(_values4, context);
+            Assert.IsFalse(result.Any());
         }
 
 
@@ -157,7 +170,7 @@ namespace softwrench.sW4.test.Configuration.Service {
         }
 
         [TestMethod]
-        public void ModuleAskTestCombination(){
+        public void ModuleAskTestCombination() {
             IEnumerable<PropertyValue> allModulesTest = new List<PropertyValue>
             {
                 new PropertyValue {Value = "2",Module = Conditions.AnyCondition},

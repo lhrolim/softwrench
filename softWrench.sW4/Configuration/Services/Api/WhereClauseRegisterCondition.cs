@@ -28,11 +28,18 @@ namespace softWrench.sW4.Configuration.Services.Api {
             }
         }
 
+        public static WhereClauseRegisterCondition ForSchema(string schema) {
+            return new WhereClauseRegisterCondition().AppendSchema(schema);
+        }
+
         public WhereClauseRegisterCondition AppendSchema(string schema) {
             if (AppContext == null) {
                 AppContext = new ApplicationLookupContext();
             }
             AppContext.Schema = schema;
+            if (Alias == null) {
+                Alias = schema;
+            }
             return this;
         }
 
