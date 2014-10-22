@@ -1,6 +1,40 @@
-﻿function ScanFilterController($http, $scope, restService, searchService) {
+﻿function ScanFilterController($http, $scope, $rootScope, restService, searchService, contextService) {
     $scope.scanOrder = [];
     $scope.filterFields = [];
+    initScanFilter();
+
+    function initScanFilter() {
+
+        $scope.fullKey = $scope.schema.properties['config.fullKey'];
+        var getUrl = restService.getActionUrl("Configuration", "GetConfiguration", { fullKey: $scope.fullKey });
+
+        $http.get(getUrl).success(function (data) {
+            if (!data) {
+                $scope.scanOrder = [];
+            }
+            else {
+                data = data.substring(1, data.length - 1);
+                contextService.insertIntoContext($scope.fullKey, data, $rootScope);
+                var scanOrder = data.split(",");
+                var scanOrderArray = [];
+                var label;
+                for (var item in scanOrder) {
+                    label = $scope.getLabelByAttribute(scanOrder[item]);
+                    scanOrderArray.push(label);
+                }
+                $scope.scanOrder = scanOrderArray;
+            }
+        });
+
+        var filterField;
+        var displayables = $scope.schema.displayables;
+        for (item in displayables) {
+            if (!displayables[item].isHidden) {
+                filterField = { "label": displayables[item].label, "attribute": displayables[item].attribute };
+                $scope.filterFields.push(filterField);
+            }
+        }
+    };
 
     $scope.closeScanFilterModal = function() {
         var modal = $('#scanfilterModal');
@@ -8,41 +42,9 @@
         modal.modal('hide');
     };
     
-    $scope.showScanFilterModal = function (schema) {
-        $scope.fullKey = schema.properties['config.fullKey'];
-        if (!$scope.filterFields.length) {
-            var filterField;
-            var displayables = schema.displayables;
-            for (item in displayables) {
-                if (!displayables[item].isHidden) {
-                    filterField = { "label": displayables[item].label, "attribute": displayables[item].attribute };
-                    $scope.filterFields.push(filterField);
-                }
-            }
-        }
-        
-        $scope.loadScanConfiguration();
+    $scope.showScanFilterModal = function () {
         var modal = $('#scanfilterModal');
         modal.appendTo('body').modal('show');
-    };
-
-    $scope.loadScanConfiguration = function () {
-        var getUrl = restService.getActionUrl("Configuration", "GetConfiguration", { fullKey: $scope.fullKey });
-
-        $http.get(getUrl).success(function (data) {
-            if (!data) {
-                return null;
-            }
-            if (!$scope.scanOrder.length) {
-                data = data.substring(1, data.length - 1);
-                var scanOrder = data.split(",");
-                var label;
-                for (var item in scanOrder) {
-                    label = $scope.getLabelByAttribute(scanOrder[item]);
-                    $scope.scanOrder.push(label);
-                }
-            }
-        });
     };
 
     $scope.getScanConfiguration = function () {
@@ -75,12 +77,13 @@
             fullKey: $scope.fullKey,
             value: scanAttributesString
         };
-        restService.invokePost("Configuration", "SetConfiguration", parameters, null, null, null);
+        restService.invokePost("Configuration", "SetConfiguration", parameters, null,
+            contextService.insertIntoContext(parameters.fullKey, scanAttributesString, $rootScope), null);
         $scope.closeScanFilterModal();
     };
 
     $('#scanfilterModal').on('hidden.bs.modal', function() {
-            searchService.refreshGrid();
+            //searchService.refreshGrid();
     });
 
     $scope.getLabelByAttribute = function(searchAttribute) {

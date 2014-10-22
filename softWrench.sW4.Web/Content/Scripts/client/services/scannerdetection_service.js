@@ -1,22 +1,18 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('scannerdetectionService', function ($http, restService, searchService) {
+app.factory('scannerdetectionService', function ($http, $rootScope, restService, searchService, contextService) {
 
     return {
         initInventoryGridListener: function (schema, datamap, parameters) {
-            var scanOrder = [];
             var searchData = parameters.searchData;
-            var getUrl = restService.getActionUrl("Configuration", "GetConfiguration", { fullkey: schema.properties['config.fullKey'] });
-            $http.get(getUrl).success(function (data) {
-                var scanOrderString = data.substring(1, data.length - 1);
-                scanOrder = scanOrderString.split(',');
-            });
-
+            
             $(document).scannerDetection(function (data) {
+                var scanOrderString = contextService.getFromContext(schema.properties['config.fullKey'], false, $rootScope);
+                var scanOrder = scanOrderString.split(",");
                 for (var attribute in scanOrder) {
                     var currentAttribute = scanOrder[attribute];
                     // If the property is not already in th escan data, add it and its value
-                    if (!searchData.hasOwnProperty(currentAttribute)) {
+                    if (!searchData || !searchData.hasOwnProperty(currentAttribute)) {
                         var localSearchData = {};
                         localSearchData[currentAttribute] = data;
                         searchService.refreshGrid(localSearchData);
