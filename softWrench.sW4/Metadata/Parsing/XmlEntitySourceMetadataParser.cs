@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using JetBrains.Annotations;
 using softWrench.sW4.Metadata.Entities;
-using softWrench.sW4.Metadata.Entities.Connectors;
 using softWrench.sW4.Metadata.Entities.Schema;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Parsing {
     /// <summary>
@@ -16,16 +15,29 @@ namespace softWrench.sW4.Metadata.Parsing {
     ///     entity metadata stored in a XML file.
     /// </summary>
     internal sealed class XmlEntitySourceMetadataParser {
+
+        private readonly Boolean _isSWDDB = false;
+
+        public XmlEntitySourceMetadataParser(bool isSWDB) {
+            _isSWDDB = isSWDB;
+        }
+
         /// <summary>
         ///     Deseriliazes the specified XML element to its corresponding
         ///     <seealso cref="EntityMetadata"/> representation.
         /// </summary>
         /// <param name="entity">The `entity` element to be deserialized.</param>
-        private static EntityMetadata ParseEntity(XElement entity) {
+        private EntityMetadata ParseEntity(XElement entity) {
             var name = entity.Attribute(XmlMetadataSchema.EntityAttributeName).Value;
+            if (_isSWDDB) {
+                name = "_" + name;
+            }
             var idAttributeName = entity.Attribute(XmlMetadataSchema.EntityAttributeIdAttribute).Value;
             var whereClause = entity.Attribute(XmlMetadataSchema.EntityAttributeWhereClause).ValueOrDefault((string)null);
             var parentEntity = entity.Attribute(XmlMetadataSchema.EntityAttributeParentEntity).ValueOrDefault((string)null);
+            if (_isSWDDB && parentEntity != null) {
+                parentEntity = "_" + parentEntity;
+            }
             var associations = XmlAssociationsParser.Parse(entity);
             return new EntityMetadata(name,
                 XmlSchemaParser.Parse(name, entity, idAttributeName, associations.Item2, whereClause, parentEntity),
@@ -42,8 +54,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         /// <param name="stream">The input stream containing the XML representation of the metadata file.</param>
         [NotNull]
         public Tuple<IEnumerable<EntityMetadata>, EntityQueries> Parse([NotNull] TextReader stream) {
-            if (stream == null) throw new ArgumentNullException("stream");
-
+            Validate.NotNull(stream,"stream");
             var document = XDocument.Load(stream);
             if (null == document.Root) throw new InvalidDataException();
 
@@ -120,12 +131,12 @@ namespace softWrench.sW4.Metadata.Parsing {
             public static EntitySchema Parse(string name, XElement entity, string idAttributeName, bool excludeUndeclaredAssociations, string whereclause, string parentEntity) {
                 var attributes = entity.Elements().FirstOrDefault(e => e.IsNamed(XmlMetadataSchema.AttributesElement));
                 if (attributes == null) {
-                    return new EntitySchema(name, null, idAttributeName, false, excludeUndeclaredAssociations, whereclause, parentEntity);
+                    return new EntitySchema(name, null, idAttributeName, false, excludeUndeclaredAssociations, whereclause, parentEntity,null);
                 }
                 var entityAttributes = attributes.Elements().Where(e => e.IsNamed(XmlMetadataSchema.AttributeElement)).Select(ParseAttribute).ToList();
                 var excludeUndeclared = attributes.Attribute(XmlMetadataSchema.ExcludeUndeclared).ValueOrDefault(false);
                 var tuple = new Tuple<Boolean, ICollection<EntityAttribute>>(excludeUndeclared, entityAttributes);
-                return new EntitySchema(name, tuple.Item2, idAttributeName, tuple.Item1, excludeUndeclaredAssociations, whereclause, parentEntity);
+                return new EntitySchema(name, tuple.Item2, idAttributeName, tuple.Item1, excludeUndeclaredAssociations, whereclause, parentEntity,null);
             }
         }
 

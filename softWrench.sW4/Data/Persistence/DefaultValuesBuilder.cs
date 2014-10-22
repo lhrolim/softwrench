@@ -20,7 +20,7 @@ namespace softWrench.sW4.Data.Persistence {
 
         public const string DBDateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
-        public static DataMap BuildDefaultValuesDataMap(ApplicationMetadata application, Entity initialValues) {
+        public static DataMap BuildDefaultValuesDataMap(ApplicationMetadata application, Entity initialValues,Type mappingType) {
 
             var displayables = application.Schema.GetDisplayable<IDefaultValueApplicationDisplayable>(typeof(IDefaultValueApplicationDisplayable));
             var fields = application.Schema.Fields;
@@ -45,7 +45,7 @@ namespace softWrench.sW4.Data.Persistence {
             if (fields.Any(f => f.Attribute == "siteid")) {
                 dictionary["siteid"] = user.SiteId;
             }
-            var schemaDefaultValues = new DataMap(application.Name, dictionary);
+            var schemaDefaultValues = new DataMap(application.Name, dictionary, mappingType);
             if (initialValues != null) {
                 MergeWithPrefilledValues(schemaDefaultValues, initialValues);
             }

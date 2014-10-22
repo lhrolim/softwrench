@@ -22,7 +22,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to ="persongroup">
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
         </relationship>
-
+        <relationship to="relatedrecord" collection="true">
+          <relationshipAttribute from="ticketid" to="recordkey" primary="true"/>
+          <relationshipAttribute to="class" literal="SR" quoteLiteral="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWSR" />
@@ -481,7 +484,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </attributes>
       <relationships>
         <relationship to ="email">
-          <relationshipAttribute from="sendto" to="emailaddress" primary="true"/>
+          <relationshipAttribute query="commlog.sendto like email_.emailaddress" primary="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -646,6 +649,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
             <composition relationship="attachment" label="Attachments">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
+            </composition>
+            <composition relationship="relatedrecord" label="Related Records">
+              <collectionproperties allowcreation="false" />
             </composition>
           </section>
 
@@ -1866,6 +1872,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </application>
 
     <application name="relatedrecord" title="Related Records" entity="relatedrecord" id="00000000-0000-0000-0000-000000000008" >
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-tags"/>
+      </properties>
       <schemas>
         <list stereotype="compositionlist">
           <field  attribute="relatedreckey" label="Related Record Key" />
@@ -2181,6 +2190,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </detail>
       </schemas>
     </application>
+
+   
 
   </applications>
 </metadata>

@@ -1,6 +1,17 @@
 ﻿function GridFilterController($scope, $http, userPreferenceService, searchService, i18NService, alertService, contextService) {
 
-    $scope.selectedfilter = contextService.getFromContext("selectedfilter", true, true);
+    function init() {
+        //since this is inside a ng-include this controller is getting reevaluated every time we refresh the page
+        $scope.selectedfilter = contextService.getFromContext("selectedfilter", true, true);
+        var basicMode = contextService.getFromContext("filter_basicmode", true, true);
+        if (basicMode == undefined) {
+            basicMode = true;
+        }
+        $scope.basicMode = basicMode;
+    }
+
+    init();
+    
 
     $scope.nonSharedFilters = function () {
         return userPreferenceService.loadUserNonSharedFilters($scope.schema.applicationName, $scope.schema.schemaId);
@@ -18,12 +29,18 @@
         return userPreferenceService.hasFilter($scope.schema.applicationName, $scope.schema.schemaId);
     }
 
+    $scope.toggleFilterMode = function () {
+        $scope.basicMode = !$scope.basicMode;
+        contextService.insertIntoContext("filter_basicmode", $scope.basicMode, true);
+        searchService.toggleAdvancedFilterMode();
+    }
 
     $scope.i18N = function (key, defaultValue, paramArray) {
         return i18NService.get18nValue(key, defaultValue, paramArray);
     };
 
     $scope.refreshGrid = function () {
+        contextService.insertIntoContext("filter_basicmode", $scope.basicMode, true);
         searchService.refreshGrid();
     };
 
@@ -108,6 +125,7 @@
         $scope.selectedfilter = filter;
         //this is required because the controller is reinitialized on an, until now unpredictable way
         contextService.insertIntoContext("selectedfilter", filter, true);
+        contextService.insertIntoContext("filter_basicmode", $scope.basicMode, true);
         searchService.refreshGrid();
     }
 
@@ -119,7 +137,6 @@
     }
 
     $scope.$on("sw_redirectapplicationsuccess", function (event) {
-
         contextService.insertIntoContext("selectedfilter", null, true);
         $scope.selectedfilter = null;
     });

@@ -13,14 +13,14 @@
 
 .index-form-row {
     margin-left: 100px;
-    padding-top: 60px;
+    padding-top: 20px;
     padding-bottom: 8px;
 }
 
 .index-background-img {
     margin-top: 40px;
-    background-image: url('../../Images/login-gric-gilariver.jpg');
-    height: 93px;
+    background-image: url('../../Images/manchester/manchester.png');
+    height: 130px;
 }
 
 .loginBttn {

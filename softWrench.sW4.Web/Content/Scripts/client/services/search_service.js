@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('searchService', function (i18NService, $rootScope, contextService) {
+app.factory('searchService', function (i18NService, $rootScope, contextService, fieldService,$http) {
 
     var objCache = {};
 
@@ -234,7 +234,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
             return this.searchOperations()[1];
         },
 
-        refreshGrid: function (searchData,extraparameters) {
+        refreshGrid: function (searchData, extraparameters) {
             /// <summary>
             /// 
             /// </summary>
@@ -246,6 +246,30 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
             ///  printMode --> if we need to refresh the grid for printmode
             /// </param>
             $rootScope.$broadcast("sw_refreshgrid", searchData, extraparameters);
+        },
+
+        toggleAdvancedFilterMode: function () {
+            $rootScope.$broadcast("sw_togglefiltermode");
+        },
+
+        advancedSearch: function (datamap, schema, advancedsearchdata) {
+            if (advancedsearchdata == null || advancedsearchdata == '') {
+                return;
+            }
+            var visibleDisplayables = fieldService.getVisibleDisplayables(datamap, schema);
+            var searchFields;
+            $.each(visibleDisplayables, function (key, v) {
+                if (v.rendererType != "color") {
+                    searchFields += v.attribute + ",";
+                }
+            });
+            advancedsearchdata = '%' + advancedsearchdata + '%';
+            var params = $.param({ 'application': schema.applicationName, 'searchFields': searchFields, 'searchText': advancedsearchdata, 'schema': schema.schemaId });
+            $http.get(url("/api/generic/Data/Search" + "?" + params)).success(
+                function (data) {
+                    $rootScope.$broadcast("sw_redirectactionsuccess", data);
+                }
+            );
         }
 
     };

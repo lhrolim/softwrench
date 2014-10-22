@@ -172,6 +172,7 @@
       <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+	  <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest">
@@ -183,9 +184,11 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+	  <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+	 <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -276,6 +279,7 @@
     <Compile Include="DB_Migration\4.0\20141001_SWWEB-505.cs" />
     <Compile Include="DB_Migration\4.0\20140724_HAP_331.cs" />
     <Compile Include="DB_Migration\4.0\20141002_SWWEB_478.cs" />
+    <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
     <Compile Include="Models\MyProfile\MyProfileModel.cs" />
@@ -375,7 +379,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Client\otb\swdbmetadata.xml">
+    <Content Include="App_Data\Client\otb\swdb\swdbmetadata.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -404,22 +408,27 @@
     <Content Include="Content\Controller\RoleGroup.html" />
     <Content Include="Content\font-awesome-4.1.0\css\font-awesome.css" />
     <Content Include="Content\font-awesome-4.1.0\css\font-awesome.min.css" />
-    <Content Include="Content\Images\background.jpg" />
+    <Content Include="Content\Images\branding.png" />
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\folder-closed.png" />
     <Content Include="Content\Images\folder.png" />
+    <Content Include="Content\Images\gric\login-gric-gilariver.jpg" />
+    <Content Include="Content\Images\hapag\login-header.jpg" />
+    <Content Include="Content\Images\hapag\login-header2.jpg" />
+    <Content Include="Content\Images\hapag\logo_hapag.gif" />
+    <Content Include="Content\Images\header.jpg" />
     <Content Include="Content\Images\icon-background-select.png" />
     <Content Include="Content\Images\icon-combobox.png" />
     <Content Include="Content\Images\icon-opendetails.png" />
-    <Content Include="Content\Images\login-gric-gilariver.jpg" />
-    <Content Include="Content\Images\manchester.png" />
-    <Content Include="Content\Images\otb-branding.png" />
-    <Content Include="Content\Images\otb-header.png" />
+    <Content Include="Content\Images\kongsberg\header.jpg" />
+    <Content Include="Content\Images\kongsberg\signin.jpg" />
+    <Content Include="Content\Images\manchester\manchester.png" />
     <Content Include="Content\Images\pagination-first.png" />
     <Content Include="Content\Images\pagination-last.png" />
     <Content Include="Content\Images\pagination-next.png" />
     <Content Include="Content\Images\pagination-previous.png" />
-    <Content Include="Content\Images\scottsdale.png" />
+    <Content Include="Content\Images\scottsdale\scottsdale.png" />
+    <Content Include="Content\Images\signin.jpg" />
     <Content Include="Content\Images\softwrench.png" />
     <Content Include="Content\Images\tree-leaf.png" />
     <Content Include="Content\Images\tree-node-collapsed.png" />
@@ -520,7 +529,6 @@
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\bootstrap\img\glyphicons-halflings-white.png" />
     <Content Include="Content\bootstrap\img\glyphicons-halflings.png" />
-    <Content Include="Content\Images\login-header2.jpg" />
     <Content Include="Content\Scripts\angular\angular-sanitize.js" />
     <Content Include="Content\Scripts\angular\angular-sanitize.min.js" />
     <Content Include="Content\Scripts\angular\bindonce.js" />
@@ -621,7 +629,7 @@
     <Content Include="Content\styles\default\application\grids.css" />
     <Content Include="Content\styles\default\application\pages.css" />
     <Content Include="Content\styles\default\grid.css" />
-    <Content Include="Content\styles\default\index.css" />
+    <Content Include="Content\styles\default\signin.css" />
     <Content Include="Content\styles\default\menu.css" />
     <Content Include="Content\styles\default\print.css" />
     <Content Include="Content\styles\default\search.css" />
@@ -632,7 +640,6 @@
     <Content Include="Content\Images\1386143956_info.png" />
     <Content Include="Content\Images\downarrow.png" />
     <Content Include="Content\Images\executeNow-icon.png" />
-    <Content Include="Content\Images\login-header.jpg" />
     <Content Include="Content\Images\pause-icon.png" />
     <Content Include="Content\Images\rightarrowtree.png" />
     <Content Include="Content\Images\scheduler-icon.png" />
@@ -746,13 +753,15 @@
     <Content Include="Content\Scripts\spin-min.js" />
     <Content Include="Content\Scripts\typeahead.js" />
     <Content Include="Content\styles\hapag\grid.css" />
-    <Content Include="Content\styles\hapag\index.css" />
+    <Content Include="Content\styles\hapag\signin.css" />
     <Content Include="Content\styles\hapag\site.css" />
-    <Content Include="Content\styles\manchester\index.css" />
+    <Content Include="Content\styles\kongsberg\signin.css" />
+    <Content Include="Content\styles\kongsberg\site.css" />
+    <Content Include="Content\styles\manchester\signin.css" />
     <Content Include="Content\styles\manchester\site.css" />
-    <Content Include="Content\styles\scottsdale\index.css" />
+    <Content Include="Content\styles\scottsdale\signin.css" />
     <Content Include="Content\styles\scottsdale\site.css" />
-    <Content Include="Content\styles\gric\index.css" />
+    <Content Include="Content\styles\gric\signin.css" />
     <Content Include="Content\styles\gric\site.css" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <Content Include="Content\Templates\commands\batches\batches.html" />
@@ -813,7 +822,6 @@
     <Content Include="IBM.Data.DB2.dll" />
     <Content Include="Content\Images\update_16.png" />
     <Content Include="Content\Images\excel_small.gif" />
-    <Content Include="Content\Images\logo_hapag.gif" />
     <Content Include="Content\Images\print_small.gif" />
     <Content Include="Content\Images\refresh_sm.gif" />
     <Content Include="Content\Images\softWrench-phone.gif" />

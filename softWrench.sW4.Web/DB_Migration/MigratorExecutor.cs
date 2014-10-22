@@ -17,24 +17,18 @@ namespace softWrench.sW4.Web.DB_Migration {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MigratorExecutor));
 
-        readonly string connectionString;
+        readonly string _connectionString;
         private readonly string _serverType;
 
         public MigratorExecutor(string connectionKey) {
             var connectionStringSettings = ApplicationConfiguration.DBConnection(ApplicationConfiguration.DBType.Swdb);
-            connectionString = connectionStringSettings.ConnectionString;
-            var _mssqlServer = ApplicationConfiguration.IsMSSQL(ApplicationConfiguration.DBType.Swdb);
-            if (_mssqlServer) {
+            _connectionString = connectionStringSettings.ConnectionString;
+            var mssqlServer = ApplicationConfiguration.IsMSSQL(ApplicationConfiguration.DBType.Swdb);
+            if (mssqlServer) {
                 _serverType = "mssql";
-            }
-            else {
-                var _db2Server = ApplicationConfiguration.IsDB2(ApplicationConfiguration.DBType.Swdb);
-                if (_db2Server) {
-                    _serverType = "db2";
-                }
-                else {
-                    _serverType = "mysql";
-                }
+            } else {
+                var db2Server = ApplicationConfiguration.IsDB2(ApplicationConfiguration.DBType.Swdb);
+                _serverType = db2Server ? "db2" : "mysql";
             }
         }
 
@@ -44,41 +38,34 @@ namespace softWrench.sW4.Web.DB_Migration {
             public string ProviderSwitches { get; private set; }
         }
 
-        public void Migrate(Action<IMigrationRunner> runnerAction)
-        {
-            if (_serverType != "db2")
-            {
-                var before = Stopwatch.StartNew();
-                if (ApplicationConfiguration.IsLocal() && !ApplicationConfiguration.IsLocalHostSWDB())
-                {
-                    Log.Debug("Ignoring Migration on remoteDB");
-                    //avoid misconfiguration to change the schema of a remote database
-                    return;
-                }
-
-                var options = new MigrationOptions { PreviewOnly = false, Timeout = 0 };
-                var factory = GetFactory();
-                var assembly = Assembly.GetExecutingAssembly();
-
-                //using (var announcer = new NullAnnouncer())
-                var announcer = new TextWriterAnnouncer(s => System.Diagnostics.Debug.WriteLine(s));
-                var migrationContext = new RunnerContext(announcer)
-                {
-#if DEBUG
-                    // will create testdata
-                    Profile = "development"
-#endif
-                };
-                var processor = factory.Create(connectionString, announcer, options);
-                var runner = new MigrationRunner(assembly, migrationContext, processor);
-                runnerAction(runner);
-                Log.Info(String.Format("Migration execution finished in {0}", LoggingUtil.MsDelta(before)));
-
-            }
-            else
-            {
+        public void Migrate(Action<IMigrationRunner> runnerAction) {
+            if (_serverType == "db2") {
                 Log.Info(String.Format("Migrator skipped due to SWDB using DB2"));
+                return;
             }
+            var before = Stopwatch.StartNew();
+            if (ApplicationConfiguration.IsLocal() && !ApplicationConfiguration.IsLocalHostSWDB()) {
+                Log.Debug("Ignoring Migration on remoteDB");
+                //avoid misconfiguration to change the schema of a remote database
+                return;
+            }
+
+            var options = new MigrationOptions { PreviewOnly = false, Timeout = 0 };
+            var factory = GetFactory();
+            var assembly = Assembly.GetExecutingAssembly();
+
+            //using (var announcer = new NullAnnouncer())
+            var announcer = new TextWriterAnnouncer(s => System.Diagnostics.Debug.WriteLine(s));
+            var migrationContext = new RunnerContext(announcer) {
+            #if DEBUG
+                // will create testdata
+                Profile = "development"
+            #endif
+            };
+            var processor = factory.Create(_connectionString, announcer, options);
+            var runner = new MigrationRunner(assembly, migrationContext, processor);
+            runnerAction(runner);
+            Log.Info(String.Format("Migration execution finished in {0}", LoggingUtil.MsDelta(before)));
         }
 
         private MigrationProcessorFactory GetFactory() {

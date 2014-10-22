@@ -36,6 +36,17 @@ namespace softWrench.sW4.Metadata.Parsing {
         private const string MissingParentSchema = "Error building schema {0} for application {1}.parentSchema {2} not found. Please assure its declared before the concrete schema";
         //        private static readonly int? Infinite = null;
 
+        private readonly bool _isSWDB = false;
+
+        public XmlApplicationMetadataParser([NotNull] IEnumerable<EntityMetadata> entityMetadata, IDictionary<string, CommandBarDefinition> commandBars, Boolean isSWDB) {
+            if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
+
+            _entityMetadata = entityMetadata;
+            _commandBars = commandBars;
+            _isSWDB = isSWDB;
+        }
+
+
         internal enum FieldRendererType {
             ASSOCIATION, COMPOSITION, OPTION, BASE,
         }
@@ -205,7 +216,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                     var label = xElement.Attribute(XmlMetadataSchema.ApplicationHeaderLabelAttribute).ValueOrDefault("");
                     var parameters = xElement.Attribute(XmlMetadataSchema.ApplicationHeaderParametersAttribute).ValueOrDefault((string)null);
                     var displacement = xElement.Attribute(XmlMetadataSchema.ApplicationHeaderDisplacementAttribute).ValueOrDefault((string)null);
-                    var showExpression = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAtribute).ValueOrDefault((string)"true");
+                    var showExpression = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAtribute).ValueOrDefault("true");
 
                     return new ApplicationHeader(label, parameters, displacement, showExpression);
                 }
@@ -383,7 +394,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var parentSchemaValue = xElement.Attribute(XmlMetadataSchema.SchemaParentSchemaAttribute).ValueOrDefault((string)null);
                 var unionSchema = xElement.Attribute(XmlMetadataSchema.SchemaUnionSchemaAttribute).ValueOrDefault((string)null);
                 var stereotype = SchemaStereotype.None;
-                
+
                 ClientPlatform? platform = null;
                 if (stereotypeAttr != null) {
                     Enum.TryParse(stereotypeAttr, true, out stereotype);
@@ -464,7 +475,10 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         /// <summary>
         ///     Deseriliazes the specified XML element to its corresponding
-        ///     <seealso cref="CompleteApplicationMetadata"/> representation.
+        ///     <seealso>
+        ///         <cref>CompleteApplicationMetadata</cref>
+        ///     </seealso>
+        ///     representation.
         /// </summary>
         /// <param name="application">The `application` element to be deserialized.</param>
         /// <param name="entityMetadata">The catalog of entity metadata to aid in the application parsing.</param>
@@ -472,9 +486,15 @@ namespace softWrench.sW4.Metadata.Parsing {
             string guid = application.Attribute(XmlMetadataSchema.ApplicationIdAttribute).ValueOrDefault((string)null);
             var id = guid != null ? Guid.Parse(guid) : (Guid?)null;
             var name = application.Attribute(XmlMetadataSchema.ApplicationNameAttribute).Value;
+            if (_isSWDB) {
+                name = "_" + name;
+            }
             var title = application.Attribute(XmlMetadataSchema.ApplicationTitleAttribute).Value;
             var properties = ParseProperties(application);
             var entity = application.Attribute(XmlMetadataSchema.ApplicationEntityAttribute).Value;
+            if (_isSWDB) {
+                entity = "_" + entity;
+            }
             var service = application.Attribute(XmlMetadataSchema.ApplicationServiceAttribute).ValueOrDefault((String)null);
             var metadata = entityMetadata.FirstWithException(e => e.Name == entity, "entity {0} not found", entity);
             var idFieldName = metadata
@@ -555,12 +575,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         private readonly IEnumerable<EntityMetadata> _entityMetadata;
         private IDictionary<string, CommandBarDefinition> _commandBars;
 
-        public XmlApplicationMetadataParser([NotNull] IEnumerable<EntityMetadata> entityMetadata, IDictionary<string, CommandBarDefinition> commandBars) {
-            if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
 
-            _entityMetadata = entityMetadata;
-            _commandBars = commandBars;
-        }
 
         /// <summary>
         ///     Parses the XML document provided by the specified

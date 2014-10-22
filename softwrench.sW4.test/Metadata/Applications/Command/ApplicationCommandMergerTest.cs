@@ -8,7 +8,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Command;
 namespace softwrench.sW4.test.Metadata.Applications.Command {
     [TestClass]
     public class ApplicationCommandMergerTest {
-        private readonly CommandBarDefinition _commandBarDefinition = new CommandBarDefinition(null, "detail", new List<ApplicationCommand>
+        private readonly CommandBarDefinition _commandBarDefinition = new CommandBarDefinition(null, "detail", false, new List<ApplicationCommand>
             {
                 ApplicationCommand.TestInstance("c1","label"),
                 ApplicationCommand.TestInstance("c2"),
@@ -28,7 +28,7 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
             var bars = new Dictionary<string, CommandBarDefinition>();
             bars["detail"] = _commandBarDefinition;
             var commandBarDefinitions = new Dictionary<string, CommandBarDefinition>();
-            commandBarDefinitions["detail"] = new CommandBarDefinition(null, "detail", new List<RemoveCommand>
+            commandBarDefinitions["detail"] = new CommandBarDefinition(null, "detail", false, new List<RemoveCommand>
             {
                 new RemoveCommand("c2")
             });
@@ -46,7 +46,7 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
             var bars = new Dictionary<string, CommandBarDefinition>();
             bars["detail"] = _commandBarDefinition;
             var commandBarDefinitions = new Dictionary<string, CommandBarDefinition>();
-            commandBarDefinitions["detail"] = new CommandBarDefinition(null, "detail", new List<ApplicationCommand>
+            commandBarDefinitions["detail"] = new CommandBarDefinition(null, "detail", false, new List<ApplicationCommand>
             {
                 ApplicationCommand.TestInstance("c4",">c2")
             });
@@ -66,7 +66,7 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
             var bars = new Dictionary<string, CommandBarDefinition>();
             bars["detail"] = _commandBarDefinition;
             var commandBarDefinitions = new Dictionary<string, CommandBarDefinition>();
-            commandBarDefinitions["detail"] = new CommandBarDefinition(null, "detail", new List<ICommandDisplayable>
+            commandBarDefinitions["detail"] = new CommandBarDefinition(null, "detail", false, new List<ICommandDisplayable>
             {
                 new ResourceCommand("c4","","",">c3")
             });
@@ -86,7 +86,7 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
             var bars = new Dictionary<string, CommandBarDefinition>();
             bars["detail"] = _commandBarDefinition;
             var commandBarDefinitions = new Dictionary<string, CommandBarDefinition>();
-            commandBarDefinitions["detail"] = new CommandBarDefinition(null, "detail", new List<ApplicationCommand>
+            commandBarDefinitions["detail"] = new CommandBarDefinition(null, "detail", false, new List<ApplicationCommand>
             {
                 ApplicationCommand.TestInstance("c1",null,"testchangelabel")
             });
@@ -100,6 +100,24 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
             Assert.AreEqual("testchangelabel", commandDisplayable.Label);
             Assert.AreEqual("c2", commandBarDefinition.Commands[1].Id);
             Assert.AreEqual("c3", commandBarDefinition.Commands[2].Id);
+        }
+
+        [TestMethod]
+        public void TestRemoveUndeclared() {
+            var bars = new Dictionary<string, CommandBarDefinition>();
+            bars["detail"] = _commandBarDefinition;
+            var commandBarDefinitions = new Dictionary<string, CommandBarDefinition>();
+            commandBarDefinitions["detail"] = new CommandBarDefinition(null, "detail", true, new List<ApplicationCommand>
+            {
+                ApplicationCommand.TestInstance("c4",null)
+            });
+            var result = ApplicationCommandMerger.MergeCommands(commandBarDefinitions, bars);
+            Assert.IsTrue(result.Keys.Any());
+            Assert.AreEqual(1, result.Keys.Count);
+            var commandBarDefinition = result["detail"];
+            Assert.AreEqual(1, commandBarDefinition.Commands.Count());
+            var commandDisplayable = (ApplicationCommand)commandBarDefinition.Commands[0];
+            Assert.AreEqual("c4", commandDisplayable.Id);
         }
 
 

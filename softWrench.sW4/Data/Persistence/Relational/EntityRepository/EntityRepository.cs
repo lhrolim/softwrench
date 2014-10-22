@@ -38,9 +38,14 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             var query = new EntityQueryBuilder().AllRows(entityMetadata, searchDto);
             var rows = Query(entityMetadata, query, searchDto);
             return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
-               .Select(r => new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key), pair => pair.Value, StringComparer.OrdinalIgnoreCase)))
+               .Select(r => BuildDataMap(entityMetadata, r))
                .ToList();
 
+        }
+
+        private DataMap BuildDataMap(EntityMetadata entityMetadata, IEnumerable<KeyValuePair<string, object>> r) {
+
+            return new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key), pair => pair.Value, StringComparer.OrdinalIgnoreCase), entityMetadata.Schema.MappingType);
         }
 
         public IEnumerable<dynamic> RawGet([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {
@@ -61,7 +66,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             var query = new EntityQueryBuilder().AllRows(entityMetadata, searchDto);
             var rows = Query(entityMetadata, query, rowstamp, searchDto);
             return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
-               .Select(r => new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key), pair => pair.Value, StringComparer.OrdinalIgnoreCase)))
+               .Select(r => BuildDataMap(entityMetadata, r))
                .ToList();
 
         }
@@ -119,7 +124,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
             var rows = Query(entityMetadata, query, new SearchRequestDto());
             return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
-              .Select(r => new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key), pair => pair.Value)))
+              .Select(r => BuildDataMap(entityMetadata, r))
               .ToList().FirstOrDefault();
         }
 
@@ -149,7 +154,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         }
 
         private BaseHibernateDAO GetDao(EntityMetadata metadata) {
-            if (metadata.Name.StartsWith("#")) {
+            if (metadata.Name.StartsWith("_")) {
                 return _swdbDao;
             }
             return _maximoHibernateDao;

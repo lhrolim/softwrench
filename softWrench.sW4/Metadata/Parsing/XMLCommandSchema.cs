@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace softWrench.sW4.Metadata.Parsing {
+﻿namespace softWrench.sW4.Metadata.Parsing {
     public class XmlCommandSchema :XmlBaseSchemaConstants{
 
         public const string CommandToolBarElements = "commandbars";
@@ -15,7 +9,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         public const string CommandsElement = "commandgroup";
         public const string CommandElement = "command";
-        public const string CommandRemoveUndeclaredAttribute = "removeundeclared";
+        public const string RemoveUndeclared = "removeundeclared";
         public const string RemoveCommand = "removecommand";
         
         
