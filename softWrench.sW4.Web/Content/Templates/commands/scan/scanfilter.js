@@ -4,27 +4,15 @@
     initScanFilter();
 
     function initScanFilter() {
+        var scanOrderString = contextService.scanOrder();
+        var scanOrder = scanOrderString.split(",");
 
-        $scope.fullKey = $scope.schema.properties['config.fullKey'];
-        var getUrl = restService.getActionUrl("Configuration", "GetConfiguration", { fullKey: $scope.fullKey });
-
-        $http.get(getUrl).success(function (data) {
-            if (!data) {
-                $scope.scanOrder = [];
-            }
-            else {
-                data = data.substring(1, data.length - 1);
-                contextService.insertIntoContext($scope.fullKey, data, $rootScope);
-                var scanOrder = data.split(",");
-                var scanOrderArray = [];
-                var label;
-                for (var item in scanOrder) {
-                    label = $scope.getLabelByAttribute(scanOrder[item]);
-                    scanOrderArray.push(label);
-                }
-                $scope.scanOrder = scanOrderArray;
-            }
-        });
+        if (!scanOrder) {
+            $scope.scanOrder = [];
+        }
+        else {
+            $scope.scanOrder = scanOrder;
+        }
 
         var filterField;
         var displayables = $scope.schema.displayables;
@@ -55,9 +43,9 @@
         var selectedField = document.getElementById("newFilterField");
         var newRow = selectedField.selectedIndex;
         var remainingFilterFields = $scope.remainingFilterFields();
-        var label = remainingFilterFields[newRow].label;
-        if ($scope.scanOrder.indexOf(label) === -1) {
-            $scope.scanOrder.push(label);
+        var attribute = remainingFilterFields[newRow].attribute;
+        if ($scope.scanOrder.indexOf(attribute) === -1) {
+            $scope.scanOrder.push(attribute);
         }
     };
 
@@ -69,16 +57,16 @@
     $scope.saveScanList = function () {
         // Convert the list of field labels for scan order to a list of the attributes
         var scanListAttributes = [];
-        for (label in $scope.scanOrder) {
-            scanListAttributes.push($scope.getAttributeByLabel($scope.scanOrder[label]));
+        for (attribute in $scope.scanOrder) {
+            scanListAttributes.push($scope.scanOrder[attribute]);
         }
         var scanAttributesString = scanListAttributes.toString();
         var parameters = {
-            fullKey: $scope.fullKey,
+            fullKey: $scope.schema.properties['config.fullKey'],
             value: scanAttributesString
         };
         restService.invokePost("Configuration", "SetConfiguration", parameters, null,
-            contextService.insertIntoContext(parameters.fullKey, scanAttributesString, $rootScope), null);
+            contextService.insertIntoContext("scanOrder", scanAttributesString), null);
         $scope.closeScanFilterModal();
     };
 
@@ -107,7 +95,7 @@
     $scope.remainingFilterFields = function() {
         var remainingFilterFields = [];
         for (item in $scope.filterFields) {
-            if ($scope.scanOrder.indexOf($scope.filterFields[item].label) === -1) {
+            if ($scope.scanOrder.indexOf($scope.filterFields[item].attribute) === -1) {
                 remainingFilterFields.push($scope.filterFields[item]);
             }
         }

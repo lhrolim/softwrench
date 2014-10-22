@@ -25,7 +25,7 @@
                                     <span>{{scanOrder.indexOf(item) + 1}}</span>
                                 </td>
                                 <td>
-                                    <span>{{item}}</span>
+                                    <span>{{getLabelByAttribute(item)}}</span>
                                 </td>
                                 <td>
                                     <button class="btn btn-default btn-sm" ng-click="deleteScanRow(this.item)"><i class="fa fa-times">&ensp;Remove</i></button>

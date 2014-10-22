@@ -5,9 +5,9 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
     return {
         initInventoryGridListener: function (schema, datamap, parameters) {
             var searchData = parameters.searchData;
-            
+
             $(document).scannerDetection(function (data) {
-                var scanOrderString = contextService.getFromContext(schema.properties['config.fullKey'], false, $rootScope);
+                var scanOrderString = contextService.scanOrder();
                 var scanOrder = scanOrderString.split(",");
                 var extraparameters = { keepfilterparameters: true };
                 for (var attribute in scanOrder) {
