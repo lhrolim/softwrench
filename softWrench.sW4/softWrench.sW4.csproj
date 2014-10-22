@@ -173,6 +173,7 @@
     <Compile Include="Data\API\BlankApplicationResponse.cs" />
     <Compile Include="Data\API\ReportRequest.cs" />
     <Compile Include="Data\Configuration\ComWhereClauseProvider.cs" />
+    <Compile Include="Data\Entities\MaxCommReadFlag.cs" />
     <Compile Include="Data\Entities\Historical\HistTicket.cs" />
     <Compile Include="Data\Entities\Historical\HistWorkorder.cs" />
     <Compile Include="Data\Entities\LocationCostCenterRestrictionDao.cs" />
@@ -181,8 +182,11 @@
     <Compile Include="Data\ExtraAttributes.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\DataSetConfigurationException.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\MaximoApplicationDataSet.cs" />
+    <Compile Include="Data\Persistence\Engine\AConnectorEngine.cs" />
+    <Compile Include="Data\Persistence\Engine\SWDBConnectorEngine.cs" />
     <Compile Include="Data\Persistence\PaginationData.cs" />
     <Compile Include="Data\Persistence\NHibernatePaginationUtil.cs" />
+    <Compile Include="Data\Persistence\Relational\EntityRepository\EntityRepository.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QuerySearchSortBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\EntityWhereClauseBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\FixedSearchWhereClauseBuilder.cs" />
@@ -251,11 +255,14 @@
     <Compile Include="Metadata\Security\UserPreferences.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\OutputDetailStereotype.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\ApplicationSchemaPropertiesCatalog.cs" />
+    <Compile Include="Metadata\Validator\BaseMetadataXmlSourceInitializer.cs" />
+    <Compile Include="Metadata\Validator\CommandsXMLSourceInitializer.cs" />
     <Compile Include="Metadata\Validator\MetadataXmlTargetInitializer.cs" />
     <Compile Include="Metadata\Validator\MetadataXmlSourceInitializer.cs" />
     <Compile Include="Metadata\Validator\MetadataParsingUtils.cs" />
     <Compile Include="Metadata\Validator\MenuXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\PropertiesXmlInitializer.cs" />
+    <Compile Include="Metadata\Validator\SWDBMetadataXmlSourceInitializer.cs" />
     <Compile Include="Preferences\GridFilterAssociation.cs" />
     <Compile Include="Preferences\GridFilter.cs" />
     <Compile Include="Preferences\GridFilterController.cs" />
@@ -306,7 +313,6 @@
     <Compile Include="Data\API\IApplicationResponse.cs" />
     <Compile Include="Data\API\ApplicationListResult.cs" />
     <Compile Include="Data\Entities\EntityBuilder.cs" />
-    <Compile Include="Data\EntitySlicer.cs" />
     <Compile Include="Data\Pagination\PaginatedSearchRequestDto.cs" />
     <Compile Include="Data\Persistence\BaseHibernateDAO.cs" />
     <Compile Include="Data\Persistence\WS\Mea\MeaAttachmentHandler.cs" />
@@ -388,7 +394,7 @@
     <Compile Include="Data\Persistence\WS\API\IGenericConnector.cs" />
     <Compile Include="Data\Persistence\WS\Internal\IMaximoConnector.cs" />
     <Compile Include="Data\Persistence\WS\Internal\IMaximoCrudConnector.cs" />
-    <Compile Include="Data\Persistence\WS\API\MaximoConnectorEngine.cs" />
+    <Compile Include="Data\Persistence\Engine\MaximoConnectorEngine.cs" />
     <Compile Include="Data\Persistence\WS\Internal\MaximoOperationExecutionContext.cs" />
     <Compile Include="Data\Persistence\WS\Internal\Constants\WsProvider.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseWorkOrderCrudConnector.cs" />
@@ -464,7 +470,6 @@
     <Compile Include="Data\Search\SearchRequestDto.cs" />
     <Compile Include="Data\Pagination\PaginationUtils.cs" />
     <Compile Include="Data\Pagination\PagingExtension.cs" />
-    <Compile Include="Data\Persistence\Relational\EntityRepository.cs" />
     <Compile Include="Data\Search\SearchUtils.cs" />
     <Compile Include="Data\Persistence\WS\Mif\MifConstants.cs" />
     <Compile Include="Data\Persistence\WS\Mif\MifMethodNameUtils.cs" />

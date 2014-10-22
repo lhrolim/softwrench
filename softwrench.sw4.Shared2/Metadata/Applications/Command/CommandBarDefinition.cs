@@ -11,14 +11,16 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
 
         public Boolean? Dynamic { get; set; }
 
+        public Boolean ExcludeUndeclared { get; set; }
 
         public List<ICommandDisplayable> Commands { get; set; }
 
 
-        public CommandBarDefinition(string id, string position, IEnumerable<ICommandDisplayable> commands) {
+        public CommandBarDefinition(string id, string position,Boolean excludeUndeclared, IEnumerable<ICommandDisplayable> commands) {
             Id = id;
             Position = position;
             Commands = new List<ICommandDisplayable>(commands);
+            ExcludeUndeclared = excludeUndeclared;
             if (Id == null && Position == null) {
                 throw new InvalidOperationException("Command must declare either Id or a Stereotype");
             }

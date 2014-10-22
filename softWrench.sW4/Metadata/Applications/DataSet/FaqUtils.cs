@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using log4net;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.Relational;
@@ -11,14 +12,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using softWrench.sW4.SimpleInjector;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
     public class FaqUtils {
 
-        private static ILog Log = LogManager.GetLogger(typeof(FaqUtils));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FaqUtils));
 
-        private EntityRepository _entityRepository = new EntityRepository();
+        private EntityRepository _repository;
 
+        private EntityRepository EntityRepository {
+            get {
+                if (_repository == null) {
+                    _repository =
+                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
+                }
+                return _repository;
+            }
+        }
         private static IEnumerable<FaqData> GetBuiltList(IEnumerable<FaqData> list, IEnumerable<UsefulFaqLinksUtils> usefulFaqLinksUtils) {
             try {
                 var buildedList = new List<FaqData>();
@@ -122,7 +133,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             dto.AppendSearchEntry("status", "ACTIVE");
             dto.AppendProjectionField(ProjectionField.Default("solutionid"));
             dto.AppendProjectionField(ProjectionField.Default("description"));
-            var result = _entityRepository.GetAsRawDictionary(MetadataProvider.Entity("solution"), dto);
+            var result = EntityRepository.GetAsRawDictionary(MetadataProvider.Entity("solution"), dto);
             Log.DebugFormat("db size {0}", result.Count());
             var treeDataList = new List<FaqData>();
             foreach (var attributeHolder in result) {

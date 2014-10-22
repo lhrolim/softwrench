@@ -909,6 +909,27 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <attribute name="hasld" type="smallint" required="true" />
         <attribute name="rowstamp" type="timestamp" required="true" />
       </attributes>
+      <relationships>
+        <relationship to="longdescription" qualifier="symptom">
+          <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="SOLUTION" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="PROBLEMCODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="cause">
+          <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="SOLUTION" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR1CODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="resolution">
+          <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="SOLUTION" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="DOCLINKS" qualifier="attachment" collection="true">
+          <relationshipAttribute from="solutionid" to="ownerid" primary="true"/>
+          <relationshipAttribute to="ownertable" literal="SOLUTION" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="solution" />
       </connectorParameters>

@@ -1,26 +1,32 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 using log4net;
-using softwrench.sw4.Shared2.Util;
-using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.Offline;
+using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
+using softwrench.sW4.Shared2.Data;
+using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace softWrench.sW4.Data.Persistence.Relational {
-    public sealed class EntityRepository : ISingletonComponent {
+namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
+    public class EntityRepository : ISingletonComponent {
 
-        private readonly MaximoHibernateDAO _dao = new MaximoHibernateDAO();
+        private static readonly ILog Log = LogManager.GetLogger(typeof(EntityRepository));
 
-        private static readonly Lazy<string> ConnectionString = new Lazy<string>(InitializeConnectionString);
+        private readonly SWDBHibernateDAO _swdbDao;
+        private readonly MaximoHibernateDAO _maximoHibernateDao;
 
-        private static ILog _log = LogManager.GetLogger(typeof(EntityRepository));
+        public EntityRepository(SWDBHibernateDAO swdbDao, MaximoHibernateDAO maximoHibernateDao) {
+            _swdbDao = swdbDao;
+            _maximoHibernateDao = maximoHibernateDao;
+        }
+
 
         private static string InitializeConnectionString() {
             return ApplicationConfiguration.DBConnectionString(ApplicationConfiguration.DBType.Maximo);
@@ -32,9 +38,14 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var query = new EntityQueryBuilder().AllRows(entityMetadata, searchDto);
             var rows = Query(entityMetadata, query, searchDto);
             return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
-               .Select(r => new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key), pair => pair.Value, StringComparer.OrdinalIgnoreCase)))
+               .Select(r => BuildDataMap(entityMetadata, r))
                .ToList();
 
+        }
+
+        private DataMap BuildDataMap(EntityMetadata entityMetadata, IEnumerable<KeyValuePair<string, object>> r) {
+
+            return new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key), pair => pair.Value, StringComparer.OrdinalIgnoreCase), entityMetadata.Schema.MappingType);
         }
 
         public IEnumerable<dynamic> RawGet([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {
@@ -55,7 +66,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var query = new EntityQueryBuilder().AllRows(entityMetadata, searchDto);
             var rows = Query(entityMetadata, query, rowstamp, searchDto);
             return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
-               .Select(r => new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key), pair => pair.Value, StringComparer.OrdinalIgnoreCase)))
+               .Select(r => BuildDataMap(entityMetadata, r))
                .ToList();
 
         }
@@ -66,7 +77,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             if (searchDto == null) throw new ArgumentNullException("searchDto");
             var query = new EntityQueryBuilder().AllRows(entityMetadata, searchDto);
             var rows = Query(entityMetadata, query, searchDto);
-            _log.DebugFormat("returning {0} rows", rows.Count());
+            Log.DebugFormat("returning {0} rows", rows.Count());
             return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
                .Select(r => r.ToDictionary(pair => FixKey(pair.Key), pair => pair.Value)).ToList();
 
@@ -75,13 +86,13 @@ namespace softWrench.sW4.Data.Persistence.Relational {
         private IEnumerable<dynamic> Query(EntityMetadata entityMetadata, BindedEntityQuery query, SearchRequestDto searchDTO) {
             //TODO: hack to avoid garbage data and limit size of list queries.
             var paginationData = PaginationData.GetInstance(searchDTO, entityMetadata);
-            var rows = _dao.FindByNativeQuery(query.Sql, query.Parameters, paginationData);
+            var rows = GetDao(entityMetadata).FindByNativeQuery(query.Sql, query.Parameters, paginationData);
             return rows;
         }
 
         private IEnumerable<dynamic> Query(EntityMetadata entityMetadata, BindedEntityQuery query, long rowstamp, SearchRequestDto searchDto) {
             var sqlAux = query.Sql.Replace("1=1", RowStampUtil.RowstampWhereCondition(entityMetadata, rowstamp, searchDto));
-            var rows = _dao.FindByNativeQuery(sqlAux, query.Parameters);
+            var rows = GetDao(entityMetadata).FindByNativeQuery(sqlAux, query.Parameters);
             return rows;
         }
 
@@ -113,7 +124,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
             var rows = Query(entityMetadata, query, new SearchRequestDto());
             return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
-              .Select(r => new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key), pair => pair.Value)))
+              .Select(r => BuildDataMap(entityMetadata, r))
               .ToList().FirstOrDefault();
         }
 
@@ -122,19 +133,13 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var query = new EntityQueryBuilder().AllRowsForSync(entityMetadata, rowstamps);
             //TODO: hack to avoid garbage data and limit size of list queries.
             var sql = query.Sql;
-            var queryResult = _dao.FindByNativeQuery(sql, query.Parameters);
+            var queryResult = GetDao(entityMetadata).FindByNativeQuery(sql, query.Parameters);
             var rows = queryResult.Cast<IEnumerable<KeyValuePair<string, object>>>();
             return rows as IList<IEnumerable<KeyValuePair<string, object>>> ?? rows.ToList();
 
         }
 
-        public IList<object> FindByQuery(String queryst, params object[] parameters) {
-            return _dao.FindByNativeQuery(queryst, parameters);
-        }
-
-        public IList<object> FindByQuery(String queryst) {
-            return _dao.FindByNativeQuery(queryst);
-        }
+        //     
 
         [NotNull]
 
@@ -144,15 +149,15 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             if (searchDto == null) throw new ArgumentNullException("searchDto");
             var query = new EntityQueryBuilder().CountRows(entityMetadata, searchDto);
 
-            return _dao.CountByNativeQuery(query.Sql, query.Parameters);
+            return GetDao(entityMetadata).CountByNativeQuery(query.Sql, query.Parameters);
 
         }
 
-        public void Dispose(bool disposing) {
-        }
-
-        public void Dispose() {
-            Dispose(true);
+        private BaseHibernateDAO GetDao(EntityMetadata metadata) {
+            if (metadata.Name.StartsWith("_")) {
+                return _swdbDao;
+            }
+            return _maximoHibernateDao;
         }
 
 

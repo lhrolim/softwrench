@@ -27,7 +27,7 @@ app.directive('crudList', function (contextService) {
             checked: '='
         },
 
-        controller: function ($scope, $http, $rootScope, $filter, $injector, $log,$timeout,
+        controller: function ($scope, $http, $rootScope, $filter, $injector, $log, $timeout,
             formatService, fixHeaderService,
             searchService, tabsService,
             fieldService, commandService, i18NService,
@@ -105,6 +105,11 @@ app.directive('crudList', function (contextService) {
                 log.debug('finish table rendered listener');
             });
 
+            $scope.$on('sw_togglefiltermode', function (event) {
+                $scope.advancedfiltermode = !$scope.advancedfiltermode;
+                fixHeaderService.callWindowResize();
+            });
+
             $scope.$on('sw_refreshgrid', function (event, searchData, extraparameters) {
                 /// <summary>
                 ///  implementation of searchService#refreshgrid see there for details
@@ -139,6 +144,11 @@ app.directive('crudList', function (contextService) {
             $scope.$on('sw_errormessage', function (event, show) {
                 fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
             });
+
+            $scope.doAdvancedSearch = function (filterdata) {
+                searchService.advancedSearch($scope.datamap,$scope.schema, filterdata);
+            }
+
 
             $scope.isEditing = function (schema) {
                 var idFieldName = schema.idFieldName;
@@ -245,6 +255,11 @@ app.directive('crudList', function (contextService) {
                 fixHeaderService.unfix();
 
                 $scope.renderListView({ SearchDTO: searchDTO, printMode: printMode });
+                if ($scope.advancedfiltermode) {
+                    //this workaround is used to clear the data after the advanced search has reached, because the code has lots of comes and goes...
+                    //TODO: refatcor search
+                    $scope.searchData = {};
+                }
             };
 
             $scope.getSearchIcon = function (columnName) {
@@ -270,7 +285,7 @@ app.directive('crudList', function (contextService) {
                 if (operator.id == "") {
                     searchData[columnName] = '';
                     $scope.selectPage(1);
-                } else if (searchData[columnName] != null && searchData[columnName] != '')  {
+                } else if (searchData[columnName] != null && searchData[columnName] != '') {
                     $scope.selectPage(1);
                 } else if (operator.id == "BLANK") {
                     searchData[columnName] = '';
@@ -332,7 +347,7 @@ app.directive('crudList', function (contextService) {
                     $(selector).show();
                 }
                 fixHeaderService.fixTableTop($(".fixedtable"));
-                };
+            };
 
 
 

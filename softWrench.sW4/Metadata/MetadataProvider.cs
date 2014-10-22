@@ -6,14 +6,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using log4net;
-using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
-using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
-using softWrench.sW4.Metadata.Menu;
 using softWrench.sW4.Metadata.Properties;
 using softWrench.sW4.Metadata.Validator;
 using softwrench.sW4.Shared2.Metadata;
@@ -32,26 +29,37 @@ namespace softWrench.sW4.Metadata {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MetadataProvider));
 
         private static MetadataProperties _globalProperties;
+
+        // SWDB entities and applications
+        private static EntityQueries _swdbentityQueries;
+        private static ICollection<EntityMetadata> _swdbentityMetadata;
+        private static IReadOnlyCollection<CompleteApplicationMetadataDefinition> _swdbapplicationMetadata;
+
+        // MAximo entities and applications
         private static EntityQueries _entityQueries;
         private static ICollection<EntityMetadata> _entityMetadata;
         private static IReadOnlyCollection<CompleteApplicationMetadataDefinition> _applicationMetadata;
         private static IDictionary<string, CommandBarDefinition> _commandBars;
+
+
         private static IDictionary<ClientPlatform, MenuDefinition> _menus;
         private static readonly IDictionary<SlicedEntityMetadataKey, SlicedEntityMetadata> SlicedEntityMetadataCache = new Dictionary<SlicedEntityMetadataKey, SlicedEntityMetadata>();
 
 
-        private static IList<string> _siteIds;
         private const string Metadata = "metadata.xml";
-        private const string MenuPattern = "menu.{0}.xml";
+
+
         public static bool FinishedParsing { get; set; }
 
         private static MetadataXmlSourceInitializer _metadataXmlInitializer;
+
+        private static SWDBMetadataXmlSourceInitializer _swdbmetadataXmlInitializer;
 
         public static void DoInit() {
             var before = Stopwatch.StartNew();
             InitializeMetadata();
             //force eager initialization to allow eager catching of errors.
-//            DataSetProvider.GetInstance();
+            //            DataSetProvider.GetInstance();
             var msDelta = LoggingUtil.MsDelta(before);
             Log.Info(String.Format("Finished metadata registry in {0}", msDelta));
             if (ApplicationConfiguration.IgnoreWsCertErrors) {
@@ -66,8 +74,16 @@ namespace softWrench.sW4.Metadata {
                 //this is needed because we may access the API method inside the validation process
                 //                _metadataValidator = new MetadataValidator();
                 _globalProperties = new PropertiesXmlInitializer().Initialize();
+
+                var commandsInitializer = new CommandsXmlSourceInitializer();
+                _commandBars = commandsInitializer.Validate();
                 _metadataXmlInitializer = new MetadataXmlSourceInitializer();
-                _metadataXmlInitializer.Validate();
+                _metadataXmlInitializer.Validate(_commandBars);
+                _swdbmetadataXmlInitializer = new SWDBMetadataXmlSourceInitializer();
+                if (!ApplicationConfiguration.IsUnitTest) {
+                    _swdbmetadataXmlInitializer.Validate(_commandBars);
+                }
+
                 _menus = new MenuXmlInitializer().Initialize();
                 FillFields();
                 FinishedParsing = true;
@@ -78,21 +94,18 @@ namespace softWrench.sW4.Metadata {
                 throw;
             } finally {
                 _metadataXmlInitializer = null;
+                _swdbmetadataXmlInitializer = null;
             }
-        }
-
-        private static IList<string> BuildSiteIds() {
-            string siteIds = GlobalProperty(MetadataProperties.MaximoSiteIds, false);
-            if (String.IsNullOrEmpty(siteIds)) {
-                return new List<string>();
-            }
-            return siteIds.Split(',');
         }
 
 
         private static void BuildSlicedMetadataCache() {
             SlicedEntityMetadataCache.Clear();
-            foreach (var app in _applicationMetadata) {
+            IEnumerable<CompleteApplicationMetadataDefinition> apps = _applicationMetadata;
+            if (_swdbapplicationMetadata != null) {
+                apps = apps.Union(_swdbapplicationMetadata);
+            }
+            foreach (var app in apps) {
                 var entityName = app.Entity;
                 var entityMetadata = Entity(entityName);
                 if (app.IsMobileSupported()) {
@@ -103,10 +116,9 @@ namespace softWrench.sW4.Metadata {
                     var schema = webSchema.Value;
                     var instance = SlicedEntityMetadataBuilder.GetInstance(entityMetadata, schema, app.FetchLimit);
                     SlicedEntityMetadataCache[new SlicedEntityMetadataKey(webSchema.Key, entityName)] = instance;
-                    if (schema.CommandSchema !=null &&schema.CommandSchema.HasDeclaration) {
+                    if (schema.CommandSchema != null && schema.CommandSchema.HasDeclaration) {
                         //mobile schemas, doesnt have command schema for now...
-                        foreach (var overridenBarKey in schema.CommandSchema.ApplicationCommands.Keys)
-                        {
+                        foreach (var overridenBarKey in schema.CommandSchema.ApplicationCommands.Keys) {
                             //adding overriding command bars here
                             var overridenKey = "{0}_{1}_{2}.{3}".Fmt(schema.ApplicationName, schema.SchemaId, schema.Mode.ToString().ToLower(), overridenBarKey);
                             _commandBars[overridenKey] = schema.CommandSchema.ApplicationCommands[overridenBarKey];
@@ -121,8 +133,14 @@ namespace softWrench.sW4.Metadata {
 
         [NotNull]
         public static EntityMetadata Entity([NotNull] string name) {
-            if (name == null) throw new ArgumentNullException("name");
-            var entityMetadata = _metadataXmlInitializer != null ? _metadataXmlInitializer.Entities : _entityMetadata;
+            Validate.NotNull(name, "name");
+            ICollection<EntityMetadata> entityMetadata;
+            if (name.StartsWith("_")) {
+                entityMetadata = _swdbmetadataXmlInitializer != null ? _swdbmetadataXmlInitializer.Entities : _swdbentityMetadata;
+            } else {
+                entityMetadata = _metadataXmlInitializer != null ? _metadataXmlInitializer.Entities : _entityMetadata;
+            }
+
             return entityMetadata.FirstWithException(a => String.Equals(a.Name, name, StringComparison.CurrentCultureIgnoreCase), "entity {0} not found", name);
 
 
@@ -137,9 +155,6 @@ namespace softWrench.sW4.Metadata {
             return _applicationMetadata;
         }
 
-        internal static ICollection<EntityMetadata> Entities() {
-            return _metadataXmlInitializer != null ? _metadataXmlInitializer.Entities : _entityMetadata;
-        }
 
         public static List<ModuleDefinition> Modules(ClientPlatform platform) {
             return Menu(platform).Modules;
@@ -170,8 +185,14 @@ namespace softWrench.sW4.Metadata {
         [NotNull]
         public static CompleteApplicationMetadataDefinition Application([NotNull] string name) {
             Validate.NotNull(name, "name");
+            IReadOnlyCollection<CompleteApplicationMetadataDefinition> apps;
+            if (name.StartsWith("_")) {
+                apps = _swdbapplicationMetadata;
+            } else {
+                apps = _applicationMetadata;
+            }
 
-            return _applicationMetadata
+            return apps
                 .FirstWithException(a => String.Equals(a.ApplicationName, name, StringComparison.CurrentCultureIgnoreCase), "application {0} not found", name);
         }
 
@@ -183,7 +204,7 @@ namespace softWrench.sW4.Metadata {
         [NotNull]
         public static ICommandDisplayable Command(string commandId) {
             Validate.NotNull(commandId, "commandId");
-            if (commandId.StartsWith("crud_")){
+            if (commandId.StartsWith("crud_")) {
                 //TODO: This is workaround to avoid exception when crud_
                 return null;
             }
@@ -218,9 +239,6 @@ namespace softWrench.sW4.Metadata {
             return _menus.ContainsKey(platform) ? _menus[platform] : null;
         }
 
-        public static IList<string> SiteIds {
-            get { return _siteIds; }
-        }
 
         [NotNull]
         public static SlicedEntityMetadata SlicedEntityMetadata(ApplicationMetadata applicationMetadata) {
@@ -235,7 +253,7 @@ namespace softWrench.sW4.Metadata {
         public void Save([NotNull] Stream data, bool internalFramework = false) {
             try {
                 _metadataXmlInitializer = new MetadataXmlSourceInitializer();
-                _metadataXmlInitializer.Validate(data);
+                _metadataXmlInitializer.Validate(_commandBars, data);
                 using (var stream = File.Create(MetadataParsingUtils.GetPath(Metadata, internalFramework))) {
                     data.CopyTo(stream);
                     stream.Flush();
@@ -265,11 +283,14 @@ namespace softWrench.sW4.Metadata {
         }
 
         private static void FillFields() {
-            _siteIds = BuildSiteIds();
             _entityMetadata = _metadataXmlInitializer.Entities;
             _applicationMetadata = _metadataXmlInitializer.Applications;
-            _commandBars = _metadataXmlInitializer.CommandBars;
             _entityQueries = _metadataXmlInitializer.Queries;
+
+            _swdbentityMetadata = _swdbmetadataXmlInitializer.Entities;
+            _swdbapplicationMetadata = _swdbmetadataXmlInitializer.Applications;
+            _swdbentityQueries = _swdbmetadataXmlInitializer.Queries;
+
         }
 
         #region Validate
@@ -279,7 +300,6 @@ namespace softWrench.sW4.Metadata {
 
         public static void StubReset() {
             FinishedParsing = false;
-            //TODO: remove this stub, monitor changes on XML?
             //TODO: create some sort of clear cache event, for distributing responsabilities in an easier way
             InitializeMetadata();
             DynamicProxyUtil.ClearCache();
@@ -290,6 +310,10 @@ namespace softWrench.sW4.Metadata {
         }
 
         public static string EntityQuery(string key, bool throwException = true) {
+            return _entityQueries.GetQuery(key, throwException);
+        }
+
+        public static string SwdbEntityQuery(string key, bool throwException = true) {
             return _entityQueries.GetQuery(key, throwException);
         }
 

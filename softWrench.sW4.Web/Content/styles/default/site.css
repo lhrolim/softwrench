@@ -160,7 +160,7 @@ input:focus, select:focus, textarea:focus {
     border-top-left-radius: 3px !important;
     border-bottom-left-radius: 3px !important;
 }
- 
+
 #datetimepicker > .input-group-addon {
     padding: 4px;
 }
@@ -619,14 +619,17 @@ Header
     max-width: 1139px;
     width: 100%;
     position: fixed;
-    background: #34a7e0 url(../../Images/otb-header.png) no-repeat top left;
+    background: #34a7e0 url(../../Images/header.jpg) no-repeat top left;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
     background-size: cover;
 }
 
     /*Responsive Menu*/
     .container header .menu-expand {
         color: #fff;
-        padding: 10px 20px;
+        padding: 20px 20px 15px;
         cursor: pointer;
         background-color: rgba(52, 167, 224, 0.5);
         border-bottom: rgba(0, 0, 0, 0.3) 3px solid;
@@ -656,56 +659,52 @@ Header
         padding: 0 20px;
     }
 
-.container .context .group.filter .btn-group {
-    margin-top: -2px;
-}
-
-.container header .menu-admin .text {
-    float: left;
-    color: #fff;
-    margin-top: 16px;
-}
-
-    .container header .menu-admin .text a {
-        color: #fff;
-    }
-
-        .container header .menu-admin .text a:hover {
-            text-decoration: none;
+        .container header .menu-admin .text {
+            float: left;
+            color: #fff;
+            margin-top: 16px;
         }
 
-.container header .menu-admin .buttons {
-    padding-top: 20px;
-    float: right;
-}
+            .container header .menu-admin .text a {
+                color: #fff;
+            }
 
-.container header .branding {
-    background: url(../../Images/otb-branding.png) no-repeat top left;
-    min-height: 100px;
-    padding: 20px 20px;
-}
+                .container header .menu-admin .text a:hover {
+                    text-decoration: none;
+                }
 
-    .container header .branding .logo img {
-        max-width: 100%;
-        height: auto;
-        width: auto;
+        .container header .menu-admin .buttons {
+            padding-top: 20px;
+            float: right;
+        }
+
+    .container header .branding {
+        background: url(../../Images/branding.png) no-repeat top left;
+        min-height: 100px;
+        padding: 20px 20px;
     }
 
-.container header .menu-grid {
-    max-width: 1139px;
-    width: 100%;
-}
+        .container header .branding .logo img {
+            max-width: 100%;
+            height: auto;
+            width: auto;
+        }
 
-    .container header .menu-grid li a {
-        text-align: center;
+    .container header .menu-grid {
+        max-width: 1139px;
+        width: 100%;
     }
+
+        .container header .menu-grid li a {
+            text-align: center;
+        }
 
 /*SM - 10/06 - SWWEB-435*/
 .container .context {
     width: 100%;
     background: #eee;
     border-bottom: #000 1px solid;
-    padding: 5px 20px 10px;
+    padding: 5px 20px 10px 10px;
 }
 
     .container .context .group {
@@ -762,7 +761,7 @@ Header
 
         .container header .logout.mobile {
             float: right;
-            margin-top: 10px;
+            margin-top: 25px;
             margin-right: 20px;
         }
 
@@ -834,7 +833,7 @@ Header
     }
 
     .container .context {
-        padding: 5px 20px;
+        padding: 5px 20px 5px 10px;
     }
 
         .container .context .group {
@@ -882,13 +881,23 @@ Header
                 margin-bottom: 0px;
             }
 
+    .container .context .hidden-xs {
+        display: inline-block !important;
+    }
+
     .container .context .group {
         margin: 5px 10px 0;
     }
 
     .container .context .right {
-        float: right;
+        /*width: 60%;*/
+        /*float: right;*/
     }
+
+        .container .context .right .group {
+            float: right;
+        }
+
 
     .container .context .group.total {
         height: auto;
@@ -922,10 +931,6 @@ Header
 }
 
 @media all and (min-width: 1170px) {
-    .container .context .right {
-        float: right;
-    }
-
     .container .context .group.total {
         display: block;
     }
@@ -947,7 +952,7 @@ Header
     font: 12px/24px Arial, Helvetica, sans-serif;
 }
 
-/*SUCCESS MESSAGE - BEGIN*/ 
+/*SUCCESS MESSAGE - BEGIN*/
 .topMessageAux {
     z-index: 1000;
     margin-left: auto !important;
@@ -1109,29 +1114,14 @@ Header
     }
 /*SM - 09/02 - ADD - Fix file upload button*/
 
-
-    .richtext .ta-editor {
-        max-width: 225px;
-    }
-
-    @media all and (min-width: 480px) {
-    .richtext .ta-editor {
-        max-width: 405px;
-    }
+.richtext .ta-editor {
+    max-width: 859px; /*add max-width to stop richtext from moving off the screen horizontally*/
 }
 
-        @media all and (min-width: 758px) {
-    .richtext .ta-editor {
-        max-width: 508px;
+    .richtext .ta-editor p {
+        word-break: break-all;
+        word-break: break-word;
     }
-}
-
-@media all and (min-width: 992px) {
-    .richtext .ta-editor {
-        max-width: 859px; /*add max-width to stop richtext from moving off the screen horizontally*/
-    }
-}
-
 
 /*SM - 09/26 - Fix label control hight with multiple lines*/
 label.form-control {
@@ -1140,6 +1130,8 @@ label.form-control {
 }
 /*SM - 09/26 - Fix label control hight with multiple lines*/
 
+
+/*JV - ~10/03 - SWWEB-472 - Add green & orange color CSS that can be used for icons*/
 .green {
     color: green;
 }
@@ -1147,6 +1139,13 @@ label.form-control {
 .orange {
     color: orange;
 }
+/*JV - ~10/03 - SWWEB-472 - Add green & orange color CSS that can be used for icons*/
+
+/*JV - 10/08 - SWWEB-472 - Add yellow color CSS that can be used for icons*/
+.envelopeYellow {
+    color: rgb(239, 198, 99);
+}
+/*JV - 10/08 - SWWEB-472 - Add yellow color CSS that can be used for icons*/
 
 /*SM - 10/06 - SWWEB-492*/
 input[type=search] {

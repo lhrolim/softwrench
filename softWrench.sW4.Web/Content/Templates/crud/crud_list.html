@@ -3,15 +3,36 @@
     <div id="affixpagination" class="affix-pagination hiddenonprint">
         <div class="context clearfix header-menu">
             <gridtoolbar position="gridtop"
-                schema="schema"
-                pagination-data="paginationData"
-                search-data="searchData"
-                search-operator="searchOperator"
-                renderfn="selectPage(pageNumber,pageSize,printMode)"></gridtoolbar>
+                         schema="schema"
+                         pagination-data="paginationData"
+                         search-data="searchData"
+                         search-sort="searchSort"
+                         search-operator="searchOperator"
+                         renderfn="selectPage(pageNumber,pageSize,printMode)"></gridtoolbar>
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
-                schema-id="{{schema.schemaId}}" application-name="{{schema.applicationName}}"
-                search-data="searchData"
-                search-operator="searchOperator" />
+                        schema-id="{{schema.schemaId}}" application-name="{{schema.applicationName}}"
+                        search-data="searchData"
+                        search-operator="searchOperator" />
+        </div>
+        <!--TODO: make this encapsulated inside gridfilter.html... is that possible?-->
+        <div class="context clearfix header-menu" ng-if="advancedfiltermode">
+            <div class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="advancedSearch" class="col-sm-1 control-label">Search</label>
+                    <div class="col-sm-11">
+                        <div class="input-group">
+                            <input class="form-control" id="advancedSearch" ng-model="advancedsearchdata" ng-enter="doAdvancedSearch(advancedsearchdata)">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-enabled="advancedsearchdata && advancedsearchdata != ''"
+                                        ng-click="doAdvancedSearch(advancedsearchdata)">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </div>
 
@@ -119,7 +140,7 @@
                                     <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
                                            ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" />
                                     <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-            The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                    The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                     <div class="input-group-addon dropdown">
                                         <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                               data-toggle="dropdown" rel="tooltip"
@@ -196,6 +217,7 @@
             <gridtoolbar position="gridbottom"
                          schema="schema"
                          pagination-data="paginationData"
+                         search-sort="searchSort"
                          search-data="searchData"
                          search-operator="searchOperator"
                          renderfn="selectPage(pageNumber,pageSize,printMode)"></gridtoolbar>

@@ -162,8 +162,8 @@ namespace softWrench.sW4.Data.Persistence {
             var before = Stopwatch.StartNew();
             using (var session = GetSessionManager().OpenSession()) {
                 var query = BuildQuery(queryst, parameters, session, true);
-                var result = (int)query.UniqueResult();
-                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "done count query"));
+                var result = Convert.ToInt32(query.UniqueResult());
+                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "done count query. Count result : {0}", result));
                 return result;
             }
         }

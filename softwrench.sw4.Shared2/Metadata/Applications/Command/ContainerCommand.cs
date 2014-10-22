@@ -60,6 +60,19 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
             return null;
         }
 
-      
+        protected bool Equals(ContainerCommand other) {
+            return string.Equals(Id, other.Id);
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ContainerCommand)obj);
+        }
+
+        public override int GetHashCode() {
+            return (Id != null ? Id.GetHashCode() : 0);
+        }
     }
 }

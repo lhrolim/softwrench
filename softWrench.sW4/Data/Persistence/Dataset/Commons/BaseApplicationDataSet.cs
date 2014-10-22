@@ -130,7 +130,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var id = request.Id;
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
-            var dataMap = id != null ? (DataMap)Engine().FindById(application.Schema, entityMetadata, id, applicationCompositionSchemas) : DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues);
+            var dataMap = id != null ? (DataMap)Engine().FindById(application.Schema, entityMetadata, id, applicationCompositionSchemas)
+                : DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, entityMetadata.Schema.MappingType);
             var associationResults = BuildAssociationOptions(dataMap, application, request);
             var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, id);
             return detailResult;
@@ -167,15 +168,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             //count query
             tasks[0] = Task.Factory.StartNew((c) => {
+                var dto = searchDto.ShallowCopy();
                 Quartz.Util.LogicalThreadContext.SetData("context", c);
                 if (searchDto.NeedsCountUpdate) {
                     Log.DebugFormat("BaseApplicationDataSet#GetList calling Count method on maximo engine. Application Schema \"{0}\" / Context \"{1}\"", schema, c);
-                    totalCount = Engine().Count(entityMetadata, searchDto);
+                    totalCount = Engine().Count(entityMetadata, dto);
                 }
             }, ctx);
 
             //query
             tasks[1] = Task.Factory.StartNew((c) => {
+                var dto = searchDto.ShallowCopy();
                 Quartz.Util.LogicalThreadContext.SetData("context", c);
                 // Only fetch the compositions schemas if indicated on searchDTO
                 var applicationCompositionSchemata = new Dictionary<string, ApplicationCompositionSchema>();
@@ -188,7 +191,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     }
                 }
                 Log.DebugFormat("BaseApplicationDataSet#GetList calling Find method on maximo engine. Application Schema \"{0}\" / Context \"{1}\"", schema, c);
-                entities = Engine().Find(entityMetadata, searchDto, applicationCompositionSchemata);
+                entities = Engine().Find(entityMetadata, dto, applicationCompositionSchemata);
             }, ctx);
 
             Task.WaitAll(tasks);

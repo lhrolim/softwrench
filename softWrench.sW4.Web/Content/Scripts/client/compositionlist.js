@@ -53,7 +53,7 @@ app.directive('expandedItemInput', function ($compile) {
 });
 
 app.directive('newItemInput', function ($compile, fieldService) {
-    
+
     return {
         restrict: "E",
         replace: true,
@@ -65,7 +65,7 @@ app.directive('newItemInput', function ($compile, fieldService) {
             associationOptions: '=',
             cancelfn: '&',
             savefn: '&'
-            
+
         },
         template: "<div></div>",
         link: function (scope, element, attrs) {
@@ -106,7 +106,7 @@ app.directive('compositionList', function (contextService) {
 
         controller: function ($scope, $log, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
-            expressionService, $timeout, modalService, redirectService) {
+            expressionService, $timeout, modalService, redirectService, eventdispatcherService) {
             
 
             function init() {
@@ -122,10 +122,10 @@ app.directive('compositionList', function (contextService) {
                 $scope.clonedCompositionData = [];
                 jQuery.extend($scope.clonedCompositionData, $scope.compositiondata);
                 $scope.isNoRecords = $scope.clonedCompositionData.length > 0 ? false : true;
-                $scope.detailData = {};                
+                $scope.detailData = {};
                 $scope.noupdateallowed = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
                 $scope.expanded = false;
-                $scope.wasExpandedBefore = false;                
+                $scope.wasExpandedBefore = false;
                 $scope.isReadonly = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
 
                 $injector.invoke(BaseController, this, {
@@ -193,13 +193,13 @@ app.directive('compositionList', function (contextService) {
                     modalService.show($scope.compositiondetailschema, datamap, $scope.save);
                 } else {
                     //TODO: switch to edit
-                $scope.newDetail = true;
+                    $scope.newDetail = true;
                 }
                 $scope.selecteditem = datamap;
                 $scope.collapseAll();
             }
 
-            var doToggle = function (id, item, forcedState) {
+            var doToggle = function (id, item, originalListItem, forcedState) {
                 if ($scope.detailData[id] == undefined) {
                     $scope.detailData[id] = {};
                     $scope.detailData[id].expanded = false;
@@ -207,6 +207,17 @@ app.directive('compositionList', function (contextService) {
                 $scope.detailData[id].data = item;
                 var newState = forcedState != undefined ? forcedState : !$scope.detailData[id].expanded;
                 $scope.detailData[id].expanded = newState;
+
+                if(newState) {
+                    var parameters = {};
+                    parameters.compositionItemId = id;
+                    parameters.compositionItemData = originalListItem;
+                    parameters.parentData = $scope.parentdata;
+                    parameters.parentSchema = $scope.parentschema;
+
+                    var compositionSchema = $scope.parentschema.cachedCompositions[$scope.relationship];
+                    eventdispatcherService.onviewdetail(compositionSchema, parameters);
+                }
             };
 
             $scope.toggleDetails = function (item, updating) {
@@ -214,7 +225,7 @@ app.directive('compositionList', function (contextService) {
                 var compositionId = item[$scope.compositionlistschema.idFieldName];
                 var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
                 if (!needServerFetching) {
-                    doToggle(compositionId, item);
+                    doToggle(compositionId, item, item);
                     return;
                 }
                 var compositiondetailschema = $scope.compositiondetailschema;
@@ -231,7 +242,7 @@ app.directive('compositionList', function (contextService) {
                 var urlToCall = url("/api/data/" + applicationName + "?" + $.param(parameters));
                 $http.get(urlToCall).success(
                     function (result) {
-                        doToggle(compositionId, result.resultObject.fields);
+                        doToggle(compositionId, result.resultObject.fields, item);
                         $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
                     });
             };
@@ -272,7 +283,7 @@ app.directive('compositionList', function (contextService) {
                 if ($scope.compositiondata == null) {
                     $scope.compositiondata = [];
                 }
-                $scope.compositiondata.push(selecteditem);                
+                $scope.compositiondata.push(selecteditem);
                 if ($scope.collectionproperties.autoCommit) {
                     var validationErrors = validationService.validate($scope.compositionschemadefinition.schemas.detail.displayables, selecteditem);
                     if (validationErrors.length > 0) {
@@ -289,7 +300,7 @@ app.directive('compositionList', function (contextService) {
                                 var compositiontabaftersave = '#' + compositions[compositions.length - 1].replace('/', '');
                                 sessionStorage.compositiontabaftersave = compositiontabaftersave;
                                 window.location.reload();
-                                    return;
+                                return;
                             }
                             $scope.clonedCompositionData = updatedArray;
                             $scope.compositiondata = updatedArray;
@@ -390,10 +401,19 @@ app.directive('compositionList', function (contextService) {
                     return;
                 }
 
+                var compositionListData = [];
+                for (var i = 0; i < $scope.compositiondata.length; i++) {
+                    var data = $scope.compositiondata[i];
+                    var id = data[$scope.compositiondetailschema.idFieldName];
+                    compositionListData[id] = data;
+                }
+
                 var urlToInvoke = removeEncoding(url("/api/generic/ExtendedData/ExpandCompositions?" + $.param(buildExpandAllParams())));
                 $http.get(urlToInvoke).success(function (result) {
                     $.each(result.resultObject[$scope.relationship], function (key, value) {
-                        doToggle(value[$scope.compositiondetailschema.idFieldName], value, true);
+                        //TODO: This function is not utilizing the needServerFetching optimization as found in the toggleDetails function
+                        var itemId = value[$scope.compositiondetailschema.idFieldName];
+                        doToggle(itemId, value, compositionListData[itemId], true);
                     });
                     $scope.wasExpandedBefore = true;
                 });
@@ -420,8 +440,8 @@ app.directive('compositionList', function (contextService) {
             $scope.i18NLabel = function (fieldMetadata) {
                 return i18NService.getI18nLabel(fieldMetadata, $scope.compositionlistschema);
             };
-            
-           
+
+
         }
     };
 });

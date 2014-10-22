@@ -1,7 +1,11 @@
-﻿using softWrench.sW4.Data.Persistence.WS.API;
+﻿using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Engine;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
+using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac;
 using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Data.Sync;
+using softwrench.sw4.Hapag.Security;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -27,6 +31,10 @@ using System.Linq;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagImacDataSet : HapagBaseApplicationDataSet {
+        public HapagImacDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao)
+            : base(locationManager, entityRepository, maxDao) {
+        }
+
         public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var result = base.GetList(application, searchDto);
             return result;

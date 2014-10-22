@@ -34,11 +34,11 @@ app.factory('fieldService', function (expressionService) {
 
 
     return {
-        isFieldHidden: function(datamap, application, fieldMetadata) {
+        isFieldHidden: function (datamap, application, fieldMetadata) {
             return isFieldHidden(datamap, application, fieldMetadata);
         },
 
-        nonTabFields: function(displayables) {
+        nonTabFields: function (displayables) {
             var result = [];
             for (var i = 0; i < displayables.length; i++) {
                 var displayable = displayables[i];
@@ -51,7 +51,7 @@ app.factory('fieldService', function (expressionService) {
             return result;
         },
 
-        fillDefaultValues: function(displayables, datamap) {
+        fillDefaultValues: function (displayables, datamap) {
             $.each(displayables, function (key, value) {
                 var target = value.attribute;
                 if (value.defaultValue != undefined && target != undefined) {
@@ -135,6 +135,17 @@ app.factory('fieldService', function (expressionService) {
                 }
             }
             return count;
+        },
+
+        getVisibleDisplayables: function (datamap, schema) {
+            var displayables = schema.displayables;
+            var result = [];
+            for (var i = 0; i < displayables.length; i++) {
+                if (!this.isFieldHidden(datamap, schema, displayables[i])) {
+                    result.push(displayables[i]);
+                }
+            }
+            return result;
         },
 
         getId: function (datamap, schema) {

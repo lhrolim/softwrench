@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NHibernate.Cfg.Loquacious;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.Relational;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -21,7 +22,12 @@ namespace softWrench.sW4.Data.Relationship.Composition {
 
     public class CompositionExpander : ISingletonComponent {
 
-        private readonly EntityRepository _entityRepository = new EntityRepository();
+        private readonly EntityRepository _entityRepository;
+
+        public CompositionExpander(EntityRepository entityRepository) {
+            _entityRepository = entityRepository;
+        }
+
 
         public IGenericResponseResult Expand(InMemoryUser user, IDictionary<string, ApplicationCompositionSchema> compositionSchemas, CompositionExpanderHelper.CompositionExpansionOptions options) {
             var resultDict = new Dictionary<string, IEnumerable<IDictionary<string, object>>>();
@@ -44,8 +50,8 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             return new GenericResponseResult<Dictionary<string, IEnumerable<IDictionary<string, object>>>>(resultDict);
         }
 
-       
+
     }
 
- 
+
 }

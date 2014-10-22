@@ -417,6 +417,9 @@
             <attribute name="orderbyfield" type="string" use="optional"/>
           </complexType>
         </element>
+        <element name="event" type="tns:Event" minOccurs="0"
+          maxOccurs="unbounded">
+        </element>
       </choice>
     </sequence>
     <attribute name="relationship" type="string" use="required"></attribute>
@@ -778,6 +781,7 @@
         <restriction base="string">
           <enumeration value="afterchange"></enumeration>
           <enumeration value="beforechange"></enumeration>
+          <enumeration value="onviewdetail"></enumeration>
           <enumeration value="onload"></enumeration>
         </restriction>
       </simpleType>

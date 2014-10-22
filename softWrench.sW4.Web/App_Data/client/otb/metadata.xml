@@ -22,7 +22,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to ="persongroup">
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
         </relationship>
-
+        <relationship to="relatedrecord" collection="true">
+          <relationshipAttribute from="ticketid" to="recordkey" primary="true"/>
+          <relationshipAttribute to="class" literal="SR" quoteLiteral="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWSR" />
@@ -481,7 +484,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </attributes>
       <relationships>
         <relationship to ="email">
-          <relationshipAttribute from="sendto" to="emailaddress" primary="true"/>
+          <relationshipAttribute query="commlog.sendto like email_.emailaddress" primary="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -641,10 +644,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
             <composition relationship="commlog" label="Communication">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
+              <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
 
             <composition relationship="attachment" label="Attachments">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
+            </composition>
+            <composition relationship="relatedrecord" label="Related Records">
+              <collectionproperties allowcreation="false" />
             </composition>
           </section>
 
@@ -728,7 +735,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-          <!--section id="ownerstatussection"/-->
           <field attribute="wonum" label="WO No:" readonly="true"/>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
             <renderer type="lookup"/>
@@ -818,11 +824,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <!-- removed default='@usersite' from the above association label-->
               <renderer type="lookup"/>
             </association>
-          </section>
-          <section id="ownerstatussection">
-            <!--field attribute="owner" label="Owner:"/-->
-
-
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
           </section>
         </schema>
@@ -830,14 +831,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema parentschema="adetail" id="editdetail" title="Work Order Detail" platform="web">
           <section id="siteidsection">
             <field label="Site:" attribute="siteid" readonly="true"/>
-          </section>
-          <section id="ownerstatussection">
-            <!--field attribute="owner" label="Owner:" readonly="true"/-->
             <association label="Status:" target="status" labelfield="synstatus.description">
               <renderer type="combo"/>
             </association>
           </section>
-
           <section id="compositions">
             <composition relationship="worklog" label="Work Log">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
@@ -1881,6 +1878,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </application>
 
     <application name="relatedrecord" title="Related Records" entity="relatedrecord" id="00000000-0000-0000-0000-000000000008" >
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-tags"/>
+      </properties>
       <schemas>
         <list stereotype="compositionlist">
           <field  attribute="relatedreckey" label="Related Record Key" />
@@ -2142,6 +2142,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="inbound">
             <renderer type="icon" params="expression={'1':'fa-long-arrow-left green','0':'fa-long-arrow-right orange'} "/>
           </field>
+          <field attribute="read">
+            <renderer type="icon" params="expression={'#default':'fa-envelope envelopeYellow','true':''}"/>
+          </field>
           <field attribute="orgobject" label="Origination"/>
           <field attribute="createdate" label="Created Date/Time">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;"/>
@@ -2170,7 +2173,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="message" label="Message:" >
             <renderer type="richtext"/>
           </field>
-
         </schema>
       </schemas>
     </application>
@@ -2194,6 +2196,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </detail>
       </schemas>
     </application>
+
+   
 
   </applications>
 </metadata>

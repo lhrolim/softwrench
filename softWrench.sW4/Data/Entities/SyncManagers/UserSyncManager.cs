@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Persistence.Relational;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
@@ -17,8 +18,8 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         private const string EntityName = "person";
 
 
-        public UserSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade)
-            : base(dao, facade) {
+        public UserSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade,EntityRepository repository)
+            : base(dao, facade,repository) {
         }
 
         [CanBeNull]
@@ -44,7 +45,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             };
             dto = BuildDTO(dto);
             var entityMetadata = MetadataProvider.Entity(EntityName);
-            var maximoUsers = new EntityRepository().Get(entityMetadata, dto);
+            var maximoUsers = EntityRepository.Get(entityMetadata, dto);
             var attributeHolders = maximoUsers as AttributeHolder[] ?? maximoUsers.ToArray();
             if (!attributeHolders.Any()) {
                 return null;
