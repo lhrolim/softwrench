@@ -112,6 +112,7 @@ app.directive('lookupModal', function (contextService) {
                             $scope.modalPaginationData.pageSize = associationResult.pageSize;
                             $scope.modalPaginationData.totalCount = associationResult.totalCount;
                             $scope.modalPaginationData.selectedPage = associationResult.pageNumber;
+                            //TODO: this should come from the server side
                             $scope.modalPaginationData.paginationOptions = [10, 30, 100];
                         }
                     }
