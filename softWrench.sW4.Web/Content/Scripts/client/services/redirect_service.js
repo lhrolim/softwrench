@@ -96,6 +96,10 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             tab.trigger('click');;
         },
         
+        goToApplication: function(applicationName, schemaId, parameters, jsonData) {
+            this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData);
+        },
+
         goToApplicationView: function (applicationName, schemaId, mode, title, parameters, jsonData) {
             var log = $log.getInstance('redirectService#goToApplication');
 

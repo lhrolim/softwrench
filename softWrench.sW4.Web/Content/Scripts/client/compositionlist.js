@@ -208,8 +208,20 @@ app.directive('compositionList', function (contextService) {
                     eventdispatcherService.onviewdetail(compositionSchema, parameters);
                 }
             };
+            /// <summary>
+            ///  Method called when an entry of the composition is clicked
+            /// </summary>
+            /// <param name="item">the row entry, datamap</param>
+            /// <param name="column">the specific column clicked,might be used by different implementations</param>
+            $scope.toggleDetails = function (item, column) {
+                var updating = $scope.collectionproperties.allowUpdate;
 
-            $scope.toggleDetails = function (item, updating) {
+                var fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
+                if (fullServiceName != null) {
+                    commandService.executeClickCustomCommand(fullServiceName, item, column);
+                    return;
+                };
+
                 $scope.isReadOnly = !updating;
                 var compositionId = item[$scope.compositionlistschema.idFieldName];
                 var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;

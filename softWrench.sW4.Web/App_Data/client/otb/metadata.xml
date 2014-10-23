@@ -1912,6 +1912,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </properties>
       <schemas>
         <list stereotype="compositionlist">
+          <properties>
+            <property key="list.click.service" value="relatedrecordService.open"/>
+          </properties>
           <commandbars>
             <commandgroup position="compositiontop">
               <container id="addrelated" label="Add Related Record" position=">refresh" icon="fa-plus" tooltip="Add related record entry">
