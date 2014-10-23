@@ -49,6 +49,10 @@ app.directive('crudList', function (contextService) {
                 return formattedValue;
             };
 
+            this.test = function(val) {
+                $log.warn(val);
+            }
+
             $scope.hasTabs = function (schema) {
                 return tabsService.hasTabs(schema);
             };

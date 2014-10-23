@@ -121,7 +121,7 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
                     log.warn("command bar {0}, and fallback {1} not found".format(commandKey, fallbackKey));
                 }
             }
-            var commands = commandbar != null ? bar[commandKey].commands : null;
+            var commands = commandbar != null ? commandbar.commands : null;
             schema.jscache.commandbars[position] = commands;
 
             return commands;

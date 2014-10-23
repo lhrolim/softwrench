@@ -160,15 +160,15 @@
 
                 //let´s see the non-default commands, i.e commands that are declared on the schema, 
                 //but may be overriden by specific tab or composition_list
-                $.each($scope.schema.commandSchema.commands, function (index, value) {
-                    if ($.inArray(value.id, localCommands.toKeep) != -1) {
-                        resultCommands.push(value);
-                    } else {
-                        if ($scope.localschema != undefined) {
-                            $scope.localschema.commandSchema.toExclude.push(value.id);
-                        }
-                    }
-                });
+//                $.each($scope.schema.commandSchema.commands, function (index, value) {
+//                    if ($.inArray(value.id, localCommands.toKeep) != -1) {
+//                        resultCommands.push(value);
+//                    } else {
+//                        if ($scope.localschema != undefined) {
+//                            $scope.localschema.commandSchema.toExclude.push(value.id);
+//                        }
+//                    }
+//                });
                 if (!isArrayNullOrEmpty(localCommands.toKeep)) {
                     //let´s see the default commands now cancel,print,save
                     $.each($scope.defaultCommands(), function (index, value) {

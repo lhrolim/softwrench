@@ -137,18 +137,7 @@ app.directive('compositionList', function (contextService) {
             };
 
             init();
-            checktabaftersave();
-
-            function checktabaftersave() {
-                $timeout(function () {
-                    var compositiontabaftersave = sessionStorage.compositiontabaftersave;
-                    if (!nullOrUndef(compositiontabaftersave)) {
-                        var tab = $('a[href="' + compositiontabaftersave + '"]');
-                        sessionStorage.compositiontabaftersave = null;
-                        tab.click();
-                    }
-                }, 1000);
-            }
+          
 
             $scope.compositionProvider = function () {
                 var localCommands = {};
@@ -243,7 +232,11 @@ app.directive('compositionList', function (contextService) {
                 $http.get(urlToCall).success(
                     function (result) {
                         doToggle(compositionId, result.resultObject.fields, item);
-                        $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
+                        //this timeout is here to avoid a strange exception exception: digest alredy in place
+                        //TODO: investigate further
+                        $timeout(function() {
+                            $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
+                        }, 0, false);
                     });
             };
 
@@ -307,7 +300,7 @@ app.directive('compositionList', function (contextService) {
                             $scope.newDetail = false;
                             $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
                             $scope.selecteditem = {};
-                            $scope.collapseAll();
+                            collapseAll();
                             if ($rootScope.showingModal) {
                                 //hides the modal after submiting it
                                 modalService.hide();
@@ -327,13 +320,25 @@ app.directive('compositionList', function (contextService) {
 
             };
 
-            $scope.collapseAll = function () {
+
+
+            /*API Methods*/
+            this.showExpansionCommands = function () {
+                return $scope.noupdateallowed && $scope.clonedCompositionData.length > 1;
+            }
+
+
+            $scope.collapseAll=function() {
                 $.each($scope.detailData, function (key, value) {
                     $scope.detailData[key].expanded = false;
                 });
+            }
+
+            this.collapseAll = function () {
+                $scope.collapseAll();
             };
 
-            $scope.refresh = function () {
+            this.refresh = function () {
                 //TODO: make a composition refresh only --> now it will be samething as F5
                 window.location.reload();
             };
@@ -393,7 +398,7 @@ app.directive('compositionList', function (contextService) {
                 return params;
             }
 
-            $scope.expandAll = function () {
+            this.expandAll = function () {
                 if ($scope.wasExpandedBefore) {
                     $.each($scope.detailData, function (key, value) {
                         $scope.detailData[key].expanded = true;

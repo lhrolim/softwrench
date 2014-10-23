@@ -7,8 +7,7 @@
                          pagination-data="paginationData"
                          search-data="searchData"
                          search-sort="searchSort"
-                         search-operator="searchOperator"
-                         renderfn="selectPage(pageNumber,pageSize,printMode)"></gridtoolbar>
+                         search-operator="searchOperator"/>
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                         schema-id="{{schema.schemaId}}" application-name="{{schema.applicationName}}"
                         search-data="searchData"
@@ -54,7 +53,7 @@
                             <span class="glyphicon glyphicon-sort-by-attributes"
                                   ng-show="column.attribute != null && searchSort.field == column.attribute && searchSort.order == 'asc'"
                                   rel="tooltip" data-original-title="Sorted ascendant"></span>
-                            <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-show="column.attribute != null 
+                            <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-show="column.attribute != null
                                   && searchSort.field == column.attribute && searchSort.order == 'desc'"
                                   rel="tooltip" data-original-title="Sorted descendant"></span>
                         </div>
@@ -62,16 +61,14 @@
                 </tr>
 
                 <!-- Filter row shown when there are too much columns to be displayed -->
-             
-
                 <!-- Filter row shown when there are few columns to be displayed -->
                 <tr class="filter-row hidden-too-much-columns hiddenonprint">
                     <th ng-repeat="column in schema.displayables"
                         ng-style="{'min-width': column.rendererParameters['minwidth'],
                                 'max-width': column.rendererParameters['maxwidth'],
                                 'width': column.rendererParameters['width']}"
-                                ng-show="!isFieldHidden(schema,column)"
-                                filterrowrendered>
+                        ng-show="!isFieldHidden(schema,column)"
+                        filterrowrendered>
                         <div ng-if="shouldShowHeaderFilter(column)">
                             <ng-switch on="column.rendererType">
                                 <div ng-switch-when="datetime" data-datepicker="true" class="input-group input-group-sm">
@@ -88,7 +85,7 @@
                                     </span>
 
                                     <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                    The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                    The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                     <div class="input-group-addon dropdown">
                                         <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                               data-toggle="dropdown" rel="tooltip"
@@ -107,7 +104,7 @@
                                     <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
                                            ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" />
                                     <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                    The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                     <div class="input-group-addon dropdown">
                                         <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                               data-toggle="dropdown" rel="tooltip"
@@ -187,8 +184,7 @@
                          pagination-data="paginationData"
                          search-sort="searchSort"
                          search-data="searchData"
-                         search-operator="searchOperator"
-                         renderfn="selectPage(pageNumber,pageSize,printMode)"></gridtoolbar>
+                         search-operator="searchOperator"></gridtoolbar>
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                         schema-id="{{schema.schemaId}}" application-name="{{schema.applicationName}}"
                         search-data="searchData"
