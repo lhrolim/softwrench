@@ -56,8 +56,12 @@ app.factory('fieldService', function (expressionService) {
                 var target = value.attribute;
                 if (value.defaultValue != undefined && target != undefined) {
                     if (datamap[target] == null) {
-                        //TODO: extract a service here, to be able to use @user, @person, @date, etc...
-                        datamap[target] = value.defaultValue;
+                        if (displayables[key].evalExpression != null) {
+                           datamap[target] = expressionService.evaluate(displayables[key].evalExpression, datamap);
+                        } else {
+                           //TODO: extract a service here, to be able to use @user, @person, @date, etc...
+                           datamap[target] = value.defaultValue;
+                        }
                     }
                 }
             });

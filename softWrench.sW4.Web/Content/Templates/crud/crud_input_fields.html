@@ -45,7 +45,7 @@
                 </label>
 
                 <input type="text" class="form-control" ng-readonly="true" ng-model="datamap[fieldMetadata.attribute]" ng-switch-default
-                    ng-init="bindEvalExpression(fieldMetadata)" />
+                    ng-init="initField(fieldMetadata)" />
             </div>
 
             <!--SM - 09-24 - SWWEB-441 Change column class
@@ -57,9 +57,10 @@
 
                 <div ng-switch-when="combo" class="sw-combobox-container">
                     <select class="hidden-phone form-control combobox"
-                        ng-model="datamap[fieldMetadata.target]"
-                        ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
-                        ng-enabled="isSelectEnabled(fieldMetadata)" />
+                            ng-model="datamap[fieldMetadata.target]"
+                            ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
+                            ng-enabled="isSelectEnabled(fieldMetadata)"
+                            ng-init="initField(fieldMetadata)" />
                 </div>
 
                 <div ng-switch-when="checkbox">
@@ -183,7 +184,7 @@
                         data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
                         maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
                         ng-enabled="isModifiableEnabled(fieldMetadata)"
-                        ng-init="bindEvalExpression(fieldMetadata)" />
+                        ng-init="initField(fieldMetadata)" />
                 </div>
 
                 <div ng-switch-when="richtext">
@@ -233,7 +234,7 @@
                     <input id="spinner"
                         class="hidden-phone form-control"
                         ng-model="datamap[fieldMetadata.attribute]"
-                        ng-init="bindEvalExpression(fieldMetadata)"
+                        ng-init="initField(fieldMetadata)"
                         min="{{fieldMetadata.rendererParameters['min']}}"
                         max="{{fieldMetadata.rendererParameters['max']}}"
                         number-spinner />
@@ -316,7 +317,7 @@
                                            ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control"
                                            data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
                                            maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
-                                           ng-init="bindEvalExpression(fieldMetadata)" />
+                                           ng-init="initField(fieldMetadata)" />
                                 </div>
                             </div>
                         </div>

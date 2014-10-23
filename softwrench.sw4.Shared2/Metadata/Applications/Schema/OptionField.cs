@@ -26,13 +26,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private bool _sort;
         private ISet<ApplicationEvent> _eventsSet;
         private string _dependantFieldsString;
+        public string EvalExpression { get; set; }
 
         public String EnableExpression { get; set; }
 
 
         public OptionField(string applicationName, string label, string attribute, string qualifier, bool isRequired, bool isReadOnly, bool isHidden,
             OptionFieldRenderer renderer, FieldFilter filter, List<IAssociationOption> options, string defaultValue, bool sort, string showExpression,
-            string toolTip, string attributeToServer, ISet<ApplicationEvent> events, string providerAttribute, string dependantFields, string enableExpression)
+            string toolTip, string attributeToServer, ISet<ApplicationEvent> events, string providerAttribute, string dependantFields, string enableExpression, string evalExpression)
             : base(applicationName, label, attribute, isRequired, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression) {
             _renderer = renderer;
             _filter = filter;
@@ -49,6 +50,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             _dependantFieldsString = dependantFields;
             _dependantFields = ParsingUtil.GetCommaSeparetedParsingResults(dependantFields);
             EnableExpression = enableExpression;
+            EvalExpression = evalExpression;
 
         }
 
@@ -93,7 +95,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             return new OptionField(ApplicationName, Label, Attribute, Qualifier, IsRequired, IsReadOnly, IsHidden, _renderer, _filter,
                 _options,
                 DefaultValue, _sort, ShowExpression, ToolTip, AttributeToServer, _eventsSet, ProviderAttribute,
-                _dependantFieldsString, EnableExpression);
+                _dependantFieldsString, EnableExpression, EvalExpression);
         }
 
         public override string ToString() {

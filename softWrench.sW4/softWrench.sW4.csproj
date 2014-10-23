@@ -194,6 +194,7 @@
     <Compile Include="Data\Persistence\Engine\IConnectorEngine.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseChangeRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseIncidentCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\BaseInventoryIssueCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePurchaseRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\CommLogHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\HapagChangeHandler.cs" />

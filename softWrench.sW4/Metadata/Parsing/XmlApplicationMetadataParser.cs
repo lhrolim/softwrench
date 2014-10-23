@@ -240,6 +240,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var isEnabled = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAtribute).ValueOrDefault("true");
             var qualifier = xElement.Attribute(XmlMetadataSchema.FieldAttributeQualifier).ValueOrDefault((string)null);
             var rendererElement = xElement.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.RendererElement);
+            var evalExpression = xElement.Attribute(XmlMetadataSchema.BaseDisplayableEvalExpressionAtribute).ValueOrDefault((string)null);
             var renderer = new OptionFieldRenderer();
             if (rendererElement != null) {
                 renderer = (OptionFieldRenderer)ParseRendererNew(rendererElement, attribute, FieldRendererType.OPTION);
@@ -248,7 +249,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var events = ParseEvents(xElement);
             return new OptionField(applicationName, label, attribute, qualifier, isRequired, isReadOnly, isHidden, renderer, ParseFilterNew(filterElement, attribute),
                 xElement.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.OptionElement).Select(ParseOption).ToList(),
-                defaultValue, sort, showExpression, toolTip, attributeToServer, events, providerAttribute, dependantFields, isEnabled);
+                defaultValue, sort, showExpression, toolTip, attributeToServer, events, providerAttribute, dependantFields, isEnabled, evalExpression);
         }
 
         private static IAssociationOption ParseOption(XElement xElement) {

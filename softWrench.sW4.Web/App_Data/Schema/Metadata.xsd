@@ -481,7 +481,7 @@
     <attribute name="default" type="string"></attribute>
     <attribute name="showexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
-
+    <attribute name="evalexpression" type="string"></attribute>
     <attribute name="providerattribute" type="string"
 			use="optional">
       <annotation>

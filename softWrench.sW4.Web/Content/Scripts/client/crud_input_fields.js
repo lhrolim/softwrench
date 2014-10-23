@@ -407,17 +407,6 @@ app.directive('crudInputFields', function (contextService) {
                 });
             };
 
-            $scope.bindEvalExpression = function (fieldMetadata) {
-                if (fieldMetadata.evalExpression == null) {
-                    return;
-                }
-                var variables = expressionService.getVariablesForWatch(fieldMetadata.evalExpression);
-                $scope.$watchCollection(variables, function (newVal, oldVal) {
-                    if (newVal != oldVal) {
-                        $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
-                    }
-                });
-            }
 
             $scope.configureNumericInput = function () {
                 for (i in $scope.schema.displayables) {
@@ -652,6 +641,34 @@ app.directive('crudInputFields', function (contextService) {
             }
 
             init();
+
+            function evalExpression(fieldMetadata) {
+                //If applying mathematical operations from two or more metadata fields
+                if (expressionService.isPrecompiledReplaceRegexMatch(fieldMetadata.evalExpression)) {
+                    return bindEvalExpression(fieldMetadata);
+                } else {
+                    var test = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
+                    $scope.datamap[fieldMetadata.attribute] = test;
+                }
+                return null;
+            }
+
+            function bindEvalExpression(fieldMetadata) {
+                var variables = expressionService.getVariablesForWatch(fieldMetadata.evalExpression);
+                $scope.$watchCollection(variables, function (newVal, oldVal) {
+                    if (newVal != oldVal) {
+                        $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
+                    }
+                });
+                return variables;
+            }
+
+            $scope.initField = function (fieldMetadata) {
+                if (fieldMetadata.evalExpression != null) {
+                    return evalExpression(fieldMetadata);
+                }
+                return null;
+            };
         }
     }
 });

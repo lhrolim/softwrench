@@ -78,6 +78,25 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </relationships>
     </entity>
 
+    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans">
+      <relationships>
+        <relationship to="workorder" >
+          <relationshipAttribute from="refwo" to="wonum" primary="true"/>
+        </relationship>
+        <relationship to="person" qualifier="issuetoperson">
+          <relationshipAttribute from="issueto" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="asset" >
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+      </relationships>
+    </entity>
+
     <entity name="labtrans" idAttribute="labtransid">
       <attributes>
         <attribute name="transdate" type="datetime" required="true" />
@@ -1538,8 +1557,80 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="longdescription_.ldtext" label="Details:" >
             <renderer type="textarea"/>
           </field>
+        </detail>
+      </schemas>
+    </application>
 
+    <application name="invissue" title="Issue Inventory" entity="invissue">
+      <schemas>
+        <list title="Issues and Returns">
+          <commandbars>
+            <commandgroup position="gridtop">
+              <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap" position=">filter"
+             successmessage="Issue created"/>
+              <command id="create_return" label="New Return" service="inventoryService" method="createReturn" parameters="schema,datamap" position=">crud_create"
+             successmessage="Return created"/>
+            </commandgroup>
+          </commandbars>
+          <field attribute="matusetransid" hidden="true"/>
+          <field attribute="refwo" label="Workorder">
+            <renderer type="default" params="width=15%;"/>
+          </field>
+          <field attribute="issueto" label="Issue To">
+            <renderer type="default" params="width=15%;"/>
+          </field>
+          <field attribute="assetnum" label="Asset">
+            <renderer type="default" params="width=15%;"/>
+          </field>
+          <field attribute="location" label="Location">
+            <renderer type="default" params="width=15%;"/>
+          </field>
+          <field attribute="issuetype" label="Issue Type">
+            <renderer type="default" params="width=15%;"/>
+          </field>
+          
+          <!--<field attribute="itemnum" hidden="true"/>
+            <field attribute="description" hidden="true"/>
+            <field attribute="quantity" hidden="true"/>
+            <field attribute="issuetype" hidden="true"/>
+            <field attribute="storeloc" hidden="true"/>
+            <field attribute="binnum" hidden="true"/>
+            <field attribute="lotnum" hidden="true"/>
+            <field attribute="rotassetnum" hidden="true"/>
+            <field attribute="assetnum" hidden="true"/>
+            <field attribute="location" hidden="true"/>
+            <field attribute="glcreditacct" hidden="true"/>
+            <field attribute="gldebitacct" hidden="true"/>
+            <field attribute="enterby" hidden="true"/>
+            <field attribute="transdate" hidden="true"/>
+            <field attribute="siteid" hidden="true"/>
+            <field attribute="orgid" hidden="true"/>
+            <field attribute="conditioncode" hidden="true"/>-->
 
+        </list>
+
+        <detail id="newissuereturn" title="Issues and Returns" mode="input">
+          <field attribute="matusetransid" hidden="true"/>
+          <association label="Workorder" target="refwo" labelfield="workorder_.description" required="true">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Issue To" target="issueto" labelfield="issuetoperson_.displayname" required="true">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" required="true">
+            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+          </association>
+          <association label="Location" target="location" labelfield="location_.description" required="true">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" required="true" >
+            <renderer type="combo"/>
+          </association>
+          <optionfield attribute="issuetype" label="Issue Type" required="true" evalexpression="ctx:fetchFromContext('matusetrans',true,false).issueType">
+            <renderer type="combo"/>
+            <option label="ISSUE" value="ISSUE"/>
+            <option label="RETURN" value="RETURN"/>
+          </optionfield>
         </detail>
       </schemas>
     </application>
