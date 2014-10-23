@@ -17,19 +17,26 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
 
         public string Label { get; set; }
         public string Tooltip { get; set; }
+        public string Icon { get; set; }
+        public string Service { get; set; }
+        public string Method { get; set; }
+
 
 
         public IEnumerable<ICommandDisplayable> Displayables { get; set; }
 
         public string Type { get { return typeof(ContainerCommand).Name; } }
 
-        public ContainerCommand(string id, string label, string tooltip, string role, string position, IEnumerable<ICommandDisplayable> displayables) {
+        public ContainerCommand(string id, string label, string tooltip, string role, string position,string icon,string service,string method, IEnumerable<ICommandDisplayable> displayables) {
             Id = id;
             Label = label;
             Tooltip = tooltip;
             Displayables = displayables;
             Role = role;
             Position = position;
+            Icon = icon;
+            Service = service;
+            Method = method;
         }
 
         public bool IsDynamic() {

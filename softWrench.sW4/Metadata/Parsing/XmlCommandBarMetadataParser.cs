@@ -75,7 +75,10 @@ namespace softWrench.sW4.Metadata.Parsing {
             if (xElement.IsNamed(cnst.ContainerCommand)) {
                 var label = xElement.AttributeValue(XmlBaseSchemaConstants.LabelAttribute);
                 var tooltip = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableToolTipAtribute);
-                return new ContainerCommand(id, label, tooltip, role, position, ParseCommandDisplayables(xElement.Elements()));
+                var icon = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandIconAttribute);
+                var service = xElement.AttributeValue(XmlBaseSchemaConstants.ServiceAttribute);
+                var method = xElement.AttributeValue(XmlBaseSchemaConstants.MethodAttribute);
+                return new ContainerCommand(id, label, tooltip, role, position,icon,service,method, ParseCommandDisplayables(xElement.Elements()));
             }
             if (xElement.IsNamed(cnst.RemoveCommand)) {
                 return new RemoveCommand(id);
@@ -98,14 +101,16 @@ namespace softWrench.sW4.Metadata.Parsing {
                 //by default Tooltip will be samething as the label it self.
                 tooltip = label;
             }
+            var icon = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandIconAttribute);
             var service = xElement.AttributeValue(XmlBaseSchemaConstants.ServiceAttribute);
             var method = xElement.AttributeValue(XmlBaseSchemaConstants.MethodAttribute);
+            
             var stereotype = xElement.AttributeValue(XmlBaseSchemaConstants.StereotypeAttribute);
             var showExpression = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAtribute);
             var successMessage = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandSuccessMessage);
             var nextSchemaId = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandNextSchemaId);
             var scopeParameters = xElement.AttributeValue(XmlBaseSchemaConstants.BaseParametersAttribute);
-            var icon = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandIconAttribute);
+            
             var applicationCommand = new ApplicationCommand(id, label, service, method, role, stereotype, showExpression,
                 successMessage, nextSchemaId, scopeParameters, position, icon, tooltip);
             return applicationCommand;

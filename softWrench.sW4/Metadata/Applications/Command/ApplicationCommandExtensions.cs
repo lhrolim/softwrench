@@ -26,7 +26,7 @@ namespace softWrench.sW4.Metadata.Applications.Command {
                     secureLeafs.Add(leaf);
                 }
             }
-            return !secureLeafs.Any() ? null : new ContainerCommand(container.Id, container.Label, container.Tooltip, container.Role, container.Position, secureLeafs);
+            return !secureLeafs.Any() ? null : new ContainerCommand(container.Id, container.Label, container.Tooltip, container.Role, container.Position,container.Icon,container.Service,container.Method, secureLeafs);
         }
     }
 }

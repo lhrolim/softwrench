@@ -195,11 +195,23 @@
   <complexType name="CommandContainer">
     <choice>
       <element minOccurs="0" maxOccurs="unbounded" name="command"
-     		type="tns:Command">
+  			type="tns:Command">
       </element>
-      <element name="container" type="tns:CommandContainer" minOccurs="0" maxOccurs="unbounded"></element>
-      <element name="resourcecommand" type="tns:ResourceCommand" minOccurs="0" maxOccurs="unbounded"></element>
+      <element name="container" type="tns:CommandContainer"
+  			minOccurs="0" maxOccurs="unbounded">
+      </element>
+      <element name="resourcecommand" type="tns:ResourceCommand"
+  			minOccurs="0" maxOccurs="unbounded">
+      </element>
     </choice>
+    <attribute name="id" type="string"></attribute>
+    <attribute name="position" type="string"></attribute>
+    <attribute name="label" type="string"></attribute>
+    <attribute name="role" type="string"></attribute>
+    <attribute name="tooltip" type="string"></attribute>
+    <attribute name="icon" type="string"></attribute>
+    <attribute name="service" type="string"></attribute>
+    <attribute name="method" type="string"></attribute>
   </complexType>
 
 
