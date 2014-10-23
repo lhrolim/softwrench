@@ -1159,3 +1159,13 @@ input[type=search] {
     border-bottom-right-radius: 3px !important;
 }
 /*SM - 10/06 - SWWEB-447*/
+
+#scanConfigTable thead tr td:nth-child(1) {
+    width: 30%;
+}
+#scanConfigTable thead tr td:nth-child(2) {
+    width: 45%;
+}
+#scanConfigTable thead tr td:nth-child(3) {
+    width: 25%;
+}
