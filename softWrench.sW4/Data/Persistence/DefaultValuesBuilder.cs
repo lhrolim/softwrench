@@ -20,7 +20,7 @@ namespace softWrench.sW4.Data.Persistence {
 
         public const string DBDateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
-        public static DataMap BuildDefaultValuesDataMap(ApplicationMetadata application, Entity initialValues,Type mappingType) {
+        public static DataMap BuildDefaultValuesDataMap(ApplicationMetadata application, Entity initialValues, Type mappingType) {
 
             var displayables = application.Schema.GetDisplayable<IDefaultValueApplicationDisplayable>(typeof(IDefaultValueApplicationDisplayable));
             var fields = application.Schema.Fields;
@@ -117,6 +117,8 @@ namespace softWrench.sW4.Data.Persistence {
             key = key.ToLower();
             if (key.Equals("@username")) {
                 value = user.Login;
+            } else if (key.Equals("@userid")) {
+                value = user.DBId.ToString();
             } else if (key.Equals("@personid")) {
                 value = user.MaximoPersonId ?? user.Login;
             } else if (key.Equals("@usersite")) {

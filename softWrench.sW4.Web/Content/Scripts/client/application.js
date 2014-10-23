@@ -49,7 +49,7 @@ app.directive('filterrowrendered', function ($timeout) {
     };
 });
 
-function ApplicationController($scope, $http, $log, $templateCache, $timeout, fixHeaderService, $rootScope, associationService, validationService, contextService) {
+function ApplicationController($scope, $http, $log, $templateCache, $timeout, fixHeaderService, $rootScope, associationService, validationService, contextService, searchService) {
     $scope.$name = 'applicationController';
 
     function switchMode(mode, scope) {
@@ -58,59 +58,65 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         }
         scope.isDetail = mode;
         scope.isList = !mode;
-        
+        var crud_context;
         if (scope.isList) {
             var elements = [];
             for (var i = 0; i < $scope.datamap.length; i++) {
 
                 elements.push($scope.datamap[i].fields[$scope.schema.idFieldName]);
             }
-            
-            var crud_context = {
+            crud_context = {
                 list_elements: elements,
                 detail_next: "0",
                 detail_previous: "-1"
-            }
+            };
             contextService.insertIntoContext("crud_context", crud_context);
         }
         if (scope.isDetail) {
-            var crud_context = contextService.fetchFromContext("crud_context", true);
+            crud_context = contextService.fetchFromContext("crud_context", true);
             var id = $scope.datamap.fields[$scope.schema.idFieldName];
             if (crud_context.list_elements.indexOf(id) != -1) {
                 var previous = crud_context.list_elements.indexOf(id) - 1;
                 var next = crud_context.list_elements.indexOf(id) + 1;
                 crud_context.detail_previous = crud_context.list_elements[previous];
                 crud_context.detail_next = crud_context.list_elements[next];
-               
-                contextService.insertIntoContext("crud_context", crud_context)
+
+                contextService.insertIntoContext("crud_context", crud_context);
             }
         }
-       
+
     }
 
     $scope.toList = function (data, scope) {
         $('#saveBTN').removeAttr('disabled');
+        scope.$broadcast("sw_gridrefreshed", data, $rootScope.printRequested);
         if (data != null && $rootScope.printRequested !== true) {
             //if its a printing operation, then leave the pagination data intact
-            scope.paginationData = {};
-            scope.searchValues = data.searchValues;
-            scope.paginationData.pagesToShow = data.pagesToShow;
-            scope.paginationData.pageNumber = data.pageNumber;
+            //this code needs to be here because the crud_list.js might not yet be included while this is loading... TODO: rethink about it
+            $scope.paginationData = {};
+            $scope.searchValues = data.searchValues;
+            $scope.paginationData.pagesToShow = data.pagesToShow;
+            $scope.paginationData.pageNumber = data.pageNumber;
             $scope.paginationData.selectedPage = data.pageNumber;
-            scope.paginationData.pageCount = data.pageCount;
-            scope.paginationData.pageSize = data.pageSize;
-            scope.paginationData.paginationOptions = data.paginationOptions;
-            scope.paginationData.totalCount = data.totalCount;
-            scope.paginationData.hasPrevious = data.hasPrevious;
-            scope.paginationData.hasNext = data.hasNext;
-            scope.paginationData.filterFixedWhereClause = data.filterFixedWhereClause;
+            $scope.paginationData.pageCount = data.pageCount;
+            $scope.paginationData.pageSize = data.pageSize;
+            $scope.paginationData.paginationOptions = data.paginationOptions;
+            $scope.paginationData.totalCount = data.totalCount;
+            $scope.paginationData.hasPrevious = data.hasPrevious;
+            $scope.paginationData.hasNext = data.hasNext;
+            $scope.paginationData.filterFixedWhereClause = data.filterFixedWhereClause;
+            if (data.pageResultDto && data.pageResultDto.searchParams) {
+                var result = searchService.buildSearchDataAndOperations(data.pageResultDto.searchParams, data.pageResultDto.searchValues);
+                $scope.searchData = result.searchData;
+                $scope.searchOperator = result.searchOperator;
+            }
         }
         switchMode(false, scope);
     };
 
 
     function toDetail(scope) {
-        
+
         switchMode(true, scope);
     };
 
@@ -133,7 +139,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
     //this code will get called when the user is already on a crud page and tries to switch view only.
     $scope.renderView = function (applicationName, schemaId, mode, title, parameters) {
         //Make a list of ticket ids in array to find the adjacent ones
-        
+
         if (parameters === undefined || parameters == null) {
             parameters = {};
         }
@@ -252,7 +258,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
                     associationService.getEagerAssociations(scope);
                 });
             }
-                associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, scope.datamap.fields);
+            associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, scope.datamap.fields);
             scope.compositions = result.compositions;
             toDetail(scope);
         } else if (result.type == 'ApplicationListResult') {

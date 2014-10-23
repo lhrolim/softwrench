@@ -24,7 +24,7 @@ namespace softWrench.sW4.Configuration.Services {
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             var before = new Stopwatch();
-            var applications = MetadataProvider.Applications();
+            var applications = MetadataProvider.Applications(true);
             var completeApplicationMetadataDefinitions = applications as CompleteApplicationMetadataDefinition[] ?? applications.ToArray();
             ISet<String> namesToRegister = new HashedSet<string>();
 
@@ -38,7 +38,7 @@ namespace softWrench.sW4.Configuration.Services {
 
         private static void AddAllApplicationsAndUsedEntities(ISet<string> namesToRegister,
             CompleteApplicationMetadataDefinition[] completeApplicationMetadataDefinitions) {
-            foreach (var application in MetadataProvider.Applications()) {
+            foreach (var application in MetadataProvider.Applications(true)) {
                 namesToRegister.Add(application.ApplicationName);
                 foreach (var schema in application.Schemas()) {
                     foreach (var association in schema.Value.Associations) {

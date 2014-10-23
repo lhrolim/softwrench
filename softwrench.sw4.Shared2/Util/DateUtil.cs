@@ -10,7 +10,7 @@ namespace softwrench.sw4.Shared2.Util {
 
         public static DateTime? Parse(string date) {
             DateTime temp;
-            if (DateTime.TryParseExact(date, DateUtil.FormatOptions, CultureInfo.CurrentCulture, DateTimeStyles.None, out temp)) {
+            if (DateTime.TryParse(date, out temp)) {
                 return temp;
             }
             return null;
@@ -21,6 +21,11 @@ namespace softwrench.sw4.Shared2.Util {
         }
 
         public static DateTime EndOfDay(DateTime date) {
+            return new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, 999);
+        }
+
+        public static DateTime EndOfToday() {
+            var date = DateTime.Now;
             return new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, 999);
         }
 
@@ -75,7 +80,6 @@ namespace softwrench.sw4.Shared2.Util {
                     default:
                         throw new FormatException();
                 }
-
                 return value;
             } catch (Exception) {
                 throw new FormatException("String representation of time in a incorrect format: " + valueToParse);

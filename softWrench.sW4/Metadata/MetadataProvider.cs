@@ -151,9 +151,14 @@ namespace softWrench.sW4.Metadata {
         ///     Returns metadata related to all applications in the catalog.
         /// </summary>
         [NotNull]
-        public static IEnumerable<CompleteApplicationMetadataDefinition> Applications() {
+        public static IEnumerable<CompleteApplicationMetadataDefinition> Applications(bool includeSWDB = false) {
+            if (includeSWDB && _swdbapplicationMetadata != null) {
+                return _applicationMetadata.Union(_swdbapplicationMetadata);
+            }
+
             return _applicationMetadata;
         }
+
 
 
         public static List<ModuleDefinition> Modules(ClientPlatform platform) {

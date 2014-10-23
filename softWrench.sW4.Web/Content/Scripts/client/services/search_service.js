@@ -1,8 +1,16 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('searchService', function (i18NService, $rootScope, contextService, fieldService,$http) {
+app.factory('searchService', function (i18NService, $rootScope, contextService, fieldService, $http) {
 
     var objCache = {};
+
+
+    function getSearchValue(value) {
+        value = replaceAll(value, '%', '');
+        value = replaceAll(value, '>=', '');
+        value = replaceAll(value, '<=', '');
+        return value;
+    };
 
     //Update the Filter lables upon change of language.
     function buildArray() {
@@ -107,6 +115,22 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
 
     return {
 
+        getSearchOperator: function (value) {
+            if (value.startsWith('>')) {
+                return this.getSearchOperationById('GT');
+            }
+            if (value.startsWith('>=')) {
+                return this.getSearchOperationById('GTE');
+            }
+            if (value.startsWith('<=')) {
+                return this.getSearchOperationById('LTE');
+            }
+            if (value.startsWith('<')) {
+                return this.getSearchOperationById('LT');
+            }
+            return value;
+        },
+
 
         buildSearchValuesString: function (searchData, searchOperator) {
             var resultString = "";
@@ -190,6 +214,25 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
             searchData.lastSearchedValues = searchDto.searchValues;
             return searchDto;
 
+        },
+
+        buildSearchDataAndOperations: function (searchParams, searchValues) {
+            var result = {};
+
+            var searchData = {};
+            var searchOperator = {};
+
+            var params = searchParams.split("&&");
+            var values = searchValues.split(",,,");
+            for (var i = 0; i < params.length; i++) {
+                var value = values[i];
+                var param = params[i];
+                searchOperator[param] = this.getSearchOperator(value);
+                searchData[param] = getSearchValue(value);
+            }
+            result.searchData = searchData;
+            result.searchOperator = searchOperator;
+            return result;
         },
 
         getSearchOperation: function (idx) {

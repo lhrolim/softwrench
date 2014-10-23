@@ -112,13 +112,12 @@ namespace softWrench.sW4.Configuration.Services {
 
             Condition storedCondition = null;
             if (condition.Alias != null) {
-                //this means that we actually have a condition rather then just a simple utility class WhereClauseRegisterCondition
+                //this means that we actually have a condition rather then just a simple utility class WhereClauseRegisterCondition, that could be used for profiles and modules
                 storedCondition = _dao.FindSingleByQuery<WhereClauseCondition>(Condition.ByAlias, condition.Alias);
                 if (storedCondition != null) {
                     condition.Id = storedCondition.Id;
                 }
                 storedCondition = _dao.Save(condition.RealCondition);
-
             }
 
             var profile = new UserProfile();
