@@ -1,16 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using softWrench.sW4.Data;
+using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Search;
+using softwrench.sw4.Shared2.Util;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
 
     class WorkorderDataSet : MaximoApplicationDataSet {
-
-
+        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+            var schemaId = application.Schema.SchemaId;
+            var shouldApplyDefaultParameters = schemaId.EqualsIc("createbatchlist") && searchDto.ValuesDictionary == null;
+            if (shouldApplyDefaultParameters) {
+                //let´s fill this only for the first call
+                var endToday = DateUtil.EndOfToday();
+                var beginDate = DateUtil.ParsePastAndFuture("14days", -1);
+                searchDto.AppendSearchEntry("schedstart", ">=" + beginDate.ToShortDateString());
+                searchDto.AppendSearchEntry("schedfinish", "<=" + endToday.ToShortDateString());
+            }
+            return base.GetList(application, searchDto);
+        }
 
         //WAPPR -> Pode mudar para todos os outros. Sem restrições de edição na info da WO.
         //APPR -> Pode mudar para todos os outros. Sem restrições de edição na info da WO (por enquanto).
@@ -37,34 +51,28 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return new List<AssociationOption> { currentOption };
         }
         /* Need to add this prefilter function for the problem codes !! */
-        public SearchRequestDto FilterProblemCodes(AssociationPreFilterFunctionParameters parameters)
-        {
+        public SearchRequestDto FilterProblemCodes(AssociationPreFilterFunctionParameters parameters) {
             return ProblemCodeFilterByFailureClassFunction(parameters);
         }
 
-        private SearchRequestDto ProblemCodeFilterByFailureClassFunction(AssociationPreFilterFunctionParameters parameters)
-        {
+        private SearchRequestDto ProblemCodeFilterByFailureClassFunction(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             var failurecodeid = parameters.OriginalEntity.GetAttribute("failurelist_.failurelist");
-            if (failurecodeid == null)
-            {
+            if (failurecodeid == null) {
                 return filter;
             }
             filter.AppendSearchEntry("parent", failurecodeid.ToString());
             return filter;
         }
-        public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters)
-        {
+        public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
             return AssetFilterBySiteFunction(parameters);
         }
 
 
-        public SearchRequestDto AssetFilterBySiteFunction(AssociationPreFilterFunctionParameters parameters)
-        {
+        public SearchRequestDto AssetFilterBySiteFunction(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             var location = (string)parameters.OriginalEntity.GetAttribute("location");
-            if (location == null)
-            {
+            if (location == null) {
                 return filter;
             }
             filter.AppendSearchEntry("asset.location", location.ToUpper());
@@ -75,7 +83,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return "workorder";
         }
 
-        public string ClientFilter() {
+        public override string ClientFilter() {
             return null;
         }
     }

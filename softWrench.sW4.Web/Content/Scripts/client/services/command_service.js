@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('commandService', function (i18NService, $injector, expressionService, contextService,$log) {
+app.factory('commandService', function (i18NService, $injector, expressionService, contextService, $log) {
 
 
 
@@ -52,7 +52,7 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
             if (command.service == undefined) {
                 return;
             }
-
+            var log = $log.getInstance("commandService#doCommand");
             var service = $injector.get(command.service);
             if (service == undefined) {
                 //this should not happen, it indicates a metadata misconfiguration
@@ -60,6 +60,10 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
             }
 
             var method = service[clientFunction];
+            if (method == null) {
+                log.warn('method {0} not found on service {1}'.format(clientFunction, command.service));
+                return;
+            }
 
             var args = [];
             if (command.scopeParameters != null) {
@@ -106,12 +110,16 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
                 //null should be considered as a cache hit also
                 return schema.jscache.commandbars[position];
             }
-            var isOverriden = schema.commandSchema.hasDeclaration;
+            var hasPossibilityOfbeingOverriden = schema.commandSchema.hasDeclaration;
             var bar = contextService.fetchFromContext("commandbars", true);
-            var commandKey = isOverriden ? "{0}_{1}_{2}.#{3}".format(schema.applicationName, schema.schemaId, schema.mode.toLowerCase(), position) : "#" + position;
+            var fallbackKey = "#" + position;
+            var commandKey = hasPossibilityOfbeingOverriden ? "{0}_{1}_{2}.#{3}".format(schema.applicationName, schema.schemaId, schema.mode.toLowerCase(), position) : fallbackKey;
             var commandbar = bar[commandKey];
             if (commandbar == null) {
-                log.warn("command bar {0} not found".format(commandKey));
+                commandbar = bar[fallbackKey];
+                if (commandbar == null) {
+                    log.warn("command bar {0}, and fallback {1} not found".format(commandKey, fallbackKey));
+                }
             }
             var commands = commandbar != null ? bar[commandKey].commands : null;
             schema.jscache.commandbars[position] = commands;

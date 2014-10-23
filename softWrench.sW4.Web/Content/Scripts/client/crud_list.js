@@ -35,6 +35,7 @@ app.directive('crudList', function (contextService) {
             associationService, contextService, statuscolorService, eventdispatcherService) {
 
             $scope.$name = 'crudlist';
+            
 
             fixHeaderService.activateResizeHandler();
 
@@ -62,9 +63,6 @@ app.directive('crudList', function (contextService) {
             $scope.tabsDisplayables = function (schema) {
                 return tabsService.tabsDisplayables(schema);
             };
-
-            
-
 
             $scope.$on('filterRowRenderedEvent', function (filterRowRenderedEvent) {
                 if ($scope.datamap.length == 0) {
@@ -314,8 +312,12 @@ app.directive('crudList', function (contextService) {
 
             };
 
-            $scope.shouldShowFilter = function (column) {
+            $scope.shouldShowHeaderLabel = function (column) {
                 return column.type == "ApplicationFieldDefinition" && column.rendererType != "color";
+            }
+
+            $scope.shouldShowHeaderFilter = function (column) {
+                return $scope.shouldShowHeaderLabel(column) && "false" != column.rendererParameters["filterenabled"];
             }
 
             $scope.statusColor = function (status, gridname) {

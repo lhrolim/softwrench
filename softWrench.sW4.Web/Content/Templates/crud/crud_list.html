@@ -47,58 +47,22 @@
                                            'width': column.rendererParameters['width'],
                                            'word-wrap': column.rendererParameters['wordwrap']}"
                         ng-click="sort(column)">
-                        <div ng-if="shouldShowFilter(column)">
-                            <span class="add-on" rel="tooltip" data-container="body" data-original-title="{{i18N('_grid.filter.clicksort','Click here to sort')}}">{{i18NLabel(column)}}</span>
+                        <div ng-if="shouldShowHeaderLabel(column)">
+                            <span class="add-on" rel="tooltip" data-container="body" data-original-title="{{i18N('_grid.filter.clicksort','Click here to sort')}}">
+                                {{i18NLabel(column)}}
+                            </span>
                             <span class="glyphicon glyphicon-sort-by-attributes"
                                   ng-show="column.attribute != null && searchSort.field == column.attribute && searchSort.order == 'asc'"
                                   rel="tooltip" data-original-title="Sorted ascendant"></span>
-                            <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-show="column.attribute != null && searchSort.field == column.attribute && searchSort.order == 'desc'"
+                            <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-show="column.attribute != null 
+                                  && searchSort.field == column.attribute && searchSort.order == 'desc'"
                                   rel="tooltip" data-original-title="Sorted descendant"></span>
                         </div>
                     </th>
                 </tr>
 
                 <!-- Filter row shown when there are too much columns to be displayed -->
-                <tr class="filter-row hidden-few-columns hiddenonprint" style="display: none;">
-                    <th colspan="{{schema.displayables.length}}">
-                        <div ng-click="collapse('.advanced-filter')" class="advanced-filter-toogle">
-                            <a>{{i18N('_grid.filter.advancedfilter','Advanced filter')}} </a>
-                        </div>
-                        <div class="advanced-filter" style="display: none;" id="advancedFilter">
-                            <div ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)" class="advanced-filter-item">
-                                <div ng-if="shouldShowFilter(column)">
-                                    <div class="filter-label">{{i18NLabel(column)}}</div>
-                                    <ng-switch on="column.rendererType">
-                                        <div ng-switch-when="datetime" data-datepicker="true" class="input-group input-group-sm">
-                                            <input type="text"
-                                                   ng-model="searchData[column.attribute]"
-                                                   class="form-control"
-                                                   data-date-time
-                                                   data-show-time="false"
-                                                   data-show-date="{{column.rendererParameters['showdate']}}"
-                                                   data-date-format="{{column.rendererParameters['format']}}"
-                                                   data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
-                                                   data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
-                                                   placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}"
-                                                   ng-enter="filterSearch(column.attribute)" />
-                                            <span class="input-group-addon" data-calendericon="true"><i class="glyphicon glyphicon-calendar"></i></span>
-
-                                            <advanced-filter-toogle />
-                                        </div>
-
-                                        <div ng-switch-default class="input-group input-group-sm">
-                                            <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
-                                                   ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" />
-
-                                            <advanced-filter-toogle />
-                                        </div>
-
-                                    </ng-switch>
-                                </div>
-                            </div>
-                        </div>
-                    </th>
-                </tr>
+             
 
                 <!-- Filter row shown when there are few columns to be displayed -->
                 <tr class="filter-row hidden-too-much-columns hiddenonprint">
@@ -108,7 +72,7 @@
                                 'width': column.rendererParameters['width']}"
                                 ng-show="!isFieldHidden(schema,column)"
                                 filterrowrendered>
-                        <div ng-if="shouldShowFilter(column)">
+                        <div ng-if="shouldShowHeaderFilter(column)">
                             <ng-switch on="column.rendererType">
                                 <div ng-switch-when="datetime" data-datepicker="true" class="input-group input-group-sm">
                                     <input type="text" ng-model="searchData[column.attribute]" class="form-control"
@@ -119,10 +83,12 @@
                                            data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
                                            data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
                                            placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" ng-enter="filterSearch(column.attribute,$event)" />
-                                    <span class="input-group-addon " data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    <span class="input-group-addon " data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </span>
 
                                     <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                        The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                    The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                     <div class="input-group-addon dropdown">
                                         <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                               data-toggle="dropdown" rel="tooltip"
@@ -141,7 +107,7 @@
                                     <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
                                            ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" />
                                     <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                    The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                     <div class="input-group-addon dropdown">
                                         <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                               data-toggle="dropdown" rel="tooltip"
