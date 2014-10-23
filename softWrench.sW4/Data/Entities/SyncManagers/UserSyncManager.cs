@@ -88,7 +88,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
 
         private static IEnumerable<User> GetUserFromMaximoUsers(IEnumerable<AttributeHolder> maximoUsers) {
             return maximoUsers.Select(maximoUser => new User {
-                UserName = (string)maximoUser.GetAttribute("maxuser_.loginid"),
+                UserName = (string)maximoUser.GetAttribute("personid"),
                 Password = null,
                 FirstName = (string)maximoUser.GetAttribute("firstname"),
                 LastName = (string)maximoUser.GetAttribute("lastname"),
