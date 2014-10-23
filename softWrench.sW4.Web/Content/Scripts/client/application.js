@@ -92,7 +92,8 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         scope.$broadcast("sw_gridrefreshed", data, $rootScope.printRequested);
         if (data != null && $rootScope.printRequested !== true) {
             //if its a printing operation, then leave the pagination data intact
-            //this code needs to be here because the crud_list.js might not yet be included while this is loading... TODO: rethink about it
+            //this code needs to be here because the crud_list.js might not yet be included while this is loading... 
+            //TODO: rethink about it
             $scope.paginationData = {};
             $scope.searchValues = data.searchValues;
             $scope.paginationData.pagesToShow = data.pagesToShow;

@@ -35,13 +35,13 @@
                 </a>
             </li>
 
-            <li class="divider" ng-if="selectedfilter"></li>
+            <li class="divider" ng-if="hasFilter()"></li>
             <li ng-repeat="filter in nonSharedFilters()">
-                <a href="#" ng-click="applyFilter(filter)">{{filter.alias}}</a>
+                <a href="#" ng-click="applyFilter(filter)"><i class="fa fa-filter"></i>&ensp;{{filter.alias}}</a>
             </li>
             <li class="divider" ng-if="hasSharedFilter()"></li>
             <li ng-repeat="filter in sharedFilters()">
-                <a href="#" ng-click="applyFilter(filter)">{{filter.alias}}</a>
+                <a href="#" ng-click="applyFilter(filter)"><i class="fa fa-filter"></i>&ensp;{{filter.alias}}</a>
             </li>
         </ul>
     </div>

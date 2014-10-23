@@ -115,11 +115,15 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
 
     return {
 
+        //TODO: dictionary?
         getSearchOperator: function (value) {
             if (value.startsWith('>')) {
                 return this.getSearchOperationById('GT');
             }
             if (value.startsWith('>=')) {
+                if (value.endsWith('<=')) {
+                    return this.getSearchOperationById('BTW');
+                }
                 return this.getSearchOperationById('GTE');
             }
             if (value.startsWith('<=')) {
@@ -128,6 +132,25 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
             if (value.startsWith('<')) {
                 return this.getSearchOperationById('LT');
             }
+            if (value.startsWith('%')) {
+                if (value.endsWith('%')) {
+                    return this.getSearchOperationById('CONTAINS');
+                }
+                return this.getSearchOperationById('STARTWITH');
+            }
+            if (value.endsWith("%")) {
+                return this.getSearchOperationById('ENDWITH');
+            }
+            if (value.startsWith("!%")) {
+                return this.getSearchOperationById('NCONTAINS');
+            }
+            if (value.startsWith("=")) {
+                return this.getSearchOperationById('EQ');
+            }
+            if (value.startsWith("!=")) {
+                return this.getSearchOperationById('NEQ');
+            }
+
             return value;
         },
 
