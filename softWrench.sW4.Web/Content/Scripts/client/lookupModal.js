@@ -84,9 +84,11 @@ app.directive('lookupModal', function (contextService) {
                     parameters.SearchDTO.pageNumber = pageNumber;
                     parameters.SearchDTO.totalCount = totalCount;
                     parameters.SearchDTO.pageSize = pageSize;
+
                 } else {
-                    parameters.valueSearchString = lookupObj.code;
-                    parameters.labelSearchString = lookupObj.description;
+                    parameters.valueSearchString = lookupObj.code == null ? "" : lookupObj.code;
+                    parameters.labelSearchString = lookupObj.description == null ? "" : lookupObj.description;
+                    parameters.hasClientSearch = true;
                     parameters.SearchDTO = {
                         pageNumber: pageNumber,
                         totalCount: totalCount,
@@ -98,18 +100,19 @@ app.directive('lookupModal', function (contextService) {
                 var jsonString = angular.toJson(fields);
                 $http.post(urlToUse, jsonString).success(function (data) {
                     var result = data.resultObject;
-                    for (association in result) {
+                    for (var association in result) {
                         if (lookupObj.fieldMetadata.associationKey == association) {
-
-                            lookupObj.options = result[association].associationData;
-                            lookupObj.schema = result[association].associationSchemaDefinition;
+                            var associationResult = result[association];
+                            lookupObj.options = associationResult.associationData;
+                            lookupObj.schema = associationResult.associationSchemaDefinition;
 
                             $scope.modalPaginationData = {};
-                            $scope.modalPaginationData.pageCount = result[association].pageCount;
-                            $scope.modalPaginationData.pageNumber = result[association].pageNumber;
-                            $scope.modalPaginationData.pageSize = result[association].pageSize;
-                            $scope.modalPaginationData.totalCount = result[association].totalCount;
-                            $scope.modalPaginationData.selectedPage = result[association].pageNumber;
+                            $scope.modalPaginationData.pageCount = associationResult.pageCount;
+                            $scope.modalPaginationData.pageNumber = associationResult.pageNumber;
+                            $scope.modalPaginationData.pageSize = associationResult.pageSize;
+                            $scope.modalPaginationData.totalCount = associationResult.totalCount;
+                            $scope.modalPaginationData.selectedPage = associationResult.pageNumber;
+                            $scope.modalPaginationData.paginationOptions = [10, 30, 100];
                         }
                     }
                 }).error(function data() {
