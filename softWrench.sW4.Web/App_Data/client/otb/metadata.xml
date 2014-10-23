@@ -484,7 +484,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </attributes>
       <relationships>
         <relationship to ="email">
-          <relationshipAttribute query="commlog.sendto like email_.emailaddress" primary="true"/>
+          <!--this to attribute is used for the autocompleteserver, do not remove it -->
+          <relationshipAttribute query="commlog.sendto like email_.emailaddress" primary="true" to="emailaddress"/>
         </relationship>
       </relationships>
       <connectorParameters>
