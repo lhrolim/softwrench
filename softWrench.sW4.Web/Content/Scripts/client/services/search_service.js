@@ -7,8 +7,9 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
 
     function getSearchValue(value) {
         value = replaceAll(value, '%', '');
-        value = replaceAll(value, '>=', '');
-        value = replaceAll(value, '<=', '');
+        value = replaceAll(value, '>', '');
+        value = replaceAll(value, '=', '');
+        value = replaceAll(value, '<', '');
         return value;
     };
 

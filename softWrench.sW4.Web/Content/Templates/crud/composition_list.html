@@ -16,10 +16,10 @@
     <table class="table table-hover" id="compositionlistgrid">
         <thead>
             <tr class="hapag-table-header">
-                <th ng-if="compositionlistschema.properties['list.selectionstyle'] == 'multipleselection'">
+                <th ng-if="compositionlistschema.properties['list.selectionstyle'] == 'multiple'">
                     <!--Multiselect-->
                 </th>
-                <th ng-if="compositionlistschema.properties['list.selectionstyle'] == 'singleselection'">
+                <th ng-if="compositionlistschema.properties['list.selectionstyle'] == 'single'">
                     <!--Singleselect-->
                 </th>
                 <th ng-repeat="column in compositionlistschema.displayables"
@@ -30,7 +30,7 @@
         </thead>
         <tbody ng-show="clonedCompositionData.length > 0">
             <tr ng-repeat-start="compositionitem in clonedCompositionData">
-                <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'multipleselection'" style="text-align: center;">
+                <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'multiple'" style="text-align: center;">
                     <!--Multiselect-->
                     <!-- TODO: Move style to css -->
                     <input type="checkbox"
@@ -39,7 +39,7 @@
                            ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)"
                            ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)">
                 </td>
-                <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'singleselection'">
+                <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'single'">
                     <!--Singleselect-->
                 </td>
                 <td ng-repeat="column in compositionlistschema.displayables" ng-show="!isFieldHidden(compositionlistschema,column)">

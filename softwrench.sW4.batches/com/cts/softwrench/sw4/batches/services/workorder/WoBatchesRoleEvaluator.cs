@@ -87,7 +87,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
                 return _noUserRole;
             }
             var list = queryResult.Cast<IEnumerable<KeyValuePair<string, object>>>()
-               .Select(r => r.ToDictionary(pair => pair.Key, pair => pair.Value.ToString(), StringComparer.OrdinalIgnoreCase))
+                .Select(r => r.ToDictionary(pair => pair.Key, pair => (pair.Value == null ? null : pair.Value.ToString()), StringComparer.OrdinalIgnoreCase))
                .ToList();
             var matchedGroup = false;
             foreach (var row in list) {

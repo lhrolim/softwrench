@@ -8,11 +8,11 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">{{i18N('general.select','Select')}} {{lookupObj.fieldMetadata.label}}</h4>
                 </div>
-                <div>
+                <div class="context clearfix">
                     <pagination pagination-data="modalPaginationData"
-                        disable-export="true"
-                        disable-print="true"
-                        renderfn="lookupModalSearch(pageNumber)" ng-cloak />
+                                disable-export="true"
+                                disable-print="true"
+                                renderfn="lookupModalSearch(pageNumber)" ng-cloak />
                 </div>
 
             </div>

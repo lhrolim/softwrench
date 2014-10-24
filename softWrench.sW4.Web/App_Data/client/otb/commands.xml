@@ -10,6 +10,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Commands.xsd ">
     <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html"/>
   </commandgroup>
 
+  <commandgroup position="gridbottom">
+   
+  </commandgroup>
+
   <!--TODO: finish bars-->
   <commandgroup position="detailform">
     <command id="save" icon="glyphicon glyphicon-ok" service="printservice" method="printGrid" parameters="paginationData,renderfn,schema" label="Submit" tooltip="Submit"/>

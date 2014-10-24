@@ -4,8 +4,8 @@ using System;
 using System.Collections.Generic;
 
 namespace softWrench.sW4.Data.API.Association {
-    public class AssociationUpdateRequest : IDataRequest, IAssociationPrefetcherRequest
-    {
+    public class AssociationUpdateRequest : IDataRequest, IAssociationPrefetcherRequest {
+        private Boolean _hasClientSearch = false;
 
         public string Id { get; set; }
 
@@ -18,6 +18,19 @@ namespace softWrench.sW4.Data.API.Association {
         public string ValueSearchString { get; set; }
         public string LabelSearchString { get; set; }
 
+        /// <summary>
+        /// to indicate whether this is coming from a search.
+        /// //TODO: refactor this api splitting the methods
+        /// </summary>
+        public Boolean HasClientSearch {
+            get {
+                return _hasClientSearch || ValueSearchString != null || LabelSearchString != null;
+            }
+            set {
+                _hasClientSearch = value;
+            }
+        }
+
         // For dependant association updates
         public string TriggerFieldName { get; set; }
 
@@ -27,10 +40,6 @@ namespace softWrench.sW4.Data.API.Association {
         public string CommandId { get; set; }
 
         public PaginatedSearchRequestDto SearchDTO { get; set; }
-
-        public Boolean HasClientSearch() {
-            return ValueSearchString != null || LabelSearchString != null;
-        }
 
         public string AssociationsToFetch { get; set; }
     }

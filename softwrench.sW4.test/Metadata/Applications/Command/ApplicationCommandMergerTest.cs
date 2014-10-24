@@ -68,7 +68,7 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
             var commandBarDefinitions = new Dictionary<string, CommandBarDefinition>();
             commandBarDefinitions["detail"] = new CommandBarDefinition(null, "detail", false, new List<ICommandDisplayable>
             {
-                new ResourceCommand("c4","","",">c3")
+                new ResourceCommand("c4","","",">c3",null)
             });
             var result = ApplicationCommandMerger.MergeCommands(commandBarDefinitions, bars);
             Assert.IsTrue(result.Keys.Any());

@@ -388,7 +388,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             searchRequest.ShouldPaginate = association.IsPaginated();
             searchRequest.NeedsCountUpdate = association.IsPaginated();
             var valueSearchString = request.ValueSearchString;
-            if (association.IsLazyLoaded() && !request.HasClientSearch()) {
+            if (association.IsLazyLoaded() && !request.HasClientSearch) {
                 if ((cruddata == null || cruddata.GetAttribute(association.Target) == null)) {
                     //we should not update lazy dependant associations except in one case:
                     //there´s a default value in place already for the dependent association

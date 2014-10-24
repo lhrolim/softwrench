@@ -40,6 +40,12 @@
             <thead id="listgridthread" class="listgrid-thead">
                 <!-- Header row -->
                 <tr class="header-row">
+                    <th ng-if="schema.properties['list.selectionstyle'] == 'multiple'">
+                        <!--Multiselect-->
+                    </th>
+                    <th ng-if="schema.properties['list.selectionstyle'] == 'single'">
+                        <!--Singleselect-->
+                    </th>
                     <th ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)"
                         ng-style="{'min-width': column.rendererParameters['minwidth'],
                                            'max-width': column.rendererParameters['maxwidth'],
@@ -60,9 +66,15 @@
                     </th>
                 </tr>
 
-                <!-- Filter row shown when there are too much columns to be displayed -->
-                <!-- Filter row shown when there are few columns to be displayed -->
                 <tr class="filter-row hidden-too-much-columns hiddenonprint">
+                    <th ng-if="schema.properties['list.selectionstyle'] == 'multiple'">
+                        <input type="checkbox"
+                               ng-change="toggleSelectAll(selectAllChecked)" ng-model="selectAllChecked">
+                    </th>
+                    <th ng-if="schema.properties['list.selectionstyle'] == 'single'">
+                        <!--Singleselect-->
+                    </th>
+
                     <th ng-repeat="column in schema.displayables"
                         ng-style="{'min-width': column.rendererParameters['minwidth'],
                                 'max-width': column.rendererParameters['maxwidth'],
@@ -85,7 +97,7 @@
                                     </span>
 
                                     <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                    The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                        The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                     <div class="input-group-addon dropdown">
                                         <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                               data-toggle="dropdown" rel="tooltip"
@@ -104,7 +116,7 @@
                                     <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
                                            ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" />
                                     <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                    The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                        The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                     <div class="input-group-addon dropdown">
                                         <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                               data-toggle="dropdown" rel="tooltip"
@@ -127,6 +139,17 @@
             <tbody>
 
                 <tr ng-repeat="dm in datamap" style="cursor: pointer" listtablerendered rel="hideRow" bindonce>
+                    <td ng-if="schema.properties['list.selectionstyle'] == 'multiple'" style="text-align: center;">
+                        <!--Multiselect-->
+                        <!-- TODO: Move style to css -->
+                        <input type="checkbox"
+                               ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)"
+                               ng-model="dm.fields['_#selected']">
+                    </td>
+                    <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'single'">
+                        <!--Singleselect-->
+                    </td>
+
                     <td ng-repeat="column in schema.displayables" bo-show="!isFieldHidden(schema,column)" class="xoupscolumns" ng-click="showDetail(dm,column)"
                         ng-style="{'min-width': column.rendererParameters['minwidth'],
                                 'max-width': column.rendererParameters['maxwidth'],

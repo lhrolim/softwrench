@@ -190,7 +190,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 }
             }
 
-            if (valueKey == ValueKeyConst) {
+            if (valueKey == ValueKeyConst && valueField!=null) {
                 searchRequestDto.AppendProjectionField(new ProjectionField { Alias = ValueKeyConst, Name = valueField });
             }
 

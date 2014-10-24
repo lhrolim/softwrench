@@ -736,6 +736,7 @@
       <simpleType>
         <restriction base="string">
           <enumeration value="gridtop"></enumeration>
+          <enumeration value="gridbottom"></enumeration>
           <enumeration value="gridrows"></enumeration>
           <enumeration value="compositiontop"></enumeration>
           <enumeration value="detailform"></enumeration>
@@ -884,6 +885,7 @@
     </attribute>
     <attribute name="role" type="string"></attribute>
     <attribute name="remove" type="boolean"></attribute>
+    <attribute name="parameters" type="string"></attribute>
   </complexType>
   <complexType name="RemoveCommand">
     <attribute name="id" type="string"></attribute>

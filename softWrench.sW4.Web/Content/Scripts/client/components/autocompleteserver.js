@@ -39,10 +39,11 @@ app.factory('cmpAutocompleteServer', function ($log, associationService,restServ
                 parameters.key.platform = platform();
                 parameters.associationFieldName = associationKey;
                 parameters.labelSearchString = "%QUERY";
-                parameters.applicationName = applicationName;
+                parameters.application = applicationName;
 
-                var urlToUse = restService.getActionUrl("Data","UpdateAssociation",parameters);
-
+                var urlToUse = restService.getActionUrl("Data", "UpdateAssociation", parameters);
+                //the %QUERY was being converted to %25QUERY breaking the component
+                urlToUse = replaceAll(urlToUse, '%25', "%");
                 var engine = new Bloodhound({
 
                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
