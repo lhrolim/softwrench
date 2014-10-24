@@ -123,6 +123,8 @@ namespace softWrench.sW4.Data.Persistence {
                 value = user.MaximoPersonId ?? user.Login;
             } else if (key.Equals("@usersite")) {
                 value = user.SiteId;
+            } else if (key.Equals("@now")) {
+                value = DateTime.Now.ToShortDateString();
             } else if (key.StartsWith(UserPrefix)) {
                 value = ParseUserProperty(key, user);
             } else if (key.StartsWith(PastFunctionPrefix)) {
