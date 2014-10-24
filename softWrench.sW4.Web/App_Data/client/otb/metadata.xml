@@ -95,6 +95,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
       </relationships>
+      <connectorParameters>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
+      </connectorParameters>
     </entity>
 
     <entity name="labtrans" idAttribute="labtransid">
@@ -1611,16 +1614,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <detail id="newissuereturn" title="Issues and Returns" mode="input">
           <field attribute="matusetransid" hidden="true"/>
-          <association label="Workorder" target="refwo" labelfield="workorder_.description" required="true">
+          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="location,assetnum" required="true">
             <renderer type="lookup"/>
+            <event type="afterchange" service="inventoryService" method="afterchangeworkorder"/>
           </association>
           <association label="Issue To" target="issueto" labelfield="issuetoperson_.displayname" required="true">
             <renderer type="lookup"/>
           </association>
-          <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" required="true">
+          <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
           </association>
-          <association label="Location" target="location" labelfield="location_.description" required="true">
+          <association label="Location" target="location" labelfield="location_.description">
             <renderer type="lookup"/>
           </association>
           <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" required="true" >
