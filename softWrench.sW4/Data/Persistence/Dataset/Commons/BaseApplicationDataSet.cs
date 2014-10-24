@@ -190,6 +190,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                         }
                     }
                 }
+                if (schema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.DisablePagination)) {
+                    dto.ShouldPaginate = dto.ShouldPaginate && !"true".Equals(schema.Properties[ApplicationSchemaPropertiesCatalog.DisablePagination]);
+                }
                 Log.DebugFormat("BaseApplicationDataSet#GetList calling Find method on maximo engine. Application Schema \"{0}\" / Context \"{1}\"", schema, c);
                 entities = Engine().Find(entityMetadata, dto, applicationCompositionSchemata);
             }, ctx);
@@ -304,7 +307,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
             return new GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>>(DoUpdateAssociation(application, request, cruddata));
         }
-
+        /// <summary>
+        ///  This will get used by lookup and autocomplete searches, as well as dependat associations changes (the original purpose) and possibly in other scenarios that needs documentation
+        /// </summary>
+        /// <param name="application"></param>
+        /// <param name="request"></param>
+        /// <param name="cruddata"></param>
+        /// <returns></returns>
+        //TODO: refactor this code, removing lookup and autocomplete searches to a specific method
         protected virtual IDictionary<string, BaseAssociationUpdateResult> DoUpdateAssociation(ApplicationMetadata application, AssociationUpdateRequest request,
             AttributeHolder cruddata) {
 
@@ -345,7 +355,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     var associationApplicationMetadata =
                         ApplicationAssociationResolver.GetAssociationApplicationMetadata(association);
 
-                    var searchRequest = BuildSearchDTO(request, association, cruddata);
+                    var searchRequest = BaseDataSetSearchHelper.BuildSearchDTOForAssociationSearch(request, association, cruddata);
 
                     if (searchRequest == null) {
                         //this would only happen if association is lazy and there´s no default value 
@@ -375,68 +385,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return resultObject;
         }
 
-        private static PaginatedSearchRequestDto BuildSearchDTO(AssociationUpdateRequest request, ApplicationAssociationDefinition association, AttributeHolder cruddata) {
 
-            var searchRequest = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
 
-            if (request.SearchDTO == null) {
-                request.SearchDTO = PaginatedSearchRequestDto.DefaultInstance(null);
-            }
-            searchRequest.PageNumber = request.SearchDTO.PageNumber;
-            searchRequest.PageSize = request.SearchDTO.PageSize;
-            //avoids pagination unless the association renderer defines so (lookup)
-            searchRequest.ShouldPaginate = association.IsPaginated();
-            searchRequest.NeedsCountUpdate = association.IsPaginated();
-            var valueSearchString = request.ValueSearchString;
-            if (association.IsLazyLoaded() && !request.HasClientSearch) {
-                if ((cruddata == null || cruddata.GetAttribute(association.Target) == null)) {
-                    //we should not update lazy dependant associations except in one case:
-                    //there´s a default value in place already for the dependent association
-                    // in that case, we would need to return a 1-value list to show on screen
-                    return null;
-                }
-                //this will force that the search would be made only on that specific value
-                //ex: autocomplete server, lookups that depend upon another association
-                valueSearchString = cruddata.GetAttribute(association.Target) as string;
-            }
-
-            if (request.AssociationKey != null) {
-                // If association has a schema key defined, the searchDTO will be filled on client, so just copy it from request
-                searchRequest.SearchParams = request.SearchDTO.SearchParams;
-                searchRequest.SearchValues = request.SearchDTO.SearchValues;
-            } else {
-                if (!String.IsNullOrWhiteSpace(valueSearchString)) {
-                    searchRequest.AppendSearchParam(association.EntityAssociation.PrimaryAttribute().To);
-                    searchRequest.AppendSearchValue("%" + valueSearchString + "%");
-                }
-                if (!String.IsNullOrWhiteSpace(request.LabelSearchString)) {
-                    AppendSearchLabelString(request, association, searchRequest);
-                }
-            }
-            return searchRequest;
-        }
-
-        /// <summary>
-        ///  this is used for both autocompleteserver or lookup to peform the search on the server based upon the labe string
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="association"></param>
-        /// <param name="searchRequest"></param>
-        private static void AppendSearchLabelString(AssociationUpdateRequest request,
-            ApplicationAssociationDefinition association, PaginatedSearchRequestDto searchRequest) {
-            var sbParam = new StringBuilder("(");
-            var sbValue = new StringBuilder();
-
-            foreach (var labelField in association.LabelFields) {
-                sbParam.Append(labelField).Append(SearchUtils.SearchParamOrSeparator);
-                sbValue.Append("%" + request.LabelSearchString + "%").Append(SearchUtils.SearchValueSeparator);
-            }
-
-            sbParam.Remove(sbParam.Length - SearchUtils.SearchParamOrSeparator.Length, SearchUtils.SearchParamOrSeparator.Length);
-            sbValue.Remove(sbValue.Length - SearchUtils.SearchValueSeparator.Length, SearchUtils.SearchValueSeparator.Length);
-            sbParam.Append(")");
-            searchRequest.AppendSearchEntry(sbParam.ToString(), sbValue.ToString());
-        }
 
 
         public virtual string ApplicationName() {

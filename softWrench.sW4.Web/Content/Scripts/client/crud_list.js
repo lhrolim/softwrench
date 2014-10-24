@@ -134,6 +134,7 @@ app.directive('crudList', function (contextService) {
                     }
                     pagetogo = 1;
                 }
+                $scope.selectAllChecked = false;
                 $scope.selectPage(pagetogo, pageSize, printmode);
             });
 

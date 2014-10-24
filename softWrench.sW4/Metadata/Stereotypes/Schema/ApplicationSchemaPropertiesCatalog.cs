@@ -51,6 +51,11 @@
         public const string DefaultPaginationSize = "list.paginationsize";
 
         /// <summary>
+        /// If true, the grid will render all the entries and the pagination will be entirely removed
+        /// </summary>
+        public const string DisablePagination = "list.disablepagination";
+
+        /// <summary>
         ///  property for specifying the options of the pagination
         /// </summary>
         public const string PaginationOptions = "list.paginationoptions";

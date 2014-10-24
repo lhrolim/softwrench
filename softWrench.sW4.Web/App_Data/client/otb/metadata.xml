@@ -731,6 +731,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <properties>
             <property key="list.click.schema" value="editdetail"/>
             <property key="list.selectionstyle" value="multiple"/>
+            <property key="list.disablepagination" value="true"/>
           </properties>
         </schema>
 
