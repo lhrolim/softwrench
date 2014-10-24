@@ -180,6 +180,7 @@
     <Compile Include="Data\Entities\SyncManagers\AMaximoRowstampManager.cs" />
     <Compile Include="Data\Entities\SyncManagers\IUserSyncManager.cs" />
     <Compile Include="Data\ExtraAttributes.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\BaseDataSetSearchHelper.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\DataSetConfigurationException.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\MaximoApplicationDataSet.cs" />
     <Compile Include="Data\Persistence\Engine\AConnectorEngine.cs" />
