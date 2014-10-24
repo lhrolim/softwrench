@@ -29,7 +29,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
 
             var methodName = GetMethodName(attribute);
-            var dataSet = FindDataSet(application.Name, methodName);
+            var dataSet = FindDataSet(application.Name,application.Schema.SchemaId, methodName);
             var mi = dataSet.GetType().GetMethod(methodName);
             if (mi == null) {
                 throw new InvalidOperationException(String.Format(MethodNotFound, methodName, dataSet.GetType().Name));

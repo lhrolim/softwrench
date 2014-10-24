@@ -99,7 +99,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
             var options = BuildOptions(queryResponse, association, numberOfLabels);
             string filterFunctionName = association.Schema.DataProvider.PostFilterFunctionName;
-            return filterFunctionName != null ? ApplyFilters(applicationMetadata.Name, originalEntity, filterFunctionName, options, association) : options;
+            return filterFunctionName != null ? ApplyFilters(applicationMetadata, originalEntity, filterFunctionName, options, association) : options;
         }
 
 
@@ -140,7 +140,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
         private SearchRequestDto ApplyPreFilterFunction(AssociationPreFilterFunctionParameters preFilterParam, string prefilterFunctionName) {
             var applicationName = preFilterParam.Metadata.Name;
-            var dataSet = FindDataSet(applicationName, prefilterFunctionName);
+            var dataSet = FindDataSet(applicationName,preFilterParam.Metadata.Schema.SchemaId,prefilterFunctionName);
             var mi = dataSet.GetType().GetMethod(prefilterFunctionName);
             if (mi == null) {
                 throw new InvalidOperationException(String.Format(MethodNotFound, prefilterFunctionName, dataSet.GetType().Name));
@@ -151,8 +151,8 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             return (SearchRequestDto)mi.Invoke(dataSet, new object[] { preFilterParam });
         }
 
-        private IEnumerable<IAssociationOption> ApplyFilters(string applicationName, AttributeHolder originalEntity, string filterFunctionName, ISet<IAssociationOption> options, ApplicationAssociationDefinition association) {
-            var dataSet = FindDataSet(applicationName, filterFunctionName);
+        private IEnumerable<IAssociationOption> ApplyFilters(ApplicationMetadata app, AttributeHolder originalEntity, string filterFunctionName, ISet<IAssociationOption> options, ApplicationAssociationDefinition association) {
+            var dataSet = FindDataSet(app.Name,app.Schema.SchemaId, filterFunctionName);
             var mi = dataSet.GetType().GetMethod(filterFunctionName);
             if (mi == null) {
                 throw new InvalidOperationException(String.Format(MethodNotFound, filterFunctionName, dataSet.GetType().Name));

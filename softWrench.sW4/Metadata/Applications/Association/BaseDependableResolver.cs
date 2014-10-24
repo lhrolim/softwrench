@@ -23,15 +23,14 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             return dependantFields.All(depField => originalEntity.GetAttribute(depField) != null);
         }
 
-        protected IDataSet FindDataSet(String applicationName,string missingParameter)
-        {
-            var dataSet = DataSetProvider.GetInstance().LookupDataSet(applicationName);
+        protected IDataSet FindDataSet(String applicationName, string schemaId, string missingParameter) {
+            var dataSet = DataSetProvider.GetInstance().LookupDataSet(applicationName, schemaId);
             if (dataSet == null) {
                 throw new InvalidOperationException(String.Format(DataSetNotFound, applicationName,
                                                                   missingParameter));
             }
             return dataSet;
         }
-        
+
     }
 }

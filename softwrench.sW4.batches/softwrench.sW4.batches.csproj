@@ -35,6 +35,10 @@
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate">
       <HintPath>..\packages\NHibernate.4.0.1.4000\lib\net40\NHibernate.dll</HintPath>
     </Reference>
@@ -43,6 +47,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,11 +55,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="com\cts\softwrench\sw4\batches\controller\BatchController.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\entities\Batch.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchDataSet.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchesRoleEvaluator.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchWhereClauseRegistry.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WorkOrderBatchWhereClauseProvider.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WorkorderBatchSchemaDataSet.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WorkorderDataSetBatchHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

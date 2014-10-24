@@ -71,7 +71,7 @@ namespace softWrench.sW4.Web.Controllers.Mobile {
                 var applicationMetadata = MetadataProvider
                     .Application(application.appName)
                     .ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(), user, ClientPlatform.Mobile);
-                var syncAppData = _dataSetProvider.LookupDataSet(application.appName)
+                var syncAppData = _dataSetProvider.LookupDataSet(application.appName,applicationMetadata.Schema.SchemaId)
                     .Sync(applicationMetadata, application);
                 if (!application.FetchMetadata) {
                     //used to reduce the amount of data sent

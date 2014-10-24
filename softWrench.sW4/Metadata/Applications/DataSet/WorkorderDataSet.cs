@@ -13,18 +13,7 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Metadata.Applications.DataSet {
 
     class WorkorderDataSet : MaximoApplicationDataSet {
-        public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
-            var schemaId = application.Schema.SchemaId;
-            var shouldApplyDefaultParameters = schemaId.EqualsIc("createbatchlist") && searchDto.ValuesDictionary == null;
-            if (shouldApplyDefaultParameters) {
-                //let´s fill this only for the first call
-                var endToday = DateUtil.EndOfToday();
-                var beginDate = DateUtil.ParsePastAndFuture("14days", -1);
-                searchDto.AppendSearchEntry("schedstart", ">=" + beginDate.ToShortDateString());
-                searchDto.AppendSearchEntry("schedfinish", "<=" + endToday.ToShortDateString());
-            }
-            return base.GetList(application, searchDto);
-        }
+
 
         //WAPPR -> Pode mudar para todos os outros. Sem restrições de edição na info da WO.
         //APPR -> Pode mudar para todos os outros. Sem restrições de edição na info da WO (por enquanto).

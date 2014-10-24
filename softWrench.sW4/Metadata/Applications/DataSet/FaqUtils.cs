@@ -82,7 +82,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web);
 
-            return _dataSetProvider.LookupDataSet(application).Get(applicationMetadata, user, request);
+            return _dataSetProvider.LookupDataSet(application,applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
         }
 
         #region Public

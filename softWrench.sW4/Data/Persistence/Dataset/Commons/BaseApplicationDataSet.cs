@@ -386,7 +386,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         }
 
 
-
+        public virtual string SchemaId() {
+            return null;
+        }
 
 
         public virtual string ApplicationName() {

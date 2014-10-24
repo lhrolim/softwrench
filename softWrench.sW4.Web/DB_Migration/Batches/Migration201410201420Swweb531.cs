@@ -5,10 +5,9 @@ namespace softWrench.sW4.Web.DB_Migration.Batches {
     [Migration(201410201420)]
 
     public class Migration201410201420Swweb531 : FluentMigrator.Migration {
-    
-        
-        public override void Up()
-        {
+
+
+        public override void Up() {
             Create.Table("BAT_BATCH")
                 .WithColumn("Id").AsInt64().PrimaryKey().Identity()
                 .WithColumn("Application").AsString(MigrationUtil.StringSmall).NotNullable()
@@ -19,7 +18,7 @@ namespace softWrench.sW4.Web.DB_Migration.Batches {
                 .WithColumn("CreationDate").AsDateTime().NotNullable()
                 .WithColumn("UpdateDate").AsDateTime().NotNullable()
                 .WithColumn("ItemIds").AsString(MigrationUtil.StringLarge).NotNullable()
-                .WithColumn("DataMapJson").AsBinary().NotNullable();
+                .WithColumn("DataMapJson").AsBinary().Nullable();
         }
 
         public override void Down() {

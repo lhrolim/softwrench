@@ -27,7 +27,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         private HapagImacDataSet GetImacDataSet() {
             if (_imacDataSet == null) {
-                _imacDataSet = (HapagImacDataSet)DataSetProvider.GetInstance().LookupDataSet("imac");
+                _imacDataSet = (HapagImacDataSet)DataSetProvider.GetInstance().LookupDataSet("imac",null);
             }
             return _imacDataSet;
         }

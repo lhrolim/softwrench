@@ -708,7 +708,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <commandbars>
             <commandgroup position="gridtop" removeundeclared="true">
               <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html" parameters="allowsave=false"/>
-              <command label="Generate Batch" id="generatebatch" service="wobatchService" method="saveBatch"/>
+              <command label="Cancel" id="cancelbatch" service="wobatchService" method="cancelBatch"/>
+              <command label="Save Batch" id="generatebatch" service="wobatchService" method="saveBatch"/>
             </commandgroup>
           </commandbars>
 

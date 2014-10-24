@@ -20,6 +20,10 @@ app.factory('wobatchService', function (redirectService) {
             redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
         },
 
+        cancelBatch: function (event) {
+            redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
+        },
+
 
 
     };

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Interfaces;
+using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
 
@@ -46,10 +48,18 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
         /// <summary>
         /// this will hold only the editable fields, as the others should be fetched from the database
         /// </summary>
-        [Property]
-        public string DataMapJson { get; set; }
+        public virtual string DataMapJsonAsString {
+            get {
+                return StringExtensions.GetString(CompressionUtil.Decompress(DataMapJson));
+            }
+            set {
+                DataMapJson = CompressionUtil.Compress(value.GetBytes());
+            }
+        }
 
-
+        [Property(Type = "BinaryBlob")]
+        [JsonIgnore]
+        public virtual byte[] DataMapJson { get; set; }
 
     }
 }
