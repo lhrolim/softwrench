@@ -714,19 +714,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </commandbars>
 
           <field attribute="wonum" label="WO No" >
-            <renderer type="default" params="filterenabled=false" />
+            <renderer type="default" params="filterenabled=false; width=15%" />
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default"  />
+            <renderer type="default"  params="width=38%"/>
           </field>
           <field attribute="status" label="Status" >
-            <renderer type="default" params="filterenabled=false" />
+            <renderer type="default" params="filterenabled=false; width=15%" />
           </field>
           <field attribute="schedstart" label="Schedule Start" >
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm; width=15%"/>
           </field>
           <field attribute="schedfinish" label="Schedule Finish" >
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm; width=15%"/>
           </field>
           <field attribute="#alreadyused">
             <renderer type="icon" params="expression={'true':'fa-warning','false':''} "/>
