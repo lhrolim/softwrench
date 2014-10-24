@@ -8,6 +8,11 @@ app.factory('wobatchService', function (redirectService,restService,alertService
             return;
         }
 
+        if (ids.length > 500) {
+            alertService.alert("Please restrict your batch to 500 elements");
+            return;
+        }
+
         var parameters = {
             application : "workorder",
             schema: "list",
