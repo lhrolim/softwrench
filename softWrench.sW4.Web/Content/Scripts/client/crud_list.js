@@ -35,7 +35,6 @@ app.directive('crudList', function (contextService) {
             associationService, contextService, statuscolorService, eventdispatcherService) {
 
             $scope.$name = 'crudlist';
-            
 
             fixHeaderService.activateResizeHandler();
 
@@ -112,6 +111,10 @@ app.directive('crudList', function (contextService) {
                 fixHeaderService.callWindowResize();
             });
 
+            $scope.$on('sw_gridrefreshed', function(event, data, printmode) {
+                $scope.selectAllChecked = false;
+            });
+
             $scope.$on('sw_refreshgrid', function (event, searchData, extraparameters) {
                 /// <summary>
                 ///  implementation of searchService#refreshgrid see there for details
@@ -134,7 +137,6 @@ app.directive('crudList', function (contextService) {
                     }
                     pagetogo = 1;
                 }
-                $scope.selectAllChecked = false;
                 $scope.selectPage(pagetogo, pageSize, printmode);
             });
 

@@ -40,10 +40,10 @@
             <thead id="listgridthread" class="listgrid-thead">
                 <!-- Header row -->
                 <tr class="header-row">
-                    <th ng-if="schema.properties['list.selectionstyle'] == 'multiple'">
+                    <th ng-show="schema.properties['list.selectionstyle'] == 'multiple'">
                         <!--Multiselect-->
                     </th>
-                    <th ng-if="schema.properties['list.selectionstyle'] == 'single'">
+                    <th ng-show="schema.properties['list.selectionstyle'] == 'single'">
                         <!--Singleselect-->
                     </th>
                     <th ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)"
@@ -67,11 +67,11 @@
                 </tr>
 
                 <tr class="filter-row hidden-too-much-columns hiddenonprint">
-                    <th ng-if="schema.properties['list.selectionstyle'] == 'multiple'">
+                    <th ng-show="schema.properties['list.selectionstyle'] == 'multiple'">
                         <input type="checkbox"
                                ng-change="toggleSelectAll(selectAllChecked)" ng-model="selectAllChecked">
                     </th>
-                    <th ng-if="schema.properties['list.selectionstyle'] == 'single'">
+                    <th ng-show="schema.properties['list.selectionstyle'] == 'single'">
                         <!--Singleselect-->
                     </th>
 
