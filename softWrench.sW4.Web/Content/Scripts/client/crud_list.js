@@ -264,6 +264,12 @@ app.directive('crudList', function (contextService) {
                 }
             };
 
+            $scope.toggleSelectAll = function (checked) {
+                $.each($scope.datamap, function(key, value) {
+                    value.fields["_#selected"] = checked;
+                });
+            }
+
             $scope.getSearchIcon = function (columnName) {
                 var showSearchIcon = $scope.schema.properties["list.advancedfilter.showsearchicon"] != "false";
                 var operator = $scope.getOperator(columnName);

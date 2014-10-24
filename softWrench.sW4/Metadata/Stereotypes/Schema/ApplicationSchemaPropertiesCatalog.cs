@@ -13,6 +13,11 @@
         /// </summary>
         public const string ListShowSearchIcon = "list.advancedfilter.showsearchicon";
 
+        /// <summary>
+        /// this property accepts single,multiple indicating that either a radiobutton or a checkbox should appear on the screen. If none provided, then there´ll be no selection
+        /// </summary>
+        public const string ListSelectionStyle = "list.selectionstyle";
+
 
         /// <summary>
         ///

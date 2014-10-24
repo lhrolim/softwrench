@@ -67,7 +67,8 @@ namespace softWrench.sW4.Metadata.Parsing {
             var position = xElement.AttributeValue(cnst.PositionAttribute);
             if (xElement.IsNamed(cnst.ResourceCommand)) {
                 var path = xElement.AttributeValue(cnst.ResourceCommandPath);
-                return new ResourceCommand(id, path, role,position);
+                var parameters = xElement.AttributeValue(XmlBaseSchemaConstants.BaseParametersAttribute);
+                return new ResourceCommand(id, path, role,position,parameters);
             }
             if (xElement.IsNamed(cnst.CommandElement)) {
                 return GetApplicationCommand(xElement, id, role, null);
