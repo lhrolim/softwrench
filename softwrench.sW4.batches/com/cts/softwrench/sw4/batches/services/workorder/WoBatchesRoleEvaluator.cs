@@ -29,7 +29,9 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
     public class WoBatchesRoleEvaluator : AfterLoginRoleEvaluator {
 
         private const string Group1 = "MAXIMO.MXWMWOM";
-        private const string Group2 = "MAXIMO.MXWMPTLA";
+        /// TODO: This needs to be set back to MAXIMO.MXWMPTLA once there is a maximo persongroup with that name
+        /// private const string Group2 = "MAXIMO.MXWMPTLA";
+        private const string Group2 = "MXWMPTLA";
         private const string Group3 = "MAXIMO.MXWMFMGR";
         private const string Maintenance = "MAXIMO.MXWMMNTN";
         private const string Operations = "MAXIMO.MXWMOPER";
