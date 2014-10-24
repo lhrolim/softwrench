@@ -54,16 +54,10 @@ app.directive('gridtoolbar', function (contextService) {
             searchData: '=',
             searchOperator: '=',
             searchSort: '=',
-            /*only appliable for compositions, otherwise this will be null*/
-            parentschema: '=',
             schema: '=',
             mode: '@',
             position: '@',
-            /*only appliable for compositions, otherwise this will be null*/
-            parentdatamap: '=',
             datamap: '=',
-            //holds the selected ids amongst the ones prensent on the datamap 
-            selectedids: '='
         },
 
         link: function (scope, element, attrs, ctrl) {

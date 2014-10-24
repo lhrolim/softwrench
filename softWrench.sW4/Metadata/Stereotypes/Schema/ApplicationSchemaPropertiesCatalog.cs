@@ -56,6 +56,11 @@
         public const string DisablePagination = "list.disablepagination";
 
         /// <summary>
+        /// If true, we will disable the detail selection of the grid
+        /// </summary>
+        public const string DisableDetails = "list.disabledetails";
+
+        /// <summary>
         ///  property for specifying the options of the pagination
         /// </summary>
         public const string PaginationOptions = "list.paginationoptions";

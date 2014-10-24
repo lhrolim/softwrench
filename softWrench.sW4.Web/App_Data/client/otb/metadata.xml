@@ -709,7 +709,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <commandgroup position="gridtop" removeundeclared="true">
               <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html" parameters="allowsave=false"/>
               <command label="Cancel" id="cancelbatch" service="wobatchService" method="cancelBatch"/>
-              <command label="Save Batch" id="generatebatch" service="wobatchService" method="saveBatch"/>
+              <command label="Save Batch" id="generatebatch" service="wobatchService" method="saveBatch" parameters="datamap"/>
             </commandgroup>
           </commandbars>
 
@@ -728,11 +728,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="schedfinish" label="Schedule Finish" >
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
           </field>
+          <field attribute="#alreadyused">
+            <renderer type="icon" params="expression={'true':'fa-warning','false':''} "/>
+          </field>
           
           <properties>
             <property key="list.click.schema" value="editdetail"/>
             <property key="list.selectionstyle" value="multiple"/>
             <property key="list.disablepagination" value="true"/>
+            <property key="list.disabledetails" value="true"/>
           </properties>
         </schema>
 

@@ -12,7 +12,7 @@ namespace softWrench.sW4.Web.DB_Migration.Batches {
                 .WithColumn("Id").AsInt64().PrimaryKey().Identity()
                 .WithColumn("Application").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("alias_").AsString(MigrationUtil.StringSmall).NotNullable()
-                .WithColumn("Schema").AsString(MigrationUtil.StringSmall).NotNullable()
+                .WithColumn("schema_").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("userid").AsInt32().ForeignKey("fk_batch_user_id", "SW_USER2", "id")
                 .WithColumn("Status").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("CreationDate").AsDateTime().NotNullable()

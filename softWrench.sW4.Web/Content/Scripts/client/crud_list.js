@@ -32,7 +32,7 @@ app.directive('crudList', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             validationService, submitService, redirectService,
-            associationService, contextService, statuscolorService, eventdispatcherService) {
+            associationService, statuscolorService,contextService, eventdispatcherService, iconService) {
 
             $scope.$name = 'crudlist';
 
@@ -48,9 +48,9 @@ app.directive('crudList', function (contextService) {
                 return formattedValue;
             };
 
-            this.test = function(val) {
-                $log.warn(val);
-            }
+            $scope.loadIcon = function (value, metadata) {
+                return iconService.loadIcon(value, metadata);
+            };
 
             $scope.hasTabs = function (schema) {
                 return tabsService.hasTabs(schema);
@@ -154,6 +154,10 @@ app.directive('crudList', function (contextService) {
                 searchService.advancedSearch($scope.datamap,$scope.schema, filterdata);
             }
 
+            $scope.cursortype = function() {
+                var editDisabled = $scope.schema.properties['list.disabledetails'];
+                return "true" != editDisabled ? "pointer" : "default";
+            }
 
             $scope.isEditing = function (schema) {
                 var idFieldName = schema.idFieldName;
@@ -183,6 +187,11 @@ app.directive('crudList', function (contextService) {
                 var popupmode = $scope.schema.properties['list.click.popupmode'];
                 var schemaid = $scope.schema.properties['list.click.schema'];
                 var fullServiceName = $scope.schema.properties['list.click.service'];
+                var editDisabled = $scope.schema.properties['list.disabledetails'];
+
+                if ("true" == editDisabled) {
+                    return;
+                }
 
                 if (popupmode == "report") {
                     return;
@@ -326,7 +335,7 @@ app.directive('crudList', function (contextService) {
             };
 
             $scope.shouldShowHeaderLabel = function (column) {
-                return column.type == "ApplicationFieldDefinition" && column.rendererType != "color";
+                return column.type == "ApplicationFieldDefinition" && column.rendererType != "color" && column.rendererType != "icon";
             }
 
             $scope.shouldShowHeaderFilter = function (column) {
