@@ -1594,25 +1594,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="issuetype" label="Issue Type">
             <renderer type="default" params="width=15%;"/>
           </field>
-          
-          <!--<field attribute="itemnum" hidden="true"/>
-            <field attribute="description" hidden="true"/>
-            <field attribute="quantity" hidden="true"/>
-            <field attribute="issuetype" hidden="true"/>
-            <field attribute="storeloc" hidden="true"/>
-            <field attribute="binnum" hidden="true"/>
-            <field attribute="lotnum" hidden="true"/>
-            <field attribute="rotassetnum" hidden="true"/>
-            <field attribute="assetnum" hidden="true"/>
-            <field attribute="location" hidden="true"/>
-            <field attribute="glcreditacct" hidden="true"/>
-            <field attribute="gldebitacct" hidden="true"/>
-            <field attribute="enterby" hidden="true"/>
-            <field attribute="transdate" hidden="true"/>
-            <field attribute="siteid" hidden="true"/>
-            <field attribute="orgid" hidden="true"/>
-            <field attribute="conditioncode" hidden="true"/>-->
-
         </list>
 
         <detail id="newissuereturn" title="Issues and Returns" mode="input">
@@ -1624,11 +1605,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label="Issue To" target="issueto" labelfield="issuetoperson_.displayname" required="true">
             <renderer type="lookup"/>
           </association>
-          <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+          <association label="Asset" target="assetnum" labelfield="asset_.assetnum" extraprojectionvalues="location">
+            <!--<renderer type="autocompleteserver" params="application=asset;schemaId=assetLookupList;"/>-->
           </association>
           <association label="Location" target="location" labelfield="location_.description">
-            <renderer type="lookup"/>
+            <!--<renderer type="autocompleteserver"/>-->
           </association>
           <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" required="true" >
             <renderer type="combo"/>

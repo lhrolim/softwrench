@@ -17,12 +17,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var user = SecurityFacade.CurrentUser();
             var invIssue = maximoTemplateData.IntegrationObject;
+
+            /*FIND CORRECT VALUES FOR THESE FIELDS*/
             w.SetValueIfNull(invIssue, "ACTUALDATE", Convert.ToDateTime("2006-08-19T10:27:14-07:00"));
             w.SetValueIfNull(invIssue, "GLDEBITACCT", "6000-200-200");
             w.SetValueIfNull(invIssue, "SITEID", user.SiteId);
             w.SetValueIfNull(invIssue, "ITEMNUM", "XMP-3500");
             w.SetValueIfNull(invIssue, "QUANTITY", 1);
             w.SetValueIfNull(invIssue, "OWNERSYSID", "1");
+            /*FIND CORRECT VALUES FOR THESE FIELDS*/
+
+            w.SetValueIfNull(invIssue, "UNITCOST", 0);
+            w.SetValueIfNull(invIssue, "TRANSDATE", DateTime.Now.FromServerToRightKind());
+            
+
 
             //var crudData = (CrudOperationData)maximoTemplateData.OperationData;
             //LongDescriptionHandler.HandleLongDescription(sr, crudData);

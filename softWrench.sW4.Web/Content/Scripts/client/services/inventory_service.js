@@ -23,9 +23,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             createTransaction(schema, "RETURN");
         },
         afterchangeworkorder: function (parameters) {
-            var fields = parameters.fields;
-            parameters.scope.datamap["location"] = fields["workorder_.location"];
-            parameters.scope.datamap["assetnum"] = fields["workorder_.assetnum"];
+            var location = parameters.fields['workorder_.location'];
+            parameters.fields['location'] = location;
+            var assetnum = parameters.fields['workorder_.assetnum'];
+            parameters.fields['assetnum'] = assetnum;
         }
 
     };
