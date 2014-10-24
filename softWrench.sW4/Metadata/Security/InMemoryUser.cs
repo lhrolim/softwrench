@@ -241,7 +241,7 @@ namespace softWrench.sW4.Metadata.Security {
 
 
         public bool IsSwAdmin() {
-            return IsInRole(Role.SysAdmin);
+            return Login.Equals("swadmin")|| IsInRole(Role.SysAdmin);
         }
 
         public IDictionary<string, CommandBarDefinition> SecuredBars(ClientPlatform platform, IDictionary<string, CommandBarDefinition> commandBars) {
