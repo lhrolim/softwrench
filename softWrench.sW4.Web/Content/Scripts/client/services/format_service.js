@@ -90,7 +90,7 @@ app.factory('formatService', function ($filter, i18NService) {
                 //once its formatted, also need to register a custom html but may not be here 
                 if (typeof value != 'undefined') {
                     var val = value.toString();
-                    return val.substring(0, column.rendererParameters['limit']);
+                    return val.substring(0, column.rendererParameters['limit'])+'...';
                 }
             }
 
