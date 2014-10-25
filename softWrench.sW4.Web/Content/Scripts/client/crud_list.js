@@ -180,7 +180,11 @@ app.directive('crudList', function (contextService) {
                 return $rootScope.clientName == "hapag";
             };
 
-            $scope.isSizeLimited = function (fieldMetadata) {
+            $scope.isSizeLimited = function (dm,column) {
+                //Check for the renderparameter limit 
+                if(dm.fields[column.rendererParameters['limit']]>0){
+                    return true;
+                }
                 return false;
             };
 

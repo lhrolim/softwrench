@@ -752,7 +752,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="filterenabled=false; width=12%" />
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="limited" params="limit=20;width=20%"  />
+            <renderer type="default" params="limit=14;width=20%"  />
           </field>
           <field attribute="#UNID" label="UNID">
             <renderer type="default" params="width=12%"  />
