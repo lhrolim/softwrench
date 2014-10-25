@@ -765,7 +765,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="yn" params="width=12%"/>
           </field>
           <field attribute="#fdbckcomment" label="Feedback Comment" required="true">
-            <renderer type="limited" params="limit=12;editable=true; width=12%"  />
+            <renderer type="default" params="limit=12;editable=true; width=12%"  />
           </field>
           <field attribute="#lognote" label="Feedback Comment" required="true">
             <renderer type="yn" params="width=12%" />
