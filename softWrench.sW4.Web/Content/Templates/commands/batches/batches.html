@@ -1,5 +1,5 @@
 <span ng-controller="BatchesController">
-    <div class="btn-group">
+    <div class="btn-group" ng-if="command.parameters['showbutton']!='false'">
         <button type="button" class="btn btn-sm btn-primary" ng-click="refreshGrid()">
             <i class="fa fa-wrench"></i>&ensp;{{selectedfilter.alias}}
         </button>

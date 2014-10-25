@@ -744,7 +744,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
           <commandbars>
             <commandgroup position="gridtop" removeundeclared="true">
-              
+              <command id="submit" label="Submit" tooltip="Submit Batch to Maximo" service ="wobatchService" method="submit"/>
+              <command id="save" label="Save Batch" tooltip="Save Batch without Submiting it" service ="wobatchService" method="savebatch"/>
+              <command id="exit" label="Exit" service ="wobatchService" method="exit"/>
+              <resourcecommand id="batches" path="/Content/Templates/commands/batches/batches.html" role="allowwobatches" parameters="showbutton=false"/>
             </commandgroup>
           </commandbars>
 
