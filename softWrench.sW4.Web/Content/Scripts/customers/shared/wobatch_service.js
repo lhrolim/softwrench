@@ -85,6 +85,10 @@ app.factory('wobatchService', function (redirectService,restService,alertService
             redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
         },
 
+        clickeditbatch: function (datamap, column) {
+          
+        },
+
 
 
     };

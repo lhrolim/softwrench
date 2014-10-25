@@ -773,10 +773,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="#close" label="Close" required="true">
             <renderer type="checkbox" params="width=10%"/>
           </field>
-          
-         
 
-          <properties>
+        <properties>
+            <property key="list.click.service" value="wobatchService.clickeditbatch"/>
             <property key="list.disablepagination" value="true"/>
             <property key="list.disablefilter" value="true"/>
             <property key="list.disabledetails" value="true"/>
