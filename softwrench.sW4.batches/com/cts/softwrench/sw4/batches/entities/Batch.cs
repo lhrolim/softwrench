@@ -53,7 +53,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
         /// </summary>
         public virtual string DataMapJsonAsString {
             get {
-                return StringExtensions.GetString(CompressionUtil.Decompress(DataMapJson));
+                return DataMapJson == null ? null : StringExtensions.GetString(CompressionUtil.Decompress(DataMapJson));
             }
             set {
                 DataMapJson = CompressionUtil.Compress(value.GetBytes());

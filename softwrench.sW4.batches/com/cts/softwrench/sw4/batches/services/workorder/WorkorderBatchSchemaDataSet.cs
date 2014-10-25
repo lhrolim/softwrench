@@ -12,7 +12,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
 
     class WorkorderBatchSchemaDataSet : MaximoApplicationDataSet {
 
-        private SWDBHibernateDAO _swdbdao;
+        private readonly SWDBHibernateDAO _swdbdao;
 
         public WorkorderBatchSchemaDataSet(SWDBHibernateDAO swdbdao) {
             _swdbdao = swdbdao;

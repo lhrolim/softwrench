@@ -21,8 +21,13 @@ app.factory('wobatchService', function (redirectService,restService,alertService
         var json = {};
         json.ids = ids.join();
         restService.invokePost("Batch", "Create", parameters, json, function (data) {
-            alertService.success("Batch successfully created",true);
-            redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
+            alertService.success("Batch successfully created", true);
+            var batchId = data.resultObject.id;
+            var searchDTO = {
+                searchParams: "id",
+                searchValues: batchId
+            }
+            redirectService.goToApplication("workorder", "editbatch", { searchDTO: searchDTO }, null);
         }, null);
     }
 
@@ -38,7 +43,16 @@ app.factory('wobatchService', function (redirectService,restService,alertService
             //            var parameters = {
             //                SearchDTO: searchDTO
             //            }
-            redirectService.goToApplicationView("workorder", "createbatchlist", null, null, {}, null);
+            redirectService.goToApplication("workorder", "createbatchlist", {}, null);
+        },
+
+        edit: function (datamap, column) {
+            var batchId = datamap['id'];
+            var searchDTO = {
+                searchParams : "id", 
+                searchValues : batchId
+            }
+            redirectService.goToApplication("workorder", "editbatch", {searchDTO:searchDTO}, null);
         },
 
         saveBatch: function (datamap) {

@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
+using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Services;
+using softWrench.sW4.SPF;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.controller {
     public class BatchController : ApiController {
@@ -21,7 +23,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.controller {
 
 
         [HttpPost]
-        public void Create(string application, string schema, string alias, JObject jsonIds) {
+        public IGenericResponseResult Create(string application, string schema, string alias, JObject jsonIds) {
+            //TODO: add id checkings on server side
             var userId = SecurityFacade.CurrentUser().DBId;
             var batch = new Batch {
                 Alias = alias,
@@ -33,7 +36,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.controller {
                 UserId = userId,
                 ItemIds = jsonIds["ids"].ToString(),
             };
-            _dao.Save(batch);
+            var saved =_dao.Save(batch);
+            return new GenericResponseResult<Batch>(saved);
         }
     }
 }

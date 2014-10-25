@@ -35,6 +35,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="width=15%"/>
           </field>
           <field attribute="itemids" label="Workorders" hidden="true"/>
+          <properties>
+            <property key="list.click.service" value="wobatchService.edit"/>
+          </properties>
         </list>
       </schemas>
     </application>

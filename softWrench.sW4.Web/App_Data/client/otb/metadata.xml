@@ -733,7 +733,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           
           <properties>
-            <property key="list.click.schema" value="editdetail"/>
             <property key="list.selectionstyle" value="multiple"/>
             <property key="list.disablepagination" value="true"/>
             <property key="list.disabledetails" value="true"/>
@@ -753,24 +752,31 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="filterenabled=false" />
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="limit=20;"  />
+            <renderer type="limited" params="limit=20;"  />
           </field>
           <field attribute="#UNID" label="UNID"/>
-          <optionfield attribute="#ReconCd" label="Reconciliation Code" required="true"/>
+          <optionfield attribute="#ReconCd" label="Reconciliation Code" required="true" providerattribute="reconciliationCodes"/>
           <field attribute="actfinish" label="Actual Finish" default="@now" required="true">
             <renderer type="datetime" params="editable=true;format=MM/dd/yyyy HH:mm;"/>
           </field>
           <field attribute="#pmchange" label="PM Change" default="N">
-            
+            <renderer type="yn"/>
           </field>
-          
+          <field attribute="#fdbckcomment" label="Feedback Comment" required="true">
+            <renderer type="limited" params="limit=12;editable=true"  />
+          </field>
+          <field attribute="#lognote" label="Feedback Comment" required="true">
+            <renderer type="yn" />
+          </field>
+          <field attribute="#close" label="Close" required="true">
+            <renderer type="checkbox" />
+          </field>
           
          
 
           <properties>
-            <property key="list.click.schema" value="editdetail"/>
-            <property key="list.selectionstyle" value="multiple"/>
             <property key="list.disablepagination" value="true"/>
+            <property key="list.disablefilter" value="true"/>
             <property key="list.disabledetails" value="true"/>
           </properties>
         </schema>

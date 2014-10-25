@@ -57,9 +57,11 @@
   <ItemGroup>
     <Compile Include="com\cts\softwrench\sw4\batches\controller\BatchController.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\entities\Batch.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\exception\BatchException.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchDataSet.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchesRoleEvaluator.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchWhereClauseRegistry.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WorkorderEditBatchSchemaDataSet.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WorkOrderBatchWhereClauseProvider.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WorkorderBatchSchemaDataSet.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WorkorderDataSetBatchHelper.cs" />

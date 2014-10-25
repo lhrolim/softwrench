@@ -37,7 +37,7 @@
         /// <summary>
         /// Use this property to specify a custom controller/action to redirect after the save has been performed.Value should be on the format serviceName.methodName
         /// </summary>
-        public const string OnCrudSaveEventAction = "oncrudsaveevent.redirectaction";
+        public const string OnCrudSaveEventAction = "oncrudsaveevent.action";
 
         /// <summary>
         /// Set this property to true to allow the framework to pass not only the selected values, but also the labels of it on the json unmapedattributes. 
@@ -54,6 +54,11 @@
         /// If true, the grid will render all the entries and the pagination will be entirely removed
         /// </summary>
         public const string DisablePagination = "list.disablepagination";
+
+        /// <summary>
+        /// If true, all the filters will be disabled
+        /// </summary>
+        public const string DisableFilter = "list.disablefilter";
 
         /// <summary>
         /// If true, we will disable the detail selection of the grid
