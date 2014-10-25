@@ -749,27 +749,29 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </commandbars>
 
           <field attribute="wonum" label="Work Order #" >
-            <renderer type="default" params="filterenabled=false" />
+            <renderer type="default" params="filterenabled=false; width=12%" />
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="limited" params="limit=20;"  />
+            <renderer type="limited" params="limit=20;width=20%"  />
           </field>
-          <field attribute="#UNID" label="UNID"/>
+          <field attribute="#UNID" label="UNID">
+            <renderer type="default" params="width=12%"  />
+          </field>
           <optionfield attribute="#ReconCd" label="Reconciliation Code" required="true" providerattribute="reconciliationCodes"/>
           <field attribute="actfinish" label="Actual Finish" default="@now" required="true">
-            <renderer type="datetime" params="editable=true;format=MM/dd/yyyy HH:mm;"/>
+            <renderer type="datetime" params="editable=true;format=MM/dd/yyyy HH:mm;width=15%"/>
           </field>
           <field attribute="#pmchange" label="PM Change" default="N">
-            <renderer type="yn"/>
+            <renderer type="yn" params="width=12%"/>
           </field>
           <field attribute="#fdbckcomment" label="Feedback Comment" required="true">
-            <renderer type="limited" params="limit=12;editable=true"  />
+            <renderer type="limited" params="limit=12;editable=true; width=12%"  />
           </field>
           <field attribute="#lognote" label="Feedback Comment" required="true">
-            <renderer type="yn" />
+            <renderer type="yn" params="width=12%" />
           </field>
           <field attribute="#close" label="Close" required="true">
-            <renderer type="checkbox" />
+            <renderer type="checkbox" params="width=10%"/>
           </field>
           
          
