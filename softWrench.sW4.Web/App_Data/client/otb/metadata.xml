@@ -731,7 +731,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="#alreadyused">
             <renderer type="icon" params="expression={'true':'fa-warning','false':''} "/>
           </field>
-          
+
           <properties>
             <property key="list.selectionstyle" value="multiple"/>
             <property key="list.disablepagination" value="true"/>
@@ -779,11 +779,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="checkbox" params="width=10%"/>
           </field>
 
-        <properties>
+          <properties>
             <property key="list.click.service" value="wobatchService.clickeditbatch"/>
             <property key="list.disablepagination" value="true"/>
             <property key="list.disablefilter" value="true"/>
             <property key="list.disabledetails" value="true"/>
+            <property key="list.sortmode" value="none"/>
           </properties>
         </schema>
 

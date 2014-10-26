@@ -59,6 +59,12 @@
         /// If true, all the filters will be disabled
         /// </summary>
         public const string DisableFilter = "list.disablefilter";
+        /// <summary>
+        /// 1) server --> the default if not declared. Sorting will be performed on server side
+        /// 2) client --> the sort will be done on the client side, just on current page
+        /// 3) none --> not allowed
+        /// </summary>
+        public const string DisableSort = "list.sortmode";
 
         /// <summary>
         /// If true, we will disable the detail selection of the grid

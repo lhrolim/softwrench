@@ -349,6 +349,10 @@ app.directive('crudList', function (contextService) {
                 return $scope.$parent.associationOptions[optionField.providerAttribute];
             }
 
+            $scope.isColumnEditable = function(column) {
+                return column.rendererParameters['editable'] == "true";
+            }
+
             $scope.shouldShowHeaderLabel = function (column) {
                 return (column.type == "ApplicationFieldDefinition" || column.type == "OptionField") && column.rendererType != "color" && column.rendererType != "icon";
             }
@@ -364,7 +368,7 @@ app.directive('crudList', function (contextService) {
 
 
             $scope.sort = function (column) {
-                if (!$scope.shouldShowFilter(column)) {
+                if (!$scope.shouldShowHeaderLabel(column) || "none" == $scope.schema.properties["list.sortmode"]) {
                     return;
                 }
                 var columnName = column.attribute;
