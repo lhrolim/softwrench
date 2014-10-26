@@ -8,8 +8,12 @@ using System.Collections.Generic;
 namespace softWrench.sW4.Data {
     public class DataMap : DataMapDefinition {
 
+        public static DataMap BlankInstance(String application) {
+            return new DataMap(application, new Dictionary<string, object>(), null, true);
+        }
 
-        public DataMap([NotNull] string application, [NotNull] IDictionary<string, object> fields, Type mappingType, bool rowstampsHandled = false)
+
+        public DataMap([NotNull] string application, [NotNull] IDictionary<string, object> fields, Type mappingType = null, bool rowstampsHandled = false)
             : base(application, fields) {
             //TODO: apply mapping type properly
             if (!rowstampsHandled) {

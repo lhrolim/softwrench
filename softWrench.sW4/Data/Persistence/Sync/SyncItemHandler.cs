@@ -65,12 +65,12 @@ namespace softWrench.sW4.Data.Persistence.Sync {
             return synchronizationData;
         }
 
-        private IList<object> DeletedRecordsId(Rowstamps rowstamps, EntityMetadata entityMetadata) {
+        private List<Dictionary<string, string>> DeletedRecordsId(Rowstamps rowstamps, EntityMetadata entityMetadata) {
             if (rowstamps.NotBound() || rowstamps.BothLimits()) {
-                return new List<object>();
+                return new List<Dictionary<string, string>>();
             }
             var deletedRecordsIdQuery = RowStampUtil.DeletedRecordsIdQuery(entityMetadata);
-            IList<object> deletedRecordsId = new List<object>();
+            var deletedRecordsId = new List<Dictionary<string, string>>();
             if (deletedRecordsIdQuery != null) {
                 deletedRecordsId = _dao.FindByNativeQuery(deletedRecordsIdQuery, rowstamps.Lowerlimit);
             }

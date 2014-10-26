@@ -11,16 +11,16 @@ namespace softWrench.sW4.Data.Offline {
         private readonly ICollection<DataMap> _dataMaps;
         private readonly string _upperLimitRowstamp;
         private readonly string _lowerLimitRowstamp;
-        public IList<object> DeletedRecordIds { get; set; }
+        public List<Dictionary<string, string>> DeletedRecordIds { get; set; }
 
 
-        public SynchronizationApplicationData(ApplicationMetadata metadata, ICollection<DataMap> dataMaps, ICollection<EntityAssociation> unresolvedAssociations, [NotNull]Rowstamps rowstamps, IList<object> deletedRecords = null) {
+        public SynchronizationApplicationData(ApplicationMetadata metadata, ICollection<DataMap> dataMaps, ICollection<EntityAssociation> unresolvedAssociations, [NotNull]Rowstamps rowstamps, List<Dictionary<string, string>> deletedRecords = null) {
             Metadata = metadata;
             _applicationName = metadata.Name;
             _dataMaps = dataMaps;
             _upperLimitRowstamp = rowstamps.Upperlimit;
             _lowerLimitRowstamp = rowstamps.Lowerlimit;
-            DeletedRecordIds = deletedRecords ?? new List<object>();
+            DeletedRecordIds = deletedRecords ?? new  List<Dictionary<string, string>>();
         }
 
         public string UpperLimitRowstamp {

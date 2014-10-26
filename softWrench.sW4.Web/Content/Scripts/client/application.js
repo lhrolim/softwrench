@@ -265,6 +265,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         } else if (result.type == 'ApplicationListResult') {
             log.debug("Application List Result handled");
             $scope.toList(result, scope);
+            associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, null);
             fixHeaderService.FixHeader();
         } else if (result.crudSubTemplate != null) {
 

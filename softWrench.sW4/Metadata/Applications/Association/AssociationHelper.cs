@@ -10,11 +10,17 @@ namespace softWrench.sW4.Metadata.Applications.Association {
     public class AssociationHelper {
         internal const string None = "#none";
         internal const string All = "#all";
+        //all associations should be resolved except for the ones marked on the schema property
         internal const string AllButSchema = "#allbutschema";
 
         public static AssociationHelperResult BuildAssociationsToPrefetch(IAssociationPrefetcherRequest request, ApplicationSchemaDefinition schema) {
             var schemaAssociations = schema.GetProperty(ApplicationSchemaPropertiesCatalog.PreFetchAssociations);
             var requestToFetch = request.AssociationsToFetch;
+            if (request is ListOptionsPrefetchRequest) {
+                // if we´re on list schema lets simply prefetch all the associations of it
+                requestToFetch= "#all";
+            }
+
             var result = new AssociationHelperResult();
             var toFetch = new HashedSet<string>();
             var toAvoid = new HashedSet<string>();

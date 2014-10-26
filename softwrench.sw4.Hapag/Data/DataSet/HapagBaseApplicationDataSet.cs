@@ -116,20 +116,14 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         }
 
         protected Boolean IsPrinterAsset(String classtructureId) {
-            var results = MaxDAO.FindByNativeQuery(AssetConstants.PrinterClassificationPath);
-            var list = results.Cast<IEnumerable<KeyValuePair<string, object>>>()
-                .Select(r => r.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase))
-                .ToList();
+            var list = MaxDAO.FindByNativeQuery(AssetConstants.PrinterClassificationPath);
             return
                 classtructureId.EqualsAny(list.Select(r => r[AssetConstants.ClassStructureIdColumn]).Cast<string>());
 
         }
 
         protected Boolean IsStdAsset(String classtructureId) {
-            var results = MaxDAO.FindByNativeQuery(AssetConstants.StdClassificationPathParent);
-            var list = results.Cast<IEnumerable<KeyValuePair<string, object>>>()
-                .Select(r => r.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase))
-                .ToList();
+            var list = MaxDAO.FindByNativeQuery(AssetConstants.StdClassificationPathParent);
             return
                 classtructureId.EqualsAny(list.Select(r => r[AssetConstants.ClassStructureIdColumn]).Cast<string>());
 

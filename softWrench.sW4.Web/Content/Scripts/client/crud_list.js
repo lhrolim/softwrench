@@ -333,8 +333,24 @@ app.directive('crudList', function (contextService) {
 
             };
 
+            $scope.GetAssociationOptions = function (fieldMetadata) {
+                if (fieldMetadata.type == "OptionField") {
+                    return $scope.GetOptionFieldOptions(fieldMetadata);
+                }
+                $scope.$parent.associationOptions = instantiateIfUndefined($scope.$parent.associationOptions);
+                return $scope.$parent.associationOptions[fieldMetadata.associationKey];
+            }
+
+            $scope.GetOptionFieldOptions = function (optionField) {
+                if (optionField.providerAttribute == null) {
+                    return optionField.options;
+                }
+                $scope.$parent.associationOptions = instantiateIfUndefined($scope.$parent.associationOptions);
+                return $scope.$parent.associationOptions[optionField.providerAttribute];
+            }
+
             $scope.shouldShowHeaderLabel = function (column) {
-                return column.type == "ApplicationFieldDefinition" && column.rendererType != "color" && column.rendererType != "icon";
+                return (column.type == "ApplicationFieldDefinition" || column.type == "OptionField") && column.rendererType != "color" && column.rendererType != "icon";
             }
 
             $scope.shouldShowHeaderFilter = function (column) {

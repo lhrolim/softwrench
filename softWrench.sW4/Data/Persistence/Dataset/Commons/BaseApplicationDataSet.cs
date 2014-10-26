@@ -198,8 +198,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }, ctx);
 
             Task.WaitAll(tasks);
-
-            return new ApplicationListResult(totalCount, searchDto, entities, schema);
+            var listOptionsPrefetchRequest = new ListOptionsPrefetchRequest();
+            var associationResults = BuildAssociationOptions(DataMap.BlankInstance(application.Name), application, listOptionsPrefetchRequest);
+            return new ApplicationListResult(totalCount, searchDto, entities, schema,associationResults);
         }
 
 

@@ -167,6 +167,7 @@
     <Compile Include="Configuration\Services\WhereClauseFacade.cs" />
     <Compile Include="Data\API\ActionRedirectResponse.cs" />
     <Compile Include="Data\API\Association\IAssociationPrefetcherRequest.cs" />
+    <Compile Include="Data\API\Association\ListOptionsPrefetchRequest.cs" />
     <Compile Include="Data\API\AttachmentRequest.cs" />
     <Compile Include="Data\API\Composition\CompositionFetchRequest.cs" />
     <Compile Include="Data\API\Composition\CompositionFetchResult.cs" />
