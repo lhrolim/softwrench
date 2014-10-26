@@ -357,6 +357,12 @@ app.directive('crudList', function (contextService) {
                 return (column.type == "ApplicationFieldDefinition" || column.type == "OptionField") && column.rendererType != "color" && column.rendererType != "icon";
             }
 
+            $scope.handleDefaultValue = function(data,column) {
+                if (column.defaultValue != null && data[column.target] == null) {
+                    data[column.target] = column.defaultValue;
+                }
+            }
+
             $scope.shouldShowHeaderFilter = function (column) {
                 return $scope.shouldShowHeaderLabel(column) && "false" != column.rendererParameters["filterenabled"];
             }

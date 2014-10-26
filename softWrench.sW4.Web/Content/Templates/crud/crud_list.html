@@ -219,6 +219,7 @@
                                 <div ng-switch on="column.rendererType">
                                     <div ng-switch-when="combo" class="sw-combobox-container">
                                         <select class="hidden-phone form-control combobox"
+                                                ng-init="handleDefaultValue(dm.fields,column)"
                                                 ng-model="dm.fields[column.target]"
                                                 ng-options="option.value as i18NOptionField(option,column,schema)
                                                 for option in GetAssociationOptions(column)" />
