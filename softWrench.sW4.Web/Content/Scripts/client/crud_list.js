@@ -180,7 +180,6 @@ app.directive('crudList', function (contextService) {
                 return $rootScope.clientName == "hapag";
             };
 
-
             $scope.showDetail = function (rowdm, column) {
 
                 var mode = $scope.schema.properties['list.click.mode'];

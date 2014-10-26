@@ -312,11 +312,11 @@
                                     <input type="hidden" ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control" />
                                 </div>
                                 <div ng-switch-default>
-                                    <input type="text"
-                                           ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control"
-                                           data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
-                                           maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
-                                           ng-init="bindEvalExpression(fieldMetadata)" />
+                                        <input type="text"
+                                               ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control"
+                                               data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
+                                               maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
+                                               ng-init="bindEvalExpression(fieldMetadata)" />
                                 </div>
                             </div>
                         </div>
