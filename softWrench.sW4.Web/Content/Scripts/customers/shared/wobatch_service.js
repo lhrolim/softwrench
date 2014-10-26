@@ -34,6 +34,12 @@ app.factory('wobatchService', function (redirectService,restService,alertService
 
     return {
 
+        exit: function (event) {
+            alertService.confirm(null, null, function(data) {
+                redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
+            }, "Non Saved work will be lost. Are you sure you want to cancel the Batch?");
+        },
+
         newBatch: function (event) {
 
             //            var searchDTO = {};
@@ -88,6 +94,8 @@ app.factory('wobatchService', function (redirectService,restService,alertService
         clickeditbatch: function (datamap, column) {
           
         },
+
+       
 
 
 
