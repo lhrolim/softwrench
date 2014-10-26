@@ -766,15 +766,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="actfinish" label="Actual Finish" default="@now" required="true">
             <renderer type="datetime" params="editable=true;format=MM/dd/yyyy HH:mm;width=15%"/>
           </field>
-          <field attribute="#pmchange" label="PM Change" default="N">
-            <renderer type="yn" params="width=9%"/>
-          </field>
+          <optionfield attribute="#pmchange" label="PM Change" default="N">
+            <renderer type="combo" params="width=8%"/>
+            <option label="Y" value="Y"/>
+            <option label="N" value="N"/>
+          </optionfield>
           <field attribute="#fdbckcomment" label="Feedback Comment" required="true">
-            <renderer type="default" params="limit=12;editable=true; width=9%"  />
+            <renderer type="default" params="limit=12; width=9%"  />
           </field>
-          <field attribute="#lognote" label="Log Note" required="true">
-            <renderer type="yn" params="width=8%" />
-          </field>
+          <optionfield attribute="#lognote" label="Log Note" default="N" required="true">
+            <renderer type="combo" params="width=8%"/>
+            <option label="Y" value="Y"/>
+            <option label="N" value="N"/>
+          </optionfield>
           <field attribute="#close" label="Close" required="true">
             <renderer type="checkbox" params="width=10%"/>
           </field>

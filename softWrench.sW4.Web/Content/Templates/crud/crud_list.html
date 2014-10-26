@@ -172,12 +172,11 @@
                                 <ng-switch on="column.rendererType">
                                     <div ng-switch-when="color" class="statuscolumncolor"
                                          bo-style="{'background-color':statusColor(dm.fields[column.rendererParameters['column']] || 'null',null)}">
-
                                     </div>
                                     <div ng-switch-when="icon">
                                         <i class="fa" ng-class="loadIcon(dm.fields[column.attribute],column)"></i>
                                     </div>
-                                    <div ng-switch-when="datetime" >
+                                    <div ng-switch-when="datetime">
                                         <div ng-if="isColumnEditable(column)" class="input-group" data-datepicker="true">
                                             <input type="text" ng-model="dm.fields[column.attribute]"
                                                    data-date-time
@@ -200,7 +199,16 @@
 
                                     <!--<div ng-switch-default style="color: black; word-break:break-word; padding-left:8px; word-wrap: break-word;">-->
                                     <div ng-switch-default style="color: black; padding-left: 8px;">
-                                        {{getFormattedValue(dm.fields[column.attribute],column)}}
+                                        <div ng-if="isColumnEditable(column)" class="input-group" data-datepicker="true">
+                                            <input type="text"
+                                                   ng-model="dm[column.attribute]" class="hidden-phone form-control"
+                                                   data-ng-maxlength="{{column.rendererParameters['maxlength']}}"
+                                                   maxlength="{{column.rendererParameters['maxlength']}}"
+                                                   />
+                                        </div>
+                                        <div ng-if="!isColumnEditable(column)">
+                                            {{getFormattedValue(dm.fields[column.attribute],column)}}
+                                        </div>
                                     </div>
                                 </ng-switch>
 
