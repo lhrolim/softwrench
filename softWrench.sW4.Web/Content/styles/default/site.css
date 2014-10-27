@@ -219,19 +219,23 @@ input:focus, select:focus, textarea:focus {
     margin-bottom: 0;
 }
 
-    #listgrid thead tr.header-row {
-        background-color: #FFF;
-        color: #000;
+    #listgrid thead {
+        background-color: #fff;
     }
 
-        #listgrid thead tr.header-row th {
-            cursor: pointer;
+        #listgrid thead tr.header-row {
+            background-color: #fff;
+            color: #000;
         }
 
-    #listgrid thead tr.filter-row {
-        background-color: #FFF;
-        color: #000;
-    }
+            #listgrid thead tr.header-row th {
+                cursor: pointer;
+            }
+
+        #listgrid thead tr.filter-row {
+            background-color: #fff;
+            color: #000;
+        }
 
     #listgrid th, #listgrid td {
         word-break: break-all;

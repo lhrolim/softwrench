@@ -141,13 +141,13 @@
 
                 <tr ng-repeat="dm in datamap" style="cursor: pointer" listtablerendered rel="hideRow" bindonce
                     ng-style="{'cursor':cursortype()}">
-                    <td ng-if="schema.properties['list.selectionstyle'] == 'multiple'" style="text-align: center;">
+                    <td ng-show="schema.properties['list.selectionstyle'] == 'multiple'" style="text-align: center;">
                         <!--Multiselect-->
                         <!-- TODO: Move style to css -->
                         <input type="checkbox"
                                ng-model="dm.fields['_#selected']">
                     </td>
-                    <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'single'">
+                    <td ng-show="compositionlistschema.properties['list.selectionstyle'] == 'single'">
                         <!--Singleselect-->
                     </td>
 
