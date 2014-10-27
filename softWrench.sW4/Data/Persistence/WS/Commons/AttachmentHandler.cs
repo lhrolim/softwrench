@@ -59,6 +59,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (String.IsNullOrEmpty(attachmentData)) {
                 return;
             }
+            var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
+            CommonCode(maximoObj, docLink, user, attachmentData,attachmentPath);
+            HandleAttachmentDataAndPath(attachmentData, docLink, attachmentPath);
         }
 
         private void CommonCode(object maximoObj, object docLink, InMemoryUser user, string attachmentPath, string attachmentData) {
