@@ -775,9 +775,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="limit=12; width=9%"  />
           </field>
           <optionfield attribute="#lognote" label="Log Note" default="N" required="true">
-            <renderer type="combo" params="width=8%"/>
-            <option label="Y" value="Y"/>
-            <option label="N" value="N"/>
+            <renderer type="default" params="width=8%"/>
           </optionfield>
           <field attribute="#close" label="Close" required="true">
             <renderer type="checkbox" params="width=10%"/>

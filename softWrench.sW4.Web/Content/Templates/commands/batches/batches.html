@@ -4,7 +4,42 @@
             <i class="fa fa-wrench"></i>&ensp;{{selectedfilter.alias}}
         </button>
     </div>
+
+
+    <!--to be shown as a modal only-->
+    <div id='feedbackcommentform' class="form-horizontal" style="display: none">
+        <div class="form-group">
+            <div class="col-md-12">
+                <textarea name="feedbackcomment" id="feedbackcommentname" rows="4"
+                          class="form-control"
+                          maxlength="1000" />
+            </div>
+        </div>
+    </div>
+    <div id='lognoteform' class="form-horizontal" style="display: none">
+        <div class="form-group">
+            <label class='control-label col-md-4'>Summary</label>
+            <div class="col-md-8">
+                <input type="text" id='summary'
+                        class="form-control"
+                        maxlength="100" />
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <label class='control-label col-md-4'>Details</label>
+            <div class="col-md-8">
+                <textarea id='details' rows='4'
+                          class="form-control"
+                          maxlength="2000" />
+            </div>
+
+        </div>
+    </div>
+
 </span>
+
 
 
 

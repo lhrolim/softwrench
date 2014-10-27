@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('wobatchService', function (redirectService,restService,alertService) {
+app.factory('wobatchService', function (redirectService, restService, alertService) {
 
     function doSave(ids) {
         if (ids.length == 0) {
@@ -92,23 +92,73 @@ app.factory('wobatchService', function (redirectService,restService,alertService
         },
 
         clickeditbatch: function (datamap, column) {
-            if (column['attribute'] == 'description') {
-                bootbox.dialog({
-                    message: datamap['description'],
-                    title: column['label'],
-                    buttons: {                        
-                        main: {
-                            label: 'OK',
-                            className: "btn-primary",
-                            callback: function (result) {
-                                return null;
-                            }
+            var message = '';
+            var buttons = {};
+            var cancelButton = {
+                label: 'Cancel',
+                className: "btn btn-default",
+                callback: function () {
+                    return null;
+                }
+            };
+            var mainButton = {
+                label: 'OK',
+                className: "btn-primary"                
+            };
+
+            switch (column['attribute']) {
+                case 'description': 
+                    message = datamap['description'];
+                    mainButton.callback = function (result) {
+                        return null;
+                    };
+                    buttons = {
+                        main: mainButton
+                    };
+                    break;
+                case '#fdbckcomment':
+                    var message = $("#feedbackcommentform").prop('outerHTML');
+                    //remove display:none
+                    message = message.replace('none', '');
+                    //change id of the filter so that it becomes reacheable via jquery
+                    message = message.replace('feedbackcommentname', 'feedbackcommentname2');
+                    mainButton.callback = function (result) {
+                        if (result) {
+                            datamap['#fdbckcomment'] = $('#feedbackcommentname2').val();
                         }
-                    },
-                    className: "smallmodal"
-                });
+                    };
+                    buttons = {
+                        cancel: cancelButton,
+                        main: mainButton
+                    };
+                    break;
+                case '#lognote':
+                    var message = $("#lognoteform").prop('outerHTML');
+                    //remove display:none
+                    message = message.replace('none', '');
+                    //change id of the filter so that it becomes reacheable via jquery
+                    message = message.replace('summary', 'summary2');
+                    message = message.replace('details', 'details2');
+                    mainButton.callback = function (result) {
+                        if (result) {
+                            datamap['#lognote'] = $('#summary2').val();
+                        }
+                    };
+                    buttons = {
+                        cancel: cancelButton,
+                        main: mainButton
+                    };
+                    break;
+                default:
+                    return;
             }
-          
+
+            bootbox.dialog({
+                message: message,
+                title: column['label'],
+                buttons: buttons,
+                className: "smallmodal"
+            });
         },
 
         savebatch: function (datamap) {
