@@ -1,6 +1,6 @@
 <span ng-controller="BatchesController">
     <div class="btn-group" ng-if="command.parameters['showbutton']!='false'">
-        <button type="button" class="btn btn-sm btn-primary" ng-click="refreshGrid()">
+        <button type="button" class="btn btn-default btn-sm hidden-xs" ng-click="manageBatches()" rel="tooltip" data-original-title="Manage workorder batches" data-container="body">
             <i class="fa fa-wrench"></i>&ensp;{{selectedfilter.alias}}
         </button>
     </div>

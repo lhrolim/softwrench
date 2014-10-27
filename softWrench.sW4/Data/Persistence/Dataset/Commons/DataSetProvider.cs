@@ -39,13 +39,18 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var storageToUse = isSWDBApplication ? _swdbDataSets : _maximoDataSets;
 
             //first we try a perfect match: app + client + schema
-            var key = new DataSetKey(applicationName.ToLower(), ApplicationConfiguration.ClientName, schemaId);
+            var clientName = ApplicationConfiguration.ClientName;
+            var key = new DataSetKey(applicationName.ToLower(), clientName, schemaId);
             if (!storageToUse.ContainsKey(key)) {
                 //second just app + schema
                 key = new DataSetKey(applicationName.ToLower(), null,schemaId);
                 if (!storageToUse.ContainsKey(key)){
-                    //last just app
-                    key = new DataSetKey(applicationName.ToLower(), null, null);
+                    //app + client
+                    key = new DataSetKey(applicationName.ToLower(), clientName, null);
+                    if (!storageToUse.ContainsKey(key)) {
+                        //last just app
+                        key = new DataSetKey(applicationName.ToLower(), null, null);
+                    }
                 }
             }
             //if not found return the default
