@@ -779,7 +779,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="limit=14; width=15%"  />
           </field>
           <field attribute="#lognote" label="Log Note">
-            <renderer type="default" params="limit=14; width=15%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
           <field attribute="#closed" label="Close" required="true">
             <renderer type="checkbox" params="width=6%"/>
