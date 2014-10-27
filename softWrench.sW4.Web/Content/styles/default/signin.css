@@ -5,7 +5,7 @@
 .page-signin {
     padding-top: 20px;
     padding-bottom: 20px;
-    background: #122c51 url(../../Images/signin.jpg) no-repeat center top fixed;
+    background: #0780c9 url(../../Images/signin.jpg) no-repeat center top fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -16,7 +16,7 @@
         max-width: 800px;
         padding: 40px 15px;
         margin: 0 auto;
-        background-color: rgba(1, 62, 91, 0.43);
+        background-color: rgba(1, 62, 91, 0.2);
         box-shadow: 0 0 30px 5px rgba(0, 0, 0, 0.6);
     }
 
@@ -36,26 +36,30 @@
                 background-color: rgba(255, 255, 255, 0.4);
             }
 
+        .page-signin .form-signin .user-links {
+            color: #fff;
+            margin-bottom: 30px;
+        }
+
         .page-signin .form-signin a {
             color: #fff;
-            font-size: 11px;
         }
 
             .page-signin .form-signin a:hover {
                 color: #fff;
             }
 
-        .page-signin .form-signin .links {
-            margin-top: 20px;
-        }
-
         .page-signin .form-signin .logo {
             margin-bottom: 40px;
             padding: 0 20px;
-             background-repeat: no-repeat;
+        }
+   
+        .page-signin .form-signin .cts-name {
+            margin-top: 60px;
+            padding: 0 20px;
         }
 
-        .page-signin .form-signin img.logo {
+        .page-signin .form-signin img.logo, .page-signin .form-signin img.cts-name {
             max-width: 100%;
             height: auto;
             width: auto;
@@ -65,7 +69,7 @@
         .page-signin .form-signin .text-danger {
             padding: 10px 20px;
         }
-        
+
         .page-signin .form-signin .alert-warning, .page-signin .form-signin .text-danger {
             background: rgba(255, 0, 0, 0.75);
             color: #fff;
@@ -80,7 +84,7 @@
             border-left: 5px solid #f00;
             border-radius: 0;
         }
-        /*SM - 06/28 - ADD - End update error message display*/
+/*SM - 06/28 - ADD - End update error message display*/
 
 @media all and (min-width: 768px) {
     .page-signin {
@@ -92,8 +96,8 @@
             padding: 0;
         }
 
-        .page-signin .links {
-            margin-top: -5px;
+                .page-signin .form-signin .user-links {
+            margin-bottom: 0;
         }
 }
 
