@@ -60,7 +60,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 return;
             }
             var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
-            CommonCode(maximoObj, docLink, user, attachmentData,attachmentPath);
+            CommonCode(maximoObj, docLink, user, attachmentPath, attachmentData);
             HandleAttachmentDataAndPath(attachmentData, docLink, attachmentPath);
         }
 
