@@ -92,6 +92,22 @@ app.factory('wobatchService', function (redirectService,restService,alertService
         },
 
         clickeditbatch: function (datamap, column) {
+            if (column['attribute'] = 'description') {
+                bootbox.dialog({
+                    message: datamap['description'],
+                    title: column['label'],
+                    buttons: {                        
+                        main: {
+                            label: 'OK',
+                            className: "btn-primary",
+                            callback: function (result) {
+                                return null;
+                            }
+                        }
+                    },
+                    className: "smallmodal"
+                });
+            }
           
         },
 
