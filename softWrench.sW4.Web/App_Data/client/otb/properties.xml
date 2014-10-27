@@ -10,7 +10,7 @@
   <property key="swdb_provider" value="System.Data.SQL"/>
   <property key="maxAttachmentSize" value="10"/> <!--in MB-->
   <property key="maxScreenshotSize" value="5"/> <!-- in MB-->
-  <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf"/>
+  <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
   <property key="defaultOrgId" value="EAGLENA"/>
   <property key="defaultSiteId" value="BEDFORD"/>
   <property key="sourcemapping" value="maximo7.5"/>

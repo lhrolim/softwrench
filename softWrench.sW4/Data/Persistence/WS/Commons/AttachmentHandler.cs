@@ -113,7 +113,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         }
 
         protected virtual int GetMaximoLength() {
-            return 20;
+            return 100;
         }
 
 
