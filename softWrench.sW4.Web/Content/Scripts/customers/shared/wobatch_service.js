@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('wobatchService', function (redirectService,$rootScope, restService, alertService, validationService) {
+app.factory('wobatchService', function (redirectService, $rootScope, restService, alertService, validationService) {
 
     function doSave(ids) {
         if (ids.length == 0) {
@@ -13,24 +13,57 @@ app.factory('wobatchService', function (redirectService,$rootScope, restService,
             return;
         }
 
-        var parameters = {
-            application: "workorder",
-            schema: "list",
-            alias: "teste"
-        }
-        var json = {};
-        json.ids = ids.join();
-        restService.invokePost("Batch", "Create", parameters, json, function (data) {
-            alertService.success("Batch successfully created", true);
-            var batchId = data.resultObject.id;
-            var searchDTO = {
-                searchParams: "id",
-                searchValues: batchId
+        saveOrUpdateAliasCode(function (alias) {
+            var parameters = {
+                application: "workorder",
+                schema: "list",
+                alias: alias
             }
-            redirectService.goToApplication("workorder", "editbatch", { searchDTO: searchDTO }, null);
-        }, null);
+            var json = {};
+            json.ids = ids.join();
+            restService.invokePost("Batch", "Create", parameters, json, function (data) {
+                alertService.success("Batch successfully created", true);
+                var batchId = data.resultObject.id;
+                var searchDTO = {
+                    searchParams: "id",
+                    searchValues: batchId
+                }
+                redirectService.goToApplication("workorder", "editbatch", { searchDTO: searchDTO }, null);
+            }, null);
+        });
     }
 
+
+    function saveOrUpdateAliasCode(cbckFn) {
+        var saveFormSt = $("#savebatchesform").prop('outerHTML');
+        //remove display:none
+        saveFormSt = saveFormSt.replace('none', '');
+        //change id of the filter sdao that it becomes reacheable via jquery
+        saveFormSt = saveFormSt.replace('batchalias', 'batchalias2');
+        bootbox.dialog({
+            message: saveFormSt,
+            title: "Save Batch",
+            buttons: {
+                cancel: {
+                    label: 'Cancel',
+                    className: "btn btn-default",
+                    callback: function () {
+                        return null;
+                    }
+                },
+                main: {
+                    label: 'Save',
+                    className: "btn-primary",
+                    callback: function () {
+                        var alias = $('#batchalias2').val();
+                        cbckFn(alias);
+                    }
+
+                }
+            },
+            className: "smallmodal"
+        });
+    }
 
     return {
 
@@ -62,7 +95,6 @@ app.factory('wobatchService', function (redirectService,$rootScope, restService,
         },
 
         generatebatch: function (datamap) {
-            //TODO: Alias
             var ids = [];
             var alreadyused = [];
             $.each(datamap, function (key, dm) {
@@ -82,9 +114,6 @@ app.factory('wobatchService', function (redirectService,$rootScope, restService,
                 return;
             }
             doSave(ids);
-
-
-            //            redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
         },
 
         cancelBatch: function (event) {
@@ -103,15 +132,15 @@ app.factory('wobatchService', function (redirectService,$rootScope, restService,
                 }
             };
             var mainButton = {
-                            label: 'OK',
-                className: "btn-primary"                
+                label: 'OK',
+                className: "btn-primary"
             };
 
             switch (column['attribute']) {
-                case 'description': 
+                case 'description':
                     message = datamap['description'];
                     mainButton.callback = function (result) {
-                                return null;
+                        return null;
                     };
                     buttons = {
                         main: mainButton
@@ -158,8 +187,8 @@ app.factory('wobatchService', function (redirectService,$rootScope, restService,
                     } else {
                         message = message.replace('#lognotesummary', '');
                         message = message.replace('#lognotedetails', '');
-                    }                  
-                    
+                    }
+
                     mainButton.callback = function (result) {
                         if (result) {
                             var worklog = {};
@@ -201,7 +230,7 @@ app.factory('wobatchService', function (redirectService,$rootScope, restService,
                     return;
                 default:
                     return;
-                        }
+            }
 
             bootbox.dialog({
                 message: message,
@@ -212,21 +241,25 @@ app.factory('wobatchService', function (redirectService,$rootScope, restService,
         },
 
         savebatch: function (datamap) {
+            //            saveOrUpdateAliasCode(function (alias) {
+
             //workaround: the batchid is inserted into every row
             var batchId = datamap[0].fields["#batchId"];
+            var batchAlias = datamap[0].fields["#batchalias"];
             var parameters = {
                 application: "workorder",
                 schema: "list",
-                batchId: batchId
+                batchId: batchId,
             }
             var json = {};
             json.datamap = datamap;
             restService.invokePost("Batch", "Update", parameters, json, function (data) {
-                alertService.success("Batch successfully saved", true);
+                alertService.success("Batch {0} successfully saved".format(batchAlias), true);
             });
+            //            });
         },
 
-       
+
 
 
 
