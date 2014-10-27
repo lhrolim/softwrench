@@ -200,7 +200,7 @@ app.directive('crudList', function (contextService) {
                 }                
 
                 if (fullServiceName != null) {
-                    commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column,$scope.schema);
+                    commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column,$scope.schema, $scope);
                     return;
                 };
 

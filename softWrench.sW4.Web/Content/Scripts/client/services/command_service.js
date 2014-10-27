@@ -80,7 +80,7 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
 
 
         //TODO: make it generic
-        executeClickCustomCommand: function (fullServiceName, rowdm, column,schema) {
+        executeClickCustomCommand: function (fullServiceName, rowdm, column,schema, scope) {
             var idx = fullServiceName.indexOf(".");
             var serviceName = fullServiceName.substring(0, idx);
             var methodName = fullServiceName.substring(idx + 1);
@@ -97,6 +97,7 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
             args.push(rowdm);
             args.push(column);
             args.push(schema);
+            args.push(scope);
 
             method.apply(this, args);
             return;

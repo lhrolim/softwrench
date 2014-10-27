@@ -756,33 +756,33 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </commandbars>
 
           <field attribute="wonum" label="Work Order #" >
-            <renderer type="default" params="filterenabled=false; width=12%" />
+            <renderer type="default" params="filterenabled=false; width=10%" />
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="limit=14;width=20%"  />
+            <renderer type="default" params="limit=14;width=15%"  />
           </field>
           <field attribute="#UNID" label="UNID">
-            <renderer type="default" params="width=12%"  />
+            <renderer type="default" params="width=10%"  />
           </field>
           <optionfield attribute="#ReconCd" label="RC" required="true" providerattribute="reconciliationCodes">
-            <renderer type="COMBO" params="width=12%"  />
+            <renderer type="COMBO" params="width=8%"  />
           </optionfield>
           <field attribute="actfinish" label="Actual Finish" default="@now" required="true">
             <renderer type="datetime" params="editable=true;format=MM/dd/yyyy;width=15%"/>
           </field>
           <optionfield attribute="#pmchange" label="PM Change" default="N">
-            <renderer type="combo" params="width=8%"/>
+            <renderer type="combo" params="width=6%"/>
             <option label="Y" value="Y"/>
             <option label="N" value="N"/>
           </optionfield>
           <field attribute="#fdbckcomment" label="Feedback Comment">
-            <renderer type="default" params="limit=12; width=9%"  />
+            <renderer type="default" params="limit=14; width=15%"  />
           </field>
-          <field attribute="#lognote" label="Log Note" default="N">
-            <renderer type="default" params="width=8%"/>
+          <field attribute="#lognote" label="Log Note">
+            <renderer type="default" params="limit=14; width=15%"/>
           </field>
           <field attribute="#closed" label="Close" required="true">
-            <renderer type="checkbox" params="width=10%"/>
+            <renderer type="checkbox" params="width=6%"/>
           </field>
 
           <properties>
