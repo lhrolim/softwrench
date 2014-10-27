@@ -714,25 +714,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </commandbars>
 
           <field attribute="wonum" label="WO No" >
-            <renderer type="default" params="filterenabled=false; width=15%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default"  params="width=38%"/>
+            <renderer type="default"  params="width=39%"/>
           </field>
-          <field attribute="status" label="Status" >
-            <renderer type="default" params="filterenabled=false; width=15%" />
-          </field>
+<!--          <field attribute="status" label="Status" >-->
+<!--            <renderer type="default" params="filterenabled=false; width=15%" />-->
+<!--          </field>-->
+          <optionfield attribute="crewid" label="Crews" providerattribute="crews">
+            <renderer type="combo" params="filteronly=true;width=16%;"/>
+          </optionfield>
           <field attribute="schedstart" label="Schedule Start" >
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm; width=15%"/>
           </field>
           <field attribute="schedfinish" label="Schedule Finish" >
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm; width=15%"/>
           </field>
-          <optionfield attribute="crewid" label="Crews" providerattribute="crews">
-            <renderer type="combo" params="filteronly=true; width=12%;"/>
-          </optionfield>
-          <field attribute="#alreadyused">
-            <renderer type="icon" params="expression={'true':'fa-warning','false':''} "/>
+        
+          <field attribute="#alreadyused" tooltip="This workorder is already used on another batch and cannot be included in the batch">
+            <renderer type="icon" params="expression={'true':'fa-warning','false':''};"/>
           </field>
 
           <properties>

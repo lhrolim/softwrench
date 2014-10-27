@@ -114,6 +114,9 @@ app.directive('crudList', function (contextService) {
             $scope.$on('sw_gridrefreshed', function(event, data, printmode) {
                 $scope.selectAllChecked = false;
             });
+            $scope.refreshGrid = function() {
+                $scope.selectPage($scope.paginationData.pageNumber, $scope.paginationData.pageSize, false);
+            };
 
             $scope.$on('sw_refreshgrid', function (event, searchData, extraparameters) {
                 /// <summary>
@@ -227,6 +230,8 @@ app.directive('crudList', function (contextService) {
                 }
                 $scope.$emit("sw_renderview", $scope.schema.applicationName, listSchema, 'none', $scope.title, parameters);
             };
+
+            
 
             $scope.selectPage = function (pageNumber, pageSize, printMode) {
                 if (pageNumber === undefined || pageNumber <= 0 || pageNumber > $scope.paginationData.pageCount) {
