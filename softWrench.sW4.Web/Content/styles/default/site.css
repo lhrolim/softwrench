@@ -20,6 +20,12 @@ input:focus, select:focus, textarea:focus {
 /*SM - 10/01 - SWWEB-507*/
 .smallmodal {
     width: 300px;
+} 
+.mediummodal {
+    width: 500px;
+} 
+.smallmodal, 
+.mediummodal {
     top: 20%;
     margin: 0 auto;
 }
@@ -33,6 +39,12 @@ input:focus, select:focus, textarea:focus {
 @media all and (min-width: 480px) {
     .smallmodal {
         width: 360px;
+    }
+    .smallmodal {
+        width: 560px;
+    }
+    .smallmodal, 
+    .mediummodal {        
         top: 30%;
     }
 }

@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('wobatchService', function (redirectService, restService, alertService, validationService) {
+app.factory('wobatchService', function (redirectService,$rootScope, restService, alertService, validationService) {
 
     function doSave(ids) {
         if (ids.length == 0) {
@@ -91,34 +91,7 @@ app.factory('wobatchService', function (redirectService, restService, alertServi
             redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
         },
 
-        clickeditbatch: function (datamap, column,schema) {
-
-            if (column["attribute"] == "#closed") {
-                var closedValue = datamap["#closed"];
-                if (closedValue) {
-                    if (typeof closedValue == 'string') {
-                        datamap["#closed"] = closedValue.toLowerCase();
-                    }
-                    //lets validate required fields first
-                    var valArray = validationService.getInvalidLabels(schema.displayables, datamap);
-                    if (datamap["#ReconCd"] == "00" && !datamap["#fdbckcomment"]) {
-                        valArray.push("Feedback Comment");
-                    }
-
-                    if (valArray.length != 0) {
-                        var message = "";
-                        for (var i = 0; i < valArray.length; i++) {
-                            var item = valArray[i];
-                            message += "<li>{0}</li>".format(item);
-                        }
-
-                        alertService.alert("This workorder cannot be closed because there are required fields not filled: <br></br><ul>{0}</ul>".format(message));
-                        datamap["#closed"] = false;
-                        return;
-                    }
-
-                }
-            }
+        clickeditbatch: function (datamap, column, schema) {
 
             var message = '';
             var buttons = {};
@@ -130,15 +103,15 @@ app.factory('wobatchService', function (redirectService, restService, alertServi
                 }
             };
             var mainButton = {
-                label: 'OK',
-                className: "btn-primary"
+                            label: 'OK',
+                className: "btn-primary"                
             };
 
             switch (column['attribute']) {
-                case 'description':
+                case 'description': 
                     message = datamap['description'];
                     mainButton.callback = function (result) {
-                        return null;
+                                return null;
                     };
                     buttons = {
                         main: mainButton
@@ -146,13 +119,19 @@ app.factory('wobatchService', function (redirectService, restService, alertServi
                     break;
                 case '#fdbckcomment':
                     var message = $("#feedbackcommentform").prop('outerHTML');
+
                     //remove display:none
                     message = message.replace('none', '');
+
                     //change id of the filter so that it becomes reacheable via jquery
                     message = message.replace('feedbackcommentname', 'feedbackcommentname2');
+
+                    //set the initial value
+                    message = message.replace('#feedbackcomment', nullOrEmpty(datamap['#fdbckcomment']) ? '' : datamap['#fdbckcomment']);
                     mainButton.callback = function (result) {
                         if (result) {
                             datamap['#fdbckcomment'] = $('#feedbackcommentname2').val();
+                            $rootScope.$digest();
                         }
                     };
                     buttons = {
@@ -162,14 +141,35 @@ app.factory('wobatchService', function (redirectService, restService, alertServi
                     break;
                 case '#lognote':
                     var message = $("#lognoteform").prop('outerHTML');
+
                     //remove display:none
                     message = message.replace('none', '');
+
                     //change id of the filter so that it becomes reacheable via jquery
                     message = message.replace('summary', 'summary2');
                     message = message.replace('details', 'details2');
+
+                    //set the initial value
+                    var worklogs = datamap['worklog_'];
+                    if (worklogs != null && worklogs.length > 0) {
+                        var worklog = worklogs[0]; // supports only 1 worklog entry
+                        message = message.replace('#lognotesummary', nullOrEmpty(worklog['description']) ? '' : worklog['description']);
+                        message = message.replace('#lognotedetails', nullOrEmpty(worklog['longdescription_.ldtext']) ? '' : worklog['longdescription_.ldtext']);
+                    } else {
+                        message = message.replace('#lognotesummary', '');
+                        message = message.replace('#lognotedetails', '');
+                    }                  
+                    
                     mainButton.callback = function (result) {
                         if (result) {
-                            datamap['#lognote'] = $('#summary2').val();
+                            var worklog = {};
+                            worklog['description'] = $('#summary2').val();
+                            worklog['longdescription_.ldtext'] = $('#details2').val();
+
+                            datamap['worklog_'] = [];
+                            datamap['worklog_'].push(worklog);
+                            datamap['#lognote'] = worklog['description'];
+                            $rootScope.$digest();
                         }
                     };
                     buttons = {
@@ -177,15 +177,37 @@ app.factory('wobatchService', function (redirectService, restService, alertServi
                         main: mainButton
                     };
                     break;
+                case "#closed":
+                    if (datamap["#closed"]) {
+                        //lets validate required fields first
+                        var valArray = validationService.getInvalidLabels(schema.displayables, datamap);
+                        if (datamap["#ReconCd"] == "00" && !datamap["#fdbckcomment"]) {
+                            valArray.push("Feedback Comment");
+                        }
+
+                        if (valArray.length != 0) {
+                            var message = "";
+                            for (var i = 0; i < valArray.length; i++) {
+                                var item = valArray[i];
+                                message += "<li>{0}</li>".format(item);
+                            }
+
+                            alertService.alert("This workorder cannot be closed because there are required fields not filled: <br></br><ul>{0}</ul>".format(message));
+                            datamap["#closed"] = false;
+                            $rootScope.$digest();
+                            return;
+                        }
+                    }
+                    return;
                 default:
                     return;
-            }
+                        }
 
             bootbox.dialog({
                 message: message,
                 title: column['label'],
                 buttons: buttons,
-                className: "smallmodal"
+                className: "mediummodal"
             });
         },
 
@@ -204,7 +226,7 @@ app.factory('wobatchService', function (redirectService, restService, alertServi
             });
         },
 
-
+       
 
 
 
