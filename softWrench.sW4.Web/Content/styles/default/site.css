@@ -255,6 +255,10 @@ input:focus, select:focus, textarea:focus {
         word-break: break-word;
     }
 
+        #listgrid td .input-group, #listgrid td .input-group .glyphicon {
+            position: initial;
+        }
+
 .affix-thead {
     position: fixed;
 }
