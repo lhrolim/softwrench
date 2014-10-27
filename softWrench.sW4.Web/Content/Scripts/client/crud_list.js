@@ -200,7 +200,7 @@ app.directive('crudList', function (contextService) {
                 }                
 
                 if (fullServiceName != null) {
-                    commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column);
+                    commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column,$scope.schema);
                     return;
                 };
 
@@ -362,9 +362,11 @@ app.directive('crudList', function (contextService) {
                 return (column.type == "ApplicationFieldDefinition" || column.type == "OptionField") && column.rendererType != "color" && column.rendererType != "icon";
             }
 
-            $scope.handleDefaultValue = function(data,column) {
-                if (column.defaultValue != null && data[column.target] == null) {
-                    data[column.target] = column.defaultValue;
+            $scope.handleDefaultValue = function(data, column) {
+                var key = column.target ? column.target : column.attribute;
+
+                if (column.defaultValue != null && data[key]== null) {
+                    data[key]= column.defaultValue;
                 }
             }
 

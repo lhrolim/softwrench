@@ -53,6 +53,11 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             foreach (var item in originalList) {
                 item.SetAttribute("#batchId", batchId);
                 dict.Add(item.GetAttribute("wonum").ToString(), item);
+                if (item.GetAttribute("actfinish") == null) {
+                    //this is the default value... 
+                    //TODO do this via metadata
+                    item.SetAttribute("actfinish", DateTime.Now.ToShortDateString());
+                }
             }
             if (dataMapJsonAsString == null) {
                 //first time the batch is created without any time being saved
@@ -90,7 +95,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             return rows.Select(row => new AssociationOption(row["value"], row["description"])).ToList();
         }
 
-       
+
 
 
 

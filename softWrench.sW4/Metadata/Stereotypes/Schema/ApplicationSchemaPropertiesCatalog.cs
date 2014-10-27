@@ -5,6 +5,7 @@
         /// and have 2 parameters:
         /// 1) datamap of the row 
         /// 2) fieldmetadata of the clicked column
+        /// 3) the schema of the grid
         /// </summary>
         public const string ListClickService = "list.click.service";
 

@@ -178,17 +178,6 @@
                         ng-style="{'min-width': column.rendererParameters['minwidth'],
                                 'max-width': column.rendererParameters['maxwidth'],
                                 'width': column.rendererParameters['width']}">
-                        <ng-switch on="column.rendererType">
-                            <div ng-switch-when="checkbox">
-                                <input type="checkbox"
-                                       class="check"
-                                       name="column.attribute"
-                                       value="{{option.value}}"
-                                       ng-click="toogleCheckboxSelection(option,column.associationKey,dm)"
-                                       ng-model="dm.fields['checked']"
-                                       ng-init="dm.fields['checked']=false" />
-                            </div>
-                        </ng-switch>
                         <ng-switch on="column.type">
                             <div ng-switch-when="ApplicationFieldDefinition">
 
@@ -196,6 +185,13 @@
                                     <div ng-switch-when="color" class="statuscolumncolor"
                                          bo-style="{'background-color':statusColor(dm.fields[column.rendererParameters['column']] || 'null',null)}">
                                     </div>
+                                    <input ng-switch-when="checkbox"
+                                           type="checkbox"
+                                           class="check"
+                                           name="column.attribute"
+                                           value="{{option.value}}"
+                                           ng-click="toogleCheckboxSelection(option,column.associationKey,dm)"
+                                           ng-model="dm.fields[column.attribute]" />
                                     <div ng-switch-when="icon">
                                         <i class="fa" ng-class="loadIcon(dm.fields[column.attribute],column)"
                                            rel="tooltip" data-original-title="{{column.toolTip}}"></i>
@@ -229,7 +225,7 @@
                                                    data-ng-maxlength="{{column.rendererParameters['maxlength']}}"
                                                    maxlength="{{column.rendererParameters['maxlength']}}" />
                                         </div>
-                                        <div ng-if="!isColumnEditable(column)">
+                                        <div ng-if="!isColumnEditable(column)" ng-init="handleDefaultValue(dm.fields,column)">
                                             {{getFormattedValue(dm.fields[column.attribute],column)}}
                                         </div>
                                     </div>

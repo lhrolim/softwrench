@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('wobatchService', function (redirectService,restService,alertService) {
+app.factory('wobatchService', function (redirectService, restService, alertService, validationService) {
 
     function doSave(ids) {
         if (ids.length == 0) {
@@ -14,7 +14,7 @@ app.factory('wobatchService', function (redirectService,restService,alertService
         }
 
         var parameters = {
-            application : "workorder",
+            application: "workorder",
             schema: "list",
             alias: "teste"
         }
@@ -35,7 +35,7 @@ app.factory('wobatchService', function (redirectService,restService,alertService
     return {
 
         exit: function (event) {
-            alertService.confirm(null, null, function(data) {
+            alertService.confirm(null, null, function (data) {
                 redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
             }, "Any non saved work will be lost. Are you sure you want to cancel the Batch?");
         },
@@ -55,10 +55,10 @@ app.factory('wobatchService', function (redirectService,restService,alertService
         edit: function (datamap, column) {
             var batchId = datamap['id'];
             var searchDTO = {
-                searchParams : "id", 
-                searchValues : batchId
+                searchParams: "id",
+                searchValues: batchId
             }
-            redirectService.goToApplication("workorder", "editbatch", {searchDTO:searchDTO}, null);
+            redirectService.goToApplication("workorder", "editbatch", { searchDTO: searchDTO }, null);
         },
 
         generatebatch: function (datamap) {
@@ -76,7 +76,7 @@ app.factory('wobatchService', function (redirectService,restService,alertService
                 }
             });
             if (alreadyused.length != 0) {
-                alertService.confirm(null, null, function() {
+                alertService.confirm(null, null, function () {
                     doSave(ids);
                 }, "The items {0} are already used on other batches and won´t be included. Proceed?".format(alreadyused.join()));
                 return;
@@ -91,12 +91,36 @@ app.factory('wobatchService', function (redirectService,restService,alertService
             redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
         },
 
-        clickeditbatch: function (datamap, column) {
+        clickeditbatch: function (datamap, column, schema) {
+            if (column["attribute"] == "#closed") {
+                if (datamap["#closed"]) {
+                    //lets validate required fields first
+                    var valArray = validationService.getInvalidLabels(schema.displayables, datamap);
+                    if (datamap["#ReconCd"] == "00" && !datamap["#fdbckcomment"]) {
+                        valArray.push("Feedback Comment");
+                    }
+
+                    if (valArray.length != 0) {
+                        var message = "";
+                        for (var i = 0; i < valArray.length; i++) {
+                            var item = valArray[i];
+                            message += "<li>{0}</li>".format(item);
+                        }
+
+                        alertService.alert("This workorder cannot be closed because there are required fields not filled: <br></br><ul>{0}</ul>".format(message));
+                        datamap["#closed"] = false;
+                        return;
+                    }
+
+                }
+            }
+
+
             if (column['attribute'] == 'description') {
                 bootbox.dialog({
                     message: datamap['description'],
                     title: column['label'],
-                    buttons: {                        
+                    buttons: {
                         main: {
                             label: 'OK',
                             className: "btn-primary",
@@ -108,16 +132,16 @@ app.factory('wobatchService', function (redirectService,restService,alertService
                     className: "smallmodal"
                 });
             }
-          
+
         },
 
         savebatch: function (datamap) {
             //workaround: the batchid is inserted into every row
             var batchId = datamap[0].fields["#batchId"];
             var parameters = {
-                application : "workorder",
+                application: "workorder",
                 schema: "list",
-                batchId:batchId
+                batchId: batchId
             }
             var json = {};
             json.datamap = datamap;
@@ -126,7 +150,7 @@ app.factory('wobatchService', function (redirectService,restService,alertService
             });
         },
 
-       
+
 
 
 

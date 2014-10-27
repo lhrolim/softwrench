@@ -148,6 +148,17 @@ app.factory('fieldService', function (expressionService) {
             return result;
         },
 
+        getRequiredDisplayables: function (schema) {
+            var displayables = schema.displayables;
+            var result = [];
+            for (var i = 0; i < displayables.length; i++) {
+                if (displayables[i].required) {
+                    result.push(displayables[i]);
+                }
+            }
+            return result;
+        },
+
         getId: function (datamap, schema) {
             return datamap[schema.idFieldName];
         },
