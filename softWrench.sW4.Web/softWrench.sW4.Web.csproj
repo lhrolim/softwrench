@@ -399,9 +399,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Client\tva\menu.web.xml" />
-    <Content Include="App_Data\Client\tva\metadata.xml" />
-    <Content Include="App_Data\Client\tva\properties.xml" />
     <Content Include="Content\bootstrap\css\bootstrap-multiselect.css" />
     <Content Include="Content\bootstrap\css\typeahead.js-bootstrap.css" />
     <Content Include="Content\Controller\About.html" />
@@ -769,8 +766,8 @@
     <Content Include="Content\styles\gric\signin.css" />
     <Content Include="Content\styles\gric\site.css" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
-    <Content Include="Content\styles\tva\signin.css" />
-    <Content Include="Content\styles\tva\site.css" />
+    <Content Include="Content\styles\tva\tva-signin.css" />
+    <Content Include="Content\styles\tva\tva-site.css" />
     <Content Include="Content\Templates\commands\batches\batches.html" />
     <Content Include="Content\Templates\commands\batches\batchesmenu.js" />
     <Content Include="Content\Templates\commands\grid\gridfilter.html" />
