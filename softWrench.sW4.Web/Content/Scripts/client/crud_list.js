@@ -188,13 +188,13 @@ app.directive('crudList', function (contextService) {
                 var fullServiceName = $scope.schema.properties['list.click.service'];
                 var editDisabled = $scope.schema.properties['list.disabledetails'];
 
-                if ("true" == editDisabled) {
-                    return;
-                }
-
                 if (popupmode == "report") {
                     return;
                 }
+
+                if ("true" == editDisabled && nullOrUndef(fullServiceName)) {
+                    return;
+                }                
 
                 if (fullServiceName != null) {
                     commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column);
