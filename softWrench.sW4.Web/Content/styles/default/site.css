@@ -30,7 +30,8 @@ input:focus, select:focus, textarea:focus {
     margin: 0 auto;
 }
 
-    .smallmodal .modal-dialog {
+    .smallmodal .modal-dialog,
+    .mediummodal .modal-dialog {
         overflow: hidden;
         padding: 0;
         width: 100%;
@@ -40,7 +41,7 @@ input:focus, select:focus, textarea:focus {
     .smallmodal {
         width: 360px;
     }
-    .smallmodal {
+    .mediummodal {
         width: 560px;
     }
     .smallmodal, 
