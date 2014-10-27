@@ -5,6 +5,8 @@
 _ReSharper.*
 .*.swp
 /Auth.targets
+.DS_Store
+Thumbs.db
 
 # Build outputs
 bin
