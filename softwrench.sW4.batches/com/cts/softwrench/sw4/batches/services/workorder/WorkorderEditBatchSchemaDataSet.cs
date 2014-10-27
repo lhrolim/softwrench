@@ -59,11 +59,10 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
                 return;
             }
             var jsonOb = JArray.Parse(dataMapJsonAsString);
-            foreach (var row in jsonOb)
-            {
+            foreach (var row in jsonOb) {
                 var r = (JObject)row;
                 var fields = r.Property("fields");
-//                var fields = children.FirstOrDefault(f => f.Name == "fields");
+                //                var fields = children.FirstOrDefault(f => f.Name == "fields");
                 if (fields == null) {
                     continue;
                 }
@@ -76,12 +75,14 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
                 CopyValue(item, ob, "#fdbckcomment");
                 CopyValue(item, ob, "#lognote");
                 CopyValue(item, ob, "#close");
-                item.SetAttribute("#batchid", batchId);
             }
         }
 
         private static void CopyValue(AttributeHolder item, JObject row, String name) {
-            item.SetAttribute(name, row.Property(name).Value.ToString());
+            var jprop = row.Property(name);
+            if (jprop != null) {
+                item.SetAttribute(name, jprop.Value.ToString());
+            }
         }
 
         public IEnumerable<IAssociationOption> GetReconciliationCodes(OptionFieldProviderParameters parameters) {

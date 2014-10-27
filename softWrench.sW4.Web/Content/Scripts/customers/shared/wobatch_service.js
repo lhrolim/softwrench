@@ -92,7 +92,7 @@ app.factory('wobatchService', function (redirectService,restService,alertService
         },
 
         clickeditbatch: function (datamap, column) {
-            if (column['attribute'] = 'description') {
+            if (column['attribute'] == 'description') {
                 bootbox.dialog({
                     message: datamap['description'],
                     title: column['label'],
