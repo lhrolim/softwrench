@@ -37,7 +37,7 @@ app.factory('wobatchService', function (redirectService,restService,alertService
         exit: function (event) {
             alertService.confirm(null, null, function(data) {
                 redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
-            }, "Non Saved work will be lost. Are you sure you want to cancel the Batch?");
+            }, "Any non saved work will be lost. Are you sure you want to cancel the Batch?");
         },
 
         newBatch: function (event) {
@@ -122,7 +122,7 @@ app.factory('wobatchService', function (redirectService,restService,alertService
             var json = {};
             json.datamap = datamap;
             restService.invokePost("Batch", "Update", parameters, json, function (data) {
-
+                alertService.success("Batch successfully saved", true);
             });
         },
 

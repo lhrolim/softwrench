@@ -62,7 +62,6 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             foreach (var row in jsonOb) {
                 var r = (JObject)row;
                 var fields = r.Property("fields");
-                //                var fields = children.FirstOrDefault(f => f.Name == "fields");
                 if (fields == null) {
                     continue;
                 }
