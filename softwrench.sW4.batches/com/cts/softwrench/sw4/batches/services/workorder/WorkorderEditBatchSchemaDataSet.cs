@@ -78,7 +78,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
                 CopyValue(item, ob, "#pmchange");
                 CopyValue(item, ob, "#fdbckcomment");
                 CopyValue(item, ob, "#lognote");
-                CopyValue(item, ob, "#close");
+                CopyValue(item, ob, "#closed");
             }
         }
 
