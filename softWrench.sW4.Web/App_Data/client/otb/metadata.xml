@@ -728,8 +728,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="schedfinish" label="Schedule Finish" >
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm; width=15%"/>
           </field>
-          <optionfield attribute="#crews" label="Crews" providerattribute="crews">
-            <renderer type="combodropdown" params="filteronly=true; width=12%;"/>
+          <optionfield attribute="crewid" label="Crews" providerattribute="crews">
+            <renderer type="combo" params="filteronly=true; width=12%;"/>
           </optionfield>
           <field attribute="#alreadyused">
             <renderer type="icon" params="expression={'true':'fa-warning','false':''} "/>

@@ -45,17 +45,13 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
         }
 
         public IEnumerable<IAssociationOption> GetCrews(OptionFieldProviderParameters parameters) {
-            var result = new List<AssociationOption>();
-            var beginDate = DateUtil.ParsePastAndFuture("14days", -1);
-            var rows = MaxDAO.FindByNativeQuery(
-                @"SELECT value,description,siteid FROM alndomain a WHERE a.domainid = 'CREWID' 
-                AND    a.siteid IN ('CT','RO','ALF','BRF','COF','CUF','GAF','JOF','JSF','KIF','PAF','SHF','WCF')
-                and exists (select NULL from workorder wo where a.siteid = wo.siteid and a.value = wo.crewid and wo.status = 'WORKING' and wo.schedfinish >= ?);", beginDate);
+            var rows = MaxDAO.FindByNativeQuery(WorkOrderBatchWhereClauseProvider.GetCrewIdQuery(true));
             if (rows == null || !rows.Any()) {
-                return result;
+                return new List<IAssociationOption>();
             }
             return rows.Select(row => new AssociationOption(row["value"], row["description"])).ToList();
         }
+
 
 
         public override string SchemaId() {
