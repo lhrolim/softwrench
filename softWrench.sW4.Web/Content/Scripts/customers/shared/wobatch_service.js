@@ -91,10 +91,14 @@ app.factory('wobatchService', function (redirectService, restService, alertServi
             redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
         },
 
-        clickeditbatch: function (datamap, column) {
+        clickeditbatch: function (datamap, column,schema) {
 
             if (column["attribute"] == "#closed") {
-                if (datamap["#closed"]) {
+                var closedValue = datamap["#closed"];
+                if (closedValue) {
+                    if (typeof closedValue == 'string') {
+                        datamap["#closed"] = closedValue.toLowerCase();
+                    }
                     //lets validate required fields first
                     var valArray = validationService.getInvalidLabels(schema.displayables, datamap);
                     if (datamap["#ReconCd"] == "00" && !datamap["#fdbckcomment"]) {
@@ -126,15 +130,15 @@ app.factory('wobatchService', function (redirectService, restService, alertServi
                 }
             };
             var mainButton = {
-                            label: 'OK',
-                className: "btn-primary"                
+                label: 'OK',
+                className: "btn-primary"
             };
 
             switch (column['attribute']) {
-                case 'description': 
+                case 'description':
                     message = datamap['description'];
                     mainButton.callback = function (result) {
-                                return null;
+                        return null;
                     };
                     buttons = {
                         main: mainButton
@@ -166,7 +170,7 @@ app.factory('wobatchService', function (redirectService, restService, alertServi
                     mainButton.callback = function (result) {
                         if (result) {
                             datamap['#lognote'] = $('#summary2').val();
-                            }
+                        }
                     };
                     buttons = {
                         cancel: cancelButton,
@@ -175,14 +179,14 @@ app.factory('wobatchService', function (redirectService, restService, alertServi
                     break;
                 default:
                     return;
-                        }
+            }
 
             bootbox.dialog({
                 message: message,
                 title: column['label'],
                 buttons: buttons,
-                    className: "smallmodal"
-                });
+                className: "smallmodal"
+            });
         },
 
         savebatch: function (datamap) {
@@ -200,7 +204,7 @@ app.factory('wobatchService', function (redirectService, restService, alertServi
             });
         },
 
-       
+
 
 
 
