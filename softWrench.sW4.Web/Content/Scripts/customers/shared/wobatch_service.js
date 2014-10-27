@@ -37,7 +37,7 @@ app.factory('wobatchService', function (redirectService,restService,alertService
         exit: function (event) {
             alertService.confirm(null, null, function(data) {
                 redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
-            }, "Non Saved work will be lost. Are you sure you want to cancel the Batch?");
+            }, "Any non saved work will be lost. Are you sure you want to cancel the Batch?");
         },
 
         newBatch: function (event) {
@@ -61,7 +61,7 @@ app.factory('wobatchService', function (redirectService,restService,alertService
             redirectService.goToApplication("workorder", "editbatch", {searchDTO:searchDTO}, null);
         },
 
-        saveBatch: function (datamap) {
+        generatebatch: function (datamap) {
             //TODO: Alias
             var ids = [];
             var alreadyused = [];
@@ -109,6 +109,21 @@ app.factory('wobatchService', function (redirectService,restService,alertService
                 });
             }
           
+        },
+
+        savebatch: function (datamap) {
+            //workaround: the batchid is inserted into every row
+            var batchId = datamap[0].fields["#batchId"];
+            var parameters = {
+                application : "workorder",
+                schema: "list",
+                batchId:batchId
+            }
+            var json = {};
+            json.datamap = datamap;
+            restService.invokePost("Batch", "Update", parameters, json, function (data) {
+                alertService.success("Batch successfully saved", true);
+            });
         },
 
        

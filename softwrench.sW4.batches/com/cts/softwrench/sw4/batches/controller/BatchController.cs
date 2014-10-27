@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
+using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Services;
@@ -36,8 +37,19 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.controller {
                 UserId = userId,
                 ItemIds = jsonIds["ids"].ToString(),
             };
-            var saved =_dao.Save(batch);
+            var saved = _dao.Save(batch);
             return new GenericResponseResult<Batch>(saved);
         }
+
+        public void Update(Int32 batchId, JObject datamap) {
+            var batch = _dao.FindByPK<Batch>(typeof(Batch), batchId);
+            if (batch == null) {
+                throw BatchException.BatchNotFound(batchId);
+            }
+            batch.DataMapJsonAsString = datamap["datamap"].ToString();
+            batch.UpdateDate = DateTime.Now;
+            _dao.Save(batch);
+        }
+
     }
 }

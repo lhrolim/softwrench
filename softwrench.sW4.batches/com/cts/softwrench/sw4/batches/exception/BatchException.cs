@@ -13,7 +13,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception {
 
         }
 
-        public static BatchException BatchNotFound(string id) {
+        public static BatchException BatchNotFound(object id) {
             return new BatchException("batch {0} not found".Fmt(id));
         }
 
