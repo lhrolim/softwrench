@@ -61,7 +61,7 @@ app.factory('wobatchService', function (redirectService,restService,alertService
             redirectService.goToApplication("workorder", "editbatch", {searchDTO:searchDTO}, null);
         },
 
-        saveBatch: function (datamap) {
+        generatebatch: function (datamap) {
             //TODO: Alias
             var ids = [];
             var alreadyused = [];
@@ -93,6 +93,21 @@ app.factory('wobatchService', function (redirectService,restService,alertService
 
         clickeditbatch: function (datamap, column) {
           
+        },
+
+        savebatch: function (datamap) {
+            //workaround: the batchid is inserted into every row
+            var batchId = datamap[0].fields["#batchId"];
+            var parameters = {
+                application : "workorder",
+                schema: "list",
+                batchId:batchId
+            }
+            var json = {};
+            json.datamap = datamap;
+            restService.invokePost("Batch", "Update", parameters, json, function (data) {
+
+            });
         },
 
        
