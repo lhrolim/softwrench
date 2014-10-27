@@ -42,16 +42,17 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             searchDto.SearchParams = null;
             searchDto.AppendSearchEntry("wonum", itemIds.Split(','));
             var result = base.GetList(application, searchDto);
-            MergeDataMap(result, batch.DataMapJsonAsString, batch.Id);
+            MergeDataMap(result, batch.DataMapJsonAsString, batch);
             return result;
 
         }
 
-        private void MergeDataMap(ApplicationListResult result, string dataMapJsonAsString, Int32? batchId) {
+        private void MergeDataMap(ApplicationListResult result, string dataMapJsonAsString, Batch batch) {
             var originalList = result.ResultObject;
             var dict = new Dictionary<string, AttributeHolder>();
             foreach (var item in originalList) {
-                item.SetAttribute("#batchId", batchId);
+                item.SetAttribute("#batchId", batch.Id);
+                item.SetAttribute("#batchalias", batch.Alias);
                 dict.Add(item.GetAttribute("wonum").ToString(), item);
                 if (item.GetAttribute("actfinish") == null) {
                     //this is the default value... 
