@@ -1163,7 +1163,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=12%"/>
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="width=12%;excelwidth=50" />
+            <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="asset_.description" label="Asset">
             <renderer type="default" params="width=12%" />
