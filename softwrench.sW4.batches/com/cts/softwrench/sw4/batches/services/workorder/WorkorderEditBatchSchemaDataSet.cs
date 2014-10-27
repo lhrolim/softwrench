@@ -85,7 +85,11 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
         private static void CopyValue(AttributeHolder item, JObject row, String name) {
             var jprop = row.Property(name);
             if (jprop != null) {
-                item.SetAttribute(name, jprop.Value.ToString());
+                if (jprop.Name == "#closed") {
+                    item.SetAttribute(name, Boolean.Parse(jprop.Value.ToString()));
+                } else {
+                    item.SetAttribute(name, jprop.Value.ToString());
+                }
             }
         }
 
