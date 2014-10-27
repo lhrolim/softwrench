@@ -53,6 +53,11 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             foreach (var item in originalList) {
                 item.SetAttribute("#batchId", batchId);
                 dict.Add(item.GetAttribute("wonum").ToString(), item);
+                if (item.GetAttribute("actfinish") == null) {
+                    //this is the default value... 
+                    //TODO do this via metadata
+                    item.SetAttribute("actfinish", DateTime.Now.ToShortDateString());
+                }
             }
             if (dataMapJsonAsString == null) {
                 //first time the batch is created without any time being saved
@@ -73,7 +78,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
                 CopyValue(item, ob, "#pmchange");
                 CopyValue(item, ob, "#fdbckcomment");
                 CopyValue(item, ob, "#lognote");
-                CopyValue(item, ob, "#close");
+                CopyValue(item, ob, "#closed");
             }
         }
 
@@ -89,6 +94,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
                 "SELECT value,description FROM alndomain WHERE  domainid = 'TVAWOREC' AND siteid IS NULL;");
             return rows.Select(row => new AssociationOption(row["value"], row["description"])).ToList();
         }
+
+
 
 
 

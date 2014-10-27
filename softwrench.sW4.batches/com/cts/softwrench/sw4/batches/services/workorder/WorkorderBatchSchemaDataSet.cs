@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Metadata.Applications.DataSet;
+using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.Util;
 
@@ -40,6 +43,15 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             }
             return result;
         }
+
+        public IEnumerable<IAssociationOption> GetCrews(OptionFieldProviderParameters parameters) {
+            var rows = MaxDAO.FindByNativeQuery(WorkOrderBatchWhereClauseProvider.GetCrewIdQuery(true));
+            if (rows == null || !rows.Any()) {
+                return new List<IAssociationOption>();
+            }
+            return rows.Select(row => new AssociationOption(row["value"], row["description"])).ToList();
+        }
+
 
 
         public override string SchemaId() {
