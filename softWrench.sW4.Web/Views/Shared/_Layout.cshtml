@@ -101,7 +101,23 @@
             </div>
             <div class="branding">
                 <div class="logo">
-                    <img src="~/Content/Images/logo-main.png" width="274" height="89">
+                    
+                    @*<img src="~/Content/Images/logo-main.png" width="274" height="89">*@
+                    @*<img src="~/Content/Images/{{clientName}}/logo-main.png" width="274" height="89">*@
+                    
+
+                   @* @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/{{clientName}}/logo-main.png")))
+                    {
+                        *@
+                    <img class="logo" src="~/Content/Images/{{clientName}}/logo-main.png">
+                    
+                    @*
+                    }
+                    else
+                    {
+                        <img class="logo" src="~/Content/Images/logo-main1.png">
+                    }*@
+
                 </div>
             </div>
             <div class="menu menu-grid">
