@@ -194,9 +194,14 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
                             var worklog = {};
                             worklog['description'] = $('#summary2').val();
                             worklog['longdescription_.ldtext'] = $('#details2').val();
-
+                            var hasData = worklog['description'] != "" || worklog['longdescription_.ldtext'] != "";
+                            if (!hasData) {
+                                return;
+                            }
                             datamap['worklog_'] = [];
                             datamap['worklog_'].push(worklog);
+
+
                             datamap['#lognote'] = 'Y';
                             $rootScope.$digest();
                         }

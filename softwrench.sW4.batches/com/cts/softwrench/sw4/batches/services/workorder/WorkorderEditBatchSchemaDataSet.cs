@@ -90,8 +90,10 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             if (jprop != null) {
                 item.SetAttribute("#lognote", "Y");
                 item.SetAttribute("worklog_", jprop.Value);
+            } else {
+                item.SetAttribute("#lognote", "N");
             }
-            
+
         }
 
         private static void CopyValue(AttributeHolder item, JObject row, String name) {
