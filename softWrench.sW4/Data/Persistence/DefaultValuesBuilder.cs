@@ -60,6 +60,13 @@ namespace softWrench.sW4.Data.Persistence {
                 }
                 schemaDefaultValues.Attributes.Add(key, attribute.Value);
             }
+            foreach (var attribute in initialValues.UnmappedAttributes) {
+                var key = attribute.Key;
+                if (schemaDefaultValues.ContainsAttribute(key)) {
+                    schemaDefaultValues.Attributes.Remove(key);
+                }
+                schemaDefaultValues.Attributes.Add(key, attribute.Value);
+            }
             return schemaDefaultValues;
         }
 
