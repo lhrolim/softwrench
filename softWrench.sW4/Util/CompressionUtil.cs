@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 
 namespace softWrench.sW4.Util {
-    class CompressionUtil {
+    public class CompressionUtil {
 
         public static byte[] Compress(byte[] plainData) {
             byte[] compressesData = null;
@@ -41,7 +41,7 @@ namespace softWrench.sW4.Util {
         public static string CompressRtf(string rtf) {
 
             string ret = String.Empty;
-            
+
             // The WPF components (RichTextBox and TextRange) require a STA thread to run
             Thread t = new Thread(
                 () => {
@@ -66,8 +66,7 @@ namespace softWrench.sW4.Util {
                                 ret = rtfStreamReader.ReadToEnd();
                             }
                         }
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         ret = e.Message;
                     }
                 });

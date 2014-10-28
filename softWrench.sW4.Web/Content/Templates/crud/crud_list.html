@@ -3,13 +3,14 @@
     <div id="affixpagination" class="affix-pagination hiddenonprint">
         <div class="context clearfix header-menu">
             <gridtoolbar position="gridtop"
+                         datamap="datamap"
                          schema="schema"
                          pagination-data="paginationData"
                          search-data="searchData"
                          search-sort="searchSort"
-                         search-operator="searchOperator"/>
+                         search-operator="searchOperator" />
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
-                        schema-id="{{schema.schemaId}}" application-name="{{schema.applicationName}}"
+                        schema="schema" application-name="{{schema.applicationName}}"
                         search-data="searchData"
                         search-operator="searchOperator" />
         </div>
@@ -40,10 +41,10 @@
             <thead id="listgridthread" class="listgrid-thead">
                 <!-- Header row -->
                 <tr class="header-row">
-                    <th ng-if="schema.properties['list.selectionstyle'] == 'multiple'">
+                    <th ng-show="schema.properties['list.selectionstyle'] == 'multiple'">
                         <!--Multiselect-->
                     </th>
-                    <th ng-if="schema.properties['list.selectionstyle'] == 'single'">
+                    <th ng-show="schema.properties['list.selectionstyle'] == 'single'">
                         <!--Singleselect-->
                     </th>
                     <th ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)"
@@ -66,12 +67,12 @@
                     </th>
                 </tr>
 
-                <tr class="filter-row hidden-too-much-columns hiddenonprint">
-                    <th ng-if="schema.properties['list.selectionstyle'] == 'multiple'">
+                <tr class="filter-row hidden-too-much-columns hiddenonprint" ng-if="schema.properties['list.disablefilter'] != 'true'">
+                    <th ng-show="schema.properties['list.selectionstyle'] == 'multiple'">
                         <input type="checkbox"
                                ng-change="toggleSelectAll(selectAllChecked)" ng-model="selectAllChecked">
                     </th>
-                    <th ng-if="schema.properties['list.selectionstyle'] == 'single'">
+                    <th ng-show="schema.properties['list.selectionstyle'] == 'single'">
                         <!--Singleselect-->
                     </th>
 
@@ -82,55 +83,78 @@
                         ng-show="!isFieldHidden(schema,column)"
                         filterrowrendered>
                         <div ng-if="shouldShowHeaderFilter(column)">
-                            <ng-switch on="column.rendererType">
-                                <div ng-switch-when="datetime" data-datepicker="true" class="input-group input-group-sm">
-                                    <input type="text" ng-model="searchData[column.attribute]" class="form-control"
-                                           data-date-time
-                                           data-show-time="false"
-                                           data-show-date="{{column.rendererParameters['showdate']}}"
-                                           data-date-format="{{column.rendererParameters['format']}}"
-                                           data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
-                                           data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
-                                           placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" ng-enter="filterSearch(column.attribute,$event)" />
-                                    <span class="input-group-addon " data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}">
-                                        <i class="glyphicon glyphicon-calendar"></i>
-                                    </span>
+                            <ng-switch on="column.type">
+                                <div ng-switch-when="ApplicationFieldDefinition">
+                                    <ng-switch on="column.rendererType">
+                                        <div ng-switch-when="datetime" data-datepicker="true" class="input-group input-group-sm">
+                                            <input type="text" ng-model="searchData[column.attribute]" class="form-control"
+                                                   data-date-time
+                                                   data-show-time="false"
+                                                   data-show-date="{{column.rendererParameters['showdate']}}"
+                                                   data-date-format="{{column.rendererParameters['format']}}"
+                                                   data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
+                                                   data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
+                                                   placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" ng-enter="filterSearch(column.attribute,$event)" />
+                                            <span class="input-group-addon " data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </span>
 
-                                    <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                        The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
-                                    <div class="input-group-addon dropdown">
-                                        <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
-                                              data-toggle="dropdown" rel="tooltip"
-                                              data-original-title="{{getOperator(column.attribute).tooltip}}">{{getSearchIcon(column.attribute)}}</span>
+                                            <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
+                                                The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                            <div class="input-group-addon dropdown">
+                                                <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
+                                                      data-toggle="dropdown" rel="tooltip"
+                                                      data-original-title="{{getOperator(column.attribute).tooltip}}">{{getSearchIcon(column.attribute)}}</span>
 
-                                        <ul class="dropdown-menu">
-                                            <li ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
-                                                ng-show="operation.renderType.indexOf(column.rendererType) > -1 || column.rendererType == null"
-                                                ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
-                                                <a href="#">{{operation.title}}</a>
-                                            </li>
-                                        </ul>
+                                                <ul class="dropdown-menu">
+                                                    <li ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
+                                                        ng-show="operation.renderType.indexOf(column.rendererType) > -1 || column.rendererType == null"
+                                                        ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
+                                                        <a href="#">{{operation.title}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div ng-switch-default class="input-group input-group-sm">
+                                            <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
+                                                   ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" />
+                                            <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
+                                                The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                            <div class="input-group-addon dropdown">
+                                                <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
+                                                      data-toggle="dropdown" rel="tooltip"
+                                                      data-original-title="{{getOperator(column.attribute).tooltip}}">{{getSearchIcon(column.attribute)}}</span>
+
+                                                <ul class="dropdown-menu">
+                                                    <li ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
+                                                        ng-show="operation.renderType.indexOf(column.rendererType) > -1 || column.rendererType == null"
+                                                        ng-clasicos="{'active' : searchOperator[column.attribute].id == operation.id}">
+                                                        <a href="#">{{operation.title}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </ng-switch>
+                                </div>
+                                <div ng-switch-when="OptionField">
+                                    <div ng-switch on="column.rendererType">
+                                        <div class="input-group" ng-switch-when="combo" class="sw-combobox-container">
+                                            <select class="hidden-phone form-control combobox"
+                                                    ng-init="handleDefaultValue(dm.fields,column)"
+                                                    ng-model="searchData[column.target]"
+                                                    ng-options="option.value as i18NOptionField(option,column,schema)
+                                                for option in GetAssociationOptions(column)" />
+
+                                            <div class="input-group-addon dropdown">
+                                                <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
+                                                      rel="tooltip"
+                                                      ng-click="refreshGrid()"
+                                                      data-original-title="{{getOperator(column.attribute).tooltip}}">{{getSearchIcon(column.attribute)}}</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div ng-switch-default class="input-group input-group-sm">
-                                    <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
-                                           ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" />
-                                    <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                        The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
-                                    <div class="input-group-addon dropdown">
-                                        <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
-                                              data-toggle="dropdown" rel="tooltip"
-                                              data-original-title="{{getOperator(column.attribute).tooltip}}">{{getSearchIcon(column.attribute)}}</span>
 
-                                        <ul class="dropdown-menu">
-                                            <li ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
-                                                ng-show="operation.renderType.indexOf(column.rendererType) > -1 || column.rendererType == null"
-                                                ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
-                                                <a href="#">{{operation.title}}</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
                             </ng-switch>
                         </div>
                     </th>
@@ -138,15 +162,15 @@
             </thead>
             <tbody>
 
-                <tr ng-repeat="dm in datamap" style="cursor: pointer" listtablerendered rel="hideRow" bindonce>
-                    <td ng-if="schema.properties['list.selectionstyle'] == 'multiple'" style="text-align: center;">
+                <tr ng-repeat="dm in datamap" style="cursor: pointer" listtablerendered rel="hideRow" bindonce
+                    ng-style="{'cursor':cursortype()}">
+                    <td ng-show="schema.properties['list.selectionstyle'] == 'multiple'" style="text-align: center;">
                         <!--Multiselect-->
                         <!-- TODO: Move style to css -->
                         <input type="checkbox"
-                               ng-click="toogleCheckboxSelection(option,fieldMetadata.associationKey)"
                                ng-model="dm.fields['_#selected']">
                     </td>
-                    <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'single'">
+                    <td ng-show="compositionlistschema.properties['list.selectionstyle'] == 'single'">
                         <!--Singleselect-->
                     </td>
 
@@ -154,34 +178,75 @@
                         ng-style="{'min-width': column.rendererParameters['minwidth'],
                                 'max-width': column.rendererParameters['maxwidth'],
                                 'width': column.rendererParameters['width']}">
-                        <ng-switch on="column.rendererType">
-                            <div ng-switch-when="checkbox">
-                                <input type="checkbox"
-                                       class="check"
-                                       name="column.attribute"
-                                       value="{{option.value}}"
-                                       ng-click="toogleCheckboxSelection(option,column.associationKey,dm)"
-                                       ng-model="dm.fields['checked']"
-                                       ng-init="dm.fields['checked']=false" />
-                            </div>
-                        </ng-switch>
                         <ng-switch on="column.type">
                             <div ng-switch-when="ApplicationFieldDefinition">
 
                                 <ng-switch on="column.rendererType">
                                     <div ng-switch-when="color" class="statuscolumncolor"
                                          bo-style="{'background-color':statusColor(dm.fields[column.rendererParameters['column']] || 'null',null)}">
-
+                                    </div>
+                                    <input ng-switch-when="checkbox"
+                                           type="checkbox"
+                                           class="check"
+                                           name="column.attribute"
+                                           ng-click="toogleCheckboxSelection(option,column.associationKey,dm)"
+                                           ng-model="dm.fields[column.attribute]" />
+                                    <div ng-switch-when="icon">
+                                        <i class="fa" ng-class="loadIcon(dm.fields[column.attribute],column)"
+                                           rel="tooltip" data-original-title="{{column.toolTip}}"></i>
+                                    </div>
+                                    <div ng-switch-when="datetime">
+                                        <div ng-if="isColumnEditable(column)" class="input-group" data-datepicker="true">
+                                            <input type="text" ng-model="dm.fields[column.attribute]"
+                                                   data-date-time
+                                                   data-show-time="{{column.rendererParameters['showtime']}}"
+                                                   data-show-date="{{column.rendererParameters['showdate']}}"
+                                                   data-date-format="{{column.rendererParameters['format']}}"
+                                                   data-show-meridian="{{column.rendererParameters['showmeridian']}}"
+                                                   data-allow-past="{{column.rendererParameters['allowpast']}}"
+                                                   data-allow-future="{{column.rendererParameters['allowfuture']}}"
+                                                   class="form-control">
+                                            <span class="input-group-addon" data-calendericon="true" rel="tooltip"
+                                                  data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}" style="cursor: pointer;">
+                                                <i class="datetime-class"></i>
+                                            </span>
+                                        </div>
+                                        <div ng-if="!isColumnEditable(column)">
+                                            {{getFormattedValue(dm.fields[column.attribute],column)}}
+                                        </div>
                                     </div>
 
                                     <!--<div ng-switch-default style="color: black; word-break:break-word; padding-left:8px; word-wrap: break-word;">-->
                                     <div ng-switch-default style="color: black; padding-left: 8px;">
-
-                                        {{getFormattedValue(dm.fields[column.attribute],column)}}
+                                        <div ng-if="isColumnEditable(column)" class="input-group" data-datepicker="true">
+                                            <input type="text"
+                                                   ng-model="dm[column.attribute]" class="hidden-phone form-control"
+                                                   data-ng-maxlength="{{column.rendererParameters['maxlength']}}"
+                                                   maxlength="{{column.rendererParameters['maxlength']}}" />
+                                        </div>
+                                        <div ng-if="!isColumnEditable(column)" ng-init="handleDefaultValue(dm.fields,column)">
+                                            {{getFormattedValue(dm.fields[column.attribute],column)}}
+                                        </div>
                                     </div>
                                 </ng-switch>
 
 
+                            </div>
+
+                            <div ng-switch-when="OptionField">
+                                <div ng-if="column.rendererParameters['filteronly']=='true'">
+                                    {{getFormattedValue(dm.fields[column.attribute],column)}}
+                                </div>
+
+                                <div ng-switch on="column.rendererType" ng-if="column.rendererParameters['filteronly']!='true'">
+                                    <div ng-switch-when="combo" class="sw-combobox-container">
+                                        <select class="hidden-phone form-control combobox"
+                                                ng-init="handleDefaultValue(dm.fields,column)"
+                                                ng-model="dm.fields[column.target]"
+                                                ng-options="option.value as i18NOptionField(option,column,schema)
+                                                for option in GetAssociationOptions(column)" />
+                                    </div>
+                                </div>
                             </div>
 
                             <div ng-switch-when="ApplicationSection">
@@ -209,7 +274,7 @@
                          search-data="searchData"
                          search-operator="searchOperator"></gridtoolbar>
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
-                        schema-id="{{schema.schemaId}}" application-name="{{schema.applicationName}}"
+                        schema="schema" application-name="{{schema.applicationName}}"
                         search-data="searchData"
                         search-operator="searchOperator" />
         </div>

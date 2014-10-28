@@ -85,6 +85,18 @@ app.factory('formatService', function ($filter, i18NService) {
                 else if (column.rendererParameters['formatter'] == 'descriptionDataHandler') {
                     return descriptionDataHandler(value, column);
                 }
+            } else if (column.rendererParameters != undefined && column.rendererParameters['limit'] != null) {
+                //format the word to only display the first n characters based on the limit 
+                //once its formatted, also need to register a custom html but may not be here 
+                if (typeof value != 'undefined') {
+                    var val = value.toString();
+                    var limit = column.rendererParameters['limit'];
+                    var truncatedText = val.substring(0, column.rendererParameters['limit']);
+                    if (val.length > limit) {
+                        truncatedText += "...";
+                    }
+                    return truncatedText;
+                }
             }
 
             return value;

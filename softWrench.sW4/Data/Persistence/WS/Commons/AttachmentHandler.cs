@@ -59,6 +59,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (String.IsNullOrEmpty(attachmentData)) {
                 return;
             }
+            var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
+            CommonCode(maximoObj, docLink, user, attachmentPath, attachmentData);
+            HandleAttachmentDataAndPath(attachmentData, docLink, attachmentPath);
         }
 
         private void CommonCode(object maximoObj, object docLink, InMemoryUser user, string attachmentPath, string attachmentData) {
@@ -110,7 +113,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         }
 
         protected virtual int GetMaximoLength() {
-            return 20;
+            return 100;
         }
 
 
@@ -140,7 +143,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var applicationMetadata = MetadataProvider
                 .Application(parentApplication)
                 .ApplyPolicies(new ApplicationMetadataSchemaKey(parentSchemaId), user, ClientPlatform.Web);
-            var response = _dataSetProvider.LookupDataSet(parentApplication).Execute(applicationMetadata, new JObject(), parentId, OperationConstants.CRUD_FIND_BY_ID);
+            var response = _dataSetProvider.LookupDataSet(parentApplication,applicationMetadata.Schema.SchemaId).Execute(applicationMetadata, new JObject(), parentId, OperationConstants.CRUD_FIND_BY_ID);
 
             var parent = response.ResultObject;
             if (parent != null) {

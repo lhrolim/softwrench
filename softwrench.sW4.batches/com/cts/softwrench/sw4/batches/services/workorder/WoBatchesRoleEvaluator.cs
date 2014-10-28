@@ -28,8 +28,10 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
     /// </summary>
     public class WoBatchesRoleEvaluator : AfterLoginRoleEvaluator {
 
-        private const string Group1 = "MAXIMO.MXWMWON";
-        private const string Group2 = "MAXIMO.MXWMPTLA";
+        private const string Group1 = "MAXIMO.MXWMWOM";
+        /// TODO: This needs to be set back to MAXIMO.MXWMPTLA once there is a maximo persongroup with that name
+        /// private const string Group2 = "MAXIMO.MXWMPTLA";
+        private const string Group2 = "MXWMPTLA";
         private const string Group3 = "MAXIMO.MXWMFMGR";
         private const string Maintenance = "MAXIMO.MXWMMNTN";
         private const string Operations = "MAXIMO.MXWMOPER";
@@ -82,13 +84,10 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
                 return _noUserRole;
             }
             //we could optimize the left join here to do a in on the group names, but I guess that doesnt worth 
-            var queryResult = _dao.FindByNativeQuery("select u.status,u.defsite,p.persongroup from maxuser u left join persongroupview p on u.personid = p.personid where u.personid = ?", user.MaximoPersonId);
-            if (queryResult == null || !queryResult.Any()) {
+            var list = _dao.FindByNativeQuery("select u.status,u.defsite,p.persongroup from maxuser u left join persongroupview p on u.personid = p.personid where u.personid = ?", user.MaximoPersonId);
+            if (list == null || !list.Any()) {
                 return _noUserRole;
             }
-            var list = queryResult.Cast<IEnumerable<KeyValuePair<string, object>>>()
-                .Select(r => r.ToDictionary(pair => pair.Key, pair => (pair.Value == null ? null : pair.Value.ToString()), StringComparer.OrdinalIgnoreCase))
-               .ToList();
             var matchedGroup = false;
             foreach (var row in list) {
                 if (row["status"] == null || (!row["status"].EqualsIc("active"))) {

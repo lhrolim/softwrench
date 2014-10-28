@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Data;
@@ -11,18 +12,26 @@ namespace softWrench.sW4.Data.API {
         private readonly ApplicationSchemaDefinition _schema;
         public PaginatedSearchRequestDto PageResultDto;
         private string _mode;
+        //this is for grids that have optionfields inside of it
+        private IDictionary<string, BaseAssociationUpdateResult> _associationOptions = new Dictionary<string, BaseAssociationUpdateResult>();
 
         public ApplicationListResult(int totalCount, PaginatedSearchRequestDto searchDTO,
-            IEnumerable<AttributeHolder> dataMap, ApplicationSchemaDefinition schema)
+            IEnumerable<AttributeHolder> dataMap, ApplicationSchemaDefinition schema, IDictionary<string, BaseAssociationUpdateResult> associationOptions)
             : base(dataMap, null) {
             _schema = schema;
             PageResultDto = new PaginatedSearchRequestDto(totalCount, searchDTO.PageNumber, searchDTO.PageSize, searchDTO.SearchValues, searchDTO.PaginationOptions);
             PageResultDto.SearchParams = searchDTO.SearchParams;
             PageResultDto.FilterFixedWhereClause = searchDTO.FilterFixedWhereClause;
+            _associationOptions = associationOptions;
         }
 
         public ApplicationSchemaDefinition Schema {
             get { return _schema; }
+        }
+
+        public IDictionary<string, BaseAssociationUpdateResult> AssociationOptions {
+            get { return _associationOptions; }
+            set { _associationOptions = value; }
         }
 
         public string Mode {

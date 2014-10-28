@@ -422,6 +422,7 @@
     <Content Include="Content\Images\icon-opendetails.png" />
     <Content Include="Content\Images\kongsberg\header.jpg" />
     <Content Include="Content\Images\kongsberg\signin.jpg" />
+    <Content Include="Content\Images\logo-main.png" />
     <Content Include="Content\Images\manchester\manchester.png" />
     <Content Include="Content\Images\pagination-first.png" />
     <Content Include="Content\Images\pagination-last.png" />
@@ -429,10 +430,13 @@
     <Content Include="Content\Images\pagination-previous.png" />
     <Content Include="Content\Images\scottsdale\scottsdale.png" />
     <Content Include="Content\Images\signin.jpg" />
-    <Content Include="Content\Images\softwrench.png" />
     <Content Include="Content\Images\tree-leaf.png" />
     <Content Include="Content\Images\tree-node-collapsed.png" />
     <Content Include="Content\Images\tree-node-expanded.png" />
+    <Content Include="Content\Images\tva\branding.png" />
+    <Content Include="Content\Images\tva\header.jpg" />
+    <Content Include="Content\Images\tva\logo-main.png" />
+    <Content Include="Content\Images\tva\signin.jpg" />
     <Content Include="Content\Scripts\angulartreeview.js" />
     <Compile Include="Controllers\Application\ApplicationController.cs" />
     <Compile Include="Controllers\AttachmentController.cs" />
@@ -549,6 +553,7 @@
     <Content Include="Content\Scripts\client\crud_base_controller.js" />
     <Content Include="Content\Scripts\client\crud_list.js" />
     <Content Include="Content\Scripts\client\logAdmin.js" />
+    <Content Include="Content\Scripts\client\services\icon_service.js" />
     <Content Include="Content\Scripts\client\services\excelservice.js" />
     <Content Include="Content\Scripts\client\services\date_service.js" />
     <Content Include="Content\Scripts\client\services\inventory_service.js" />
@@ -762,6 +767,8 @@
     <Content Include="Content\styles\gric\signin.css" />
     <Content Include="Content\styles\gric\site.css" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
+    <Content Include="Content\styles\tva\tva-signin.css" />
+    <Content Include="Content\styles\tva\tva-site.css" />
     <Content Include="Content\Templates\commands\batches\batches.html" />
     <Content Include="Content\Templates\commands\batches\batchesmenu.js" />
     <Content Include="Content\Templates\commands\grid\gridfilter.html" />
@@ -874,6 +881,7 @@
     <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\font-awesome-4.1.0\fonts\FontAwesome.otf" />
+    <Content Include="Content\Images\tva\Thumbs.db" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>

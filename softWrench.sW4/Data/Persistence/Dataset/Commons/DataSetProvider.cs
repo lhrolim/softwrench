@@ -33,15 +33,27 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         }
 
-        public IDataSet LookupDataSet(String applicationName) {
+        public IDataSet LookupDataSet(String applicationName,string schemaId) {
             var isSWDBApplication = applicationName.StartsWith("_");
             var defaultSet = isSWDBApplication ? _defaultSWDBDataSet : _defaultMaximoDataSet;
             var storageToUse = isSWDBApplication ? _swdbDataSets : _maximoDataSets;
 
-            var key = new DataSetKey(applicationName.ToLower(), ApplicationConfiguration.ClientName);
+            //first we try a perfect match: app + client + schema
+            var clientName = ApplicationConfiguration.ClientName;
+            var key = new DataSetKey(applicationName.ToLower(), clientName, schemaId);
             if (!storageToUse.ContainsKey(key)) {
-                key = new DataSetKey(applicationName.ToLower(), null);
+                //second just app + schema
+                key = new DataSetKey(applicationName.ToLower(), null,schemaId);
+                if (!storageToUse.ContainsKey(key)){
+                    //app + client
+                    key = new DataSetKey(applicationName.ToLower(), clientName, null);
+                    if (!storageToUse.ContainsKey(key)) {
+                        //last just app
+                        key = new DataSetKey(applicationName.ToLower(), null, null);
+                    }
+                }
             }
+            //if not found return the default
             return storageToUse.ContainsKey(key) ? storageToUse[key] : defaultSet;
         }
 
@@ -53,17 +65,20 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         class DataSetKey {
             readonly string _application;
+            readonly string _schemaId;
             readonly string _client;
 
-            public DataSetKey(string application, string client) {
+            public DataSetKey(string application, string client,string schemaId) {
                 _application = application;
                 _client = client;
+                _schemaId = schemaId;
             }
 
             private bool Equals(DataSetKey other) {
                 var applicationEquals = string.Equals(_application, other._application,StringComparison.CurrentCultureIgnoreCase);
                 var clientEquals = _client == null || string.Equals(_client, other._client,StringComparison.CurrentCultureIgnoreCase);
-                return applicationEquals && clientEquals;
+                var schemaEquals = _schemaId == null || string.Equals(_schemaId, other._schemaId,StringComparison.CurrentCultureIgnoreCase);
+                return applicationEquals && clientEquals && schemaEquals;
             }
 
             public override bool Equals(object obj) {
@@ -75,7 +90,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             public override int GetHashCode() {
                 unchecked {
-                    return ((_application != null ? _application.ToLower().GetHashCode() : 0) * 397) ^ (_client != null ? _client.ToLower().GetHashCode() : 0);
+                    return ((_application != null ? _application.ToLower().GetHashCode() : 0) * 397) ^ (_client != null ? _client.ToLower().GetHashCode() : 0) ^ (_schemaId != null ? _schemaId.ToLower().GetHashCode() : 0);
                 }
             }
 
@@ -93,11 +108,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 //                }
                 //                var dataSet = (IDataSet)Activator.CreateInstance(dataSetType);
                 var applicationName = dataSet.ApplicationName();
+                
                 if (applicationName == null) {
                     //null stands for framework instances... we dont need to handle these
                     continue;
                 }
-
+                var schemaId = dataSet.SchemaId();
                 var isSWDBApplication = applicationName.StartsWith("_");
                 var isSWDDBDataSet = dataSet is SWDBApplicationDataset;
                 if (isSWDDBDataSet && !isSWDBApplication) {
@@ -109,10 +125,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 if (clientFilter != null) {
                     var strings = clientFilter.Split(',');
                     foreach (var client in strings) {
-                        storageToUse.Add(new DataSetKey(applicationName, client), dataSet);
+                        storageToUse.Add(new DataSetKey(applicationName, client,schemaId), dataSet);
                     }
                 } else {
-                    storageToUse.Add(new DataSetKey(applicationName, null), dataSet);
+                    storageToUse.Add(new DataSetKey(applicationName, null, schemaId), dataSet);
                 }
             }
         }

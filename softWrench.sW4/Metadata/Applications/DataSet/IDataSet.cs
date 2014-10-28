@@ -33,5 +33,6 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
         string ApplicationName();
         string ClientFilter();
+        string SchemaId();
     }
 }

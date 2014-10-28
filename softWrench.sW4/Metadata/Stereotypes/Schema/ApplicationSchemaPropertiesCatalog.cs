@@ -5,6 +5,7 @@
         /// and have 2 parameters:
         /// 1) datamap of the row 
         /// 2) fieldmetadata of the clicked column
+        /// 3) the schema of the grid
         /// </summary>
         public const string ListClickService = "list.click.service";
 
@@ -37,7 +38,7 @@
         /// <summary>
         /// Use this property to specify a custom controller/action to redirect after the save has been performed.Value should be on the format serviceName.methodName
         /// </summary>
-        public const string OnCrudSaveEventAction = "oncrudsaveevent.redirectaction";
+        public const string OnCrudSaveEventAction = "oncrudsaveevent.action";
 
         /// <summary>
         /// Set this property to true to allow the framework to pass not only the selected values, but also the labels of it on the json unmapedattributes. 
@@ -49,6 +50,27 @@
         ///  property for specifying the default size of the pagination
         /// </summary>
         public const string DefaultPaginationSize = "list.paginationsize";
+
+        /// <summary>
+        /// If true, the grid will render all the entries and the pagination will be entirely removed
+        /// </summary>
+        public const string DisablePagination = "list.disablepagination";
+
+        /// <summary>
+        /// If true, all the filters will be disabled
+        /// </summary>
+        public const string DisableFilter = "list.disablefilter";
+        /// <summary>
+        /// 1) server --> the default if not declared. Sorting will be performed on server side
+        /// 2) client --> the sort will be done on the client side, just on current page
+        /// 3) none --> not allowed
+        /// </summary>
+        public const string DisableSort = "list.sortmode";
+
+        /// <summary>
+        /// If true, we will disable the detail selection of the grid
+        /// </summary>
+        public const string DisableDetails = "list.disabledetails";
 
         /// <summary>
         ///  property for specifying the options of the pagination

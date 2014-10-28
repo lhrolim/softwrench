@@ -45,7 +45,7 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly I18NResolver _i18NResolver;
         protected readonly IContextLookuper ContextLookuper;
 
-        public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper,CompositionExpander expander) {
+        public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper, CompositionExpander expander) {
             _i18NResolver = i18NResolver;
             ContextLookuper = contextLookuper;
             CompositionExpander = expander;
@@ -73,15 +73,15 @@ namespace softWrench.sW4.Web.Controllers {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web);
             ContextLookuper.FillContext(request.Key);
-            var response = DataSetProvider.LookupDataSet(application).Get(applicationMetadata, user, request);
+            var response = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
             response.Title = _i18NResolver.I18NSchemaTitle(response.Schema);
             var schemaMode = request.Key.Mode ?? response.Schema.Mode;
             response.Mode = schemaMode.ToString().ToLower();
             return response;
         }
 
-     
-      
+
+
 
 
 
@@ -104,8 +104,8 @@ namespace softWrench.sW4.Web.Controllers {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web);
 
-            var baseDataSet = DataSetProvider.LookupDataSet(application);
-           
+            var baseDataSet = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId);
+
 
             var response = baseDataSet.UpdateAssociations(applicationMetadata, request, currentData);
 
@@ -191,7 +191,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             var maximoResult = new MaximoResult(null, null);
             if (!mockMaximo) {
-                maximoResult = DataSetProvider.LookupDataSet(application)
+                maximoResult = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
                     .Execute(applicationMetadata, json, id, operation);
             }
             if (currentschemaKey.Platform == ClientPlatform.Mobile) {
@@ -203,8 +203,8 @@ namespace softWrench.sW4.Web.Controllers {
                     platform, currentschemaKey, nextSchemaKey, mockMaximo);
                 response.SuccessMessage = _successMessageHandler.FillSucessMessage(applicationMetadata, maximoResult.Id,
                     operation);
-            return response;
-        }
+                return response;
+            }
             return new BlankApplicationResponse() {
                 SuccessMessage = _successMessageHandler.FillSucessMessage(applicationMetadata, maximoResult.Id, operation)
             };
@@ -233,7 +233,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             var searchRequestDto = PaginatedSearchRequestDto.DefaultInstance(appSchema);
             searchRequestDto.SetFromSearchString(appSchema, searchFields.Split(','), searchText);
-            
+
             var dataResponse = Get(application, new DataRequestAdapter() { Key = key, SearchDTO = searchRequestDto });
             //fixing the filter parameters used so that it is applied on next queries
             ((ApplicationListResult)dataResponse).PageResultDto.BuildFixedWhereClause(app.Entity);

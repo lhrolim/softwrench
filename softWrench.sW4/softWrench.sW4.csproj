@@ -167,6 +167,7 @@
     <Compile Include="Configuration\Services\WhereClauseFacade.cs" />
     <Compile Include="Data\API\ActionRedirectResponse.cs" />
     <Compile Include="Data\API\Association\IAssociationPrefetcherRequest.cs" />
+    <Compile Include="Data\API\Association\ListOptionsPrefetchRequest.cs" />
     <Compile Include="Data\API\AttachmentRequest.cs" />
     <Compile Include="Data\API\Composition\CompositionFetchRequest.cs" />
     <Compile Include="Data\API\Composition\CompositionFetchResult.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="Data\Entities\SyncManagers\AMaximoRowstampManager.cs" />
     <Compile Include="Data\Entities\SyncManagers\IUserSyncManager.cs" />
     <Compile Include="Data\ExtraAttributes.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\BaseDataSetSearchHelper.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\DataSetConfigurationException.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\MaximoApplicationDataSet.cs" />
     <Compile Include="Data\Persistence\Engine\AConnectorEngine.cs" />

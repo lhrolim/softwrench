@@ -734,31 +734,93 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <commandbars>
             <commandgroup position="gridtop" removeundeclared="true">
               <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html" parameters="allowsave=false"/>
-              <command label="Generate Batch" id="generatebatch" service="wobatchService" method="saveBatch"/>
+              <command label="Cancel" id="cancelbatch" service="wobatchService" method="cancelBatch" icon="fa-backward"/>
+              <command label="Save Batch" id="generatebatch" service="wobatchService" method="generatebatch" parameters="datamap" icon="fa-save"/>
+              <resourcecommand id="batches" path="/Content/Templates/commands/batches/batches.html" role="allowwobatches" parameters="showbutton=false"/>
             </commandgroup>
           </commandbars>
 
           <field attribute="wonum" label="WO No" >
-            <renderer type="default" params="filterenabled=false" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="filterenabled=false" />
+            <renderer type="default"  params="width=39%"/>
           </field>
-          <field attribute="status" label="Status" >
-            <renderer type="default" params="filterenabled=false" />
-          </field>
+<!--          <field attribute="status" label="Status" >-->
+<!--            <renderer type="default" params="filterenabled=false; width=15%" />-->
+<!--          </field>-->
+          <optionfield attribute="crewid" label="Crews" providerattribute="crews">
+            <renderer type="combo" params="filteronly=true;width=16%;"/>
+          </optionfield>
           <field attribute="schedstart" label="Schedule Start" >
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm; width=15%"/>
           </field>
           <field attribute="schedfinish" label="Schedule Finish" >
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm; width=15%"/>
           </field>
-          
+        
+          <field attribute="#alreadyused" tooltip="This workorder is already used on another batch and cannot be included in the batch">
+            <renderer type="icon" params="expression={'true':'fa-warning','false':''};"/>
+          </field>
+
           <properties>
-            <property key="list.click.schema" value="editdetail"/>
             <property key="list.selectionstyle" value="multiple"/>
+            <property key="list.disablepagination" value="true"/>
+            <property key="list.disabledetails" value="true"/>
           </properties>
         </schema>
+
+
+        <schema id="editbatch" title="Work Order Grid" platform="web" stereotype="list">
+
+          <commandbars>
+            <commandgroup position="gridtop" removeundeclared="true">
+              <command id="submit" label="Submit" tooltip="Submit Batch to Maximo" service ="wobatchService" method="submit" icon="fa-cloud-upload" />
+              <command id="save" label="Save Batch" tooltip="Save Batch without Submiting it" service ="wobatchService" method="savebatch" parameters="datamap" icon="fa-save" />
+              <command id="exit" label="Exit" service ="wobatchService" method="exit" icon="fa-backward"/>
+              <resourcecommand id="batches" path="/Content/Templates/commands/batches/batches.html" role="allowwobatches" parameters="showbutton=false"/>
+            </commandgroup>
+          </commandbars>
+
+          <field attribute="wonum" label="Work Order #" >
+            <renderer type="default" params="filterenabled=false; width=10%" />
+          </field>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="limit=14;"  />
+          </field>
+          <field attribute="#UNID" label="UNID">
+            <renderer type="default" params="width=8%"  />
+          </field>
+          <optionfield attribute="#ReconCd" label="Reconciliation Codes" required="true" providerattribute="reconciliationCodes">
+            <renderer type="COMBO" params="width=10%"  />
+          </optionfield>
+          <field attribute="actfinish" label="Actual Finish" default="@now" required="true">
+            <renderer type="datetime" params="editable=true;format=MM/dd/yyyy;width=12%"/>
+          </field>
+          <optionfield attribute="#pmchange" label="PM Change" default="N">
+            <renderer type="combo" params="width=10%"/>
+            <option label="Yes" value="Y"/>
+            <option label="No" value="N"/>
+          </optionfield>
+          <field attribute="#fdbckcomment" label="Feedback Comment">
+            <renderer type="default" params="limit=14;width=12%"  />
+          </field>
+          <field attribute="#lognote" label="Log Note">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute="#closed" label="Close" required="true">
+            <renderer type="checkbox" params="width=5%"/>
+          </field>
+
+          <properties>
+            <property key="list.click.service" value="wobatchService.clickeditbatch"/>
+            <property key="list.disablepagination" value="true"/>
+            <property key="list.disablefilter" value="true"/>
+            <property key="list.disabledetails" value="true"/>
+            <property key="list.sortmode" value="none"/>
+          </properties>
+        </schema>
+
 
         <schema id="adetail" title="Work Order Detail" abstract="true" stereotype="detail" platform="web">
           <field attribute="estdur"            hidden="true"/>
@@ -1130,7 +1192,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=12%"/>
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="width=12%;excelwidth=50" />
+            <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="asset_.description" label="Asset">
             <renderer type="default" params="width=12%" />

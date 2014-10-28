@@ -106,7 +106,7 @@ app.directive('compositionList', function (contextService) {
 
         controller: function ($scope, $log, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
-            expressionService, $timeout, modalService, redirectService, eventdispatcherService) {
+            expressionService, $timeout, modalService, redirectService, eventdispatcherService, iconService) {
             
 
             function init() {
@@ -362,27 +362,7 @@ app.directive('compositionList', function (contextService) {
             };
 
             $scope.loadIcon = function (value, metadata) {
-                var expression = metadata.rendererParameters['expression'];
-                if (expression != null) {
-                    expression = replaceAll(expression, '\'', "\"");
-                    try {
-                        var expressionObj = JSON.parse(expression);
-                        var result = expressionObj[value];
-                        if (result == null) {
-                            //switch case deafult
-                            return expressionObj["#default"];
-                        }
-                        return result;
-                    } catch (e) {
-                        $log.getInstance('compositionlist#loadicon').warn('invalid expression definition {0}'.format(expression));
-                    }
-                }
-                var iconvalue = metadata.rendererParameters['value'];
-                if (iconvalue != null) {
-                    return iconvalue;
-                }
-                //forgot to declare it, just return
-                return '';
+                return iconService.loadIcon(value, metadata);
             };
 
             function buildExpandAllParams() {

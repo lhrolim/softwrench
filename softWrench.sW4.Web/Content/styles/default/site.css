@@ -20,11 +20,18 @@ input:focus, select:focus, textarea:focus {
 /*SM - 10/01 - SWWEB-507*/
 .smallmodal {
     width: 300px;
+} 
+.mediummodal {
+    width: 500px;
+} 
+.smallmodal, 
+.mediummodal {
     top: 20%;
     margin: 0 auto;
 }
 
-    .smallmodal .modal-dialog {
+    .smallmodal .modal-dialog,
+    .mediummodal .modal-dialog {
         overflow: hidden;
         padding: 0;
         width: 100%;
@@ -33,6 +40,12 @@ input:focus, select:focus, textarea:focus {
 @media all and (min-width: 480px) {
     .smallmodal {
         width: 360px;
+    }
+    .mediummodal {
+        width: 560px;
+    }
+    .smallmodal, 
+    .mediummodal {        
         top: 30%;
     }
 }
@@ -219,24 +232,36 @@ input:focus, select:focus, textarea:focus {
     margin-bottom: 0;
 }
 
-    #listgrid thead tr.header-row {
-        background-color: #FFF;
-        color: #000;
+    #listgrid thead {
+        background-color: #fff;
     }
 
-        #listgrid thead tr.header-row th {
-            cursor: pointer;
+        #listgrid thead tr.header-row {
+            background-color: #fff;
+            color: #000;
         }
 
-    #listgrid thead tr.filter-row {
-        background-color: #FFF;
-        color: #000;
+            #listgrid thead tr.header-row th {
+                cursor: pointer;
+            }
+
+        #listgrid thead tr.filter-row {
+            background-color: #fff;
+            color: #000;
+        }
+
+    #listgrid th {
+        word-break: break-word;
     }
 
-    #listgrid th, #listgrid td {
+    #listgrid td {
         word-break: break-all;
         word-break: break-word;
     }
+
+        #listgrid td .input-group, #listgrid td .input-group .glyphicon {
+            position: initial;
+        }
 
 .affix-thead {
     position: fixed;

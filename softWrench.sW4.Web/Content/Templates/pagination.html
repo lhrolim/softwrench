@@ -1,4 +1,4 @@
-<div class="right">
+<div class="right" ng-show="isPaginationEnabled()">
     <div>
         <div class="group total hidden-xs">
             <label ng-if="isHapag()">{{i18N('_grid.pagination.display',"Displaying Page {0} of {1}, Total items {2}",[paginationData.selectedPage,paginationData.pageCount,paginationData.totalCount])}}</label>

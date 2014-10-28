@@ -81,7 +81,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             var resultSchema = metadata.Schema(nextSchemaKey, true);
             var user = SecurityFacade.CurrentUser();
             var nextMetadata = metadata.ApplyPolicies(nextSchemaKey, user, ClientPlatform.Web);
-            var dataSet = _dataSetProvider.LookupDataSet(applicationName);
+            var dataSet = _dataSetProvider.LookupDataSet(applicationName,applicationMetadata.Schema.SchemaId);
             if (resultSchema.Stereotype == SchemaStereotype.Detail) {
                 if (maximoMocked) {
                     return MockingUtils.GetMockedDataMap(applicationName, resultSchema, nextMetadata);

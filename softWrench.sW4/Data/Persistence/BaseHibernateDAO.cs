@@ -112,23 +112,24 @@ namespace softWrench.sW4.Data.Persistence {
             return query;
         }
 
-        public IList<dynamic> FindByNativeQuery(String queryst, params object[] parameters) {
+        public List<Dictionary<string, string>> FindByNativeQuery(String queryst, params object[] parameters) {
+            IList<dynamic> queryResult;
             using (var session = GetSessionManager().OpenSession()) {
                 using (session.BeginTransaction()) {
                     var query = BuildQuery(queryst, parameters, session, true);
                     query.SetResultTransformer(NhTransformers.ExpandoObject);
-                    return query.List<dynamic>();
+                    queryResult = query.List<dynamic>();
                 }
             }
+            if (queryResult == null || !queryResult.Any()) {
+                return null;
+            }
+            var list = queryResult.Cast<IEnumerable<KeyValuePair<string, object>>>()
+                .Select(r => r.ToDictionary(pair => pair.Key, pair => (pair.Value == null ? null : pair.Value.ToString()), StringComparer.OrdinalIgnoreCase))
+               .ToList();
+            return list;
         }
 
-        public IList<dynamic> FindByNativeQuery(String queryst) {
-            using (var session = GetSessionManager().OpenSession()) {
-                var query = BuildQuery(queryst, session, true);
-                query.SetResultTransformer(NhTransformers.ExpandoObject);
-                return query.List<dynamic>();
-            }
-        }
 
         public IList<dynamic> FindByNativeQuery(String queryst, ExpandoObject parameters, PaginationData paginationData = null) {
             var before = Stopwatch.StartNew();

@@ -92,7 +92,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         scope.$broadcast("sw_gridrefreshed", data, $rootScope.printRequested);
         if (data != null && $rootScope.printRequested !== true) {
             //if its a printing operation, then leave the pagination data intact
-            //this code needs to be here because the crud_list.js might not yet be included while this is loading... 
+            //this code needs to be here because the crud_list.js might not yet be included in the page while this is running, so the even would be lost... 
             //TODO: rethink about it
             $scope.paginationData = {};
             $scope.searchValues = data.searchValues;
@@ -265,6 +265,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         } else if (result.type == 'ApplicationListResult') {
             log.debug("Application List Result handled");
             $scope.toList(result, scope);
+            associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, null);
             fixHeaderService.FixHeader();
         } else if (result.crudSubTemplate != null) {
 

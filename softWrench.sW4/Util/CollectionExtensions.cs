@@ -12,7 +12,7 @@ namespace softWrench.sW4.Util {
             return enumerable == null || !enumerable.Any();
         }
 
-        public static List<TSource> AddReturn<TSource>(this List<TSource> source,TSource item) {
+        public static List<TSource> AddReturn<TSource>(this List<TSource> source, TSource item) {
             source.Add(item);
             return source;
         }
@@ -22,6 +22,11 @@ namespace softWrench.sW4.Util {
             return source;
         }
 
+        public static void AddAll<TSource>(this System.Collections.Generic.ISet<TSource> source, IEnumerable<TSource> items) {
+            foreach (var item in items) {
+                source.Add(item);
+            }
+        }
 
         public static TSource FirstWithException<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate, string msg, params object[] args) {
             var first = source.FirstOrDefault(predicate);

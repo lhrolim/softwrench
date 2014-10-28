@@ -36,7 +36,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
     }
 
 
-  
+
 
     var doGetFullObject = function (associationFieldMetadata, associationOptions, selectedValue) {
         if (selectedValue == null) {
@@ -51,7 +51,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             //if the list is lazy (ex: lookups, there´s nothing we can do, except for static option field )
             if (associationFieldMetadata.options != undefined) {
                 //this means this is an option field with static options
-                var resultArr = $.grep(associationFieldMetadata.options, function(option) {
+                var resultArr = $.grep(associationFieldMetadata.options, function (option) {
                     return selectedValue.equalIc(option.value);
                 });
                 return resultArr == null ? null : resultArr[0];
@@ -146,10 +146,15 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             fn(afterchangeEvent);
         },
 
-        //Callback of the updateAssociations call, in which the values returned from the server would update the scope variables, 
-        //to be shown on screen
-        ///It would be called at the first time the detail screen is opened as well
         updateAssociationOptionsRetrievedFromServer: function (scope, serverOptions, datamap) {
+            /// <summary>
+            ///  Callback of the updateAssociations call, in which the values returned from the server would update the scope variables, 
+            /// to be shown on screen
+            /// It would be called at the first time the detail screen is opened as well
+            /// </summary>
+            /// <param name="scope"></param>
+            /// <param name="serverOptions"></param>
+            /// <param name="datamap">could be null for list schemas.</param>
             var log = $log.getInstance('sw4.associationservice#updateAssociationOptionsRetrievedFromServer');
             scope.associationOptions = instantiateIfUndefined(scope.associationOptions);
             scope.blockedassociations = instantiateIfUndefined(scope.blockedassociations);
@@ -173,7 +178,8 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 }
                 var fn = this;
                 $.each(associationFieldMetadatas, function (index, value) {
-                    if (value.target == null) {
+                    if (value.target == null || datamap == null) {
+                        //the datamap could be null if this method is called from a list schema
                         return;
                     }
                     //clear datamap for the association updated -->This is needed due to a IE9 issue
@@ -266,7 +272,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
 
             var parameters = {
-                application : applicationName ,
+                application: applicationName,
                 key: {
                     schemaId: schema.schemaId,
                     mode: schema.mode,
