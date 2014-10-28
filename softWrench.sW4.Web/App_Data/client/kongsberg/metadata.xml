@@ -1208,7 +1208,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="outtoolcost"       hidden="true"/>
           <field attribute="outservcost"       hidden="true"/>
           <field attribute="workorderid"  readonly="true" hidden="true"/>
-          
+          <field attribute="actliccost"        hidden="true"/>
+          <field attribute="estatapprliccost"  hidden="true"/>
+          <field attribute="estliccost"        hidden="true"/>
           <field attribute="orgid"  required="true" readonly="true" hidden="true"/>
           <section id ="siteidsection"/>
           <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
