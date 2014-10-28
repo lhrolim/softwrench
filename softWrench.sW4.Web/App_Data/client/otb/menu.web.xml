@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Menu xmlns="http://www.example.org/Menu" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmenudisplacement="horizontal" indexitem
-  ="SR">
+  ="WO">
   <!--  <application title="Workorder Grid" ref="workorder" schema="detail"  tooltip="Workorders" id="workorder"/>-->
   <container title="Service Requests" tooltip="Click to access your request tasks" icon ="fa fa-ticket" id="servicereq" role="sr">
     <application id="SR" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid"/>

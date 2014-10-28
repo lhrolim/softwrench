@@ -673,11 +673,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Work Order Grid" platform="web">
 
-          <commandbars>
-            <commandgroup position="gridtop">
-              <resourcecommand id="batches" position=">filter" path="/Content/Templates/commands/batches/batches.html" role="allowwobatches"/>
-            </commandgroup>
-          </commandbars>
 
           <field attribute="wonum" label="WO No" >
             <renderer type="default" params="width=15%" />

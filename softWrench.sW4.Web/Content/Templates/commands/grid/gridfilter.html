@@ -1,12 +1,12 @@
 <span ng-controller="GridFilterController">
     <div class="btn-group">
         <button type="button" class="btn btn-sm" ng-click="refreshGrid()" ng-class="{'btn-default':command.parameters['allowsave']=='false','btn-primary':command.parameters['allowsave']==null}">
-            <i class="fa fa-filter"></i><span ng-show="!selectedfilter.alias"
+            <i class="fa fa-refresh" ></i><span ng-show="!selectedfilter.alias"
                                               ng-if="command.parameters['allowsave']!='false'">
                 &ensp;Filters
             </span><span ng-show="selectedfilter.alias">&ensp;{{selectedfilter.alias}}</span>
         </button>
-        <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" ng-if="command.parameters['allowsave']!='false'">
+        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" ng-if="command.parameters['allowsave']!='false'">
             <span class="caret"></span>
             <span class="sr-only">Toggle Dropdown</span>
         </button>
