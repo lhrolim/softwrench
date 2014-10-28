@@ -728,7 +728,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm; width=15%"/>
           </field>
         
-          <field attribute="#alreadyused" tooltip="This workorder is already used on another batch and cannot be included in the batch">
+          <field attribute="#alreadyused" tooltip="This workorder is already used on another batch and cannot be included in this batch">
             <renderer type="icon" params="expression={'true':'fa-warning','false':''};"/>
           </field>
 

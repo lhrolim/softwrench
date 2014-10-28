@@ -110,7 +110,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
             if (alreadyused.length != 0) {
                 alertService.confirm(null, null, function () {
                     doSave(ids);
-                }, "The items {0} are already used on other batches and won´t be included. Proceed?".format(alreadyused.join()));
+                }, "The workorders {0} are already used on other batches and will not be included. Proceed?".format(alreadyused.join()));
                 return;
             }
             doSave(ids);
