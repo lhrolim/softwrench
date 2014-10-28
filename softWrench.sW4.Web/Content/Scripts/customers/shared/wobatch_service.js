@@ -215,7 +215,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
                     if (datamap["#closed"]) {
                         //lets validate required fields first
                         var valArray = validationService.getInvalidLabels(schema.displayables, datamap);
-                        if (datamap["#ReconCd"] == "00" && !datamap["#fdbckcomment"]) {
+                        if (datamap["#ReconCd"] != "00" && !datamap["#fdbckcomment"]) {
                             valArray.push("Feedback Comment");
                         }
 
