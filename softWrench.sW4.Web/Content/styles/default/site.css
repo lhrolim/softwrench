@@ -1198,3 +1198,14 @@ input[type=search] {
 #scanConfigTable thead tr td:nth-child(3) {
     width: 25%;
 }
+
+/*user profile input form*/
+.new-button {
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+#profiles .buttons, #roles .buttons {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}

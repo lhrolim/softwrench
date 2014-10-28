@@ -1,7 +1,8 @@
 ﻿<article class="container" ng-controller="UserProfileController">
-
     <section ng-show="isList">
-        <a ng-click="new();" style="cursor: pointer">{{i18N('general.newuserprofile','New User Profile')}}</a>
+        <button type="button" class="btn btn-primary new-button" ng-click="new();">
+            <i style="margin-right: 0.5em" class="glyphicon glyphicon-plus"></i>{{i18N('general.newuserprofile','New User Profile')}}
+        </button>
 
         <div id="dvUserList">
             <form id="roleForm">
@@ -25,29 +26,28 @@
     <section ng-show="isDetail">
         <div id="dvDetail" class="form-horizontal container">
             <div class="form-group">
-                
+
                 <label class="control-label col-lg-2">{{i18N('general.profile','Profile')}}</label>
                 <div class="col-lg-10">
                     <input type="text" id="txtUserName" ng-model="profile.name" placeholder="{{i18N('placeholder.required.profilename','Profile name is required')}}!" class="form-control"></input>
                 </div>
             </div>
-
             <div class="form-group">
                 <label class="control-label col-lg-2">{{i18N('general.description','Description')}}</label>
                 <div class="col-lg-10">
                     <input type="text" id="txtDescription" ng-model="profile.description" class="form-control"></input>
                 </div>
             </div>
-
             <div id="roles" class="form-group">
                 <label class="control-label col-lg-2">{{i18N('general.selectedroles','Selected Roles')}}</label>
                 <div class="col-lg-10">
                     <div class="select-left-right">
                         <select multiple="multiple" ng-model="selectedroles" ng-options="role.name for role in profile.roles"
                             class="form-control hidden-phone input-block-level" />
-
-                        <button type="button" class="btn-success" ng-click="addSelectedRoles(availablerolesselected)">ADD</button>
-                        <button type="button" class="btn-warning" ng-click="removeSelectedRoles(selectedroles)">DELETE</button><br/>
+                        <div class="buttons">
+                            <button type="button" class="btn btn-sm btn-defualt" ng-click="addSelectedRoles(availablerolesselected)"><i class="fa fa-plus"></i>&ensp;ADD</button>
+                            <button type="button" class="btn btn-sm btn-defualt" ng-click="removeSelectedRoles(selectedroles)"><i class="fa fa-minus"></i>&ensp;DELETE</button>
+                        </div>
                         <label>Profiles Deleted</label>
 
                         <select multiple="multiple" ng-model="availablerolesselected" ng-options="role.name for role in availableroles"
@@ -55,12 +55,11 @@
                     </div>
                 </div>
             </div>
-
             <div id="constraints" class="form-group">
                 <div class="row">
                     <div class="col-lg-3">
                         <label class="control-label">{{i18N('general.contraints','Constraints')}}</label>
-                        <button type="button" class="glyphicon glyphicon-plus" ng-click="addConstraint()" />
+                        <button type="button" class="btn btn-sm glyphicon glyphicon-plus" ng-click="addConstraint()" />
                     </div>
                 </div>
                 <div class="row">
@@ -75,10 +74,10 @@
                                 </tr>
                             </thead>
                             {{profile.constraints}}
-                            <tbody>
+                                                      <tbody>
                                 <tr ng-repeat="constraint in profile.dataConstraints">
                                     <td>
-                                        <button type="button" class="glyphicon glyphicon-remove" ng-click="removeConstraint(constraint)"></button>
+                                        <button type="button" class="btn btn-sm glyphicon glyphicon-remove" ng-click="removeConstraint(constraint)"></button>
                                     </td>
                                     <td>
                                         <input type="text" ng-model="constraint.entityName" class="hidden-phone checkbox" />
@@ -96,24 +95,15 @@
                     </div>
                 </div>
             </div>
-
-
-
-
-
             <div class="form-actions hidden-phone">
                 <div class="col-lg-offset-2 col-lg-10">
-                    <button type="button" id="btnSave" class="btn btn-primary" ng-click="save()">{{i18N('general.save','Save')}}</button>
-                    <button type="button" class="btn btn-primary" ng-click="cancel()">{{i18N('general.cancel','Cancel')}}</button>
-                    <button type="button" class="btn btn-primary" ng-click="delete()">{{i18N('general.delete','Delete')}}</button>
+                    <button type="button" id="btnSave" class="btn btn-primary" ng-click="save()"><i style="margin-right: 0.5em" class="glyphicon glyphicon-ok"></i>{{i18N('general.save','Save')}}</button>
+                    <button type="button" class="btn" ng-click="cancel()"><i style="margin-right: 0.5em" class="glyphicon glyphicon-backward"></i>{{i18N('general.cancel','Cancel')}}</button>
+                    <button type="button" class="btn" ng-click="delete()"><i style="margin-right: 0.5em" class="glyphicon glyphicon-remove"></i>{{i18N('general.delete','Delete')}}</button>
                 </div>
             </div>
-
-            <!--this is redundant and is removed from the page since the error message gets printed on the message section above--> 
+            <!--this is redundant and is removed from the page since the error message gets printed on the message section above-->
             <!--{{errorMessage}}-->
-
-
         </div>
-
     </section>
 </article>
