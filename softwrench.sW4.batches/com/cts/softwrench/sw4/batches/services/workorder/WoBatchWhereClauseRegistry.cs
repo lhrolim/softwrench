@@ -15,11 +15,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
         }
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
-            var clientName = ApplicationConfiguration.ClientName;
-            if(clientName=="otb"){
-                _wcFacade.Register("_wobatch", "userid = @userid", new WhereClauseRegisterCondition() { AppContext = new ApplicationLookupContext() { Schema = "list" } });
-                }
-            _wcFacade.Register("workorder", "@workOrderBatchWhereClauseProvider.CreateBatchWhereClause",  WhereClauseRegisterCondition.ForSchema("createbatchlist"));
+            _wcFacade.Register("_wobatch", "userid = @userid", new WhereClauseRegisterCondition() { AppContext = new ApplicationLookupContext() { Schema = "list" } });
+            _wcFacade.Register("workorder", "@workOrderBatchWhereClauseProvider.CreateBatchWhereClause", WhereClauseRegisterCondition.ForSchema("createbatchlist"));
         }
     }
 }

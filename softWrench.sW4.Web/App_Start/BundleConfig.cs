@@ -126,11 +126,11 @@ namespace softWrench.sW4.Web {
 
             var clientName = ApplicationConfiguration.ClientName;
             var clientPath = String.Format("~/Content/Scripts/customers/{0}", clientName);
-            var sharedPath = String.Format("~/Content/Scripts/customers/shared", clientName);
+            const string sharedPath = "~/Content/Scripts/customers/shared";
             var scriptBundle = new ScriptBundle("~/Content/Scripts/client/client-js");
+            bundles.Add(scriptBundle.IncludeDirectory(sharedPath, "*.js"));
             try {
                 bundles.Add(scriptBundle.IncludeDirectory(clientPath, "*.js"));
-                bundles.Add(scriptBundle.IncludeDirectory(sharedPath, "*.js"));
             }
             catch {
                 //nothing to do
@@ -140,9 +140,8 @@ namespace softWrench.sW4.Web {
         private static void AddClientBundle(BundleCollection bundles) {
             var clientName = ApplicationConfiguration.ClientName;
             const string basePath = "~/Content/styles/default/";
-            var baseAppPath = basePath + "/application";
+            const string baseAppPath = basePath + "/application";
 
-            //            var clientPath = String.Format("~/Content/Customers/{0}/css", clientName);
             var clientPath = String.Format("~/Content/styles/{0}", clientName);
             var clientPathAppCustom = clientPath + "/application";
 

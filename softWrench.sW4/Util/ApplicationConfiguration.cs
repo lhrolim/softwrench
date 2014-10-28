@@ -16,6 +16,9 @@ namespace softWrench.sW4.Util {
 
         private static Version _version;
 
+        private static string _clientName;
+        private static string _environment;
+
         public static String SystemVersion {
             get { return ConfigurationManager.AppSettings["version"]; }
         }
@@ -44,11 +47,15 @@ namespace softWrench.sW4.Util {
         /// </summary>
         public static string ClientName {
             get {
-
+                if (_clientName != null) {
+                    //caching file system access
+                    return _clientName;
+                }
                 if (_testclientName != null && IsUnitTest) {
                     return _testclientName;
                 }
-                return ConfigurationManager.AppSettings["clientkey"];
+                _clientName = ConfigurationManager.AppSettings["clientkey"];
+                return ClientName;
             }
         }
 
@@ -61,8 +68,12 @@ namespace softWrench.sW4.Util {
         public static readonly string Profile = GetProfile();
 
         private static string GetProfile() {
-            string declaredProfile = ConfigurationManager.AppSettings["profile"];
-            return declaredProfile ?? UnitTestProfile;
+            if (_environment != null) {
+                return _environment;
+            }
+            var declaredProfile = ConfigurationManager.AppSettings["profile"];
+            _environment = declaredProfile ?? UnitTestProfile;
+            return _environment;
         }
 
         #region MaximoProperties
