@@ -79,6 +79,15 @@ namespace softWrench.sW4.Util {
                 if (prop.PropertyType.IsEnum) {
                     value = Enum.Parse(prop.PropertyType, (string)value);
                 }
+                //Add an other case for boolean
+                if (prop.PropertyType.Name == "Boolean" && (value.ToString() != "true" || value.ToString() != "false")) {
+                    if (value.ToString() == "0") {
+                        value = false;
+                    }
+                    if (value.ToString() == "1") {
+                        value = true;
+                    }
+                }
                 prop.SetValue(baseObject, value);
             } catch (Exception e) {
                 throw new InvalidOperationException(String.Format("Error setting property {0} of object {1}. {2}", propertyName, baseObject, e.Message), e);
