@@ -23,12 +23,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValueIfNull(invIssue, "GLDEBITACCT", "6000-200-200");
             w.SetValueIfNull(invIssue, "SITEID", user.SiteId);
             w.SetValueIfNull(invIssue, "ITEMNUM", "XMP-3500");
-            w.SetValueIfNull(invIssue, "QUANTITY", 1);
-            w.SetValueIfNull(invIssue, "OWNERSYSID", "1");
+            w.SetValueIfNull(invIssue, "QUANTITY", 1.00);
+            w.SetValueIfNull(invIssue, "UNITCOST", 0.00);
+            w.SetValueIfNull(invIssue, "ACTUALCOST", 0.00);
+            w.SetValueIfNull(invIssue, "LINECOST", 0.00);
+            w.SetValueIfNull(invIssue, "QTYREQUESTED", 0.00);
             /*FIND CORRECT VALUES FOR THESE FIELDS*/
 
-            w.SetValueIfNull(invIssue, "UNITCOST", 0);
+           
             w.SetValueIfNull(invIssue, "TRANSDATE", DateTime.Now.FromServerToRightKind());
+            w.SetValueIfNull(invIssue, "SENDERSYSID", "SW");
             
 
 

@@ -78,7 +78,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </relationships>
     </entity>
 
-    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans">
+    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN')">
       <relationships>
         <relationship to="workorder" >
           <relationshipAttribute from="refwo" to="wonum" primary="true"/>
@@ -297,6 +297,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="EXCEPTIONREASON" quoteLiteral="true" />
+        </relationship>
+        <relationship to="invissue" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
       </relationships>
 
@@ -1567,6 +1571,24 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </schemas>
     </application>
 
+    <application name="invissuewo" title="Workorder Inventory Issuing and Returns" entity="workorder">
+      <schemas>
+        <detail id="viewdetail">
+          <field attribute="#refwo" label="Workorder"/>
+          <field attribute="#issueto" label="Issue To"/>
+          <field attribute="#assetnum" label="Asset"/>
+          <field attribute="#location" label="Location"/>
+          <field attribute="#storeloc" label="Storeroom"/>
+          <field attribute="#issuetype" label="Issue Type"/>
+          <composition relationship="matusetrans" label="Materials">
+            <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'"  />
+          </composition>
+          
+          
+        </detail>
+      </schemas>
+    </application>
+      
     <application name="invissue" title="Issue Inventory" entity="invissue">
       <schemas>
         <list title="Issues and Returns">
@@ -1596,7 +1618,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
         </list>
 
-        <detail id="newissuereturn" title="Issues and Returns" mode="input">
+        <detail title="Issues and Returns" mode="input" >
           <field attribute="matusetransid" hidden="true"/>
           <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="location,assetnum" required="true">
             <renderer type="lookup"/>
@@ -1619,6 +1641,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <option label="ISSUE" value="ISSUE"/>
             <option label="RETURN" value="RETURN"/>
           </optionfield>
+          
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="cancel"/>
+            </commandgroup>
+          </commandbars>
         </detail>
       </schemas>
     </application>
