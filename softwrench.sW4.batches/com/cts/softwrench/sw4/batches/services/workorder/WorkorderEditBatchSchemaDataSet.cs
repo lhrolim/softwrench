@@ -4,6 +4,7 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception;
+using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
@@ -78,9 +79,19 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
                 CopyValue(item, ob, "actfinish");
                 CopyValue(item, ob, "#pmchange");
                 CopyValue(item, ob, "#fdbckcomment");
-                CopyValue(item, ob, "#lognote");
                 CopyValue(item, ob, "#closed");
+                HandleLogNote(item, ob);
+
             }
+        }
+
+        private void HandleLogNote(AttributeHolder item, JObject ob) {
+            var jprop = ob.Property("worklog_");
+            if (jprop != null) {
+                item.SetAttribute("#lognote", "Y");
+                item.SetAttribute("worklog_", jprop.Value);
+            }
+            
         }
 
         private static void CopyValue(AttributeHolder item, JObject row, String name) {

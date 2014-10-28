@@ -197,7 +197,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
 
                             datamap['worklog_'] = [];
                             datamap['worklog_'].push(worklog);
-                            datamap['#lognote'] = worklog['description'];
+                            datamap['#lognote'] = 'Y';
                             $rootScope.$digest();
                         }
                     };
