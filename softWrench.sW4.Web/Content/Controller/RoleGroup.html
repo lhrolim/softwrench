@@ -1,10 +1,8 @@
 ﻿<article class="container" ng-controller="RoleGroupController">
-
-
     <section ng-show="isList">
-
-        <a ng-click="editRoleGroup(null,null,null);" style="cursor: pointer">{{i18N('_rolegroup.new','New Role Group')}}</a>
-
+         <button type="button" class="btn btn-primary new-button" ng-click="editRoleGroup(null,null,null);">
+            <i style="margin-right: 0.5em" class="glyphicon glyphicon-plus"></i>{{i18N('_rolegroup.new','New Role Group')}}
+        </button>
         <div id="dvUserList">
             <form id="roleForm">
                 <table class="table table-striped table-hover hidden-phone">
@@ -38,23 +36,21 @@
                     <div class="col-lg-10">
                         <div class="select-left-right">
                             <select multiple="multiple" ng-model="selectedroles" ng-options="role.label for role in rolegroup.roles"
-                                    class="form-control hidden-phone input-block-level" />
+                                class="form-control hidden-phone input-block-level" />
 
-                            <button type="button" class="btn-success" ng-click="addSelectedRoles(availablerolesselected)"><<</button>
-                            <button type="button" class="btn-warning" ng-click="removeSelectedRoles(selectedroles)">>></button>
+                            <button type="button" class="btn btn-sm btn-defualt" ng-click="addSelectedRoles(availablerolesselected)"><<</button>
+                            <button type="button" class="btn btn-sm btn-defualt" ng-click="removeSelectedRoles(selectedroles)">>></button>
 
                             <select multiple="multiple" ng-model="availablerolesselected" ng-options="role.label for role in availableroles"
-                                    class="form-control hidden-phone input-block-level" />
+                                class="form-control hidden-phone input-block-level" />
                         </div>
                     </div>
                 </div>
-
-
                 <div class="form-actions hidden-phone">
                     <div class="col-lg-offset-2 col-lg-10">
-                        <button type="button" id="btnSave" class="btn btn-primary" ng-click="save()">{{i18N('general.save','Save')}}</button>
-                        <button type="button" class="btn btn-primary" ng-click="cancel()">{{i18N('general.cancel','Cancel')}}</button>
-                        <button type="button" class="btn btn-primary" ng-click="delete()">{{i18N('general.delete','Delete')}}</button>
+                        <button type="button" id="btnSave" class="btn btn-primary" ng-click="save()"><i style="margin-right: 0.5em" class="glyphicon glyphicon-ok"></i>{{i18N('general.save','Save')}}</button>
+                        <button type="button" class="btn" ng-click="cancel()"><i style="margin-right: 0.5em" class="glyphicon glyphicon-backward"></i>{{i18N('general.cancel','Cancel')}}</button>
+                        <button type="button" class="btn" ng-click="delete()"><i style="margin-right: 0.5em" class="glyphicon glyphicon-remove"></i>{{i18N('general.delete','Delete')}}</button>
                     </div>
                 </div>
             </div>
