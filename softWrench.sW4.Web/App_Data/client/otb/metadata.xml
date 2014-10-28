@@ -726,10 +726,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <optionfield attribute="crewid" label="Crews" providerattribute="crews">
             <renderer type="combo" params="filteronly=true;width=16%;"/>
           </optionfield>
-          <field attribute="schedstart" label="Schedule Start" >
+          <field attribute="schedstart" label="Scheduled Start" >
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm; width=15%"/>
           </field>
-          <field attribute="schedfinish" label="Schedule Finish" >
+          <field attribute="schedfinish" label="Scheduled Finish" >
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm; width=15%"/>
           </field>
         
