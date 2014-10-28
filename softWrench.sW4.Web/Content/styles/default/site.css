@@ -178,6 +178,10 @@ input:focus, select:focus, textarea:focus {
     padding: 4px;
 }
 
+.datepicker-dropdown {
+    z-index: 1000 !important;
+}
+
 .detail-body {
     padding-top: 20px;
 }
