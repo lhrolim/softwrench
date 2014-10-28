@@ -542,6 +542,7 @@
     <Content Include="Content\Scripts\client\aa_dateutils.js" />
     <Content Include="Content\Scripts\client\aa_stringutils.js" />
     <Content Include="Content\Scripts\client\about.js" />
+    <Content Include="Content\Scripts\client\commlogactions.js" />
     <Content Include="Content\Scripts\client\components\componentsfacade.js" />
     <Content Include="Content\Scripts\client\components\autocompleteserver.js" />
     <Content Include="Content\Scripts\client\components\autocompleteclient.js" />
