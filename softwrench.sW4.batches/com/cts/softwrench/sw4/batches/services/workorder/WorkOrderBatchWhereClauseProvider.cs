@@ -14,7 +14,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
         public static string GetCrewIdQuery(bool appendDescription) {
             var beginDate = DateUtil.ParsePastAndFuture("14days", -1);
             return @"SELECT {0} FROM alndomain a WHERE a.domainid = 'CREWID' 
-                AND    a.siteid = {1}
+                AND    a.siteid = '{1}'
                 and exists (select NULL from workorder wo where a.siteid = wo.siteid and a.value = wo.crewid and wo.status = 'WORKING' and wo.schedfinish >= '{2}')"
                 .Fmt(appendDescription ? "value,description" : "value", SecurityFacade.CurrentUser().SiteId, beginDate);
         }
