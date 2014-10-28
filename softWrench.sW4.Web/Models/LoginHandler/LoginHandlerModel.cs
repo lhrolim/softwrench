@@ -11,10 +11,18 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
         private readonly string _loginMessage;
         private readonly bool _incorrectLogin;
         private readonly bool _isHapagClient;
+        private readonly string _clientName;
 
         public LoginHandlerModel(bool isLoginEnabled, string loginMessage) {
             _isLoginEnabled = isLoginEnabled;
             _loginMessage = loginMessage;
+        }
+
+        public LoginHandlerModel(bool isLoginEnabled, string loginMessage, string clientName)
+        {
+            _isLoginEnabled = isLoginEnabled;
+            _loginMessage = loginMessage;
+            _clientName = clientName;
         }
 
         public LoginHandlerModel(bool isLoginEnabled, bool incorrectLogin, string loginMessage, bool isHapagClient) {
@@ -24,9 +32,26 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
             _isHapagClient = isHapagClient;
         }
 
-        public LoginHandlerModel(bool isLoginEnabled, bool isHapagClient) {
+        public LoginHandlerModel(bool isLoginEnabled, bool incorrectLogin, string loginMessage, bool isHapagClient, string clientName)
+        {
+            _isLoginEnabled = isLoginEnabled;
+            _incorrectLogin = incorrectLogin;
+            _loginMessage = loginMessage;
+            _isHapagClient = isHapagClient;
+            _clientName = clientName;
+        }
+
+        public LoginHandlerModel(bool isLoginEnabled, bool isHapagClient)
+        {
             _isLoginEnabled = isLoginEnabled;
             _isHapagClient = isHapagClient;
+        }
+
+        public LoginHandlerModel(bool isLoginEnabled, bool isHapagClient, string clientName)
+        {
+            _isLoginEnabled = isLoginEnabled;
+            _isHapagClient = isHapagClient;
+            _clientName = clientName;
         }
 
         public bool IsLoginEnabled {
@@ -45,6 +70,11 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
             get { return _isHapagClient; }
         }
 
+        public string ClientName
+        {
+            get { return _clientName; }
+        }
+
         public string Version {
             get { return ApplicationConfiguration.SystemVersion; }
         }
@@ -59,7 +89,7 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
             }
         }
         public override string ToString() {
-            return string.Format("IsLoginEnabled: {0}, LoginMessage: {1}, IncorrectLogin: {2}, Version: {3}, Revision: {4}", IsLoginEnabled, LoginMessage, IncorrectLogin, Version, Revision);
+            return string.Format("IsLoginEnabled: {0}, LoginMessage: {1}, IncorrectLogin: {2}, Version: {3}, Revision: {4}, Client Name: {5}", IsLoginEnabled, LoginMessage, IncorrectLogin, Version, Revision, ClientName);
         }
     }
 }

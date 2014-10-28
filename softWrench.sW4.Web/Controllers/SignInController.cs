@@ -35,9 +35,9 @@ namespace softWrench.sW4.Web.Controllers {
             LoginHandlerModel model;
             string loginMessage = null;
             if (!IsLoginEnabled(ref loginMessage)) {
-                model = new LoginHandlerModel(false, loginMessage);
+                model = new LoginHandlerModel(false, loginMessage, ClientName());
             } else {
-                model = new LoginHandlerModel(true, IsHapagClient());
+                model = new LoginHandlerModel(true, IsHapagClient(), ClientName());
             }
             return View(model);
         }
@@ -72,7 +72,7 @@ namespace softWrench.sW4.Web.Controllers {
             LoginHandlerModel model = null;
             var validationMessage = GetValidationMessage(userName, password);
             if (!string.IsNullOrEmpty(validationMessage)) {
-                model = new LoginHandlerModel(true, true, validationMessage, IsHapagClient());
+                model = new LoginHandlerModel(true, true, validationMessage, IsHapagClient(), ClientName());
                 return View(model);
             }
             userName = userName.ToLower();
@@ -89,7 +89,7 @@ namespace softWrench.sW4.Web.Controllers {
             validationMessage = ApplicationConfiguration.LoginErrorMessage != null
                 ? ApplicationConfiguration.LoginErrorMessage.Replace("\\n", "\n")
                 : null;
-            model = new LoginHandlerModel(true, true, validationMessage, IsHapagClient());
+            model = new LoginHandlerModel(true, true, validationMessage, IsHapagClient(), ClientName());
             return View(model);
         }
 
@@ -106,6 +106,11 @@ namespace softWrench.sW4.Web.Controllers {
 
         private bool IsHapagClient() {
             return ApplicationConfiguration.ClientName == "hapag";
+        }
+
+        private string ClientName()
+        {
+            return ApplicationConfiguration.ClientName;
         }
 
         public string GetValidationMessage(string userName, string password) {
