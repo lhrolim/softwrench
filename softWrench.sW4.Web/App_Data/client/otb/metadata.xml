@@ -756,13 +756,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </commandgroup>
           </commandbars>
 
-          <field attribute="wonum" label="Work Order #" >
+          <field attribute="workorderid" label="Work Order #" >
             <renderer type="default" params="filterenabled=false; width=10%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="limit=14;"  />
           </field>
-          <field attribute="#UNID" label="UNID">
+          <field attribute="wonum" label="UNID">
             <renderer type="default" params="width=8%"  />
           </field>
           <optionfield attribute="#ReconCd" label="Reconciliation Codes" required="true" providerattribute="reconciliationCodes">

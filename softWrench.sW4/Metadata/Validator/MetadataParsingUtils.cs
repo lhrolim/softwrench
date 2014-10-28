@@ -12,12 +12,16 @@ namespace softWrench.sW4.Metadata.Validator {
         private const string InternalMetadataPattern = "\\App_Data\\Client\\@internal\\{0}\\{1}.xml";
         private const string TestInternalMetadataPattern = "\\Client\\@internal\\{0}\\{1}.xml";
         private const string TestMetadataPath = "\\Client\\{0}\\";
+        private const string OtbPath = "\\App_Data\\Client\\otb\\";
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MetadataParsingUtils));
 
-        public static string GetPath(string resource, bool internalFramework = false) {
+        public static string GetPath(string resource, bool internalFramework = false, bool otbpath = false) {
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            var clientName = internalFramework ? "@internal" : ApplicationConfiguration.ClientName;
+            var clientName = otbpath ? "otb" : ApplicationConfiguration.ClientName;
+            if (internalFramework) {
+                clientName = "@internal";
+            }
             var pattern = ApplicationConfiguration.IsUnitTest ? TestMetadataPath : ClientMetadataPattern;
             return (baseDirectory + String.Format(pattern, clientName) + resource);
         }
@@ -41,16 +45,17 @@ namespace softWrench.sW4.Metadata.Validator {
             return streamValidator == null ? GetStreamImpl(path) : new StreamReader(StreamUtils.CopyStream(streamValidator));
         }
 
-        public static StreamReader GetStreamImpl(string resource, bool internalFramework = false, Stream streamValidator = null) {
+        public static StreamReader GetStreamImpl(string resource, Stream streamValidator = null) {
             if (streamValidator != null) {
                 return new StreamReader(StreamUtils.CopyStream(streamValidator));
             }
             try {
-                var path = GetPath(resource, internalFramework);
+                var path = GetPath(resource);
                 if (File.Exists(path)) {
                     return new StreamReader(path);
                 }
-                return null;
+                path = GetPath(resource, false, true);
+                return new StreamReader(path);
             } catch (Exception) {
                 //nothing to do here.
                 return null;
