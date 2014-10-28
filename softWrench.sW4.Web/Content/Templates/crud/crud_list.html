@@ -66,7 +66,8 @@
                         </div>
                     </th>
                 </tr>
-
+                
+                <!-- Filter row -->
                 <tr class="filter-row hidden-too-much-columns hiddenonprint" ng-if="schema.properties['list.disablefilter'] != 'true'">
                     <th ng-show="schema.properties['list.selectionstyle'] == 'multiple'">
                         <input type="checkbox"
@@ -143,7 +144,7 @@
                                                     ng-init="handleDefaultValue(dm.fields,column)"
                                                     ng-model="searchData[column.target]"
                                                     ng-options="option.value as i18NOptionField(option,column,schema)
-                                                for option in GetAssociationOptions(column)" />
+                                                for option in GetAssociationOptions(column,true)" />
 
                                             <div class="input-group-addon dropdown">
                                                 <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"

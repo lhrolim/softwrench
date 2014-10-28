@@ -23,11 +23,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private readonly FieldFilter _filter;
         private readonly String _providerAttribute;
         private readonly ISet<string> _dependantFields = new HashSet<string>();
-        private bool _sort;
-        private ISet<ApplicationEvent> _eventsSet;
-        private string _dependantFieldsString;
+        private readonly bool _sort;
+        private readonly ISet<ApplicationEvent> _eventsSet;
+        private readonly string _dependantFieldsString;
 
-        public String EnableExpression { get; set; }
 
 
         public OptionField(string applicationName, string label, string attribute, string qualifier, bool isRequired, bool isReadOnly, bool isHidden,
