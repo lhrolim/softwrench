@@ -25,6 +25,8 @@ namespace softWrench.sW4.Web.Models.Home {
         public string Message { get; set; }
         public string WindowTitle { get; set; }
 
+        public string ClientName { get; set; }
+
         public long InitTimeMillis { get; set; }
 
         public HomeModel(string url, string title, HomeConfigs configs, InMemoryUser user, bool hasLogoPopup,
@@ -32,6 +34,8 @@ namespace softWrench.sW4.Web.Models.Home {
             Url = url;
             InitTimeMillis = configs.InitTimeMillis;
             Title = title;
+            ClientName = clientName;
+
             ConfigJSON = JsonConvert.SerializeObject(configs, Newtonsoft.Json.Formatting.None,
           new JsonSerializerSettings() {
               ContractResolver = new CamelCasePropertyNamesContractResolver()
