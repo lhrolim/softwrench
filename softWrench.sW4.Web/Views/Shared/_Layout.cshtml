@@ -106,17 +106,14 @@
                     @*<img src="~/Content/Images/{{clientName}}/logo-main.png" width="274" height="89">*@
                     
 
-                   @* @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/{{clientName}}/logo-main.png")))
+                    @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-main.png")))
                     {
-                        *@
-                    <img class="logo" src="~/Content/Images/{{clientName}}/logo-main.png">
-                    
-                    @*
+                        <img class="logo" src="~/Content/Images/@Model.ClientName/logo-main.png">
                     }
                     else
                     {
-                        <img class="logo" src="~/Content/Images/logo-main1.png">
-                    }*@
+                        <img class="logo" src="~/Content/Images/logo-main.png">
+                    }
 
                 </div>
             </div>
