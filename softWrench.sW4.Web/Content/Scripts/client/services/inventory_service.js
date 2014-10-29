@@ -30,19 +30,24 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
         editinvissuewo: function(parameters) {
             var datamap = {};
-            var param = {};
-            
-
+            datamap['wonum'] = "11250";
             datamap['#assetnum'] = "11250";
             datamap['#issueto'] = "SINCLAIR";
             datamap['#issuetype'] = "RETURN";
             datamap['#location'] = "BR200";
             datamap['#refwo'] = "43079";
             datamap['#storeloc'] = "CENTRAL";
-            datamap['#test'] = "test";
-            param.resultObject = datamap;
-            
-            redirectService.goToApplicationView('invissuewo', 'viewdetail', null, null, null, datamap);
+            datamap['invissue_'] = [];
+
+            var newRecord = {};
+            newRecord['itemnum'] = "test";
+
+            datamap['invissue_'].push(newRecord);
+
+            var param = {};
+            param.id = "43079";
+            param.forceGet = true;
+            redirectService.goToApplicationView('invissuewo', 'viewdetail', null, null, param, datamap);
         }
 
     };

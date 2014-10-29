@@ -27,6 +27,32 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
                 }
             });
         },
+        initIssueItemListener: function (schema, datamap, parameters) {
+            var compData = datamap;
+            $(document).scannerDetection(function (data) {
+
+                //var test = compData;
+                if (compData === undefined) {
+                    compData = {};
+                }
+                if (compData['fields'] === undefined){
+                    compData['fields'] = {};
+                    compData['fields']['invissue_'] = {};
+                } else {
+                    if (compData['fields']['invissue_'] === undefined) {
+                        compData['fields']['invissue_'] = [];
+                    }
+                }
+                
+                var newRecord = {};
+                newRecord['itemnum'] = data;
+                newRecord['quantity'] = 1;
+                newRecord['description'] = "Z RAGGIN IT UP";
+
+                compData['fields']['invissue_'] = [newRecord];
+
+            });
+        },
         
     };
 

@@ -128,6 +128,7 @@ app.directive('compositionList', function (contextService) {
                 $scope.wasExpandedBefore = false;
                 $scope.isReadonly = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
 
+                
                 $injector.invoke(BaseController, this, {
                     $scope: $scope,
                     i18NService: i18NService,
@@ -138,6 +139,7 @@ app.directive('compositionList', function (contextService) {
 
             init();
           
+            eventdispatcherService.onload($scope.compositionlistschema, $scope.compositiondata);
 
             $scope.compositionProvider = function () {
                 var localCommands = {};
@@ -251,6 +253,7 @@ app.directive('compositionList', function (contextService) {
                         }, 0, false);
                     });
             };
+
 
             $scope.cancelComposition = function () {
                 $scope.newDetail = false;
