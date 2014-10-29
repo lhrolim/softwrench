@@ -9,6 +9,7 @@ namespace softWrench.sW4.Metadata.Validator {
 
 
         private const string ClientMetadataPattern = "\\App_Data\\Client\\{0}\\";
+        internal const string TemplatesInternalPath = "App_Data\\Client\\@internal\\templates\\{0}";
         private const string InternalMetadataPattern = "\\App_Data\\Client\\@internal\\{0}\\{1}.xml";
         private const string TestInternalMetadataPattern = "\\Client\\@internal\\{0}\\{1}.xml";
         private const string TestMetadataPath = "\\Client\\{0}\\";
@@ -23,7 +24,15 @@ namespace softWrench.sW4.Metadata.Validator {
                 clientName = "@internal";
             }
             var pattern = ApplicationConfiguration.IsUnitTest ? TestMetadataPath : ClientMetadataPattern;
-            return (baseDirectory + String.Format(pattern, clientName) + resource);
+            return @"" + (baseDirectory + String.Format(pattern, clientName) + resource);
+        }
+
+        public static string GetTemplateInternalPath(string resource) {
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            if (resource.StartsWith("@")) {
+                resource = resource.Substring(1);
+            }
+            return @"" + baseDirectory + TemplatesInternalPath.Fmt(resource);
         }
 
 
@@ -43,6 +52,18 @@ namespace softWrench.sW4.Metadata.Validator {
 
         public static StreamReader GetStream(Stream streamValidator, String path) {
             return streamValidator == null ? GetStreamImpl(path) : new StreamReader(StreamUtils.CopyStream(streamValidator));
+        }
+
+        public static StreamReader DoGetStream(string path) {
+            try {
+                if (File.Exists(path)) {
+                    return new StreamReader(path);
+                }
+                return null;
+            } catch (Exception) {
+                //nothing to do here.
+                return null;
+            }
         }
 
         public static StreamReader GetStreamImpl(string resource, Stream streamValidator = null) {

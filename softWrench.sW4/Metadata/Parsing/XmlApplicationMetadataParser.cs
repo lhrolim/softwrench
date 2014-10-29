@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using softWrench.sW4.Metadata.Validator;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
@@ -31,7 +32,7 @@ namespace softWrench.sW4.Metadata.Parsing {
     ///     Provides parsing and deserialization of
     ///     application metadata stored in a XML file.
     /// </summary>
-    internal sealed class XmlApplicationMetadataParser {
+    internal sealed class XmlApplicationMetadataParser : IXmlMetadataParser<IEnumerable<CompleteApplicationMetadataDefinition>> {
         private const string MissingRelationship = "application {0} references unknown entity {1}";
         private const string MissingParentSchema = "Error building schema {0} for application {1}.parentSchema {2} not found. Please assure its declared before the concrete schema";
         //        private static readonly int? Infinite = null;
@@ -573,8 +574,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         }
 
         private readonly IEnumerable<EntityMetadata> _entityMetadata;
-        private IDictionary<string, CommandBarDefinition> _commandBars;
-
+        private readonly IDictionary<string, CommandBarDefinition> _commandBars;
 
 
         /// <summary>
@@ -582,15 +582,23 @@ namespace softWrench.sW4.Metadata.Parsing {
         ///     stream and returns all application metadata.
         /// </summary>
         /// <param name="stream">The input stream containing the XML representation of the metadata file.</param>
+        /// <param name="alreadyParsedTemplates"></param>
         [NotNull]
-        public IReadOnlyCollection<CompleteApplicationMetadataDefinition> Parse([NotNull] TextReader stream) {
+        public IEnumerable<CompleteApplicationMetadataDefinition> Parse(TextReader stream, ISet<string> alreadyParsedTemplates = null) {
             if (stream == null) throw new ArgumentNullException("stream");
+
+            var result = new List<CompleteApplicationMetadataDefinition>();
 
             var document = XDocument.Load(stream);
             if (null == document.Root) throw new InvalidDataException();
 
-            var applications = document
-                .Root.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.ApplicationsElement);
+            var xElements = document.Root.Elements();
+            var enumerable = xElements as XElement[] ?? xElements.ToArray();
+
+            var applications = enumerable.FirstOrDefault(f => f.IsNamed(XmlMetadataSchema.ApplicationsElement));
+            var templates = enumerable.FirstOrDefault(e => e.IsNamed(XmlMetadataSchema.TemplatesElement));
+            result.AddRange(XmlTemplateHandler.HandleTemplatesForApplications(templates, _entityMetadata, _commandBars, _isSWDB, alreadyParsedTemplates));
+
 
             if (null == applications) {
                 return new ReadOnlyCollection<CompleteApplicationMetadataDefinition>(Enumerable
@@ -598,9 +606,13 @@ namespace softWrench.sW4.Metadata.Parsing {
                     .ToList());
             }
 
-            IEnumerable<XElement> applicationElements = applications.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.ApplicationElement);
-            return (from applicationEl in applicationElements
-                    select ParseApplication(applicationEl, _entityMetadata)).ToList();
+            var applicationElements = applications.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.ApplicationElement);
+            var overridenApplications = (from applicationEl in applicationElements select ParseApplication(applicationEl, _entityMetadata)).ToList();
+
+            var resultApplications = MetadataMerger.MergeApplications(result, overridenApplications);
+
+
+            return resultApplications;
         }
 
         private static class XmlWidgetParser {
