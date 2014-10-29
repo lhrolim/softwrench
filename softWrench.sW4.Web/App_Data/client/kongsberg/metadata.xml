@@ -1744,7 +1744,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="richtext"/>
           </field>
           <field label="Attachment:" attribute="newattachment" >
-            <renderer type="upload"/>
+              <renderer type="upload"/>
           </field>
         </schema>
 
