@@ -233,9 +233,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="classification" qualifier="classification">
           <relationshipAttribute from="classificationid" to ="classificationid" primary="true"/>
         </relationship>
-        <relationship to="srclassifications" qualifier="srclassifications">
+        <!--relationship to="srclassifications" qualifier="srclassifications">
           <relationshipAttribute from="classificationid" to="classificationid" primary="true"/>
-        </relationship>
+        </relationship-->
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="sr" />
@@ -274,12 +274,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </relationships>
     </entity>
     
-    <entity name="incidentclassifications" parententity="classstructure" idAttribute="classstructureid" >
+    <entity name="incidentclassifications" parententity="classstructure" idAttribute="classstructureid">
       <attributes>
-        <attribute name="classstructureid" type="varchar" query="CASE WHEN (incidentclassifications.classstructureid = classusewith.classstructureid) and (classusewith.objectvalue='INCIDENT')) "/>
+        <attribute name="classstructureid" type="varchar" query="CASE WHEN ((incidentclassifications.classstructureid = classusewith.classstructureid) and (classusewith.objectvalue='INCIDENT')) THEN incidentclassifications.classstructureid end "/>
+        
       </attributes>
     </entity>
-    
+   
     <entity name="matusetrans" idAttribute="matusetransid" >
       <attributes>
         <attribute name="matusetransid"  type="bigint" required="true" />
@@ -1586,7 +1587,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=8%" />
           </field>
           <field attribute="reportdate" label="Reported Date">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mmwidth=8%;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=8%;showtime=false" />
           </field>
           <field attribute="owner" label="Owner">
             <renderer type="default" params="width=8%" />
@@ -1738,6 +1739,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
             <renderer type="lookup"/>
           </association>
+          <association label="Project Classification:" target="classificationid" labelfield="classification_.description">
+            <renderer type="lookup"/>
+          </association>
+          <!--field attribute="classificationid" label="Project Classification"/-->
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
             <!--renderer type="lookup"/-->
