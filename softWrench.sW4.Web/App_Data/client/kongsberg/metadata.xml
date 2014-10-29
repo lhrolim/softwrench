@@ -1296,6 +1296,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Details:" attribute="longdescription_.ldtext" >
             <renderer type="richtext"/>
           </field>
+          <section id="attachmentsection"/>
           <section id="compositions"/>
           <!--					<section id="matusetranssection"/>-->
           <!--					<section id="labtranssection"/>-->
@@ -1313,6 +1314,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             
             
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
+          </section>
+          <section id="attachmentsection">
+            <field label="Attachment:" attribute="newattachment" >
+              <renderer type="upload"/>
+            </field>
           </section>
         </schema>
 
@@ -1690,6 +1696,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="statusdate" hidden="true" />
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
+          </field>
+          <field label="Attachment:" attribute="newattachment" >
+              <renderer type="upload"/>
           </field>
         </schema>
 
