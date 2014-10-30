@@ -301,14 +301,6 @@ app.directive('compositionList', function (contextService) {
                 //                $scope.isReadonly = true;
             };
 
-            $scope.cancel = function (previousData, previousSchema) {
-                $('#crudmodal').modal('hide');
-                if (GetPopUpMode() == 'browser') {
-                    close();
-                }
-                $scope.cancelfn({ data: $scope.previousdata, schema: $scope.previousschema });
-                $scope.$emit('sw_cancelclicked');
-            };
 
             $scope.allowButton = function (value) {
                 return expressionService.evaluate(value, $scope.parentdata) && $scope.inline;
