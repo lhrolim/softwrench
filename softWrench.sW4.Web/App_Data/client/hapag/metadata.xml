@@ -581,7 +581,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="list.click.popup" value="browserwindow"/>
           </properties>
         </schema>
-l
+
         <schema id="tapebackupreport" stereotype="list" title="Tape BackUp Report">
           <field label="Incident Number" attribute="ticketid">
             <renderer type="default" params="minwidth=109.1428571428571px;wordwrap=break-word" />
