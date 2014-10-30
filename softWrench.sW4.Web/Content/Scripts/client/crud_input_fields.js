@@ -103,7 +103,7 @@ app.directive('crudInputFields', function (contextService) {
         controller: function ($scope, $http, $element, $injector, $timeout,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
-            cmpfacade,cmpComboDropdown, redirectService,validationService, contextService) {
+            cmpfacade,cmpComboDropdown, redirectService,validationService, eventdispatcherService) {
 
             $scope.$name = 'crud_input_fields';
 
@@ -141,7 +141,7 @@ app.directive('crudInputFields', function (contextService) {
 
             //this will get called when the input form is done rendering
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
-
+                
                 var bodyElement = $('#' + parentElementId);
                 if (bodyElement.length <= 0) {
                     return;

@@ -9,6 +9,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         public string OrderByField { get; set; }
 
         private readonly bool _autoCommit;
+        private readonly bool _hideExistingdata;
         private readonly String _listSchema;
 
         public CompositionCollectionProperties() {
@@ -19,15 +20,15 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             _autoCommit = true;
         }
 
-        public CompositionCollectionProperties(string allowRemoval, string allowInsertion, string allowUpdate, string listSchema, bool autoCommit, string orderByField) {
+        public CompositionCollectionProperties(string allowRemoval, string allowInsertion, string allowUpdate, string listSchema, bool autoCommit, bool hideExistingData, string orderByField) {
             AllowRemoval = allowRemoval;
             AllowInsertion = allowInsertion;
             AllowUpdate = allowUpdate;
             _listSchema = listSchema;
             _autoCommit = autoCommit;
+            _hideExistingdata = hideExistingData;
             OrderByField = orderByField;
         }
-
 
         public string ListSchema {
             get { return _listSchema; }
@@ -37,7 +38,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             get { return _autoCommit; }
         }
 
-
+        public bool HideExistingData
+        {
+            get { return _hideExistingdata; }
+        }
 
         public override string ToString() {
             return string.Format("AllowRemoval: {0}, AllowInsertion: {1}, " +

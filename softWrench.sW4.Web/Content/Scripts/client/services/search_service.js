@@ -315,6 +315,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
             $rootScope.$broadcast("sw_refreshgrid", searchData, extraparameters);
         },
 
+
         toggleAdvancedFilterMode: function () {
             $rootScope.$broadcast("sw_togglefiltermode");
         },

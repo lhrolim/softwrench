@@ -1645,18 +1645,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="#location" hidden="true"/>
           <field attribute="#storeloc" label="Storeroom" readonly="true"/>
           <field attribute="#issuetype" label="Issue Type" readonly="true"/>
-          <composition relationship="invissue" label="Materials" inline="true">
-            <collectionproperties listschema="itemlist" allowupdate="false" allowcreation="@status!='CLOSED'"  />
+          <composition relationship="invissue" label="Items">
+            <collectionproperties listschema="itemlist" allowcreation="true" hideexistingdata="true" />
           </composition>
+          <event type="onload" service="scannerdetectionService" method="initIssueItemListener"/>
         </schema>
       </schemas>
     </application>
-    
-    <!--<application name="invissueitem" title="Item Issuing" entity="invissue">
-      <schemas>
-        
-      </schemas>
-    </application>-->
       
     <application name="invissue" title="Issue Inventory" entity="invissue">
       <schemas>
@@ -1667,7 +1662,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
              successmessage="Issue created"/>
               <command id="create_return" label="New Return" service="inventoryService" method="createReturn" parameters="schema,datamap" position=">create_issue"
              successmessage="Return created"/>
-            <command id="create_return_stub" label="New Return Stub" service="inventoryService" method="editinvissuewo" parameters="schema,datamap" position=">create_return"
+            <command id="create_return_stub" label="New Return Stub" service="inventoryService" method="editinvissuewo" parameters="schema,datamap,clonedCompositionData" position=">create_return"
              successmessage="Return created"/>
             </commandgroup>
           </commandbars>
@@ -1689,26 +1684,58 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
         </list>
         
-        <schema id="itemlist" stereotype="list">
+        <schema id="itemlist" stereotype="compositionlist">
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+            <property key="list.click.popup" value="modal"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="compositiontop" removeundeclared="true">
+              <command id="create_return_stub" label="New Return Stub" service="inventoryService" method="editinvissuewo" parameters="schema,datamap,clonedCompositionData"
+             successmessage="Return created"/>
+            </commandgroup>
+            <commandgroup position="compositionbottom" removeundeclared="true">
+              
+            </commandgroup>
+          </commandbars>
+          <!--<association label="Item:" target="itemnum" labelfield="item_.description">
+            <renderer type="lookup"/>
+          </association>-->
+          <field attribute="itemnum" label="Item"/>
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="refwo" hidden="true"/>
           <field attribute="issueto" hidden="true"/>
           <field attribute="assetnum" hidden="true"/>
           <field attribute="location" hidden="true"/>
-          <field attribute="issuetype" hidden="true"/>
-          <field attribute="itemnum" label="Item" />
           <field attribute="item_.description" label="Description"/>
           <field attribute="quantity" label="Quantity"/>
-          <event type="onload" service="scannerdetectionService" method="initIssueItemListener"/>
+          <field attribute="issuetype" label="Issue Type"/>
+          <field attribute="storeloc" hidden="true"/>
+        </schema>
+        
+        <schema id="editdetail" stereotype="compositiondetail">
+          <association label="Item:" target="itemnum" labelfield="item_.description">
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="matusetransid" hidden="true"/>
+          <field attribute="refwo" hidden="true"/>
+          <field attribute="issueto" hidden="true"/>
+          <field attribute="assetnum" hidden="true"/>
+          <field attribute="location" hidden="true"/>
+          <field attribute="item_.description" label="Description"/>
+          <field attribute="quantity" label="Quantity"/>
+          <field attribute="issuetype" label="Issue Type"/>
+          <field attribute="storeloc" hidden="true"/>
+          
         </schema>
         
         <schema id="newinvissue" stereotype="list">
-          <commandbars>
+          <!--<commandbars>
             <commandgroup position="compositionbottom"  >
               <command id="create_return_stub" label="New Return Stub" service="inventoryService" method="editinvissuewo" parameters="schema,datamap" position=">create_return"
              successmessage="Return created"/>
             </commandgroup>
-          </commandbars>
+          </commandbars>-->
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="refwo" label="Workorder">
             <renderer type="default" params="width=15%;"/>
@@ -1726,10 +1753,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=15%;"/>
           </field>
         </schema>
-        
-        
 
-        <detail title="Issues and Returns" mode="input" >
+        <detail id="lookupwo" title="Issues and Returns" mode="input" platform="Web">
           <field attribute="matusetransid" hidden="true"/>
           <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="location,assetnum" required="true">
             <renderer type="lookup"/>

@@ -414,6 +414,7 @@
             </attribute>
             <attribute name="listschema" type="string"></attribute>
             <attribute name="autocommit" type="boolean" use="optional"/>
+            <attribute name="hideexistingdata" type="boolean" use="optional"/>
             <attribute name="orderbyfield" type="string" use="optional"/>
           </complexType>
         </element>

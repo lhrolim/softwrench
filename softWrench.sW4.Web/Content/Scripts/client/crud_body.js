@@ -38,9 +38,8 @@ app.directive('crudBody', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             submitService, redirectService,
-            associationService, contextService, alertService, validationService) {
+            associationService, contextService, alertService, validationService, eventdispatcherService) {
 
-           
            
             $scope.getFormattedValue = function (value, column) {
                 var formattedValue = formatService.format(value, column);
@@ -95,6 +94,7 @@ app.directive('crudBody', function (contextService) {
                 if (tab != null) {
                     redirectService.redirectToTab(tab);
                 }
+                
             });
 
             function defaultSuccessFunction(data) {
@@ -320,7 +320,8 @@ app.directive('crudBody', function (contextService) {
                 fieldService: fieldService,
                 commandService: commandService
             });
-            
+           
+
         }
 
     };

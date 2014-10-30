@@ -135,11 +135,24 @@ app.directive('compositionList', function (contextService) {
                     fieldService: fieldService,
                     commandService: commandService
                 });
+
+                var parameters = {};
+                parameters.clonedCompositionData = $scope.clonedCompositionData;
+                eventdispatcherService.onload($scope.parentschema, $scope.parentdata, parameters);
+
             };
 
             init();
           
-            eventdispatcherService.onload($scope.compositionlistschema, $scope.compositiondata);
+            $scope.isRowHidden = function (compositionlistschema, collectionproperties, compositionitem) {
+                if (collectionproperties.hideExistingData == true) {
+                    var idFieldName = compositionlistschema.idFieldName;
+                    if (compositionitem[idFieldName] != null) {
+                        return true;
+                    }
+                }
+                return false;
+            }
 
             $scope.compositionProvider = function () {
                 var localCommands = {};

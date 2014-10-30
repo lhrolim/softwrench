@@ -133,20 +133,15 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             //var dataMap = id != null ? (DataMap)Engine().FindById(application.Schema, entityMetadata, id, applicationCompositionSchemas)
             //    : DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, entityMetadata.Schema.MappingType);
             DataMap dataMap = null;
-            if (id != null)
-            {
-                dataMap =
-                    (DataMap) Engine().FindById(application.Schema, entityMetadata, id, applicationCompositionSchemas);
-                if (request.InitialValues != null)
-                {
+            if (id != null) {
+                dataMap = (DataMap)Engine().FindById(application.Schema, entityMetadata, id, applicationCompositionSchemas);
+                if (request.InitialValues != null) {
                     var initValDataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application,
                         request.InitialValues, entityMetadata.Schema.MappingType);
                     dataMap = DefaultValuesBuilder.MergeWithExistingDataMap(dataMap, initValDataMap);
                 }
-            }
-            else
-            {
-                DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, entityMetadata.Schema.MappingType);
+            } else {
+                dataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, entityMetadata.Schema.MappingType);
             }
             var associationResults = BuildAssociationOptions(dataMap, application, request);
             var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, id);

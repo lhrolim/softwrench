@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('scannerdetectionService', function ($http, $rootScope, restService, searchService, contextService) {
+app.factory('scannerdetectionService', function ($http, $rootScope, restService, searchService, redirectService, contextService) {
 
     return {
         initInventoryGridListener: function (schema, datamap, parameters) {
@@ -28,28 +28,38 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
             });
         },
         initIssueItemListener: function (schema, datamap, parameters) {
-            var compData = datamap;
+            
             $(document).scannerDetection(function (data) {
+                var lookupData = searchService.getSearchOperationById(data);
 
-                //var test = compData;
-                if (compData === undefined) {
-                    compData = {};
-                }
-                if (compData['fields'] === undefined){
-                    compData['fields'] = {};
-                    compData['fields']['invissue_'] = {};
-                } else {
-                    if (compData['fields']['invissue_'] === undefined) {
-                        compData['fields']['invissue_'] = [];
+                var itemExist = false;
+                for (var key in parameters.clonedCompositionData) {
+                    var item = parameters.clonedCompositionData[key];
+                    if (item['matusetransid'] == null) {
+                        if (item['itemnum'] == data) {
+                            item['quantity']++;
+                            itemExist = true;
+                        }
                     }
                 }
-                
-                var newRecord = {};
-                newRecord['itemnum'] = data;
-                newRecord['quantity'] = 1;
-                newRecord['description'] = "Z RAGGIN IT UP";
 
-                compData['fields']['invissue_'] = [newRecord];
+                if (!itemExist) {
+                    var newRecord = {};
+                    newRecord['itemnum'] = data;
+                    newRecord['quantity'] = 1;
+                    newRecord['item_.description'] = "Z RAGGIN IT UP";
+                    newRecord['issuetype'] = "ISSUE";
+                    newRecord['matusetransid'] = null;
+                    newRecord['assetnum'] = "11250";
+                    newRecord['issueto'] = "SINCLAIR";
+                    newRecord['location'] = "BR2000";
+                    newRecord['refwo'] = "43079";
+                    newRecord['siteid'] = "BEDFORD";
+                    newRecord['storeloc'] = "CENTRAL";
+                    parameters.clonedCompositionData.push(newRecord);
+                }
+                
+                redirectService.redirectToTab('invissue_');
 
             });
         },
