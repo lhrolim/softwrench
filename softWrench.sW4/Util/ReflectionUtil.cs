@@ -76,8 +76,22 @@ namespace softWrench.sW4.Util {
                 return false;
             }
             try {
+                if (value==null){
+                    prop.SetValue(baseObject, null);
+                    return true;
+                }
+                var stvalue = value.ToString();
                 if (prop.PropertyType.IsEnum) {
-                    value = Enum.Parse(prop.PropertyType, (string)value);
+                    value = Enum.Parse(prop.PropertyType, stvalue);
+                }
+                //Add an other case for boolean
+                if ("boolean".EqualsIc(prop.PropertyType.Name) && (!value.ToString().EqualsAny("true","false"))) {
+                    if (stvalue == "0") {
+                        value = false;
+                    }
+                    if (stvalue == "1") {
+                        value = true;
+                    }
                 }
                 prop.SetValue(baseObject, value);
             } catch (Exception e) {

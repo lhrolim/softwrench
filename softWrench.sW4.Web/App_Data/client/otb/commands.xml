@@ -45,7 +45,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Commands.xsd ">
 
   <commandgroup position="compositiontop">
     <command icon="fa-plus" label="Expand All" id="expandall" service="$scope" method="expandAll" showexpression="$scope:showExpansionCommands"/>
-    <command icon="fa-minus" label="Colapse All" id="collapseall" service="$scope" method="collapseAll" showexpression="$scope:showExpansionCommands"/>
+    <command icon="fa-minus" label="Collapse All" id="collapseall" service="$scope" method="collapseAll" showexpression="$scope:showExpansionCommands"/>
     <command icon="fa-refresh" label="Refresh" id="refresh" service="$scope" method="refresh" />
     
   </commandgroup>

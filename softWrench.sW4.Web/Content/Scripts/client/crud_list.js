@@ -338,20 +338,29 @@ app.directive('crudList', function (contextService) {
 
             };
 
-            $scope.GetAssociationOptions = function (fieldMetadata) {
+            $scope.GetAssociationOptions = function (fieldMetadata,forfilter) {
                 if (fieldMetadata.type == "OptionField") {
-                    return $scope.GetOptionFieldOptions(fieldMetadata);
+                    return $scope.GetOptionFieldOptions(fieldMetadata, forfilter);
                 }
                 $scope.$parent.associationOptions = instantiateIfUndefined($scope.$parent.associationOptions);
                 return $scope.$parent.associationOptions[fieldMetadata.associationKey];
             }
 
-            $scope.GetOptionFieldOptions = function (optionField) {
+            $scope.GetOptionFieldOptions = function (optionField, forfilter) {
                 if (optionField.providerAttribute == null) {
                     return optionField.options;
                 }
+                optionField.jscache = instantiateIfUndefined(optionField.jscache);
+                if (optionField.jscache.providerOptions) {
+                    return optionField.jscache.providerOptions;
+                }
                 $scope.$parent.associationOptions = instantiateIfUndefined($scope.$parent.associationOptions);
-                return $scope.$parent.associationOptions[optionField.providerAttribute];
+                var associationOptions = $scope.$parent.associationOptions[optionField.providerAttribute];
+                if (forfilter || optionField.addBlankOption) {
+                    associationOptions.unshift({ label: "", value: "" });
+                }
+                optionField.jscache.providerOptions = associationOptions;
+                return associationOptions;
             }
 
             $scope.isColumnEditable = function(column) {

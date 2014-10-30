@@ -70,13 +70,13 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
         exit: function (event) {
             alertService.confirm(null, null, function (data) {
                 redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
-            }, "Any non saved work will be lost. Are you sure you want to cancel the Batch?");
+            }, "Any unsaved work will be lost. Are you sure you want to cancel this Batch?");
         },
 
         newBatch: function (event) {
 
             //            var searchDTO = {};
-            //            searchDTO['searchParams'] = 'schedstart&&schedfinish';
+            //            searchDTO['searchParams'] = 'schedstart&&schedfinish';fille
             //            searchDTO['searchValues'] = '>={0}, , ,<={1}'.format(twoweeksAgo, now);
             //            //
             //            var parameters = {
@@ -110,7 +110,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
             if (alreadyused.length != 0) {
                 alertService.confirm(null, null, function () {
                     doSave(ids);
-                }, "The items {0} are already used on other batches and won´t be included. Proceed?".format(alreadyused.join()));
+                }, "The workorders {0} are already used on other batches and will not be included. Proceed?".format(alreadyused.join()));
                 return;
             }
             doSave(ids);
@@ -194,10 +194,15 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
                             var worklog = {};
                             worklog['description'] = $('#summary2').val();
                             worklog['longdescription_.ldtext'] = $('#details2').val();
-
+                            var hasData = worklog['description'] != "" || worklog['longdescription_.ldtext'] != "";
+                            if (!hasData) {
+                                return;
+                            }
                             datamap['worklog_'] = [];
                             datamap['worklog_'].push(worklog);
-                            datamap['#lognote'] = worklog['description'];
+
+
+                            datamap['#lognote'] = 'Y';
                             $rootScope.$digest();
                         }
                     };
@@ -210,7 +215,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
                     if (datamap["#closed"]) {
                         //lets validate required fields first
                         var valArray = validationService.getInvalidLabels(schema.displayables, datamap);
-                        if (datamap["#ReconCd"] == "00" && !datamap["#fdbckcomment"]) {
+                        if (datamap["#ReconCd"] != "00" && !datamap["#fdbckcomment"]) {
                             valArray.push("Feedback Comment");
                         }
 
@@ -221,7 +226,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
                                 message += "<li>{0}</li>".format(item);
                             }
 
-                            alertService.alert("This workorder cannot be closed because there are required fields not filled: <br></br><ul>{0}</ul>".format(message));
+                            alertService.alert("This workorder cannot be closed because there are required fields not completed: <br></br><ul>{0}</ul>".format(message));
                             datamap["#closed"] = false;
                             $rootScope.$digest();
                             return;

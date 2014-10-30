@@ -22,7 +22,7 @@ namespace softwrench.sW4.Shared2.Metadata {
         //        public MobileApplicationSchema _mobileSchema;
         private readonly IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> _schemas = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
 
-        private readonly IEnumerable<ApplicationSchemaDefinition> schemasList = new List<ApplicationSchemaDefinition>();
+        private readonly IEnumerable<ApplicationSchemaDefinition> _schemasList = new List<ApplicationSchemaDefinition>();
 
         public IEnumerable<DisplayableComponent> DisplayableComponents = new List<DisplayableComponent>();
 
@@ -54,7 +54,7 @@ namespace softwrench.sW4.Shared2.Metadata {
             if (paramters.ContainsKey(ApplicationMetadataConstants.FetchLimitProperty)) {
                 FetchLimit = int.Parse(paramters[ApplicationMetadataConstants.FetchLimitProperty].ToString());
             }
-            schemasList = _schemas.Values;
+            _schemasList = _schemas.Values;
             DisplayableComponents = components;
             //            _mobileSchema = BuildMobileSchema();
         }
@@ -78,7 +78,7 @@ namespace softwrench.sW4.Shared2.Metadata {
         }
 
         public IEnumerable<ApplicationSchemaDefinition> SchemasList {
-            get { return schemasList; }
+            get { return _schemasList; }
         }
 
 
@@ -107,5 +107,6 @@ namespace softwrench.sW4.Shared2.Metadata {
         public override string ToString() {
             return string.Format("Name: {0}", ApplicationName);
         }
+
     }
 }

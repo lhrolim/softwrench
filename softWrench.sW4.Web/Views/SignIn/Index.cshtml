@@ -29,17 +29,23 @@
     @Scripts.Render("~/Content/Scripts/client/application")
     @Scripts.Render("~/Content/Scripts/client/signin")
 
-    <div class="container">
+<div class="container">
         <div class="form-signin">
             <div class="row text-center">
                 <div class="col-sm-offset-1 col-sm-10">
-                    <img class="logo" src="~/Content/Images/logo-main.png">
+                    @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-main.png")))
+                    {
+                        <img class="logo" src="~/Content/Images/@Model.ClientName/logo-main.png">
+                    }
+                    else
+                    {
+                        <img class="logo" src="~/Content/Images/logo-main.png">
+                    }
                 </div>
             </div>
 
             @if (!Model.IsLoginEnabled)
             {
-
                 <div class="row index-form-row">
                     <div class="serviceItLoginWarning" style="margin-bottom: 2em">
                         @Model.LoginMessage
@@ -49,19 +55,16 @@
 
             @if (Model.IsLoginEnabled)
             {
-
                 <div class="row">
                     <form class="col-sm-offset-1 col-sm-10" role="form" action="@Request.RawUrl" method="post" name="value">
                         @if (Model.IncorrectLogin)
                         {
                             if (string.IsNullOrEmpty(Model.LoginMessage))
                             {
-
                             <div class="text-danger" style="margin-bottom: 2em">Your <strong>User Name</strong> or <strong>Password</strong> was entered incorrectly.</div>
                             }
                             else if (Model.IsHapagClient)
                             {
-
                             <script>
                                 $(document).ready(function () {
                                     alert(' Ungültiger Username oder falsches Passwort \n Invalid Username or Bad Password \n No válido Nombre de usuario o contraseña incorreta');
@@ -76,7 +79,6 @@
                                 foreach (var m in message)
                                 {
                                     var styleMessage = i == count ? "margin-bottom: 2em" : string.Empty;
-
                             <div class="text-danger" style="@styleMessage; margin-right: 250px;">@m</div>
                                     i++;
                                 }
@@ -90,12 +92,14 @@
                                     Username is required<br />
                                     Username wird benötigt<br />
                                     nombre de usuario es necessario                             
+                               
                                 </div>
                                 <input id="password" type="password" name="password" class="form-control" placeholder="Password">
                                 <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
                                     Password is required<br />
                                     Passwort wird benötigt<br />
                                     se requiere contraseña                               
+                               
                                 </div>
                                 <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset" />
                             </div>
@@ -103,7 +107,7 @@
                                 @*Use the following credentials to log in<br />
                                 <b>End User: </b>enduser\password<br />
                                 <b>Supervisor: </b>supervisor\password<br />
-                                <b>Administrator: </b>administrator\password<br />*@                                              
+                                <b>Administrator: </b>administrator\password<br />*@
                                 @*<a href="">Forgot Password?</a><br />
                                 <a href="">Register Now</a>*@
                             </div>
@@ -113,6 +117,7 @@
                         </div>
                     </form>
                 </div>
+
                 <div class="row text-center">
                     <div class="col-sm-offset-1 col-sm-10">
                         <img class="cts-name" src="~/Content/Images/cts-name.png">

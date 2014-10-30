@@ -33,28 +33,45 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         }
 
-        public IDataSet LookupDataSet(String applicationName,string schemaId) {
+        public IDataSet LookupDataSet(String applicationName, string schemaId) {
             var isSWDBApplication = applicationName.StartsWith("_");
             var defaultSet = isSWDBApplication ? _defaultSWDBDataSet : _defaultMaximoDataSet;
             var storageToUse = isSWDBApplication ? _swdbDataSets : _maximoDataSets;
 
             //first we try a perfect match: app + client + schema
             var clientName = ApplicationConfiguration.ClientName;
-            var key = new DataSetKey(applicationName.ToLower(), clientName, schemaId);
-            if (!storageToUse.ContainsKey(key)) {
-                //second just app + schema
-                key = new DataSetKey(applicationName.ToLower(), null,schemaId);
-                if (!storageToUse.ContainsKey(key)){
-                    //app + client
-                    key = new DataSetKey(applicationName.ToLower(), clientName, null);
-                    if (!storageToUse.ContainsKey(key)) {
-                        //last just app
-                        key = new DataSetKey(applicationName.ToLower(), null, null);
-                    }
-                }
-            }
+            var key = LookUp(applicationName, schemaId, clientName, storageToUse);
             //if not found return the default
             return storageToUse.ContainsKey(key) ? storageToUse[key] : defaultSet;
+        }
+
+        private static DataSetKey LookUp(string applicationName, string schemaId, string clientName, IDictionary<DataSetKey, IDataSet> storageToUse) {
+            var key = new DataSetKey(applicationName, clientName, schemaId);
+            if (storageToUse.ContainsKey(key)) {
+                return key;
+            }
+            //try otb as fallback
+            key = new DataSetKey(applicationName, "otb", schemaId);
+            if (storageToUse.ContainsKey(key)) {
+                return key;
+            }
+
+            //second just app + schema
+            key = new DataSetKey(applicationName, null, schemaId);
+            if (storageToUse.ContainsKey(key)) {
+                return key;
+            }
+            //app + client
+            key = new DataSetKey(applicationName, clientName, null);
+            if (storageToUse.ContainsKey(key)) {
+                return key;
+            }
+            key = new DataSetKey(applicationName, "otb", null);
+            if (storageToUse.ContainsKey(key)) {
+                return key;
+            }
+            //last just app
+            return new DataSetKey(applicationName, null, null);
         }
 
         public static DataSetProvider GetInstance() {
@@ -68,16 +85,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             readonly string _schemaId;
             readonly string _client;
 
-            public DataSetKey(string application, string client,string schemaId) {
-                _application = application;
+            public DataSetKey(string application, string client, string schemaId) {
+                _application = application.ToLower();
                 _client = client;
                 _schemaId = schemaId;
             }
 
             private bool Equals(DataSetKey other) {
-                var applicationEquals = string.Equals(_application, other._application,StringComparison.CurrentCultureIgnoreCase);
-                var clientEquals = _client == null || string.Equals(_client, other._client,StringComparison.CurrentCultureIgnoreCase);
-                var schemaEquals = _schemaId == null || string.Equals(_schemaId, other._schemaId,StringComparison.CurrentCultureIgnoreCase);
+                var applicationEquals = string.Equals(_application, other._application, StringComparison.CurrentCultureIgnoreCase);
+                var clientEquals = _client == null || string.Equals(_client, other._client, StringComparison.CurrentCultureIgnoreCase);
+                var schemaEquals = _schemaId == null || string.Equals(_schemaId, other._schemaId, StringComparison.CurrentCultureIgnoreCase);
                 return applicationEquals && clientEquals && schemaEquals;
             }
 
@@ -108,7 +125,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 //                }
                 //                var dataSet = (IDataSet)Activator.CreateInstance(dataSetType);
                 var applicationName = dataSet.ApplicationName();
-                
+
                 if (applicationName == null) {
                     //null stands for framework instances... we dont need to handle these
                     continue;
@@ -125,7 +142,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 if (clientFilter != null) {
                     var strings = clientFilter.Split(',');
                     foreach (var client in strings) {
-                        storageToUse.Add(new DataSetKey(applicationName, client,schemaId), dataSet);
+                        storageToUse.Add(new DataSetKey(applicationName, client, schemaId), dataSet);
                     }
                 } else {
                     storageToUse.Add(new DataSetKey(applicationName, null, schemaId), dataSet);

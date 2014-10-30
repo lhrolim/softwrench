@@ -2,6 +2,10 @@
 <metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
+  <templates>
+    <template path="@servicerequest.xml"/>
+    <template path="@worklogs.xml"/>
+  </templates>
 
   <!--otb-->
   <entities>
@@ -733,7 +737,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
           <commandbars>
             <commandgroup position="gridtop" removeundeclared="true">
-              <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html" parameters="allowsave=false"/>
+              <command id="refresh" icon="fa-refresh" tooltip="refresh" service="searchService" method="refreshGrid"/>
               <command label="Cancel" id="cancelbatch" service="wobatchService" method="cancelBatch" icon="fa-backward"/>
               <command label="Save Batch" id="generatebatch" service="wobatchService" method="generatebatch" parameters="datamap" icon="fa-save"/>
               <resourcecommand id="batches" path="/Content/Templates/commands/batches/batches.html" role="allowwobatches" parameters="showbutton=false"/>
@@ -752,14 +756,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <optionfield attribute="crewid" label="Crews" providerattribute="crews">
             <renderer type="combo" params="filteronly=true;width=16%;"/>
           </optionfield>
-          <field attribute="schedstart" label="Schedule Start" >
+          <field attribute="schedstart" label="Scheduled Start" >
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm; width=15%"/>
           </field>
-          <field attribute="schedfinish" label="Schedule Finish" >
+          <field attribute="schedfinish" label="Scheduled Finish" >
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm; width=15%"/>
           </field>
         
-          <field attribute="#alreadyused" tooltip="This workorder is already used on another batch and cannot be included in the batch">
+          <field attribute="#alreadyused" tooltip="This workorder is already used on another batch and cannot be included in this batch">
             <renderer type="icon" params="expression={'true':'fa-warning','false':''};"/>
           </field>
 
@@ -782,13 +786,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </commandgroup>
           </commandbars>
 
-          <field attribute="wonum" label="Work Order #" >
+          <field attribute="workorderid" label="Work Order #" >
             <renderer type="default" params="filterenabled=false; width=10%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="limit=14;"  />
           </field>
-          <field attribute="#UNID" label="UNID">
+          <field attribute="wonum" label="UNID">
             <renderer type="default" params="width=8%"  />
           </field>
           <optionfield attribute="#ReconCd" label="Reconciliation Codes" required="true" providerattribute="reconciliationCodes">

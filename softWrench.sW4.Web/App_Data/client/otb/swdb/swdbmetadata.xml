@@ -19,7 +19,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <command id="newbatch" position="left" icon="fa fa-plus" label="New Batch" service="wobatchService" method="newBatch"/>
             </commandgroup>
           </commandbars>
-          <field attribute="id" label="Batch Id">
+          <field attribute="id" label="Batch ID">
             <renderer type="default" params="width=15%"/>
           </field>
           <field attribute="alias" label="Alias">
@@ -31,7 +31,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="updatedate" label="Updated">
             <renderer type="datetime" params="format=MM/dd/yyyy hh:mm; width=25%"/>
           </field>
-          <field attribute="#numberofitems" label="Workorders">
+          <field attribute="#numberofitems" label="Work Order Count">
             <renderer type="default" params="width=15%"/>
           </field>
           <field attribute="itemids" label="Workorders" hidden="true"/>
