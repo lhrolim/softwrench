@@ -1047,7 +1047,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label ="Internal Priority:" target="internalpriority" labelfield="numericdomain_.description">
             <renderer type="lookup"/>
           </association>
-          <field label="Reported Priority:" attribute="reportedpriority"/>
+          <field label="Reported Priority:" attribute="reportedpriority">
+            <renderer type="default" params="placeholder=Enter a numeric value"/>
+          </field>
           <field label="TFS#:" attribute="tfsnumber"/>
           <field label="Feature Request:" attribute="feature_request">
             <renderer type="checkbox"/>
