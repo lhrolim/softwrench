@@ -16,13 +16,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Commands.xsd ">
 
   <!--TODO: finish bars-->
   <commandgroup position="detailform">
-    <command id="save" icon="glyphicon glyphicon-ok" service="printservice" method="printGrid" parameters="paginationData,renderfn,schema" label="Submit" tooltip="Submit"/>
-    <command id="print" icon="fa-print" service="printservice" method="printGrid" parameters="paginationData,renderfn,schema" label="Print" tooltip="Print"/>
-    <command id="cancel" icon="glyphicon glyphicon-backward" service="printservice" method="printGrid" parameters="paginationData,renderfn,schema" label="Cancel" tooltip="Cancel"/>
+    <command id="save" icon="fa-save" service="$scope" method="save" label="Submit" tooltip="Submit" />
+    <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="schema,datamap" label="Print" tooltip="Print" showexpression="$scope:shouldshowprint"/>
+    <command id="cancel" icon="fa-backward" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>
   </commandgroup>
 
   <commandgroup position="compositionbottom">
-
+    <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel"/>
+    <command id="save" icon="fa-save" service="$scope" method="save" label="Submit" tooltip="Submit" />
+    <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="parentschema,parentdata" label="Print" tooltip="Print"/>
+    <command id="cancel" icon="fa-backward" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>
   </commandgroup>
 
 

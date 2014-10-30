@@ -15,30 +15,37 @@
             previousschema: '=',
             previousdata: '=',
             title: '=',
-            elementid: '@'
+            elementid: '@',
+            composition:'@'
         },
 
         controller: function ($scope, $http,$injector, $element, printService, compositionService, commandService, fieldService, i18NService) {
             $scope.$name = 'crudinput';
 
-            $scope.cancel = function () {
+            this.cancel = function () {
                 $scope.cancelfn({ data: $scope.previousdata, schema: $scope.previousschema });
                 $scope.$emit('sw_cancelclicked');
             };
 
-            $scope.save = function () {
+            this.save = function () {
                 $scope.savefn();
             };
+
+            this.printDetail = function () {
+                var schema = $scope.schema;
+                printService.printDetail(schema, $scope.datamap[schema.idFieldName]);
+            };
+
+            this.shouldshowprint = function () {
+                return $scope.composition != "true";
+            }
 
             $scope.isEditing = function (schema, datamap) {
                 var id = datamap[schema.idFieldName];
                 return id != null;
             };
 
-            $scope.printDetail = function () {
-                var schema = $scope.schema;
-                printService.printDetail(schema, $scope.datamap[schema.idFieldName]);
-            };
+         
 
             $injector.invoke(BaseController, this, {
                 $scope: $scope,
