@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('generalsrService', function (alertService, associationService, fieldService) {
+app.factory('generalsrService', function (alertService, $rootScope,associationService, fieldService) {
 
     return {
         beforeChangeLocation: function (event) {
@@ -59,7 +59,10 @@ app.factory('generalsrService', function (alertService, associationService, fiel
             }
             if (event.fields['status'] == 'NEW') {
                 event.fields['status'] = 'QUEUED';
-                alertService.alert("Owner Group Field will be disabled if the owner is selected");
+                //Removing the alert for Kongsberg because Kongsberg uses generalsr_service and they can select both owner and ownergroup
+                if(!$rootScope.clientName == 'kongsberg'){
+                    alertService.alert("Owner Group Field will be disabled if the owner is selected");
+                }
                 return;
             }
             
