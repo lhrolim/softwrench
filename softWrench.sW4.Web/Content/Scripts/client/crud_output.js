@@ -13,15 +13,24 @@
             hasError: '='
         },
 
-        controller: function ($scope,$injector, formatService, printService, tabsService, fieldService, commandService, redirectService, i18NService) {
+        controller: function ($scope, $injector, formatService, printService, tabsService, fieldService, commandService, redirectService, i18NService) {
             $scope.$name = 'crudoutput';
 
-            $scope.cancel = function (previousdata,previousschema) {
+
+            this.shouldshowprint = function () {
+                return $scope.composition != "true";
+            }
+
+            this.shouldshowsave = function () {
+                return false;
+            }
+
+            this.cancel = function () {
                 $('#crudmodal').modal('hide');
                 if (GetPopUpMode() == 'browser') {
                     close();
                 }
-                $scope.cancelfn({ data: previousdata, schema: previousschema });
+                $scope.cancelfn({ data: $scope.previousdata, schema: $scope.previousschema });
                 $scope.$emit('sw_cancelclicked');
             };
 
@@ -33,11 +42,6 @@
             $scope.redirectToAction = function (title, controller, action, parameters) {
                 redirectService.redirectToAction(title, controller, action, parameters);
             };
-
-            $scope.printDetail = function () {
-                printService.printDetail($scope.schema, $scope.datamap[$scope.schema.idFieldName]);
-            };
-
 
             $scope.nonTabFields = function (displayables) {
                 return fieldService.nonTabFields(displayables);
