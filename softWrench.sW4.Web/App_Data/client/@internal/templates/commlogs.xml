@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
+
+  <entities>
+    <entity name="commlog" idAttribute="commloguid">
+      <attributes>
+        <attribute name="commlogid" type="int" required="true"/>
+        <attribute name="sendto" type="varchar" required="false" />
+        <attribute name="sendfrom" type="varchar" required="true" />
+        <attribute name="subject" type="varchar" required="false" />
+        <attribute name="createby" type="varchar" required="true" />
+        <attribute name="createdate" type="datetime" required="true" />
+        <attribute name="ownerid" type="int" required="true" />
+        <attribute name="ownertable" type="varchar" required="true" />
+        <attribute name="cc" type="text" required="false" />
+        <attribute name="bcc" type="text" required="false" />
+        <attribute name="replyto" type="varchar" required="false" />
+        <attribute name="inbound" type="smallint" required="true" />
+        <attribute name="commloguid" type="bigint" required="true" />
+        <attribute name="message" type="text" required="false" />
+        <attribute name="orgobject" type="varchar" required="false" />
+        <attribute name="uniqueid" type="int" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="issendfail" type="smallint" required="true" />
+        <attribute name="keepfailed" type="smallint" required="true" />
+        <attribute name="ccflag" query="CASE WHEN !@cc is not null THEN 'true' ELSE 'false' end " type="bool"/>
+      </attributes>
+      <relationships>
+        <relationship to ="email">
+          <!--this to attribute is used for the autocompleteserver, do not remove it -->
+          <relationshipAttribute query="commlog.sendto like email_.emailaddress" primary="true" to="emailaddress"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="commlog" />
+      </connectorParameters>
+    </entity>
+
+  </entities>
+
+  <applications>
+    <application entity="commlog" name="commlog" title="Communications">
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-envelope-o"/>
+      </properties>
+
+      <schemas>
+        <schema id="list" stereotype="compositionlist">
+          <properties>
+
+            <property key="list.click.popup" value="modal"/>
+          </properties>
+          <!--<field attribute="#inboundicon">
+            <renderer type="icon" params="iconcss=fa fa-mail-forward"/>
+          </field>-->
+          <field attribute="inbound">
+            <renderer type="icon" params="expression={'1':'fa-long-arrow-left green','0':'fa-long-arrow-right orange'} "/>
+          </field>
+          <field attribute="read">
+            <renderer type="icon" params="expression={'#default':'fa-envelope envelopeYellow','true':''}"/>
+          </field>
+          <field attribute="orgobject" label="Origination"/>
+          <field attribute="createdate" label="Created Date/Time">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;"/>
+          </field>
+          <field attribute="sendto" label="To"/>
+          <field attribute="cc" hidden="true"/>
+          <field attribute="ccflag" label="Cc">
+            <renderer type="checkbox"/>
+          </field>
+          <field attribute="message" hidden="true"/>
+          <field attribute="sendfrom" label="Send From" />
+          <field attribute="subject" label="Subject" />
+          <section resourcepath="/Content/Templates/otb/commlogaction.html"/>
+        </schema>
+
+
+        <schema id="detail" stereotype="compositiondetail">
+          <field attribute="commlogid" hidden="true" />
+          <!--field attribute="sendto" label="To:" /-->
+          <association label="To:" target="sendto" labelfield="email_.emailaddress">
+            <renderer type="autocompleteserver"/>
+          </association>
+          <field attribute="cc" label="Cc:"/>
+          <field attribute="sendfrom" label="From:"  />
+          <field attribute="subject" label="Subject:" />
+          <field attribute="message" label="Message:" >
+            <renderer type="richtext"/>
+          </field>
+        </schema>
+      </schemas>
+    </application>
+
+  </applications>
+
+
+</metadata>

@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
+
+  <applications>
+    <application name="attachment" title="Attachment" entity="DOCLINKS">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+        <property key ="icon.composition.tab" value="fa fa-paperclip"/>
+      </properties>
+      <schemas>
+        <list stereotype="compositionlist" platform="mobile">
+          <field label="Id" hidden="true" attribute="docinfoid"/>
+          <field hidden="true" attribute="doclinksid"/>
+          <field label="Document" attribute="document" qualifier="title"/>
+          <field label="Created Date" attribute="createdate" qualifier="subtitle"/>
+          <field hidden="true" attribute="docinfo_.urlname"/>
+          <field hidden="true" attribute="maximoURL"/>
+        </list>
+
+
+        <list stereotype="compositionlist" platform="web">
+          <properties>
+            <property key="detail.cancel.lbl" value="Close"/>
+            <property key="expansible" value="false"/>
+          </properties>
+          <field label="Id" hidden="true" attribute="docinfoid"/>
+          <field hidden="true" attribute="doclinksid"/>
+          <field label="Document" hidden="true" attribute="document"/>
+          <section attribute="document"
+									   resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=http"/>
+          <field label="Created Date" attribute="createdate"/>
+        </list>
+
+        <schema id="faqAttachments" stereotype="compositionlist" platform="web">
+          <field label="Id" hidden="true" attribute="docinfoid"/>
+          <field hidden="true" attribute="doclinksid"/>
+          <field label="Document" hidden="true" attribute="document"/>
+          <section attribute="document" resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Faq;action=Download;idcolumn=docinfoid"/>
+        </schema>
+
+        <schema id="detail" title="Attachments">
+          <field hidden="true" attribute="doclinksid"/>
+          <field label="Id" hidden="true" attribute="docinfoid"/>
+          <field label="Title:" attribute="document" />
+          <field label="Attachment:" attribute="newattachment" required="true">
+            <renderer type="image"/>
+          </field>
+          <!--          <field hidden="true" attribute="ownerid"/>-->
+          <!--          <field hidden="true" attribute="ownertable"/>-->
+          <field hidden="true" attribute="createdate"/>
+          <commandbars>
+            <commandgroup position="compositionbottom"  >
+              <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                       showexpression="@status=='NEW'" successmessage="Attachment deleted"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+      </schemas>
+    </application>
+
+  </applications>
+
+
+
+
+</metadata>
