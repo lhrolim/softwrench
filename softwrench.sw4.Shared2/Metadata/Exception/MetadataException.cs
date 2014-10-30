@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace softwrench.sw4.Shared2.Metadata.Exception {
+
     public class MetadataException : InvalidOperationException {
 
 
@@ -19,7 +21,7 @@ namespace softwrench.sw4.Shared2.Metadata.Exception {
         }
 
         public static MetadataException MissingPathInResourceCommand(string commandId) {
-            throw new MetadataException(String.Format("Missing path for ResourceCommand {0}", commandId));
+            throw new InvalidOperationException(String.Format("Missing path for ResourceCommand {0}", commandId));
         }
     }
 }

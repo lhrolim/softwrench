@@ -31,11 +31,6 @@
                 $scope.savefn();
             };
 
-            this.printDetail = function () {
-                var schema = $scope.schema;
-                printService.printDetail(schema, $scope.datamap[schema.idFieldName]);
-            };
-
             this.shouldshowprint = function () {
                 return $scope.composition != "true";
             }
