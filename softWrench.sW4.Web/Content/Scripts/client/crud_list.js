@@ -32,7 +32,7 @@ app.directive('crudList', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             validationService, submitService, redirectService,
-            associationService, statuscolorService,contextService, eventdispatcherService, iconService) {
+            associationService, statuscolorService, contextService, eventdispatcherService, iconService) {
 
             $scope.$name = 'crudlist';
 
@@ -109,12 +109,18 @@ app.directive('crudList', function (contextService) {
             $scope.$on('sw_togglefiltermode', function (event) {
                 $scope.advancedfiltermode = !$scope.advancedfiltermode;
                 fixHeaderService.callWindowResize();
+                if (!$scope.advancedfiltermode) {
+                    $scope.advancedsearchdata = null;
+                    for (var data in $scope.searchData) {
+                        $scope.searchData[data] = "";
+                    }
+                }
             });
 
-            $scope.$on('sw_gridrefreshed', function(event, data, printmode) {
+            $scope.$on('sw_gridrefreshed', function (event, data, printmode) {
                 $scope.selectAllChecked = false;
             });
-            $scope.refreshGrid = function() {
+            $scope.refreshGrid = function () {
                 $scope.selectPage($scope.paginationData.pageNumber, $scope.paginationData.pageSize, false);
             };
 
@@ -123,7 +129,8 @@ app.directive('crudList', function (contextService) {
                 ///  implementation of searchService#refreshgrid see there for details
                 /// </summary>
                 if (extraparameters == null) {
-                    extraparameters = {};
+                    extraparameters = {
+                    };
                 }
                 var pagetogo = extraparameters.pageNumber ? extraparameters.pageNumber : $scope.paginationData.pageNumber;
                 var pageSize = extraparameters.pageSize ? extraparameters.pageSize : $scope.paginationData.pageSize;
@@ -154,10 +161,10 @@ app.directive('crudList', function (contextService) {
             });
 
             $scope.doAdvancedSearch = function (filterdata) {
-                searchService.advancedSearch($scope.datamap,$scope.schema, filterdata);
+                searchService.advancedSearch($scope.datamap, $scope.schema, filterdata);
             }
 
-            $scope.cursortype = function() {
+            $scope.cursortype = function () {
                 var editDisabled = $scope.schema.properties['list.disabledetails'];
                 return "true" != editDisabled ? "pointer" : "default";
             }
@@ -197,10 +204,10 @@ app.directive('crudList', function (contextService) {
 
                 if ("true" == editDisabled && nullOrUndef(fullServiceName)) {
                     return;
-                }                
+                }
 
                 if (fullServiceName != null) {
-                    commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column,$scope.schema);
+                    commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema);
                     return;
                 };
 
@@ -217,7 +224,9 @@ app.directive('crudList', function (contextService) {
                 if (schemaid == null) {
                     schemaid = detailSchema();
                 }
-                $scope.$emit("sw_renderview", applicationname, schemaid, mode, $scope.title, { id: id, popupmode: popupmode });
+                $scope.$emit("sw_renderview", applicationname, schemaid, mode, $scope.title, {
+                    id: id, popupmode: popupmode
+                });
             };
 
             $scope.renderListView = function (parameters) {
@@ -231,7 +240,7 @@ app.directive('crudList', function (contextService) {
                 $scope.$emit("sw_renderview", $scope.schema.applicationName, listSchema, 'none', $scope.title, parameters);
             };
 
-            
+
 
             $scope.selectPage = function (pageNumber, pageSize, printMode) {
                 if (pageNumber === undefined || pageNumber <= 0 || pageNumber > $scope.paginationData.pageCount) {
@@ -272,16 +281,19 @@ app.directive('crudList', function (contextService) {
                 //avoids table flickering
                 fixHeaderService.unfix();
 
-                $scope.renderListView({ SearchDTO: searchDTO, printMode: printMode });
+                $scope.renderListView({
+                    SearchDTO: searchDTO, printMode: printMode
+                });
                 if ($scope.advancedfiltermode) {
                     //this workaround is used to clear the data after the advanced search has reached, because the code has lots of comes and goes...
                     //TODO: refatcor search
-                    $scope.searchData = {};
+                    $scope.searchData = {
+                    };
                 }
             };
 
             $scope.toggleSelectAll = function (checked) {
-                $.each($scope.datamap, function(key, value) {
+                $.each($scope.datamap, function (key, value) {
                     value.fields["_#selected"] = checked;
                 });
             }
@@ -338,7 +350,7 @@ app.directive('crudList', function (contextService) {
 
             };
 
-            $scope.GetAssociationOptions = function (fieldMetadata,forfilter) {
+            $scope.GetAssociationOptions = function (fieldMetadata, forfilter) {
                 if (fieldMetadata.type == "OptionField") {
                     return $scope.GetOptionFieldOptions(fieldMetadata, forfilter);
                 }
@@ -357,13 +369,15 @@ app.directive('crudList', function (contextService) {
                 $scope.$parent.associationOptions = instantiateIfUndefined($scope.$parent.associationOptions);
                 var associationOptions = $scope.$parent.associationOptions[optionField.providerAttribute];
                 if (forfilter || optionField.addBlankOption) {
-                    associationOptions.unshift({ label: "", value: "" });
+                    associationOptions.unshift({
+                        label: "", value: ""
+                    });
                 }
                 optionField.jscache.providerOptions = associationOptions;
                 return associationOptions;
             }
 
-            $scope.isColumnEditable = function(column) {
+            $scope.isColumnEditable = function (column) {
                 return column.rendererParameters['editable'] == "true";
             }
 
@@ -371,11 +385,11 @@ app.directive('crudList', function (contextService) {
                 return (column.type == "ApplicationFieldDefinition" || column.type == "OptionField") && column.rendererType != "color" && column.rendererType != "icon";
             }
 
-            $scope.handleDefaultValue = function(data, column) {
+            $scope.handleDefaultValue = function (data, column) {
                 var key = column.target ? column.target : column.attribute;
 
-                if (column.defaultValue != null && data[key]== null) {
-                    data[key]= column.defaultValue;
+                if (column.defaultValue != null && data[key] == null) {
+                    data[key] = column.defaultValue;
                 }
             }
 

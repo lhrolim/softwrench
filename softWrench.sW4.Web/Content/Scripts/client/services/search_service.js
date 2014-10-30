@@ -248,6 +248,11 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
 
             var params = searchParams.split("&&");
             var values = searchValues.split(",,,");
+            if (values.length != params.length) {
+                //this was a global search, so it uses || and not && 
+                params = searchParams.split("||,");
+            }
+
             for (var i = 0; i < params.length; i++) {
                 var value = values[i];
                 var param = params[i];
