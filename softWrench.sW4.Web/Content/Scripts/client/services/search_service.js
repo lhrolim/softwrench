@@ -324,7 +324,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
                 return;
             }
             var visibleDisplayables = fieldService.getVisibleDisplayables(datamap, schema);
-            var searchFields;
+            var searchFields = "";
             $.each(visibleDisplayables, function (key, v) {
                 if (v.rendererType != "color") {
                     searchFields += v.attribute + ",";
