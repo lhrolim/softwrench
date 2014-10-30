@@ -715,6 +715,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="targetversion" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="TARGETVERSION" quoteLiteral="true"/>
         </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="INCIDENTSTATUS" quoteLiteral="true" />
+        </relationship>
         <relationship to="location">
           <relationshipAttribute from="location" to="location" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
@@ -1700,7 +1704,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                          parameters="joinattribute=actualfinish;">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
-          <field label="Status:" attribute="status" readonly="true" default="NEW" required="true"/>
+          <!--field label="Status:" attribute="status" readonly="true" default="NEW" required="true"/-->
+          <association label="Status:" target="status" labelfield="synstatus.description" required="true" default="NEW">
+            <renderer type="lookup" />
+          </association>
           <field attribute="statusdate" hidden="true" />
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
@@ -1790,7 +1797,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                          parameters="joinattribute=actualfinish;">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
-          <field label="Status:" attribute="status" readonly="true" />
+          <association label="Status:" target="status" labelfield="synstatus.description" required="true" >
+            <renderer type="lookup" />
+          </association>
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
           </field>
