@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using softwrench.sw4.Shared2.Metadata.Exception;
 using softwrench.sW4.Shared2.Util;
 
 namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
@@ -19,13 +20,16 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
 
         public string Type { get { return typeof(ResourceCommand).Name; } }
 
-        public ResourceCommand(string id, string path, string role,string position,string parameters) {
+        public ResourceCommand(string id, string path, string role, string position, string parameters) {
             Id = id;
             Path = path;
             Role = role;
             Position = position;
             OriginalParameters = parameters;
             _parameters = PropertyUtil.ConvertToDictionary(parameters);
+            if (string.IsNullOrEmpty(path)) {
+                throw MetadataException.MissingPathInResourceCommand(id);
+            }
         }
 
 

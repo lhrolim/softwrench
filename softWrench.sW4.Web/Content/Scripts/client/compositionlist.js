@@ -78,7 +78,8 @@ app.directive('newItemInput', function ($compile, fieldService) {
                                 "elementid='elementid'" +
                                 "associationOptions='associationOptions'" +
                                 "savefn='savefn()'" +
-                                "cancelfn='cancelfn()'></crud-input>"
+                                "cancelfn='cancelfn()'" +
+                                "composition='true'></crud-input>"
                 );
                 $compile(element.contents())(scope);
             }
@@ -107,7 +108,7 @@ app.directive('compositionList', function (contextService) {
         controller: function ($scope, $log, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
             expressionService, $timeout, modalService, redirectService, eventdispatcherService, iconService) {
-            
+
 
             function init() {
                 //Extra variables
@@ -137,7 +138,7 @@ app.directive('compositionList', function (contextService) {
             };
 
             init();
-          
+
 
             $scope.compositionProvider = function () {
                 var localCommands = {};
@@ -167,9 +168,36 @@ app.directive('compositionList', function (contextService) {
                 return localCommands;
             };
 
+            this.getAddIcon = function () {
+                var iconCompositionAddbutton = $scope.compositionschemadefinition.schemas.list.properties['icon.composition.addbutton'];
+                if (!iconCompositionAddbutton) {
+                    //use the same as the tab by default
+                    iconCompositionAddbutton = $scope.compositionschemadefinition.schemas.list.properties['icon.composition.tab'];
+                }
+                return iconCompositionAddbutton;
+            }
 
-            $scope.newDetailFn = function () {
+            this.getAddLabel = function () {
+                return $scope.i18N($scope.relationship + '.add', 'Add ' + $scope.title);
+            }
+
+            this.newDetailFn = function () {
                 $scope.edit({});
+            };
+
+            this.save = function () {
+                return $scope.save();
+            }
+
+          
+
+            this.cancel = function () {
+                $('#crudmodal').modal('hide');
+                if (GetPopUpMode() == 'browser') {
+                    close();
+                }
+                $scope.cancelfn({ data: $scope.previousdata, schema: $scope.previousschema });
+                $scope.$emit('sw_cancelclicked');
             };
 
             $scope.$on("sw.composition.edit", function (event, datamap) {
@@ -197,7 +225,7 @@ app.directive('compositionList', function (contextService) {
                 var newState = forcedState != undefined ? forcedState : !$scope.detailData[id].expanded;
                 $scope.detailData[id].expanded = newState;
 
-                if(newState) {
+                if (newState) {
                     var parameters = {};
                     parameters.compositionItemId = id;
                     parameters.compositionItemData = originalListItem;
@@ -246,7 +274,7 @@ app.directive('compositionList', function (contextService) {
                         doToggle(compositionId, result.resultObject.fields, item);
                         //this timeout is here to avoid a strange exception exception: digest alredy in place
                         //TODO: investigate further
-                        $timeout(function() {
+                        $timeout(function () {
                             $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
                         }, 0, false);
                     });
@@ -254,17 +282,11 @@ app.directive('compositionList', function (contextService) {
 
             $scope.cancelComposition = function () {
                 $scope.newDetail = false;
+                $scope.selecteditem = null;
                 //                $scope.isReadonly = true;
             };
 
-            $scope.cancel = function (previousData, previousSchema) {
-                $('#crudmodal').modal('hide');
-                if (GetPopUpMode() == 'browser') {
-                    close();
-                }
-                $scope.cancelfn({ data: $scope.previousdata, schema: $scope.previousschema });
-                $scope.$emit('sw_cancelclicked');
-            };
+
 
             $scope.allowButton = function (value) {
                 return expressionService.evaluate(value, $scope.parentdata) && $scope.inline;
@@ -340,7 +362,7 @@ app.directive('compositionList', function (contextService) {
             }
 
 
-            $scope.collapseAll=function() {
+            $scope.collapseAll = function () {
                 $.each($scope.detailData, function (key, value) {
                     $scope.detailData[key].expanded = false;
                 });
@@ -354,8 +376,8 @@ app.directive('compositionList', function (contextService) {
                 //TODO: make a composition refresh only --> now it will be samething as F5
                 window.location.reload();
             };
-           
-            
+
+
 
             $scope.showListCommands = function () {
                 return !$scope.detail || $scope.expanded;
