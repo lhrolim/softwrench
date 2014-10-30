@@ -119,13 +119,13 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
         //TODO: dictionary?
         getSearchOperator: function (value) {
             if (value.startsWith('>')) {
-                return this.getSearchOperationById('GT');
-            }
-            if (value.startsWith('>=')) {
-                if (value.endsWith('<=')) {
-                    return this.getSearchOperationById('BTW');
+                if (value.startsWith('>=')) {
+                    if (value.endsWith('<=')) {
+                        return this.getSearchOperationById('BTW');
+                    }
+                    return this.getSearchOperationById('GTE');
                 }
-                return this.getSearchOperationById('GTE');
+                return this.getSearchOperationById('GT');
             }
             if (value.startsWith('<=')) {
                 return this.getSearchOperationById('LTE');
