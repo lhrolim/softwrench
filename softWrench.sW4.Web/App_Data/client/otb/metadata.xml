@@ -492,6 +492,56 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <connectorParameter key="dbtable" value="commlog" />
       </connectorParameters>
     </entity>
+
+    <entity name="invuse" idAttribute="invuseid" whereclause="invuse.usetype='TRANSFER'">
+      <relationships>
+        <relationship to="invuseline">
+          <relationshipAttribute from="invusenum" to="invusenum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="fromstoreloc" to="fromstoreloc"/>
+          <relationshipAttribute from="usetype" to="usetype"/>
+        </relationship>
+        <relationship to="invcost">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="fromstoreloc" to="location"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="inventory">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
+        </relationship>
+        <relationship to="location" qualifier="fromlocation">
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="setid"/>
+        </relationship>
+        <relationship to="invbalances" qualifier="frominvbalance">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.frombin" to="binnum" primary="true"/>
+        </relationship>
+        <relationship to="location" qualifier="tolocation">
+          <relationshipAttribute from="invuseline_.tostoreloc" to="location" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="setid"/>
+        </relationship>
+        <relationship to="invbalances" qualifier="toinvbalance">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="invuseline_.tostoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.tobin" to="binnum" primary="true"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWINVUSE"/>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInvuseCrudConnector"/>
+      </connectorParameters>
+    </entity>
+    
   </entities>
 
   <applications>
@@ -2303,7 +2353,57 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </schemas>
     </application>
 
-
+    <application entity="invuse" name="invuse" title="Inventory Transfer">
+      <schemas>
+        <list>
+          <field attribute="invuseline_.itemnum" label="Item"/>
+          <field attribute="invuseline_.fromstoreloc" label="From Location"/>
+          <field attribute="invuseline_.frombin" label="From Bin"/>
+          <field attribute="invuseline_.tostoreloc" label="To location"/>
+          <field attribute="invuseline_.tobin" label="To Bin"/>
+          <field attribute="invuseline_.quantity" label="Quantity"/>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService" method="createTransfer" parameters="schema" position=">Filters"/>
+            </commandgroup>
+          </commandbars>
+        </list>
+        
+        <schema id="detail" stereotype="detail" mode="readonly">
+          <field attribute="invuseline_.itemnum" label="Item"/>
+          <field attribute="invuseline_.actualdate" label="Date"/>
+          <field attribute="invuseline_.fromstoreloc" label="From Location"/>
+          <field attribute="invuseline_.frombin" label="From Bin"/>
+          <field attribute="invuseline_.tostoreloc" label="To location"/>
+          <field attribute="invuseline_.tobin" label="To Bin"/>
+          <field attribute="invuseline_.quantity" label="Quantity"/>
+        </schema>
+        
+        <schema id="newdetail" stereotype="detail">
+          <field attribute="usetype" hidden="true"/>
+          <field attribute="invuseline_.itemnum" label="Item"/>
+          <!--<field attribute="fromstoreloc" label="From Location"/>
+          <field attribute="invuseline_.frombin" label="From Bin"/>
+          <field attribute="invuseline_.tostoreloc" label="To Location"/>-->
+          <association target="fromstoreloc" label="From Storeroom" labelfield="fromlocation_.description">
+            <dataprovider prefilterfunction="FilterLocation"/>
+            <renderer type="lookup"/>
+          </association>
+          <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum">
+            <renderer type="lookup"/>
+          </association>
+          <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description">
+            <dataprovider prefilterfunction="FilterLocation"/>
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="invuseline_.tobin" label="To Bin"/>
+          <field attribute="invuseline_.quantity" label="Quantity"/>
+          <field attribute="invcost_.stdcost" hidden="true"/>
+          <field attribute="invcost_.avgcost" hidden="true"/>
+          <field attribute="inventory_.costtype" hidden="true"/>
+        </schema>
+      </schemas>
+    </application>
 
   </applications>
 </metadata>

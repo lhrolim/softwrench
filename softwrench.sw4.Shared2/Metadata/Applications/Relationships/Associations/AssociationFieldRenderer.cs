@@ -6,7 +6,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
     public class AssociationFieldRenderer : FieldRenderer {
 
-        private const string WrongRenderer = "renderer {0} not found. Possible options are AUTOCOMPLETECLIENT, AUTOCOMPLETESERVER, COMBO and LOOKUP";
+        private const string WrongRenderer = "renderer {0} not found. Possible options are AUTOCOMPLETECLIENT, AUTOCOMPLETESERVER, COMBO, LOOKUP, CUSTOM and COMBODROPDOWN";
 
         private AssociationRendererType EnumRendererType { get; set; }
 
