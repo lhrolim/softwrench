@@ -180,8 +180,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="targetversion" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="TARGETVERSION" quoteLiteral="true"/>
         </relationship>
-        <relationship to="numericdomain" >
+        <relationship to="numericdomain" qualifier="internalpriority">
           <relationshipAttribute from="internalpriority" to="value" primary="true"/>
+          <relationshipAttribute to ="domainid" literal="TICKETPRIORITY" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="numericdomain" qualifier="reportedpriority">
+          <relationshipAttribute from="reportedpriority" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="TICKETPRIORITY" quoteLiteral="true"/>
         </relationship>
         <relationship to="site">
@@ -739,8 +743,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="person" qualifier="affectedperson">
           <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
         </relationship>
-        <relationship to="numericdomain" >
+        <relationship to="numericdomain" qualifier="internalpriority">
           <relationshipAttribute from="internalpriority" to="value" primary="true"/>
+          <relationshipAttribute to ="domainid" literal="TICKETPRIORITY" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="numericdomain" qualifier="reportedpriority">
+          <relationshipAttribute from="reportedpriority" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="TICKETPRIORITY" quoteLiteral="true"/>
         </relationship>
         <relationship to="person" qualifier="reporter">
@@ -1048,12 +1056,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup"/>
           </association>
           <!--Adding Internal Priority and Reported Priority fields for Kongsberg-->
-          <association label ="Internal Priority:" target="internalpriority" labelfield="numericdomain_.description">
+          <association label ="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description">
             <renderer type="lookup"/>
           </association>
-          <field label="Reported Priority:" attribute="reportedpriority">
+          <!--field label="Reported Priority:" attribute="reportedpriority">
             <renderer type="default" params="placeholder=Enter a numeric value"/>
-          </field>
+          </field-->
+          <association label ="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description">
+            <renderer type="lookup"/>
+          </association>
           <field label="TFS#:" attribute="tfsnumber"/>
           <field label="Feature Request:" attribute="feature_request">
             <renderer type="checkbox"/>
@@ -1654,10 +1665,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup"/>
           </association>
           <!--Adding Internal Priority and Reported Priority fields for Kongsberg-->
-          <association label ="Internal Priority:" target="internalpriority" labelfield="numericdomain_.description">
+          <association label ="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description">
             <renderer type="lookup"/>
           </association>
-          <field label="Reported Priority:" attribute="reportedpriority"/>
+          <!--field label="Reported Priority:" attribute="reportedpriority"/-->
+          <association label ="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description">
+            <renderer type="lookup"/>
+          </association>
           <field label="TFS#:" attribute="tfsnumber"/>
           <field label="Feature Request:" attribute="feature_request">
             <renderer type="checkbox"/>
@@ -1746,10 +1760,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </association>
           
           <!--Adding Internal Priority and Reported Priority fields for Kongsberg-->
-          <association label ="Internal Priority:" target="internalpriority" labelfield="numericdomain_.description">
+          <association label ="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description">
             <renderer type="lookup"/>
           </association>
-          <field label="Reported Priority:" attribute="reportedpriority"/>
+          <!--field label="Reported Priority:" attribute="reportedpriority"/-->
+          <association label ="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description">
+            <renderer type="lookup"/>
+          </association>
           <field label="TFS#:" attribute="tfsnumber"/>
           <field label="Feature Request:" attribute="feature_request">
             <renderer type="checkbox"/>
