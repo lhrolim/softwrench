@@ -312,7 +312,7 @@ app.directive('compositionList', function (contextService) {
                             $scope.newDetail = false;
                             $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
                             $scope.selecteditem = {};
-                            collapseAll();
+                            $scope.collapseAll();
                             if ($rootScope.showingModal) {
                                 //hides the modal after submiting it
                                 modalService.hide();
