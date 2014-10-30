@@ -998,7 +998,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=9%" />
           </field>
           <field attribute="changedate" label="Changed Date">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=9%;showtime=false"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=9%;showtime=false"/>
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
@@ -1599,7 +1599,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <!-- KSW-50
           <field attribute="reportdate" label="Reported Date">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=8%;showtime=false" />
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=8%;showtime=false" />
           </field>
           -->
           <field attribute="status" label="Status">
@@ -2473,7 +2473,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=13%" />
           </field>
           <field attribute="requireddate" label="Required Date">
-            <renderer type="datetime" params="width=13%format=dd/MM/yyyy HH:mm;showtime=false" />
+            <renderer type="datetime" params="width=13%format=MM/dd/yyyy HH:mm;showtime=false" />
           </field>
           <field attribute="vendor" label="Vendor">
             <renderer type="default" params="width=13%" />
@@ -2666,7 +2666,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <field attribute="orgobject" label="Origination"/>
           <field attribute="createdate" label="Created Date/Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
           </field>
           <field attribute="sendto" label="To"/>
           <field attribute="cc" hidden="true"/>
