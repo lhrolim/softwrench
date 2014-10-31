@@ -165,7 +165,7 @@ app.directive('crudInputFields', function (contextService) {
                     });
                 });
 
-                if (parentElementId == ('crudInputMainCompositionFields')) {
+                if (parentElementId.equalsAny('crudInputMainCompositionFields','crudInputMainFields')) {
                     //to avoid registering these global listeners multiple times, as the page main contain sections.
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();
