@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('inventoryService', function ($http, contextService, redirectService) {
+app.factory('inventoryService', function ($http, contextService, redirectService, searchService) {
     var createTransaction = function (schema, issueType) {
         var matusetrans = {};
         matusetrans.issueType = issueType;
@@ -11,7 +11,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         var invuse = {};
         invuse.usetype = useType;
         contextService.insertIntoContext("invuse", invuse, false);
-        redirectService.goToApplicationView(schema.applicationName, "newdetail", "Input", null, null, null);
+        redirectService.goToApplicationView("invuse", "newdetail", "Input", null, null, null);
     };
     return {
         createIssue: function (schema) {
@@ -55,7 +55,52 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 return;
             }
             createInvUse(schema, "TRANSFER");
-        }
+        },
+        afterChangeBin: function (parameters) {
+            var searchData = {
+                itemnum: parameters['fields']['invuseline_.itemnum'],
+                location: parameters['fields']['fromstoreloc']
+            }
+            var searchDTO = searchService.buildSearchDTO(searchData, {}, {}, null);
+            searchDTO.pageNumber = 1;
+            searchDTO.totalCount = 0;
+            searchDTO.pageSize = 30;
+            var restParameters = {
+                key: {
+                    schemaId: "list",
+                    mode: "none",
+                    platform: "web"
+                },
+                SearchDTO: searchDTO
+            }
+            var urlToUse = url("/api/Data/invcost?" + $.param(restParameters));
+            $http.get(urlToUse).success(function (data) {
+                var resultObject = data.resultObject;
+                var fields = resultObject[0].fields;
+                var costtype = parameters['fields']['inventory_.costtype'];
+                if (costtype === 'STANDARD')
+                {
+                    parameters.fields['invuseline_.unitcost'] = fields.stdcost;
+                }
+                else if (costtype === 'AVERAGE') {
+                    parameters.fields['invuseline_.unitcost'] = fields.avgcost;
+                }
+                //var standardCost = fields.stdcost;
+                //var averageCost = fields.avgcost;
+                //parameters.fields["invcost_.stdcost"] = standardCost;
+                //parameters.fields["invcost_.avgcost"] = averageCost;
+            });
+        },
+        afterChangeTransferQuantity: function (parameters) {
+            var lineCost = parameters.fields['invuseline_.quantity'] * parameters.fields['invuseline_.unitcost'];
+            parameters.fields['invuseline_.linecost'] = lineCost;
+        },
+        submitTransfer: function () {
+
+        },
+        cancelTransfer: function () {
+            redirectService.goToApplicationView('matusetransTransfers', 'list', null, null, null);
+        },
 
     };
 

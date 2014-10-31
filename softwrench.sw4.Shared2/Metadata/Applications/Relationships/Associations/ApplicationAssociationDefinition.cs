@@ -19,6 +19,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public string Target { get; set; }
         public string LabelPattern { get; set; }
         public string EnableExpression { get; set; }
+        public bool HideDescription { get; set; }
 
         private string _applicationTo;
         private ISet<string> _extraProjectionFields = new HashSet<string>();
@@ -61,7 +62,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public ApplicationAssociationDefinition() { }
 
         public ApplicationAssociationDefinition(string @from, LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
-            string showExpression, string toolTip, Boolean required, string defaultValue, string enableExpression = "true", ISet<ApplicationEvent> events = null)
+            string showExpression, string toolTip, Boolean required, string defaultValue, bool hideDescription, string enableExpression = "true", ISet<ApplicationEvent> events = null)
             : base(from, labelData.Label, showExpression, toolTip) {
             _labelData = labelData;
             _label = labelData.Label;
@@ -74,6 +75,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             IsRequired = required;
             _eventsSet = events;
             Qualifier = qualifier;
+            HideDescription = hideDescription;
 
             if (events != null) {
                 _events = events.ToDictionary(f => f.Type, f => f);
@@ -190,7 +192,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public object Clone() {
             var cloned = new ApplicationAssociationDefinition(From, _labelData, Target,Qualifier, Schema, ShowExpression, ToolTip, IsRequired,
-                DefaultValue, EnableExpression, _eventsSet) {
+                DefaultValue, HideDescription, EnableExpression, _eventsSet) {
                     ExtraProjectionFields = ExtraProjectionFields,
                     LabelFields = LabelFields,
                     ApplicationTo = ApplicationTo,

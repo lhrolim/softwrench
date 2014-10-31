@@ -27,13 +27,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
                     //Date entered not working, server thinks it is in the future
                     var dateEntered = DateTime.Now.FromServerToRightKind();
-                    
-                    // Hard coded test values
-                    dateEntered = Convert.ToDateTime("10/29/2014 1:00:00 PM");
+                    //dateEntered = Convert.ToDateTime("10/29/2014 1:00:00 PM");
                     w.SetValueIfNull(integrationObject, "ACTUALDATE", dateEntered);
                     w.SetValueIfNull(integrationObject, "PHYSCNTDATE", dateEntered);
-                    w.SetValueIfNull(integrationObject, "UNITCOST", 0.02);
-                    w.SetValueIfNull(integrationObject, "LINECOST", 0.04);
+
+                    var unitcost = w.GetRealValue(integrationObject, "unitcost");
+                    var quantity = w.GetRealValue(integrationObject, "quantity");
+                    var linecost = Convert.ToDouble(unitcost) * Convert.ToDouble(quantity);
+                    w.SetValue(integrationObject, "LINECOST", linecost);
+
+                    // Hard coded test values
                     w.SetValueIfNull(integrationObject, "PHYSCNT", 0);
 
                     ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());

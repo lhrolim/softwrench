@@ -493,6 +493,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </connectorParameters>
     </entity>
 
+    <entity name="matrectransTransfers" idAttribute="matrectransid" parententity="matrectrans" whereclause="issuetype='TRANSFER'">
+
+    </entity>
+
     <entity name="invuse" idAttribute="invuseid" whereclause="invuse.usetype='TRANSFER'">
       <relationships>
         <relationship to="invuseline">
@@ -508,17 +512,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
         <relationship to="inventory">
-          <relationshipAttribute from="invuseline_.itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
           <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
           <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
-          <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location" primary="true"/>
         </relationship>
         <relationship to="location" qualifier="fromlocation">
           <relationshipAttribute from="invuseline_.fromstoreloc" to="location" primary="true"/>
           <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
           <relationshipAttribute from="invuseline_.itemsetid" to="setid"/>
         </relationship>
-        <relationship to="invbalances" qualifier="frominvbalance">
+        <relationship to="invbalancestest" qualifier="frominvbalance">
           <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute from="itemsetid" to="itemsetid"/>
@@ -530,7 +534,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
           <relationshipAttribute from="invuseline_.itemsetid" to="setid"/>
         </relationship>
-        <relationship to="invbalances" qualifier="toinvbalance">
+        <relationship to="invbalancestest" qualifier="toinvbalance">
           <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
           <relationshipAttribute from="invuseline_.tostoreloc" to="location"/>
           <relationshipAttribute from="invuseline_.tobin" to="binnum" primary="true"/>
@@ -542,6 +546,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </connectorParameters>
     </entity>
     
+  <entity name="invbalancestest" idAttribute="invbalancesid" parententity="invbalances" whereclause="binnum!=''">
+      <attributes>
+        <attribute name="ib1" type="varchar" required="false" />
+      </attributes>
+      <relationships>
+        <relationship to="item" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+        </relationship>
+        <relationship to="inventory" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWINVBAL" />
+      </connectorParameters>
+    </entity>
+
   </entities>
 
   <applications>
@@ -770,9 +794,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="description" label="Summary">
             <renderer type="default"  params="width=39%"/>
           </field>
-<!--          <field attribute="status" label="Status" >-->
-<!--            <renderer type="default" params="filterenabled=false; width=15%" />-->
-<!--          </field>-->
+          <!--          <field attribute="status" label="Status" >-->
+          <!--            <renderer type="default" params="filterenabled=false; width=15%" />-->
+          <!--          </field>-->
           <optionfield attribute="crewid" label="Crews" providerattribute="crews">
             <renderer type="combo" params="filteronly=true;width=16%;"/>
           </optionfield>
@@ -782,7 +806,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="schedfinish" label="Schedule Finish" >
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm; width=15%"/>
           </field>
-        
+
           <field attribute="#alreadyused" tooltip="This workorder is already used on another batch and cannot be included in the batch">
             <renderer type="icon" params="expression={'true':'fa-warning','false':''};"/>
           </field>
@@ -2353,22 +2377,65 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </schemas>
     </application>
 
-    <application entity="invuse" name="invuse" title="Inventory Transfer">
+    <application entity="matrectransTransfers" name="matrectransTransfers" title="Inventory Transfers">
       <schemas>
         <list>
-          <field attribute="invuseline_.itemnum" label="Item"/>
-          <field attribute="invuseline_.fromstoreloc" label="From Location"/>
-          <field attribute="invuseline_.frombin" label="From Bin"/>
-          <field attribute="invuseline_.tostoreloc" label="To location"/>
-          <field attribute="invuseline_.tobin" label="To Bin"/>
-          <field attribute="invuseline_.quantity" label="Quantity"/>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="width=16%"/>
+          </field>
+          <field attribute="fromstoreloc" label="From Storeroom">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="frombin" label="From Bin">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute="tostoreloc" label="To Storeroom">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="tobin" label="To Bin">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute="quantity" label="Quantity">
+            <renderer type="default" params="width=10%"/>
+          </field>
+          <field attribute="actualdate" label="Transfer Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=18%"/>
+          </field>
+          <properties>
+            <property key="list.click.schema" value="detail"/>
+          </properties>
           <commandbars>
             <commandgroup position="gridtop">
               <command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService" method="createTransfer" parameters="schema" position=">Filters"/>
             </commandgroup>
           </commandbars>
         </list>
-        
+
+        <schema id="detail" title="Inventory Transfer">
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="fromstoreloc" label="From Storeroom" readonly="true"/>
+          <field attribute="frombin" label="From Bin" readonly="true"/>
+          <field attribute="tostoreloc" label="To Storeroom" readonly="true"/>
+          <field attribute="tobin" label="To Bin" readonly="true"/>
+          <field attribute="quantity" label="Quantity" readonly="true"/>
+          <field attribute="actualdate" label="Transfer Date" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+        </schema>
+      </schemas>
+    </application>
+
+    <application entity="invuse" name="invuse" title="Inventory Transfer">
+      <schemas>
+        <!--<list>
+          <field attribute="invuseline_.itemnum" label="Item"/>
+          <field attribute="invuseline_.fromstoreloc" label="From Location"/>
+          <field attribute="invuseline_.frombin" label="From Bin"/>
+          <field attribute="invuseline_.tostoreloc" label="To location"/>
+          <field attribute="invuseline_.tobin" label="To Bin"/>
+          <field attribute="invuseline_.quantity" label="Quantity"/>
+        </list>
+
         <schema id="detail" stereotype="detail" mode="readonly">
           <field attribute="invuseline_.itemnum" label="Item"/>
           <field attribute="invuseline_.actualdate" label="Date"/>
@@ -2377,30 +2444,44 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="invuseline_.tostoreloc" label="To location"/>
           <field attribute="invuseline_.tobin" label="To Bin"/>
           <field attribute="invuseline_.quantity" label="Quantity"/>
-        </schema>
-        
+        </schema>-->
+
         <schema id="newdetail" stereotype="detail">
           <field attribute="usetype" hidden="true"/>
-          <field attribute="invuseline_.itemnum" label="Item"/>
-          <!--<field attribute="fromstoreloc" label="From Location"/>
-          <field attribute="invuseline_.frombin" label="From Bin"/>
-          <field attribute="invuseline_.tostoreloc" label="To Location"/>-->
-          <association target="fromstoreloc" label="From Storeroom" labelfield="fromlocation_.description">
+          <field attribute="invuseline_.itemnum" label="Item" required="true"/>
+          <association target="fromstoreloc" label="From Storeroom" labelfield="inventory_.location" hideDescription="true" required="true" extraprojectionvalues="costtype">
+            <renderer type="lookup"/>
+          </association>
+          <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true" required="true">
+            <event type="afterchange" service="inventoryService" method="afterChangeBin"/>
+            <renderer type="lookup"/>
+          </association>
+          <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" required="true">
             <dataprovider prefilterfunction="FilterLocation"/>
             <renderer type="lookup"/>
           </association>
-          <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum">
-            <renderer type="lookup"/>
-          </association>
-          <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description">
-            <dataprovider prefilterfunction="FilterLocation"/>
-            <renderer type="lookup"/>
-          </association>
-          <field attribute="invuseline_.tobin" label="To Bin"/>
-          <field attribute="invuseline_.quantity" label="Quantity"/>
-          <field attribute="invcost_.stdcost" hidden="true"/>
-          <field attribute="invcost_.avgcost" hidden="true"/>
-          <field attribute="inventory_.costtype" hidden="true"/>
+          <field attribute="invuseline_.tobin" label="To Bin" required="true"/>
+          <field attribute="invuseline_.quantity" label="Quantity" required="true"/>
+          <field attribute="invuseline_.unitcost" label="Unit Cost" hidden="true"/>
+          <field attribute="inventory_.costtype" label="Cost Type" hidden="true"/>
+          <commandbars>
+            <commandgroup position="detailform" removeundeclared="true">
+              <command id="crud_submit" label="Submit" service="inventoryService" method="submitTransfer" parameters="schema,datamap"
+                       successmessage="Inventory Transfer Successful" position="left"/>
+              <command id="crud_cancel" label="Cancel" service="inventoryService" method="cancelTransfer" parameters="schema"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
+    
+    <application entity="invcost" name="invcost" title="invcost">
+      <schemas>
+        <schema id="list" title="Invcost List" stereotype="list">
+          <field attribute="itemnum" label="Item"/>
+          <field attribute="location" label="location"/>
+          <field attribute="avgcost" label="Average Cost"/>
+          <field attribute="stdcost" label="Standard Cost"/>
         </schema>
       </schemas>
     </application>
