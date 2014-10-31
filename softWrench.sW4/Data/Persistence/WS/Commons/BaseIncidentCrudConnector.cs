@@ -40,34 +40,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                         maximoTemplateData.ApplicationMetadata);
                 }
             }
-            //HandleSolutions(maximoTemplateData, crudData, sr);
+            HandleSolutions(crudData, sr);
             base.BeforeUpdate(maximoTemplateData);
         }
 
-        private void HandleSolutions(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData crudDataEntity, object sr)
-        {
-            var solutions = (IEnumerable<CrudOperationData>)crudDataEntity.GetRelationship("solution");
-            var recordKey = crudDataEntity.Id;
-            var user = SecurityFacade.CurrentUser();
-            w.CloneArray((IEnumerable<CrudOperationData>)crudDataEntity.GetRelationship("solution"), sr, "SOLUTION",
-                delegate(object integrationObject, CrudOperationData crudData)
-                {
-                    if (ReflectionUtil.IsNull(integrationObject, "SOLUTION"))
-                    {
-                        w.SetValue(integrationObject, "SOLUTION", -1);
-                    }
-                    var enterdate = sr;
-                    
-                    w.SetValueIfNull(integrationObject, "SOLUTIONID", 0);
-                    w.SetValueIfNull(integrationObject, "ORGID", user.OrgId);
-
-
-                    ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
-                });
+        private void HandleSolutions(CrudOperationData crudDataEntity, object sr) {
+            var sympton = crudDataEntity.GetAttribute("symptom_.ldtext");
+            var cause = crudDataEntity.GetAttribute("cause_.ldtext");
+            var resolution = crudDataEntity.GetAttribute("resolution_.ldtext");
+            w.SetValue(sr, "FR1CODE_LONGDESCRIPTION", cause);
+            w.SetValue(sr, "FR2CODE_LONGDESCRIPTION", resolution);
+            w.SetValue(sr, "PROBLEMCODE_LONGDESCRIPTION", sympton);
         }
 
-        public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData)
-        {
+        public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var user = SecurityFacade.CurrentUser();
             var sr = maximoTemplateData.IntegrationObject;
             w.SetValue(sr, "ACTLABHRS", 0);

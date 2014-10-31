@@ -531,21 +531,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
 					<relationshipAttribute to="ldownercol" literal="EXCEPTIONREASON" quoteLiteral="true" />
 				</relationship>
-        <relationship to="longdescription" qualifier="symptom">
-          <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
-          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
-          <relationshipAttribute to="ldownercol" literal="PROBLEMCODE" quoteLiteral="true" />
-        </relationship>
-        <relationship to="longdescription" qualifier="cause">
-          <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
-          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
-          <relationshipAttribute to="ldownercol" literal="FR1CODE" quoteLiteral="true" />
-        </relationship>
-        <relationship to="longdescription" qualifier="resolution">
-          <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
-          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
-          <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
-        </relationship>
+      
 			</relationships>
       
       <connectorParameters>
@@ -790,7 +776,23 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
         <relationship to ="solution" qualifier="solution" >
           <relationshipAttribute from="solution" to ="solution" primary="true"/>
-        </relationship> 
+        </relationship>
+        <relationship to="longdescription" qualifier="symptom">
+          <relationshipAttribute from="ticketid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="PROBLEMCODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="cause">
+          <relationshipAttribute from="ticketid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR1CODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="resolution">
+          <relationshipAttribute from="ticketid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
+        </relationship>
+        
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="incident" />
@@ -1840,6 +1842,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <field attribute="solution" hidden="true"/>
             <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
               <renderer type="lookup"/>
+              <event type="afterchange" service="solutionService" method="setsolutiondata"/>
             </association> 
             <field attribute="solution_.description" label="Description:" readonly="true"/>
             <field attribute="symptom_.ldtext" label="Symptom:">
