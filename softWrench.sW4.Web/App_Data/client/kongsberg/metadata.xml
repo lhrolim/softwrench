@@ -778,17 +778,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="solution" to ="solution" primary="true"/>
         </relationship>
         <relationship to="longdescription" qualifier="symptom">
-          <relationshipAttribute from="ticketid" to="ldkey" primary="true"/>
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="PROBLEMCODE" quoteLiteral="true" />
         </relationship>
         <relationship to="longdescription" qualifier="cause">
-          <relationshipAttribute from="ticketid" to="ldkey" primary="true"/>
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="FR1CODE" quoteLiteral="true" />
         </relationship>
         <relationship to="longdescription" qualifier="resolution">
-          <relationshipAttribute from="ticketid" to="ldkey" primary="true"/>
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
         </relationship>

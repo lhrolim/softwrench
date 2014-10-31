@@ -84,7 +84,7 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (!(obj.GetType().IsAssignableFrom(GetType()) || GetType().IsInstanceOfType(obj))) return false;
             return Equals((EntityAssociation)obj);
         }
 

@@ -218,6 +218,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
 
 
     $scope.renderData = function renderData(result) {
+        contextService.insertIntoContext("associationsresolved", false, true);
         $scope.isList = $scope.isDetail = false;
         $scope.crudsubtemplate = null;
         $scope.multipleSchema = false;
@@ -256,14 +257,19 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         validationService.clearDirty();
         if (result.type == 'ApplicationDetailResult') {
             log.debug("Application Detail Result handled");
-            if (result.schema.properties['associationstoprefetch'] != "#all") {
+            var shouldFetchAssociationsFromServer = result.schema.properties['associationstoprefetch'] != "#all";
+            if (shouldFetchAssociationsFromServer) {
                 $timeout(function () {
                     log.info('fetching eager associations of {0}'.format(scope.schema.applicationName));
                     associationService.getEagerAssociations(scope);
+                    
                 });
             }
             associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, scope.datamap.fields);
             scope.compositions = result.compositions;
+            if (!shouldFetchAssociationsFromServer) {
+                contextService.insertIntoContext("associationsresolved", true, true);
+            }
             toDetail(scope);
         } else if (result.type == 'ApplicationListResult') {
             log.debug("Application List Result handled");

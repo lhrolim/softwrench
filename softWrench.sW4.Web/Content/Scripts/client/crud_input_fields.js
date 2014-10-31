@@ -103,7 +103,7 @@ app.directive('crudInputFields', function (contextService) {
         controller: function ($scope, $http, $element, $injector, $timeout,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
-            cmpfacade,cmpComboDropdown, redirectService,validationService, contextService) {
+            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService) {
 
             $scope.$name = 'crud_input_fields';
 
@@ -123,14 +123,14 @@ app.directive('crudInputFields', function (contextService) {
                 return title;
             };
 
-            $scope.getCheckboxOptions = function(fieldMetadata){
+            $scope.getCheckboxOptions = function (fieldMetadata) {
                 if (fieldMetadata.providerAttribute == null) {
                     return fieldMetadata.options;
                 }
                 return associationOptions[fieldMetadata.associationKey];
             }
 
-            $scope.isPositionLeft = function(fieldMetadata) {
+            $scope.isPositionLeft = function (fieldMetadata) {
                 return "left".equalIc(fieldMetadata.rendererParameters['position']);
             }
 
@@ -170,7 +170,7 @@ app.directive('crudInputFields', function (contextService) {
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();
                     $scope.configureAssociationChangeEvents();
-                    
+
                     $scope.configureDirtyWatcher();
                 }
 
@@ -178,7 +178,9 @@ app.directive('crudInputFields', function (contextService) {
                 // Configure input files
                 $('#uploadBtn').on('change', function (e) {
                     if (this != null) {
-                        $('#uploadFile').attr("value", this.value);}});
+                        $('#uploadFile').attr("value", this.value);
+                    }
+                });
             });
 
             $scope.configureDirtyWatcher = function () {
@@ -236,7 +238,10 @@ app.directive('crudInputFields', function (contextService) {
                                 }
                                 var result = associationService.updateAssociations(association, $scope);
                                 if (result != undefined && result == false) {
-                                    associationService.postAssociationHook(association, $scope, { phase: 'configured', dispatchedbytheuser: true });
+                                    var resolved =contextService.fetchFromContext("associationsresolved", false, true);
+                                    var phase = resolved ? 'configured' : 'initial';
+                                    var dispatchedbytheuser = $scope.associationsResolved ? true : false;
+                                    associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser });
                                 }
                                 try {
                                     $scope.$digest();
@@ -260,6 +265,9 @@ app.directive('crudInputFields', function (contextService) {
                     });
 
                     $scope.$watchCollection('associationOptions.' + association.associationKey, function (newvalue, old) {
+                        if (newvalue == old) {
+                            return;
+                        }
                         $timeout(
                             function () {
                                 cmpfacade.digestAndrefresh(association, $scope);
@@ -363,7 +371,7 @@ app.directive('crudInputFields', function (contextService) {
                 }
             };
             $scope.getLookUpDescriptionLabel = function (fieldMetadata) {
-               return i18NService.getLookUpDescriptionLabel(fieldMetadata);
+                return i18NService.getLookUpDescriptionLabel(fieldMetadata);
             };
             $scope.lookupCodeBlur = function (fieldMetadata) {
                 var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
@@ -549,14 +557,14 @@ app.directive('crudInputFields', function (contextService) {
                 //return $scope.hasSameLineLabel(fieldMetadata) ? 'col-md-2' : 'col-md-12';
                 if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
                     return null;
-            }
+                }
                 return $scope.hasSameLineLabel(fieldMetadata) ? 'col-sm-3 col-md-2' : 'col-xs-12';
             }
 
             $scope.getFieldClass = function (fieldMetadata) {
                 if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
                     return 'col-md-12';
-            }
+                }
                 return $scope.hasSameLineLabel(fieldMetadata) ? 'col-sm-9 col-md-10' : 'col-xs-12';
             }
             //SM - 09/24 - SWWEB-441 change OTM column classes
@@ -683,7 +691,7 @@ app.directive('selectCombo', function () {
                 //return false;
                 //e.stopPropagation();
             });
-         
-    }
+
+        }
     };
 });

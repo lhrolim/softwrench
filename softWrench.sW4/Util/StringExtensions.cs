@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace softWrench.sW4.Util {
     public static class StringExtensions {
@@ -34,6 +35,10 @@ namespace softWrench.sW4.Util {
 
         public static bool StartsWithAny(this string str, params string[] strings) {
             return strings.Any(toCompare => str.StartsWith(toCompare, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public static int NumberOfItems(this string str, string toSearch) {
+            return new Regex(Regex.Escape(toSearch)).Matches(str).Count;
         }
     }
 }
