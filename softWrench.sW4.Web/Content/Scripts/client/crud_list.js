@@ -269,6 +269,11 @@ app.directive('crudList', function (contextService) {
                     $scope.selectPage(1);
                 }
 
+                // workaround to remove the focus from the filter textbox
+                // on ie9, if we dont took the focus out of the textbox, the page breaks something on the rendering 
+                // that prevents the click on the grid to show the details
+                $('#listgrid').focus();
+                window.scrollTo(0, 0);
             };
 
             $scope.shouldShowFilter = function (column) {
