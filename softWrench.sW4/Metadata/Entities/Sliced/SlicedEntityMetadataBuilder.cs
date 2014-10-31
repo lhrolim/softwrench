@@ -114,16 +114,26 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
                 .ToList();
         }
 
-        private static IEnumerable<EntityAssociation> HandleAssociations(IEnumerable<ApplicationAssociationDefinition> associations,
+        private static IEnumerable<SlicedEntityAssociation> HandleAssociations(IEnumerable<ApplicationAssociationDefinition> associations,
             EntityMetadata entityMetadata) {
-            var usedRelationships = new List<EntityAssociation>();
+            var usedRelationships = new List<SlicedEntityAssociation>();
             foreach (var association in associations) {
                 var entityAssociation = association.EntityAssociation;
                 if (entityAssociation == null) {
                     throw ExceptionUtil.InvalidOperation(MissingAssociation, association.Attribute, entityMetadata.Name);
                     //                    throw new InvalidOperationException(String.Format(MissingAssociation, entityAssociation.Qualifier, entityMetadata.Name));
                 }
-                usedRelationships.Add(entityAssociation);
+                var usedAttributes = new HashSet<string>();
+                var labelFields = association.LabelFields;
+                usedAttributes.AddAll(labelFields);
+//                usedAttributes.AddAll(entityAssociation.Attributes.Select(a => a.To));
+
+                var entity = MetadataProvider.Entity(entityAssociation.To);
+                var slicedAttributes = entity.Attributes(EntityMetadata.AttributesMode.NoCollections)
+                      .Where(attribute => labelFields
+                          .Any(r => r.Equals(attribute.Name)));
+
+                usedRelationships.Add(new SlicedEntityAssociation(entityAssociation, slicedAttributes,entityAssociation.Qualifier));
             }
             return usedRelationships;
         }

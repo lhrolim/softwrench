@@ -133,7 +133,7 @@ namespace softWrench.sW4.Metadata.Entities {
 
         public enum AttributesMode { NoCollections, IncludeCollections }
 
-        protected IEnumerable<EntityAttribute> AddGenericRelationshipAttributes(AttributesMode includeCollections, string prefix = null) {
+        private IEnumerable<EntityAttribute> AddGenericRelationshipAttributes(AttributesMode includeCollections, string prefix = null) {
             var relationshipAttributes = new List<EntityAttribute>();
             var associations = includeCollections == AttributesMode.IncludeCollections ? Associations : NonListAssociations();
             foreach (var usedRelationship in associations) {
@@ -204,7 +204,7 @@ namespace softWrench.sW4.Metadata.Entities {
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
+            if (!(obj.GetType().IsAssignableFrom(GetType()) || GetType().IsInstanceOfType(obj))) return false;
             return Equals((EntityMetadata)obj);
         }
 

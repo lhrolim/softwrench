@@ -40,17 +40,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </relationship>
 
         <relationship to="longdescription" qualifier="symptom">
-          <relationshipAttribute from="ticketid" to="ldkey" primary="true"/>
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="PROBLEMCODE" quoteLiteral="true" />
         </relationship>
         <relationship to="longdescription" qualifier="cause">
-          <relationshipAttribute from="ticketid" to="ldkey" primary="true"/>
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="FR1CODE" quoteLiteral="true" />
         </relationship>
         <relationship to="longdescription" qualifier="resolution">
-          <relationshipAttribute from="ticketid" to="ldkey" primary="true"/>
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
         </relationship>
@@ -165,7 +165,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="statusdate" hidden="true" />
         </schema>
 
-        <schema stereotype="detail" id="detail" mode="input" title="Incident Details">
+        <detail mode="input" title="Incident Details">
           <field attribute="actlabcost" default="0" hidden="true"/>
           <field attribute="actlabhrs" default="0" hidden="true" />
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
@@ -249,7 +249,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <!--composition relationship="solution" label="Solution">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
           </composition-->
-        </schema>
+        </detail>
         <!--field attribute="statusdate" hidden="true" />
           <composition relationship="relatedrecord" label="Related Records" inline="true" >
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey" />

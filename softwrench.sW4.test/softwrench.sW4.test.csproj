@@ -95,6 +95,7 @@
     <Compile Include="Metadata\Applications\Command\ApplicationCommandUtilsTest.cs" />
     <Compile Include="Metadata\Association\DependencyBuilderTest.cs" />
     <Compile Include="Metadata\Association\AssociationHelperTest.cs" />
+    <Compile Include="Metadata\Entities\OtbSlicedEntityMetadataBuilderTest.cs" />
     <Compile Include="Metadata\Entities\SlicedEntityMetadataBuilderTest.cs" />
     <Compile Include="Metadata\Entities\ParentEntityTest.cs" />
     <Compile Include="Metadata\Entities\TargetAttributeHandlerTest.cs" />
