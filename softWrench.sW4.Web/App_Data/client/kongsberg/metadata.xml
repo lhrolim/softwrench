@@ -531,6 +531,21 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
 					<relationshipAttribute to="ldownercol" literal="EXCEPTIONREASON" quoteLiteral="true" />
 				</relationship>
+        <relationship to="longdescription" qualifier="symptom">
+          <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="PROBLEMCODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="cause">
+          <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR1CODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="resolution">
+          <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
+        </relationship>
 			</relationships>
       
       <connectorParameters>
@@ -909,7 +924,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="classstructure" qualifier="classstructure">
           <relationshipAttribute from="classstructureid" to ="classstructureid" primary="true"/>
         </relationship>
-            <relationship to="longdescription" qualifier="symptom">
+          <relationship to="longdescription" qualifier="symptom">
           <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="SOLUTION" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="PROBLEMCODE" quoteLiteral="true" />
@@ -1827,13 +1842,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="lookup"/>
             </association> 
             <field attribute="solution_.description" label="Description:" readonly="true"/>
-            <field attribute="solution_symptom_.ldtext" label="Symptom:">
+            <field attribute="symptom_.ldtext" label="Symptom:">
               <renderer type="richtext"/>
             </field>
-            <field attribute="solution_cause_.ldtext" label="Cause:" >
+            <field attribute="cause_.ldtext" label="Cause:" >
               <renderer type="richtext"/>
             </field>
-            <field attribute="solution_resolution_.ldtext" label="Resolution:" >
+            <field attribute="resolution_.ldtext" label="Resolution:" >
               <renderer type ="richtext"/>
             </field>
           </tab>
