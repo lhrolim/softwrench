@@ -226,8 +226,8 @@ app.directive('compositionList', function (contextService) {
                 } else {
                     //TODO: switch to edit
                     $scope.newDetail = true;
+                    $scope.selecteditem = datamap;
                 }
-                $scope.selecteditem = datamap;
                 $scope.collapseAll();
             }
 

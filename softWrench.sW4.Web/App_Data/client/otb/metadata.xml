@@ -1592,7 +1592,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
     <application name="invissuewo" title="Workorder Inventory Issuing and Returns" entity="workorder">
       <schemas>
-        <schema id="viewdetail" stereotype="detail" mode="input">
+        <schema id="newdetail" stereotype="detail" mode="input">
           <field attribute="#refwo" label="Workorder" readonly="true"/>
           <field attribute="wonum" hidden="true"/>
           <field attribute="assetnum" label="Asset" readonly="true"/>
@@ -1606,21 +1606,34 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <collectionproperties listschema="itemlist" allowcreation="true" hideexistingdata="true" />
           </composition>
           <event type="onload" service="scannerdetectionService" method="initIssueItemListener"/>
+          <properties>
+            <property key="detail.navigationbuttons.disabled" value="true"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="detailform" removeundeclared="true">
+              <command id="savenewinvissue" label="Submit" service="inventoryService" method="submitNewInvIssue" parameters="schema,datamap" />
+              <command id="cancelnewinvissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" />
+            </commandgroup>
+          </commandbars>
         </schema>
       </schemas>
     </application>
       
     <application name="invissue" title="Issue Inventory" entity="invissue">
       <schemas>
-        <list title="Issues and Returns">
+        
+        <schema stereotype="list" id="invissuelist" title="Issues and Returns">
+          <properties>
+            <property key="list.click.schema" value="viewinvissuedetail"/>
+          </properties>
           <commandbars>
             <commandgroup position="gridtop">
               <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap" position=">filter"
              successmessage="Issue created"/>
-              <command id="create_return" label="New Return" service="inventoryService" method="createReturn" parameters="schema,datamap" position=">create_issue"
+              <command id="create_return" label="New Return" service="inventoryService" method="createReturn" parameters="schema,datamap" 
              successmessage="Return created"/>
-            <command id="create_return_stub" label="New Return Stub" service="inventoryService" method="editinvissuewo" parameters="schema,datamap,clonedCompositionData" position=">create_return"
-             successmessage="Return created"/>
+            <!--<command id="create_return_stub" label="New Return Stub" service="inventoryService" method="editinvissuewo" parameters="schema,datamap,clonedCompositionData"
+             successmessage="Return created"/>-->
             </commandgroup>
           </commandbars>
           <field attribute="matusetransid" hidden="true"/>
@@ -1639,20 +1652,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="issuetype" label="Issue Type">
             <renderer type="default" params="width=15%;"/>
           </field>
-        </list>
+        </schema>
         
         <schema id="itemlist" stereotype="compositionlist">
           <properties>
-            <property key="list.click.schema" value="editdetail"/>
             <property key="list.click.popup" value="modal"/>
+            <property key="list.click.service" value="inventoryService.editinvissuewo"/>
+            <property key="list.disablepagination" value="true"/>
           </properties>
           <commandbars>
-            <commandgroup position="compositiontop" removeundeclared="true">
-              <command id="create_return_stub" label="New Return Stub" service="inventoryService" method="editinvissuewo" parameters="schema,datamap,clonedCompositionData"
-             successmessage="Return created"/>
-            </commandgroup>
+            <commandgroup position="compositiontop" removeundeclared="true"/>
             <commandgroup position="compositionbottom" removeundeclared="true">
-              
+              <command id="additem" label="Add Item" service="inventoryService" method="displayPopupModal" parameters="datamap,$scope.save"/>
+              <command id="savenewinvissue" label="Submit" service="inventoryService" method="submitNewInvIssue" parameters="schema,datamap" />
+              <command id="cancelnewinvissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" />
             </commandgroup>
           </commandbars>
           <!--<association label="Item:" target="itemnum" labelfield="item_.description">
@@ -1670,29 +1683,34 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="storeloc" hidden="true"/>
         </schema>
         
-        <schema id="editdetail" stereotype="compositiondetail">
+        <schema id="viewinvissuedetail" stereotype="detail">
+          <!--<association label="Item:" target="itemnum" labelfield="item_.description">
+            <renderer type="lookup"/>
+          </association>-->
+          <field attribute="matusetransid" hidden="true"/>
+          <field attribute="refwo" label="Workorder"/>
+          <field attribute="issueto" label="Issue To"/>
+          <field attribute="assetnum" label="Asset"/>
+          <field attribute="location" label="Location"/>
+          
+          <field attribute="issuetype" label="Issue Type"/>
+          <field attribute="storeloc" label="Storeroom"/>
+          <field attribute="itemnum" label="Item"/>
+          <field attribute="item_.description" label="Description"/>
+          <field attribute="quantity" label="Quantity"/>
+        </schema>
+        
+        <schema id="newitem" stereotype="detail" mode="input">
           <association label="Item:" target="itemnum" labelfield="item_.description">
             <renderer type="lookup"/>
           </association>
-          <field attribute="matusetransid" hidden="true"/>
-          <field attribute="refwo" hidden="true"/>
-          <field attribute="issueto" hidden="true"/>
-          <field attribute="assetnum" hidden="true"/>
-          <field attribute="location" hidden="true"/>
-          <field attribute="item_.description" label="Description"/>
           <field attribute="quantity" label="Quantity"/>
-          <field attribute="issuetype" label="Issue Type"/>
-          <field attribute="storeloc" hidden="true"/>
-          
-        </schema>
-        
-        <schema id="newinvissue" stereotype="list">
-          <!--<commandbars>
-            <commandgroup position="compositionbottom"  >
-              <command id="create_return_stub" label="New Return Stub" service="inventoryService" method="editinvissuewo" parameters="schema,datamap" position=">create_return"
-             successmessage="Return created"/>
+          <commandbars>
+            <commandgroup position="detailform" removeundeclared="true">
+                <command id="saveitem" label="Save Item" service="inventoryService" method="addItemToInvIssue" parameters="schema,datamap"/>
+                <command id="cancelnewitem" label="Cancel" service="inventoryService" method="cancelNewInvIssueItem" />
             </commandgroup>
-          </commandbars>-->
+          </commandbars>
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="refwo" label="Workorder">
             <renderer type="default" params="width=15%;"/>
@@ -1709,6 +1727,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="issuetype" label="Issue Type">
             <renderer type="default" params="width=15%;"/>
           </field>
+          
         </schema>
 
         <detail id="lookupwo" title="Issues and Returns" mode="input" platform="Web">
@@ -1736,7 +1755,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </optionfield>
           <commandbars>
             <commandgroup position="detailform">
+              <command id="start_issuing" label="Start Issuing" service="inventoryService" position="&lt;save" method="editinvissuewo" parameters="schema,datamap"/>
               <removecommand id="save"/>
+              <removecommand id="print"/>
             </commandgroup>
           </commandbars>
         </detail>
@@ -1836,6 +1857,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="itemnum" label="Item:"  required="true" />
           <field attribute="description" label="Description:"  required="true" />
         </detail>
+        <schema id="itemlookup" stereotype="detail" mode="output">
+          <field attribute="itemnum"/>
+          <field attribute="description"/>
+          <field attribute="issueunit"/>
+        </schema>
       </schemas>
     </application>
 
