@@ -2,7 +2,7 @@
 @using softWrench.sW4.Metadata.Security
 @using softWrench.sW4.Web.Util
 <!DOCTYPE html>
-<html ng-app="sw_layout">
+<html ng-app="sw_layout" id="ng-app" xmlns:ng="http://angularjs.org">
 <head>
     <title>@ViewBag.Title</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -11,7 +11,7 @@
     @RowStampScriptHelper.RenderCss("~/Content/bootstrap/css/twitter-bootstrap")
     @RowStampScriptHelper.RenderCss("~/Content/themes/base/fonts")
     @RowStampScriptHelper.RenderCss("~/Content/styles/client/client-css")
-    
+
     @*    <base href="@Request.ApplicationPath" />*@
 
 
@@ -61,7 +61,7 @@
                                     </li>
                                     <li ng-show="myprofileenabled">
                                         <a href="#" ng-click="doAction(null,'User','MyProfile',null)"
-                                            rel="tooltip" data-original-title="{{i18N('_headermenu.myprofile_tooltip','View your profile')}}" data-placement="bottom"><span>|</span>{{i18N('_headermenu.myprofile','My Profile')}}</a>
+                                           rel="tooltip" data-original-title="{{i18N('_headermenu.myprofile_tooltip','View your profile')}}" data-placement="bottom"><span>|</span>{{i18N('_headermenu.myprofile','My Profile')}}</a>
                                     </li>
                                     <li class="dropdown" ng-show="isSysAdmin" style="margin-top: -1px !important">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>|</span><i class="glyphicon glyphicon-wrench"></i> {{i18N('_headermenu.utilities','Utilities')}}<b class="caret"></b></a>
