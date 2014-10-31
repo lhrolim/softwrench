@@ -85,23 +85,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 else if (costtype === 'AVERAGE') {
                     parameters.fields['invuseline_.unitcost'] = fields.avgcost;
                 }
-                //var standardCost = fields.stdcost;
-                //var averageCost = fields.avgcost;
-                //parameters.fields["invcost_.stdcost"] = standardCost;
-                //parameters.fields["invcost_.avgcost"] = averageCost;
             });
-        },
-        afterChangeTransferQuantity: function (parameters) {
-            var lineCost = parameters.fields['invuseline_.quantity'] * parameters.fields['invuseline_.unitcost'];
-            parameters.fields['invuseline_.linecost'] = lineCost;
-        },
-        submitTransfer: function () {
-
-        },
-        cancelTransfer: function () {
-            redirectService.goToApplicationView('matusetransTransfers', 'list', null, null, null);
-        },
-
+        }
     };
 
 });

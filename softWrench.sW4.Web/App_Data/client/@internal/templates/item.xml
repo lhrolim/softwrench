@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
+
+  <entities>
+    <entity name="item" idAttribute="itemnum" >
+      <attributes>
+        <attribute name="itemnum"  type="varchar" required="true" />
+        <attribute name="description"  type="varchar" required="true" />
+      </attributes>
+    </entity>
+
+  </entities>
+
+
+  <applications>
+    <application name="item" title="Item" entity="item" id="00000000-0000-0000-0000-000000000010">
+      <properties>
+        <property key="mobile.userInteractionEnabled" value="false"/>
+        <property key="mobile.fetchlimit" value="300"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="itemnum" label="Item" qualifier="title"/>
+          <field attribute="description" label="Description" qualifier="excerpt"/>
+        </list>
+        <detail>
+          <field attribute="itemnum" label="Item:"  required="true" />
+          <field attribute="description" label="Description:"  required="true" />
+        </detail>
+      </schemas>
+    </application>
+  </applications>
+
+
+
+
+</metadata>

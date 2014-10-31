@@ -88,6 +88,9 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
     }
 
     $scope.toList = function (data, scope) {
+        if (scope == null) {
+            scope = $scope;
+        }
         $('#saveBTN').removeAttr('disabled');
         scope.$broadcast("sw_gridrefreshed", data, $rootScope.printRequested);
         if (data != null && $rootScope.printRequested !== true) {

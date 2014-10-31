@@ -165,7 +165,7 @@ app.directive('crudInputFields', function (contextService) {
                     });
                 });
 
-                if (parentElementId.indexOf('Section') == -1) {
+                if (parentElementId == ('crudInputMainCompositionFields')) {
                     //to avoid registering these global listeners multiple times, as the page main contain sections.
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();
@@ -667,7 +667,6 @@ app.directive('numberSpinner', function () {
                 min: attr.min,
                 max: attr.max
             });
-            console.log(attr);
         }
     }
 });

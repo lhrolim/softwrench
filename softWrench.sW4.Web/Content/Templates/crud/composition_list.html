@@ -123,14 +123,24 @@
         </div>
     </div>
 
-    <commandbar schema="parentschema"
-                mode="parentschema.mode"
-                ng-if="!inline"
-                datamap="parentdata.fields"
-                localcommandprovider="compositionProvider()"
-                localschema="compositionlistschema"
-                savefn="save()"
-                cancelfn="cancel(previousdata,previousschema)" />
+    <div class="form-actions hidden-phone form-group hiddenonprint commandbar" data-class="commandbar" ng-show="selecteditem==null">
+        <div class="spinner" data-class="spinner" id="detailspinner"></div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="text-align: center; vertical-align: middle;" data-class="commandbar">
+                    <compositiontoolbar position="compositionbottom"
+                                        schema="compositionlistschema"
+                                        parentschema="parentschema"
+                                        datamap="compositiondata"
+                                        parentdatamap="parentdata"
+                                        pagination-data="paginationData"
+                                        search-data="searchData"
+                                        search-sort="searchSort"
+                                        search-operator="searchOperator" />
+                </td>
+            </tr>
+        </table>
+    </div>
 
     <div ng-if="newDetail" style="margin-top: 10px">
 

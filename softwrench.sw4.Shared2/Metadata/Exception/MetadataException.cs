@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace softwrench.sw4.Shared2.Metadata.Exception {
+
     public class MetadataException : InvalidOperationException {
 
 
@@ -14,9 +16,12 @@ namespace softwrench.sw4.Shared2.Metadata.Exception {
             throw new MetadataException(String.Format("Command bar {0} not found, review your metadata configuration", commandBarId));
         }
 
-        public static System.Exception CommandNotFound(string commanddisplayableId,string commandBarId)
-        {
+        public static System.Exception CommandNotFound(string commanddisplayableId, string commandBarId) {
             throw new MetadataException(String.Format("Command {0} not found in commandbar {1}. review your metadata configuration", commanddisplayableId, commandBarId));
+        }
+
+        public static MetadataException MissingPathInResourceCommand(string commandId) {
+            throw new InvalidOperationException(String.Format("Missing path for ResourceCommand {0}", commandId));
         }
     }
 }

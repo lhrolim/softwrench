@@ -1,160 +1,160 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
-<!--kongsberg-->
+  <!--kongsberg-->
   <entities>
 
-    
+
     <entity name="SR" idAttribute="ticketid">
-        <attributes>
-          <attribute name="accumulatedholdtime" type="float" required="false" />
-          <attribute name="actlabcost" type="decimal" required="true" />
-          <attribute name="actlabhrs" type="float" required="true" />
-          <attribute name="actualcontactdate" type="datetime" required="false" />
-          <attribute name="actualfinish" type="datetime" required="false" />
-          <attribute name="actualstart" type="datetime" required="false" />
-          <attribute name="adjustedtargetcontacttime" type="datetime" required="false" />
-          <attribute name="adjustedtargetresolutiontime" type="datetime" required="false" />
-          <attribute name="adjustedtargetresponsetime" type="datetime" required="false" />
-          <attribute name="affecteddate" type="datetime" required="false" />
-          <attribute name="affectedemail" type="varchar" required="false" />
-          <attribute name="affectedperson" type="varchar" required="false" />
-          <attribute name="affectedphone" type="varchar" required="false" />
-          <attribute name="ageflag" type="varchar" required="false" />
-          <attribute name="area" type="varchar" required="false" />
-          <attribute name="assetnum" type="varchar" required="false" />
-          <attribute name="assetorgid" type="varchar" required="false" />
-          <attribute name="assetsiteid" type="varchar" required="false" />
-          <attribute name="assignedownergroup" type="varchar" required="false" />
-          <attribute name="calccalendar" type="varchar" required="false" />
-          <attribute name="calcorgid" type="varchar" required="false" />
-          <attribute name="calcshift" type="varchar" required="false" />
-          <attribute name="changeby" type="varchar" required="true" />
-          <attribute name="changedate" type="datetime" required="true" />
-          <attribute name="cinum" type="varchar" required="false" />
-          <attribute name="class" type="varchar" required="true" />
-          <attribute name="classificationid" type="varchar" required="false" />
-          <attribute name="classstructureid" type="varchar" required="false" />
-          <attribute name="commodity" type="varchar" required="false" />
-          <attribute name="commoditygroup" type="varchar" required="false" />
-          <attribute name="correlationattrs" type="varchar" required="false" />
-          <attribute name="createdby" type="varchar" required="false" />
-          <attribute name="createwomulti" type="varchar" required="false" />
-          <attribute name="creationdate" type="datetime" required="false" />
-          <attribute name="description" type="varchar" required="false" />
-          <attribute name="descsrvid" type="varchar" required="false" />
-          <attribute name="developmentrequest" type="smallint" required="true" />
-          <attribute name="externalrecid" type="varchar" required="false" />
-          <attribute name="externalsystem" type="varchar" required="false" />
-          <attribute name="externalsystem_ticketid" type="varchar" required="false" />
-          <attribute name="failurecode" type="varchar" required="false" />
-          <attribute name="feature_request" type="smallint" required="true" />
-          <attribute name="fr1code" type="varchar" required="false" />
-          <attribute name="fr2code" type="varchar" required="false" />
-          <attribute name="glaccount" type="varchar" required="false" />
-          <attribute name="globalticketclass" type="varchar" required="false" />
-          <attribute name="globalticketid" type="varchar" required="false" />
-          <attribute name="hasactivity" type="smallint" required="true" />
-          <attribute name="hasld" type="smallint" required="true" />
-          <attribute name="hassolution" type="smallint" required="true" />
-          <attribute name="historyflag" type="smallint" required="true" />
-          <attribute name="impact" type="int" required="false" />
-          <attribute name="indicatedpriority" type="int" required="false" />
-          <attribute name="inheritstatus" type="smallint" required="true" />
-          <attribute name="internalpriority" type="int" required="false" />
-          <attribute name="isglobal" type="smallint" required="true" />
-          <attribute name="isknownerror" type="smallint" required="true" />
-          <attribute name="isknownerrordate" type="datetime" required="false" />
-          <attribute name="langcode" type="varchar" required="true" />
-          <attribute name="location" type="varchar" required="false" />
-          <attribute name="oncallautoassign" type="smallint" required="true" />
-          <attribute name="oncallfirstrotassnperson" type="varchar" required="false" />
-          <attribute name="oncallownergroup" type="varchar" required="false" />
-          <attribute name="oncallreassigntime" type="datetime" required="false" />
-          <attribute name="oncallstarttime" type="datetime" required="false" />
-          <attribute name="orgid" type="varchar" required="false" />
-          <attribute name="origrecordclass" type="varchar" required="false" />
-          <attribute name="origrecordid" type="varchar" required="false" />
-          <attribute name="origrecorgid" type="varchar" required="false" />
-          <attribute name="origrecsiteid" type="varchar" required="false" />
-          <attribute name="outageduration" type="float" required="false" />
-          <attribute name="owner" type="varchar" required="false" />
-          <attribute name="ownergroup" type="varchar" required="false" />
-          <attribute name="pluspagreement" type="varchar" required="false" />
-          <attribute name="pluspbblinenum" type="int" required="false" />
-          <attribute name="pluspbillbatch" type="varchar" required="false" />
-          <attribute name="pluspcalccalnum" type="varchar" required="false" />
-          <attribute name="pluspcalcorgid" type="varchar" required="false" />
-          <attribute name="pluspcalcshift" type="varchar" required="false" />
-          <attribute name="pluspcostcenter" type="varchar" required="false" />
-          <attribute name="pluspcustchacct" type="varchar" required="false" />
-          <attribute name="pluspcustomer" type="varchar" required="false" />
-          <attribute name="pluspcustponum" type="varchar" required="false" />
-          <attribute name="pluspmaxprice" type="decimal" required="false" />
-          <attribute name="pluspporeq" type="smallint" required="true" />
-          <attribute name="plusppricesched" type="varchar" required="false" />
-          <attribute name="pluspquotedprice" type="decimal" required="false" />
-          <attribute name="pluspquotetype" type="varchar" required="false" />
-          <attribute name="pluspresponseplan" type="varchar" required="false" />
-          <attribute name="plusprevnum" type="int" required="false" />
-          <attribute name="pmcomimpact" type="int" required="false" />
-          <attribute name="pmcomresolution" type="varchar" required="false" />
-          <attribute name="pmcomtype" type="varchar" required="false" />
-          <attribute name="pmcomurgency" type="int" required="false" />
-          <attribute name="pmcosolappliedby" type="varchar" required="false" />
-          <attribute name="pmcosolapplieddate" type="datetime" required="false" />
-          <attribute name="pmcosolfeedback" type="varchar" required="false" />
-          <attribute name="pmcosolstatus" type="varchar" required="false" />
-          <attribute name="pmsccrid" type="varchar" required="false" />
-          <attribute name="pmsccurrency" type="varchar" required="false" />
-          <attribute name="pmscinvalid" type="smallint" required="false" />
-          <attribute name="pmscitemnum" type="varchar" required="false" />
-          <attribute name="pmscitemsetid" type="varchar" required="false" />
-          <attribute name="pmscoffsummary" type="varchar" required="false" />
-          <attribute name="pmsconetimeprice" type="decimal" required="false" />
-          <attribute name="pmscquantity" type="int" required="false" />
-          <attribute name="pmscrecurringprice" type="decimal" required="false" />
-          <attribute name="pmsctmplid" type="bigint" required="false" />
-          <attribute name="pmsctotalonetimeprice" type="decimal" required="false" />
-          <attribute name="pmsctotalrecurringprice" type="decimal" required="false" />
-          <attribute name="proactive" type="smallint" required="true" />
-          <attribute name="problemcode" type="varchar" required="false" />
-          <attribute name="problemtype" type="varchar" required="false" />
-          <attribute name="proposedversion" type="varchar" required="false" />
-          <attribute name="relatedtoglobal" type="smallint" required="true" />
-          <attribute name="replacedowner" type="varchar" required="false" />
-          <attribute name="reportdate" type="datetime" required="false" />
-          <attribute name="reportedby" type="varchar" required="false" />
-          <attribute name="reportedemail" type="varchar" required="false" />
-          <attribute name="reportedphone" type="varchar" required="false" />
-          <attribute name="reportedpriority" type="int" required="false" />
-          <attribute name="reportedversion" type="varchar" required="false" />
-          <attribute name="responseslo" type="smallint" required="true" />
-          <attribute name="rowstamp" type="timestamp" required="true" />
-          <attribute name="selfservsolaccess" type="smallint" required="true" />
-          <attribute name="siteid" type="varchar" required="false" />
-          <attribute name="sitevisit" type="smallint" required="true" />
-          <attribute name="slaapproachingindicator" type="varchar" required="false" />
-          <attribute name="slamet" type="smallint" required="true" />
-          <attribute name="solution" type="varchar" required="false" />
-          <attribute name="source" type="varchar" required="false" />
-          <attribute name="status" type="varchar" required="true" />
-          <attribute name="statusdate" type="datetime" required="true" />
-          <attribute name="supervisor" type="varchar" required="false" />
-          <attribute name="targetcontactdate" type="datetime" required="false" />
-          <attribute name="targetdesc" type="varchar" required="false" />
-          <attribute name="targetfinish" type="datetime" required="false" />
-          <attribute name="targetstart" type="datetime" required="false" />
-          <attribute name="targetversion" type="varchar" required="false" />
-          <attribute name="template" type="smallint" required="true" />
-          <attribute name="templateid" type="varchar" required="false" />
-          <attribute name="tfsnumber" type="varchar" required="false" />
-          <attribute name="ticketid" type="varchar" required="true" />
-          <attribute name="ticketuid" type="bigint" required="true" />
-          <attribute name="urgency" type="int" required="false" />
-          <attribute name="vendor" type="varchar" required="false" />
-          <attribute name="virtualenv" type="smallint" required="false" />
-        </attributes>
+      <attributes>
+        <attribute name="accumulatedholdtime" type="float" required="false" />
+        <attribute name="actlabcost" type="decimal" required="true" />
+        <attribute name="actlabhrs" type="float" required="true" />
+        <attribute name="actualcontactdate" type="datetime" required="false" />
+        <attribute name="actualfinish" type="datetime" required="false" />
+        <attribute name="actualstart" type="datetime" required="false" />
+        <attribute name="adjustedtargetcontacttime" type="datetime" required="false" />
+        <attribute name="adjustedtargetresolutiontime" type="datetime" required="false" />
+        <attribute name="adjustedtargetresponsetime" type="datetime" required="false" />
+        <attribute name="affecteddate" type="datetime" required="false" />
+        <attribute name="affectedemail" type="varchar" required="false" />
+        <attribute name="affectedperson" type="varchar" required="false" />
+        <attribute name="affectedphone" type="varchar" required="false" />
+        <attribute name="ageflag" type="varchar" required="false" />
+        <attribute name="area" type="varchar" required="false" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="assetorgid" type="varchar" required="false" />
+        <attribute name="assetsiteid" type="varchar" required="false" />
+        <attribute name="assignedownergroup" type="varchar" required="false" />
+        <attribute name="calccalendar" type="varchar" required="false" />
+        <attribute name="calcorgid" type="varchar" required="false" />
+        <attribute name="calcshift" type="varchar" required="false" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="cinum" type="varchar" required="false" />
+        <attribute name="class" type="varchar" required="true" />
+        <attribute name="classificationid" type="varchar" required="false" />
+        <attribute name="classstructureid" type="varchar" required="false" />
+        <attribute name="commodity" type="varchar" required="false" />
+        <attribute name="commoditygroup" type="varchar" required="false" />
+        <attribute name="correlationattrs" type="varchar" required="false" />
+        <attribute name="createdby" type="varchar" required="false" />
+        <attribute name="createwomulti" type="varchar" required="false" />
+        <attribute name="creationdate" type="datetime" required="false" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="descsrvid" type="varchar" required="false" />
+        <attribute name="developmentrequest" type="smallint" required="true" />
+        <attribute name="externalrecid" type="varchar" required="false" />
+        <attribute name="externalsystem" type="varchar" required="false" />
+        <attribute name="externalsystem_ticketid" type="varchar" required="false" />
+        <attribute name="failurecode" type="varchar" required="false" />
+        <attribute name="feature_request" type="smallint" required="true" />
+        <attribute name="fr1code" type="varchar" required="false" />
+        <attribute name="fr2code" type="varchar" required="false" />
+        <attribute name="glaccount" type="varchar" required="false" />
+        <attribute name="globalticketclass" type="varchar" required="false" />
+        <attribute name="globalticketid" type="varchar" required="false" />
+        <attribute name="hasactivity" type="smallint" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="hassolution" type="smallint" required="true" />
+        <attribute name="historyflag" type="smallint" required="true" />
+        <attribute name="impact" type="int" required="false" />
+        <attribute name="indicatedpriority" type="int" required="false" />
+        <attribute name="inheritstatus" type="smallint" required="true" />
+        <attribute name="internalpriority" type="int" required="false" />
+        <attribute name="isglobal" type="smallint" required="true" />
+        <attribute name="isknownerror" type="smallint" required="true" />
+        <attribute name="isknownerrordate" type="datetime" required="false" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="oncallautoassign" type="smallint" required="true" />
+        <attribute name="oncallfirstrotassnperson" type="varchar" required="false" />
+        <attribute name="oncallownergroup" type="varchar" required="false" />
+        <attribute name="oncallreassigntime" type="datetime" required="false" />
+        <attribute name="oncallstarttime" type="datetime" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="origrecordclass" type="varchar" required="false" />
+        <attribute name="origrecordid" type="varchar" required="false" />
+        <attribute name="origrecorgid" type="varchar" required="false" />
+        <attribute name="origrecsiteid" type="varchar" required="false" />
+        <attribute name="outageduration" type="float" required="false" />
+        <attribute name="owner" type="varchar" required="false" />
+        <attribute name="ownergroup" type="varchar" required="false" />
+        <attribute name="pluspagreement" type="varchar" required="false" />
+        <attribute name="pluspbblinenum" type="int" required="false" />
+        <attribute name="pluspbillbatch" type="varchar" required="false" />
+        <attribute name="pluspcalccalnum" type="varchar" required="false" />
+        <attribute name="pluspcalcorgid" type="varchar" required="false" />
+        <attribute name="pluspcalcshift" type="varchar" required="false" />
+        <attribute name="pluspcostcenter" type="varchar" required="false" />
+        <attribute name="pluspcustchacct" type="varchar" required="false" />
+        <attribute name="pluspcustomer" type="varchar" required="false" />
+        <attribute name="pluspcustponum" type="varchar" required="false" />
+        <attribute name="pluspmaxprice" type="decimal" required="false" />
+        <attribute name="pluspporeq" type="smallint" required="true" />
+        <attribute name="plusppricesched" type="varchar" required="false" />
+        <attribute name="pluspquotedprice" type="decimal" required="false" />
+        <attribute name="pluspquotetype" type="varchar" required="false" />
+        <attribute name="pluspresponseplan" type="varchar" required="false" />
+        <attribute name="plusprevnum" type="int" required="false" />
+        <attribute name="pmcomimpact" type="int" required="false" />
+        <attribute name="pmcomresolution" type="varchar" required="false" />
+        <attribute name="pmcomtype" type="varchar" required="false" />
+        <attribute name="pmcomurgency" type="int" required="false" />
+        <attribute name="pmcosolappliedby" type="varchar" required="false" />
+        <attribute name="pmcosolapplieddate" type="datetime" required="false" />
+        <attribute name="pmcosolfeedback" type="varchar" required="false" />
+        <attribute name="pmcosolstatus" type="varchar" required="false" />
+        <attribute name="pmsccrid" type="varchar" required="false" />
+        <attribute name="pmsccurrency" type="varchar" required="false" />
+        <attribute name="pmscinvalid" type="smallint" required="false" />
+        <attribute name="pmscitemnum" type="varchar" required="false" />
+        <attribute name="pmscitemsetid" type="varchar" required="false" />
+        <attribute name="pmscoffsummary" type="varchar" required="false" />
+        <attribute name="pmsconetimeprice" type="decimal" required="false" />
+        <attribute name="pmscquantity" type="int" required="false" />
+        <attribute name="pmscrecurringprice" type="decimal" required="false" />
+        <attribute name="pmsctmplid" type="bigint" required="false" />
+        <attribute name="pmsctotalonetimeprice" type="decimal" required="false" />
+        <attribute name="pmsctotalrecurringprice" type="decimal" required="false" />
+        <attribute name="proactive" type="smallint" required="true" />
+        <attribute name="problemcode" type="varchar" required="false" />
+        <attribute name="problemtype" type="varchar" required="false" />
+        <attribute name="proposedversion" type="varchar" required="false" />
+        <attribute name="relatedtoglobal" type="smallint" required="true" />
+        <attribute name="replacedowner" type="varchar" required="false" />
+        <attribute name="reportdate" type="datetime" required="false" />
+        <attribute name="reportedby" type="varchar" required="false" />
+        <attribute name="reportedemail" type="varchar" required="false" />
+        <attribute name="reportedphone" type="varchar" required="false" />
+        <attribute name="reportedpriority" type="int" required="false" />
+        <attribute name="reportedversion" type="varchar" required="false" />
+        <attribute name="responseslo" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="selfservsolaccess" type="smallint" required="true" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="sitevisit" type="smallint" required="true" />
+        <attribute name="slaapproachingindicator" type="varchar" required="false" />
+        <attribute name="slamet" type="smallint" required="true" />
+        <attribute name="solution" type="varchar" required="false" />
+        <attribute name="source" type="varchar" required="false" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="statusdate" type="datetime" required="true" />
+        <attribute name="supervisor" type="varchar" required="false" />
+        <attribute name="targetcontactdate" type="datetime" required="false" />
+        <attribute name="targetdesc" type="varchar" required="false" />
+        <attribute name="targetfinish" type="datetime" required="false" />
+        <attribute name="targetstart" type="datetime" required="false" />
+        <attribute name="targetversion" type="varchar" required="false" />
+        <attribute name="template" type="smallint" required="true" />
+        <attribute name="templateid" type="varchar" required="false" />
+        <attribute name="tfsnumber" type="varchar" required="false" />
+        <attribute name="ticketid" type="varchar" required="true" />
+        <attribute name="ticketuid" type="bigint" required="true" />
+        <attribute name="urgency" type="int" required="false" />
+        <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="virtualenv" type="smallint" required="false" />
+      </attributes>
       <relationships>
         <relationship to="asset">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
@@ -180,8 +180,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="targetversion" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="TARGETVERSION" quoteLiteral="true"/>
         </relationship>
-        <relationship to="numericdomain" >
+        <relationship to="numericdomain" qualifier="internalpriority">
           <relationshipAttribute from="internalpriority" to="value" primary="true"/>
+          <relationshipAttribute to ="domainid" literal="TICKETPRIORITY" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="numericdomain" qualifier="reportedpriority">
+          <relationshipAttribute from="reportedpriority" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="TICKETPRIORITY" quoteLiteral="true"/>
         </relationship>
         <relationship to="site">
@@ -233,9 +237,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="classification" qualifier="classification">
           <relationshipAttribute from="classificationid" to ="classificationid" primary="true"/>
         </relationship>
-        <relationship to="srclassifications" qualifier="srclassifications">
+        <!--relationship to="srclassifications" qualifier="srclassifications">
           <relationshipAttribute from="classificationid" to="classificationid" primary="true"/>
-        </relationship>
+        </relationship-->
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="sr" />
@@ -243,7 +247,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseServiceRequestCrudConnector" />
       </connectorParameters>
     </entity>
-    
+
     <entity name="alndomain" idAttribute="alndomainid">
       <attributes>
         <attribute name="domainid" type="varchar" required="true" />
@@ -260,7 +264,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <connectorParameter key="dbtable" value="alndomain" />
       </connectorParameters>
     </entity>
-    
+
     <entity name="classstructure"  idAttribute="classstructureid" >
       <relationships>
         <relationship to ="classusewith" qualifier="incidentclassstructures">
@@ -273,13 +277,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
       </relationships>
     </entity>
-    
-    <entity name="incidentclassifications" parententity="classstructure" idAttribute="classstructureid" >
+
+    <entity name="incidentclassifications" parententity="classstructure" idAttribute="classstructureid">
       <attributes>
-        <attribute name="classstructureid" type="varchar" query="CASE WHEN (incidentclassifications.classstructureid = classusewith.classstructureid) and (classusewith.objectvalue='INCIDENT')) "/>
+        <attribute name="classstructureid" type="varchar" query="CASE WHEN ((incidentclassifications.classstructureid = classusewith.classstructureid) and (classusewith.objectvalue='INCIDENT')) THEN incidentclassifications.classstructureid end "/>
+
       </attributes>
     </entity>
-    
+
     <entity name="matusetrans" idAttribute="matusetransid" >
       <attributes>
         <attribute name="matusetransid"  type="bigint" required="true" />
@@ -309,7 +314,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
       </relationships>
     </entity>
-    
+
     <entity name="labtrans" idAttribute="labtransid">
       <attributes>
         <attribute name="transdate" type="datetime" required="true" />
@@ -342,7 +347,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
       </relationships>
     </entity>
-    
+
     <entity name="failurecode" idAttribute="failurecodeid">
       <attributes>
         <attribute name="failurecodeid" type="int"  required="true" />
@@ -351,9 +356,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="orgid"  type="varchar" />
       </attributes>
     </entity>
-    
+
     <entity name ="failurelistonly" parententity="failurelist" idAttribute="failurelist" whereclause="((failurelistonly.TYPE is null)) " >
-      
+
     </entity>
 
     <entity name ="problemlist" parententity="failurelist" idAttribute="failurelist" whereclause="((problemlist.TYPE like 'PROBLEM')) " >
@@ -368,7 +373,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="orgid"  type="varchar" />
       </attributes>
     </entity>
-    
+
     <entity name="chartofaccounts" idAttribute="chartofaccountsid">
       <attributes>
         <attribute name="chartofaccountsid" type="int"  required="true" />
@@ -377,7 +382,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="orgid"  type="varchar" />
       </attributes>
     </entity>
-    
+
     <entity name="labor"  idAttribute="laborid">
       <attributes>
         <attribute name="laborid" type="int"/>
@@ -391,14 +396,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
       </relationships>
     </entity>
-    
+
     <entity name="item" idAttribute="itemnum" >
       <attributes>
         <attribute name="itemnum"  type="varchar" required="true" />
         <attribute name="description"  type="varchar" required="true" />
       </attributes>
     </entity>
-    
+
     <entity name="invbalances" idAttribute="itemnum">
       <attributes>
         <attribute name="itemnum" type="varchar" required="true" />
@@ -436,7 +441,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <connectorParameter key="dbtable" value="invbalances" />
       </connectorParameters>
     </entity>
-    
+
     <entity name="inventory" idAttribute="inventoryid">
       <attributes>
         <attribute name="itemnum" type="varchar" required="true" />
@@ -509,30 +514,31 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
         <relationship to="site">
-					<relationshipAttribute from="siteid" to="siteid" primary="true"/>
-				</relationship>
-				<relationship to="worktype" qualifier="changecategory">
-					<relationshipAttribute from="worktype" to="worktype" primary="true"/>
-					<relationshipAttribute from="orgid" to="orgid" />
-					<relationshipAttribute to="woclass" literal="CHANGE" quoteLiteral="true" />
-				</relationship>
-				<relationship to="longdescription" qualifier="reasonforchange">
-					<relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
-					<relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
-					<relationshipAttribute to="ldownercol" literal="REASONFORCHANGE" quoteLiteral="true" />
-				</relationship>
-				<relationship to="longdescription" qualifier="exceptionreason">
-					<relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
-					<relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
-					<relationshipAttribute to="ldownercol" literal="EXCEPTIONREASON" quoteLiteral="true" />
-				</relationship>
-			</relationships>
-      
+          <relationshipAttribute from="siteid" to="siteid" primary="true"/>
+        </relationship>
+        <relationship to="worktype" qualifier="changecategory">
+          <relationshipAttribute from="worktype" to="worktype" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute to="woclass" literal="CHANGE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="reasonforchange">
+          <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="REASONFORCHANGE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="exceptionreason">
+          <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="EXCEPTIONREASON" quoteLiteral="true" />
+        </relationship>
+
+      </relationships>
+
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
       </connectorParameters>
-		</entity>
+    </entity>
 
     <entity name="incident" idAttribute="ticketid">
       <attributes>
@@ -714,6 +720,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="targetversion" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="TARGETVERSION" quoteLiteral="true"/>
         </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="INCIDENTSTATUS" quoteLiteral="true" />
+        </relationship>
         <relationship to="location">
           <relationshipAttribute from="location" to="location" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
@@ -734,8 +744,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="person" qualifier="affectedperson">
           <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
         </relationship>
-        <relationship to="numericdomain" >
+        <relationship to="numericdomain" qualifier="internalpriority">
           <relationshipAttribute from="internalpriority" to="value" primary="true"/>
+          <relationshipAttribute to ="domainid" literal="TICKETPRIORITY" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="numericdomain" qualifier="reportedpriority">
+          <relationshipAttribute from="reportedpriority" to="value" primary="true"/>
           <relationshipAttribute to ="domainid" literal="TICKETPRIORITY" quoteLiteral="true"/>
         </relationship>
         <relationship to="person" qualifier="reporter">
@@ -762,7 +776,23 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
         <relationship to ="solution" qualifier="solution" >
           <relationshipAttribute from="solution" to ="solution" primary="true"/>
-        </relationship> 
+        </relationship>
+        <relationship to="longdescription" qualifier="symptom">
+          <relationshipAttribute from="ticketid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="PROBLEMCODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="cause">
+          <relationshipAttribute from="ticketid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR1CODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="resolution">
+          <relationshipAttribute from="ticketid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
+        </relationship>
+
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="incident" />
@@ -770,62 +800,62 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseIncidentCrudConnector" />
       </connectorParameters>
     </entity>
-    
+
     <entity name="wochange" idAttribute="workorderid">
-			<attributes>
+      <attributes>
         <attribute name="workorderid" type="integer" required="true" />
-				
-			</attributes>
-			<relationships>
-				<relationship to="longdescription">
-					<relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
-					<relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
-					<relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
-				</relationship>
-				<relationship to="longdescription" qualifier="reasonforchange">
-					<relationshipAttribute from="workorderid"  to="ldkey" primary="true"/>
-					<relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
-					<relationshipAttribute to="ldownercol" literal="REASONFORCHANGE" quoteLiteral="true" />
-				</relationship>
-				<relationship to="longdescription" qualifier="backoutplan">
-					<relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
-					<relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
-					<relationshipAttribute to="ldownercol" literal="BACKOUTPLAN" quoteLiteral="true" />
-				</relationship>
-				<relationship to="longdescription" qualifier="pretestdetail">
-					<relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
-					<relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
-					<relationshipAttribute to="ldownercol" literal="ITDCHGPRETSTDTL" quoteLiteral="true" />
-				</relationship>
-				<relationship to="longdescription" qualifier="exceptionreason">
-					<relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
-					<relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
-					<relationshipAttribute to="ldownercol" literal="EXCEPTIONREASON" quoteLiteral="true" />
-				</relationship>
-				<relationship to="workorder">
-					<relationshipAttribute from="wonum" to="parent" primary="true"/>
-					<relationshipAttribute from="siteid" to="siteid" />
-				</relationship>
-				<relationship to="pmchgotherapprovers" qualifier="approvalsdashboard">
-					<relationshipAttribute from="wonum" to="wonum" primary="true" />
-					<relationshipAttribute from="siteid" to="siteid" />
-				</relationship>
-				<relationship to="woactivity" qualifier="woactivitydashboard">
-					<relationshipAttribute from="wonum" to="parent" primary="true" />
-					<relationshipAttribute from="siteid" to="siteid" />
-				</relationship>
-				<relationship to="worklog">
-					<relationshipAttribute from="wonum" to="recordkey" primary="true" />
-					<relationshipAttribute from="siteid" to="siteid" />
-					<relationshipAttribute to="class" literal="CHANGE" quoteLiteral="true" />
-				</relationship>
-			</relationships>
+
+      </attributes>
+      <relationships>
+        <relationship to="longdescription">
+          <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="reasonforchange">
+          <relationshipAttribute from="workorderid"  to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="REASONFORCHANGE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="backoutplan">
+          <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="BACKOUTPLAN" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="pretestdetail">
+          <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="ITDCHGPRETSTDTL" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="exceptionreason">
+          <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="EXCEPTIONREASON" quoteLiteral="true" />
+        </relationship>
+        <relationship to="workorder">
+          <relationshipAttribute from="wonum" to="parent" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="pmchgotherapprovers" qualifier="approvalsdashboard">
+          <relationshipAttribute from="wonum" to="wonum" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="woactivity" qualifier="woactivitydashboard">
+          <relationshipAttribute from="wonum" to="parent" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="worklog">
+          <relationshipAttribute from="wonum" to="recordkey" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="class" literal="CHANGE" quoteLiteral="true" />
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWCH" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseChangeRequestCrudConnector" />
       </connectorParameters>
-		</entity>
-    
+    </entity>
+
     <entity name="commodities" idAttribute="commoditiesid">
       <relationships>
         <relationship to="assetloccomm" qualifier="selectedcommodities">
@@ -835,7 +865,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
       </relationships>
     </entity>
-    
+
     <entity name="chartofaccounts" idAttribute="chartofaccountsid">
       <attributes>
         <attribute name="displaycostcenter" type="varchar" required="false" query="COALESCE(glcomp02,'') || ' // ' || COALESCE(accountname,'')"/>
@@ -854,7 +884,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
         <relationship to ="prline" qualifier="prline" collection ="true">
           <relationshipAttribute from="prnum" to="prnum" primary="true"/>
-          
+
           <relationshipAttribute from="siteid" to ="siteid"/>
           <relationshipAttribute from ="orgid" to="orgid"/>
         </relationship>
@@ -896,7 +926,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="classstructure" qualifier="classstructure">
           <relationshipAttribute from="classstructureid" to ="classstructureid" primary="true"/>
         </relationship>
-            <relationship to="longdescription" qualifier="symptom">
+        <relationship to="longdescription" qualifier="symptom">
           <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="SOLUTION" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="PROBLEMCODE" quoteLiteral="true" />
@@ -949,12 +979,18 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="keepfailed" type="smallint" required="true" />
         <attribute name="ccflag" query="CASE WHEN !@cc is not null THEN 'true' ELSE 'false' end " type="bool"/>
       </attributes>
+      <relationships>
+        <relationship to ="email">
+          <!--this to attribute is used for the autocompleteserver, do not remove it -->
+          <relationshipAttribute query="commlog.sendto like email_.emailaddress" primary="true" to="emailaddress"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="commlog" />
       </connectorParameters>
     </entity>
   </entities>
-  
+
   <applications>
 
     <application entity="SR" name="servicerequest" title="Service Request">
@@ -991,7 +1027,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=9%" />
           </field>
           <field attribute="changedate" label="Changed Date">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=9%;showtime=false"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=9%;showtime=false"/>
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
@@ -999,7 +1035,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <properties>
             <property key="list.click.schema" value="editdetail"/>
           </properties>
-          
+
         </list>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
@@ -1037,10 +1073,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup"/>
           </association>
           <!--Adding Internal Priority and Reported Priority fields for Kongsberg-->
-          <association label ="Internal Priority:" target="internalpriority" labelfield="numericdomain_.description">
+          <association label ="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description">
             <renderer type="lookup"/>
           </association>
-          <field label="Reported Priority:" attribute="reportedpriority"/>
+          <!--field label="Reported Priority:" attribute="reportedpriority">
+            <renderer type="default" params="placeholder=Enter a numeric value"/>
+          </field-->
+          <association label ="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description">
+            <renderer type="lookup"/>
+          </association>
           <field label="TFS#:" attribute="tfsnumber"/>
           <field label="Feature Request:" attribute="feature_request">
             <renderer type="checkbox"/>
@@ -1085,15 +1126,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section id="attachmentsection" />
           <!-- SWWEB 173-->
           <!-- SWWEB 172: Changed the location and asset to make them look similar to gric-->
+          <!-- Kongsberg wont require location and asset fields 
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="generalsrService" method="afterChangeAsset"/>
           </association>
+          -->
           <section id="compositions"/>
         </schema>
         <schema parentschema="adetail" title="New Service Request" id="newdetail">
@@ -1138,9 +1180,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </composition>
           </section>
           <commands>
-              <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
-                       showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>
-            </commands>
+            <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                     showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>
+          </commands>
         </schema>
       </schemas>
     </application>
@@ -1202,7 +1244,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="outtoolcost"       hidden="true"/>
           <field attribute="outservcost"       hidden="true"/>
           <field attribute="workorderid"  readonly="true" hidden="true"/>
-          
+          <field attribute="actliccost"        hidden="true"/>
+          <field attribute="estatapprliccost"  hidden="true"/>
+          <field attribute="estliccost"        hidden="true"/>
           <field attribute="orgid"  required="true" readonly="true" hidden="true"/>
           <section id ="siteidsection"/>
           <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
@@ -1253,8 +1297,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
             <renderer type="lookup"/>
           </association>
-         
-          
+
+
           <!-- Adding target start finish date-->
           <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
           <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
@@ -1281,12 +1325,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
 
-          
 
-          <field attribute="description" label="Summary:"/>
+
+          <field attribute="description" label="Summary:" required="true"/>
           <field label="Details:" attribute="longdescription_.ldtext" >
             <renderer type="richtext"/>
           </field>
+          <section id="attachmentsection"/>
           <section id="compositions"/>
           <!--					<section id="matusetranssection"/>-->
           <!--					<section id="labtranssection"/>-->
@@ -1301,9 +1346,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
           <section id="ownerstatussection">
             <!--field attribute="owner" label="Owner:"/-->
-            
-            
+
+
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
+          </section>
+          <section id="attachmentsection">
+            <field label="Attachment:" attribute="newattachment" >
+              <renderer type="upload"/>
+            </field>
           </section>
         </schema>
 
@@ -1367,12 +1417,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
 
           <field attribute="wopriority" label="Priority" required="true" default="1" >
-            
+
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
             <number decimals="0" min="0" max="999" />
           </field>
           <field attribute="location" hidden="true"/>
-          
+
           <field attribute="location_.description" label="Location" >
             <lookup sourceApplication="location" sourceField="location" sourceDisplay="description,location" targetField="location" targetQualifier="">
               <lookupFilters>
@@ -1498,7 +1548,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <list>
           <field attribute="failurecode" label="Failure Class" qualifier="title"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
-          
+
         </list>
         <detail>
           <field attribute="failurecodeid" label="ID:"  required="true" />
@@ -1562,31 +1612,35 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="classificationid" label="Project Description">
             <renderer type="default" params="width=8%;excelwidth=50" />
           </field>
+          <!-- KSW-50
           <field attribute="area" label="Area">
             <renderer type="default" params="width=8%;excelwidth=50" />
           </field>
           <field attribute="problemtype" label="Problem Type">
             <renderer type="default" params="width=8%;excelwidth=50" />
           </field>
+            -->
           <field attribute="reportedby" label="Reported By">
+            <renderer type="default" params="width=8%" />
+          </field>
+          <field attribute="internalpriority" label="Internal Priority">
             <renderer type="default" params="width=8%" />
           </field>
           <field attribute="reportedpriority" label="Reported Priority">
             <renderer type="default" params="width=8%"/>
           </field>
-          <field attribute="internalpriority" label="Internal Priority">
-            <renderer type="default" params="width=8%" />
-          </field>
+          <!-- KSW-50
           <field attribute="reportdate" label="Reported Date">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mmwidth=8%;showtime=false" />
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=8%;showtime=false" />
+          </field>
+          -->
+          <field attribute="status" label="Status">
+            <renderer type="default" params="width=8%" />
           </field>
           <field attribute="owner" label="Owner">
             <renderer type="default" params="width=8%" />
           </field>
           <field attribute="ownergroup" label="Owner Group">
-            <renderer type="default" params="width=8%" />
-          </field>
-          <field attribute="status" label="Status">
             <renderer type="default" params="width=8%" />
           </field>
           <field attribute="#color" label="">
@@ -1599,15 +1653,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <schema stereotype="detail" id="newdetail" mode="input" title="New Incident">
           <association label="Site:" target="siteid" labelfield="site_.description" required="true">
-              <!-- removed default='@usersite' from the above association label-->
-              <renderer type="lookup"/>
+            <!-- removed default='@usersite' from the above association label-->
+            <renderer type="lookup"/>
           </association>
           <field attribute="actlabcost" default="0" hidden="true"/>
           <field attribute="actlabhrs" default="0" hidden="true" />
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
           <field attribute="ticketid" label="Incident Number:" readonly="true"/>
-          <field attribute="description" label="Summary:"/>
-          
+          <field attribute="description" label="Summary:" required="true"/>
+
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
             <renderer type="lookup"/>
@@ -1628,10 +1682,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup"/>
           </association>
           <!--Adding Internal Priority and Reported Priority fields for Kongsberg-->
-          <association label ="Internal Priority:" target="internalpriority" labelfield="numericdomain_.description">
+          <association label ="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description">
             <renderer type="lookup"/>
           </association>
-          <field label="Reported Priority:" attribute="reportedpriority"/>
+          <!--field label="Reported Priority:" attribute="reportedpriority"/-->
+          <association label ="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description">
+            <renderer type="lookup"/>
+          </association>
           <field label="TFS#:" attribute="tfsnumber"/>
           <field label="Feature Request:" attribute="feature_request">
             <renderer type="checkbox"/>
@@ -1648,15 +1705,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label="Project Classification:" target="classificationid" labelfield="incidentclassifications_.description">
             <renderer type="lookup"/>
           </association>
+          <!-- Kongsberg wont require location and asset fields
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="generalsrService" method="afterChangeAsset"/>
           </association>
+          -->
           <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
           <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
           <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
@@ -1677,10 +1735,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                          parameters="joinattribute=actualfinish;">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
-          <field label="Status:" attribute="status" readonly="true" default="NEW" required="true"/>
+          <!--field label="Status:" attribute="status" readonly="true" default="NEW" required="true"/-->
+          <association label="Status:" target="status" labelfield="synstatus.description" required="true" default="NEW">
+            <renderer type="lookup" />
+          </association>
           <field attribute="statusdate" hidden="true" />
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
+          </field>
+          <field label="Attachment:" attribute="newattachment" >
+            <renderer type="upload"/>
           </field>
         </schema>
 
@@ -1690,18 +1754,18 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="actlabhrs" default="0" hidden="true" />
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
           <field attribute="ticketid" label="Incident Number:" readonly="true" required="true"/>
-          <field attribute="description" label="Summary:"/>
-          
+          <field attribute="description" label="Summary:" required="true"/>
+
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
             <renderer type="lookup"/>
           </association>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" default="@username" enableexpression="@ownergroup==null">
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" >
             <renderer type="lookup"/>
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" >
             <renderer type="lookup"/>
           </association>
           <!--Adding Area and ProblemType field for Kongsberg-->
@@ -1711,12 +1775,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description">
             <renderer type="lookup"/>
           </association>
-          
+
           <!--Adding Internal Priority and Reported Priority fields for Kongsberg-->
-          <association label ="Internal Priority:" target="internalpriority" labelfield="numericdomain_.description">
+          <association label ="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description">
             <renderer type="lookup"/>
           </association>
-          <field label="Reported Priority:" attribute="reportedpriority"/>
+          <!--field label="Reported Priority:" attribute="reportedpriority"/-->
+          <association label ="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description">
+            <renderer type="lookup"/>
+          </association>
           <field label="TFS#:" attribute="tfsnumber"/>
           <field label="Feature Request:" attribute="feature_request">
             <renderer type="checkbox"/>
@@ -1730,15 +1797,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
             <renderer type="lookup"/>
           </association>
+          <association label="Project Classification:" target="classificationid" labelfield="classification_.description">
+            <renderer type="lookup"/>
+          </association>
+          <!--field attribute="classificationid" label="Project Classification"/-->
+          <!--Kongsberg wont require location and asset values 
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="generalsrService" method="afterChangeAsset"/>
           </association>
+          -->
           <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
           <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
           <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
@@ -1759,32 +1831,35 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                          parameters="joinattribute=actualfinish;">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
-          <field label="Status:" attribute="status" readonly="true" />
+          <association label="Status:" target="status" labelfield="synstatus.description" required="true" >
+            <renderer type="lookup" />
+          </association>
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
           </field>
           <tab label="Solution" id="solution">
-            
+
             <field attribute="solution" hidden="true"/>
             <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
               <renderer type="lookup"/>
-            </association> 
+              <event type="afterchange" service="solutionService" method="setsolutiondata"/>
+            </association>
             <field attribute="solution_.description" label="Description:" readonly="true"/>
-            <field attribute="solution_symptom_.ldtext" label="Symptom:">
+            <field attribute="symptom_.ldtext" label="Symptom:">
               <renderer type="richtext"/>
             </field>
-            <field attribute="solution_cause_.ldtext" label="Cause:" >
+            <field attribute="cause_.ldtext" label="Cause:" >
               <renderer type="richtext"/>
             </field>
-            <field attribute="solution_resolution_.ldtext" label="Resolution:" >
+            <field attribute="resolution_.ldtext" label="Resolution:" >
               <renderer type ="richtext"/>
             </field>
           </tab>
-        <composition relationship="attachment" label="Attachments">
-          <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
-        </composition>
+          <composition relationship="attachment" label="Attachments">
+            <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
+          </composition>
         </schema>
-        
+
       </schemas>
     </application>
 
@@ -1792,7 +1867,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Change Grid">
           <field attribute="workorderid" hidden="true">
-            
+
           </field>
           <field attribute="wonum" label="Change ID">
             <renderer type="default" params="width=16%" />
@@ -1831,11 +1906,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="wonum" label="Change Id:" required="true"/>
           <field attribute="ownergroup" label="Owner Group:"/>
           <field attribute="location" label="Location:"/>
-          
+
           <field attribute="description" label="Summary:"/>
           <field attribute="reportedby" label="Reported By:"/>
           <field attribute="classstructureid" label="Classification:"/>
-          
+
           <field attribute="worktype" label="Category:"/>
           <!--field attribute="pmcomimpact" label="Impact"/>
           <field attribute="pmcomurgency" label="Urgency"/-->
@@ -1945,7 +2020,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
 
         </schema>
-        
+
       </schemas>
     </application>
 
@@ -1993,26 +2068,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field  attribute="recordkey" label="Record Key" hidden="true" />
           <field  attribute="class" label="Class" hidden="true" />
           <field  attribute="createby" label="Created By" hidden="true" />
-          <field attribute="createdbyperson_.displayname" label="Created By"/>          
+          <field attribute="createdbyperson_.displayname" label="Created By"/>
           <field attribute="createdate" label="Date" qualifier="subtitle">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
-           <field  attribute="logtype" label="Log Type" hidden="true" />
+          <field  attribute="logtype" label="Log Type" hidden="true" />
           <field  attribute="description" label="Summary" qualifier="title"/>
-          <field attribute="longdescription_.ldtext" label="Details" hidden="true"/>          
+          <field attribute="longdescription_.ldtext" label="Details" hidden="true"/>
           <!--<field attribute="orgid" hidden="true" />
           <field attribute="siteid" hidden="true" />-->
-          
+
         </schema>
-          
+
         <detail stereotype="compositiondetail">
-          
+
           <field attribute="description" label="Summary:" required="true" />
           <field attribute="longdescription_.ldtext" label="Details:" >
             <renderer type="textarea"/>
           </field>
-          
-          
+
+
         </detail>
       </schemas>
     </application>
@@ -2251,14 +2326,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="list" stereotype="compositionlist" >
           <field attribute="solution" label="Solution No"/>
           <field attribute="description" label="Description"/>
-          
+
         </schema>
         <detail stereotype="compositiondetail">
           <field attribute="solution" label="Solution No" readonly="true"/>
           <field attribute="problemcode" label="Symptom:" />
           <field attribute="fr1code" label="Cause:" />
           <field attribute="fr2code" label="Resolution:" />
-          
+
         </detail>
       </schemas>
     </application>
@@ -2280,7 +2355,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 
         <list stereotype="compositionlist" platform="web">
-          
+
           <properties>
             <property key="detail.cancel.lbl" value="Close"/>
             <property key="expansible" value="false"/>
@@ -2383,7 +2458,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </detail>
       </schemas>
     </application>
-    
+
     <application name="commodities" title="Commodities" entity="commodities" >
       <schemas>
         <detail>
@@ -2393,7 +2468,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </detail>
       </schemas>
     </application>
-  
+
     <application entity="woactivity" name="woactivity" title="WO Activity">
       <properties>
         <property key ="icon.composition.tab" value="fa fa-gavel"/>
@@ -2406,27 +2481,27 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </commands>
           <properties>
             <property key="detail.cancel.lbl" value="Close"/>
-					</properties>
-					<field attribute="wonum" hidden="true"/>
-					<field attribute="wosequence" label="Sequence" />
+          </properties>
+          <field attribute="wonum" hidden="true"/>
+          <field attribute="wosequence" label="Sequence" />
           <field attribute="taskid" label="Task" />
           <field attribute="description" label="Summary"/>
           <field attribute="estdur" label="Estimated Duration" />
-					
-					<field attribute="status" label="Status"/>
+
+          <field attribute="status" label="Status"/>
           <field attribute="owner" label="Owner" />
           <field attribute="ownergroup" label="Owner Group" />
-				</list>
+        </list>
 
-				<detail stereotype="compositiondetail">
-					<field attribute="description" label="Summary:" required="true"/>
-					<field attribute="longdescription_.ldtext" label="Details:" >
-						<renderer type="textarea"/>
-					</field>
-				</detail>
+        <detail stereotype="compositiondetail">
+          <field attribute="description" label="Summary:" required="true"/>
+          <field attribute="longdescription_.ldtext" label="Details:" >
+            <renderer type="textarea"/>
+          </field>
+        </detail>
 
-			</schemas>
-		</application>
+      </schemas>
+    </application>
 
     <application entity="pr" name ="pr" title="Purchase Requests">
       <schemas>
@@ -2442,7 +2517,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=13%" />
           </field>
           <field attribute="requireddate" label="Required Date">
-            <renderer type="datetime" params="width=13%format=dd/MM/yyyy HH:mm;showtime=false" />
+            <renderer type="datetime" params="width=13%format=MM/dd/yyyy HH:mm;showtime=false" />
           </field>
           <field attribute="vendor" label="Vendor">
             <renderer type="default" params="width=13%" />
@@ -2456,7 +2531,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=pr;column=status"/>
           </field>
-          
+
           <properties>
             <property key="list.click.schema" value="detail"/>
           </properties>
@@ -2467,8 +2542,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!--SWWEB 192: Reported Priority Field-->
           <field attribute="description" label="Summary" hidden="true">
             <renderer type="default"/>
-            
-            </field>
+
+          </field>
           <field attribute="prnum" label="PR No:" hidden="true">
             <renderer type="default"/>
           </field>
@@ -2480,7 +2555,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default"/>
           </field>
           <!--SWWEB 195: Add Pretax Total Field is a precalculated field on the Maximo Side-->
-          
+
           <!--SWWEB 196: Add Total Tax Field-->
           <field attribute="totaltax1" label="Total Tax:">
             <renderer type="default"/>
@@ -2517,10 +2592,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
                      showexpression="@status=='NEW'" successmessage="Attachment deleted"/>
           </commands>
-          
+
         </schema>
-       
-        
+
+
         <schema id="newdetail" stereotype="detail" mode="input" title="Purchase Request Details">
           <!--SWWEB 192: Add Reported Priority Field-->
           <field attribute="priority" label="Priority:" required="true" default="0">
@@ -2547,22 +2622,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <optionfield attribute="novendor" label="No Vendor? :"  required="true" >
             <renderer type="radio"/>
             <option label="No" value="FALSE"/>
-            <option label="Yes" value="TRUE"/>  
+            <option label="Yes" value="TRUE"/>
           </optionfield>
           <!--SWWEB 200: Add Total Base Cost Field is a precalculated field on the Maximo Side-->
           <!--SWWEB 201: Add Vendor field -->
           <association label="Vendor:" target="vendor" labelfield="companies_.company" enableexpression="@novendor=='FALSE'">
-                       <renderer type="lookup"/>
+            <renderer type="lookup"/>
           </association>
           <!--SWWEB 202: Add Vendor Contract field-->
           <association label="Vendor Contract:" target="contractrefnum" labelfield="contract_.description" enableexpression="@novendor=='FALSE'">
             <renderer type="lookup"/>
           </association>
 
-          
+
           <composition relationship="prline" label="PR Lines" ></composition>
-          
-        </schema> 
+
+        </schema>
       </schemas>
     </application>
 
@@ -2610,7 +2685,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="taxrate" label="Tax Rate:"/>
           <field attribute="tax1" label="Total Tax:" evalexpression="@linecost*@taxrate"/>
           <!--field attribute="tax1" label="Tax:" evalexpression="@linecost*@tax_.taxrate"/-->
-          <!--field attribute="conversion" label="Conversion Factor:" hidden="true" default="1"/--> 
+          <!--field attribute="conversion" label="Conversion Factor:" hidden="true" default="1"/-->
         </detail>
       </schemas>
     </application>
@@ -2628,12 +2703,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="icon" params="iconcss=fa fa-mail-forward"/>
           </field>-->
           <field attribute="inbound">
-            <renderer type="icon" params="iconcss=fa fa-mail-forward"/>
+            <renderer type="icon" params="expression={'1':'fa-long-arrow-left green','0':'fa-long-arrow-right orange'}"/>
           </field>
           <field attribute="read">
             <renderer type="icon" params="expression={'#default':'fa-envelope envelopeYellow','true':''}"/>
           </field>
           <field attribute="orgobject" label="Origination"/>
+          <field attribute="createdate" label="Created Date/Time">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
           <field attribute="sendto" label="To"/>
           <field attribute="cc" hidden="true"/>
           <field attribute="ccflag" label="Cc">
@@ -2643,23 +2721,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="sendfrom" label="Send From" />
           <field attribute="subject" label="Subject" />
           <section resourcepath="/Content/Templates/otb/commlogaction.html"/>
-         </schema>
+        </schema>
 
 
         <schema id="detail" stereotype="compositiondetail">
           <field attribute="commlogid" hidden="true" />
           <field attribute="sendto" label="To:" />
+          <!--association label="To:" target="sendto" labelfield="email_.emailaddress">
+            <renderer type="autocompleteserver"/>
+          </association-->
           <field attribute="cc" label="Cc:"/>
           <field attribute="sendfrom" label="From:"  />
           <field attribute="subject" label="Subject:" />
           <field attribute="message" label="Message:" >
             <renderer type="richtext"/>
           </field>
-          
-        </schema> 
+
+        </schema>
       </schemas>
     </application>
-    
+
     <application entity="prterm" name="prterm" title="Terms and Conditions">
       <schemas>
         <schema id="list" stereotype="compositionlist">
@@ -2667,11 +2748,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="prtermid" label="Term ID" />
           <field attribute="seqnum" label="Sequence No"/>
           <field attribute="description" label="Description"/>
-          
+
         </schema>
 
         <detail stereotype="compositiondetail">
-         
+
           <field attribute="prnum" label="PR No:" readonly="true"/>
           <field attribute="prtermid" label="Term ID:" />
           <field attribute="seqnum" label="Sequence No:"/>
@@ -2679,6 +2760,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </detail>
       </schemas>
     </application>
-    
-  </applications>  
+
+  </applications>
 </metadata>

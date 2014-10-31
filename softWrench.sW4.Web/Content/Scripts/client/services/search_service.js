@@ -119,13 +119,13 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
         //TODO: dictionary?
         getSearchOperator: function (value) {
             if (value.startsWith('>')) {
-                return this.getSearchOperationById('GT');
-            }
-            if (value.startsWith('>=')) {
-                if (value.endsWith('<=')) {
-                    return this.getSearchOperationById('BTW');
+                if (value.startsWith('>=')) {
+                    if (value.endsWith('<=')) {
+                        return this.getSearchOperationById('BTW');
+                    }
+                    return this.getSearchOperationById('GTE');
                 }
-                return this.getSearchOperationById('GTE');
+                return this.getSearchOperationById('GT');
             }
             if (value.startsWith('<=')) {
                 return this.getSearchOperationById('LTE');
@@ -248,6 +248,11 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
 
             var params = searchParams.split("&&");
             var values = searchValues.split(",,,");
+            if (values.length != params.length) {
+                //this was a global search, so it uses || and not && 
+                params = searchParams.split("||,");
+            }
+
             for (var i = 0; i < params.length; i++) {
                 var value = values[i];
                 var param = params[i];
@@ -324,7 +329,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
                 return;
             }
             var visibleDisplayables = fieldService.getVisibleDisplayables(datamap, schema);
-            var searchFields;
+            var searchFields="";
             $.each(visibleDisplayables, function (key, v) {
                 if (v.rendererType != "color") {
                     searchFields += v.attribute + ",";
