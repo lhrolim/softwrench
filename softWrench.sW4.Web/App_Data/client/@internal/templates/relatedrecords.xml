@@ -12,15 +12,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <properties>
             <property key="list.click.service" value="relatedrecordService.open"/>
           </properties>
-          <commandbars>
-            <commandgroup position="compositiontop">
-              <container id="addrelated" label="Add Related Record" position=">refresh" icon="fa-plus" tooltip="Add related record entry">
-                <command id="addrelatedch" label="Change" icon="fa-random" service="relatedrecordService" method="create" parameters="'change',parentdatamap"/>
-                <command id="addrelatedin" label="Incident" icon="fa-warning" service="relatedrecordService" method="create" parameters="'incident',parentdatamap"/>
-                <command id="addrelatedsr" label="Service Request" icon="fa-ticket" service="relatedrecordService" method="create" parameters="'servicerequest',parentdatamap"/>
-              </container>
-            </commandgroup>
-          </commandbars>
+<!--          <commandbars>-->
+<!--            <commandgroup position="compositiontop" >-->
+<!--              <container id="addrelated" label="Add Related Record" position=">refresh" icon="fa-plus" tooltip="Add related record entry">-->
+<!--                <command id="addrelatedch" label="Change" icon="fa-random" service="relatedrecordService" method="create" parameters="'change',parentdatamap"/>-->
+<!--                <command id="addrelatedin" label="Incident" icon="fa-warning" service="relatedrecordService" method="create" parameters="'incident',parentdatamap"/>-->
+<!--                <command id="addrelatedsr" label="Service Request" icon="fa-ticket" service="relatedrecordService" method="create" parameters="'servicerequest',parentdatamap"/>-->
+<!--              </container>-->
+<!--            </commandgroup>-->
+<!--          </commandbars>-->
           <field  attribute="relatedreckey" label="Related Record Key" />
           <field  attribute="relatedrecclass" label="Related Record Class" />
         </list>
