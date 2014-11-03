@@ -24,14 +24,12 @@ app.directive('printSection', function (contextService) {
         },
 
         controller: function ($scope, $timeout, $log, printService, tabsService, i18NService, compositionService, fieldService, fixHeaderService) {
-
             $scope.compositionstoprint = [];
             $scope.shouldPageBreak = true;
             $scope.showPrintSection = false;
             $scope.showPrintSectionCompostions = false;
 
-            $scope.$on('sw_readytoprintevent', function (event, compositionData, shouldPageBreak, shouldPrintMain) {
-                
+            $scope.$on('sw_readytoprintevent', function (event, compositionData, shouldPageBreak, shouldPrintMain) {               
                 fixHeaderService.unfix();
                 var compositionstoprint = [];
                 $scope.shouldPageBreak = shouldPageBreak;
@@ -95,7 +93,6 @@ app.directive('printSection', function (contextService) {
                 $scope.showPrintSectionCompostions = false;
                 $scope.printSchema = null;
             });
-
         }
     };
 });

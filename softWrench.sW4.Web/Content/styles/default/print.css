@@ -5,7 +5,7 @@
     }
 
     #top-affix {
-        display:none !important;
+        display: none !important;
         border: none;
     }
 
@@ -13,7 +13,6 @@
         font-size: 11px;
     }
 
-    
     #listgrid {
         border: none;
         font-size: 10px;
@@ -25,24 +24,99 @@
     }
 
     #listgrid tbody > tr {
-    border-top: none;
-    border-bottom: none;
+        border-top: none;
+        border-bottom: none;
     }
 
     .hapag-body-loaded {
-    border: 0px;
-    border: 0px;
-    margin: auto;
+        border: 0px;
+        border: 0px;
+        margin: auto;
     }
 
     .hapag-body {
-
-    margin: 0px 0px 0px 0px;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
+        margin: 0px 0px 0px 0px;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
     }
-    
 
+    .hiddenonprint {
+        display: none !important;
+    }
 
+    #listgrid {
+        /*margin-left: -120px; SWWEB-244: Had to comment for the margin to show correctly and print the total grid */
+        display: block;
+    }
+
+    .listgrid-firefox {
+        width: 700px !important;
+    }
+
+    .pagebreak-before {
+        display: block;
+        page-break-before: always;
+    }
+
+    .pagebreak-after {
+        display: block;
+        page-break-after: always;
+    }
+
+    .container {
+        margin-top: 0px !important;
+    }
+
+        .container .content {
+            margin-top: 0px !important;
+        }
+
+    html, body {
+        margin-top: 0px !important;
+        overflow: visible !important;
+        float: none !important;
+        position: relative;
+    }
+
+    .form-control {
+        border: none;
+    }
+
+    .no-records {
+        width: 100%;
+        text-align: center;
+        padding-top: 20px;
+        padding-bottom: 40px;
+    }
+
+    #rootprintdiv .control-label, #rootprintdiv .field {
+        float: left;
+    }
+
+    #rootprintdiv .control-label {
+        width: 25%;
+    }
+
+    #rootprintdiv .field {
+        width: 70%;
+    }
+
+        #rootprintdiv .field .samelinepickers {
+            margin-top: -6px;
+        }
+
+            #rootprintdiv .field .samelinepickers .col-md-6 {
+                padding-left: 0;
+            }
+
+            #rootprintdiv .field .samelinepickers input {
+                padding-left: 0;
+                padding-right: 20px;
+            }
+
+        #rootprintdiv .field label {
+            padding: 0;
+            font-weight: normal;
+        }
 }
