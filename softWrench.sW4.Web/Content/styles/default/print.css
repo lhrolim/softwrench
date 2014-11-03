@@ -40,4 +40,53 @@
         -moz-box-shadow: none;
         box-shadow: none;
     }
+
+    .hiddenonprint {
+        display: none !important;
+    }
+
+    #listgrid {
+        /*margin-left: -120px; SWWEB-244: Had to comment for the margin to show correctly and print the total grid */
+        display: block;
+    }
+
+    .listgrid-firefox {
+        width: 700px !important;
+    }
+
+    .pagebreak-before {
+        display: block;
+        page-break-before: always;
+    }
+
+    .pagebreak-after {
+        display: block;
+        page-break-after: always;
+    }
+
+    .container {
+        margin-top: 0px !important;
+    }
+
+        .container .content {
+            margin-top: 0px !important;
+        }
+
+    html, body {
+        margin-top: 0px !important;
+        overflow: visible !important;
+        float: none !important;
+        position: relative;
+    }
+
+    .form-control {
+        border: none;
+    }
+
+    .no-records {
+        width: 100%;
+        text-align: center;
+        padding-top: 20px;
+        padding-bottom: 40px;
+    }
 }
