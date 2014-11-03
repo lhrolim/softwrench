@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('generalsrService', function (alertService, $rootScope,associationService, fieldService) {
+app.factory('generalsrService', function (alertService, contextService,associationService, fieldService) {
 
     return {
         beforeChangeLocation: function (event) {
