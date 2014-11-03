@@ -34,6 +34,9 @@
 
     $scope.commandLabel = function (command) {
         var label = command.label;
+        if (label == null) {
+            return null;
+        }
         if (label.startsWith("$scope:")) {
             return $scope.invokeOuterScopeFn(label);
         }

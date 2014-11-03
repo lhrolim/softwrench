@@ -1,10 +1,12 @@
 ﻿using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
+using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
@@ -38,34 +40,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                         maximoTemplateData.ApplicationMetadata);
                 }
             }
-            //HandleSolutions(maximoTemplateData, crudData, sr);
+            HandleSolutions(crudData, sr);
             base.BeforeUpdate(maximoTemplateData);
         }
 
-        private void HandleSolutions(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData crudDataEntity, object sr)
-        {
-            var solutions = (IEnumerable<CrudOperationData>)crudDataEntity.GetRelationship("solution");
-            var recordKey = crudDataEntity.Id;
-            var user = SecurityFacade.CurrentUser();
-            w.CloneArray((IEnumerable<CrudOperationData>)crudDataEntity.GetRelationship("solution"), sr, "SOLUTION",
-                delegate(object integrationObject, CrudOperationData crudData)
-                {
-                    if (ReflectionUtil.IsNull(integrationObject, "SOLUTION"))
-                    {
-                        w.SetValue(integrationObject, "SOLUTION", -1);
-                    }
-                    var enterdate = sr;
-                    
-                    w.SetValueIfNull(integrationObject, "SOLUTIONID", 0);
-                    w.SetValueIfNull(integrationObject, "ORGID", user.OrgId);
-
-
-                    ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
-                });
+        private void HandleSolutions(CrudOperationData crudDataEntity, object sr) {
+            var sympton = crudDataEntity.GetAttribute("symptom_.ldtext");
+            var cause = crudDataEntity.GetAttribute("cause_.ldtext");
+            var resolution = crudDataEntity.GetAttribute("resolution_.ldtext");
+            w.SetValue(sr, "FR1CODE_LONGDESCRIPTION", cause);
+            w.SetValue(sr, "FR2CODE_LONGDESCRIPTION", resolution);
+            w.SetValue(sr, "PROBLEMCODE_LONGDESCRIPTION", sympton);
         }
 
-        public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData)
-        {
+        public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var user = SecurityFacade.CurrentUser();
             var sr = maximoTemplateData.IntegrationObject;
             w.SetValue(sr, "ACTLABHRS", 0);
@@ -75,11 +63,39 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var crudData = (CrudOperationData)maximoTemplateData.OperationData;
             LongDescriptionHandler.HandleLongDescription(sr, crudData);
 
-            //HandleAttachmentAndScreenshot(crudData, sr, maximoTemplateData.ApplicationMetadata);
+            HandleAttachmentAndScreenshot(crudData, sr, maximoTemplateData.ApplicationMetadata);
 
             base.BeforeCreation(maximoTemplateData);
         }
 
+        private void HandleAttachmentAndScreenshot(CrudOperationData data, object maximoObj, ApplicationMetadata applicationMetadata) {
 
+            // Check if Attachment is present
+            var attachmentString = data.GetUnMappedAttribute("newattachment");
+            var attachmentPath = data.GetUnMappedAttribute("newattachment_path");
+
+            if (!String.IsNullOrWhiteSpace(attachmentString) && !String.IsNullOrWhiteSpace(attachmentPath)) {
+                AttachmentHandler.HandleAttachments(maximoObj, attachmentString, attachmentPath, applicationMetadata);
+            }
+
+            // Check if Screenshot is present
+            var screenshotString = data.GetUnMappedAttribute("newscreenshot");
+            var screenshotName = data.GetUnMappedAttribute("newscreenshot_path");
+
+            if (!String.IsNullOrWhiteSpace(screenshotString) && !String.IsNullOrWhiteSpace(screenshotName)) {
+
+                if (screenshotName.ToLower().EndsWith("rtf")) {
+                    var bytes = Convert.FromBase64String(screenshotString);
+                    var decodedString = Encoding.UTF8.GetString(bytes);
+                    var compressedScreenshot = CompressionUtil.CompressRtf(decodedString);
+
+                    bytes = Encoding.UTF8.GetBytes(compressedScreenshot);
+                    screenshotString = Convert.ToBase64String(bytes);
+                    screenshotName = screenshotName.Substring(0, screenshotName.Length - 3) + "doc";
+                }
+
+                AttachmentHandler.HandleAttachments(maximoObj, screenshotString, screenshotName, applicationMetadata);
+            }
+        }
     }
 }

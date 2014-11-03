@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('associationService', function ($injector, $http, $timeout, $log, $rootScope, submitService, fieldService) {
+app.factory('associationService', function ($injector, $http, $timeout, $log, $rootScope, submitService, fieldService, contextService) {
 
     var doUpdateExtraFields = function (associationFieldMetadata, underlyingValue, datamap) {
         var log = $log.getInstance('sw4.associationservice#doUpdateExtraFields');
@@ -14,7 +14,9 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             var extrafield = associationFieldMetadata.extraProjectionFields[i];
             var valueToSet = underlyingValue == null ? null : underlyingValue.extrafields[extrafield];
             log.debug('updating extra field {0}.{1} | value={2}'.format(key, extrafield, valueToSet));
-            if (extrafield.indexOf(key) > -1) {
+            if (extrafield.startsWith(key)) {
+                //if the extrafield has the association we dont need to append anything (i.e: solution_x_y and relationship = solution_)
+                //but we have to take care of a_resolution_.ldtext and reslationship=solution_ that could lead to false positive, thats why startsWith
                 datamap[extrafield] = valueToSet;
             } else {
                 var appendDot = extrafield.indexOf('.') == -1;
@@ -146,6 +148,10 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             fn(afterchangeEvent);
         },
 
+        markAssociationProcessComplete: function () {
+            $rootScope.$broadcast("sw_optionsretrievedFromServerEnded");
+        },
+
         updateAssociationOptionsRetrievedFromServer: function (scope, serverOptions, datamap) {
             /// <summary>
             ///  Callback of the updateAssociations call, in which the values returned from the server would update the scope variables, 
@@ -232,6 +238,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     }
                 });
             }
+            
         },
 
         getEagerAssociations: function (scope) {
@@ -295,6 +302,10 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     //this means we´re getting the eager associations, see method above
                     postAssociationHook(association, scope, { dispatchedbytheuser: true, phase: 'configured' });
                 } else {
+                    $timeout(function () {
+                        //this needs to be marked for the next digest loop so that the crud_input_fields has the possibility to distinguish between the initial and configured phases, and so the listeners
+                        contextService.insertIntoContext("associationsresolved", true, true);
+                    }, 100, false);
                     $rootScope.avoidspin = false;
                     $rootScope.$broadcast("sw_associationsupdated", scope.associationOptions);
                 }

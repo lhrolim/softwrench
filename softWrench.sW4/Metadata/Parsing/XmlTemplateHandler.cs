@@ -71,6 +71,9 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         private static string RealPath(XElement template) {
             var path = template.Attribute(XmlMetadataSchema.TemplatePathAttribute).Value;
+            if (!path.EndsWith(".xml")) {
+                path = path + ".xml";
+            }
             return MetadataParsingUtils.GetTemplateInternalPath(path);
 
         }
