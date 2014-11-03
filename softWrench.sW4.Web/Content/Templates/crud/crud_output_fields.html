@@ -1,12 +1,10 @@
 ﻿<section>
-    <div ng-repeat="fieldMetadata in nonTabFields(displayables)" class="row" style="width:100%;"
-         ng-show="!isFieldHidden(schema,fieldMetadata)"
-         ng-class="getSectionClass(fieldMetadata)"
-         ng-style="getSectionStyle(fieldMetadata)">
-
-
+    <div ng-repeat="fieldMetadata in nonTabFields(displayables)" class="row" style="width: 100%;"
+        ng-show="!isFieldHidden(schema,fieldMetadata)"
+        ng-class="getSectionClass(fieldMetadata)"
+        ng-style="getSectionStyle(fieldMetadata)">
         <label class="control-label detail-output" ng-style="getHeaderStyle(fieldMetadata)" ng-if="hasLabelOrHeader(fieldMetadata)"
-               ng-class="{'col-sm-3' : hasSameLineLabel(fieldMetadata), 'col-sm-12' : !hasSameLineLabel(fieldMetadata)}">
+            ng-class="{'col-sm-3' : hasSameLineLabel(fieldMetadata), 'col-sm-12' : !hasSameLineLabel(fieldMetadata)}">
             {{i18NLabel(fieldMetadata)}}<span ng-show="i18NLabel(fieldMetadata)!='' && hasSameLineLabel(fieldMetadata)">:</span>
         </label>
 
@@ -30,8 +28,6 @@
 
                     </div>
                 </div>
-
-                
                 <div ng-switch-default>
                     <div ng-switch on="fieldMetadata.isHidden">
                         <div ng-switch-when="true">
@@ -50,7 +46,6 @@
                                          data-node-children="{{fieldMetadata.rendererParameters.childrenField == null && 'children' || fieldMetadata.rendererParameters.childrenField}}">
                                     </div>
 
-
                                     <!--nasty workaround for HAP-356 -->
                                     <div ng-if="isIE9()" class="hiddenonscreen">
                                         <ul style="list-style: none;">
@@ -68,9 +63,7 @@
                                             </li>
                                         </ul>
                                     </div>
-
                                 </div>
-
                                 <div ng-switch-when="fieldwithbuttons">
                                     <div ng-if="isbtnLeft(fieldMetadata)">
                                         <button class="{{fieldMetadata.rendererParameters.icon}} fieldButton" ></button>
@@ -87,8 +80,6 @@
                                         <button class="{{fieldMetadata.rendererParameters.icon}} fieldButton" ></button>
                                     </div>
                                  </div>   
-                                    
-
                                 <div ng-switch-default>
                                     <label class="form-control" style="text-align:left; word-break:break-word;"
                                            ng-bind-html="getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata) | linebreak"
@@ -102,6 +93,5 @@
                 </div>
             </ng-switch>
         </div>
-
     </div>
 </section>
