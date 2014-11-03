@@ -27,7 +27,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var invuse = maximoTemplateData.IntegrationObject;
             w.SetValueIfNull(invuse, "USETYPE", "TRANSFER");
             w.SetValue(invuse, "STATUS", "COMPLETE");
-            var inventory = (CrudOperationData)entity.GetRelationship("inventory");
             InvuselineHandler.HandleInvuseline(entity, invuse);
             base.BeforeCreation(maximoTemplateData);
         }

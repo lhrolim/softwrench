@@ -940,7 +940,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     
     <application entity="invuse" name="invuse" title="Inventory Transfer">
       <schemas>
-        <!-- Temporary list schema untill new detail save redirects to the correct list schema-->
+        <!-- Temporary list schema untill new detail save redirects to the correct applications list schema-->
         <list>
           <field attribute="invuseline_.itemnum" label="Item">
             <renderer type="default" params="width=16%"/>
