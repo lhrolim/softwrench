@@ -28,6 +28,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="itemnum" label="Item:"  required="true" />
           <field attribute="description" label="Description:"  required="true" />
         </detail>
+        <schema id="itemlookup" stereotype="detail" mode="output">
+          <field attribute="itemnum"/>
+          <field attribute="description"/>
+          <field attribute="issueunit"/>
+        </schema>
       </schemas>
     </application>
   </applications>
