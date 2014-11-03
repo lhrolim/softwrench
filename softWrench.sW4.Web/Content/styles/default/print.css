@@ -5,7 +5,7 @@
     }
 
     #top-affix {
-        display:none !important;
+        display: none !important;
         border: none;
     }
 
@@ -13,7 +13,6 @@
         font-size: 11px;
     }
 
-    
     #listgrid {
         border: none;
         font-size: 10px;
@@ -25,24 +24,20 @@
     }
 
     #listgrid tbody > tr {
-    border-top: none;
-    border-bottom: none;
+        border-top: none;
+        border-bottom: none;
     }
 
     .hapag-body-loaded {
-    border: 0px;
-    border: 0px;
-    margin: auto;
+        border: 0px;
+        border: 0px;
+        margin: auto;
     }
 
     .hapag-body {
-
-    margin: 0px 0px 0px 0px;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
+        margin: 0px 0px 0px 0px;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
     }
-    
-
-
 }
