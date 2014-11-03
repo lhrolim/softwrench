@@ -675,6 +675,7 @@ app.directive('numberSpinner', function () {
                 min: attr.min,
                 max: attr.max
             });
+            console.log(attr);
         }
     }
 });
