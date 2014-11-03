@@ -2924,6 +2924,138 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
+    <entity name="MATRECTRANS" idAttribute="matrectransid">
+      <attributes>
+        <attribute name="itemnum" type="varchar" required="false" />
+        <attribute name="tostoreloc" type="varchar" required="false" />
+        <attribute name="transdate" type="datetime" required="true" />
+        <attribute name="actualdate" type="datetime" required="true" />
+        <attribute name="quantity" type="decimal" required="false" />
+        <attribute name="receivedunit" type="varchar" required="false" />
+        <attribute name="issuetype" type="varchar" required="false" />
+        <attribute name="unitcost" type="decimal" required="true" />
+        <attribute name="actualcost" type="decimal" required="true" />
+        <attribute name="ponum" type="varchar" required="false" />
+        <attribute name="invoicenum" type="varchar" required="false" />
+        <attribute name="rejectcode" type="varchar" required="false" />
+        <attribute name="rejectqty" type="decimal" required="true" />
+        <attribute name="conversion" type="decimal" required="false" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="enterby" type="varchar" required="true" />
+        <attribute name="it1" type="varchar" required="false" />
+        <attribute name="it2" type="varchar" required="false" />
+        <attribute name="it3" type="varchar" required="false" />
+        <attribute name="it4" type="decimal" required="false" />
+        <attribute name="it5" type="varchar" required="false" />
+        <attribute name="outside" type="smallint" required="true" />
+        <attribute name="issueto" type="varchar" required="false" />
+        <attribute name="packingslipnum" type="varchar" required="false" />
+        <attribute name="polinenum" type="int" required="false" />
+        <attribute name="issue" type="smallint" required="true" />
+        <attribute name="requestedby" type="varchar" required="false" />
+        <attribute name="totalcurbal" type="decimal" required="false" />
+        <attribute name="oldavgcost" type="decimal" required="false" />
+        <attribute name="itin1" type="varchar" required="false" />
+        <attribute name="itin2" type="varchar" required="false" />
+        <attribute name="itin3" type="varchar" required="false" />
+        <attribute name="tobin" type="varchar" required="false" />
+        <attribute name="gldebitacct" type="varchar" required="false" />
+        <attribute name="glcreditacct" type="varchar" required="false" />
+        <attribute name="linecost" type="decimal" required="true" />
+        <attribute name="financialperiod" type="varchar" required="false" />
+        <attribute name="currencycode" type="varchar" required="true" />
+        <attribute name="exchangerate" type="decimal" required="false" />
+        <attribute name="currencyunitcost" type="decimal" required="false" />
+        <attribute name="manufacturer" type="varchar" required="false" />
+        <attribute name="modelnum" type="varchar" required="false" />
+        <attribute name="currencylinecost" type="decimal" required="false" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="remark" type="varchar" required="false" />
+        <attribute name="fromstoreloc" type="varchar" required="false" />
+        <attribute name="frombin" type="varchar" required="false" />
+        <attribute name="qtyheld" type="decimal" required="false" />
+        <attribute name="fromlot" type="varchar" required="false" />
+        <attribute name="tolot" type="varchar" required="false" />
+        <attribute name="loadedcost" type="decimal" required="true" />
+        <attribute name="tax1code" type="varchar" required="false" />
+        <attribute name="tax1" type="decimal" required="false" />
+        <attribute name="tax2code" type="varchar" required="false" />
+        <attribute name="tax2" type="decimal" required="false" />
+        <attribute name="tax3code" type="varchar" required="false" />
+        <attribute name="tax3" type="decimal" required="false" />
+        <attribute name="tax4code" type="varchar" required="false" />
+        <attribute name="tax4" type="decimal" required="false" />
+        <attribute name="tax5code" type="varchar" required="false" />
+        <attribute name="tax5" type="decimal" required="false" />
+        <attribute name="prorated" type="smallint" required="true" />
+        <attribute name="proratecost" type="decimal" required="false" />
+        <attribute name="status" type="varchar" required="false" />
+        <attribute name="statusdate" type="datetime" required="false" />
+        <attribute name="statuschangeby" type="varchar" required="false" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="qtyrequested" type="decimal" required="false" />
+        <attribute name="curbal" type="decimal" required="true" />
+        <attribute name="exchangerate2" type="decimal" required="false" />
+        <attribute name="linecost2" type="decimal" required="false" />
+        <attribute name="mrnum" type="varchar" required="false" />
+        <attribute name="mrlinenum" type="int" required="false" />
+        <attribute name="matrectransid" type="bigint" required="true" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="it6" type="varchar" required="false" />
+        <attribute name="it7" type="varchar" required="false" />
+        <attribute name="it8" type="varchar" required="false" />
+        <attribute name="it9" type="varchar" required="false" />
+        <attribute name="it10" type="varchar" required="false" />
+        <attribute name="itin4" type="varchar" required="false" />
+        <attribute name="itin5" type="varchar" required="false" />
+        <attribute name="itin6" type="varchar" required="false" />
+        <attribute name="itin7" type="varchar" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="fincntrlid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="costinfo" type="smallint" required="true" />
+        <attribute name="belongsto" type="bigint" required="false" />
+        <attribute name="refwo" type="varchar" required="false" />
+        <attribute name="enteredastask" type="smallint" required="true" />
+        <attribute name="fromsiteid" type="varchar" required="true" />
+        <attribute name="receiptref" type="bigint" required="false" />
+        <attribute name="linetype" type="varchar" required="true" />
+        <attribute name="itemsetid" type="varchar" required="false" />
+        <attribute name="conditioncode" type="varchar" required="false" />
+        <attribute name="fromconditioncode" type="varchar" required="false" />
+        <attribute name="condrate" type="int" required="false" />
+        <attribute name="commoditygroup" type="varchar" required="false" />
+        <attribute name="commodity" type="varchar" required="false" />
+        <attribute name="matusetransid" type="bigint" required="false" />
+        <attribute name="courier" type="varchar" required="false" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="inspectedqty" type="decimal" required="false" />
+        <attribute name="positeid" type="varchar" required="false" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rotassetnum" type="varchar" required="false" />
+        <attribute name="porevisionnum" type="int" required="false" />
+        <attribute name="invuselineid" type="bigint" required="false" />
+        <attribute name="invuseid" type="bigint" required="false" />
+        <attribute name="invuselinenum" type="int" required="false" />
+        <attribute name="invuselinesplitid" type="bigint" required="false" />
+        <attribute name="shipmentnum" type="varchar" required="false" />
+        <attribute name="shipmentlinenum" type="varchar" required="false" />
+        <attribute name="qtyoverreceived" type="decimal" required="false" />
+        <attribute name="costoverreceived" type="decimal" required="false" />
+        <attribute name="consignment" type="smallint" required="true" />
+        <attribute name="consinvoicenum" type="varchar" required="false" />
+        <attribute name="consvendor" type="varchar" required="false" />
+        <attribute name="orgrcvexternalrefid" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="MATRECTRANS" />
+      </connectorParameters>
+    </entity>
+
     <entity name="inventory" idAttribute="inventoryid">
       <attributes>
         <attribute name="itemsetid" type="varchar" required="true" />
@@ -3012,6 +3144,109 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </attributes>
       <connectorParameters>
         <connectorParameter key="dbtable" value="invcost" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="invuse" idAttribute="invuseid">
+      <attributes>
+        <attribute name="invusenum" type="varchar" required="true" />
+        <attribute name="invowner" type="varchar" required="false" />
+        <attribute name="usetype" type="varchar" required="true" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="fromstoreloc" type="varchar" required="true" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="statusiface" type="smallint" required="true" />
+        <attribute name="statusdate" type="datetime" required="true" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="autocreated" type="smallint" required="true" />
+        <attribute name="receipts" type="varchar" required="false" />
+        <attribute name="shipmentdate" type="datetime" required="false" />
+        <attribute name="shiptoattn" type="varchar" required="false" />
+        <attribute name="currencycode" type="varchar" required="false" />
+        <attribute name="exchangedate" type="datetime" required="false" />
+        <attribute name="exchangerate" type="decimal" required="false" />
+        <attribute name="exchangerate2" type="decimal" required="false" />
+        <attribute name="invuseid" type="bigint" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="workorderid" type="bigint" required="false" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="invuse" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="invuseline" idAttribute="invuselineid">
+      <attributes>
+        <attribute name="invusenum" type="varchar" required="true" />
+        <attribute name="usetype" type="varchar" required="true" />
+        <attribute name="itemnum" type="varchar" required="true" />
+        <attribute name="itemsetid" type="varchar" required="false" />
+        <attribute name="tostoreloc" type="varchar" required="false" />
+        <attribute name="tositeid" type="varchar" required="false" />
+        <attribute name="quantity" type="double" required="true" />
+        <attribute name="fromconditioncode" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="requestnum" type="varchar" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="validated" type="smallint" required="true" />
+        <attribute name="financialperiod" type="varchar" required="false" />
+        <attribute name="enteredastask" type="smallint" required="true" />
+        <attribute name="toconditioncode" type="varchar" required="false" />
+        <attribute name="linetype" type="varchar" required="true" />
+        <attribute name="remark" type="varchar" required="false" />
+        <attribute name="tobin" type="varchar" required="false" />
+        <attribute name="tolot" type="varchar" required="false" />
+        <attribute name="fromstoreloc" type="varchar" required="true" />
+        <attribute name="enterby" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="invuselinenum" type="int" required="true" />
+        <attribute name="issueid" type="bigint" required="false" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="issueto" type="varchar" required="false" />
+        <attribute name="gldebitacct" type="varchar" required="false" />
+        <attribute name="glcreditacct" type="varchar" required="false" />
+        <attribute name="refwo" type="varchar" required="false" />
+        <attribute name="actualdate" type="datetime" required="true" />
+        <attribute name="conversion" type="decimal" required="false" />
+        <attribute name="unitcost" type="double" required="true" />
+        <attribute name="linecost" type="double" required="true" />
+        <attribute name="commoditygroup" type="varchar" required="false" />
+        <attribute name="commodity" type="varchar" required="false" />
+        <attribute name="ponum" type="varchar" required="false" />
+        <attribute name="porevisionnum" type="int" required="false" />
+        <attribute name="polinenum" type="int" required="false" />
+        <attribute name="positeid" type="varchar" required="false" />
+        <attribute name="mrnum" type="varchar" required="false" />
+        <attribute name="mrlinenum" type="int" required="false" />
+        <attribute name="prsiteid" type="varchar" required="false" />
+        <attribute name="rotassetnum" type="varchar" required="false" />
+        <attribute name="fromlot" type="varchar" required="false" />
+        <attribute name="frombin" type="varchar" required="false" />
+        <attribute name="physcnt" type="decimal" required="true" />
+        <attribute name="physcntdate" type="datetime" required="true" />
+        <attribute name="split" type="smallint" required="true" />
+        <attribute name="newassetnum" type="varchar" required="false" />
+        <attribute name="returnagainstissue" type="smallint" required="true" />
+        <attribute name="toorgid" type="varchar" required="false" />
+        <attribute name="receiptscomplete" type="smallint" required="true" />
+        <attribute name="receivedqty" type="decimal" required="false" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="returnedqty" type="decimal" required="false" />
+        <attribute name="inspectionrequired" type="smallint" required="true" />
+        <attribute name="invuselineid" type="bigint" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="invuseline" />
       </connectorParameters>
     </entity>
   </entities>
