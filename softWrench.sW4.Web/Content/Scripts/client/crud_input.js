@@ -19,7 +19,8 @@
             composition:'@'
         },
 
-        controller: function ($scope, $http,$injector, $element, printService, compositionService, commandService, fieldService, i18NService) {
+        controller: function ($scope, $http, $injector, $element, printService, compositionService, commandService, fieldService, i18NService) {
+            
             $scope.$name = 'crudinput';
 
             this.cancel = function () {
@@ -48,6 +49,8 @@
                 fieldService: fieldService,
                 commandService:commandService
             });
+
+
         }
     };
 });

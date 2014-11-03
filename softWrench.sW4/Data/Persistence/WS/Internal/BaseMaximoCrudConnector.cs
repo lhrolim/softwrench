@@ -1,4 +1,6 @@
-﻿using softWrench.sW4.Data.Persistence.Operation;
+﻿using log4net;
+using softWrench.sW4.Configuration.Services;
+using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Security.Services;
@@ -9,6 +11,8 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
     public abstract class BaseMaximoCrudConnector : IMaximoCrudConnector {
+
+        private static readonly ILog Log = log4net.LogManager.GetLogger(typeof(BaseMaximoCrudConnector));
 
         public virtual DynamicObject CreateProxy(EntityMetadata metadata) {
             return DynamicProxyUtil.LookupProxy(metadata);
@@ -62,8 +66,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             var idProperty = maximoTemplateData.Metadata.Schema.IdAttribute.Name;
             var resultOb = (Array)resultData;
             var firstOb = resultOb.GetValue(0);
-            var id = (string)WsUtil.GetRealValue(firstOb, idProperty);
-            maximoTemplateData.ResultObject = new MaximoResult(id, resultData);
+            var id = WsUtil.GetRealValue(firstOb, idProperty);
+
+            if (id == null) {
+                Log.WarnFormat("Identifier {0} not received after creating object in Maximo.", idProperty);
+                maximoTemplateData.ResultObject = new MaximoResult(null, resultData);
+                return;
+            }
+
+            maximoTemplateData.ResultObject = new MaximoResult(id.ToString(), resultData);
         }
         public void AfterCreation(MaximoOperationExecutionContext maximoExecutionContext) {
             //NOOP

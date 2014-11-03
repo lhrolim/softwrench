@@ -120,6 +120,7 @@ app.directive('crudBodyModal', function ($rootScope,modalService) {
                 fieldService.fillDefaultValues(schema.displayables, datamap);
                 $scope.schema = schema;
                 $scope.originalsavefn = modaldata.savefn;
+                $scope.parentCompositionData = modaldata.parentCompositionData;
                 $scope.datamap = {
                     fields: datamap
                 };

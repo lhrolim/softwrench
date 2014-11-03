@@ -2665,6 +2665,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </attributes>
       <connectorParameters>
         <connectorParameter key="dbtable" value="matusetrans" />
+        <connectorParameter key="integration_interface" value="SWINVISSUE" />
       </connectorParameters>
     </entity>
 

@@ -29,7 +29,7 @@
             </tr>
         </thead>
         <tbody ng-show="clonedCompositionData.length > 0">
-            <tr ng-repeat-start="compositionitem in clonedCompositionData">
+            <tr ng-repeat-start="compositionitem in clonedCompositionData" ng-show="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)">
                 <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'multiple'" style="text-align: center;">
                     <!--Multiselect-->
                     <!-- TODO: Move style to css -->
