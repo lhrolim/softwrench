@@ -62,39 +62,7 @@ namespace softWrench.sW4.Metadata.Validator {
         }
 
 
-        protected void MergeEntities(EntityMetadata sourceEntity, EntityMetadata overridenEntity) {
-            foreach (var association in overridenEntity.Associations) {
-                if (overridenEntity.Schema.ExcludeUndeclaredAssociations) {
-                    sourceEntity.Associations.Clear();
-                }
-                if (sourceEntity.Associations.Contains(association)) {
-                    sourceEntity.Associations.Remove(association);
-                }
-                sourceEntity.Associations.Add(association);
-            }
-            foreach (var attribute in overridenEntity.Schema.Attributes) {
-                if (overridenEntity.Schema.ExcludeUndeclaredAttributes) {
-                    sourceEntity.Schema.Attributes.Clear();
-                }
-                if (sourceEntity.Schema.Attributes.Contains(attribute)) {
-                    sourceEntity.Schema.Attributes.Remove(attribute);
-                }
-                sourceEntity.Schema.Attributes.Add(attribute);
-            }
 
-            foreach (var parameter in overridenEntity.ConnectorParameters.Parameters) {
-                if (overridenEntity.ConnectorParameters.ExcludeUndeclared) {
-                    sourceEntity.ConnectorParameters.Parameters.Clear();
-                }
-                if (sourceEntity.ConnectorParameters.Parameters.ContainsKey(parameter.Key)) {
-                    sourceEntity.ConnectorParameters.Parameters.Remove(parameter.Key);
-                }
-                sourceEntity.ConnectorParameters.Parameters.Add(parameter);
-            }
-            if (overridenEntity.HasWhereClause) {
-                sourceEntity.WhereClause = overridenEntity.WhereClause;
-            }
-        }
 
         protected ICollection<EntityMetadata> InitializeEntities(Stream data) {
             var internalEntities = InitializeEntityInternalMetadata();
@@ -108,7 +76,7 @@ namespace softWrench.sW4.Metadata.Validator {
 
             IEnumerable<EntityMetadata> clientEntities = new List<EntityMetadata>();
             var metadataPath = MetadataPath();
-            using (var stream = MetadataParsingUtils.GetStreamImpl(metadataPath,streamValidator)) {
+            using (var stream = MetadataParsingUtils.GetStreamImpl(metadataPath, streamValidator)) {
                 if (stream != null) {
                     var parsingResult = new XmlEntitySourceMetadataParser(IsSWDB()).Parse(stream);
                     clientEntities = parsingResult.Item1;
@@ -118,13 +86,7 @@ namespace softWrench.sW4.Metadata.Validator {
                 }
             }
             var entityMetadatas = clientEntities as EntityMetadata[] ?? clientEntities.ToArray();
-            foreach (var sourceEntity in sourceEntities) {
-                var overridenEntity = entityMetadatas.FirstOrDefault(a => a.Name.EqualsIc(sourceEntity.Name));
-                if (overridenEntity != null) {
-                    MergeEntities(sourceEntity, overridenEntity);
-                }
-                resultEntities.Add(sourceEntity);
-            }
+            resultEntities.AddAll(MetadataMerger.MergeEntities(sourceEntities,entityMetadatas));
 
             foreach (var clientEntity in entityMetadatas) {
                 resultEntities.Add(clientEntity);

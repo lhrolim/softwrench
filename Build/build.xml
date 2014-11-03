@@ -26,6 +26,9 @@
   <if test="${environment::variable-exists('environmentsw4')}">
     <property name="profile" value="${environment::get-variable('environmentsw4')}" />
   </if>
+  <if test="${environment::variable-exists('tag')}">
+    <property name="version" value="${environment::get-variable('tag')}" />
+  </if>
 
   <target name="fulldeploy" depends="compile,copydlls,deploy"/>
 
@@ -205,6 +208,7 @@
       <arg line="-source:iisApp=${OutputDir}/deploy,includeAcls=true" />
       <arg line="-dest:iisApp=${iispath},wmsvc=${msdeploy_url}" />
       <arg line="-allowUntrusted=true" />
+      <arg line="-enableRule:AppOffline" />
       <arg line="-verbose" />
     </exec>
   </target>

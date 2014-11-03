@@ -25,6 +25,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="longdescription_.ldtext" label="Details" hidden="true"/>
           <!--<field attribute="orgid" hidden="true" />
           <field attribute="siteid" hidden="true" />-->
+
         </schema>
 
         <detail stereotype="compositiondetail">

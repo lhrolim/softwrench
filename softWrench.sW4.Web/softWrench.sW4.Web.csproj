@@ -310,6 +310,64 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\Client\%40internal\templates\incident.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\solution.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\chartofaccounts.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\item.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\longdescription.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\commlogs.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\labor.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\labtrans.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\relatedrecords.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\workorder.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\materials.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\woactivity.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\attachments.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\worklogs.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_Data\Client\%40internal\target\smartcloud7.5.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -768,8 +826,8 @@
     <Content Include="Content\styles\gric\signin.css" />
     <Content Include="Content\styles\gric\site.css" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
-    <Content Include="Content\styles\tva\tva-signin.css" />
-    <Content Include="Content\styles\tva\tva-site.css" />
+    <Content Include="Content\styles\tva\signin.css" />
+    <Content Include="Content\styles\tva\site.css" />
     <Content Include="Content\Templates\commands\batches\batches.html" />
     <Content Include="Content\Templates\commands\batches\batchesmenu.js" />
     <Content Include="Content\Templates\commands\grid\gridfilter.html" />
@@ -1415,6 +1473,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Client\gric\i18n\en\" />
+    <Folder Include="App_Data\Client\shared\" />
     <Folder Include="Content\Customers\gric\" />
     <Folder Include="Views\HapagHome\" />
     <Folder Include="Views\SchedulerSetup\" />

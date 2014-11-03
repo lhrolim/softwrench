@@ -15,7 +15,7 @@ app.factory('solutionService', function (redirectService) {
             var solutionCause = fields.extrafields["solution_.cause_.ldtext"];
             var solutionResolution = fields.extrafields["solution_.resolution_.ldtext"];
 
-            fields["sympton_.ldtext"] = solutionSympton;
+            fields["symptom_.ldtext"] = solutionSympton;
             fields["cause_.ldtext"] = solutionCause;
             fields["resolution_.ldtext"] = solutionResolution;
         },
