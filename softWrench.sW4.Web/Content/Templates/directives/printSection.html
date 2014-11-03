@@ -15,7 +15,6 @@
                                 <crud-output-fields schema="composition.schema" datamap="item.fields" displayables="composition.schema.displayables" orientation="vertical">
                                 </crud-output-fields>
                             </div>
-                            *******************************************************************
                         </div>
 
                         <div ng-switch-default>
@@ -23,8 +22,6 @@
                                 <div>
                                     <crud-output-fields schema="composition.schema" datamap="compositionDatamap" displayables="composition.schema.displayables" orientation="vertical">
                                     </crud-output-fields>
-                                </div>
-                                *******************************************************************
                             </div>
                             <div ng-show="item.fields[composition.key] == null || item.fields[composition.key].length == 0" class="no-records">
                                 {{i18nValue('general.norecords','No records to display')}}

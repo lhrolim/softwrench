@@ -10,7 +10,7 @@
             {{i18NLabel(fieldMetadata)}}<span ng-show="i18NLabel(fieldMetadata)!='' && hasSameLineLabel(fieldMetadata)">:</span>
         </label>
 
-        <div ng-class="getFieldClass(fieldMetadata)">
+        <div class="field" ng-class="getFieldClass(fieldMetadata)">
             <ng-switch on="fieldMetadata.type">
                 <div ng-switch-when="ApplicationCompositionDefinition">
                     <inline-composition-list-wrapper compositionschemadefinition="fieldMetadata.schema"
