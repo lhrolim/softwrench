@@ -390,6 +390,7 @@
     </attribute>
     <attribute name="required" type="boolean"></attribute>
     <attribute name="qualifier" type="string"></attribute>
+    <attribute name="hideDescription" type="boolean"></attribute>
   </complexType>
 
   <complexType name="DataProvider">
