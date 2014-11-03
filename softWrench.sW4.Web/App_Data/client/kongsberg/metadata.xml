@@ -1129,7 +1129,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!-- Kongsberg wont require location and asset fields 
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
+            renderer type="lookup"/
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
@@ -1716,7 +1716,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!-- Kongsberg wont require location and asset fields
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
+            renderer type="lookup"/
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
@@ -1813,7 +1813,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!--Kongsberg wont require location and asset values 
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
+            renderer type="lookup"/
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
