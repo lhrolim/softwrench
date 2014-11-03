@@ -114,11 +114,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 parameters.fields['#curbal'] = fields.curbal;
             });
         },
-        submitTransfer: function (schema, datamap, savefn) {
+        submitTransfer: function (schema, datamap) {
             // Save transfer
-            savefn();
+            
             // Redirect to the matrectrans grid
-            redirectService.goToApplicationView("matrectransTransfers", "list", null, null, null);
+            redirectService.goToApplicationView("matrectransTransfers", "list", null, null, null, null);
         },
         cancelTransfer: function () {
             redirectService.goToApplicationView("matrectransTransfers", "list", null, null, null, null);
