@@ -113,12 +113,7 @@ app.directive('crudBody', function (contextService) {
 
             $scope.disableNavigationButtons = function (schema) {
                 var property = schema.properties['detail.navigationbuttons.disabled'];
-                if (property === undefined)
-                    return false;
-                if (property == "true")
-                    return true;
-                else
-                    return false;
+                return property == "true";
             }
 
 

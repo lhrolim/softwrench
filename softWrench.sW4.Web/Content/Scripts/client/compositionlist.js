@@ -148,9 +148,7 @@ app.directive('compositionList', function (contextService) {
             $scope.isRowHidden = function (compositionlistschema, collectionproperties, compositionitem) {
                 if (collectionproperties.hideExistingData == true) {
                     var idFieldName = compositionlistschema.idFieldName;
-                    if (compositionitem[idFieldName] != null) {
-                        return true;
-                    }
+                    return compositionitem[idFieldName] != null;
                 }
                 return false;
             }

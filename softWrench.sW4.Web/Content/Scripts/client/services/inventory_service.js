@@ -66,19 +66,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var compositiondata = parentdatamap['fields']['invissue_'];
             
             modalService.show(compositionschema, itemDatamap, null, compositiondata);
-            /*var restParameters = {clonedcompositiondata
-                key: {
-                    schemaId: "newitem",
-                    mode: "input",
-                    platform: "web"
-                }
-            }
-
-            var urlToUse = url("/api/Data/invissue?" + $.param(restParameters));
-            $http.get(urlToUse).success(function (data) {
-                var schema = data.schema;
-                modalService.show(schema, data.resultObject.fields, saveFn);
-            });*/
+            
         },
         cancelNewInvIssueItem: function () {
             modalService.hide();

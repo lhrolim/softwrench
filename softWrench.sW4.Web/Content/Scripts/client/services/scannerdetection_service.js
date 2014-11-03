@@ -28,11 +28,15 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
             });
         },
         initIssueItemListener: function (schema, datamap, parameters) {
-            
+            //This function will look for an item being scanned for the Issue Inventory application. 
+            //Scanned items are added to the invissue composition.  
             $(document).scannerDetection(function (data) {
                
+                //Checks to see if the item has already been added to the composition list.
+                //If the item is found, this will increment the quantity by 1.
                 for (var key in parameters.clonedCompositionData) {
                     var item = parameters.clonedCompositionData[key];
+                    //Records with a value for the matusetransid are being hidden from the user.
                     if (item['matusetransid'] == null) {
                         if (item['itemnum'] == data) {
                             item['quantity']++;
@@ -42,6 +46,8 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
                     }
                 }
 
+                //If the item was not found in the composition list, a lookup is made to fetch
+                //associated information (description, costtype, etc)
                     var restParameters = {
                         id: data,
                         application: "item",
@@ -78,10 +84,6 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
                         redirectService.redirectToTab('invissue_');
                         return;
                     });
-
-                
-                    
-
             });
 
         },

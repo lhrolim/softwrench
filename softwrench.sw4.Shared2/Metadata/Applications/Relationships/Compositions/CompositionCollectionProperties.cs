@@ -38,8 +38,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             get { return _autoCommit; }
         }
 
-        public bool HideExistingData
-        {
+        public bool HideExistingData {
             get { return _hideExistingdata; }
         }
 

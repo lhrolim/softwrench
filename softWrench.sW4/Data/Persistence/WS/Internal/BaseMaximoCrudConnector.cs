@@ -69,7 +69,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             var id = WsUtil.GetRealValue(firstOb, idProperty);
 
             if (id == null) {
-                Log.Warn(String.Format("Identifier {0} not received after creating object in Maximo.", idProperty));
+                Log.WarnFormat("Identifier {0} not received after creating object in Maximo.", idProperty);
+                maximoTemplateData.ResultObject = new MaximoResult(null, resultData);
+                return;
             }
 
             maximoTemplateData.ResultObject = new MaximoResult(id.ToString(), resultData);

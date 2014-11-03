@@ -125,20 +125,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             throw new InvalidOperationException("could not determine which operation to take upon request");
         }
 
-
         public virtual ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var id = request.Id;
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
-            //var dataMap = id != null ? (DataMap)Engine().FindById(application.Schema, entityMetadata, id, applicationCompositionSchemas)
-            //    : DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, entityMetadata.Schema.MappingType);
             DataMap dataMap = null;
             if (id != null) {
                 dataMap = (DataMap)Engine().FindById(application.Schema, entityMetadata, id, applicationCompositionSchemas);
                 if (request.InitialValues != null) {
                     var initValDataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application,
                         request.InitialValues, entityMetadata.Schema.MappingType);
-                    dataMap = DefaultValuesBuilder.MergeWithExistingDataMap(dataMap, initValDataMap);
+                    dataMap = DefaultValuesBuilder.AddMissingInitialValues(dataMap, initValDataMap);
                 }
             } else {
                 dataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, entityMetadata.Schema.MappingType);

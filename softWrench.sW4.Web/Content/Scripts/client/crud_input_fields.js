@@ -654,8 +654,8 @@ app.directive('crudInputFields', function (contextService) {
                 if (expressionService.isPrecompiledReplaceRegexMatch(fieldMetadata.evalExpression)) {
                     return bindEvalExpression(fieldMetadata);
                 } else {
-                    var test = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
-                    $scope.datamap[fieldMetadata.attribute] = test;
+                    //Evaluates a single field
+                    $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
                 }
                 return null;
             }
