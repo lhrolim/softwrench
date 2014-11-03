@@ -164,6 +164,11 @@ app.directive('lookupModal', function (contextService) {
 
             });
 
+            $scope.hideLookupModal = function () {
+                var modals = $('[data-class="lookupModal"]');
+                modals.modal('hide')
+            }
+
             $element.on('shown.bs.modal', function (e) {
                 $scope.searchObj = {};
                 if ($scope.lookupObj != undefined) {

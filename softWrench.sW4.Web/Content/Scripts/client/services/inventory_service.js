@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('inventoryService', function ($http, contextService, redirectService, modalService) {
+app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService) {
     var createTransaction = function (schema, issueType) {
         var matusetrans = {};
         matusetrans.issueType = issueType;
@@ -48,9 +48,25 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         cancelNewInvIssue: function () {
             redirectService.goToApplicationView("invissue", "invissuelist", null, null, null, null);
         },
-        displayPopupModal: function (datamap, saveFn) {
+        displayPopupModal: function (parentschema, parentdatamap) {
+            var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
+            var parentdata = parentdatamap['fields'];
+            var user = contextService.getUserData();
+            var itemDatamap = {};
+            itemDatamap['itemnum'] = "";
+            itemDatamap['enterby'] = user.login;
+            itemDatamap['siteid'] = user.siteId;
+            itemDatamap['matusetransid'] = null;
+            itemDatamap['refwo'] = parentdata['#refwo'];
+            itemDatamap['assetnum'] = parentdata['#assetnum'];
+            itemDatamap['issuetype'] = parentdata['#issuetype'];
+            itemDatamap['issueto'] = parentdata['#issueto'];
+            itemDatamap['location'] = parentdata['#location'];
+            itemDatamap['storeloc'] = parentdata['#storeloc'];
+            var compositiondata = parentdatamap['fields']['invissue_'];
             
-            var restParameters = {
+            modalService.show(compositionschema, itemDatamap, null, compositiondata);
+            /*var restParameters = {clonedcompositiondata
                 key: {
                     schemaId: "newitem",
                     mode: "input",
@@ -61,11 +77,62 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var urlToUse = url("/api/Data/invissue?" + $.param(restParameters));
             $http.get(urlToUse).success(function (data) {
                 var schema = data.schema;
-                modalService.show(schema, datamap, saveFn);
-            });
+                modalService.show(schema, data.resultObject.fields, saveFn);
+            });*/
         },
         cancelNewInvIssueItem: function () {
-            redirectService.goToApplicationView("invissue", "invissuelist", null, null, null, null);
+            modalService.hide();
+        },
+        addItemToInvIssue: function (schema, datamap, parentdata, clonedcompositiondata, originalDatamap, previousdata) {
+            var newRecord = {};
+            newRecord['itemnum'] = fields['itemnum'];
+            newRecord['quantity'] = 1;
+            newRecord['item_.description'] = fields['description'];
+            newRecord['issuetype'] = matusetransData['#issuetype'];
+            newRecord['matusetransid'] = null;
+            newRecord['assetnum'] = matusetransData['#assetnum'];
+            newRecord['issueto'] = matusetransData['#issueto'];
+            newRecord['location'] = matusetransData['#location'];
+            newRecord['refwo'] = matusetransData['#refwo'];
+            var user = contextService.getUserData();
+            newRecord['siteid'] = user.siteid;
+            newRecord['storeloc'] = matusetransData['#storeloc'];
+            parameters.clonedCompositionData.push(newRecord);
+            redirectService.redirectToTab('invissue_');
+        },
+        afterchangeinvissueitem: function (parameters) {
+            var user = contextService.getUserData();
+            var searchData = {
+                itemnum: parameters['fields']['itemnum'],
+                location: parameters['fields']['location'],
+                siteid: user.siteId,
+                orgid: user.orgId,
+                status: "ACTIVE"
+            }
+            var searchDTO = searchService.buildSearchDTO(searchData, {}, {}, null);
+            searchDTO.pageNumber = 1;
+            searchDTO.totalCount = 0;
+            searchDTO.pageSize = 30;
+            var restParameters = {
+                key: {
+                    schemaId: "list",
+                    mode: "none",
+                    platform: "web"
+                },
+                SearchDTO: searchDTO
+            }
+            var urlToUse = url("/api/Data/inventory?" + $.param(restParameters));
+            $http.get(urlToUse).success(function (data) {
+                var resultObject = data.resultObject;
+                var fields = resultObject[0].fields;
+                var costtype = parameters['fields']['inventory_.costtype'];
+                if (costtype === 'STANDARD') {
+                    parameters.fields['invuseline_.unitcost'] = fields.stdcost;
+                }
+                else if (costtype === 'AVERAGE') {
+                    parameters.fields['invuseline_.unitcost'] = fields.avgcost;
+                }
+            });
         },
 
     };

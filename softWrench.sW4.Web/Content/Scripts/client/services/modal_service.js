@@ -10,7 +10,7 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
             }
         },
 
-        show: function (schemaorModalData, datamap,savefn) {
+        show: function (schemaorModalData, datamap,savefn, parentCompositionData) {
             /// <summary>
             /// method to be called for showing the modal a screen, 
             /// could receive as first parameter either the already filled modaldata, or a schema.
@@ -29,7 +29,8 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
             var modaldata = {
                 schema: schemaorModalData,
                 datamap: datamap,
-                savefn: savefn
+                savefn: savefn,
+                parentCompositionData: parentCompositionData
             };
 
             $rootScope.$broadcast("sw.modal.show", modaldata);

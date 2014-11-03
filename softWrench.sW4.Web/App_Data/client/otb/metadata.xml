@@ -1602,8 +1602,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="#location" hidden="true"/>
           <field attribute="#storeloc" label="Storeroom" readonly="true"/>
           <field attribute="#issuetype" label="Issue Type" readonly="true"/>
-          <composition relationship="invissue" label="Items">
-            <collectionproperties listschema="itemlist" allowcreation="true" hideexistingdata="true" />
+          <composition relationship="invissue" label="Items" detailschema="newitem">
+            <collectionproperties listschema="itemlist" allowcreation="true" hideexistingdata="true" autocommit="false" />
           </composition>
           <event type="onload" service="scannerdetectionService" method="initIssueItemListener"/>
           <properties>
@@ -1657,13 +1657,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="itemlist" stereotype="compositionlist">
           <properties>
             <property key="list.click.popup" value="modal"/>
-            <property key="list.click.service" value="inventoryService.editinvissuewo"/>
+            <!--<property key="list.click.schema" value="inventoryService.editinvissuewo"/>-->
             <property key="list.disablepagination" value="true"/>
+            <property key="nextschema.schemaid" value="newitem"/>
           </properties>
           <commandbars>
             <commandgroup position="compositiontop" removeundeclared="true"/>
-            <commandgroup position="compositionbottom" removeundeclared="true">
-              <command id="additem" label="Add Item" service="inventoryService" method="displayPopupModal" parameters="datamap,$scope.save"/>
+            <commandgroup position="compositionbottom" >
+              <removecommand id="print"/>
+              <removecommand id="cancel"/>
+              <removecommand id="add"/>
+              <command id="additem" label="Add Item" service="inventoryService" method="displayPopupModal" parameters="parentschema,parentdatamap"/>
               <command id="savenewinvissue" label="Submit" service="inventoryService" method="submitNewInvIssue" parameters="schema,datamap" />
               <command id="cancelnewinvissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" />
             </commandgroup>
@@ -1700,33 +1704,31 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="quantity" label="Quantity"/>
         </schema>
         
-        <schema id="newitem" stereotype="detail" mode="input">
-          <association label="Item:" target="itemnum" labelfield="item_.description">
+        <schema id="newitem" stereotype="compositiondetail" mode="input" >
+          <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit,itemtype" required="true">
             <renderer type="lookup"/>
+            <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
           </association>
           <field attribute="quantity" label="Quantity"/>
+          <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+          <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/> 
+          <field attribute="storeloc" label="Storeroom" hidden="true"/>
+          <field attribute="enterby" label="Entered By" readonly="true"/>
+          <field attribute="item_.itemtype" label="Item Type" readonly="true"/> 
+          <field attribute="siteid" label="Entered By" readonly="true"/>
+          <!--<field attribute="curbal" label="Current Balance" readonly="true"/>-->
           <commandbars>
             <commandgroup position="detailform" removeundeclared="true">
-                <command id="saveitem" label="Save Item" service="inventoryService" method="addItemToInvIssue" parameters="schema,datamap"/>
-                <command id="cancelnewitem" label="Cancel" service="inventoryService" method="cancelNewInvIssueItem" />
+              <command id="savenewitem" label="Save Item" service="inventoryService" method="addItemToInvIssue" parameters="schema,datamap,parentdata,clonedcompositiondata,originalDatamap, previousdata"/>
+              <command id="cancelnewitem" label="Cancel" service="inventoryService" method="cancelNewInvIssueItem" />
             </commandgroup>
           </commandbars>
           <field attribute="matusetransid" hidden="true"/>
-          <field attribute="refwo" label="Workorder">
-            <renderer type="default" params="width=15%;"/>
-          </field>
-          <field attribute="issueto" label="Issue To">
-            <renderer type="default" params="width=15%;"/>
-          </field>
-          <field attribute="assetnum" label="Asset">
-            <renderer type="default" params="width=15%;"/>
-          </field>
-          <field attribute="location" label="Location">
-            <renderer type="default" params="width=15%;"/>
-          </field>
-          <field attribute="issuetype" label="Issue Type">
-            <renderer type="default" params="width=15%;"/>
-          </field>
+          <field attribute="refwo" label="Workorder" hidden="true"/>
+          <field attribute="issueto" label="Issue To" hidden="true"/>
+          <field attribute="assetnum" label="Asset" hidden="true"/>
+          <field attribute="location" label="Location" hidden="true"/>
+          <field attribute="issuetype" label="Issue Type" hidden="true"/>
           
         </schema>
 
