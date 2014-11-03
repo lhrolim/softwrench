@@ -3249,5 +3249,94 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <connectorParameter key="dbtable" value="invuseline" />
       </connectorParameters>
     </entity>
+
+    <entity name="po" idAttribute="ponum">
+      <attributes>
+        <attribute name="ponum" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="purchaseagent" type="varchar" required="false" />
+        <attribute name="orderdate" type="datetime" required="false" />
+        <attribute name="requireddate" type="datetime" required="false" />
+        <attribute name="followupdate" type="datetime" required="false" />
+        <attribute name="potype" type="varchar" required="false" />
+        <attribute name="originalponum" type="varchar" required="false" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="statusdate" type="datetime" required="true" />
+        <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="contact" type="varchar" required="false" />
+        <attribute name="freightterms" type="varchar" required="false" />
+        <attribute name="paymentterms" type="varchar" required="false" />
+        <attribute name="shipvia" type="varchar" required="false" />
+        <attribute name="customernum" type="varchar" required="false" />
+        <attribute name="fob" type="varchar" required="false" />
+        <attribute name="shipto" type="varchar" required="false" />
+        <attribute name="shiptoattn" type="varchar" required="false" />
+        <attribute name="billto" type="varchar" required="false" />
+        <attribute name="billtoattn" type="varchar" required="false" />
+        <attribute name="totalcost" type="decimal" required="false" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="priority" type="int" required="true" />
+        <attribute name="historyflag" type="smallint" required="true" />
+        <attribute name="po1" type="varchar" required="false" />
+        <attribute name="po2" type="varchar" required="false" />
+        <attribute name="po3" type="varchar" required="false" />
+        <attribute name="po4" type="varchar" required="false" />
+        <attribute name="po5" type="varchar" required="false" />
+        <attribute name="po6" type="decimal" required="false" />
+        <attribute name="po7" type="datetime" required="false" />
+        <attribute name="po8" type="decimal" required="false" />
+        <attribute name="po9" type="int" required="false" />
+        <attribute name="po10" type="smallint" required="true" />
+        <attribute name="vendeliverydate" type="datetime" required="false" />
+        <attribute name="receipts" type="varchar" required="false" />
+        <attribute name="currencycode" type="varchar" required="true" />
+        <attribute name="exchangerate" type="decimal" required="false" />
+        <attribute name="exchangedate" type="datetime" required="false" />
+        <attribute name="buyahead" type="smallint" required="true" />
+        <attribute name="totaltax1" type="decimal" required="false" />
+        <attribute name="totaltax2" type="decimal" required="false" />
+        <attribute name="totaltax3" type="decimal" required="false" />
+        <attribute name="inclusive1" type="smallint" required="true" />
+        <attribute name="inclusive2" type="smallint" required="true" />
+        <attribute name="inclusive3" type="smallint" required="true" />
+        <attribute name="internal" type="smallint" required="true" />
+        <attribute name="totaltax4" type="decimal" required="false" />
+        <attribute name="totaltax5" type="decimal" required="false" />
+        <attribute name="inclusive4" type="smallint" required="true" />
+        <attribute name="inclusive5" type="smallint" required="true" />
+        <attribute name="startdate" type="datetime" required="false" />
+        <attribute name="enddate" type="datetime" required="false" />
+        <attribute name="payonreceipt" type="smallint" required="true" />
+        <attribute name="buyercompany" type="varchar" required="false" />
+        <attribute name="exchangerate2" type="decimal" required="false" />
+        <attribute name="mnetsent" type="varchar" required="false" />
+        <attribute name="ecomstatusdate" type="datetime" required="false" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="contractrefnum" type="varchar" required="false" />
+        <attribute name="poid" type="bigint" required="true" />
+        <attribute name="contractrefid" type="bigint" required="false" />
+        <attribute name="contractrefrev" type="int" required="false" />
+        <attribute name="contreleaseseq" type="int" required="false" />
+        <attribute name="storeloc" type="varchar" required="false" />
+        <attribute name="storelocsiteid" type="varchar" required="false" />
+        <attribute name="inspectionrequired" type="smallint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="revisionnum" type="int" required="true" />
+        <attribute name="revcomments" type="varchar" required="false" />
+        <attribute name="internalchange" type="smallint" required="true" />
+        <attribute name="ignorecntrev" type="smallint" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="po" />
+      </connectorParameters>
+    </entity>
   </entities>
 </metadata>

@@ -1015,5 +1015,50 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </schema>
       </schemas>
     </application>
+
+    <application entity="po" name="po" title="Puchase Orders">
+      <properties>
+        <property key ="mobile.disabled" value="true"/>
+      </properties>
+      <schemas>
+        <list title="Purchase Order Grid">
+          <field attribute ="ponum" label="PO">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute ="description" label="Description">
+            <renderer type="default" params="excelwidth=50"/>
+          </field>
+          <field attribute ="status" label="Status">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute ="siteid" label="Site">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute ="potype" label="Type">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute ="priority" label="Priority">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute ="requireddate" label="Required Date">
+            <renderer type="datetime" params="width=12%;format=MM/dd/yyyy HH:mm;showtime=false"/>
+          </field>
+          <field attribute ="totalcost" label="Total Cost">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+          </properties>
+        </list>
+
+        <schema id ="adetail" title="PO Details" abstract="true" stereotype="detail">
+          <field attribute="ponum" label="PO #:"/>
+        </schema>
+
+        <schema id="editdetail" parentschema="adetail" title="Purchase Order Detail">
+          
+        </schema>
+      </schemas>
+    </application>
   </applications>
 </metadata>
