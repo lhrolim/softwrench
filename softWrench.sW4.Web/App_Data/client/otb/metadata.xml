@@ -355,6 +355,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="vendor" to="company" primary="true"/>
           <relationshipAttribute to="type" literal="V" quoteLiteral="true"/>
         </relationship>
+        <relationship to ="poline" qualifier="poline" collection ="true">
+          <relationshipAttribute from="ponum" to="ponum" primary="true"/>
+          <relationshipAttribute from="siteid" to ="siteid"/>
+          <relationshipAttribute from ="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+    <entity name="poline" idAttribute="polinenum">
+      <relationships>
+        <relationship to ="item">
+          <relationshipAttribute from ="itemnum" to="itemnum" primary="true"/>
+        </relationship>
       </relationships>
     </entity>
   </entities>
@@ -1113,6 +1126,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup" params="application=companies;schemaId=companiesLookupList;"/>
           </association>
           <field attribute="companies_.phone" label="Phone:"/>
+          <section id="compositions"/>
         </schema>
 
         <schema id="editdetail" parentschema="adetail" title="Purchase Order Detail">
@@ -1124,6 +1138,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <association label="Status:" target="status" labelfield="postatus.description" required="true">
               <renderer type="combo" />
             </association>
+          </section>
+          <section id="compositions">
+            <composition relationship="poline" label="PO Lines" ></composition>
           </section>
         </schema>
       </schemas>
@@ -1144,6 +1161,36 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="orgid"  label="Organization"/>
          </schema>
         </schemas>
+    </application>
+
+    <application name="poline" entity="poline" title="PO Lines">
+      <properties>
+        <!--will need to change the icon later-->
+        <property key ="icon.composition.tab" value="fa fa-tags"/>
+      </properties>
+      <schemas>
+        <schema id="list" stereotype="compositionlist">
+          <field attribute="ponum" label="PO No" readonly="true"/>
+          <field attribute="polinenum" label="Line No" />
+          <field attribute="itemnum" label="Item"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="orderqty" label="Quantity"/>
+          <field attribute="unitcost" label="Unit Cost"/>
+          <field label="Entered Date &amp; Time" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+        </schema>
+
+        <detail stereotype="compositiondetail">
+          <field attribute="linetype" label="Line Type"/>
+          <association label="Item:" target="itemnum" labelfield="item_.description" enableexpression="@linetype=='item'">
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="receivedqty" label="Received Qty:"/>
+          
+        </detail>
+        
+      </schemas>
     </application>
   </applications>
 </metadata>
