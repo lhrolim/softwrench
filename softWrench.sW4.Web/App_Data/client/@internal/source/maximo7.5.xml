@@ -3339,5 +3339,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <connectorParameter key="dbtable" value="po" />
       </connectorParameters>
     </entity>
+
+    <entity name="currency" idAttribute="currencyid">
+      <attributes>
+        <attribute name="currencycode" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="active" type="smallint" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="currencyid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="currency" />
+      </connectorParameters>
+    </entity>
   </entities>
 </metadata>
