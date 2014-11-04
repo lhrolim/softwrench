@@ -18,6 +18,19 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return filter;
         }
 
+        public SearchRequestDto FilterBin(AssociationPreFilterFunctionParameters parameters) {
+            return BinFilterByLocation(parameters);
+        }
+
+        public SearchRequestDto BinFilterByLocation(AssociationPreFilterFunctionParameters parameters) {
+            var filter = parameters.BASEDto;
+            var location = (string)parameters.OriginalEntity.GetAttribute("fromstoreloc");
+            if (location != null) {
+                filter.AppendSearchEntry("invbalances.location", location.ToUpper());
+            }
+            return filter;
+        }
+
         public override string ApplicationName() {
             return "invuse";
         }

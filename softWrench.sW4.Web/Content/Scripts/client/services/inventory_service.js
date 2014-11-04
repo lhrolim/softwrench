@@ -203,10 +203,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 currentSchemaKey: "newdetail.input.web"
             };
             restService.invokePost("data", "post", httpParameters, jsonString,
-                redirectService.goToApplicationView("matrectransTransfers", "list", null, null, null, null));
+                redirectService.goToApplication("matrectransTransfers", "list", null, null));
         },
         cancelTransfer: function () {
-            redirectService.goToApplicationView("matrectransTransfers", "list", null, null, null, null);
+            redirectService.goToApplication("matrectransTransfers", "list", null, null);
         }
 
     };

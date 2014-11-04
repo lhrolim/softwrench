@@ -289,7 +289,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       
     </entity>
 
-    <entity name="invuse" idAttribute="invuseid" whereclause="invuse.usetype='TRANSFER'">
+    <entity name="invuse" idAttribute="invuseid">
       <relationships>
         <relationship to="invuseline">
           <relationshipAttribute from="invusenum" to="invusenum" primary="true"/>
@@ -312,24 +312,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="location" qualifier="fromlocation">
           <relationshipAttribute from="invuseline_.fromstoreloc" to="location" primary="true"/>
           <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
-          <relationshipAttribute from="invuseline_.itemsetid" to="setid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
         </relationship>
         <relationship to="invbalances" qualifier="frominvbalance">
           <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
-          <relationshipAttribute from="siteid" to="siteid"/>
-          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
           <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
           <relationshipAttribute from="invuseline_.frombin" to="binnum" primary="true"/>
         </relationship>
         <relationship to="location" qualifier="tolocation">
           <relationshipAttribute from="invuseline_.tostoreloc" to="location" primary="true"/>
           <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
-          <relationshipAttribute from="invuseline_.itemsetid" to="setid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
         </relationship>
         <relationship to="invbalances" qualifier="toinvbalance">
           <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
           <relationshipAttribute from="invuseline_.tostoreloc" to="location"/>
           <relationshipAttribute from="invuseline_.tobin" to="binnum" primary="true"/>
+        </relationship>
+        <relationship to="item">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -955,12 +959,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <schema id="newdetail" stereotype="detail" mode="input">
           <field attribute="usetype" hidden="true"/>
-          <field attribute="invuseline_.itemnum" label="Item"/>
+          <association target="invuseline_.itemnum" labelfield="item_.description" label="Item"  required="true">
+            <renderer type="lookup"/>
+          </association>
           <association target="fromstoreloc" label="From Storeroom" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,siteid,itemsetid,location" required="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterChangeLocation"/>
           </association>
           <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true" required="true">
+            <dataprovider prefilterfunction="FilterBin"/>
             <event type="afterchange" service="inventoryService" method="getBinQuantity"/>
             <renderer type="lookup"/>
           </association>
