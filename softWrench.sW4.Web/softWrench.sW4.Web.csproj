@@ -631,6 +631,7 @@
     <Content Include="Content\styles\default\application\forms.css" />
     <Content Include="Content\styles\default\application\pages.css" />
     <Content Include="Content\styles\default\grid.css" />
+    <Content Include="Content\styles\default\screen.css" />
     <Content Include="Content\styles\default\signin.css" />
     <Content Include="Content\styles\default\menu.css" />
     <Content Include="Content\styles\default\print.css" />
