@@ -310,68 +310,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Client\%40internal\templates\incident.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\templates\inventory.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\templates\solution.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\templates\chartofaccounts.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\templates\item.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\templates\longdescription.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\templates\commlogs.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\templates\labor.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\templates\labtrans.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\templates\relatedrecords.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\templates\workorder.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\templates\materials.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\templates\woactivity.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\templates\attachments.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\%40internal\templates\worklogs.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="App_Data\Client\%40internal\target\smartcloud7.5.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -619,7 +557,6 @@
     <Content Include="Content\Scripts\client\services\icon_service.js" />
     <Content Include="Content\Scripts\client\services\excelservice.js" />
     <Content Include="Content\Scripts\client\services\date_service.js" />
-    <Content Include="Content\Scripts\client\services\inventory_service.js" />
     <Content Include="Content\Scripts\client\services\securityService.js" />
     <Content Include="Content\Scripts\client\services\rest_service.js" />
     <Content Include="Content\Scripts\client\services\generalsr_service.js" />
@@ -677,7 +614,6 @@
     <Content Include="Content\Scripts\customers\hapag\report_service.js" />
     <Content Include="Content\Scripts\customers\hapag\sr_service.js" />
     <Content Include="Content\Scripts\customers\hapag\sr_summary_service.js" />
-    <Content Include="Content\Scripts\customers\shared\solution_service.js" />
     <Content Include="Content\Scripts\customers\shared\commlogactions.js" />
     <Content Include="Content\Scripts\client\services\commlog_service.js" />
     <Content Include="Content\Scripts\customers\otb\sr_service.js" />
@@ -695,6 +631,7 @@
     <Content Include="Content\styles\default\application\forms.css" />
     <Content Include="Content\styles\default\application\pages.css" />
     <Content Include="Content\styles\default\grid.css" />
+    <Content Include="Content\styles\default\screen.css" />
     <Content Include="Content\styles\default\signin.css" />
     <Content Include="Content\styles\default\menu.css" />
     <Content Include="Content\styles\default\print.css" />
@@ -1479,7 +1416,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Client\gric\i18n\en\" />
-    <Folder Include="App_Data\Client\shared\" />
     <Folder Include="Content\Customers\gric\" />
     <Folder Include="Views\HapagHome\" />
     <Folder Include="Views\SchedulerSetup\" />
