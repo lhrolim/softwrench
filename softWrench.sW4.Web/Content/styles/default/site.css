@@ -1,4 +1,4 @@
-﻿body {
+body {
     font-family: "Arial";
     overflow-y: scroll;
     -webkit-transition: all 0.5s;
@@ -675,6 +675,10 @@ Header
             text-align: center;
         }
 
+        .container header .menu-grid .submenu li a {
+            text-align: left;
+        }
+
 /*SM - 10/06 - SWWEB-435*/
 .container .context {
     width: 100%;
@@ -1146,3 +1150,26 @@ input[type=search] {
 #scanConfigTable thead tr td:nth-child(3) {
     width: 25%;
 }
+
+/*user profile input form*/
+.new-button {
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+#profiles .buttons, #roles .buttons {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.crud_output .field label {
+    text-align: left;
+    word-break: break-all;
+    word-break: break-word;
+}
+
+    .crud_output .field label img {
+        max-width: 100%;
+        height: auto;
+        width: auto;
+    }

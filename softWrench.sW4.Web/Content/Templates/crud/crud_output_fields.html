@@ -1,4 +1,4 @@
-﻿<section>
+﻿<section class="crud_output">
     <div ng-repeat="fieldMetadata in nonTabFields(displayables)" class="row" style="width: 100%;"
         ng-show="!isFieldHidden(schema,fieldMetadata)"
         ng-class="getSectionClass(fieldMetadata)"
@@ -67,13 +67,13 @@
                                 <div ng-switch-when="fieldwithbuttons">
                                     <div ng-if="isbtnLeft(fieldMetadata)">
                                         <button class="{{fieldMetadata.rendererParameters.icon}} fieldButton" ></button>
-                                        <label class="form-control " style="text-align:left; word-break:break-word;width: 96.35%;display: inline-block;"
+                                        <label class="form-control " style="width: 96.35%;display: inline-block;"
                                             ng-bind-html="getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata) | linebreak"
                                             ng-init="bindEvalExpression(fieldMetadata)">
                                         </label>
                                     </div>
                                     <div ng-if="!isbtnLeft(fieldMetadata)"
-                                        <label class="form-control " style="text-align:left; word-break:break-word;width: 96.35%;display: inline-block;"
+                                        <label class="form-control " style="width: 96.35%;display: inline-block;"
                                             ng-bind-html="getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata) | linebreak"
                                             ng-init="bindEvalExpression(fieldMetadata)">
                                         </label>
@@ -81,7 +81,7 @@
                                     </div>
                                  </div>   
                                 <div ng-switch-default>
-                                    <label class="form-control" style="text-align:left; word-break:break-word;"
+                                    <label class="form-control"
                                            ng-bind-html="getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata) | linebreak"
                                            ng-init="bindEvalExpression(fieldMetadata)"
                                            data-attribute="{{fieldMetadata.attribute}}">
