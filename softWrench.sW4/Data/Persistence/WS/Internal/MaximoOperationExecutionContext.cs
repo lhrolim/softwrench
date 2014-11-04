@@ -20,7 +20,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         protected const string WsInputLog = "WS_CALL_LOGS";
 
-        private static readonly ILog Log = LogManager.GetLogger(WsInputLog);
+        protected static readonly ILog Log = LogManager.GetLogger(WsInputLog);
 
         protected MaximoOperationExecutionContext(IOperationData operationData) {
             _operationData = operationData;

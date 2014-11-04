@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Util {
-    class ConversionUtil {
+    public class ConversionUtil {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ConversionUtil));
 
@@ -19,7 +19,7 @@ namespace softWrench.sW4.Util {
                 return stValue;
             }
             if (type == "smallint" || type == "int" || type == "integer") {
-                if (stValue.EqualsAny("True","False")){
+                if (stValue.EqualsAny("True", "False")) {
                     return Convert.ToBoolean(stValue);
                 }
                 return Convert.ToInt32(stValue);
@@ -52,7 +52,7 @@ namespace softWrench.sW4.Util {
             return stValue;
         }
 
-        private static DateTime? HandleDateConversion(string stValue) {
+        public static DateTime? HandleDateConversion(string stValue) {
             var kind = ApplicationConfiguration.IsISM() ? DateTimeKind.Utc : DateTimeKind.Local;
             var user = SecurityFacade.CurrentUser(false);
             try {

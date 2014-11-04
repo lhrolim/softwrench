@@ -152,10 +152,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="width=8%"  />
           </field>
           <optionfield attribute="#ReconCd" label="Reconciliation Codes" required="true" providerattribute="reconciliationCodes">
-            <renderer type="COMBO" params="width=10%"  />
+            <renderer type="COMBO" params="width=12%"  />
           </optionfield>
           <field attribute="actfinish" label="Actual Finish" default="@now" required="true">
-            <renderer type="datetime" params="editable=true;format=MM/dd/yyyy;width=12%"/>
+            <renderer type="datetime" params="editable=true;format=MM/dd/yyyy;width=15%"/>
           </field>
           <optionfield attribute="#pmchange" label="PM Change" default="N">
             <renderer type="combo" params="width=10%"/>

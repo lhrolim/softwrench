@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
 using softWrench.sW4.Data.Persistence.Engine;
@@ -82,11 +83,16 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                             Report = report
                         };
                         problem = _dao.Save(problem);
+                        if (report.ProblemItens == null) {
+                            report.ProblemItens = new HashedSet<BatchItemProblem>();
+                        }
                         report.ProblemItens.Add(problem);
                         _dao.Save(report);
                     }
                 }
                 _dao.Save(report);
+                report.OriginalBatch.Status = BatchStatus.COMPLETE;
+                _dao.Save(report.OriginalBatch);
             }, submissionData);
         }
 

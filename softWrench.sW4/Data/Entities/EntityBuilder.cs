@@ -13,7 +13,7 @@ using System.Linq;
 namespace softWrench.sW4.Data.Entities {
 
 
-    class EntityBuilder {
+    public class EntityBuilder {
 
         private const string RelationshipNotFound = "relationship {0} not found on entity {1}";
 
