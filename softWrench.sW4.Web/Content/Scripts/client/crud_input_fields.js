@@ -141,7 +141,7 @@ app.directive('crudInputFields', function (contextService) {
 
             //this will get called when the input form is done rendering
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
-
+                eventdispatcherService.onload($scope.schema, $scope.datamap);
                 var bodyElement = $('#' + parentElementId);
                 if (bodyElement.length <= 0) {
                     return;

@@ -953,37 +953,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     
     <application entity="invuse" name="invuse" title="Inventory Transfer">
       <schemas>
-        <!-- Temporary list schema untill new detail save redirects to the correct applications list schema-->
-        <list>
-          <field attribute="invuseline_.itemnum" label="Item">
-            <renderer type="default" params="width=16%"/>
-          </field>
-          <field attribute="invuseline_.fromstoreloc" label="From Storeroom">
-            <renderer type="default" params="width=15%"/>
-          </field>
-          <field attribute="invuseline_.frombin" label="From Bin">
-            <renderer type="default" params="width=12%"/>
-          </field>
-          <field attribute="invuseline_.tostoreloc" label="To Storeroom">
-            <renderer type="default" params="width=15%"/>
-          </field>
-          <field attribute="invuseline_.tobin" label="To Bin">
-            <renderer type="default" params="width=12%"/>
-          </field>
-          <field attribute="invuseline_.quantity" label="Quantity">
-            <renderer type="default" params="width=10%"/>
-          </field>
-          <field attribute="invuseline_.actualdate" label="Transfer Date">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=18%"/>
-          </field>
-          <commandbars>
-            <commandgroup position="gridtop">
-              <command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService" 
-                       method="createTransfer" parameters="schema" position=">filter"/>
-            </commandgroup>
-          </commandbars>
-        </list>
-        
         <schema id="newdetail" stereotype="detail" mode="input">
           <field attribute="usetype" hidden="true"/>
           <field attribute="invuseline_.itemnum" label="Item"/>
@@ -1007,13 +976,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="inventory_.costtype" label="Cost Type" hidden="true"/>
           <field attribute="#curbal" label="Current Balance" hidden="true"/>
           <commandbars>
-            <commandgroup position="detailform" removeundeclared="false">
-              <removecommand id="print"/>
-              <removecommand id="cancel"/>
-              <!--<command id="saveTransfer" icon="fa fa-save" label="Submit" service="inventoryService" method="submitTransfer" position="left" parameters="schema,datamap"/>-->
+            <commandgroup position="detailform" removeundeclared="true">
+              <command id="saveTransfer" icon="fa fa-save" label="Submit" service="inventoryService" method="submitTransfer" position="left" parameters="schema,datamap"/>
               <command id="cancelTransfer" icon="fa fa-backward" label="Cancel" service="inventoryService" method="cancelTransfer"/>
             </commandgroup>
           </commandbars>
+          <event type="onload" service="scannerdetectionService" method="initInvuseTransferListener"/>
         </schema>
       </schemas>
     </application>

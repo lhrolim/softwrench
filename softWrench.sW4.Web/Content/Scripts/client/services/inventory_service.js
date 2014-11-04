@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService) {
+app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService, restService) {
     var createTransaction = function (schema, issueType) {
         var matusetrans = {};
         matusetrans.issueType = issueType;
@@ -194,9 +194,16 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
         submitTransfer: function (schema, datamap) {
             // Save transfer
-            
-            // Redirect to the matrectrans grid
-            redirectService.goToApplicationView("matrectransTransfers", "list", null, null, null, null);
+            var user = contextService.getUserData();
+
+            var jsonString = angular.toJson(datamap);
+            var httpParameters = {
+                application: "invuse",
+                platform: "web",
+                currentSchemaKey: "newdetail.input.web"
+            };
+            restService.invokePost("data", "post", httpParameters, jsonString,
+                redirectService.goToApplicationView("matrectransTransfers", "list", null, null, null, null));
         },
         cancelTransfer: function () {
             redirectService.goToApplicationView("matrectransTransfers", "list", null, null, null, null);
