@@ -1,5 +1,13 @@
-﻿@media print {
+﻿.printModal {
+    width: 330px;
+    outline: none;
+}
 
+    .printModal .modal-dialog {
+        width: 300px;
+    }
+
+@media print {
     .no-print, .col-lg-2, .affix, .filter-row, .glyphicon {
         display: none !important;
     }
