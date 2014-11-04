@@ -189,6 +189,7 @@
     <Compile Include="Data\Persistence\PaginationData.cs" />
     <Compile Include="Data\Persistence\NHibernatePaginationUtil.cs" />
     <Compile Include="Data\Persistence\Relational\EntityRepository\EntityRepository.cs" />
+    <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\BaseQueryBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QuerySearchSortBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\EntityWhereClauseBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\FixedSearchWhereClauseBuilder.cs" />
@@ -532,6 +533,7 @@
     <Compile Include="SimpleInjector\Core\Order\IPriorityOrdered.cs" />
     <Compile Include="SimpleInjector\ISingletonComponent.cs" />
     <Compile Include="SimpleInjector\SimpleInjectorGenericFactory.cs" />
+    <Compile Include="SimpleInjector\IClientApplicationAwareComponent.cs" />
     <Compile Include="SPF\IGenericResponseResult.cs" />
     <Compile Include="SPF\RedirectResponseResult.cs" />
     <Compile Include="Util\AttributeUtil.cs" />
@@ -563,6 +565,7 @@
     <Compile Include="Util\StreamUtils.cs" />
     <Compile Include="Util\StringExtensions.cs" />
     <Compile Include="Util\SwConstants.cs" />
+    <Compile Include="Util\TaskFactoryExtensions.cs" />
     <Compile Include="Util\Validate.cs" />
     <Compile Include="Web References\wsAsset\Reference.cs">
       <AutoGen>True</AutoGen>

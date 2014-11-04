@@ -9,7 +9,10 @@ using System.Globalization;
 using System.Linq;
 
 namespace softWrench.sW4.Util {
-    public class LoggingUtil {
+    public class LoggingUtil
+    {
+
+        
 
         public static string MsDelta(Stopwatch watch) {
             watch.Stop();

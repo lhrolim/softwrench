@@ -4,7 +4,6 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception;
-using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
@@ -13,16 +12,14 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
-using softwrench.sw4.Shared2.Util;
-using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder {
 
-    class WorkorderEditBatchSchemaDataSet : MaximoApplicationDataSet {
+    class WoEditBatchSchemaDataSet : MaximoApplicationDataSet {
 
         private readonly SWDBHibernateDAO _swdbdao;
 
-        public WorkorderEditBatchSchemaDataSet(SWDBHibernateDAO swdbdao) {
+        public WoEditBatchSchemaDataSet(SWDBHibernateDAO swdbdao) {
             _swdbdao = swdbdao;
         }
 

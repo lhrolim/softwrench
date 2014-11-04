@@ -9,7 +9,7 @@ using softWrench.sW4.Metadata.Entities.Schema;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
-    class QuerySelectBuilder {
+    class QuerySelectBuilder : BaseQueryBuilder {
 
         private const string AliasDelimiter = "\"";
         private const string LiteralDelimiter = "'";
@@ -53,7 +53,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                     }
                     string aliasAttribute;
                     if (result != null && result.Item1.Query != null) {
-                        aliasAttribute = AliasAttribute(entityMetadata, field.Alias, result.Item1, result.Item2);
+                        aliasAttribute = AliasAttributeWithQuery(entityMetadata, field.Alias, result.Item1, result.Item2);
                     } else {
                         aliasAttribute = AliasAttribute(entityMetadata, field);
                     }
@@ -102,9 +102,15 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             return new Tuple<EntityAttribute, string>(attribute, context);
         }
 
-        private static string AliasAttribute(EntityMetadata entityMetadata, string alias, EntityAttribute attribute, string context) {
+        private static string AliasAttributeWithQuery(EntityMetadata entityMetadata, string alias, EntityAttribute attribute, string context) {
             var contextToUse = context ?? entityMetadata.Name;
-            var qualifiedName = attribute.GetQueryReplacingMarkers(contextToUse);
+            var query = attribute.Query;
+            var qualifiedName = "";
+            if (query.StartsWith("@")) {
+                qualifiedName = GetServiceQuery(query,contextToUse);
+            } else {
+                qualifiedName = attribute.GetQueryReplacingMarkers(contextToUse);
+            }
             return string.Format("{0} as {1}", qualifiedName, alias);
         }
 
@@ -120,7 +126,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             var qualifiedName = BaseQueryUtil.QualifyAttribute(entityMetadata, attribute);
             var alias = string.Format("{0}{1}{0}", AliasDelimiter, attribute.Name);
             if (attribute.Query != null) {
-                return AliasAttribute(entityMetadata, alias, attribute, null);
+                return AliasAttributeWithQuery(entityMetadata, alias, attribute, null);
             }
             return string.Format("{0} as {1}", qualifiedName, alias);
         }

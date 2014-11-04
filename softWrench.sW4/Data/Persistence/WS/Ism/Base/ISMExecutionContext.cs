@@ -17,7 +17,9 @@ using System.Diagnostics;
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
     class IsmExecutionContext : MaximoOperationExecutionContext {
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(IsmExecutionContext));
+        
+
+        private static readonly ILog Log = LogManager.GetLogger(WsInputLog);
 
         public IsmExecutionContext(DynamicObject proxy, IOperationData operationData)
             : base(operationData) {
@@ -54,7 +56,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
                 var path = isChange ? MetadataProvider.GlobalProperty("globaservletpath_chg") : MetadataProvider.GlobalProperty("globaservletpath_inc");
 
                 Log.InfoFormat("PERFORMANCE - ISM WS request started at {0}.", DateTime.Now);
-                Log.DebugFormat("Calling ISM WS on {0}. Content: {1}", path, arg0);                
+                Log.DebugFormat("Calling ISM WS on {0}. Content: {1}", path, arg0);
                 soapEnvelopeXml.LoadXml(@arg0);
                 var webRequest = CreateWebRequest(path);
 
@@ -79,13 +81,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
                 }
 
                 return result;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Log.Error("Error invoking ISM proxy", e);
                 var rootException = ExceptionUtil.DigRootException(e);
                 throw rootException;
-            }
-            finally {
+            } finally {
                 var msDelta = LoggingUtil.MsDelta(before);
                 Log.InfoFormat("PERFORMANCE - ISM WS request took {0} ms to be executed.", msDelta);
             }
@@ -102,13 +102,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             return webRequest;
         }
 
-        private string SerializeIntegrationObject() {
-            var rootElement = IntegrationObject;
-            var serializer = new XmlSerializer(rootElement.GetType(), @"http://b2b.ibm.com/schema/B2B_CDM_Incident/R2_2");
-            var sWriter = new StringWriter();
-            serializer.Serialize(sWriter, rootElement);
-            return sWriter.ToString().Substring(sWriter.ToString().IndexOf('\n') + 1, sWriter.ToString().Length - sWriter.ToString().IndexOf('\n') - 1);
-        }
+       
 
         protected override string MethodName() {
             return "ProcessDoc";

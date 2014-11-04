@@ -26,10 +26,10 @@ namespace softWrench.sW4.Metadata {
             throw new NotSupportedException();
         }
 
-        private static void Db2Delegate(XmlElement attribute, IEnumerable<KeyValuePair<string, object>> row) {
-            foreach (var keyValuePair in row) {
+        private static void Db2Delegate(XmlElement attribute, Dictionary<string, string> dictionary) {
+            foreach (var keyValuePair in dictionary) {
                 var key = keyValuePair.Key.ToLower();
-                var value = keyValuePair.Value.ToString().ToLower();
+                var value = keyValuePair.Value.ToLower();
                 if (key.ToLower() == "nulls") {
                     attribute.SetAttribute("required", (value == "n").ToString().ToLower());
                 }
@@ -39,10 +39,10 @@ namespace softWrench.sW4.Metadata {
             }
         }
 
-        private static void SQLServerDelegate(XmlElement attribute, IEnumerable<KeyValuePair<string, object>> row) {
-            foreach (var keyValuePair in row) {
+        private static void SQLServerDelegate(XmlElement attribute, Dictionary<string, string> dictionary) {
+            foreach (var keyValuePair in dictionary) {
                 var key = keyValuePair.Key.ToLower();
-                var value = keyValuePair.Value.ToString().ToLower();
+                var value = keyValuePair.Value.ToLower();
                 if (key.ToUpper() == "IS_NULLABLE") {
                     attribute.SetAttribute("required", (value.ToLower() == "no").ToString().ToLower());
                 }
@@ -52,15 +52,15 @@ namespace softWrench.sW4.Metadata {
             }
         }
 
-        private string HandleGeneric(string query, string tableName, Action<XmlElement, IEnumerable<KeyValuePair<string, object>>> rowDelegate) {
+        private string HandleGeneric(string query, string tableName, Action<XmlElement, Dictionary<string, string>> rowDelegate) {
             var result = _dao.FindByNativeQuery(query, tableName.ToUpper());
             if (result == null) {
                 return null;
             }
-            var rows = result.Cast<IEnumerable<KeyValuePair<string, object>>>();
-            rows = rows as IList<IEnumerable<KeyValuePair<string, object>>> ?? rows.ToList();
-            var enumerable = rows as IEnumerable<KeyValuePair<string, object>>[] ?? rows.ToArray();
-            if (!enumerable.Any()) {
+//            var rows = result.Cast<IEnumerable<KeyValuePair<string, object>>>();
+//            rows = rows as IList<IEnumerable<KeyValuePair<string, object>>> ?? rows.ToList();
+//            var enumerable = rows as IEnumerable<KeyValuePair<string, object>>[] ?? rows.ToArray();
+            if (!result.Any()) {
                 return null;
             }
             var doc = new XmlDocument();
@@ -70,7 +70,7 @@ namespace softWrench.sW4.Metadata {
             el.AppendChild(attributes);
 
 
-            foreach (var row in enumerable) {
+            foreach (var row in result) {
                 var attribute = doc.CreateElement("attribute");
                 attributes.AppendChild(attribute);
                 rowDelegate(attribute, row);

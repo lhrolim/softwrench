@@ -100,7 +100,21 @@
     <attribute name="required" type="string"></attribute>
     <attribute name="type" type="string" use="required"></attribute>
     <attribute name="auto-generated" type="boolean"></attribute>
-    <attribute name="query" type="string"></attribute>
+    <attribute name="query" type="string">
+      <annotation>
+        <documentation>
+          a query will be executed when a declared application asks for this attribute.
+
+          Remarks:
+
+          1) use !@ chars to make framework replace the correct current entity name, considering join contexts
+
+          2) use ref:xxx to refer to a declared global query named xxx
+
+          3) use @xxx.yyy to refer to a injectable service xxx and method yyy that should return the query at runtime
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="Relationship">
@@ -210,7 +224,7 @@
           <element name="event" type="tns:Event" minOccurs="0"
             maxOccurs="unbounded">
           </element>
-      
+
         </choice>
         <attribute name="platform" type="string" use="optional">
         </attribute>

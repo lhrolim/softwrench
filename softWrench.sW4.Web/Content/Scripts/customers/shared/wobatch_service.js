@@ -2,6 +2,20 @@
 
 app.factory('wobatchService', function (redirectService, $rootScope, restService, alertService, validationService) {
 
+    function doSubmit(hasAtLeastOne, datamap) {
+        var batchId = datamap[0].fields["#batchId"];
+        var batchAlias = datamap[0].fields["#batchalias"];
+        var parameters = {
+            batchId: batchId
+        }
+        var json = {};
+        json.datamap = datamap;
+        restService.invokePost('Batch', 'submit', parameters, json, function (data) {
+            alertService.success("Batch {0} successfully {1}.".format(batchAlias, hasAtLeastOne ? "submitted" : "deleted"), true);
+            redirectService.goToApplication("_wobatch", "list");
+        });
+    };
+
     function doSave(ids) {
         if (ids.length == 0) {
             alertService.alert("Please select at least one element");
@@ -252,9 +266,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
             var batchId = datamap[0].fields["#batchId"];
             var batchAlias = datamap[0].fields["#batchalias"];
             var parameters = {
-                application: "workorder",
-                schema: "list",
-                batchId: batchId,
+                batchId: batchId
             }
             var json = {};
             json.datamap = datamap;
@@ -263,6 +275,21 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
             });
             //            });
         },
+
+        submitBatch: function (datamap) {
+            var hasAtLeastOne = false;
+            $.each(datamap, function (key, item) {
+                if (item.fields["#closed"]) {
+                    hasAtLeastOne = true;
+                }
+            });
+            if (!hasAtLeastOne) {
+                alertService.confirmMsg("This batch has no closed entries.It will be deleted upon submission. Proceeed?", function () {
+                    doSubmit(false, datamap);
+                });
+            }
+            doSubmit(true, datamap);
+        }
 
 
 

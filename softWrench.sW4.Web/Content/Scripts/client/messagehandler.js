@@ -81,6 +81,16 @@ app.directive('messagesection', function (contextService) {
 
                 $scope.errorMsg = errordata.errorMessage;
                 $scope.errorStack = errordata.errorStack;
+                if (!$scope.errorMsg) {
+                    //this will happen if the exception is thrown before the Controllers are called, by the .net framework itself; the GenericExceptionFilter would never get called
+                    $scope.errorMsg = errordata.exceptionMessage;
+                }
+                if (!$scope.errorStack) {
+                    //this will happen if the exception is thrown before the Controllers are called, by the .net framework itself; the GenericExceptionFilter would never get called
+                    $scope.errorStack = errordata.stackTrace;
+                }
+
+                
                 $scope.$broadcast('sw_errormessage', true);
 
                 if (nullOrUndef($rootScope.hasErrorDetail) && nullOrUndef($rootScope.hasErrorList)) {

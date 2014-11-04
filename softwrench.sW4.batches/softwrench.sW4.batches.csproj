@@ -32,15 +32,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Iesi.Collections">
-      <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate">
-      <HintPath>..\packages\NHibernate.4.0.1.4000\lib\net40\NHibernate.dll</HintPath>
+    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NHibernate.3.3.1.4000\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate.Mapping.Attributes">
       <HintPath>..\packages\NHibernate.Mapping.Attributes.3.2.0.0\lib\NHibernate.Mapping.Attributes.dll</HintPath>
@@ -56,15 +58,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="com\cts\softwrench\sw4\batches\controller\BatchController.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchItemProblem.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\entities\Batch.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchReport.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchStatus.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\entities\BatchStatusType.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\exception\BatchException.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\BatchSubmissionData.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\BatchSubmissionItem.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\submission\ISubmissionConverter.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\submission\BatchSubmissionService.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\submission\WorkorderSubmissionConverter.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchDataSet.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchesRoleEvaluator.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchWhereClauseRegistry.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WorkorderEditBatchSchemaDataSet.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WorkOrderBatchWhereClauseProvider.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WorkorderBatchSchemaDataSet.cs" />
-    <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WorkorderDataSetBatchHelper.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoEditBatchSchemaDataSet.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchWhereClauseProvider.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoBatchSchemaDataSet.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\workorder\WoDataSetBatchHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
