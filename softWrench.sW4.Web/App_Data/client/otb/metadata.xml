@@ -337,6 +337,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInvuseCrudConnector"/>
       </connectorParameters>
     </entity>
+
+    <entity name="po" idAttribute="ponum">
+      <relationships>
+        <relationship to="synonymdomain" qualifier="postatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="POSTATUS" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="synonymdomain" qualifier="potype">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="POTYPE" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="currency" qualifier="currency" collection="true">
+          <relationshipAttribute from="currencycode" to="currencycode" primary="true"/>
+        </relationship>
+        <relationship to="companies" qualifier="companies" collection="true">
+          <relationshipAttribute from="vendor" to="company" primary="true"/>
+          <relationshipAttribute to="type" literal="V" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
   </entities>
 
   <applications>
@@ -1065,13 +1085,65 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </list>
 
         <schema id ="adetail" title="PO Details" abstract="true" stereotype="detail">
-          <field attribute="ponum" label="PO #:"/>
+          <section id="siteidsection"/>
+          <field attribute="ponum" label="PO #:" readonly="true"/>
+          <field attribute="description" label="Description:">
+            <renderer type="richtext"/>
+          </field>
+          <field attribute="siteid" hidden="true" />
+          <section id ="statussection"/>
+          <association label="Type:" target="type" labelfield="potype_.description">
+            <renderer type="lookup"/>
+          </association>         
+          <field attribute="priority" label="Priority:">
+            <renderer type="default" params="placeholder=Please enter a value from 0-9"/>
+          </field>
+          <field attribute="orderdate" label="Date:" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+          <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
+          <section id="requireddate" resourcepath="/Content/Templates/samelinepickers.html"
+                         parameters="joinattribute=requireddate;">
+            <header label="Required Date:" displacement="sameline"/>
+          </section>
+          <association label="Currency:" target="currencycode" labelfield="currency_.description">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Vendor:" target="vendor" labelfield="companies_.name" extraprojectionvalues="phone">
+            <renderer type="lookup" params="application=companies;schemaId=companiesLookupList;"/>
+          </association>
+          <field attribute="companies_.phone" label="Phone:"/>
         </schema>
 
         <schema id="editdetail" parentschema="adetail" title="Purchase Order Detail">
-          
+          <section id="siteidsection">
+            <field attribute="ponum" label="PO #:" readonly="true" required="true"/>
+            <field label="Site:" attribute="siteid" readonly="true"/>
+          </section>
+          <section id="statussection">
+            <association label="Status:" target="status" labelfield="postatus.description" required="true">
+              <renderer type="combo" />
+            </association>
+          </section>
         </schema>
       </schemas>
+    </application>
+
+    <application name="companies" entity="companies" title="Companies" id="00000000-0000-0000-0000-000000000017">
+      <properties>
+        <property key="mobile.fetchlimit" value="30"/>
+        <property key="mobile.userInteractionEnabled" value="false"/>
+      </properties>
+      <schemas>
+        <schema id="companiesLookupList" stereotype="list">
+          <field attribute="company" label="Company"/>
+          <field attribute="name" label="Name">
+            <renderer type="default" params="minwidth=300px" />
+          </field>
+          <field attribute="type" label="Type"/>
+          <field attribute="orgid"  label="Organization"/>
+         </schema>
+        </schemas>
     </application>
   </applications>
 </metadata>
