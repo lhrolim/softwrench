@@ -971,17 +971,18 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <event type="afterchange" service="inventoryService" method="getBinQuantity"/>
             <renderer type="lookup"/>
           </association>
+          <field attribute="#curbal" label="Current Balance" readonly="true"/>
           <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" required="true">
             <dataprovider prefilterfunction="FilterLocation"/>
             <renderer type="lookup"/>
           </association>
           <field attribute="invuseline_.tobin" label="To Bin" required="true"/>
           <field attribute="invuseline_.quantity" label="Quantity" required="true">
+            <event type="afterchange" service="inventoryService" method="afterChangeTransferQuantity"/>
             <renderer type="numericinput" params="min=1;"/>
           </field>
           <field attribute="invuseline_.unitcost" label="Unit Cost" hidden="true"/>
           <field attribute="inventory_.costtype" label="Cost Type" hidden="true"/>
-          <field attribute="#curbal" label="Current Balance" hidden="true"/>
           <commandbars>
             <commandgroup position="detailform" removeundeclared="true">
               <command id="saveTransfer" icon="fa fa-save" label="Submit" service="inventoryService" method="submitTransfer" position="left" parameters="schema,datamap"/>

@@ -128,7 +128,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 }
             });
         },
-	createTransfer: function(schema) {
+	    createTransfer: function(schema) {
             if (schema === undefined) {
                 return;
             }
@@ -202,12 +202,23 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 platform: "web",
                 currentSchemaKey: "newdetail.input.web"
             };
-            restService.invokePost("data", "post", httpParameters, jsonString,
-                redirectService.goToApplication("matrectransTransfers", "list", null, null));
-        },
+            restService.invokePost("data", "post", httpParameters, jsonString, function () {
+                var restParameters = {
+                    key: {
+                        schemaId: "list",
+                        mode: "none",
+                        platform: "web"
+                    },
+                    SearchDTO: null
+                }
+                var urlToUse = url("/api/Data/matrectransTransfers?" + $.param(restParameters));
+                $http.get(urlToUse).success(function (data) {
+                    redirectService.goToApplication("matrectransTransfers", "list", null, data);
+                });
+            });
+            },
         cancelTransfer: function () {
             redirectService.goToApplication("matrectransTransfers", "list", null, null);
-        }
-
+        },
     };
 });
