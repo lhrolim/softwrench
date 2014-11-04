@@ -512,20 +512,6 @@ textarea .readonly {
     font-weight: bold !important;
 }
 
-@media screen {
-    .hideRows {
-        display: none;
-    }
-
-    .pagebreak {
-        display: none;
-    }
-
-    .hiddenonscreen {
-        display: none;
-    }
-}
-
 .col-sectionsamelineheader {
     margin-top: -15px !important;
 }
