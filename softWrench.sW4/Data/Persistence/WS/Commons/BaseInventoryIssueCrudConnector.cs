@@ -20,7 +20,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             /*FIND CORRECT VALUES FOR THESE FIELDS*/
             w.SetValueIfNull(invIssue, "ACTUALDATE", Convert.ToDateTime("2006-08-19T10:27:14-07:00"));
-            w.SetValueIfNull(invIssue, "GLDEBITACCT", "6000-200-200");
             w.SetValueIfNull(invIssue, "SITEID", user.SiteId);
             w.SetValueIfNull(invIssue, "ITEMNUM", "XMP-3500");
             w.SetValueIfNull(invIssue, "QUANTITY", 1.00);

@@ -27,7 +27,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
   </container>
   <container title="Inventory" tooltip="Click to access your inventory" icon="fa fa-cube" id="Inventory" role="inventory" >
     <application id="IN" title="Inventory Grid" ref="invbalances" schema="list" tooltip="Click to view your Inventory Grid" />
-    <application id="IR" title="Issues and Returns" ref="invissue" schema="invissuelist" tooltip="Click to view your Issues and Returns" />
+    <application id="IR" title="Issues and Returns" ref="invissue" schema="list" tooltip="Click to view your Issues and Returns" />
     <application id="INT" title="Inventory Transfer Grid" ref="matrectransTransfers" schema="list" tooltip="Click to view your Inventory Transfers Grid"/>
   </container>
 </Menu>
