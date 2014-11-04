@@ -693,7 +693,6 @@
     <Content Include="Content\Scripts\thirdparty\textAngular-sanitize-min.js" />
     <Content Include="Content\Scripts\thirdparty\textAngular-min.js" />
     <Content Include="Content\styles\default\application\forms.css" />
-    <Content Include="Content\styles\default\application\grids.css" />
     <Content Include="Content\styles\default\application\pages.css" />
     <Content Include="Content\styles\default\grid.css" />
     <Content Include="Content\styles\default\signin.css" />
@@ -819,6 +818,7 @@
     <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.zh-TW.js" />
     <Content Include="Content\Scripts\spin-min.js" />
     <Content Include="Content\Scripts\typeahead.js" />
+    <Content Include="Content\styles\gric\application\grids.css" />
     <Content Include="Content\styles\hapag\grid.css" />
     <Content Include="Content\styles\hapag\signin.css" />
     <Content Include="Content\styles\hapag\site.css" />
@@ -826,6 +826,7 @@
     <Content Include="Content\styles\kongsberg\site.css" />
     <Content Include="Content\styles\manchester\signin.css" />
     <Content Include="Content\styles\manchester\site.css" />
+    <Content Include="Content\styles\otb\application\grids.css" />
     <Content Include="Content\styles\scottsdale\signin.css" />
     <Content Include="Content\styles\scottsdale\site.css" />
     <Content Include="Content\styles\gric\signin.css" />
