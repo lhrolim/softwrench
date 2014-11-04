@@ -251,12 +251,13 @@
 
                 <div ng-switch-when="numericinput">
                     <input id="spinner"
-                        class="hidden-phone form-control"
-                        ng-model="datamap[fieldMetadata.attribute]"
-                        ng-init="initField(fieldMetadata)"
-                        min="{{fieldMetadata.rendererParameters['min']}}"
-                        max="{{fieldMetadata.rendererParameters['max']}}"
-                        number-spinner />
+                           class="hidden-phone form-control"
+                           ng-change="onFieldChange(fieldMetadata)"
+                           ng-model="datamap[fieldMetadata.attribute]"
+                           ng-init="initField(fieldMetadata)"
+                           min="{{fieldMetadata.rendererParameters['min']}}"
+                           max="{{fieldMetadata.rendererParameters['max']}}"
+                           number-spinner />
                 </div>
 
 
@@ -332,12 +333,13 @@
                                     <input type="hidden" ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control" />
                                 </div>
                                 <div ng-switch-default>
-                                        <input type="text"
-                                               ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control"
-                                               data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
-                                               maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
-                                               placeholder="{{fieldMetadata.rendererParameters['placeholder']}}"
-                                               ng-init="initField(fieldMetadata)" />
+                                    <input type="text"
+                                           ng-change="onFieldChange(fieldMetadata)"
+                                           ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control"
+                                           data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
+                                           maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
+                                           placeholder="{{fieldMetadata.rendererParameters['placeholder']}}"
+                                           ng-init="initField(fieldMetadata)" />
                                 </div>
                             </div>
                         </div>

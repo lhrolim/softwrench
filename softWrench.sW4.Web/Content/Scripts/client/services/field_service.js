@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('fieldService', function (expressionService) {
+app.factory('fieldService', function ($injector, $log, expressionService) {
 
     var isFieldHidden = function (datamap, application, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);
@@ -223,6 +223,70 @@ app.factory('fieldService', function (expressionService) {
                 return false;
             }
             return !expressionService.evaluate(displayable.showExpression, datamap);
+        },
+
+        onFieldChange: function (fieldMetadata, event) {
+
+            if (fieldMetadata.events == undefined) {
+                event.continue();
+                return;
+            }
+            var beforeChangeEvent = fieldMetadata.events['beforechange'];
+            if (beforeChangeEvent == undefined) {
+                event.continue();
+            } else {
+                var service = $injector.get(beforeChangeEvent.service);
+                if (service == undefined) {
+                    //this should not happen, it indicates a metadata misconfiguration
+                    event.continue();
+                    return;
+                }
+                //now let´s invoke the service
+                var fn = service[beforeChangeEvent.method];
+                if (fn == undefined) {
+                    //this should not happen, it indicates a metadata misconfiguration
+                    event.continue();
+                    return;
+                }
+                var result = fn(event);
+                //sometimes the event might be syncrhonous, returning either true of false
+                if (result != undefined && result == false) {
+                    event.interrupt();
+                } else if (result != undefined && result == true) {
+                    event.continue();
+                }
+            }
+        },
+        postFieldChange: function (field, scope) {
+            if (field.events == undefined) {
+                return;
+            }
+            var afterChangeEvent = field.events['afterchange'];
+            if (afterChangeEvent == undefined) {
+                return;
+            }
+            var service = $injector.get(afterChangeEvent.service);
+            if (service == undefined) {
+                //this should not happen, it indicates a metadata misconfiguration
+                return;
+            }
+            //now let´s invoke the service
+            var fn = service[afterChangeEvent.method];
+            if (fn == undefined) {
+                //this should not happen, it indicates a metadata misconfiguration
+                return;
+            }
+            var fields = scope.datamap;
+            if (scope.datamap.fields != undefined) {
+                fields = scope.datamap.fields;
+            }
+
+            var afterchangeEvent = {
+                fields: fields,
+                scope: scope
+            };
+            $log.getInstance('sw4.fieldservice#postfieldchange').debug('invoking post field change service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));
+            fn(afterchangeEvent);
         }
     };
 

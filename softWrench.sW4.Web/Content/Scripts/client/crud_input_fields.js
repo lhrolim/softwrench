@@ -170,6 +170,7 @@ app.directive('crudInputFields', function (contextService) {
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();
                     $scope.configureAssociationChangeEvents();
+                    $scope.configureFieldChangeEvents();
 
                     $scope.configureDirtyWatcher();
                 }
@@ -432,7 +433,45 @@ app.directive('crudInputFields', function (contextService) {
                 }
             };
 
+            $scope.configureFieldChangeEvents = function () {
+                var fields = fieldService.getDisplayablesOfTypes($scope.displayables, ['ApplicationFieldDefinition']);
+                
+                $.each(fields, function (key, field) {
+                    var shouldDoWatch = true;
+                    $scope.$watch('datamap["' + field.attribute + '"]', function (newValue, oldValue) {
+                        if (oldValue == newValue || !shouldDoWatch) {
+                            return;
+                        }
 
+                        var eventToDispatch = {
+                            oldValue: oldValue,
+                            newValue: newValue,
+                            fields: $scope.datamap,
+                            displayables: $scope.displayables,
+                            scope: $scope,
+                            'continue': function () {
+                                fieldService.postFieldChange(field, $scope);
+                                try {
+                                    $scope.$digest();
+                                } catch (ex) {
+                                    //nothing to do, just checking if digest was already in place or not
+                                }
+                            },
+                            interrupt: function () {
+                                $scope.datamap[association.attribute] = oldValue;
+                                //to avoid infinite recursion here.
+                                shouldDoWatch = false;
+                                cmpfacade.digestAndrefresh(association, $scope);
+                                //turn it on for future changes
+                                shouldDoWatch = true;
+                            }
+                        };
+
+                        fieldService.onFieldChange(field, eventToDispatch);
+                        cmpfacade.digestAndrefresh(field, $scope);
+                    });
+                });
+            };
 
             $scope.configureOptionFields = function () {
                 //TODO: check field parameter as well, with top priority before schema
