@@ -512,20 +512,6 @@ textarea .readonly {
     font-weight: bold !important;
 }
 
-@media screen {
-    .hideRows {
-        display: none;
-    }
-
-    .pagebreak {
-        display: none;
-    }
-
-    .hiddenonscreen {
-        display: none;
-    }
-}
-
 .col-sectionsamelineheader {
     margin-top: -15px !important;
 }
@@ -907,6 +893,10 @@ Header
 @media all and (min-width: 992px) {
     .container .context .group {
         margin: 5px 0 0 20px;
+    }
+
+    .container .context .group:first-child {
+        margin-left: 10px;
     }
 }
 
