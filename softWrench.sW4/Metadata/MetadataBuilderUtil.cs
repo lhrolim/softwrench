@@ -53,7 +53,7 @@ namespace softWrench.sW4.Metadata {
         }
 
         private string HandleGeneric(string query, string tableName, Action<XmlElement, IEnumerable<KeyValuePair<string, object>>> rowDelegate) {
-            var result = _dao.FindByNativeQuery(query, tableName.ToUpper());
+            var result = _dao.FindByNativeQuery(query, true, tableName.ToUpper());
             if (result == null) {
                 return null;
             }

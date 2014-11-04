@@ -1109,10 +1109,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label="Currency:" target="currencycode" labelfield="currency_.description">
             <renderer type="lookup"/>
           </association>
-          <association label="Vendor:" target="vendor" labelfield="companies_.name">
+          <association label="Vendor:" target="vendor" labelfield="companies_.name" extraprojectionvalues="phone">
             <renderer type="lookup" params="application=companies;schemaId=companiesLookupList;"/>
           </association>
-          <!--This could be wrong !! Need to check it later !! -->
           <field attribute="companies_.phone" label="Phone:"/>
         </schema>
 
