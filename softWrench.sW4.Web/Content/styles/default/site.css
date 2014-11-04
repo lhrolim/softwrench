@@ -1161,3 +1161,15 @@ input[type=search] {
     margin-top: 10px;
     margin-bottom: 30px;
 }
+
+.crud_output .field label {
+    text-align: left;
+    word-break: break-all;
+    word-break: break-word;
+}
+
+    .crud_output .field label img {
+        max-width: 100%;
+        height: auto;
+        width: auto;
+    }
