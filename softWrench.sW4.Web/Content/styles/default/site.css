@@ -894,6 +894,10 @@ Header
     .container .context .group {
         margin: 5px 0 0 20px;
     }
+
+    .container .context .group:first-child {
+        margin-left: 10px;
+    }
 }
 
 @media all and (min-width: 1170px) {
