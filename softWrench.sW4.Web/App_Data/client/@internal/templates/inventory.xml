@@ -84,14 +84,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </properties>
           <commandbars>
             <commandgroup position="gridtop">
-              <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap" position=">filter"
+              <command id="bulk_issue" label="Bulk Issue" service="inventoryService" method="createIssue" parameters="schema,datamap" position=">filter"
              successmessage="Issue created"/>
-              <command id="create_return" label="New Return" service="inventoryService" method="createReturn" parameters="schema,datamap"
+              <command id="create_issue" label="New Issue" service="inventoryService" method="createReturn" parameters="schema,datamap"
              successmessage="Return created"/>
               <command id="test" label="Test" service="inventoryService" method="test" parameters="schema,datamap" successmessage="Return created"/>
             </commandgroup>
           </commandbars>
           <field attribute="matusetransid" hidden="true"/>
+          <field attribute="storeloc" hidden="true"/>
+          <field attribute="binnum" hidden="true"/>
           <field attribute="itemnum" label="Item">
             <renderer type="default" params="width=12%;"/>
           </field>
