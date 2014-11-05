@@ -409,6 +409,7 @@
     <Content Include="Content\Controller\RoleGroup.html" />
     <Content Include="Content\font-awesome-4.1.0\css\font-awesome.css" />
     <Content Include="Content\font-awesome-4.1.0\css\font-awesome.min.css" />
+    <Content Include="Content\ie\ie9.css" />
     <Content Include="Content\Images\branding.png" />
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\folder-closed.png" />
