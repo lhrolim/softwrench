@@ -373,6 +373,10 @@ input:focus, select:focus, textarea:focus {
     padding: 2px;
 }
 
+.combobox-container:before, .combobox-container:after {
+    content: none;
+}
+
 .combobox-aux {
     background-image: url('../../Images/icon-combobox.png');
 }
