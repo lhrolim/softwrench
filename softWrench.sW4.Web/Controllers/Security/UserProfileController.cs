@@ -6,7 +6,7 @@ using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.Web.SPF;
+using softWrench.sW4.SPF;
 
 namespace softWrench.sW4.Web.Controllers.Security {
     [Authorize]
@@ -26,7 +26,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
             return new GenericResponseResult<UserProfileListDto>(dto);
         }
 
-        public partial class UserProfileListDto {
+        public class UserProfileListDto {
             private ICollection<UserProfile> _profiles;
             private ICollection<Role> _roles;
 

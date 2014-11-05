@@ -13,6 +13,7 @@ app.directive('crudBody', function (contextService) {
             associationSchemas: '=',
             schema: '=',
             datamap: '=',
+            extraparameters:'=',
             isDirty: '=',
             originalDatamap: '=',
             savefn: '&',

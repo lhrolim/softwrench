@@ -1,11 +1,11 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('expressionService', function ($rootScope,contextService) {
+app.factory('expressionService', function ($rootScope, contextService) {
 
     var preCompiledReplaceRegex = /(?:^|\W)@(\#*)(\w+)(?!\w)/g;
 
     return {
-        isPrecompiledReplaceRegexMatch: function(expression) {
+        isPrecompiledReplaceRegexMatch: function (expression) {
             return expression.match(preCompiledReplaceRegex);
         },
 
@@ -35,7 +35,7 @@ app.factory('expressionService', function ($rootScope,contextService) {
             var collWatch = '[';
             for (var i = 0; i < variables.length; i++) {
                 collWatch += 'datamap.' + variables[i];
-                if (i != variables.length-1) {
+                if (i != variables.length - 1) {
                     collWatch += ",";
                 }
             }
@@ -46,7 +46,7 @@ app.factory('expressionService', function ($rootScope,contextService) {
 
 
         evaluate: function (expression, datamap) {
-            if (expression == "true") {
+            if (expression == undefined || expression == "true") {
                 return true;
             }
             if (expression == "false") {

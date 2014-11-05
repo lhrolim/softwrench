@@ -49,7 +49,9 @@
                                 <button type="button" class="btn btn-primary" ng-click="toConfirmCancel(previousdata,previousschema)">Back</button>
                             </div>-->
                             <div ng-switch-when="input">
-                                <crud-input elementid="crudInputMainComposition"
+                                <crud-input 
+                                            extraparameters="extraparameters"
+                                            elementid="crudInputMainComposition"
                                             schema="schema" datamap="datamap.fields"
                                             original-datamap="originalDatamap.fields"
                                             is-dirty="isDirty"
@@ -63,7 +65,8 @@
 
                             </div>
                             <div ng-switch-when="output">
-                                <crud-output schema="schema" datamap="datamap.fields"
+                                <crud-output extraparameters="extraparameters"
+                                             schema="schema" datamap="datamap.fields"
                                              displayables="schema.displayables"
                                              cancelfn="toListSchema(data,schema)" previousschema="previousschema" previousdata="previousdata" />
                             </div>
@@ -86,7 +89,8 @@
                         </div>
                         <div class="tab-pane" ng-switch-when="ApplicationTabDefinition" ng-switch on="schema.mode">
                             <div ng-switch-when="input">
-                                <crud-input elementid="tab_{{tab.tabid}}"
+                                <crud-input extraparameters="extraparameters"
+                                            elementid="tab_{{tab.tabid}}"
                                             displayables="tab.displayables"
                                             schema="schema" datamap="datamap.fields"
                                             association-options="associationOptions"
@@ -97,7 +101,8 @@
                                             previousschema="previousschema" previousdata="previousdata" />
                             </div>
                             <div ng-switch-when="output">
-                                <crud-output schema="schema" datamap="datamap.fields"
+                                <crud-output extraparameters="extraparameters"
+                                             schema="schema" datamap="datamap.fields"
                                              displayables="tab.displayables"
                                              cancelfn="toListSchema(data,schema)" previousschema="previousschema" previousdata="previousdata" />
                             </div>
@@ -109,7 +114,9 @@
             <div ng-switch-when="false" class="hiddenonprint detail-body">
                 <ng-switch on="schema.mode">
                     <div ng-switch-when="input">
-                        <crud-input elementid="crudInputMain" schema="schema" datamap="datamap.fields"
+                        <crud-input elementid="crudInputMain"
+                                    extraparameters="extraparameters"
+                                    schema="schema" datamap="datamap.fields"
                                     association-options="associationOptions"
                                     blockedassociations="blockedassociations"
                                     association-schemas="associationSchemas"
@@ -119,7 +126,9 @@
                                     previousschema="previousschema" previousdata="previousdata" />
                     </div>
                     <div ng-switch-when="output">
-                        <crud-output schema="schema" datamap="datamap.fields"
+                        <crud-output schema="schema"
+                                     extraparameters="extraparameters"
+                                     datamap="datamap.fields"
                                      displayables="schema.displayables"
                                      cancelfn="toListSchema(data,schema)" previousschema="previousschema" previousdata="previousdata" />
                     </div>

@@ -116,5 +116,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             return new ApplicationFieldDefinition(applicationName, attributeName, "", false, false, true,
                         new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null,null);
         }
+
+        public static ApplicationFieldDefinition DefaultColumnInstance(string applicationName, string attributeName,string label) {
+            return new ApplicationFieldDefinition(applicationName, attributeName, label, false, false, false,
+                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null, null);
+        }
     }
 }
