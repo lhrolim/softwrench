@@ -255,7 +255,9 @@
                            ng-model="datamap[fieldMetadata.attribute]"
                            ng-init="initField(fieldMetadata)"
                            min="{{fieldMetadata.rendererParameters['min']}}"
-                           max="{{setMaxNumericInput(fieldMetadata.rendererParameters['max'], fieldMetadata.rendererParameters['maxExprVar'])}}"
+                           max="{{setMaxNumericInput(fieldMetadata.rendererParameters['max'], 
+                                                     fieldMetadata.rendererParameters['maxExpr'], 
+                                                     fieldMetadata.rendererParameters['maxExprVar'])}}"
                            number-spinner />
                 </div>
 

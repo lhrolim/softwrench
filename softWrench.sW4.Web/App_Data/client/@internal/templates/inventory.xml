@@ -115,7 +115,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="quantity" label="Quantity">
             <renderer type="default" params="width=12%;"/>
           </field>
-          <field attribute="qtyrequested" label="Quantity Returned">
+          <field attribute="qtyreturned" label="Quantity Returned">
             <renderer type="default" params="width=12%;"/>
           </field>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html"></section>
@@ -179,9 +179,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="issuetype" label="Issue Type" readonly="true"/>
           <field attribute="storeloc" label="Storeroom" readonly="true"/>
           <field attribute="quantity" label="Quantity Issued" readonly="true"/>
-          <field attribute="qtyrequested" label="Quantity Returned" readonly="true"/>
+          <field attribute="qtyreturned" label="Quantity Returned" readonly="true"/>
           <field attribute="#quantityadj" label="New Return Quantity" default="1">
-            <renderer type="numericinput" params="min=1;max=({0} + {1});maxExprVar=quantity,qtyrequested;"/>
+            <renderer type="numericinput" params="min=1;maxExpr=({0} + {1});maxExprVar=quantity,qtyreturned;"/>
           </field>
           <commandbars>
             <commandgroup position="detailform">

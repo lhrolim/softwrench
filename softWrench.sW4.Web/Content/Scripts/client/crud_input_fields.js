@@ -530,9 +530,19 @@ app.directive('crudInputFields', function (contextService) {
                 return isIe9();
             };
 
-            $scope.setMaxNumericInput = function(maxRendererExpr, maxRendererExprVar) {
-                var variables = maxRendererExprVar.split(',');
-                var expression = maxRendererExpr;
+            $scope.setMaxNumericInput = function (max, maxExpr, maxExprVar) {
+                //If a max value is defined, use it
+                if (max != null) {
+                    return max;
+                }
+
+                //If either the expression or expression variables are missing, return nothing (i.e. the max is unbounded)
+                if (maxExpr === undefined || maxExprVar === undefined) {
+                    return;
+                }
+
+                var variables = maxExprVar.split(',');
+                var expression = maxExpr;
 
                 for (var i = 0; i < variables.length; i++) {
                     var replaceVar = "{" + i + "}";
@@ -540,7 +550,7 @@ app.directive('crudInputFields', function (contextService) {
                 }
 
                 try {
-                    return Math.abs(eval(maxRendererExpr));
+                    return Math.abs(eval(expression));
                 } catch (e) {
                     if ($rootScope.isLocal) {
                         console.log(e);

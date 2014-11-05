@@ -2,7 +2,7 @@
 
     $scope.hasBeenReturned = function (matusetransitem) {
         var data = matusetransitem['fields'];
-        if ((data['quantity'] + data['qtyrequested']) == 0) {
+        if ((data['quantity'] + data['qtyreturned']) == 0) {
             return true;
         }
 
@@ -11,7 +11,7 @@
 
     $scope.return = function (matusetransitem) {
         var data = matusetransitem['fields'];
-        var returnQty = Math.abs(data['quantity'] + data['qtyrequested']);
+        var returnQty = Math.abs(data['quantity'] + data['qtyreturned']);
         var item = data['itemnum'];
         var storeloc = data['storeloc'];
         var binnum = data['binnum'];
