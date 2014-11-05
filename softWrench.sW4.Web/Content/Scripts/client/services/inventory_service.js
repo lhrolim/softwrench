@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService, restService) {
+app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService, restService, alertService) {
     var createTransaction = function (schema, issueType) {
         var matusetrans = {};
         matusetrans.issueType = issueType;
@@ -219,6 +219,12 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             },
         cancelTransfer: function () {
             redirectService.goToApplication("matrectransTransfers", "list", null, null);
+        },
+        afterChangeTransferQuantity: function (event) {
+            if (event.fields['invuseline_.quantity'] > event.fields['#curbal']) {
+                alertService.alert("The quantity being transfered cannot be greater than the current balance of the from bin.");
+                event.scope.datamap['invuseline_.quantity'] = event.fields['#curbal'];
+            }
         },
     };
 });
