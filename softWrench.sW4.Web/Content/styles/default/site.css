@@ -1171,3 +1171,32 @@ input[type=search] {
         height: auto;
         width: auto;
     }
+
+.adminlogs .textarealog.form-control {
+    height: 368px;
+}
+
+.adminlogs .log-select {
+    padding-top: 20px;
+}
+
+    .adminlogs .log-select label {
+        /*margin-top: 5px;*/
+        display: block;
+    }
+
+    .adminlogs .log-select .options {
+        margin-top: 5px;
+    }
+
+.adminlogs table a {
+    cursor: pointer;
+}
+
+.adminlogs .appender {
+    margin-bottom: 20px;
+}
+
+    .adminlogs .appender .btn {
+        margin-top: 10px;
+    }
