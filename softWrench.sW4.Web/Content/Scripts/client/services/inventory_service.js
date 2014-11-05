@@ -56,6 +56,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
             parameters.fields['gldebitacct'] = gldebitacct;
         },
+        editinvissuedetail: function(datamap, schema) {
+            var param = {};
+            param.id = datamap['matusetransid'];
+            redirectService.goToApplicationView('invissue', 'editinvissuedetail', "input", null, param, null);
+        },
         editinvissuewo: function(schema, datamap) {
             var newDatamap = {};
             newDatamap['#assetnum'] = datamap['assetnum'];

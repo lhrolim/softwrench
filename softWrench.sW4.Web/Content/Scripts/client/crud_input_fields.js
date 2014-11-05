@@ -530,6 +530,28 @@ app.directive('crudInputFields', function (contextService) {
                 return isIe9();
             };
 
+            $scope.setMaxNumericInput = function (maxRendererExpr, maxRendererExprVar) {
+                var variables = maxRendererExprVar.split(',');
+
+                var variableValues = {};
+
+                var expression = maxRendererExpr;
+                
+                for (var i = 0; i < variables.length; i++) {
+                    var replaceVar = "{" + i + "}";
+                    expression = expression.replace(replaceVar,$scope.datamap[variables[i]]);
+                }
+
+                try {
+                    return Math.abs(eval(maxRendererExpr));
+                } catch (e) {
+                    if ($rootScope.isLocal) {
+                        console.log(e);
+                    }
+                    return;
+                }
+            }
+
             $scope.getLabelStyle = function (fieldMetadata) {
                 var rendererColor = styleService.getLabelStyle(fieldMetadata, 'color');
                 var weight = styleService.getLabelStyle(fieldMetadata, 'font-weight');

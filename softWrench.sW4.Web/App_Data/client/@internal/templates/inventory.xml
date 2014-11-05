@@ -80,8 +80,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       <schemas>
         <list id="invissuelist" title="Issues and Returns">
           <properties>
-            <property key="list.click.schema" value="viewinvissuedetail"/>
-            <property key="list.click.mode" value="output"/>
+            <property key="list.click.service" value="inventoryService.editinvissuedetail"/>
           </properties>
           <commandbars>
             <commandgroup position="gridtop">
@@ -111,6 +110,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="issuetype" label="Issue Type">
             <renderer type="default" params="width=12%;"/>
           </field>
+          <field attribute="quantity" label="Quantity">
+            <renderer type="default" params="width=12%;"/>
+          </field>
+          <field attribute="qtyrequested" label="Quantity Returned">
+            <renderer type="default" params="width=12%;"/>
+          </field>
+          <section resourcepath="/Content/Templates/otb/invissuereturnaction.html"></section>
         </list>
 
         <schema id="itemlist" stereotype="compositionlist">
@@ -144,16 +150,37 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
         <schema id="viewinvissuedetail" stereotype="detail" mode="output">
           <field attribute="matusetransid" hidden="true"/>
-          <field attribute="refwo" label="Workorder"/>
-          <field attribute="issueto" label="Issue To"/>
-          <field attribute="assetnum" label="Asset"/>
-          <field attribute="location" label="Location"/>
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="item_.description" label="Description" readonly="true"/>
+          <field attribute="refwo" label="Workorder" readonly="true"/>
+          <field attribute="issueto" label="Issue To" readonly="true"/>
+          <field attribute="assetnum" label="Asset" readonly="true"/>
+          <field attribute="location" label="Location" readonly="true"/>
+          <field attribute="issuetype" label="Issue Type" readonly="true"/>
+          <field attribute="storeloc" label="Storeroom" readonly="true"/>
+          <field attribute="quantity" label="Quantity Returned"/>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
 
-          <field attribute="issuetype" label="Issue Type"/>
-          <field attribute="storeloc" label="Storeroom"/>
-          <field attribute="itemnum" label="Item"/>
-          <field attribute="item_.description" label="Description"/>
-          <field attribute="quantity" label="Quantity"/>
+        <schema id="editinvissuedetail" stereotype="detail" mode="input">
+          <field attribute="matusetransid" hidden="true"/>
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="item_.description" label="Description" readonly="true"/>
+          <field attribute="refwo" label="Workorder" readonly="true"/>
+          <field attribute="issueto" label="Issue To" readonly="true"/>
+          <field attribute="assetnum" label="Asset" readonly="true"/>
+          <field attribute="location" label="Location" readonly="true"/>
+          <field attribute="issuetype" label="Issue Type" readonly="true"/>
+          <field attribute="storeloc" label="Storeroom" readonly="true"/>
+          <field attribute="quantity" label="Quantity Issued" readonly="true"/>
+          <field attribute="qtyrequested" label="Quantity Returned" readonly="true"/>
+          <field attribute="#quantityadj" label="New Return Quantity" default="1">
+            <renderer type="numericinput" params="min=1;max=({0} + {1});maxExprVar=quantity,qtyrequested;"/>
+          </field>
           <commandbars>
             <commandgroup position="detailform">
               <removecommand id="save"/>

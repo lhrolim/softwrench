@@ -251,12 +251,12 @@
 
                 <div ng-switch-when="numericinput">
                     <input id="spinner"
-                        class="hidden-phone form-control"
-                        ng-model="datamap[fieldMetadata.attribute]"
-                        ng-init="initField(fieldMetadata)"
-                        min="{{fieldMetadata.rendererParameters['min']}}"
-                        max="{{fieldMetadata.rendererParameters['max']}}"
-                        number-spinner />
+                           class="hidden-phone form-control"
+                           ng-model="datamap[fieldMetadata.attribute]"
+                           ng-init="initField(fieldMetadata)"
+                           min="{{fieldMetadata.rendererParameters['min']}}"
+                           max="{{setMaxNumericInput(fieldMetadata.rendererParameters['max'], fieldMetadata.rendererParameters['maxExprVar'])}}"
+                           number-spinner />
                 </div>
 
 
