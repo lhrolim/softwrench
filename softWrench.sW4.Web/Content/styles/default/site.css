@@ -1,4 +1,4 @@
-﻿body {
+body {
     font-family: "Arial";
     overflow-y: scroll;
     -webkit-transition: all 0.5s;
@@ -104,11 +104,6 @@ input:focus, select:focus, textarea:focus {
         width: 975px;
         z-index: 100;
     }
-
-.printModal {
-    width: 330px;
-    outline: none;
-}
 
 .conditionModal {
     position: absolute;
@@ -512,72 +507,6 @@ textarea .readonly {
     font-weight: bold !important;
 }
 
-@media screen {
-    .hideRows {
-        display: none;
-    }
-
-    .pagebreak {
-        display: none;
-    }
-
-    .hiddenonscreen {
-        display: none;
-    }
-}
-
-@media print {
-    .hiddenonprint {
-        display: none !important;
-    }
-
-    #listgrid {
-        /*margin-left: -120px; SWWEB-244: Had to comment for the margin to show correctly and print the total grid */
-        display: block;
-    }
-
-    .listgrid-firefox {
-        width: 700px !important;
-    }
-
-    .pagebreak-before {
-        display: block;
-        page-break-before: always;
-    }
-
-    .pagebreak-after {
-        display: block;
-        page-break-after: always;
-    }
-
-    .container {
-        margin-top: 0px !important;
-    }
-
-        .container .content {
-            margin-top: 0px !important;
-        }
-
-    html, body {
-        /*height: 25%;*/
-        margin-top: 0px !important;
-        overflow: visible !important;
-        float: none !important;
-        position: relative;
-    }
-
-    .form-control {
-        border: none;
-    }
-
-    .no-records {
-        width: 100%;
-        text-align: center;
-        padding-top: 20px;
-        padding-bottom: 40px;
-    }
-}
-
 .col-sectionsamelineheader {
     margin-top: -15px !important;
 }
@@ -960,6 +889,10 @@ Header
     .container .context .group {
         margin: 5px 0 0 20px;
     }
+
+    .container .context .group:first-child {
+        margin-left: 10px;
+    }
 }
 
 @media all and (min-width: 1170px) {
@@ -1213,3 +1146,15 @@ input[type=search] {
     margin-top: 10px;
     margin-bottom: 30px;
 }
+
+.crud_output .field label {
+    text-align: left;
+    word-break: break-all;
+    word-break: break-word;
+}
+
+    .crud_output .field label img {
+        max-width: 100%;
+        height: auto;
+        width: auto;
+    }

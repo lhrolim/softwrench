@@ -80,11 +80,11 @@ app.directive('lookupModal', function (contextService) {
                     for (var field in searchValues) {
                         searchOperators[field] = defaultLookupSearchOperator;
                     }
+                    parameters.hasClientSearch = true;
                     parameters.SearchDTO = searchService.buildSearchDTO(searchValues, {}, searchOperators);
                     parameters.SearchDTO.pageNumber = pageNumber;
                     parameters.SearchDTO.totalCount = totalCount;
                     parameters.SearchDTO.pageSize = pageSize;
-
                 } else {
                     parameters.valueSearchString = lookupObj.code == null ? "" : lookupObj.code;
                     parameters.labelSearchString = lookupObj.description == null ? "" : lookupObj.description;
@@ -163,6 +163,11 @@ app.directive('lookupModal', function (contextService) {
                 }
 
             });
+
+            $scope.hideLookupModal = function () {
+                var modals = $('[data-class="lookupModal"]');
+                modals.modal('hide')
+            }
 
             $element.on('shown.bs.modal', function (e) {
                 $scope.searchObj = {};

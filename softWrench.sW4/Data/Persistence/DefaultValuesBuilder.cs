@@ -52,13 +52,25 @@ namespace softWrench.sW4.Data.Persistence {
             return schemaDefaultValues;
         }
 
+        //TODO: Modify to have a flag that will determine whether the existingDataMap attribute should be overwritten if attribute already exist in initialValues
+        public static DataMap AddMissingInitialValues(DataMap existingDataMap, DataMap initialValues)
+        {
+            foreach (var attribute in initialValues.Attributes)
+            {
+                var key = attribute.Key;
+                if (!existingDataMap.ContainsAttribute(key)) {
+                    existingDataMap.Attributes.Add(key, attribute.Value);
+                }
+            }
+            return existingDataMap;
+        }
+
         private static DataMap MergeWithPrefilledValues(DataMap schemaDefaultValues, Entity initialValues) {
             foreach (var attribute in initialValues.Attributes) {
-                var key = attribute.Key;
-                if (schemaDefaultValues.ContainsAttribute(key)) {
-                    schemaDefaultValues.Attributes.Remove(key);
-                }
-                schemaDefaultValues.Attributes.Add(key, attribute.Value);
+                schemaDefaultValues.SetAttribute(attribute.Key, attribute.Value);
+            }
+            foreach (var attribute in initialValues.UnmappedAttributes) {
+                schemaDefaultValues.SetAttribute(attribute.Key, attribute.Value);
             }
             return schemaDefaultValues;
         }

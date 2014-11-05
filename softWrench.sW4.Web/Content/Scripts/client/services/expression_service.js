@@ -5,6 +5,10 @@ app.factory('expressionService', function ($rootScope,contextService) {
     var preCompiledReplaceRegex = /(?:^|\W)@(\#*)(\w+)(?!\w)/g;
 
     return {
+        isPrecompiledReplaceRegexMatch: function(expression) {
+            return expression.match(preCompiledReplaceRegex);
+        },
+
         getExpression: function (expression, datamap) {
             if (datamap.fields != undefined) {
                 expression = expression.replace(/\@/g, 'datamap.fields.');

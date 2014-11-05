@@ -1,33 +1,10 @@
-﻿.col-lg-5 {
-    float: left !important;
-    text-align: right !important;
+﻿.page-signin .form-signin img.logo {
+    max-width: 100%;
+    margin-bottom: 60px;
 }
 
-.col-lg-3 {
-    float: left !important;
-}
-
-.col-lg-offset-5 {
-    margin-left: 336px !important;
-}
-
-.index-form-row {
-    margin-left: 100px;
-    padding-top: 60px;
-    padding-bottom: 8px;
-}
-
-.index-background-img {
-    margin-top: 40px;
-    background-image: url('../../Images/gric/login-gric-gilariver.jpg');
-    height: 93px;
-}
-
-.loginBttn {
-    margin-left: 5px;
-    margin-top: 22px;
-}
-
-.col-lg-offset-4 {
-    margin-left: 23.333333% !important;
+@media all and (min-width: 480px) {
+    .page-signin .form-signin img.logo {
+        max-width: 80%;
+    }
 }

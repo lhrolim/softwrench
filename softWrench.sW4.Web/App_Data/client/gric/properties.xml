@@ -17,23 +17,23 @@
 
 
   <environment key="dev">
-    <property key="basewsURL" value="http://66.235.236.5/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=192.168.1.226;Initial Catalog=DEMO2MAX;User Id=MAXIMO;password=MAXIMO;" />
-    <property key="swdb_url" value="Data Source=192.168.1.226;Initial Catalog=SWDB;User Id=sw;password=softwrench;" />
+    <property key="basewsURL" value="http://10.50.100.125/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.125;Initial Catalog=SWMAX;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX;User Id=sw;password=softwrench;" />
   </environment>
 
   <environment key="qa">
-    <property key="basewsURL" value="http://192.168.2.107/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=192.168.2.21;Initial Catalog=GRC75MAX;User Id=MAXIMO;password=MAXIMO;" />
-    <property key="swdb_url" value="Data Source=192.168.2.21;Initial Catalog=SWDB;User Id=sw;password=sw@dm1n;" />
-    <property key="ldapServer" value="192.168.2.11"/>
+    <property key="basewsURL" value="http://10.50.100.126/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.50;Initial Catalog=GRC75MAX;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="swdb_url" value="Data Source=10.50.100.50;Initial Catalog=swdb_grc75max;User Id=sw;password=softwrench;" />
+   <!-- <property key="ldapServer" value="192.168.2.11"/>
     <property key="ldapPortNumber" value="389"/>
-    <property key="ldapBaseDn" value="ou=GROUPS,ou=MAXIMO,dc=sas,dc=local"/>
+    <property key="ldapBaseDn" value="ou=GROUPS,ou=MAXIMO,dc=sas,dc=local"/>-->
     <property key="mifcredentials.user" value="maxadmin"/>
     <property key="mifcredentials.password" value="M@xadm1n"/>
   </environment>
 
-  <environment key="prod">
+  <!--<environment key="prod">
     <property key="maximo_DB_provider" value="System.Data.SQL"/>
     <property key="defaultOrgId" value="GRGE"/>
     <property key="defaultSiteId" value=""/>
@@ -46,7 +46,7 @@
     <property key="ldapBaseDn" value="DC=GRC,DC=LOCAL"/>
     <property key="mifcredentials.user" value="mxintadm"/>
     <property key="mifcredentials.password" value="M@x1mo23"/>
-  </environment>
+  </environment>-->
 
 </Properties>
  

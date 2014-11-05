@@ -51,7 +51,7 @@ namespace softWrench.sW4.Data.Entities {
                 if (operationType == OperationType.Add && Equals(metadata.Schema.IdAttribute, attribute)) {
                     return;
                 }
-                if (attribute != null) {
+                if (attribute != null && !attributes.ContainsKey(property.Name)) {
                     attributes.Add(property.Name, GetValueFromJson(GetType(metadata, attribute), property.Value));
                 } else if (property.Value.Type == JTokenType.Array) {
                     var array = property.Value.ToObject<Object[]>();

@@ -13,6 +13,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <template path="@servicerequest.xml"/>
     <template path="@workorder.xml"/>
     <template path="@incident.xml"/>
+    <template path="@inventory.xml"/>
   </templates>
 
   <!--otb-->
@@ -41,7 +42,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </attributes>
     </entity>
 
-
     <entity name="failurecode" idAttribute="failurecodeid">
       <attributes>
         <attribute name="failurecodeid" type="int"  required="true" />
@@ -68,7 +68,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </attributes>
     </entity>
 
-   
     <entity name="invbalances" idAttribute="invbalancesid">
       <attributes>
         <attribute name="ib1" type="varchar" required="false" />
@@ -138,6 +137,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </entity>
 
     <entity name="workorder" idAttribute="wonum" whereclause="woclass like 'WORKORDER'">
+      <relationships>
+        <relationship to="invissue" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
@@ -145,7 +150,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </entity>
 
     <entity name="incident" idAttribute="ticketid">
-   
       <connectorParameters>
         <connectorParameter key="dbtable" value="incident" />
         <connectorParameter key="integration_interface" value="SWINCIDENT" />
@@ -218,7 +222,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </relationships>
     </entity>
 
-
     <entity name="pr" idAttribute="prnum">
       <relationships>
         <relationship to="companies">
@@ -268,8 +271,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </relationships>
     </entity>
 
-  
-
     <entity name="inboundcomm" idAttribute="inboundcommid">
       <relationships>
         <relationship to="commlog" collection="true">
@@ -278,13 +279,100 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </relationships>
     </entity>
 
-  
+    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN')">
+      <connectorParameters>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="matrectransTransfers" parententity="matrectrans" idAttribute="matrectransid" whereclause="issuetype='TRANSFER'">
+      
+    </entity>
+
+    <entity name="invuse" idAttribute="invuseid" whereclause="invuse.usetype='TRANSFER'">
+      <relationships>
+        <relationship to="invuseline">
+          <relationshipAttribute from="invusenum" to="invusenum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="fromstoreloc" to="fromstoreloc"/>
+          <relationshipAttribute from="usetype" to="usetype"/>
+        </relationship>
+        <relationship to="invcost">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="fromstoreloc" to="location"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="inventory">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location" primary="true"/>
+        </relationship>
+        <relationship to="location" qualifier="fromlocation">
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="setid"/>
+        </relationship>
+        <relationship to="invbalances" qualifier="frominvbalance">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.frombin" to="binnum" primary="true"/>
+        </relationship>
+        <relationship to="location" qualifier="tolocation">
+          <relationshipAttribute from="invuseline_.tostoreloc" to="location" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="setid"/>
+        </relationship>
+        <relationship to="invbalances" qualifier="toinvbalance">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="invuseline_.tostoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.tobin" to="binnum" primary="true"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWINVUSE"/>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInvuseCrudConnector"/>
+      </connectorParameters>
+    </entity>
+
+    <entity name="po" idAttribute="ponum">
+      <relationships>
+        <relationship to="synonymdomain" qualifier="postatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="POSTATUS" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="synonymdomain" qualifier="potype">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="POTYPE" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="currency" qualifier="currency" collection="true">
+          <relationshipAttribute from="currencycode" to="currencycode" primary="true"/>
+        </relationship>
+        <relationship to="companies" qualifier="companies" collection="true">
+          <relationshipAttribute from="vendor" to="company" primary="true"/>
+          <relationshipAttribute to="type" literal="V" quoteLiteral="true"/>
+        </relationship>
+        <relationship to ="poline" qualifier="poline" collection ="true">
+          <relationshipAttribute from="ponum" to="ponum" primary="true"/>
+          <relationshipAttribute from="siteid" to ="siteid"/>
+          <relationshipAttribute from ="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+    <entity name="poline" idAttribute="polinenum">
+      <relationships>
+        <relationship to ="item">
+          <relationshipAttribute from ="itemnum" to="itemnum" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
   </entities>
 
   <applications>
-
-    
-
     <!--    ToString="asset + @description"-->
     <application name="asset" title="Asset" entity="asset" id="00000000-0000-0000-0000-000000000001" >
       <properties>
@@ -378,10 +466,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </detail>
       </schemas>
     </application>
-
-  
-
-  
 
     <application entity="wochange" name="change" title="Change">
       <schemas>
@@ -575,9 +659,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </schemas>
     </application>
 
-
-   
-
     <application name="invbalances" title="Inventory" entity="invbalances">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
@@ -637,7 +718,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </schemas>
     </application>
 
-
     <application name="commodities" title="Commodities" entity="commodities" >
       <schemas>
         <detail>
@@ -647,8 +727,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </detail>
       </schemas>
     </application>
-
-  
 
     <application entity="pr" name ="pr" title="Purchase Requests">
       <schemas>
@@ -857,7 +935,262 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </schemas>
     </application>
 
+    <application entity="matrectransTransfers" name="matrectransTransfers" title="Inventory Transfers">
+      <schemas>
+        <list>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="width=16%"/>
+          </field>
+          <field attribute="fromstoreloc" label="From Storeroom">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="frombin" label="From Bin">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute="tostoreloc" label="To Storeroom">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="tobin" label="To Bin">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute="quantity" label="Quantity">
+            <renderer type="default" params="width=10%"/>
+          </field>
+          <field attribute="actualdate" label="Transfer Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=18%"/>
+          </field>
+          <properties>
+            <property key="list.click.schema" value="detail"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService" 
+                       method="createTransfer" parameters="schema" position=">filter"/>
+            </commandgroup>
+          </commandbars>
+        </list>
 
+        <schema id="detail" title="Inventory Transfer">
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="fromstoreloc" label="From Storeroom" readonly="true"/>
+          <field attribute="frombin" label="From Bin" readonly="true"/>
+          <field attribute="tostoreloc" label="To Storeroom" readonly="true"/>
+          <field attribute="tobin" label="To Bin" readonly="true"/>
+          <field attribute="quantity" label="Quantity" readonly="true"/>
+          <field attribute="actualdate" label="Transfer Date" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+        </schema>
+      </schemas>
+    </application>
+    
+    <application entity="invuse" name="invuse" title="Inventory Transfer">
+      <schemas>
+        <!-- Temporary list schema untill new detail save redirects to the correct applications list schema-->
+        <list>
+          <field attribute="invuseline_.itemnum" label="Item">
+            <renderer type="default" params="width=16%"/>
+          </field>
+          <field attribute="invuseline_.fromstoreloc" label="From Storeroom">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="invuseline_.frombin" label="From Bin">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute="invuseline_.tostoreloc" label="To Storeroom">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="invuseline_.tobin" label="To Bin">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute="invuseline_.quantity" label="Quantity">
+            <renderer type="default" params="width=10%"/>
+          </field>
+          <field attribute="invuseline_.actualdate" label="Transfer Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=18%"/>
+          </field>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService" 
+                       method="createTransfer" parameters="schema" position=">filter"/>
+            </commandgroup>
+          </commandbars>
+        </list>
+        
+        <schema id="newdetail" stereotype="detail" mode="input">
+          <field attribute="usetype" hidden="true"/>
+          <field attribute="invuseline_.itemnum" label="Item"/>
+          <association target="fromstoreloc" label="From Storeroom" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,siteid,itemsetid,location" required="true">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="inventoryService" method="afterChangeLocation"/>
+          </association>
+          <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true" required="true">
+            <event type="afterchange" service="inventoryService" method="getBinQuantity"/>
+            <renderer type="lookup"/>
+          </association>
+          <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" required="true">
+            <dataprovider prefilterfunction="FilterLocation"/>
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="invuseline_.tobin" label="To Bin" required="true"/>
+          <field attribute="invuseline_.quantity" label="Quantity" required="true">
+            <renderer type="numericinput" params="min=1;"/>
+          </field>
+          <field attribute="invuseline_.unitcost" label="Unit Cost" hidden="true"/>
+          <field attribute="inventory_.costtype" label="Cost Type" hidden="true"/>
+          <field attribute="#curbal" label="Current Balance" hidden="true"/>
+          <commandbars>
+            <commandgroup position="detailform" removeundeclared="false">
+              <removecommand id="print"/>
+              <removecommand id="cancel"/>
+              <!--<command id="saveTransfer" icon="fa fa-save" label="Submit" service="inventoryService" method="submitTransfer" position="left" parameters="schema,datamap"/>-->
+              <command id="cancelTransfer" icon="fa fa-backward" label="Cancel" service="inventoryService" method="cancelTransfer"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
 
+    <application entity="invcost" name="invcost" title="invcost">
+      <schemas>
+        <schema id="list" title="Invcost List" stereotype="list">
+          <field attribute="itemnum" label="Item"/>
+          <field attribute="location" label="location"/>
+          <field attribute="avgcost" label="Average Cost"/>
+          <field attribute="stdcost" label="Standard Cost"/>
+        </schema>
+      </schemas>
+    </application>
+
+    <application entity="po" name="po" title="Puchase Orders">
+      <properties>
+        <property key ="mobile.disabled" value="true"/>
+      </properties>
+      <schemas>
+        <list title="Purchase Order Grid">
+          <field attribute ="ponum" label="PO">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute ="description" label="Description">
+            <renderer type="default" params="excelwidth=50"/>
+          </field>
+          <field attribute ="status" label="Status">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute ="siteid" label="Site">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute ="potype" label="Type">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute ="priority" label="Priority">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute ="requireddate" label="Required Date">
+            <renderer type="datetime" params="width=12%;format=MM/dd/yyyy HH:mm;showtime=false"/>
+          </field>
+          <field attribute ="totalcost" label="Total Cost">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+          </properties>
+        </list>
+
+        <schema id ="adetail" title="PO Details" abstract="true" stereotype="detail">
+          <section id="siteidsection"/>
+          <field attribute="ponum" label="PO #:" readonly="true"/>
+          <field attribute="description" label="Description:">
+            <renderer type="richtext"/>
+          </field>
+          <field attribute="siteid" hidden="true" />
+          <section id ="statussection"/>
+          <association label="Type:" target="type" labelfield="potype_.description">
+            <renderer type="lookup"/>
+          </association>         
+          <field attribute="priority" label="Priority:">
+            <renderer type="default" params="placeholder=Please enter a value from 0-9"/>
+          </field>
+          <field attribute="orderdate" label="Date:" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+          <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
+          <section id="requireddate" resourcepath="/Content/Templates/samelinepickers.html"
+                         parameters="joinattribute=requireddate;">
+            <header label="Required Date:" displacement="sameline"/>
+          </section>
+          <association label="Currency:" target="currencycode" labelfield="currency_.description">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Vendor:" target="vendor" labelfield="companies_.name" extraprojectionvalues="phone">
+            <renderer type="lookup" params="application=companies;schemaId=companiesLookupList;"/>
+          </association>
+          <field attribute="companies_.phone" label="Phone:"/>
+          <section id="compositions"/>
+        </schema>
+
+        <schema id="editdetail" parentschema="adetail" title="Purchase Order Detail">
+          <section id="siteidsection">
+            <field attribute="ponum" label="PO #:" readonly="true" required="true"/>
+            <field label="Site:" attribute="siteid" readonly="true"/>
+          </section>
+          <section id="statussection">
+            <association label="Status:" target="status" labelfield="postatus.description" required="true">
+              <renderer type="combo" />
+            </association>
+          </section>
+          <section id="compositions">
+            <composition relationship="poline" label="PO Lines" ></composition>
+          </section>
+        </schema>
+      </schemas>
+    </application>
+
+    <application name="companies" entity="companies" title="Companies" id="00000000-0000-0000-0000-000000000017">
+      <properties>
+        <property key="mobile.fetchlimit" value="30"/>
+        <property key="mobile.userInteractionEnabled" value="false"/>
+      </properties>
+      <schemas>
+        <schema id="companiesLookupList" stereotype="list">
+          <field attribute="company" label="Company"/>
+          <field attribute="name" label="Name">
+            <renderer type="default" params="minwidth=300px" />
+          </field>
+          <field attribute="type" label="Type"/>
+          <field attribute="orgid"  label="Organization"/>
+         </schema>
+        </schemas>
+    </application>
+
+    <application name="poline" entity="poline" title="PO Lines">
+      <properties>
+        <!--will need to change the icon later-->
+        <property key ="icon.composition.tab" value="fa fa-tags"/>
+      </properties>
+      <schemas>
+        <schema id="list" stereotype="compositionlist">
+          <field attribute="ponum" label="PO No" readonly="true"/>
+          <field attribute="polinenum" label="Line No" />
+          <field attribute="itemnum" label="Item"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="orderqty" label="Quantity"/>
+          <field attribute="unitcost" label="Unit Cost"/>
+          <field label="Entered Date &amp; Time" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+        </schema>
+
+        <detail stereotype="compositiondetail">
+          <field attribute="linetype" label="Line Type"/>
+          <association label="Item:" target="itemnum" labelfield="item_.description" enableexpression="@linetype=='item'">
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="receivedqty" label="Received Qty:"/>
+          
+        </detail>
+        
+      </schemas>
+    </application>
   </applications>
 </metadata>

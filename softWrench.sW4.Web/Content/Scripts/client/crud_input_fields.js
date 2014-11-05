@@ -103,7 +103,7 @@ app.directive('crudInputFields', function (contextService) {
         controller: function ($scope, $http, $element, $injector, $timeout,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
-            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService) {
+            cmpfacade,cmpComboDropdown, redirectService,validationService, contextService, eventdispatcherService) {
 
             $scope.$name = 'crud_input_fields';
 
@@ -415,18 +415,6 @@ app.directive('crudInputFields', function (contextService) {
                 });
             };
 
-            $scope.bindEvalExpression = function (fieldMetadata) {
-                if (fieldMetadata.evalExpression == null) {
-                    return;
-                }
-                var variables = expressionService.getVariablesForWatch(fieldMetadata.evalExpression);
-                $scope.$watchCollection(variables, function (newVal, oldVal) {
-                    if (newVal != oldVal) {
-                        $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
-                    }
-                });
-            }
-
             $scope.configureNumericInput = function () {
                 for (i in $scope.schema.displayables) {
                     var fieldMetadata = $scope.schema.displayables[i];
@@ -660,6 +648,34 @@ app.directive('crudInputFields', function (contextService) {
             }
 
             init();
+
+            function evalExpression(fieldMetadata) {
+                //If applying mathematical operations from two or more metadata fields
+                if (expressionService.isPrecompiledReplaceRegexMatch(fieldMetadata.evalExpression)) {
+                    return bindEvalExpression(fieldMetadata);
+                } else {
+                    //Evaluates a single field
+                    $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
+                }
+                return null;
+            }
+
+            function bindEvalExpression(fieldMetadata) {
+                var variables = expressionService.getVariablesForWatch(fieldMetadata.evalExpression);
+                $scope.$watchCollection(variables, function (newVal, oldVal) {
+                    if (newVal != oldVal) {
+                        $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
+                    }
+                });
+                return variables;
+            }
+
+            $scope.initField = function (fieldMetadata) {
+                if (fieldMetadata.evalExpression != null) {
+                    return evalExpression(fieldMetadata);
+                }
+                return null;
+            };
         }
     }
 });
@@ -675,6 +691,7 @@ app.directive('numberSpinner', function () {
                 min: attr.min,
                 max: attr.max
             });
+            console.log(attr);
         }
     }
 });

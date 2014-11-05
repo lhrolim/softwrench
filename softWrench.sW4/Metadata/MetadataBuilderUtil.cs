@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -11,7 +11,7 @@ namespace softWrench.sW4.Metadata {
     public class MetadataBuilderUtil {
         public const string DB2Query = "SELECT colname as name,typename as type,nulls FROM SYSCAT.COLUMNS where TABNAME  = ?";
         public const string MSSQLQuery = "select COLUMN_NAME as name ,DATA_TYPE as type,IS_NULLABLE from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME= ?";
-        private MaximoHibernateDAO _dao = new MaximoHibernateDAO();
+        private readonly MaximoHibernateDAO _dao = new MaximoHibernateDAO();
 
         public string GenerateEntityMetadata(string tableName) {
             const ApplicationConfiguration.DBType dbType = ApplicationConfiguration.DBType.Maximo;

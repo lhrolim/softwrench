@@ -108,7 +108,7 @@ app.directive('compositionList', function (contextService) {
         controller: function ($scope, $log, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
             expressionService, $timeout, modalService, redirectService, eventdispatcherService, iconService) {
-
+            
 
             function init() {
                 //Extra variables
@@ -129,16 +129,29 @@ app.directive('compositionList', function (contextService) {
                 $scope.wasExpandedBefore = false;
                 $scope.isReadonly = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
 
+                
                 $injector.invoke(BaseController, this, {
                     $scope: $scope,
                     i18NService: i18NService,
                     fieldService: fieldService,
                     commandService: commandService
                 });
+
+                var parameters = {};
+                parameters.clonedCompositionData = $scope.clonedCompositionData;
+                eventdispatcherService.onload($scope.parentschema, $scope.parentdata, parameters);
+
             };
 
             init();
-
+          
+            $scope.isRowHidden = function (compositionlistschema, collectionproperties, compositionitem) {
+                if (collectionproperties.hideExistingData == true) {
+                    var idFieldName = compositionlistschema.idFieldName;
+                    return compositionitem[idFieldName] != null;
+                }
+                return false;
+            }
 
             $scope.compositionProvider = function () {
                 var localCommands = {};
@@ -211,8 +224,8 @@ app.directive('compositionList', function (contextService) {
                 } else {
                     //TODO: switch to edit
                     $scope.newDetail = true;
+                    $scope.selecteditem = datamap;
                 }
-                $scope.selecteditem = datamap;
                 $scope.collapseAll();
             }
 
@@ -285,7 +298,6 @@ app.directive('compositionList', function (contextService) {
                 $scope.selecteditem = null;
                 //                $scope.isReadonly = true;
             };
-
 
 
             $scope.allowButton = function (value) {
