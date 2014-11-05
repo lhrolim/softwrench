@@ -429,6 +429,24 @@ textarea .readonly {
     width: 100%;
 }
 
+.richtext .btn-toolbar .btn-group {
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+.richtext .btn-toolbar > .btn + .btn, .richtext .btn-toolbar > .btn-group + .btn, .richtext .btn-toolbar > .btn + .btn-group, .richtext .btn-toolbar > .btn-group + .btn-group {
+    margin-left: 0;
+}
+
+.richtext .ta-editor {
+    max-width: 859px; /*add max-width to stop richtext from moving off the screen horizontally*/
+}
+
+    .richtext .ta-editor p {
+        word-break: break-all;
+        word-break: break-word;
+    }
+
 .filter-row .grid-filter-button {
     font-weight: bold;
 }
@@ -1082,15 +1100,6 @@ Header
         cursor: pointer;
     }
 /*SM - 09/02 - ADD - Fix file upload button*/
-
-.richtext .ta-editor {
-    max-width: 859px; /*add max-width to stop richtext from moving off the screen horizontally*/
-}
-
-    .richtext .ta-editor p {
-        word-break: break-all;
-        word-break: break-word;
-    }
 
 /*SM - 09/26 - Fix label control hight with multiple lines*/
 label.form-control {
