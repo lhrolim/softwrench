@@ -1,0 +1,5 @@
+﻿.menu-grid > ul > li > a.selected,
+.menu-grid .btn-default.selected,
+.menu-grid .open .dropdown-toggle.btn-default.selected {
+    color: #000;
+}

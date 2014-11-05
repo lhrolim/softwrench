@@ -53,6 +53,10 @@ namespace softWrench.sW4.Web {
 
             bundles.Add(new StyleBundle("~/Content/themes/base/fonts").Include(
                 "~/Content/fonts/font.css"));
+
+            bundles.Add(new StyleBundle("~/Content/themes/base/ie9").Include(
+                "~/Content/ie/ie9.css"
+                ));
         }
 
         private static void AddScripts(BundleCollection bundles) {
