@@ -35,6 +35,9 @@ app.factory('eventdispatcherService', function ($injector, $log) {
                 return;
             }
             fn(parameters);
+        },
+        loadService: function (schema, eventName) {
+            return loadService(schema, eventName);
         }
     }
 

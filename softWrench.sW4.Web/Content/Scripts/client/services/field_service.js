@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('fieldService', function ($injector, $log, expressionService) {
+app.factory('fieldService', function ($injector, $log, expressionService, eventdispatcherService) {
 
     var isFieldHidden = function (datamap, application, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);
@@ -226,28 +226,22 @@ app.factory('fieldService', function ($injector, $log, expressionService) {
         },
 
         onFieldChange: function (fieldMetadata, event) {
-
+            var eventType = "beforechange";
             if (fieldMetadata.events == undefined) {
                 event.continue();
                 return;
             }
-            var beforeChangeEvent = fieldMetadata.events['beforechange'];
+            var beforeChangeEvent = fieldMetadata.events[eventType];
             if (beforeChangeEvent == undefined) {
                 event.continue();
             } else {
-                var service = $injector.get(beforeChangeEvent.service);
-                if (service == undefined) {
+                var fn = eventdispatcherService.loadService(fieldMetadata, eventType)
+                if (fn == null) {
                     //this should not happen, it indicates a metadata misconfiguration
                     event.continue();
                     return;
                 }
-                //now let´s invoke the service
-                var fn = service[beforeChangeEvent.method];
-                if (fn == undefined) {
-                    //this should not happen, it indicates a metadata misconfiguration
-                    event.continue();
-                    return;
-                }
+                $log.getInstance('sw4.fieldservice#onFieldChange').warn('invoking before field change service {0} method {1}'.format(beforeChangeEventservice, beforeChangeEvent.method));
                 var result = fn(event);
                 //sometimes the event might be syncrhonous, returning either true of false
                 if (result != undefined && result == false) {
@@ -258,21 +252,10 @@ app.factory('fieldService', function ($injector, $log, expressionService) {
             }
         },
         postFieldChange: function (field, scope) {
-            if (field.events == undefined) {
-                return;
-            }
-            var afterChangeEvent = field.events['afterchange'];
-            if (afterChangeEvent == undefined) {
-                return;
-            }
-            var service = $injector.get(afterChangeEvent.service);
-            if (service == undefined) {
-                //this should not happen, it indicates a metadata misconfiguration
-                return;
-            }
-            //now let´s invoke the service
-            var fn = service[afterChangeEvent.method];
-            if (fn == undefined) {
+            var eventType = "afterchange";
+            var afterChangeEvent = field.events[eventType];
+            var fn = eventdispatcherService.loadService(field, eventType)
+            if (fn == null) {
                 //this should not happen, it indicates a metadata misconfiguration
                 return;
             }
@@ -285,7 +268,7 @@ app.factory('fieldService', function ($injector, $log, expressionService) {
                 fields: fields,
                 scope: scope
             };
-            $log.getInstance('sw4.fieldservice#postfieldchange').debug('invoking post field change service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));
+            $log.getInstance('sw4.fieldservice#postfieldchange').warn('invoking post field change service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));
             fn(afterchangeEvent);
         }
     };

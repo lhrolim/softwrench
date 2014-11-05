@@ -24,7 +24,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
         public SearchRequestDto BinFilterByLocation(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
-            var location = (string)parameters.OriginalEntity.GetAttribute("fromstoreloc");
+            var location = parameters.OriginalEntity.GetAttribute("fromstoreloc") as string;
             if (location != null) {
                 filter.AppendSearchEntry("invbalances.location", location.ToUpper());
             }
