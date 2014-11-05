@@ -227,28 +227,19 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventd
 
         onFieldChange: function (fieldMetadata, event) {
             var eventType = "beforechange";
-            if (fieldMetadata.events == undefined) {
+            var beforeChangeEvent = fieldMetadata.events[eventType];
+            var fn = eventdispatcherService.loadService(fieldMetadata, eventType)
+            if (fn == null) {
                 event.continue();
                 return;
             }
-            var beforeChangeEvent = fieldMetadata.events[eventType];
-            if (beforeChangeEvent == undefined) {
+            $log.getInstance('sw4.fieldservice#onFieldChange').debug('invoking before field change service {0} method {1}'.format(beforeChangeEventservice, beforeChangeEvent.method));
+            var result = fn(event);
+            //sometimes the event might be syncrhonous, returning either true of false
+            if (result != undefined && result == false) {
+                event.interrupt();
+            } else if (result != undefined && result == true) {
                 event.continue();
-            } else {
-                var fn = eventdispatcherService.loadService(fieldMetadata, eventType)
-                if (fn == null) {
-                    //this should not happen, it indicates a metadata misconfiguration
-                    event.continue();
-                    return;
-                }
-                $log.getInstance('sw4.fieldservice#onFieldChange').warn('invoking before field change service {0} method {1}'.format(beforeChangeEventservice, beforeChangeEvent.method));
-                var result = fn(event);
-                //sometimes the event might be syncrhonous, returning either true of false
-                if (result != undefined && result == false) {
-                    event.interrupt();
-                } else if (result != undefined && result == true) {
-                    event.continue();
-                }
             }
         },
         postFieldChange: function (field, scope) {
@@ -256,7 +247,6 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventd
             var afterChangeEvent = field.events[eventType];
             var fn = eventdispatcherService.loadService(field, eventType)
             if (fn == null) {
-                //this should not happen, it indicates a metadata misconfiguration
                 return;
             }
             var fields = scope.datamap;
@@ -268,7 +258,7 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventd
                 fields: fields,
                 scope: scope
             };
-            $log.getInstance('sw4.fieldservice#postfieldchange').warn('invoking post field change service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));
+            $log.getInstance('sw4.fieldservice#postfieldchange').debug('invoking post field change service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));
             fn(afterchangeEvent);
         }
     };

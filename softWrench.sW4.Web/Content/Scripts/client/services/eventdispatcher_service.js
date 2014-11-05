@@ -5,6 +5,9 @@ var app = angular.module('sw_layout');
 app.factory('eventdispatcherService', function ($injector, $log) {
     var loadService = function (schema, eventName) {
         var log = $log.getInstance('eventdispatcherService#loadService');
+        if (schema.events === undefined) {
+            return null;
+        }
         var event = schema.events[eventName];
         if (!event) {
             return null;
