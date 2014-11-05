@@ -306,6 +306,34 @@ app.directive('crudInputFields', function (contextService) {
                 return result;
             };
 
+            $scope.setMaxNumericInput = function (max, maxExpr, maxExprVar) {
+                //If a max value is defined, use it
+                if (max != null) {
+                    return max;
+                }
+
+                //If either the expression or expression variables are missing, return nothing (i.e. the max is unbounded)
+                if (maxExpr === undefined || maxExprVar === undefined) {
+                    return;
+                }
+
+                var variables = maxExprVar.split(',');
+                var expression = maxExpr;
+
+                for (var i = 0; i < variables.length; i++) {
+                    var replaceVar = "{" + i + "}";
+                    expression = expression.replace(replaceVar, $scope.datamap[variables[i]]);
+                }
+
+                try {
+                    return Math.abs(eval(expression));
+                } catch (e) {
+                    if ($rootScope.isLocal) {
+                        console.log(e);
+                    }
+                }
+            };
+
 
             /* CHECKBOX functions */
 
