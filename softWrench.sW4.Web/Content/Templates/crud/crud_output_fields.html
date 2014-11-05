@@ -13,12 +13,15 @@
                 <div ng-switch-when="ApplicationCompositionDefinition">
                     <inline-composition-list-wrapper compositionschemadefinition="fieldMetadata.schema"
                                              compositiondata="datamap[fieldMetadata.relationship]"
-                                             iscollection="fieldMetadata.collection" />
+                                                     iscollection="fieldMetadata.collection"
+                                                     mode="output"
+                                                      />
                 </div>
                 <div ng-switch-when="ApplicationSection">
                     <div ng-if="fieldMetadata.resourcepath != null" ng-include="contextPath(fieldMetadata.resourcepath)" href="#" style="width: 100%" />
                     <div ng-if="fieldMetadata.resourcepath == null">
-                        <section-element-output schema="schema"
+                        <section-element-output extraparameters="extraparameters"
+                                                schema="schema"
                                                 datamap="datamap"
                                                 displayables="fieldMetadata.displayables"
                                                 orientation="{{fieldMetadata.orientation}}"

@@ -63,7 +63,14 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.controller {
 
         }
 
-
+        [SPFRedirect(URL = "BatchReport")]
+        public IGenericResponseResult ViewReport(Int32 batchId) {
+            var batchReport = _dao.FindSingleByQuery<BatchReport>(BatchReport.ByBatchId, batchId);
+            if (batchReport == null) {
+                throw BatchException.BatchReportNotFound(batchId);
+            }
+            return new GenericResponseResult<BatchReport>(batchReport);
+        }
 
     }
 }

@@ -14,7 +14,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
     /// </summary>
     public class RedirectUrlFilter : ActionFilterAttribute {
 
-        private const string ConventionPattern = "/Content/Controller/{0}.html";
+
 
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext) {
             base.OnActionExecuted(actionExecutedContext);
@@ -43,7 +43,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
             if (value.RedirectURL == null) {
                 value.RedirectURL = url;
             }
-            if (value.CrudSubTemplate == null && redirectAttribute != null && redirectAttribute.CrudSubTemplate!=null) {
+            if (value.CrudSubTemplate == null && redirectAttribute != null && redirectAttribute.CrudSubTemplate != null) {
                 if (!redirectAttribute.CrudSubTemplate.StartsWith("/Content")) {
                     redirectAttribute.CrudSubTemplate = "/Content" + redirectAttribute.CrudSubTemplate;
                 }
@@ -66,9 +66,16 @@ namespace softWrench.sW4.Web.SPF.Filters {
 
         public static string FindRedirectURL(String controllerName, SPFRedirectAttribute redirectAttribute) {
             if (redirectAttribute != null && redirectAttribute.URL != null) {
-                return redirectAttribute.Avoid ? null : String.Format(ConventionPattern, redirectAttribute.URL);
+                if (redirectAttribute.Avoid) {
+                    return null;
+                }
+                if (redirectAttribute.URL.EndsWith(".html")) {
+                    //this is not required, here just to make the API more robust
+                    redirectAttribute.URL = redirectAttribute.URL.Replace(".html", "");
+                }
+                return String.Format(SPFRedirectAttribute.ConventionPattern, redirectAttribute.URL);
             }
-            return String.Format(ConventionPattern, WebAPIUtil.RemoveControllerSufix(controllerName));
+            return String.Format(SPFRedirectAttribute.ConventionPattern, WebAPIUtil.RemoveControllerSufix(controllerName));
         }
 
         private static SPFRedirectAttribute LookupAttribute(HttpActionContext actionContext) {

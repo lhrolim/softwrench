@@ -1,9 +1,5 @@
 <span ng-controller="BatchesController">
-    <div class="btn-group" ng-if="command.parameters['showbutton']!='false'">
-        <button type="button" class="btn btn-default btn-sm hidden-xs" ng-click="manageBatches()" rel="tooltip" data-original-title="Manage workorder batches" data-container="body">
-            <i class="fa fa-wrench"></i>&ensp;{{selectedfilter.alias}}
-        </button>
-    </div>
+    {{scope.mode}}
     
     
     <!--to be shown as a modal only-->
@@ -25,8 +21,10 @@
         <div class="form-group">
             <div class="col-md-12">
                 <textarea id="feedbackcommentname" rows="4"
-                          class="form-control"
-                          maxlength="1000">#feedbackcomment</textarea>
+                          class="form-control" ng-enabled="schema.mode!='output'"
+                          maxlength="1000">
+                    #feedbackcomment
+                </textarea>
             </div>
         </div>
     </div>
@@ -35,8 +33,9 @@
             <label class='control-label col-md-3'>Summary</label>
             <div class="col-md-9">
                 <input type="text" id='summary'
-                        class="form-control"
-                        maxlength="100" value="#lognotesummary">
+                       class="form-control"
+                       ng-enabled="schema.mode!='output'"
+                       maxlength="100" value="#lognotesummary">
             </div>
         </div>
 
@@ -44,9 +43,13 @@
 
             <label class='control-label col-md-3'>Details</label>
             <div class="col-md-9">
+                
                 <textarea id='details' rows='4'
                           class="form-control"
-                          maxlength="2000">#lognotedetails</textarea>
+                          ng-enabled="schema.mode!='output'"
+                          maxlength="2000">
+                    #lognotedetails
+                </textarea>
             </div>
 
         </div>

@@ -6,6 +6,7 @@
         scope: {
             schema: '=',
             displayables: '=',
+            extraparameters: '=',
             datamap: '=',
             cancelfn: '&',
             previousschema: '=',

@@ -55,6 +55,7 @@ app.directive('sectionElementInput', function ($compile) {
             associationOptions: '=',
             associationSchemas: '=',
             blockedassociations: '=',
+            extraparameters: '=',
             elementid: '@',
             orientation: '@',
             islabelless: '@'
@@ -90,6 +91,7 @@ app.directive('crudInputFields', function (contextService) {
         scope: {
             schema: '=',
             datamap: '=',
+            extraparameters: '=',
             isDirty: '=',
             displayables: '=',
             associationOptions: '=',

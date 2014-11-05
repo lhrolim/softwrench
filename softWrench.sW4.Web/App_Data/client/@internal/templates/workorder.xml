@@ -131,7 +131,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </schema>
 
 
-        <schema id="editbatch" title="Work Order Grid" platform="web" stereotype="list">
+        <schema id="editbatch" title="Work Order Grid" platform="web" stereotype="list" mode="input">
 
           <commandbars>
             <commandgroup position="gridtop" removeundeclared="true">
@@ -181,6 +181,92 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </properties>
         </schema>
 
+        <schema id="editbatch" title="Work Order Grid" platform="web" stereotype="compositionlist" mode="output">
+
+          <commandbars>
+            <commandgroup position="compositiontop" removeundeclared="true">
+              <resourcecommand id="batches" path="/Content/Templates/commands/batches/batches.html" role="allowwobatches" parameters="showbutton=false"/>
+            </commandgroup>
+          </commandbars>
+
+          <field attribute="workorderid" label="Work Order #" >
+            <renderer type="default" params="filterenabled=false; width=10%" />
+          </field>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="limit=14;"  />
+          </field>
+          <field attribute="wonum" label="UNID">
+            <renderer type="default" params="width=8%"  />
+          </field>
+          <field attribute="#ReconCd" label="Reconciliation Codes" required="true">
+            <renderer type="default" params="width=8%"  />
+          </field>
+          <field attribute="actfinish" label="Actual Finish" default="@now" required="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy;width=15%"/>
+          </field>
+          <field attribute="#pmchange" label="PM Change" default="N">
+            <renderer type="default" params="width=8%"  />
+          </field>
+          <field attribute="#fdbckcomment" label="Feedback Comment">
+            <renderer type="default" params="limit=14;width=12%"  />
+          </field>
+          <field attribute="#lognote" label="Log Note">
+            <renderer type="default" params="width=12%"/>
+          </field>
+         
+
+          <properties>
+            <property key="list.click.service" value="wobatchService.clickeditbatch"/>
+            <property key="list.disablepagination" value="true"/>
+            <property key="list.disablefilter" value="true"/>
+            <property key="list.disabledetails" value="true"/>
+            <property key="list.sortmode" value="none"/>
+          </properties>
+        </schema>
+
+        <schema id="faileditbatch" mode="output">
+          <commandbars>
+            <commandgroup position="compositiontop" removeundeclared="true">
+              <resourcecommand id="batches" path="/Content/Templates/commands/batches/batches.html" role="allowwobatches" parameters="showbutton=false"/>
+            </commandgroup>
+          </commandbars>
+
+          <field attribute="workorderid" label="Work Order #" >
+            <renderer type="default" params="filterenabled=false; width=10%" />
+          </field>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="limit=14;"  />
+          </field>
+          <field attribute="wonum" label="UNID">
+            <renderer type="default" params="width=8%"  />
+          </field>
+          <field attribute="#ReconCd" label="Reconciliation Codes" required="true">
+            <renderer type="default" params="width=8%"  />
+          </field>
+          <field attribute="actfinish" label="Actual Finish" default="@now" required="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy;width=15%"/>
+          </field>
+          <field attribute="#pmchange" label="PM Change" default="N">
+            <renderer type="default" params="width=8%"  />
+          </field>
+          <field attribute="#fdbckcomment" label="Feedback Comment">
+            <renderer type="default" params="limit=14;width=12%"  />
+          </field>
+          <field attribute="#lognote" label="Log Note">
+            <renderer type="default" params="width=12%"/>
+          </field>
+          <field attribute="#errormessage" label="Error Message" showexpression="@#errormessage!=null">
+            <renderer type="default" params="width=12%"/>
+          </field>
+
+          <properties>
+            <property key="list.click.service" value="wobatchService.clickeditbatch"/>
+            <property key="list.disablepagination" value="true"/>
+            <property key="list.disablefilter" value="true"/>
+            <property key="list.disabledetails" value="true"/>
+            <property key="list.sortmode" value="none"/>
+          </properties>
+        </schema>
 
         <schema id="adetail" title="Work Order Detail" abstract="true" stereotype="detail" platform="web">
           <field attribute="estdur"            hidden="true"/>

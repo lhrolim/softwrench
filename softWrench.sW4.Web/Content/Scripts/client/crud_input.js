@@ -7,6 +7,7 @@
             schema: '=',
             displayables: '=',
             datamap: '=',
+            extraparameters:'=',
             associationOptions: '=',
             associationSchemas: '=',
             blockedassociations: '=',

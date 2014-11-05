@@ -557,7 +557,6 @@
     <Compile Include="SimpleInjector\WebApi\IAPIControllerFactory.cs" />
     <Compile Include="SimpleInjector\WebApi\SimpleInjectorWebAPIUtil.cs" />
     <Compile Include="SPF\Filters\RedirectUrlFilter.cs" />
-    <Compile Include="SPF\SPFRedirectAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Client\%40internal\source\maximo7.1.xml">
@@ -837,6 +836,7 @@
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <Content Include="Content\styles\tva\signin.css" />
     <Content Include="Content\styles\tva\site.css" />
+    <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\commands\batches\batches.html" />
     <Content Include="Content\Templates\commands\batches\batchesmenu.js" />
     <Content Include="Content\Templates\commands\grid\gridfilter.html" />

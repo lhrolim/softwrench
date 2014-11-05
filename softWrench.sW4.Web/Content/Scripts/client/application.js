@@ -242,6 +242,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
 
         // resultObject can be null only when SW is pointing to a Maximo DB different from Maximo WS DB
         scope.datamap = instantiateIfUndefined(result.resultObject);
+        scope.extraparameters = instantiateIfUndefined(result.extraParameters);
 
         scope.mode = result.mode;
         if (scope.schema != null) {
