@@ -37,7 +37,7 @@ namespace softWrench.sW4.Util {
             return strings.Any(toCompare => str.StartsWith(toCompare, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public static int NumberOfItems(this string str, string toSearch) {
+        public static int GetNumberOfItems(this string str, string toSearch) {
             return new Regex(Regex.Escape(toSearch)).Matches(str).Count;
         }
     }

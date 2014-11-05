@@ -71,7 +71,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var ctx = ContextLookuper.LookupContext();
             foreach (var collectionAssociation in collectionAssociations) {
                 var association = collectionAssociation;
-                tasks[i++] = Task.Factory.StartNew(() => FetchAsync(association, compositionSchemas, entitiesList, ctx));
+                tasks[i++] = Task.Factory.NewThread(() => FetchAsync(association, compositionSchemas, entitiesList, ctx));
             }
             Task.WaitAll(tasks);
             _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections",

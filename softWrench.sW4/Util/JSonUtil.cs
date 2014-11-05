@@ -6,9 +6,18 @@ using System.Linq;
 using System.Text;
 
 namespace softWrench.sW4.Util {
-    class JSonUtil {
+    public static class JSonUtil {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(JSonUtil));
+
+        public static String StringValue(this JObject ob, string propertyName) {
+            var prop = ob.Property(propertyName);
+            if (prop == null || prop.Value == null) {
+                return null;
+            }
+            return prop.Value.ToString();
+        }
+
 
         public static JObject BuildJSon(string filePath) {
             string line;

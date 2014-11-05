@@ -13,11 +13,11 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder {
 
-    class WorkorderBatchSchemaDataSet : MaximoApplicationDataSet {
+    class WoBatchSchemaDataSet : MaximoApplicationDataSet {
 
         private readonly SWDBHibernateDAO _swdbdao;
 
-        public WorkorderBatchSchemaDataSet(SWDBHibernateDAO swdbdao) {
+        public WoBatchSchemaDataSet(SWDBHibernateDAO swdbdao) {
             _swdbdao = swdbdao;
         }
 
@@ -45,7 +45,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
         }
 
         public IEnumerable<IAssociationOption> GetCrews(OptionFieldProviderParameters parameters) {
-            var rows = MaxDAO.FindByNativeQuery(WorkOrderBatchWhereClauseProvider.GetCrewIdQuery(true));
+            var rows = MaxDAO.FindByNativeQuery(WoBatchWhereClauseProvider.GetCrewIdQuery(true));
             if (rows == null || !rows.Any()) {
                 return new List<IAssociationOption>();
             }

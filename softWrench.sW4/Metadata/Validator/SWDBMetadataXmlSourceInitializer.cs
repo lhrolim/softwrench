@@ -34,7 +34,7 @@ namespace softWrench.sW4.Metadata.Validator {
         }
 
         private EntitySchema GetEntitySchema(string entityName, Type type) {
-            return new EntitySchema(entityName, ConvertAttributes(entityName, type), "id", true, true, null, null,type, false);
+            return new EntitySchema(entityName, ConvertAttributes(entityName, type), "id", true, true, null, null, type, false);
         }
 
         private static IEnumerable<EntityAttribute> ConvertAttributes(string entityName, Type type) {
@@ -46,8 +46,8 @@ namespace softWrench.sW4.Metadata.Validator {
                 var isId = memberInfo.ReadAttribute<IdAttribute>() != null;
                 var isColumn = memberInfo.ReadAttribute<PropertyAttribute>() != null;
                 var attribute = memberInfo.Name.ToLower();
-                if (!memberInfo.GetMethod.ReturnType.IsPrimitive 
-                    && memberInfo.PropertyType != typeof(string) 
+                if (!memberInfo.GetMethod.ReturnType.IsPrimitive
+                    && memberInfo.PropertyType != typeof(string)
                     && memberInfo.PropertyType != typeof(DateTime)
                     && memberInfo.PropertyType != typeof(DateTime?)
                     && memberInfo.PropertyType != typeof(Int32)
@@ -56,6 +56,7 @@ namespace softWrench.sW4.Metadata.Validator {
                     && memberInfo.PropertyType != typeof(long?)
                     && memberInfo.PropertyType != typeof(int)
                     && memberInfo.PropertyType != typeof(long)
+                    && !memberInfo.PropertyType.IsEnum
                     ) {
                     //TODO: components embeddables
                     //avoid adding relationships

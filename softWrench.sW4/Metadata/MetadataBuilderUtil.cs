@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -57,6 +57,9 @@ namespace softWrench.sW4.Metadata {
             if (result == null) {
                 return null;
             }
+//            var rows = result.Cast<IEnumerable<KeyValuePair<string, object>>>();
+//            rows = rows as IList<IEnumerable<KeyValuePair<string, object>>> ?? rows.ToList();
+//            var enumerable = rows as IEnumerable<KeyValuePair<string, object>>[] ?? rows.ToArray();
             if (!result.Any()) {
                 return null;
             }

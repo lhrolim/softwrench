@@ -85,6 +85,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
             if (ApplicationConfiguration.IgnoreWsCertErrors) {
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             }
+            if (Log.IsDebugEnabled) {
+                Log.Debug("sending content to mif :\n " + SerializeIntegrationObject());
+            } else if (ApplicationConfiguration.IsLocal() && Log.IsInfoEnabled) {
+                Log.Info("sending content to mif :\n " + SerializeIntegrationObject());
+            }
 
             var parameterList = MifUtils.GetParameterList(RootInterfaceObject);
             var types = new Type[parameterList.Length];

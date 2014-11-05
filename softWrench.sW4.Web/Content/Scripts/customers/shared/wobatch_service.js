@@ -2,6 +2,20 @@
 
 app.factory('wobatchService', function (redirectService, $rootScope, restService, alertService, validationService) {
 
+    function doSubmit(hasAtLeastOne, datamap) {
+        var batchId = datamap[0].fields["#batchId"];
+        var batchAlias = datamap[0].fields["#batchalias"];
+        var parameters = {
+            batchId: batchId
+        }
+        var json = {};
+        json.datamap = datamap;
+        restService.invokePost('Batch', 'submit', parameters, json, function (data) {
+            alertService.success("Batch {0} successfully {1}.".format(batchAlias, hasAtLeastOne ? "submitted" : "deleted"), true);
+            redirectService.goToApplication("_wobatch", "list");
+        });
+    };
+
     function doSave(ids) {
         if (ids.length == 0) {
             alertService.alert("Please select at least one element");
@@ -87,10 +101,19 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
 
         edit: function (datamap, column) {
             var batchId = datamap['id'];
+
+            var status = datamap['status'];
+            if (status.equalIc("submitting")) {
+                alertService.alert("The batch is currently being submitted. When this is done a report will be generated");
+                return;
+            }
+
             var searchDTO = {
                 searchParams: "id",
                 searchValues: batchId
             }
+
+
             redirectService.goToApplication("workorder", "editbatch", { searchDTO: searchDTO }, null);
         },
 
@@ -179,9 +202,8 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
                     message = message.replace('details', 'details2');
 
                     //set the initial value
-                    var worklogs = datamap['worklog_'];
-                    if (worklogs != null && worklogs.length > 0) {
-                        var worklog = worklogs[0]; // supports only 1 worklog entry
+                    var worklog = datamap['worklog_'];
+                    if (worklog != null) {
                         message = message.replace('#lognotesummary', nullOrEmpty(worklog['description']) ? '' : worklog['description']);
                         message = message.replace('#lognotedetails', nullOrEmpty(worklog['longdescription_.ldtext']) ? '' : worklog['longdescription_.ldtext']);
                     } else {
@@ -196,13 +218,13 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
                             worklog['longdescription_.ldtext'] = $('#details2').val();
                             var hasData = worklog['description'] != "" || worklog['longdescription_.ldtext'] != "";
                             if (!hasData) {
-                                return;
+                                datamap['#lognote'] = 'N';
+                                datamap['worklog_'] = null;
+                            } else {
+                                datamap['worklog_'] = worklog;
+                                datamap['#lognote'] = 'Y';
                             }
-                            datamap['worklog_'] = [];
-                            datamap['worklog_'].push(worklog);
-
-
-                            datamap['#lognote'] = 'Y';
+                            
                             $rootScope.$digest();
                         }
                     };
@@ -252,9 +274,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
             var batchId = datamap[0].fields["#batchId"];
             var batchAlias = datamap[0].fields["#batchalias"];
             var parameters = {
-                application: "workorder",
-                schema: "list",
-                batchId: batchId,
+                batchId: batchId
             }
             var json = {};
             json.datamap = datamap;
@@ -263,6 +283,21 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
             });
             //            });
         },
+
+        submitBatch: function (datamap) {
+            var hasAtLeastOne = false;
+            $.each(datamap, function (key, item) {
+                if (item.fields["#closed"]) {
+                    hasAtLeastOne = true;
+                }
+            });
+            if (!hasAtLeastOne) {
+                alertService.confirmMsg("This batch has no closed entries.It will be deleted upon submission. Proceeed?", function () {
+                    doSubmit(false, datamap);
+                });
+            }
+            doSubmit(true, datamap);
+        }
 
 
 
