@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('fieldService', function (expressionService) {
+app.factory('fieldService', function ($injector, $log, expressionService, eventdispatcherService) {
 
     var isFieldHidden = function (datamap, application, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);
@@ -223,6 +223,43 @@ app.factory('fieldService', function (expressionService) {
                 return false;
             }
             return !expressionService.evaluate(displayable.showExpression, datamap);
+        },
+
+        onFieldChange: function (fieldMetadata, event) {
+            var eventType = "beforechange";
+            var beforeChangeEvent = fieldMetadata.events[eventType];
+            var fn = eventdispatcherService.loadService(fieldMetadata, eventType)
+            if (fn == null) {
+                event.continue();
+                return;
+            }
+            $log.getInstance('sw4.fieldservice#onFieldChange').debug('invoking before field change service {0} method {1}'.format(beforeChangeEventservice, beforeChangeEvent.method));
+            var result = fn(event);
+            //sometimes the event might be syncrhonous, returning either true of false
+            if (result != undefined && result == false) {
+                event.interrupt();
+            } else if (result != undefined && result == true) {
+                event.continue();
+            }
+        },
+        postFieldChange: function (field, scope) {
+            var eventType = "afterchange";
+            var afterChangeEvent = field.events[eventType];
+            var fn = eventdispatcherService.loadService(field, eventType)
+            if (fn == null) {
+                return;
+            }
+            var fields = scope.datamap;
+            if (scope.datamap.fields != undefined) {
+                fields = scope.datamap.fields;
+            }
+
+            var afterchangeEvent = {
+                fields: fields,
+                scope: scope
+            };
+            $log.getInstance('sw4.fieldservice#postfieldchange').debug('invoking post field change service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));
+            fn(afterchangeEvent);
         }
     };
 

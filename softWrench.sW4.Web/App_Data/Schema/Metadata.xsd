@@ -221,7 +221,7 @@
           <element name="reference" minOccurs="0" maxOccurs="unbounded"
 						type="tns:referenceComplexType">
           </element>
-          <element name="event" type="tns:Event" minOccurs="0"
+          <element name="event" type="tns:schemaEvent" minOccurs="0"
             maxOccurs="unbounded">
           </element>   
         </choice>
@@ -278,7 +278,7 @@
           <attribute name="time" type="boolean"></attribute>
         </complexType>
       </element>
-      <element name="event" type="tns:Event" minOccurs="0"
+      <element name="event" type="tns:inputEvent" minOccurs="0"
 				maxOccurs="unbounded"></element>
     </choice>
 
@@ -350,7 +350,7 @@
       <element name="filter" type="tns:Filter" maxOccurs="1"
         minOccurs="0">
       </element>
-      <element name="event" type="tns:Event" minOccurs="0"
+      <element name="event" type="tns:inputEvent" minOccurs="0"
 				maxOccurs="unbounded">
       </element>
     </choice>
@@ -439,7 +439,7 @@
             <attribute name="orderbyfield" type="string" use="optional"/>
           </complexType>
         </element>
-        <element name="event" type="tns:Event" minOccurs="0"
+        <element name="event" type="tns:schemaEvent" minOccurs="0"
           maxOccurs="unbounded">
         </element>
       </choice>
@@ -493,7 +493,7 @@
       <element name="option" type="tns:OptionType" maxOccurs="unbounded"
 				minOccurs="0">
       </element>
-      <element name="event" type="tns:Event" minOccurs="0"
+      <element name="event" type="tns:inputEvent" minOccurs="0"
 				maxOccurs="unbounded">
       </element>
     </sequence>
@@ -811,19 +811,48 @@
     </attribute>
   </complexType>
 
-  <complexType name="Event">
-    <attribute name="type" use="required">
-      <simpleType>
-        <restriction base="string">
-          <enumeration value="afterchange"></enumeration>
-          <enumeration value="beforechange"></enumeration>
-          <enumeration value="onviewdetail"></enumeration>
-          <enumeration value="onload"></enumeration>
-        </restriction>
-      </simpleType>
-    </attribute>
+  <complexType name="baseEvent">
+    <annotation>
+      <documentation>
+        The base event uses a service and mathod attribute 
+        to define the service.method to call. Extensions of 
+        this event type should be used to define type 
+        attributes containing enumerations of the applicable 
+        event types.
+      </documentation>
+    </annotation>
     <attribute name="service" type="string" use="required"></attribute>
     <attribute name="method" type="string" use="required"></attribute>
+  </complexType>
+
+  <complexType name="inputEvent">
+    <complexContent mixed="false">
+      <extension base="tns:baseEvent">
+        <attribute name="type" use="required">
+          <simpleType>
+            <restriction base="string">
+              <enumeration value="afterchange"></enumeration>
+              <enumeration value="beforechange"></enumeration>
+            </restriction>
+          </simpleType>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="schemaEvent">
+    <complexContent mixed="false">
+      <extension base="tns:baseEvent">
+        <attribute name="type" use="required">
+          <simpleType>
+            <restriction base="string">
+              <enumeration value="onviewdetail"></enumeration>
+              <enumeration value="onload"></enumeration>
+            </restriction>
+          </simpleType>
+        </attribute>
+      </extension>
+    </complexContent>
   </complexType>
 
   <complexType name="queriesType">

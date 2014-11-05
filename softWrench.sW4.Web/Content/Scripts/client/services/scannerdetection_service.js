@@ -87,6 +87,12 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
             });
 
         },
+        initInvuseTransferListener: function (schema, datamap) {
+            $(document).scannerDetection(function (data) {
+                datamap['invuseline_.itemnum'] = data;
+                $rootScope.$digest();
+            });
+        },
         
     };
 

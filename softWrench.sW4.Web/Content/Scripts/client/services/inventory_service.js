@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService) {
+app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService, restService, alertService) {
     var createTransaction = function (schema, issueType) {
         var matusetrans = {};
         matusetrans.issueType = issueType;
@@ -128,7 +128,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 }
             });
         },
-	createTransfer: function(schema) {
+	    createTransfer: function(schema) {
             if (schema === undefined) {
                 return;
             }
@@ -194,13 +194,37 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
         submitTransfer: function (schema, datamap) {
             // Save transfer
-            
-            // Redirect to the matrectrans grid
-            redirectService.goToApplicationView("matrectransTransfers", "list", null, null, null, null);
-        },
-        cancelTransfer: function () {
-            redirectService.goToApplicationView("matrectransTransfers", "list", null, null, null, null);
-        }
+            var user = contextService.getUserData();
 
+            var jsonString = angular.toJson(datamap);
+            var httpParameters = {
+                application: "invuse",
+                platform: "web",
+                currentSchemaKey: "newdetail.input.web"
+            };
+            restService.invokePost("data", "post", httpParameters, jsonString, function () {
+                var restParameters = {
+                    key: {
+                        schemaId: "list",
+                        mode: "none",
+                        platform: "web"
+                    },
+                    SearchDTO: null
+                }
+                var urlToUse = url("/api/Data/matrectransTransfers?" + $.param(restParameters));
+                $http.get(urlToUse).success(function (data) {
+                    redirectService.goToApplication("matrectransTransfers", "list", null, data);
+                });
+            });
+            },
+        cancelTransfer: function () {
+            redirectService.goToApplication("matrectransTransfers", "list", null, null);
+        },
+        afterChangeTransferQuantity: function (event) {
+            if (event.fields['invuseline_.quantity'] > event.fields['#curbal']) {
+                alertService.alert("The quantity being transferred cannot be greater than the current balance of the From Bin.");
+                event.scope.datamap['invuseline_.quantity'] = event.fields['#curbal'];
+            }
+        },
     };
 });
