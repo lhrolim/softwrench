@@ -20,7 +20,14 @@ $(function () {
             $('.content').css('margin-top', headerHeight + messageHeight);
             $('messagesection .alerts').css('margin-top', 0 - messageHeight);
             $('.affix-pagination').css('top', headerHeight + messageHeight);
-            $('.listgrid-thead').css('top', headerHeight + messageHeight + paginationHeight);
+
+            //move fixed listgrid header up in IE9
+            var adjustment = 0;
+            if (isIe9()) {
+                adjustment = 135;
+            }
+
+            $('.listgrid-thead').css('top', headerHeight + messageHeight + paginationHeight - adjustment);
             $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight - 1);
         }
         //reset the lcoation of the content, context menu, grid header and filter bar
