@@ -4,9 +4,9 @@
 
   <entity name="workorder">
     <attributes>
-      <attribute name="#ReconCd" targetpath="" type="varchar"/>
-      <attribute name="#pmchange" targetpath="" type="varchar"/>
-      <attribute name="#fdbckcomment" targetpath="" type="varchar"/>
+      <attribute name="#ReconCd" targetpath="RECONCD" type="varchar"/>
+      <attribute name="#pmchange" targetpath="PMCHANGE" type="varchar"/>
+      <attribute name="#fdbckcomment" targetpath="FEEDBACKCOMMENT" type="varchar"/>
     </attributes>    
   </entity>
   

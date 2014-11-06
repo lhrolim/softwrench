@@ -33,7 +33,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                     if (i != splitted.Count() - 1) {
                         objectToUse = ReflectionUtil.InstantiateAndSetIfNull(objectToUse, propertyName);
                     } else {
-                        ReflectionUtil.SetProperty(objectToUse, propertyName, attributeValue);
+                        if (ApplicationConfiguration.IsMif() || ApplicationConfiguration.IsMea()) {
+                            WsUtil.SetValue(objectToUse, propertyName, attributeValue);
+                        } else {
+
+                            ReflectionUtil.SetProperty(objectToUse, propertyName, attributeValue);
+                        }
                     }
                 }
             }
