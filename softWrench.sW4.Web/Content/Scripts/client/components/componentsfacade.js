@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, cmpAutocompleteClient, cmpAutocompleteServer, screenshotService, fieldService) {
+app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmpAutocompleteClient, cmpAutocompleteServer, screenshotService, fieldService) {
 
     return {
 
@@ -40,7 +40,7 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
 
         digestAndrefresh: function (displayable, scope) {
             var rendererType = displayable.rendererType;
-            if (rendererType != 'autocompleteclient' && rendererType != 'autocompleteserver' && rendererType != 'combodropdown' && rendererType != 'lookup') {
+            if (rendererType != 'autocompleteclient' && rendererType != 'autocompleteserver' && rendererType != 'combodropdown') {
                 return;
             }
             try {
@@ -74,8 +74,6 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
                 cmpAutocompleteServer.refreshFromAttribute(displayable, scope);
             } else if (rendererType == 'combodropdown') {
                 cmpComboDropdown.refreshFromAttribute(attribute);
-            }else if (rendererType == 'lookup') {
-                cmplookup.refreshFromAttribute(displayable, scope);
             }
         },
 
