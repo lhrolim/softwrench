@@ -133,15 +133,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!--field attribute="owner" label="Owner" readonly="true" hidden="true"/-->
 
           <section id="statussection"/>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname"  enableexpression="@ownergroup==null">
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname"  >
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
+          <!--association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeownergroup"/>
-          </association>
+          </association-->
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" >
             <renderer type="lookup" params="columnlabel=Name"/>
@@ -444,10 +444,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <event type="afterchange" service="srService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
+          <!--association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeownergroup"/>
-          </association>
+          </association-->
           <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
           <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
