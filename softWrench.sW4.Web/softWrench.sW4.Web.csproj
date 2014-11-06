@@ -548,6 +548,7 @@
     <Content Include="Content\Scripts\client\components\autocompleteserver.js" />
     <Content Include="Content\Scripts\client\components\autocompleteclient.js" />
     <Content Include="Content\Scripts\client\components\combodropdown.js" />
+    <Content Include="Content\Scripts\client\components\lookupcomponent.js" />
     <Content Include="Content\Scripts\client\components\richtext.js" />
     <Content Include="Content\Scripts\client\crud_body_modal.js" />
     <Content Include="Content\Scripts\client\directives\gridtoolBar.js" />
