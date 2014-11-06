@@ -1170,7 +1170,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </list>
         <schema id="detail" mode="output" title="Receipts Detail">
           <field attribute="description" hidden="true"/>
-          <composition relationship="poline" inline="true" label="PO Lines"/>
+          <composition relationship="poline" inline="true" label="PO Lines">
+            <collectionproperties allowupdate="true"/>
+          </composition>
         </schema>
       </schemas>
     </application>
@@ -1207,10 +1209,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="receivedqty" label="Received Qty:"/>
           <association label="PO Line:" target="polinenum" labelfield="matrectrans_.polinenum" extraprojectionvalues="qtyrequested,qtyreturned,curbal" >
             <renderer type="lookup"/>
-            <event type="afterchange" service="inventoryService" method="setmatrectransdata"/>
           </association>
           <field attribute="matrectrans_.curbal" label="Test:">
-            <renderer type="richtext"/>
+            <renderer type="default"/>
           </field>
         </detail>
         
