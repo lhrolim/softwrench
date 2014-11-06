@@ -246,23 +246,21 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <application name="physicalcount" entity="physicalCount" title="Physical Count">
       <schemas>
         <list title="Physical Count">
+          <field attribute="invbalancesid" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="width=16%"/>
+            <renderer type="default" params="width=18%"/>
           </field>
           <field attribute="inventory_.siteid" label="Site">
-            <renderer type="default" params="width=16%"/>
+            <renderer type="default" params="width=18%"/>
           </field>
           <field attribute="location" label="Storeroom">
-            <renderer type="default" params="width=16%"/>
+            <renderer type="default" params="width=18%"/>
           </field>
           <field attribute="binnum" label="Bin">
-            <renderer type="default" params="width=16%"/>
+            <renderer type="default" params="width=18%"/>
           </field>
-          <field attribute="physcntdate" label="Last Physical Count">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=16%"/>
-          </field>
-        
         </list>
+        
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
           <field label="Inventory Balances ID" attribute="invbalancesid" required="true" readonly="true" hidden="true"/>
           <field label="Item" attribute="itemnum" readonly="true"/>
@@ -291,23 +289,21 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <application name="physicaldeviation" entity="physicalDeviation" title="Physical Deviation">
       <schemas>
         <list title="Physical Count">
+          <field attribute="invbalancesid" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="width=13%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
           <field attribute="inventory_.siteid" label="Site">
-            <renderer type="default" params="width=13%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
           <field attribute="location" label="Storeroom">
-            <renderer type="default" params="width=13%"/>
+            <renderer type="default" params="width=16%"/>
           </field>
           <field attribute="binnum" label="Bin">
-            <renderer type="default" params="width=13%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
           <field attribute="physcnt" label="Physical Count">
-            <renderer type="default" params="width=12%"/>
-          </field>
-          <field attribute="physcntdate" label="Last Physical Count">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=16%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
         </list>
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
