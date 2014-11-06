@@ -37,6 +37,11 @@ namespace softWrench.sW4.Metadata.Validator {
                 }
                 return @"" + baseDirectory + TemplatesInternalPath.Fmt(resource);
             }
+            if (ApplicationConfiguration.IsUnitTest)
+            {
+                return @"" + baseDirectory + TestMetadataPath.Fmt(ApplicationConfiguration.ClientName) + resource;
+            }
+
             return @"" + baseDirectory + ClientMetadataPattern.Fmt(ApplicationConfiguration.ClientName) + resource;
         }
 
