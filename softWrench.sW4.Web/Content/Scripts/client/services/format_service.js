@@ -48,10 +48,21 @@ app.factory('formatService', function ($filter, i18NService) {
     };
 
     return {
-        format: function (value, column) {
+        format: function (value, column, eventdispatcherService) {
             if (column == undefined) {
                 return value;
             }
+
+            //If the formatter starts with an @ symbol
+            if (column.rendererParameters['formatter'].match(/\@/g)) {
+                //Remove the @ symbol and then split the xxx.yyy service call
+                var serviceCall = column.rendererParameters['formatter'].replace(/\@/g, '').split('.');
+                var serviceName = serviceCall[0];
+                var serviceMethod = serviceCall[1];
+
+                //var fn = eventdispatcherService.loadService();
+            }
+
             var dateFormat;
             if (column.rendererType == "datetime") {
                 if (column.rendererParameters['format'] != null && value != null) {
