@@ -17,140 +17,58 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using System.Windows.Forms;
 
-namespace softWrench.sW4.Web.Util {
-    public class ExcelUtil : ISingletonComponent {
+namespace softWrench.sW4.Web.Util
+{
+    public class ExcelUtil : ISingletonComponent
+    {
 
-        public SLDocument ConvertGridToExcel(string application, ApplicationMetadataSchemaKey key, ApplicationListResult result) {
+        private Dictionary<String, String> cellStyleDictionary;
+
+        public ExcelUtil()
+        {
+            // setup style dictionary for back colors
+            cellStyleDictionary = new Dictionary<string, string>();
+            cellStyleDictionary.Add("NEW", "5");
+            cellStyleDictionary.Add("QUEUED", "4");
+            cellStyleDictionary.Add("INPROG", "4");
+            cellStyleDictionary.Add("CLOSED", "3");
+            cellStyleDictionary.Add("CANCELLED", "2");
+            cellStyleDictionary.Add("RESOLVED", "6");
+            cellStyleDictionary.Add("SLAHOLD", "6");
+            cellStyleDictionary.Add("RESOLVCONF", "3");
+        }
+
+        public SLDocument ConvertGridToExcel(string application, ApplicationMetadataSchemaKey key, ApplicationListResult result)
+        {
             IEnumerable<ApplicationFieldDefinition> applicationFields = result.Schema.Fields;
-            //var theme = new SLThemeSettings();
-            //theme.Accent1Color = System.Drawing.Color.Yellow;
-            //theme.Accent2Color = System.Drawing.Color.Blue;
-            //var excelFile = new SLDocument(theme);
-
-            //var defaultStyle = excelFile.CreateStyle();
-            //defaultStyle.Alignment.Horizontal = HorizontalAlignmentValues.Left;
-            //defaultStyle.Alignment.Vertical = VerticalAlignmentValues.Bottom;
-            //defaultStyle.Font.FontName = "Calibri";
-            //defaultStyle.Font.FontSize = 10;
-            //defaultStyle.SetWrapText(true);
-
-            //var headerStyle = excelFile.CreateStyle();
-            //headerStyle.Alignment.Horizontal = HorizontalAlignmentValues.Center;
-            //headerStyle.Alignment.Vertical = VerticalAlignmentValues.Bottom;
-            //headerStyle.Font.FontName = "Calibri";
-            //headerStyle.Font.FontSize = 10;
-            //headerStyle.Font.Bold = true;
-
-            //var solidColorStyle = excelFile.CreateStyle();
-            //solidColorStyle.Fill.SetPatternType(PatternValues.Solid);
-
-            //BuildHeader(excelFile, headerStyle, applicationFields);
-
-            //var rowIndex = 1;
-            //var currentPage = 1;
-
-            ////while (currentPage <= result.PageCount) {
-            ////    var requestDTO = PaginatedSearchRequestDto.DefaultInstance();
-            ////    requestDTO.PageNumber = currentPage;
-
-            ////    dataResponse = new DataController().Get(application,
-            ////                                            new DataRequestAdapter() {
-            ////                                                Key = key,
-            ////                                                SearchDTO = requestDTO
-            ////                                            });
-            ////    result = dataResponse as ApplicationListResult;
-
-            ////Export To Excel even in case the Field is Hidden in the Grid.
-            //string value = string.Empty;
-
-            //foreach (var item in result.ResultObject) {
-            //    rowIndex++;
-            //    var attributes = item.Attributes;
-            //    var columnIndex = 1;
-
-            //    var nonHiddenFields = applicationFields.Where(f => !f.IsHidden || (f.Renderer.ParametersAsDictionary().TryGetValue(FieldRendererConstants.EXPORTTOEXCEL, out value)));
-            //    foreach (var applicationField in nonHiddenFields) {
-            //        object dataAux;
-            //        attributes.TryGetValue(applicationField.Attribute, out dataAux);
-            //        var data = dataAux == null ? string.Empty : dataAux.ToString();
-
-            //        var style = defaultStyle;
-            //        FillCell(excelFile, rowIndex, columnIndex, data, defaultStyle);
-
-            //        if (applicationField.Attribute == "status" && ApplicationConfiguration.ClientName == "hapag")
-            //        {
-
-            //            switch (data.Trim())
-            //            {
-            //                case "NEW":
-            //                    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Orange);
-            //                    break;
-            //                case "QUEUED":
-            //                    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Yellow);
-            //                    break;
-            //                case "INPROG":
-            //                    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Yellow);
-            //                    break;
-            //                case "CLOSED":
-            //                    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Green);
-            //                    break;
-            //                case "CANCELLED":
-            //                    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Red);
-            //                    break;
-            //                case "RESOLVED":
-            //                    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Blue);
-            //                    break;
-            //                case "SLAHOLD":
-            //                    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Blue);
-            //                    break;
-            //                case "RESOLVCONF":
-            //                    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Green);
-            //                    break;
-            //                default:
-            //                    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Transparent);
-            //                    break;
-            //            }
-            //            //FillCell(excelFile, rowIndex, columnIndex, data, solidColorStyle);
-            //            style = solidColorStyle;
-            //        }
-            //        FillCell(excelFile, rowIndex, columnIndex, data, style);
-            //        columnIndex++;
-            //    }
-            //    excelFile.AutoFitRow(rowIndex);
-            //}
-            
-            //SetColumnWidth(excelFile, applicationFields);
-            //return excelFile;
 
             using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+            using (SpreadsheetDocument xl = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook))
             {
-                SpreadsheetDocument xl = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook);
-                List<OpenXmlAttribute> oxa;
-                OpenXmlWriter oxw;
+                // attributes of elements
+                List<OpenXmlAttribute> xmlAttributes;
+                // the xml writer
+                OpenXmlWriter writer;
 
                 xl.AddWorkbookPart();
-                WorksheetPart wsp = xl.WorkbookPart.AddNewPart<WorksheetPart>();
+                WorksheetPart worksheetpart = xl.WorkbookPart.AddNewPart<WorksheetPart>();
 
-                oxw = OpenXmlWriter.Create(wsp);
+                writer = OpenXmlWriter.Create(worksheetpart);
 
-                oxw.WriteStartElement(new Worksheet());
-                oxw.WriteStartElement(new SheetData());
+                Worksheet worksheet = new Worksheet();
+                writer.WriteStartElement(worksheet);
+
+                // create sheetdata element
+                writer.WriteStartElement(new SheetData());
 
                 var stylesPart = xl.WorkbookPart.AddNewPart<WorkbookStylesPart>();
                 stylesPart.Stylesheet = new Stylesheet();
 
-                // blank font list
-                stylesPart.Stylesheet.Fonts = new Fonts();
-                stylesPart.Stylesheet.Fonts.Count = 1;
-                FontName name = new FontName();
-                name.Val = "Calibri";
-                FontSize size = new FontSize();
-                size.Val = 10;
-                stylesPart.Stylesheet.Fonts.AppendChild(new Font {FontName = name, FontSize = size });
+                // create 2 fonts (one normal, one header)
+                createFonts(stylesPart);
+
 
                 // create fills
-                stylesPart.Stylesheet.Fills = new Fills();
-
                 buildFills(stylesPart);
 
                 // blank border list
@@ -164,143 +82,175 @@ namespace softWrench.sW4.Web.Util {
                 stylesPart.Stylesheet.CellStyleFormats.AppendChild(new CellFormat());
 
                 // cell format list
-                stylesPart.Stylesheet.CellFormats = new CellFormats();
-                // empty one for index 0, seems to be required
-                stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat());
-                // no color
-                stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat { FormatId = 0, FontId = 0, BorderId = 0, FillId = 0, ApplyFill = true }).AppendChild(new Alignment { Horizontal = HorizontalAlignmentValues.Left, WrapText = BooleanValue.FromBoolean(true), Vertical = VerticalAlignmentValues.Top });
-                // red
-                stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat { FormatId = 0, FontId = 0, BorderId = 0, FillId = 2, ApplyFill = true }).AppendChild(new Alignment { Horizontal = HorizontalAlignmentValues.Left, WrapText = BooleanValue.FromBoolean(true), Vertical = VerticalAlignmentValues.Top });
-                // green
-                stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat { FormatId = 0, FontId = 0, BorderId = 0, FillId = 3, ApplyFill = true }).AppendChild(new Alignment { Horizontal = HorizontalAlignmentValues.Left, WrapText = BooleanValue.FromBoolean(true), Vertical = VerticalAlignmentValues.Top });
-                // yellow
-                stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat { FormatId = 0, FontId = 0, BorderId = 0, FillId = 4, ApplyFill = true }).AppendChild(new Alignment { Horizontal = HorizontalAlignmentValues.Left, WrapText = BooleanValue.FromBoolean(true), Vertical = VerticalAlignmentValues.Top });
-                // orange
-                stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat { FormatId = 0, FontId = 0, BorderId = 0, FillId = 5, ApplyFill = true }).AppendChild(new Alignment { Horizontal = HorizontalAlignmentValues.Left, WrapText = BooleanValue.FromBoolean(true), Vertical = VerticalAlignmentValues.Top });
-                // blue
-                stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat { FormatId = 0, FontId = 0, BorderId = 0, FillId = 6, ApplyFill = true }).AppendChild(new Alignment { Horizontal = HorizontalAlignmentValues.Left, WrapText = BooleanValue.FromBoolean(true), Vertical = VerticalAlignmentValues.Top });
-               
-                stylesPart.Stylesheet.CellFormats.Count = 7;
-               
-                
-                string value = string.Empty;
+                createCellFormats(stylesPart);
+
                 int rowIdx = 1;
-                foreach (var item in result.ResultObject)
+                string value = string.Empty;
+
+                // create header row
+                xmlAttributes = new List<OpenXmlAttribute>();
+                xmlAttributes.Add(new OpenXmlAttribute("r", null, rowIdx.ToString()));
+                writer.WriteStartElement(new Row(), xmlAttributes);
+                foreach (var applicationField in applicationFields)
                 {
-                   var attributes = item.Attributes;
+                    //Exporting to Excel, even if field is hidden
+                    if (applicationField.IsHidden && !applicationField.Renderer.ParametersAsDictionary().TryGetValue(FieldRendererConstants.EXPORTTOEXCEL, out value))
+                    {
+                        continue;
+                    }
 
-                   oxa = new List<OpenXmlAttribute>();
-                   // this is the row index
-                   oxa.Add(new OpenXmlAttribute("r", null, rowIdx.ToString()));
+                    xmlAttributes = new List<OpenXmlAttribute>();
+                    // add new datatype for cell
+                    xmlAttributes.Add(new OpenXmlAttribute("t", null, "str"));
+                    // add header style
+                    xmlAttributes.Add(new OpenXmlAttribute("s", null, "7"));
 
-                   oxw.WriteStartElement(new Row(), oxa);
+                    writer.WriteStartElement(new Cell(), xmlAttributes);
+                    writer.WriteElement(new CellValue(applicationField.Label));
 
-                   int cellIdx = 1;
-                   var nonHiddenFields = applicationFields.Where(f => !f.IsHidden || (f.Renderer.ParametersAsDictionary().TryGetValue(FieldRendererConstants.EXPORTTOEXCEL, out value)));
-                   foreach (var applicationField in nonHiddenFields)
-                   {
-                       object dataAux;
-                       attributes.TryGetValue(applicationField.Attribute, out dataAux);
-                       var data = dataAux == null ? string.Empty : dataAux.ToString();
-
-                       oxa = new List<OpenXmlAttribute>();
-                       // this is the data type ("t"), with CellValues.String ("str")
-                       oxa.Add(new OpenXmlAttribute("t", null, "str"));
-                       
-                       switch (data.Trim())
-                       {
-                           case "NEW":
-                               //solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Orange);
-                               oxa.Add(new OpenXmlAttribute("s", null, "5"));
-                               break;
-                           case "QUEUED":
-                               //solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Yellow);
-                               oxa.Add(new OpenXmlAttribute("s", null, "4"));
-                               break;
-                           case "INPROG":
-                              // solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Yellow);
-                               oxa.Add(new OpenXmlAttribute("s", null, "4"));
-                               break;
-                           case "CLOSED":
-                               //solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Green);
-                               oxa.Add(new OpenXmlAttribute("s", null, "3"));
-                               break;
-                           case "CANCELLED":
-                               //solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Red);
-                               oxa.Add(new OpenXmlAttribute("s", null, "2"));
-                               break;
-                           case "RESOLVED":
-                              // solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Blue);
-                               oxa.Add(new OpenXmlAttribute("s", null, "6"));
-                               break;
-                           case "SLAHOLD":
-                              // solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Blue);
-                               oxa.Add(new OpenXmlAttribute("s", null, "6"));
-                               break;
-                           case "RESOLVCONF":
-                               //solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Green);
-                               oxa.Add(new OpenXmlAttribute("s", null, "3"));
-                               break;
-                           default:
-                              // solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Transparent);
-                               oxa.Add(new OpenXmlAttribute("s", null, "1"));
-                               break;
-                       }
-                       
-
-                       oxw.WriteStartElement(new Cell(), oxa);
-
-                       oxw.WriteElement(new CellValue(data.ToString()));
-
-                       // this is for Cell
-                       oxw.WriteEndElement();
-
-                       cellIdx++;
-                   }
-
-                   rowIdx++;
-                   // this is for Row
-                   oxw.WriteEndElement();
+                    // this is for Cell
+                    writer.WriteEndElement();
                 }
 
-                
-                // this is for Worksheet
-                oxw.WriteEndElement();
-                oxw.Close();
+                // end Row
+                writer.WriteEndElement();
+                //count up row
+                rowIdx++;
 
-                oxw = OpenXmlWriter.Create(xl.WorkbookPart);
-                oxw.WriteStartElement(new Workbook());
-                oxw.WriteStartElement(new Sheets());
+                // write data rows
+                value = string.Empty;
+                foreach (var item in result.ResultObject)
+                {
+                    var attributes = item.Attributes;
+
+                    // create new row
+                    xmlAttributes = new List<OpenXmlAttribute>();
+                    xmlAttributes.Add(new OpenXmlAttribute("r", null, rowIdx.ToString()));
+                    writer.WriteStartElement(new Row(), xmlAttributes);
+
+                    var nonHiddenFields = applicationFields.Where(f => !f.IsHidden || (f.Renderer.ParametersAsDictionary().TryGetValue(FieldRendererConstants.EXPORTTOEXCEL, out value)));
+                    foreach (var applicationField in nonHiddenFields)
+                    {
+                        object dataAux;
+                        attributes.TryGetValue(applicationField.Attribute, out dataAux);
+                        var data = dataAux == null ? string.Empty : dataAux.ToString();
+
+                        xmlAttributes = new List<OpenXmlAttribute>();
+                        // this is the data type ("t"), with CellValues.String ("str")
+                        xmlAttributes.Add(new OpenXmlAttribute("t", null, "str"));
+
+                        // that's the default style
+                        String styleId = "1";
+                        if (applicationField.Attribute == "status" && ApplicationConfiguration.ClientName == "hapag")
+                        {
+                            bool success = cellStyleDictionary.TryGetValue(data.Trim(), out styleId);
+                            if (!success)
+                                styleId = "1";
+                        }
+                        xmlAttributes.Add(new OpenXmlAttribute("s", null, styleId));
+
+                        // start a cell
+                        writer.WriteStartElement(new Cell(), xmlAttributes);
+                        // write cell content
+                        DateTime dtTimeAux;
+                        var dataToCell = DateTime.TryParse(data, out dtTimeAux) ?
+                            dtTimeAux.ToString("dd/MM/yyyy H:mm") : data;
+                        writer.WriteElement(new CellValue(dataToCell.ToString()));
+                        // end cell
+                        writer.WriteEndElement();
+                    }
+
+                    // next row
+                    rowIdx++;
+                    // end row
+                    writer.WriteEndElement();
+                }
+
+
+                // end worksheet
+                writer.WriteEndElement();
+                writer.Close();
+
+
+                // write root element
+                writer = OpenXmlWriter.Create(xl.WorkbookPart);
+                writer.WriteStartElement(new Workbook());
+                writer.WriteStartElement(new Sheets());
 
                 // you can use object initialisers like this only when the properties
                 // are actual properties. SDK classes sometimes have property-like properties
                 // but are actually classes. For example, the Cell class has the CellValue
                 // "property" but is actually a child class internally.
                 // If the properties correspond to actual XML attributes, then you're fine.
-                oxw.WriteElement(new Sheet()
+                writer.WriteElement(new Sheet()
                 {
                     Name = "Sheet1",
                     SheetId = 1,
-                    Id = xl.WorkbookPart.GetIdOfPart(wsp)
+                    Id = xl.WorkbookPart.GetIdOfPart(worksheetpart)
                 });
 
-                // this is for Sheets
-                oxw.WriteEndElement();
-                // this is for Workbook
-                oxw.WriteEndElement();
-                oxw.Close();
+
+                // end Sheets
+                writer.WriteEndElement();
+                // end Workbook
+                writer.WriteEndElement();
+                writer.Close();
 
                 xl.Close();
 
 
                 var excelFile = new SLDocument(ms);
+                SetColumnWidth(excelFile, applicationFields);
                 return excelFile;
             }
         }
 
+        private static void createCellFormats(WorkbookStylesPart stylesPart)
+        {
+            stylesPart.Stylesheet.CellFormats = new CellFormats();
+            // empty one for index 0, seems to be required
+            stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat());
+            // no color
+            stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat { FormatId = 0, FontId = 0, BorderId = 0, FillId = 0, ApplyFill = true }).AppendChild(new Alignment { Horizontal = HorizontalAlignmentValues.Left, WrapText = BooleanValue.FromBoolean(true), Vertical = VerticalAlignmentValues.Top });
+            // red
+            stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat { FormatId = 0, FontId = 0, BorderId = 0, FillId = 2, ApplyFill = true }).AppendChild(new Alignment { Horizontal = HorizontalAlignmentValues.Left, WrapText = BooleanValue.FromBoolean(true), Vertical = VerticalAlignmentValues.Top });
+            // green
+            stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat { FormatId = 0, FontId = 0, BorderId = 0, FillId = 3, ApplyFill = true }).AppendChild(new Alignment { Horizontal = HorizontalAlignmentValues.Left, WrapText = BooleanValue.FromBoolean(true), Vertical = VerticalAlignmentValues.Top });
+            // yellow
+            stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat { FormatId = 0, FontId = 0, BorderId = 0, FillId = 4, ApplyFill = true }).AppendChild(new Alignment { Horizontal = HorizontalAlignmentValues.Left, WrapText = BooleanValue.FromBoolean(true), Vertical = VerticalAlignmentValues.Top });
+            // orange
+            stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat { FormatId = 0, FontId = 0, BorderId = 0, FillId = 5, ApplyFill = true }).AppendChild(new Alignment { Horizontal = HorizontalAlignmentValues.Left, WrapText = BooleanValue.FromBoolean(true), Vertical = VerticalAlignmentValues.Top });
+            // blue
+            stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat { FormatId = 0, FontId = 0, BorderId = 0, FillId = 6, ApplyFill = true }).AppendChild(new Alignment { Horizontal = HorizontalAlignmentValues.Left, WrapText = BooleanValue.FromBoolean(true), Vertical = VerticalAlignmentValues.Top });
+
+            // header style
+            stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat { FormatId = 0, FontId = 1, BorderId = 0, FillId = 0, ApplyFill = true }).AppendChild(new Alignment { Horizontal = HorizontalAlignmentValues.Left, WrapText = BooleanValue.FromBoolean(true), Vertical = VerticalAlignmentValues.Top });
+
+            stylesPart.Stylesheet.CellFormats.Count = 8;
+        }
+
+        private static void createFonts(WorkbookStylesPart stylesPart)
+        {
+            stylesPart.Stylesheet.Fonts = new Fonts();
+
+            // normal font
+            FontName name = new FontName();
+            name.Val = "Calibri";
+            FontSize size = new FontSize();
+            size.Val = 10;
+            stylesPart.Stylesheet.Fonts.AppendChild(new Font { FontName = name, FontSize = size });
+
+            // bold font for header
+            Bold boldFont = new Bold();
+            stylesPart.Stylesheet.Fonts.AppendChild(new Font { FontName = (FontName)name.Clone(), FontSize = (FontSize)size.Clone(), Bold = boldFont });
+
+            stylesPart.Stylesheet.Fonts.Count = 2;
+        }
 
         private void buildFills(WorkbookStylesPart stylesPart)
         {
+            stylesPart.Stylesheet.Fills = new Fills();
+
             // create a solid red fill
             var solidRed = new PatternFill() { PatternType = PatternValues.Solid };
             solidRed.ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString("FFFF0000") }; // red fill
@@ -308,22 +258,22 @@ namespace softWrench.sW4.Web.Util {
 
             // create green
             var green = new PatternFill() { PatternType = PatternValues.Solid };
-            green.ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString("FF006836") }; 
+            green.ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString("FF006836") };
             green.BackgroundColor = new BackgroundColor { Indexed = 64 };
 
             // create yellow
             var yellow = new PatternFill() { PatternType = PatternValues.Solid };
-            yellow.ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString("FFffff00") }; 
+            yellow.ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString("FFffff00") };
             yellow.BackgroundColor = new BackgroundColor { Indexed = 64 };
 
             // create orange
             var orange = new PatternFill() { PatternType = PatternValues.Solid };
-            orange.ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString("FFff7d00") }; 
+            orange.ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString("FFff7d00") };
             orange.BackgroundColor = new BackgroundColor { Indexed = 64 };
 
             // create blue
             var blue = new PatternFill() { PatternType = PatternValues.Solid };
-            blue.ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString("ff002fff") }; 
+            blue.ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString("ff002fff") };
             blue.BackgroundColor = new BackgroundColor { Indexed = 64 };
 
 
@@ -339,35 +289,15 @@ namespace softWrench.sW4.Web.Util {
         }
 
 
-        private static void BuildHeader(SLDocument excelFile, SLStyle headerStyle, IEnumerable<ApplicationFieldDefinition> applicationFields) {
-            var i = 1;
-            string value = string.Empty;
-            foreach (var applicationField in applicationFields) {
-                //Exporting to Excel, even if field is hidden
-                if (applicationField.IsHidden && !applicationField.Renderer.ParametersAsDictionary().TryGetValue(FieldRendererConstants.EXPORTTOEXCEL, out value)) {
-                    continue;
-                }
-                excelFile.SetCellValue(1, i, applicationField.Label);
-                excelFile.SetCellStyle(1, i, headerStyle);
-                i++;
-            }
-        }
-
-        private static void FillCell(SLDocument excelFile, int rowIndex, int columnIndex, string data, SLStyle slStyle) {
-            DateTime dtTimeAux;
-            var dataToCell = DateTime.TryParse(data, out dtTimeAux) ?
-                dtTimeAux.ToString("dd/MM/yyyy H:mm") : data;
-            
-            excelFile.SetCellValue(rowIndex, columnIndex, dataToCell);
-            excelFile.SetCellStyle(rowIndex, columnIndex, slStyle);
-        }
-
-        private static void SetColumnWidth(SLDocument excelFile, IEnumerable<ApplicationFieldDefinition> applicationFields) {
+        private static void SetColumnWidth(SLDocument excelFile, IEnumerable<ApplicationFieldDefinition> applicationFields)
+        {
             var columnIndex = 1;
-            foreach (var applicationField in applicationFields) {
+            foreach (var applicationField in applicationFields)
+            {
                 double excelWidthAux;
                 string excelwidthAux;
-                if (applicationField.IsHidden) {
+                if (applicationField.IsHidden)
+                {
                     continue;
                 }
                 applicationField.RendererParameters.TryGetValue("excelwidth", out excelwidthAux);
