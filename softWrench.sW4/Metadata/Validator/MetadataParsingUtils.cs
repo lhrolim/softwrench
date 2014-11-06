@@ -32,12 +32,12 @@ namespace softWrench.sW4.Metadata.Validator {
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             if (resource.StartsWith("@")) {
                 resource = resource.Substring(1);
+                if (ApplicationConfiguration.IsUnitTest) {
+                    return @"" + baseDirectory + TestTemplatesInternalPath.Fmt(resource);
+                }
+                return @"" + baseDirectory + TemplatesInternalPath.Fmt(resource);
             }
-            if (ApplicationConfiguration.IsUnitTest) {
-                return @"" + baseDirectory + TestTemplatesInternalPath.Fmt(resource);
-            }
-
-            return @"" + baseDirectory + TemplatesInternalPath.Fmt(resource);
+            return @"" + baseDirectory + ClientMetadataPattern.Fmt(ApplicationConfiguration.ClientName) + resource;
         }
 
 

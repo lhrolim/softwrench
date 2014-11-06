@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TargetEntities xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Target.xsd ">
+
+  <entity name="workorder">
+    <attributes>
+      <attribute name="#ReconCd" targetpath="" type="varchar"/>
+      <attribute name="#pmchange" targetpath="" type="varchar"/>
+      <attribute name="#fdbckcomment" targetpath="" type="varchar"/>
+    </attributes>    
+  </entity>
+  
+    
+</TargetEntities>

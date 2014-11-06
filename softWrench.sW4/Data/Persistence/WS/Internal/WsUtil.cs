@@ -29,9 +29,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             if (target.StartsWith("maximo6")) {
                 return Constants.WsProvider.MEA;
             }
-            throw new InvalidOperationException("Please, configure WsProvider key to either mea or mif");
-
-
+            var prop = MetadataProvider.GlobalProperty("wsprovider", true);
+            WsProvider val;
+            Enum.TryParse(prop, true, out val);
+            return val;
         }
 
         public static object GetRealValue(Object integrationObject, string propertyName) {
@@ -49,7 +50,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 return default(T);
             }
             var value = r.GetProperty(property, "Value");
-            return (T) value;
+            return (T)value;
         }
 
         public static T GetRealValue<T>(Object mxObject) where T : class {
