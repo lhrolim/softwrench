@@ -105,7 +105,7 @@ app.directive('crudInputFields', function (contextService) {
         controller: function ($scope, $http, $element, $injector, $timeout,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
-            cmpfacade,cmpComboDropdown, redirectService,validationService, contextService, eventdispatcherService) {
+            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventdispatcherService) {
 
             $scope.$name = 'crud_input_fields';
 
@@ -151,7 +151,7 @@ app.directive('crudInputFields', function (contextService) {
                 // Configure tooltips
                 $('.no-touch [rel=tooltip]', bodyElement).tooltip({ container: 'body' });
 
-                $scope.configureLookupModals(bodyElement);
+
                 cmpfacade.init(bodyElement, $scope);
                 // workaround in order to make the <select> comboboxes work properly on ie9
 
@@ -167,7 +167,7 @@ app.directive('crudInputFields', function (contextService) {
                     });
                 });
 
-                if (parentElementId.equalsAny('crudInputMainCompositionFields','crudInputMainFields')) {
+                if (parentElementId.equalsAny('crudInputMainCompositionFields', 'crudInputMainFields')) {
                     //to avoid registering these global listeners multiple times, as the page main contain sections.
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();
@@ -241,7 +241,7 @@ app.directive('crudInputFields', function (contextService) {
                                 }
                                 var result = associationService.updateAssociations(association, $scope);
                                 if (result != undefined && result == false) {
-                                    var resolved =contextService.fetchFromContext("associationsresolved", false, true);
+                                    var resolved = contextService.fetchFromContext("associationsresolved", false, true);
                                     var phase = resolved ? 'configured' : 'initial';
                                     var dispatchedbytheuser = $scope.associationsResolved ? true : false;
                                     associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser });
@@ -412,40 +412,6 @@ app.directive('crudInputFields', function (contextService) {
                 }
             };
 
-            $scope.configureLookupModals = function (bodyElement) {
-                // Configure lookup modals
-                var lookups = fieldService.getDisplayablesOfRendererTypes($scope.schema.displayables, ['lookup']);
-                $.each(lookups, function (key, value) {
-                    var fieldMetadata = value;
-                    if ($scope.associationOptions == null) {
-                        //this scenario happens when a composition has lookup-associations on its details, 
-                        //but the option list has not been fetched yet
-                        $scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
-                        $scope.lookupAssociationsCode[fieldMetadata.attribute] = null;
-                    } else {
-                        var options = $scope.associationOptions[fieldMetadata.associationKey];
-
-                        var doConfigure = function (optionValue) {
-
-                            $scope.lookupAssociationsCode[fieldMetadata.attribute] = optionValue;
-                            if (options == null || options.length <= 0) {
-                                //it should always be lazy loaded... why is this code even needed?
-                                return;
-                            }
-
-                            var optionSearch = $.grep(options, function (e) {
-                                return e.value == optionValue;
-                            });
-
-                            var valueToSet = optionSearch != null && optionSearch.length > 0 ? optionSearch[0].label : null;
-                            $scope.lookupAssociationsDescription[fieldMetadata.attribute] = valueToSet;
-                        }
-
-                        doConfigure($scope.datamap[fieldMetadata.target]);
-                    }
-                });
-            };
-
             $scope.configureNumericInput = function () {
                 for (i in $scope.schema.displayables) {
                     var fieldMetadata = $scope.schema.displayables[i];
@@ -465,7 +431,7 @@ app.directive('crudInputFields', function (contextService) {
 
             $scope.configureFieldChangeEvents = function () {
                 var fields = fieldService.getDisplayablesOfTypes($scope.displayables, ['ApplicationFieldDefinition']);
-                
+
                 $.each(fields, function (key, field) {
                     var shouldDoWatch = true;
                     $scope.$watch('datamap["' + field.attribute + '"]', function (newValue, oldValue) {
@@ -760,7 +726,6 @@ app.directive('numberSpinner', function () {
                 min: attr.min,
                 max: attr.max
             });
-            console.log(attr);
         }
     }
 });
