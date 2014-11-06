@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using NHibernate.Mapping;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Connectors;
@@ -30,15 +32,16 @@ namespace softWrench.sW4.Metadata.Validator {
             //TODO: relationships
             var name = "_" + type.Name;
             Log.DebugFormat("adding swdb internal entity {0}", name);
-            return new EntityMetadata(name, GetEntitySchema(name, type), new List<EntityAssociation>(), ConnectorParameters(type));
+            var properties = ParseProperties(name, type);
+            var entitySchema = new EntitySchema(name, properties.Item1, "id", true, true, null, null, type, false);
+            return new EntityMetadata(name, entitySchema, properties.Item2, ConnectorParameters(type));
         }
 
-        private EntitySchema GetEntitySchema(string entityName, Type type) {
-            return new EntitySchema(entityName, ConvertAttributes(entityName, type), "id", true, true, null, null,type, false);
-        }
+        private static Tuple<IEnumerable<EntityAttribute>, IEnumerable<EntityAssociation>> ParseProperties(string entityName, Type type) {
 
-        private static IEnumerable<EntityAttribute> ConvertAttributes(string entityName, Type type) {
-            var resultList = new List<EntityAttribute>();
+            var resultAttributes = new List<EntityAttribute>();
+            var resultAssociations = new List<EntityAssociation>();
+
             var connectorParameters = new ConnectorParameters(new Dictionary<string, string>(), true);
             foreach (var memberInfo in type.GetProperties()) {
                 var attr = memberInfo.ReadAttribute<PropertyAttribute>();
@@ -46,8 +49,8 @@ namespace softWrench.sW4.Metadata.Validator {
                 var isId = memberInfo.ReadAttribute<IdAttribute>() != null;
                 var isColumn = memberInfo.ReadAttribute<PropertyAttribute>() != null;
                 var attribute = memberInfo.Name.ToLower();
-                if (!memberInfo.GetMethod.ReturnType.IsPrimitive 
-                    && memberInfo.PropertyType != typeof(string) 
+                if (!memberInfo.GetMethod.ReturnType.IsPrimitive
+                    && memberInfo.PropertyType != typeof(string)
                     && memberInfo.PropertyType != typeof(DateTime)
                     && memberInfo.PropertyType != typeof(DateTime?)
                     && memberInfo.PropertyType != typeof(Int32)
@@ -56,9 +59,16 @@ namespace softWrench.sW4.Metadata.Validator {
                     && memberInfo.PropertyType != typeof(long?)
                     && memberInfo.PropertyType != typeof(int)
                     && memberInfo.PropertyType != typeof(long)
+                    && !memberInfo.PropertyType.IsEnum
                     ) {
                     //TODO: components embeddables
                     //avoid adding relationships
+                    var oneTomany = memberInfo.ReadAttribute<OneToManyAttribute>();
+                    if (oneTomany != null) {
+                        resultAssociations.Add(HandleOneToMany(memberInfo, oneTomany));
+                    }
+                    //TODO: other relationships like many to one
+
                     continue;
                 }
 
@@ -68,12 +78,19 @@ namespace softWrench.sW4.Metadata.Validator {
                 }
 
                 Log.DebugFormat("adding swdb attribute {0} to entity {1}", attribute, entityName);
-                resultList.Add(new EntityAttribute(attribute, memberInfo.PropertyType.Name, false, true,
+                resultAttributes.Add(new EntityAttribute(attribute, memberInfo.PropertyType.Name, false, true,
                     connectorParameters, query));
             }
+            return new Tuple<IEnumerable<EntityAttribute>, IEnumerable<EntityAssociation>>(resultAttributes, resultAssociations);
+        }
 
-
-            return resultList;
+        private static EntityAssociation HandleOneToMany(PropertyInfo memberInfo, OneToManyAttribute oneTomany) {
+            var keyAttr = memberInfo.ReadAttribute<KeyAttribute>();
+            var qualifier = memberInfo.Name;
+            var to = "_" + oneTomany.ClassType.Name.ToLower();
+            IList<EntityAssociationAttribute> attributes = new List<EntityAssociationAttribute>();
+            attributes.Add(new EntityAssociationAttribute(keyAttr.Column, "id", null, true));
+            return new EntityAssociation("_"+qualifier, to, attributes, true);
         }
 
         private static ConnectorParameters ConnectorParameters(Type type) {

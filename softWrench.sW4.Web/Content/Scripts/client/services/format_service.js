@@ -53,20 +53,15 @@ app.factory('formatService', function ($filter, i18NService) {
                 return value;
             }
 
-            //If the formatter starts with an @ symbol
-            if (column.rendererParameters['formatter'].match(/\@/g)) {
-                //Remove the @ symbol and then split the xxx.yyy service call
-                var serviceCall = column.rendererParameters['formatter'].replace(/\@/g, '').split('.');
-                var serviceName = serviceCall[0];
-                var serviceMethod = serviceCall[1];
-
-                //var fn = eventdispatcherService.loadService();
-            }
 
             var dateFormat;
             if (column.rendererType == "datetime") {
-                if (column.rendererParameters['format'] != null && value != null) {
+                if (value != null) {
                     dateFormat = column.rendererParameters['format'];
+                    if (dateFormat == null) {
+                        //TODO: make default client specific
+                        dateFormat = "MM/dd/yyyy hh:mm";
+                    }
                     return doFormatDate(value, dateFormat, false);
                 }
             } else if (column.type == "ApplicationSection" && column.parameters['format']) {
@@ -125,7 +120,7 @@ app.factory('formatService', function ($filter, i18NService) {
         adjustDateFormatForPicker: function (dateFormat, showTime) {
             if (dateFormat == undefined || dateFormat == '') {
                 //default ==> should be client specific
-                return showTime ? "yyyy-MM-dd hh:ii" : "yyyy-MM-dd";
+                return showTime ? "MM-dd-yyyy hh:ii" : "MM-dd-yyyy";
             } else {
                 dateFormat = dateFormat.replace('mm', 'ii');
                 dateFormat = dateFormat.replace('MM', 'mm');

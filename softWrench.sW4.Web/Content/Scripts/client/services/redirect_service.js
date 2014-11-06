@@ -22,7 +22,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
         return removeEncoding(crudUrl);
     };
 
-  
+
 
     var getApplicationUrl = function (applicationName, schemaId, mode, title, parameters, jsonData) {
         if (parameters === undefined || parameters == null) {
@@ -37,16 +37,15 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
 
         if (parameters.popupmode == "browser") {
             return buildApplicationURLForBrowser(applicationName, parameters);
+        }
+        if (title != null && title.trim() != "") {
+            parameters.title = title;
+        }
+        if (jsonData == undefined) {
+            return url("/api/data/" + applicationName + "?" + $.param(parameters));
         } else {
-            if (title != null && title.trim() != "") {
-                parameters.title = title;
-            }
-            if (jsonData == undefined) {
-                return url("/api/data/" + applicationName + "?" + $.param(parameters));
-            } else {
-                parameters.application = applicationName;
-                return url("/api/generic/ExtendedData/OpenDetailWithInitialData" + "?" + $.param(parameters));
-            }
+            parameters.application = applicationName;
+            return url("/api/generic/ExtendedData/OpenDetailWithInitialData" + "?" + $.param(parameters));
         }
     };
 
@@ -64,39 +63,53 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             if (title != null) {
                 parameters.title = title;
             }
-
+            var redirectUrl;
             if (target == 'new') {
-                var redirectURL = url(controller + "/" + action + "?" + $.param(parameters));
-                var w = window.open(redirectURL);
+                redirectUrl = url(controller + "/" + action + "?" + $.param(parameters));
+                var w = window.open(redirectUrl);
                 w.moveTo(0, 0);
-            } else {
-                var redirectURL = restService.getActionUrl(controller, action, parameters);
-                sessionStorage.swGlobalRedirectURL = redirectURL;
-                $http.get(redirectURL).success(
-                    function (data) {
-                        $rootScope.$broadcast("sw_redirectactionsuccess", data);
-                    }).error(
-                    function (data) {
-                        var errordata = {
-                            errorMessage: "error opening action {0} of controller {1} ".format(action, controller),
-                            errorStack: data.message
-                        }
-                        $rootScope.$broadcast("sw_ajaxerror", errordata);
-                    });
+                return;
             }
+
+            redirectUrl = restService.getActionUrl(controller, action, parameters);
+            sessionStorage.swGlobalRedirectURL = redirectUrl;
+            $http.get(redirectUrl).success(
+                function (data) {
+                    $rootScope.$broadcast("sw_redirectactionsuccess", data);
+                }).error(
+                function (data) {
+                    var errordata = {
+                        errorMessage: "error opening action {0} of controller {1} ".format(action, controller),
+                        errorStack: data.message
+                    }
+                    $rootScope.$broadcast("sw_ajaxerror", errordata);
+                });
+
         },
 
         getApplicationUrl: function (applicationName, schemaId, mode, title, parameters) {
             return getApplicationUrl(applicationName, schemaId, mode, title, parameters);
         },
-       
+
 
         redirectToTab: function (tabId) {
             var tab = $('a[href="#' + tabId + '"]');
             tab.trigger('click');;
         },
-        
-        goToApplication: function(applicationName, schemaId, parameters, jsonData) {
+
+        goToAction: function (controller, action, parameters) {
+            /// <summary>
+            /// Shortcut method for the most common case
+            /// </summary>
+            /// <param name="title"></param>
+            /// <param name="controller"></param>
+            /// <param name="action"></param>
+            /// <param name="parameters"></param>
+            /// <param name="target"></param>
+            return this.redirectToAction(null, controller, action, parameters, null);
+        },
+
+        goToApplication: function (applicationName, schemaId, parameters, jsonData) {
             this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData);
         },
 

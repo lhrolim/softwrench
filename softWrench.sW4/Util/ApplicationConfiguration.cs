@@ -385,6 +385,14 @@ namespace softWrench.sW4.Util {
             return toUse == DBMS.MSSQL;
         }
 
+        public static bool IsMySql() {
+            var toUse = ToUse(DBType.Swdb);
+            if (toUse == null) {
+                toUse = DiscoverDBMS(DBType.Swdb);
+            }
+            return toUse == DBMS.MYSQL;
+        }
+
         internal static DBMS? ToUse(DBType dbType) {
             var dbms = dbType == DBType.Maximo ? _maximodbType : _swdbType;
             if (dbms == null) {

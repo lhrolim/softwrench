@@ -100,7 +100,21 @@
     <attribute name="required" type="string"></attribute>
     <attribute name="type" type="string" use="required"></attribute>
     <attribute name="auto-generated" type="boolean"></attribute>
-    <attribute name="query" type="string"></attribute>
+    <attribute name="query" type="string">
+      <annotation>
+        <documentation>
+          a query will be executed when a declared application asks for this attribute.
+
+          Remarks:
+
+          1) use !@ chars to make framework replace the correct current entity name, considering join contexts
+
+          2) use ref:xxx to refer to a declared global query named xxx
+
+          3) use @xxx.yyy to refer to a injectable service xxx and method yyy that should return the query at runtime
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="Relationship">
@@ -207,9 +221,9 @@
           <element name="reference" minOccurs="0" maxOccurs="unbounded"
 						type="tns:referenceComplexType">
           </element>
-          <element name="event" type="tns:Event" minOccurs="0"
+          <element name="event" type="tns:schemaEvent" minOccurs="0"
             maxOccurs="unbounded">
-          </element>
+          </element>   
         </choice>
         <attribute name="platform" type="string" use="optional">
         </attribute>
@@ -264,7 +278,7 @@
           <attribute name="time" type="boolean"></attribute>
         </complexType>
       </element>
-      <element name="event" type="tns:Event" minOccurs="0"
+      <element name="event" type="tns:inputEvent" minOccurs="0"
 				maxOccurs="unbounded"></element>
     </choice>
 
@@ -337,7 +351,7 @@
       <element name="filter" type="tns:Filter" maxOccurs="1"
         minOccurs="0">
       </element>
-      <element name="event" type="tns:Event" minOccurs="0"
+      <element name="event" type="tns:inputEvent" minOccurs="0"
 				maxOccurs="unbounded">
       </element>
     </choice>
@@ -426,7 +440,7 @@
             <attribute name="orderbyfield" type="string" use="optional"/>
           </complexType>
         </element>
-        <element name="event" type="tns:Event" minOccurs="0"
+        <element name="event" type="tns:schemaEvent" minOccurs="0"
           maxOccurs="unbounded">
         </element>
       </choice>
@@ -480,7 +494,7 @@
       <element name="option" type="tns:OptionType" maxOccurs="unbounded"
 				minOccurs="0">
       </element>
-      <element name="event" type="tns:Event" minOccurs="0"
+      <element name="event" type="tns:inputEvent" minOccurs="0"
 				maxOccurs="unbounded">
       </element>
     </sequence>
@@ -798,19 +812,48 @@
     </attribute>
   </complexType>
 
-  <complexType name="Event">
-    <attribute name="type" use="required">
-      <simpleType>
-        <restriction base="string">
-          <enumeration value="afterchange"></enumeration>
-          <enumeration value="beforechange"></enumeration>
-          <enumeration value="onviewdetail"></enumeration>
-          <enumeration value="onload"></enumeration>
-        </restriction>
-      </simpleType>
-    </attribute>
+  <complexType name="baseEvent">
+    <annotation>
+      <documentation>
+        The base event uses a service and mathod attribute 
+        to define the service.method to call. Extensions of 
+        this event type should be used to define type 
+        attributes containing enumerations of the applicable 
+        event types.
+      </documentation>
+    </annotation>
     <attribute name="service" type="string" use="required"></attribute>
     <attribute name="method" type="string" use="required"></attribute>
+  </complexType>
+
+  <complexType name="inputEvent">
+    <complexContent mixed="false">
+      <extension base="tns:baseEvent">
+        <attribute name="type" use="required">
+          <simpleType>
+            <restriction base="string">
+              <enumeration value="afterchange"></enumeration>
+              <enumeration value="beforechange"></enumeration>
+            </restriction>
+          </simpleType>
+        </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="schemaEvent">
+    <complexContent mixed="false">
+      <extension base="tns:baseEvent">
+        <attribute name="type" use="required">
+          <simpleType>
+            <restriction base="string">
+              <enumeration value="onviewdetail"></enumeration>
+              <enumeration value="onload"></enumeration>
+            </restriction>
+          </simpleType>
+        </attribute>
+      </extension>
+    </complexContent>
   </complexType>
 
   <complexType name="queriesType">

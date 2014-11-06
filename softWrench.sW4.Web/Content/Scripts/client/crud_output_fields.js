@@ -6,6 +6,7 @@
             schema: '=',
             datamap: '=',
             displayables: '=',
+            extraparameters: '=',
             orientation: '@'
         },
         template: "<div></div>",
@@ -29,6 +30,7 @@ app.directive('crudOutputFields', function (contextService) {
         replace: true,
         templateUrl: contextService.getResourceUrl('/Content/Templates/crud/crud_output_fields.html'),
         scope: {
+            extraparameters: '=',
             schema: '=',
             datamap: '=',
             displayables: '=',

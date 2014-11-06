@@ -4,10 +4,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
   <entities>
     <!--This is a batch only for workorders-->
-    <entity name="WOBatch"  whereclause="Application = 'WORKORDER' " idAttribute="Id" parententity="Batch"/>
+    <entity name="WOBatch"  whereclause="Application = 'WORKORDER' " idAttribute="Id" parententity="Batch">
+      <attributes>
+        <attribute name="wocount" type="int" query="@woBatchWhereClauseProvider.WoCountQuery"/>
+      </attributes>
+    </entity>
+
   </entities>
-  
-  
+
+
   <applications>
 
 
@@ -16,7 +21,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <list title="Workorder Batches">
           <commandbars>
             <commandgroup position="gridtop" removeundeclared="true">
-              <command id="newbatch" position="left" icon="fa fa-plus" label="New Batch" service="wobatchService" method="newBatch"/>
+              <command id="refresh" icon="fa-refresh" tooltip="refresh" service="searchService" method="refreshGrid"/>
+              <command id="newbatch" icon="fa fa-plus" label="New Batch" service="wobatchService" method="newBatch"/>
             </commandgroup>
           </commandbars>
           <field attribute="id" label="Batch ID">
@@ -29,9 +35,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="width=15%"/>
           </field>
           <field attribute="updatedate" label="Updated">
-            <renderer type="datetime" params="format=MM/dd/yyyy hh:mm; width=25%"/>
+            <renderer type="datetime" params="width=25%"/>
           </field>
-          <field attribute="#numberofitems" label="Work Order Count">
+          <field attribute="wocount" label="Work Order Count">
             <renderer type="default" params="width=15%"/>
           </field>
           <field attribute="itemids" label="Workorders" hidden="true"/>
@@ -41,6 +47,35 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </list>
       </schemas>
     </application>
-     
+
+    <application name="batchreport" entity="BatchReport" title="Batch Report">
+      <schemas>
+        <detail mode="output">
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="print"/>
+            </commandgroup>
+          </commandbars>
+          <section id="sentbatch" resourcepath="/Content/Templates/batches/dynamiccomposition.html" parameters="schemaref=failedbatchschema;
+                   datamapref=failedbatchdatamap">
+            <header label="Problematic Items" displacement="ontop"/>
+          </section>
+          <section id="sentbatch" resourcepath="/Content/Templates/batches/dynamiccomposition.html" parameters="schemaref=sentbatchschema;
+                   datamapref=sentbatchdatamap">
+            <header label="Sent Items" displacement="ontop"/>
+          </section>
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="ProblemItens" entity="BatchItemProblem" title="Batch Problems">
+      <schemas>
+        <schema id="list" stereotype="compositionlist">
+          <field attribute="itemid" label="Item Id"/>
+          <field attribute="errormessage" label="Error Message"/>
+        </schema>
+      </schemas>
+    </application>
+
   </applications>
 </metadata>

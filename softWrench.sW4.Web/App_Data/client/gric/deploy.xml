@@ -5,12 +5,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Deploy_Metadata
 
     <!--MAximo Properties-->
     <environment key="dev">
-      <property key="iispath" value="SW4GRICStable/SW4GRICStable" />
-      <property key="msdeploy_url" value="https://66.235.236.5:8172/msdeploy.axd,username=MAXSW2\Administrator,password=$@$Adm1n" />
+      <property key="iispath" value="SW4OTB/SW4OTB" />
+      <property key="msdeploy_url" value="https://10.50.100.125:8172/msdeploy.axd,username=MAXSW2\Administrator,password=$@$Adm1n" />
     </environment>
     <environment key="qa">
       <property key="iispath" value="sw4/sw4" />
-      <property key="msdeploy_url" value="https://192.168.2.107:8172/msdeploy.axd,username=sas\maxadmin,password=M@xadm1n" />
+      <property key="msdeploy_url" value="https://10.50.100.126:8172/msdeploy.axd,username=grc75dev\Administrator,password=$@$Adm1n" />
     </environment>
 
   </globalproperties>

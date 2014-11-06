@@ -13,7 +13,12 @@
     @RowStampScriptHelper.RenderCss("~/Content/bootstrap/css/twitter-bootstrap")
     @RowStampScriptHelper.RenderCss("~/Content/themes/base/font-awesome")
     @RowStampScriptHelper.RenderCss("~/Content/themes/base/fonts")
-    @RowStampScriptHelper.RenderCss("~/Content/styles/client/client-css")   
+    @RowStampScriptHelper.RenderCss("~/Content/styles/client/client-css")
+
+    <!--[if IE 9]>
+    @RowStampScriptHelper.RenderCss("~/Content/themes/base/ie9")
+    <![endif]-->
+
     @*<base href="@Request.ApplicationPath" />*@
 </head>
 <body>

@@ -10,13 +10,23 @@ using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder {
-    public class WorkOrderBatchWhereClauseProvider : ISingletonComponent {
+    public class WoBatchWhereClauseProvider : ISingletonComponent {
         public static string GetCrewIdQuery(bool appendDescription) {
             var beginDate = DateUtil.ParsePastAndFuture("14days", -1);
             return @"SELECT {0} FROM alndomain a WHERE a.domainid = 'CREWID' 
                 AND    a.siteid = '{1}'
                 and exists (select NULL from workorder wo where a.siteid = wo.siteid and a.value = wo.crewid and wo.status = 'WORKING' and wo.schedfinish >= '{2}')"
                 .Fmt(appendDescription ? "value,description" : "value", SecurityFacade.CurrentUser().SiteId, beginDate);
+        }
+
+        public static string WoCountQuery(string context) {
+            if (ApplicationConfiguration.IsMSSQL(ApplicationConfiguration.DBType.Swdb)) {
+                return "CASE WHEN itemids = '' then 0 else len(itemids) - len(replace(itemids, ',', ''))+1 end";
+            }
+            if (ApplicationConfiguration.IsMySql()) {
+                return "CASE WHEN itemids = '' then 0 else length(itemids) - length(replace(itemids, ',', ''))+1 end";
+            }
+            throw new NotSupportedException("db2 not yet implemented");
         }
 
 

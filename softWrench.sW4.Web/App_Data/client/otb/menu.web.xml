@@ -19,6 +19,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
   </container>
   <container title="Purchasing" id="purchase" tooltip="Click to access your purchases" icon="fa fa-dollar" role="purchasing">
     <application id ="PGRID" title="Purchase Request Grid" ref="pr" schema="list" tooltip="Click to view your Purchase Request Grid"/>
+    <application id ="POGRID" title="Purchase Orders Grid" ref="po" schema="list" tooltip="Click to view your Purchase Order Grid"/>
     <application id ="PNEW" title="New Purchase Request" ref="pr" schema="newdetail" tooltip="Click to create a new Purchase Request"/>
   </container>
   <container title="Incidents" tooltip="Click to access your incidents" icon="fa fa-warning" id="Incident"  role="incidents">
@@ -29,5 +30,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
     <application id="IN" title="Inventory Grid" ref="invbalances" schema="list" tooltip="Click to view your Inventory Grid" />
     <application id="IR" title="Issues and Returns" ref="invissue" schema="list" tooltip="Click to view your Issues and Returns" />
     <application id="INT" title="Inventory Transfer Grid" ref="matrectransTransfers" schema="list" tooltip="Click to view your Inventory Transfers Grid"/>
+    <application id="PC" title="Physical Count Grid" ref="physicalcount" schema="list" tooltip="Click to view your Physical Count Grid"/>
+    <application id="PD" title="Physical Deviation Grid" ref="physicaldeviation" schema="list" tooltip="Click to view your Physical Deviation Grid"/>
   </container>
 </Menu>

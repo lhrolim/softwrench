@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService) {
+app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService, restService, alertService) {
     var createTransaction = function (schema, issueType) {
         var matusetrans = {};
         matusetrans.issueType = issueType;
@@ -14,7 +14,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         redirectService.goToApplicationView("invuse", "newdetail", "Input", null, null, null);
     };
     return {
-        createIssue: function(schema) {
+        createIssue: function (schema) {
             if (schema === undefined) {
                 return;
             }
@@ -64,7 +64,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var mode = 'output';
 
             if (datamap['issuetype'] == 'ISSUE') {
-                if (isNaN(datamap['qtyreturned'])) {
+                if (typeof datamap['qtyreturned'] === "string") {
                     datamap['qtyreturned'] = parseInt(datamap['qtyreturned']);
                 }
                 if (datamap['qtyreturned'] + datamap['quantity'] < 0) {
@@ -97,13 +97,13 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             param.id = datamap['refwo'];
             redirectService.goToApplicationView('invissuewo', 'newdetail', null, null, param, newDatamap);
         },
-        submitNewInvIssue: function(schema, datamap, saveFn) {
+        submitNewInvIssue: function (schema, datamap, saveFn) {
             modalService.show(schema.compositiondetailschema, datamap, saveFn);
         },
-        cancelNewInvIssue: function() {
+        cancelNewInvIssue: function () {
             redirectService.goToApplicationView("invissue", "invissuelist", null, null, null, null);
         },
-        displayPopupModal: function(parentschema, parentdatamap) {
+        displayPopupModal: function (parentschema, parentdatamap) {
             var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
             var parentdata = parentdatamap['fields'];
             var user = contextService.getUserData();
@@ -119,14 +119,14 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             itemDatamap['location'] = parentdata['#location'];
             itemDatamap['storeloc'] = parentdata['#storeloc'];
             var compositiondata = parentdatamap['fields']['invissue_'];
-
+            
             modalService.show(compositionschema, itemDatamap, null, compositiondata);
-
+            
         },
-        cancelNewInvIssueItem: function() {
+        cancelNewInvIssueItem: function () {
             modalService.hide();
         },
-        addItemToInvIssue: function(schema, datamap, parentdata, clonedcompositiondata, originalDatamap, previousdata) {
+        addItemToInvIssue: function (schema, datamap, parentdata, clonedcompositiondata, originalDatamap, previousdata) {
             var newRecord = {};
             newRecord['itemnum'] = fields['itemnum'];
             newRecord['quantity'] = 1;
@@ -143,7 +143,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             parameters.clonedCompositionData.push(newRecord);
             redirectService.redirectToTab('invissue_');
         },
-        afterchangeinvissueitem: function(parameters) {
+        afterchangeinvissueitem: function (parameters) {
             var user = contextService.getUserData();
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
@@ -165,7 +165,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 SearchDTO: searchDTO
             };
             var urlToUse = url("/api/Data/inventory?" + $.param(restParameters));
-            $http.get(urlToUse).success(function(data) {
+            $http.get(urlToUse).success(function (data) {
                 var resultObject = data.resultObject;
                 var fields = resultObject[0].fields;
                 var costtype = parameters['fields']['inventory_.costtype'];
@@ -219,7 +219,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 }
 
         },
-	    createTransfer: function(schema) {
+	createTransfer: function(schema) {
             if (schema === undefined) {
                 return;
             }
@@ -285,13 +285,41 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
         submitTransfer: function (schema, datamap) {
             // Save transfer
-            
-            // Redirect to the matrectrans grid
-            redirectService.goToApplicationView("matrectransTransfers", "list", null, null, null, null);
+            var user = contextService.getUserData();
+
+            var jsonString = angular.toJson(datamap);
+            var httpParameters = {
+                application: "invuse",
+                platform: "web",
+                currentSchemaKey: "newdetail.input.web"
+            };
+            restService.invokePost("data", "post", httpParameters, jsonString, function () {
+                var restParameters = {
+                    key: {
+                        schemaId: "list",
+                        mode: "none",
+                        platform: "web"
+                    },
+                    SearchDTO: null
+                }
+                var urlToUse = url("/api/Data/matrectransTransfers?" + $.param(restParameters));
+                $http.get(urlToUse).success(function (data) {
+                    redirectService.goToApplication("matrectransTransfers", "list", null, data);
+                });
+            });
+            },
+        cancelTransfer: function () {
+            redirectService.goToApplication("matrectransTransfers", "list", null, null);
         },
         cancelTransfer: function () {
             redirectService.goToApplicationView("matrectransTransfers", "list", null, null, null, null);
-        }
+        },
+	afterChangeTransferQuantity: function (event) {
+            if (event.fields['invuseline_.quantity'] > event.fields['#curbal']) {
+                alertService.alert("The quantity being transferred cannot be greater than the current balance of the From Bin.");
+                event.scope.datamap['invuseline_.quantity'] = event.fields['#curbal'];
+            }
+        },
 
     };
 });

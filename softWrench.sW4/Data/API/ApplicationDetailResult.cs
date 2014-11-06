@@ -16,6 +16,8 @@ namespace softWrench.sW4.Data.API {
         private readonly IDictionary<string, BaseAssociationUpdateResult> _associationOptions
                     = new Dictionary<string, BaseAssociationUpdateResult>();
 
+        
+
         public ApplicationDetailResult(DataMap dataMap, IDictionary<string, BaseAssociationUpdateResult> associationOptions,
             ApplicationSchemaDefinition main, IDictionary<string, ApplicationCompositionSchema> compositions, string id)
             : base(dataMap, null) {
@@ -37,6 +39,8 @@ namespace softWrench.sW4.Data.API {
             get;
             set;
         }
+
+     
 
         public string Id {
             get { return _id; }

@@ -1,0 +1,25 @@
+<div>
+
+    <!--        {{extraparameters[fieldMetadata.parameters['datamapref']]-->
+    <!--        <inline-composition-list-wrapper compositionschemadefinition="extraparameters[fieldMetadata.parameters['schemaref']]"-->
+    <!--                                         compositiondata="extraparameters[fieldMetadata.parameters['datamapref']]"-->
+    <!--                                         iscollection="true" />-->
+
+    <composition-list title="aaa"
+                      compositionschemadefinition="extraparameters[fieldMetadata.parameters['schemaref']]"
+                      relationship="{{tab.relationship}}"
+                      compositiondata="extraparameters[fieldMetadata.parameters['datamapref']]"
+                      parentschema="schema"
+                      parentdata="datamap"
+                      cancelfn="toListSchema(data,schema)"
+                      previousschema="previousschema" previousdata="previousdata" />
+
+    <!--        <crud-list datamap="extraparameters[fieldMetadata.parameters['datamapref']]"-->
+    <!--                   schema="extraparameters[fieldMetadata.parameters['schemaref']]"-->
+    <!--                   pagination-data="{}"-->
+    <!--                   search-data="{}"-->
+    <!--                   search-operator="{}"-->
+    <!--                   search-sort="{}"-->
+    <!--                    hidebars="true"-->
+    <!--                   />-->
+</div>

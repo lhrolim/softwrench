@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using JetBrains.Annotations;
 using log4net;
@@ -20,11 +16,11 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(XmlTemplateHandler));
 
-        private static List<R> DoHandleTemplates<R, T>(XContainer templates, bool isSWDB, ISet<string> alreadyParsedTemplates, IXmlMetadataParser<T> parser) {
+        private static List<TR> DoHandleTemplates<TR, T>(XContainer templates, ISet<string> alreadyParsedTemplates, IXmlMetadataParser<T> parser) {
             if (alreadyParsedTemplates == null) {
                 alreadyParsedTemplates = new HashSet<string>();
             }
-            var result = new List<R>();
+            var result = new List<TR>();
             if (templates == null) {
                 return result;
             }
@@ -38,12 +34,12 @@ namespace softWrench.sW4.Metadata.Parsing {
                 using (var stream = MetadataParsingUtils.DoGetStream(realPath)) {
                     if (stream != null) {
                         var parsingResult = parser.Parse(stream, alreadyParsedTemplates);
-                        if (parsingResult is IEnumerable<R>) {
-                            result.AddRange((IEnumerable<R>)parsingResult);
+                        if (parsingResult is IEnumerable<TR>) {
+                            result = new List<TR>(MetadataMerger.Merge<TR>(result, (IEnumerable<TR>)parsingResult));
                         } else {
-                            var Istuple = parsingResult as Tuple<IEnumerable<R>, EntityQueries>;
-                            if (Istuple != null) {
-                                result.AddRange(Istuple.Item1);
+                            var istuple = parsingResult as Tuple<IEnumerable<TR>, EntityQueries>;
+                            if (istuple != null) {
+                                result.AddRange(istuple.Item1);
                             }
                         }
                         alreadyParsedTemplates.Add(realPath);
@@ -58,14 +54,14 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         [NotNull]
         public static List<EntityMetadata> HandleTemplatesForEntities(XContainer templates, bool isSWDB, ISet<string> alreadyParsedTemplates) {
-            return DoHandleTemplates<EntityMetadata, Tuple<IEnumerable<EntityMetadata>, EntityQueries>>(templates, isSWDB, alreadyParsedTemplates,
+            return DoHandleTemplates<EntityMetadata, Tuple<IEnumerable<EntityMetadata>, EntityQueries>>(templates, alreadyParsedTemplates,
                 new XmlEntitySourceMetadataParser(isSWDB));
         }
 
         [NotNull]
         public static List<CompleteApplicationMetadataDefinition> HandleTemplatesForApplications(XContainer templates,
             [NotNull] IEnumerable<EntityMetadata> entityMetadata, IDictionary<string, CommandBarDefinition> commandBars, Boolean isSWDB, ISet<string> alreadyParsedTemplates) {
-            return DoHandleTemplates<CompleteApplicationMetadataDefinition, IEnumerable<CompleteApplicationMetadataDefinition>>(templates, isSWDB, alreadyParsedTemplates,
+            return DoHandleTemplates<CompleteApplicationMetadataDefinition, IEnumerable<CompleteApplicationMetadataDefinition>>(templates, alreadyParsedTemplates,
              new XmlApplicationMetadataParser(entityMetadata, commandBars, isSWDB));
         }
 

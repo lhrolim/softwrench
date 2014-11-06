@@ -29,8 +29,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
         [Property]
         public int? UserId { get; set; }
 
-        [Property]
-        public string Status { get; set; }
+        [Property(TypeType = typeof(BatchStatusType))]
+        public BatchStatus Status { get; set; }
 
         [Property]
         public DateTime? CreationDate { get; set; }
@@ -63,6 +63,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
         [Property(Type = "BinaryBlob")]
         [JsonIgnore]
         public virtual byte[] DataMapJson { get; set; }
+
+
 
     }
 }

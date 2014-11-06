@@ -1,4 +1,4 @@
-﻿body {
+body {
     font-family: "Arial";
     overflow-y: scroll;
     -webkit-transition: all 0.5s;
@@ -104,11 +104,6 @@ input:focus, select:focus, textarea:focus {
         width: 975px;
         z-index: 100;
     }
-
-.printModal {
-    width: 330px;
-    outline: none;
-}
 
 .conditionModal {
     position: absolute;
@@ -373,6 +368,10 @@ input:focus, select:focus, textarea:focus {
     padding: 2px;
 }
 
+.combobox-container:before, .combobox-container:after {
+    content: none;
+}
+
 .combobox-aux {
     background-image: url('../../Images/icon-combobox.png');
 }
@@ -429,6 +428,24 @@ textarea .readonly {
 .richtextbox {
     width: 100%;
 }
+
+.richtext .btn-toolbar .btn-group {
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+.richtext .btn-toolbar > .btn + .btn, .richtext .btn-toolbar > .btn-group + .btn, .richtext .btn-toolbar > .btn + .btn-group, .richtext .btn-toolbar > .btn-group + .btn-group {
+    margin-left: 0;
+}
+
+.richtext .ta-editor {
+    max-width: 859px; /*add max-width to stop richtext from moving off the screen horizontally*/
+}
+
+    .richtext .ta-editor p {
+        word-break: break-all;
+        word-break: break-word;
+    }
 
 .filter-row .grid-filter-button {
     font-weight: bold;
@@ -510,72 +527,6 @@ textarea .readonly {
 .detail-output {
     text-align: left !important;
     font-weight: bold !important;
-}
-
-@media screen {
-    .hideRows {
-        display: none;
-    }
-
-    .pagebreak {
-        display: none;
-    }
-
-    .hiddenonscreen {
-        display: none;
-    }
-}
-
-@media print {
-    .hiddenonprint {
-        display: none !important;
-    }
-
-    #listgrid {
-        /*margin-left: -120px; SWWEB-244: Had to comment for the margin to show correctly and print the total grid */
-        display: block;
-    }
-
-    .listgrid-firefox {
-        width: 700px !important;
-    }
-
-    .pagebreak-before {
-        display: block;
-        page-break-before: always;
-    }
-
-    .pagebreak-after {
-        display: block;
-        page-break-after: always;
-    }
-
-    .container {
-        margin-top: 0px !important;
-    }
-
-        .container .content {
-            margin-top: 0px !important;
-        }
-
-    html, body {
-        /*height: 25%;*/
-        margin-top: 0px !important;
-        overflow: visible !important;
-        float: none !important;
-        position: relative;
-    }
-
-    .form-control {
-        border: none;
-    }
-
-    .no-records {
-        width: 100%;
-        text-align: center;
-        padding-top: 20px;
-        padding-bottom: 40px;
-    }
 }
 
 .col-sectionsamelineheader {
@@ -960,6 +911,10 @@ Header
     .container .context .group {
         margin: 5px 0 0 20px;
     }
+
+    .container .context .group:first-child {
+        margin-left: 10px;
+    }
 }
 
 @media all and (min-width: 1170px) {
@@ -1146,15 +1101,6 @@ Header
     }
 /*SM - 09/02 - ADD - Fix file upload button*/
 
-.richtext .ta-editor {
-    max-width: 859px; /*add max-width to stop richtext from moving off the screen horizontally*/
-}
-
-    .richtext .ta-editor p {
-        word-break: break-all;
-        word-break: break-word;
-    }
-
 /*SM - 09/26 - Fix label control hight with multiple lines*/
 label.form-control {
     height: auto;
@@ -1227,3 +1173,44 @@ input[type=search] {
     margin-top: 10px;
     margin-bottom: 30px;
 }
+
+.crud_output .field label {
+    text-align: left;
+    word-break: break-all;
+    word-break: break-word;
+}
+
+    .crud_output .field label img {
+        max-width: 100%;
+        height: auto;
+        width: auto;
+    }
+
+.adminlogs .textarealog.form-control {
+    height: 368px;
+}
+
+.adminlogs .log-select {
+    padding-top: 20px;
+}
+
+    .adminlogs .log-select label {
+        /*margin-top: 5px;*/
+        display: block;
+    }
+
+    .adminlogs .log-select .options {
+        margin-top: 5px;
+    }
+
+.adminlogs table a {
+    cursor: pointer;
+}
+
+.adminlogs .appender {
+    margin-bottom: 20px;
+}
+
+    .adminlogs .appender .btn {
+        margin-top: 10px;
+    }

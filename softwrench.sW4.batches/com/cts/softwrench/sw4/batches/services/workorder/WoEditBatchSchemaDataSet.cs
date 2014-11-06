@@ -4,7 +4,6 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception;
-using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
@@ -13,16 +12,13 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
-using softwrench.sw4.Shared2.Util;
-using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder {
-
-    class WorkorderEditBatchSchemaDataSet : MaximoApplicationDataSet {
+    public class WoEditBatchSchemaDataSet : MaximoApplicationDataSet {
 
         private readonly SWDBHibernateDAO _swdbdao;
 
-        public WorkorderEditBatchSchemaDataSet(SWDBHibernateDAO swdbdao) {
+        public WoEditBatchSchemaDataSet(SWDBHibernateDAO swdbdao) {
             _swdbdao = swdbdao;
         }
 
@@ -37,18 +33,20 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             }
 
             var itemIds = batch.ItemIds;
-
-            //cleaning params that were used to locate the batch --> now we will locate the workorders
-            searchDto.SearchValues = null;
-            searchDto.SearchParams = null;
-            searchDto.AppendSearchEntry("wonum", itemIds.Split(','));
-            var result = base.GetList(application, searchDto);
-            MergeDataMap(result, batch.DataMapJsonAsString, batch);
-            return result;
-
+            return DoGetMergedBatch(application, itemIds, batch);
         }
 
-        private void MergeDataMap(ApplicationListResult result, string dataMapJsonAsString, Batch batch) {
+        public ApplicationListResult DoGetMergedBatch(ApplicationMetadata application, string itemIds, Batch batch) {
+            var searchDto = new PaginatedSearchRequestDto();
+            searchDto.AppendSearchEntry("wonum", itemIds.Split(','));
+            var result = base.GetList(application, searchDto);
+            MergeDataMap(result, batch);
+            return result;
+        }
+
+        private void MergeDataMap(ApplicationListResult result,  Batch batch)
+        {
+            var dataMapJsonAsString= batch.DataMapJsonAsString;
             var originalList = result.ResultObject;
             var dict = new Dictionary<string, AttributeHolder>();
             foreach (var item in originalList) {
@@ -75,6 +73,10 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
                 var ob = ((JObject)fields.Value);
                 var woId = ob.Property("wonum").Value.ToString();
                 var item = dict[woId];
+                if (item == null) {
+                    //maybe the original item no longer exists on maximo, or we´re handling the sentItems case here
+                    continue;
+                }
                 CopyValue(item, ob, "#ReconCd");
                 CopyValue(item, ob, "actfinish");
                 CopyValue(item, ob, "#pmchange");

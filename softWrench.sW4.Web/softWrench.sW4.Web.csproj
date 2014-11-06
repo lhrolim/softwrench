@@ -115,8 +115,9 @@
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NHibernate">
-      <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
+    <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NHibernate.3.3.1.4000\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="Quartz, Version=2.2.1.400, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -279,6 +280,7 @@
     <Compile Include="DB_Migration\4.0\20141001_SWWEB-505.cs" />
     <Compile Include="DB_Migration\4.0\20140724_HAP_331.cs" />
     <Compile Include="DB_Migration\4.0\20141002_SWWEB_478.cs" />
+    <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
@@ -307,6 +309,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\Client\%40internal\source\maximo7.5.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\%40internal\templates\asset.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -462,6 +468,25 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\Client\tva\deploy.xml" />
+    <Content Include="App_Data\Client\%40internal\target\tvamaximo_target.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\tva\menu.web.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\tva\metadata.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\tva\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\tva\workorderbatch.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\bootstrap\css\bootstrap-multiselect.css" />
     <Content Include="Content\bootstrap\css\typeahead.js-bootstrap.css" />
     <Content Include="Content\Controller\About.html" />
@@ -471,6 +496,7 @@
     <Content Include="Content\Controller\RoleGroup.html" />
     <Content Include="Content\font-awesome-4.1.0\css\font-awesome.css" />
     <Content Include="Content\font-awesome-4.1.0\css\font-awesome.min.css" />
+    <Content Include="Content\ie\ie9.css" />
     <Content Include="Content\Images\branding.png" />
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\folder-closed.png" />
@@ -555,7 +581,6 @@
     <Compile Include="SimpleInjector\WebApi\IAPIControllerFactory.cs" />
     <Compile Include="SimpleInjector\WebApi\SimpleInjectorWebAPIUtil.cs" />
     <Compile Include="SPF\Filters\RedirectUrlFilter.cs" />
-    <Compile Include="SPF\SPFRedirectAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Client\%40internal\source\maximo7.1.xml">
@@ -605,11 +630,11 @@
     <Content Include="Content\Scripts\client\aa_dateutils.js" />
     <Content Include="Content\Scripts\client\aa_stringutils.js" />
     <Content Include="Content\Scripts\client\about.js" />
+    <Content Include="Content\Scripts\client\components\lookupcomponent.js" />
     <Content Include="Content\Scripts\client\components\componentsfacade.js" />
     <Content Include="Content\Scripts\client\components\autocompleteserver.js" />
     <Content Include="Content\Scripts\client\components\autocompleteclient.js" />
     <Content Include="Content\Scripts\client\components\combodropdown.js" />
-    <Content Include="Content\Scripts\client\components\richtext.js" />
     <Content Include="Content\Scripts\client\crud_body_modal.js" />
     <Content Include="Content\Scripts\client\directives\gridtoolBar.js" />
     <Content Include="Content\Scripts\client\makeSWAdmin.js" />
@@ -619,6 +644,7 @@
     <Content Include="Content\Scripts\client\services\icon_service.js" />
     <Content Include="Content\Scripts\client\services\excelservice.js" />
     <Content Include="Content\Scripts\client\services\date_service.js" />
+    <Content Include="Content\Scripts\client\services\physicalinventory_service.js" />
     <Content Include="Content\Scripts\client\services\inventory_service.js" />
     <Content Include="Content\Scripts\client\services\securityService.js" />
     <Content Include="Content\Scripts\client\services\rest_service.js" />
@@ -684,6 +710,7 @@
     <Content Include="Content\Scripts\customers\otb\sr_service.js" />
     <Content Include="Content\Scripts\bindonce.js" />
     <Content Include="Content\Scripts\customers\shared\relatedrecord_service.js" />
+    <Content Include="Content\Scripts\customers\shared\genericticket_service.js" />
     <Content Include="Content\Scripts\customers\shared\wobatch_service.js" />
     <Content Include="Content\Scripts\jquery\jquery-filedownload-1.2.0.js" />
     <Content Include="Content\Scripts\jquery\jquery-fileupload-5.40.1.js" />
@@ -694,9 +721,9 @@
     <Content Include="Content\Scripts\thirdparty\textAngular-sanitize-min.js" />
     <Content Include="Content\Scripts\thirdparty\textAngular-min.js" />
     <Content Include="Content\styles\default\application\forms.css" />
-    <Content Include="Content\styles\default\application\grids.css" />
     <Content Include="Content\styles\default\application\pages.css" />
     <Content Include="Content\styles\default\grid.css" />
+    <Content Include="Content\styles\default\screen.css" />
     <Content Include="Content\styles\default\signin.css" />
     <Content Include="Content\styles\default\menu.css" />
     <Content Include="Content\styles\default\print.css" />
@@ -820,6 +847,7 @@
     <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.zh-TW.js" />
     <Content Include="Content\Scripts\spin-min.js" />
     <Content Include="Content\Scripts\typeahead.js" />
+    <Content Include="Content\styles\gric\application\grids.css" />
     <Content Include="Content\styles\hapag\grid.css" />
     <Content Include="Content\styles\hapag\signin.css" />
     <Content Include="Content\styles\hapag\site.css" />
@@ -827,6 +855,7 @@
     <Content Include="Content\styles\kongsberg\site.css" />
     <Content Include="Content\styles\manchester\signin.css" />
     <Content Include="Content\styles\manchester\site.css" />
+    <Content Include="Content\styles\otb\application\grids.css" />
     <Content Include="Content\styles\scottsdale\signin.css" />
     <Content Include="Content\styles\scottsdale\site.css" />
     <Content Include="Content\styles\gric\signin.css" />
@@ -834,6 +863,7 @@
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <Content Include="Content\styles\tva\signin.css" />
     <Content Include="Content\styles\tva\site.css" />
+    <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\commands\batches\batches.html" />
     <Content Include="Content\Templates\commands\batches\batchesmenu.js" />
     <Content Include="Content\Templates\commands\grid\gridfilter.html" />

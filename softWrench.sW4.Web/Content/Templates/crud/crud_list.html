@@ -1,6 +1,6 @@
 
 <form>
-    <div id="affixpagination" class="affix-pagination hiddenonprint">
+    <div id="affixpagination" class="affix-pagination hiddenonprint" ng-hide="hidebars">
         <div class="context clearfix header-menu">
             <gridtoolbar position="gridtop"
                          datamap="datamap"
@@ -264,7 +264,7 @@
         {{i18N("_grid.filter.noresult","No results match your search criteria")}}
     </p>
     <!--this is exclusive for IBM Demo to indicate the bottom of the page.-->
-    <div ng-if="isNotHapagTest()">
+    <div ng-if="isNotHapagTest()" ng-hide="hidebars">
         <br />
         <br />
         <div id="affixpagination1" class="hiddenonprint  context clearfix hiddenonprint">

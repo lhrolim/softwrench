@@ -5,6 +5,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
   <templates>
     <template path="@chartofaccounts.xml"/>
     <template path="@workorder.xml"/>
+    <template path="@item.xml"/>
   </templates>
   
   <entities>
@@ -29,7 +30,51 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
       </connectorParameters>
     </entity>
-
+    
+    <entity name="physicalCount" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 1 and DATEDIFF(day, physcntdate, GETDATE()) > inventory_.ccf and inventory_.ccf != 0">
+      <relationships>
+        <relationship to="item" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+        </relationship>
+        <relationship to="invlot">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="lotnum" to="lotnum"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BasePhysicalCountCrudConnector"/>
+      </connectorParameters>
+    </entity>
+    
+    <entity name="physicalDeviation" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 0 and curbal != physcnt">
+      <relationships>
+        <relationship to="item" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+        </relationship>
+        <relationship to="invlot">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="lotnum" to="lotnum"/>
+        </relationship>
+      </relationships>
+    </entity>
   </entities>
 
 
@@ -49,7 +94,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <composition relationship="invissue" label="Items" detailschema="newitem">
             <collectionproperties listschema="itemlist" allowcreation="true" hideexistingdata="true" autocommit="false" />
           </composition>
-          <event type="onload" service="scannerdetectionService" method="initIssueItemListener"/>
           <properties>
             <property key="detail.navigationbuttons.disabled" value="true"/>
           </properties>
@@ -138,6 +182,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <command id="cancelnewinvissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" />
             </commandgroup>
           </commandbars>
+          <event type="onload" service="scannerdetectionService" method="initIssueItemListener"/>
           <field attribute="itemnum" label="Item"/>
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="refwo" hidden="true"/>
@@ -312,6 +357,96 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
    
       </schemas>
     </application>
+
+    <application name="physicalcount" entity="physicalCount" title="Physical Count">
+      <schemas>
+        <list title="Physical Count">
+          <field attribute="invbalancesid" hidden="true"/>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="width=18%"/>
+          </field>
+          <field attribute="inventory_.siteid" label="Site">
+            <renderer type="default" params="width=18%"/>
+          </field>
+          <field attribute="location" label="Storeroom">
+            <renderer type="default" params="width=18%"/>
+          </field>
+          <field attribute="binnum" label="Bin">
+            <renderer type="default" params="width=18%"/>
+          </field>
+        </list>
+        
+        <schema id="detail" stereotype="detail" title="Physical Count Entry">
+          <field label="Inventory Balances ID" attribute="invbalancesid" required="true" readonly="true" hidden="true"/>
+          <field label="Item" attribute="itemnum" readonly="true"/>
+          <field label="Description" attribute="item_.description" readonly="true"/>
+          <field label="Storeroom" attribute="location" readonly="true"/>
+          <field label="Bin" attribute="binnum" readonly="true"/>
+          <field label="Site" attribute="siteid" readonly="true"/>
+          <field label="Condition Code" attribute="conditioncode" readonly="true"/>
+          <field label="Lot" attribute="lotnum" readonly="true"/>
+          <field label="Issue Unit" attribute="inventory_.issueunit" readonly="true"/>
+          <field label="Last Count Date" attribute="#lastCountDate" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+          <field label="Count Date" attribute="physcntdate">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+          <field label="New Count" attribute="physcnt">
+            <renderer type="numericinput" params="min=0;"/>
+          </field>
+          <field attribute="curbal" hidden="true"/>
+          <event type="onload" service="physicalInventoryService" method="newPhysicalCount"/>
+        </schema>
+      </schemas>
+    </application>
+
+    <application name="physicaldeviation" entity="physicalDeviation" title="Physical Deviation">
+      <schemas>
+        <list title="Physical Count">
+          <field attribute="invbalancesid" hidden="true"/>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="inventory_.siteid" label="Site">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="location" label="Storeroom">
+            <renderer type="default" params="width=16%"/>
+          </field>
+          <field attribute="binnum" label="Bin">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="physcnt" label="Physical Count">
+            <renderer type="default" params="width=15%"/>
+          </field>
+        </list>
+        <schema id="detail" stereotype="detail" title="Physical Count Entry">
+          <field label="Inventory Balances ID" attribute="invbalancesid" required="true" readonly="true" hidden="true"/>
+          <field label="Item" attribute="itemnum" readonly="true"/>
+          <field label="Description" attribute="item_.description" readonly="true"/>
+          <field label="Storeroom" attribute="location" readonly="true"/>
+          <field label="Bin" attribute="binnum" readonly="true"/>
+          <field label="Site" attribute="siteid" readonly="true"/>
+          <field label="Condition Code" attribute="conditioncode" readonly="true"/>
+          <field label="Lot" attribute="lotnum" readonly="true"/>
+          <field label="Issue Unit" attribute="inventory_.issueunit" readonly="true"/>
+          <field label="Last Count Date" attribute="#lastCountDate" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+          <field label="Count Date" attribute="physcntdate">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+          <field label="New Count" attribute="physcnt">
+            <renderer type="numericinput" params="min=0;"/>
+          </field>
+          <field attribute="curbal" hidden="true"/>
+          <event type="onload" service="physicalInventoryService" method="editPhysicalCount"/>
+        </schema>
+      </schemas>
+    </application>
+
+    
 
   </applications>
 

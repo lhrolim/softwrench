@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml.Serialization;
+using log4net;
 using softWrench.sW4.Data.Persistence.WS.API;
 using WcfSamples.DynamicProxy;
 using softWrench.sW4.Data.Persistence.Operation;
@@ -14,6 +17,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
     /// This class is a Holder that contains all the relevant data for a single maximo operation execution. It should not be reused between multiple invocations
     /// </summary>
     public abstract class MaximoOperationExecutionContext {
+
+        protected const string WsInputLog = "WS_CALL_LOGS";
+
+        protected static readonly ILog Log = LogManager.GetLogger(WsInputLog);
 
         protected MaximoOperationExecutionContext(IOperationData operationData) {
             _operationData = operationData;
@@ -49,12 +56,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         public virtual object InvokeProxy() {
             try {
+                if (Log.IsDebugEnabled) {
+                    Log.Debug(SerializeIntegrationObject());
+                } else if (ApplicationConfiguration.IsLocal() && Log.IsInfoEnabled) {
+                    Log.Info(SerializeIntegrationObject());
+                }
                 var result = Proxy.CallMethod(MethodName(),
                                           new[] { RootInterfaceObject.GetType() },
                                           new[] { RootInterfaceObject });
                 return result;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 var rootException = ExceptionUtil.DigRootException(e);
                 throw rootException;
             }
@@ -63,6 +74,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         public static MaximoOperationExecutionContext GetInstance(IOperationData operationData, DynamicObject proxy = null) {
             return ApplicationConfiguration.IsMif() ? (MaximoOperationExecutionContext)new MifExecutionContext(operationData, proxy) :
                 new MeaExecutionContext(operationData, proxy);
+        }
+
+        protected string SerializeIntegrationObject() {
+            var rootElement = IntegrationObject;
+            var serializer = new XmlSerializer(rootElement.GetType(), @"http://b2b.ibm.com/schema/B2B_CDM_Incident/R2_2");
+            var sWriter = new StringWriter();
+            serializer.Serialize(sWriter, rootElement);
+            return sWriter.ToString().Substring(sWriter.ToString().IndexOf('\n') + 1, sWriter.ToString().Length - sWriter.ToString().IndexOf('\n') - 1);
         }
 
         protected abstract string MethodName();

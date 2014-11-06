@@ -20,5 +20,9 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception {
         public static BatchException BatchIdNotInformed() {
             return new BatchException("batch id should be informed, contact your administrator");
         }
+
+        public static Exception BatchReportNotFound(object batchId) {
+            return new BatchException("batch report not found for batch {0}".Fmt(batchId));
+        }
     }
 }

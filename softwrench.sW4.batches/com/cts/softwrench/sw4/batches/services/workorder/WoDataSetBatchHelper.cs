@@ -8,7 +8,7 @@ using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.SimpleInjector;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder {
-    class WorkorderDataSetBatchHelper :ISingletonComponent {
+    class WoDataSetBatchHelper :ISingletonComponent {
 
         public static void AppendParametersIfNeeded(PaginatedSearchRequestDto searchDto) {
             if (searchDto.ValuesDictionary == null) {
