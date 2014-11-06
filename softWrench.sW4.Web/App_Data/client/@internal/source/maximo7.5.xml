@@ -3479,5 +3479,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <connectorParameter key="dbtable" value="poline" />
       </connectorParameters>
     </entity>
+
+    <entity name="invlot" idAttribute="invlotid">
+      <attributes>
+        <attribute name="lotnum" type="varchar" required="true" />
+        <attribute name="shelflife" type="float" required="false" />
+        <attribute name="useby" type="datetime" required="false" />
+        <attribute name="mfglotnum" type="varchar" required="false" />
+        <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="manufacturer" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="invlotid" type="bigint" required="true" />
+        <attribute name="itemnum" type="varchar" required="true" />
+        <attribute name="location" type="varchar" required="true" />
+        <attribute name="itemsetid" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="invlot" />
+      </connectorParameters>
+    </entity>
   </entities>
 </metadata>

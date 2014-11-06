@@ -75,12 +75,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <relationships>
         <relationship to="item" >
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
         </relationship>
         <relationship to="inventory" >
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
           <relationshipAttribute from="location" to="location" />
           <relationshipAttribute from="siteid" to="siteid" />
           <relationshipAttribute from="itemsetid" to="itemsetid" />
+        </relationship>
+        <relationship to="invlot">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="lotnum" to="lotnum"/>
         </relationship>
       </relationships>
       <connectorParameters>
