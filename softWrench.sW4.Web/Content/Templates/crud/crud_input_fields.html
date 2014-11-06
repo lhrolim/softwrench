@@ -29,14 +29,15 @@
             <div ng-class="getFieldClass(fieldMetadata)" ng-if="fieldMetadata.isReadOnly" ng-switch on="fieldMetadata.rendererType">
 
                 <input type="text" ng-switch-when="datetime"
-                    ng-model="datamap[fieldMetadata.attribute]"
-                    data-date-time
-                    data-show-time="{{fieldMetadata.rendererParameters['showtime']}}"
-                    data-show-date="{{fieldMetadata.rendererParameters['showdate']}}"
-                    data-date-format="{{fieldMetadata.rendererParameters['format']}}"
-                    data-show-meridian="{{fieldMetadata.rendererParameters['showmeridian']}}"
-                    class="form-control datetimereadonly"
-                    ng-readonly="true" readonly>
+                       ng-model="datamap[fieldMetadata.attribute]"
+                       data-date-time
+                       data-show-time="{{fieldMetadata.rendererParameters['showtime']}}"
+                       data-show-date="{{fieldMetadata.rendererParameters['showdate']}}"
+                       data-date-format="{{fieldMetadata.rendererParameters['format']}}"
+                       data-show-meridian="{{fieldMetadata.rendererParameters['showmeridian']}}"
+                       class="form-control datetimereadonly"
+                       value="{{getFormattedValue(fieldMetadata.attribute,fieldMetadata)}}"
+                       ng-readonly="true" readonly>
 
                 <label ng-switch-when="label" class="control-label"
                     ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}">

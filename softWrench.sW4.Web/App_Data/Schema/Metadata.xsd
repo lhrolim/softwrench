@@ -286,6 +286,7 @@
     <attribute name="evalexpression" type="string"></attribute>
     <attribute name="qualifier" type="string"></attribute>
     <attribute name="default" type="string"></attribute>
+    <attribute name="enabledefault" type="string" default="true"></attribute>
     <attribute name="tooltip" type="string"></attribute>
   </complexType>
 

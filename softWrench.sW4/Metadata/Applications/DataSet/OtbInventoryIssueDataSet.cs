@@ -15,7 +15,8 @@ using softWrench.sW4.SimpleInjector;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
     class OtbInventoryIssueDataSet : MaximoApplicationDataSet {
-        
+
+
         public SearchRequestDto FilterWorkorders(AssociationPreFilterFunctionParameters parameters) {
             return AssetFilterBySiteFunction(parameters);
         }

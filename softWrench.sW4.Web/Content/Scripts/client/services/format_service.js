@@ -67,6 +67,11 @@ app.factory('formatService', function ($filter, i18NService) {
                 if (column.rendererParameters['formatter'] == 'numberToBoolean') {
                     value = value == 1 ? i18NService.get18nValue('general.yes', 'Yes') : i18NService.get18nValue('general.no', 'No');
                 }
+                else if (column.rendererParameters['formatter'] == 'numberToAbs') {
+                    if (!isNaN(value)) {
+                        value = Math.abs(value);
+                    }
+                }
                 else if (column.rendererParameters['formatter'] == 'doubleToTime') {
                     if (value == null) {
                         return "";

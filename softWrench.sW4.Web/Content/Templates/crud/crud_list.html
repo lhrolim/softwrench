@@ -223,7 +223,7 @@
                                             <input type="text"
                                                    ng-model="dm[column.attribute]" class="hidden-phone form-control"
                                                    data-ng-maxlength="{{column.rendererParameters['maxlength']}}"
-                                                   maxlength="{{column.rendererParameters['maxlength']}}" />
+                                                   maxlength="{{column.rendererParameters['maxlength']}}"  />
                                         </div>
                                         <div ng-if="!isColumnEditable(column)" ng-init="handleDefaultValue(dm.fields,column)">
                                             {{getFormattedValue(dm.fields[column.attribute],column)}}

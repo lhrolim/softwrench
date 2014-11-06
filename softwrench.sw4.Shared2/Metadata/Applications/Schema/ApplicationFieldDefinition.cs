@@ -17,14 +17,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private ISet<ApplicationEvent> _eventsSet = new HashSet<ApplicationEvent>();
         public string EvalExpression { get; set; }
-
+        public string EnableDefault { get; set; }
         public ApplicationFieldDefinition() {
 
         }
 
         public ApplicationFieldDefinition(string applicationName, string attribute, string label, bool isRequired, bool isReadOnly, bool isIsHidden,
              FieldRenderer renderer, FieldFilter filter, IWidgetDefinition widgetDefinition, string defaultValue, string qualifier, string showExpression, string toolTip,
-             string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression)
+             string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression, string enableDefault)
             : base(applicationName, label, attribute, isRequired, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression) {
             if (widgetDefinition == null) throw new ArgumentNullException("widgetDefinition");
             _widgetDefinition = widgetDefinition;
@@ -39,7 +39,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
             _eventsSet = events;
             EvalExpression = evalExpression;
-        }
+            EnableDefault = enableDefault;
+            }
         //TODO: choose one of the modes?
         private FieldRenderer BuildFromWidget() {
             if (_widgetDefinition is DateWidgetDefinition) {
@@ -109,12 +110,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public object Clone() {
             return new ApplicationFieldDefinition(ApplicationName, Attribute, Label, IsRequired, IsReadOnly, IsHidden,
-                Renderer, Filter, WidgetDefinition, DefaultValue, Qualifier, ShowExpression, ToolTip, AttributeToServer, _eventsSet, EnableExpression,EvalExpression);
+                Renderer, Filter, WidgetDefinition, DefaultValue, Qualifier, ShowExpression, ToolTip, AttributeToServer, _eventsSet, EnableExpression,EvalExpression, EnableDefault);
         }
 
         public static ApplicationFieldDefinition HiddenInstance(string applicationName, string attributeName) {
             return new ApplicationFieldDefinition(applicationName, attributeName, "", false, false, true,
-                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null,null);
+                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null,null, null);
         }
     }
 }

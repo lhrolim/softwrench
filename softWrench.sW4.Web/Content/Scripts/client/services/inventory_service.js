@@ -56,11 +56,30 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
             parameters.fields['gldebitacct'] = gldebitacct;
         },
-        editinvissuedetail: function(datamap, schema) {
+        invissuelistclick: function(datamap, schema) {
             var param = {};
             param.id = datamap['matusetransid'];
-            redirectService.goToApplicationView('invissue', 'editinvissuedetail', "input", null, param, null);
+            var application = 'invissue';
+            var detail = 'viewinvreturndetail';
+            var mode = 'output';
+
+            if (datamap['issuetype'] == 'ISSUE') {
+                if (isNaN(datamap['qtyreturned'])) {
+                    datamap['qtyreturned'] = parseInt(datamap['qtyreturned']);
+                }
+                if (datamap['qtyreturned'] + datamap['quantity'] < 0) {
+                    detail = 'editinvissuedetail';
+                    mode = 'input';
+                } else {
+                    detail = 'viewinvissuedetail';
+                }
+            }
+
+            datamap['quantity'] = Math.abs(datamap['quantity']);
+
+            redirectService.goToApplicationView(application, detail, mode, null, param, null);
         },
+        
         editinvissuewo: function(schema, datamap) {
             var newDatamap = {};
             newDatamap['#assetnum'] = datamap['assetnum'];

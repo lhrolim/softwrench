@@ -32,7 +32,7 @@ app.directive('crudList', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             validationService, submitService, redirectService,
-            associationService, statuscolorService, contextService, eventdispatcherService, iconService) {
+            associationService, statuscolorService, contextService, eventdispatcherService, iconService, expressionService) {
 
             $scope.$name = 'crudlist';
 
@@ -74,6 +74,14 @@ app.directive('crudList', function (contextService) {
                     // update table heigth (for ie9)
                 }
             });
+
+            $scope.renderFormat = function(item, format) {
+                if (format == 'Math.abs') {
+                    if (!isNaN(item))
+                        return Math.abs(item);
+                }
+                return item;
+            };
 
             $scope.$on('listTableRenderedEvent', function (listTableRenderedEvent) {
                 var log = $log.getInstance('sw4.crud_list_dir#on#listTableRenderedEvent');
@@ -389,7 +397,9 @@ app.directive('crudList', function (contextService) {
                 var key = column.target ? column.target : column.attribute;
 
                 if (column.defaultValue != null && data[key] == null) {
-                    data[key] = column.defaultValue;
+                    if (column.enableDefault != null && expressionService.evaluate(column.enableDefault, data)) {
+                        data[key] = column.defaultValue;
+                    }
                 }
             }
 

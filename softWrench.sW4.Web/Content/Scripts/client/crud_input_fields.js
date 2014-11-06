@@ -478,6 +478,16 @@ app.directive('crudInputFields', function (contextService) {
                 }
             };
 
+            $scope.getFormattedValue = function (value, column) {
+                var formattedValue = formatService.format(value, column);
+                if (formattedValue == "-666") {
+                    //this magic number should never be displayed! 
+                    //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
+                    return null;
+                }
+                return formattedValue;
+            };
+
             $scope.enabletoopendetails = function (fieldMetadata) {
                 $scope.fillparamstoopendetails(fieldMetadata);
                 return $scope.paramstopendetails == null ? false : true;
