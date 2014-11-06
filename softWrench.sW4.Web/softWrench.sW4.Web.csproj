@@ -312,6 +312,10 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\Client\%40internal\templates\asset.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\incident.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -626,11 +630,11 @@
     <Content Include="Content\Scripts\client\aa_dateutils.js" />
     <Content Include="Content\Scripts\client\aa_stringutils.js" />
     <Content Include="Content\Scripts\client\about.js" />
+    <Content Include="Content\Scripts\client\components\lookupcomponent.js" />
     <Content Include="Content\Scripts\client\components\componentsfacade.js" />
     <Content Include="Content\Scripts\client\components\autocompleteserver.js" />
     <Content Include="Content\Scripts\client\components\autocompleteclient.js" />
     <Content Include="Content\Scripts\client\components\combodropdown.js" />
-    <Content Include="Content\Scripts\client\components\richtext.js" />
     <Content Include="Content\Scripts\client\crud_body_modal.js" />
     <Content Include="Content\Scripts\client\directives\gridtoolBar.js" />
     <Content Include="Content\Scripts\client\makeSWAdmin.js" />
@@ -704,6 +708,7 @@
     <Content Include="Content\Scripts\customers\otb\sr_service.js" />
     <Content Include="Content\Scripts\bindonce.js" />
     <Content Include="Content\Scripts\customers\shared\relatedrecord_service.js" />
+    <Content Include="Content\Scripts\customers\shared\genericticket_service.js" />
     <Content Include="Content\Scripts\customers\shared\wobatch_service.js" />
     <Content Include="Content\Scripts\jquery\jquery-filedownload-1.2.0.js" />
     <Content Include="Content\Scripts\jquery\jquery-fileupload-5.40.1.js" />
