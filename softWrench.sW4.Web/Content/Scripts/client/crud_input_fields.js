@@ -2,7 +2,6 @@
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
-
             if (scope.$first) {
                 scope.datamap[scope.fieldMetadata.attribute] = [];
             }
@@ -16,33 +15,27 @@
         }
     };
 });
-
 app.directive('configUpdateSectionDatamap', function ($timeout) {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
-
             if (scope.$first) {
                 scope.datamap[scope.fieldMetadata.id] = [];
             }
             var item = {};
             item["label"] = scope.i18NLabel(scope.field);
             item["value"] = scope.datamap[scope.field.attribute];
-
             scope.$watch('datamap["' + scope.field.attribute + '"]', function (newValue, oldValue) {
                 if (oldValue == newValue) {
                     return;
                 }
                 scope.datamap[scope.fieldMetadata.id][scope.$index]["value"] = newValue;
             });
-
             item["#newvalue"] = '';
-
             scope.datamap[scope.fieldMetadata.id].push(item);
         }
     };
 });
-
 app.directive('sectionElementInput', function ($compile) {
     return {
         restrict: "E",
@@ -55,6 +48,7 @@ app.directive('sectionElementInput', function ($compile) {
             associationOptions: '=',
             associationSchemas: '=',
             blockedassociations: '=',
+            extraparameters: '=',
             elementid: '@',
             orientation: '@',
             islabelless: '@'
@@ -62,26 +56,23 @@ app.directive('sectionElementInput', function ($compile) {
         template: "<div></div>",
         link: function (scope, element, attrs) {
             if (angular.isArray(scope.displayables)) {
-
                 element.append(
-                    "<crud-input-fields displayables='displayables'" +
-                                "schema='schema'" +
-                                "datamap='datamap'" +
-                                "is-dirty='isDirty'" +
-                                "displayables='displayables'" +
-                                "association-options='associationOptions'" +
-                                "association-schemas='associationSchemas'" +
-                                "blockedassociations='blockedassociations'" +
-                                "elementid='{{elementid}}'" +
-                                "orientation='{{orientation}}' insidelabellesssection={{islabelless}}></crud-input-fields>"
+                "<crud-input-fields displayables='displayables'" +
+                "schema='schema'" +
+                "datamap='datamap'" +
+                "is-dirty='isDirty'" +
+                "displayables='displayables'" +
+                "association-options='associationOptions'" +
+                "association-schemas='associationSchemas'" +
+                "blockedassociations='blockedassociations'" +
+                "elementid='{{elementid}}'" +
+                "orientation='{{orientation}}' insidelabellesssection={{islabelless}}></crud-input-fields>"
                 );
                 $compile(element.contents())(scope);
             }
         }
     }
 });
-
-
 app.directive('crudInputFields', function (contextService) {
     return {
         restrict: 'E',
@@ -90,6 +81,7 @@ app.directive('crudInputFields', function (contextService) {
         scope: {
             schema: '=',
             datamap: '=',
+            extraparameters: '=',
             isDirty: '=',
             displayables: '=',
             associationOptions: '=',
@@ -99,14 +91,11 @@ app.directive('crudInputFields', function (contextService) {
             orientation: '@',
             insidelabellesssection: '@',
         },
-
         controller: function ($scope, $http, $element, $injector, $timeout,
-            printService, compositionService, commandService, fieldService, i18NService,
-            associationService, expressionService, styleService,
-            cmpfacade,cmpComboDropdown, redirectService,validationService, contextService) {
-
+        printService, compositionService, commandService, fieldService, i18NService,
+        associationService, expressionService, styleService,
+        cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventdispatcherService) {
             $scope.$name = 'crud_input_fields';
-
             $scope.handlerTitleInputFile = function (cssclassaux) {
                 var title = $scope.i18N('attachment.' + cssclassaux, 'No file selected');
                 var fileInput = $('.' + cssclassaux);
@@ -122,65 +111,56 @@ app.directive('crudInputFields', function (contextService) {
                 });
                 return title;
             };
-
-            $scope.getCheckboxOptions = function(fieldMetadata){
+            $scope.getCheckboxOptions = function (fieldMetadata) {
                 if (fieldMetadata.providerAttribute == null) {
                     return fieldMetadata.options;
                 }
                 return associationOptions[fieldMetadata.associationKey];
             }
-
-            $scope.isPositionLeft = function(fieldMetadata) {
+            $scope.isPositionLeft = function (fieldMetadata) {
                 return "left".equalIc(fieldMetadata.rendererParameters['position']);
             }
-
             $scope.$on('sw_associationsupdated', function (event, associationoptions) {
                 //this in scenarios where a section is compiled before the association has returned from the server... angular seems to get lost in the bindings
                 $scope.associationOptions = associationoptions;
             });
-
             //this will get called when the input form is done rendering
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
-
+                eventdispatcherService.onload($scope.schema, $scope.datamap);
                 var bodyElement = $('#' + parentElementId);
                 if (bodyElement.length <= 0) {
                     return;
                 }
                 // Configure tooltips
                 $('.no-touch [rel=tooltip]', bodyElement).tooltip({ container: 'body' });
-
-                $scope.configureLookupModals(bodyElement);
                 cmpfacade.init(bodyElement, $scope);
                 // workaround in order to make the <select> comboboxes work properly on ie9
-
                 angular.forEach($("select"), function (currSelect) {
                     if (currSelect.selectedIndex >= 0) {
                         currSelect.options[currSelect.selectedIndex].text += " ";
                     }
-
                     $(currSelect).change(function () {
                         if (this.selectedIndex >= 0) {
                             this.options[this.selectedIndex].text += " ";
                         }
                     });
                 });
-
-                if (parentElementId.indexOf('Section') == -1) {
+                if (parentElementId.equalsAny('crudInputMainCompositionFields', 'crudInputMainFields')) {
                     //to avoid registering these global listeners multiple times, as the page main contain sections.
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();
                     $scope.configureAssociationChangeEvents();
-                    
+                    $scope.configureFieldChangeEvents();
                     $scope.configureDirtyWatcher();
                 }
-
                 $('.datetimereadonly').datepicker("remove");
                 // Configure input files
                 $('#uploadBtn').on('change', function (e) {
                     if (this != null) {
-                        $('#uploadFile').attr("value", this.value);}});
+                        $('#uploadFile').attr("value", this.value);
+                    }
+                });
             });
-
             $scope.configureDirtyWatcher = function () {
                 $timeout(function () {
                     $scope.$watch('datamap', function (newValue, oldValue) {
@@ -193,15 +173,10 @@ app.directive('crudInputFields', function (contextService) {
             /* Association (COMBO, AUTOCOMPLETECLIENT) functions */
             $scope.configureAssociationChangeEvents = function () {
                 var associations = fieldService.getDisplayablesOfTypes($scope.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
-
                 $.each(associations, function (key, association) {
                     var shouldDoWatch = true;
-
                     var isMultiValued = association.multiValued;
-
                     $scope.$watch('datamap["' + association.attribute + '"]', function (newValue, oldValue) {
-
-
                         if (oldValue == newValue || !shouldDoWatch) {
                             return;
                         }
@@ -223,7 +198,6 @@ app.directive('crudInputFields', function (contextService) {
                                 return;
                             }
                         }
-
                         var eventToDispatch = {
                             oldValue: oldValue,
                             newValue: newValue,
@@ -236,14 +210,16 @@ app.directive('crudInputFields', function (contextService) {
                                 }
                                 var result = associationService.updateAssociations(association, $scope);
                                 if (result != undefined && result == false) {
-                                    associationService.postAssociationHook(association, $scope, { phase: 'configured', dispatchedbytheuser: true });
+                                    var resolved = contextService.fetchFromContext("associationsresolved", false, true);
+                                    var phase = resolved ? 'configured' : 'initial';
+                                    var dispatchedbytheuser = $scope.associationsResolved ? true : false;
+                                    associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser });
                                 }
                                 try {
                                     $scope.$digest();
                                 } catch (ex) {
                                     //nothing to do, just checking if digest was already in place or not
                                 }
-
                             },
                             interrupt: function () {
                                 $scope.datamap[association.attribute] = oldValue;
@@ -254,25 +230,23 @@ app.directive('crudInputFields', function (contextService) {
                                 shouldDoWatch = true;
                             }
                         };
-
                         associationService.onAssociationChange(association, isMultiValued, eventToDispatch);
                         cmpfacade.digestAndrefresh(association, $scope);
                     });
-
                     $scope.$watchCollection('associationOptions.' + association.associationKey, function (newvalue, old) {
+                        if (newvalue == old) {
+                            return;
+                        }
                         $timeout(
-                            function () {
-                                cmpfacade.digestAndrefresh(association, $scope);
-                            }, 0, false);
+                        function () {
+                            cmpfacade.digestAndrefresh(association, $scope);
+                        }, 0, false);
                     });
-
-
                     $scope.$watch('blockedassociations.' + association.associationKey, function (newValue, oldValue) {
                         cmpfacade.blockOrUnblockAssociations($scope, newValue, oldValue, association);
                     });
                 });
             }
-
             $scope.isSelectEnabled = function (fieldMetadata) {
                 var key = fieldMetadata.associationKey;
                 $scope.disabledassociations = instantiateIfUndefined($scope.disabledassociations);
@@ -284,31 +258,46 @@ app.directive('crudInputFields', function (contextService) {
                     cmpfacade.blockOrUnblockAssociations($scope, !result, !$scope.disabledassociations[key], fieldMetadata);
                     $scope.disabledassociations[key] = result;
                 }
-
                 return result;
             };
-
             $scope.haslookupModal = function (schema) {
                 return fieldService.getDisplayablesOfRendererTypes(schema.displayables, ['lookup']).length > 0;
             }
-
             $scope.isModifiableEnabled = function (fieldMetadata) {
                 var result = expressionService.evaluate(fieldMetadata.enableExpression, $scope.datamap);
                 return result;
             };
-
-
+            $scope.setMaxNumericInput = function (max, maxExpr, maxExprVar) {
+                //If a max value is defined, use it
+                if (max != null) {
+                    return max;
+                }
+                //If either the expression or expression variables are missing, return nothing (i.e. the max is unbounded)
+                if (maxExpr === undefined || maxExprVar === undefined) {
+                    return;
+                }
+                var variables = maxExprVar.split(',');
+                var expression = maxExpr;
+                for (var i = 0; i < variables.length; i++) {
+                    var replaceVar = "{" + i + "}";
+                    expression = expression.replace(replaceVar, $scope.datamap[variables[i]]);
+                }
+                try {
+                    return Math.abs(eval(expression));
+                } catch (e) {
+                    if ($rootScope.isLocal) {
+                        console.log(e);
+                    }
+                }
+            };
             /* CHECKBOX functions */
-
             $scope.isCheckboxSelected = function (option, datamapKey) {
                 var model = $scope.datamap[datamapKey];
-
                 if (model == undefined) {
                     return false;
                 }
                 return model.indexOf(option.value) > -1;
             };
-
             $scope.toogleCheckboxSelection = function (option, datamapKey) {
                 var model = $scope.datamap[datamapKey];
                 if (model == undefined) {
@@ -328,22 +317,16 @@ app.directive('crudInputFields', function (contextService) {
                 }
                 $scope.datamap[datamapKey] = model;
             };
-
-
             /* LOOKUP functions */
-
             $scope.lookupAssociationsCode = {};
             $scope.lookupAssociationsDescription = {};
-
             $scope.showLookupModal = function (fieldMetadata) {
                 if (!$scope.isSelectEnabled(fieldMetadata)) {
                     return;
                 }
-
                 $scope.lookupModalSearch = {};
                 $scope.lookupModalSearch.descripton = '';
                 $scope.lookupModalSearch.fieldMetadata = fieldMetadata;
-
                 var targetValue = $scope.datamap[fieldMetadata.target];
                 if (targetValue == null || targetValue == " ") {
                     $scope.lookupModalSearch.code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
@@ -354,7 +337,6 @@ app.directive('crudInputFields', function (contextService) {
                 modals.draggable();
                 modals.modal('show');
             };
-
             $scope.lookupCodeChange = function (fieldMetadata) {
                 if ($scope.datamap[fieldMetadata.target] != null) {
                     $scope.datamap[fieldMetadata.target] = " "; // If the lookup value is changed to a null value, set a white space, so it can be updated on maximo WS.
@@ -363,7 +345,7 @@ app.directive('crudInputFields', function (contextService) {
                 }
             };
             $scope.getLookUpDescriptionLabel = function (fieldMetadata) {
-               return i18NService.getLookUpDescriptionLabel(fieldMetadata);
+                return i18NService.getLookUpDescriptionLabel(fieldMetadata);
             };
             $scope.lookupCodeBlur = function (fieldMetadata) {
                 var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
@@ -372,53 +354,6 @@ app.directive('crudInputFields', function (contextService) {
                     $scope.showLookupModal(fieldMetadata);
                 }
             };
-
-            $scope.configureLookupModals = function (bodyElement) {
-                // Configure lookup modals
-                var lookups = fieldService.getDisplayablesOfRendererTypes($scope.schema.displayables, ['lookup']);
-                $.each(lookups, function (key, value) {
-                    var fieldMetadata = value;
-                    if ($scope.associationOptions == null) {
-                        //this scenario happens when a composition has lookup-associations on its details, 
-                        //but the option list has not been fetched yet
-                        $scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
-                        $scope.lookupAssociationsCode[fieldMetadata.attribute] = null;
-                    } else {
-                        var options = $scope.associationOptions[fieldMetadata.associationKey];
-
-                        var doConfigure = function (optionValue) {
-
-                            $scope.lookupAssociationsCode[fieldMetadata.attribute] = optionValue;
-                            if (options == null || options.length <= 0) {
-                                //it should always be lazy loaded... why is this code even needed?
-                                return;
-                            }
-
-                            var optionSearch = $.grep(options, function (e) {
-                                return e.value == optionValue;
-                            });
-
-                            var valueToSet = optionSearch != null && optionSearch.length > 0 ? optionSearch[0].label : null;
-                            $scope.lookupAssociationsDescription[fieldMetadata.attribute] = valueToSet;
-                        }
-
-                        doConfigure($scope.datamap[fieldMetadata.target]);
-                    }
-                });
-            };
-
-            $scope.bindEvalExpression = function (fieldMetadata) {
-                if (fieldMetadata.evalExpression == null) {
-                    return;
-                }
-                var variables = expressionService.getVariablesForWatch(fieldMetadata.evalExpression);
-                $scope.$watchCollection(variables, function (newVal, oldVal) {
-                    if (newVal != oldVal) {
-                        $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
-                    }
-                });
-            }
-
             $scope.configureNumericInput = function () {
                 for (i in $scope.schema.displayables) {
                     var fieldMetadata = $scope.schema.displayables[i];
@@ -435,9 +370,42 @@ app.directive('crudInputFields', function (contextService) {
                     }
                 }
             };
-
-
-
+            $scope.configureFieldChangeEvents = function () {
+                var fields = fieldService.getDisplayablesOfTypes($scope.displayables, ['ApplicationFieldDefinition']);
+                $.each(fields, function (key, field) {
+                    var shouldDoWatch = true;
+                    $scope.$watch('datamap["' + field.attribute + '"]', function (newValue, oldValue) {
+                        if (oldValue == newValue || !shouldDoWatch) {
+                            return;
+                        }
+                        var eventToDispatch = {
+                            oldValue: oldValue,
+                            newValue: newValue,
+                            fields: $scope.datamap,
+                            displayables: $scope.displayables,
+                            scope: $scope,
+                            'continue': function () {
+                                fieldService.postFieldChange(field, $scope);
+                                try {
+                                    $scope.$digest();
+                                } catch (ex) {
+                                    //nothing to do, just checking if digest was already in place or not
+                                }
+                            },
+                            interrupt: function () {
+                                $scope.datamap[association.attribute] = oldValue;
+                                //to avoid infinite recursion here.
+                                shouldDoWatch = false;
+                                cmpfacade.digestAndrefresh(association, $scope);
+                                //turn it on for future changes
+                                shouldDoWatch = true;
+                            }
+                        };
+                        fieldService.onFieldChange(field, eventToDispatch);
+                        cmpfacade.digestAndrefresh(field, $scope);
+                    });
+                });
+            };
             $scope.configureOptionFields = function () {
                 //TODO: check field parameter as well, with top priority before schema
                 if ($scope.schema.properties["optionfield.donotusefirstoptionasdefault"] == "true") {
@@ -456,18 +424,15 @@ app.directive('crudInputFields', function (contextService) {
                     }
                 }
             };
-
             $scope.getSelectedTexts = function (fieldMetadata) {
                 return cmpComboDropdown.getSelectedTexts(fieldMetadata);
             };
-
             $scope.opendetails = function (fieldMetadata) {
                 if ($scope.enabletoopendetails(fieldMetadata)) {
                     var parameters = { id: $scope.paramstopendetails.idtopendetails, popupmode: 'browser' };
                     redirectService.goToApplicationView($scope.paramstopendetails.application, 'detail', 'output', null, parameters);
                 }
             };
-
             $scope.fillparamstoopendetails = function (fieldMetadata) {
                 $scope.paramstopendetails = null;
                 if (!nullOrUndef(fieldMetadata.rendererParameters)) {
@@ -481,12 +446,10 @@ app.directive('crudInputFields', function (contextService) {
                     }
                 }
             };
-
             $scope.enabletoopendetails = function (fieldMetadata) {
                 $scope.fillparamstoopendetails(fieldMetadata);
                 return $scope.paramstopendetails == null ? false : true;
             };
-
             $scope.getLengthParam = function (fieldMetadata) {
                 var lengthclass = null;
                 if (!nullOrUndef(fieldMetadata.rendererParameters)) {
@@ -507,7 +470,6 @@ app.directive('crudInputFields', function (contextService) {
                 }
                 return lengthclass;
             };
-
             $scope.GetAssociationOptions = function (fieldMetadata) {
                 if (fieldMetadata.type == "OptionField") {
                     return $scope.GetOptionFieldOptions(fieldMetadata);
@@ -515,7 +477,6 @@ app.directive('crudInputFields', function (contextService) {
                 $scope.associationOptions = instantiateIfUndefined($scope.associationOptions);
                 return $scope.associationOptions[fieldMetadata.associationKey];
             }
-
             $scope.GetOptionFieldOptions = function (optionField) {
                 if (optionField.providerAttribute == null) {
                     return optionField.options;
@@ -523,17 +484,13 @@ app.directive('crudInputFields', function (contextService) {
                 $scope.associationOptions = instantiateIfUndefined($scope.associationOptions);
                 return $scope.associationOptions[optionField.providerAttribute];
             }
-
-
             $scope.contextPath = function (path) {
                 return url(path);
             };
-
             $scope.isIE = function () {
                 //TODO: is this needed for all ieversions or only 9 and, in this case replace function for aa_utils
                 return isIe9();
             };
-
             $scope.getLabelStyle = function (fieldMetadata) {
                 var rendererColor = styleService.getLabelStyle(fieldMetadata, 'color');
                 var weight = styleService.getLabelStyle(fieldMetadata, 'font-weight');
@@ -543,24 +500,21 @@ app.directive('crudInputFields', function (contextService) {
                 }
                 return result;
             }
-
             //SM - 09/24 - SWWEB-441 change OTM column classes
             $scope.getLabelClass = function (fieldMetadata) {
                 //return $scope.hasSameLineLabel(fieldMetadata) ? 'col-md-2' : 'col-md-12';
                 if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
                     return null;
-            }
+                }
                 return $scope.hasSameLineLabel(fieldMetadata) ? 'col-sm-3 col-md-2' : 'col-xs-12';
             }
-
             $scope.getFieldClass = function (fieldMetadata) {
                 if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
                     return 'col-md-12';
-            }
+                }
                 return $scope.hasSameLineLabel(fieldMetadata) ? 'col-sm-9 col-md-10' : 'col-xs-12';
             }
             //SM - 09/24 - SWWEB-441 change OTM column classes
-
             ///
             // legendevaluation is boolean indicating the mode we are calling this method, either for an ordinary field or for a header with legend
             ////
@@ -577,39 +531,32 @@ app.directive('crudInputFields', function (contextService) {
                 //if header is declared as fieldset return true only for the legendEvaluation
                 return isVisible && (isFieldSet == legendEvaluationMode);
             }
-
-
             $scope.isVerticalOrientation = function () {
                 return $scope.orientation == 'vertical';
             };
-
             $scope.isSectionWithoutLabel = function (fieldMetadata) {
                 return fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null && fieldMetadata.header == null;
             };
-
             $scope.hasSameLineLabel = function (fieldMetadata) {
                 return ($scope.isVerticalOrientation()) &&
-                       (
-                            (fieldMetadata.header != null && fieldMetadata.header.displacement != 'ontop') ||
-                            (fieldMetadata.header == null)
-                       );
+                (
+                (fieldMetadata.header != null && fieldMetadata.header.displacement != 'ontop') ||
+                (fieldMetadata.header == null)
+                );
             };
-
             $scope.sectionHasSameLineLabel = function (fieldMetadata) {
                 return $scope.hasSameLineLabel(fieldMetadata) && fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null;
             };
-
             $scope.getValueColumnClass = function (fieldMetadata) {
                 var classes = '';
                 if ($scope.sectionHasSameLineLabel(fieldMetadata)) {
                     classes += 'col-sectionsamelineheader ';
                 }
-
                 if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
                     return 'col-md-12';
                 }
                 if ($scope.isSectionWithoutLabel(fieldMetadata)) {
-                    //                    classes += 'col-md-12 ';
+                    // classes += 'col-md-12 ';
                 } else if (!$scope.hasSameLineLabel(fieldMetadata)) {
                     classes += 'col-md-12 ';
                 } else if ($scope.isVerticalOrientation()) {
@@ -620,21 +567,17 @@ app.directive('crudInputFields', function (contextService) {
                     } else {
                         classes += 'col-md-10 ';
                     }
-                    //                    classes += 'col-md-8 ';
+                    // classes += 'col-md-8 ';
                     //SM - 08/30 - End, fix label width
                 }
-
                 return classes;
             };
-
             $scope.formatId = function (id) {
                 return RemoveSpecialChars(id);
             }
-
             $scope.nonTabFields = function (displayables) {
                 return fieldService.nonTabFields(displayables);
             };
-
             function init() {
                 if (!$scope.isVerticalOrientation()) {
                     var countVisibleDisplayables = fieldService.countVisibleDisplayables($scope.datamap, $scope.schema, $scope.displayables);
@@ -650,12 +593,35 @@ app.directive('crudInputFields', function (contextService) {
                     fieldService: fieldService
                 });
             }
-
             init();
+            function evalExpression(fieldMetadata) {
+                //If applying mathematical operations from two or more metadata fields
+                if (expressionService.isPrecompiledReplaceRegexMatch(fieldMetadata.evalExpression)) {
+                    return bindEvalExpression(fieldMetadata);
+                } else {
+                    //Evaluates a single field
+                    $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
+                }
+                return null;
+            }
+            function bindEvalExpression(fieldMetadata) {
+                var variables = expressionService.getVariablesForWatch(fieldMetadata.evalExpression);
+                $scope.$watchCollection(variables, function (newVal, oldVal) {
+                    if (newVal != oldVal) {
+                        $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
+                    }
+                });
+                return variables;
+            }
+            $scope.initField = function (fieldMetadata) {
+                if (fieldMetadata.evalExpression != null) {
+                    return evalExpression(fieldMetadata);
+                }
+                return null;
+            };
         }
     }
 });
-
 app.directive('numberSpinner', function () {
     return {
         restrict: 'A',
@@ -667,23 +633,19 @@ app.directive('numberSpinner', function () {
                 min: attr.min,
                 max: attr.max
             });
-            console.log(attr);
         }
     }
 });
-
 app.directive('selectCombo', function () {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
             $(element).on('click', 'input', function (e) {
                 console.log('click');
-
                 $(element).find('[data-dropdown="dropdown"]').click();
                 //return false;
                 //e.stopPropagation();
             });
-         
-    }
+        }
     };
 });
