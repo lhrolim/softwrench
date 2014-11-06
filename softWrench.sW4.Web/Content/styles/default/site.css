@@ -368,6 +368,10 @@ input:focus, select:focus, textarea:focus {
     padding: 2px;
 }
 
+.combobox-container:before, .combobox-container:after {
+    content: none;
+}
+
 .combobox-aux {
     background-image: url('../../Images/icon-combobox.png');
 }
@@ -424,6 +428,24 @@ textarea .readonly {
 .richtextbox {
     width: 100%;
 }
+
+.richtext .btn-toolbar .btn-group {
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+.richtext .btn-toolbar > .btn + .btn, .richtext .btn-toolbar > .btn-group + .btn, .richtext .btn-toolbar > .btn + .btn-group, .richtext .btn-toolbar > .btn-group + .btn-group {
+    margin-left: 0;
+}
+
+.richtext .ta-editor {
+    max-width: 859px; /*add max-width to stop richtext from moving off the screen horizontally*/
+}
+
+    .richtext .ta-editor p {
+        word-break: break-all;
+        word-break: break-word;
+    }
 
 .filter-row .grid-filter-button {
     font-weight: bold;
@@ -1079,15 +1101,6 @@ Header
     }
 /*SM - 09/02 - ADD - Fix file upload button*/
 
-.richtext .ta-editor {
-    max-width: 859px; /*add max-width to stop richtext from moving off the screen horizontally*/
-}
-
-    .richtext .ta-editor p {
-        word-break: break-all;
-        word-break: break-word;
-    }
-
 /*SM - 09/26 - Fix label control hight with multiple lines*/
 label.form-control {
     height: auto;
@@ -1157,4 +1170,33 @@ input[type=search] {
         max-width: 100%;
         height: auto;
         width: auto;
+    }
+
+.adminlogs .textarealog.form-control {
+    height: 368px;
+}
+
+.adminlogs .log-select {
+    padding-top: 20px;
+}
+
+    .adminlogs .log-select label {
+        /*margin-top: 5px;*/
+        display: block;
+    }
+
+    .adminlogs .log-select .options {
+        margin-top: 5px;
+    }
+
+.adminlogs table a {
+    cursor: pointer;
+}
+
+.adminlogs .appender {
+    margin-bottom: 20px;
+}
+
+    .adminlogs .appender .btn {
+        margin-top: 10px;
     }

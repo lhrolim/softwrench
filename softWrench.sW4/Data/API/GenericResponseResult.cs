@@ -6,6 +6,11 @@ using System.Collections.Generic;
 namespace softWrench.sW4.Data.API {
     public class GenericResponseResult<T> : IGenericResponseResult {
 
+        /// <summary>
+        /// Use this dictionary to append extra properties that could be used by application custom sections
+        /// </summary>
+        private IDictionary<string, object> _extraParameters = new Dictionary<string, object>();
+
         public GenericResponseResult() {
 
         }
@@ -24,6 +29,11 @@ namespace softWrench.sW4.Data.API {
 
         public IList<AttributeHolder> ToList() {
             throw new NotImplementedException();
+        }
+
+        public IDictionary<string, object> ExtraParameters {
+            get { return _extraParameters; }
+            set { _extraParameters = value; }
         }
 
 

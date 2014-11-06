@@ -24,6 +24,7 @@ app.directive('crudList', function (contextService) {
             searchOperator: '=',
             searchSort: '=',
             ismodal: '@',
+            hidebars:'@',
             checked: '='
         },
 

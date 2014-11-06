@@ -8,6 +8,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
     [Class(Table = "BAT_REPORT", Lazy = false)]
     public class BatchReport : IBaseEntity {
 
+        public const string ByBatchId = "from BatchReport where OriginalBatch.Id =?";
+
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
         public virtual int? Id { get; set; }
@@ -18,7 +20,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
         public virtual ISet<BatchItemProblem> ProblemItens { get; set; }
 
         //actually it would be one-to-one
-        [ManyToOne(Column= "batch")]
+        [ManyToOne(Column = "batch")]
         public virtual Batch OriginalBatch { get; set; }
 
         [Property]

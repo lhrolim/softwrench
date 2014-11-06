@@ -604,9 +604,8 @@ namespace softWrench.sW4.Metadata.Parsing {
 
 
             if (null == applications) {
-                return new ReadOnlyCollection<CompleteApplicationMetadataDefinition>(Enumerable
-                    .Empty<CompleteApplicationMetadataDefinition>()
-                    .ToList());
+                //we just have templates, but no applications defined
+                return result;
             }
 
             var applicationElements = applications.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.ApplicationElement);

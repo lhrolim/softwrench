@@ -5,6 +5,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
   <templates>
     <template path="@chartofaccounts.xml"/>
     <template path="@workorder.xml"/>
+    <template path="@item.xml"/>
   </templates>
   
   <entities>
@@ -93,7 +94,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <composition relationship="invissue" label="Items" detailschema="newitem">
             <collectionproperties listschema="itemlist" allowcreation="true" hideexistingdata="true" autocommit="false" />
           </composition>
-          <event type="onload" service="scannerdetectionService" method="initIssueItemListener"/>
           <properties>
             <property key="detail.navigationbuttons.disabled" value="true"/>
           </properties>
@@ -156,6 +156,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <command id="cancelnewinvissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" />
             </commandgroup>
           </commandbars>
+          <event type="onload" service="scannerdetectionService" method="initIssueItemListener"/>
           <field attribute="itemnum" label="Item"/>
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="refwo" hidden="true"/>

@@ -186,8 +186,17 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
         private static ApplicationSchemaDefinition OnApplyPlatformPolicy(ApplicationSchemaDefinition schema, ClientPlatform platform, List<IApplicationDisplayable> displayables) {
             //pass null on ParentSchema to avoid reMerging the parentSchemaData
-            return GetInstance(schema.ApplicationName, schema.Title, schema.SchemaId, schema.Stereotype, schema.Mode, platform, schema.Abstract, displayables,
-                schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UnionSchema, schema.EventSet);
+            return GetInstance(schema.ApplicationName, schema.Title, schema.SchemaId, schema.Stereotype, schema.Mode, platform,
+                 schema.Abstract, displayables,
+                 schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UnionSchema,
+                 schema.EventSet);
+        }
+
+        public static ApplicationSchemaDefinition Clone(ApplicationSchemaDefinition schema) {
+            return GetInstance(schema.ApplicationName, schema.Title, schema.SchemaId, schema.Stereotype, schema.Mode, schema.Platform,
+                schema.Abstract, schema.Displayables,
+                schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UnionSchema,
+                schema.EventSet);
         }
 
         //        protected abstract ApplicationSchema OnApplyPlatformPolicy(ClientPlatform platform, IList<IApplicationDisplayable> fields);

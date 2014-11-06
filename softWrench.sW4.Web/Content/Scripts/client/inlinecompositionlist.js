@@ -11,12 +11,14 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
             compositionschemadefinition: '=',
             compositiondata: '=',
             iscollection: '=',
+            mode:'@'
         },
 
         link: function (scope, element, attrs) {
             element.append(
                 "<inline-composition-list compositionschemadefinition='compositionschemadefinition'" +
                          "compositiondata='compositiondata'" +
+                         "mode='mode'" +
                          "iscollection='iscollection' />"
             );
             $compile(element.contents())(scope);
@@ -35,6 +37,7 @@ app.directive('inlineCompositionList', function (contextService) {
             compositionschemadefinition: '=',
             compositiondata: '=',
             iscollection: '=',
+            mode: '@',
         },
 
         controller: function ($scope, $filter, $http, $element, $rootScope, tabsService) {

@@ -30,7 +30,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
         saveOrUpdateAliasCode(function (alias) {
             var parameters = {
                 application: "workorder",
-                schema: "list",
+                schema: "editbatch",
                 alias: alias
             }
             var json = {};
@@ -42,7 +42,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
                     searchParams: "id",
                     searchValues: batchId
                 }
-                redirectService.goToApplication("workorder", "editbatch", { searchDTO: searchDTO }, null);
+                redirectService.goToApplicationView("workorder", "editbatch","input",null, { searchDTO: searchDTO }, null);
             }, null);
         });
     }
@@ -104,17 +104,24 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
 
             var status = datamap['status'];
             if (status.equalIc("submitting")) {
-                alertService.alert("The batch is currently being submitted. When this is done a report will be generated");
+                alertService.alert("The batch is currently being submitted. A report will be generated when this operation is complete");
                 return;
             }
+
+            if (status.equalIc("complete")) {
+                //this will trigger report page instead of edition
+                redirectService.goToApplication("_batchreport", "detail", { id: batchId });
+                return;
+            }
+
+            //WORKING case --> will open edit page
 
             var searchDTO = {
                 searchParams: "id",
                 searchValues: batchId
             }
 
-
-            redirectService.goToApplication("workorder", "editbatch", { searchDTO: searchDTO }, null);
+            redirectService.goToApplicationView("workorder", "editbatch", "input", null, { searchDTO: searchDTO }, null);
         },
 
         generatebatch: function (datamap) {
@@ -224,7 +231,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
                                 datamap['worklog_'] = worklog;
                                 datamap['#lognote'] = 'Y';
                             }
-                            
+
                             $rootScope.$digest();
                         }
                     };
@@ -295,6 +302,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
                 alertService.confirmMsg("This batch has no closed entries.It will be deleted upon submission. Proceeed?", function () {
                     doSubmit(false, datamap);
                 });
+                return;
             }
             doSubmit(true, datamap);
         }

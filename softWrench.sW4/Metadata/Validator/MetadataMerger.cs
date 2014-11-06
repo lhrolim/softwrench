@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using NHibernate.Util;
 using softWrench.sW4.Metadata.Entities;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -14,17 +15,32 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Metadata.Validator {
     class MetadataMerger {
 
-        public static IEnumerable<CompleteApplicationMetadataDefinition> MergeApplications(List<CompleteApplicationMetadataDefinition> sourceApplications, List<CompleteApplicationMetadataDefinition> overridenApplications) {
+        public static IEnumerable<TR> Merge<TR>(IEnumerable<TR> sourceItems, IEnumerable<TR> overridenItems) {
+            var enumerable = overridenItems as IList<TR> ?? overridenItems.ToList();
+            if (!enumerable.Any()) {
+                return sourceItems;
+            }
+
+            if (enumerable.First() is CompleteApplicationMetadataDefinition) {
+                return (IEnumerable<TR>)MergeApplications((IEnumerable<CompleteApplicationMetadataDefinition>)sourceItems, (IEnumerable<CompleteApplicationMetadataDefinition>)enumerable);
+            }
+            return (IEnumerable<TR>) MergeEntities((IEnumerable<EntityMetadata>)sourceItems, (IEnumerable<EntityMetadata>)enumerable);
+        }
+
+
+        public static IEnumerable<CompleteApplicationMetadataDefinition> MergeApplications(IEnumerable<CompleteApplicationMetadataDefinition> sourceApplications,
+            IEnumerable<CompleteApplicationMetadataDefinition> overridenApplications) {
             IList<CompleteApplicationMetadataDefinition> resultApplications = new List<CompleteApplicationMetadataDefinition>();
+            var completeApplicationMetadataDefinitions = overridenApplications as CompleteApplicationMetadataDefinition[] ?? overridenApplications.ToArray();
             foreach (var souceAplication in sourceApplications) {
-                var overridenApplication = overridenApplications.FirstOrDefault(a => a.ApplicationName.EqualsIc(souceAplication.ApplicationName));
+                var overridenApplication = completeApplicationMetadataDefinitions.FirstOrDefault(a => a.ApplicationName.EqualsIc(souceAplication.ApplicationName));
                 if (overridenApplication != null) {
                     resultApplications.Add(DoMergeApplication(souceAplication, overridenApplication));
                 } else {
                     resultApplications.Add(souceAplication);
                 }
             }
-            foreach (var overridenApplication in overridenApplications) {
+            foreach (var overridenApplication in completeApplicationMetadataDefinitions) {
                 if (resultApplications.All(f => f.ApplicationName != overridenApplication.ApplicationName)) {
                     resultApplications.Add(overridenApplication);
                 }
@@ -42,6 +58,12 @@ namespace softWrench.sW4.Metadata.Validator {
                     resultSchemas.Add(schema.Key, overridenSchema);
                 } else {
                     resultSchemas.Add(schema.Key, schema.Value);
+                }
+            }
+
+            foreach (var overridenSchema in overridenApplication.Schemas()) {
+                if (souceAplication.Schemas().All(f => !f.Key.Equals(overridenSchema.Key))) {
+                    resultSchemas.Add(overridenSchema.Key, overridenSchema.Value);
                 }
             }
 

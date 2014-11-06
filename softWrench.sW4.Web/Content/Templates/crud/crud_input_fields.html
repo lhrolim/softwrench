@@ -309,7 +309,8 @@
                                  ng-include="contextPath(fieldMetadata.resourcepath)" href="#" style="width: 100%" />
                             <div ng-if="fieldMetadata.resourcepath == null">
 
-                                <section-element-input schema="schema"
+                                <section-element-input extraparameters="extraparameters" 
+                                                       schema="schema"
                                                        datamap="datamap"
                                                        is-dirty="isDirty"
                                                        displayables="fieldMetadata.displayables"
