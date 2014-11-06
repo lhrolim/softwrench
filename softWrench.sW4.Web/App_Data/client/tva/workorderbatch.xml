@@ -65,13 +65,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </commandgroup>
           </commandbars>
 
-          <field attribute="workorderid" label="Work Order #" >
+          <field attribute="wonum" label="Work Order #" >
             <renderer type="default" params="filterenabled=false; width=10%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="limit=14;"  />
           </field>
-          <field attribute="wonum" label="UNID">
+          <field attribute="unid" label="UNID">
             <renderer type="default" params="width=8%"  />
           </field>
           <optionfield attribute="#ReconCd" label="Reconciliation Codes" required="true" providerattribute="reconciliationCodes">
@@ -112,13 +112,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </commandgroup>
           </commandbars>
 
-          <field attribute="workorderid" label="Work Order #" >
+          <field attribute="wonum" label="Work Order #" >
             <renderer type="default" params="filterenabled=false; width=10%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="limit=14;"  />
           </field>
-          <field attribute="wonum" label="UNID">
+          <field attribute="unid" label="UNID">
             <renderer type="default" params="width=8%"  />
           </field>
           <field attribute="#ReconCd" label="Reconciliation Codes" required="true">
