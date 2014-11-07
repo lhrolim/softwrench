@@ -1,12 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService, restService, alertService) {
-    var createTransaction = function (schema, issueType) {
-        var matusetrans = {};
-        matusetrans.issueType = issueType;
-        contextService.insertIntoContext("matusetrans", matusetrans, false);
-        redirectService.goToApplicationView("invissue", "filter", "input", null, null, null);
-    };
     var createInvUse = function(schema, useType) {
         var invuse = {};
         invuse.usetype = useType;
@@ -14,22 +8,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         redirectService.goToApplicationView("invuse", "newdetail", "Input", null, null, null);
     };
     return {
-        createIssue: function (schema) {
-            if (schema === undefined) {
-                return;
-            }
-
-            createTransaction(schema, "ISSUE");
-        },
-        test: function(schema, datamap) {
-            redirectService.goToApplicationView("invissue", "detail", "Input", null, null, null);
-        },
-        createReturn: function(schema) {
-            if (schema === undefined) {
-                return;
-            }
-
-            createTransaction(schema, "RETURN");
+        navToBulkFilter: function () {
+            redirectService.goToApplicationView("invissue", "filter", "input", null, null, null);
         },
         afterchangeworkorder: function (parameters) {
 
@@ -48,7 +28,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
 
             var gldebitacct = parameters.fields['gldebitacct'];
-
 
             if (parameters.fields['workorder_.glaccount']) {
                 gldebitacct = parameters.fields['workorder_.glaccount'];

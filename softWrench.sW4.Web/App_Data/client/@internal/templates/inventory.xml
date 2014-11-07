@@ -25,6 +25,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="location" to="location" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
+        <relationship to="chartofaccounts" >
+          <relationshipAttribute from="gldebitacct" to="glaccount" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
@@ -77,7 +81,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     </entity>
   </entities>
 
-
   <applications>
     <application name="invissuewo" title="Issue/Return" entity="workorder">
       <schemas>
@@ -128,11 +131,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </properties>
           <commandbars>
             <commandgroup position="gridtop">
-              <command id="bulk_issue" label="Bulk Issue" service="inventoryService" method="createIssue" parameters="schema,datamap" position=">filter"
-             successmessage="Issue created"/>
+              <command id="bulk_issue" label="New Bulk Issue" service="inventoryService" method="navToBulkFilter" parameters="" successmessage="New issue created"/>
               <command id="create_issue" label="New Issue" service="inventoryService" method="createReturn" parameters="schema,datamap"
-             successmessage="Return created"/>
-              <command id="test" label="Test" service="inventoryService" method="test" parameters="schema,datamap" successmessage="Return created"/>
+             successmessage="Return created"/>   
             </commandgroup>
           </commandbars>
           <field attribute="matusetransid" hidden="true"/>
@@ -206,7 +207,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="issuetype" label="Issue Type" readonly="true"/>
           <field attribute="storeloc" label="Storeroom" readonly="true"/>
           <field attribute="quantity" label="Quantity Returned">
-            <renderer type="default" params="formatter=numberToAbs;"/>
+            <renderer type="default" params="formatter=@inventoryService.formatQty;"/>
           </field>
           <commandbars>
             <commandgroup position="detailform">
@@ -267,7 +268,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <commandbars>
             <commandgroup position="detailform">
               <removecommand id="save"/>
-              <command id="return" position="&lt;print" label="Return" service="inventoryService" method="returnInvIssue" parameters="datamap" successmessage="Return created"/>
+              <command id="return" position="&lt;print" label="Return" service="inventoryService" method="returnInvIssue" parameters="datamap,$scope" successmessage="Return created"/>
             </commandgroup>
           </commandbars>
         </schema>
@@ -299,7 +300,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="assetnum" label="Asset" hidden="true"/>
           <field attribute="location" label="Location" hidden="true"/>
           <field attribute="issuetype" label="Issue Type" hidden="true"/>
-
         </schema>
 
         <schema id="filter" stereotype="detail" title="Issues and Returns" mode="input" platform="Web">
@@ -320,13 +320,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" required="true" >
             <renderer type="combo"/>
           </association>
-          <!-- TODO: Modify to use default attribute instead of evalexpression attribute. -->
-          <optionfield attribute="issuetype" label="Issue Type" required="true" evalexpression="ctx:fetchFromContext('matusetrans',true,false).issueType">
-            <renderer type="combo"/>
-            <option label="ISSUE" value="ISSUE"/>
-            <option label="RETURN" value="RETURN"/>
-          </optionfield>
-          <field attribute="gldebitacct" label="GL Debit Account"/>
+          <field attribute="gldebitacct" label="GL Debit Account" />
           <field attribute="glcreditacct" label="GL Credit Account" />
           <commandbars>
             <commandgroup position="detailform">
@@ -336,37 +330,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             </commandgroup>
           </commandbars>
         </schema>
-        
-      <detail title="Test" mode="input" platform="Web">
-          <field attribute="matusetransid" hidden="true"/>
-          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="location,assetnum,glaccount">
-            
-            <renderer type="lookup"/>
-            <event type="afterchange" service="inventoryService" method="afterchangeworkorder"/>
-          </association>
-          <association label="Issue To" target="issueto" labelfield="issuetoperson_.displayname">
-            <renderer type="lookup"/>
-          </association>
-          <association label="Asset" target="assetnum" labelfield="asset_.assetnum" extraprojectionvalues="location,glaccount">
-            <event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>
-          </association>
-          <association label="Location" target="location" labelfield="location_.description" extraprojectionvalues="glaccount">
-            <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>
-          </association>
-          <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" required="true" >
-            <renderer type="combo"/>
-          </association>
-          <!-- TODO: Modify to use default attribute instead of evalexpression attribute. -->
-          <optionfield attribute="issuetype" label="Issue Type" required="true" evalexpression="ctx:fetchFromContext('matusetrans',true,false).issueType">
-            <renderer type="combo"/>
-            <option label="ISSUE" value="ISSUE"/>
-            <option label="RETURN" value="RETURN"/>
-          </optionfield>
-          <field attribute="gldebitacct" label="GL Debit Account"/>
-          <field attribute="glcreditacct" label="GL Credit Account" />
-
-        </detail>
-   
       </schemas>
     </application>
 

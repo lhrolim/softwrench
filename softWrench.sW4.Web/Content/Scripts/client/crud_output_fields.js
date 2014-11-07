@@ -71,7 +71,7 @@ app.directive('crudOutputFields', function (contextService) {
             },
 
             $scope.initField = function (fieldMetadata) {
-                bindEvalExpression(fieldMetadata);
+                $scope.bindEvalExpression(fieldMetadata);
                 return null;
             };
 
