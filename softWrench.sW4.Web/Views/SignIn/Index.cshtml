@@ -63,14 +63,15 @@
                             {
                             <div class="text-danger" style="margin-bottom: 2em">Your <strong>User Name</strong> or <strong>Password</strong> was entered incorrectly.</div>
                             }
-                            else if (Model.IsHapagClient)
+                            @*else if (Model.IsHapagClient)
                             {
-                            <script>
-                                $(document).ready(function () {
-                                    alert(' Ungültiger Username oder falsches Passwort \n Invalid Username or Bad Password \n No válido Nombre de usuario o contraseña incorreta');
-                                });
-                            </script>
-                            }
+                                GRICC-64: Remove alternate language - Hapag uses a different index.cshtml
+                                <script>
+                                    $(document).ready(function () {
+                                        alert(' Ungültiger Username oder falsches Passwort \n Invalid Username or Bad Password \n No válido Nombre de usuario o contraseña incorreta');
+                                    });
+                                </script>
+                            }*@
                             else
                             {
                                 var message = Model.LoginMessage.Split('\n');
@@ -88,40 +89,19 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
-                                @if (Model.IsHapagClient)
-                                {
-                                    <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                        Username is required<br />
-                                        Username wird benötigt<br />
-                                        nombre de usuario es necessario                             
-                               
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                        Username is required<br />
+                                <!--GRICC-64: Remove alternate language - Hapag uses a different index.cshtml-->
+                                <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                    Username is required<br />
 
-                                    </div>
-                                }
+                                </div>
+
                                 
                                 <input id="password" type="password" name="password" class="form-control" placeholder="Password">
-                                @if (Model.IsHapagClient)
-                                {
-                                    <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                        Password is required<br />
-                                        Passwort wird benötigt<br />
-                                        se requiere contraseña                               
-                               
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                        Password is required<br />
+                                <!--GRICC-64: Remove alternate language - Hapag uses a different index.cshtml-->
+                                <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                    Password is required<br />
 
-                                    </div>
-                                }
+                                </div>
 
                                 <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset" />
                             </div>
