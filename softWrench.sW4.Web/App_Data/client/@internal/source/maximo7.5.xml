@@ -2669,6 +2669,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
+    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN')">
+      <relationships>
+        <relationship to="workorder" >
+          <relationshipAttribute from="refwo" to="wonum" primary="true"/>
+        </relationship>
+        <relationship to="person" qualifier="issuetoperson">
+          <relationshipAttribute from="issueto" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="asset" >
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
+      </connectorParameters>
+    </entity>
+
     <entity name="tooltrans" idAttribute="tooltransid">
       <attributes>
         <attribute name="transdate" type="datetime" required="true" />

@@ -43,9 +43,13 @@ namespace softWrench.sW4.Metadata.Validator {
 
         private void MergeEntities(IEnumerable<KeyValuePair<string, XmlEntityTargetMetadataParser.TargetParsingResult>> targets) {
             foreach (var target in targets) {
-                var entity = MetadataProvider.Entity(target.Key);
-                entity.Targetschema = target.Value.TargetSchema;
-                entity.ConnectorParameters.Merge(target.Value.Parameters);
+                try {
+                    var entity = MetadataProvider.Entity(target.Key);
+                    entity.Targetschema = target.Value.TargetSchema;
+                    entity.ConnectorParameters.Merge(target.Value.Parameters);
+                } catch (Exception e) {
+                    Log.WarnFormat("Target entity {0} not found. This entity will be ignored.", target.Key); 
+                }
             }
         }
 
