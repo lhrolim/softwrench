@@ -393,6 +393,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="asset_.description" label="Asset">
             <renderer type="default" params="width=15%" />
           </field>
+          <field attribute="worktype" label="Worktype">
+            <renderer type="default" params="width=15%"/>
+          </field>
           <field attribute="status" label="Status">
             <renderer type="default" params="width=15%" />
           </field>
@@ -478,9 +481,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <dataprovider prefilterfunction="FilterProblemCodes"/>
           </association-->
           <field label="Job Plan:" attribute="jpnum" readonly="true" />
-          <association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
+          <!--association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
             <renderer type="lookup"/>
-          </association>
+          </association-->
 
 
           <!-- Adding target start finish date-->
