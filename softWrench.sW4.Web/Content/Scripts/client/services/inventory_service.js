@@ -8,6 +8,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         redirectService.goToApplicationView("invuse", "newdetail", "Input", null, null, null);
     };
     return {
+        createIssue: function () {
+            redirectService.goToApplicationView("invissue", "newInvIssueDetail", "input", null, null, null);
+        },
         navToBulkFilter: function () {
             redirectService.goToApplicationView("invissue", "filter", "input", null, null, null);
         },
@@ -193,14 +196,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             parameters.clonedCompositionData.push(newRecord);
             redirectService.redirectToTab('invissue_');
         },
-        afterchangeinvissueitem: function (parameters) {
+        afterChangeStoreroom: function (parameters) {
             var user = contextService.getUserData();
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
-                location: parameters['fields']['location'],
-                //siteid: user.siteId,
-                //orgid: user.orgId,
-                //status: "ACTIVE"
+                location: parameters['fields']['storeloc'],
             };
             var searchDTO = searchService.buildSearchDTO(searchData, {}, {}, null);
             searchDTO.pageNumber = 1;
@@ -214,7 +214,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 },
                 SearchDTO: searchDTO
             };
-            var urlToUse = url("/api/Data/inventory?" + $.param(restParameters));
+            var urlToUse = url("/api/Data/invcost?" + $.param(restParameters));
             $http.get(urlToUse).success(function (data) {
                 var resultObject = data.resultObject;
                 var fields = resultObject[0].fields;
@@ -269,7 +269,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 }
 
         },
-	createTransfer: function(schema) {
+	    createTransfer: function(schema) {
             if (schema === undefined) {
                 return;
             }
@@ -364,7 +364,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         cancelTransfer: function () {
             redirectService.goToApplicationView("matrectransTransfers", "list", null, null, null, null);
         },
-	afterChangeTransferQuantity: function (event) {
+	    afterChangeTransferQuantity: function (event) {
             if (event.fields['invuseline_.quantity'] > event.fields['#curbal']) {
                 alertService.alert("The quantity being transferred cannot be greater than the current balance of the From Bin.");
                 event.scope.datamap['invuseline_.quantity'] = event.fields['#curbal'];

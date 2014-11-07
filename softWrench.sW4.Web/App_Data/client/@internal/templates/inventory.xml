@@ -29,6 +29,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="gldebitacct" to="glaccount" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid" />
         </relationship>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="storeloc" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="invbalances">
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="inventory_.itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="storeloc" to="location"/>
+          <relationshipAttribute from="binnum" to="binnum" primary="true"/>
+          <relationshipAttribute from="lotnum" to="lotnum"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
@@ -132,8 +145,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <commandbars>
             <commandgroup position="gridtop">
               <command id="bulk_issue" label="New Bulk Issue" service="inventoryService" method="navToBulkFilter" parameters="" successmessage="New issue created"/>
-              <command id="create_issue" label="New Issue" service="inventoryService" method="createReturn" parameters="schema,datamap"
-             successmessage="Return created"/>   
+              <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap"
+                       successmessage="Return created"/>
             </commandgroup>
           </commandbars>
           <field attribute="matusetransid" hidden="true"/>
@@ -329,6 +342,46 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <removecommand id="print"/>
             </commandgroup>
           </commandbars>
+        </schema>
+      
+        <schema id="newInvIssueDetail" mode="input" stereotype="detail">
+          <field attribute="matusetransid" hidden="true"/>
+          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="location,assetnum,glaccount">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="inventoryService" method="afterchangeworkorder"/>
+          </association>
+          <association label="Issue To" target="issueto" labelfield="issuetoperson_.displayname">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Asset" target="assetnum" labelfield="asset_.assetnum" extraprojectionvalues="location,glaccount">
+            <event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>
+          </association>
+          <association label="Location" target="location" labelfield="location_.description" extraprojectionvalues="glaccount">
+            <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>
+          </association>
+          <field attribute="issuetype" label="Issue Type" required="true" readonly="true" default="ISSUE"/>
+          <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit,itemtype" required="true">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Storeroom" target="storeloc" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype" required="true">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="inventoryService" method="afterChangeStoreroom"/>
+          </association>
+          <association label="Bin" target="binnum" labelfield="invbalances_.binnum" hideDescription="true">
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="quantity" label="Quantity" default="1">
+            <renderer type="numericinput" params="min=1;"/>
+          </field>
+          <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+          <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
+          <field attribute="storeloc" label="Storeroom" hidden="true"/>
+          <field attribute="enterby" label="Entered By" readonly="true"/>
+          <field attribute="inventory_.itemtype" label="Item Type" readonly="true"/>
+          <field attribute="siteid" label="Entered By" readonly="true"/>
+          <field attribute="inventory_.costtype" hidden="true"/>
+          <field attribute="inventory_.stdcost" hidden="true"/>
+          <field attribute="inventory_.avgcost" hidden="true"/>
         </schema>
       </schemas>
     </application>
