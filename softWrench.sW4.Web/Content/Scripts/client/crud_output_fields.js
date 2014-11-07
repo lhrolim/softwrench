@@ -54,8 +54,8 @@ app.directive('crudOutputFields', function (contextService) {
 
 
 
-            $scope.getFormattedValue = function (value, column) {
-                return formatService.format(value, column);
+            $scope.getFormattedValue = function (datamap, value, column) {
+                return formatService.format(datamap, value, column);
             };
 
 

@@ -56,6 +56,77 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
             parameters.fields['gldebitacct'] = gldebitacct;
         },
+        formatQtyReturned: function (datamap, value, column) {
+            var dm = datamap.fields;
+            if (dm === undefined) {
+                dm = datamap;
+            }
+            if (dm['issuetype'] == 'ISSUE') {
+                if (dm[column.attribute] == null) {
+                    dm[column.attribute] = 0;
+                }
+            }
+        },
+        formatQty: function(datamap, value, column) {
+            var dm = datamap.fields;
+            if (dm === undefined) {
+                dm = datamap;
+            }
+            if (dm['issuetype'] == 'ISSUE') {
+                if (dm[column.attribute] != null) {
+                    dm[column.attribute] = Math.abs(dm[column.attribute]);
+                }
+            }  
+        },
+        returnInvIssue: function (matusetransitem) {
+            var returnQty = matusetransitem['#quantityadj'];
+            var item = matusetransitem['itemnum'];
+            var storeloc = matusetransitem['storeloc'];
+            var binnum = matusetransitem['binnum'];
+            var message = "Return (" + returnQty + ") " + item + " to " + storeloc + "?";
+            if (binnum != null) {
+                message = message + " (Bin: " + binnum + ")";
+            }
+            alertService.confirm(null, null, function () {
+                var newReturnItem = angular.copy(matusetransitem);
+                newReturnItem['issueid'] = matusetransitem['matusetransid'];
+                newReturnItem['matusetransid'] = null;
+                newReturnItem['rowstamp'] = null;
+                newReturnItem['quantity'] = matusetransitem['#quantityadj'];
+                newReturnItem['issuetype'] = 'RETURN';
+                newReturnItem['qtyreturned'] = null;
+                newReturnItem['qtyrequested'] = matusetransitem['#quantityadj'];
+                
+                var jsonString = angular.toJson(newReturnItem);
+                var httpParameters = {
+                    application: "invissue",
+                    platform: "web",
+                    currentSchemaKey: "editinvissuedetail.input.web"
+                };
+                restService.invokePost("data", "post", httpParameters, jsonString, function () {
+                    redirectService.goToApplicationView("invissue", "list", null, null, null, null);
+                    //var updateReturnItem = angular.copy(matusetransitem);
+                    //updateReturnItem['qtyreturned'] = matusetransitem['qtyreturned'] + matusetransitem['#quantityadj'];
+                    //updateReturnItem['rowstamp'] = null;
+                    //updateReturnItem['']
+                    //var updateJsonString = angular.toJson(updateReturnItem);
+                    //httpParameters.id = updateReturnItem['matusetransid'];
+                    //var urlToUse = url("/api/data/invissue?" + $.param(httpParameters));
+                    
+                    //$http.put(urlToUse, updateJsonString)
+                    //    .success(function(data) {
+                    //        redirectService.goToApplicationView("invissue", "list", null, null, null, null);
+                    //    });
+                    ////.error(function (data) {
+                    ////    redirectService.goToApplicationView("invissue", "list", null, null, null, null);
+                    ////});
+
+                });
+                modalService.hide();
+            }, message , function () {
+                modalService.hide();
+            });
+        },
         invissuelistclick: function(datamap, schema) {
             var param = {};
             param.id = datamap['matusetransid'];
@@ -67,7 +138,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 if (typeof datamap['qtyreturned'] === "string") {
                     datamap['qtyreturned'] = parseInt(datamap['qtyreturned']);
                 }
-                if (datamap['qtyreturned'] + datamap['quantity'] < 0) {
+                if (datamap['quantity'] - datamap['qtyreturned'] > 0) {
                     detail = 'editinvissuedetail';
                     mode = 'input';
                 } else {

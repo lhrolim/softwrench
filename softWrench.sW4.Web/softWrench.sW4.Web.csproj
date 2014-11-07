@@ -641,6 +641,7 @@
     <Content Include="Content\Scripts\client\crud_base_controller.js" />
     <Content Include="Content\Scripts\client\crud_list.js" />
     <Content Include="Content\Scripts\client\logAdmin.js" />
+    <Content Include="Content\Scripts\client\services\dispatcher_service.js" />
     <Content Include="Content\Scripts\client\services\icon_service.js" />
     <Content Include="Content\Scripts\client\services\excelservice.js" />
     <Content Include="Content\Scripts\client\services\date_service.js" />
@@ -650,7 +651,7 @@
     <Content Include="Content\Scripts\client\services\rest_service.js" />
     <Content Include="Content\Scripts\client\services\generalsr_service.js" />
     <Content Include="Content\Scripts\client\services\userpreference_service.js" />
-    <Content Include="Content\Scripts\client\services\eventdispatcher_service.js" />
+    <Content Include="Content\Scripts\client\services\event_service.js" />
     <Content Include="Content\Scripts\client\services\file_service.js" />
     <Content Include="Content\Scripts\client\services\localstorage_service.js" />
     <Content Include="Content\Scripts\client\services\modal_service.js" />

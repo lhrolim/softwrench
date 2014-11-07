@@ -19,29 +19,17 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var invIssue = maximoTemplateData.IntegrationObject;
 
             /*FIND CORRECT VALUES FOR THESE FIELDS*/
-            w.SetValueIfNull(invIssue, "ACTUALDATE", Convert.ToDateTime("2006-08-19T10:27:14-07:00"));
+            w.SetValueIfNull(invIssue, "ACTUALDATE", DateTime.Now.FromServerToRightKind());
             w.SetValueIfNull(invIssue, "SITEID", user.SiteId);
-            w.SetValueIfNull(invIssue, "ITEMNUM", "XMP-3500");
-            w.SetValueIfNull(invIssue, "QUANTITY", 1.00);
-            w.SetValueIfNull(invIssue, "UNITCOST", 0.00);
-            w.SetValueIfNull(invIssue, "ACTUALCOST", 0.00);
-            w.SetValueIfNull(invIssue, "LINECOST", 0.00);
-            w.SetValueIfNull(invIssue, "QTYREQUESTED", 0.00);
             /*FIND CORRECT VALUES FOR THESE FIELDS*/
 
-           
             w.SetValueIfNull(invIssue, "TRANSDATE", DateTime.Now.FromServerToRightKind());
             w.SetValueIfNull(invIssue, "SENDERSYSID", "SW");
             
-
-
-            //var crudData = (CrudOperationData)maximoTemplateData.OperationData;
-            //LongDescriptionHandler.HandleLongDescription(sr, crudData);
-
-            //HandleAttachmentAndScreenshot(crudData, sr, maximoTemplateData.ApplicationMetadata);
-
             base.BeforeCreation(maximoTemplateData);
         }
+
+
 
         //private void HandlePRLINES(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData crudDataEntity, object sr) {
         //    var prlines = (IEnumerable<CrudOperationData>)crudDataEntity.GetRelationship("prline");

@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('formatService', function ($filter, i18NService) {
+app.factory('formatService', function ($filter, i18NService, dispatcherService) {
 
     var doFormatDate = function (value, dateFormat, forceConversion) {
         if (value == null) {
@@ -48,12 +48,24 @@ app.factory('formatService', function ($filter, i18NService) {
     };
 
     return {
-        format: function (value, column, eventdispatcherService) {
+        format: function (datamap, value, column) {
             if (column == undefined) {
                 return value;
             }
 
+            if (column.rendererParameters['formatter'] != undefined) {
+                //If the formatter starts with an @ symbol
+                if (column.rendererParameters['formatter'].match(/\@/g)) {
+                    //Remove the @ symbol and then split the xxx.yyy service call
+                    var serviceCall = column.rendererParameters['formatter'].replace(/\@/g, '').split('.');
+                    var serviceName = serviceCall[0];
+                    var serviceMethod = serviceCall[1];
 
+                    var fn = dispatcherService.loadService(serviceName, serviceMethod);
+                    fn(datamap, value, column);
+                }
+            }
+            
             var dateFormat;
             if (column.rendererType == "datetime") {
                 if (value != null) {

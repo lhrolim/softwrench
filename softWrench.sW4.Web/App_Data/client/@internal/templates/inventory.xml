@@ -157,10 +157,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="width=12%;"/>
           </field>
           <field attribute="quantity" label="Quantity">
-            <renderer type="default" params="width=12%;formatter=numberToAbs;"/>
+            <renderer type="default" params="width=12%;formatter=@inventoryService.formatQty;"/>
           </field>
-          <field attribute="qtyreturned" label="Quantity Returned" default="0" enabledefault="@issuetype == 'ISSUE'">
-            <renderer type="default" params="width=12%;"/>
+          <field attribute="qtyreturned" label="Quantity Returned">
+            <renderer type="default" params="width=12%;formatter=@inventoryService.formatQtyReturned;"/>
           </field>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html"></section>
         </list>
@@ -226,9 +226,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="issuetype" label="Issue Type" readonly="true"/>
           <field attribute="storeloc" label="Storeroom" readonly="true"/>
           <field attribute="quantity" label="Quantity Issued">
-            <renderer type="default" params="formatter=numberToAbs;"/>
+            <renderer type="default" params="formatter=@inventoryService.formatQty;"/>
           </field>
-          <field attribute="qtyreturned" label="Quantity Returned"/>
+          <field attribute="qtyreturned" label="Quantity Returned">
+            <renderer type="default" params="formatter=@inventoryService.formatQtyReturned;"/>
+          </field>
           <commandbars>
             <commandgroup position="detailform">
               <removecommand id="save"/>
@@ -236,7 +238,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </commandbars>
         </schema>
 
-        <schema id="editinvissuedetail" stereotype="detail" mode="input">
+        <schema id="editinvissuedetail" stereotype="detail" mode="input" platform="web">
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="itemnum" label="Item" readonly="true"/>
           <field attribute="item_.description" label="Description" readonly="true"/>
@@ -246,16 +248,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="location" label="Location" readonly="true"/>
           <field attribute="issuetype" label="Issue Type" readonly="true"/>
           <field attribute="storeloc" label="Storeroom" readonly="true"/>
+          <field attribute="binnum" label="Bin" readonly="true"/>
+          <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+          <field attribute="actualcost" label="Actual Cost" readonly="true"/>
+          <field attribute="gldebitacct" hidden="true"/>
+          <field attribute="glcreditacct" hidden="true"/>
+          <field attribute="linecost" hidden="true"/>
+          <field attribute="issueid" hidden="true"/>
           <field attribute="quantity" label="Quantity Issued" readonly="true">
-            <renderer type="default" params="formatter=numberToAbs;"/>
+            <renderer type="default" params="formatter=@inventoryService.formatQty;"/>
           </field>
-          <field attribute="qtyreturned" label="Quantity Returned" readonly="true"/>
-          <field attribute="#quantityadj" label="New Return Quantity" default="1">
-            <renderer type="numericinput" params="min=1;maxExpr=({0} + {1});maxExprVar=quantity,qtyreturned;"/>
+          <field attribute="qtyreturned" label="Quantity Returned" readonly="true">
+            <renderer type="default" params="formatter=@inventoryService.formatQtyReturned;"/>
+          </field>
+          <field attribute="#quantityadj" label="New Return Quantity">
+            <renderer type="numericinput" params="min=1;max=(@quantity - @qtyreturned);"/>
           </field>
           <commandbars>
             <commandgroup position="detailform">
               <removecommand id="save"/>
+              <command id="return" position="&lt;print" label="Return" service="inventoryService" method="returnInvIssue" parameters="datamap" successmessage="Return created"/>
             </commandgroup>
           </commandbars>
         </schema>
