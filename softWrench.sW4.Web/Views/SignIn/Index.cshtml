@@ -88,19 +88,41 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
-                                <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                    Username is required<br />
-                                    Username wird benötigt<br />
-                                    nombre de usuario es necessario                             
+                                @if (Model.IsHapagClient)
+                                {
+                                    <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                        Username is required<br />
+                                        Username wird benötigt<br />
+                                        nombre de usuario es necessario                             
                                
-                                </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                        Username is required<br />
+
+                                    </div>
+                                }
+                                
                                 <input id="password" type="password" name="password" class="form-control" placeholder="Password">
-                                <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
-                                    Password is required<br />
-                                    Passwort wird benötigt<br />
-                                    se requiere contraseña                               
+                                @if (Model.IsHapagClient)
+                                {
+                                    <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                        Password is required<br />
+                                        Passwort wird benötigt<br />
+                                        se requiere contraseña                               
                                
-                                </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div id="passwordMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
+                                        Password is required<br />
+
+                                    </div>
+                                }
+
                                 <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset" />
                             </div>
                             <div class="user-links col-sm-6">
