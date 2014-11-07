@@ -143,6 +143,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </connectorParameters>
     </entity>
 
+    <entity name="invissuewo" idAttribute="wonum" parententity="workorder">
+      <relationships>
+        <relationship to="invissue" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+      </relationships>
+    </entity>
+
     <entity name="workorder" idAttribute="wonum" whereclause="woclass like 'WORKORDER'">
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />

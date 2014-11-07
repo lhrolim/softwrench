@@ -34,15 +34,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
-    <entity name="invissuewo" idAttribute="wonum" parententity="workorder">
-      <relationships>
-        <relationship to="invissue" collection="true">
-          <relationshipAttribute from="wonum" to="refwo" primary="true" />
-          <relationshipAttribute from="siteid" to="siteid" />
-        </relationship>
-      </relationships>
-    </entity>
-    
     <entity name="physicalCount" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 1 and DATEDIFF(day, physcntdate, GETDATE()) > inventory_.ccf and inventory_.ccf != 0">
       <relationships>
         <relationship to="item" >
