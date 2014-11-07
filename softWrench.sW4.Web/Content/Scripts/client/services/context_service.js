@@ -17,6 +17,15 @@ app.factory('contextService', function ($rootScope) {
 
 
         },
+
+        set: function (key, value, userootscope) {
+            return this.insertIntoContext(key, value, userootscope);
+        },
+
+        get: function(key, isJson, userootscope) {
+            return this.fetchFromContext(key, isJson, userootscope);
+        },
+
         fetchFromContext: function(key, isJson, userootscope) {
             //shortcut method
             var value = this.retrieveFromContext(key, userootscope);

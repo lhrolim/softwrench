@@ -84,7 +84,7 @@ app.directive('crudList', function (contextService) {
                     fullKey: "/Global/Grids/ScanBar",
                     searchData: $scope.searchData
                 };
-                eventdispatcherService.onload($scope.schema, null, parameters);
+                eventdispatcherService.onload($scope.schema, $scope.datamap, parameters);
 
                 if ($scope.ismodal == 'true' && !(true === $scope.$parent.showingModal)) {
                     return;
@@ -147,6 +147,9 @@ app.directive('crudList', function (contextService) {
                         $scope.searchData = searchData;
                     }
                     pagetogo = 1;
+                }
+                if (extraparameters.avoidspin) {
+                    contextService.set("avoidspin", true, true);
                 }
                 $scope.selectPage(pagetogo, pageSize, printmode);
             });

@@ -1,9 +1,6 @@
-<div>
-
-    <!--        {{extraparameters[fieldMetadata.parameters['datamapref']]-->
-    <!--        <inline-composition-list-wrapper compositionschemadefinition="extraparameters[fieldMetadata.parameters['schemaref']]"-->
-    <!--                                         compositiondata="extraparameters[fieldMetadata.parameters['datamapref']]"-->
-    <!--                                         iscollection="true" />-->
+<div style="overflow-x: hidden; overflow-y: auto; max-height: 400px">
+    
+    <h4>{{fieldMetadata.parameters['title']}}</h4>
 
     <composition-list title="aaa"
                       compositionschemadefinition="extraparameters[fieldMetadata.parameters['schemaref']]"
@@ -14,12 +11,4 @@
                       cancelfn="toListSchema(data,schema)"
                       previousschema="previousschema" previousdata="previousdata" />
 
-    <!--        <crud-list datamap="extraparameters[fieldMetadata.parameters['datamapref']]"-->
-    <!--                   schema="extraparameters[fieldMetadata.parameters['schemaref']]"-->
-    <!--                   pagination-data="{}"-->
-    <!--                   search-data="{}"-->
-    <!--                   search-operator="{}"-->
-    <!--                   search-sort="{}"-->
-    <!--                    hidebars="true"-->
-    <!--                   />-->
 </div>
