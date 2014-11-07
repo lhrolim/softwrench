@@ -158,10 +158,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="width=12%;"/>
           </field>
           <field attribute="quantity" label="Quantity">
-            <renderer type="default" params="width=12%;formatter=@inventoryService.formatQty;"/>
+            <renderer type="default" params="width=12%;formatter=@inventoryService.formatQtyList;"/>
           </field>
           <field attribute="qtyreturned" label="Quantity Returned">
-            <renderer type="default" params="width=12%;formatter=@inventoryService.formatQtyReturned;"/>
+            <renderer type="default" params="width=12%;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html"></section>
         </list>
@@ -207,7 +207,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="issuetype" label="Issue Type" readonly="true"/>
           <field attribute="storeloc" label="Storeroom" readonly="true"/>
           <field attribute="quantity" label="Quantity Returned">
-            <renderer type="default" params="formatter=@inventoryService.formatQty;"/>
+            <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
           </field>
           <commandbars>
             <commandgroup position="detailform">
@@ -227,10 +227,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="issuetype" label="Issue Type" readonly="true"/>
           <field attribute="storeloc" label="Storeroom" readonly="true"/>
           <field attribute="quantity" label="Quantity Issued">
-            <renderer type="default" params="formatter=@inventoryService.formatQty;"/>
+            <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
           </field>
           <field attribute="qtyreturned" label="Quantity Returned">
-            <renderer type="default" params="formatter=@inventoryService.formatQtyReturned;"/>
+            <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
           </field>
           <commandbars>
             <commandgroup position="detailform">
@@ -257,10 +257,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="linecost" hidden="true"/>
           <field attribute="issueid" hidden="true"/>
           <field attribute="quantity" label="Quantity Issued" readonly="true">
-            <renderer type="default" params="formatter=@inventoryService.formatQty;"/>
+            <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
           </field>
           <field attribute="qtyreturned" label="Quantity Returned" readonly="true">
-            <renderer type="default" params="formatter=@inventoryService.formatQtyReturned;"/>
+            <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
           </field>
           <field attribute="#quantityadj" label="New Return Quantity">
             <renderer type="numericinput" params="min=1;max=(@quantity - @qtyreturned);"/>

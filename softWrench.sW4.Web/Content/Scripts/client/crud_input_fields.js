@@ -673,18 +673,6 @@ app.directive('crudInputFields', function (contextService) {
 
             init();
 
-            //function evalExpression(fieldMetadata) {
-            //    //If applying mathematical operations from two or more metadata fields
-            //    if (expressionService.isPrecompiledReplaceRegexMatch(fieldMetadata.evalExpression)) {
-            //        return bindEvalExpression(fieldMetadata);
-            //    } else {
-            //        //Evaluates a single field
-            //        $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
-            //    }
-            //    return null;
-            //}
-
-
             function bindExpression(expression) {
                 var variables = expressionService.getVariablesForWatch(expression);
                 $scope.$watchCollection(variables, function (newVal, oldVal) {

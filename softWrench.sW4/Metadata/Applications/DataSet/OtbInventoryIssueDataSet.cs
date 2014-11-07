@@ -49,29 +49,25 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var user = SecurityFacade.CurrentUser();
             var commaSeparatedIds = string.Join(",", matusetransidlist);
             var query = MaxDAO.FindByNativeQuery(
-                "SELECT issueid, sum(quantity) " +
-                "FROM matusetrans " +
-                "WHERE issueid in (" + commaSeparatedIds + ")" +
-                " and siteid='" + user.SiteId + "'" +
-                " group by issueid " +
-                " having sum(quantity) > 0");
+                String.Format("SELECT issueid, sum(quantity) FROM matusetrans WHERE issueid in ({0}) and siteid='{1}' group by issueid having sum(quantity) > 0",commaSeparatedIds,user.SiteId));
 
             if (query == null) { 
                 return;
             }
 
+            //For each matusetrans record in the datamap and each result in the above query,
+            //checks to see if there was a match between the attribute holder's matusetransid and the query's issueid.
+            //If a match is found, the summation is set as the qtyReturned value.
+            //This is needed because Maximo itself does not provide a field to sum the quantity field for all
+            //items returned to an issue. Instead, they perform this exact query.
+            //Quantity returned is set to 0 if no match is found (i.e. no items have been returned to the issue)
             foreach (var attributeHolder in datamap) {
                 var matusetransid = attributeHolder.GetAttribute("MATUSETRANSID");
                 foreach (var record in query) {
                     if (record["issueid"] == matusetransid.ToString()) {
                         double qtyReturned;
                         var anyReturned = Double.TryParse(record[""], out qtyReturned);
-                        if (anyReturned) {
-                            attributeHolder.SetAttribute("QTYRETURNED", qtyReturned);
-                        }
-                        else {
-                            attributeHolder.SetAttribute("QTYRETURNED", 0);
-                        }
+                        attributeHolder.SetAttribute("QTYRETURNED", anyReturned ? qtyReturned : 0);
                     }
                 }
             }
@@ -86,28 +82,16 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 return;
             }
 
-            var query = MaxDAO.FindByNativeQuery(
-             "SELECT sum(quantity) FROM matusetrans WHERE issueid = " + matusetransid + " and siteid='" + user.SiteId + "'");
+            var query = MaxDAO.FindSingleByNativeQuery<object>(
+             String.Format("SELECT sum(quantity) FROM matusetrans WHERE issueid = {0} and siteid='{1}'", matusetransid, user.SiteId));
 
             if (query == null) {
                 return;   
             }
 
-            var queryResult = query[0].Values.FirstOrDefault();
-
-            if (queryResult == null) {
-                return;
-            }
-
             double qtyReturned;
-            var anyQtyReturned = Double.TryParse(queryResult, out qtyReturned);
-            if (anyQtyReturned) {
-                resultObject.SetAttribute("QTYRETURNED", qtyReturned);
-            }
-            else {
-                resultObject.SetAttribute("QTYRETURNED", 0);
-            }
-            
+            var anyQtyReturned = Double.TryParse(query.ToString(), out qtyReturned);
+            resultObject.SetAttribute("QTYRETURNED", anyQtyReturned ? qtyReturned : 0);
         }
 
         public SearchRequestDto FilterWorkorders(AssociationPreFilterFunctionParameters parameters) {

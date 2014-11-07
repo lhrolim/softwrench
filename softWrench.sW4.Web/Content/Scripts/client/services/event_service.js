@@ -3,11 +3,11 @@
 var app = angular.module('sw_layout');
 
 app.factory('eventService', function ($log, dispatcherService) {
-    var loadEvent = function(schema, eventName) {
-        if (schema.events === undefined) {
+    var loadEvent = function(eventholder, eventName) {
+        if (eventholder.events === undefined) {
             return null;
         }
-        var event = schema.events[eventName];
+        var event = eventholder.events[eventName];
         if (!event) {
             return null;
         }
@@ -18,22 +18,22 @@ app.factory('eventService', function ($log, dispatcherService) {
         return dispatcherService.loadService(service, method);
     };
     return {
-        onload: function(schema, datamap, parameters) {
-            var fn = loadEvent(schema, 'onload');
+        onload: function(eventholder, datamap, parameters) {
+            var fn = loadEvent(eventholder, 'onload');
             if (!fn) {
                 return;
             }
-            fn(schema, datamap, parameters);
+            fn(eventholder, datamap, parameters);
         },
-        onviewdetail: function(schema, parameters) {
-            var fn = loadEvent(schema, 'onviewdetail');
+        onviewdetail: function (eventholder, parameters) {
+            var fn = loadEvent(eventholder, 'onviewdetail');
             if (!fn) {
                 return;
             }
             fn(parameters);
         },
-        loadEvent: function(schema, eventName) {
-            return loadEvent(schema, eventName);
+        loadEvent: function (eventholder, eventName) {
+            return loadEvent(eventholder, eventName);
         }
     };
 

@@ -76,14 +76,6 @@ app.directive('crudList', function (contextService) {
                 }
             });
 
-            $scope.renderFormat = function(item, format) {
-                if (format == 'Math.abs') {
-                    if (!isNaN(item))
-                        return Math.abs(item);
-                }
-                return item;
-            };
-
             $scope.$on('listTableRenderedEvent', function (listTableRenderedEvent) {
                 var log = $log.getInstance('sw4.crud_list_dir#on#listTableRenderedEvent');
                 log.debug('init table rendered listener');
