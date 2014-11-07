@@ -316,6 +316,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
             ///  pageNumber --> the page to go
             ///  pageSize --> a different page size than the scope one
             ///  printMode --> if we need to refresh the grid for printmode
+            ///  avoidsping --> if true, we wont show the busy indicator on the screen
             /// </param>
             $rootScope.$broadcast("sw_refreshgrid", searchData, extraparameters);
         },

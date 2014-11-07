@@ -6,7 +6,7 @@
     <attributes>
       <attribute name="#ReconCd" targetpath="RECONCD" type="varchar"/>
       <attribute name="#pmchange" targetpath="PMCHANGE" type="varchar"/>
-      <attribute name="#fdbckcomment" targetpath="FEEDBACKCOMMENT" type="varchar"/>
+      <attribute name="#fdbckcomment" targetpath="FEEDBACK_LONGDESCRIPTION" type="varchar"/>
     </attributes>    
   </entity>
   
