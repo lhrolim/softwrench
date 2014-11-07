@@ -144,12 +144,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </entity>
 
     <entity name="workorder" idAttribute="wonum" whereclause="woclass like 'WORKORDER'">
-      <relationships>
-        <relationship to="invissue" collection="true">
-          <relationshipAttribute from="wonum" to="refwo" primary="true" />
-          <relationshipAttribute from="siteid" to="siteid" />
-        </relationship>
-      </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />

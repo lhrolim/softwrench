@@ -1,0 +1,7 @@
+﻿<div ng-controller="InvIssueReturnActionController">
+    <button class="fa fa-rotate-left" 
+            ng-disabled="hasBeenReturned(dm)"
+            ng-class="updateOpacity(dm)"
+            ng-show="isReturnHidden(dm)"
+            title="Return"></button>
+</div>

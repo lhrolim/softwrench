@@ -12,10 +12,11 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ServiceAttribute = "service";
         public const string MethodAttribute = "method";
         public const string RootElement = "metadata";
-        public const string BaseDisplayableShowExpressionAtribute = "showexpression";
-        public const string BaseDisplayableEnableExpressionAtribute = "enableexpression";
-        public const string BaseDisplayableEvalExpressionAtribute = "evalexpression";
-        public const string BaseDisplayableToolTipAtribute = "tooltip";
+        public const string BaseDisplayableShowExpressionAttribute = "showexpression";
+        public const string BaseDisplayableEnableExpressionAttribute = "enableexpression";
+        public const string BaseDisplayableEvalExpressionAttribute = "evalexpression";
+        public const string BaseDisplayableEnableDefaultAttribute = "enabledefault";
+        public const string BaseDisplayableToolTipAttribute = "tooltip";
         public const string BaseDisplayableHiddenAttribute = "hidden";
         public const string BaseDisplayableLabelAttribute = "label";
         public const string BaseDisplayableIdAttribute = "id";

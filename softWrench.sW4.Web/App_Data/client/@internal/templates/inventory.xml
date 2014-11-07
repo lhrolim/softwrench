@@ -4,7 +4,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
   <templates>
     <template path="@chartofaccounts.xml"/>
-    <template path="@workorder.xml"/>
     <template path="@item.xml"/>
   </templates>
   
@@ -30,7 +29,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
       </connectorParameters>
     </entity>
-    
+
+    <entity name="invissuewo" idAttribute="wonum" parententity="workorder">
+      <relationships>
+        <relationship to="invissue" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+      </relationships>
+    </entity>
+
     <entity name="physicalCount" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 1 and DATEDIFF(day, physcntdate, GETDATE()) > inventory_.ccf and inventory_.ccf != 0">
       <relationships>
         <relationship to="item" >
@@ -77,9 +85,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     </entity>
   </entities>
 
-
   <applications>
-    <application name="invissuewo" title="Workorder Inventory Issuing and Returns" entity="workorder">
+    <application name="invissuewo" title="Issue/Return" entity="invissuewo">
       <schemas>
         <schema id="newdetail" stereotype="detail" mode="input">
           <field attribute="#refwo" label="Workorder" readonly="true"/>
@@ -106,38 +113,61 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </schema>
       </schemas>
     </application>
+   
+    <application name="inventory" title="Inventory" entity="inventory">
+      <schemas>
+        <list>
+          <field attribute="itemnum"/>
+          <field attribute="binnum"/>
+          <field attribute="location"/>
+          <field attribute="siteid"/>
+          <field attribute="orgid"/>
+          <field attribute="status"/>
+        </list>
+      </schemas>
+    </application>
 
     <application name="invissue" title="Issue Inventory" entity="invissue">
       <schemas>
-        <schema stereotype="list" id="invissuelist" title="Issues and Returns">
+        <list id="invissuelist" title="Issues and Returns">
           <properties>
-            <property key="list.click.schema" value="viewinvissuedetail"/>
+            <property key="list.click.service" value="inventoryService.invissuelistclick"/>
           </properties>
           <commandbars>
             <commandgroup position="gridtop">
-              <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap" position=">filter"
-             successmessage="Issue created"/>
-              <command id="create_return" label="New Return" service="inventoryService" method="createReturn" parameters="schema,datamap"
-             successmessage="Return created"/>
+              <command id="bulk_issue" label="New Bulk Issue" service="inventoryService" method="navToBulkFilter" parameters="" successmessage="New issue created"/>
+              <command id="create_issue" label="New Issue" service="inventoryService" method="createReturn" parameters="schema,datamap" successmessage="Return created"/>   
             </commandgroup>
           </commandbars>
           <field attribute="matusetransid" hidden="true"/>
+          <field attribute="storeloc" hidden="true"/>
+          <field attribute="binnum" hidden="true"/>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="width=12%;"/>
+          </field>
           <field attribute="refwo" label="Workorder">
-            <renderer type="default" params="width=15%;"/>
+            <renderer type="default" params="width=12%;"/>
           </field>
           <field attribute="issueto" label="Issue To">
-            <renderer type="default" params="width=15%;"/>
+            <renderer type="default" params="width=12%;"/>
           </field>
           <field attribute="assetnum" label="Asset">
-            <renderer type="default" params="width=15%;"/>
+            <renderer type="default" params="width=12%;"/>
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" params="width=15%;"/>
+            <renderer type="default" params="width=12%;"/>
           </field>
           <field attribute="issuetype" label="Issue Type">
-            <renderer type="default" params="width=15%;"/>
+            <renderer type="default" params="width=12%;"/>
           </field>
-        </schema>
+          <field attribute="quantity" label="Quantity">
+            <renderer type="default" params="width=12%;formatter=@inventoryService.formatQtyList;"/>
+          </field>
+          <field attribute="qtyreturned" label="Quantity Returned">
+            <renderer type="default" params="width=12%;formatter=@inventoryService.formatQtyReturnedList;"/>
+          </field>
+          <section resourcepath="/Content/Templates/otb/invissuereturnaction.html"></section>
+        </list>
 
         <schema id="itemlist" stereotype="compositionlist">
           <properties>
@@ -169,26 +199,91 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="storeloc" hidden="true"/>
         </schema>
 
-        <schema id="viewinvissuedetail" stereotype="detail">
+        <schema id="viewinvreturndetail" stereotype="detail" mode="output">
           <field attribute="matusetransid" hidden="true"/>
-          <field attribute="refwo" label="Workorder"/>
-          <field attribute="issueto" label="Issue To"/>
-          <field attribute="assetnum" label="Asset"/>
-          <field attribute="location" label="Location"/>
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="item_.description" label="Description" readonly="true"/>
+          <field attribute="refwo" label="Workorder" readonly="true"/>
+          <field attribute="issueto" label="Issue To" readonly="true"/>
+          <field attribute="assetnum" label="Asset" readonly="true"/>
+          <field attribute="location" label="Location" readonly="true"/>
+          <field attribute="issuetype" label="Issue Type" readonly="true"/>
+          <field attribute="storeloc" label="Storeroom" readonly="true"/>
+          <field attribute="quantity" label="Quantity Returned">
+            <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
+          </field>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+        
+        <schema id="viewinvissuedetail" stereotype="detail" mode="output">
+          <field attribute="matusetransid" hidden="true"/>
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="item_.description" label="Description" readonly="true"/>
+          <field attribute="refwo" label="Workorder" readonly="true"/>
+          <field attribute="issueto" label="Issue To" readonly="true"/>
+          <field attribute="assetnum" label="Asset" readonly="true"/>
+          <field attribute="location" label="Location" readonly="true"/>
+          <field attribute="issuetype" label="Issue Type" readonly="true"/>
+          <field attribute="storeloc" label="Storeroom" readonly="true"/>
+          <field attribute="quantity" label="Quantity Issued">
+            <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
+          </field>
+          <field attribute="qtyreturned" label="Quantity Returned">
+            <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
+          </field>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
 
-          <field attribute="issuetype" label="Issue Type"/>
-          <field attribute="storeloc" label="Storeroom"/>
-          <field attribute="itemnum" label="Item"/>
-          <field attribute="item_.description" label="Description"/>
-          <field attribute="quantity" label="Quantity"/>
+        <schema id="editinvissuedetail" stereotype="detail" mode="input" platform="web">
+          <field attribute="matusetransid" hidden="true"/>
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="item_.description" label="Description" readonly="true"/>
+          <field attribute="refwo" label="Workorder" readonly="true"/>
+          <field attribute="issueto" label="Issue To" readonly="true"/>
+          <field attribute="assetnum" label="Asset" readonly="true"/>
+          <field attribute="location" label="Location" readonly="true"/>
+          <field attribute="issuetype" label="Issue Type" readonly="true"/>
+          <field attribute="storeloc" label="Storeroom" readonly="true"/>
+          <field attribute="binnum" label="Bin" readonly="true"/>
+          <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+          <field attribute="actualcost" label="Actual Cost" readonly="true"/>
+          <field attribute="gldebitacct" hidden="true"/>
+          <field attribute="glcreditacct" hidden="true"/>
+          <field attribute="linecost" hidden="true"/>
+          <field attribute="issueid" hidden="true"/>
+          <field attribute="quantity" label="Quantity Issued" readonly="true">
+            <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
+          </field>
+          <field attribute="qtyreturned" label="Quantity Returned" readonly="true">
+            <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
+          </field>
+          <field attribute="#quantityadj" label="New Return Quantity">
+            <renderer type="numericinput" params="min=1;max=(@quantity - @qtyreturned);"/>
+          </field>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+              <command id="return" position="&lt;print" label="Return" service="inventoryService" method="returnInvIssue" parameters="datamap,$scope" successmessage="Return created"/>
+            </commandgroup>
+          </commandbars>
         </schema>
 
         <schema id="newitem" stereotype="compositiondetail" mode="input" >
           <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit,itemtype" required="true">
             <renderer type="lookup"/>
-            <!--<event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>-->
+            <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
           </association>
-          <field attribute="quantity" label="Quantity"/>
+          <field attribute="quantity" label="Quantity" default="1">
+            <renderer type="numericinput" params="min=1;"/>
+          </field>
           <field attribute="unitcost" label="Unit Cost" readonly="true"/>
           <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
           <field attribute="storeloc" label="Storeroom" hidden="true"/>
@@ -208,31 +303,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="assetnum" label="Asset" hidden="true"/>
           <field attribute="location" label="Location" hidden="true"/>
           <field attribute="issuetype" label="Issue Type" hidden="true"/>
-
         </schema>
 
-        <detail id="lookupwo" title="Issues and Returns" mode="input" platform="Web">
+        <schema id="filter" stereotype="detail" title="Issues and Returns" mode="input" platform="Web">
           <field attribute="matusetransid" hidden="true"/>
-          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="location,assetnum" required="true">
+          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="location,assetnum,glaccount">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterchangeworkorder"/>
           </association>
-          <association label="Issue To" target="issueto" labelfield="issuetoperson_.displayname" required="true">
+          <association label="Issue To" target="issueto" labelfield="issuetoperson_.displayname">
             <renderer type="lookup"/>
           </association>
-          <association label="Asset" target="assetnum" labelfield="asset_.assetnum" extraprojectionvalues="location">
+          <association label="Asset" target="assetnum" labelfield="asset_.assetnum" extraprojectionvalues="location,glaccount">
+            <event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>
           </association>
-          <association label="Location" target="location" labelfield="location_.description">
+          <association label="Location" target="location" labelfield="location_.description" extraprojectionvalues="glaccount">
+            <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>
           </association>
           <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" required="true" >
             <renderer type="combo"/>
           </association>
-          <!-- TODO: Modify to use default attribute instead of evalexpression attribute. -->
-          <optionfield attribute="issuetype" label="Issue Type" required="true" evalexpression="ctx:fetchFromContext('matusetrans',true,false).issueType">
-            <renderer type="combo"/>
-            <option label="ISSUE" value="ISSUE"/>
-            <option label="RETURN" value="RETURN"/>
-          </optionfield>
+          <field attribute="gldebitacct" label="GL Debit Account" />
+          <field attribute="glcreditacct" label="GL Credit Account" />
           <commandbars>
             <commandgroup position="detailform">
               <command id="start_issuing" label="Start Issuing" service="inventoryService" position="&lt;save" method="editinvissuewo" parameters="schema,datamap"/>
@@ -240,7 +332,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <removecommand id="print"/>
             </commandgroup>
           </commandbars>
-        </detail>
+        </schema>
       </schemas>
     </application>
 

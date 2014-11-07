@@ -54,8 +54,8 @@ app.directive('crudOutputFields', function (contextService) {
 
 
 
-            $scope.getFormattedValue = function (value, column) {
-                return formatService.format(value, column);
+            $scope.getFormattedValue = function (datamap, value, column) {
+                return formatService.format(datamap, value, column);
             };
 
 
@@ -70,7 +70,20 @@ app.directive('crudOutputFields', function (contextService) {
                 }
             },
 
+            $scope.initField = function (fieldMetadata) {
+                $scope.bindEvalExpression(fieldMetadata);
+                return null;
+            };
 
+            $scope.handleDefaultValue = function (data, column) {
+                var key = column.target ? column.target : column.attribute;
+
+                if (column.defaultValue != null && data[key] == null) {
+                    if (column.enableDefault != null && expressionService.evaluate(column.enableDefault, data)) {
+                        data[key] = column.defaultValue;
+                    }
+                }
+            }
 
 
             $scope.getSectionStyle = function (fieldMetadata) {

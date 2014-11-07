@@ -108,7 +108,7 @@ app.directive('compositionList', function (contextService) {
 
         controller: function ($scope, $log, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
-            expressionService, $timeout, modalService, redirectService, eventdispatcherService, iconService) {
+            expressionService, $timeout, modalService, redirectService, eventService, iconService) {
             
 
             function init() {
@@ -151,7 +151,7 @@ app.directive('compositionList', function (contextService) {
 
             var parameters = {};
             parameters.clonedCompositionData = $scope.clonedCompositionData;
-            eventdispatcherService.onload($scope.compositionlistschema, $scope.parentdata, parameters);
+            eventService.onload($scope.compositionlistschema, $scope.parentdata, parameters);
 
         };
 
@@ -266,7 +266,7 @@ app.directive('compositionList', function (contextService) {
             parameters.parentSchema = $scope.parentschema;
 
             var compositionSchema = $scope.parentschema.cachedCompositions[$scope.relationship];
-            eventdispatcherService.onviewdetail(compositionSchema, parameters);
+            eventService.onviewdetail(compositionSchema, parameters);
         }
     };
     /// <summary>
@@ -474,8 +474,8 @@ app.directive('compositionList', function (contextService) {
         });
     };
 
-    $scope.getFormattedValue = function (value, column) {
-        return formatService.format(value, column);
+    $scope.getFormattedValue = function (datamap, value, column) {
+        return formatService.format(datamap, value, column);
     };
 
     $scope.shouldDisplayCommand = function (commandSchema, id) {

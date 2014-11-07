@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('fieldService', function ($injector, $log, expressionService, eventdispatcherService) {
+app.factory('fieldService', function ($injector, $log, expressionService, eventService) {
 
     var isFieldHidden = function (datamap, application, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);
@@ -228,7 +228,7 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventd
         onFieldChange: function (fieldMetadata, event) {
             var eventType = "beforechange";
             var beforeChangeEvent = fieldMetadata.events[eventType];
-            var fn = eventdispatcherService.loadService(fieldMetadata, eventType)
+            var fn = eventService.loadEvent(fieldMetadata, eventType);
             if (fn == null) {
                 event.continue();
                 return;
@@ -245,7 +245,7 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventd
         postFieldChange: function (field, scope) {
             var eventType = "afterchange";
             var afterChangeEvent = field.events[eventType];
-            var fn = eventdispatcherService.loadService(field, eventType)
+            var fn = eventService.loadEvent(field, eventType);
             if (fn == null) {
                 return;
             }

@@ -105,7 +105,7 @@ app.directive('crudInputFields', function (contextService) {
         controller: function ($scope, $http, $element, $injector, $timeout,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
-            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventdispatcherService) {
+            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService) {
 
             $scope.$name = 'crud_input_fields';
 
@@ -143,7 +143,7 @@ app.directive('crudInputFields', function (contextService) {
 
             //this will get called when the input form is done rendering
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
-                eventdispatcherService.onload($scope.schema, $scope.datamap);
+                eventService.onload($scope.schema, $scope.datamap);
                 var bodyElement = $('#' + parentElementId);
                 if (bodyElement.length <= 0) {
                     return;
@@ -308,32 +308,11 @@ app.directive('crudInputFields', function (contextService) {
                 return result;
             };
 
-            $scope.setMaxNumericInput = function (max, maxExpr, maxExprVar) {
-                //If a max value is defined, use it
-                if (max != null) {
-                    return max;
+            $scope.setMaxNumericInput = function (datamap, fieldMetadata) {
+                if (fieldMetadata.rendererParameters['max'] != null) {
+                    return parseInt(expressionService.evaluate(fieldMetadata.rendererParameters['max'],datamap));
                 }
-
-                //If either the expression or expression variables are missing, return nothing (i.e. the max is unbounded)
-                if (maxExpr === undefined || maxExprVar === undefined) {
-                    return;
-                }
-
-                var variables = maxExprVar.split(',');
-                var expression = maxExpr;
-
-                for (var i = 0; i < variables.length; i++) {
-                    var replaceVar = "{" + i + "}";
-                    expression = expression.replace(replaceVar, $scope.datamap[variables[i]]);
-                }
-
-                try {
-                    return Math.abs(eval(expression));
-                } catch (e) {
-                    if ($rootScope.isLocal) {
-                        console.log(e);
-                    }
-                }
+                return null;
             };
 
 
@@ -513,6 +492,16 @@ app.directive('crudInputFields', function (contextService) {
                 }
             };
 
+            $scope.getFormattedValue = function (datamap, value, column) {
+                var formattedValue = formatService.format(datamap, value, column);
+                if (formattedValue == "-666") {
+                    //this magic number should never be displayed! 
+                    //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
+                    return null;
+                }
+                return formattedValue;
+            };
+
             $scope.enabletoopendetails = function (fieldMetadata) {
                 $scope.fillparamstoopendetails(fieldMetadata);
                 return $scope.paramstopendetails == null ? false : true;
@@ -684,22 +673,11 @@ app.directive('crudInputFields', function (contextService) {
 
             init();
 
-            function evalExpression(fieldMetadata) {
-                //If applying mathematical operations from two or more metadata fields
-                if (expressionService.isPrecompiledReplaceRegexMatch(fieldMetadata.evalExpression)) {
-                    return bindEvalExpression(fieldMetadata);
-                } else {
-                    //Evaluates a single field
-                    $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
-                }
-                return null;
-            }
-
-            function bindEvalExpression(fieldMetadata) {
-                var variables = expressionService.getVariablesForWatch(fieldMetadata.evalExpression);
+            function bindExpression(expression) {
+                var variables = expressionService.getVariablesForWatch(expression);
                 $scope.$watchCollection(variables, function (newVal, oldVal) {
                     if (newVal != oldVal) {
-                        $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
+                        $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(expression, $scope.datamap);
                     }
                 });
                 return variables;
@@ -707,7 +685,7 @@ app.directive('crudInputFields', function (contextService) {
 
             $scope.initField = function (fieldMetadata) {
                 if (fieldMetadata.evalExpression != null) {
-                    return evalExpression(fieldMetadata);
+                    return bindExpression(fieldMetadata.evalExpression);
                 }
                 return null;
             };

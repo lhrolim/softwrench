@@ -1,11 +1,24 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService, restService, alertService) {
-    var createTransaction = function (schema, issueType) {
-        var matusetrans = {};
-        matusetrans.issueType = issueType;
-        contextService.insertIntoContext("matusetrans", matusetrans, false);
-        redirectService.goToApplicationView(schema.applicationName, "detail", "Input", null, null, null);
+    var formatQty = function(datamap, value, column) {
+
+        if (datamap['issuetype'] == 'ISSUE') {
+            if (datamap[column.attribute] != null) {
+                return Math.abs(datamap[column.attribute]);
+            }
+        }
+        return datamap[column.attribute];
+    };
+    var formatQtyReturned = function (datamap, value, column) {
+        if (datamap['issuetype'] == 'ISSUE') {
+            if (datamap[column.attribute] == null) {
+                return 0;
+            } else {
+                return datamap[column.attribute];
+            }
+        }
+        return "";
     };
     var createInvUse = function(schema, useType) {
         var invuse = {};
@@ -14,27 +27,138 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         redirectService.goToApplicationView("invuse", "newdetail", "Input", null, null, null);
     };
     return {
-        createIssue: function (schema) {
-            if (schema === undefined) {
-                return;
-            }
-
-            createTransaction(schema, "ISSUE");
-        },
-        createReturn: function (schema) {
-            if (schema === undefined) {
-                return;
-            }
-
-            createTransaction(schema, "RETURN");
+        navToBulkFilter: function () {
+            redirectService.goToApplicationView("invissue", "filter", "input", null, null, null);
         },
         afterchangeworkorder: function (parameters) {
-            var location = parameters.fields['workorder_.location'];
-            parameters.fields['location'] = location;
-            var assetnum = parameters.fields['workorder_.assetnum'];
-            parameters.fields['assetnum'] = assetnum;
+
+            if (parameters.fields['workorder_.location'] == null) {
+                parameters.fields['workorder_.location'] = " ";
+                parameters.fields['location'] = " ";
+            } else {
+                parameters.fields['location'] = parameters.fields['workorder_.location'];
+            }
+
+            if (parameters.fields['workorder_.assetnum'] == null) {
+                parameters.fields['workorder_.assetnum'] = " ";
+                parameters.fields['assetnum'] = " ";
+            } else {
+                parameters.fields['assetnum'] = parameters.fields['workorder_.assetnum'];
+            }
+
+            var gldebitacct = parameters.fields['gldebitacct'];
+
+            if (parameters.fields['workorder_.glaccount']) {
+                gldebitacct = parameters.fields['workorder_.glaccount'];
+            }
+
+            parameters.fields['gldebitacct'] = gldebitacct;
         },
-        editinvissuewo: function (schema, datamap) {
+        formatQtyReturnedList: function (datamap, value, column) {
+            var dm = datamap.fields;
+            if (dm === undefined) {
+                dm = datamap;
+            }
+            return formatQtyReturned(dm, value, column);
+        },
+        formatQtyList: function (datamap, value, column) {
+            var dm = datamap.fields;
+            if (dm === undefined) {
+                dm = datamap;
+            }
+            return formatQty(dm, value, column);
+        },
+        formatQtyReturnedDetail: function (datamap, value, column) {
+            var formattedValue = formatQtyReturned(datamap, value, column);
+            var dm = datamap.fields;
+            if (dm === undefined) {
+                dm = datamap;
+            }
+            dm[column.attribute] = formattedValue;
+            return formattedValue;
+        },
+        formatQtyDetail: function (datamap, value, column) {
+            var formattedValue = formatQty(datamap, value, column);
+            var dm = datamap.fields;
+            if (dm === undefined) {
+                dm = datamap;
+            }
+            dm[column.attribute] = formattedValue;
+            return formattedValue;
+        },
+
+
+        returnInvIssue: function (matusetransitem) {
+            var returnQty = matusetransitem['#quantityadj'];
+            var item = matusetransitem['itemnum'];
+            var storeloc = matusetransitem['storeloc'];
+            var binnum = matusetransitem['binnum'];
+            var message = "Return (" + returnQty + ") " + item + " to " + storeloc + "?";
+            if (binnum != null) {
+                message = message + " (Bin: " + binnum + ")";
+            }
+            alertService.confirm(null, null, function () {
+                var newReturnItem = angular.copy(matusetransitem);
+                newReturnItem['issueid'] = matusetransitem['matusetransid'];
+                newReturnItem['matusetransid'] = null;
+                newReturnItem['rowstamp'] = null;
+                newReturnItem['quantity'] = matusetransitem['#quantityadj'];
+                newReturnItem['issuetype'] = 'RETURN';
+                newReturnItem['qtyreturned'] = null;
+                newReturnItem['qtyrequested'] = matusetransitem['#quantityadj'];
+                
+                var jsonString = angular.toJson(newReturnItem);
+                var httpParameters = {
+                    application: "invissue",
+                    platform: "web",
+                    currentSchemaKey: "editinvissuedetail.input.web"
+                };
+                restService.invokePost("data", "post", httpParameters, jsonString, function () {
+                    redirectService.goToApplicationView("invissue", "list", null, null, null, null);
+                });
+                modalService.hide();
+            }, message , function () {
+                modalService.hide();
+            });
+        },
+        invissuelistclick: function(datamap, schema) {
+            var param = {};
+            param.id = datamap['matusetransid'];
+            var application = 'invissue';
+            var detail = 'viewinvreturndetail';
+            var mode = 'output';
+
+            //Logic to determine whether the record is an ISSUE
+            //and whether all of the issued items have been returned
+            if (datamap['issuetype'] == 'ISSUE') {
+                
+                //Sets qtyreturned to 0 if null
+                //Parses the qtyreturned if its in a strng format
+                var qtyreturned = 0;
+                if (typeof datamap['qtyreturned'] === "string") {
+                    qtyreturned = parseInt(datamap['qtyreturned']);
+                } else if (datamap['qtyreturned'] != null) {
+                    qtyreturned = datamap['qtyreturned'];
+                }
+
+                //For an issue, the quantity will be a negative number, representing the # of items issued
+                //The below if statement will add the positive quantityreturned to the negative quantity.
+                //If the result is negative, then are still items to be returned
+                if (qtyreturned + datamap['quantity'] < 0) {
+                    detail = 'editinvissuedetail';
+                    mode = 'input';
+                } else {
+                    //If all of the items have been returned, show the viewdetail page for 'ISSUE' records
+                    detail = 'viewinvissuedetail';
+                }
+            }
+
+            datamap['quantity'] = Math.abs(datamap['quantity']);
+
+            redirectService.goToApplicationView(application, detail, mode, null, param, null);
+        },
+        
+        editinvissuewo: function(schema, datamap) {
             var newDatamap = {};
             newDatamap['#assetnum'] = datamap['assetnum'];
             newDatamap['#issueto'] = datamap['issueto'];
@@ -42,6 +166,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             newDatamap['#location'] = datamap['location'];
             newDatamap['#refwo'] = datamap['refwo'];
             newDatamap['#storeloc'] = datamap['storeloc'];
+            newDatamap['location'] = datamap['location'];
+            newDatamap['assetnum'] = datamap['assetnum'];
+            newDatamap['issueto'] = datamap['#issueto'];
             newDatamap['invissue_'] = [];
 
             var param = {};
@@ -99,10 +226,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 location: parameters['fields']['location'],
-                siteid: user.siteId,
-                orgid: user.orgId,
-                status: "ACTIVE"
-            }
+                //siteid: user.siteId,
+                //orgid: user.orgId,
+                //status: "ACTIVE"
+            };
             var searchDTO = searchService.buildSearchDTO(searchData, {}, {}, null);
             searchDTO.pageNumber = 1;
             searchDTO.totalCount = 0;
@@ -114,21 +241,68 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     platform: "web"
                 },
                 SearchDTO: searchDTO
-            }
+            };
             var urlToUse = url("/api/Data/inventory?" + $.param(restParameters));
             $http.get(urlToUse).success(function (data) {
                 var resultObject = data.resultObject;
                 var fields = resultObject[0].fields;
                 var costtype = parameters['fields']['inventory_.costtype'];
                 if (costtype === 'STANDARD') {
-                    parameters.fields['invuseline_.unitcost'] = fields.stdcost;
-                }
-                else if (costtype === 'AVERAGE') {
-                    parameters.fields['invuseline_.unitcost'] = fields.avgcost;
+                    parameters.fields['unitcost'] = fields.stdcost;
+                } else if (costtype === 'AVERAGE') {
+                    parameters.fields['unitcost'] = fields.avgcost;
                 }
             });
         },
-	    createTransfer: function(schema) {
+        invIssue_afterChangeAsset: function (parameters) {
+            //Sets the associated GL Debit Account
+            //if a workorder isn't already specified
+            //Updates the location field from the asset's location
+            if(parameters.fields['assetnum'].trim() != "") {
+                var refwo = parameters.fields['refwo'];
+                var location = parameters.fields['location'];
+            
+                if (!refwo || refwo.trim() == "") {
+                    refwo = "";
+                }
+                if (!location || location.trim() == "") {
+                    location = "";
+                }
+
+                if (refwo != "") {
+                    return;
+                }
+
+                if (refwo != "" && location == "") {
+                    parameters.fields['location'] = parameters.fields['asset_.location'];
+                    return;
+                }
+
+                if (refwo == "") {
+                    parameters.fields['location'] = parameters.fields['asset_.location'];
+                    parameters.fields['gldebitacct'] = parameters.fields['asset_.glaccount'];
+                }
+            }
+        },
+        invIssue_afterChangeLocation: function (parameters) {
+            //Sets the gldebitacct and clears the asset 
+            //if there is no refwo defined
+                if(parameters.fields['location'].trim() != "") {
+                    var refwo = parameters.fields['refwo'];
+                    
+                    if (!refwo || refwo.trim() == "") {
+                        refwo = "";
+                    }
+
+                    if (refwo != "")
+                        return;
+
+                    parameters.fields['assetnum'] = "";
+                    parameters.fields['gldebitacct'] = parameters.fields['location_.glaccount'];
+                }
+
+        },
+	createTransfer: function(schema) {
             if (schema === undefined) {
                 return;
             }
@@ -138,7 +312,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var searchData = {
                 itemnum: parameters['fields']['invuseline_.itemnum'],
                 location: parameters['fields']['fromstoreloc']
-            }
+            };
             var searchDTO = searchService.buildSearchDTO(searchData, {}, {}, null);
             searchDTO.pageNumber = 1;
             searchDTO.totalCount = 0;
@@ -150,7 +324,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     platform: "web"
                 },
                 SearchDTO: searchDTO
-            }
+            };
             var urlToUse = url("/api/Data/invcost?" + $.param(restParameters));
             $http.get(urlToUse).success(function (data) {
                 var resultObject = data.resultObject;
@@ -220,11 +394,15 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         cancelTransfer: function () {
             redirectService.goToApplication("matrectransTransfers", "list", null, null);
         },
-        afterChangeTransferQuantity: function (event) {
+        cancelTransfer: function () {
+            redirectService.goToApplicationView("matrectransTransfers", "list", null, null, null, null);
+        },
+	afterChangeTransferQuantity: function (event) {
             if (event.fields['invuseline_.quantity'] > event.fields['#curbal']) {
                 alertService.alert("The quantity being transferred cannot be greater than the current balance of the From Bin.");
                 event.scope.datamap['invuseline_.quantity'] = event.fields['#curbal'];
             }
         },
+
     };
 });

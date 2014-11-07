@@ -60,7 +60,7 @@
                                 <div ng-switch-when="datetime">
                                     <a style="color: black; cursor: pointer; word-break:break-all;"
                                        ng-click="toggleDetails(compositionitem,column)">
-                                        {{getFormattedValue(compositionitem[column.attribute],column)}}
+                                        {{getFormattedValue(clonedCompositionData,compositionitem[column.attribute],column)}}
                                     </a>
                                 </div>
 
@@ -68,7 +68,7 @@
                                 <a style="color: black; cursor: pointer; word-break:break-all;"
                                    ng-switch-default
                                    ng-click="toggleDetails(compositionitem,column)">
-                                    {{getFormattedValue(compositionitem[column.attribute],column)}}
+                                    {{getFormattedValue(clonedCompositionData,compositionitem[column.attribute],column)}}
                                 </a>
                             </ng-switch>
 
