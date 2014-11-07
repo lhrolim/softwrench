@@ -8,6 +8,37 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
   </templates>
   
   <entities>
+    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN')">
+      <relationships>
+        <relationship to="workorder" >
+          <relationshipAttribute from="refwo" to="wonum" primary="true"/>
+        </relationship>
+        <relationship to="person" qualifier="issuetoperson">
+          <relationshipAttribute from="issueto" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="asset" >
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="invissuewo" idAttribute="wonum" parententity="workorder">
+      <relationships>
+        <relationship to="invissue" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+      </relationships>
+    </entity>
+
     <entity name="physicalCount" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 1 and DATEDIFF(day, physcntdate, GETDATE()) > inventory_.ccf and inventory_.ccf != 0">
       <relationships>
         <relationship to="item" >
@@ -105,8 +136,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <commandbars>
             <commandgroup position="gridtop">
               <command id="bulk_issue" label="New Bulk Issue" service="inventoryService" method="navToBulkFilter" parameters="" successmessage="New issue created"/>
-              <command id="create_issue" label="New Issue" service="inventoryService" method="createReturn" parameters="schema,datamap"
-             successmessage="Return created"/>   
+              <command id="create_issue" label="New Issue" service="inventoryService" method="createReturn" parameters="schema,datamap" successmessage="Return created"/>   
             </commandgroup>
           </commandbars>
           <field attribute="matusetransid" hidden="true"/>

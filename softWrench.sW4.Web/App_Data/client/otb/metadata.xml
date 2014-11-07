@@ -143,37 +143,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </connectorParameters>
     </entity>
 
-    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN')">
-      <relationships>
-        <relationship to="workorder" >
-          <relationshipAttribute from="refwo" to="wonum" primary="true"/>
-        </relationship>
-        <relationship to="person" qualifier="issuetoperson">
-          <relationshipAttribute from="issueto" to="personid" primary="true"/>
-        </relationship>
-        <relationship to="asset" >
-          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
-          <relationshipAttribute from="siteid" to="siteid" />
-        </relationship>
-        <relationship to="location">
-          <relationshipAttribute from="location" to="location" primary="true"/>
-          <relationshipAttribute from="siteid" to="siteid" />
-        </relationship>
-      </relationships>
-      <connectorParameters>
-        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
-      </connectorParameters>
-    </entity>
-    
-    <entity name="invissuewo" idAttribute="wonum" parententity="workorder">
-      <relationships>
-        <relationship to="invissue" collection="true">
-          <relationshipAttribute from="wonum" to="refwo" primary="true" />
-          <relationshipAttribute from="siteid" to="siteid" />
-        </relationship>
-      </relationships>
-    </entity>
-
     <entity name="workorder" idAttribute="wonum" whereclause="woclass like 'WORKORDER'">
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
