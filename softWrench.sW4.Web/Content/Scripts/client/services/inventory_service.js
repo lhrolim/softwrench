@@ -153,8 +153,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 }
             }
 
-            datamap['quantity'] = Math.abs(datamap['quantity']);
-
             redirectService.goToApplicationView(application, detail, mode, null, param, null);
         },
         
