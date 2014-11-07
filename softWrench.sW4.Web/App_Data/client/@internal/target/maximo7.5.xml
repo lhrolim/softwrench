@@ -9,5 +9,15 @@
       <attribute name="ACTLABCOST" targetpath="ACTLABCOST" type="double"/>
     </attributes>    
   </entity>
+
+  <entity name="invissue">
+    <attributes>
+      <attribute name="QUANTITY" targetpath="QUANTITY" type="double"/>
+      <attribute name="LINECOST" targetpath="LINECOST" type="double"/>
+      <attribute name="UNITCOST" targetpath="UNITCOST" type="double"/>
+      <attribute name="ACTUALCOST" targetpath="ACTUALCOST" type="double"/>
+      <attribute name="QTYRETURNED" targetpath="QTYRETURNED" type="double"/>
+    </attributes>
+  </entity>
   
 </TargetEntities>
