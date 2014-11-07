@@ -148,6 +148,9 @@ app.directive('crudList', function (contextService) {
                     }
                     pagetogo = 1;
                 }
+                if (extraparameters.avoidspin) {
+                    contextService.set("avoidspin", true, true);
+                }
                 $scope.selectPage(pagetogo, pageSize, printmode);
             });
 

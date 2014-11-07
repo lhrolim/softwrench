@@ -25,6 +25,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <command id="newbatch" icon="fa fa-plus" label="New Batch" service="wobatchService" method="newBatch"/>
             </commandgroup>
           </commandbars>
+          <event type="onload" service="wobatchService" method="configurePolling"/>
           <field attribute="id" label="Batch ID">
             <renderer type="default" params="width=15%"/>
           </field>
@@ -54,15 +55,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <commandbars>
             <commandgroup position="detailform">
               <removecommand id="print"/>
+              <command id="cancel" icon="fa-backward" service="$scope" method="cancel" label="Cancel" tooltip="Cancel" parameters="default='_batch.list'"/>
             </commandgroup>
           </commandbars>
           <section id="sentbatch" resourcepath="/Content/Templates/batches/dynamiccomposition.html" parameters="schemaref=failedbatchschema;
-                   datamapref=failedbatchdatamap">
-            <header label="Problematic Items" displacement="ontop"/>
+                   datamapref=failedbatchdatamap;title=Problematic Items">
+<!--            <header label="Problematic Items" displacement="ontop"/>-->
           </section>
           <section id="sentbatch" resourcepath="/Content/Templates/batches/dynamiccomposition.html" parameters="schemaref=sentbatchschema;
-                   datamapref=sentbatchdatamap">
-            <header label="Sent Items" displacement="ontop"/>
+                   datamapref=sentbatchdatamap;title=Sent Items">
+<!--            <header label="Sent Items" displacement="ontop"/>-->
           </section>
         </detail>
       </schemas>
