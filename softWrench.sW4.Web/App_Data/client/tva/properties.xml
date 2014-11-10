@@ -28,6 +28,7 @@
     <property key="maximo_DB_url" value="Data Source=10.50.100.43;Initial Catalog=TVA62MAX;User Id=MAXIMO;password=Max7118;" />
     <property key="swdb_url" value="Data Source=10.50.100.43;Initial Catalog=SWDB_TVA75MAX;User Id=sw;password=softwrench;" />
     <property key="wsprovider" value="mea" />
+    <property key="basewsURL" value="http://tva62dev.cts.com/meaweb/services/" />
   </environment>
 
 
