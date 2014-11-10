@@ -12,6 +12,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <template path="@longdescription.xml"/>
     <template path="@servicerequest.xml"/>
     <template path="@workorder.xml"/>
+<!--    <template path="workorderbatch.xml"/>-->
     <template path="@incident.xml"/>
     <template path="@inventory.xml"/>
   </templates>
@@ -144,12 +145,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </entity>
 
     <entity name="workorder" idAttribute="wonum" whereclause="woclass like 'WORKORDER'">
-      <relationships>
-        <relationship to="invissue" collection="true">
-          <relationshipAttribute from="wonum" to="refwo" primary="true" />
-          <relationshipAttribute from="siteid" to="siteid" />
-        </relationship>
-      </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
@@ -942,7 +937,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <commandbars>
             <commandgroup position="gridtop">
               <command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService" 
-                       method="createTransfer" parameters="schema" position=">filter"/>
+                       method="createTransfer" parameters="schema"/>
             </commandgroup>
           </commandbars>
         </list>

@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('wobatchService', function (redirectService, $rootScope, restService, alertService, validationService) {
+app.factory('wobatchService', function (redirectService, $rootScope, restService, alertService, validationService, $timeout, searchService) {
 
     function doSubmit(hasAtLeastOne, datamap) {
         var batchId = datamap[0].fields["#batchId"];
@@ -42,7 +42,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
                     searchParams: "id",
                     searchValues: batchId
                 }
-                redirectService.goToApplicationView("workorder", "editbatch","input",null, { searchDTO: searchDTO }, null);
+                redirectService.goToApplicationView("workorder", "editbatch", "input", null, { searchDTO: searchDTO }, null);
             }, null);
         });
     }
@@ -103,7 +103,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
             var batchId = datamap['id'];
 
             var status = datamap['status'];
-            if (status.equalIc("submitting")) {
+            if (status.toLowerCase().startsWith("submitting")) {
                 alertService.alert("The batch is currently being submitted. A report will be generated when this operation is complete");
                 return;
             }
@@ -305,9 +305,26 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
                 return;
             }
             doSubmit(true, datamap);
+        },
+
+        configurePolling: function (schema, datamap, parameters) {
+            var idxs = [];
+            $.each(datamap, function (key, value) {
+                if (value.fields.status.toLowerCase().startsWith("submitting")) {
+                    idxs.push(key);
+                }
+            });
+            if (idxs.length == 0) {
+                //there are no items being submitted, no need to configure a polling
+                return;
+            }
+            $timeout(function () {
+                searchService.refreshGrid(null,{avoidspin:true});
+            }, 1000);
+
+
+
         }
-
-
 
 
 

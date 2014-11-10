@@ -2,11 +2,8 @@
 
     $scope.hasBeenReturned = function (matusetransitem) {
         var data = matusetransitem['fields'];
-        if ((data['quantity'] - data['qtyreturned']) <= 0) {
-            return true;
-        }
-
-        return false;
+        var deltaQty = data['quantity'] + data['qtyreturned'] >= 0;
+        return deltaQty;
     };
 
     $scope.updateOpacity = function (matusetransitem) {
@@ -19,10 +16,7 @@
 
     $scope.isReturnHidden = function (matusetransitem) {
         var data = matusetransitem['fields'];
-        if (data['issuetype'] == 'RETURN') {
-            return false;
-        }
-        return true;
+        return data['issuetype'] != 'RETURN';
     };
 
 }

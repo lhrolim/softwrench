@@ -1,4 +1,4 @@
-﻿var app = angular.module('sw_layout');
+var app = angular.module('sw_layout');
 
 app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, cmpAutocompleteClient, cmpAutocompleteServer, screenshotService, fieldService) {
 
@@ -74,7 +74,7 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
                 cmpAutocompleteServer.refreshFromAttribute(displayable, scope);
             } else if (rendererType == 'combodropdown') {
                 cmpComboDropdown.refreshFromAttribute(attribute);
-            }else if (rendererType == 'lookup') {
+            } else if (rendererType == 'lookup') {
                 cmplookup.refreshFromAttribute(displayable, scope);
             }
         },

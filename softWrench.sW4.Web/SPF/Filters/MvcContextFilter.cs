@@ -27,7 +27,9 @@ namespace softWrench.sW4.Web.SPF.Filters {
             if (currentMetadataId != null) {
                 appCtx = new ApplicationLookupContext { MetadataId = currentMetadataId };
             }
-            ContextLookuper.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx }, true);
+            var instance = ContextLookuper.GetInstance();
+            instance.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx }, true);
+//            instance.RegisterHttpContext(actionContext.HttpContext.re);
         }
 
         private static string GetValue(ActionExecutingContext actionContext, string key) {

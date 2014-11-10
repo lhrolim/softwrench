@@ -13,44 +13,6 @@ input:focus, select:focus, textarea:focus {
     color: red;
 }
 
-.modal {
-    z-index: 8000;
-}
-
-/*SM - 10/01 - SWWEB-507*/
-.smallmodal {
-    width: 300px;
-} 
-.mediummodal {
-    width: 500px;
-} 
-.smallmodal, 
-.mediummodal {
-    top: 20%;
-    margin: 0 auto;
-}
-
-    .smallmodal .modal-dialog,
-    .mediummodal .modal-dialog {
-        overflow: hidden;
-        padding: 0;
-        width: 100%;
-    }
-
-@media all and (min-width: 480px) {
-    .smallmodal {
-        width: 360px;
-    }
-    .mediummodal {
-        width: 560px;
-    }
-    .smallmodal, 
-    .mediummodal {        
-        top: 30%;
-    }
-}
-/*SM - 10/01 - SWWEB-507*/
-
 .spinner {
     position: fixed; /*HAP-508 T-EU-044 fix*/
     top: 50%;
@@ -58,15 +20,13 @@ input:focus, select:focus, textarea:focus {
     z-index: 9999;
 }
 
-#crudmodal {
-    margin-left: auto;
-    margin-right: auto;
-    top: 50px;
-}
-
 .fieldButton {
     background: transparent;
     border: none;
+}
+
+.clear {
+    clear: both;
 }
 
 /*SM - 07/05 - ADD - Start fix content responsive width*/
@@ -104,26 +64,6 @@ input:focus, select:focus, textarea:focus {
         width: 975px;
         z-index: 100;
     }
-
-.conditionModal {
-    position: absolute;
-    top: 65%;
-    left: 12%;
-    padding: 20px;
-    width: 450px;
-    height: 650px;
-    outline: none;
-}
-
-.modal {
-    overflow-y: auto !important;
-}
-
-/*SM - 10/01 - SWWEB-508*/
-/*.modal-dialog {
-    width: 100%;
-}*/
-/*SM - 10/01 - SWWEB-508*/
 
 .helptext {
     color: gray;
@@ -459,33 +399,6 @@ textarea .readonly {
     width: 100%;
 }
 
-.modalLock {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-}
-
-.lookupModal .modal-body {
-    max-height: 400px;
-    overflow: auto;
-    width: 100%;
-}
-
-/*SM - 10/01 - SWWEB-508*/
-@media all and (min-width: 992px) {
-    .lookupModal .modal-dialog {
-        width: 800px;
-    }
-}
-
-@media all and (min-width: 1140px) {
-    .assetnum .modal-dialog {
-        width: 1000px;
-    }
-}
-/*SM - 10/01 - SWWEB-508*/
-
 /************************ 
     Config
  ************************/
@@ -549,140 +462,6 @@ textarea .readonly {
         padding-right: 0px;
     }
 
-
-/************************ 
-Header 
-************************/
-/*SM - 06/28 - ADD - Start header styles*/
-.clear {
-    clear: both;
-}
-
-.btn-brand {
-    background-color: #34a7e0;
-    border-color: #34a7e0;
-    color: white;
-}
-
-    .btn-brand:hover, .btn-brand:focus, .btn-brand:active, .btn-brand.active {
-        background-color: #1f93cc;
-        border-color: #1c86ba;
-        color: white;
-    }
-
-    .btn-brand.disabled:hover, .btn-brand.disabled:focus, .btn-brand.disabled:active, .btn-brand.disabled.active, .btn-brand[disabled]:hover, .btn-brand[disabled]:focus, .btn-brand[disabled]:active, .btn-brand[disabled].active, fieldset[disabled] .btn-brand:hover, fieldset[disabled] .btn-brand:focus, fieldset[disabled] .btn-brand:active, fieldset[disabled] .btn-brand.active {
-        background-color: #34a7e0;
-        border-color: #34a7e0;
-    }
-
-.btn-service {
-    background-color: #c9c7c7;
-    border-color: #c9c7c7;
-    color: black;
-}
-
-    .btn-service:hover, .btn-service:focus, .btn-service:active, .btn-service.active {
-        background-color: #b5b2b2;
-        border-color: #aba8a8;
-        color: black;
-    }
-
-    .btn-service.disabled:hover, .btn-service.disabled:focus, .btn-service.disabled:active, .btn-service.disabled.active, .btn-service[disabled]:hover, .btn-service[disabled]:focus, .btn-service[disabled]:active, .btn-service[disabled].active, fieldset[disabled] .btn-service:hover, fieldset[disabled] .btn-service:focus, fieldset[disabled] .btn-service:active, fieldset[disabled] .btn-service.active {
-        background-color: #c9c7c7;
-        border-color: #c9c7c7;
-    }
-
-.container header {
-    margin-left: auto !important;
-    margin-right: auto !important;
-    max-width: 1139px;
-    width: 100%;
-    position: fixed;
-    background: #34a7e0 url(../../Images/header.jpg) no-repeat top left;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-}
-
-    /*Responsive Menu*/
-    .container header .menu-expand {
-        color: #fff;
-        padding: 20px 20px 15px;
-        cursor: pointer;
-        background-color: rgba(52, 167, 224, 0.5);
-        border-bottom: rgba(0, 0, 0, 0.3) 3px solid;
-    }
-
-        .container header .menu-expand:hover {
-            color: #000;
-        }
-
-    .container header .menu-grid .menu-expand {
-        background-color: #878787;
-        border-bottom: #000000 1px solid;
-    }
-
-    .container header div.menu-open + .menu-items {
-        display: block;
-    }
-
-    .container header div.menu-open, .container header .menu-grid div.menu-open {
-        border-bottom: none;
-        padding: 10px 20px 0;
-    }
-
-    .container header .menu-admin {
-        background-color: rgba(52, 167, 224, 0.5);
-        border-bottom: rgba(0, 0, 0, 0.3) 3px solid;
-        padding: 0 20px;
-    }
-
-        .container header .menu-admin .text {
-            float: left;
-            color: #fff;
-            margin-top: 16px;
-        }
-
-            .container header .menu-admin .text a {
-                color: #fff;
-            }
-
-                .container header .menu-admin .text a:hover {
-                    text-decoration: none;
-                }
-
-        .container header .menu-admin .buttons {
-            padding-top: 20px;
-            float: right;
-        }
-
-    .container header .branding {
-        background: url(../../Images/branding.png) no-repeat top left;
-        min-height: 100px;
-        padding: 20px 20px;
-    }
-
-        .container header .branding .logo img {
-            max-width: 100%;
-            height: auto;
-            width: auto;
-        }
-
-    .container header .menu-grid {
-        max-width: 1139px;
-        width: 100%;
-    }
-
-        .container header .menu-grid li a {
-            text-align: center;
-        }
-
-        .container header .menu-grid .submenu li a {
-            text-align: left;
-        }
-
-/*SM - 10/06 - SWWEB-435*/
 .container .context {
     width: 100%;
     background: #eee;
@@ -694,10 +473,6 @@ Header
         margin: 5px 10px 0;
     }
 
-        /*.container .context .group.actions {
-            display: none;
-        }*/
-
         .container .context .group.pagesize {
             padding-top: 5px;
         }
@@ -707,7 +482,6 @@ Header
         }
 
         .container .context .group.total {
-            /*display: none;*/
             margin-top: 10px;
         }
 
@@ -718,48 +492,8 @@ Header
 .container button {
     text-transform: uppercase;
 }
-/*SM - 10/06 - SWWEB-435*/
 
 @media all and (min-width: 1px) {
-    .container header {
-        position: relative;
-        z-index: 1010;
-    }
-
-        .container header .menu-expand {
-            display: block;
-        }
-
-        .container header .menu-items {
-            display: none;
-        }
-
-        .container header .menu-admin .buttons {
-            width: 100%;
-        }
-
-            .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
-                width: 100%;
-            }
-
-        .container header .logout.mobile {
-            float: right;
-            margin-top: 25px;
-            margin-right: 20px;
-        }
-
-        .container header .menu-grid li {
-            width: 100%;
-        }
-
-            .container header .menu-grid li:last-child .dropdown, .container header .menu-grid li:last-child a {
-                margin-bottom: 5px;
-            }
-
-        .container header .menu-grid button {
-            width: 100%;
-        }
-
     .container .content {
         margin-top: 0;
     }
@@ -792,29 +526,7 @@ Header
     }
 }
 
-@media all and (min-width: 330px) {
-    .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
-        width: 49%;
-    }
-
-        .container header .menu-admin .buttons .btn-group .btn {
-            width: 100%;
-        }
-
-    .container header .branding .logo img {
-        width: 274px;
-    }
-}
-
 @media all and (min-width: 480px) {
-    .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
-        width: 32%;
-    }
-
-    .container header .menu-grid li {
-        width: 49%;
-    }
-
     .container .context {
         padding: 5px 20px 5px 10px;
     }
@@ -825,45 +537,7 @@ Header
         }
 }
 
-@media all and (min-width: 640px) {
-    .container header .menu-grid li {
-        width: 32%;
-    }
-}
-
 @media all and (min-width: 768px) {
-    .container header {
-        position: fixed;
-    }
-
-        .container header .menu-expand {
-            display: none;
-        }
-
-        .container header .menu-items {
-            display: block;
-        }
-
-        .container header .menu-admin .buttons {
-            width: auto;
-        }
-
-            .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
-                width: auto;
-            }
-
-            .container header .menu-admin .buttons .logout {
-                display: inline-block !important;
-            }
-
-        .container header .menu-grid li {
-            width: auto;
-        }
-
-            .container header .menu-grid li:last-child .dropdown, .container header .menu-grid li:last-child a {
-                margin-bottom: 0px;
-            }
-
     .container .context .hidden-xs {
         display: inline-block !important;
     }
@@ -872,14 +546,9 @@ Header
         margin: 5px 10px 0;
     }
 
-    .container .context .right {
-        /*width: 60%;*/
-        /*float: right;*/
+    .container .context .right .group {
+        float: right;
     }
-
-        .container .context .right .group {
-            float: right;
-        }
 
 
     .container .context .group.total {
@@ -912,9 +581,9 @@ Header
         margin: 5px 0 0 20px;
     }
 
-    .container .context .group:first-child {
-        margin-left: 10px;
-    }
+        .container .context .group:first-child {
+            margin-left: 10px;
+        }
 }
 
 @media all and (min-width: 1170px) {
@@ -922,12 +591,6 @@ Header
         display: block;
     }
 }
-
-/*SM - 10/06 - SWWEB-506*/
-.container header .menu-grid .submenu li {
-    width: 100%;
-}
-/*SM - 10/06 - SWWEB-506*/
 
 .legend-label {
     display: inline;

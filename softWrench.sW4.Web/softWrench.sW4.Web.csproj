@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -635,6 +635,8 @@
     <Content Include="Content\Scripts\client\components\autocompleteserver.js" />
     <Content Include="Content\Scripts\client\components\autocompleteclient.js" />
     <Content Include="Content\Scripts\client\components\combodropdown.js" />
+    <Content Include="Content\Scripts\client\components\lookupcomponent.js" />
+    <Content Include="Content\Scripts\client\components\richtext.js" />
     <Content Include="Content\Scripts\client\crud_body_modal.js" />
     <Content Include="Content\Scripts\client\directives\gridtoolBar.js" />
     <Content Include="Content\Scripts\client\makeSWAdmin.js" />
@@ -723,11 +725,14 @@
     <Content Include="Content\Scripts\thirdparty\textAngular-min.js" />
     <Content Include="Content\styles\default\application\forms.css" />
     <Content Include="Content\styles\default\application\pages.css" />
+    <Content Include="Content\styles\default\branding.css" />
     <Content Include="Content\styles\default\grid.css" />
-    <Content Include="Content\styles\default\screen.css" />
+    <Content Include="Content\styles\default\header.css" />
+    <Content Include="Content\styles\default\media\screen.css" />
+    <Content Include="Content\styles\default\modal.css" />
     <Content Include="Content\styles\default\signin.css" />
     <Content Include="Content\styles\default\menu.css" />
-    <Content Include="Content\styles\default\print.css" />
+    <Content Include="Content\styles\default\media\print.css" />
     <Content Include="Content\styles\default\search.css" />
     <Content Include="Content\Controller\Configuration.html" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
@@ -865,6 +870,7 @@
     <Content Include="Content\styles\tva\signin.css" />
     <Content Include="Content\styles\tva\site.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
+    <Content Include="Content\Templates\batches\emailreport.html" />
     <Content Include="Content\Templates\commands\batches\batches.html" />
     <Content Include="Content\Templates\commands\batches\batchesmenu.js" />
     <Content Include="Content\Templates\commands\grid\gridfilter.html" />

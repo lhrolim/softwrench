@@ -1,0 +1,192 @@
+﻿.container header {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    max-width: 1139px;
+    width: 100%;
+    position: fixed;
+}
+
+    /*Responsive Menu*/
+    .container header .menu-expand {
+        color: #fff;
+        padding: 20px 20px 15px;
+        cursor: pointer;
+        background-color: rgba(52, 167, 224, 0.5);
+        border-bottom: rgba(0, 0, 0, 0.3) 3px solid;
+    }
+
+        .container header .menu-expand:hover {
+            color: #000;
+        }
+
+    .container header .menu-grid .menu-expand {
+        background-color: #878787;
+        border-bottom: #000000 1px solid;
+    }
+
+    .container header div.menu-open + .menu-items {
+        display: block;
+    }
+
+    .container header div.menu-open, .container header .menu-grid div.menu-open {
+        border-bottom: none;
+        padding: 10px 20px 0;
+    }
+
+    .container header .menu-admin {
+        background-color: rgba(52, 167, 224, 0.5);
+        border-bottom: rgba(0, 0, 0, 0.3) 3px solid;
+        padding: 0 20px;
+    }
+
+        .container header .menu-admin .text {
+            float: left;
+            color: #fff;
+            margin-top: 16px;
+        }
+
+            .container header .menu-admin .text a {
+                color: #fff;
+            }
+
+                .container header .menu-admin .text a:hover {
+                    text-decoration: none;
+                }
+
+        .container header .menu-admin .buttons {
+            padding-top: 20px;
+            float: right;
+        }
+
+    .container header .branding {
+        min-height: 100px;
+        padding: 20px 20px;
+    }
+
+        .container header .branding .logo img {
+            max-width: 100%;
+            height: auto;
+            width: auto;
+        }
+
+    .container header .menu-grid {
+        max-width: 1139px;
+        width: 100%;
+    }
+
+        .container header .menu-grid li a {
+            text-align: center;
+        }
+
+        .container header .menu-grid .submenu li a {
+            text-align: left;
+        }
+
+@media all and (min-width: 1px) {
+    .container header {
+        position: relative;
+        z-index: 1010;
+    }
+
+        .container header .menu-expand {
+            display: block;
+        }
+
+        .container header .menu-items {
+            display: none;
+        }
+
+        .container header .menu-admin .buttons {
+            width: 100%;
+        }
+
+            .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
+                width: 100%;
+            }
+
+        .container header .logout.mobile {
+            float: right;
+            margin-top: 25px;
+            margin-right: 20px;
+        }
+
+        .container header .menu-grid li {
+            width: 100%;
+        }
+
+            .container header .menu-grid li:last-child .dropdown, .container header .menu-grid li:last-child a {
+                margin-bottom: 5px;
+            }
+
+        .container header .menu-grid button {
+            width: 100%;
+        }
+}
+
+@media all and (min-width: 330px) {
+    .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
+        width: 49%;
+    }
+
+        .container header .menu-admin .buttons .btn-group .btn {
+            width: 100%;
+        }
+
+    .container header .branding .logo img {
+        width: 274px;
+    }
+}
+
+@media all and (min-width: 480px) {
+    .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
+        width: 32%;
+    }
+
+    .container header .menu-grid li {
+        width: 49%;
+    }
+}
+
+@media all and (min-width: 640px) {
+    .container header .menu-grid li {
+        width: 32%;
+    }
+}
+
+@media all and (min-width: 768px) {
+    .container header {
+        position: fixed;
+    }
+
+        .container header .menu-expand {
+            display: none;
+        }
+
+        .container header .menu-items {
+            display: block;
+        }
+
+        .container header .menu-admin .buttons {
+            width: auto;
+        }
+
+            .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
+                width: auto;
+            }
+
+            .container header .menu-admin .buttons .logout {
+                display: inline-block !important;
+            }
+
+        .container header .menu-grid li {
+            width: auto;
+        }
+
+            .container header .menu-grid li:last-child .dropdown, .container header .menu-grid li:last-child a {
+                margin-bottom: 0px;
+            }
+}
+
+.container header .menu-grid .submenu li {
+    width: 100%;
+}

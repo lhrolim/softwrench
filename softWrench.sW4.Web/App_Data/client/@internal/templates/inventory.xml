@@ -9,39 +9,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
   </templates>
   
   <entities>
-    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN')">
+    <entity name="invissuewo" idAttribute="wonum" parententity="workorder">
       <relationships>
-        <relationship to="workorder" >
-          <relationshipAttribute from="refwo" to="wonum" primary="true"/>
-        </relationship>
-        <relationship to="person" qualifier="issuetoperson">
-          <relationshipAttribute from="issueto" to="personid" primary="true"/>
-        </relationship>
-        <relationship to="asset">
-          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+        <relationship to="invissue" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
           <relationshipAttribute from="siteid" to="siteid" />
-        </relationship>
-        <relationship to="location">
-          <relationshipAttribute from="location" to="location" primary="true"/>
-          <relationshipAttribute from="siteid" to="siteid" />
-        </relationship>
-        <relationship to="inventory">
-          <relationshipAttribute from="itemnum" to="itemnum"/>
-          <relationshipAttribute from="storeloc" to="location" primary="true"/>
-          <relationshipAttribute from="siteid" to="siteid" />
-        </relationship>
-        <relationship to="invbalances">
-          <relationshipAttribute from="itemnum" to="itemnum"/>
-          <relationshipAttribute from="siteid" to="siteid"/>
-          <relationshipAttribute from="inventory_.itemsetid" to="itemsetid"/>
-          <relationshipAttribute from="storeloc" to="location"/>
-          <relationshipAttribute from="binnum" to="binnum" primary="true"/>
-          <relationshipAttribute from="lotnum" to="lotnum"/>
         </relationship>
       </relationships>
-      <connectorParameters>
-        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
-      </connectorParameters>
     </entity>
     
     <entity name="physicalCount" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 1 and DATEDIFF(day, physcntdate, GETDATE()) > inventory_.ccf and inventory_.ccf != 0">
@@ -91,7 +65,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
   </entities>
 
   <applications>
-    <application name="invissuewo" title="Issue/Return" entity="workorder">
+    <application name="invissuewo" title="Issue/Return" entity="invissuewo">
       <schemas>
         <schema id="newdetail" stereotype="detail" mode="input">
           <field attribute="#refwo" label="Workorder" readonly="true"/>
@@ -167,10 +141,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="width=12%;"/>
           </field>
           <field attribute="quantity" label="Quantity">
-            <renderer type="default" params="width=12%;formatter=@inventoryService.formatQty;"/>
+            <renderer type="default" params="width=12%;formatter=@inventoryService.formatQtyList;"/>
           </field>
           <field attribute="qtyreturned" label="Quantity Returned">
-            <renderer type="default" params="width=12%;formatter=@inventoryService.formatQtyReturned;"/>
+            <renderer type="default" params="width=12%;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html"></section>
         </list>
@@ -216,7 +190,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="issuetype" label="Issue Type" readonly="true"/>
           <field attribute="storeloc" label="Storeroom" readonly="true"/>
           <field attribute="quantity" label="Quantity Returned">
-            <renderer type="default" params="formatter=@inventoryService.formatQty;"/>
+            <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
           </field>
           <commandbars>
             <commandgroup position="detailform">
@@ -236,10 +210,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="issuetype" label="Issue Type" readonly="true"/>
           <field attribute="storeloc" label="Storeroom" readonly="true"/>
           <field attribute="quantity" label="Quantity Issued">
-            <renderer type="default" params="formatter=@inventoryService.formatQty;"/>
+            <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
           </field>
           <field attribute="qtyreturned" label="Quantity Returned">
-            <renderer type="default" params="formatter=@inventoryService.formatQtyReturned;"/>
+            <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
           </field>
           <commandbars>
             <commandgroup position="detailform">
@@ -266,10 +240,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="linecost" hidden="true"/>
           <field attribute="issueid" hidden="true"/>
           <field attribute="quantity" label="Quantity Issued" readonly="true">
-            <renderer type="default" params="formatter=@inventoryService.formatQty;"/>
+            <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
           </field>
           <field attribute="qtyreturned" label="Quantity Returned" readonly="true">
-            <renderer type="default" params="formatter=@inventoryService.formatQtyReturned;"/>
+            <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
           </field>
           <field attribute="#quantityadj" label="New Return Quantity">
             <renderer type="numericinput" params="min=1;max=(@quantity - @qtyreturned);"/>

@@ -1,19 +1,34 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Security.Context;
+using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder {
     public class WoBatchDataSet : SWDBApplicationDataset {
 
+        private IContextLookuper _contextLookuper;
 
+        public WoBatchDataSet(IContextLookuper contextLookuper) {
+            _contextLookuper = contextLookuper;
+        }
 
         public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var result = base.GetList(application, searchDto);
             foreach (var item in result.ResultObject) {
-                var itemIds = item.GetAttribute("itemids") as string;
-                item.SetAttribute("#numberofitems", itemIds == null ? 0 : itemIds.Count(f => f == ',')+1);
+                var status = item.GetAttribute("status") as string;
+                if (BatchStatus.SUBMITTING.ToString().EqualsIc(status)) {
+                    var id = item.GetAttribute("id");
+                    var report = _contextLookuper.GetFromMemoryContext<BatchReport>("sw_batchreport{0}".Fmt(id));
+                    if (report != null) {
+                        item.SetAttribute("status", "Submitting {0} %".Fmt(report.PercentageDone));
+                    }
+                }
+
             }
             return result;
         }

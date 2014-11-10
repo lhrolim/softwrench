@@ -101,13 +101,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          <field attribute="reportedby" label="Reported By">
+          <field attribute="reportedbyperson_.displayname" label="Reported By">
             <renderer type="default" params="width=15%" />
           </field>
           <field attribute="status" label="Status">
             <renderer type="default" params="width=15%" />
           </field>
-          <field attribute="owner" label="Owner">
+          <field attribute="ownerperson_.displayname" label="Owner">
             <renderer type="default" params="width=15%" />
           </field>
           <field attribute="#color" label="">
@@ -133,15 +133,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!--field attribute="owner" label="Owner" readonly="true" hidden="true"/-->
 
           <section id="statussection"/>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname"  enableexpression="@ownergroup==null">
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname"  >
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
+          <!--association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeownergroup"/>
-          </association>
+          </association-->
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" >
             <renderer type="lookup" params="columnlabel=Name"/>
@@ -201,7 +201,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schema parentschema="adetail" title="New Service Request" id="newdetail">
         <section id="siteidsection">
           <field attribute="ticketid" label="Request #:" hidden="true"/>
-          <association label="Site:" target="siteid" labelfield="site_.description" required="true">
+          <association label="Site:" target="siteid" labelfield="site_.description" required="true" default='@usersite' enableexpression="true">
             <!-- removed default='@usersite' from the above association label-->
             <renderer type="lookup"/>
           </association>
@@ -382,19 +382,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Work Order Grid" platform="web">
           <field attribute="wonum" label="WO No">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=10%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=12%" />
           </field>
           <field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=25%" />
+          </field>
+          <field attribute="worktype" label="Worktype">
+            <renderer type="default" params="width=12%"/>
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=12%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
@@ -437,17 +440,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-          <!--section id="ownerstatussection"/-->
+          <section id="statussection"/>
           <field attribute="wonum" label="WO No:" readonly="true"/>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
+          <!--association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeownergroup"/>
-          </association>
+          </association-->
           <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
           <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
@@ -470,18 +473,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
             <renderer type="lookup"/>
           </association>
-          <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist">
-            <!--renderer type="lookup"/-->
+          <!--association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist">
           </association>
           <field hidden="true" attribute="failurelist_.failurelist"/>
           <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode">
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterProblemCodes"/>
-          </association>
+          </association-->
           <field label="Job Plan:" attribute="jpnum" readonly="true" />
-          <association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
+          <!--association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
             <renderer type="lookup"/>
-          </association>
+          </association-->
 
 
           <!-- Adding target start finish date-->
@@ -516,6 +518,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Details:" attribute="longdescription_.ldtext" >
             <renderer type="richtext"/>
           </field>
+          <section id="attachmentsection"/>
           <section id="compositions"/>
           <!--					<section id="matusetranssection"/>-->
           <!--					<section id="labtranssection"/>-->
@@ -524,29 +527,35 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <schema parentschema="adetail" title="New Work Order" id="newdetail" platform="web">
           <section id="siteidsection">
-            <association label="Site:" target="siteid" labelfield="site_.description" required="true">
+            <association label="Site:" target="siteid" labelfield="site_.description" required="true" default='@usersite'>
               <!-- removed default='@usersite' from the above association label-->
               <renderer type="lookup"/>
             </association>
           </section>
-          <section id="ownerstatussection">
+          <section id="statussection">
             <!--field attribute="owner" label="Owner:"/-->
 
 
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
           </section>
-          
+          <section id="attachmentsection">
+            <field label="Attachment:" attribute="newattachment" >
+              <renderer type="upload"/>
+            </field>
+          </section>
         </schema>
 
         <schema parentschema="adetail" id="editdetail" title="Work Order Detail" platform="web">
-          <section id="ownerstatussection">
+          <section id="siteidsection">
+            <field label="Site:" attribute="siteid" readonly="true"/>
+          </section>
+          <section id="statussection">
             <field attribute="owner" label="Owner" readonly="true"/>
             <association label="Status" target="status" labelfield="synstatus.description">
               <renderer type="combo"/>
             </association>
-            <field label="Site" attribute="siteid" readonly="true"/>
           </section>
-         
+          
           <section id="compositions">
             <composition relationship="worklog" label="Work Log">
               <collectionproperties allowupdate="false" allowcreation="true" />

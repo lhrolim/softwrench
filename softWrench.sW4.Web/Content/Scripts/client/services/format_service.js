@@ -55,14 +55,15 @@ app.factory('formatService', function ($filter, i18NService, dispatcherService) 
 
             if (column.rendererParameters['formatter'] != undefined) {
                 //If the formatter starts with an @ symbol
-                if (column.rendererParameters['formatter'].match(/\@/g)) {
-                    //Remove the @ symbol and then split the xxx.yyy service call
-                    var serviceCall = column.rendererParameters['formatter'].replace(/\@/g, '').split('.');
+                if (column.rendererParameters['formatter'].startsWith("@")) {
+                    var formatter = column.rendererParameters['formatter'];
+                    formatter = formatter.substring(1); //Removes the leading '@' symbol
+                    var serviceCall = formatter.split('.');
                     var serviceName = serviceCall[0];
                     var serviceMethod = serviceCall[1];
 
                     var fn = dispatcherService.loadService(serviceName, serviceMethod);
-                    fn(datamap, value, column);
+                    return fn(datamap, value, column);
                 }
             }
             
