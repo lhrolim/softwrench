@@ -145,14 +145,17 @@ namespace softWrench.sW4.Web {
             var clientName = ApplicationConfiguration.ClientName;
             const string basePath = "~/Content/styles/default/";
             const string baseAppPath = basePath + "/application";
+            const string baseMediaPath = basePath + "/media";
 
             var clientPath = String.Format("~/Content/styles/{0}", clientName);
             var clientPathAppCustom = clientPath + "/application";
+            var clientPathMediaCustom = clientPath + "/media";
 
             var styleBundle = new StyleBundle("~/Content/styles/client/client-css");
             
             bundles.Add(styleBundle.IncludeDirectory(basePath, "*.css"));
             bundles.Add(styleBundle.IncludeDirectory(baseAppPath, "*.css"));
+            bundles.Add(styleBundle.IncludeDirectory(baseMediaPath, "*.css"));
 
             //client specific scripts go after, so they can override default styles
             try {
@@ -164,6 +167,14 @@ namespace softWrench.sW4.Web {
             try
             {
                 bundles.Add(styleBundle.IncludeDirectory(clientPathAppCustom, "*.css"));
+            }
+            catch
+            {
+                //nothing to do
+            }
+            try
+            {
+                bundles.Add(styleBundle.IncludeDirectory(clientPathMediaCustom, "*.css"));
             }
             catch
             {
