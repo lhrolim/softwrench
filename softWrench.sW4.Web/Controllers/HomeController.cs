@@ -14,6 +14,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using softWrench.sW4.Web.Security;
 
 namespace softWrench.sW4.Web.Controllers {
     [System.Web.Mvc.Authorize]
@@ -24,15 +25,20 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly IConfigurationFacade _facade;
         private readonly I18NResolver _i18NResolver;
         private readonly StatusColorResolver _statusColorResolver;
+        private ContextLookuper _lookuper;
 
-        public HomeController(IConfigurationFacade facade, I18NResolver i18NResolver, StatusColorResolver statusColorResolver) {
+        public HomeController(IConfigurationFacade facade, I18NResolver i18NResolver, StatusColorResolver statusColorResolver, ContextLookuper lookuper) {
             //            _controllerFactory = (IAPIControllerFactory)GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IAPIControllerFactory));
             _facade = facade;
             _i18NResolver = i18NResolver;
             _statusColorResolver = statusColorResolver;
+            _lookuper = lookuper;
         }
 
-        public ActionResult Index() {
+        public ActionResult Index()
+        {
+            _lookuper.RegisterHttpContext(Request);
+
             var user = SecurityFacade.CurrentUser();
             var securedMenu = user.Menu(ClientPlatform.Web);
             var indexItem = securedMenu.IndexItem;
