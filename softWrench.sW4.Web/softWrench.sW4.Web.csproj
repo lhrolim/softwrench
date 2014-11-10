@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -635,6 +635,8 @@
     <Content Include="Content\Scripts\client\components\autocompleteserver.js" />
     <Content Include="Content\Scripts\client\components\autocompleteclient.js" />
     <Content Include="Content\Scripts\client\components\combodropdown.js" />
+    <Content Include="Content\Scripts\client\components\lookupcomponent.js" />
+    <Content Include="Content\Scripts\client\components\richtext.js" />
     <Content Include="Content\Scripts\client\crud_body_modal.js" />
     <Content Include="Content\Scripts\client\directives\gridtoolBar.js" />
     <Content Include="Content\Scripts\client\makeSWAdmin.js" />
