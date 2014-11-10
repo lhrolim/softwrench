@@ -373,7 +373,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to ="item">
           <relationshipAttribute from ="itemnum" to="itemnum" primary="true"/>
         </relationship>
-        <relationship to="MATRECTRANS" qualifier="matrectrans" collection="true">
+        <relationship to="matrectrans" qualifier="matrectrans" collection="true">
           <relationshipAttribute from="ponum" to="ponum" primary="true"/>
           <relationshipAttribute from="polinenum" to="polinenum"/>
         </relationship>
@@ -1148,7 +1148,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <properties>
         <!--will need to change the icon later-->
         <property key ="icon.composition.tab" value="fa fa-tags"/>
-        <property key="list.click.popup" value="modal"/>
+        <property key="list.click.service" value="poreceivingService.poreceivelistclick"/>
       </properties>
       <schemas>
         <schema id="list" mode="output" stereotype="compositionlist">
@@ -1159,6 +1159,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="description" label="Description"/>
           <field attribute="orderqty" label="Quantity"/>
           <field attribute="unitcost" label="Unit Cost"/>
+          <field attribute="matrectrans_.matrectransid" hidden="true"/>
           <field label="Entered Date &amp; Time" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
@@ -1182,6 +1183,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
         </detail>
         
+      </schemas>
+    </application>
+
+    <application name="matrectrans" entity="MATRECTRANS" title="Matrectrans">
+      <schemas>
+        <schema id ="matrectransdetail" mode="input" title="Matrectrans Detail">
+          <field attribute="polinenum" label="poline no:"/>
+          <field attribute="ponum" label="po no:"/>       
+          <field attribute="itemnum" label="item no:"/>
+          <field attribute="quantity" label="quantity:"/>
+        </schema>
       </schemas>
     </application>
   </applications>
