@@ -91,11 +91,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </list>
 
 
-
-
-
-  
-        <schema id="adetail" title="Work Order Detail" abstract="true" stereotype="detail" platform="web">
+        <schema id="ahiddendetails" title="schemaForHoldingHiddensOnly" abstract="true" stereotype="detail" platform="web">
           <field attribute="estdur"            hidden="true"/>
           <field attribute="estlabhrs"         hidden="true"/>
           <field attribute="estmatcost"        hidden="true"/>
@@ -122,93 +118,102 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="outtoolcost"       hidden="true"/>
           <field attribute="outservcost"       hidden="true"/>
           <field attribute="workorderid"  readonly="true" hidden="true"/>
+          <section id="realfields"/>
+        </schema>
 
-          <field attribute="orgid"  required="true" readonly="true" hidden="true"/>
+
+
+
+        <schema id="adetail" title="Work Order Detail" abstract="true" stereotype="detail" platform="web">
           <section id ="siteidsection"/>
-          <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
-          <field attribute="woclass" hidden="true"/>
-          <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-          <field attribute="wonum" label="WO No:" readonly="true"/>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="genericTicetService" method="afterchangeowner"/>
-          </association>
-          <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="genericTicetService" method="afterchangeownergroup"/>
-          </association>
-          <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
-          <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-          </field>
-          <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
-            <renderer type="lookup"/>
-          </association>
-          <field attribute="wopriority" label="Priority:" required="true" default="1">
-            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-          </field>
-          <association label="Location:" target="location" labelfield="location_.description" >
-            <event type="beforechange" service="genericTicetService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
-          </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-            <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="genericTicetService" method="afterChangeAsset"/>
-          </association>
-          <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
-            <renderer type="lookup"/>
-          </association>
-          <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist">
-            <!--renderer type="lookup"/-->
-          </association>
-          <field hidden="true" attribute="failurelist_.failurelist"/>
-          <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode">
-            <renderer type="lookup"/>
-            <dataprovider prefilterfunction="FilterProblemCodes"/>
-          </association>
-          <field label="Job Plan:" attribute="jpnum" readonly="true" />
-          <association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
-            <renderer type="lookup"/>
-          </association>
+          <section id="realfields">
+            <field attribute="orgid"  required="true" readonly="true" hidden="true"/>
+            <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
+            <field attribute="woclass" hidden="true"/>
+            <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
+            <field attribute="wonum" label="WO No:" readonly="true"/>
+            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="genericTicetService" method="afterchangeowner"/>
+            </association>
+            <!-- Added the Owner Group field-->
+            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="genericTicetService" method="afterchangeownergroup"/>
+            </association>
+            <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
+            <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+            </field>
+            <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
+              <renderer type="lookup"/>
+            </association>
+            <field attribute="wopriority" label="Priority:" required="true" default="1">
+              <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
+            </field>
+            <association label="Location:" target="location" labelfield="location_.description" >
+              <event type="beforechange" service="genericTicetService" method="beforeChangeLocation"/>
+              <!--renderer type="lookup"/-->
+            </association>
+            <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+              <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+              <dataprovider prefilterfunction="FilterAssets"/>
+              <event type="afterchange" service="genericTicetService" method="afterChangeAsset"/>
+            </association>
+            <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
+              <renderer type="lookup"/>
+            </association>
+            <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist">
+              <!--renderer type="lookup"/-->
+            </association>
+            <field hidden="true" attribute="failurelist_.failurelist"/>
+            <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode">
+              <renderer type="lookup"/>
+              <dataprovider prefilterfunction="FilterProblemCodes"/>
+            </association>
+            <field label="Job Plan:" attribute="jpnum" readonly="true" />
+            <association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
+              <renderer type="lookup"/>
+            </association>
 
 
-          <!-- Adding target start finish date-->
-          <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualfinish" hidden="true" attributeToServer="#notusedattribute"/>
+            <!-- Adding target start finish date-->
+            <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
+            <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
+            <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
+            <field attribute="actualfinish" hidden="true" attributeToServer="#notusedattribute"/>
 
-          <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetstart;">
-            <header label="Target Start Date:" displacement="sameline"/>
+            <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
+                           parameters="joinattribute=targetstart;">
+              <header label="Target Start Date:" displacement="sameline"/>
+            </section>
+
+            <section id="targetFinish" resourcepath="/Content/Templates/samelinepickers.html"
+                           parameters="joinattribute=targetfinish;">
+              <header label="Target Finish Date:" displacement="sameline"/>
+            </section>
+
+            <section id="actualStart" resourcepath="/Content/Templates/samelinepickers.html"
+                           parameters="joinattribute=actualstart;">
+              <header label="Actual Start Date:" displacement="sameline"/>
+            </section>
+
+            <section id="actualFinish" resourcepath="/Content/Templates/samelinepickers.html"
+                           parameters="joinattribute=actualfinish;">
+              <header label="Actual Finish Date:" displacement="sameline"/>
+            </section>
+
+
+
+            <field attribute="description" label="Summary:"/>
+            <field label="Details:" attribute="longdescription_.ldtext" >
+              <renderer type="richtext"/>
+            </field>
+           
+            <!--					<section id="matusetranssection"/>-->
+            <!--					<section id="labtranssection"/>-->
           </section>
-
-          <section id="targetFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetfinish;">
-            <header label="Target Finish Date:" displacement="sameline"/>
-          </section>
-
-          <section id="actualStart" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualstart;">
-            <header label="Actual Start Date:" displacement="sameline"/>
-          </section>
-
-          <section id="actualFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualfinish;">
-            <header label="Actual Finish Date:" displacement="sameline"/>
-          </section>
-
-
-
-          <field attribute="description" label="Summary:"/>
-          <field label="Details:" attribute="longdescription_.ldtext" >
-            <renderer type="richtext"/>
-          </field>
           <section id="compositions"/>
-          <!--					<section id="matusetranssection"/>-->
-          <!--					<section id="labtranssection"/>-->
         </schema>
 
         <schema parentschema="adetail" title="New Work Order" id="newdetail" platform="web">
