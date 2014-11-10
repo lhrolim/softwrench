@@ -37,6 +37,10 @@ input:focus, select:focus, textarea:focus {
         width: 100%;
     }
 
+ .modal-content .context, .modal-content .listgrid-table {
+    display: none;
+}
+
 @media all and (min-width: 480px) {
     .smallmodal {
         width: 360px;
