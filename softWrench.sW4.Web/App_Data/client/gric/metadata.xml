@@ -382,22 +382,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Work Order Grid" platform="web">
           <field attribute="wonum" label="WO No">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=10%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=12%" />
           </field>
           <field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=25%" />
           </field>
           <field attribute="worktype" label="Worktype">
-            <renderer type="default" params="width=15%"/>
+            <renderer type="default" params="width=12%"/>
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=12%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
