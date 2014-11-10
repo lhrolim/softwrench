@@ -124,13 +124,15 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return filter;
         }
 
-        public SearchRequestDto AssetFilterBySiteFunction(AssociationPreFilterFunctionParameters parameters) {
+        public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
+            return AssteFilterBySiteid(parameters);
+        }
+
+        private SearchRequestDto AssteFilterBySiteid(AssociationPreFilterFunctionParameters parameters) {
+            var user = SecurityFacade.CurrentUser();
             var filter = parameters.BASEDto;
-            var location = (string)parameters.OriginalEntity.GetAttribute("location");
-            if (location == null) {
-                return filter;
-            }
-            filter.AppendSearchEntry("asset.location", location.ToUpper());
+            var siteid = user.SiteId;
+            filter.AppendSearchEntry("asset.siteid", siteid.ToUpper());
             return filter;
         }
 

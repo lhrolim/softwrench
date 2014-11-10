@@ -351,6 +351,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="lookup"/>
           </association>
           <association label="Asset" target="assetnum" labelfield="asset_.assetnum" extraprojectionvalues="location">
+            <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>
           </association>
           <association label="Location" target="location" labelfield="location_.description">
