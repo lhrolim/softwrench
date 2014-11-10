@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using log4net;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
@@ -14,6 +16,8 @@ namespace softWrench.sW4.Web.Security {
 
     public class ContextLookuper : IContextLookuper {
 
+        private static readonly IDictionary<string, object> _memoryContext = new ConcurrentDictionary<string, object>();
+
         private static ILog Log = LogManager.GetLogger(typeof(ContextLookuper));
 
         public ContextHolder LookupContext() {
@@ -23,9 +27,9 @@ namespace softWrench.sW4.Web.Security {
         }
 
         public void FillContext(ApplicationMetadataSchemaKey key) {
-            
+
             var context = (ContextHolder)ReflectionUtil.Clone(new ContextHolder(), LookupContext());
-            
+
             Log.DebugFormat("filling {0} into context {1}", key, context);
             if (context.ApplicationLookupContext == null) {
                 Log.DebugFormat("no context found");
@@ -42,6 +46,31 @@ namespace softWrench.sW4.Web.Security {
             } else {
                 LogicalThreadContext.SetData("context", context);
             }
+        }
+
+        public void SetMemoryContext(string key, object ob, bool userSpecific = false) {
+            var user = SecurityFacade.CurrentUser();
+            var login = userSpecific ? user.Login : null;
+//            var userKey = new UserKey(login, key);
+            _memoryContext.Add(key, ob);
+        }
+
+        public void RemoveFromMemoryContext(string key, bool userSpecific = false) {
+            var user = SecurityFacade.CurrentUser();
+            var login = userSpecific ? user.Login : null;
+//            var userKey = new UserKey(login, key);
+            _memoryContext.Remove(key);
+        }
+
+        public T GetFromMemoryContext<T>(string key) {
+            var user = SecurityFacade.CurrentUser();
+            var userKey = new UserKey(user.Login, key);
+            if (!_memoryContext.ContainsKey(key)) {
+                Log.WarnFormat("object {0} not found in memory", key);
+                return default(T);
+            }
+            return (T)_memoryContext[key];
+
         }
 
         public static ContextHolder AddContext(ContextHolder context, bool isHttp) {
@@ -67,6 +96,37 @@ namespace softWrench.sW4.Web.Security {
             } catch (Exception e) {
                 //not logged users
                 return context;
+            }
+        }
+    }
+
+    class UserKey {
+        public UserKey(string userName, string key) {
+            if (userName == null) {
+                //To make hash code and equals work fine
+                userName = "#null";
+            }
+            UserName = userName;
+            Key = key;
+        }
+
+        internal string UserName;
+        internal string Key;
+
+        protected bool Equals(UserKey other) {
+            return (UserName == null || string.Equals(UserName, other.UserName)) && string.Equals(Key, other.Key);
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((UserKey)obj);
+        }
+
+        public override int GetHashCode() {
+            unchecked {
+                return ((UserName != null ? UserName.GetHashCode() : 0) * 397) ^ (Key != null ? Key.GetHashCode() : 0);
             }
         }
     }

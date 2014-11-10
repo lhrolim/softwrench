@@ -135,7 +135,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
       </relationships>
       <connectorParameters>
-        <connectorParameter key="integration_interface" value="SWWO2" />
+        <connectorParameter key="integration_interface" value="SWWO" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
       </connectorParameters>
     </entity>
