@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('formatService', function ($filter, i18NService) {
+app.factory('formatService', function ($filter, i18NService, dispatcherService) {
 
     var doFormatDate = function (value, dateFormat, forceConversion) {
         if (value == null) {
@@ -48,10 +48,25 @@ app.factory('formatService', function ($filter, i18NService) {
     };
 
     return {
-        format: function (value, column) {
+        format: function (datamap, value, column) {
             if (column == undefined) {
                 return value;
             }
+
+            if (column.rendererParameters['formatter'] != undefined) {
+                //If the formatter starts with an @ symbol
+                if (column.rendererParameters['formatter'].startsWith("@")) {
+                    var formatter = column.rendererParameters['formatter'];
+                    formatter = formatter.substring(1); //Removes the leading '@' symbol
+                    var serviceCall = formatter.split('.');
+                    var serviceName = serviceCall[0];
+                    var serviceMethod = serviceCall[1];
+
+                    var fn = dispatcherService.loadService(serviceName, serviceMethod);
+                    return fn(datamap, value, column);
+                }
+            }
+            
             var dateFormat;
             if (column.rendererType == "datetime") {
                 if (value != null) {
@@ -70,6 +85,11 @@ app.factory('formatService', function ($filter, i18NService) {
             } else if (column.rendererParameters != undefined && column.rendererParameters['formatter'] != null) {
                 if (column.rendererParameters['formatter'] == 'numberToBoolean') {
                     value = value == 1 ? i18NService.get18nValue('general.yes', 'Yes') : i18NService.get18nValue('general.no', 'No');
+                }
+                else if (column.rendererParameters['formatter'] == 'numberToAbs') {
+                    if (!isNaN(value)) {
+                        value = Math.abs(value);
+                    }
                 }
                 else if (column.rendererParameters['formatter'] == 'doubleToTime') {
                     if (value == null) {

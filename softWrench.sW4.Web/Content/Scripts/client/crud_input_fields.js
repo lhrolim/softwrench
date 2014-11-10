@@ -105,7 +105,7 @@ app.directive('crudInputFields', function (contextService) {
         controller: function ($scope, $http, $element, $injector, $timeout,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
-            cmpfacade,cmpComboDropdown, redirectService,validationService, contextService, eventdispatcherService) {
+            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService) {
 
             $scope.$name = 'crud_input_fields';
 
@@ -143,7 +143,7 @@ app.directive('crudInputFields', function (contextService) {
 
             //this will get called when the input form is done rendering
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
-                eventdispatcherService.onload($scope.schema, $scope.datamap);
+                eventService.onload($scope.schema, $scope.datamap);
                 var bodyElement = $('#' + parentElementId);
                 if (bodyElement.length <= 0) {
                     return;
@@ -151,7 +151,7 @@ app.directive('crudInputFields', function (contextService) {
                 // Configure tooltips
                 $('.no-touch [rel=tooltip]', bodyElement).tooltip({ container: 'body' });
 
-                $scope.configureLookupModals(bodyElement);
+
                 cmpfacade.init(bodyElement, $scope);
                 // workaround in order to make the <select> comboboxes work properly on ie9
 
@@ -167,7 +167,7 @@ app.directive('crudInputFields', function (contextService) {
                     });
                 });
 
-                if (parentElementId.equalsAny('crudInputMainCompositionFields','crudInputMainFields')) {
+                if (parentElementId.equalsAny('crudInputMainCompositionFields', 'crudInputMainFields')) {
                     //to avoid registering these global listeners multiple times, as the page main contain sections.
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();
@@ -241,7 +241,7 @@ app.directive('crudInputFields', function (contextService) {
                                 }
                                 var result = associationService.updateAssociations(association, $scope);
                                 if (result != undefined && result == false) {
-                                    var resolved =contextService.fetchFromContext("associationsresolved", false, true);
+                                    var resolved = contextService.fetchFromContext("associationsresolved", false, true);
                                     var phase = resolved ? 'configured' : 'initial';
                                     var dispatchedbytheuser = $scope.associationsResolved ? true : false;
                                     associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser });
@@ -308,32 +308,11 @@ app.directive('crudInputFields', function (contextService) {
                 return result;
             };
 
-            $scope.setMaxNumericInput = function (max, maxExpr, maxExprVar) {
-                //If a max value is defined, use it
-                if (max != null) {
-                    return max;
+            $scope.setMaxNumericInput = function (datamap, fieldMetadata) {
+                if (fieldMetadata.rendererParameters['max'] != null) {
+                    return parseInt(expressionService.evaluate(fieldMetadata.rendererParameters['max'],datamap));
                 }
-
-                //If either the expression or expression variables are missing, return nothing (i.e. the max is unbounded)
-                if (maxExpr === undefined || maxExprVar === undefined) {
-                    return;
-                }
-
-                var variables = maxExprVar.split(',');
-                var expression = maxExpr;
-
-                for (var i = 0; i < variables.length; i++) {
-                    var replaceVar = "{" + i + "}";
-                    expression = expression.replace(replaceVar, $scope.datamap[variables[i]]);
-                }
-
-                try {
-                    return Math.abs(eval(expression));
-                } catch (e) {
-                    if ($rootScope.isLocal) {
-                        console.log(e);
-                    }
-                }
+                return null;
             };
 
 
@@ -412,40 +391,6 @@ app.directive('crudInputFields', function (contextService) {
                 }
             };
 
-            $scope.configureLookupModals = function (bodyElement) {
-                // Configure lookup modals
-                var lookups = fieldService.getDisplayablesOfRendererTypes($scope.schema.displayables, ['lookup']);
-                $.each(lookups, function (key, value) {
-                    var fieldMetadata = value;
-                    if ($scope.associationOptions == null) {
-                        //this scenario happens when a composition has lookup-associations on its details, 
-                        //but the option list has not been fetched yet
-                        $scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
-                        $scope.lookupAssociationsCode[fieldMetadata.attribute] = null;
-                    } else {
-                        var options = $scope.associationOptions[fieldMetadata.associationKey];
-
-                        var doConfigure = function (optionValue) {
-
-                            $scope.lookupAssociationsCode[fieldMetadata.attribute] = optionValue;
-                            if (options == null || options.length <= 0) {
-                                //it should always be lazy loaded... why is this code even needed?
-                                return;
-                            }
-
-                            var optionSearch = $.grep(options, function (e) {
-                                return e.value == optionValue;
-                            });
-
-                            var valueToSet = optionSearch != null && optionSearch.length > 0 ? optionSearch[0].label : null;
-                            $scope.lookupAssociationsDescription[fieldMetadata.attribute] = valueToSet;
-                        }
-
-                        doConfigure($scope.datamap[fieldMetadata.target]);
-                    }
-                });
-            };
-
             $scope.configureNumericInput = function () {
                 for (i in $scope.schema.displayables) {
                     var fieldMetadata = $scope.schema.displayables[i];
@@ -465,7 +410,7 @@ app.directive('crudInputFields', function (contextService) {
 
             $scope.configureFieldChangeEvents = function () {
                 var fields = fieldService.getDisplayablesOfTypes($scope.displayables, ['ApplicationFieldDefinition']);
-                
+
                 $.each(fields, function (key, field) {
                     var shouldDoWatch = true;
                     $scope.$watch('datamap["' + field.attribute + '"]', function (newValue, oldValue) {
@@ -545,6 +490,16 @@ app.directive('crudInputFields', function (contextService) {
                         }
                     }
                 }
+            };
+
+            $scope.getFormattedValue = function (datamap, value, column) {
+                var formattedValue = formatService.format(datamap, value, column);
+                if (formattedValue == "-666") {
+                    //this magic number should never be displayed! 
+                    //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
+                    return null;
+                }
+                return formattedValue;
             };
 
             $scope.enabletoopendetails = function (fieldMetadata) {
@@ -718,22 +673,11 @@ app.directive('crudInputFields', function (contextService) {
 
             init();
 
-            function evalExpression(fieldMetadata) {
-                //If applying mathematical operations from two or more metadata fields
-                if (expressionService.isPrecompiledReplaceRegexMatch(fieldMetadata.evalExpression)) {
-                    return bindEvalExpression(fieldMetadata);
-                } else {
-                    //Evaluates a single field
-                    $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
-                }
-                return null;
-            }
-
-            function bindEvalExpression(fieldMetadata) {
-                var variables = expressionService.getVariablesForWatch(fieldMetadata.evalExpression);
+            function bindExpression(expression) {
+                var variables = expressionService.getVariablesForWatch(expression);
                 $scope.$watchCollection(variables, function (newVal, oldVal) {
                     if (newVal != oldVal) {
-                        $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);
+                        $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(expression, $scope.datamap);
                     }
                 });
                 return variables;
@@ -741,7 +685,7 @@ app.directive('crudInputFields', function (contextService) {
 
             $scope.initField = function (fieldMetadata) {
                 if (fieldMetadata.evalExpression != null) {
-                    return evalExpression(fieldMetadata);
+                    return bindExpression(fieldMetadata.evalExpression);
                 }
                 return null;
             };
@@ -760,7 +704,6 @@ app.directive('numberSpinner', function () {
                 min: attr.min,
                 max: attr.max
             });
-            console.log(attr);
         }
     }
 });

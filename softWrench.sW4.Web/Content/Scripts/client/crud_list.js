@@ -33,14 +33,14 @@ app.directive('crudList', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             validationService, submitService, redirectService,
-            associationService, statuscolorService, contextService, eventdispatcherService, iconService) {
+            associationService, statuscolorService, contextService, eventService, iconService, expressionService) {
 
             $scope.$name = 'crudlist';
 
             fixHeaderService.activateResizeHandler();
 
-            $scope.getFormattedValue = function (value, column) {
-                var formattedValue = formatService.format(value, column);
+            $scope.getFormattedValue = function (datamap, value, column) {
+                var formattedValue = formatService.format(datamap, value, column);
                 if (formattedValue == "-666") {
                     //this magic number should never be displayed! 
                     //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
@@ -84,7 +84,7 @@ app.directive('crudList', function (contextService) {
                     fullKey: "/Global/Grids/ScanBar",
                     searchData: $scope.searchData
                 };
-                eventdispatcherService.onload($scope.schema, null, parameters);
+                eventService.onload($scope.schema, $scope.datamap, parameters);
 
                 if ($scope.ismodal == 'true' && !(true === $scope.$parent.showingModal)) {
                     return;
@@ -147,6 +147,9 @@ app.directive('crudList', function (contextService) {
                         $scope.searchData = searchData;
                     }
                     pagetogo = 1;
+                }
+                if (extraparameters.avoidspin) {
+                    contextService.set("avoidspin", true, true);
                 }
                 $scope.selectPage(pagetogo, pageSize, printmode);
             });
@@ -390,7 +393,9 @@ app.directive('crudList', function (contextService) {
                 var key = column.target ? column.target : column.attribute;
 
                 if (column.defaultValue != null && data[key] == null) {
-                    data[key] = column.defaultValue;
+                    if (column.enableDefault != null && expressionService.evaluate(column.enableDefault, data)) {
+                        data[key] = column.defaultValue;
+                    }
                 }
             }
 

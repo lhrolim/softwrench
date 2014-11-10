@@ -104,6 +104,21 @@ namespace softwrench.sW4.Shared2.Metadata {
             get { return ApplicationName; }
         }
 
+        protected bool Equals(CompleteApplicationMetadataDefinition other) {
+            return string.Equals(ApplicationName, other.ApplicationName);
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((CompleteApplicationMetadataDefinition)obj);
+        }
+
+        public override int GetHashCode() {
+            return (ApplicationName != null ? ApplicationName.GetHashCode() : 0);
+        }
+
         public override string ToString() {
             return string.Format("Name: {0}", ApplicationName);
         }

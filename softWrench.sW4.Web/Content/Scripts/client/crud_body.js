@@ -39,11 +39,11 @@ app.directive('crudBody', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             submitService, redirectService,
-            associationService, contextService, alertService, validationService, eventdispatcherService) {
+            associationService, contextService, alertService, validationService, eventService) {
 
            
-            $scope.getFormattedValue = function (value, column) {
-                var formattedValue = formatService.format(value, column);
+            $scope.getFormattedValue = function (datamap, value, column) {
+                var formattedValue = formatService.format(datamap, value, column);
                 if (formattedValue == "-666") {
                     //this magic number should never be displayed! 
                     //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!

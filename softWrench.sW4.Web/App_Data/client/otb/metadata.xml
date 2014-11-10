@@ -75,12 +75,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <relationships>
         <relationship to="item" >
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
         </relationship>
         <relationship to="inventory" >
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
           <relationshipAttribute from="location" to="location" />
           <relationshipAttribute from="siteid" to="siteid" />
           <relationshipAttribute from="itemsetid" to="itemsetid" />
+        </relationship>
+        <relationship to="invlot">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="lotnum" to="lotnum"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -137,12 +144,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </entity>
 
     <entity name="workorder" idAttribute="wonum" whereclause="woclass like 'WORKORDER'">
-      <relationships>
-        <relationship to="invissue" collection="true">
-          <relationshipAttribute from="wonum" to="refwo" primary="true" />
-          <relationshipAttribute from="siteid" to="siteid" />
-        </relationship>
-      </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
@@ -381,40 +382,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
   </entities>
 
   <applications>
-    <!--    ToString="asset + @description"-->
-    <application name="asset" title="Asset" entity="asset" id="00000000-0000-0000-0000-000000000001" >
-      <properties>
-        <property key="mobile.fetchlimit" value="30"/>
-        <property key="mobile.userInteractionEnabled" value="false"/>
-      </properties>
-      <schemas>
-        <list>
-          <field attribute="assetnum" label="Asset" qualifier="title"/>
-          <field attribute="location" label="Location" qualifier="subtitle"/>
-          <field attribute="vendor" label="Vendor"  qualifier="featured"/>
-        </list>
-        <detail>
-          <field attribute="assetid" label="ID:"  required="true" />
-          <field attribute="assetnum" label="Asset:"  required="true" />
-          <field attribute="location" label="Location:"  required="true" />
-          <field attribute="vendor" label="Vendor:"  />
-          <field attribute="description" label="Description:"  />
-          <field attribute="failurecode" label="Failure Class:"  />
-          <field attribute="priority" label="Priority:"  />
-          <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
-        </detail>
-        <schema id="assetLookupList" stereotype="list">
-          <field attribute="assetnum" label="Asset"/>
-          <field attribute="description" label="Description">
-            <renderer type="default" params="minwidth=300px" />
-          </field>
-          <field attribute="location" label="Location"/>
-          <field attribute="siteid"  label="Site"/>
-          <field attribute="status" label="Status"/>
-        </schema>
-      </schemas>
-
-    </application>
 
     <application name="location" title="Location" entity="location" id="00000000-0000-0000-0000-000000000002">
       <properties>
@@ -973,7 +940,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <commandbars>
             <commandgroup position="gridtop">
               <command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService" 
-                       method="createTransfer" parameters="schema" position=">filter"/>
+                       method="createTransfer" parameters="schema"/>
             </commandgroup>
           </commandbars>
         </list>

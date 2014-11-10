@@ -2581,11 +2581,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <attribute name="storeloc" type="varchar" required="false" />
         <attribute name="transdate" type="datetime" required="true" />
         <attribute name="actualdate" type="datetime" required="true" />
-        <attribute name="quantity" type="decimal" required="true" />
+        <attribute name="quantity" type="double" required="true" />
         <attribute name="curbal" type="decimal" required="true" />
         <attribute name="physcnt" type="decimal" required="true" />
-        <attribute name="unitcost" type="decimal" required="true" />
-        <attribute name="actualcost" type="decimal" required="true" />
+        <attribute name="unitcost" type="double" required="true" />
+        <attribute name="actualcost" type="double" required="true" />
         <attribute name="ponum" type="varchar" required="false" />
         <attribute name="conversion" type="decimal" required="false" />
         <attribute name="assetnum" type="varchar" required="false" />
@@ -2609,7 +2609,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <attribute name="issuetype" type="varchar" required="true" />
         <attribute name="gldebitacct" type="varchar" required="false" />
         <attribute name="glcreditacct" type="varchar" required="false" />
-        <attribute name="linecost" type="decimal" required="true" />
+        <attribute name="linecost" type="double" required="true" />
         <attribute name="financialperiod" type="varchar" required="false" />
         <attribute name="currencycode" type="varchar" required="true" />
         <attribute name="currencyunitcost" type="decimal" required="false" />
@@ -2641,7 +2641,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <attribute name="sendersysid" type="varchar" required="false" />
         <attribute name="fincntrlid" type="varchar" required="false" />
         <attribute name="issueid" type="bigint" required="false" />
-        <attribute name="qtyreturned" type="decimal" required="false" />
+        <attribute name="qtyreturned" type="double" required="false" />
         <attribute name="orgid" type="varchar" required="true" />
         <attribute name="siteid" type="varchar" required="true" />
         <attribute name="refwo" type="varchar" required="false" />
@@ -2666,6 +2666,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       <connectorParameters>
         <connectorParameter key="dbtable" value="matusetrans" />
         <connectorParameter key="integration_interface" value="SWINVISSUE" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN')">
+      <relationships>
+        <relationship to="workorder" >
+          <relationshipAttribute from="refwo" to="wonum" primary="true"/>
+        </relationship>
+        <relationship to="person" qualifier="issuetoperson">
+          <relationshipAttribute from="issueto" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="asset" >
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="location">
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
       </connectorParameters>
     </entity>
 
@@ -3477,6 +3499,27 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </attributes>
       <connectorParameters>
         <connectorParameter key="dbtable" value="poline" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="invlot" idAttribute="invlotid">
+      <attributes>
+        <attribute name="lotnum" type="varchar" required="true" />
+        <attribute name="shelflife" type="float" required="false" />
+        <attribute name="useby" type="datetime" required="false" />
+        <attribute name="mfglotnum" type="varchar" required="false" />
+        <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="manufacturer" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="invlotid" type="bigint" required="true" />
+        <attribute name="itemnum" type="varchar" required="true" />
+        <attribute name="location" type="varchar" required="true" />
+        <attribute name="itemsetid" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="invlot" />
       </connectorParameters>
     </entity>
   </entities>

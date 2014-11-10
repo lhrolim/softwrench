@@ -14,7 +14,7 @@ app.config(['$httpProvider', function ($httpProvider) {
                 .format(config.url, config.headers['currentmodule'], config.headers['currentmetadata']));
             if (activeRequests == 0) {
                 log.info("started request {0}".format(config.url));
-                if (!$rootScope.avoidspin) {
+                if (!$rootScope.avoidspin && !contextService.get("avoidspin",false,true)) {
                     $rootScope.$broadcast('sw_ajaxinit');
                 }
 
@@ -33,7 +33,8 @@ app.config(['$httpProvider', function ($httpProvider) {
                 log.info("Requests ended");
                 $rootScope.$broadcast('sw_ajaxend', response.data);
                 successMessageHandler(response.data);
-
+                //this has to be renewed per operation
+                contextService.insertIntoContext("avoidspin", null, true);
             }
         };
 

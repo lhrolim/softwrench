@@ -75,7 +75,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             }
             if (xElement.IsNamed(cnst.ContainerCommand)) {
                 var label = xElement.AttributeValue(XmlBaseSchemaConstants.LabelAttribute);
-                var tooltip = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableToolTipAtribute);
+                var tooltip = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute);
                 var icon = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandIconAttribute);
                 var service = xElement.AttributeValue(XmlBaseSchemaConstants.ServiceAttribute);
                 var method = xElement.AttributeValue(XmlBaseSchemaConstants.MethodAttribute);
@@ -97,7 +97,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         private static ApplicationCommand GetApplicationCommand(XElement xElement, string id, string role, string position) {
             var label = xElement.AttributeValue(XmlBaseSchemaConstants.LabelAttribute);
-            var tooltip = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableToolTipAtribute);
+            var tooltip = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute);
             if (tooltip == null) {
                 //by default Tooltip will be samething as the label it self.
                 tooltip = label;
@@ -107,7 +107,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var method = xElement.AttributeValue(XmlBaseSchemaConstants.MethodAttribute);
             
             var stereotype = xElement.AttributeValue(XmlBaseSchemaConstants.StereotypeAttribute);
-            var showExpression = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAtribute);
+            var showExpression = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute);
             var successMessage = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandSuccessMessage);
             var nextSchemaId = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandNextSchemaId);
             var scopeParameters = xElement.AttributeValue(XmlBaseSchemaConstants.BaseParametersAttribute);

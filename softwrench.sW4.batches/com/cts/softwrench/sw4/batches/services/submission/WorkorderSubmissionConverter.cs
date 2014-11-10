@@ -52,7 +52,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
             dict["ACTFINISH"] = ConversionUtil.HandleDateConversion(row.StringValue("actfinish"));
             //now we can finish the mapping using target file
             dict["#ReconCd"] = row.StringValue("#ReconCd");
-            dict["#pmchange"] = row.StringValue("#pmchange");
+            dict["#pmchange"] = "y".EqualsIc(row.StringValue("#pmchange"));
             dict["#fdbckcomment"] = row.StringValue("#fdbckcomment");
             return dict;
         }
