@@ -974,7 +974,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </association>
           <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true" required="true">
             <dataprovider prefilterfunction="FilterBin"/>
-            <event type="afterchange" service="inventoryService" method="getBinQuantity"/>
+            <event type="afterchange" service="inventoryService" method="getTransferBinQuantity"/>
             <renderer type="lookup"/>
           </association>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>

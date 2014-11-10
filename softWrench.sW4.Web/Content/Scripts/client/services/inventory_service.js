@@ -7,6 +7,26 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         contextService.insertIntoContext("invuse", invuse, false);
         redirectService.goToApplicationView("invuse", "newdetail", "Input", null, null, null);
     };
+    var getBinQuantity = function(searchData, parameters, balanceField) {
+        var searchDTO = searchService.buildSearchDTO(searchData, {}, {}, null);
+        searchDTO.pageNumber = 1;
+        searchDTO.totalCount = 0;
+        searchDTO.pageSize = 30;
+        var restParameters = {
+            key: {
+                schemaId: "list",
+                mode: "none",
+                platform: "web"
+            },
+            SearchDTO: searchDTO
+        };
+        var urlToUse = url("/api/Data/invbalances?" + $.param(restParameters));
+        $http.get(urlToUse).success(function(data) {
+            var resultObject = data.resultObject;
+            var fields = resultObject[0].fields;
+            parameters.fields[balanceField] = fields.curbal;
+        });
+    };
     return {
         createIssue: function () {
             redirectService.goToApplicationView("invissue", "newInvIssueDetail", "input", null, null, null);
@@ -17,26 +37,26 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         afterchangeworkorder: function (parameters) {
 
             if (parameters.fields['workorder_.location'] == null) {
-                parameters.fields['workorder_.location'] = " ";
-                parameters.fields['location'] = " ";
+                parameters.fields['workorder_.location'] = null;
+                parameters.fields['location'] = null;
             } else {
                 parameters.fields['location'] = parameters.fields['workorder_.location'];
             }
 
             if (parameters.fields['workorder_.assetnum'] == null) {
-                parameters.fields['workorder_.assetnum'] = " ";
-                parameters.fields['assetnum'] = " ";
+                parameters.fields['workorder_.assetnum'] = null;
+                parameters.fields['assetnum'] = null;
             } else {
                 parameters.fields['assetnum'] = parameters.fields['workorder_.assetnum'];
             }
 
-            var gldebitacct = parameters.fields['gldebitacct'];
+            //var gldebitacct = parameters.fields['gldebitacct'];
 
-            if (parameters.fields['workorder_.glaccount']) {
-                gldebitacct = parameters.fields['workorder_.glaccount'];
-            }
+            //if (parameters.fields['workorder_.glaccount']) {
+            //    gldebitacct = parameters.fields['workorder_.glaccount'];
+            //}
 
-            parameters.fields['gldebitacct'] = gldebitacct;
+            //parameters.fields['gldebitacct'] = gldebitacct;
         },
         formatQtyReturned: function (datamap, value, column) {
             var dm = datamap.fields;
@@ -306,32 +326,25 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 }
             });
         },
-        getBinQuantity: function (parameters) {
+        getIssueBinQuantity: function(parameters){
+            var searchData = {
+                itemnum: parameters['fields']['itemnum'],
+                siteid: parameters['fields']['siteid'],
+                itemsetid: parameters['fields']['inventory_.itemsetid'],
+                location: parameters['fields']['storeloc'],
+                binnum: parameters['fields']['binnum']
+            };
+            getBinQuantity(searchData, parameters, '#curbal');
+        },
+        getTransferBinQuantity: function(parameters) {
             var searchData = {
                 itemnum: parameters['fields']['invuseline_.itemnum'],
                 siteid: parameters['fields']['inventory_.siteid'],
                 itemsetid: parameters['fields']['inventory_.itemsetid'],
                 location: parameters['fields']['fromstoreloc'],
                 binnum: parameters['fields']['invuseline_.frombin']
-            }
-            var searchDTO = searchService.buildSearchDTO(searchData, {}, {}, null);
-            searchDTO.pageNumber = 1;
-            searchDTO.totalCount = 0;
-            searchDTO.pageSize = 30;
-            var restParameters = {
-                key: {
-                    schemaId: "list",
-                    mode: "none",
-                    platform: "web"
-                },
-                SearchDTO: searchDTO
-            }
-            var urlToUse = url("/api/Data/invbalances?" + $.param(restParameters));
-            $http.get(urlToUse).success(function (data) {
-                var resultObject = data.resultObject;
-                var fields = resultObject[0].fields;
-                parameters.fields['#curbal'] = fields.curbal;
-            });
+            };
+            getBinQuantity(searchData, parameters, '#curbal');
         },
         submitTransfer: function (schema, datamap) {
             // Save transfer

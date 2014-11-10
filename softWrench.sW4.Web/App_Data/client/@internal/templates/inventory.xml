@@ -17,17 +17,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <relationship to="person" qualifier="issuetoperson">
           <relationshipAttribute from="issueto" to="personid" primary="true"/>
         </relationship>
-        <relationship to="asset" >
+        <relationship to="asset">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
         <relationship to="location">
           <relationshipAttribute from="location" to="location" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
-        </relationship>
-        <relationship to="chartofaccounts" >
-          <relationshipAttribute from="gldebitacct" to="glaccount" primary="true"/>
-          <relationshipAttribute from="orgid" to="orgid" />
         </relationship>
         <relationship to="inventory">
           <relationshipAttribute from="itemnum" to="itemnum"/>
@@ -317,17 +313,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
         <schema id="filter" stereotype="detail" title="Issues and Returns" mode="input" platform="Web">
           <field attribute="matusetransid" hidden="true"/>
-          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="location,assetnum,glaccount">
+          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="location,assetnum">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterchangeworkorder"/>
           </association>
           <association label="Issue To" target="issueto" labelfield="issuetoperson_.displayname">
             <renderer type="lookup"/>
           </association>
-          <association label="Asset" target="assetnum" labelfield="asset_.assetnum" extraprojectionvalues="location,glaccount">
+          <association label="Asset" target="assetnum" labelfield="asset_.assetnum" extraprojectionvalues="location">
             <event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>
           </association>
-          <association label="Location" target="location" labelfield="location_.description" extraprojectionvalues="glaccount">
+          <association label="Location" target="location" labelfield="location_.description">
             <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>
           </association>
           <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" required="true" >
@@ -346,42 +342,41 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       
         <schema id="newInvIssueDetail" mode="input" stereotype="detail">
           <field attribute="matusetransid" hidden="true"/>
-          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="location,assetnum,glaccount">
+          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="location,assetnum">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterchangeworkorder"/>
           </association>
           <association label="Issue To" target="issueto" labelfield="issuetoperson_.displayname">
             <renderer type="lookup"/>
           </association>
-          <association label="Asset" target="assetnum" labelfield="asset_.assetnum" extraprojectionvalues="location,glaccount">
+          <association label="Asset" target="assetnum" labelfield="asset_.assetnum" extraprojectionvalues="location">
             <event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>
           </association>
-          <association label="Location" target="location" labelfield="location_.description" extraprojectionvalues="glaccount">
+          <association label="Location" target="location" labelfield="location_.description">
             <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>
           </association>
           <field attribute="issuetype" label="Issue Type" required="true" readonly="true" default="ISSUE"/>
-          <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit,itemtype" required="true">
+          <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" required="true">
             <renderer type="lookup"/>
           </association>
-          <association label="Storeroom" target="storeloc" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype" required="true">
+          <association label="Storeroom" target="storeloc" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,issueunit,itemtype" required="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterChangeStoreroom"/>
           </association>
           <association label="Bin" target="binnum" labelfield="invbalances_.binnum" hideDescription="true">
             <renderer type="lookup"/>
+            <event type="afterchange" service="inventoryService" method="getIssueBinQuantity"/>
           </association>
+          <field attribute="#curbal" label="Current Balance" readonly="true"/>
           <field attribute="quantity" label="Quantity" default="1">
             <renderer type="numericinput" params="min=1;"/>
           </field>
           <field attribute="unitcost" label="Unit Cost" readonly="true"/>
           <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
-          <field attribute="storeloc" label="Storeroom" hidden="true"/>
           <field attribute="enterby" label="Entered By" readonly="true"/>
           <field attribute="inventory_.itemtype" label="Item Type" readonly="true"/>
-          <field attribute="siteid" label="Entered By" readonly="true"/>
+          <field attribute="siteid" label="Site" readonly="true"/>
           <field attribute="inventory_.costtype" hidden="true"/>
-          <field attribute="inventory_.stdcost" hidden="true"/>
-          <field attribute="inventory_.avgcost" hidden="true"/>
         </schema>
       </schemas>
     </application>
