@@ -84,7 +84,7 @@ app.directive('crudList', function (contextService) {
                     fullKey: "/Global/Grids/ScanBar",
                     searchData: $scope.searchData
                 };
-                eventService.onload($scope.schema, null, parameters);
+                eventService.onload($scope.schema, $scope.datamap, parameters);
 
                 if ($scope.ismodal == 'true' && !(true === $scope.$parent.showingModal)) {
                     return;

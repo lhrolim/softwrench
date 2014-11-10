@@ -300,7 +300,7 @@ namespace softWrench.sW4.Util {
         }
 
         public static Boolean IsDev() {
-            return Profile == "dev";
+            return Profile.Contains("dev");
         }
 
         public static Boolean IsQA() {
