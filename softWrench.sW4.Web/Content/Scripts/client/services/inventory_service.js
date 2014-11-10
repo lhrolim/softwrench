@@ -34,30 +34,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         navToBulkFilter: function () {
             redirectService.goToApplicationView("invissue", "filter", "input", null, null, null);
         },
-        afterchangeworkorder: function (parameters) {
-
-            if (parameters.fields['workorder_.location'] == null) {
-                parameters.fields['workorder_.location'] = null;
-                parameters.fields['location'] = null;
-            } else {
-                parameters.fields['location'] = parameters.fields['workorder_.location'];
-            }
-
-            if (parameters.fields['workorder_.assetnum'] == null) {
-                parameters.fields['workorder_.assetnum'] = null;
-                parameters.fields['assetnum'] = null;
-            } else {
-                parameters.fields['assetnum'] = parameters.fields['workorder_.assetnum'];
-            }
-
-            //var gldebitacct = parameters.fields['gldebitacct'];
-
-            //if (parameters.fields['workorder_.glaccount']) {
-            //    gldebitacct = parameters.fields['workorder_.glaccount'];
-            //}
-
-            //parameters.fields['gldebitacct'] = gldebitacct;
-        },
         formatQtyReturned: function (datamap, value, column) {
             var dm = datamap.fields;
             if (dm === undefined) {
@@ -215,6 +191,30 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             newRecord['storeloc'] = matusetransData['#storeloc'];
             parameters.clonedCompositionData.push(newRecord);
             redirectService.redirectToTab('invissue_');
+        },
+        afterchangeworkorder: function (parameters) {
+
+            if (parameters.fields['workorder_.location'] == null) {
+                parameters.fields['workorder_.location'] = null;
+                parameters.fields['location'] = null;
+            } else {
+                parameters.fields['location'] = parameters.fields['workorder_.location'];
+            }
+
+            if (parameters.fields['workorder_.assetnum'] == null) {
+                parameters.fields['workorder_.assetnum'] = null;
+                parameters.fields['assetnum'] = null;
+            } else {
+                parameters.fields['assetnum'] = parameters.fields['workorder_.assetnum'];
+            }
+
+            var gldebitacct = parameters.fields['gldebitacct'];
+
+            if (parameters.fields['workorder_.glaccount']) {
+                gldebitacct = parameters.fields['workorder_.glaccount'];
+            }
+
+            parameters.fields['gldebitacct'] = gldebitacct;
         },
         afterChangeStoreroom: function (parameters) {
             var user = contextService.getUserData();

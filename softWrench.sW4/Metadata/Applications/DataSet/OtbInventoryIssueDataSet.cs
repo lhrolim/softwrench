@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Permissions;
 using DocumentFormat.OpenXml.Spreadsheet;
 using NHibernate.Hql.Ast.ANTLR;
 using NHibernate.Linq;
@@ -111,7 +112,16 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
         public SearchRequestDto FilterWorkorders(AssociationPreFilterFunctionParameters parameters) {
-            return AssetFilterBySiteFunction(parameters);
+            return WorkorderFilterByStatus(parameters);
+        }
+
+        private SearchRequestDto WorkorderFilterByStatus(AssociationPreFilterFunctionParameters parameters) {
+            var user = SecurityFacade.CurrentUser();
+            var filter = parameters.BASEDto;
+            var siteid = user.SiteId;
+            filter.AppendSearchEntry("workorder.siteid", siteid.ToUpper());
+            filter.AppendWhereClause("STATUS in ('APPR', 'WMATL', 'WSCH', 'WORKING')");
+            return filter;
         }
 
         public SearchRequestDto AssetFilterBySiteFunction(AssociationPreFilterFunctionParameters parameters) {

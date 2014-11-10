@@ -313,7 +313,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
         <schema id="filter" stereotype="detail" title="Issues and Returns" mode="input" platform="Web">
           <field attribute="matusetransid" hidden="true"/>
-          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="location,assetnum">
+          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount,location,assetnum">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterchangeworkorder"/>
           </association>
@@ -342,7 +342,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       
         <schema id="newInvIssueDetail" mode="input" stereotype="detail">
           <field attribute="matusetransid" hidden="true"/>
-          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="location,assetnum">
+          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount,location,assetnum">
+            <dataprovider prefilterfunction="FilterWorkorders"/>
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterchangeworkorder"/>
           </association>
