@@ -872,11 +872,6 @@ Header
         margin: 5px 10px 0;
     }
 
-    .container .context .right {
-        /*width: 60%;*/
-        /*float: right;*/
-    }
-
         .container .context .right .group {
             float: right;
         }

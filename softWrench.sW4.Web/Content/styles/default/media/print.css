@@ -127,4 +127,35 @@
             padding: 0;
             font-weight: normal;
         }
+
+    .container header {
+        position: initial;
+    }
+
+    messagesection .alerts {
+        position: initial;
+        margin-top: initial !important;
+    }
+
+    .affix-pagination {
+        position: initial;
+        top: initial !important;
+    }
+
+    .listgrid-thead {
+        position: initial;
+        top: initial !important;
+    }
+
+    .listgrid-table {
+         margin-top: initial !important;
+    }
+
+    .content {
+         margin-top: initial !important;
+    }
+
+    .tooltip {
+        display: none;
+    }
 }
