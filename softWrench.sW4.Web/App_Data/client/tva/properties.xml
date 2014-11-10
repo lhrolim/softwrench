@@ -3,10 +3,12 @@
             xsi:schemaLocation="http://www.example.org/Properties ../../Schema/Properties.xsd ">
   <property key="baseWSPrefix" value="SW"/>
   <property key="externalSystemName" value="SW" />
-  
+
   <property key="basewsURL" value="http://tva75dev.cts.com:9080/meaweb/wsdl/" />
   <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=TVA75MAX;User Id=MAXIMO;password=MAXIMO;" />
+  <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_TVA75MAX;User Id=sw;password=softwrench;" />
   <property key="maximo_DB_provider" value="System.Data.SQL"/>
+  
   <property key="swdb_provider" value="System.Data.SQL"/>
   <property key="maxAttachmentSize" value="10"/> <!--in MB-->
   <property key="maxScreenshotSize" value="5"/> <!-- in MB-->
@@ -22,8 +24,10 @@
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="true"/>
 
-  <environment key="dev">
-    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_TVA75MAX;User Id=sw;password=softwrench;" />
+  <environment key="dev62">
+    <property key="maximo_DB_url" value="Data Source=10.50.100.43;Initial Catalog=TVA62MAX;User Id=MAXIMO;password=Max7118;" />
+    <property key="swdb_url" value="Data Source=10.50.100.43;Initial Catalog=SWDB_TVA75MAX;User Id=sw;password=softwrench;" />
+    <property key="wsprovider" value="mea" />
   </environment>
 
 
