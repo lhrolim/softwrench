@@ -936,7 +936,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <commandbars>
             <commandgroup position="gridtop">
               <command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService" 
-                       method="createTransfer" parameters="schema" position=">filter"/>
+                       method="createTransfer" parameters="schema"/>
             </commandgroup>
           </commandbars>
         </list>
