@@ -13,10 +13,11 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Security;
+using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
-namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services {
+namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report2 {
     public class BatchReportDataSet : SWDBApplicationDataset {
 
         private readonly SWDBHibernateDAO _dao;
@@ -34,6 +35,11 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services {
             if (batchReport == null) {
                 throw BatchException.BatchReportNotFound(batchId);
             }
+            if (!batchReport.OriginalBatch.UserId.Equals(user.DBId))
+            {
+                throw BatchException.UnauthorizedException();
+            }
+
 
 
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);

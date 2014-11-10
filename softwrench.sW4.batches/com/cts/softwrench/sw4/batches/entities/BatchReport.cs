@@ -47,5 +47,15 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
                 SentItemIds += "," + id;
             }
         }
+
+        public Int32 PercentageDone {
+            get {
+                var numberOfItems = OriginalBatch.NumberOfItems;
+                var totalSentItens = NumberOfProblemItens + NumberOfSentItens;
+                var percentageDone = totalSentItens * 100 / numberOfItems;
+                //return 100 to avoid strange scenarios on screen
+                return percentageDone > 100 ? 100 : percentageDone;
+            }
+        }
     }
 }

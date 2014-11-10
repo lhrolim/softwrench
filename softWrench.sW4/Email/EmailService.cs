@@ -44,6 +44,8 @@ namespace softWrench.sW4.Email {
 
         public class EmailData {
             public EmailData(string sendFrom, string sendTo, string subject, string message) {
+                Validate.NotNull(sendTo,"sentTo");
+                Validate.NotNull(subject,"Subject");
                 SendFrom = sendFrom;
                 SendTo = sendTo;
                 Subject = subject;
