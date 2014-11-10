@@ -5,11 +5,6 @@
 .page-signin {
     padding-top: 20px;
     padding-bottom: 20px;
-    background: #0780c9 url(../../Images/signin.jpg) no-repeat center top fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
 }
 
     .page-signin .form-signin {

@@ -725,8 +725,11 @@
     <Content Include="Content\Scripts\thirdparty\textAngular-min.js" />
     <Content Include="Content\styles\default\application\forms.css" />
     <Content Include="Content\styles\default\application\pages.css" />
+    <Content Include="Content\styles\default\branding.css" />
     <Content Include="Content\styles\default\grid.css" />
+    <Content Include="Content\styles\default\header.css" />
     <Content Include="Content\styles\default\media\screen.css" />
+    <Content Include="Content\styles\default\modal.css" />
     <Content Include="Content\styles\default\signin.css" />
     <Content Include="Content\styles\default\menu.css" />
     <Content Include="Content\styles\default\media\print.css" />
