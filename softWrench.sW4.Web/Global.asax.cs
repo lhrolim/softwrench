@@ -27,13 +27,12 @@ namespace softWrench.sW4.Web {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
-    public class WebApiApplication : System.Web.HttpApplication
-    {
+    public class WebApiApplication : System.Web.HttpApplication {
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof (WebApiApplication));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WebApiApplication));
 
         protected void Application_Start(object sender, EventArgs args) {
-            
+
             var before = Stopwatch.StartNew();
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(new ClientAwareRazorViewEngine());
@@ -59,7 +58,7 @@ namespace softWrench.sW4.Web {
             var dispatcher = (IEventDispatcher)container.GetInstance(typeof(IEventDispatcher));
             dispatcher.Dispatch(new ApplicationStartedEvent());
             Log.Info(LoggingUtil.BaseDurationMessage("**************App started in {0}*************", before));
-            ApplicationConfiguration.StartTimeMillis =  (long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
+            ApplicationConfiguration.StartTimeMillis = (long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
         }
 
         private static void ConfigureLogging() {
@@ -108,29 +107,27 @@ namespace softWrench.sW4.Web {
                 //error handling
             }
         }
-//        protected void Application_BeginRequest(
-//           object sender, EventArgs e) {
-//            ManagedWebSessionContext.Bind(
-//                System.Web.HttpContext.Current,
-//                SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
-//        }
-//
-//        protected void Application_EndRequest(
-//            object sender, EventArgs e) {
-//            var session = ManagedWebSessionContext.Unbind(
-//                System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory);
-//            if (session != null && session.IsOpen) {
-//                //                if (session.Transaction != null && session.Transaction.IsActive)
-//                //                {
-//                //                    session.Transaction.Rollback();
-//                //                }
-//                //                else
-//                //                {
-//                //                    session.Flush();
-//                //                }
-//                session.Close();
-//            }
-//        }
+        protected void Application_BeginRequest(
+           object sender, EventArgs e) {
+          
+        }
+        //
+        //        protected void Application_EndRequest(
+        //            object sender, EventArgs e) {
+        //            var session = ManagedWebSessionContext.Unbind(
+        //                System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory);
+        //            if (session != null && session.IsOpen) {
+        //                //                if (session.Transaction != null && session.Transaction.IsActive)
+        //                //                {
+        //                //                    session.Transaction.Rollback();
+        //                //                }
+        //                //                else
+        //                //                {
+        //                //                    session.Flush();
+        //                //                }
+        //                session.Close();
+        //            }
+        //        }
 
         /// <summary>
         /// this is used for allowing to place a user with more data then simply a username on the current request.

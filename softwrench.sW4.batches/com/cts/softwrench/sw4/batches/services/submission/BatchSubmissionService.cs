@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
+using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report2;
 using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Context;
@@ -18,13 +19,15 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
         private readonly SWDBHibernateDAO _dao;
         private readonly MaximoConnectorEngine _maximoEngine;
         private IEnumerable<ISubmissionConverter> _converters;
-        private IContextLookuper _contextLookuper;
+        private readonly IContextLookuper _contextLookuper;
+        private readonly BatchReportEmailService _batchReportEmailService;
 
 
-        public BatchSubmissionService(SWDBHibernateDAO dao, MaximoConnectorEngine maximoEngine, IContextLookuper contextLookuper) {
+        public BatchSubmissionService(SWDBHibernateDAO dao, MaximoConnectorEngine maximoEngine, IContextLookuper contextLookuper, BatchReportEmailService batchReportEmailService) {
             _dao = dao;
             _maximoEngine = maximoEngine;
             _contextLookuper = contextLookuper;
+            _batchReportEmailService = batchReportEmailService;
         }
 
         public IEnumerable<ISubmissionConverter> Converters {
@@ -99,6 +102,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                 _dao.Save(report);
                 report.OriginalBatch.Status = BatchStatus.COMPLETE;
                 _dao.Save(report.OriginalBatch);
+                _batchReportEmailService.SendEmail(report);
             }, submissionData);
         }
 

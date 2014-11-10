@@ -25,7 +25,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
                     var id = item.GetAttribute("id");
                     var report = _contextLookuper.GetFromMemoryContext<BatchReport>("sw_batchreport{0}".Fmt(id));
                     if (report != null) {
-                        item.SetAttribute("status", "Submitting {0} %".Fmt(report.PercentageDone()));
+                        item.SetAttribute("status", "Submitting {0} %".Fmt(report.PercentageDone));
                     }
                 }
 

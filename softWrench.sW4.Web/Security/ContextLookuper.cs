@@ -2,23 +2,29 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using DocumentFormat.OpenXml.Office2010.Excel;
+using System.Web;
+using System.Web.Http.Controllers;
 using log4net;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.SimpleInjector;
+using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
-using softWrench.sW4.Web.SPF.Filters;
 using LogicalThreadContext = Quartz.Util.LogicalThreadContext;
 
 namespace softWrench.sW4.Web.Security {
 
     public class ContextLookuper : IContextLookuper {
 
-        private static readonly IDictionary<string, object> _memoryContext = new ConcurrentDictionary<string, object>();
+        private static readonly IDictionary<string, object> MemoryContext = new ConcurrentDictionary<string, object>();
 
-        private static ILog Log = LogManager.GetLogger(typeof(ContextLookuper));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ContextLookuper));
+
+        public static ContextLookuper GetInstance() {
+            return SimpleInjectorGenericFactory.Instance.GetObject<ContextLookuper>(typeof(ContextLookuper));
+        }
+
 
         public ContextHolder LookupContext() {
             var isHttp = System.Web.HttpContext.Current != null;
@@ -51,29 +57,29 @@ namespace softWrench.sW4.Web.Security {
         public void SetMemoryContext(string key, object ob, bool userSpecific = false) {
             var user = SecurityFacade.CurrentUser();
             var login = userSpecific ? user.Login : null;
-//            var userKey = new UserKey(login, key);
-            _memoryContext.Add(key, ob);
+            //            var userKey = new UserKey(login, key);
+            MemoryContext.Add(key, ob);
         }
 
         public void RemoveFromMemoryContext(string key, bool userSpecific = false) {
             var user = SecurityFacade.CurrentUser();
             var login = userSpecific ? user.Login : null;
-//            var userKey = new UserKey(login, key);
-            _memoryContext.Remove(key);
+            //            var userKey = new UserKey(login, key);
+            MemoryContext.Remove(key);
         }
 
         public T GetFromMemoryContext<T>(string key) {
             var user = SecurityFacade.CurrentUser();
             var userKey = new UserKey(user.Login, key);
-            if (!_memoryContext.ContainsKey(key)) {
+            if (!MemoryContext.ContainsKey(key)) {
                 Log.WarnFormat("object {0} not found in memory", key);
                 return default(T);
             }
-            return (T)_memoryContext[key];
+            return (T)MemoryContext[key];
 
         }
 
-        public static ContextHolder AddContext(ContextHolder context, bool isHttp) {
+        public ContextHolder AddContext(ContextHolder context, bool isHttp) {
             context.Environment = ApplicationConfiguration.Profile;
             if (isHttp) {
                 System.Web.HttpContext.Current.Items["context"] = context;
@@ -97,6 +103,15 @@ namespace softWrench.sW4.Web.Security {
                 //not logged users
                 return context;
             }
+        }
+
+        public void RegisterHttpContext(HttpRequestBase request) {
+            if (MemoryContext.ContainsKey("httpcontext")) {
+                //already registered
+                return;
+            }
+            var uri = request.Url;
+            MemoryContext.Add("httpcontext", new SwHttpContext(uri.Scheme, uri.Host, uri.Port, request.ApplicationPath));
         }
     }
 

@@ -24,5 +24,9 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.exception {
         public static Exception BatchReportNotFound(object batchId) {
             return new BatchException("batch report not found for batch {0}".Fmt(batchId));
         }
+
+        public static Exception UnauthorizedException() {
+            return new BatchException("This batch is not authorized for your user");
+        }
     }
 }
