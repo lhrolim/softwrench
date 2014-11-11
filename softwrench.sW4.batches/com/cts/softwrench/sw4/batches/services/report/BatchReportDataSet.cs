@@ -13,11 +13,10 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
-namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report2 {
+namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report {
     public class BatchReportDataSet : SWDBApplicationDataset {
 
         private readonly SWDBHibernateDAO _dao;

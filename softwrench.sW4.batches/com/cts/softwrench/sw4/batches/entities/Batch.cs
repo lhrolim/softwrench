@@ -11,6 +11,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
     public class Batch : IBaseEntity {
 
         public static string ActiveBatchesofApplication = "from Batch where Application =? and Status = 'INPROG' ";
+        public static string OldSubmittedBatches = "from Batch where Application =? and Status = 'COMPLETE' ";
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]

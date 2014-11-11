@@ -1,18 +1,15 @@
 ﻿using System;
 using System.IO;
-using System.Security.Policy;
 using DotLiquid;
 using log4net;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
 using softWrench.sW4.Email;
-using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.SPF;
-using softWrench.sW4.Util;
 using Hash = DotLiquid.Hash;
 
-namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report2 {
+namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report {
     public class BatchReportEmailService : ISingletonComponent {
 
         private readonly EmailService _emailService;
