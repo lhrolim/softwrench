@@ -1,9 +1,11 @@
-﻿using softWrench.sW4.Metadata;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using System;
+using softwrench.sw4.Shared2.Util;
 
 namespace softWrench.sW4.Util {
-    static class DateExtensions {
+    public static class DateExtensions {
 
         public static double ToTimeInMillis(this DateTime time) {
             return time.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
@@ -72,7 +74,7 @@ namespace softWrench.sW4.Util {
         }
 
         public static DateTime FromMaximoToServer(this DateTime date) {
-            return MaximoConversion(date, TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes*-1, false);
+            return MaximoConversion(date, TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes * -1, false);
         }
 
         private static DateTime UserMaximoConversion(DateTime date, InMemoryUser user, bool fromUserToMaximo, int? maximoOffset = null) {
@@ -126,6 +128,43 @@ namespace softWrench.sW4.Util {
             date = date.AddMinutes(offset);
             return date;
         }
+
+        public static DateComparisonExpression IsOlderThan(this DateTime? date, int number, DateTime? toCompare = null) {
+            if (date == null) {
+                return new DateComparisonExpression();
+            }
+            if (toCompare == null) {
+                toCompare = DateTime.Now;
+            }
+
+            return new DateComparisonExpression(date.Value, number, true, toCompare.Value);
+        }
+
+        public class DateComparisonExpression {
+            DateTime _date;
+            private int _amount;
+            private bool _past;
+            private DateTime _toCompare;
+
+            public DateComparisonExpression() {
+
+            }
+
+            public DateComparisonExpression(DateTime date, int amount, bool past, DateTime toCompare) {
+                _date = date;
+                _amount = amount;
+                _past = past;
+                _toCompare = toCompare;
+            }
+
+            public virtual Boolean Days() {
+                _toCompare = _toCompare.AddDays(_past ? -1 * _amount : _amount);
+                _date = DateUtil.BeginOfDay(_date);
+                _toCompare = DateUtil.BeginOfDay(_toCompare);
+                return _date < _toCompare;
+            }
+        }
+
 
 
 

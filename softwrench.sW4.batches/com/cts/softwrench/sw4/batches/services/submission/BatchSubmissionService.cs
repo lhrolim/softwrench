@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
-using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report2;
+using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report;
 using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Context;
