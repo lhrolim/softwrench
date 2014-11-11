@@ -112,5 +112,10 @@
         /// Describes the icon that will appear on the compoisition add button (add worklog)
         /// </summary>
         public static string CompositionAddIcon = "icon.composition.addbutton";
+
+        /// <summary>
+        /// By default the cancel click on a detail page will try to locate a list schema for the given application. Use this property when you need to overload it
+        /// </summary>
+        public static string CancelDetailSchema = "detail.cancel.click";
     }
 }
