@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('searchService', function (i18NService, $rootScope, contextService, fieldService, $http) {
+app.factory('searchService', function (i18NService,$log, $rootScope, contextService, fieldService, $http) {
 
     var objCache = {};
 
@@ -346,6 +346,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
             if (!searchData) {
                 searchData = {};
             }
+            var log = $log.getInstance('searchService#searchWithData');
 
             var searchDTO = this.buildSearchDTO(searchData, {}, {}, null);
             searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
@@ -361,6 +362,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
             };
             var queryString = $.param(restParameters);
             var urlToUse = url("/api/Data/{0}?{1}".format(application, queryString));
+            log.info("invoking url {0}".format(urlToUse));
             return $http.get(urlToUse);
         },
 
