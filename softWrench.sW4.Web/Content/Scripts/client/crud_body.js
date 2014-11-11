@@ -39,7 +39,7 @@ app.directive('crudBody', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             submitService, redirectService,
-            associationService, contextService, alertService, validationService, eventService) {
+            associationService, contextService, alertService, validationService, schemaService) {
 
            
             $scope.getFormattedValue = function (datamap, value, column) {
@@ -146,14 +146,28 @@ app.directive('crudBody', function (contextService) {
 
 
             $scope.renderListView = function (parameters) {
+                /// <summary>
+                /// 
+                /// </summary>
+                /// <param name="parameters">
+                ///  application --> overrides the default application which would be the same as current. Useful for cancel clicks that should span different applications (on F5)
+                /// </param>
+                var applicationToGo = $scope.$parent.applicationname;
+                if (parameters && parameters.application) {
+                    applicationToGo = parameters.application;
+                }
+                var schemaToGo = 'list';
+                if (parameters && parameters.schema) {
+                    schemaToGo = parameters.schema;
+                }
+
                 $scope.$parent.multipleSchema = false;
                 $scope.$parent.schemas = null;
-                var listSchema = 'list';
                 if ($scope.schema != null && $scope.schema.stereotype.isEqual('list', true)) {
                     //if we have a list schema already declared, keep it
-                    listSchema = $scope.schema.schemaId;
+                    schemaToGo = $scope.schema.schemaId;
                 }
-                $scope.$parent.renderView($scope.$parent.applicationname, listSchema, 'none', $scope.title, parameters);
+                $scope.$parent.renderView(applicationToGo, schemaToGo, 'none', $scope.title, parameters);
             };
             $scope.toConfirmCancel = function (data, schema) {
                 
@@ -194,16 +208,28 @@ app.directive('crudBody', function (contextService) {
                 if (GetPopUpMode() == 'browser') {
                     open(location, '_self').close();
                 }
+                var parameters = {};
                 if (schema != null && data != null) {
-                //if they are both null, it means that the previous data does not exist (F5 on browser). 
-                //Let´s keep them untouched until the new one comes from server, otherwise after the $http call there will be errors on the $digest evalution
                     $scope.schema = schema;
                     $scope.datamap = data;
+                } else {
+                    //if they are both null, it means that the previous data does not exist (F5 on browser). 
+                    //Let´s keep them untouched until the new one comes from server, otherwise after the $http call there will be errors on the $digest evalution
+                    var cancelSchema = $scope.schema.properties['detail.cancel.click'];
+                    if (cancelSchema) {
+                        //if this schema registers another application/schema/mode entry for the cancel click, let´s use it
+                        var result =schemaService.parseAppAndSchema(cancelSchema);
+                        parameters.application = result.app;
+                        parameters.schema = result.schemaId;
+                        parameters.mode = result.mode;
+                    }
+                    
                 }
+
                 // at this point, usually schema should be a list schema, on cancel call for instance, where we pass the previous schema. same goes for the datamap
                 // this first if is more of an unexpected case
                 if ($scope.schema == null || $scope.datamap == null || $scope.schema.stereotype == 'Detail') {
-                    $scope.renderListView(null);
+                    $scope.renderListView(parameters);
                 } else {
                     $scope.$emit('sw_titlechanged', schema.title);
                     $scope.$parent.toList(null);
