@@ -1,8 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService, restService, alertService) {
-    var formatQty = function(datamap, value, column) {
-
+    var formatQty = function (datamap, value, column) {
         if (datamap['issuetype'] == 'ISSUE') {
             if (datamap[column.attribute] != null) {
                 return Math.abs(datamap[column.attribute]);
@@ -10,42 +9,32 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         }
         return datamap[column.attribute];
     };
+
     var formatQtyReturned = function (datamap, value, column) {
         if (datamap['issuetype'] == 'ISSUE') {
             if (datamap[column.attribute] == null) {
                 return 0;
-            } else {
-                return datamap[column.attribute];
             }
+            return datamap[column.attribute];
         }
         return "";
     };
-    var createInvUse = function(schema, useType) {
+
+    var createInvUse = function (schema, useType) {
         var invuse = {};
         invuse.usetype = useType;
         contextService.insertIntoContext("invuse", invuse, false);
         redirectService.goToApplicationView("invuse", "newdetail", "Input", null, null, null);
     };
-    var getBinQuantity = function(searchData, parameters, balanceField) {
-        var searchDTO = searchService.buildSearchDTO(searchData, {}, {}, null);
-        searchDTO.pageNumber = 1;
-        searchDTO.totalCount = 0;
-        searchDTO.pageSize = 30;
-        var restParameters = {
-            key: {
-                schemaId: "list",
-                mode: "none",
-                platform: "web"
-            },
-            SearchDTO: searchDTO
-        };
-        var urlToUse = url("/api/Data/invbalances?" + $.param(restParameters));
-        $http.get(urlToUse).success(function(data) {
+
+    var getBinQuantity = function (searchData, parameters, balanceField) {
+        searchService.searchWithData("invbalances", searchData).success(function (data) {
             var resultObject = data.resultObject;
             var fields = resultObject[0].fields;
             parameters.fields[balanceField] = fields.curbal;
         });
     };
+
     return {
         createIssue: function () {
             redirectService.goToApplicationView("invissue", "newInvIssueDetail", "input", null, null, null);
@@ -105,7 +94,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 newReturnItem['issuetype'] = 'RETURN';
                 newReturnItem['qtyreturned'] = null;
                 newReturnItem['qtyrequested'] = matusetransitem['#quantityadj'];
-                
+
                 var jsonString = angular.toJson(newReturnItem);
                 var httpParameters = {
                     application: "invissue",
@@ -116,11 +105,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     redirectService.goToApplicationView("invissue", "list", null, null, null, null);
                 });
                 modalService.hide();
-            }, message , function () {
+            }, message, function () {
                 modalService.hide();
             });
         },
-        invissuelistclick: function(datamap, schema) {
+        invissuelistclick: function (datamap, schema) {
             var param = {};
             param.id = datamap['matusetransid'];
             var application = 'invissue';
@@ -130,7 +119,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             //Logic to determine whether the record is an ISSUE
             //and whether all of the issued items have been returned
             if (datamap['issuetype'] == 'ISSUE') {
-                
+
                 //Sets qtyreturned to 0 if null
                 //Parses the qtyreturned if its in a strng format
                 var qtyreturned = 0;
@@ -154,8 +143,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
             redirectService.goToApplicationView(application, detail, mode, null, param, null);
         },
-        
-        editinvissuewo: function(schema, datamap) {
+
+        editinvissuewo: function (schema, datamap) {
             var newDatamap = {};
             newDatamap['#assetnum'] = datamap['assetnum'];
             newDatamap['#issueto'] = datamap['issueto'];
@@ -194,9 +183,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             itemDatamap['location'] = parentdata['#location'];
             itemDatamap['storeloc'] = parentdata['#storeloc'];
             var compositiondata = parentdatamap['fields']['invissue_'];
-            
+
             modalService.show(compositionschema, itemDatamap, null, compositiondata);
-            
+
         },
         cancelNewInvIssueItem: function () {
             modalService.hide();
@@ -242,77 +231,43 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
             parameters.fields['gldebitacct'] = gldebitacct;
         },
-        afterChangeStoreroom: function (parameters) {
-            var user = contextService.getUserData();
+
+        doUpdateUnitCostFromInventoryCost: function (parameters,unitCostFieldName) {
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 location: parameters['fields']['storeloc'],
             };
-            var searchDTO = searchService.buildSearchDTO(searchData, {}, {}, null);
-            searchDTO.pageNumber = 1;
-            searchDTO.totalCount = 0;
-            searchDTO.pageSize = 30;
-            var restParameters = {
-                key: {
-                    schemaId: "list",
-                    mode: "none",
-                    platform: "web"
-                },
-                SearchDTO: searchDTO
-            };
-            var urlToUse = url("/api/Data/invcost?" + $.param(restParameters));
-            $http.get(urlToUse).success(function (data) {
+            searchService.searchWithData("invcost", searchData).success(function (data) {
                 var resultObject = data.resultObject;
                 var fields = resultObject[0].fields;
                 var costtype = parameters['fields']['inventory_.costtype'];
                 if (costtype === 'STANDARD') {
-                    parameters.fields['unitcost'] = fields.stdcost;
+                    parameters.fields[unitCostFieldName] = fields.stdcost;
                 } else if (costtype === 'AVERAGE') {
-                    parameters.fields['unitcost'] = fields.avgcost;
+                    parameters.fields[unitCostFieldName] = fields.avgcost;
                 }
             });
+        },
+
+        afterChangeStoreroom: function (parameters) {
+            doUpdateUnitCostFromInventoryCost(parameters,'unitcost');
         },
         afterchangeinvissueitem: function (parameters) {
-            var user = contextService.getUserData();
-            var searchData = {
-                itemnum: parameters['fields']['itemnum'],
-                location: parameters['fields']['location'],
-                //siteid: user.siteId,
-                //orgid: user.orgId,
-                //status: "ACTIVE"
-            };
-            var searchDTO = searchService.buildSearchDTO(searchData, {}, {}, null);
-            searchDTO.pageNumber = 1;
-            searchDTO.totalCount = 0;
-            searchDTO.pageSize = 30;
-            var restParameters = {
-                key: {
-                    schemaId: "list",
-                    mode: "none",
-                    platform: "web"
-                },
-                SearchDTO: searchDTO
-            };
-            var urlToUse = url("/api/Data/invcost?" + $.param(restParameters));
-            $http.get(urlToUse).success(function (data) {
-                var resultObject = data.resultObject;
-                var fields = resultObject[0].fields;
-                var costtype = parameters['fields']['inventory_.costtype'];
-                if (costtype === 'STANDARD') {
-                    parameters.fields['unitcost'] = fields.stdcost;
-                } else if (costtype === 'AVERAGE') {
-                    parameters.fields['unitcost'] = fields.avgcost;
-                }
-            });
+            doUpdateUnitCostFromInventoryCost(parameters, 'unitcost');
         },
+
+        afterChangeLocation: function (parameters) {
+            doUpdateUnitCostFromInventoryCost(parameters, 'invuseline_.unitcost');
+        },
+
         invIssue_afterChangeAsset: function (parameters) {
             //Sets the associated GL Debit Account
             //if a workorder isn't already specified
             //Updates the location field from the asset's location
-            if(parameters.fields['assetnum'].trim() != "") {
+            if (parameters.fields['assetnum'].trim() != "") {
                 var refwo = parameters.fields['refwo'];
                 var location = parameters.fields['location'];
-            
+
                 if (!refwo || refwo.trim() == "") {
                     refwo = "";
                 }
@@ -338,59 +293,31 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         invIssue_afterChangeLocation: function (parameters) {
             //Sets the gldebitacct and clears the asset 
             //if there is no refwo defined
-                if(parameters.fields['location'].trim() != "") {
-                    var refwo = parameters.fields['refwo'];
-                    
-                    if (!refwo || refwo.trim() == "") {
-                        refwo = "";
-                    }
+            if (parameters.fields['location'].trim() != "") {
+                var refwo = parameters.fields['refwo'];
 
-                    if (refwo != "")
-                        return;
-
-                    parameters.fields['assetnum'] = "";
-                    parameters.fields['gldebitacct'] = parameters.fields['location_.glaccount'];
+                if (!refwo || refwo.trim() == "") {
+                    refwo = "";
                 }
 
+                if (refwo != "")
+                    return;
+
+                parameters.fields['assetnum'] = "";
+                parameters.fields['gldebitacct'] = parameters.fields['location_.glaccount'];
+            }
+
         },
-	createTransfer: function(schema) {
+
+        createTransfer: function (schema) {
             if (schema === undefined) {
                 return;
             }
             createInvUse(schema, "TRANSFER");
         },
-        afterChangeLocation: function (parameters) {
-            var searchData = {
-                itemnum: parameters['fields']['invuseline_.itemnum'],
-                location: parameters['fields']['fromstoreloc']
-            };
-            var searchDTO = searchService.buildSearchDTO(searchData, {}, {}, null);
-            searchDTO.pageNumber = 1;
-            searchDTO.totalCount = 0;
-            searchDTO.pageSize = 30;
-            var restParameters = {
-                key: {
-                    schemaId: "list",
-                    mode: "none",
-                    platform: "web"
-                },
-                SearchDTO: searchDTO
-            };
-            var urlToUse = url("/api/Data/invcost?" + $.param(restParameters));
-            $http.get(urlToUse).success(function (data) {
-                var resultObject = data.resultObject;
-                var fields = resultObject[0].fields;
-                var costtype = parameters['fields']['inventory_.costtype'];
-                if (costtype === 'STANDARD')
-                {
-                    parameters.fields['invuseline_.unitcost'] = fields.stdcost;
-                }
-                else if (costtype === 'AVERAGE') {
-                    parameters.fields['invuseline_.unitcost'] = fields.avgcost;
-                }
-            });
-        },
-        getIssueBinQuantity: function(parameters){
+        
+
+        getIssueBinQuantity: function (parameters) {
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 siteid: parameters['fields']['siteid'],
@@ -400,7 +327,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             };
             getBinQuantity(searchData, parameters, '#curbal');
         },
-        getTransferBinQuantity: function(parameters) {
+        getTransferBinQuantity: function (parameters) {
             var searchData = {
                 itemnum: parameters['fields']['invuseline_.itemnum'],
                 siteid: parameters['fields']['inventory_.siteid'],
@@ -434,14 +361,13 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     redirectService.goToApplication("matrectransTransfers", "list", null, data);
                 });
             });
-            },
-        cancelTransfer: function () {
-            redirectService.goToApplication("matrectransTransfers", "list", null, null);
         },
+
         cancelTransfer: function () {
-            redirectService.goToApplicationView("matrectransTransfers", "list", null, null, null, null);
+            redirectService.goToApplication("matrectransTransfers", "list");
         },
-	afterChangeTransferQuantity: function (event) {
+   
+        afterChangeTransferQuantity: function (event) {
             if (event.fields['invuseline_.quantity'] > event.fields['#curbal']) {
                 alertService.alert("The quantity being transferred cannot be greater than the current balance of the From Bin.");
                 event.scope.datamap['invuseline_.quantity'] = event.fields['#curbal'];
