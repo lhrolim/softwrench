@@ -250,14 +250,14 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         afterChangeStoreroom: function (parameters) {
-            doUpdateUnitCostFromInventoryCost(parameters,'unitcost');
+            this.doUpdateUnitCostFromInventoryCost(parameters,'unitcost');
         },
         afterchangeinvissueitem: function (parameters) {
-            doUpdateUnitCostFromInventoryCost(parameters, 'unitcost');
+            this.doUpdateUnitCostFromInventoryCost(parameters, 'unitcost');
         },
 
         afterChangeLocation: function (parameters) {
-            doUpdateUnitCostFromInventoryCost(parameters, 'invuseline_.unitcost');
+            this.doUpdateUnitCostFromInventoryCost(parameters, 'invuseline_.unitcost');
         },
 
         invIssue_afterChangeAsset: function (parameters) {
