@@ -54,37 +54,55 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
             parameters.fields['gldebitacct'] = gldebitacct;
         },
-        formatQtyReturnedList: function (datamap, value, column) {
-            var dm = datamap.fields;
-            if (dm === undefined) {
-                dm = datamap;
+        formatQtyReturnedList: function (parameters) {
+            var value = parameters.value;
+            var column = parameters.column;
+            var dm = parameters.datamap;
+            if (dm != undefined) {
+                if (dm.fields != undefined) {
+                    var dm = parameters.datamap.fields;
+                }
             }
             return formatQtyReturned(dm, value, column);
         },
-        formatQtyList: function (datamap, value, column) {
-            var dm = datamap.fields;
-            if (dm === undefined) {
-                dm = datamap;
+        formatQtyList: function (parameters) {
+            var value = parameters.value;
+            var column = parameters.column;
+            var dm = parameters.datamap;
+            if (dm != undefined) {
+                if (dm.fields != undefined) {
+                    var dm = parameters.datamap.fields;
+                }
             }
             return formatQty(dm, value, column);
         },
-        formatQtyReturnedDetail: function (datamap, value, column) {
-            var formattedValue = formatQtyReturned(datamap, value, column);
-            var dm = datamap.fields;
-            if (dm === undefined) {
-                dm = datamap;
+        formatQtyReturnedDetail: function (parameters) {
+            var value = parameters.value;
+            var column = parameters.column;
+            var dm = parameters.datamap;
+            if (dm != undefined) {
+                if (dm.fields != undefined) {
+                    var dm = parameters.datamap.fields;
+                }
+                var formattedValue = formatQtyReturned(dm, value, column);
+                dm[column.attribute] = formattedValue;
+                return formattedValue;
             }
-            dm[column.attribute] = formattedValue;
-            return formattedValue;
+            return;
         },
-        formatQtyDetail: function (datamap, value, column) {
-            var formattedValue = formatQty(datamap, value, column);
-            var dm = datamap.fields;
-            if (dm === undefined) {
-                dm = datamap;
+        formatQtyDetail: function (parameters) {
+            var value = parameters.value;
+            var column = parameters.column;
+            var dm = parameters.datamap;
+            if (dm != undefined) {
+                if (dm.fields != undefined) {
+                    var dm = parameters.datamap.fields;
+                }
+                var formattedValue = formatQty(dm, value, column);
+                dm[column.attribute] = formattedValue;
+                return formattedValue;
             }
-            dm[column.attribute] = formattedValue;
-            return formattedValue;
+            return;
         },
 
 
