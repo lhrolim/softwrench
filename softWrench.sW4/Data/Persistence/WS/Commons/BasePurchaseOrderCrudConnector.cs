@@ -29,8 +29,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             base.BeforeUpdate(maximoTemplateData);
         }
 
-        private void HandlePolines(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData crudData, object po)
-        {
+        private void HandlePolines(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData crudData, object po){
             if (crudData != null)
             {
                 var polines = (IEnumerable<CrudOperationData>)crudData.GetRelationship("poline");

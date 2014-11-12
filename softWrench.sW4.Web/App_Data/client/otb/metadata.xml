@@ -380,6 +380,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
       </relationships>
     </entity>
+
+    <entity name="MATRECTRANS" idAttribute="matrectransid">
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWRECEIPT" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseReceiptCrudConnector" />
+      </connectorParameters>
+    </entity>
   </entities>
 
   <applications>
@@ -1159,6 +1166,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="itemnum" label="Item"/>
           <field attribute="description" label="Description"/>
           <field attribute="orderqty" label="Quantity"/>
+          <field attribute="receivedqty" label="Received Qty"/>
           <field attribute="unitcost" label="Unit Cost"/>
           <field attribute="matrectrans_.matrectransid" hidden="true"/>
           <field label="Entered Date &amp; Time" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
@@ -1192,6 +1200,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id ="matrectransdetail" mode="input" title="Matrectrans Detail">
           <field attribute="polinenum" label="poline no:"/>
           <field attribute="ponum" label="po no:"/>       
+          <field attribute="itemnum" label="item no:"/>
+          <field attribute="quantity" label="quantity:"/>
+        </schema>
+
+        <schema id ="newdetail" mode="input" title="New Matrectrans Detail">
+          <field attribute="polinenum" label="poline no:"/>
+          <field attribute="ponum" label="po no:"/>
           <field attribute="itemnum" label="item no:"/>
           <field attribute="quantity" label="quantity:"/>
         </schema>
