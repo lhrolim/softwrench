@@ -639,7 +639,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <list title="Inventory Grid" platform="web">
           <commandbars>
             <commandgroup position="gridtop">
-              <resourcecommand id="scanfilter" position=">filter" path="/Content/Templates/commands/scan/scanfilter.html" />
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" />
             </commandgroup>
           </commandbars>
           <field attribute="itemnum" label="Item No">
