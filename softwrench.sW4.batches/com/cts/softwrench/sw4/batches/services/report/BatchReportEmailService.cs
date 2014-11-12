@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net.Mail;
-using System.Net.Mime;
 using DotLiquid;
 using log4net;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
@@ -51,14 +49,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
                             url = appurl
                         }));
            
-            var attachmentPath = Environment.CurrentDirectory + @"\test.png";
-            var inline = new Attachment(attachmentPath);
-            inline.ContentDisposition.Inline = true;
-            inline.ContentDisposition.DispositionType = DispositionTypeNames.Inline;
-            inline.ContentId = contentID;
-            inline.ContentType.MediaType = "image/png";
-            inline.ContentType.Name = Path.GetFileName(attachmentPath);
-            email.Attachments.Add(inline);
+          
 
             var emailData = new EmailService.EmailData("noreply@controltechnologysolutions.com", user.Email, "Batch Submission Finished", msg);
             _emailService.SendEmail(emailData);
