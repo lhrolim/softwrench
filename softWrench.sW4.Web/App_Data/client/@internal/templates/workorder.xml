@@ -64,8 +64,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </properties>
       <schemas>
         <list title="Work Order Grid" platform="web">
-
-
           <field attribute="wonum" label="WO No" >
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
@@ -89,7 +87,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <property key="list.click.schema" value="editdetail"/>
           </properties>
         </list>
-
 
         <schema id="ahiddendetails" title="schemaForHoldingHiddensOnly" abstract="true" stereotype="detail" platform="web">
           <field attribute="estdur"            hidden="true"/>
