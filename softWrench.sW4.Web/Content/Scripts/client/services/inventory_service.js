@@ -35,6 +35,23 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         });
     };
 
+    var doUpdateUnitCostFromInventoryCost = function(parameters, unitCostFieldName) {
+        var searchData = {
+            itemnum: parameters['fields']['itemnum'],
+            location: parameters['fields']['storeloc'],
+        };
+        searchService.searchWithData("invcost", searchData).success(function(data) {
+            var resultObject = data.resultObject;
+            var fields = resultObject[0].fields;
+            var costtype = parameters['fields']['inventory_.costtype'];
+            if (costtype === 'STANDARD') {
+                parameters.fields[unitCostFieldName] = fields.stdcost;
+            } else if (costtype === 'AVERAGE') {
+                parameters.fields[unitCostFieldName] = fields.avgcost;
+            }
+        });
+    };
+
     return {
         createIssue: function () {
             redirectService.goToApplicationView("invissue", "newInvIssueDetail", "input", null, null, null);
@@ -231,33 +248,15 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
             parameters.fields['gldebitacct'] = gldebitacct;
         },
-
-        doUpdateUnitCostFromInventoryCost: function (parameters,unitCostFieldName) {
-            var searchData = {
-                itemnum: parameters['fields']['itemnum'],
-                location: parameters['fields']['storeloc'],
-            };
-            searchService.searchWithData("invcost", searchData).success(function (data) {
-                var resultObject = data.resultObject;
-                var fields = resultObject[0].fields;
-                var costtype = parameters['fields']['inventory_.costtype'];
-                if (costtype === 'STANDARD') {
-                    parameters.fields[unitCostFieldName] = fields.stdcost;
-                } else if (costtype === 'AVERAGE') {
-                    parameters.fields[unitCostFieldName] = fields.avgcost;
-                }
-            });
-        },
-
         afterChangeStoreroom: function (parameters) {
-            this.doUpdateUnitCostFromInventoryCost(parameters,'unitcost');
+            doUpdateUnitCostFromInventoryCost(parameters,'unitcost');
         },
         afterchangeinvissueitem: function (parameters) {
-            this.doUpdateUnitCostFromInventoryCost(parameters, 'unitcost');
+            doUpdateUnitCostFromInventoryCost(parameters, 'unitcost');
         },
 
         afterChangeLocation: function (parameters) {
-            this.doUpdateUnitCostFromInventoryCost(parameters, 'invuseline_.unitcost');
+            doUpdateUnitCostFromInventoryCost(parameters, 'invuseline_.unitcost');
         },
 
         invIssue_afterChangeAsset: function (parameters) {
