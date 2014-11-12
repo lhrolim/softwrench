@@ -97,16 +97,12 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
         public SearchRequestDto FilterWorkorders(AssociationPreFilterFunctionParameters parameters) {
-            return WorkorderFilterByStatus(parameters);
-        }
-
-        private SearchRequestDto WorkorderFilterByStatus(AssociationPreFilterFunctionParameters parameters) {
             var user = SecurityFacade.CurrentUser();
             var filter = parameters.BASEDto;
             var siteid = user.SiteId;
             filter.AppendSearchEntry("workorder.siteid", siteid.ToUpper());
 
-            var validWorkOrderStatus = new List<string> {"APPR", "WMAT", "WSCH", "WORKING"};
+            var validWorkOrderStatus = new List<string> { "APPR", "WMAT", "WSCH", "WORKING" };
             filter.AppendSearchEntry("STATUS", validWorkOrderStatus);
             return filter;
         }
