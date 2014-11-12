@@ -1,12 +1,16 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('columnWidth', function ($log) {
+app.directive('columnWidths', function ($log) {
     var log = $log.getInstance('sw4.columnwidthcss');
+
     return {
         link: function (scope, element, attr) {
             log.debug('Render Listgrid CSS');
      
-            attr.$observe('columns', function (value) {
+            //look for user changing modules
+            attr.$observe('columnWidths', function (value) {
+
+                //convert string column data to object column data
                 var json = angular.fromJson(value);
                 var widths = {}
 

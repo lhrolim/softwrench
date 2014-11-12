@@ -37,9 +37,8 @@
     </div>
 
     <div class="divAuxTable">
-
-        <!--build responsive css rules-->
-        <style column-width columns="{{schema.displayables}}"></style>
+        <!--build responsive css rules based on metadata-->
+        <style column-widths="{{schema.displayables}}"></style>
 
         <table class="table table-hover hidden-phone fixedtable listgrid-table" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" id="listgrid">
             <thead id="listgridthread" class="listgrid-thead">
