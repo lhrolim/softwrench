@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Permissions;
+using System.Windows.Controls;
 using DocumentFormat.OpenXml.Spreadsheet;
 using NHibernate.Hql.Ast.ANTLR;
 using NHibernate.Linq;
@@ -104,7 +105,9 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var filter = parameters.BASEDto;
             var siteid = user.SiteId;
             filter.AppendSearchEntry("workorder.siteid", siteid.ToUpper());
-            filter.AppendWhereClause("STATUS in ('APPR', 'WMATL', 'WSCH', 'WORKING')");
+
+            var validWorkOrderStatus = new List<string> {"APPR", "WMAT", "WSCH", "WORKING"};
+            filter.AppendSearchEntry("STATUS", validWorkOrderStatus);
             return filter;
         }
 
