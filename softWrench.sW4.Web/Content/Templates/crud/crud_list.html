@@ -37,6 +37,10 @@
     </div>
 
     <div class="divAuxTable">
+
+        <!--build responsive css rules-->
+        <style column-width columns="{{schema.displayables}}"></style>
+
         <table class="table table-hover hidden-phone fixedtable listgrid-table" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" id="listgrid">
             <thead id="listgridthread" class="listgrid-thead">
                 <!-- Header row -->
@@ -47,11 +51,12 @@
                     <th ng-show="schema.properties['list.selectionstyle'] == 'single'">
                         <!--Singleselect-->
                     </th>
-                    <th ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)"
-                        ng-style="{'min-width': column.rendererParameters['minwidth'],
+                               <!--ng-style="{'min-width': column.rendererParameters['minwidth'],
                                            'max-width': column.rendererParameters['maxwidth'],
                                            'width': column.rendererParameters['width'],
-                                           'word-wrap': column.rendererParameters['wordwrap']}"
+                                           'word-wrap': column.rendererParameters['wordwrap']}"-->
+                    <th ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)"
+             
                         ng-click="sort(column)">
                         <div ng-if="shouldShowHeaderLabel(column)">
                             <span class="add-on" rel="tooltip" data-container="body" data-original-title="{{i18N('_grid.filter.clicksort','Click here to sort')}}">
@@ -77,10 +82,11 @@
                         <!--Singleselect-->
                     </th>
 
-                    <th ng-repeat="column in schema.displayables"
-                        ng-style="{'min-width': column.rendererParameters['minwidth'],
+                     <!--ng-style="{'min-width': column.rendererParameters['minwidth'],
                                 'max-width': column.rendererParameters['maxwidth'],
-                                'width': column.rendererParameters['width']}"
+                                'width': column.rendererParameters['width']}"-->
+
+                    <th ng-repeat="column in schema.displayables"
                         ng-show="!isFieldHidden(schema,column)"
                         filterrowrendered>
                         <div ng-if="shouldShowHeaderFilter(column)">
@@ -175,10 +181,13 @@
                         <!--Singleselect-->
                     </td>
 
-                    <td ng-repeat="column in schema.displayables" bo-show="!isFieldHidden(schema,column)" class="xoupscolumns" ng-click="showDetail(dm,column)"
-                        ng-style="{'min-width': column.rendererParameters['minwidth'],
+                    <!--ng-style="{'min-width': column.rendererParameters['minwidth'],
                                 'max-width': column.rendererParameters['maxwidth'],
-                                'width': column.rendererParameters['width']}">
+                                'width': column.rendererParameters['width']}"-->
+                    <td ng-repeat="column in schema.displayables"
+                        bo-show="!isFieldHidden(schema,column)"
+                        class="xoupscolumns"
+                        ng-click="showDetail(dm,column)">
                         <ng-switch on="column.type">
                             <div ng-switch-when="ApplicationFieldDefinition">
 
