@@ -225,28 +225,24 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             redirectService.redirectToTab('invissue_');
         },
         afterchangeworkorder: function (parameters) {
-
+            // If the new work order has a location assigned to it, fill the location on the invissue
             if (parameters.fields['workorder_.location'] == null) {
-                parameters.fields['workorder_.location'] = null;
                 parameters.fields['location'] = null;
             } else {
                 parameters.fields['location'] = parameters.fields['workorder_.location'];
             }
 
+            // If the new workorder has an asset assigned to it, fill the asset num on the invissue
             if (parameters.fields['workorder_.assetnum'] == null) {
-                parameters.fields['workorder_.assetnum'] = null;
                 parameters.fields['assetnum'] = null;
             } else {
                 parameters.fields['assetnum'] = parameters.fields['workorder_.assetnum'];
             }
 
-            var gldebitacct = parameters.fields['gldebitacct'];
-
+            // If the new work order has a gldebitaccnt, fill the gldebitacct on the invissue
             if (parameters.fields['workorder_.glaccount']) {
-                gldebitacct = parameters.fields['workorder_.glaccount'];
+                parameters.fields['gldebitacct'] = parameters.fields['workorder_.glaccount'];
             }
-
-            parameters.fields['gldebitacct'] = gldebitacct;
         },
         afterChangeStoreroom: function (parameters) {
             doUpdateUnitCostFromInventoryCost(parameters,'unitcost');
