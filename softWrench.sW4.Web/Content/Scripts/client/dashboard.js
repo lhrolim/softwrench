@@ -63,7 +63,7 @@ function DashboardController($scope, $http, $templateCache, $rootScope, formatSe
     };
 
     $scope.format = function (value, column) {
-        return formatService.format($scope.datamap, value, column);
+        return formatService.format(value, column, $scope.datamap);
     };
 
     $scope.viewAll = function (index) {
