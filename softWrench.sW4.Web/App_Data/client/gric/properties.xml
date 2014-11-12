@@ -13,6 +13,9 @@
   <property key="sourcemapping" value="maximo7.5"/>
   <property key="targetmapping" value="maximo7.5"/>
   <property key="maximoutc" value="-7"/>
+  <property key="maxAttachmentSize" value="20"/>
+  <property key="maxScreenshotSize" value="5"/>
+  <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
 
 
 

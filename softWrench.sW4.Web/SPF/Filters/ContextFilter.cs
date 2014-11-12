@@ -28,18 +28,21 @@ namespace softWrench.sW4.Web.SPF.Filters {
         private const string CurrentMetadataKey = "currentmetadata";
 
         public override void OnActionExecuting(HttpActionContext actionContext) {
-            
+
             var currentModule = RequestUtil.GetValue(actionContext.Request, CurrentModuleKey);
             var currentMetadataId = RequestUtil.GetValue(actionContext.Request, CurrentMetadataKey);
             ApplicationLookupContext appCtx = null;
             if (currentMetadataId != null) {
                 appCtx = new ApplicationLookupContext { MetadataId = currentMetadataId };
             }
-            ContextLookuper.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx }, true);
+            var instance = ContextLookuper.GetInstance();
+            instance.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx }, true);
+//            instance.RegisterHttpContext(actionContext);
+
             base.OnActionExecuting(actionContext);
         }
 
-      
+
 
     }
 }

@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
+using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report;
 using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Security.Context;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
 
@@ -17,11 +19,15 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
         private readonly SWDBHibernateDAO _dao;
         private readonly MaximoConnectorEngine _maximoEngine;
         private IEnumerable<ISubmissionConverter> _converters;
+        private readonly IContextLookuper _contextLookuper;
+        private readonly BatchReportEmailService _batchReportEmailService;
 
 
-        public BatchSubmissionService(SWDBHibernateDAO dao, MaximoConnectorEngine maximoEngine) {
+        public BatchSubmissionService(SWDBHibernateDAO dao, MaximoConnectorEngine maximoEngine, IContextLookuper contextLookuper, BatchReportEmailService batchReportEmailService) {
             _dao = dao;
             _maximoEngine = maximoEngine;
+            _contextLookuper = contextLookuper;
+            _batchReportEmailService = batchReportEmailService;
         }
 
         public IEnumerable<ISubmissionConverter> Converters {
@@ -71,6 +77,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
 
         private void SubmitItensOnNewThread(BatchSubmissionData submissionData, BatchReport report) {
             Task.Factory.NewThread(array => {
+                var reportKey = "sw_batchreport{0}".Fmt(report.OriginalBatch.Id);
+                _contextLookuper.SetMemoryContext(reportKey, report);
                 foreach (var itemToSubmit in submissionData.ItemsToSubmit) {
                     try {
                         _maximoEngine.Update(itemToSubmit.CrudData);
@@ -90,9 +98,11 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                         _dao.Save(report);
                     }
                 }
+                _contextLookuper.RemoveFromMemoryContext(reportKey);
                 _dao.Save(report);
                 report.OriginalBatch.Status = BatchStatus.COMPLETE;
                 _dao.Save(report.OriginalBatch);
+                _batchReportEmailService.SendEmail(report);
             }, submissionData);
         }
 

@@ -103,7 +103,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
             var batchId = datamap['id'];
 
             var status = datamap['status'];
-            if (status.equalIc("submitting")) {
+            if (status.toLowerCase().startsWith("submitting")) {
                 alertService.alert("The batch is currently being submitted. A report will be generated when this operation is complete");
                 return;
             }
@@ -310,7 +310,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
         configurePolling: function (schema, datamap, parameters) {
             var idxs = [];
             $.each(datamap, function (key, value) {
-                if ('submitting'.equalIc(value.fields.status)) {
+                if (value.fields.status.toLowerCase().startsWith("submitting")) {
                     idxs.push(key);
                 }
             });

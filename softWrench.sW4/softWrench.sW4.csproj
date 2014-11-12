@@ -544,7 +544,9 @@
     <Compile Include="SimpleInjector\IClientApplicationAwareComponent.cs" />
     <Compile Include="SPF\IGenericResponseResult.cs" />
     <Compile Include="SPF\RedirectResponseResult.cs" />
+    <Compile Include="SPF\RedirectService.cs" />
     <Compile Include="SPF\SPFRedirectAttribute.cs" />
+    <Compile Include="SPF\SwHttpContext.cs" />
     <Compile Include="Util\AttributeUtil.cs" />
     <Compile Include="Util\ApplicationConfiguration.cs" />
     <Compile Include="Util\ArrayUtil.cs" />

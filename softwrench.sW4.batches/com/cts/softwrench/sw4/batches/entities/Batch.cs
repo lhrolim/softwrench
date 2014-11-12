@@ -8,10 +8,10 @@ using softWrench.sW4.Util;
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
 
     [Class(Table = "BAT_BATCH", Lazy = false)]
-    public class Batch : IBaseEntity
-    {
+    public class Batch : IBaseEntity {
 
         public static string ActiveBatchesofApplication = "from Batch where Application =? and Status = 'INPROG' ";
+        public static string OldSubmittedBatches = "from Batch where Application =? and Status = 'COMPLETE' ";
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
@@ -45,7 +45,13 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
         public String ItemIds { get; set; }
 
         public int NumberOfItems {
-            get { return ItemIds == null ? 0 : ItemIds.Count(f => f == ','); }
+            get {
+                if (ItemIds == null) {
+                    return 0;
+                }
+                var numberOfCommas = ItemIds.Count(f => f == ',');
+                return numberOfCommas + 1;
+            }
         }
 
         /// <summary>

@@ -74,8 +74,13 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         }
         if (scope.isDetail) {
             crud_context = contextService.fetchFromContext("crud_context", true);
+            if (!crud_context) {
+                //this might happen if we´re handling a direct link
+                return;
+            }
+
             var id = $scope.datamap.fields[$scope.schema.idFieldName];
-            if (crud_context.list_elements.indexOf(id) != -1) {
+            if (crud_context.list_elements && crud_context.list_elements.indexOf(id) != -1) {
                 var previous = crud_context.list_elements.indexOf(id) - 1;
                 var next = crud_context.list_elements.indexOf(id) + 1;
                 crud_context.detail_previous = crud_context.list_elements[previous];

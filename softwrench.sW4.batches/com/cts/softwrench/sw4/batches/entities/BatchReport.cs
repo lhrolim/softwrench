@@ -9,12 +9,13 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
     public class BatchReport : IBaseEntity {
 
         public const string ByBatchId = "from BatchReport where OriginalBatch.Id =?";
+        
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
         public virtual int? Id { get; set; }
 
-        [Set(0, Inverse = true, Lazy = CollectionLazy.False)]
+        [Set(0, Inverse = true, Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "report_id")]
         [OneToMany(2, ClassType = typeof(BatchItemProblem))]
         public virtual ISet<BatchItemProblem> ProblemItens { get; set; }
@@ -45,6 +46,16 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
                 SentItemIds += id;
             } else {
                 SentItemIds += "," + id;
+            }
+        }
+
+        public Int32 PercentageDone {
+            get {
+                var numberOfItems = OriginalBatch.NumberOfItems;
+                var totalSentItens = NumberOfProblemItens + NumberOfSentItens;
+                var percentageDone = totalSentItens * 100 / numberOfItems;
+                //return 100 to avoid strange scenarios on screen
+                return percentageDone > 100 ? 100 : percentageDone;
             }
         }
     }

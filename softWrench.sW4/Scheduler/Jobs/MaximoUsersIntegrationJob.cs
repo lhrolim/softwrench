@@ -44,7 +44,6 @@ namespace softWrench.sW4.Scheduler.Jobs {
             }
         }
 
-        public override bool IsScheduled { get; set; }
 
         public override bool RunAtStartup() {
             return true;

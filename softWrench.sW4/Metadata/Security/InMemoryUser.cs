@@ -239,9 +239,12 @@ namespace softWrench.sW4.Metadata.Security {
             return strPersonGroups;
         }
 
+        public string FullName {
+            get { return FirstName + " " + LastName; }
+        }
 
         public bool IsSwAdmin() {
-            return Login.Equals("swadmin")|| IsInRole(Role.SysAdmin);
+            return Login.Equals("swadmin") || IsInRole(Role.SysAdmin);
         }
 
         public IDictionary<string, CommandBarDefinition> SecuredBars(ClientPlatform platform, IDictionary<string, CommandBarDefinition> commandBars) {
