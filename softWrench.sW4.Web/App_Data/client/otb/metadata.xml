@@ -366,6 +366,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="siteid" to ="siteid"/>
           <relationshipAttribute from ="orgid" to="orgid"/>
         </relationship>
+        <relationship to="matrectrans" qualifier="matrectrans" collection="true">
+          <relationshipAttribute from="ponum" to ="ponum" primary="true"/>
+          <relationshipAttribute from="siteid" to ="siteid"/>
+          <relationshipAttribute from ="orgid" to="orgid"/>
+        </relationship>
       </relationships>
     </entity>
 
@@ -381,7 +386,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </relationships>
     </entity>
 
-    <entity name="MATRECTRANS" idAttribute="matrectransid">
+    <entity name="matrectrans" idAttribute="matrectransid">
+      <relationships>
+        <relationship to="poline" qualifier="poline">
+          <relationshipAttribute from="ponum" to="ponum" primary="true"/>
+          <relationshipAttribute from="polinenum" to="polinenum"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWRECEIPT" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseReceiptCrudConnector" />
@@ -1140,14 +1151,24 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=12%"/>
           </field>
           <properties>
-            <property key="list.click.mode" value="output"/>
+            <property key="list.click.schema" value="editdetail"/>
           </properties>
         </list>
-        <schema id="detail" mode="output" title="Receipts Detail">
+        <schema id ="adetail" title="PO Receipt Details" abstract="true" stereotype="detail">
+          <section id ="siteidsection"/>
           <field attribute="description" hidden="true"/>
-          <composition relationship="poline" inline="true" label="PO Lines">
-            <collectionproperties allowupdate="true"/>
-          </composition>
+          <section id ="compositions"/>
+        </schema>
+        <schema id="editdetail" parentschema="adetail" title="Receipt Detail">
+          <section id="siteidsection">
+            <field attribute="ponum" label="PO #:" readonly="true" required="true"/>
+            <field label="Site:" attribute="siteid" readonly="true"/>
+          </section>
+          <section id ="compositions">
+            <composition relationship="matrectrans" label="Material Receipts">
+              <collectionproperties hideexistingdata="false" allowcreation="false" allowupdate="false"/>
+            </composition>
+          </section>
         </schema>
       </schemas>
     </application>
@@ -1158,7 +1179,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <property key ="icon.composition.tab" value="fa fa-tags"/>
         <property key="list.click.service" value="poreceivingService.poreceivelistclick"/>
       </properties>
+      
       <schemas>
+        
         <schema id="list" mode="output" stereotype="compositionlist">
           <section resourcepath="/Content/Templates/otb/receipts.html"/>
           <field attribute="ponum" label="PO No" readonly="true"/>
@@ -1172,13 +1195,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Entered Date &amp; Time" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
+          
           <commandbars>
+            <commandgroup position="compositiontop" removeundeclared="true">
+              <command id="ordereditems" label="Select Ordered Items" service="poreceivingService" method="submitorderedItems" parameters="schema,datamap" />
+              <command id="rotatingitems" label="Select Rotating Items to Return" service="poreceivingService" method="returnRotatingItems" />
+            </commandgroup>
             <commandgroup position="compositionbottom" removeundeclared="true"/>
           </commandbars>
         </schema>
 
         <detail stereotype="compositiondetail">
-          
           <field attribute="linetype" label="Line Type"/>
           <association label="Item:" target="itemnum" labelfield="item_.description" enableexpression="@linetype=='item'">
             <renderer type="lookup"/>
@@ -1195,21 +1222,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </schemas>
     </application>
 
-    <application name="matrectrans" entity="MATRECTRANS" title="Matrectrans">
+    <application name="matrectrans" entity="matrectrans" title="Material Receipts">
       <schemas>
-        <schema id ="matrectransdetail" mode="input" title="Matrectrans Detail">
-          <field attribute="polinenum" label="poline no:"/>
-          <field attribute="ponum" label="po no:"/>       
-          <field attribute="itemnum" label="item no:"/>
-          <field attribute="quantity" label="quantity:"/>
-        </schema>
+        <list stereotype="compositionlist">
+          <field attribute="ponum" hidden="true"/>
+          <field attribute="matrectransid" hidden="true"/>
+          <field attribute="polinenum" label="PO Line"/>
+          <field attribute="itemnum" label="Item"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="quantity" label="Quantity Received"/>
+        </list>
 
-        <schema id ="newdetail" mode="input" title="New Matrectrans Detail">
-          <field attribute="polinenum" label="poline no:"/>
-          <field attribute="ponum" label="po no:"/>
-          <field attribute="itemnum" label="item no:"/>
-          <field attribute="quantity" label="quantity:"/>
-        </schema>
+        <detail stereotype="compositiondetail">
+          <field attribute="polinenum" label="PO Line:"/>
+        </detail>
       </schemas>
     </application>
   </applications>

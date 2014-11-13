@@ -2960,7 +2960,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
-    <entity name="MATRECTRANS" idAttribute="matrectransid">
+    <entity name="matrectrans" idAttribute="matrectransid">
       <attributes>
         <attribute name="itemnum" type="varchar" required="false" />
         <attribute name="tostoreloc" type="varchar" required="false" />
