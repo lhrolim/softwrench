@@ -74,27 +74,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
             return (string)entity.GetAttribute("affectedperson");
         }
 
-        protected string GetTemplateIdForNewChange() {
+        protected override string GetTemplateId(CrudOperationData jsonObject) {
             var module = ContextManager.LookupContext().Module;
-            if (!string.IsNullOrEmpty(module)) {
-                if (module.Equals("sso", StringComparison.InvariantCultureIgnoreCase)) {
-                    return ApplicationConfiguration.SsoChangeTeamplateId[0];
-                }
-                if (module.Equals("tui", StringComparison.InvariantCultureIgnoreCase)) {
-                    return ApplicationConfiguration.TuiChangeTeamplateId[0];
-                }
+            if ("sso".EqualsIc(module)) {
+                return ApplicationConfiguration.SsoChangeTeamplateId[0];
+            }
+            if ("tui".EqualsIc(module)) {
+                return ApplicationConfiguration.TuiChangeTeamplateId[0];
             }
             return ApplicationConfiguration.DefaultChangeTeamplateId[0];
         }
 
-        protected override ISMServiceEntities.Problem PopulateProblem(CrudOperationData jsonObject, ServiceIncident webServiceObject,
-            string entityName, bool update) {
-            var problem = base.PopulateProblem(jsonObject, webServiceObject, entityName, update);
-            foreach (var flexfield in problem.FlexFields.Where(f => f.mappedTo == "TemplateID")) {
-                flexfield.Value = GetTemplateIdForNewChange();
-                break;
-            }
-            return problem;
-        }
     }
 }
