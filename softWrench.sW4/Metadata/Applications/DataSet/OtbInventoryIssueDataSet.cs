@@ -96,7 +96,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             resultObject.SetAttribute("QTYRETURNED", anyQtyReturned ? qtyReturned : 0);
         }
 
-        SearchRequestDto FilterWorkorders(AssociationPreFilterFunctionParameters parameters) { {
+        SearchRequestDto FilterWorkorders(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             var siteid = parameters.OriginalEntity.Attributes["siteid"];
             if (siteid != null) {
@@ -104,7 +104,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 var validWorkOrderStatus = new List<string> { "APPR", "WMAT", "WSCH", "WORKING" };
                 filter.AppendSearchEntry("STATUS", validWorkOrderStatus);
                 return filter;
-	    }
+	        }
         }
 
         public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
