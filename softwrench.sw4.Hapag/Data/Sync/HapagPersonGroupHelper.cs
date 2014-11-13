@@ -207,8 +207,10 @@ namespace softwrench.sw4.Hapag.Data.Sync {
         /// <param name="user"></param>
         /// <returns></returns>
         public InMemoryUser HandleSsotuiModulesMerge(InMemoryUser user) {
-            var isSSO = user.PersonGroups.Any(f => f.PersonGroup.Name.Equals(HapagPersonGroupConstants.SSO));
-            var isTui = user.PersonGroups.Any(f => f.PersonGroup.Name.Equals(HapagPersonGroupConstants.Tui));
+            var isExternalUser = user.PersonGroups.Any(f => f.PersonGroup.Name.Equals(HapagPersonGroupConstants.HExternalUser));
+            var isSSO = isExternalUser && user.PersonGroups.Any(f => f.PersonGroup.Name.Equals(HapagPersonGroupConstants.SSO));
+            var isTui = isExternalUser && user.PersonGroups.Any(f => f.PersonGroup.Name.Equals(HapagPersonGroupConstants.Tui));
+
 
             var dbUser = user.DBUser;
             if (dbUser.CustomRoles == null) {
@@ -216,32 +218,36 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             }
             if (!isSSO && !isTui) {
                 //if not a tui nor sso, we need to add the default items on the menu (enduser...)
-                AddCustomRole(dbUser, RoleType.Defaulthome);
-                AddCustomRole(dbUser, RoleType.Defaultnewsr);
-                AddCustomRole(dbUser, RoleType.Defaultsrgrid);
-                AddCustomRole(dbUser, RoleType.Defaultssrsearch);
+                AddCustomRole(user, RoleType.Defaulthome);
+                AddCustomRole(user, RoleType.Defaultnewsr);
+                AddCustomRole(user, RoleType.Defaultsrgrid);
+                AddCustomRole(user, RoleType.Defaultssrsearch);
             } else {
                 //otherwise, these items cannot be seem, just the module ones
-                RemoveCustomRole(dbUser, RoleType.Defaulthome);
-                RemoveCustomRole(dbUser, RoleType.Defaultnewsr);
-                RemoveCustomRole(dbUser, RoleType.Defaultsrgrid);
-                RemoveCustomRole(dbUser, RoleType.Defaultssrsearch);
+                RemoveCustomRole(user, RoleType.Defaulthome);
+                RemoveCustomRole(user, RoleType.Defaultnewsr);
+                RemoveCustomRole(user, RoleType.Defaultsrgrid);
+                RemoveCustomRole(user, RoleType.Defaultssrsearch);
             }
             return user;
         }
 
-        private static void AddCustomRole(User dbUser, RoleType type) {
+        private static void AddCustomRole(InMemoryUser user, RoleType type) {
+            var dbUser = user.DBUser;
             dbUser.CustomRoles.Add(new UserCustomRole {
                 Role = _cachedDefaultRoles[type],
                 UserId = dbUser.Id
             });
+            user.Roles.Add(_cachedDefaultRoles[type]);
         }
 
-        private static void RemoveCustomRole(User dbUser, RoleType type) {
+        private static void RemoveCustomRole(InMemoryUser user, RoleType type) {
+            var dbUser = user.DBUser;
             dbUser.CustomRoles.Remove(new UserCustomRole {
                 Role = _cachedDefaultRoles[type],
                 UserId = dbUser.Id
             });
+            user.Roles.Remove(_cachedDefaultRoles[type]);
         }
     }
 }

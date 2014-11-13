@@ -34,7 +34,7 @@ namespace softWrench.sW4.Web.Controllers {
             var user = SecurityFacade.CurrentUser();
             var securedMenu = user.Menu(ClientPlatform.Web);
             var indexItemId = securedMenu.ItemindexId;
-            var indexItem = securedMenu.Leafs.FirstOrDefault(l => l.Id.EqualsIc(indexItemId));
+            var indexItem = securedMenu.Leafs.FirstOrDefault(l => indexItemId.EqualsIc(l.Id));
 
 
             HomeModel model = null;

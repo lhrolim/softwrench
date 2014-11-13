@@ -97,12 +97,12 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                     user.DBUser.PersonGroups.Add(personGroupAssociation);
                     _hapagHelper.AddHapagMatchingRolesAndProfiles(personGroup, user.DBUser);
                 }
-                user = _hapagHelper.HandleSsotuiModulesMerge(user);
+                
                 user.DBUser = DAO.Save(user.DBUser);
 
                 user = new InMemoryUser(user.DBUser, user.DBUser.Profiles, user.TimezoneOffset);
             }
-
+            user = _hapagHelper.HandleSsotuiModulesMerge(user);
             user = _hapagHelper.RemoveOrphanEntities(user);
 
             if (hasDeletedAssociation || hasNewAssociation) {
