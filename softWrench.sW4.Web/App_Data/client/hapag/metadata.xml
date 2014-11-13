@@ -2160,7 +2160,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<field attribute="asset_.item_.itdmodel" label="Model" />
 						<field attribute="asset_.item_.itdmachtype" label="Type" />
 						<field attribute="asset_.assettag" label="HL Invent Number" />
-						<field attribute="" label="Comment" readonly="true" />
+						<field attribute="unknow_comment" label="Comment" readonly="true" />
 					</section>
 
 
