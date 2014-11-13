@@ -168,7 +168,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             resultObject.Attributes["#affectedtime"] = originalDateTime;
 
             var user = SecurityFacade.CurrentUser();
-            resultObject.Attributes["isitc"] = ShouldShowITC(user);
+            resultObject.Attributes["isitcortom"] = ShouldShowITC(user);
         }
 
         private bool ShouldShowITC(InMemoryUser user) {
@@ -176,12 +176,13 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             //to avoid null references...
             var module = ctx.Module ?? "";
 
-            var isFrThatHasNoAccess = module.EqualsAny(FunctionalRole.Tom.GetName(), FunctionalRole.Itom.GetName(),
-                FunctionalRole.Sso.GetName());
+            //var isFrThatHasNoAccess = module.EqualsAny(FunctionalRole.Tom.GetName(), FunctionalRole.Itom.GetName(),
+            //    FunctionalRole.Sso.GetName());
+            var isFrThatHasNoAccess = module.EqualsAny(FunctionalRole.Sso.GetName());
             if (isFrThatHasNoAccess) {
                 return false;
             }
-            return user.HasProfile(ProfileType.Itc) || module.Equals(FunctionalRole.XItc.GetName());
+            return user.HasProfile(ProfileType.Itc) || module.EqualsAny(FunctionalRole.XItc.GetName(), FunctionalRole.Tom.GetName(), FunctionalRole.Itom.GetName());
         }
 
         private void HandleClosedDate(DataMap resultObject, ApplicationMetadata application) {

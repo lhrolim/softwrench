@@ -897,7 +897,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 				<componentdisplayable id="generaloutlookassetsection">
 					<!--TODO: make header accept showexpression-->
 					<section>
-						<header label="User-Personal Asset" params="fieldset=true" displacement="ontop" showexpression="@isitc==true"/>
+						<header label="User-Personal Asset" params="fieldset=true" displacement="ontop" showexpression="@isitcortom==true"/>
 						<association label="Asset:" target="assetnum" labelfield="asset_.hlagdescription2"
 												 extraprojectionvalues="location, location_.description, pluspcustomer" >
               <renderer type="autocompleteclient" params="minLength=3;"/>
@@ -907,7 +907,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <field hidden="true" attribute="asset_.pluspcustomer"></field>
 					</section>
 
-					<section showexpression="@isitc==true">
+					<section showexpression="@isitcortom==true">
 						<header label="ITC-Responsible Asset" params="fieldset=true" displacement="ontop"/>
 						<optionfield providerattribute="hlagUserLocations" attribute="itcassetlocation" label="Location" />
 						<association label="Asset:" target="itcassetnum" labelfield="2asset_.hlagdescription2" 
@@ -919,11 +919,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <field hidden="true" attribute="2asset_.pluspcustomer"></field>
 					</section>
 
-					<field showexpression="@isitc==true &amp;&amp; !nullOrEmpty(@assetnum)" attribute="asset_.location_.description" readonly="true" label="Asset Location">
+					<field showexpression="@isitcortom==true &amp;&amp; !nullOrEmpty(@assetnum)" attribute="asset_.location_.description" readonly="true" label="Asset Location">
 						<renderer type="label" />
 					</field>
 
-					<field showexpression="@isitc==true &amp;&amp; !nullOrEmpty(@itcassetnum)" attribute="2asset_.location_.description" readonly="true" label="Asset Location" >
+					<field showexpression="@isitcortom==true &amp;&amp; !nullOrEmpty(@itcassetnum)" attribute="2asset_.location_.description" readonly="true" label="Asset Location" >
 						<renderer type="label" />
 					</field>
 
