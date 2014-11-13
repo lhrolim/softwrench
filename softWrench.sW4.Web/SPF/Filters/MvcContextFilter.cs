@@ -32,13 +32,19 @@ namespace softWrench.sW4.Web.SPF.Filters {
 
         private static string GetValue(ActionExecutingContext actionContext, string key) {
             string value = null;
-            var headers = actionContext.HttpContext.Request.Headers.GetValues(key);
+            var request = actionContext.HttpContext.Request;
+            var headers = request.Headers.GetValues(key);
             if (headers != null) {
                 value = headers.First();
             } else {
-                var values = actionContext.HttpContext.Request.QueryString.GetValues(key);
+                var values = request.QueryString.GetValues(key);
                 if (values != null) {
                     value = values[0];
+                } else {
+                    values = request.Params.GetValues(key);
+                    if (values != null) {
+                        value = values[0];
+                    }
                 }
             }
             return "null".Equals(value) ? null : value;
