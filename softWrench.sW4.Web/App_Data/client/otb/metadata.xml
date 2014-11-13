@@ -1183,7 +1183,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         
         <schema id="list" mode="output" stereotype="compositionlist">
-          <section resourcepath="/Content/Templates/otb/receipts.html"/>
           <field attribute="ponum" label="PO No" readonly="true"/>
           <field attribute="polinenum" label="Line No" />
           <field attribute="itemnum" label="Item"/>
