@@ -1,4 +1,5 @@
-﻿using Iesi.Collections.Generic;
+﻿using Iesi.Collections;
+using Iesi.Collections.Generic;
 using log4net;
 using softwrench.sw4.Hapag.Data.Init;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -18,6 +19,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
         private static readonly ILog Log = LogManager.GetLogger(typeof(HapagPersonGroupHelper));
         private static IDictionary<string, UserProfile> _hapagProfiles;
         private static IDictionary<string, Role> _hapagModules;
+        private static IDictionary<RoleType, Role> _cachedDefaultRoles;
 
         public HapagPersonGroupHelper(SWDBHibernateDAO dao) {
             this._dao = dao;
@@ -30,7 +32,13 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             if (_hapagModules == null) {
                 _hapagModules = GetHapagModules();
             }
+            if (_cachedDefaultRoles == null) {
+                _cachedDefaultRoles = GetDefaultRoles();
+            }
+
         }
+
+
 
         public bool AddHapagMatchingRolesAndProfiles(PersonGroup personGroup, User user) {
             var addedProfile = false;
@@ -52,6 +60,15 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             return addedProfile || addedRole;
         }
 
+
+        private IDictionary<RoleType, Role> GetDefaultRoles() {
+            IDictionary<RoleType, Role> roles = new Dictionary<RoleType, Role>();
+            roles.Add(RoleType.Defaulthome, FindRole(RoleType.Defaulthome));
+            roles.Add(RoleType.Defaultnewsr, FindRole(RoleType.Defaultnewsr));
+            roles.Add(RoleType.Defaultsrgrid, FindRole(RoleType.Defaultsrgrid));
+            roles.Add(RoleType.Defaultssrsearch, FindRole(RoleType.Defaultssrsearch));
+            return roles;
+        }
 
         private IDictionary<string, Role> GetHapagModules() {
             IDictionary<string, Role> resultDict = new Dictionary<string, Role>();
@@ -80,6 +97,14 @@ namespace softwrench.sw4.Hapag.Data.Sync {
         }
 
         private Role FindRole(FunctionalRole roleType) {
+            var role = _dao.FindSingleByQuery<Role>(Role.RoleByName, roleType.GetName());
+            if (role == null) {
+                Log.WarnFormat("role {0} not found for group", roleType.GetName());
+            }
+            return role;
+        }
+
+        private Role FindRole(RoleType roleType) {
             var role = _dao.FindSingleByQuery<Role>(Role.RoleByName, roleType.GetName());
             if (role == null) {
                 Log.WarnFormat("role {0} not found for group", roleType.GetName());
@@ -138,11 +163,11 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             if (user.HasProfile(ProfileType.Itc)) {
                 return true;
             }
-            return user.PersonGroups.Any(f => f.PersonGroup.Name.EqualsAny(c.HEu, c.HExternalUser,c.HITC));
+            return user.PersonGroups.Any(f => f.PersonGroup.Name.EqualsAny(c.HEu, c.HExternalUser, c.HITC));
         }
 
         /// <summary>
-        /// if user is external, then inactivate all %IFU% roles, and if external, inactivate all %EFU% roles.
+        /// if user is external, then inactivate all %IFU% roles, and if internal, inactivate all %EFU% roles.
         /// 
         /// This is double check to avoid wrong scenarios on maximo side
         /// 
@@ -166,8 +191,61 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                     role.Active = false;
                 }
             }
+
+
+
+
+
             return user;
 
+        }
+
+        /// <summary>
+        /// If the user is not an external user, i.e TUI or SSO, we need to add default roles to it, so that the "enduser" actions become visible; 
+        /// otherwise, the sso/tui roles will take control over it
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public InMemoryUser HandleSsotuiModulesMerge(InMemoryUser user) {
+            var isSSO = user.PersonGroups.Any(f => f.PersonGroup.Name.Equals(HapagPersonGroupConstants.SSO));
+            var isTui = user.PersonGroups.Any(f => f.PersonGroup.Name.Equals(HapagPersonGroupConstants.Tui));
+
+            var dbUser = user.DBUser;
+            if (dbUser.CustomRoles == null) {
+                dbUser.CustomRoles = new HashedSet<UserCustomRole>();
+            }
+            if (!isSSO && !isTui) {
+                AddCustomRole(dbUser, RoleType.Defaulthome);
+                AddCustomRole(dbUser, RoleType.Defaultnewsr);
+                AddCustomRole(dbUser, RoleType.Defaultsrgrid);
+                AddCustomRole(dbUser, RoleType.Defaultssrsearch);
+            } else if (isSSO) {
+                RemoveCustomRole(dbUser, RoleType.Defaulthome);
+                RemoveCustomRole(dbUser, RoleType.Defaultnewsr);
+                RemoveCustomRole(dbUser, RoleType.Defaultsrgrid);
+                RemoveCustomRole(dbUser, RoleType.Defaultssrsearch);
+            } else if (isTui) {
+                //tui should only change its home, but there´s no intersection in the SR grids
+                AddCustomRole(dbUser, RoleType.Defaultnewsr);
+                AddCustomRole(dbUser, RoleType.Defaultsrgrid);
+                AddCustomRole(dbUser, RoleType.Defaultssrsearch);
+                RemoveCustomRole(dbUser, RoleType.Defaulthome);
+            }
+            return user;
+        }
+
+        private static void AddCustomRole(User dbUser, RoleType type) {
+            dbUser.CustomRoles.Add(new UserCustomRole {
+                Role = _cachedDefaultRoles[type],
+                UserId = dbUser.Id
+            });
+        }
+
+        private static void RemoveCustomRole(User dbUser, RoleType type) {
+            dbUser.CustomRoles.Remove(new UserCustomRole {
+                Role = _cachedDefaultRoles[type],
+                UserId = dbUser.Id
+            });
         }
     }
 }

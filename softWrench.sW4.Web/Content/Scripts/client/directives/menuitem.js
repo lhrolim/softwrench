@@ -129,27 +129,6 @@ app.directive('menuItem', function (contextService) {
                 return menuItem.icon;
             };
                 
-            //    var menuTitle = menuService.getI18nMenuLabel(menuItem, tooltip);
-            //    if (menuTitle == "Request Tasks") {
-                  
-            //      return "fa fa-paper-plane-o";
-            //    }
-            //    if (menuTitle == "Work Order Tasks") {
-            //        return "fa fa-gavel";
-                               
-            //    }
-            //     if (menuTitle == "Change Grid") {
-            //          return "fa fa-refresh";
-            //    }
-            //     if (menuTitle == "Purchase Tasks") {
-            //          return "fa fa-plus-square";
-            //    }
-            //     if (menuTitle == "Incident Tasks") {
-            //           return "fa fa-wrench";
-            //    }
-             
-            //   };
-
 
             $scope.goToApplication = function (leaf, target) {
                 menuService.goToApplication(leaf, target);

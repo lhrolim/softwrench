@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 using JetBrains.Annotations;
-using Quartz.Util;
-using softWrench.sW4.Metadata.Menu.Containers;
 using softWrench.sW4.Metadata.Parsing;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Menu;
@@ -46,7 +44,7 @@ namespace softWrench.sW4.Metadata.Menu {
                     }
                     continue;
                 }
-                var leaf = BuildLeaf(xName, xElement);
+                var leaf = BuildLeaf(xName, xElement, modules);
                 if (indexItem != null && indexLeaf == null && leaf != null && leaf.Id == indexItem) {
                     indexLeaf = leaf;
                 }
@@ -60,17 +58,22 @@ namespace softWrench.sW4.Metadata.Menu {
 
 
         [NotNull]
-        private static MenuBaseDefinition ParseResourceRef(XElement xElement) {
+        private static MenuBaseDefinition ParseResourceRef(XElement xElement, ICollection<ModuleDefinition> modules) {
             var id = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseIdAttribute).ValueOrDefault((string)null);
             var @params = xElement.Attribute(XmlMenuMetadataSchema.ResourceMenuParamsAttribute).ValueOrDefault((string)null);
             var path = xElement.Attribute(XmlMenuMetadataSchema.ResourceMenuPathAttribute).Value;
             var role = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseRoleAttribute).ValueOrDefault((string)null);
             var tooltip = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseTipAttribute).ValueOrDefault((string)null);
-            return new ResourceMenuItem(id, role, path, @params, tooltip);
+            var moduleName = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleName).ValueOrDefault((string)null);
+            var moduleAlias = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleAlias).ValueOrDefault((string)null);
+            if (moduleName != null) {
+                modules.Add(new ModuleDefinition(moduleName, moduleAlias));
+            }
+            return new ResourceMenuItem(id, role, path, @params, tooltip,moduleName);
         }
 
         [NotNull]
-        private static MenuBaseDefinition ParseApplication(XElement xElement) {
+        private static MenuBaseDefinition ParseApplication(XElement xElement, ICollection<ModuleDefinition> modules) {
             var id = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseIdAttribute).ValueOrDefault((string)null);
             var title = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseTitleAttribute).ValueOrDefault((string)null);
             var tooltip = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseTipAttribute).ValueOrDefault((string)null);
@@ -79,15 +82,20 @@ namespace softWrench.sW4.Metadata.Menu {
             var application = xElement.Attribute(XmlMenuMetadataSchema.ApplicationMenuRefAttribute).ValueOrDefault((string)null);
             var schema = xElement.Attribute(XmlMenuMetadataSchema.ApplicationMenuSchemaAttribute).ValueOrDefault("list");
             var modeAttr = xElement.Attribute(XmlMenuMetadataSchema.ApplicationMenuModeAttribute).ValueOrDefault((string)null);
+            var moduleName = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleName).ValueOrDefault((string)null);
+            var moduleAlias = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleAlias).ValueOrDefault((string)null);
+            if (moduleName != null) {
+                modules.Add(new ModuleDefinition(moduleName, moduleAlias));
+            }
             var parameters =
                 xElement.Attribute(XmlMenuMetadataSchema.ApplicationMenuParametersAttribute).ValueOrDefault((string)null);
             SchemaMode mode;
             Enum.TryParse(modeAttr, true, out mode);
-            return new ApplicationMenuItemDefinition(id, title, role, tooltip, icon, application, schema, mode, PropertyUtil.ConvertToDictionary(parameters));
+            return new ApplicationMenuItemDefinition(id, title, role, tooltip, icon, application, schema, mode, PropertyUtil.ConvertToDictionary(parameters),moduleName);
         }
 
         [NotNull]
-        private static MenuBaseDefinition ParseAction(XElement xElement) {
+        private static MenuBaseDefinition ParseAction(XElement xElement, ICollection<ModuleDefinition> modules) {
             var id = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseIdAttribute).ValueOrDefault((string)null);
             var title = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseTitleAttribute).ValueOrDefault((string)null);
             var tooltip = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseTipAttribute).ValueOrDefault((string)null);
@@ -95,10 +103,15 @@ namespace softWrench.sW4.Metadata.Menu {
             var role = xElement.Attribute(XmlMenuMetadataSchema.MenuBaseRoleAttribute).ValueOrDefault((string)null);
             var action = xElement.Attribute(XmlMenuMetadataSchema.ActionMenuActionAttribute).ValueOrDefault((string)null);
             var target = xElement.Attribute(XmlMenuMetadataSchema.ActionMenuTargetAttribute).ValueOrDefault((string)null);
+            var moduleName = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleName).ValueOrDefault((string)null);
+            var moduleAlias = xElement.Attribute(XmlMenuMetadataSchema.ContainerModuleAlias).ValueOrDefault((string)null);
+            if (moduleName != null) {
+                modules.Add(new ModuleDefinition(moduleName, moduleAlias));
+            }
             var parameters =
                 xElement.Attribute(XmlMenuMetadataSchema.ActionMenuParametersAttribute).ValueOrDefault((string)null);
             var controller = xElement.Attribute(XmlMenuMetadataSchema.ActionMenuControllerAttribute).Value;
-            return new ActionMenuItemDefinition(id, title, role, tooltip, icon, action, controller, target, PropertyUtil.ConvertToDictionary(parameters));
+            return new ActionMenuItemDefinition(id, title, role, tooltip, icon, action, controller, target, PropertyUtil.ConvertToDictionary(parameters),moduleName);
         }
 
         [NotNull]
@@ -135,7 +148,7 @@ namespace softWrench.sW4.Metadata.Menu {
                     leafs.Add(ParseContainer(xElement, indexItem, out indexLeaf, modules));
                     continue;
                 }
-                var leaf = BuildLeaf(xName, xElement);
+                var leaf = BuildLeaf(xName, xElement, modules);
                 if (indexItem != null && indexLeaf == null && leaf != null && leaf.Id == indexItem) {
                     indexLeaf = leaf;
                 }
@@ -145,14 +158,14 @@ namespace softWrench.sW4.Metadata.Menu {
         }
 
         [CanBeNull]
-        private static MenuBaseDefinition BuildLeaf(string xName, XElement xElement) {
+        private static MenuBaseDefinition BuildLeaf(string xName, XElement xElement, List<ModuleDefinition> modules) {
             switch (xName) {
                 case XmlMenuMetadataSchema.ActionElement:
-                    return ParseAction(xElement);
+                    return ParseAction(xElement, modules);
                 case XmlMenuMetadataSchema.ApplicationElement:
-                    return ParseApplication(xElement);
+                    return ParseApplication(xElement, modules);
                 case XmlMenuMetadataSchema.ResourceRefElement:
-                    return ParseResourceRef(xElement);
+                    return ParseResourceRef(xElement, modules);
                 case XmlMenuMetadataSchema.DividerElement:
                     return ParseDivider(xElement);
             }

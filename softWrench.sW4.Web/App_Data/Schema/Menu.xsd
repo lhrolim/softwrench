@@ -139,6 +139,8 @@
       </annotation>
     </attribute>
     <attribute name="icon" type="string"></attribute>
+    <attribute name="modulename" type="string"/>
+    <attribute name="modulealias" type="string"/>
   </complexType>
 
 
@@ -183,6 +185,8 @@
         </documentation>
       </annotation>
     </attribute>
+    <attribute name="modulename" type="string"/>
+    <attribute name="modulealias" type="string"/>
   </complexType>
 
   <complexType name="MenuActionItem">

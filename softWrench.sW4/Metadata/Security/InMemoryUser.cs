@@ -60,6 +60,9 @@ namespace softWrench.sW4.Metadata.Security {
             _timezoneOffset = timezoneOffset;
             _maximoPersonId = dbUser.MaximoPersonId;
             _personGroups = (dbUser.PersonGroups ?? new HashedSet<PersonGroupAssociation>());
+            if (initializedProfiles == null) {
+                initializedProfiles = new List<UserProfile>();
+            }
             var userProfiles = initializedProfiles as UserProfile[] ?? initializedProfiles.ToArray();
             _profiles = userProfiles;
             var roles = new List<Role>();
@@ -180,7 +183,7 @@ namespace softWrench.sW4.Metadata.Security {
                 foreach (var leaf in unsecureMenu.Leafs) {
                     if (!Login.Equals("swadmin") && leaf.Role != null &&
                         (Roles == null || !Roles.Any(r => r.Active && r.Name == leaf.Role))) {
-                        Log.DebugFormat("ignoring leaf {0} for user {1} due to absence of role {2}",leaf.Id,Login,leaf.Role);
+                        Log.DebugFormat("ignoring leaf {0} for user {1} due to absence of role {2}", leaf.Id, Login, leaf.Role);
                         continue;
                     }
                     if (leaf is MenuContainerDefinition) {
@@ -229,6 +232,6 @@ namespace softWrench.sW4.Metadata.Security {
             return strPersonGroups;
         }
 
-       
+
     }
 }

@@ -104,6 +104,16 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         [HttpGet]
+        public GenericResponseResult<IList<DashboardDefinition>> SSOHome() {
+            return GetFromDict(c.ActionRequiredForOpenRequests, c.EUOpenRequests, c.ActionRequiredForOpenIncidents, c.OpenApprovals, c.OpenChangeTasks);
+        }
+
+        [HttpGet]
+        public GenericResponseResult<IList<DashboardDefinition>> TUIHome() {
+            return GetFromDict(c.ActionRequiredForOpenRequests, c.EUOpenRequests, c.OpenApprovals, c.OpenChangeTasks);
+        }
+
+        [HttpGet]
         public GenericResponseResult<IList<DashboardDefinition>> XITCHome() {
             return GetFromDict(c.ActionRequiredForOpenRequests, c.ActionRequiredForOpenIncidents, c.OpenImacs);
         }
@@ -128,15 +138,7 @@ namespace softWrench.sW4.Web.Controllers {
             return GetFromDict(c.OpenApprovals, c.OpenChangeTasks);
         }
 
-        [HttpGet]
-        public GenericResponseResult<IList<DashboardDefinition>> SSOHome() {
-            return GetFromDict(c.ActionRequiredForOpenRequests, c.EUOpenRequests, c.ActionRequiredForOpenIncidents, c.OpenApprovals, c.OpenChangeTasks);
-        }
 
-        [HttpGet]
-        public GenericResponseResult<IList<DashboardDefinition>> TUIHome() {
-            return GetFromDict(c.OpenApprovals, c.OpenChangeTasks);
-        }
 
         private GenericResponseResult<IList<DashboardDefinition>> GetFromDict(params string[] dashboards) {
             return DoGetFromList(dashboards.Select(dashboard => _dashboards[dashboard]).ToList());

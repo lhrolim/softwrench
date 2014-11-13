@@ -2,6 +2,12 @@
 
 namespace softwrench.sw4.Hapag.Data {
     public enum RoleType {
+        
+        Defaulthome,
+        Defaultsrgrid,
+        Defaultnewsr,
+        Defaultssrsearch,
+    
         Incident,
         Asset,
         ITCSearch,

@@ -91,10 +91,15 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                         PersonGroup = personGroup
                     };
                     user.PersonGroups.Add(personGroupAssociation);
+                    if (user.DBUser.PersonGroups == null) {
+                        user.DBUser.PersonGroups = new HashedSet<PersonGroupAssociation>();
+                    }
                     user.DBUser.PersonGroups.Add(personGroupAssociation);
                     _hapagHelper.AddHapagMatchingRolesAndProfiles(personGroup, user.DBUser);
                 }
+                user = _hapagHelper.HandleSsotuiModulesMerge(user);
                 user.DBUser = DAO.Save(user.DBUser);
+
                 user = new InMemoryUser(user.DBUser, user.DBUser.Profiles, user.TimezoneOffset);
             }
 

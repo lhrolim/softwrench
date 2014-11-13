@@ -1,22 +1,52 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Menu xmlns="http://www.example.org/Menu" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmenudisplacement="vertical" indexitem="HOME">
-	<action title="Home" controller="HapagHome"  tooltip="Your Home Page" id="HOME"/>
+
+  <action title="Home" controller="HapagHome"  tooltip="Your Home Page" id="HOME" role="defaulthome"/>
+  <action title="Home" controller="HapagHome" action="SSOHome" tooltip="Your Home Page" id="HOME" role="sso" modulealias="sso" modulename="sso"/>
+  <action title="Home" controller="HapagHome" action="TUIHome" tooltip="Your Home Page" id="HOME" role="tui" modulealias="tui" modulename="tui"/>
 
 	<divider/>
 	<!--  <application title="Workorder Grid" ref="workorder" schema="detail"  tooltip="Workorders" id="workorder"/>-->
 	<container title="Tasks and Grids" tooltip="Click to access your request tasks" id="TasksGrids" >
-		<application id="SR" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid"/>
-		<container title="New Service Request" tooltip="Click to create a new Service Request" id="NewSR">
+	
+    <!--End user Items-->
+    <application id="SR" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid" role="defaultsrgrid"/>
+		<container title="New Service Request" tooltip="Click to create a new Service Request" id="NewSR" role="defaultnewsr">
 			<application id="Generalsr" title="General" tooltip="Click to create a new General Service Request" schema="general" ref="servicerequest" parameters="popupmode=browser"/>
 			<!-- <application id="sdsr" title="Software Distribution" tooltip="Click to create a new Software Distribution Service Request" schema="sd" ref="servicerequest" parameters="popupmode=browser"/> -->
 			<application id="printersr" title="Printer" tooltip="Click to create a new Printer Service Request" schema="printer" ref="servicerequest" parameters="popupmode=browser"/>
 			<application id="Outlooksr" title="Outlook" tooltip="Click to create a new Outlook Service Request" schema="outlook" ref="servicerequest" parameters="popupmode=browser"/>
 			<application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
 		</container>
+    <!--Finish Endser Items-->
+
+    <!-- Merged SSO declaration-->
+    <application id="SR" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid" role="sso" modulealias="sso" modulename="sso"/>
+    <container title="New Service Request" tooltip="Click to create a new Service Request" id="NewSR" role="sso" modulealias="sso" modulename="sso">
+      <application id="Generalsr" title="General" tooltip="Click to create a new General Service Request" schema="general" ref="servicerequest" parameters="popupmode=browser"/>
+      <!-- <application id="sdsr" title="Software Distribution" tooltip="Click to create a new Software Distribution Service Request" schema="sd" ref="servicerequest" parameters="popupmode=browser"/> -->
+      <application id="printersr" title="Printer" tooltip="Click to create a new Printer Service Request" schema="printer" ref="servicerequest" parameters="popupmode=browser"/>
+      <application id="Outlooksr" title="Outlook" tooltip="Click to create a new Outlook Service Request" schema="outlook" ref="servicerequest" parameters="popupmode=browser"/>
+      <application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
+    </container>
+    <application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" role="sso" modulealias="sso" modulename="sso" />
+    <application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes" role="sso" modulealias="sso" modulename="sso"/>
+    <application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" role="sso" parameters="popupmode=browser" modulealias="sso" modulename="sso"/>
+    <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems" role="sso" modulealias="sso" modulename="sso"/>
+    <!-- Ended SSO Merged declaration-->
+
+
+    <!-- Merged TUI declaration-->
+    <application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes" role="tui" modulealias="tui" modulename="tui"/>
+    <application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser" role="tui" modulealias="tui" modulename="tui"/>
+    <!-- Ended TUI Merged declaration-->
+
+    <!--ITC Items-->
 		<application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" role="incident"/>
 		<application id="AssetMenu" title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" role="asset"/>
 		<application id="ImacGrid" title="IMAC Grid" ref="imac" schema="list" tooltip="Click to view your Imacs" role="imacgrid"/>
+    <!--Finish ITC Items-->
 
 		<container title="New IMAC Request" tooltip="Click to create a new IMAC Request" id="newimac" role="newimac">
 
@@ -51,9 +81,9 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 
 	</container>
 
-	<divider role="tapebackupreport" />
+	<divider role="itcreport" />
 
-	<container title="Reports" tooltip="Click Here to access your Reports" id="Reports" role="tapebackupreport">
+	<container title="Reports" tooltip="Click Here to access your Reports" id="Reports" role="itcreport">
 
 		<application id="tapebackupreport" title="Tape BackUp Report" tooltip="Click to view Tape Back Up Report" schema="tapebackupreport" ref="incident" role="tapebackupreport"/>
 		<application id="incidentdetailreport" title="Incident Detail Report" tooltip="Click to view Incident Detail Report" schema="incidentdetailreportfilters" ref="incident" role="incidentdetailsreport"/>
@@ -62,20 +92,40 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<action id="categoriesreport" title="Asset Categories" tooltip="Click here to view Asset Categories report" controller="Report" action="Index" 
             parameters="application=asset;reportName=CategoriesReport;key.schemaId=categories" role="assetcategoriesreport" target="new" />
     <application id="itcreport" title="ITC Report" tooltip="Click to view ITC Report" schema="itcreportfilters" ref="persongroupview" role="itcreport"/>
-  
-	</container>
 
+    <application id="incidentdetailreport" title="Incident Detail Report" tooltip="Click to view Incident Detail Report" schema="incidentdetailreportfilters" ref="incident"  modulealias="sso" modulename="sso" role="sso"/>
+	</container>
+  
 	<divider />
 
 	<container title="Search" id="Search">
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Request ID &amp; Summary"
-					 params="id=servicerequestmenusearch;application=servicerequest;schema=list;label=Service Request Search;searchFields=ticketid,description"/>
-		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Incidents" role="itcsearch"
+					 params="id=servicerequestmenusearch;application=servicerequest;schema=list;label=Service Request Search;searchFields=ticketid,description" role="defaultssrsearch"/>
+
+    <!-- ITC Search -->
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Incidents" role="itcsearch"
 					 params="id=incidentsearch;application=incident;label=Incident Search;searchFields=ticketid,description" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Assets" role="itcsearch"
 					 params="id=assetmenusearch;application=asset;label=Asset Search;searchFields=hlagdescription,serialnum,computername" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search IMACS" role="itcsearch"
 					 params="id=imacsearch;application=imac;label=IMAC Search;searchFields=ticketid,description"/>
+    <!-- Finish ITC Search -->
+
+    <!-- Merged SSO declaration-->
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Request ID &amp; Summary"
+     params="id=servicerequestmenusearchsso;application=servicerequest;schema=list;label=Service Request Search;searchFields=ticketid,description" modulealias="sso" modulename="sso" role="sso"/>
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Incidents"
+							 params="id=incidentsearchsso;application=incident;label=Incident Search;searchFields=ticketid,description" modulealias="sso" modulename="sso" role="sso" />
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchsso;application=change;label=Change Search;
+                 searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search" modulealias="sso" modulename="sso" role="sso"/>
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchsso;application=problem;label=Problem Search;
+                 searchFields=ticketid,description" tooltip="Search Problems" modulealias="sso" modulename="sso" role="sso"/>
+    <!-- Ended SSO Merged declaration-->
+
+    <!-- Merged tui declaration-->
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchtui;application=change;label=Change Search;
+                 searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search" role="tui" modulealias="tui" modulename="tui"/>
+    <!-- ended tui declaration-->
 
 	</container>
 
@@ -288,45 +338,8 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 									 params="id=incidentsearchad;application=incident;label=Incident Search;searchFields=ticketid,description" />
 	</container>
 
-	<divider role="sso"/>
 
-	<container title="SSO" role="sso" id="sso" modulename="sso" modulealias="SSO" controller="HapagHome" action="SSOHome">
-		<application id="SR" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid"/>
-		<container title="New Service Request" tooltip="Click to create a new Service Request" id="NewSR">
-			<application id="Generalsr" title="General" tooltip="Click to create a new General Service Request" schema="general" ref="servicerequest" parameters="popupmode=browser"/>
-			<!-- <application id="sdsr" title="Software Distribution" tooltip="Click to create a new Software Distribution Service Request" schema="sd" ref="servicerequest" parameters="popupmode=browser"/> -->
-			<application id="printersr" title="Printer" tooltip="Click to create a new Printer Service Request" schema="printer" ref="servicerequest" parameters="popupmode=browser"/>
-			<application id="Outlooksr" title="Outlook" tooltip="Click to create a new Outlook Service Request" schema="outlook" ref="servicerequest" parameters="popupmode=browser"/>
-			<application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
-		</container>
-		<application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" />
-		<application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
-		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser"/>
-		<application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
 
-		<container title="Reports" tooltip="Click Here to access your Reports" id="Reports">
-			<application id="incidentdetailreport" title="Incident Detail Report" tooltip="Click to view Incident Detail Report" schema="incidentdetailreportfilters" ref="incident" />
-		</container>
-
-		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Request ID &amp; Summary"
-			 params="id=servicerequestmenusearchsso;application=servicerequest;schema=list;label=Service Request Search;searchFields=ticketid,description"/>
-		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Incidents"
-							 params="id=incidentsearchsso;application=incident;label=Incident Search;searchFields=ticketid,description" />
-		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchsso;application=change;label=Change Search;
-                 searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search"/>
-    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchsso;application=problem;label=Problem Search;
-                 searchFields=ticketid,description" tooltip="Search Problems"/>
-	</container>
-
-	<divider role="tui"/>
-
-	<container title="TUI Infotec" role="tui" id="tui" modulename="tui" modulealias="TUI Infotec" controller="HapagHome" action="TUIHome">
-		<application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
-		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser"/>
-
-		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchtui;application=change;label=Change Search;
-                 searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search"/>
-	</container>
 
 	<divider/>
 

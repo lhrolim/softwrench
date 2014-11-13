@@ -10,20 +10,20 @@ namespace softwrench.sW4.Shared2.Metadata.Menu {
         public string Application { get; set; }
 
         public string Schema { get; set; }
-        
+
         [JsonConverter(typeof(StringEnumConverter))]
         public SchemaMode Mode { get; set; }
         public IDictionary<string, string> Parameters { get; set; }
-        
+
         public ApplicationMenuItemDefinition() { }
 
-        public ApplicationMenuItemDefinition(string id, string title, string role, string tooltip, string icon, string application,
-            string schema, SchemaMode mode, IDictionary<string, string> parameters)
+        public ApplicationMenuItemDefinition(string id, string title, string role, string tooltip, string icon, string application, string schema, SchemaMode mode, IDictionary<string, string> parameters, string moduleName)
             : base(id, title, role, tooltip, icon) {
             Application = application;
             Schema = schema;
             Mode = mode;
             Parameters = parameters;
+            Module = moduleName;
         }
     }
 }
