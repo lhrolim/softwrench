@@ -110,7 +110,7 @@ namespace softWrench.sW4.Web.Controllers {
 
         [HttpGet]
         public GenericResponseResult<IList<DashboardDefinition>> TUIHome() {
-            return GetFromDict(c.ActionRequiredForOpenRequests, c.EUOpenRequests, c.OpenApprovals, c.OpenChangeTasks);
+            return GetFromDict(c.OpenApprovals, c.OpenChangeTasks);
         }
 
         [HttpGet]

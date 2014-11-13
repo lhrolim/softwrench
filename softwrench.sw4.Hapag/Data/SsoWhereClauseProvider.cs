@@ -38,6 +38,7 @@ namespace softwrench.sw4.Hapag.Data {
 
         private string DoGetWhereClause(string entity, bool dashboard) {
             var sb = new StringBuilder();
+
             var ssoListOfServices = GetSsoListOfServices();
             if (ssoListOfServices != null) {
                 sb.Append(ServicesWhereClause.Fmt(entity, ssoListOfServices));
@@ -47,6 +48,17 @@ namespace softwrench.sw4.Hapag.Data {
             }
             if (dashboard) {
                 sb.Append(HapagQueryConstants.ITCActionRequired(entity));
+            }
+            if (entity == "sr") {
+                if (!dashboard) {
+                    if (ssoListOfServices != null) {
+                        sb.Append(" or ( {0} ) ".Fmt(HapagQueryConstants.EndUserSR));
+                    } else {
+                        sb.Append(HapagQueryConstants.EndUserSR);
+                    }
+                } else {
+                    sb.Append(" or ( {0} ) ".Fmt(HapagQueryConstants.EndUserActionRequired));
+                }
             }
             return sb.ToString();
         }

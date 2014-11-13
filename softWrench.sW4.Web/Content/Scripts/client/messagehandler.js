@@ -60,6 +60,10 @@ app.directive('messagesection', function (contextService) {
             });
 
             $scope.$on('sw_ajaxerror', function (event, errordata) {
+                if ($scope.errorMsg) {
+                    return;
+                }
+
                 $scope.errorMsg = errordata.errorMessage;
                 $scope.errorStack = errordata.errorStack;
                 $scope.$broadcast('sw_errormessage', true);

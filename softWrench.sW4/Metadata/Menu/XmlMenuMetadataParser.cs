@@ -33,24 +33,17 @@ namespace softWrench.sW4.Metadata.Menu {
             var indexItem = menuElement.Attribute(XmlMenuMetadataSchema.MenuIndexItemAttribute).ValueOrDefault((string)null);
             var childs = menuElement.Elements();
             var leafs = new List<MenuBaseDefinition>();
-            MenuBaseDefinition indexLeaf = null;
             foreach (var xElement in childs) {
                 var xName = xElement.Name.LocalName;
                 if (xName == XmlMenuMetadataSchema.ContainerElement) {
                     MenuBaseDefinition newIndexLeaf;
                     leafs.Add(ParseContainer(xElement, indexItem, out newIndexLeaf, modules));
-                    if (newIndexLeaf != null) {
-                        indexLeaf = newIndexLeaf;
-                    }
                     continue;
                 }
                 var leaf = BuildLeaf(xName, xElement, modules);
-                if (indexItem != null && indexLeaf == null && leaf != null && leaf.Id == indexItem) {
-                    indexLeaf = leaf;
-                }
                 leafs.Add(leaf);
             }
-            var menuDefinition = new MenuDefinition(leafs, displacement, (IMenuLeaf)indexLeaf);
+            var menuDefinition = new MenuDefinition(leafs, displacement, indexItem);
             modules.Sort();
             menuDefinition.Modules = modules;
             return menuDefinition;

@@ -215,21 +215,17 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                 dbUser.CustomRoles = new HashedSet<UserCustomRole>();
             }
             if (!isSSO && !isTui) {
+                //if not a tui nor sso, we need to add the default items on the menu (enduser...)
                 AddCustomRole(dbUser, RoleType.Defaulthome);
                 AddCustomRole(dbUser, RoleType.Defaultnewsr);
                 AddCustomRole(dbUser, RoleType.Defaultsrgrid);
                 AddCustomRole(dbUser, RoleType.Defaultssrsearch);
-            } else if (isSSO) {
+            } else {
+                //otherwise, these items cannot be seem, just the module ones
                 RemoveCustomRole(dbUser, RoleType.Defaulthome);
                 RemoveCustomRole(dbUser, RoleType.Defaultnewsr);
                 RemoveCustomRole(dbUser, RoleType.Defaultsrgrid);
                 RemoveCustomRole(dbUser, RoleType.Defaultssrsearch);
-            } else if (isTui) {
-                //tui should only change its home, but there´s no intersection in the SR grids
-                AddCustomRole(dbUser, RoleType.Defaultnewsr);
-                AddCustomRole(dbUser, RoleType.Defaultsrgrid);
-                AddCustomRole(dbUser, RoleType.Defaultssrsearch);
-                RemoveCustomRole(dbUser, RoleType.Defaulthome);
             }
             return user;
         }

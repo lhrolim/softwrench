@@ -83,7 +83,9 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 
 	<divider role="itcreport" />
 
-	<container title="Reports" tooltip="Click Here to access your Reports" id="Reports" role="itcreport">
+  <divider role="sso" />
+  
+	<container title="Reports" tooltip="Click Here to access your Reports" id="Reports">
 
 		<application id="tapebackupreport" title="Tape BackUp Report" tooltip="Click to view Tape Back Up Report" schema="tapebackupreport" ref="incident" role="tapebackupreport"/>
 		<application id="incidentdetailreport" title="Incident Detail Report" tooltip="Click to view Incident Detail Report" schema="incidentdetailreportfilters" ref="incident" role="incidentdetailsreport"/>

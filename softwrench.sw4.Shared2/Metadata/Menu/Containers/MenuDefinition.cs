@@ -8,23 +8,26 @@ using softwrench.sw4.Shared2.Metadata.Modules;
 namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
 
     public class MenuDefinition {
+
+
         public enum MenuDisplacement {
             Vertical, Horizontal,
         }
 
         public MenuDefinition() { }
 
-        public MenuDefinition(IEnumerable<MenuBaseDefinition> leafs, MenuDisplacement mainMenuDisplacement, IMenuLeaf indexItem) {
+        public MenuDefinition(IEnumerable<MenuBaseDefinition> leafs, MenuDisplacement mainMenuDisplacement) {
             MainMenuDisplacement = mainMenuDisplacement;
             Leafs = leafs;
-            IndexItem = indexItem;
         }
 
-        public MenuDefinition(IEnumerable<MenuBaseDefinition> leafs, String mainMenuDisplacement, IMenuLeaf indexItem) {
+        public MenuDefinition(IEnumerable<MenuBaseDefinition> leafs, String mainMenuDisplacement,string itemindexId) {
             MainMenuDisplacement = (MenuDisplacement) Enum.Parse(typeof(MenuDisplacement),mainMenuDisplacement,true);
             Leafs = leafs;
-            IndexItem = indexItem;
+            ItemindexId = itemindexId;
         }
+
+        public string ItemindexId { get; set; }
 
         public MenuDisplacement MainMenuDisplacement { get; set; }
         public string Displacement {
@@ -32,7 +35,6 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
                 return MainMenuDisplacement.ToString().ToLower();
             }
         }
-        public IMenuLeaf IndexItem { get; set; }
         public IEnumerable<MenuBaseDefinition> Leafs { get; set; }
 
         public List<ModuleDefinition> Modules { get; set; }  
