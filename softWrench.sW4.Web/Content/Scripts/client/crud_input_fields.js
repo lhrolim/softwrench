@@ -120,6 +120,14 @@ app.directive('crudInputFields', function (contextService) {
                 return title;
             };
 
+            $scope.$on('sw_block_association', function (event, association) {
+                $scope.blockedassociations[association] = true;
+            });
+
+            $scope.$on('sw_unblock_association', function (event, association) {
+                $scope.blockedassociations[association] = null;
+            });
+
             $scope.$on('sw_associationsupdated', function (event, associationoptions) {
                 //this in scenarios where a section is compiled before the association has returned from the server... angular seems to get lost in the bindings
                 $scope.associationOptions = associationoptions;

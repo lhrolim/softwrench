@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('srservice', function ($http, alertService, fieldService, searchService) {
+app.factory('srservice', function ($http, alertService, fieldService, $rootScope,contextService) {
 
     return {
         //This service is to add the new field ACTION in Service Request details for resolved tickets
@@ -40,6 +40,25 @@ app.factory('srservice', function ($http, alertService, fieldService, searchServ
                 event.fields['itcassetnum'] = '$null$ignorewatch';
             }
             //event.fields['itcassetnum'] = null;
+        },
+
+        /// <summary>
+        /// if the afected person is different from the current user, then we should disable the User-Personal Asset combobox, since it would make no sense anymore
+        /// </summary>
+        /// <param name="event"></param>
+        afterChangeaffectedperson: function (event) {
+            if (!event.fields["isitcortom"]) {
+                //then we have no such separation
+                return;
+            }
+            var userData =contextService.getUserData();
+            // Clean ITC-Responsible Asset
+            if (userData.maximoPersonId != event.fields['affectedperson']) {
+                $rootScope.$broadcast('sw_block_association', "asset_");
+                //block
+            } else {
+                $rootScope.$broadcast('sw_unblock_association', "asset_");
+            }
         },
 
         afterPhoneAffectedDeviceChange: function (event) {

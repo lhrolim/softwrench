@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using Iesi.Collections.Generic;
+using JetBrains.Annotations;
 using log4net;
 using Newtonsoft.Json;
 using softWrench.sW4.Metadata.Menu.Containers;
@@ -25,6 +26,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly string _language;
         private readonly string _maximoPersonId;
         private readonly int? _timezoneOffset;
+        
         private readonly IList<Role> _roles;
         private readonly ICollection<UserProfile> _profiles;
         private readonly Iesi.Collections.Generic.ISet<PersonGroupAssociation> _personGroups;
@@ -150,7 +152,7 @@ namespace softWrench.sW4.Metadata.Security {
         public int? TimezoneOffset {
             get { return _timezoneOffset; }
         }
-
+        [NotNull]
         public IList<Role> Roles {
             get { return _roles; }
         }

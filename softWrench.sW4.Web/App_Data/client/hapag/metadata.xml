@@ -1050,6 +1050,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<association label="Affected Person:" target="affectedperson" labelfield="person_.hlagdisplayname" default="@personid" extraprojectionvalues="pluspcustomer">
 						<renderer type="autocompleteserver"/>
 						<dataprovider prefilterfunction="FilterAffectedPerson" />
+            <event type="afterchange" service="srservice" method="afterChangeaffectedperson"/>
 					</association>
 
 					<field hidden="true" attribute="person_.pluspcustomer"/>
