@@ -1098,9 +1098,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<field attribute="asset_.assetid" hidden="true" />
 						<association label="Affected Printer:" target="assetnum" labelfield="asset_.description" 
                          extraprojectionvalues="location,assetid,pluspcustomer" dependantfields="printerpluspcustomer">
-              <renderer type="autocompleteclient" params="minLength=3;"/>
+              <renderer type="autocompleteclient" params="minLength=3;opendetails=true;idtopendetails=asset_.assetid"/>
 							<dataprovider prefilterfunction="FilterAssets"/>
-							<renderer type="autocompleteclient" params="opendetails=true;idtopendetails=asset_.assetid"/>
+							<!--<renderer type="autocompleteclient" params="opendetails=true;idtopendetails=asset_.assetid"/>-->
 						</association>
             <field hidden="true" attribute="asset_.pluspcustomer"></field>
 
@@ -1636,7 +1636,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 				<componentdisplayable id="updateasset">
 					<association target="asset" dependantfields="fromlocation" label="Asset" labelfield="asset_.hlagdescription2" required="true"
 								  extraprojectionvalues="primaryuser_.personid,primaryuser_person_.hlagdisplayname,aucisowner_person_.hlagdisplayname,aucisowner_person_.personid,classification,location_.description,assetglaccount_.displaycostcenter,status,assetid,description,serialnum,item_.description,item_.itdmachtype,item_.itdmodel,installdate,assettag,assetnum,computername,location">
-            <renderer type="autocompleteclient" params="minLength=3;"/>
+            <renderer type="autocompleteclient" params="minLength=3;opendetails=true;idtopendetails=asset_.assetid"/>
 						<dataprovider prefilterfunction="FilterAssetByHlagLocation"/>
 						<event type="afterchange" service="imacservice" method="afterChangeAsset"/>
 					</association>
@@ -1646,15 +1646,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 				</componentdisplayable>
 
 				<componentdisplayable id="mainasset">
-					<association
+         <association
 								target="asset" dependantfields="fromlocation" label="Asset" labelfield="asset_.hlagdescription2" required="true"
-																	   extraprojectionvalues="usage, primaryuser_.personid, primaryuser_.hlagdisplayname, primaryuser_person_.displayname,primaryuser_person_.hlagdisplayname
+																	   extraprojectionvalues="usage, assetid, primaryuser_.personid, primaryuser_.hlagdisplayname, primaryuser_person_.displayname,primaryuser_person_.hlagdisplayname
                      ,classification,location,location_.description,aucisowner_person_.hlagdisplayname,aucisowner_person_.personid,pluspcustomer,assetglaccount_.displaycostcenter,assetglaccount_.glaccount,status">
-            <renderer type="autocompleteclient" params="minLength=3;"/>
+            <renderer type="autocompleteclient" params="minLength=3;opendetails=true;idtopendetails=asset_.assetid"/>
 						<event type="afterchange" service="imacservice" method="afterChangeAsset"/>
 						<dataprovider prefilterfunction="FilterAssetByHlagLocation"/>
 					</association>
-					<field hidden="true" attribute="asset_.status"/>
+          <field hidden="true" attribute="asset_.status"/>
 					<field hidden="true" attribute="asset_.location"/>
 					<field hidden="true" attribute="asset_.aucisowner_.person_.personid"/>
 				</componentdisplayable>
