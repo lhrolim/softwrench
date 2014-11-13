@@ -446,8 +446,42 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </schemas>
     </application>
 
-    
-
+    <application name="reservedMaterials" entity="invreserve" title="Reserved Materials">
+      <schemas>
+        <list>
+          <field attribute="wonum" label="Work Order">
+            <renderer type="default" params="width=16%"/>
+          </field>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="width=16%"/>
+          </field>
+          <field attribute="siteid" label="Site ID">
+            <renderer type="default" params="width=16%"/>
+          </field>
+          <field attribute="reservedqty" label="Reserved Quantity">
+            <renderer type="default" params="width=16%"/>
+          </field>
+          <field attribute="actualqty" label="Quantity Issued">
+            <renderer type="default" params="width=16%"/>
+          </field>
+        </list>
+        <schema id="detail" stereotype="detail" mode="input">
+          <field attribute="invreserveid" hidden="true"/>
+          <field attribute="wonum" label="Work Order" readonly="true"/>
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="location" label="Storeroom" readonly="true"/>
+          <field attribute="reservedqty" label="Reserved Quantity" readonly="true"/>
+          <!--<field attribute="actualqty" label="Quantity Issued" readonly="true"/>-->
+          <field attribute="actualqty" label="Issue Quantity">
+            <renderer type="numericinput" params="min=1;max=@reservedqty;"/>
+          </field>
+          <field attribute="requireddate" label="Required Date" readonly="true"/>
+          <!--<field attribute="#issueqty" label="Issue Quantity">
+            <renderer type="numericinput" params="min=1;max=(@reservedqty - @actualqty);"/>
+          </field>-->
+        </schema>
+      </schemas>
+    </application>
   </applications>
 
 
