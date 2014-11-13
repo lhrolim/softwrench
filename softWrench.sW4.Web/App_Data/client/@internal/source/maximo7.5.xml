@@ -2685,6 +2685,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="location" to="location" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="storeloc" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="invbalances">
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="inventory_.itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="storeloc" to="location"/>
+          <relationshipAttribute from="binnum" to="binnum" primary="true"/>
+          <relationshipAttribute from="lotnum" to="lotnum"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />

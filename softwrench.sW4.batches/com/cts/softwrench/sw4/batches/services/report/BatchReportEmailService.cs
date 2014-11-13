@@ -14,7 +14,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
 
         private readonly EmailService _emailService;
 
-        private readonly Template _template;
+        private Template _template;
         private readonly RedirectService _redirectService;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(BatchReportEmailService));
@@ -26,10 +26,13 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
             _redirectService = redirectService;
             var templatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//batches//emailreport.html";
             var templateContent = File.ReadAllText(templatePath);
-            _template = Template.Parse(templateContent);  // Parses and compiles the template
+            
         }
 
         public void SendEmail(BatchReport report) {
+            var templatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//batches//emailreport.html";
+            var templateContent = File.ReadAllText(templatePath);
+            _template = Template.Parse(templateContent);  // Parses and compiles the template
             var user = SecurityFacade.CurrentUser();
             if (user.Email == null) {
                 Log.WarnFormat("unable to send report email, as user {0} has no email registered", user.Login);
@@ -45,6 +48,9 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
                             problematicitems = report.NumberOfProblemItens,
                             url = appurl
                         }));
+           
+          
+
             var emailData = new EmailService.EmailData("noreply@controltechnologysolutions.com", user.Email, "Batch Submission Finished", msg);
             _emailService.SendEmail(emailData);
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Permissions;
+using System.Windows.Controls;
 using DocumentFormat.OpenXml.Spreadsheet;
 using NHibernate.Hql.Ast.ANTLR;
 using NHibernate.Linq;
@@ -95,16 +97,25 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
         public SearchRequestDto FilterWorkorders(AssociationPreFilterFunctionParameters parameters) {
-            return AssetFilterBySiteFunction(parameters);
+            var user = SecurityFacade.CurrentUser();
+            var filter = parameters.BASEDto;
+            var siteid = user.SiteId;
+            filter.AppendSearchEntry("workorder.siteid", siteid.ToUpper());
+
+            var validWorkOrderStatus = new List<string> { "APPR", "WMAT", "WSCH", "WORKING" };
+            filter.AppendSearchEntry("STATUS", validWorkOrderStatus);
+            return filter;
         }
 
-        public SearchRequestDto AssetFilterBySiteFunction(AssociationPreFilterFunctionParameters parameters) {
+        public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
+            return AssteFilterBySiteid(parameters);
+        }
+
+        private SearchRequestDto AssteFilterBySiteid(AssociationPreFilterFunctionParameters parameters) {
+            var user = SecurityFacade.CurrentUser();
             var filter = parameters.BASEDto;
-            var location = (string)parameters.OriginalEntity.GetAttribute("location");
-            if (location == null) {
-                return filter;
-            }
-            filter.AppendSearchEntry("asset.location", location.ToUpper());
+            var siteid = user.SiteId;
+            filter.AppendSearchEntry("asset.siteid", siteid.ToUpper());
             return filter;
         }
 

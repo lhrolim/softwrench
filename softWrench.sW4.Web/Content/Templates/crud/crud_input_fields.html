@@ -36,7 +36,7 @@
                        data-date-format="{{fieldMetadata.rendererParameters['format']}}"
                        data-show-meridian="{{fieldMetadata.rendererParameters['showmeridian']}}"
                        class="form-control datetimereadonly"
-                       value="{{getFormattedValue(datamap,fieldMetadata.attribute,fieldMetadata)}}"
+                       value="{{getFormattedValue(fieldMetadata.attribute,fieldMetadata,datamap)}}"
                        ng-readonly="true" readonly>
 
                 <label ng-switch-when="label" class="control-label"
@@ -45,13 +45,13 @@
                
                 </label>
 
-                <input type="text" 
-                       class="form-control" 
-                       ng-readonly="true" 
-                       ng-model="datamap[fieldMetadata.attribute]" 
+                <input type="text"
+                       class="form-control"
+                       ng-readonly="true"
+                       ng-model="datamap[fieldMetadata.attribute]"
                        ng-switch-default
-                       ng-init="initField(fieldMetadata)" 
-                       value="{{getFormattedValue(datamap,fieldMetadata.attribute,fieldMetadata)}}" />
+                       ng-init="initField(fieldMetadata)"
+                       value="{{getFormattedValue(fieldMetadata.attribute,fieldMetadata,datamap)}}" />
             </div>
 
             <!--SM - 09-24 - SWWEB-441 Change column class
