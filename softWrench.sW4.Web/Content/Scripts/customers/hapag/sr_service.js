@@ -47,10 +47,6 @@ app.factory('srservice', function ($http, alertService, fieldService, $rootScope
         /// </summary>
         /// <param name="event"></param>
         afterChangeaffectedperson: function (event) {
-            if (!event.fields["isitcortom"]) {
-                //then we have no such separation
-                return;
-            }
             var userData =contextService.getUserData();
             // Clean ITC-Responsible Asset
             if (userData.maximoPersonId != event.fields['affectedperson']) {

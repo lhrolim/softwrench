@@ -2334,6 +2334,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 				</list>
 
 				<list platform="web">
+          <properties>
+            <property key="list.defaultorderby" value="pluspcustomer,asset.assetnum desc"/>
+          </properties>
 					<field attribute="assetnum" label="" qualifier="title" hidden="true" />
 					<field attribute="siteid" label="" qualifier="title" hidden="true"/>
 					<field label="Location Code" attribute="hlagpluspcustomer">

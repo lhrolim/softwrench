@@ -138,7 +138,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var ctx = ContextLookuper.LookupContext();
 
             //count query
-            tasks[0] = Task.Factory.StartNew((c) => {
+            tasks[0] = Task.Factory.NewThread(c => {
                 Quartz.Util.LogicalThreadContext.SetData("context", c);
                 if (searchDto.NeedsCountUpdate) {
                     Log.DebugFormat("BaseApplicationDataSet#GetList calling Count method on maximo engine. Application Schema \"{0}\" / Context \"{1}\"", schema, c);
@@ -147,7 +147,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             }, ctx);
 
             //query
-            tasks[1] = Task.Factory.StartNew((c) => {
+            tasks[1] = Task.Factory.NewThread(c => {
                 Quartz.Util.LogicalThreadContext.SetData("context", c);
                 // Only fetch the compositions schemas if indicated on searchDTO
                 var applicationCompositionSchemata = new Dictionary<string, ApplicationCompositionSchema>();
@@ -209,7 +209,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 }
                 var association = applicationAssociation;
 
-                tasks.Add(Task.Factory.StartNew(c => {
+                tasks.Add(Task.Factory.NewThread(c => {
                     Quartz.Util.LogicalThreadContext.SetData("context", c);
                     var associationOptions = _associationOptionResolver.ResolveOptions(application, dataMap, association, search);
                     associationOptionsDictionary.Add(association.AssociationKey, new BaseAssociationUpdateResult(associationOptions));
@@ -230,7 +230,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                     continue;
                 }
                 var field = optionField;
-                tasks.Add(Task.Factory.StartNew(c => {
+                tasks.Add(Task.Factory.NewThread(c => {
                     Quartz.Util.LogicalThreadContext.SetData("context", c);
                     var associationOptions = _dynamicOptionFieldResolver.ResolveOptions(application, field, dataMap);
                     associationOptionsDictionary.Add(field.AssociationKey, new BaseAssociationUpdateResult(associationOptions));
@@ -305,7 +305,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                     EntityUtil.IsRelationshipNameEquals(f.AssociationKey, associationToUpdate)));
                 if (association == null) {
                     var optionField = application.Schema.OptionFields.First(f => f.AssociationKey == associationToUpdate);
-                    tasks.Add(Task.Factory.StartNew(c => {
+                    tasks.Add(Task.Factory.NewThread(c => {
                         Quartz.Util.LogicalThreadContext.SetData("context", c);
                         var data = _dynamicOptionFieldResolver.ResolveOptions(application, optionField, cruddata);
                         resultObject.Add(optionField.AssociationKey, new LookupAssociationUpdateResult(data, 100, PaginatedSearchRequestDto.DefaultPaginationOptions));
@@ -322,7 +322,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                         continue;
                     }
 
-                    tasks.Add(Task.Factory.StartNew(c => {
+                    tasks.Add(Task.Factory.NewThread(c => {
                         Quartz.Util.LogicalThreadContext.SetData("context", c);
                         var options = _associationOptionResolver.ResolveOptions(application, cruddata, association,
                            searchRequest);

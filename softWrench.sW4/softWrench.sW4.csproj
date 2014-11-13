@@ -526,6 +526,7 @@
     <Compile Include="Util\StreamUtils.cs" />
     <Compile Include="Util\StringExtensions.cs" />
     <Compile Include="Util\SwConstants.cs" />
+    <Compile Include="Util\TaskFactoryExtensions.cs" />
     <Compile Include="Util\Validate.cs" />
     <Compile Include="Web References\wsAsset\Reference.cs">
       <AutoGen>True</AutoGen>

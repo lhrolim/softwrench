@@ -29,7 +29,7 @@ namespace softWrench.sW4.SimpleInjector.Events {
                 var before = Stopwatch.StartNew();
                 if (item is MultiThreadedSWEventListener<T>) {
                     var item1 = item;
-                    var task = Task.Factory.StartNew(() => item1.HandleEvent(eventToDispatch));
+                    var task = Task.Factory.NewThread(() => item1.HandleEvent(eventToDispatch));
                 } else {
                     item.HandleEvent(eventToDispatch);
                 }

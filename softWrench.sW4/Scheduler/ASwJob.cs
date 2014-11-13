@@ -45,7 +45,7 @@ namespace softWrench.sW4.Scheduler {
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             if (RunAtStartup()) {
-                Task.Factory.StartNew(DoExecute);
+                Task.Factory.NewThread(DoExecute);
             }
         }
         //run at the end
