@@ -100,12 +100,14 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
         private SearchRequestDto WorkorderFilterByStatus(AssociationPreFilterFunctionParameters parameters) {
-            var user = SecurityFacade.CurrentUser();
             var filter = parameters.BASEDto;
-            var siteid = user.SiteId;
-            filter.AppendSearchEntry("workorder.siteid", siteid.ToUpper());
-            filter.AppendWhereClause("STATUS in ('APPR', 'WMATL', 'WSCH', 'WORKING')");
+            var siteid = parameters.OriginalEntity.Attributes["siteid"];
+            if (siteid != null) { 
+                filter.AppendSearchEntry("workorder.siteid", siteid.ToString().ToUpper());
+                filter.AppendWhereClause("STATUS in ('APPR', 'WMATL', 'WSCH', 'WORKING')");
+            }
             return filter;
+            
         }
 
         public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
@@ -113,10 +115,11 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
         private SearchRequestDto AssteFilterBySiteid(AssociationPreFilterFunctionParameters parameters) {
-            var user = SecurityFacade.CurrentUser();
             var filter = parameters.BASEDto;
-            var siteid = user.SiteId;
-            filter.AppendSearchEntry("asset.siteid", siteid.ToUpper());
+            var siteid = parameters.OriginalEntity.Attributes["siteid"]; 
+            if(siteid != null) { 
+                filter.AppendSearchEntry("asset.siteid", siteid.ToString().ToUpper());
+            }
             return filter;
         }
 

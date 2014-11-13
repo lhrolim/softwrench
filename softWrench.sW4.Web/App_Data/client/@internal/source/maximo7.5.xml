@@ -2698,6 +2698,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="binnum" to="binnum" primary="true"/>
           <relationshipAttribute from="lotnum" to="lotnum"/>
         </relationship>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to="siteid" primary="true"/>
+        </relationship>
+        <relationship to="chartofaccounts" >
+          <relationshipAttribute from="glaccount" to="glaccount" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />

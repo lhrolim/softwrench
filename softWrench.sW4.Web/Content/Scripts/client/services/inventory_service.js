@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService, restService, alertService) {
+app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService, restService, alertService, $rootScope) {
     var formatQty = function (datamap, value, column) {
         if (datamap['issuetype'] == 'ISSUE') {
             if (datamap[column.attribute] != null) {
@@ -39,8 +39,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         createIssue: function () {
             redirectService.goToApplicationView("invissue", "newInvIssueDetail", "input", null, null, null);
         },
-        navToBulkFilter: function () {
-            redirectService.goToApplicationView("invissue", "filter", "input", null, null, null);
+        navToBatchFilter: function () {
+            redirectService.goToApplicationView("invissue", "batchInvIssueFilter", "input", null, null, null);
         },
         formatQtyReturnedList: function (datamap, value, column) {
             var dm = datamap.fields;
@@ -146,15 +146,15 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
         editinvissuewo: function (schema, datamap) {
             var newDatamap = {};
-            newDatamap['#assetnum'] = datamap['assetnum'];
-            newDatamap['#issueto'] = datamap['issueto'];
-            newDatamap['#issuetype'] = datamap['issuetype'];
-            newDatamap['#location'] = datamap['location'];
+            newDatamap['assetnum'] = datamap['assetnum'];
             newDatamap['#refwo'] = datamap['refwo'];
             newDatamap['#storeloc'] = datamap['storeloc'];
-            newDatamap['location'] = datamap['location'];
-            newDatamap['assetnum'] = datamap['assetnum'];
-            newDatamap['issueto'] = datamap['#issueto'];
+            newDatamap['#siteid'] = datamap['siteid'];
+            newDatamap['#gldebitacct'] = datamap['gldebitacct'];
+            newDatamap['#issuetype'] = datamap['issuetype'];
+            newDatamap['#location'] = datamap['location'];
+            newDatamap['#assetnum'] = datamap['assetnum'];
+            newDatamap['#issueto'] = datamap['issueto'];
             newDatamap['invissue_'] = [];
 
             var param = {};
@@ -165,7 +165,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             modalService.show(schema.compositiondetailschema, datamap, saveFn);
         },
         cancelNewInvIssue: function () {
-            redirectService.goToApplicationView("invissue", "invissuelist", null, null, null, null);
+            redirectService.goToApplicationView("invissue", "list", null, null, null, null);
         },
         displayPopupModal: function (parentschema, parentdatamap) {
             var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
@@ -173,7 +173,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var user = contextService.getUserData();
             var itemDatamap = {};
             itemDatamap['itemnum'] = "";
-            itemDatamap['enterby'] = user.login;
+            itemDatamap['enterby'] = user.login.toUpperCase();
             itemDatamap['siteid'] = user.siteId;
             itemDatamap['matusetransid'] = null;
             itemDatamap['refwo'] = parentdata['#refwo'];
@@ -182,6 +182,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             itemDatamap['issueto'] = parentdata['#issueto'];
             itemDatamap['location'] = parentdata['#location'];
             itemDatamap['storeloc'] = parentdata['#storeloc'];
+            itemDatamap['gldebitacct'] = parentdata['#gldebitacct'];
             var compositiondata = parentdatamap['fields']['invissue_'];
 
             modalService.show(compositionschema, itemDatamap, null, compositiondata);
@@ -207,29 +208,34 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             parameters.clonedCompositionData.push(newRecord);
             redirectService.redirectToTab('invissue_');
         },
-        afterchangeworkorder: function (parameters) {
+        invIssue_afterChangeWorkorder: function (parameters) {
+            if (parameters.fields['refwo'] == null || parameters.fields['refwo'].trim() == "") {
+                parameters.fields['refwo'] = null;
+                parameters.fields['location'] = null;
+                parameters.fields['assetnum'] = null;
+                parameters.fields['gldebitacct'] = null;
+                return;
+            }
 
             if (parameters.fields['workorder_.location'] == null) {
-                parameters.fields['workorder_.location'] = null;
                 parameters.fields['location'] = null;
             } else {
                 parameters.fields['location'] = parameters.fields['workorder_.location'];
             }
 
             if (parameters.fields['workorder_.assetnum'] == null) {
-                parameters.fields['workorder_.assetnum'] = null;
                 parameters.fields['assetnum'] = null;
             } else {
                 parameters.fields['assetnum'] = parameters.fields['workorder_.assetnum'];
             }
 
-            var gldebitacct = parameters.fields['gldebitacct'];
-
-            if (parameters.fields['workorder_.glaccount']) {
-                gldebitacct = parameters.fields['workorder_.glaccount'];
+            if (parameters.fields['workorder_.glaccount'] == null) {
+                parameters.fields['gldebitacct'] = null;
+            } else {
+                parameters.fields['gldebitacct'] = parameters.fields['workorder_.glaccount'];
             }
 
-            parameters.fields['gldebitacct'] = gldebitacct;
+            return;
         },
 
         doUpdateUnitCostFromInventoryCost: function (parameters,unitCostFieldName) {
@@ -264,49 +270,29 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             //Sets the associated GL Debit Account
             //if a workorder isn't already specified
             //Updates the location field from the asset's location
-            if (parameters.fields['assetnum'].trim() != "") {
-                var refwo = parameters.fields['refwo'];
-                var location = parameters.fields['location'];
+            if (parameters.fields['refwo'] != null) {
+                return;
+            }
 
-                if (!refwo || refwo.trim() == "") {
-                    refwo = "";
-                }
-                if (!location || location.trim() == "") {
-                    location = "";
-                }
+            //if (parameters.fields['asset_.location'] != parameters.fields['location']) {
+            //    parameters.fields['location'] = parameters.fields['asset_.location'];
+            //    parameters.fields['gldebitacct'] = parameters.fields['asset_.glaccount'];
+            //}
 
-                if (refwo != "") {
-                    return;
-                }
-
-                if (refwo != "" && location == "") {
-                    parameters.fields['location'] = parameters.fields['asset_.location'];
-                    return;
-                }
-
-                if (refwo == "") {
-                    parameters.fields['location'] = parameters.fields['asset_.location'];
-                    parameters.fields['gldebitacct'] = parameters.fields['asset_.glaccount'];
-                }
+            if (parameters.fields['asset_.location'] != parameters.fields['location']) {
+                parameters.fields['location'] = parameters.fields['asset_.location'];
+                parameters.fields['gldebitacct'] = parameters.fields['asset_.glaccount'];
             }
         },
         invIssue_afterChangeLocation: function (parameters) {
             //Sets the gldebitacct and clears the asset 
             //if there is no refwo defined
-            if (parameters.fields['location'].trim() != "") {
-                var refwo = parameters.fields['refwo'];
-
-                if (!refwo || refwo.trim() == "") {
-                    refwo = "";
-                }
-
-                if (refwo != "")
-                    return;
-
-                parameters.fields['assetnum'] = "";
-                parameters.fields['gldebitacct'] = parameters.fields['location_.glaccount'];
+            if (parameters.fields['refwo'] != null) {
+                return;
             }
+            
 
+            return;
         },
 
         createTransfer: function (schema) {
