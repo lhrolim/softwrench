@@ -185,7 +185,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 				<attribute name="service" type="varchar" required="false" query="SUBSTR(classstructure_.description, LOCATE('\', classstructure_.description) + 1)"/>
 				<attribute name="hlagsummary" type="varchar" required="false" query="CASE WHEN LOCATE('//',!@Description) > 0 THEN LTRIM(RTRIM(SUBSTR(!@Description,1,LOCATE('//',!@Description)-1))) ELSE LTRIM(RTRIM(!@Description)) END"/>
 				<attribute name="hlagimacstatus" type="varchar" required="false" query="case when (select count(*) from maximo.WOACTIVITY wo where wo.origrecordid = !@ticketid and wo.origrecordclass = 'SR') > 0 
-          and (!@status != 'CANCELLED' or !@status != 'CLOSED')
+          and (!@status != 'CANCELLED' and !@status != 'CLOSED' and !@status != 'RESOLVED' )
           then !@status || ' ' || 
           (select case when count(*) = 0 then '1' else count(*) end from maximo.WOACTIVITY wo where wo.origrecordid = !@ticketid and wo.status in ('CAN','CLOSED','COMP') and wo.origrecordclass = 'SR') || '/' || 
           (select count(*) from maximo.WOACTIVITY wo where wo.origrecordid = !@ticketid and wo.origrecordclass = 'SR')
