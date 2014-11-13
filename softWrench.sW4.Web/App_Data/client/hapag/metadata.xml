@@ -2404,7 +2404,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 					<!--TODO: showexpression-->
 					<section id="createoutof" resourcepath="/Content/Templates/hapag/createfromasset.html"
-                   showexpression="!ctx:InModule(['assetcontrol','assetramcontrol','tom','itom']) 
+                   showexpression="!ctx:InModule(['assetcontrol','assetramcontrol','tom','itom','purchase']) 
                    &amp;&amp; @status != null &amp;&amp; @status.equalsAny('OPERATING','120 Active','150 Idle','010 Ordered')">
 						<header label="Create New" />
 					</section>
