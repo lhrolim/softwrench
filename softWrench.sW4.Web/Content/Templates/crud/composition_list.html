@@ -23,13 +23,13 @@
         </thead>
         <tbody ng-show="clonedCompositionData.length > 0">
             <tr ng-repeat-start="compositionitem in clonedCompositionData">
-                <td ng-repeat="column in compositionlistschema.displayables" ng-show="!isFieldHidden(compositionlistschema,column)" style="word-break:break-all">
+                <td ng-repeat="column in compositionlistschema.displayables" ng-show="!isFieldHidden(compositionlistschema,column)">
                     <ng-switch on="column.type">
                         <div ng-switch-when="ApplicationSection">
                             <div ng-include="contextPath(column.resourcepath)" href="#" style="width: 100%" />
                         </div>
-                        <div ng-switch-when="ApplicationFieldDefinition">
-                            <a style="color: black; cursor: pointer; word-break:break-all;" ng-click="toggleDetails(compositionitem,collectionproperties.allowUpdate)">
+                        <div ng-switch-when="ApplicationFieldDefinition" class="gridcolumnvalue">
+                            <a style="color: black; cursor: pointer;" ng-click="toggleDetails(compositionitem,collectionproperties.allowUpdate)">
                                 {{getFormattedValue(compositionitem[column.attribute],column)}}
                             </a>
                         </div>

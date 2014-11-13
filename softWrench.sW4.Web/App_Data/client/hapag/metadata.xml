@@ -2930,7 +2930,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					</field>
 					<field attribute="approvallevel" hidden="true"/>
 					<field  attribute="#status" label="Status" />
-					<section resourcepath="/Content/Templates/hapag/jobplancompleteaction.html"/>
+          <section resourcepath="/Content/Templates/hapag/jobplancompleteaction.html">
+            <header label="Action"/>
+          </section>
 				</list>
 				<detail stereotype="compositiondetail">
 					<field  attribute="description" label="Summary" required="true"/>
@@ -3185,7 +3187,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
 					</field>
 					<field attribute="description" label="Summary"/>
-					<section resourcepath="/Content/Templates/hapag/jobplancompleteaction.html"/>					
+          <section resourcepath="/Content/Templates/hapag/jobplancompleteaction.html">
+            <header label="Action"/>
+          </section>
 				</list>
 
 				<schema id="changeTasksDashboardList" stereotype="list">
