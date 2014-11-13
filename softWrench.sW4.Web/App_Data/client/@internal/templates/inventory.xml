@@ -337,6 +337,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </association>
           <field attribute="issuetype" label="Issue Type" required="true" readonly="true" default="ISSUE"/>
           <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" required="true">
+            <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
             <renderer type="lookup"/>
           </association>
           <association label="Storeroom" target="storeloc" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,issueunit,itemtype" required="true">

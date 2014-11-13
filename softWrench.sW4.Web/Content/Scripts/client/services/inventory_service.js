@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService, restService, alertService, $rootScope) {
+app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService, restService, alertService) {
     var formatQty = function (datamap, value, column) {
         if (datamap['issuetype'] == 'ISSUE') {
             if (datamap[column.attribute] != null) {
@@ -32,6 +32,23 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var resultObject = data.resultObject;
             var fields = resultObject[0].fields;
             parameters.fields[balanceField] = fields.curbal;
+        });
+    };
+
+    var doUpdateUnitCostFromInventoryCost = function(parameters, unitCostFieldName) {
+        var searchData = {
+            itemnum: parameters['fields']['itemnum'],
+            location: parameters['fields']['storeloc'],
+        };
+        searchService.searchWithData("invcost", searchData).success(function(data) {
+            var resultObject = data.resultObject;
+            var fields = resultObject[0].fields;
+            var costtype = parameters['fields']['inventory_.costtype'];
+            if (costtype === 'STANDARD') {
+                parameters.fields[unitCostFieldName] = fields.stdcost;
+            } else if (costtype === 'AVERAGE') {
+                parameters.fields[unitCostFieldName] = fields.avgcost;
+            }
         });
     };
 
@@ -216,19 +233,22 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 parameters.fields['gldebitacct'] = null;
                 return;
             }
-
+            
+            // If the workorder's location is null, remove the current datamap's location
             if (parameters.fields['workorder_.location'] == null) {
                 parameters.fields['location'] = null;
             } else {
                 parameters.fields['location'] = parameters.fields['workorder_.location'];
             }
 
+            // If the workorder's assetnum is null, remove the current datamap's assetnum
             if (parameters.fields['workorder_.assetnum'] == null) {
                 parameters.fields['assetnum'] = null;
             } else {
                 parameters.fields['assetnum'] = parameters.fields['workorder_.assetnum'];
             }
 
+            // If the workorder's GL account is null, remove the current datamap's GL Debit Acct
             if (parameters.fields['workorder_.glaccount'] == null) {
                 parameters.fields['gldebitacct'] = null;
             } else {
@@ -256,43 +276,63 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         afterChangeStoreroom: function (parameters) {
-            this.doUpdateUnitCostFromInventoryCost(parameters,'unitcost');
+            doUpdateUnitCostFromInventoryCost(parameters,'unitcost');
         },
         afterchangeinvissueitem: function (parameters) {
-            this.doUpdateUnitCostFromInventoryCost(parameters, 'unitcost');
+            doUpdateUnitCostFromInventoryCost(parameters, 'unitcost');
         },
 
         afterChangeLocation: function (parameters) {
-            this.doUpdateUnitCostFromInventoryCost(parameters, 'invuseline_.unitcost');
+            doUpdateUnitCostFromInventoryCost(parameters, 'invuseline_.unitcost');
         },
 
         invIssue_afterChangeAsset: function (parameters) {
             //Sets the associated GL Debit Account
             //if a workorder isn't already specified
             //Updates the location field from the asset's location
-            if (parameters.fields['refwo'] != null) {
-                return;
-            }
+            if (parameters.fields['assetnum'].trim() != "") {
+                var refwo = parameters.fields['refwo'];
+                var location = parameters.fields['location'];
 
-            //if (parameters.fields['asset_.location'] != parameters.fields['location']) {
-            //    parameters.fields['location'] = parameters.fields['asset_.location'];
-            //    parameters.fields['gldebitacct'] = parameters.fields['asset_.glaccount'];
-            //}
+                if (!refwo || refwo.trim() == "") {
+                    refwo = "";
+                }
+                if (!location || location.trim() == "") {
+                    location = "";
+                }
 
-            if (parameters.fields['asset_.location'] != parameters.fields['location']) {
-                parameters.fields['location'] = parameters.fields['asset_.location'];
-                parameters.fields['gldebitacct'] = parameters.fields['asset_.glaccount'];
+                if (refwo != "") {
+                    return;
+                }
+
+                if (refwo != "" && location == "") {
+                    parameters.fields['location'] = parameters.fields['asset_.location'];
+                    return;
+                }
+
+                if (refwo == "") {
+                    parameters.fields['location'] = parameters.fields['asset_.location'];
+                    parameters.fields['gldebitacct'] = parameters.fields['asset_.glaccount'];
+                }
             }
         },
         invIssue_afterChangeLocation: function (parameters) {
             //Sets the gldebitacct and clears the asset 
             //if there is no refwo defined
-            if (parameters.fields['refwo'] != null) {
-                return;
-            }
-            
+            if (parameters.fields['location'].trim() != "") {
+                var refwo = parameters.fields['refwo'];
 
-            return;
+                if (!refwo || refwo.trim() == "") {
+                    refwo = "";
+                }
+
+                if (refwo != "")
+                    return;
+
+                parameters.fields['assetnum'] = "";
+                parameters.fields['gldebitacct'] = parameters.fields['location_.glaccount'];
+            }
+
         },
 
         createTransfer: function (schema) {
