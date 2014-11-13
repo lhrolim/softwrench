@@ -20,18 +20,17 @@ namespace softwrench.sW4.test.Metadata.Entities {
         }
 
         [TestMethod]
-        public void TestMethod1()
-        {
+        public void TestMethod1() {
             var metadata = MetadataProvider.Entity("SR");
             var wo = JObject.Parse(new StreamReader("jsons\\sr\\creation1.json").ReadToEnd());
             var data = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), metadata, null, wo, null);
 
-            var result = TargetAttributesHandler.SetValuesFromJSON(new ServiceIncident(), metadata,data);
+            var result = TargetAttributesHandler.SetValuesFromJSON(new ServiceIncident(), metadata, data);
             Assert.IsNotNull(result.Problem);
             Assert.AreEqual(result.WorkflowStatus, "new");
             Assert.AreEqual(result.Problem.Abstract, "test");
             Assert.IsNotNull(result.Metrics.ProblemOccurredDateTime);
-            
+
         }
 
     }

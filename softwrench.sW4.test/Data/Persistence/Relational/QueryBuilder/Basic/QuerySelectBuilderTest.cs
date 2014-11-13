@@ -71,7 +71,7 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
             var dto = new SearchRequestDto();
             dto.AppendProjectionField(ProjectionField.Default("primaryuser_.person_.hlagdisplayname"));
             var result = QuerySelectBuilder.BuildSelectAttributesClause(MetadataProvider.Entity("asset"), QueryCacheKey.QueryMode.Detail, dto);
-            Assert.AreEqual(("select '(' || primaryuser_person_.PERSONID || ') ' || COALESCE(primaryuser_person_.DISPLAYNAME,'-- Name Not Set --') as primaryuser_person_hlagdisplayname "), result);
+            Assert.AreEqual(("select CASE WHEN LOCATE('@',primaryuser_person_.PERSONID) > 0 THEN '(' || SUBSTR(primaryuser_person_.PERSONID,1,LOCATE('@',primaryuser_person_.PERSONID)-1) || ') ' || COALESCE(primaryuser_person_.DISPLAYNAME,'-- Name Not Set --') ELSE '(' || primaryuser_person_.PERSONID || ') ' || COALESCE(primaryuser_person_.DISPLAYNAME,'-- Name Not Set --') END as primaryuser_person_hlagdisplayname "), result);
         }
 
         [TestMethod]
@@ -85,7 +85,7 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
         [TestMethod]
         public void ChangeSRUnionSearch() {
             var dto = new SearchRequestDto();
-            dto.BuildUnionDTO(MetadataProvider.FindSchemaDefinition("srforchange.changeunionschema"));
+            dto.BuildUnionDTO(MetadataProvider.FindSchemaDefinition("change.list"));
 
             var completeOne = MetadataProvider.Application("change");
             var metadata = completeOne.ApplyPolicies(new ApplicationMetadataSchemaKey("list"), InMemoryUser.TestInstance(),
@@ -93,7 +93,7 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
             ApplicationSchemaDefinition schema;
             var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("wochange"), metadata.Schema,300);
             var result = QuerySelectBuilder.BuildSelectAttributesClause(sliced.UnionSchema,QueryCacheKey.QueryMode.Union, dto.unionDTO);
-            Assert.AreEqual("select null, '-666' as zeroedattr, srforchange.description as hlagchangesummary, srforchange.ticketid as ticketid, asset_.description as asset_description, null, null, CASE WHEN srforchange.PLUSPCUSTOMER IS NOT NULL AND srforchange.PLUSPCUSTOMER = 'HLC-00' then 'HLC-00'  WHEN srforchange.PLUSPCUSTOMER IS NOT NULL AND LENGTH(srforchange.PLUSPCUSTOMER) >= 3 THEN SUBSTR(srforchange.PLUSPCUSTOMER, LENGTH(srforchange.PLUSPCUSTOMER) - 2, 3) ELSE '' END as hlagpluspcustomer, CASE WHEN LOCATE('@',srforchange.REPORTEDBY) > 0 THEN SUBSTR(srforchange.REPORTEDBY,1,LOCATE('@',srforchange.REPORTEDBY)-1) ELSE srforchange.REPORTEDBY END as hlagreportedby, srforchange.status as status ", result);
+            Assert.AreEqual("select null, null, null, null, '-666' as zeroedattr, srforchange.description as hlagchangesummary, srforchange.ticketid as ticketid, asset_.description as asset_description, null, null, CASE WHEN srforchange.PLUSPCUSTOMER IS NOT NULL AND srforchange.PLUSPCUSTOMER = 'HLC-00' then 'HLC-00'  WHEN srforchange.PLUSPCUSTOMER IS NOT NULL AND LENGTH(srforchange.PLUSPCUSTOMER) >= 3 THEN SUBSTR(srforchange.PLUSPCUSTOMER, LENGTH(srforchange.PLUSPCUSTOMER) - 2, 3) ELSE '' END as hlagpluspcustomer, CASE WHEN LOCATE('@',srforchange.REPORTEDBY) > 0 THEN SUBSTR(srforchange.REPORTEDBY,1,LOCATE('@',srforchange.REPORTEDBY)-1) ELSE srforchange.REPORTEDBY END as hlagreportedby, srforchange.status as status ", result);
         }
     }
 }

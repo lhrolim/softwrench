@@ -34,9 +34,9 @@ namespace softwrench.sW4.test.Data.Search {
             Assert.IsTrue(searchRequestDto.SearchParams.Equals("ticketid"));
             Assert.IsTrue(searchRequestDto.SearchValues.Equals("teste"));
 
-            String whereClause = SearchUtils.GetWhere(searchRequestDto, "SR");
+            var whereClause = SearchUtils.GetWhere(searchRequestDto, "SR");
 
-            Assert.IsTrue(whereClause.Equals("( UPPER(SR.ticketid) = :ticketid )"));
+            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) = :ticketid )", whereClause);
         }
 
         [TestMethod]
@@ -45,16 +45,12 @@ namespace softwrench.sW4.test.Data.Search {
             searchRequestDto.SetFromSearchString(_schema, "ticketid,description,asset_.description,siteid,affectedperson,status,reportdate".Split(','), "teste");
 
             Assert.IsNotNull(searchRequestDto);
-            Assert.AreEqual("ticketid||,description||,asset_.description||,affectedperson||,status", searchRequestDto.SearchParams);
-            Assert.AreEqual("teste,,,teste,,,teste,,,teste,,,teste", searchRequestDto.SearchValues);
+            Assert.AreEqual("ticketid||,description||,asset_.description||,status", searchRequestDto.SearchParams);
+            Assert.AreEqual("teste,,,teste,,,teste,,,teste", searchRequestDto.SearchValues);
 
             String whereClause = SearchUtils.GetWhere(searchRequestDto, "SR");
 
-            Assert.AreEqual("( UPPER(SR.ticketid) = :ticketid ) OR " +
-                "( UPPER(SR.description) = :description ) OR " +
-                "( UPPER(asset_.description) = :asset_.description ) OR " +
-                "( UPPER(SR.affectedperson) = :affectedperson ) OR " +
-                "( UPPER(SR.status) = :status )", whereClause);
+            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) = :ticketid ) OR ( UPPER(COALESCE(SR.description,'')) = :description ) OR ( UPPER(COALESCE(asset_.description,'')) = :asset_.description ) OR ( UPPER(COALESCE(SR.status,'')) = :status )", whereClause);
         }
 
         [TestMethod]
@@ -105,7 +101,8 @@ namespace softwrench.sW4.test.Data.Search {
         public void SearchWithQueryParameter() {
             var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
             searchRequestDto.SetFromSearchString(_assetSchema, "computername".Split(','), "test%");
-            Assert.AreEqual(SearchUtils.GetWhere(searchRequestDto, "asset"), ("( UPPER(CASE WHEN LOCATE('//',asset.Description) > 0 THEN LTRIM(RTRIM(SUBSTR(asset.Description,1,LOCATE('//',asset.Description)-1))) ELSE LTRIM(RTRIM(asset.Description)) END) like :computername )"));
+            var actual = SearchUtils.GetWhere(searchRequestDto, "asset");
+            Assert.AreEqual("( UPPER(COALESCE(CASE WHEN LOCATE('//',asset.Description) > 0 THEN LTRIM(RTRIM(SUBSTR(asset.Description,1,LOCATE('//',asset.Description)-1))) ELSE LTRIM(RTRIM(asset.Description)) END,'')) like :computername )", actual);
 
         }
 
@@ -123,7 +120,7 @@ namespace softwrench.sW4.test.Data.Search {
             searchRequestDto.SetFromSearchString(_schema, "ticketid,description".Split(','), "%teste%");
             searchRequestDto.BuildFixedWhereClause("SR");
             var filterFixedWhereClause = searchRequestDto.FilterFixedWhereClause;
-            Assert.AreEqual("( UPPER(SR.ticketid) like '%TESTE%' ) OR ( UPPER(SR.description) like '%TESTE%' )", filterFixedWhereClause);
+            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) like '%TESTE%' ) OR ( UPPER(COALESCE(SR.description,'')) like '%TESTE%' )", filterFixedWhereClause);
         }
         [TestMethod]
         public void SearchWithFixedParam_Hapag_SEARCH_TEST_NOTEQ() {
@@ -131,7 +128,7 @@ namespace softwrench.sW4.test.Data.Search {
             searchRequestDto.SetFromSearchString(_schema, "ticketid".Split(','), "!=teste");
             searchRequestDto.BuildFixedWhereClause("SR");
             var filterFixedWhereClause = searchRequestDto.FilterFixedWhereClause;
-            Assert.AreEqual("( UPPER(SR.ticketid) != 'TESTE' OR UPPER(SR.ticketid) IS NULL  )", filterFixedWhereClause);
+            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) != 'TESTE' OR UPPER(COALESCE(SR.ticketid,'')) IS NULL  )", filterFixedWhereClause);
         }
 
         [Ignore]
