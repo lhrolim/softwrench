@@ -467,6 +467,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </list>
         <schema id="detail" stereotype="detail" mode="input">
           <field attribute="invreserveid" hidden="true"/>
+          <field attribute="requestnum" hidden="true"/>
           <field attribute="wonum" label="Work Order" readonly="true"/>
           <field attribute="itemnum" label="Item" readonly="true"/>
           <field attribute="location" label="Storeroom" readonly="true"/>

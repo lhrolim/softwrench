@@ -258,9 +258,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
 
             // If the new work order has a gldebitaccnt, fill the gldebitacct on the invissue
-            if (parameters.fields['workorder_.glaccount']) {
-                parameters.fields['gldebitacct'] = parameters.fields['workorder_.glaccount'];
-            }
+            //if (parameters.fields['workorder_.glaccount']) {
+                //parameters.fields['gldebitacct'] = parameters.fields['workorder_.glaccount'];
+            //}
         },
         afterChangeStoreroom: function (parameters) {
             doUpdateUnitCostFromInventoryCost(parameters,'unitcost');
@@ -299,7 +299,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
                 if (refwo == "") {
                     parameters.fields['location'] = parameters.fields['asset_.location'];
-                    parameters.fields['gldebitacct'] = parameters.fields['asset_.glaccount'];
+                    //parameters.fields['gldebitacct'] = parameters.fields['asset_.glaccount'];
                 }
             }
         },
@@ -317,7 +317,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     return;
 
                 parameters.fields['assetnum'] = "";
-                parameters.fields['gldebitacct'] = parameters.fields['location_.glaccount'];
+                //parameters.fields['gldebitacct'] = parameters.fields['location_.glaccount'];
             }
 
         },
