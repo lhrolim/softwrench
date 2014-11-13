@@ -1787,7 +1787,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 					<field attribute="asset_primaryuser_.hlagdisplayname" label="User ID"/>
 					<field attribute="hlagaffectedperson" label="Reported By"/>
 					<field attribute="hlagreportedby" label="On Behalf Of"/>
-					<field attribute="asset_.glaccount" label="Cost Center"/>
+					<field attribute="asset_.assetglaccount_.displaycostcenter" label="Cost Center"/>
 
 					<field attribute="classstructure_.description" hidden="true"/>
 
