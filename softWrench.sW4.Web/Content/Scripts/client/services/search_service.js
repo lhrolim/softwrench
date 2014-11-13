@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('searchService', function (i18NService, $rootScope, contextService, fieldService, $http) {
+app.factory('searchService', function (i18NService,$log, $rootScope, contextService, fieldService, $http) {
 
     var objCache = {};
 
@@ -321,6 +321,50 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
             $rootScope.$broadcast("sw_refreshgrid", searchData, extraparameters);
         },
 
+        /// <summary>
+        /// invokes a search function on the specified application, returning a $http.get promise invocation built
+        /// </summary>
+        /// <param name="application"></param>
+        /// <param name="searchData"></param>
+        /// <param name="schema"></param>
+        /// <param name="extraParameters">Accepts an object with the following:
+        /// 
+        /// pageNumber --> the page in which to perform the search, would be 1 by default
+        /// pageSize --> the number of items to display per page, would be 30 by default
+        /// mode --> the mode of the schema to use, defaults to none
+        /// 
+        /// </param>
+        searchWithData: function (application, searchData, schema, extraParameters) {
+            if (application == null) {
+                throw new Error("application cannot be null");
+            }
+
+            if (!extraParameters) {
+                //to avoid extra checkings all along
+                extraParameters = {};
+            }
+            if (!searchData) {
+                searchData = {};
+            }
+            var log = $log.getInstance('searchService#searchWithData');
+
+            var searchDTO = this.buildSearchDTO(searchData, {}, {}, null);
+            searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
+            searchDTO.totalCount = 0;
+            searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;
+            var restParameters = {
+                key: {
+                    schemaId: schema ? schema : "list",
+                    mode: extraParameters.mode ? extraParameters.mode : 'none',
+                    platform: "web"
+                },
+                SearchDTO: searchDTO
+            };
+            var queryString = $.param(restParameters);
+            var urlToUse = url("/api/Data/{0}?{1}".format(application, queryString));
+            log.info("invoking url {0}".format(urlToUse));
+            return $http.get(urlToUse);
+        },
 
         toggleAdvancedFilterMode: function () {
             $rootScope.$broadcast("sw_togglefiltermode");
@@ -331,7 +375,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService, 
                 return;
             }
             var visibleDisplayables = fieldService.getVisibleDisplayables(datamap, schema);
-            var searchFields="";
+            var searchFields = "";
             $.each(visibleDisplayables, function (key, v) {
                 if (v.rendererType != "color") {
                     searchFields += v.attribute + ",";
