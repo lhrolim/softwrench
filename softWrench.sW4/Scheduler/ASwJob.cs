@@ -40,7 +40,7 @@ namespace softWrench.sW4.Scheduler {
         public abstract string Description();
         public abstract string Cron();
         public abstract void ExecuteJob();
-        public abstract bool IsScheduled { get; set; }
+
         public abstract bool RunAtStartup();
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
@@ -48,6 +48,9 @@ namespace softWrench.sW4.Scheduler {
                 Task.Factory.StartNew(DoExecute);
             }
         }
+
+        public bool IsScheduled { get; set; }
+
         //run at the end
         public int Order { get { return 1000; } }
     }

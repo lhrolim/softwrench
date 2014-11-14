@@ -66,6 +66,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
                    datamapref=sentbatchdatamap;title=Sent Items">
 <!--            <header label="Sent Items" displacement="ontop"/>-->
           </section>
+          <properties>
+            <property key="detail.cancel.click" value="_wobatch.list"/>
+          </properties>
         </detail>
       </schemas>
     </application>
