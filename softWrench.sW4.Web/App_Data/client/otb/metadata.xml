@@ -976,11 +976,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association target="fromstoreloc" label="From Storeroom" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,itemsetid,location" required="true">
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterFromStoreLoc"/>
-            <event type="afterchange" service="inventoryService" method="afterChangeLocation"/>
+            <event type="afterchange" service="inventoryService" method="invUse_afterChangeLocation"/>
           </association>
           <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true" required="true">
             <dataprovider prefilterfunction="FilterFromBin" postfilterfunction="ParseBins"/>
-            <event type="afterchange" service="inventoryService" method="getTransferBinQuantity"/>
+            <event type="afterchange" service="inventoryService" method="invUse_afterChangeFromBin"/>
             <renderer type="Lookup"/>
           </association>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>

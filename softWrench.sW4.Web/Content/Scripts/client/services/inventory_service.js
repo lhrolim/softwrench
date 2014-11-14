@@ -271,7 +271,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             doUpdateUnitCostFromInventoryCost(parameters, 'unitcost');
         },
 
-        afterChangeLocation: function (parameters) {
+        invUse_afterChangeLocation: function (parameters) {
             doUpdateUnitCostFromInventoryCost(parameters, 'invuseline_.unitcost');
         },
 
@@ -345,7 +345,14 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             };
             getBinQuantity(searchData, parameters, '#curbal', binnum);
         },
-        getTransferBinQuantity: function (parameters) {
+        invUse_afterChangeFromBin: function (parameters) {
+
+            if (parameters['fields']['invuseline_.frombin'] == null ||
+                parameters['fields']['invuseline_.frombin'].trim() == "") {
+                parameters['fields']['#curbal'] = null;
+                return;
+            }
+
             var binnum = parameters['fields']['invuseline_.frombin'];
             if (binnum == '[No Bin]') {
                 binnum = null;
@@ -357,6 +364,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 location: parameters['fields']['fromstoreloc']
             };
             getBinQuantity(searchData, parameters, '#curbal', binnum);
+            return;
         },
         submitTransfer: function (schema, datamap) {
             // Save transfer
