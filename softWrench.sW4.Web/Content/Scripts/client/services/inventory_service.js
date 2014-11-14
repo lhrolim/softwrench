@@ -387,5 +387,38 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
         },
 
+        submitReservedInventoryIssue: function(schema, datamap) {
+            var user = contextService.getUserData();
+
+            // Get the reserved, actual, and issue quantities
+            var reservedQty = datamap["reservedqty"];
+            var actualQty = datamap["actualqty"];
+            var issueQty = datamap["#issueqty"];
+            // Calculate the new values based on the quantity being issued
+            datamap["reservedqty"] = reservedQty - issueQty;
+            datamap["actualqty"] = actualQty + issueQty;
+
+            var jsonString = angular.toJson(datamap);
+            var httpParameters = {
+                application: "reservedMaterials",
+                platform: "web",
+                currentSchemaKey: "detail.input.web"
+            };
+            restService.invokePost("data", "put", httpParameters, jsonString, function () {
+                var restParameters = {
+                    key: {
+                        schemaId: "list",
+                        mode: "none",
+                        platform: "web"
+                    },
+                    SearchDTO: null
+                }
+                var urlToUse = url("/api/Data/reservedMaterials?" + $.param(restParameters));
+                $http.get(urlToUse).success(function (data) {
+                    redirectService.goToApplication("reservedMaterials", "list", null, data);
+                });
+            });
+        }
+
     };
 });
