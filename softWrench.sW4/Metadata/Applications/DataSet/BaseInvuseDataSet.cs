@@ -44,8 +44,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var filter = parameters.BASEDto;
             var siteid = parameters.OriginalEntity.GetAttribute("siteid");
             
-            if (siteid != null)
-            {
+            if (siteid != null) {
                 filter.AppendSearchEntry("inventory_.siteid", siteid.ToString().ToUpper());
                 filter.SearchSort = "inventory_.itemnum";
             }
