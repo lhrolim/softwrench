@@ -133,6 +133,7 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
         private void CreateSsoWhereClauses() {
             //change queries already registered in CreateChangeWhereClauses
             _wcFacade.Register("servicerequest", SsoWhereClauseProvider("DashboardServiceRequestWhereClause"), MetadataIdForModule(dc.ActionRequiredForOpenRequests, fr.Sso));
+            _wcFacade.Register("servicerequest", SsoWhereClauseProvider("EuOpenRequests"), MetadataIdForModule(dc.EUOpenRequests, fr.Sso));
             _wcFacade.Register("incident", SsoWhereClauseProvider("DashboardIncidentWhereClause"), MetadataIdForModule(dc.ActionRequiredForOpenIncidents, fr.Sso));
 
             _wcFacade.Register("servicerequest", SsoWhereClauseProvider("ServiceRequestWhereClause"), ForModule(fr.Sso));

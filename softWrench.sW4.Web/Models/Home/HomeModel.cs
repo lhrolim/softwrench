@@ -18,6 +18,8 @@ namespace softWrench.sW4.Web.Models.Home {
 
         public String UserJSON { get; set; }
 
+        public string InitialModule { get; set; }
+
         public string I18NJsons { get; set; }
         public string Message { get; set; }
         public string MessageType { get; set; }
@@ -26,10 +28,11 @@ namespace softWrench.sW4.Web.Models.Home {
         public long InitTimeMillis { get; set; }
 
         public HomeModel(string url, string title, HomeConfigs configs, InMemoryUser user, bool hasLogoPopup, 
-            JObject i18NJsons, string clientName, string windowTitle = null, string message = null, string messageType = null) {
+            JObject i18NJsons, string clientName,string initialModule, string windowTitle = null, string message = null, string messageType = null) {
             Url = url;
             InitTimeMillis = configs.InitTimeMillis;
             Title = title;
+            InitialModule = initialModule;
             ConfigJSON = JsonConvert.SerializeObject(configs, Newtonsoft.Json.Formatting.None,
           new JsonSerializerSettings() {
               ContractResolver = new CamelCasePropertyNamesContractResolver()

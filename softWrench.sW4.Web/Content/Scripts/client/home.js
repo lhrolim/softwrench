@@ -7,6 +7,7 @@
 
         var redirectUrl = url(homeModel.Url);
         i18NService.load(homeModel.I18NJsons, userLanguage);
+        contextService.insertIntoContext("currentmodule", homeModel.InitialModule, false);
 
         var sessionRedirectURL = sessionStorage.swGlobalRedirectURL;
         if (sessionRedirectURL != null && ((redirectUrl.indexOf("popupmode=browser") == -1) && (redirectUrl.indexOf("MakeSWAdmin") == -1))) {

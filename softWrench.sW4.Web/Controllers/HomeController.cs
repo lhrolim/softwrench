@@ -35,18 +35,21 @@ namespace softWrench.sW4.Web.Controllers {
             var securedMenu = user.Menu(ClientPlatform.Web);
             var indexItemId = securedMenu.ItemindexId;
             var indexItem = securedMenu.Leafs.FirstOrDefault(l => indexItemId.EqualsIc(l.Id));
-
+            if (indexItem == null) {
+                //first we´ll try to get the item declared, if it´s null (that item is role protected for that user, for instance, let´s pick the first leaf one as a fallback to avoid problems
+                indexItem = securedMenu.Leafs.FirstOrDefault(a => a.Leaf);
+            }
 
             HomeModel model = null;
             if (indexItem is ApplicationMenuItemDefinition) {
                 var app = (ApplicationMenuItemDefinition)indexItem;
                 var key = new ApplicationMetadataSchemaKey(app.Schema, app.Mode, ClientPlatform.Web);
                 var adapter = new DataRequestAdapter(null, key);
-                model = new HomeModel(GetUrlFromApplication(app.Application, adapter), app.Title, FetchConfigs(), user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), ApplicationConfiguration.ClientName);
+                model = new HomeModel(GetUrlFromApplication(app.Application, adapter), app.Title, FetchConfigs(), user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), ApplicationConfiguration.ClientName,indexItem.Module);
             } else if (indexItem is ActionMenuItemDefinition) {
                 var actItem = (ActionMenuItemDefinition)indexItem;
                 var action = actItem.Action;
-                model = new HomeModel(GetUrlFromAction(actItem), actItem.Title, FetchConfigs(), user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), ApplicationConfiguration.ClientName);
+                model = new HomeModel(GetUrlFromAction(actItem), actItem.Title, FetchConfigs(), user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), ApplicationConfiguration.ClientName, indexItem.Module);
             }
             return View(model);
         }
