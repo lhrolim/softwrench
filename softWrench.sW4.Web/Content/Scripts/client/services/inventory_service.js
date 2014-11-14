@@ -39,6 +39,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         var searchData = {
             itemnum: parameters['fields']['itemnum'],
             location: parameters['fields']['storeloc'],
+            siteid: parameters['fields']['siteid']
         };
         searchService.searchWithData("invcost", searchData).success(function(data) {
             var resultObject = data.resultObject;
@@ -256,23 +257,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
 
             return;
-        },
-
-        doUpdateUnitCostFromInventoryCost: function (parameters,unitCostFieldName) {
-            var searchData = {
-                itemnum: parameters['fields']['itemnum'],
-                location: parameters['fields']['storeloc'],
-            };
-            searchService.searchWithData("invcost", searchData).success(function (data) {
-                var resultObject = data.resultObject;
-                var fields = resultObject[0].fields;
-                var costtype = parameters['fields']['inventory_.costtype'];
-                if (costtype === 'STANDARD') {
-                    parameters.fields[unitCostFieldName] = fields.stdcost;
-                } else if (costtype === 'AVERAGE') {
-                    parameters.fields[unitCostFieldName] = fields.avgcost;
-                }
-            });
         },
 
         afterChangeStoreroom: function (parameters) {

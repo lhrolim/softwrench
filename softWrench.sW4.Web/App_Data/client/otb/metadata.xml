@@ -337,6 +337,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="invuseline_.itemnum" to="itemnum" primary="true"/>
           <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
         </relationship>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to="siteid" primary="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWINVUSE"/>
@@ -960,11 +963,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <schema id="newdetail" stereotype="detail" mode="input">
           <field attribute="usetype" hidden="true"/>
-          <association target="invuseline_.itemnum" labelfield="item_.description" label="Item"  required="true">
+          <association label="Site Id" target="siteid" labelfield="site_.siteid" extraprojectionvalues="description" required="true">
             <renderer type="lookup"/>
           </association>
-          <association target="fromstoreloc" label="From Storeroom" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,siteid,itemsetid,location" required="true">
+          <association target="invuseline_.itemnum" labelfield="item_.description" label="Item" dependantfields="siteid" extraprojectionvalues="itemnum"  required="true">
             <renderer type="lookup"/>
+          </association>
+          <association target="fromstoreloc" label="From Storeroom" labelfield="inventory_.location" hideDescription="true" dependantfields="siteid" extraprojectionvalues="costtype,itemsetid,location" required="true">
+            <renderer type="lookup"/>
+            <dataprovider prefilterfunction="FilterFromStoreLoc"/>
             <event type="afterchange" service="inventoryService" method="afterChangeLocation"/>
           </association>
           <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true" required="true">
@@ -973,8 +980,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup"/>
           </association>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>
-          <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" required="true">
-            <dataprovider prefilterfunction="FilterLocation"/>
+          <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" dependantfields="siteid" hideDescription="true" required="true">
+            <!--<dataprovider prefilterfunction="FilterLocation"/>-->
             <renderer type="lookup"/>
           </association>
           <field attribute="invuseline_.tobin" label="To Bin" required="true"/>
@@ -984,6 +991,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <field attribute="invuseline_.unitcost" label="Unit Cost" hidden="true"/>
           <field attribute="inventory_.costtype" label="Cost Type" hidden="true"/>
+          <field attribute="lotnum" hidden="true"/>
           <commandbars>
             <commandgroup position="detailform" removeundeclared="true">
               <command id="saveTransfer" icon="fa fa-save" label="Submit" service="inventoryService" method="submitTransfer" position="left" parameters="schema,datamap"/>

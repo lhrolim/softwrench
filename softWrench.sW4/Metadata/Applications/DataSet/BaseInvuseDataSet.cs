@@ -6,7 +6,7 @@ using softWrench.sW4.Data.Search;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
 
-    class InvuseDataSet : MaximoApplicationDataSet {
+    class BaseInvuseDataSet : MaximoApplicationDataSet {
         public SearchRequestDto FilterLocation(AssociationPreFilterFunctionParameters parameters) {
             return LocationFilterByType(parameters);
         }
@@ -18,15 +18,28 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return filter;
         }
 
+        public SearchRequestDto FilterFromStoreLoc(AssociationPreFilterFunctionParameters parameters) {
+            var filter = parameters.BASEDto;
+            var siteid = parameters.OriginalEntity.GetAttribute("siteid");
+            var itemnum = parameters.OriginalEntity.GetAttribute("itemnum");
+            if (siteid != null && itemnum != null) {
+                filter.AppendSearchEntry("inventory.siteid", siteid.ToString().ToUpper());
+                filter.AppendSearchEntry("inventory.itemnum", itemnum.ToString().ToUpper());
+            }
+            return filter;
+        }
+
         public SearchRequestDto FilterBin(AssociationPreFilterFunctionParameters parameters) {
             return BinFilterByLocation(parameters);
         }
 
         public SearchRequestDto BinFilterByLocation(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
-            var location = parameters.OriginalEntity.GetAttribute("fromstoreloc") as string;
-            if (location != null) {
-                filter.AppendSearchEntry("invbalances.location", location.ToUpper());
+            var siteid = parameters.OriginalEntity.GetAttribute("siteid");
+            var location = parameters.OriginalEntity.GetAttribute("location");
+            if (siteid != null && location != null) {
+                filter.AppendSearchEntry("inventory.siteid", siteid.ToString().ToUpper());
+                filter.AppendSearchEntry("invbalances.location", location.ToString().ToUpper());
             }
             return filter;
         }

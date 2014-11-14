@@ -286,19 +286,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <association label="Site Id" target="siteid" labelfield="site_.siteid" extraprojectionvalues="description" required="true">
             <renderer type="lookup"/>
           </association>
-          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount,location,assetnum">
-            <dataprovider prefilterfunction="FilterWorkorders"/>
+          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount" dependantfields="siteid">
+            <!--<dataprovider prefilterfunction="FilterWorkorders"/>-->
             <renderer type="lookup"/>
             <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeWorkorder"/>-->
           </association>
           <association label="Issue To" target="issueto" labelfield="issuetoperson_.displayname">
             <renderer type="lookup"/>
           </association>
-          <association label="Location" target="location" labelfield="location_.location" dependantfields="siteid" extraprojectionvalues="glaccount,location">
+          <association label="Location" target="location" labelfield="location_.location" dependantfields="siteid" extraprojectionvalues="glaccount">
             <renderer type="lookup"/>
             <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>-->
           </association>
-          <association label="Asset" target="assetnum" labelfield="asset_.assetnum" dependantfields="siteid" extraprojectionvalues="glaccount,assetnum">
+          <association label="Asset" target="assetnum" labelfield="asset_.assetnum" dependantfields="siteid" extraprojectionvalues="glaccount">
             <renderer type="lookup"/>
             <!--<dataprovider prefilterfunction="FilterAssets" />-->
             <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>-->

@@ -96,25 +96,21 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             resultObject.SetAttribute("QTYRETURNED", anyQtyReturned ? qtyReturned : 0);
         }
 
-        SearchRequestDto FilterWorkorders(AssociationPreFilterFunctionParameters parameters) {
+        public SearchRequestDto FilterWorkorders(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             var siteid = parameters.OriginalEntity.Attributes["siteid"];
             if (siteid != null) {
-                filter.AppendSearchEntry("workorder.siteid", siteid.ToUpper());
+                filter.AppendSearchEntry("workorder.siteid", siteid.ToString().ToUpper());
                 var validWorkOrderStatus = new List<string> { "APPR", "WMAT", "WSCH", "WORKING" };
                 filter.AppendSearchEntry("STATUS", validWorkOrderStatus);
-                return filter;
-	        }
+            }
+            return filter;
         }
 
         public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
-            return AssteFilterBySiteid(parameters);
-        }
-
-        private SearchRequestDto AssteFilterBySiteid(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
-            var siteid = parameters.OriginalEntity.Attributes["siteid"]; 
-            if(siteid != null) { 
+            var siteid = parameters.OriginalEntity.Attributes["siteid"];
+            if (siteid != null) {
                 filter.AppendSearchEntry("asset.siteid", siteid.ToString().ToUpper());
             }
             return filter;
