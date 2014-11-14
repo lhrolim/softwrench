@@ -86,7 +86,7 @@
                         <div class="tab-pane" ng-switch-when="ApplicationTabDefinition" ng-switch on="schema.mode">
 
                             <div ng-switch-when="input">
-                                <crud-input elementid="crudInputMainComposition"
+                                <crud-input elementid="tab_{{tab.tabid}}"
                                             displayables="tab.displayables"
                                             schema="schema" datamap="datamap.fields"
                                             association-options="associationOptions"

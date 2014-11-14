@@ -90,18 +90,18 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmpAutocomp
             if (oldValue == newValue) {
                 return;
             }
-            var displayables;
-            var fn;
+            var displayables = fieldService.getDisplayablesByAssociationKey(scope.schema, association.associationKey);
+            if (displayables == null) {
+                return;
+            }
+            //reversing to preserve focus order. see https://controltechnologysolutions.atlassian.net/browse/HAP-674
+            displayables = displayables.reverse();
+            var fn = this;
             if (oldValue == true && newValue == false) {
-                //this means that this association has been unblocked
-                displayables = fieldService.getDisplayablesByAssociationKey(scope.schema, association.associationKey);
-                fn = this;
                 $.each(displayables, function (idx, value) {
                     fn.unblock(value, scope);
                 });
             } else if (oldValue == false && newValue == true) {
-                displayables = fieldService.getDisplayablesByAssociationKey(scope.schema, association.associationKey);
-                fn = this;
                 $.each(displayables, function (idx, value) {
                     fn.block(value, scope);
                 });

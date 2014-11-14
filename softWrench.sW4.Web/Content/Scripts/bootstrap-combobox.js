@@ -302,7 +302,7 @@
         this.source = this.parse();
         this.options.items = this.source.length;
         var val = this.$element.val();
-        if (!this.source || $.inArray(val, this.source) == -1) {
+        if (!this.source || ($.inArray(val, this.source) == -1 || val.trim() == "" )) {
             this.clearElement();
         }
     }

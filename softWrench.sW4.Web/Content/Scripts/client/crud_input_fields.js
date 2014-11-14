@@ -159,7 +159,7 @@ app.directive('crudInputFields', function (contextService) {
                     });
                 });
 
-                if (parentElementId.indexOf('Section') == -1) {
+                if (parentElementId.equalsAny('crudInputMainCompositionFields', 'crudInputMainFields')) {
                     //to avoid registering these global listeners multiple times, as the page main contain sections.
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();
@@ -179,7 +179,11 @@ app.directive('crudInputFields', function (contextService) {
             /* Association (COMBO, AUTOCOMPLETECLIENT) functions */
             $scope.configureAssociationChangeEvents = function () {
                 var associations = fieldService.getDisplayablesOfTypes($scope.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
-
+                if (associations == null) {
+                    return;
+                }
+                //reversing to preserve focus order. see https://controltechnologysolutions.atlassian.net/browse/HAP-674
+                associations = associations.reverse();
                 $.each(associations, function (key, association) {
                     var shouldDoWatch = true;
 
@@ -202,7 +206,7 @@ app.directive('crudInputFields', function (contextService) {
                                 }
                                 $scope.datamap[association.attribute] = newValue;
                                 cmpfacade.digestAndrefresh(association, $scope);
-                                
+
                                 $timeout(function () {
                                     shouldDoWatch = true;
                                 }, 0, false);
@@ -272,14 +276,41 @@ app.directive('crudInputFields', function (contextService) {
 
             $scope.isSelectEnabled = function (fieldMetadata) {
                 var key = fieldMetadata.associationKey;
-                $scope.disabledassociations = instantiateIfUndefined($scope.disabledassociations);
+                $scope.enabledassociations = instantiateIfUndefined($scope.enabledassociations);
+                if (!$scope.blockunblockparameters) {
+                    $scope.blockunblockparameters = [];
+                }
                 if (key == undefined) {
                     return true;
                 }
-                var result = ($scope.blockedassociations == null || !$scope.blockedassociations[key]) && expressionService.evaluate(fieldMetadata.enableExpression, $scope.datamap);
-                if (result != $scope.disabledassociations[key]) {
-                    cmpfacade.blockOrUnblockAssociations($scope, !result, !$scope.disabledassociations[key], fieldMetadata);
-                    $scope.disabledassociations[key] = result;
+                //either we don´t have blocked associations at all (server didnt responded yet, or this specific one is marked as false)
+                var notblocked = ($scope.blockedassociations == null || !$scope.blockedassociations[key]);
+                if (fieldMetadata.enableExpression == "true") {
+                    return notblocked;
+                }
+
+                var result = notblocked && expressionService.evaluate(fieldMetadata.enableExpression, $scope.datamap);
+                //result ==> its not blocked and there´s no expression marking it to be disabled
+                var currentAssociationEnabledState = $scope.enabledassociations[key];
+                if (currentAssociationEnabledState == undefined) {
+                    $scope.enabledassociations[key] = result;
+                } else if (result != currentAssociationEnabledState) {
+                    //here we´re toggling the status of it, passing the currentstate --> the values refer to block state, so we need to inverse them
+                    //we need to call an extra refresh, in the reverse order as of the listeners registered on the screen so that the focus are kept in the correct order
+                    $scope.blockunblockparameters.unshift({ result: !result, currentState: !currentAssociationEnabledState, fieldMetadata: fieldMetadata });
+                    $scope.enabledassociations[key] = result;
+                }
+                if ($scope.blockunblockparameters.length == 1) {
+                    //register the timeout only once
+                    $timeout(function() {
+                        for (var i = 0; i < $scope.blockunblockparameters.length; i++) {
+                            //this array was built in the reverse order,using unshift, as if the screen was rendered bottom up
+                            var param = $scope.blockunblockparameters[i];
+                            cmpfacade.blockOrUnblockAssociations($scope, param.result, param.currentState, param.fieldMetadata);
+                            cmpfacade.digestAndrefresh(param.fieldMetadata, $scope);
+                        }
+                        $scope.blockunblockparameters = [];
+                    }, 0, false);
                 }
 
                 return result;
@@ -579,7 +610,7 @@ app.directive('crudInputFields', function (contextService) {
                 return fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null && fieldMetadata.header == null;
             };
 
-         
+
 
             $scope.sectionHasSameLineLabel = function (fieldMetadata) {
                 return $scope.hasSameLineLabel(fieldMetadata) && fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null;
@@ -621,7 +652,7 @@ app.directive('crudInputFields', function (contextService) {
             };
 
             function init() {
-           
+
                 $injector.invoke(BaseController, this, {
                     $scope: $scope,
                     i18NService: i18NService,
@@ -641,7 +672,7 @@ app.directive('crudInputFields', function (contextService) {
         }
 
 
-         
+
     }
 });
 
