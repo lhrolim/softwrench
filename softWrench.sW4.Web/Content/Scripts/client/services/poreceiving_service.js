@@ -11,6 +11,15 @@ app.factory('poreceivingService', function($http, redirectService) {
             var mode = 'input';
             redirectService.goToApplicationView(application, detail, mode, null, param, null);
 
+        },
+
+        submitorderedItems: function (schema, datamap) {
+            var param = {};
+            param.id = datamap[0]['ponum'];
+            var application = 'po';
+            var detail = 'editdetail';
+            var mode = 'input';
+            redirectService.goToApplicationView(application, detail, mode, null, param, null);
         }
     };
 });

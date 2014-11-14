@@ -363,8 +363,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
         <relationship to ="poline" qualifier="poline" collection ="true">
           <relationshipAttribute from="ponum" to="ponum" primary="true"/>
-          <relationshipAttribute from="siteid" to ="siteid"/>
-          <relationshipAttribute from ="orgid" to="orgid"/>
         </relationship>
         <relationship to="matrectrans" qualifier="matrectrans" collection="true">
           <relationshipAttribute from="ponum" to ="ponum" primary="true"/>
@@ -1063,14 +1061,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </properties>
         </list>
 
-        <schema id ="adetail" title="PO Details" abstract="true" stereotype="detail">
-          <section id="siteidsection"/>
+        <schema id ="editdetail" title="PO Details"  stereotype="detail">
+          
           <field attribute="ponum" label="PO #:" readonly="true"/>
           <field attribute="description" label="Description:">
             <renderer type="richtext"/>
           </field>
           <field attribute="siteid" hidden="true" />
-          <section id ="statussection"/>
+          
           <association label="Type:" target="type" labelfield="potype_.description">
             <renderer type="lookup"/>
           </association>         
@@ -1092,10 +1090,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup" params="application=companies;schemaId=companiesLookupList;"/>
           </association>
           <field attribute="companies_.phone" label="Phone:"/>
-          <section id="compositions"/>
+          <composition relationship="poline" label="PO Lines" ></composition>
         </schema>
 
-        <schema id="editdetail" parentschema="adetail" title="Purchase Order Detail">
+        <!--<schema id="editdetail" parentschema="adetail" title="Purchase Order Detail">
           <section id="siteidsection">
             <field attribute="ponum" label="PO #:" readonly="true" required="true"/>
             <field label="Site:" attribute="siteid" readonly="true"/>
@@ -1108,7 +1106,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section id="compositions">
             <composition relationship="poline" label="PO Lines" ></composition>
           </section>
-        </schema>
+        </schema>-->
       </schemas>
     </application>
 
@@ -1182,7 +1180,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       
       <schemas>
         
-        <schema id="list" mode="output" stereotype="compositionlist">
+        <schema id="list" stereotype="compositionlist">
           <field attribute="ponum" label="PO No" readonly="true"/>
           <field attribute="polinenum" label="Line No" />
           <field attribute="itemnum" label="Item"/>
@@ -1190,7 +1188,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="orderqty" label="Quantity"/>
           <field attribute="receivedqty" label="Received Qty"/>
           <field attribute="unitcost" label="Unit Cost"/>
-          <field attribute="matrectrans_.matrectransid" hidden="true"/>
           <field label="Entered Date &amp; Time" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
