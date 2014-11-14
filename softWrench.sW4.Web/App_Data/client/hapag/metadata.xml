@@ -1636,7 +1636,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 				<componentdisplayable id="updateasset">
 					<association target="asset" dependantfields="fromlocation" label="Asset" labelfield="asset_.hlagdescription2" required="true"
-								  extraprojectionvalues="primaryuser_.personid,primaryuser_person_.hlagdisplayname,aucisowner_person_.hlagdisplayname,aucisowner_person_.personid,classification,location_.description,assetglaccount_.displaycostcenter,status,assetid,description,serialnum,item_.description,item_.itdmachtype,item_.itdmodel,installdate,assettag,assetnum,computername,location">
+								  extraprojectionvalues="primaryuser_.personid,primaryuser_person_.hlagdisplayname,aucisowner_person_.hlagdisplayname,aucisowner_person_.personid,
+                  classification,location_.description,assetglaccount_.displaycostcenter,status,assetid,description,serialnum,item_.description,
+                  item_.itdmachtype,item_.itdmodel,installdate,assettag,assetnum,computername,location,assetspeccomment_.alnvalue">
             <renderer type="autocompleteclient" params="minLength=3;opendetails=true;idtopendetails=asset_.assetid"/>
 						<dataprovider prefilterfunction="FilterAssetByHlagLocation"/>
 						<event type="afterchange" service="imacservice" method="afterChangeAsset"/>
@@ -2160,7 +2162,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 						<field attribute="asset_.item_.itdmodel" label="Model" />
 						<field attribute="asset_.item_.itdmachtype" label="Type" />
 						<field attribute="asset_.assettag" label="HL Invent Number" />
-						<field attribute="unknow_comment" label="Comment" readonly="true" />
+						<field attribute="asset_.assetspeccomment_.alnvalue" label="Comment" readonly="true" />
 					</section>
 
 
