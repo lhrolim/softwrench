@@ -452,7 +452,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Change Grid">
           <field attribute="workorderid" hidden="true">
-
           </field>
           <field attribute="wonum" label="Change ID">
             <renderer type="default" params="width=16%" />
@@ -475,8 +474,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=change;column=status"/>
           </field>
-
-
           <properties>
             <property key="list.click.schema" value="editdetail"/>
           </properties>
@@ -982,16 +979,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <event type="afterchange" service="inventoryService" method="afterChangeLocation"/>
           </association>
           <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true" required="true">
-            <dataprovider prefilterfunction="FilterFromBin"/>
+            <dataprovider prefilterfunction="FilterFromBin" postfilterfunction="ParseBins"/>
             <event type="afterchange" service="inventoryService" method="getTransferBinQuantity"/>
-            <renderer type="lookup"/>
+            <renderer type="Lookup"/>
           </association>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>
           <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" dependantfields="siteid" hideDescription="true" required="true">
-            <dataprovider prefilterfunction="FilterLocation"/>
+            <dataprovider prefilterfunction="FilterToStoreLoc"/>
             <renderer type="lookup"/>
           </association>
-          <field attribute="invuseline_.tobin" label="To Bin" required="true"/>
+          <association target="invuseline_.tobin" label="To Bin" labelfield="toinvbalance_.binnum" dependantfields="siteid,invuseline_.tostoreloc" hideDescription="true" required="true">
+            <dataprovider prefilterfunction="FilterToBin" postfilterfunction="ParseBins"/>
+            <renderer type="Lookup"/>
+          </association>
           <field attribute="invuseline_.quantity" label="Quantity" required="true">
             <event type="afterchange" service="inventoryService" method="afterChangeTransferQuantity"/>
             <renderer type="numericinput" params="min=1;"/>
