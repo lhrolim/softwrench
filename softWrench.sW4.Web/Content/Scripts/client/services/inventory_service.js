@@ -27,11 +27,16 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         redirectService.goToApplicationView("invuse", "newdetail", "Input", null, null, null);
     };
 
-    var getBinQuantity = function (searchData, parameters, balanceField) {
+    var getBinQuantity = function (searchData, parameters, balanceField, binnum) {
         searchService.searchWithData("invbalances", searchData).success(function (data) {
             var resultObject = data.resultObject;
-            var fields = resultObject[0].fields;
-            parameters.fields[balanceField] = fields.curbal;
+            resultObject.forEach(function(row) {
+                var fields = row['fields'];
+                if (fields['binnum'] == binnum) {
+                    parameters.fields[balanceField] = fields.curbal;
+                    return;
+                }
+            });
         });
     };
 
@@ -328,24 +333,30 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         
 
         getIssueBinQuantity: function (parameters) {
+            var binnum = parameters['fields']['invuseline_.frombin'];
+            if (binnum == '[No Bin]') {
+                binnum = null;
+            }
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 siteid: parameters['fields']['siteid'],
                 itemsetid: parameters['fields']['inventory_.itemsetid'],
-                location: parameters['fields']['storeloc'],
-                binnum: parameters['fields']['binnum']
+                location: parameters['fields']['storeloc']
             };
-            getBinQuantity(searchData, parameters, '#curbal');
+            getBinQuantity(searchData, parameters, '#curbal', binnum);
         },
         getTransferBinQuantity: function (parameters) {
+            var binnum = parameters['fields']['invuseline_.frombin'];
+            if (binnum == '[No Bin]') {
+                binnum = null;
+            }
             var searchData = {
                 itemnum: parameters['fields']['invuseline_.itemnum'],
                 siteid: parameters['fields']['inventory_.siteid'],
                 itemsetid: parameters['fields']['inventory_.itemsetid'],
-                location: parameters['fields']['fromstoreloc'],
-                binnum: parameters['fields']['invuseline_.frombin']
+                location: parameters['fields']['fromstoreloc']
             };
-            getBinQuantity(searchData, parameters, '#curbal');
+            getBinQuantity(searchData, parameters, '#curbal', binnum);
         },
         submitTransfer: function (schema, datamap) {
             // Save transfer

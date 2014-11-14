@@ -1,7 +1,9 @@
-﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+﻿using System.Collections.Generic;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Spreadsheet;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Search;
+using softwrench.sw4.Shared2.Data.Association;
 
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
@@ -21,25 +23,38 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         public SearchRequestDto FilterFromStoreLoc(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             var siteid = parameters.OriginalEntity.GetAttribute("siteid");
-            var itemnum = parameters.OriginalEntity.GetAttribute("itemnum");
-            if (siteid != null && itemnum != null) {
+            
+            if (siteid != null) {
                 filter.AppendSearchEntry("inventory.siteid", siteid.ToString().ToUpper());
-                filter.AppendSearchEntry("inventory.itemnum", itemnum.ToString().ToUpper());
+                filter.SearchSort = "inventory.location asc";
             }
             return filter;
         }
 
-        public SearchRequestDto FilterBin(AssociationPreFilterFunctionParameters parameters) {
-            return BinFilterByLocation(parameters);
-        }
-
-        public SearchRequestDto BinFilterByLocation(AssociationPreFilterFunctionParameters parameters) {
+        public SearchRequestDto FilterItem(AssociationPreFilterFunctionParameters parameters)
+        {
             var filter = parameters.BASEDto;
             var siteid = parameters.OriginalEntity.GetAttribute("siteid");
-            var location = parameters.OriginalEntity.GetAttribute("location");
+            
+            if (siteid != null)
+            {
+                filter.AppendSearchEntry("inventory_.siteid", siteid.ToString().ToUpper());
+                filter.SearchSort = "inventory_.itemnum";
+            }
+            return filter;
+        }
+
+        public SearchRequestDto FilterFromBin(AssociationPreFilterFunctionParameters parameters) {
+            var filter = parameters.BASEDto;
+            var siteid = parameters.OriginalEntity.GetAttribute("siteid");
+            var location = parameters.OriginalEntity.GetAttribute("fromstoreloc");
             if (siteid != null && location != null) {
-                filter.AppendSearchEntry("inventory.siteid", siteid.ToString().ToUpper());
+                filter.AppendSearchEntry("inventory_.siteid", siteid.ToString().ToUpper());
                 filter.AppendSearchEntry("invbalances.location", location.ToString().ToUpper());
+                filter.ProjectionFields.Clear();
+                filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '[No Bin]')"));
+                filter.SearchSort = "CASE WHEN invbalances.binnum = '[No Bin]' THEN '1' ELSE invbalances.binnum END";
+                filter.SearchAscending = true;
             }
             return filter;
         }
