@@ -162,7 +162,7 @@
     }
 
     , lookup: function (event) {
-        var val = this.$element.val();        
+        var val = this.$element.val();
         if (val.length >= this.options.minLength || val == '') {
             this.query = this.$element.val();
             return this.process(this.source);
@@ -302,7 +302,7 @@
         this.source = this.parse();
         this.options.items = this.source.length;
         var val = this.$element.val();
-        if (!this.source || ($.inArray(val, this.source) == -1 || val.trim() == "" )) {
+        if (!this.source || ($.inArray(val, this.source) == -1 || val.trim() == "")) {
             this.clearElement();
         }
     }
@@ -345,15 +345,15 @@
     }
 
     , move: function (e) {
-        if (!this.shown) { return; }
-
+        if (!this.shown) {
+            return;
+        } 
         switch (e.keyCode) {
             case 9: // tab
             case 13: // enter
             case 27: // escape
                 e.preventDefault();
                 break;
-
             case 38: // up arrow
                 e.preventDefault();
                 this.prev();
@@ -408,9 +408,14 @@
                 if (!this.shown) { return; }
                 this.hide();
                 break;
+            case 67:
+                if ((e.ctrlKey || e.metaKey)) {
+                    //avoid ctrl +C
+                    break;
+                }
 
             default:
-                this.clearTarget();               
+                this.clearTarget();
                 this.lookup();
         }
 
@@ -473,7 +478,7 @@
             '</span></div>'
     , menu: '<ul class="typeahead typeahead-long dropdown-menu" style="width:94%"></ul>'
     , item: '<li><a href="#"></a></li>'
-    , minLength : 1
+    , minLength: 1
     };
 
     $.fn.combobox.Constructor = Combobox;

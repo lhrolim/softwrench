@@ -121,8 +121,8 @@
                                 </div>
                             </div>
                             <div>
-                                <div id="opendetails" class="input-group" ng-show="datamap[fieldMetadata.target]">
-                                    <button ng-click="opendetails(fieldMetadata)" />
+                                <div id="opendetails" class="input-group" >
+                                    <button ng-click="opendetails(fieldMetadata)" ng-enabled="datamap[fieldMetadata.target]" />
                                 </div>
                             </div>
                         </div>
