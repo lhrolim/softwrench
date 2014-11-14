@@ -41,8 +41,17 @@ app.factory('associationService', function ($injector, $http, $timeout, $log,$ro
     var doGetFullObject = function (associationFieldMetadata, associationOptions, selectedValue) {
         if (selectedValue == null) {
             return null;
-        } else if (Array.isArray(selectedValue)) { // for 'checkbox' option fields (multi value selection)
-            return selectedValue;
+        } else if (Array.isArray(selectedValue)) {         // for 'checkbox' option fields (multi value selection)
+            var ObjectArray = [];
+
+            // Extract each item into an array object
+            for (var i = 0; i < selectedValue.length; i++) {
+                var Object = doGetFullObject(associationFieldMetadata, associationOptions, selectedValue[i]);
+                ObjectArray = ObjectArray.concat(Object);
+            }
+
+            // Return results for multi-value selection
+            return ObjectArray;
         }
 
         //we need to locate the value from the list of association options
@@ -81,6 +90,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log,$ro
             if (selectedValue == null) {
                 return null;
             }
+            //TODO: Return full object.
             var resultValue = doGetFullObject(associationFieldMetadata, associationOptions, selectedValue);
             if (resultValue == null) {
                 $log.getInstance('associationService#getFullObject').warn('value not found in association options for {0} '.format(associationFieldMetadata.associationKey));
@@ -341,7 +351,14 @@ app.factory('associationService', function ($injector, $http, $timeout, $log,$ro
                 var targetName = value.target;
                 var labelName = "#" + targetName + "_label";
                 var realValue = fn.getFullObject(value, datamap, associationoptions);
-                if (realValue != null) {
+                if (realValue != null && Array.isArray(realValue)) {
+                    datamap[labelName] = "";
+                    // store result into a string with newline delimitor
+                    for (var i = 0; i < realValue.length; i++) {
+                        datamap[labelName] += "\\n" + realValue[i].label;
+                    }
+                }
+                else if (realValue != null) {
                     datamap[labelName] = realValue.label;
                 }
             });
