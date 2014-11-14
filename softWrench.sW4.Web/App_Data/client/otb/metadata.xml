@@ -984,11 +984,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="Lookup"/>
           </association>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>
-          <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" dependantfields="siteid" hideDescription="true" required="true">
+          <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" required="true">
             <dataprovider prefilterfunction="FilterToStoreLoc"/>
             <renderer type="lookup"/>
           </association>
-          <association target="invuseline_.tobin" label="To Bin" labelfield="toinvbalance_.binnum" dependantfields="siteid,invuseline_.tostoreloc" hideDescription="true" required="true">
+          <association target="invuseline_.tobin" label="To Bin" labelfield="toinvbalance_.binnum" hideDescription="true" required="true">
             <dataprovider prefilterfunction="FilterToBin" postfilterfunction="ParseBins"/>
             <renderer type="Lookup"/>
           </association>

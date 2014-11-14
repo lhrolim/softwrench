@@ -20,8 +20,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
             var siteid = parameters.OriginalEntity.GetAttribute("siteid");
 
-            if (siteid != null)
-            {
+            if (siteid != null) {
                 filter.AppendSearchEntry("location.siteid", siteid.ToString().ToUpper());
             }
 
@@ -39,8 +38,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return filter;
         }
 
-        public SearchRequestDto FilterItem(AssociationPreFilterFunctionParameters parameters)
-        {
+        public SearchRequestDto FilterItem(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             var siteid = parameters.OriginalEntity.GetAttribute("siteid");
             
@@ -73,7 +71,6 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             filter.AppendSearchEntry("invbalances.location", location.ToString().ToUpper());
             filter.ProjectionFields.Clear();
             filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '[No Bin]')"));
-            filter.SearchSort = "CASE WHEN invbalances.binnum = '[No Bin]' THEN '1' ELSE invbalances.binnum END";
             filter.SearchAscending = true;
             return filter;
         }
