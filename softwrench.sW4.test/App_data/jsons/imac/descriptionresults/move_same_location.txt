@@ -1,0 +1,23 @@
+﻿
+=====================================================================
+Request Details
+
+Location:   HLAG-MT4 --> HLAG-MT4
+Asset:   (A7805) Standard Desktop Computer
+Child Asset:   
+to ITC:   (WILSON) Mike Wilson2
+=====================================================================
+Service Attributes
+
+IBM technician – Yes/No:   yes
+Installation date:   
+Remarks:   
+=====================================================================
+Location
+
+Building:   
+Floor:   
+Room:   
+=====================================================================
+Cost Center:   6200/300/000//Maint+General
+=====================================================================
