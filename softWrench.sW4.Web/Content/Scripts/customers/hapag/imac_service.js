@@ -10,7 +10,7 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
     */
     var parseLocations = function (datamap, location, triggerparams) {
         if (location == null) {
-            datamap['building'] = datamap['floor'] = datamap['room']= null;
+            datamap['building'] = datamap['floor'] = datamap['room'] = null;
             return;
         }
         var idxBldg = location.indexOf('/BLDG');
@@ -53,9 +53,15 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
 
         opendetail: function (datamap, displayables) {
 
-            var id = datamap['ticketid'];            
+            var id = datamap['ticketid'];
             var parameters = { id: id, popupmode: 'browser' };
             redirectService.goToApplicationView('imac', 'detail', 'output', null, parameters);
+        },
+
+        toitcchanged: function (event) {
+            //            event.fields['userid'] = event.fields['asset_.primaryuser_.person_.hlagdisplayname'];
+            //TODO: fix the bug where the autocompleteserver is not being correctly bound if it´s included dinamically (via show expressions)
+            $("input[data-association-key=person_]").typeahead('val', event.fields['asset_.primaryuser_.person_.hlagdisplayname']);
         }
     };
 });
