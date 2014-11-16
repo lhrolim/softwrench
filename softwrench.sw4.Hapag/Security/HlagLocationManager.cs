@@ -228,10 +228,13 @@ namespace softwrench.sw4.Hapag.Security {
             }
         }
 
-        private static bool IsChildGroup(PersonGroup g, PersonGroup @group) {
-            return g.Description.StartsWith(@group.Description) && !g.Description.Equals(@group.Description) && !g.SuperGroup;
+        private static bool IsChildGroup(PersonGroup possibleChildGroup, PersonGroup @group) {
+            if (!HlagLocationUtil.IsALocationGroup(possibleChildGroup)) {
+                return false;
+            }
+            var descriptionMatches = possibleChildGroup.Description.StartsWith(@group.Description) && !possibleChildGroup.Description.Equals(@group.Description);
+            return (descriptionMatches || @group.Name.Equals(HapagPersonGroupConstants.HapagWWGroup)) && !possibleChildGroup.SuperGroup;
         }
-
 
 
         public IEnumerable<HlagGroupedLocation> FindAllLocationsOfCurrentUser() {

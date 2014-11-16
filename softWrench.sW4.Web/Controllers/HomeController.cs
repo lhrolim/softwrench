@@ -14,6 +14,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using softWrench.sW4.Web.Security;
 
 namespace softWrench.sW4.Web.Controllers {
     [System.Web.Mvc.Authorize]
@@ -23,11 +24,13 @@ namespace softWrench.sW4.Web.Controllers {
 
         private readonly IConfigurationFacade _facade;
         private readonly I18NResolver _i18NResolver;
+        private ContextLookuper _lookuper;
 
-        public HomeController(IConfigurationFacade facade, I18NResolver i18NResolver) {
+        public HomeController(IConfigurationFacade facade, I18NResolver i18NResolver, ContextLookuper lookuper) {
             //            _controllerFactory = (IAPIControllerFactory)GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IAPIControllerFactory));
             _facade = facade;
             _i18NResolver = i18NResolver;
+            _lookuper = lookuper;
         }
 
         public ActionResult Index() {
@@ -93,7 +96,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             var windowTitle = GetWindowTitle(redirectURL);
             var hasPopupLogo = HasPopupLogo(application, popupmode);
-            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(), user, hasPopupLogo, _i18NResolver.FetchCatalogs(), ApplicationConfiguration.ClientName, windowTitle, message, messageType));
+            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(), user, hasPopupLogo, _i18NResolver.FetchCatalogs(), ApplicationConfiguration.ClientName, _lookuper.LookupContext().Module, windowTitle, message, messageType));
         }
 
         public ActionResult MakeSWAdmin() {
