@@ -12,7 +12,7 @@
 "dhcpaddress":"100.100.100.100",
 "installationdate":"27/06/2014",
 "refprinter":"test",
-"remarks":"test\n\ntest",
+"remarks":"test\r\n\r\ntest",
 "usage":"TEST",
 "asset_.location_.description":"Atlanta Domocile Terminal",
 "building":null,
