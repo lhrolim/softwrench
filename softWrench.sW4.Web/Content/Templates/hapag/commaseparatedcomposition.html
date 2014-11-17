@@ -1,3 +1,8 @@
-﻿<label ng-repeat="item in compositiondata" class="control-label" style="text-align:left; word-break:break-all; cursor: pointer;" ng-click="handleItemClick(item,compositionschemadefinition)">
-    {{item[compositionschemadefinition.rendererParameters.attributeToDisplay]}}<span ng-if="$index < compositiondata.length-1">,&nbsp;</span>
-</label>
+﻿<span ng-repeat="item in compositiondata">
+    <a style="text-align:left; word-break:break-all; cursor: pointer;text-decoration: underline;" ng-click="handleItemClick(item,compositionschemadefinition)">
+        {{item[compositionschemadefinition.rendererParameters.attributeToDisplay]}}
+    </a>
+    <label>
+        <span ng-if="$index < compositiondata.length-1">,&nbsp;</span>
+    </label>
+</span>
