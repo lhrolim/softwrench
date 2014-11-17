@@ -1,22 +1,24 @@
-﻿function HomeController($scope, $http, $templateCache, $rootScope, $timeout,contextService, menuService, i18NService, alertService) {
+﻿function HomeController($scope, $http, $templateCache, $rootScope, $timeout,$log, contextService, menuService, i18NService, alertService) {
 
     $scope.$name = 'HomeController';
 
     function initController() {
-
+        var log =$log.getInstance('home.js#initController');
 
         var redirectUrl = url(homeModel.Url);
         i18NService.load(homeModel.I18NJsons, userLanguage);
-        contextService.insertIntoContext("currentmodule", homeModel.InitialModule, false);
+
 
         var sessionRedirectURL = sessionStorage.swGlobalRedirectURL;
         if (sessionRedirectURL != null && ((redirectUrl.indexOf("popupmode=browser") == -1) && (redirectUrl.indexOf("MakeSWAdmin") == -1))) {
             redirectUrl = sessionRedirectURL;
         }
-        //        if (sessionStorage.currentmodule != undefined && sessionStorage.currentmodule != "null") {
-        //            //sessionstorage is needed in order to avoid F5 losing currentmodule
-        //            $rootScope.currentmodule = sessionStorage.currentmodule;
-        //        }
+        var currentModule = contextService.currentModule();
+        if (currentModule == undefined || currentModule == "null") {
+            //sessionstorage is needed in order to avoid F5 losing currentmodule
+            log.info('switching to home module {0}'.format(homeModel.InitialModule));
+            contextService.insertIntoContext("currentmodule", homeModel.InitialModule, false);
+        }
         $http({
             method: "GET",
             url: redirectUrl,
@@ -42,7 +44,7 @@
                     }, 1000);
                     
                 } else {*/
-                    alertService.success(homeModel.Message, false);
+                alertService.success(homeModel.Message, false);
                 //}
                 homeModel.Message = null;
             }

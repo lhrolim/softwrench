@@ -77,7 +77,8 @@ function DashboardController($scope, $http, $templateCache, $rootScope, formatSe
 
         var searchDTO = {
             searchParams: dashboard.searchParams,
-            searchValues: dashboard.searchValues
+            searchValues: dashboard.searchValues,
+            pageSize:100
         };
         //this is used for keeping the same whereclause on the viewAll grid
         contextService.insertIntoContext('currentmetadata', dashboard.id);
