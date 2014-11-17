@@ -51,7 +51,7 @@
             };
 
             $scope.exportToExcel = function (schemaId) {
-                excelService.exportToExcel(schemaId);
+                excelService.exporttoexcel($scope.$parent.schema, $scope.$parent.searchData, $scope.$parent.searchSort, $scope.$parent.searchOperator, $scope.paginationData);
             };
 
          
