@@ -99,7 +99,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             var submittingAction = "true".Equals(jsonObject.GetUnMappedAttribute("#submittingaction"));
             if (update && !submittingAction) {
                 if (problem.Abstract != null && !problem.Abstract.StartsWith("@@")) {
-                    problem.Abstract = "@@" + problem.Abstract;
+                    if (problem.Abstract.Length > 98) {
+                        //https://controltechnologysolutions.atlassian.net/browse/HAP-642
+                        problem.Abstract = "@@" + problem.Abstract.Substring(0,98);
+                    } else {
+                        problem.Abstract = "@@" + problem.Abstract;
+                    }
                 }
             }
 

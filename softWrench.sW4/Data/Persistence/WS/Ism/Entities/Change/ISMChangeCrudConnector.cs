@@ -33,7 +33,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
             if (hasWorkLog) {
                 var description = (String)operationData.GetAttribute("description");
                 if (!description.StartsWith("@@")) {
-                    description = "@@" + description;
+                    if (description.Length > 98) {
+                        //we need to make sure the size is never bigger than 100
+                        //https://controltechnologysolutions.atlassian.net/browse/HAP-642
+                        description = "@@" + description.Substring(0, 98);
+                    } else {
+                        description = "@@" + description;
+                    }
                     maximoTicket.Change.Description = description;
                 }
             }
