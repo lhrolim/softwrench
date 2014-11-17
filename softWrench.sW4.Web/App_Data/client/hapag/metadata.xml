@@ -5,7 +5,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
   <entities>
 
     <queries>
-      <query key="pluspcustomer" value="CASE WHEN !@PLUSPCUSTOMER IS NOT NULL AND !@PLUSPCUSTOMER = 'HLC-00' then 'HLC-00'  WHEN !@PLUSPCUSTOMER IS NOT NULL AND LENGTH(!@PLUSPCUSTOMER) >= 3 THEN SUBSTR(!@PLUSPCUSTOMER, LENGTH(!@PLUSPCUSTOMER) - 2, 3) ELSE '' END"/>
+      <query key="pluspcustomer" value="CASE WHEN !@PLUSPCUSTOMER IS NOT NULL AND !@PLUSPCUSTOMER = 'HLC-00' then 'HLAG'  WHEN !@PLUSPCUSTOMER IS NOT NULL AND LENGTH(!@PLUSPCUSTOMER) >= 3 THEN SUBSTR(!@PLUSPCUSTOMER, LENGTH(!@PLUSPCUSTOMER) - 2, 3) ELSE '' END"/>
       <query key="numberofdaysopen" value="(DAYS(current date) - DAYS(incident.affecteddate))"/>
       <query key="affectedpersoncustom" value="CASE WHEN LOCATE('@',!@AFFECTEDPERSON) > 0 THEN SUBSTR(!@AFFECTEDPERSON,1,LOCATE('@',!@AFFECTEDPERSON)-1) ELSE !@AFFECTEDPERSON END"/>
       <query key="createbycustom" value="CASE WHEN LOCATE('@',!@CREATEBY) > 0 THEN SUBSTR(!@CREATEBY,1,LOCATE('@',!@CREATEBY)-1) ELSE !@CREATEBY END"/>
@@ -18,7 +18,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
     <entity name="pluspcustomer" idAttribute="pluspcustomerid" whereclause="customer like 'HLC-%'">
       <attributes>
-        <attribute name="hlagpluspcustomer" type="varchar" required="false" query="CASE WHEN !@CUSTOMER IS NOT NULL AND !@CUSTOMER = 'HLC-00' then 'HLC-00'  WHEN !@CUSTOMER IS NOT NULL AND LENGTH(!@CUSTOMER) >= 3 THEN SUBSTR(!@CUSTOMER, LENGTH(!@CUSTOMER) - 2, 3) ELSE '' END"/>
+        <attribute name="hlagpluspcustomer" type="varchar" required="false" query="CASE WHEN !@CUSTOMER IS NOT NULL AND !@CUSTOMER = 'HLC-00' then 'HLAG'  WHEN !@CUSTOMER IS NOT NULL AND LENGTH(!@CUSTOMER) >= 3 THEN SUBSTR(!@CUSTOMER, LENGTH(!@CUSTOMER) - 2, 3) ELSE '' END"/>
       </attributes>
     </entity>
 
