@@ -221,17 +221,31 @@ namespace softwrench.sw4.Hapag.Security {
             foreach (var personGroup in superGroups) {
                 HlagLocationsCache[personGroup] = new HashSet<HlagLocation>();
                 var @group = personGroup;
-                foreach (var childGroup in allGroups.Where(g => IsChildGroup(g, @group))) {
+                foreach (var childGroup in allGroups.Where(g => IsChildLocationGroup(g, @group))) {
                     var hlagLocation = HlagLocationsCache[childGroup].First();
                     HlagLocationsCache[personGroup].Add(hlagLocation.CloneForParent());
                 }
             }
         }
 
-        private static bool IsChildGroup(PersonGroup g, PersonGroup @group) {
-            return g.Description.StartsWith(@group.Description) && !g.Description.Equals(@group.Description) && !g.SuperGroup;
+        /// <summary>
+        ///  returns if the first parameter group is "child" of the second one.
+        ///  
+        ///  If possibleParentGroup is C-HLC-WW-AR-WW, then, all location groups should be considered child of it.
+        /// 
+        ///  Otherwise, only those who match the initial description
+        /// 
+        /// </summary>
+        /// <param name="possibleChildGroup"></param>
+        /// <param name="possibleParentGroup"></param>
+        /// <returns></returns>
+        private static bool IsChildLocationGroup(PersonGroup possibleChildGroup, PersonGroup possibleParentGroup) {
+            if (!HlagLocationUtil.IsALocationGroup(possibleChildGroup)) {
+                return false;
+            }
+            var descriptionMatches = possibleChildGroup.Description.StartsWith(possibleParentGroup.Description) && !possibleChildGroup.Description.Equals(possibleParentGroup.Description);
+            return (descriptionMatches || possibleParentGroup.Name.Equals(HapagPersonGroupConstants.HapagWWGroup)) && !possibleChildGroup.SuperGroup;
         }
-
 
 
         public IEnumerable<HlagGroupedLocation> FindAllLocationsOfCurrentUser() {

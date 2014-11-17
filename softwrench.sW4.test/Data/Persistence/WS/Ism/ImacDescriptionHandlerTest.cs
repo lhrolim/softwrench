@@ -31,9 +31,14 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Ism {
             DoTest("move", "move_other_location.json", "move_other_location.txt");
         }
 
+        [TestMethod]
+        public void MoveSame() {
+            DoTest("move", "move_same_location.json", "move_same_location.txt");
+        }
+
 
         [TestMethod]
-        [Ignore]
+//        [Ignore]
         public void InstallLan() {
             DoTest("installlan", "installlan.json", "installlan.txt");
         }
@@ -62,7 +67,7 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Ism {
             var resultDescription = ImacDescriptionHandler.BuildDescription(imac, appMetadata);
             Debug.Write(resultDescription);
             var result = new StreamReader("jsons\\imac\\descriptionresults\\" + output).ReadToEnd();
-            Assert.AreEqual(resultDescription, result);
+            Assert.AreEqual(result, resultDescription);
         }
 
 

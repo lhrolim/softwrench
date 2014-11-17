@@ -92,6 +92,7 @@ namespace softWrench.sW4.Data.Entities {
                 var relationshipName = EntityUtil.GetRelationshipName(attributeName, out resultAttributeName);
                 var relationship = GetRelationship(relationshipName);
                 if (relationship is Entity) {
+                    //there´s a bug here, it should be return relationship.ContainsAttribute(resultAttributeName) instead
                     return ContainsAttribute(resultAttributeName);
                 }
             }

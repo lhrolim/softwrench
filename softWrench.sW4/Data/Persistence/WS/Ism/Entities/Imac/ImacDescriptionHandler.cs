@@ -37,19 +37,24 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
 
         private static void CreateSection(CrudOperationData jsonObject, StringBuilder sb,
             ApplicationSection section) {
-            OpenSection(sb, section);
+            var sectionHeader = OpenSection(section);
             var displayables = DisplayableUtil.GetDisplayable<IApplicationAttributeDisplayable>(
                 typeof(IApplicationAttributeDisplayable), section.Displayables);
 
             if (section.Id == "specification") {
+                sb.Append(sectionHeader);
                 HandleSpecifications(sb, (string)jsonObject.GetAttribute(section.Id), section);
-            } else {
-
-                DoHandleDisplayables(jsonObject, sb, displayables);
+                return;
+            }
+            var st = DoHandleDisplayables(jsonObject, displayables);
+            if (!String.IsNullOrEmpty(st)) {
+                sb.Append(sectionHeader);
+                sb.Append(st);
             }
         }
 
-        private static void DoHandleDisplayables(CrudOperationData jsonObject, StringBuilder sb, IList<IApplicationAttributeDisplayable> displayables) {
+        private static string DoHandleDisplayables(CrudOperationData jsonObject, IList<IApplicationAttributeDisplayable> displayables) {
+            var sb = new StringBuilder();
             foreach (var attributeDisplayable in displayables) {
                 if (attributeDisplayable.Qualifier != null &&
                     (attributeDisplayable.Qualifier.Contains(NoDescriptionQualifier) ||
@@ -79,8 +84,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
 
                 var oldValue = GetValue(jsonObject, attributeDisplayable);
                 var newValue = LocateNewValue(attributeDisplayable.Attribute, jsonObject, displayables);
-                AppendField(sb, attributeDisplayable.Label, oldValue, newValue);
+                sb.AppendLine(AppendField(attributeDisplayable.Label, oldValue, newValue));
             }
+            return sb.ToString();
         }
 
         private static object GetValue(CrudOperationData jsonObject, IApplicationAttributeDisplayable attributeDisplayable) {
@@ -100,7 +106,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
                 var label = assetAttribute.Value<string>("label");
                 var oldValue = assetAttribute.Value<string>("value");
                 var newValue = assetAttribute.Value<string>("#newvalue");
-                AppendField(sb, label, oldValue, newValue);
+                sb.AppendLine(AppendField(label, oldValue, newValue));
             }
         }
 
@@ -124,7 +130,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
                 var label = assetAttribute.Value<string>("assetattribute_.description");
                 var oldValue = assetAttribute.Value<string>("value");
                 var newValue = assetAttribute.Value<string>("#newvalue");
-                AppendField(sb, label, oldValue, newValue);
+                sb.AppendLine(AppendField(label, oldValue, newValue));
             }
         }
 
@@ -134,10 +140,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
             if (newDisplayable == null) {
                 return null;
             }
-            return GetValue(jsonObject,newDisplayable) as string;
+            return GetValue(jsonObject, newDisplayable) as string;
         }
 
-        public static void OpenSection(StringBuilder sb, ApplicationSection section) {
+        public static string OpenSection(ApplicationSection section) {
+            var sb = new StringBuilder();
             sb.AppendLine(SectionSeparator);
             string sectionTitle;
             if (!section.Parameters.TryGetValue("detaildescription", out sectionTitle)) {
@@ -153,21 +160,21 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
                 sb.AppendLine(sectionTitle);
                 sb.AppendLine();
             }
+            return sb.ToString();
         }
 
         public static void CloseSection(StringBuilder sb) {
             sb.AppendLine(SectionSeparator);
         }
 
-        public static void AppendField(StringBuilder sb, string label, object oldValue, object newValue) {
+        public static string AppendField(string label, object oldValue, object newValue) {
             if (label.Equals("from Location")) {
                 label = "Location";
             }
             if (newValue == null) {
-                sb.AppendLine(String.Format(FieldPattern, label, oldValue));
-            } else {
-                sb.AppendLine(String.Format(FieldOldNewPattern, label, oldValue, newValue));
+                return String.Format(FieldPattern, label, oldValue);
             }
+            return String.Format(FieldOldNewPattern, label, oldValue, newValue);
         }
 
 

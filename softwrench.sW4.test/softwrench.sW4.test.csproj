@@ -209,6 +209,9 @@
     <Content Include="App_data\jsons\imac\replaceother.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_data\jsons\imac\descriptionresults\move_same_location.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="App_data\jsons\imac\update_asset_data.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

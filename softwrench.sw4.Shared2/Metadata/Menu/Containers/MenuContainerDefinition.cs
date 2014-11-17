@@ -16,13 +16,24 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
             Module = module;
             var menuBaseDefinitions = leafs as MenuBaseDefinition[] ?? leafs.ToArray();
             Leafs = menuBaseDefinitions;
+            UpdateInnerModules(module, menuBaseDefinitions);
+            Action = action;
+            Controller = controller;
+        }
+
+        private void UpdateInnerModules(string module, IEnumerable<MenuBaseDefinition> menuBaseDefinitions) {
+            if (module == null) {
+                return;
+            }
             foreach (var leaf in menuBaseDefinitions) {
                 if (leaf.Module == null) {
                     leaf.Module = module;
                 }
+                if (leaf is MenuContainerDefinition) {
+                    var container = ((MenuContainerDefinition)leaf);
+                    container.UpdateInnerModules(module, container.Leafs);
+                }
             }
-            Action = action;
-            Controller = controller;
         }
     }
 }
