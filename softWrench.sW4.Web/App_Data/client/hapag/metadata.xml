@@ -1679,8 +1679,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <componentdisplayable id="inputaccel">
           <optionfield attribute="inputaccel" label="Input Accel ֠Yes/No">
-            <option label="yes" value="yes"/>
+            <!--HAP-672 Revised the order of yes/no-->
             <option label="no" value="no"/>
+            <option label="yes" value="yes"/>
           </optionfield>
         </componentdisplayable>
 
