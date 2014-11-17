@@ -7,9 +7,9 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
     redirectService, searchService, contextService, fileService) {
 
     return {
-        showModalExportToExcel: function (parameters) {
+        showModalExportToExcel: function (fn,schema, searchData, searchSort, searchOperator, paginationData) {
             //TODO: fix this crap
-            var modalTitle = i18NService.get18nValue('_exportotoexcel.export', 'Export') + " " + parameters.application +
+            var modalTitle = i18NService.get18nValue('_exportotoexcel.export', 'Export') + " " + schema.applicationName+
                 " " + i18NService.get18nValue('_exportotoexcel.toexcel', 'to excel');
             var selectText = i18NService.get18nValue('_exportotoexcel.selectexportmode', 'Select export mode');
             var exportModeGridOnlyText = i18NService.get18nValue('_exportotoexcel.gridonly', 'Grid only');
@@ -47,11 +47,7 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
                         callback: function (result) {
                             if (result) {
                                 var exportModeSelected = $('input[name=exportMode]:checked', '#infos').val();
-                                if (exportModeSelected != parameters.key.schemaId) {
-                                    this.exportToExcel(exportModeSelected);
-                                } else {
-                                    this.exportToExcel(parameters.key.schemaId);
-                                }
+                                fn(schema, searchData, searchSort, searchOperator, paginationData, exportModeSelected);
                             }
                         }
                     }
@@ -61,28 +57,27 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
         },
 
 
-        exporttoexcel: function (schema, searchData, searchSort, searchOperator, paginationData) {
-            var schemaId = schema.schemaId;
+        exporttoexcel: function (schema, searchData, searchSort, searchOperator, paginationData,schemaSelected) {
+            var application = schema.applicationName;
+            if (contextService.isClient("hapag") && application == "asset" && !schemaSelected) {
+                var fn = this.exporttoexcel;
+                this.showModalExportToExcel(fn, schema, searchData, searchSort, searchOperator, paginationData);
+                return null;
+            }
+            var schemaToUse = schemaSelected ? schemaSelected : schema.schemaId;
+
             var parameters = {};
             parameters.key = {};
-            parameters.key.schemaId = schema.schemaId;
+            parameters.key.schemaId = schemaToUse;
             parameters.key.mode = schema.mode;
             parameters.key.platform = "web";
-            parameters.application = schema.applicationName;
-            if ((nullOrUndef(schemaId))) {
-                if (contextService.isClient("hapag") && parameters.application == "asset") {
-                    this.showModalExportToExcel(parameters);
-                    return null;
-                }
-            } else {
-                parameters.key.schemaId = schemaId;
-            }
+            parameters.application = application;
             var searchDTO = searchService.buildSearchDTO(searchData, searchSort, searchOperator, paginationData.filterFixedWhereClause);
             var currentModule = contextService.currentModule();
             if (currentModule != null) {
                 parameters.module = currentModule;
             }
-            searchDTO.pageNumber = paginationData.pageNumber;
+            searchDTO.pageNumber = 1;
             searchDTO.totalCount = paginationData.totalCount;
             searchDTO.pageSize = paginationData.pageSize;
 

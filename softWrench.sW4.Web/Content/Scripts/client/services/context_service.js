@@ -151,6 +151,27 @@ app.factory('contextService', function ($rootScope) {
         retrieveReportSearchDTO: function (reportSchemaId) {
             return this.retrieveFromContext('repSearchDTO_' + reportSchemaId);
         },
+
+        client: function () {
+            return this.retrieveFromContext('clientName');
+        },
+
+        isClient: function (name) {
+            if (name == null) {
+                $log.getInstance('contextService#isClient').warn("asked for null client name");
+                return false;
+            }
+            var clientName = this.client();
+            if (name == clientName) {
+                return true;
+            }
+            if (typeof (name) === 'array') {
+                if (jQuery.inArray(clientName, name)!=-1) {
+                    return true;
+                }
+            }
+            return false;
+        },
     };
 
 });
