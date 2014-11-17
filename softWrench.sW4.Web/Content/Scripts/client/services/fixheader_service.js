@@ -168,6 +168,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         fixThead: function (schema, params) {
             var log = $log.getInstance('sw4.fixheader_service#fixThead');
             log.debug('starting fix Thead');
+
             if (!params || !params.resizing) {
                 this.unfix();
             }
@@ -186,8 +187,6 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
                 $(v).width(thead[i]);
             });
 
-
-
             log.debug('updating filter visibility');
             this.updateFilterVisibility(schema, thead);
             contextService.insertIntoContext('currentgridarray', thead);
@@ -196,7 +195,8 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             //update the style, to fixed
             this.fixTableTop(table, params);
 
-
+            //hack to fix HAP-610 T-ITOM-015
+            $('#pagesize').width($('#pagesize').width());
 
             log.debug('finishing fix Thead');
         },
