@@ -1515,7 +1515,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <componentdisplayable id="installationdate">
           <field attribute="installationdate" label="Installation date">
-            <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;allowpast=false"/>
           </field>
         </componentdisplayable>
 
@@ -1990,7 +1990,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <reference id="lantype"/>
               <reference id="ibmtechnician"/>
               <field attribute="installationdate" label="Installation date">
-                <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false"/>
+                <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;allowpast=false"/>
               </field>
 
               <field attribute="remarks" label="Remarks">
@@ -2085,7 +2085,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <reference id="lantype"/>
               <reference id="ibmtechnician"/>
               <field attribute="installationdate" label="Installation date">
-                <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false"/>
+                <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;allowpast=false"/>
               </field>
 
               <field attribute="remarks" label="Remarks">
