@@ -392,7 +392,7 @@ nav.hapag-topbar {
         }
 
 #pagesize {
-    width: 100px; /*SM - 09/22 - HAP-498*/
+    width: 75px; /*SM - 09/22 - HAP-498*/
 }
 
 .pagination-pager {
@@ -818,7 +818,7 @@ body,
 }
 
     .col-main-content > .affix {
-        width: 785px;
+        width: 792px;
     }
 
 #listgrid {
@@ -928,7 +928,7 @@ select {
 .affix-pagination {
     background-color: white;
     position: fixed;
-    width: 782px;
+    width: 792px;
     margin-left: -10px;
     margin-top: -2px;
     padding-top: 2px;
