@@ -6,7 +6,9 @@ Location:   HLAG-MT4
 Asset:   (13150) Top Breaker System // 32R5G
 Old Child Asset:   
 New Asset:   (A5006) 95 FLD112 TRACTOR // 1FG44093300009
-New Child Asset:   13150, A5006
+New Child Asset:
+(13150) 95 FLD112 TRACTOR // 1FG44093300009
+(A5006) 95 FLD112 TRACTOR // 1FG44093300009
 =====================================================================
 Service Attributes
 
