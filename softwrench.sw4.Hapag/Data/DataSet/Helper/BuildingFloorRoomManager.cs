@@ -23,6 +23,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
             dto.AppendSearchEntry("pluspcustomer", "%" + location);
             dto.AppendSearchEntry("status","!=DECOMMISSIONED");
             dto.AppendSearchEntry("TYPE","OPERATING");
+            dto.SearchSort = "location";
+            dto.SearchAscending = true;
             dto.IgnoreWhereClause = true;
             var result = EntityRepository.GetAsRawDictionary(entityMetadata, dto);
             var options = new HashSet<IAssociationOption>();
