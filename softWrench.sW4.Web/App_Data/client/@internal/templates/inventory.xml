@@ -90,9 +90,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="invissue_.frombin" to="binnum" primary="true"/>
         </relationship>
       </relationships>
-      <connectorParameters>
-        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInvreservedCrudConnector" />
-      </connectorParameters>
     </entity>
   </entities>
 

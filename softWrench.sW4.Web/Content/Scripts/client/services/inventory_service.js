@@ -440,6 +440,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 siteid: datamap['siteid'],
                 costtype: datamap['costtype']
             };
+            // Post the new matusetrans record
             var jsonString = angular.toJson(matusetransDatamap);
             var httpParameters = {
                 application: "invissue",
@@ -454,22 +455,32 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 // Calculate the new reserved and actual values based on the quantity being issued
                 var newReservedQty = reservedQty - issueQty;
                 var newActualQty = actualQty + issueQty;
-                // Update the datamap with the new values
-                datamap["reservedqty"] = newReservedQty;
-                datamap["actualqty"] = newActualQty;
-                // Put the new invreserve record
-                jsonString = angular.toJson(datamap);
                 httpParameters = {
                     currentSchemaKey: "detail.input.web",
                     platform: "web"
                 };
-                var urlToUse = url("/api/data/reservedMaterials/" + datamap["invreserveid"] + "?" + $.param(httpParameters));
-                $http.put(urlToUse, jsonString).success(function () {
-                    // Return to the list of reserved materials
-                    redirectService.goToApplication("reservedMaterials", "list", null, null);
-                }).error(function () {
-                    // Failed to update the material reservation
-                });
+                if (newReservedQty > 0) {
+                    // If there is still a reserved quantity, update the record
+                    // Update the datamap with the new values
+                    datamap["reservedqty"] = newReservedQty;
+                    datamap["actualqty"] = newActualQty;
+                    // Put the updated invreserve record
+                    jsonString = angular.toJson(datamap);
+                    var urlToUse = url("/api/data/reservedMaterials/" + datamap["invreserveid"] + "?" + $.param(httpParameters));
+                    $http.put(urlToUse, jsonString).success(function() {
+                        // Return to the list of reserved materials
+                        redirectService.goToApplication("reservedMaterials", "list", null, null);
+                    }).error(function() {
+                        // Failed to update the material reservation
+                    });
+                } else {
+                    // If the reserved quantity has reached 0, delete the record
+                    var deleteUrl = url("/api/data/reservedMaterials/" + datamap["invreserveid"] + "?" + $.param(httpParameters));
+                    $http.delete(deleteUrl).success(function () {
+                        // Return to the list of reserved materials
+                        redirectService.goToApplication("reservedMaterials", "list", null, null);
+                    });
+                }
             }); 
         },
 
@@ -478,6 +489,15 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 fields: datamap
             };
             updateInventoryCosttype(parameters);
+            datamap['#issueqty'] = datamap['reservedqty'];
+            var searchData = {
+                itemnum: parameters['fields']['itemnum'],
+                siteid: parameters['fields']['siteid'],
+                itemsetid: parameters['fields']['itemsetid'],
+                location: parameters['fields']['location'],
+                binnum: parameters['fields']['#frombin']
+            };
+            getBinQuantity(searchData, parameters, '#curbal');
         },
 
     };
