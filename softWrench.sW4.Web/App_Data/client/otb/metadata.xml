@@ -371,6 +371,34 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
       </relationships>
     </entity>
+    
+    <entity name="receiving" parententity="po" idAttribute="ponum">
+      <relationships>
+        <relationship to="synonymdomain" qualifier="postatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="POSTATUS" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="synonymdomain" qualifier="potype">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="POTYPE" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="currency" qualifier="currency" collection="true">
+          <relationshipAttribute from="currencycode" to="currencycode" primary="true"/>
+        </relationship>
+        <relationship to="companies" qualifier="companies" collection="true">
+          <relationshipAttribute from="vendor" to="company" primary="true"/>
+          <relationshipAttribute to="type" literal="V" quoteLiteral="true"/>
+        </relationship>
+        <relationship to ="poline" qualifier="poline" collection ="true">
+          <relationshipAttribute from="ponum" to="ponum" primary="true"/>
+        </relationship>
+        <relationship to="matrectrans" qualifier="matrectrans" collection="true">
+          <relationshipAttribute from="ponum" to ="ponum" primary="true"/>
+          <relationshipAttribute from="siteid" to ="siteid"/>
+          <relationshipAttribute from ="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
+    </entity>
 
     <entity name="poline" idAttribute="polinenum">
       <relationships>
@@ -1127,7 +1155,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </schemas>
     </application>
 
-    <application entity="po" name="receiving" title="Receiving">
+    <application entity="receiving" name="receiving" title="Receiving">
       <schemas>
         <list title="Receiving Grid">
           <field attribute ="ponum" label="PO">
