@@ -1,4 +1,4 @@
-﻿<section id="{{elementid}}">
+<section id="{{elementid}}">
     <div>
         <fieldset ng-repeat="fieldMetadata in nonTabFields(displayables)" class="form-group"
             ng-show="!isFieldHidden(schema,fieldMetadata)"
@@ -118,8 +118,8 @@
                                 </div>
                             </div>
                             <div>
-                                <div id="opendetails" class="input-group">
-                                    <button ng-click="opendetails(fieldMetadata)" />
+                            <div id="opendetails" class="input-group" >
+                                    <button ng-click="opendetails(fieldMetadata)" ng-enabled="datamap[fieldMetadata.target]" />
                                 </div>
                             </div>
                         </div>

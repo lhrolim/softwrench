@@ -43,6 +43,17 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
     var doGetFullObject = function (associationFieldMetadata, associationOptions, selectedValue) {
         if (selectedValue == null) {
             return null;
+        } else if (Array.isArray(selectedValue)) {
+            var ObjectArray = [];
+
+            // Extract each item into an array object
+            for (var i = 0; i < selectedValue.length; i++) {
+                var Object = doGetFullObject(associationFieldMetadata, associationOptions, selectedValue[i]);
+                ObjectArray = ObjectArray.concat(Object);
+            }
+
+            // Return results for multi-value selection
+            return ObjectArray;
         }
 
         //we need to locate the value from the list of association options
@@ -357,7 +368,14 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 var targetName = value.target;
                 var labelName = "#" + targetName + "_label";
                 var realValue = fn.getFullObject(value, datamap, associationoptions);
-                if (realValue != null) {
+                if (realValue != null && Array.isArray(realValue)) {
+                    datamap[labelName] = "";
+                    // store result into a string with newline delimiter
+                    for (var i = 0; i < realValue.length; i++) {
+                        datamap[labelName] += "\\n" + realValue[i].label;
+                    }
+                }
+                else if (realValue != null) {
                     datamap[labelName] = realValue.label;
                 }
             });
