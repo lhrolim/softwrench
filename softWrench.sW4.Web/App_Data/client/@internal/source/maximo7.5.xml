@@ -1348,6 +1348,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </relationship>
       </relationships>
       <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWWO" />
         <connectorParameter key="dbtable" value="workorder" />
       </connectorParameters>
 

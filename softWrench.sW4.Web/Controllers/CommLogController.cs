@@ -15,7 +15,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         [HttpPost]
-        public void UpdateReadFlag(string application, int applicationItemId, int userId, int commlogId) {
+        public void UpdateReadFlag(string application, string applicationItemId, int userId, int commlogId) {
             var newCommEntry = new MaxCommReadFlag() {
                 Application = application,
                 ApplicationItemId = applicationItemId,

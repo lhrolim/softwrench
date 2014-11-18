@@ -121,6 +121,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
 
         <schema id="adetail" title="Work Order Detail" abstract="true" stereotype="detail" platform="web">
+
+          <field attribute="workorderid" hidden="true"/>
           <section id ="siteidsection"/>
           <section id="realfields">
             <field attribute="orgid"  required="true" readonly="true" hidden="true"/>
