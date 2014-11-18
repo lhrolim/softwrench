@@ -1208,7 +1208,18 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       
       <schemas>
         
+        <schema id="applist" stereotype="list">
+          <field attribute="ponum" label="PO No" readonly="true"/>
+          <field attribute="polinenum" label="Line No" />
+          <field attribute="itemnum" label="Item"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="orderqty" label="Quantity"/>
+          <field attribute="receivedqty" label="Received Qty"/>
+          <field attribute="unitcost" label="Unit Cost"/>
+        </schema>
+        
         <schema id="list" stereotype="compositionlist">
+          <section resourcepath="/Content/Templates/otb/receiving.html"/>
           <field attribute="ponum" label="PO No" readonly="true"/>
           <field attribute="polinenum" label="Line No" />
           <field attribute="itemnum" label="Item"/>
@@ -1220,13 +1231,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
           
-          <commandbars>
-            <commandgroup position="compositiontop" removeundeclared="true">
-              <command id="ordereditems" label="Select Ordered Items" service="poreceivingService" method="submitorderedItems" parameters="schema,datamap" />
-              <command id="rotatingitems" label="Select Rotating Items to Return" service="poreceivingService" method="returnRotatingItems" />
-            </commandgroup>
-            <commandgroup position="compositionbottom" removeundeclared="true"/>
-          </commandbars>
+          
         </schema>
 
         <detail stereotype="compositiondetail">
@@ -1255,6 +1260,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="itemnum" label="Item"/>
           <field attribute="description" label="Description"/>
           <field attribute="quantity" label="Quantity Received"/>
+        
+          <commandbars>
+            <commandgroup position="compositiontop" removeundeclared="true">
+              <command id="ordereditems" label="Select Ordered Items" service="poreceivingService" method="submitorderedItems" parameters="schema,datamap" />
+              <command id="rotatingitems" label="Select Rotating Items to Return" service="poreceivingService" method="returnRotatingItems" />
+            </commandgroup>
+            <commandgroup position="compositionbottom" removeundeclared="true"/>
+          </commandbars>
         </list>
 
         <detail stereotype="compositiondetail">

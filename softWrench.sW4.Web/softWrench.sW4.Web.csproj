@@ -707,6 +707,7 @@
     <Content Include="Content\Scripts\customers\hapag\sr_service.js" />
     <Content Include="Content\Scripts\customers\hapag\sr_summary_service.js" />
     <Content Include="Content\Scripts\customers\shared\invissuereturnaction.js" />
+    <Content Include="Content\Scripts\customers\shared\receivingactions.js" />
     <Content Include="Content\Scripts\customers\shared\solution_service.js" />
     <Content Include="Content\Scripts\customers\shared\commlogactions.js" />
     <Content Include="Content\Scripts\client\services\commlog_service.js" />
@@ -895,6 +896,7 @@
     <Content Include="Content\Templates\hapag\commaseparatedcomposition.html" />
     <Content Include="Content\Templates\otb\invissuereturnaction.html" />
     <Content Include="Content\Templates\otb\commlogaction.html" />
+    <Content Include="Content\Templates\otb\receiving.html" />
     <Content Include="Content\Templates\samelinepickers.html" />
     <Content Include="Content\Templates\hapag\conditionalfield.html" />
     <Content Include="Content\Templates\configConditionModal.html" />
