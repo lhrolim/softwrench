@@ -19,118 +19,59 @@ app.directive('columnWidths', function ($log) {
                     //convert metadata to html columns (add 2 for select columns and 1 for index base)
                     var column = parseInt(id) + 3;
 
-                    //get widths from metadata
-                    var width = json[id].rendererParameters.width;
-                    var widthXS = json[id].rendererParameters.widthXS;
-                    var widthSM = json[id].rendererParameters.widthSM;
-                    var widthMD = json[id].rendererParameters.widthMD;
-                    var widthLG = json[id].rendererParameters.widthLG;
-
                     //new row object
                     var row = {};
-                    
+
+                    width = removePercent(json[id].rendererParameters.width);
+                                
                     //if width is set override responsive widths
                     if (width) {
-                        row['width'] = width;
+                        row.width = width;
+                        row.widthXS = width;
+                        row.widthSM = width;
+                        row.widthMD = width;
+                        row.widthLG = width;
                     } else { //else add responsive width
-                        if (widthXS) {
-                            row['widthXS'] = widthXS;
-                        }
-
-                        if (widthSM) {
-                            row['widthSM'] = widthSM;
-                        }
-
-                        if (widthMD) {
-                            row['widthMD'] = widthMD;
-                        }
-
-                        if (widthLG) {
-                            row['widthLG'] = widthLG;
-                        }
+                        row.width = width;
+                        row.widthXS = removePercent(json[id].rendererParameters.widthXS);
+                        row.widthSM = removePercent(json[id].rendererParameters.widthSM);
+                        row.widthMD = removePercent(json[id].rendererParameters.widthMD);
+                        row.widthLG = removePercent(json[id].rendererParameters.widthLG);
                     }
 
-                    //if widths found add row to the object
-                    if (width || widthXS || widthSM || widthMD || widthLG) {
-                        widths[column] = row;
-                    }
+                    widths[column] = row;
                 }
 
-                log.debug(widths);
-                var css = '';
+                
+                //check if widths found
+                //if (Object.keys(widths).length > 0) {
+                    log.debug('Widths Found', widths);
 
                 //build css rules
-                for (column in widths) {
-                    //log.debug(widths[row]);
+                var css = getViewRules(widths, 'width', null);
+                css = css + getViewRules(widths, 'widthXS', '1px');
+                css = css + getViewRules(widths, 'widthSM', '480px');
+                css = css + getViewRules(widths, 'widthMD', '768px');
+                css = css + getViewRules(widths, 'widthLG', '992px');
 
-                    if (widths[column].width) {
-                        columnWidth = widths[column].width;
-                    } 
-                    else if (widths[column].widthXS) {
-                        columnWidth = widths[column].widthXS;
-                    }
+                //}
+                //else {
+                //    log.debug('No widths found for', json.length, 'columns');
 
-                    //get the css rule & add it other rules
-                    if (columnWidth) {
-                        var temp = getCSSrule(column, columnWidth);
-                        if (temp) {
-                            css = css + temp;
-                        }
-                    }
+                //    var width = 100 / json.length;
+                //    var columnWidth = Math.floor(width) + '%';
+
+                //    css = getCSSrule(null, columnWidth);
+                //}
+
+                if (css) {
+                    log.debug(css);
+
+                    //output css rules to html
+                    element.html(css);
+                } else {
+                    log.debug('No CSS Generated');
                 }
-
-                css = css + '@media all and (min-width: 480px) {';
-                for (column in widths) {
-                    //log.debug(widths[row]);
-
-                    if (widths[column].widthSM) {
-                        columnWidth = widths[column].widthSM;
-
-                        //get the css rule & add it other rules
-                        var temp = getCSSrule(column, columnWidth);
-                        if (temp) {
-                            css = css + temp;
-                        }
-                    }
-                }
-                css = css + '}';
-
-                css = css + '@media all and (min-width: 768px) {';
-                for (column in widths) {
-                    //log.debug(widths[row]);
-
-                    if (widths[column].widthMD) {
-                        columnWidth = widths[column].widthMD;
-
-                        //get the css rule & add it other rules
-                        var temp = getCSSrule(column, columnWidth);
-                        if (temp) {
-                            css = css + temp;
-                        }
-                    }
-                }
-                css = css + '}';
-
-                css = css + '@media all and (min-width: 992px) {';
-                for (column in widths) {
-                    //log.debug(widths[row]);
-
-                    if (widths[column].widthLG) {
-                        columnWidth = widths[column].widthLG;
-
-                        //get the css rule & add it other rules
-                        var temp = getCSSrule(column, columnWidth);
-                        if (temp) {
-                            css = css + temp;
-                        }
-                    }
-                }
-                css = css + '}';
-
-                log.debug(css);
-
-                //output css rules to html
-                element.html(css);
             });
         }
     }
@@ -138,16 +79,60 @@ app.directive('columnWidths', function ($log) {
 
 function getCSSrule(column, columnWidth) {
     if (columnWidth) {
-        if (columnWidth === '0%') {
+
+        //-1 hide this column, else set width and show
+        if (columnWidth === -1) {
             css = '#listgrid th:nth-child(' + column +
                 '), #listgrid td:nth-child(' + column +
                 ') {display: none;}';
         } else {
             css = '#listgrid th:nth-child(' + column +
                 '), #listgrid td:nth-child(' + column +
-                ') {width: ' + columnWidth + '; display: table-cell;}';
+                ') {width: ' + columnWidth + '%; display: table-cell;}';
         }
     }
 
 	return css;
+}
+
+function getViewRules(widths, param, viewWidth) {
+    var newCSS = '';
+
+    //look for the viewWidth in each column
+    for (column in widths) {
+        if (widths[column][param]) {
+            columnWidth = widths[column][param];
+
+            //get the css rule & add it other rules
+            if (columnWidth) {
+                var temp = getCSSrule(column, columnWidth);
+                if (temp) {
+                    newCSS = newCSS + temp;
+                }
+            }
+        }
+    }
+
+    //if a viewWidth is supplied, create a media query
+    if (viewWidth) {
+        if (newCSS) {
+            newCSS = '@media all and (min-width: ' + viewWidth + ') {' + newCSS + '} ';
+        }
+    }
+
+    return newCSS;
+}
+
+function removePercent(value) {
+    if (value) {
+        var size = parseInt(value.replace('%', ''));
+
+        if (isNaN(size)) {
+            size = 0;
+        }
+
+        return size;
+    } else {
+        return 0;
+    }
 }

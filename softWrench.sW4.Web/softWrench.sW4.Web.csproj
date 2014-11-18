@@ -361,6 +361,7 @@
     </Content>
     <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Client\%40internal\templates\materials.xml">
       <SubType>Designer</SubType>
