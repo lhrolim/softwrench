@@ -3573,9 +3573,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <attribute name="langcode" type="varchar" required="true" />
         <attribute name="hasld" type="smallint" required="true" />
         <attribute name="porevisionnum" type="int" required="false" />
-        <attribute name="pendingqty" type="decimal" required="false" />
-        <attribute name="shippedqty" type="decimal" required="false" />
-        <attribute name="stagedqty" type="decimal" required="false" />
+        <attribute name="pendingqty" type="double" required="false" />
+        <attribute name="shippedqty" type="double" required="false" />
+        <attribute name="stagedqty" type="double" required="false" />
         <attribute name="oplocation" type="varchar" required="false" />
         <attribute name="tostoreloc" type="varchar" required="false" />
         <attribute name="restype" type="varchar" required="true" />

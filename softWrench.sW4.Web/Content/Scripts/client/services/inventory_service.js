@@ -40,7 +40,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             itemnum: parameters['fields']['itemnum'],
             location: parameters['fields']['storeloc'],
         };
-        searchService.searchWithData("invcost", searchData).success(function(data) {
+        searchService.searchWithData("invcost", searchData).success(function (data) {
             var resultObject = data.resultObject;
             var fields = resultObject[0].fields;
             var costtype = parameters['fields']['inventory_.costtype'];
@@ -52,14 +52,31 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         });
     };
 
+    var updateInventoryCosttype = function(parameters) {
+        var searchData = {
+            itemnum: parameters['fields']['itemnum'],
+            location: parameters['fields']['location'],
+            siteid: parameters['fields']['siteid'],
+            orgid: parameters['fields']['orgid'],
+            itemsetid: parameters['fields']['itemsetid']
+        };
+        searchService.searchWithData("inventory", searchData).success(function (data) {
+            var resultObject = data.resultObject;
+            var fields = resultObject[0].fields;
+            var costtype = fields['costtype'];
+            parameters['fields']['inventory_.costtype'] = costtype;
+            doUpdateUnitCostFromInventoryCost(parameters, "unitcost");
+        });
+    };
+
     return {
-        createIssue: function () {
+        createIssue: function() {
             redirectService.goToApplicationView("invissue", "newInvIssueDetail", "input", null, null, null);
         },
-        navToBulkFilter: function () {
+        navToBulkFilter: function() {
             redirectService.goToApplicationView("invissue", "filter", "input", null, null, null);
         },
-        formatQtyReturnedList: function (parameters) {
+        formatQtyReturnedList: function(parameters) {
             var value = parameters.value;
             var column = parameters.column;
             var dm = parameters.datamap;
@@ -70,7 +87,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
             return formatQtyReturned(dm, value, column);
         },
-        formatQtyList: function (parameters) {
+        formatQtyList: function(parameters) {
             var value = parameters.value;
             var column = parameters.column;
             var dm = parameters.datamap;
@@ -81,7 +98,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
             return formatQty(dm, value, column);
         },
-        formatQtyReturnedDetail: function (parameters) {
+        formatQtyReturnedDetail: function(parameters) {
             var value = parameters.value;
             var column = parameters.column;
             var dm = parameters.datamap;
@@ -95,7 +112,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
             return;
         },
-        formatQtyDetail: function (parameters) {
+        formatQtyDetail: function(parameters) {
             var value = parameters.value;
             var column = parameters.column;
             var dm = parameters.datamap;
@@ -111,7 +128,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
 
-        returnInvIssue: function (matusetransitem) {
+        returnInvIssue: function(matusetransitem) {
             var returnQty = matusetransitem['#quantityadj'];
             var item = matusetransitem['itemnum'];
             var storeloc = matusetransitem['storeloc'];
@@ -120,7 +137,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             if (binnum != null) {
                 message = message + " (Bin: " + binnum + ")";
             }
-            alertService.confirm(null, null, function () {
+            alertService.confirm(null, null, function() {
                 var newReturnItem = angular.copy(matusetransitem);
                 newReturnItem['issueid'] = matusetransitem['matusetransid'];
                 newReturnItem['matusetransid'] = null;
@@ -136,15 +153,15 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     platform: "web",
                     currentSchemaKey: "editinvissuedetail.input.web"
                 };
-                restService.invokePost("data", "post", httpParameters, jsonString, function () {
+                restService.invokePost("data", "post", httpParameters, jsonString, function() {
                     redirectService.goToApplicationView("invissue", "list", null, null, null, null);
                 });
                 modalService.hide();
-            }, message, function () {
+            }, message, function() {
                 modalService.hide();
             });
         },
-        invissuelistclick: function (datamap, schema) {
+        invissuelistclick: function(datamap, schema) {
             var param = {};
             param.id = datamap['matusetransid'];
             var application = 'invissue';
@@ -179,7 +196,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             redirectService.goToApplicationView(application, detail, mode, null, param, null);
         },
 
-        editinvissuewo: function (schema, datamap) {
+        editinvissuewo: function(schema, datamap) {
             var newDatamap = {};
             newDatamap['#assetnum'] = datamap['assetnum'];
             newDatamap['#issueto'] = datamap['issueto'];
@@ -196,13 +213,13 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             param.id = datamap['refwo'];
             redirectService.goToApplicationView('invissuewo', 'newdetail', null, null, param, newDatamap);
         },
-        submitNewInvIssue: function (schema, datamap, saveFn) {
+        submitNewInvIssue: function(schema, datamap, saveFn) {
             modalService.show(schema.compositiondetailschema, datamap, saveFn);
         },
-        cancelNewInvIssue: function () {
+        cancelNewInvIssue: function() {
             redirectService.goToApplicationView("invissue", "invissuelist", null, null, null, null);
         },
-        displayPopupModal: function (parentschema, parentdatamap) {
+        displayPopupModal: function(parentschema, parentdatamap) {
             var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
             var parentdata = parentdatamap['fields'];
             var user = contextService.getUserData();
@@ -222,10 +239,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             modalService.show(compositionschema, itemDatamap, null, compositiondata);
 
         },
-        cancelNewInvIssueItem: function () {
+        cancelNewInvIssueItem: function() {
             modalService.hide();
         },
-        addItemToInvIssue: function (schema, datamap, parentdata, clonedcompositiondata, originalDatamap, previousdata) {
+        addItemToInvIssue: function(schema, datamap, parentdata, clonedcompositiondata, originalDatamap, previousdata) {
             var newRecord = {};
             newRecord['itemnum'] = fields['itemnum'];
             newRecord['quantity'] = 1;
@@ -242,7 +259,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             parameters.clonedCompositionData.push(newRecord);
             redirectService.redirectToTab('invissue_');
         },
-        afterchangeworkorder: function (parameters) {
+        afterchangeworkorder: function(parameters) {
             // If the new work order has a location assigned to it, fill the location on the invissue
             if (parameters.fields['workorder_.location'] == null) {
                 parameters.fields['location'] = null;
@@ -259,17 +276,17 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
             // If the new work order has a gldebitaccnt, fill the gldebitacct on the invissue
             //if (parameters.fields['workorder_.glaccount']) {
-                //parameters.fields['gldebitacct'] = parameters.fields['workorder_.glaccount'];
+            //parameters.fields['gldebitacct'] = parameters.fields['workorder_.glaccount'];
             //}
         },
-        afterChangeStoreroom: function (parameters) {
-            doUpdateUnitCostFromInventoryCost(parameters,'unitcost');
+        afterChangeStoreroom: function(parameters) {
+            doUpdateUnitCostFromInventoryCost(parameters, 'unitcost');
         },
-        afterchangeinvissueitem: function (parameters) {
+        afterchangeinvissueitem: function(parameters) {
             doUpdateUnitCostFromInventoryCost(parameters, 'unitcost');
         },
 
-        afterChangeLocation: function (parameters) {
+        afterChangeLocation: function(parameters) {
             doUpdateUnitCostFromInventoryCost(parameters, 'invuseline_.unitcost');
         },
 
@@ -340,6 +357,18 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             };
             getBinQuantity(searchData, parameters, '#curbal');
         },
+
+        getReserveBinQuantity: function (parameters) {
+            var searchData = {
+                itemnum: parameters['fields']['itemnum'],
+                siteid: parameters['fields']['siteid'],
+                itemsetid: parameters['fields']['itemsetid'],
+                location: parameters['fields']['location'],
+                binnum: parameters['fields']['#frombin']
+            };
+            getBinQuantity(searchData, parameters, '#curbal');
+        },
+
         getTransferBinQuantity: function (parameters) {
             var searchData = {
                 itemnum: parameters['fields']['invuseline_.itemnum'],
@@ -351,9 +380,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             getBinQuantity(searchData, parameters, '#curbal');
         },
         submitTransfer: function (schema, datamap) {
-            // Save transfer
-            var user = contextService.getUserData();
-
             var jsonString = angular.toJson(datamap);
             var httpParameters = {
                 application: "invuse",
@@ -368,7 +394,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                         platform: "web"
                     },
                     SearchDTO: null
-                }
+                };
                 var urlToUse = url("/api/Data/matrectransTransfers?" + $.param(restParameters));
                 $http.get(urlToUse).success(function (data) {
                     redirectService.goToApplication("matrectransTransfers", "list", null, data);
@@ -387,38 +413,73 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
         },
 
+        afterChangeIssueQuantity: function (event) {
+            if (event.fields['#issueqty'] > event.fields['reservedqty']) {
+                alertService.alert("The quantity being transferred cannot be greater than the current balance of the From Bin.");
+                event.scope.datamap['#issueqty'] = event.fields['reservedqty'];
+            }
+        },
+
         submitReservedInventoryIssue: function(schema, datamap) {
-            var user = contextService.getUserData();
-
-            // Get the reserved, actual, and issue quantities
-            var reservedQty = datamap["reservedqty"];
-            var actualQty = datamap["actualqty"];
-            var issueQty = datamap["#issueqty"];
-            // Calculate the new values based on the quantity being issued
-            datamap["reservedqty"] = reservedQty - issueQty;
-            datamap["actualqty"] = actualQty + issueQty;
-
-            var jsonString = angular.toJson(datamap);
-            var httpParameters = {
-                application: "reservedMaterials",
-                platform: "web",
-                currentSchemaKey: "detail.input.web"
+            // Create new matusetrans record
+            var matusetransDatamap = {
+                refwo: datamap['wonum'],
+                assetnum: datamap['assetnum'],
+                issueto: datamap['issueto'],
+                location: datamap['oplocation'],
+                glaccount: datamap['glaccount'],
+                issuetype: 'ISSUE',
+                itemnum: datamap['itemnum'],
+                storeloc: datamap['location'],
+                binnum: datamap['#frombin'],
+                quantity: datamap['#issueqty'],
+                unitcost: datamap['unitcost'],
+                issueunit: datamap['issueunit'],
+                enterby: datamap['enterby'],
+                itemtype: datamap['itemtype'],
+                siteid: datamap['siteid'],
+                costtype: datamap['costtype']
             };
-            restService.invokePost("data", "put", httpParameters, jsonString, function () {
-                var restParameters = {
-                    key: {
-                        schemaId: "list",
-                        mode: "none",
-                        platform: "web"
-                    },
-                    SearchDTO: null
-                }
-                var urlToUse = url("/api/Data/reservedMaterials?" + $.param(restParameters));
-                $http.get(urlToUse).success(function (data) {
-                    redirectService.goToApplication("reservedMaterials", "list", null, data);
+            var jsonString = angular.toJson(matusetransDatamap);
+            var httpParameters = {
+                application: "invissue",
+                currentSchemaKey: "newInvIssueDetail.input.web",
+                platform: "web"
+            };
+            restService.invokePost('data', 'post', httpParameters, jsonString, function() {
+                // Get the reserved, actual, and issue quantities
+                var reservedQty = datamap["reservedqty"];
+                var actualQty = datamap["actualqty"];
+                var issueQty = datamap["#issueqty"];
+                // Calculate the new reserved and actual values based on the quantity being issued
+                var newReservedQty = reservedQty - issueQty;
+                var newActualQty = actualQty + issueQty;
+                // Update the datamap with the new values
+                datamap["reservedqty"] = newReservedQty;
+                datamap["actualqty"] = newActualQty;
+                // Put the new invreserve record
+                jsonString = angular.toJson(datamap);
+                httpParameters = {
+                    currentSchemaKey: "detail.input.web",
+                    platform: "web"
+                };
+                var urlToUse = url("/api/data/reservedMaterials/" + datamap["invreserveid"] + "?" + $.param(httpParameters));
+                $http.put(urlToUse, jsonString).success(function () {
+                    // Return to the list of reserved materials
+                    redirectService.goToApplication("reservedMaterials", "list", null, null);
+                }).error(function () {
+                    // Failed to update the material reservation
                 });
-            });
-        }
+            }); 
+        },
+
+        onloadReservation: function (schema, datamap) {
+            var parameters = {
+                fields: datamap
+            };
+            updateInventoryCosttype(parameters);
+        },
 
     };
 });
+
