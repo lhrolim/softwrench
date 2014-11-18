@@ -1690,9 +1690,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="autocompleteserver"/>
           </association>
         </componentdisplayable>
+        
+        <componentdisplayable id="readonlyuserid">
+          <field label="User ID:" attribute="userid" readonly="true" showexpression="@asset!=null" />
+        </componentdisplayable>
 
         <componentdisplayable id="currentitc">
-          <field label="Current ITC" attribute="asset_.primaryuser_.hlagdisplayname" readonly="true" showexpression="@asset!=null" />
+          <field label="Current ITC" attribute="currentitc" readonly="true" showexpression="@asset!=null" />
         </componentdisplayable>
 
         <componentdisplayable id="specifylocationfrom">
@@ -1932,7 +1936,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                           providerattribute="costCentersByToItc" />
 
             <reference id="defaultuserid" label="User" />
-<!--            <field label="User" attribute="asset_.primaryuser_.person_.hlagdisplayname" />-->
+            <!--            <field label="User" attribute="asset_.primaryuser_.person_.hlagdisplayname" />-->
           </section>
 
         </schema>
@@ -1967,8 +1971,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
           </section>
 
-          <reference id="currentitc"/>
-          <field label="Cost Center" attribute="asset_.assetglaccount_.displaycostcenter" readonly="true" showexpression="@asset!=null" />
+          <section parameters="detaildescription= ">
+            <reference id="currentitc"/>
+            <field label="Cost Center" attribute="asset_.assetglaccount_.displaycostcenter" readonly="true" showexpression="@asset!=null" />
+          </section>
 
         </schema>
 
@@ -2063,8 +2069,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
           <field label="Location of New Asset" attribute="asset_.location_.description" readonly="true" showexpression="@newasset!=null" />
 
-          <reference id="currentitc"/>
-          <field label="Cost Center" attribute="asset_.assetglaccount_.displaycostcenter" readonly="true" showexpression="@asset!=null" />
+          <section id="other" parameters="detaildescription= ">
+            <reference id="readonlyuserid"/>
+            <reference id="currentitc"/>
+<!--            <field label="Cost Center" attribute="asset_.assetglaccount_.displaycostcenter" readonly="true" showexpression="@asset!=null" />-->
+          </section>
 
         </schema>
 

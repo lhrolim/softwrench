@@ -36,8 +36,10 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
         afterChangeAsset: function (event) {
             var userId = event.fields['asset_.aucisowner_.person_.personid'];
             var costCenter = event.fields['asset_.assetglaccount_.glaccount'];
+            var currentITC = event.fields['asset_.primaryuser_.hlagdisplayname'];
             event.fields['userid'] = userId;
             event.fields['costcenter'] = costCenter;
+            event.fields['currentitc'] = currentITC;
             parseLocations(event.fields, event.fields['asset_.location'], event.triggerparams);
         },
 

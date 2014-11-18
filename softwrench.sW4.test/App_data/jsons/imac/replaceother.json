@@ -30,7 +30,7 @@
     "asset_.primaryuser_.person_.displayname": null,
     "asset_.primaryuser_.person_.hlagdisplayname": null,
     "asset_.aucisowner_.person_.hlagdisplayname": null,
-    "userid": null,
+    "userid": "STORM",
     "costcenter": "6200/300/000",
     "2asset_.location_.description": null,
     "#fromlocation_label": "HLAG-MT4",
@@ -41,5 +41,6 @@
     "#building_label": "Miami Customer Service Center",
     "#floor_label": "0001",
     "#room_label": "0006",
-    "#newchildasset_label": "\r\n(13150) 95 FLD112 TRACTOR // 1FG44093300009\r\n(A5006) 95 FLD112 TRACTOR // 1FG44093300009"
+    "#newchildasset_label": "\r\n(13150) 95 FLD112 TRACTOR // 1FG44093300009\r\n(A5006) 95 FLD112 TRACTOR // 1FG44093300009",
+    "currentitc":"FINLEY",
 }

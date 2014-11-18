@@ -144,7 +144,7 @@ namespace softwrench.sw4.Hapag.Data.Connector.Imac {
         }
 
         private static string GetCurrentITC(CrudOperationData jsonObject) {
-            var result = jsonObject.GetAttribute("asset_.primaryuser_.personid") as string;
+            var result = jsonObject.GetAttribute("currentitc") as string;
             return result == null ? "#fakeuserjusttonotthrowexception" : ISMConstants.AddEmailIfNeeded(result).ToUpper();
             //            return SecurityFacade.CurrentUser().MaximoPersonId;
         }
