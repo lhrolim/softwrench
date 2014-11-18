@@ -154,7 +154,12 @@
 
                                     </div>
 
-                                    <div ng-switch-default class="gridcolumnvalue">
+                                    <div ng-switch-default class="gridcolumnvalue"
+                                         ng-style="{
+                                         'min-width':getGridColumnStyle(column,'minwidth'),
+                                         'max-width':getGridColumnStyle(column,'maxwidth'),
+                                         'width':getGridColumnStyle(column,'width')
+                                         }">
 
                                         {{getFormattedValue(dm.fields[column.attribute],column)}}
                                     </div>

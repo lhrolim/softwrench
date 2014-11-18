@@ -23,14 +23,10 @@
 
 @media only screen and (min-width: 1200px) {
 
-    .gridcolumnvalue {
-        max-width: 135px;
-    }
+    
 }
 
 @media only screen and (max-width: 1199px) {
 
-    .gridcolumnvalue {
-        max-width: 100px;
-    }
+   
 }
