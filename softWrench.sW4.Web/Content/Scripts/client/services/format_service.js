@@ -48,7 +48,7 @@ app.factory('formatService', function ($filter, i18NService, dispatcherService) 
     };
 
     return {
-        format: function (datamap, value, column) {
+        format: function (value, column, datamap) {
             if (column == undefined) {
                 return value;
             }
@@ -63,7 +63,13 @@ app.factory('formatService', function ($filter, i18NService, dispatcherService) 
                     var serviceMethod = serviceCall[1];
 
                     var fn = dispatcherService.loadService(serviceName, serviceMethod);
-                    return fn(datamap, value, column);
+
+                    var parameters = {
+                        'value': value,
+                        'column': column,
+                        'datamap': datamap
+                    };
+                    return fn(parameters);
                 }
             }
             

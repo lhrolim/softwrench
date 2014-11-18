@@ -221,7 +221,7 @@
                                             </span>
                                         </div>
                                         <div ng-if="!isColumnEditable(column)">
-                                            {{getFormattedValue(dm,dm.fields[column.attribute],column)}}
+                                            {{getFormattedValue(dm.fields[column.attribute],column,dm)}}
                                         </div>
                                     </div>
 
@@ -234,7 +234,7 @@
                                                    maxlength="{{column.rendererParameters['maxlength']}}"  />
                                         </div>
                                         <div ng-if="!isColumnEditable(column)" ng-init="handleDefaultValue(dm.fields,column)">
-                                            {{getFormattedValue(dm,dm.fields[column.attribute],column)}}
+                                            {{getFormattedValue(dm.fields[column.attribute],column,dm)}}
                                         </div>
                                     </div>
                                 </ng-switch>
@@ -244,7 +244,7 @@
 
                             <div ng-switch-when="OptionField">
                                 <div ng-if="column.rendererParameters['filteronly']=='true'">
-                                    {{getFormattedValue(dm,dm.fields[column.attribute],column)}}
+                                    {{getFormattedValue(dm.fields[column.attribute],column,dm)}}
                                 </div>
 
                                 <div ng-switch on="column.rendererType" ng-if="column.rendererParameters['filteronly']!='true'">

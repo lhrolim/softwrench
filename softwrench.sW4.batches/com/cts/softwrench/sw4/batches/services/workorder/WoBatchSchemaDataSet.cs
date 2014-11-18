@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
 using softWrench.sW4.Data.API;
@@ -26,8 +27,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
                 //let´s fill this only for the first call
                 var endToday = DateUtil.EndOfToday();
                 var beginDate = DateUtil.ParsePastAndFuture("14days", -1);
-                searchDto.AppendSearchEntry("schedstart", ">=" + beginDate.ToShortDateString());
-                searchDto.AppendSearchEntry("schedfinish", "<=" + endToday.ToShortDateString());
+                searchDto.AppendSearchEntry("schedstart", ">=" + beginDate.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture));
+                searchDto.AppendSearchEntry("schedfinish", "<=" + endToday.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture));
             }
             var result = base.GetList(application, searchDto);
             var allActiveBatches = _swdbdao.FindByQuery<Batch>(Batch.ActiveBatchesofApplication, application.Name);

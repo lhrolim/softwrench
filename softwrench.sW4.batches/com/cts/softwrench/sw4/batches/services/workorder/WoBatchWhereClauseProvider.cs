@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +12,14 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder {
     public class WoBatchWhereClauseProvider : ISingletonComponent {
-        public static string GetCrewIdQuery(bool appendDescription) {
+        public static string GetCrewIdQuery(bool appendDescription)
+        {
             var beginDate = DateUtil.ParsePastAndFuture("14days", -1);
+            var date = beginDate.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture);
             return @"SELECT {0} FROM alndomain a WHERE a.domainid = 'CREWID' 
                 AND    a.siteid = '{1}'
                 and exists (select NULL from workorder wo where a.siteid = wo.siteid and a.value = wo.crewid and wo.status = 'WORKING' and wo.schedfinish >= '{2}')"
-                .Fmt(appendDescription ? "value,description" : "value", SecurityFacade.CurrentUser().SiteId, beginDate);
+                .Fmt(appendDescription ? "value,description" : "value", SecurityFacade.CurrentUser().SiteId, date);
         }
 
         public static string WoCountQuery(string context) {

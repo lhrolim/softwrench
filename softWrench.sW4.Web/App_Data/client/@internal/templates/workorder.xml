@@ -82,7 +82,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
           </field>
-
           <properties>
             <property key="list.click.schema" value="editdetail"/>
           </properties>

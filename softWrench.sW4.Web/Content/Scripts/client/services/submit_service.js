@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('submitService', function ($rootScope, fieldService) {
+app.factory('submitService', function ($rootScope, fieldService,contextService) {
 
 
     return {
@@ -17,7 +17,7 @@ app.factory('submitService', function ($rootScope, fieldService) {
             }
 
 
-
+            formToSubmit.append("<input type='hidden' name='currentmodule' value='" + contextService.retrieveFromContext('currentmodule') + "' />");
 
             formToSubmit.append("<input type='hidden' name='application' value='" + applicationName + "' />");
             formToSubmit.append("<input type='hidden' name='json' value='" + jsonString.replace("'", "&apos;") + "' />");
@@ -57,7 +57,7 @@ app.factory('submitService', function ($rootScope, fieldService) {
             });
 
             $('input[type="file"]', form).each(function () {
-                if (this.value != null) {
+                if (this.value != null && this.value!="") {
                     formId = $(this).closest('form');
                 }
             });

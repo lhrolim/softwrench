@@ -458,20 +458,23 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <application entity="SR" name="servicerequest" title="Service Request">
       <schemas>
         <list title="Service Request Grid">
-          <field attribute="ticketid" label="Request #">
-            <renderer type="default" params="minwidth=110px" />
+          <field attribute="ticketid" label="SR No">
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="minwidth=150px" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="minwidth=150px" />
+            <renderer type="default" params="width=15%" />
           </field>
-          <field attribute="affectedperson" label="Affected Person">
-            <renderer type="default" params="minwidth=150px" />
+          <field attribute="owner" label="Owner">
+            <renderer type="default" params="width=15%" />
+          </field>
+          <field attribute="#color" label="">
+            <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
@@ -676,23 +679,24 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </properties>
       <schemas>
         <list title="Work Order Grid" platform="web">
-          <field attribute="wonum" label="WO No">
-            <renderer type="default" params="minwidth=110px" />
+          <field attribute="wonum" label="WO No" >
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" params="minwidth=150px" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="minwidth=150px" />
+            <renderer type="default" params="width=15%" />
           </field>
-          <field attribute="status" label="Status">
-            <renderer type="default" params="minwidth=150px" />
+          <field attribute="status" label="Status" >
+            <renderer type="default" params="width=15%" />
           </field>
-          <section id="statusColorPicker" resourcepath="/Content/Templates/hapag/statuscolorpicker.html" parameters="grid=servicerequest;column=status"/>
-
+          <field attribute="#color" label="">
+            <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
+          </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
           </properties>

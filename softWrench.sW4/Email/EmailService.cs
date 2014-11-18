@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using softWrench.sW4.SimpleInjector;
-using softWrench.sW4.Configuration.Services.Api;
 using System.Net.Mail;
-using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Metadata;
 using Common.Logging;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Email {
     public class EmailService : ISingletonComponent {
+
+        private static readonly Regex HtmlImgRegex = new Regex("<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>");
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(EmailService));
         public void SendEmail(EmailData emailData) {
@@ -27,9 +24,10 @@ namespace softWrench.sW4.Email {
             var email = new MailMessage(emailData.SendFrom, emailData.SendTo) {
                 Subject = emailData.Subject,
                 Body = emailData.Message,
+                IsBodyHtml = true
             };
             if (emailData.Cc != null) {
-                foreach (var ccemail in emailData.Cc.Split(' ',',',';')) {
+                foreach (var ccemail in emailData.Cc.Split(' ', ',', ';')) {
                     email.CC.Add(ccemail);
                 }
             }
@@ -44,8 +42,8 @@ namespace softWrench.sW4.Email {
 
         public class EmailData {
             public EmailData(string sendFrom, string sendTo, string subject, string message) {
-                Validate.NotNull(sendTo,"sentTo");
-                Validate.NotNull(subject,"Subject");
+                Validate.NotNull(sendTo, "sentTo");
+                Validate.NotNull(subject, "Subject");
                 SendFrom = sendFrom;
                 SendTo = sendTo;
                 Subject = subject;
@@ -61,5 +59,7 @@ namespace softWrench.sW4.Email {
             public string Message { get; set; }
         }
 
+
+       
     }
 }
