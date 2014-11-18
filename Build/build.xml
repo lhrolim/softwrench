@@ -200,6 +200,7 @@
       <arg line="-source:iisApp=${OutputDir}/deploy,includeAcls=true" />
       <arg line="-dest:iisApp=${iispath},wmsvc=${msdeploy_url}" />
       <arg line="-allowUntrusted=true" />
+      <arg line="-enableRule:AppOffline" />
       <arg line="-verbose" />
     </exec>
   </target>
