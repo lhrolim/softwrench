@@ -59,7 +59,7 @@
                             ng-model="datamap[fieldMetadata.target]"
                             ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                             ng-enabled="isSelectEnabled(fieldMetadata)"
-                            tabindex="{{$index}}" />
+                             />
                     <!--<div class="arrow"></div>-->
                 </div>
 
@@ -105,7 +105,7 @@
                                             ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                                             ng-enabled="isSelectEnabled(fieldMetadata)"
                                             data-associationkey="{{fieldMetadata.associationKey}}"
-                                            tabindex="{{$index}}" />
+                                             />
                                 </div>
                             </div>
                             <div class="col-xs-6 autocompleteclientopendetails">
@@ -116,7 +116,7 @@
                                             ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
                                             ng-enabled="isSelectEnabled(fieldMetadata)"
                                             data-associationkey="{{fieldMetadata.associationKey}}"
-                                            tabindex="{{$index}}" />
+                                             />
 
                                 </div>
                             </div>
@@ -135,7 +135,7 @@
                                         ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
                                         data-associationkey="{{fieldMetadata.associationKey}}"
-                                        tabindex="{{$index}}" />
+                                         />
                             </div>
                             <div ng-switch-default>
                                 <select id="{{formatId(fieldMetadata.target)}}"
@@ -144,7 +144,7 @@
                                         ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
                                         data-associationkey="{{fieldMetadata.associationKey}}"
-                                        tabindex="{{$index}}" />
+                                         />
 
                             </div>
                         </div>
@@ -250,7 +250,7 @@
                                 ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                                 ng-enabled="isSelectEnabled(fieldMetadata)"
                                 custombuttontext=""
-                                tabindex="{{$index}}" />
+                                 />
                         <div ng-if="fieldMetadata.rendererParameters['showvaluesbelow'] == 'true'">
                             <table>
                                 <tbody>
