@@ -248,7 +248,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         public IEnumerable<IAssociationOption> GetRoomToLocation(OptionFieldProviderParameters parameters) {
             return GetRoom(parameters.OriginalEntity.GetAttribute("tolocation") as String,
-                parameters.OriginalEntity.GetAttribute("buildingtolocation") as String,
+                parameters.OriginalEntity.GetAttribute("building") as String,
                 parameters.OriginalEntity.GetAttribute("floor") as String);
         }
 
