@@ -513,6 +513,12 @@
     <Content Include="Content\Images\kongsberg\header.jpg" />
     <Content Include="Content\Images\kongsberg\signin.jpg" />
     <Content Include="Content\Images\logo-main.png" />
+    <Content Include="Content\Images\manchester\branding.png" />
+    <Content Include="Content\Images\manchester\divider.png" />
+    <Content Include="Content\Images\manchester\header.jpg" />
+    <Content Include="Content\Images\manchester\logo-main.png" />
+    <Content Include="Content\Images\manchester\signin-branding.png" />
+    <Content Include="Content\Images\manchester\signin.jpg" />
     <Content Include="Content\Images\pagination-first.png" />
     <Content Include="Content\Images\pagination-last.png" />
     <Content Include="Content\Images\pagination-next.png" />
@@ -860,6 +866,7 @@
     <Content Include="Content\styles\hapag\site.css" />
     <Content Include="Content\styles\kongsberg\signin.css" />
     <Content Include="Content\styles\kongsberg\site.css" />
+    <Content Include="Content\styles\manchester\branding.css" />
     <Content Include="Content\styles\otb\application\grids.css" />
     <Content Include="Content\styles\scottsdale\signin.css" />
     <Content Include="Content\styles\scottsdale\site.css" />
@@ -1518,8 +1525,6 @@
     <Folder Include="App_Data\Client\gric\i18n\en\" />
     <Folder Include="App_Data\Client\shared\" />
     <Folder Include="Content\Customers\gric\" />
-    <Folder Include="Content\Images\manchester\" />
-    <Folder Include="Content\styles\manchester\" />
     <Folder Include="Views\HapagHome\" />
     <Folder Include="Views\SchedulerSetup\" />
   </ItemGroup>
