@@ -146,7 +146,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="qtyreturned" label="Qty Rtn">
             <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
-          <section resourcepath="/Content/Templates/otb/invissuereturnaction.html"></section>
+          <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
+            <renderer type="default" params="width=6%;"/>
+          </section>
         </list>
 
         <schema id="itemlist" stereotype="compositionlist">
