@@ -7,13 +7,22 @@
     padding-bottom: 20px;
 }
 
-    .page-signin .form-signin {
+    .page-signin .shadow {
         max-width: 800px;
-        padding: 40px 15px;
         margin: 0 auto;
-        background-color: rgba(1, 62, 91, 0.3);
         box-shadow: 0 0 30px 5px rgba(0, 0, 0, 0.6);
     }
+
+    .page-signin .form-signin {
+        padding: 40px 15px;
+        background-color: rgba(1, 62, 91, 0.3);
+    }
+
+        .page-signin .form-signin .divider {
+            height: 60px;
+            width: 600px;
+            margin: 0 auto;
+        }
 
         .page-signin .form-signin input[type="text"], .page-signin .form-signin input[type="email"], .page-signin .form-signin input[type="password"] {
             margin-bottom: 20px;
@@ -45,12 +54,15 @@
             }
 
         .page-signin .form-signin .logo {
-            margin-bottom: 40px;
+            /*margin-bottom: 40px;*/
             padding: 0 20px;
         }
    
+        .page-signin .form-signin .branding {
+            margin: 0 auto;
+        }
+
         .page-signin .form-signin .cts-name {
-            margin-top: 60px;
             padding: 0 20px;
         }
 
@@ -87,11 +99,11 @@
     }
 
         .page-signin .logo {
-            margin-bottom: 60px;
+            /*margin-bottom: 60px;*/
             padding: 0;
         }
 
-                .page-signin .form-signin .user-links {
+        .page-signin .form-signin .user-links {
             margin-bottom: 0;
         }
 }
