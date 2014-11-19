@@ -22,7 +22,7 @@ app.directive('columnWidths', function ($log) {
                     //new row object
                     var row = {};
 
-                    log.debug('css', id, json[id]);
+                    log.debug('css', id, json[id], json[id].rendererParameters);
 
                     //if the column has rendererParameters, else defaul to 0 width
                     //log.debug(json[id]);
@@ -114,7 +114,7 @@ function balanceColumns(widths, param) {
             balanceWidth = 100 / totalColumns;
         }
 
-        console.log('CSS', param, 'totalWidth', totalWidth, 'remainingWidth', remainingWidth, 'totalColumns', totalColumns, 'without Width', totalColumns - withWidth, 'balanceWidth', balanceWidth);
+        //console.log(param, 'totalWidth', totalWidth, 'remainingWidth', remainingWidth, 'totalColumns', totalColumns, 'without Width', totalColumns - withWidth, 'balanceWidth', balanceWidth);
 
         //update the columns without widths
         for (column in widths) {

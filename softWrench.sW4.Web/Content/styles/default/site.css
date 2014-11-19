@@ -792,8 +792,9 @@ label.form-control {
 /*JV - ~10/03 - SWWEB-472 - Add green & orange color CSS that can be used for icons*/
 
 .low-opacity {
-    opacity: 0.4;
-    filter: alpha(opacity=40); /* For IE8 and earlier */
+    /*SM - disabled, opacity causing z-index on issues & returns grid*/
+    /*opacity: 0.4;*/
+    /*filter: alpha(opacity=40);*/ /* For IE8 and earlier */
 }
 
 /*JV - 10/08 - SWWEB-472 - Add yellow color CSS that can be used for icons*/
