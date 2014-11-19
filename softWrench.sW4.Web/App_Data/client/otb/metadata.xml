@@ -968,28 +968,31 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="usetype" hidden="true"/>
           <association label="Site Id" target="siteid" labelfield="site_.description" extraprojectionvalues="description" required="true">
             <renderer type="lookup"/>
+            <event type="afterchange" service="inventoryService" method="invUse_afterChangeSite"/>
           </association>
           <association target="invuseline_.itemnum" labelfield="item_.description" label="Item" required="true">
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterItem"/>
+            <event type="afterchange" service="inventoryService" method="invUse_afterChangeItem"/>
           </association>
           <association target="fromstoreloc" label="From Storeroom" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,itemsetid,location" required="true">
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterFromStoreLoc"/>
-            <event type="afterchange" service="inventoryService" method="invUse_afterChangeLocation"/>
+            <event type="afterchange" service="inventoryService" method="invUse_afterChangeFromStoreroom"/>
           </association>
-          <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true" required="true">
-            <dataprovider prefilterfunction="FilterFromBin" postfilterfunction="ParseBins"/>
+          <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true">
+            <!--<dataprovider prefilterfunction="FilterFromBin" postfilterfunction="ParseBins"/>-->
             <event type="afterchange" service="inventoryService" method="invUse_afterChangeFromBin"/>
             <renderer type="Lookup"/>
           </association>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>
           <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" required="true">
             <dataprovider prefilterfunction="FilterToStoreLoc"/>
+            <event type="afterchange" service="inventoryService" method="invUse_afterChangeToStoreroom"/>
             <renderer type="lookup"/>
           </association>
-          <association target="invuseline_.tobin" label="To Bin" labelfield="toinvbalance_.binnum" hideDescription="true" required="true">
-            <dataprovider prefilterfunction="FilterToBin" postfilterfunction="ParseBins"/>
+          <association target="invuseline_.tobin" label="To Bin" labelfield="toinvbalance_.binnum" hideDescription="true">
+            <!--<dataprovider prefilterfunction="FilterToBin" postfilterfunction="ParseBins"/>-->
             <renderer type="Lookup"/>
           </association>
           <field attribute="invuseline_.quantity" label="Quantity" required="true">

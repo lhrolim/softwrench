@@ -289,9 +289,28 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             doUpdateUnitCostFromInventoryCost(parameters, 'unitcost');
         },
 
-        invUse_afterChangeLocation: function (parameters) {
+        invUse_afterChangeFromStoreroom: function (parameters) {
             doUpdateUnitCostFromInventoryCost(parameters, 'invuseline_.unitcost');
+            var itemnum = parameters['fields']['invuseline_.itemnum'];
+            var siteid = parameters['fields']['siteid'];
+            var fromstoreloc = parameters['fields']['fromstoreloc'];
+            if (itemnum !== undefined && itemnum.trim() != "" &&
+                siteid !== undefined && siteid.trim() != "" && 
+                fromstoreloc !== undefined && fromstoreloc.trim() != "") {
+                var searchData = {
+                    itemnum: itemnum,
+                    siteid: siteid,
+                    itemsetid: parameters['fields']['inventory_.itemsetid'],
+                    location: parameters['fields']['fromstoreloc']
+                };
+                getBinQuantity(searchData, parameters, '#curbal', null);
+            } else {
+                parameters['fields']['invuseline_.tobin'] = null;
+                parameters['fields']['#curbal'] = null;
+                parameters['fields']['invuseline_.frombin'] = null;
+            }
         },
+
 
         invIssue_afterChangeAsset: function (parameters) {
             //Sets the associated GL Debit Account
@@ -352,9 +371,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
         getIssueBinQuantity: function (parameters) {
             var binnum = parameters['fields']['invuseline_.frombin'];
-            if (binnum == '[No Bin]') {
-                binnum = null;
-            }
+            //if (binnum == '[No Bin]') {
+            //    binnum = null;
+            //}
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 siteid: parameters['fields']['siteid'],
@@ -372,9 +391,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
 
             var binnum = parameters['fields']['invuseline_.frombin'];
-            if (binnum == '[No Bin]') {
-                binnum = null;
-            }
+            //if (binnum == '[No Bin]') {
+            //    binnum = null;
+            //}
             var searchData = {
                 itemnum: parameters['fields']['invuseline_.itemnum'],
                 siteid: parameters['fields']['inventory_.siteid'],
@@ -384,9 +403,36 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             getBinQuantity(searchData, parameters, '#curbal', binnum);
             return;
         },
+        invUse_afterChangeItem: function (parameters) {
+
+            if (parameters['fields']['invuseline_.itemnum'] == null ||
+                parameters['fields']['invuseline_.itemnum'].trim() == "") {
+                parameters['fields']['fromstoreloc'] = null;
+                return;
+            }
+
+        },
+        invUse_afterChangeSite: function (parameters) {
+
+            if (parameters['fields']['invuseline_.siteid'] == null ||
+                parameters['fields']['invuseline_.siteid'].trim() == "") {
+                parameters['fields']['invuseline_.itemnum'] = null;
+                parameters['fields']['invuseline_.tostoreloc'] = null;
+                parameters['fields']['invuseline_.tobin'] = null;
+                return;
+            }
+
+        },
         submitTransfer: function (schema, datamap) {
             // Save transfer
-            var user = contextService.getUserData();
+            //var user = contextService.getUserData();
+            //if (datamap['invuseline_.frombin'] == '[No Bin]') {
+            //    datamap['invuseline_.frombin'] = null;
+            //}
+
+            //if (datamap['inventory_.tobin'] == '[No Bin]') {
+            //    datamap['inventory_.tobin'] = null;
+            //}
 
             var jsonString = angular.toJson(datamap);
             var httpParameters = {

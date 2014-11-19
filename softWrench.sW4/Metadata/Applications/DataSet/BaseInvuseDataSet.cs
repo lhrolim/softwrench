@@ -70,33 +70,33 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             filter.AppendSearchEntry("inventory_.siteid", siteid.ToString().ToUpper());
             filter.AppendSearchEntry("invbalances.location", location.ToString().ToUpper());
             filter.ProjectionFields.Clear();
-            filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '[No Bin]')"));
+            //filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '[No Bin]')"));
             filter.SearchAscending = true;
             return filter;
         }
 
-        public IEnumerable<IAssociationOption> ParseBins(AssociationPostFilterFunctionParameters postParams)
-        {
-            ISet<IAssociationOption> resultBins = new HashSet<IAssociationOption>();
+        //public IEnumerable<IAssociationOption> ParseBins(AssociationPostFilterFunctionParameters postParams)
+        //{
+        //    ISet<IAssociationOption> resultBins = new HashSet<IAssociationOption>();
 
-            var nullBinWithInventory = (from bin in postParams.Options
-                                        where bin.Value == "[No Bin]"
-                                        select bin).SingleOrDefault();
+        //    var nullBinWithInventory = (from bin in postParams.Options
+        //                                where bin.Value == "[No Bin]"
+        //                                select bin).SingleOrDefault();
 
-            if (nullBinWithInventory != null) {
-                resultBins.Add(nullBinWithInventory);
-            } 
+        //    if (nullBinWithInventory != null) {
+        //        resultBins.Add(nullBinWithInventory);
+        //    } 
             
-            var binsWithInventory = (from bin in postParams.Options
-                                          where bin.Value != "[No Bin]"
-                                          select bin).ToList();
+        //    var binsWithInventory = (from bin in postParams.Options
+        //                                  where bin.Value != "[No Bin]"
+        //                                  select bin).ToList();
 
-            foreach (var bin in binsWithInventory) {
-                resultBins.Add(bin);
-            }
+        //    foreach (var bin in binsWithInventory) {
+        //        resultBins.Add(bin);
+        //    }
 
-            return resultBins;
-        }
+        //    return resultBins;
+        //}
 
         public override string ApplicationName() {
             return "invuse";
