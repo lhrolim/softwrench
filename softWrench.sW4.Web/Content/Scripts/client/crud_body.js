@@ -95,6 +95,9 @@ app.directive('crudBody', function (contextService) {
                 if (tab != null) {
                     redirectService.redirectToTab(tab);
                 }
+
+                //make sure we are seeing the top of the grid 
+                window.scrollTo(0, 0);
                 
             });
 

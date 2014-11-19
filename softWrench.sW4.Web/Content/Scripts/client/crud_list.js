@@ -103,6 +103,9 @@ app.directive('crudList', function (contextService) {
                     }
                 });
 
+                //make sure we are seeing the top of the grid 
+                window.scrollTo(0, 0);
+
                 $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
                 log.debug('finish table rendered listener');
             });

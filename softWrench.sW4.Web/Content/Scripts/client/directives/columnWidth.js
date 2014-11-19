@@ -22,7 +22,7 @@ app.directive('columnWidths', function ($log) {
                     //new row object
                     var row = {};
 
-                    log.debug('css', id, json[id], json[id].rendererParameters);
+                    //log.debug('css', id, json[id], json[id].rendererParameters);
 
                     //if the column has rendererParameters, else defaul to 0 width
                     //log.debug(json[id]);
