@@ -22,30 +22,49 @@ app.directive('columnWidths', function ($log) {
                     //new row object
                     var row = {};
 
-                    width = removePercent(json[id].rendererParameters.width);
-                                
-                    //if width is set override responsive widths
-                    if (width) {
-                        row.width = width;
-                        row.widthXS = width;
-                        row.widthSM = width;
-                        row.widthMD = width;
-                        row.widthLG = width;
-                    } else { //else add responsive width
-                        row.width = width;
-                        row.widthXS = removePercent(json[id].rendererParameters.widthXS);
-                        row.widthSM = removePercent(json[id].rendererParameters.widthSM);
-                        row.widthMD = removePercent(json[id].rendererParameters.widthMD);
-                        row.widthLG = removePercent(json[id].rendererParameters.widthLG);
-                    }
+                    log.debug('css', id, json[id]);
 
-                    widths[column] = row;
+                    //if the column has rendererParameters, else defaul to 0 width
+                    //log.debug(json[id]);
+
+                    if (!json[id].isHidden) {
+                        if (json[id].rendererParameters) {
+                            width = removePercent(json[id].rendererParameters.width);
+
+                            //if width is set override responsive widths, else add responsive widths
+                            if (width) {
+                                row.width = width;
+                                row.widthXS = width;
+                                row.widthSM = width;
+                                row.widthMD = width;
+                                row.widthLG = width;
+                            } else {
+                                row.width = width;
+                                row.widthXS = removePercent(json[id].rendererParameters.widthXS);
+                                row.widthSM = removePercent(json[id].rendererParameters.widthSM);
+                                row.widthMD = removePercent(json[id].rendererParameters.widthMD);
+                                row.widthLG = removePercent(json[id].rendererParameters.widthLG);
+                            }
+                        } else {
+                            row.width = 0;
+                            row.widthXS = 0;
+                            row.widthSM = 0;
+                            row.widthMD = 0;
+                            row.widthLG = 0;
+                        }
+
+                        widths[column] = row;
+                    }
                 }
 
-                
-                //check if widths found
-                //if (Object.keys(widths).length > 0) {
-                    log.debug('Widths Found', widths);
+                log.debug('Widths Found', widths);
+
+                //balance remaining width between missing column widths
+                balanceColumns(widths, 'width');
+                balanceColumns(widths, 'widthXS');
+                balanceColumns(widths, 'widthSM');
+                balanceColumns(widths, 'widthMD');
+                balanceColumns(widths, 'widthLG');
 
                 //build css rules
                 var css = getViewRules(widths, 'width', null);
@@ -54,18 +73,8 @@ app.directive('columnWidths', function ($log) {
                 css = css + getViewRules(widths, 'widthMD', '768px');
                 css = css + getViewRules(widths, 'widthLG', '992px');
 
-                //}
-                //else {
-                //    log.debug('No widths found for', json.length, 'columns');
-
-                //    var width = 100 / json.length;
-                //    var columnWidth = Math.floor(width) + '%';
-
-                //    css = getCSSrule(null, columnWidth);
-                //}
-
                 if (css) {
-                    log.debug(css);
+                    //log.debug(css);
 
                     //output css rules to html
                     element.html(css);
@@ -76,6 +85,50 @@ app.directive('columnWidths', function ($log) {
         }
     }
 });
+
+function balanceColumns(widths, param) {
+
+    var totalColumns = Object.keys(widths).length;
+    var totalWidth = 0;
+    var withWidth = 0;
+    
+    //total all the column widths
+    for (column in widths) {
+        if (widths[column][param] === -1) {
+            withWidth++;
+        } else if (widths[column][param] > 0) {
+            totalWidth = totalWidth + widths[column][param];
+            withWidth++;
+        }
+    }
+
+    //if there are columns without widths assigned
+    if (withWidth < totalColumns) {
+
+        //if the total metadata widths are less than 100 calc the remainder, else fallback to equal width columns
+        if (totalWidth <= 100) {
+            remainingWidth = 100 - totalWidth;
+            balanceWidth = remainingWidth / (totalColumns - withWidth);
+        } else {
+            remainingWidth = 0;
+            balanceWidth = 100 / totalColumns;
+        }
+
+        console.log('CSS', param, 'totalWidth', totalWidth, 'remainingWidth', remainingWidth, 'totalColumns', totalColumns, 'without Width', totalColumns - withWidth, 'balanceWidth', balanceWidth);
+
+        //update the columns without widths
+        for (column in widths) {
+            if (remainingWidth > 0) {
+                currentWidth = widths[column][param];
+                if (currentWidth === 0) {
+                    widths[column][param] = balanceWidth;
+                }
+            } else {
+                widths[column][param] = balanceWidth;
+            }
+        }
+    }
+}
 
 function getCSSrule(column, columnWidth) {
     if (columnWidth) {
@@ -127,6 +180,7 @@ function removePercent(value) {
     if (value) {
         var size = parseInt(value.replace('%', ''));
 
+        //if size is not a number
         if (isNaN(size)) {
             size = 0;
         }

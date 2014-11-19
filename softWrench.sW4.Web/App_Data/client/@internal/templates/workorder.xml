@@ -71,13 +71,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" params="widthXS=0%;widthSM=25%;widthMD=20%;widthLG=15%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=20%;widthLG=15%" />
           </field>
           <field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="widthXS=0%;widthMD=30%;widthLG=25%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=30%;widthLG=25%" />
           </field>
           <field attribute="status" label="Status" >
-            <renderer type="default" params="widthXS=0%;widthLG=15%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>

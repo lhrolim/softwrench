@@ -78,22 +78,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="widthXS=0%;widthMD=20%;widthLG=12%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%;widthLG=12%" />
           </field>
           <field attribute="targetfinish" label="Target Finish">
-            <renderer type="datetime" params="widthXS=0%;widthLG=15%;format=dd/MM/yyyy HH:mm;showtime=false" />
+            <renderer type="datetime" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%;format=dd/MM/yyyy HH:mm;showtime=false" />
           </field>
           <field attribute="internalpriority" label="Priority">
-            <renderer type="default" params="widthXS=0%;widthSM=15%;widthMD=10%;widthLG=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=15%;widthMD=10%;widthLG=8%" />
           </field>
           <field attribute="reportdate" label="Reported Date">
-            <renderer type="datetime" params="widthXS=0%;widthLG=15%;format=dd/MM/yyyy HH:mm;showtime=false" />
+            <renderer type="datetime" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%;format=dd/MM/yyyy HH:mm;showtime=false" />
           </field>
           <field attribute="ownergroup" label="Owner Group">
-            <renderer type="default" params="widthXS=0%;widthMD=15%;widthLG=12%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=12%" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="widthXS=0%;widthSM=20%;widthMD=15%;widthLG=10%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=incident;column=status"/>
