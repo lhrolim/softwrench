@@ -400,15 +400,13 @@ app.directive('crudList', function (contextService) {
             }
 
             $scope.shouldShowHeaderFilter = function (column) {
-                return $scope.shouldShowHeaderLabel(column) && "false" != column.rendererParameters["filterenabled"];
+                return $scope.shouldShowHeaderLabel(column) && !column.rendererParameters["hidefilter"];
             }
 
             $scope.statusColor = function (status, gridname) {
                 return statuscolorService.getColor(status, $scope.schema.applicationName);
             }
-
-
-
+            
             $scope.sort = function (column) {
                 if (!$scope.shouldShowHeaderLabel(column) || "none" == $scope.schema.properties["list.sortmode"]) {
                     return;

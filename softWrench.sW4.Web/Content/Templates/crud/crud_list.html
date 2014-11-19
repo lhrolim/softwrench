@@ -75,14 +75,8 @@
                     <th ng-show="schema.properties['list.selectionstyle'] == 'single'">
                         <!--Singleselect-->
                     </th>
-
-                     <!--ng-style="{'min-width': column.rendererParameters['minwidth'],
-                                'max-width': column.rendererParameters['maxwidth'],
-                                'width': column.rendererParameters['width']}"-->
-
                     <th ng-repeat="column in schema.displayables"
                         ng-show="!isFieldHidden(schema,column)"
-                        ng-class="{'hidefilter': column.rendererParameters['hidefilter']}"
                         filterrowrendered>
                         <div ng-if="shouldShowHeaderFilter(column)">
                             <ng-switch on="column.type">
