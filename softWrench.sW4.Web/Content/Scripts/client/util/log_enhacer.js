@@ -57,8 +57,14 @@ function enhanceAngularLog($log, contextService) {
                 return;
             }
 
-            var modifiedArguments = [].slice.call(arguments);
-            modifiedArguments[0] = [moment().format("dddd hh:mm:ss:SSS a") + '::[' + context + ']> '] + modifiedArguments[0];
+            //var modifiedArguments = [].slice.call(arguments);
+            //modifiedArguments[0] = [moment().format("dddd hh:mm:ss:SSS a") + '::[' + context + ']> '] + modifiedArguments[0];
+
+            //add timestamp and context to array of arguments (inspect object using the bowser console)
+            var currentargs = [].slice.call(arguments);
+            var contextarg = [moment().format("dddd hh:mm:ss:SSS a") + '::[' + context + ']> '];
+            var modifiedArguments = contextarg.concat(currentargs);
+
             loggingFunc.apply(null, modifiedArguments);
             if (localStorage.logs == undefined) {
                 localStorage.logs = "";

@@ -139,6 +139,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="storelocsiteid" type="varchar" required="false" />
         <attribute name="rowstamp" type="timestamp" required="false" />
       </attributes>
+      <relationships>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="inventory" />
       </connectorParameters>
@@ -293,6 +298,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
     <entity name="invuse" idAttribute="invuseid">
       <relationships>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to="siteid" primary="true"/>
+        </relationship>
         <relationship to="invuseline">
           <relationshipAttribute from="invusenum" to="invusenum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid"/>
@@ -491,31 +499,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Change Grid">
           <field attribute="workorderid" hidden="true">
-
           </field>
           <field attribute="wonum" label="Change ID">
-            <renderer type="default" params="width=16%" />
+            <renderer type="default" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="status" label="Status" >
-            <renderer type="default" params="width=16%" />
+            <renderer type="default" />
           </field>
           <field attribute="pmchgtype" label="Type" >
-            <renderer type="default" params="width=16%" />
+            <renderer type="default" />
           </field>
           <field attribute="priority" label="Priority" >
-            <renderer type="default" params="width=16%" />
+            <renderer type="default" />
           </field>
           <field attribute="risk" label="Risk" >
-            <renderer type="default" params="width=16%" />
+            <renderer type="default" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=change;column=status"/>
           </field>
-
-
           <properties>
             <property key="list.click.schema" value="editdetail"/>
           </properties>
@@ -687,26 +692,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <list title="Inventory Grid" platform="web">
           <commandbars>
             <commandgroup position="gridtop">
-              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" />
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
             </commandgroup>
           </commandbars>
           <field attribute="itemnum" label="Item No">
-            <renderer type="default" params="width=16%" />
+            <renderer type="default" params="widthXS=35%;widthSM=30%;widthMD=20%;widthLG=10%" />
           </field>
           <field attribute="item_.description" label="Description">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="location" label="Storeroom">
-            <renderer type="default" params="width=16%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
           </field>
           <field attribute="binnum" label="Bin">
-            <renderer type="default" params="width=16%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
           </field>
           <field attribute="curbal" label="Balance">
-            <renderer type="default" params="width=16%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="siteid" label="Site">
-            <renderer type="default" params="width=16%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="invbalancesid" hidden="true"/>
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
@@ -722,6 +727,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Description:" attribute="item_.description" readonly="true"/>
           <field label="Storeroom:" attribute="location" readonly="true"/>
           <field label="Bin:" attribute="binnum" readonly="true"/>
+          <field label="Issue Unit:" attribute="item_.issueunit" readonly="true"/>
           <field label="Balance:" attribute="curbal"/>
           <field label="Site:" attribute="siteid" readonly="true"/>
           <field attribute="physcnt" hidden="true"/>
@@ -753,25 +759,25 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <!--Creating the Grid: SWWEB-232-->
         <list title="Purchase Grid">
           <field attribute="prnum" label="PR No.">
-            <renderer type="default" params="width=13%"/>
+            <renderer type="default" params="widthXS=35%;widthSM=25%;widthMD=20%;widthLG=10%"/>
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=13%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%" />
           </field>
           <field attribute="requireddate" label="Required Date">
-            <renderer type="datetime" params="width=13%;format=dd/MM/yyyy HH:mm;showtime=false" />
+            <renderer type="datetime" params="widthXS=-1%;widthSM=30%;widthMD=20%;format=dd/MM/yyyy HH:mm;showtime=false" />
           </field>
           <field attribute="vendor" label="Vendor">
-            <renderer type="default" params="width=13%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;" />
           </field>
           <field attribute="totalcost" label="Total Cost">
-            <renderer type="default" params="width=13%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="siteid" label="Site ID">
-            <renderer type="default" params="width=13%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=pr;column=status"/>
@@ -985,7 +991,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <commandbars>
             <commandgroup position="gridtop">
               <command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService" 
-                       method="createTransfer" parameters="schema"/>
+                       method="createTransfer" parameters="schema" position="&lt;filter"/>
             </commandgroup>
           </commandbars>
         </list>
@@ -996,6 +1002,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="frombin" label="From Bin" readonly="true"/>
           <field attribute="tostoreloc" label="To Storeroom" readonly="true"/>
           <field attribute="tobin" label="To Bin" readonly="true"/>
+          <field attribute="issueunit" label="Issue Unit" readonly="true"/>
           <field attribute="quantity" label="Quantity" readonly="true"/>
           <field attribute="actualdate" label="Transfer Date" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
@@ -1008,30 +1015,43 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <schema id="newdetail" stereotype="detail" mode="input">
           <field attribute="usetype" hidden="true"/>
-          <association target="invuseline_.itemnum" labelfield="item_.description" label="Item"  required="true">
+          <association label="Site Id" target="siteid" labelfield="site_.description" extraprojectionvalues="description" required="true">
             <renderer type="lookup"/>
+            <event type="afterchange" service="inventoryService" method="invUse_afterChangeSite"/>
           </association>
-          <association target="fromstoreloc" label="From Storeroom" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,siteid,itemsetid,location" required="true">
+          <association target="invuseline_.itemnum" labelfield="item_.description" label="Item" required="true" extraprojectionvalues="issueunit">
             <renderer type="lookup"/>
-            <event type="afterchange" service="inventoryService" method="afterChangeLocation"/>
+            <dataprovider prefilterfunction="FilterItem"/>
+            <event type="afterchange" service="inventoryService" method="invUse_afterChangeItem"/>
           </association>
-          <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true" required="true">
-            <dataprovider prefilterfunction="FilterBin"/>
-            <event type="afterchange" service="inventoryService" method="getTransferBinQuantity"/>
+          <association target="fromstoreloc" label="From Storeroom" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,itemsetid,location" required="true">
             <renderer type="lookup"/>
+            <dataprovider prefilterfunction="FilterFromStoreLoc"/>
+            <event type="afterchange" service="inventoryService" method="invUse_afterChangeFromStoreroom"/>
           </association>
+          <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true">
+            <dataprovider prefilterfunction="FilterFromBin" />
+            <event type="afterchange" service="inventoryService" method="invUse_afterChangeFromBin"/>
+            <renderer type="Lookup"/>
+          </association>
+          <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>
           <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" required="true">
-            <dataprovider prefilterfunction="FilterLocation"/>
+            <dataprovider prefilterfunction="FilterToStoreLoc"/>
+            <event type="afterchange" service="inventoryService" method="invUse_afterChangeToStoreroom"/>
             <renderer type="lookup"/>
           </association>
-          <field attribute="invuseline_.tobin" label="To Bin" required="true"/>
+          <association target="invuseline_.tobin" label="To Bin" labelfield="toinvbalance_.binnum" hideDescription="true">
+            <dataprovider prefilterfunction="FilterToBin" />
+            <renderer type="Lookup"/>
+          </association>
           <field attribute="invuseline_.quantity" label="Quantity" required="true">
             <event type="afterchange" service="inventoryService" method="afterChangeTransferQuantity"/>
             <renderer type="numericinput" params="min=1;"/>
           </field>
           <field attribute="invuseline_.unitcost" label="Unit Cost" hidden="true"/>
           <field attribute="inventory_.costtype" label="Cost Type" hidden="true"/>
+          <field attribute="lotnum" hidden="true"/>
           <commandbars>
             <commandgroup position="detailform" removeundeclared="true">
               <command id="saveTransfer" icon="fa fa-save" label="Submit" service="inventoryService" method="submitTransfer" position="left" parameters="schema,datamap"/>
@@ -1061,28 +1081,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Purchase Order Grid">
           <field attribute ="ponum" label="PO">
-            <renderer type="default" params="width=15%"/>
+            <renderer type="default" />
           </field>
           <field attribute ="description" label="Description">
             <renderer type="default" params="excelwidth=50"/>
           </field>
           <field attribute ="status" label="Status">
-            <renderer type="default" params="width=12%"/>
+            <renderer type="default" />
           </field>
           <field attribute ="siteid" label="Site">
-            <renderer type="default" params="width=12%"/>
+            <renderer type="default" />
           </field>
           <field attribute ="potype" label="Type">
-            <renderer type="default" params="width=12%"/>
+            <renderer type="default" />
           </field>
           <field attribute ="priority" label="Priority">
-            <renderer type="default" params="width=12%"/>
+            <renderer type="default" />
           </field>
           <field attribute ="requireddate" label="Required Date">
-            <renderer type="datetime" params="width=12%;format=MM/dd/yyyy HH:mm;showtime=false"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=false"/>
           </field>
           <field attribute ="totalcost" label="Total Cost">
-            <renderer type="default" params="width=12%"/>
+            <renderer type="default" />
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>

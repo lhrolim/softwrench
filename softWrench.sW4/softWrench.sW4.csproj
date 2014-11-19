@@ -242,7 +242,7 @@
     <Compile Include="Metadata\Applications\Association\DynamicOptionFieldResolver.cs" />
     <Compile Include="Metadata\Applications\Command\ApplicationCommandExtensions.cs" />
     <Compile Include="Metadata\Applications\DataSet\AssociationPostFilterFunctionParameters.cs" />
-    <Compile Include="Metadata\Applications\DataSet\InvuseDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\BaseInvuseDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\ComToolTransDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\IncidentDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInventoryIssueDataSet.cs" />
