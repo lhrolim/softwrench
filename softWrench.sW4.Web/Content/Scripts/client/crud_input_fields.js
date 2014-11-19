@@ -91,6 +91,12 @@ app.directive('crudInputFields', function (contextService) {
             orientation: '@',
             insidelabellesssection: '@',
         },
+
+        link: function (scope, element, attrs) {
+            scope.lookupAssociationsCode = {};
+            scope.lookupAssociationsDescription = {};
+        },
+
         controller: function ($scope, $http, $element, $injector, $timeout,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
@@ -307,8 +313,8 @@ app.directive('crudInputFields', function (contextService) {
                 $scope.datamap[datamapKey] = model;
             };
             /* LOOKUP functions */
-            $scope.lookupAssociationsCode = {};
-            $scope.lookupAssociationsDescription = {};
+        
+
             $scope.showLookupModal = function (fieldMetadata) {
                 if (!$scope.isSelectEnabled(fieldMetadata)) {
                     return;

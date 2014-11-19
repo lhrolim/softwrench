@@ -92,7 +92,7 @@ namespace softWrench.sW4.Data.Entities {
                 var relationshipName = EntityUtil.GetRelationshipName(attributeName, out resultAttributeName);
                 var relationship = GetRelationship(relationshipName);
                 if (relationship is Entity) {
-                    return ContainsAttribute(resultAttributeName);
+                    return ((Entity)relationship).ContainsAttribute(resultAttributeName);
                 }
             }
             return UnmappedAttributes.ContainsKey(attributeName) || Attributes.ContainsKey(attributeName);
