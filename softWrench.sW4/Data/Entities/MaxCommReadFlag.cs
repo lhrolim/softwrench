@@ -21,7 +21,7 @@ namespace softWrench.sW4.Data.Entities {
         public virtual string Application { get; set; }
 
         [Property]
-        public virtual int ApplicationItemId { get; set; }
+        public virtual string ApplicationItemId { get; set; }
 
         [Property]
         public virtual int UserId { get; set; }

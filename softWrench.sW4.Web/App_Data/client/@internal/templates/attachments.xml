@@ -11,6 +11,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       <schemas>
         <list stereotype="compositionlist" platform="mobile">
           <field label="Id" hidden="true" attribute="docinfoid"/>
+          <field hidden="true" attribute="ownerid"/>
           <field hidden="true" attribute="doclinksid"/>
           <field label="Document" attribute="document" qualifier="title"/>
           <field label="Created Date" attribute="createdate" qualifier="subtitle"/>
@@ -24,6 +25,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <property key="detail.cancel.lbl" value="Close"/>
             <property key="expansible" value="false"/>
           </properties>
+          <field hidden="true" attribute="ownerid"/>
           <field label="Id" hidden="true" attribute="docinfoid"/>
           <field hidden="true" attribute="doclinksid"/>
           <field label="Document" hidden="true" attribute="document"/>
@@ -41,6 +43,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
         <schema id="detail" title="Attachments">
           <field hidden="true" attribute="doclinksid"/>
+          <field hidden="true" attribute="ownerid"/>
           <field label="Id" hidden="true" attribute="docinfoid"/>
           <field label="Title:" attribute="document" />
           <field label="Attachment:" attribute="newattachment" required="true">

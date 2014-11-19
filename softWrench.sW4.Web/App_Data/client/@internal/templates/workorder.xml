@@ -64,8 +64,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </properties>
       <schemas>
         <list title="Work Order Grid" platform="web">
-
-
           <field attribute="wonum" label="WO No" >
             <renderer type="default" params="width=15%" />
           </field>
@@ -84,12 +82,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
           </field>
-
           <properties>
             <property key="list.click.schema" value="editdetail"/>
           </properties>
         </list>
-
 
         <schema id="ahiddendetails" title="schemaForHoldingHiddensOnly" abstract="true" stereotype="detail" platform="web">
           <field attribute="estdur"            hidden="true"/>
@@ -125,6 +121,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
 
         <schema id="adetail" title="Work Order Detail" abstract="true" stereotype="detail" platform="web">
+
+          <field attribute="workorderid" hidden="true"/>
           <section id ="siteidsection"/>
           <section id="realfields">
             <field attribute="orgid"  required="true" readonly="true" hidden="true"/>
