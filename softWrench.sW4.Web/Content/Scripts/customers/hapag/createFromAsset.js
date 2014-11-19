@@ -59,8 +59,7 @@
             //this means that we want to keep the same window (!=browser), but with no menu
             popupmode: 'nomenu'
         };
-        var title = schemaid == 'general' ? capitaliseFirstLetter('new {0} service request') : capitaliseFirstLetter('new ' + typeofimac + ' imac service');
-        redirectService.goToApplicationView(typeofticket, schemaid, 'input', title, parameters, initialData);
+        redirectService.goToApplicationView(typeofticket, schemaid, 'input', null, parameters, initialData);
     };
 
     $scope.isvalid = function (schemaid, typeofimac) {
