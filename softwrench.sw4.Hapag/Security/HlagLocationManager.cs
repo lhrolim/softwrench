@@ -318,6 +318,7 @@ namespace softwrench.sw4.Hapag.Security {
             var dto = new SearchRequestDto();
             dto.AppendProjectionField(new ProjectionField("accountname", "accountname"));
             dto.AppendProjectionField(new ProjectionField("glaccount", "glaccount"));
+            dto.AppendProjectionField(new ProjectionField("displaycostcenter", "displaycostcenter"));
 
             dto.AppendWhereClause(groupedLocation.CostCentersForQuery("glaccount"));
 
@@ -326,8 +327,8 @@ namespace softwrench.sw4.Hapag.Security {
 
             foreach (var attributeHolder in queryResult) {
                 var value = (String)attributeHolder.GetAttribute("glaccount");
-                var label = (String)attributeHolder.GetAttribute("accountname");
-                options.Add(new GenericAssociationOption(value, value.Replace('-', '/') + "//" + label));
+                var label = (String)attributeHolder.GetAttribute("displaycostcenter");
+                options.Add(new GenericAssociationOption(value, label));
             }
 
             //            if (options.Count == 0 && ApplicationConfiguration.IsDebug()) {
