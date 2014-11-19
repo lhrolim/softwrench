@@ -122,30 +122,32 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="storeloc" hidden="true"/>
           <field attribute="binnum" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="width=12%;"/>
+            <renderer type="default" />
           </field>
           <field attribute="refwo" label="Workorder">
-            <renderer type="default" params="width=12%;"/>
+            <renderer type="default" />
           </field>
           <field attribute="issueto" label="Issue To">
-            <renderer type="default" params="width=12%;"/>
+            <renderer type="default" />
           </field>
           <field attribute="assetnum" label="Asset">
-            <renderer type="default" params="width=12%;"/>
+            <renderer type="default" />
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" params="width=12%;"/>
+            <renderer type="default" />
           </field>
           <field attribute="issuetype" label="Issue Type">
-            <renderer type="default" params="width=12%;"/>
+            <renderer type="default" />
           </field>
-          <field attribute="quantity" label="Quantity">
-            <renderer type="default" params="width=12%;formatter=@inventoryService.formatQtyList;"/>
+          <field attribute="quantity" label="Qty">
+            <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyList;"/>
           </field>
-          <field attribute="qtyreturned" label="Quantity Returned">
-            <renderer type="default" params="width=12%;formatter=@inventoryService.formatQtyReturnedList;"/>
+          <field attribute="qtyreturned" label="Qty Rtn">
+            <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
-          <section resourcepath="/Content/Templates/otb/invissuereturnaction.html"></section>
+          <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
+            <renderer type="default" params="width=6%;"/>
+          </section>
         </list>
 
         <schema id="itemlist" stereotype="compositionlist">
@@ -368,16 +370,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <list title="Physical Count">
           <field attribute="invbalancesid" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="width=18%"/>
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="inventory_.siteid" label="Site">
-            <renderer type="default" params="width=18%"/>
+            <renderer type="default" />
           </field>
           <field attribute="location" label="Storeroom">
-            <renderer type="default" params="width=18%"/>
+            <renderer type="default" />
           </field>
           <field attribute="binnum" label="Bin">
-            <renderer type="default" params="width=18%"/>
+            <renderer type="default" />
           </field>
         </list>
         

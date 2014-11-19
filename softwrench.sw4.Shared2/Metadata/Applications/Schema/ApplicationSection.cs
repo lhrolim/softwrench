@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
+using softwrench.sW4.Shared2.Metadata.Applications.UI;
 using softwrench.sW4.Shared2.Util;
 using System.Xml.Serialization;
 using System;
@@ -36,7 +37,19 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private Boolean AreComponentsResolved = false;
         private string _parametersString;
+        private FieldRenderer _renderer;
+        public string RendererType {
+            get { return _renderer.RendererType; }
+        }
 
+        public IDictionary<string, string> RendererParameters {
+            get { return _renderer == null ? new Dictionary<string, string>() : _renderer.ParametersAsDictionary(); }
+        }
+
+        public FieldRenderer Renderer {
+            get { return _renderer; }
+            set { _renderer = value; }
+        }
         public string Qualifier { get; set; }
 
         public ApplicationSection() {
@@ -46,7 +59,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public ApplicationSection(string id, string applicationName,
             bool @abstract, string label, string attribute, string resourcepath,
             string parameters, List<IApplicationDisplayable> displayables, string showExpression,
-            string toolTip, string orientation, ApplicationHeader header) {
+            string toolTip, string orientation, ApplicationHeader header, FieldRenderer renderer) {
             Id = id;
             ApplicationName = applicationName;
             Abstract = @abstract;
@@ -60,7 +73,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             ToolTip = toolTip;
             ValidateOrientation(orientation);
             Header = header;
-        }
+            _renderer = renderer;
+
+            }
         protected virtual void ValidateOrientation(string orientation) {
 
             ApplicationSectionOrientation result;
@@ -75,7 +90,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
-        public string RendererType { get { return null; } }
         public string Type { get { return GetType().Name; } }
         public string Orientation { get { return OrientationEnum.ToString().ToLower(); } }
         public string Role { get { return ApplicationName + "." + Id; } }
@@ -96,7 +110,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 }
             }
             return new ApplicationSection(Id, ApplicationName, Abstract, Label, Attribute, Resourcepath, _parametersString,
-            resultDisplayables, ShowExpression, ToolTip, Orientation, Header);
+            resultDisplayables, ShowExpression, ToolTip, Orientation, Header, _renderer);
         }
 
         public List<IApplicationDisplayable> Displayables {

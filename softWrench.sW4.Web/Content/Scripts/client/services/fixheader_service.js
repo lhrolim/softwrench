@@ -138,6 +138,8 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         },
 
         fixThead: function (schema, params) {
+            var log = $log.getInstance('sw4.fixThead');
+ 
             if ($rootScope.clientName == 'hapag') {
                 log.debug('starting fix Thead');
                 if (!params || !params.resizing) {

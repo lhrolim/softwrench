@@ -681,9 +681,11 @@
   </element>
   <complexType name="sectionComplexType">
     <sequence>
-
       <element name="header" type="tns:headerType" minOccurs="0"
 				maxOccurs="1">
+      </element>
+      <element name="renderer" type="tns:Renderer" maxOccurs="1"
+				minOccurs="0">
       </element>
       <choice minOccurs="0" maxOccurs="unbounded">
         <element minOccurs="0" maxOccurs="unbounded" name="field"

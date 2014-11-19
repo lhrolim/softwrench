@@ -361,6 +361,7 @@
     </Content>
     <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Client\%40internal\templates\materials.xml">
       <SubType>Designer</SubType>
@@ -637,6 +638,7 @@
     <Content Include="Content\Scripts\client\components\lookupcomponent.js" />
     <Content Include="Content\Scripts\client\components\richtext.js" />
     <Content Include="Content\Scripts\client\crud_body_modal.js" />
+    <Content Include="Content\Scripts\client\directives\columnWidth.js" />
     <Content Include="Content\Scripts\client\directives\gridtoolBar.js" />
     <Content Include="Content\Scripts\client\makeSWAdmin.js" />
     <Content Include="Content\Scripts\client\crud_base_controller.js" />
