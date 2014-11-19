@@ -432,6 +432,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseReceiptCrudConnector" />
       </connectorParameters>
     </entity>
+    
+    <entity name="materialrecords" parententity="matrectrans" idAttribute="matrectransid"/>
   </entities>
 
   <applications>
@@ -1293,6 +1295,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <detail stereotype="compositiondetail">
           <field attribute="polinenum" label="PO Line:"/>
         </detail>
+      </schemas>
+    </application>
+
+    <application name="materialrecords" entity="materialrecords" title="Matrectrans items">
+      <schemas>
+        <list id="list">
+          <field attribute="ponum" label="ponum"/>
+          <field attribute="polinenum" label="polinenum"/>
+          <field attribute="quantity" label="quantity received"/>
+        </list>
       </schemas>
     </application>
   </applications>
