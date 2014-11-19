@@ -113,9 +113,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </properties>
           <commandbars>
             <commandgroup position="gridtop">
-              <command id="batch_issue" label="Batch Issuing" service="inventoryService" method="navToBatchFilter" parameters="" successmessage="New issue(s) created"/>
               <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap"
-                       successmessage="Issue created"/>
+                       successmessage="Issue created" position="&lt;filter"/>
+              <command id="batch_issue" label="Batch Issuing" service="inventoryService" method="navToBatchFilter" parameters="" successmessage="New issue(s) created" position="&lt;filter"/>
             </commandgroup>
           </commandbars>
           <field attribute="matusetransid" hidden="true"/>
