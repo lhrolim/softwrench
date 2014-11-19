@@ -1692,7 +1692,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </componentdisplayable>
         
         <componentdisplayable id="readonlyuserid">
-          <field label="User ID:" attribute="userid" readonly="true" showexpression="@asset!=null" />
+          <field label="User ID" attribute="userid" readonly="true" showexpression="@asset!=null" />
         </componentdisplayable>
 
         <componentdisplayable id="currentitc">
@@ -2072,7 +2072,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section id="other" parameters="detaildescription= ">
             <reference id="readonlyuserid"/>
             <reference id="currentitc"/>
-<!--            <field label="Cost Center" attribute="asset_.assetglaccount_.displaycostcenter" readonly="true" showexpression="@asset!=null" />-->
+            <field label="Cost Center" attribute="costcenter" readonly="true" showexpression="@asset!=null" />
           </section>
 
         </schema>
