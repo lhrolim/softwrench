@@ -140,11 +140,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="issuetype" label="Issue Type">
             <renderer type="default" />
           </field>
-          <field attribute="quantity" label="Quantity">
-            <renderer type="default" params="widthXS=-1%;formatter=@inventoryService.formatQtyList;"/>
+          <field attribute="quantity" label="Qty">
+            <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyList;"/>
           </field>
-          <field attribute="qtyreturned" label="Quantity Returned">
-            <renderer type="default" params="widthXS=-1%;formatter=@inventoryService.formatQtyReturnedList;"/>
+          <field attribute="qtyreturned" label="Qty Rtn">
+            <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html"></section>
         </list>

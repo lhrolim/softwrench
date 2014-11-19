@@ -50,12 +50,7 @@
                     <th ng-show="schema.properties['list.selectionstyle'] == 'single'">
                         <!--Singleselect-->
                     </th>
-                               <!--ng-style="{'min-width': column.rendererParameters['minwidth'],
-                                           'max-width': column.rendererParameters['maxwidth'],
-                                           'width': column.rendererParameters['width'],
-                                           'word-wrap': column.rendererParameters['wordwrap']}"-->
                     <th ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)"
-             
                         ng-click="sort(column)">
                         <div ng-if="shouldShowHeaderLabel(column)">
                             <span class="add-on" rel="tooltip" data-container="body" data-original-title="{{i18N('_grid.filter.clicksort','Click here to sort')}}">
@@ -87,6 +82,7 @@
 
                     <th ng-repeat="column in schema.displayables"
                         ng-show="!isFieldHidden(schema,column)"
+                        ng-class="{'hidefilter': column.rendererParameters['hidefilter']}"
                         filterrowrendered>
                         <div ng-if="shouldShowHeaderFilter(column)">
                             <ng-switch on="column.type">
@@ -179,10 +175,6 @@
                     <td ng-show="compositionlistschema.properties['list.selectionstyle'] == 'single'">
                         <!--Singleselect-->
                     </td>
-
-                    <!--ng-style="{'min-width': column.rendererParameters['minwidth'],
-                                'max-width': column.rendererParameters['maxwidth'],
-                                'width': column.rendererParameters['width']}"-->
                     <td ng-repeat="column in schema.displayables"
                         bo-show="!isFieldHidden(schema,column)"
                         class="xoupscolumns"
