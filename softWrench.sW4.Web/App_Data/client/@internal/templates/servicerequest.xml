@@ -58,7 +58,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <properties>
             <property key="list.click.schema" value="editdetail"/>
           </properties>
-
         </list>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">

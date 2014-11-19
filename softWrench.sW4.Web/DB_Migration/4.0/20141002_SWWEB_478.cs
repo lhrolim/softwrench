@@ -10,7 +10,7 @@ namespace softWrench.sW4.Web.DB_Migration._4._0 {
             Create.Table("MAX_COMMREADFLAG")
                 .WithColumn("Id").AsInt64().PrimaryKey().Identity()
                 .WithColumn("Application").AsString(MigrationUtil.StringMedium).NotNullable()
-                .WithColumn("ApplicationItemId").AsInt64().NotNullable()
+                .WithColumn("ApplicationItemId").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("UserId").AsInt32().NotNullable()
                 .WithColumn("CommlogId").AsInt64().NotNullable()
                 .WithColumn("ReadFlag").AsBoolean().NotNullable();
