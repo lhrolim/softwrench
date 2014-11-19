@@ -674,6 +674,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Description:" attribute="item_.description" readonly="true"/>
           <field label="Storeroom:" attribute="location" readonly="true"/>
           <field label="Bin:" attribute="binnum" readonly="true"/>
+          <field label="Issue Unit:" attribute="item_.issueunit" readonly="true"/>
           <field label="Balance:" attribute="curbal"/>
           <field label="Site:" attribute="siteid" readonly="true"/>
           <field attribute="physcnt" hidden="true"/>
@@ -948,6 +949,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="frombin" label="From Bin" readonly="true"/>
           <field attribute="tostoreloc" label="To Storeroom" readonly="true"/>
           <field attribute="tobin" label="To Bin" readonly="true"/>
+          <field attribute="issueunit" label="Issue Unit" readonly="true"/>
           <field attribute="quantity" label="Quantity" readonly="true"/>
           <field attribute="actualdate" label="Transfer Date" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
@@ -960,7 +962,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <schema id="newdetail" stereotype="detail" mode="input">
           <field attribute="usetype" hidden="true"/>
-          <association target="invuseline_.itemnum" labelfield="item_.description" label="Item"  required="true">
+          <association target="invuseline_.itemnum" labelfield="item_.description" label="Item"  required="true" extraprojectionvalues="issueunit">
             <renderer type="lookup"/>
           </association>
           <association target="fromstoreloc" label="From Storeroom" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,siteid,itemsetid,location" required="true">
@@ -972,6 +974,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <event type="afterchange" service="inventoryService" method="getTransferBinQuantity"/>
             <renderer type="lookup"/>
           </association>
+          <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>
           <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" required="true">
             <dataprovider prefilterfunction="FilterLocation"/>
