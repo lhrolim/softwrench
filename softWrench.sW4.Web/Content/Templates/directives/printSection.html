@@ -1,6 +1,6 @@
 ﻿<div class="hiddenonscreen">
     <div ng-if="showPrintSection">
-        <div id="rootprintdiv" ng-repeat="item in printDatamap" printsectionrendered>
+        <div id="rootprintdiv" ng-repeat="item in printDatamap" ng-class="{'pagebreak-after': shouldPageBreak}" printsectionrendered>
             <div ng-show="shouldPrintMain">
                 <h4 class="text-center"><strong>{{printSchema.title}}</strong></h4>
                 <crud-output-fields schema="printSchema" datamap="item.fields" displayables="printSchema.displayables" orientation="vertical">
