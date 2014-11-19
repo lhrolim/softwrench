@@ -125,7 +125,7 @@ app.directive('crudInputFields', function (contextService) {
             });
 
             $scope.$on('sw_unblock_association', function (event, association) {
-                $scope.blockedassociations[association] = null;
+                $scope.blockedassociations[association] = false;
             });
 
             $scope.$on('sw_associationsupdated', function (event, associationoptions) {
