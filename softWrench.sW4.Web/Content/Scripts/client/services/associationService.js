@@ -114,7 +114,9 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             } else if (fullObject == null) {
                 //now, the object was not present in the array, let´s update it. For instance, we have a lookup with a single initial option, and changed it to another.
                 //the array should contain 2 elements in the end. If the object was already there, no need to do anything
-                scope.associationOptions[key] = instantiateIfUndefined(scope.associationOptions[key]);
+                if (scope.associationOptions[key] == undefined) {
+                    scope.associationOptions[key] = [];
+                }
                 scope.associationOptions[key].push(underlyingValue);
                 $log.getInstance('associationService#updateUnderlyingAssociationObject').debug('updating association array {0} pushing new item'.format(key));
             }
