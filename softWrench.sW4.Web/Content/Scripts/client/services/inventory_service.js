@@ -82,7 +82,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var dm = parameters.datamap;
             if (dm != undefined) {
                 if (dm.fields != undefined) {
-                    var dm = parameters.datamap.fields;
+                    dm = parameters.datamap.fields;
                 }
             }
             return formatQtyReturned(dm, value, column);
@@ -93,7 +93,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var dm = parameters.datamap;
             if (dm != undefined) {
                 if (dm.fields != undefined) {
-                    var dm = parameters.datamap.fields;
+                    dm = parameters.datamap.fields;
                 }
             }
             return formatQty(dm, value, column);
@@ -104,13 +104,13 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var dm = parameters.datamap;
             if (dm != undefined) {
                 if (dm.fields != undefined) {
-                    var dm = parameters.datamap.fields;
+                    dm = parameters.datamap.fields;
                 }
                 var formattedValue = formatQtyReturned(dm, value, column);
                 dm[column.attribute] = formattedValue;
                 return formattedValue;
             }
-            return;
+            return null;
         },
         formatQtyDetail: function(parameters) {
             var value = parameters.value;
@@ -118,13 +118,13 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var dm = parameters.datamap;
             if (dm != undefined) {
                 if (dm.fields != undefined) {
-                    var dm = parameters.datamap.fields;
+                    dm = parameters.datamap.fields;
                 }
                 var formattedValue = formatQty(dm, value, column);
                 dm[column.attribute] = formattedValue;
                 return formattedValue;
             }
-            return;
+            return null;
         },
 
 
@@ -161,7 +161,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 modalService.hide();
             });
         },
-        invissuelistclick: function(datamap, schema) {
+        invissuelistclick: function(datamap) {
             var param = {};
             param.id = datamap['matusetransid'];
             var application = 'invissue';
@@ -242,7 +242,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         cancelNewInvIssueItem: function() {
             modalService.hide();
         },
-        addItemToInvIssue: function(schema, datamap, parentdata, clonedcompositiondata, originalDatamap, previousdata) {
+        addItemToInvIssue: function() {
             var newRecord = {};
             newRecord['itemnum'] = fields['itemnum'];
             newRecord['quantity'] = 1;
@@ -364,7 +364,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 siteid: parameters['fields']['siteid'],
                 itemsetid: parameters['fields']['itemsetid'],
                 location: parameters['fields']['location'],
-                binnum: parameters['fields']['#frombin']
+                binnum: parameters['fields']['invbalances_.binnum']
             };
             getBinQuantity(searchData, parameters, '#curbal');
         },
@@ -420,7 +420,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
         },
 
-        submitReservedInventoryIssue: function(schema, datamap) {
+        submitReservedInventoryIssue: function (schema, datamap) {
+            if (datamap['#issueqty'] > datamap['#curbal']) {
+                alertService.alert("The quantity being issued cannot be greater than the current balance of the From Bin.");
+                return;
+            }
             // Create new matusetrans record
             var matusetransDatamap = {
                 refwo: datamap['wonum'],
@@ -431,7 +435,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 issuetype: 'ISSUE',
                 itemnum: datamap['itemnum'],
                 storeloc: datamap['location'],
-                binnum: datamap['#frombin'],
+                binnum: datamap['invbalances_.binnum'],
                 quantity: datamap['#issueqty'],
                 unitcost: datamap['unitcost'],
                 issueunit: datamap['issueunit'],
@@ -449,9 +453,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             };
             restService.invokePost('data', 'post', httpParameters, jsonString, function() {
                 // Get the reserved, actual, and issue quantities
-                var reservedQty = datamap["reservedqty"];
-                var actualQty = datamap["actualqty"];
-                var issueQty = datamap["#issueqty"];
+                var reservedQty = Number(datamap["reservedqty"]);
+                var actualQty = Number(datamap["actualqty"]);
+                var issueQty = Number(datamap["#issueqty"]);
                 // Calculate the new reserved and actual values based on the quantity being issued
                 var newReservedQty = reservedQty - issueQty;
                 var newActualQty = actualQty + issueQty;
@@ -459,7 +463,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     currentSchemaKey: "detail.input.web",
                     platform: "web"
                 };
-                if (newReservedQty > 0) {
+
+                // If the reserved quantity reaches 0 then the invreserve record should be deleted but
+                // the delete functionality is not currently working so just update the invreserve record for now
+
+                //if (newReservedQty > 0) {
                     // If there is still a reserved quantity, update the record
                     // Update the datamap with the new values
                     datamap["reservedqty"] = newReservedQty;
@@ -473,14 +481,14 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     }).error(function() {
                         // Failed to update the material reservation
                     });
-                } else {
-                    // If the reserved quantity has reached 0, delete the record
-                    var deleteUrl = url("/api/data/reservedMaterials/" + datamap["invreserveid"] + "?" + $.param(httpParameters));
-                    $http.delete(deleteUrl).success(function () {
-                        // Return to the list of reserved materials
-                        redirectService.goToApplication("reservedMaterials", "list", null, null);
-                    });
-                }
+                //} else {
+                //    // If the reserved quantity has reached 0, delete the record
+                //    var deleteUrl = url("/api/data/reservedMaterials/" + datamap["invreserveid"] + "?" + $.param(httpParameters));
+                //    $http.delete(deleteUrl).success(function () {
+                //        // Return to the list of reserved materials
+                //        redirectService.goToApplication("reservedMaterials", "list", null, null);
+                //    });
+                //}
             }); 
         },
 
