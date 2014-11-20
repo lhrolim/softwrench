@@ -384,34 +384,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="siteid" label="Site" readonly="true"/>
           <field attribute="inventory_.costtype" hidden="true"/>
         </schema>
-
-        <!--<schema id="invreserveIssueDetail" mode="input" stereotype="detail">
-          <field attribute="matusetransid" hidden="true"/>
-          <field attribute="refwo" label="Workorder" readonly="true"/>
-          <field attribute="issueto" label="Issue To" readonly="true"/>
-          <field attribute="assetnum" label="Asset" readonly="true"/>
-          <field attribute="location" label="Location" readonly="true"/>
-          <field attribute="issuetype" label="Issue Type" readonly="true" default="ISSUE"/>
-          <field attribute="itemnum" label="Item" readonly="true"/>
-          <association label="Storeroom" target="storeloc" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,issueunit,itemtype" required="true">
-            <event type="afterchange" service="inventoryService" method="afterChangeStoreroom"/>
-          </association>
-          <association label="Bin" target="binnum" labelfield="invbalances_.binnum" hideDescription="true">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="inventoryService" method="afterChangeBin"/>
-          </association>
-          <field attribute="#curbal" label="Current Balance" readonly="true"/>
-          <field attribute="quantity" label="Quantity" default="1">
-            <renderer type="numericinput" params="min=1;max=reservedqty"/>
-          </field>
-          <field attribute="unitcost" label="Unit Cost" readonly="true"/>
-          <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
-          <field attribute="enterby" label="Entered By" readonly="true"/>
-          <field attribute="inventory_.itemtype" label="Item Type" readonly="true"/>
-          <field attribute="siteid" label="Site" readonly="true"/>
-          <field attribute="inventory_.costtype" hidden="true"/>
-          <event type="onload" service="inventoryService" method="onloadInvreserved"/>
-        </schema>-->
       </schemas>
     </application>
 
@@ -528,9 +500,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="width=11%"/>
           </field>
           <field attribute="location" hidden="true"/>
-          <!--<properties>
-            <property key="list.click.service" value="inventoryService.reservedMaterialsListClick"/>
-          </properties>-->
         </list>
         
         <schema id="detail" mode="input">
@@ -550,8 +519,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="location" label="Storeroom" readonly="true"/>
           <field attribute="reservedqty" label="Reserved Quantity" readonly="true"/>
           <field attribute="actualqty" label="Quantity Issued" readonly="true" hidden="true"/>
-          <association target="#frombin" labelfield="invbalances_.binnum" label="From Bin" hideDescription="true">
-            <!--<dataprovider prefilterfunction="FilterBins"/>-->
+          <association target="#frombin" labelfield="invbalances_.binnum" label="From Bin">
             <event type="afterchange" service="inventoryService" method="getReserveBinQuantity"/>
           </association>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>
