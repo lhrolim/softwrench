@@ -109,11 +109,16 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             }
 
             var key = associationFieldMetadata.associationKey;
-            var i;
+            var fullObject = this.getFullObject(associationFieldMetadata, scope.datamap, scope.associationOptions);
             if (underlyingValue == null) {
                 //we need to locate the value from the list of association options
                 // we only have the "value" on the datamap
-                underlyingValue = this.getFullObject(associationFieldMetadata, scope.datamap, scope.associationOptions);
+                underlyingValue = fullObject;
+            } else if (fullObject == null) {
+                //now, the object was not present in the array, let´s update it. For instance, we have a lookup with a single initial option, and changed it to another.
+                //the array should contain 2 elements in the end. If the object was already there, no need to do anything
+                scope.associationOptions[key] = instantiateIfUndefined(scope.associationOptions[key]);
+                scope.associationOptions[key].push(underlyingValue);
             }
             if (underlyingValue == null && scope.associationOptions[key] == null) {
                 //the value remains null, but this is because the list of options is lazy loaded, nothing to do
@@ -249,7 +254,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     }
                 });
             }
-            
+
         },
 
         getEagerAssociations: function (scope) {
