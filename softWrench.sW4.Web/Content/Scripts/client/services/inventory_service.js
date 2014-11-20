@@ -249,12 +249,22 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             redirectService.goToApplicationView('invissuewo', 'newdetail', null, null, param, newDatamap);
         },
         submitNewInvIssue: function (schema, datamap, saveFn) {
-            modalService.show(schema.compositiondetailschema, datamap, saveFn);
+            var newRecord = {};
+            newRecord['itemnum'] = "Z-RAGS";
+            newRecord['quantity'] = 1;
+            newRecord['item_.description'] = "Z-RAGS";
+            newRecord['issuetype'] = "ISSUE";
+            newRecord['matusetransid'] = null;
+            newRecord['assetnum'] = "2025";
+            
+            var user = contextService.getUserData();
+            newRecord['siteid'] = user.siteid;
+            datamap.push(newRecord);
         },
         cancelNewInvIssue: function () {
             redirectService.goToApplicationView("invissue", "list", null, null, null, null);
         },
-        displayPopupModal: function (parentschema, parentdatamap) {
+        displayNewIssueModal: function (parentschema, parentdatamap, clonedCompositionData) {
             var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
             var parentdata = parentdatamap['fields'];
             var user = contextService.getUserData();
@@ -270,10 +280,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             itemDatamap['location'] = parentdata['#location'];
             itemDatamap['storeloc'] = parentdata['#storeloc'];
             itemDatamap['gldebitacct'] = parentdata['#gldebitacct'];
-            var compositiondata = parentdatamap['fields']['invissue_'];
 
-            modalService.show(compositionschema, itemDatamap, null, compositiondata);
-
+            contextService.insertIntoContext('clonedCompositionData', clonedCompositionData, false);
+            modalService.show(compositionschema, itemDatamap, null);
         },
         cancelNewInvIssueItem: function () {
             modalService.hide();
@@ -294,6 +303,17 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             newRecord['storeloc'] = matusetransData['#storeloc'];
             parameters.clonedCompositionData.push(newRecord);
             redirectService.redirectToTab('invissue_');
+        },
+        addItemToBatch: function (datamap) {
+            var test = contextService.fetchFromContext('clonedCompositionData', true, false);
+            if (test['invissue_'] == null) {
+                test['invissue_'] = [];
+            }
+            var newissue = {};
+            newissue.matusetransid = "";
+            newissue.assetnum = "2235";
+            newissue.itemnum = "Z-RAGS";
+            test['invissue_'].push(newissue);
         },
         invIssue_afterChangeWorkorder: function (parameters) {
             if (parameters.fields['refwo'] == null || parameters.fields['refwo'].trim() == "") {

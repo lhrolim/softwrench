@@ -158,13 +158,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </properties>
           <commandbars>
             <commandgroup position="compositiontop" removeundeclared="true"/>
-            <commandgroup position="compositionbottom" >
-              <removecommand id="print"/>
-              <removecommand id="cancel"/>
-              <removecommand id="add"/>
-              <command id="additem" label="Add Item" service="inventoryService" method="displayPopupModal" parameters="parentschema,parentdatamap"/>
-              <command id="savenewinvissue" label="Submit" service="inventoryService" method="submitNewInvIssue" parameters="schema,datamap" />
-              <command id="cancelnewinvissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" />
+            <commandgroup position="compositionbottom" removeundeclared="true">
+              <command id="additemtobatchissue" label="Add Item" service="inventoryService" method="displayNewIssueModal" parameters="parentschema,parentdatamap,clonedCompositionData"/>
+              <command id="submitnewbatchissue" label="Submit" service="inventoryService" method="submitNewInvIssue" parameters="schema,datamap,$scope" />
+              <command id="cancelnewbatchissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" />
             </commandgroup>
           </commandbars>
           <event type="onload" service="scannerdetectionService" method="initIssueItemListener"/>
@@ -257,7 +254,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </commandbars>
         </schema>
 
-        <schema id="newitem" stereotype="compositiondetail" mode="input" >
+        <schema id="newitem" stereotype="compositiondetail" mode="input" title="New Issue">
           <field attribute="matusetransid" hidden="true"/>
           <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" required="true">
             <renderer type="lookup"/>
@@ -283,6 +280,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="inventory_.itemtype" label="Item Type" readonly="true"/>
           <field attribute="siteid" label="Site" readonly="true"/>
           <field attribute="inventory_.costtype" hidden="true"/>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="cancel"/>
+              <removecommand id="print"/>
+              <removecommand id="save"/>
+              <command id="additemtobatch" label="Add" service="inventoryService" method="addItemToBatch" parameters="datamap,parentdata"/>
+              <command id="cancel" label="Cancel" service="modalService" method="hide"/>
+            </commandgroup>
+          </commandbars>
         </schema>
 
         <schema id="batchInvIssueFilter" stereotype="detail" title="Issues and Returns" mode="input" platform="Web">
@@ -454,12 +460,5 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </schema>
       </schemas>
     </application>
-
-    
-
   </applications>
-
-
-
-
 </metadata>
