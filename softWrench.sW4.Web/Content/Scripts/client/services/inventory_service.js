@@ -27,6 +27,25 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         redirectService.goToApplicationView("invuse", "newdetail", "Input", null, null, null);
     };
 
+    var setBatchIssueBin = function(parameters) {
+        var itemnum = parameters['fields']['itemnum'];
+        var siteid = parameters['fields']['siteid'];
+        var storeloc = parameters['fields']['storeloc'];
+        if (itemnum != null && itemnum.trim() != "" &&
+            siteid != null && siteid.trim() != "" &&
+            storeloc != null && storeloc.trim() != "") {
+            var searchData = {
+                itemnum: itemnum,
+                siteid: siteid,
+                location: parameters['fields']['storeloc']
+            };
+            getBinQuantity(searchData, parameters, '#curbal', null);
+        } else {
+            parameters['fields']['#curbal'] = null;
+            parameters['fields']['invbalances_.binnum'] = null;
+        }
+    };
+
     var getBinQuantity = function (searchData, parameters, balanceField, binnum) {
         searchService.searchWithData("invbalances", searchData).success(function (data) {
             var resultObject = data.resultObject;
@@ -185,7 +204,34 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             redirectService.goToApplicationView(application, detail, mode, null, param, null);
         },
 
-        editinvissuewo: function (schema, datamap) {
+        navToBatchIssueDetail: function (schema, datamap) {
+            var siteid = datamap['siteid'];
+            
+            if (siteid == null || siteid.trim() == "") {
+                alertService.alert("A Site Id is required.");
+                return;
+            }
+    
+            var storeloc = datamap['storeloc'];
+
+            if (storeloc == null || storeloc.trim() == "") {
+                alertService.alert("A Storeroom is required.");
+                return;
+            }
+
+            var refwo = datamap['refwo'];
+            var location = datamap['location'];
+            var assetnum = datamap['assetnum'];
+            var gldebitacct = datamap['gldebitacct'];
+
+            if ((refwo == null || storeloc.trim() == "") &&
+                (location == null || location.trim() == "") &&
+                (assetnum == null || assetnum.trim() == "") &&
+                (gldebitacct == null || gldebitacct.trim() == "")) {
+                alertService.alert("Either a Workorder, Location, Asset, or GL Debit Account is required.");
+                return;
+            }
+
             var newDatamap = {};
             newDatamap['assetnum'] = datamap['assetnum'];
             newDatamap['#refwo'] = datamap['refwo'];
@@ -213,7 +259,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var parentdata = parentdatamap['fields'];
             var user = contextService.getUserData();
             var itemDatamap = {};
-            itemDatamap['itemnum'] = "";
+            itemDatamap['itemnum'] = null;
             itemDatamap['enterby'] = user.login.toUpperCase();
             itemDatamap['siteid'] = user.siteId;
             itemDatamap['matusetransid'] = null;
@@ -311,6 +357,34 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
         },
 
+        invIssue_afterChangeItem: function(parameters) {
+            setBatchIssueBin(parameters);
+        },
+
+        batchinvIssue_afterChangeBin: function(parameters) {
+            var itemnum = parameters['fields']['itemnum'];
+            var siteid = parameters['fields']['siteid'];
+            var storeloc = parameters['fields']['storeloc'];
+            var binnum = parameters['fields']['binnum'];
+            if (binnum != null && binnum.trim() != "") {
+                if (itemnum != null && itemnum.trim() != "" &&
+                    siteid != null && siteid.trim() != "" &&
+                    storeloc != null && storeloc.trim() != "") {
+                    var searchData = {
+                        itemnum: itemnum,
+                        siteid: siteid,
+                        location: parameters['fields']['storeloc']
+                    };
+                    getBinQuantity(searchData, parameters, '#curbal', binnum);
+                } else {
+                    parameters['fields']['#curbal'] = null;
+                }
+            } else {
+                setBatchIssueBin(parameters);
+            }
+            
+        },
+
 
         invIssue_afterChangeAsset: function (parameters) {
             //Sets the associated GL Debit Account
@@ -371,9 +445,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
         getIssueBinQuantity: function (parameters) {
             var binnum = parameters['fields']['invuseline_.frombin'];
-            //if (binnum == '[No Bin]') {
-            //    binnum = null;
-            //}
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 siteid: parameters['fields']['siteid'],
@@ -391,9 +462,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
 
             var binnum = parameters['fields']['invuseline_.frombin'];
-            //if (binnum == '[No Bin]') {
-            //    binnum = null;
-            //}
             var searchData = {
                 itemnum: parameters['fields']['invuseline_.itemnum'],
                 siteid: parameters['fields']['inventory_.siteid'],
@@ -425,15 +493,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
         submitTransfer: function (schema, datamap) {
             // Save transfer
-            //var user = contextService.getUserData();
-            //if (datamap['invuseline_.frombin'] == '[No Bin]') {
-            //    datamap['invuseline_.frombin'] = null;
-            //}
-
-            //if (datamap['inventory_.tobin'] == '[No Bin]') {
-            //    datamap['inventory_.tobin'] = null;
-            //}
-
             var jsonString = angular.toJson(datamap);
             var httpParameters = {
                 application: "invuse",
@@ -466,6 +525,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 event.scope.datamap['invuseline_.quantity'] = event.fields['#curbal'];
             }
         },
+        overrideGlAccount: function(event) {
+            if (event.fields['#gldebitacct'] != null || event.fields['gldebitacct'].trim != "") {
+                event.fields['gldebitacct'] = event.fields['#gldebitacct'];
+            }
+        }
 
     };
 });
