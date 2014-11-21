@@ -353,7 +353,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 siteid: parameters['fields']['siteid'],
                 itemsetid: parameters['fields']['inventory_.itemsetid'],
                 location: parameters['fields']['storeloc'],
-                binnum: parameters['fields']['binnum']
+                binnum: parameters['fields']['binnum'],
+                lotnum: parameters['fields']['lotnum']
             };
             getBinQuantity(searchData, parameters, '#curbal');
         },
@@ -364,7 +365,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 siteid: parameters['fields']['siteid'],
                 itemsetid: parameters['fields']['itemsetid'],
                 location: parameters['fields']['location'],
-                binnum: parameters['fields']['invbalances_.binnum']
+                binnum: parameters['fields']['invbalancesBin_.binnum'],
+                lotnum: parameters['fields']['invbalancesLot_.lotnum']
             };
             getBinQuantity(searchData, parameters, '#curbal');
         },
@@ -375,10 +377,12 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 siteid: parameters['fields']['inventory_.siteid'],
                 itemsetid: parameters['fields']['inventory_.itemsetid'],
                 location: parameters['fields']['fromstoreloc'],
-                binnum: parameters['fields']['invuseline_.frombin']
+                binnum: parameters['fields']['invuseline_.frombin'],
+                lotnum: parameters['fields']['frominvbalance_']['lotnum']
             };
             getBinQuantity(searchData, parameters, '#curbal');
         },
+
         submitTransfer: function (schema, datamap) {
             var jsonString = angular.toJson(datamap);
             var httpParameters = {

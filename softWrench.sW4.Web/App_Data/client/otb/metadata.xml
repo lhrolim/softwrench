@@ -322,6 +322,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
           <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
           <relationshipAttribute from="invuseline_.frombin" to="binnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.fromlot" to="lotnum"/>
         </relationship>
         <relationship to="location" qualifier="tolocation">
           <relationshipAttribute from="invuseline_.tostoreloc" to="location" primary="true"/>
@@ -674,6 +675,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Description:" attribute="item_.description" readonly="true"/>
           <field label="Storeroom:" attribute="location" readonly="true"/>
           <field label="Bin:" attribute="binnum" readonly="true"/>
+          <field label="Lot:" attribute="lotnum" readonly="true"/>
           <field label="Balance:" attribute="curbal"/>
           <field label="Site:" attribute="siteid" readonly="true"/>
           <field attribute="physcnt" hidden="true"/>
@@ -967,8 +969,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterChangeLocation"/>
           </association>
-          <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true" required="true">
+          <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true" required="true" extraprojectionvalues="lotnum">
             <dataprovider prefilterfunction="FilterBin"/>
+            <event type="afterchange" service="inventoryService" method="getTransferBinQuantity"/>
+            <renderer type="lookup"/>
+          </association>
+          <association target="invuseline_.fromlot" label="From Lot" labelfield="frominvbalance_.lotnum" hideDescription="true" >
             <event type="afterchange" service="inventoryService" method="getTransferBinQuantity"/>
             <renderer type="lookup"/>
           </association>
