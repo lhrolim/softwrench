@@ -2,7 +2,8 @@
  * resolutions handler - begin *
  ****************************/
 
-@media (min-width: 1200px) {
+/*SM - HAP-393, using these setting (only 50px difference between large and small settings)*/
+/*@media (min-width: 1200px) {*/
     /* some CSS for large resolution */
     .container {
         max-width: 1080px !important;
@@ -70,7 +71,7 @@
     .modal-open, .modal-open .navbar-fixed-top {
         margin-right: 0 !important;
     }
-}
+/*}*/
 
 /****************************
  * resolutions handler - end *

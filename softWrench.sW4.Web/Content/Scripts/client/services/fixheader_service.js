@@ -208,16 +208,18 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             var fn = this;
             $(window).resize(function () {
                 var newWidth = $(this).width();
-                var isNewHighResolution = newWidth > resolutionBarrier + 15; // lets add some margin to give the browser time to render the new table...
-                var isNewLowResolution = newWidth < resolutionBarrier - 15; // lets add some margin to give the browser time to render the new table...
-                if ((isNewHighResolution && !highResolution) || (isNewLowResolution && highResolution)) {
+
+                //SM - HAP-393, resize regardless of screen size
+                //var isNewHighResolution = newWidth > resolutionBarrier + 15; // lets add some margin to give the browser time to render the new table...
+                //var isNewLowResolution = newWidth < resolutionBarrier - 15; // lets add some margin to give the browser time to render the new table...
+                //if ((isNewHighResolution && !highResolution) || (isNewLowResolution && highResolution)) {
                     $log.getInstance("crudlistdir#resize").debug('switching resolutions');
                     fn.fixThead(null, {
                         resizing: true
                     });
-                    width = newWidth;
-                    highResolution = width >= resolutionBarrier;
-                }
+                    //width = newWidth;
+                    //highResolution = width >= resolutionBarrier;
+                //}
             });
         },
 
