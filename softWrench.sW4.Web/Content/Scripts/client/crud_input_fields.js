@@ -302,7 +302,7 @@ app.directive('crudInputFields', function (contextService) {
                 }
                 if ($scope.blockunblockparameters.length == 1) {
                     //register the timeout only once
-                    $timeout(function() {
+                    $timeout(function () {
                         for (var i = 0; i < $scope.blockunblockparameters.length; i++) {
                             //this array was built in the reverse order,using unshift, as if the screen was rendered bottom up
                             var param = $scope.blockunblockparameters[i];
@@ -500,6 +500,10 @@ app.directive('crudInputFields', function (contextService) {
                     var idtopendetails = fieldMetadata.rendererParameters['idtopendetails'];
                     if (!nullOrUndef(fieldMetadata.applicationTo)) {
                         var application = fieldMetadata.applicationTo.replace('_', '');
+                        if (isNumber(application.charAt(0))) {
+                            application = application.substring(1);
+                        }
+
                         var id = $scope.datamap[idtopendetails];
                         if (!nullOrUndef(id) && !nullOrUndef(application)) {
                             $scope.paramstopendetails = { idtopendetails: id, application: application };

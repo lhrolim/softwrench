@@ -933,6 +933,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
       <schemas>
 
+        
+        
         <schema title="Service Request Grid" abstract="true" id="baselist" stereotype="list">
           <field attribute="ticketid" label="Request#">
             <renderer type="default" params="minwidth=88px;maxwidth=100px" />
@@ -942,7 +944,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <field attribute="asset_.description" label="Asset">
             <renderer type="default" params="minwidth=109px;wordwrap=break-word" />
-
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=109px;showtime=false;" />
@@ -975,6 +976,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
           </section>
         </list>
+
+        <schema id="excellist" parentschema="list" title="Service Request Grid">
+          
+        </schema>
 
         <detail id="detail" mode="output" title="Request Details">
           <field attribute="ticketid" label="Request#" />
@@ -2042,8 +2047,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </association>
 
             <association dependantfields="fromlocation" label="New Asset" labelfield="2asset_.hlagdescription2" required="true" target="newasset"
-																 extraprojectionvalues="location_.description">
-              <renderer type="autocompleteclient" params="minLength=3;"/>
+																 extraprojectionvalues="assetid,location_.description">
+              <renderer type="autocompleteclient" params="minLength=3;opendetails=true;idtopendetails=2asset_.assetid"/>
               <dataprovider prefilterfunction="FilterAssetByHlagLocation"/>
             </association>
             <association dependantfields="fromlocation,newasset" label="New Child Asset" labelfield="2childasset_.hlagdescription2" target="newchildasset">

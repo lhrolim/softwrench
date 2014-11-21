@@ -526,6 +526,10 @@ function isEmpty(obj) {
     return true;
 }
 
+function isNumber(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
 /* Base64 encode / decode http://www.webtoolkit.info/ */
 var Base64 = {
     // private property
