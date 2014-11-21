@@ -68,6 +68,10 @@ function BaseController($scope, i18NService, fieldService,commandService) {
         return commandService.isCommandHidden($scope.datamap, schema, command);
     };
 
+    $scope.isCommandEnabled = function (schema, command) {
+        return commandService.isCommandEnabled($scope.datamap, schema, command);
+    }
+
     $scope.doCommand = function (command) {
         commandService.doCommand($scope, command);
     };

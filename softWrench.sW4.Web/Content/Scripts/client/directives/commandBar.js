@@ -238,6 +238,11 @@
                 return commandService.isCommandHidden($scope.datamap, schema, command, tabId);
             };
 
+            $scope.isCommandEnabled = function (schema, command) {
+                var tabId = $element.parents('.tab-pane').attr('id');
+                return commandService.isCommandEnabled($scope.datamap, schema, command, tabId);
+            }
+
             $scope.isEditing = function (schema, datamap) {
                 return datamap[schema.idFieldName] != null;
             };

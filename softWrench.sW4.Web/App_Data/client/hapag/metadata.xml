@@ -862,7 +862,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <reference id="R017RequiredFields"/>
           <commands>
-            <command id="print" label="Print" stereotype="print" service="reportservice" method="printSelected" parameters="schema,datamap"/>
+            <command id="print" label="Print" stereotype="print" service="reportservice" method="printSelected" parameters="schema,datamap" enableexpression="var checkForChecked = function(datamap) {for (var idx in datamap) { if (datamap[idx] != undefined &amp;&amp; datamap[idx] != null &amp;&amp; datamap[idx].fields != undefined &amp;&amp; datamap[idx].fields.checked) { return true;}} return false}; checkForChecked(datamap);"/>
             <command id="cancel" label="Close" stereotype="cancel" service="srsummaryService" method="redirectToHapagHome" />
             <command id="selectAll" label="Select All" method="selectAll" service="reportservice" parameters="schema,datamap" />
             <command id="deselectAll" label="Deselct All" method="deselectAll" service="reportservice" parameters="schema,datamap"/>

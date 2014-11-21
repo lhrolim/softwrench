@@ -547,6 +547,7 @@
     </attribute>
     <attribute name="cssclasses" type="string"></attribute>
     <attribute name="showexpression" type="string"></attribute>
+    <attribute name="enableexpression" type="string"></attribute>
     <attribute name="nextSchemaId" type="string"></attribute>
     <attribute name="parameters" type="string" use="optional">
       <annotation>

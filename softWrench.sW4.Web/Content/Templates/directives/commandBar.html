@@ -8,7 +8,7 @@
               
                 <button ng-repeat="command in getCommands()"
                         type="button" class="btn commandButton navbar-btn" ng-click="doCommand(command)"
-                        ng-show="!isCommandHidden(schema,command)">
+                        ng-show="!isCommandHidden(schema,command)" ng-disabled="!isCommandEnabled(schema, command)">
                     
                     <i style="margin-right: 0.5em" class="glyphicon" ng-class="[command.icon]"
                        ng-if="command.icon!=null"></i>{{i18NCommandLabel(command)}}

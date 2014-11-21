@@ -473,12 +473,13 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var role = xElement.Attribute(XmlMetadataSchema.ApplicationCommandRoleAttribute).ValueOrDefault((String)null);
                 var stereotype = xElement.Attribute(XmlMetadataSchema.ApplicationCommandStereotypeAttribute).ValueOrDefault((String)null);
                 var showExpression = xElement.Attribute(XmlMetadataSchema.BaseDisplayableShowExpressionAtribute).ValueOrDefault((String)null);
+                var enableExpression = xElement.Attribute(XmlMetadataSchema.BaseDisplayableEnableExpressionAtribute).ValueOrDefault((String)null);
                 var successMessage = xElement.Attribute(XmlMetadataSchema.ApplicationCommandSuccessMessage).ValueOrDefault((String)null);
                 var nextSchemaId = xElement.Attribute(XmlMetadataSchema.ApplicationCommandNextSchemaId).ValueOrDefault((String)null);
                 var scopeParameters = xElement.Attribute(XmlMetadataSchema.BaseParametersAttribute).ValueOrDefault((String)null);
                 var defaultPosition = xElement.Attribute(XmlMetadataSchema.ApplicationCommandDefaultPositionAttribute).ValueOrDefault("left");
                 var icon = xElement.Attribute(XmlMetadataSchema.ApplicationCommandIconAttribute).ValueOrDefault((String)null);
-                commands.Add(new ApplicationCommand(id, label, service, method, remove, role, stereotype, showExpression, successMessage, nextSchemaId, scopeParameters, defaultPosition, icon));
+                commands.Add(new ApplicationCommand(id, label, service, method, remove, role, stereotype, showExpression, enableExpression, successMessage, nextSchemaId, scopeParameters, defaultPosition, icon));
             }
             return commands;
         }
