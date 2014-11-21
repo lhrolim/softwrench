@@ -11,6 +11,8 @@ using System.Linq;
 namespace softWrench.sW4.Util {
     public class LoggingUtil {
 
+        public static readonly ILog PerformanceLog = LogManager.GetLogger("SW_PERFORMANCE");
+
         public static string MsDelta(Stopwatch watch) {
             watch.Stop();
             return watch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture) + " ms";

@@ -1,23 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
 using XDesigner.RTF;
 
 namespace softWrench.sW4.Util {
     class RTFUtil {
 
+        private static readonly ILog Log = LogManager.GetLogger(typeof(RTFUtil));
+
         public static string ConvertToHTML(string rtf) {
-            
-            RTFDomDocument doc = new RTFDomDocument();
+
+            var before = Stopwatch.StartNew();
+            var doc = new RTFDomDocument();
             doc.LoadRTFText(rtf);
-            
+
             var htmlDoc = new StringBuilder();
 
             htmlDoc.Append("<html><head></head><body>");
-            htmlDoc.Append(ConvertElementsToHTML(doc.Elements));            
+            htmlDoc.Append(ConvertElementsToHTML(doc.Elements));
             htmlDoc.Append("</body></html>");
+
+            var message = LoggingUtil.BaseDurationMessageFormat(before, "PERFORMANCE - Done RTL HTML conversion.");
+            
+            LoggingUtil.PerformanceLog.Debug(message);
+            Log.Debug(message);
+
 
             return htmlDoc.ToString();
         }
