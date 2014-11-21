@@ -39,7 +39,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             var screenshotString = jsonObject.GetAttribute("newscreenshot") as string;
             var screenshotName = jsonObject.GetAttribute("newscreenshot_path") as string;
             HandleScreenshots(screenshotString, screenshotName, attachmentList);
-            
+
             return attachmentList;
         }
 
@@ -55,7 +55,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             ((ServiceIncident)webServiceObject).Activity = ArrayUtil.Push(((ServiceIncident)webServiceObject).Activity,
                 activity);
         }
-        
+
         private static void HandleScreenshots(string screenshotString, string screenshotName, List<Attachment> attachmentList) {
 
             if (String.IsNullOrWhiteSpace(screenshotString) || String.IsNullOrWhiteSpace(screenshotName)) {
@@ -64,7 +64,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             }
             if (screenshotName.ToLower().EndsWith("rtf")) {
                 //converting rtf to doc to handle IE9 scenario
-                screenshotString = ConvertRtfToHtml(screenshotString, ref screenshotName);
+                screenshotString = RTFUtil.ConvertRtfToHtml(screenshotString, ref screenshotName);
             }
 
             ScreenshotHandler.Validate(screenshotName, screenshotString);
@@ -75,17 +75,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             });
         }
 
-        private static string ConvertRtfToHtml(string screenshotString, ref string screenshotName) {
-            var bytes = Convert.FromBase64String(screenshotString);
-            var decodedString = Encoding.UTF8.GetString(bytes);
-            var compressedScreenshot = CompressionUtil.CompressRtf(decodedString);
-            var convertedScreeshot = RTFUtil.ConvertToHTML(compressedScreenshot);
 
-            bytes = Encoding.UTF8.GetBytes(convertedScreeshot);
-            screenshotString = Convert.ToBase64String(bytes);
-            screenshotName = screenshotName.Substring(0, screenshotName.Length - 3) + "html";
-            return screenshotString;
-        }
 
         public static void HandleAttachmentsForCreation(CrudOperationData entity, ServiceIncident maximoTicket) {
             maximoTicket.Attachment = DoHandleAttachment(entity, maximoTicket).ToArray();
