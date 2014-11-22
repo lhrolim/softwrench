@@ -34,6 +34,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
         </relationship>
       </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWSR" />
+      </connectorParameters>
     </entity>
 
     <entity name ="failurelistonly" parententity="failurelist" idAttribute="failurelist" whereclause="((failurelistonly.TYPE is null)) " >
@@ -87,6 +90,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!--field attribute="owner" label="Owner" readonly="true" hidden="true"/-->
 
           <section id="statussection"/>
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_ClassStructureType" default="@classstructureid">
+            <renderer type="AUTOCOMPLETECLIENT" />
+          </optionfield>
           <!--SWWEB-342-->
           <field attribute="changeby" default="@username" hidden="true"/>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname"  enableexpression="@ownergroup==null">
