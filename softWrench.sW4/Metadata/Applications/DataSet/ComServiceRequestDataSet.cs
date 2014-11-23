@@ -17,20 +17,8 @@ using softwrench.sw4.Shared2.Data.Association;
 namespace softWrench.sW4.Metadata.Applications.DataSet
 {
     class ComServiceRequestDataSet : MaximoApplicationDataSet {
-        private static SWDBHibernateDAO _swdbDao;
-        //private const string application = "SR";
-
-        private SWDBHibernateDAO GetSWDBDAO()
-        {
-            if (_swdbDao == null)
-            {
-                _swdbDao = SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
-            }
-            return _swdbDao;
-        }
-
-        public IEnumerable<IAssociationOption> GetClassStructureType(OptionFieldProviderParameters parameters)
-        {
+        public IEnumerable<IAssociationOption> GetClassStructureType(OptionFieldProviderParameters parameters) {
+            
             // TODO: Change the design to use a tree view component
             var query = string.Format(@"SELECT  c.classstructureid AS ID, 
                                                 p3.classificationid AS CLASS_5, 

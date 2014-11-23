@@ -90,6 +90,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!--field attribute="owner" label="Owner" readonly="true" hidden="true"/-->
 
           <section id="statussection"/>
+          <!--COMSW-1-->
           <optionfield attribute="classstructureid" label="Classification:" providerattribute="_ClassStructureType" default="@classstructureid">
             <renderer type="AUTOCOMPLETECLIENT" />
           </optionfield>
