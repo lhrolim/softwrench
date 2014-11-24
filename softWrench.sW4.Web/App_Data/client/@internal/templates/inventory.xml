@@ -122,22 +122,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="storeloc" hidden="true"/>
           <field attribute="binnum" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="refwo" label="Workorder">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=18%" />
           </field>
           <field attribute="issueto" label="Issue To">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=15%" />
           </field>
           <field attribute="assetnum" label="Asset">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%;widthLG=15%" />
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
           </field>
           <field attribute="issuetype" label="Issue Type">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
           </field>
           <field attribute="quantity" label="Qty">
             <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyList;"/>
@@ -146,7 +146,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
-            <renderer type="default" params="width=6%;"/>
+            <renderer type="default" params="width=4%"/>
           </section>
         </list>
 
@@ -370,16 +370,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <list title="Physical Count">
           <field attribute="invbalancesid" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="widthMD=15%;widthLG=15%" />
           </field>
           <field attribute="inventory_.siteid" label="Site">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%" />
           </field>
           <field attribute="location" label="Storeroom">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%" />
           </field>
           <field attribute="binnum" label="Bin">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%" />
           </field>
         </list>
         
@@ -413,19 +413,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <list title="Physical Count">
           <field attribute="invbalancesid" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="width=15%"/>
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=15%" />
           </field>
           <field attribute="inventory_.siteid" label="Site">
-            <renderer type="default" params="width=15%"/>
+            <renderer type="default"  />
           </field>
           <field attribute="location" label="Storeroom">
-            <renderer type="default" params="width=16%"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=20%" />
           </field>
           <field attribute="binnum" label="Bin">
-            <renderer type="default" params="width=15%"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%" />
           </field>
           <field attribute="physcnt" label="Physical Count">
-            <renderer type="default" params="width=15%"/>
+            <renderer type="default" params="widthXS=30%;widthSM=20%" />
           </field>
         </list>
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
