@@ -30,15 +30,20 @@ app.factory('inventoryService', function ($http, contextService, redirectService
     var getBinQuantity = function (searchData, parameters, balanceField) {
         searchService.searchWithData("invbalances", searchData).success(function (data) {
             var resultObject = data.resultObject;
-            var fields = resultObject[0].fields;
-            parameters.fields[balanceField] = fields.curbal;
+            if (resultObject[0] != undefined) {
+                var fields = resultObject[0].fields;
+                parameters.fields[balanceField] = fields.curbal;
+            } else {
+                parameters.fields[balanceField] = 0;
+            }
         });
     };
 
-    var doUpdateUnitCostFromInventoryCost = function(parameters, unitCostFieldName) {
+    var doUpdateUnitCostFromInventoryCost = function(parameters, unitCostFieldName, locationFieldName) {
         var searchData = {
             itemnum: parameters['fields']['itemnum'],
-            location: parameters['fields']['storeloc'],
+            location: parameters['fields'][locationFieldName],
+            siteid: parameters['fields']['siteid']
         };
         searchService.searchWithData("invcost", searchData).success(function (data) {
             var resultObject = data.resultObject;
@@ -65,7 +70,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var fields = resultObject[0].fields;
             var costtype = fields['costtype'];
             parameters['fields']['inventory_.costtype'] = costtype;
-            doUpdateUnitCostFromInventoryCost(parameters, "unitcost");
+            var locationFieldName = "";
+            if (parameters['fields'].location != undefined) {
+                locationFieldName = "location";
+            }
+            doUpdateUnitCostFromInventoryCost(parameters, "unitcost", locationFieldName);
         });
     };
 
@@ -359,12 +368,13 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         getReserveBinQuantity: function (parameters) {
+            parameters['fields']['#frombin'] = parameters['fields']['invbalances_.binnum'];
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 siteid: parameters['fields']['siteid'],
                 itemsetid: parameters['fields']['itemsetid'],
                 location: parameters['fields']['location'],
-                binnum: parameters['fields']['invbalances_.binnum']
+                binnum: parameters['fields']['#frombin']
             };
             getBinQuantity(searchData, parameters, '#curbal');
         },
@@ -505,7 +515,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 location: parameters['fields']['location'],
                 binnum: parameters['fields']['#frombin']
             };
-            getBinQuantity(searchData, parameters, '#curbal');
+            getReserveBinQuantity(parameters);
         },
 
     };
