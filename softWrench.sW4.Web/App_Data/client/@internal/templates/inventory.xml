@@ -77,15 +77,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="#issueto" label="Issue To" readonly="true"/>
           <field attribute="#storeloc" label="Storeroom" readonly="true"/>
           <field attribute="#gldebitacct" label="GL Debit Account" readonly="true"/>
-          <composition relationship="invissue" label="Items" detailschema="newitem">
-            <collectionproperties listschema="itemlist" allowcreation="true" hideexistingdata="true" autocommit="false" />
+          <composition relationship="invissue" label="Items" detailschema="newitem" inline="true">
+            <collectionproperties listschema="itemlist" hideexistingdata="true" allowcreation="false" autocommit="false" />
           </composition>
           <properties>
             <property key="detail.navigationbuttons.disabled" value="true"/>
           </properties>
           <commandbars>
             <commandgroup position="detailform" removeundeclared="true">
-              <command id="cancelnewinvissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" />
+              <command id="additemtobatchissue" label="Add Item" service="inventoryService" method="displayNewIssueModal" parameters="schema,datamap"/>
+              <command id="submitnewbatchissue" label="Submit" service="inventoryService" method="submitNewInvIssue" parameters="schema,datamap,$scope" />
+              <command id="cancelnewbatchissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" />
             </commandgroup>
           </commandbars>
         </schema>
@@ -253,6 +255,43 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             </commandgroup>
           </commandbars>
         </schema>
+
+        <!--<schema id="newitem" stereotype="compositiondetail" mode="input" title="New Issue">
+          <field attribute="matusetransid" hidden="true"/>
+          <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" required="true">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="inventoryService" method="invIssue_afterChangeItem"/>
+          </association>
+          <field label="Storeroom" attribute="storeloc" readonly="true"/>
+          <association label="Bin" target="binnum" labelfield="invbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="inventoryService" method="batchinvIssue_afterChangeBin"/>
+          </association>
+          <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
+          <association label="Override Debit Account" target="#gldebitacct" labelfield="chartofaccounts_.accountname">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="inventoryService" method="overrideGlAccount"/>
+          </association>
+          <field attribute="#curbal" label="Current Balance" readonly="true"/>
+          <field attribute="quantity" label="Quantity" default="1">
+            <renderer type="numericinput" params="min=1;max=@curbal;"/>
+          </field>
+          <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+          <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
+          <field attribute="enterby" label="Entered By" readonly="true"/>
+          <field attribute="inventory_.itemtype" label="Item Type" readonly="true"/>
+          <field attribute="siteid" label="Site" readonly="true"/>
+          <field attribute="inventory_.costtype" hidden="true"/>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="cancel"/>
+              <removecommand id="print"/>
+              <removecommand id="save"/>
+              <command id="additemtobatch" label="Add" service="inventoryService" method="addItemToBatch" parameters="datamap,parentdata"/>
+              <command id="cancel" label="Cancel" service="modalService" method="hide"/>
+            </commandgroup>
+          </commandbars>
+        </schema>-->
 
         <schema id="newitem" stereotype="compositiondetail" mode="input" title="New Issue">
           <field attribute="matusetransid" hidden="true"/>

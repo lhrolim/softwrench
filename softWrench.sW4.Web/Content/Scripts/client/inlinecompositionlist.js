@@ -11,7 +11,9 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
             compositionschemadefinition: '=',
             compositiondata: '=',
             iscollection: '=',
-            mode:'@'
+            mode: '@',
+            previousdata: '=',
+            previousschema: '='
         },
 
         link: function (scope, element, attrs) {
@@ -19,7 +21,9 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
                 "<inline-composition-list compositionschemadefinition='compositionschemadefinition'" +
                          "compositiondata='compositiondata'" +
                          "mode='mode'" +
-                         "iscollection='iscollection' />"
+                         "iscollection='iscollection'" +
+                         "previousdata='previousdata'" +
+                         "previousschema='previousschema' />"
             );
             $compile(element.contents())(scope);
         }
@@ -38,6 +42,8 @@ app.directive('inlineCompositionList', function (contextService) {
             compositiondata: '=',
             iscollection: '=',
             mode: '@',
+            previousdata: '=',
+            previousschema: '='
         },
 
         controller: function ($scope, $filter, $http, $element, $rootScope, tabsService) {
@@ -45,7 +51,6 @@ app.directive('inlineCompositionList', function (contextService) {
             $scope.contextPath = function (path) {
                 return url(path);
             };
-
         }
     };
 });

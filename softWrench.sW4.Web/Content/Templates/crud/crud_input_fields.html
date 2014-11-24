@@ -332,7 +332,9 @@
                         <div ng-switch-when="ApplicationCompositionDefinition">
                             <inline-composition-list-wrapper compositionschemadefinition="fieldMetadata.schema"
                                                              compositiondata="datamap[fieldMetadata.relationship]"
-                                                             iscollection="fieldMetadata.collection" />
+                                                             iscollection="fieldMetadata.collection"
+                                                             previousdata="datamap"
+                                                             previousschema="schema" />
                         </div>
                         <div ng-switch-default>
                             <div ng-switch on="fieldMetadata.isHidden">

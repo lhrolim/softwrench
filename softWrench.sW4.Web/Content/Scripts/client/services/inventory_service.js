@@ -264,9 +264,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         cancelNewInvIssue: function () {
             redirectService.goToApplicationView("invissue", "list", null, null, null, null);
         },
-        displayNewIssueModal: function (parentschema, parentdatamap, clonedCompositionData) {
+        displayNewIssueModal: function (parentschema, parentdatamap) {
+            var clonedCompositionData = parentdatamap['invissue_'];
             var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
-            var parentdata = parentdatamap['fields'];
+            var parentdata = parentdatamap;
             var user = contextService.getUserData();
             var itemDatamap = {};
             itemDatamap['itemnum'] = null;
@@ -314,6 +315,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             newissue.assetnum = "2235";
             newissue.itemnum = "Z-RAGS";
             test['invissue_'].push(newissue);
+            modalService.hide();
         },
         invIssue_afterChangeWorkorder: function (parameters) {
             if (parameters.fields['refwo'] == null || parameters.fields['refwo'].trim() == "") {
