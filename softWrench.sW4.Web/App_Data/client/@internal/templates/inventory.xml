@@ -80,15 +80,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="itemsetid" to="itemsetid"/>
           <relationshipAttribute from="location" to="location"/>
         </relationship>
-        <relationship to="invbalances" qualifier="invbalancesBin">
-          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
-          <relationshipAttribute from="itemnum" to="itemnum"/>
-          <relationshipAttribute from="siteid" to="siteid"/>
-          <relationshipAttribute from="orgid" to="orgid"/>
-          <relationshipAttribute from="itemsetid" to="itemsetid"/>
-          <relationshipAttribute from="location" to="location"/>
-        </relationship>
-        <relationship to="invbalances" qualifier="invbalancesLot">
+        <relationship to="invbalances">
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
           <relationshipAttribute from="itemnum" to="itemnum"/>
           <relationshipAttribute from="siteid" to="siteid"/>
@@ -517,7 +509,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="itemsetid" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
-          <field attribute="rowstamp" label="Row Stamp" hidden="true"/>
+          <field attribute="rowstamp" label="Row Stamp" hidden="false"/>
           <field attribute="wonum" label="Work Order" readonly="true"/>
           <field attribute="assetnum" label="Asset" readonly="true"/>
           <field attribute="issueto" label="Issue To" readonly="true"/>
@@ -527,11 +519,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="location" label="Storeroom" readonly="true"/>
           <field attribute="reservedqty" label="Reserved Quantity" readonly="true"/>
           <field attribute="actualqty" label="Quantity Issued" readonly="true" hidden="true"/>
-          <association target="#frombin" labelfield="invbalancesBin_.binnum" label="From Bin" extraprojectionvalues="binnum" dependantfields="itemnum,location">
-            <event type="afterchange" service="inventoryService" method="getReserveBinQuantity"/>
-          </association>
-          <association target="#fromlot" labelfield="invbalancesLot_.lotnum" label="From lot">
-            <dataprovider prefilterfunction="FilterLots"/>
+          <association target="#frombin" labelfield="invbalances_.binnum" label="From Bin">
             <event type="afterchange" service="inventoryService" method="getReserveBinQuantity"/>
           </association>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>
