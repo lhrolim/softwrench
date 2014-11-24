@@ -638,7 +638,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <field label="Last-Action Worklog" attribute="lastworklog_.description"/>
           <field label="Owner Group" attribute="ownergroup" hidden="true">
-            <renderer type="default" params="exportToExcel=true;minwidth=109.1428571428571px"/>
+            <renderer type="default" params="exporttoexcel=true;minwidth=109.1428571428571px"/>
           </field>
           <field label="Days Open" attribute="numberdaysopen">
             <renderer type="default" params="minwidth=109.1428571428571px" />
@@ -946,8 +946,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=109px;wordwrap=break-word" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=109px;showtime=false;" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=109px;showtime=false;exporttoexcel=false" />
           </field>
+          <field attribute="reportdate_excel" label="Reported Date &amp; Time" hidden="true">
+            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=109px;showtime=false;exporttoexcel=true" />
+          </field>
+          <field attribute="reporttime_excel" label="Reported Date &amp; Time" hidden="true">
+            <renderer type="datetime" params="format=HH:mm;minwidth=109px;showtime=false;exporttoexcel=true" />
+          </field>
+
           <field attribute="hlagpluspcustomer" label="Site Id">
             <renderer type="default" params="minwidth=80px;maxwidth=80px;" />
           </field>
