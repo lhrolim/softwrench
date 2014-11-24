@@ -199,12 +199,8 @@ namespace softWrench.sW4.Web.Util {
             xmlAttributes = new List<OpenXmlAttribute>();
             xmlAttributes.Add(new OpenXmlAttribute("r", null, rowIdx.ToString()));
             writer.WriteStartElement(new Row(), xmlAttributes);
-            foreach (var applicationField in applicationFields) {
+            foreach (var applicationField in applicationFields.Where(ShouldShowField())) {
                 //Exporting to Excel, even if field is hidden
-                if (applicationField.IsHidden && !applicationField.Renderer.ParametersAsDictionary().TryGetValue(FieldRendererConstants.Exporttoexcel, out value)) {
-                    continue;
-                }
-
                 xmlAttributes = new List<OpenXmlAttribute>();
                 // add new datatype for cell
                 xmlAttributes.Add(new OpenXmlAttribute("t", null, "str"));
