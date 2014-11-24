@@ -443,6 +443,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="ticketid" to="recordkey" primary="true"/>
           <relationshipAttribute to="class" literal="SR" quoteLiteral="true"/>
         </relationship>
+        <relationship to ="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
         <relationship to="synonymdomain" qualifier="synstatus">
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="SRSTATUS" quoteLiteral="true" />
@@ -3541,6 +3544,31 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </attributes>
       <connectorParameters>
         <connectorParameter key="dbtable" value="invlot" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="classstructure" idAttribute="classstructureid">
+      <attributes>
+        <attribute name="classstructureid" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="genassetdesc" type="smallint" required="true" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="parent" type="varchar" required="false" />
+        <attribute name="classificationid" type="varchar" required="true" />
+        <attribute name="useclassindesc" type="smallint" required="true" />
+        <attribute name="type" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="classstructureuid" type="bigint" required="true" />
+        <attribute name="haschildren" type="smallint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="showinassettopo" type="smallint" required="false" />
+        <attribute name="plusdusewithtnd" type="smallint" required="true" />
+        <attribute name="permitfees" type="decimal" required="false" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="classstructure" />
       </connectorParameters>
     </entity>
   </entities>
