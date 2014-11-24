@@ -538,10 +538,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="reportdate" label="Reported Date &amp; Time">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=84px;maxwidth=98px;wordwrap=break-word;showtime=false;exporttoexcel=false" />
           </field>
-          <field attribute="reportdate" label="Reported Date" hidden="true">
+          <field attribute="#2reportdate" label="Reported Date" hidden="true">
             <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=109px;showtime=false;exporttoexcel=true" />
           </field>
-          <field attribute="reportdate" label="Reported Time" hidden="true">
+          <field attribute="#3reportdate" label="Reported Time" hidden="true">
             <renderer type="datetime" params="format=HH:mm;minwidth=109px;showtime=false;exporttoexcel=true" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site Id">
@@ -954,10 +954,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="reportdate" label="Reported Date &amp; Time">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=109px;showtime=false;exporttoexcel=false" />
           </field>
-          <field attribute="reportdate" label="Reported Date" hidden="true">
+          <field attribute="#2reportdate" label="Reported Date" hidden="true">
             <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=109px;showtime=false;exporttoexcel=true" />
           </field>
-          <field attribute="reporttime" label="Reported Time" hidden="true">
+          <field attribute="#3reportdate" label="Reported Time" hidden="true">
             <renderer type="datetime" params="format=HH:mm;minwidth=109px;showtime=false;exporttoexcel=true" />
           </field>
 
@@ -2288,10 +2288,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="reportdate" label="Reported Date &amp; Time">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=109px;showtime=false;exporttoexcel=false" />
           </field>
-          <field attribute="reportdate" label="Reported Date" hidden="true">
+          <field attribute="#2reportdate" label="Reported Date" hidden="true">
             <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=109px;showtime=false;exporttoexcel=true" />
           </field>
-          <field attribute="reportdate" label="Reported Time" hidden="true">
+          <field attribute="#3reportdate" label="Reported Time" hidden="true">
             <renderer type="datetime" params="format=HH:mm;minwidth=109px;showtime=false;exporttoexcel=true" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site Id">

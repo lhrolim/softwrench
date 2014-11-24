@@ -102,6 +102,10 @@ namespace softWrench.sW4.Web.Util {
                     foreach (var applicationField in nonHiddenFields) {
                         object dataAux;
                         attributes.TryGetValue(applicationField.Attribute, out dataAux);
+                        if (dataAux == null && applicationField.Attribute.StartsWith("#") && Char.IsNumber(applicationField.Attribute[1])) {
+                            attributes.TryGetValue(applicationField.Attribute.Substring(2), out dataAux);
+                        }
+
                         var data = dataAux == null ? string.Empty : dataAux.ToString();
 
                         xmlAttributes = new List<OpenXmlAttribute>();
@@ -131,9 +135,12 @@ namespace softWrench.sW4.Web.Util {
                         writer.WriteStartElement(new Cell(), xmlAttributes);
                         // write cell content
                         DateTime dtTimeAux;
-                        var dataToCell = DateTime.TryParse(data, out dtTimeAux) ?
-                            dtTimeAux.ToString("dd/MM/yyyy H:mm") : data;
-                        writer.WriteElement(new CellValue(dataToCell.ToString()));
+                        var formatToUse = "dd/MM/yyyy HH:mm";
+                        if (applicationField.RendererParameters.ContainsKey("format")) {
+                            formatToUse = applicationField.RendererParameters["format"];
+                        }
+                        var dataToCell = DateTime.TryParse(data, out dtTimeAux) ? dtTimeAux.ToString(formatToUse) : data;
+                        writer.WriteElement(new CellValue(dataToCell));
                         // end cell
                         writer.WriteEndElement();
                     }
