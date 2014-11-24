@@ -1249,6 +1249,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="receivedqty" label="Received Qty"/>
           <field attribute="unitcost" label="Unit Cost"/>
           <field attribute="gldebitacct" hidden="true"/>
+          <field attribute="siteid" hidden="true" />
+          <field attribute="orgid" hidden="true" />
           <field label="Entered Date &amp; Time" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>

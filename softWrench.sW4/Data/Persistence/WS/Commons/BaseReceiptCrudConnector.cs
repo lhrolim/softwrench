@@ -30,8 +30,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var receipt = maximoTemplateData.IntegrationObject;
             w.SetValueIfNull(receipt, "receiptquantity", Convert.ToDouble(crudData.GetAttribute("quantity")));
             w.SetValueIfNull(receipt, "externalrefid", "sw");
+            w.SetValueIfNull(receipt, "linetype", "ITEM");
+            w.SetValueIfNull(receipt, "itemsetid", "SET1");
             w.SetValueIfNull(receipt, "issuetype", "RECEIPT");
-            w.SetValueIfNull(receipt, "gldebitacct", crudData.GetAttribute("gldebitacct"));
+            w.SetValueIfNull(receipt, "consignment", 0);
+            w.SetValueIfNull(receipt, "porevisionnum", 0);
+            w.SetValueIfNull(receipt, "status", "WASSET");
+            w.SetValueIfNull(receipt, "tostoreloc", "RECEIVING");
+            w.SetValueIfNull(receipt, "conversion", 1.00);
+            w.SetValueIfNull(receipt, "sourcesysid", "sw");
+            w.SetValue(receipt, "enterby", user.Login);
+            w.SetValue(receipt, "positeid", crudData.GetAttribute("siteid"));
+            w.SetValueIfNull(receipt, "transdate", DateTime.Now.FromServerToRightKind());
+            w.SetValueIfNull(receipt, "actualdate", DateTime.Now.AddMinutes(-1.00).FromServerToRightKind());
+            
             base.BeforeCreation(maximoTemplateData);
         }
     }
