@@ -536,7 +536,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=60px;maxwidth=75px;wordwrap=break-word" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=84px;maxwidth=98px;wordwrap=break-word;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=84px;maxwidth=98px;wordwrap=break-word;showtime=false;exporttoexcel=false" />
+          </field>
+          <field attribute="reportdate" label="Reported Date" hidden="true">
+            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=109px;showtime=false;exporttoexcel=true" />
+          </field>
+          <field attribute="reportdate" label="Reported Time" hidden="true">
+            <renderer type="datetime" params="format=HH:mm;minwidth=109px;showtime=false;exporttoexcel=true" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site Id">
             <renderer type="default" params="minwidth=74px;maxwidth=74px" />
@@ -948,10 +954,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="reportdate" label="Reported Date &amp; Time">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=109px;showtime=false;exporttoexcel=false" />
           </field>
-          <field attribute="reportdate_excel" label="Reported Date" hidden="true">
+          <field attribute="reportdate" label="Reported Date" hidden="true">
             <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=109px;showtime=false;exporttoexcel=true" />
           </field>
-          <field attribute="reporttime_excel" label="Reported Time" hidden="true">
+          <field attribute="reporttime" label="Reported Time" hidden="true">
             <renderer type="datetime" params="format=HH:mm;minwidth=109px;showtime=false;exporttoexcel=true" />
           </field>
 
@@ -2280,7 +2286,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=109px" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=109px;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=109px;showtime=false;exporttoexcel=false" />
+          </field>
+          <field attribute="reportdate" label="Reported Date" hidden="true">
+            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=109px;showtime=false;exporttoexcel=true" />
+          </field>
+          <field attribute="reportdate" label="Reported Time" hidden="true">
+            <renderer type="datetime" params="format=HH:mm;minwidth=109px;showtime=false;exporttoexcel=true" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site Id">
             <renderer type="default" params="minwidth=109px" />
