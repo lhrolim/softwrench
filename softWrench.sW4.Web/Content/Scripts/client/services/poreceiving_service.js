@@ -28,6 +28,7 @@ app.factory('poreceivingService', function($http, redirectService, restService) 
             matdatamap['ponum'] = datamap['ponum'];
             matdatamap['polinenum'] = datamap['polinenum'];
             matdatamap['quantity'] = datamap['#qtytoreceive'];
+            matdatamap['gldebitacct'] = datamap['gldebitacct'];
 
             var jsonString = angular.toJson(matdatamap);
             // submit a post of matrectrans to hit the right crudconnector

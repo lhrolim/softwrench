@@ -31,7 +31,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValueIfNull(receipt, "receiptquantity", Convert.ToDouble(crudData.GetAttribute("quantity")));
             w.SetValueIfNull(receipt, "externalrefid", "sw");
             w.SetValueIfNull(receipt, "issuetype", "RECEIPT");
-            w.SetValueIfNull(receipt, "SOURCESYSID", "sw");
+            w.SetValueIfNull(receipt, "gldebitacct", crudData.GetAttribute("gldebitacct"));
             base.BeforeCreation(maximoTemplateData);
         }
     }
