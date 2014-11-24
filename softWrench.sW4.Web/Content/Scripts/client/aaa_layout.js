@@ -68,14 +68,16 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
     $rootScope.$on('sw_ajaxinit', function (ajaxinitevent) {
         var savingMain = true === $rootScope.savingMain;
-        if (!$rootScope.avoidspin) {
+        if (!$rootScope.avoidspin && !$rootScope.showingspin) {
             spin = startSpin(savingMain);
+            $rootScope.showingspin = true;
         }
     });
 
     $rootScope.$on('sw_ajaxend', function (data) {
         if (spin != undefined) {
             spin.stop();
+            $rootScope.showingspin = false;
         }
         $rootScope.savingMain = undefined;
 
