@@ -1,6 +1,9 @@
 ﻿var app = angular.module('sw_layout');
 
 app.config(['$httpProvider', function ($httpProvider) {
+
+    var logName = "sw4.ajaxint";
+
     $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log) {
         var activeRequests = 0;
         var started = function (config) {
@@ -10,15 +13,17 @@ app.config(['$httpProvider', function ($httpProvider) {
             config.headers['currentmetadata'] = contextService.retrieveFromContext('currentmetadata');
             config.headers['mockerror'] = sessionStorage['mockerror'];
             var log = $log.getInstance('sw4.ajaxint#started');
-            log.trace("url: {0} | current module:{1} | current metadata:{2} "
-                .format(config.url, config.headers['currentmodule'], config.headers['currentmetadata']));
             if (activeRequests == 0) {
-                log.info("started request {0}".format(config.url));
-                if (!$rootScope.avoidspin) {
+                if (!log.isLevelEnabled('trace')) {
+                    log.info("started request {0}".format(config.url));
+                }
+                if (!$rootScope.avoidspin && config.url.indexOf("/Content/")==-1) {
                     $rootScope.$broadcast('sw_ajaxinit');
                 }
 
             }
+            log.trace("url: {0} | current module:{1} | current metadata:{2} "
+               .format(config.url, config.headers['currentmodule'], config.headers['currentmetadata']));
             activeRequests++;
         };
         var endedok = function (response) {
@@ -33,7 +38,6 @@ app.config(['$httpProvider', function ($httpProvider) {
                 log.info("Requests ended");
                 $rootScope.$broadcast('sw_ajaxend', response.data);
                 successMessageHandler(response.data);
-
             }
         };
 

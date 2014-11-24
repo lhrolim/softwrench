@@ -1,4 +1,53 @@
-﻿app.directive('crudInput', function (contextService) {
+﻿app.directive('crudInputWrapper', function (contextService, $compile, $rootScope) {
+    return {
+        restrict: 'E',
+        replace: true,
+        template: "<div></div>",
+
+        scope: {
+            schema: '=',
+            displayables: '=',
+            datamap: '=',
+            associationOptions: '=',
+            associationSchemas: '=',
+            blockedassociations: '=',
+            cancelfn: '&',
+            savefn: '&',
+            previousschema: '=',
+            previousdata: '=',
+            title: '=',
+            elementid: '@',
+            isMainTab: '@',
+            tabid:'@'
+        },
+
+        link: function (scope, element, attrs) {
+            var doLoad = function () {
+                element.append(
+                  "<crud-input elementid='crudInputMain' schema='schema' " +
+                  "datamap='datamap' association-options='associationOptions' blockedassociations='blockedassociations'" +
+                  "association-schemas='associationSchemas'cancelfn='toListSchema(data,schema)' displayables='displayables'" +
+                  "savefn='save(selecteditem, parameters)' previousschema='previousschema' previousdata='previousdata' />"
+               );
+                $compile(element.contents())(scope);
+                scope.loaded = true;
+            }
+
+            if (scope.schema.mode == "input" && ("true" == scope.isMainTab)) {
+                doLoad();
+            }
+
+            scope.$on("sw_lazyloadtab", function (event, tabid) {
+                if (scope.tabid == tabid && !scope.loaded) {
+                    doLoad();
+                }
+            });
+        }
+    }
+});
+
+
+app.directive('crudInput', function (contextService) {
     return {
         restrict: 'E',
         replace: true,

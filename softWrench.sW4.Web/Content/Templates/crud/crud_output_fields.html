@@ -15,8 +15,8 @@
         <div ng-class="getFieldClass(fieldMetadata)">
             <ng-switch on="fieldMetadata.type">
                 <div ng-switch-when="ApplicationCompositionDefinition">
-                    <inline-composition-list-wrapper compositionschemadefinition="fieldMetadata.schema"
-                                                     compositiondata="datamap[fieldMetadata.relationship]"
+                    <inline-composition-list-wrapper parentdata="datamap"
+                                                     metadata="fieldMetadata"
                                                      iscollection="fieldMetadata.collection" />
                 </div>
                 <div ng-switch-when="ApplicationSection">
