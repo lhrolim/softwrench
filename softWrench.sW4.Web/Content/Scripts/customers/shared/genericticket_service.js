@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('genericTicetService', function (alertService, associationService, fieldService) {
+app.factory('genericTicketService', function (alertService, associationService, fieldService) {
 
     return {
         beforeChangeLocation: function (event) {
@@ -82,12 +82,21 @@ app.factory('genericTicetService', function (alertService, associationService, f
 
 
         },
+
         beforechangeownergroup: function (event) {
             if (event.fields['owner'] != null) {
                 alertService.alert("You may select an Owner or an Owner Group; not both");
             }
-        }
+        },
 
+        beforeWOPriorty: function (event) {
+            // Clean User-Personal Asset
+            if (event.fields['wopriority'] != null) {
+                event.fields['wopriority'] = '$null$ignorewatch';
+            }
+            //event.fields['assetnum'] = null;
+
+        }
     };
 
 });
