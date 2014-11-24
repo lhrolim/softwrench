@@ -26,7 +26,30 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
     class OtbInvreserveDataSet : MaximoApplicationDataSet {
 
         public IEnumerable<IAssociationOption> GetAvailableBins(OptionFieldProviderParameters parameters) {
+            var siteid = parameters.OriginalEntity.GetAttribute("siteid");
+            var itemnum = parameters.OriginalEntity.GetAttribute("itemnum");
+            var orgid = parameters.OriginalEntity.GetAttribute("orgid");
+            var location = parameters.OriginalEntity.GetAttribute("location");
+            var lotnum = parameters.OriginalEntity.GetAttribute("lotnum");
+
+            var query = string.Format("select binnum " +
+                                      "from invbalances " +
+                                      "where itemnum = '{0}' and " +
+                                            "siteid = '{1}' and " +
+                                            "orgid = '{2}' and " +
+                                            "location = '{3}' and " +
+                                            "curbal > 0 and " +
+                                            "binnum is not null",
+                                      itemnum, siteid, orgid, location, lotnum);
+
+            var result = MaxDAO.FindByNativeQuery(query, null);
             var availableLocations = new List<IAssociationOption>();
+
+            foreach (var record in result)
+            {
+                availableLocations.Add(new AssociationOption(record["binnum"], record["binnum"]));
+            }
+
             return availableLocations.AsEnumerable();
         }
 

@@ -1,6 +1,8 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService, restService, alertService) {
+    var thisService = this;
+
     var formatQty = function (datamap, value, column) {
         if (datamap['issuetype'] == 'ISSUE') {
             if (datamap[column.attribute] != null) {
@@ -27,15 +29,16 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         redirectService.goToApplicationView("invuse", "newdetail", "Input", null, null, null);
     };
 
-    var getBinQuantity = function (searchData, parameters, balanceField) {
+    var getBinQuantity = function (searchData, parameters, balanceField, binnum) {
         searchService.searchWithData("invbalances", searchData).success(function (data) {
             var resultObject = data.resultObject;
-            if (resultObject[0] != undefined) {
-                var fields = resultObject[0].fields;
-                parameters.fields[balanceField] = fields.curbal;
-            } else {
-                parameters.fields[balanceField] = 0;
-            }
+            resultObject.forEach(function (row) {
+                var fields = row['fields'];
+                if (fields['binnum'] == binnum) {
+                    parameters.fields[balanceField] = fields.curbal;
+                    return;
+                }
+            });
         });
     };
 
@@ -357,37 +360,36 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         
 
         getIssueBinQuantity: function (parameters) {
+            var binnum = parameters['fields']['binnum'];
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 siteid: parameters['fields']['siteid'],
                 itemsetid: parameters['fields']['inventory_.itemsetid'],
-                location: parameters['fields']['storeloc'],
-                binnum: parameters['fields']['binnum']
+                location: parameters['fields']['storeloc']
             };
-            getBinQuantity(searchData, parameters, '#curbal');
+            getBinQuantity(searchData, parameters, '#curbal', binnum);
         },
 
         getReserveBinQuantity: function (parameters) {
-            parameters['fields']['#frombin'] = parameters['fields']['invbalances_.binnum'];
+            var binnum = parameters['fields']['#frombin'];
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 siteid: parameters['fields']['siteid'],
                 itemsetid: parameters['fields']['itemsetid'],
-                location: parameters['fields']['location'],
-                binnum: parameters['fields']['#frombin']
+                location: parameters['fields']['location']
             };
-            getBinQuantity(searchData, parameters, '#curbal');
+            getBinQuantity(searchData, parameters, '#curbal', binnum);
         },
 
         getTransferBinQuantity: function (parameters) {
+            var binnum = parameters['fields']['invuseline_.frombin']
             var searchData = {
                 itemnum: parameters['fields']['invuseline_.itemnum'],
                 siteid: parameters['fields']['inventory_.siteid'],
                 itemsetid: parameters['fields']['inventory_.itemsetid'],
-                location: parameters['fields']['fromstoreloc'],
-                binnum: parameters['fields']['invuseline_.frombin']
+                location: parameters['fields']['fromstoreloc']
             };
-            getBinQuantity(searchData, parameters, '#curbal');
+            getBinQuantity(searchData, parameters, '#curbal', binnum);
         },
         submitTransfer: function (schema, datamap) {
             var jsonString = angular.toJson(datamap);
@@ -515,7 +517,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 location: parameters['fields']['location'],
                 binnum: parameters['fields']['#frombin']
             };
-            getReserveBinQuantity(parameters);
+            
+            getBinQuantity(searchData, parameters, '#curbal');
         },
 
     };

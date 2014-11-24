@@ -519,7 +519,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="location" label="Storeroom" readonly="true"/>
           <field attribute="reservedqty" label="Reserved Quantity" readonly="true"/>
           <field attribute="actualqty" label="Quantity Issued" readonly="true" hidden="true"/>
-          <optionfield attribute="#frombin" label="From Bin" providerattribute="GetAvailableBins" dependantfields="siteid,orgid,itemnum,location">
+          <optionfield attribute="#frombin" label="From Bin" providerattribute="_AvailableBins">
+            <event type="afterchange" service="inventoryService" method="getReserveBinQuantity"/>
             <renderer type="AUTOCOMPLETECLIENT"/>
           </optionfield>
           <!--<association target="#frombin" labelfield="invbalances_.binnum" label="From Bin">
