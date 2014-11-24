@@ -948,10 +948,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="reportdate" label="Reported Date &amp; Time">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=109px;showtime=false;exporttoexcel=false" />
           </field>
-          <field attribute="reportdate_excel" label="Reported Date &amp; Time" hidden="true">
+          <field attribute="reportdate_excel" label="Reported Date" hidden="true">
             <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=109px;showtime=false;exporttoexcel=true" />
           </field>
-          <field attribute="reporttime_excel" label="Reported Date &amp; Time" hidden="true">
+          <field attribute="reporttime_excel" label="Reported Time" hidden="true">
             <renderer type="datetime" params="format=HH:mm;minwidth=109px;showtime=false;exporttoexcel=true" />
           </field>
 
