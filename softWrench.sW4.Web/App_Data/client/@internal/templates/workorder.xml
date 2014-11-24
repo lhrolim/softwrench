@@ -117,11 +117,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <section id="realfields"/>
         </schema>
 
-
-
-
         <schema id="adetail" title="Work Order Detail" abstract="true" stereotype="detail" platform="web">
-
           <field attribute="workorderid" hidden="true"/>
           <section id ="siteidsection"/>
           <section id="realfields">
@@ -132,12 +128,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <field attribute="wonum" label="WO No:" readonly="true"/>
             <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
               <renderer type="lookup"/>
-              <event type="afterchange" service="genericTicetService" method="afterchangeowner"/>
+              <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
             </association>
             <!-- Added the Owner Group field-->
             <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
               <renderer type="lookup"/>
-              <event type="afterchange" service="genericTicetService" method="afterchangeownergroup"/>
+              <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
             </association>
             <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
             <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
@@ -150,13 +146,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
             </field>
             <association label="Location:" target="location" labelfield="location_.description" >
-              <event type="beforechange" service="genericTicetService" method="beforeChangeLocation"/>
+              <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
               <!--renderer type="lookup"/-->
             </association>
             <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
               <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
               <dataprovider prefilterfunction="FilterAssets"/>
-              <event type="afterchange" service="genericTicetService" method="afterChangeAsset"/>
+              <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
             </association>
             <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
               <renderer type="lookup"/>
