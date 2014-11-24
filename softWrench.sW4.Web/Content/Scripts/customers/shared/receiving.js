@@ -6,6 +6,7 @@
         }
         if (compositionitem['receivedqty'] == null) {
             //need to perform the query to get the total quantity due -- Extract everything into a function of poreceiving service later
+            var qtydue = 0;
             var searchData = {
                 ponum: compositionitem['ponum'],
                 polinenum: String(compositionitem['polinenum'])
@@ -17,10 +18,16 @@
                 for (i = 0;i< resultObject.length;i++) {
                     totalquantityreceived = totalquantityreceived + resultObject[i]['fields']['quantity'];
                 }
-                var qtydue = compositionitem['orderqty'] - totalquantityreceived;
+                qtydue = compositionitem['orderqty'] - totalquantityreceived;
+                // prepopulate the values for the matrectrans record
+                var clonedItem = {};
+                angular.copy(compositionitem, clonedItem);
+                var originalPoNum = clonedItem['ponum'];
+                var originalPoLineNum = String(clonedItem['polinenum']);
+                clonedItem['polinenum'] = originalPoLineNum;
+                clonedItem['#qtydue'] = qtydue;
+                $scope.$emit("sw.composition.edit", clonedItem);
             });
-            // prepopulate the values for the matrectrans record
-
             //open a schema to submit a matrectrans record
         }
         return;

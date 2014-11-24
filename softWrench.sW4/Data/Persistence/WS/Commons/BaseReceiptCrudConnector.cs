@@ -26,16 +26,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var user = SecurityFacade.CurrentUser();
+            var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
             var receipt = maximoTemplateData.IntegrationObject;
+            w.SetValueIfNull(receipt, "receiptquantity", Convert.ToDouble(crudData.GetAttribute("quantity")));
             w.SetValueIfNull(receipt, "externalrefid", "sw");
             w.SetValueIfNull(receipt, "issuetype", "RECEIPT");
-            w.SetValueIfNull(receipt, "sourcesysid", "sw");
-            w.SetValueIfNull(receipt, "rejectqty", 0.0);
-            /*w.SetValueIfNull(receipt, "ownersysid", "sw");
-            w.SetValueIfNull(receipt, "ACTUALDATE", DateTime.Now.FromServerToRightKind());
-            w.SetValueIfNull(receipt, "SITEID", user.SiteId);
-            w.SetValueIfNull(receipt, "TRANSDATE", DateTime.Now.FromServerToRightKind());*/
-            var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
+            w.SetValueIfNull(receipt, "SOURCESYSID", "sw");
             base.BeforeCreation(maximoTemplateData);
         }
     }

@@ -378,6 +378,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from ="orgid" to="orgid"/>
         </relationship>
       </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWPO" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BasePurchaseOrderCrudConnector" />
+      </connectorParameters>
     </entity>
     
     <entity name="receiving" parententity="po" idAttribute="ponum">
@@ -427,13 +431,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="polinenum" to="polinenum"/>
         </relationship>
       </relationships>
+      
+    </entity>
+
+    <entity name="materialrecords" parententity="matrectrans" idAttribute="matrectransid">
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWRECEIPT" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseReceiptCrudConnector" />
       </connectorParameters>
     </entity>
-    
-    <entity name="materialrecords" parententity="matrectrans" idAttribute="matrectransid"/>
   </entities>
 
   <applications>
@@ -1133,14 +1139,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                          parameters="joinattribute=requireddate;">
             <header label="Required Date:" displacement="sameline"/>
           </section>
-          <association label="Currency:" target="currencycode" labelfield="currency_.description">
+          <!--<association label="Currency:" target="currencycode" labelfield="currency_.description">
             <renderer type="lookup"/>
           </association>
           <association label="Vendor:" target="vendor" labelfield="companies_.name" extraprojectionvalues="phone">
             <renderer type="lookup" params="application=companies;schemaId=companiesLookupList;"/>
-          </association>
+          </association>-->
           <field attribute="companies_.phone" label="Phone:"/>
-          <composition relationship="poline" label="PO Lines" ></composition>
+          <composition relationship="poline" label="PO Lines" >
+            <collectionproperties allowupdate="true" allowcreation="true"/>
+          </composition>
         </schema>
 
         <!--<schema id="editdetail" parentschema="adetail" title="Purchase Order Detail">
@@ -1225,22 +1233,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <properties>
         <!--will need to change the icon later-->
         <property key ="icon.composition.tab" value="fa fa-tags"/>
-        <property key="list.click.service" value="poreceivingService.poreceivelistclick"/>
       </properties>
-      
       <schemas>
         
-        <schema id="applist" stereotype="list">
-          <field attribute="ponum" label="PO No" readonly="true"/>
-          <field attribute="polinenum" label="Line No" />
-          <field attribute="itemnum" label="Item"/>
-          <field attribute="description" label="Description"/>
-          <field attribute="orderqty" label="Quantity"/>
-          <field attribute="receivedqty" label="Received Qty"/>
-          <field attribute="unitcost" label="Unit Cost"/>
-        </schema>
-        
         <schema id="list" stereotype="compositionlist">
+          <!--<properties>
+            --><!--<property key="list.click.popup" value="modal"/>--><!--
+          </properties>-->
           <section resourcepath="/Content/Templates/otb/receiving.html"/>
           <field attribute="ponum" label="PO No" readonly="true"/>
           <field attribute="polinenum" label="Line No" />
@@ -1252,22 +1251,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Entered Date &amp; Time" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
-          
-          
         </schema>
 
         <detail stereotype="compositiondetail">
-          <field attribute="linetype" label="Line Type"/>
-          <association label="Item:" target="itemnum" labelfield="item_.description" enableexpression="@linetype=='item'">
-            <renderer type="lookup"/>
-          </association>
-          <field attribute="receivedqty" label="Received Qty:"/>
-          <association label="PO Line:" target="polinenum" labelfield="matrectrans_.polinenum" extraprojectionvalues="qtyrequested,qtyreturned,curbal" >
-            <renderer type="lookup"/>
-          </association>
-          <field attribute="matrectrans_.curbal" label="Test:">
-            <renderer type="default"/>
+          <field attribute="ponum" label="PO Num:" readonly="true"/>
+          <field attribute="itemnum" label="Item:" readonly="true"/>
+          <field attribute="#qtydue" label="Quantity Due:" readonly="true"/>
+          <field attribute="#qtytoreceive" label="Quantity to Receive:">
+            <renderer type="numericinput" params="min=1;max=@#qtydue;"/>
           </field>
+          <commandbars>
+            <commandgroup position="detailform" removeundeclared="true">
+              <command id="Receive" icon="fa-save" service="poreceivingService" method="submitMatrecTrans" label="Submit" tooltip="Submit" parameters="schema,datamap"/>
+            </commandgroup>
+          </commandbars>
         </detail>
         
       </schemas>
@@ -1305,6 +1302,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="polinenum" label="polinenum"/>
           <field attribute="quantity" label="quantity received"/>
         </list>
+
+        <schema id="newdetail" platform="web" stereotype="detail" mode="input">
+          <field attribute="matrectransid" hidden="true"/>
+          <field attribute="ponum" label="ponum"/>
+          <field attribute="polinenum" label="polinenum"/>
+          <field attribute="quantity" label="Received"/>
+        </schema>
       </schemas>
     </application>
   </applications>

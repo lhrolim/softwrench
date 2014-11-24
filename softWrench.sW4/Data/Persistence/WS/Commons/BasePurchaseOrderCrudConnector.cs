@@ -6,13 +6,17 @@ using System.Threading.Tasks;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
+using softWrench.sW4.mif_sr;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
-namespace softWrench.sW4.Data.Persistence.WS.Commons {
-    class BasePurchaseOrderCrudConnector : CrudConnectorDecorator {
-        public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
+namespace softWrench.sW4.Data.Persistence.WS.Commons
+{
+    internal class BasePurchaseOrderCrudConnector : CrudConnectorDecorator
+    {
+        public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData)
+        {
             var user = SecurityFacade.CurrentUser();
             var po = maximoTemplateData.IntegrationObject;
 
@@ -23,20 +27,29 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValueIfNull(po, "REPORTDATE", DateTime.Now.FromServerToRightKind());
 
 
-            var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
+            var crudData = ((CrudOperationData) maximoTemplateData.OperationData);
             LongDescriptionHandler.HandleLongDescription(po, crudData);
             HandlePolines(maximoTemplateData, crudData, po);
             base.BeforeUpdate(maximoTemplateData);
         }
 
-        private void HandlePolines(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData crudData, object po){
+        private void HandlePolines(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData crudData,
+            object po)
+        {
             if (crudData != null)
             {
-                var polines = (IEnumerable<CrudOperationData>)crudData.GetRelationship("poline");
+                var polines = (IEnumerable<CrudOperationData>) crudData.GetRelationship("poline");
                 var recordKey = crudData.Id;
-            }
-            var user = SecurityFacade.CurrentUser();
+                w.CloneArray(polines, po, "POLINE", delegate(object integrationObject, CrudOperationData crudDataEntry)
+                {
 
+                    ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
+                    
+
+                    LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
+                });
+            }
         }
     }
 }
+           

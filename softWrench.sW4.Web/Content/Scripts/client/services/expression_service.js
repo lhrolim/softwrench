@@ -13,6 +13,10 @@ app.factory('expressionService', function ($rootScope, contextService) {
             if (datamap.fields != undefined) {
                 expression = expression.replace(/\@/g, 'datamap.fields.');
             } else {
+                if (expression.startsWith('@#')) {
+                    expression = expression.replace(/\@#/g, 'datamap[\'#');
+                    expression = expression + '\']';
+                }
                 expression = expression.replace(/\@/g, 'datamap.');
             }
             expression = expression.replace(/ctx:/g, 'contextService.');
