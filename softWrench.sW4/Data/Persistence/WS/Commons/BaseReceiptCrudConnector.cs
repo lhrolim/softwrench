@@ -17,21 +17,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             
         }
 
-        public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData){
-            var user = SecurityFacade.CurrentUser();
-            var sr = maximoTemplateData.IntegrationObject;
-            var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
-            base.BeforeUpdate(maximoTemplateData);
-        }
-
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var user = SecurityFacade.CurrentUser();
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
             var receipt = maximoTemplateData.IntegrationObject;
             w.SetValueIfNull(receipt, "receiptquantity", Convert.ToDouble(crudData.GetAttribute("quantity")));
             w.SetValueIfNull(receipt, "externalrefid", "sw");
-            w.SetValueIfNull(receipt, "linetype", "ITEM");
-            w.SetValueIfNull(receipt, "itemsetid", "SET1");
             w.SetValueIfNull(receipt, "issuetype", "RECEIPT");
             w.SetValueIfNull(receipt, "consignment", 0);
             w.SetValueIfNull(receipt, "porevisionnum", 0);
@@ -43,7 +34,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValue(receipt, "positeid", crudData.GetAttribute("siteid"));
             w.SetValueIfNull(receipt, "transdate", DateTime.Now.FromServerToRightKind());
             w.SetValueIfNull(receipt, "actualdate", DateTime.Now.AddMinutes(-1.00).FromServerToRightKind());
-            
             base.BeforeCreation(maximoTemplateData);
         }
     }

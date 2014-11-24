@@ -3,15 +3,15 @@
 app.factory('poreceivingService', function($http, redirectService, restService) {
 
     return {
-        poreceivelistclick: function(datamap, schema) {
-            var param = {};
-            //param.id = datamap['matrectrans_.matrectransid'];
-            var application = 'matrectrans';
-            var detail = 'newdetail';
-            var mode = 'input';
-            redirectService.goToApplicationView(application, detail, mode, null, param, null);
+        //poreceivelistclick: function(datamap, schema) {
+        //    var param = {};
+        //    //param.id = datamap['matrectrans_.matrectransid'];
+        //    var application = 'matrectrans';
+        //    var detail = 'newdetail';
+        //    var mode = 'input';
+        //    redirectService.goToApplicationView(application, detail, mode, null, param, null);
 
-        },
+        //},
 
         submitorderedItems: function(schema, datamap) {
             var param = {};
@@ -31,8 +31,10 @@ app.factory('poreceivingService', function($http, redirectService, restService) 
             matdatamap['gldebitacct'] = datamap['gldebitacct'];
             matdatamap['glcreditacct'] = datamap['glcreditacct'];
             matdatamap['itemnum'] = datamap['itemnum'];
+            matdatamap['itemsetid'] = datamap['itemsetid'];
             matdatamap['siteid'] = datamap['siteid'];
             matdatamap['orgid'] = datamap['orgid'];
+            matdatamap['linetype'] = datamap['linetype'];
 
             var jsonString = angular.toJson(matdatamap);
             // submit a post of matrectrans to hit the right crudconnector
@@ -52,7 +54,7 @@ app.factory('poreceivingService', function($http, redirectService, restService) 
                 };
                 var urlToUse = url("/api/Data/materialrecords?" + $.param(restParameters));
                 $http.get(urlToUse).success(function(data) {
-                    redirectService.goToApplication("materialrecords", "list", null, data);
+                    redirectService.goToApplication("receiving", "list", null, data);
                 });
             });
         },

@@ -199,7 +199,6 @@
     <Compile Include="Data\Persistence\WS\Commons\BaseIncidentCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseInventoryIssueCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePhysicalCountCrudConnector.cs" />
-    <Compile Include="Data\Persistence\WS\Commons\BasePurchaseOrderCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePurchaseRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseInvuseCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseReceiptCrudConnector.cs" />
@@ -251,7 +250,6 @@
     <Compile Include="Metadata\Applications\DataSet\GricServiceRequestDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OptionFieldProviderParameters.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\SWDBApplicationDataset.cs" />
-    <Compile Include="Metadata\Applications\DataSet\PoReceivingDataSet.cs" />
     <Compile Include="Metadata\Applications\Reference\ReferenceHandler.cs" />
     <Compile Include="Metadata\Entities\EntityQueries.cs" />
     <Compile Include="Metadata\Entities\Schema\ContextualEntityAttribute.cs" />
