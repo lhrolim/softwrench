@@ -2440,7 +2440,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <composition relationship="assetloccomm" label="Services" inline="true">
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=commodities_.description" />
           </composition>
-          <field label="Cost Center" attribute="pluspcostcenter"/>
+          <field label="Cost Center" attribute="assetglaccount_.displaycostcenter"/>
           <!-- "Parent and Children" tree view -->
           <field label="Parent and Children" attribute="#assettree">
             <renderer type="treeview" params="idField=assetid;"/>
