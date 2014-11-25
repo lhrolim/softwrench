@@ -81,6 +81,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
         </relationship>
+        <relationship to="numericdomain" qualifier="synpriority">
+          <relationshipAttribute from="wopriority" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="WO PRIORITY" quoteLiteral="true" />
+        </relationship>
         <relationship to="longdescription" >
           <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
@@ -142,8 +146,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="siteid" hidden="true" />
           <field attribute="orgid" hidden="true"/>
           <field attribute="createby" hidden="true"/>
-
-          <!--field attribute="owner" label="Owner" readonly="true" hidden="true"/-->
 
           <section id="statussection"/>
           <!--SWWEB-342-->
@@ -208,8 +210,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
           </association>
-
-
           <section id="compositions"/>
         </schema>
 
@@ -233,7 +233,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </schema>
 
         <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
-
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" readonly="true" required="true"/>
             <field label="Site:" attribute="siteid" readonly="true"/>
@@ -345,7 +344,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <field attribute="wonum" label="WO No:" readonly="true"/>
              <!--COMSW-2-->
             <optionfield attribute="classstructureid" label="Classification:" providerattribute="_ClassStructureType" default="@classstructureid">
-              <renderer type="autocompleteclient" />
+              <renderer type="combo" />
             </optionfield>  
             <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
               <renderer type="lookup"/>
@@ -364,23 +363,23 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="lookup"/>
             </association>
             
+            <!--COMSW-2 Fix For Priority Selection-->
             <!--<field attribute="wopriority" label="Priority:" required="true" default="1">
               <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
               <number decimals="0" min="0" max="999" />
             </field>-->
-            
-            <!--COMSW-2 Fix For Priority Selection-->
-            <!--<field attribute="wopriority" label="Priority Code:" readonly="true" required="true">
-            </field>-->
-              
-            <!--<association label="Priority:" target="wopriority" labelfield="synpriority.description">
+
+            <association label="Priority:" target="wopriority" labelfield="synpriority.description" required="true">
               <renderer type="combo"/>
-              <event type="beforechange" service="genericTicketService" method="beforeWOPriorty"/>
-            </association>-->
+            </association>
             
-            <optionfield attribute="wopriority" label="Priority:" providerattribute="_WorkorderPriorityType">
+            <!--<field attribute="wopriority" label="Priority Code:" readonly="true" required="true">
+              <renderer type="fieldwithbuttons"/>
+            </field>-->
+
+            <!--<optionfield attribute="wopriority" label="Priority:" providerattribute="_WorkorderPriorityType" default="@wopriority">
               <renderer type="autocompleteclient"/>
-            </optionfield>  
+            </optionfield>-->  
             
             <association label="Location:" target="location" labelfield="location_.description" >
               <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
@@ -434,12 +433,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </section>
 
             <field attribute="description" label="Summary:"/>
+            
             <field label="Details:" attribute="longdescription_.ldtext" >
               <renderer type="richtext"/>
             </field>
-
-            <!--<section id="matusetranssection"/>-->
-            <!--<section id="labtranssection"/>-->
+            
           </section>
           <section id="compositions"/>
         </schema>
@@ -590,25 +588,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label="Labor:" target="laborcode" labelfield="labor_.laborcode,labor_.person_.displayname" labelpattern="{0} {1}" required="true" >
             <renderer type="lookup"/>
           </association>
-          <field label="Start Date:" attribute="startdate">
+          <field label="Start Date:" attribute="startdate" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
           </field>
-          <field label="Start Time:" attribute="starttime" >
+          <field label="Start Time:" attribute="starttime" default="@currentdatetime">
             <renderer type="datetime" params="format=HH:mm;showdate=false" />
           </field>
-          <field label="End Date:" attribute="finishdate">
+          <field label="End Date:" attribute="finishdate" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false" />
           </field>
-          <field label="End Time:" attribute="finishtime" >
+          <field label="End Time:" attribute="finishtime" readonly="true" >
             <renderer type="datetime" params="format=HH:mm;showdate=false" />
           </field>
           <field attribute="regularhrs" label="Regular Hours:" required="true"/>
-          <association label="GL Debit Account:" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
-            <renderer type="lookup"/>
-          </association>
-          <field attribute="payrate" label="Pay Rate:" required="true" default="0">
-            <renderer type="numericinput" params="min=0;max=999;decimals=0"/>
-          </field>
+          <field attribute="payrate" label="Pay Rate:" required="true" default="0"/>
         </detail>
 
         <detail platform="mobile" title="Labor">
