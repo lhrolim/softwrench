@@ -40,6 +40,16 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
             return !eval(expressionToEval);
         },
 
+        isCommandEnabled: function (datamap, schema, command, tabId) {
+            var expression = command.enableExpression;
+            if (expression == undefined || expression == "") {
+                return true;
+            }
+            var expressionToEval = expressionService.getExpression(expression, datamap);
+            var returnValue = eval(expressionToEval);
+            return returnValue;
+        },
+
         doCommand: function (scope, command) {
             var clientFunction = command.method;
             if (typeof (clientFunction) === 'function') {

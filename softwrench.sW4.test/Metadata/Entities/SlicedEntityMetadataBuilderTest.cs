@@ -27,7 +27,7 @@ namespace softwrench.sW4.test.Metadata.Entities {
         [TestMethod]
         public void TestFrom() {
             var sliced =SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("asset"),_schema);
-            Assert.AreEqual(4,sliced.InnerMetadatas.Count);
+            Assert.AreEqual(5,sliced.InnerMetadatas.Count);
             var from = QueryFromBuilder.Build(sliced);
             Debug.Write(from);
             Assert.IsTrue(from.Contains("address as location_shipto_"));

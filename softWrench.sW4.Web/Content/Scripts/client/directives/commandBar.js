@@ -238,9 +238,49 @@
                 return commandService.isCommandHidden($scope.datamap, schema, command, tabId);
             };
 
+            $scope.isCommandEnabled = function (schema, command) {
+                var tabId = $element.parents('.tab-pane').attr('id');
+
+                var enableExpression = command.enableExpression;
+                if (enableExpression && enableExpression.startsWith("$scope:")) {
+                    var result = $scope.invokeFn(enableExpression);
+                    if (result == null) {
+                        return true;
+                    }
+                    return result;
+                }
+                // if there is no $scope use regular expression evaluation
+                return commandService.isCommandEnabled($scope.datamap, schema, command, tabId);
+            }
+
             $scope.isEditing = function (schema, datamap) {
                 return datamap[schema.idFieldName] != null;
             };
+
+            $scope.invokeFn = function (expr, throwExceptionIfNotFound) {
+                var methodname = expr.substr(7);
+                var fn =this[methodname];
+                if (fn != null) {
+                    return fn();
+                } else if (throwExceptionIfNotFound) {
+                    throw new Error("parameterless method {0} not found on scope".format(methodname));
+                }
+                return null;
+            }
+
+            $scope.shouldCommandBeEnabled = function () {
+                var datamap = $scope.datamap;
+
+                for (var idx in datamap) {
+                    if (datamap[idx] != undefined && datamap[idx] != null
+                        && datamap[idx].fields != undefined
+                        && datamap[idx].fields.checked) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
 
         }
     };
