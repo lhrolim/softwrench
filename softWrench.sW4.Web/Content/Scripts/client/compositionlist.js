@@ -324,7 +324,7 @@ app.directive('compositionList', function (contextService) {
                         //interrupting here, can´t be done inside service
                         return;
                     }
-                    $scope.$parent.save(null, {
+                    $scope.$parent.$parent.save(null, {
                         successCbk: function (data) {
                             var updatedArray = data.resultObject.fields[$scope.relationship];
                             var alwaysrefresh = $scope.compositiondetailschema.properties && "true" == $scope.compositiondetailschema.properties['compositions.alwaysrefresh'];
@@ -351,7 +351,7 @@ app.directive('compositionList', function (contextService) {
                             $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
                         },
                         isComposition: true,
-                        nextSchemaObj: { schemaId: $scope.$parent.schema.schemaId }
+                        nextSchemaObj: { schemaId: $scope.$parent.$parent.schema.schemaId }
                     });
                 }
 

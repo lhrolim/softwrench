@@ -42,6 +42,10 @@
                     doLoad();
                 }
             });
+
+            scope.save = function () {
+                scope.savefn();
+            };
         }
     }
 });
