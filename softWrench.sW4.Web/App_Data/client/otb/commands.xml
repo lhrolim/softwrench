@@ -24,7 +24,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Commands.xsd ">
   <commandgroup position="compositionbottom">
     <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd"/>
     <command id="save" icon="fa-save" service="$scope" method="save" label="Submit" tooltip="Submit" />
-    <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="parentschema,parentdata" label="Print" tooltip="Print"/>
+    <command id="print" icon="fa-print" service="printService" method="printCompositionDetail" parameters="parentschema,parentdata,schema" label="Print" tooltip="Print"/>
     <command id="cancel" icon="fa-backward" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>
   </commandgroup>
 
