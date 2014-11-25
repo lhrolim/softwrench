@@ -32,6 +32,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <section attribute="document"
 									   resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=http"/>
           <field label="Created Date" attribute="createdate"/>
+          <commandbars>
+            <commandgroup position="compositionbottom" removeundeclared="true">
+              <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd"/>
+              <command id="save" icon="fa-save" service="$scope" method="save" label="Submit" tooltip="Submit" />
+              <command id="cancel" icon="fa-backward" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>
+            </commandgroup>
+          </commandbars>
         </list>
 
         <schema id="faqAttachments" stereotype="compositionlist" platform="web">
