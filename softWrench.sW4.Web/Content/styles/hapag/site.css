@@ -843,6 +843,7 @@ body,
 
     #listgrid thead {
         width: 874px;
+        z-index: 1;
     }
 
     #listgrid thead tr.header-row, #listgrid tfoot tr.footer-row {
@@ -1345,3 +1346,9 @@ select {
     max-height: 265px;
 }
 /*SM - 09/17 - HAP-558 #T-ITC-030*/
+
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+    opacity: 1;
+    filter: alpha(opacity=100);
+    background: #aaa !important;
+}
