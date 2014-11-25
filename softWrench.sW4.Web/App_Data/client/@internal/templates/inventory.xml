@@ -63,7 +63,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </relationships>
     </entity>
     
-    <entity name="invreserve" idAttribute="invreserveid" whereclause="reservedqty > 0">
+    <entity name="invreserve" idAttribute="requestnum" whereclause="reservedqty > 0">
       <relationships>
         <relationship to="invissue">
           <relationshipAttribute from="wonum" to="refwo" primary="true"/>

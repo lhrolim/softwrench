@@ -486,28 +486,28 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 // If the reserved quantity reaches 0 then the invreserve record should be deleted but
                 // the delete functionality is not currently working so just update the invreserve record for now
 
-                //if (newReservedQty > 0) {
+                if (newReservedQty > 0) {
                     // If there is still a reserved quantity, update the record
                     // Update the datamap with the new values
                     datamap["reservedqty"] = newReservedQty;
                     datamap["actualqty"] = newActualQty;
                     // Put the updated invreserve record
                     jsonString = angular.toJson(datamap);
-                    var urlToUse = url("/api/data/reservedMaterials/" + datamap["invreserveid"] + "?" + $.param(httpParameters));
+                    var urlToUse = url("/api/data/reservedMaterials/" + datamap["requestnum"] + "?" + $.param(httpParameters));
                     $http.put(urlToUse, jsonString).success(function() {
                         // Return to the list of reserved materials
                         redirectService.goToApplication("reservedMaterials", "list", null, null);
                     }).error(function() {
                         // Failed to update the material reservation
                     });
-                //} else {
-                //    // If the reserved quantity has reached 0, delete the record
-                //    var deleteUrl = url("/api/data/reservedMaterials/" + datamap["invreserveid"] + "?" + $.param(httpParameters));
-                //    $http.delete(deleteUrl).success(function () {
-                //        // Return to the list of reserved materials
-                //        redirectService.goToApplication("reservedMaterials", "list", null, null);
-                //    });
-                //}
+                } else {
+                    // If the reserved quantity has reached 0, delete the record
+                    var deleteUrl = url("/api/data/reservedMaterials/" + datamap["requestnum"] + "?" + $.param(httpParameters));
+                    $http.delete(deleteUrl).success(function () {
+                        // Return to the list of reserved materials
+                        redirectService.goToApplication("reservedMaterials", "list", null, null);
+                    });
+                }
             }); 
         },
 

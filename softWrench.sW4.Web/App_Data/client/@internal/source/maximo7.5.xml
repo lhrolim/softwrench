@@ -3536,7 +3536,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
-    <entity name="invreserve" idAttribute="invreserveid">
+    <entity name="invreserve" idAttribute="requestnum">
       <attributes>
         <attribute name="requestnum" type="varchar" required="true" />
         <attribute name="itemnum" type="varchar" required="false" />
