@@ -15,13 +15,6 @@
             datamap: '='
         },
 
-        link: function (scope, element, attrs, ctrl) {
-            scope.ctrlfns = {};
-            for (var fn in ctrl) {
-                scope.ctrlfns[fn] = ctrl[fn];
-            }
-        },
-
         controller: function ($scope, $http, $element, $log, $rootScope, printService, i18NService, commandService, redirectService, alertService) {
 
             $scope.defaultCommands = function () {
@@ -251,7 +244,7 @@
 
                 var enableExpression = command.enableExpression;
                 if (enableExpression && enableExpression.startsWith("$scope:")) {
-                    var result = $scope.invokeOuterScopeFn(enableExpression);
+                    var result = $scope.invokeFn(enableExpression);
                     if (result == null) {
                         return true;
                     }
@@ -265,15 +258,29 @@
                 return datamap[schema.idFieldName] != null;
             };
 
-            $scope.invokeOuterScopeFn = function (expr, throwExceptionIfNotFound) {
+            $scope.invokeFn = function (expr, throwExceptionIfNotFound) {
                 var methodname = expr.substr(7);
-                var fn = $scope.ctrlfns[methodname];
+                var fn =this[methodname];
                 if (fn != null) {
                     return fn();
                 } else if (throwExceptionIfNotFound) {
-                    throw new Error("parameterless method {0} not found on outer scope".format(methodname));
+                    throw new Error("parameterless method {0} not found on scope".format(methodname));
                 }
                 return null;
+            }
+
+            $scope.shouldCommandBeEnabled = function () {
+                var datamap = $scope.datamap;
+
+                for (var idx in datamap) {
+                    if (datamap[idx] != undefined && datamap[idx] != null
+                        && datamap[idx].fields != undefined
+                        && datamap[idx].fields.checked) {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
         }

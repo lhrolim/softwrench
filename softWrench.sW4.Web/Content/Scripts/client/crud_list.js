@@ -348,20 +348,6 @@ app.directive('crudList', function (contextService) {
                 fixHeaderService.fixTableTop($(".fixedtable"));
                 };
 
-           this.shouldCommandBeEnabled = function() {
-                var datamap = $scope.datamap;
-                
-                for (var idx in datamap) { 
-                    if (datamap[idx] != undefined && datamap[idx] != null 
-                        && datamap[idx].fields != undefined 
-                        && datamap[idx].fields.checked) { 
-                            return true;
-                    }
-                } 
-                
-                return false;
-            }
-
 
             $injector.invoke(BaseController, this, {
                 $scope: $scope,
