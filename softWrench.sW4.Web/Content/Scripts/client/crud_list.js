@@ -349,7 +349,6 @@ app.directive('crudList', function (contextService) {
                 };
 
 
-
             $injector.invoke(BaseController, this, {
                 $scope: $scope,
                 i18NService: i18NService,
