@@ -32,7 +32,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var location = parameters.OriginalEntity.GetAttribute("location");
             var lotnum = parameters.OriginalEntity.GetAttribute("lotnum");
 
-            var query = string.Format("select binnum " +
+            var query = string.Format("select distinct binnum " +
                                       "from invbalances " +
                                       "where itemnum = '{0}' and " +
                                             "siteid = '{1}' and " +
@@ -44,10 +44,46 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
             var result = MaxDAO.FindByNativeQuery(query, null);
             var availableLocations = new List<IAssociationOption>();
+            if (result != null) {
+                foreach (var record in result) {
+                    var recordAssociationOption = new AssociationOption(record["binnum"], record["binnum"]);
+                    if (!availableLocations.Contains(recordAssociationOption)) {
+                        availableLocations.Add(recordAssociationOption);
+                    }
+                }
+            }
 
-            foreach (var record in result)
-            {
-                availableLocations.Add(new AssociationOption(record["binnum"], record["binnum"]));
+            return availableLocations.AsEnumerable();
+        }
+
+        public IEnumerable<IAssociationOption> GetAvailableLots(OptionFieldProviderParameters parameters) {
+            var siteid = parameters.OriginalEntity.GetAttribute("siteid");
+            var itemnum = parameters.OriginalEntity.GetAttribute("itemnum");
+            var orgid = parameters.OriginalEntity.GetAttribute("orgid");
+            var location = parameters.OriginalEntity.GetAttribute("location");
+            var binnum = parameters.OriginalEntity.GetAttribute("#frombin");
+
+            var query = string.Format("select distinct lotnum " +
+                                      "from invbalances " +
+                                      "where itemnum = '{0}' and " +
+                                            "siteid = '{1}' and " +
+                                            "orgid = '{2}' and " +
+                                            "location = '{3}' and " +
+                                            "binnum = '{4}' and " +
+                                            "curbal > 0 and " +
+                                            "binnum is not null and " +
+                                            "lotnum is not null",
+                                      itemnum, siteid, orgid, location, binnum);
+
+            var result = MaxDAO.FindByNativeQuery(query, null);
+            var availableLocations = new List<IAssociationOption>();
+            if (result != null) {
+                foreach (var record in result) {
+                    var recordAssociationOption = new AssociationOption(record["lotnum"], record["lotnum"]);
+                    if (!availableLocations.Contains(recordAssociationOption)) {
+                        availableLocations.Add(recordAssociationOption);
+                    }
+                }
             }
 
             return availableLocations.AsEnumerable();

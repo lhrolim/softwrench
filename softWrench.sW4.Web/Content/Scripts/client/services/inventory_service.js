@@ -29,16 +29,19 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         redirectService.goToApplicationView("invuse", "newdetail", "Input", null, null, null);
     };
 
-    var getBinQuantity = function (searchData, parameters, balanceField, binnum) {
+    var getBinQuantity = function (searchData, parameters, balanceField, binnum, lotnum) {
         searchService.searchWithData("invbalances", searchData).success(function (data) {
             var resultObject = data.resultObject;
-            resultObject.forEach(function (row) {
-                var fields = row['fields'];
-                if (fields['binnum'] == binnum) {
+            
+            for (var i = 0; i < resultObject.length; i++) {
+                var fields = resultObject[i]['fields'];
+                if (fields['binnum'] == binnum && fields['lotnum'] == lotnum) {
                     parameters.fields[balanceField] = fields.curbal;
-                    return;
+                    // Exit the loop
+                    break;
                 }
-            });
+                parameters.fields[balanceField] = null;
+            };
         });
     };
 
@@ -361,35 +364,39 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
         getIssueBinQuantity: function (parameters) {
             var binnum = parameters['fields']['binnum'];
+            var lotnum = parameters['fields']['lotnum'];
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 siteid: parameters['fields']['siteid'],
                 itemsetid: parameters['fields']['inventory_.itemsetid'],
                 location: parameters['fields']['storeloc']
             };
-            getBinQuantity(searchData, parameters, '#curbal', binnum);
+            getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
         },
 
         getReserveBinQuantity: function (parameters) {
             var binnum = parameters['fields']['#frombin'];
+            var lotnum = parameters['fields']['#fromlot'];
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 siteid: parameters['fields']['siteid'],
                 itemsetid: parameters['fields']['itemsetid'],
-                location: parameters['fields']['location']
+                location: parameters['fields']['location'],
+                lotnum: parameters['fields']['#fromlot']
             };
-            getBinQuantity(searchData, parameters, '#curbal', binnum);
+            getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
         },
 
         getTransferBinQuantity: function (parameters) {
-            var binnum = parameters['fields']['invuseline_.frombin']
+            var binnum = parameters['fields']['invuseline_.frombin'];
+            var lotnum = parameters['fields']['invuseline_.fromlot'];
             var searchData = {
                 itemnum: parameters['fields']['invuseline_.itemnum'],
                 siteid: parameters['fields']['inventory_.siteid'],
                 itemsetid: parameters['fields']['inventory_.itemsetid'],
                 location: parameters['fields']['fromstoreloc']
             };
-            getBinQuantity(searchData, parameters, '#curbal', binnum);
+            getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
         },
         submitTransfer: function (schema, datamap) {
             var jsonString = angular.toJson(datamap);
@@ -520,6 +527,36 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             
             getBinQuantity(searchData, parameters, '#curbal');
         },
+
+        afterChangeInvreserveFromBin: function (parameters) {
+            // The fromlot should be getting cleared already because it is dependant on the binnum
+            //parameters['fields']['#fromlot'] = undefined;
+            var binnum = parameters['fields']['#frombin'];
+            var lotnum = parameters['fields']['#fromlot'];
+            var searchData = {
+                itemnum: parameters['fields']['itemnum'],
+                siteid: parameters['fields']['siteid'],
+                itemsetid: parameters['fields']['itemsetid'],
+                location: parameters['fields']['location'],
+                binnum: parameters['fields']['#frombin'],
+                lotnum: parameters['fields']['#fromlot']
+            };
+            getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
+        },
+
+        afterChangeInvreserveFromLot: function(parameters) {
+            var binnum = parameters['fields']['#frombin'];
+            var lotnum = parameters['fields']['#fromlot'];
+            var searchData = {
+                itemnum: parameters['fields']['itemnum'],
+                siteid: parameters['fields']['siteid'],
+                itemsetid: parameters['fields']['itemsetid'],
+                location: parameters['fields']['location'],
+                binnum: parameters['fields']['#frombin'],
+                lotnum: parameters['fields']['#fromlot']
+            };
+            getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
+        }
 
     };
 });

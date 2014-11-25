@@ -654,11 +654,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="binnum" label="Bin">
             <renderer type="default" params="width=16%" />
           </field>
+          <field attribute="lotnum" label="Lot">
+            <renderer type="default" params="width=10%"/>
+          </field>
           <field attribute="curbal" label="Balance">
-            <renderer type="default" params="width=16%" />
+            <renderer type="default" params="width=11%" />
           </field>
           <field attribute="siteid" label="Site">
-            <renderer type="default" params="width=16%" />
+            <renderer type="default" params="width=11%" />
           </field>
           <field attribute="invbalancesid" hidden="true"/>
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
@@ -674,6 +677,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Description:" attribute="item_.description" readonly="true"/>
           <field label="Storeroom:" attribute="location" readonly="true"/>
           <field label="Bin:" attribute="binnum" readonly="true"/>
+          <field label="Lot:" attribute="lotnum" readonly="true"/>
           <field label="Balance:" attribute="curbal"/>
           <field label="Site:" attribute="siteid" readonly="true"/>
           <field attribute="physcnt" hidden="true"/>
