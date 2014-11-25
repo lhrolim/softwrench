@@ -8,6 +8,39 @@ app.directive('advancedFilterToogle', function (contextService) {
     };
 });
 
+app.directive('crudListWrapper', function (contextService, $compile) {
+    return {
+        restrict: 'E',
+        replace: true,
+        template: "<div></div>",
+        scope: {
+            schema: '=',
+            datamap: '=',
+            previousschema: '=',
+            previousdata: '=',
+            paginationData: '=',
+            searchData: '=',
+            searchOperator: '=',
+            searchSort: '=',
+            ismodal: '@',
+            checked: '=',
+            isList: "="
+        },
+        link: function (scope, element, attrs) {
+            if (scope.isList) {
+                element.append(
+                    "<crud-list datamap='datamap' schema='schema' pagination-data='paginationData' " +
+                    "search-data='searchData' " +
+                    "search-operator='searchOperator' " +
+                    "search-sort='searchSort' />"
+                );
+                $compile(element.contents())(scope);
+            }
+        }
+    }
+});
+
+
 
 app.directive('crudList', function (contextService) {
     return {
@@ -24,7 +57,7 @@ app.directive('crudList', function (contextService) {
             searchOperator: '=',
             searchSort: '=',
             ismodal: '@',
-            hidebars:'@',
+            hidebars: '@',
             checked: '='
         },
 
@@ -57,9 +90,7 @@ app.directive('crudList', function (contextService) {
                 return tabsService.hasTabs(schema);
             };
             $scope.isCommand = function (schema) {
-                if ($scope.schema.properties['command.select'] == "true") {
-                    return true;
-                }
+                return $scope.schema && $scope.schema.properties['command.select'] == "true";
             };
             $scope.isNotHapagTest = function () {
                 return $rootScope.clientName != 'hapag';
@@ -409,7 +440,7 @@ app.directive('crudList', function (contextService) {
             $scope.statusColor = function (status, gridname) {
                 return statuscolorService.getColor(status, $scope.schema.applicationName);
             }
-            
+
             $scope.sort = function (column) {
                 if (!$scope.shouldShowHeaderLabel(column) || "none" == $scope.schema.properties["list.sortmode"]) {
                     return;

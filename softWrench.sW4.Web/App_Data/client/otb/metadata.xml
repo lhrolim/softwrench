@@ -509,22 +509,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="workorderid" hidden="true">
           </field>
           <field attribute="wonum" label="Change ID">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="status" label="Status" >
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=20%" />
           </field>
           <field attribute="pmchgtype" label="Type" >
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
           </field>
           <field attribute="priority" label="Priority" >
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="risk" label="Risk" >
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=change;column=status"/>
@@ -973,25 +973,25 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="width=16%"/>
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="fromstoreloc" label="From Storeroom">
-            <renderer type="default" params="width=15%"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
           </field>
           <field attribute="frombin" label="From Bin">
-            <renderer type="default" params="width=12%"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="tostoreloc" label="To Storeroom">
-            <renderer type="default" params="width=15%"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
           </field>
           <field attribute="tobin" label="To Bin">
-            <renderer type="default" params="width=12%"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="quantity" label="Quantity">
-            <renderer type="default" params="width=10%"/>
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="actualdate" label="Transfer Date">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=18%"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
           <properties>
             <property key="list.click.schema" value="detail"/>
@@ -1089,28 +1089,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Purchase Order Grid">
           <field attribute ="ponum" label="PO">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute ="description" label="Description">
             <renderer type="default" params="excelwidth=50"/>
           </field>
           <field attribute ="status" label="Status">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%" />
           </field>
           <field attribute ="siteid" label="Site">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute ="potype" label="Type">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=10%" />
           </field>
           <field attribute ="priority" label="Priority">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=10%;widthLG=10%" />
           </field>
           <field attribute ="requireddate" label="Required Date">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=false"/>
+            <renderer type="datetime" params="widthXS=-1%;widthSM=20%;widthMD=15%;format=MM/dd/yyyy HH:mm;showtime=false"/>
           </field>
           <field attribute ="totalcost" label="Total Cost">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%" />
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
