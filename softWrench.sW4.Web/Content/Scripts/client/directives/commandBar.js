@@ -3,7 +3,6 @@
         restrict: 'E',
         replace: true,
         templateUrl: contextService.getResourceUrl('/Content/Templates/directives/commandBar.html'),
-        /* Here I would need - require: '^crudList', */
         scope: {
             applicationschema: '=',
             schema: '=',
