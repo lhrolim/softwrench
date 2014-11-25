@@ -984,8 +984,8 @@ select {
 }
 
 .hapag-body-loaded {
-    border: 1px solid #eee;
-    border: 1px solid rgba(0,0,0,0.2);
+    /*border: 1px solid #eee;
+    border: 1px solid rgba(0,0,0,0.2);*/
 }
 
 .hapag-topbar {
