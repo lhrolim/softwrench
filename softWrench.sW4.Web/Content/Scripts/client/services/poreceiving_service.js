@@ -1,17 +1,18 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('poreceivingService', function($http, redirectService, restService) {
+app.factory('poreceivingService', function ($http, redirectService, restService, searchService, alertService) {
+
+    var getReceiptData = function(ponum) {
+        var searchData = {
+            ponum: ponum
+        };
+        searchService.searchWithData("po", searchData).success(function (data) {
+            var resultObject = data.resultObject;
+            return resultObject[0]['fields']['receipts'];
+        });
+    };
 
     return {
-        //poreceivelistclick: function(datamap, schema) {
-        //    var param = {};
-        //    //param.id = datamap['matrectrans_.matrectransid'];
-        //    var application = 'matrectrans';
-        //    var detail = 'newdetail';
-        //    var mode = 'input';
-        //    redirectService.goToApplicationView(application, detail, mode, null, param, null);
-
-        //},
 
         submitorderedItems: function(schema, datamap) {
             var param = {};
@@ -57,6 +58,27 @@ app.factory('poreceivingService', function($http, redirectService, restService) 
                     redirectService.goToApplication("receiving", "list", null, data);
                 });
             });
+        },
+
+        completeReceipts: function(schema, datamap) {
+            // Check if the receipts is already complete for the application
+            var ponum = datamap[0]['ponum'];
+            var searchData = {
+                ponum: ponum
+            };
+            searchService.searchWithData("po", searchData).success(function (data) {
+                var resultObject = data.resultObject;
+                var receipts = resultObject[0]['fields']['receipts'];
+                if (receipts.equalIc('complete')) {
+                    alertService.alert("RECEIPTS ALREADY COMPLETED");
+                    return;
+                }
+                // if not check if the quantity due on all the polines is 0
+
+
+                // if quantity due is 0, complete receipts
+            });
+
         },
     };
 });

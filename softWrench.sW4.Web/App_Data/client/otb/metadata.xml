@@ -384,7 +384,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </connectorParameters>
     </entity>
     
-    <entity name="receiving" parententity="po" idAttribute="ponum">
+    <entity name="receiving" parententity="po" idAttribute="ponum" whereclause="status = 'APPR'">
       <relationships>
         <relationship to="synonymdomain" qualifier="postatus">
           <relationshipAttribute from="status" to="value" primary="true"/>
@@ -1112,6 +1112,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute ="totalcost" label="Total Cost">
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%" />
           </field>
+          <field attribute="receipts" hidden="true"/>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
           </properties>
@@ -1146,6 +1147,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup" params="application=companies;schemaId=companiesLookupList;"/>
           </association>-->
           <field attribute="companies_.phone" label="Phone:"/>
+          
           <composition relationship="poline" label="PO Lines" >
             <collectionproperties allowupdate="true" allowcreation="true"/>
           </composition>
@@ -1256,6 +1258,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Entered Date &amp; Time" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
+          <commandbars>
+            <commandgroup position="compositiontop" removeundeclared="false">
+              <command id ="Complete" icon="fa-thumbs-o-up" service="poreceivingService" method="completeReceipts" label="Complete Receipts" parameters="schema,datamap,parentdata" />
+            </commandgroup>
+          </commandbars>
         </schema>
 
         <detail stereotype="compositiondetail">
@@ -1266,8 +1273,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="numericinput" params="min=1;max=@#qtydue;"/>
           </field>
           <commandbars>
+            
             <commandgroup position="detailform" removeundeclared="true">
               <command id="Receive" icon="fa-save" service="poreceivingService" method="submitMatrecTrans" label="Submit" tooltip="Submit" parameters="schema,datamap"/>
+              <command id="cancel" icon="fa-backward" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>
             </commandgroup>
           </commandbars>
         </detail>
