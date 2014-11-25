@@ -68,14 +68,16 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
     $rootScope.$on('sw_ajaxinit', function (ajaxinitevent) {
         var savingMain = true === $rootScope.savingMain;
-        if (!$rootScope.avoidspin) {
+        if (!$rootScope.avoidspin && !$rootScope.showingspin) {
             spin = startSpin(savingMain);
+            $rootScope.showingspin = true;
         }
     });
 
     $rootScope.$on('sw_ajaxend', function (data) {
         if (spin != undefined) {
             spin.stop();
+            $rootScope.showingspin = false;
         }
         $rootScope.savingMain = undefined;
 
@@ -189,6 +191,12 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
         $scope.mainlogo = config.logo;
         $scope.myprofileenabled = config.myProfileEnabled;
+        var popupMode = GetPopUpMode();
+        $scope.popupmode = popupMode;
+        if (popupMode != "none") {
+            return;
+        }
+
 
         $http({
             method: "GET",
@@ -211,8 +219,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             $scope.menu = menuAndNav.menu;
             $scope.isSysAdmin = menuAndNav.isSysAdmin;
             $scope.isClientAdmin = menuAndNav.isClientAdmin;
-            var popupMode = GetPopUpMode();
-            $scope.popupmode = popupMode;
+          
             $('.hapag-body').addClass('hapag-body-loaded');
         })
         .error(function (data) {

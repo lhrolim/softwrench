@@ -1,4 +1,48 @@
-﻿app.directive('crudOutput', function (contextService) {
+﻿app.directive('crudOutputWrapper', function (contextService, $compile, $rootScope) {
+    return {
+        restrict: 'E',
+        replace: true,
+        template: "<div></div>",
+        scope: {
+            schema: '=',
+            displayables: '=',
+            datamap: '=',
+            cancelfn: '&',
+            previousschema: '=',
+            previousdata: '=',
+            hasError: '=',
+            tabid: '@',
+            isMainTab:"@"
+        },
+        link: function (scope, element, attrs) {
+
+            var doLoad = function () {
+                element.append(
+                    "<crud-output schema='schema'" +
+                    "datamap='datamap'" +
+                    "displayables='displayables'" +
+                    "orientation='{{orientation}}'></crud-output-fields>"
+                );
+                $compile(element.contents())(scope);
+                scope.loaded = true;
+            }
+
+            if (scope.schema.mode == "output" && ("true" == scope.isMainTab)) {
+                doLoad();
+            }
+
+            scope.$on("sw_lazyloadtab", function(event,tabid) {
+                if (scope.tabid == tabid && !scope.loaded) {
+                    doLoad();
+                }
+            });
+
+        }
+    }
+});
+
+
+app.directive('crudOutput', function (contextService) {
     return {
         restrict: 'E',
         replace: true,

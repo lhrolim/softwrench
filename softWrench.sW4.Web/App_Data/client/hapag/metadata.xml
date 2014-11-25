@@ -536,7 +536,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=60px;maxwidth=75px;wordwrap=break-word" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=84px;maxwidth=98px;wordwrap=break-word;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=84px;maxwidth=98px;wordwrap=break-word;showtime=false;exporttoexcel=false" />
+          </field>
+          <field attribute="#2reportdate" label="Reported Date" hidden="true">
+            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=109px;showtime=false;exporttoexcel=true" />
+          </field>
+          <field attribute="#3reportdate" label="Reported Time" hidden="true">
+            <renderer type="datetime" params="format=HH:mm;minwidth=109px;showtime=false;exporttoexcel=true" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site Id">
             <renderer type="default" params="minwidth=74px;maxwidth=74px" />
@@ -638,7 +644,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <field label="Last-Action Worklog" attribute="lastworklog_.description"/>
           <field label="Owner Group" attribute="ownergroup" hidden="true">
-            <renderer type="default" params="exportToExcel=true;minwidth=109.1428571428571px"/>
+            <renderer type="default" params="exporttoexcel=true;minwidth=109.1428571428571px"/>
           </field>
           <field label="Days Open" attribute="numberdaysopen">
             <renderer type="default" params="minwidth=109.1428571428571px" />
@@ -946,8 +952,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=109px;wordwrap=break-word" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=109px;showtime=false;" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=109px;showtime=false;exporttoexcel=false" />
           </field>
+          <field attribute="#2reportdate" label="Reported Date" hidden="true">
+            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=109px;showtime=false;exporttoexcel=true" />
+          </field>
+          <field attribute="#3reportdate" label="Reported Time" hidden="true">
+            <renderer type="datetime" params="format=HH:mm;minwidth=109px;showtime=false;exporttoexcel=true" />
+          </field>
+
           <field attribute="hlagpluspcustomer" label="Site Id">
             <renderer type="default" params="minwidth=80px;maxwidth=80px;" />
           </field>
@@ -1635,7 +1648,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </componentdisplayable>
 
         <componentdisplayable id="readonlycostcenter">
-          <field label="Cost Center" attribute="asset_.assetglaccount_.displaycostcenter" readonly="true" showexpression="@asset!=null" />
+          <field label="Cost Center" attribute="costcenter" readonly="true" showexpression="@asset!=null" />
+<!--          <field label="Cost Center" attribute="asset_.assetglaccount_.displaycostcenter" readonly="true" showexpression="@asset!=null" />-->
         </componentdisplayable>
 
         <componentdisplayable id="updateasset">
@@ -2077,7 +2091,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section id="other" parameters="detaildescription= ">
             <reference id="readonlyuserid"/>
             <reference id="currentitc"/>
-            <field label="Cost Center" attribute="costcenter" readonly="true" showexpression="@asset!=null" />
+            <reference id="readonlycostcenter"/>
           </section>
 
         </schema>
@@ -2170,8 +2184,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
           </section>
 
-          <reference id="readonlycostcenter" />
-
+          <section id="other" parameters="detaildescription= ">
+            <reference id="readonlycostcenter" />
+          </section>
           <section id="specification" showexpression="@asset!=null" resourcepath="/Content/Templates/crud/update_section.html" parameters="detaildescription=Specifications">
             <header displacement="sameline" label="Specifications"/>
             <field attribute="asset_.computername" label="Computer Name" />
@@ -2273,7 +2288,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=109px" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=109px;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=109px;showtime=false;exporttoexcel=false" />
+          </field>
+          <field attribute="#2reportdate" label="Reported Date" hidden="true">
+            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=109px;showtime=false;exporttoexcel=true" />
+          </field>
+          <field attribute="#3reportdate" label="Reported Time" hidden="true">
+            <renderer type="datetime" params="format=HH:mm;minwidth=109px;showtime=false;exporttoexcel=true" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site Id">
             <renderer type="default" params="minwidth=109px" />
@@ -2419,7 +2440,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <composition relationship="assetloccomm" label="Services" inline="true">
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=commodities_.description" />
           </composition>
-          <field label="Cost Center" attribute="pluspcostcenter"/>
+          <field label="Cost Center" attribute="assetglaccount_.displaycostcenter"/>
           <!-- "Parent and Children" tree view -->
           <field label="Parent and Children" attribute="#assettree">
             <renderer type="treeview" params="idField=assetid;"/>

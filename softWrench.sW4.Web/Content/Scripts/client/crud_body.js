@@ -1,5 +1,29 @@
 ﻿var app = angular.module('sw_layout');
 
+
+app.directive('tabsrendered', function ($timeout, $log, $rootScope) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            if (scope.$last === true) {
+                $timeout(function () {
+                    $('.compositiondetailtab li>a').each(function () {
+                        var $this = $(this);
+                        $this.click(function (e) {
+                            e.preventDefault();
+                            $this.tab('show');
+                            var tabId = $(this).data('tabid');
+                            $log.getInstance('tabsrendered').trace('lazy loading tab {0}'.format(tabId));
+                            $rootScope.$broadcast('sw_lazyloadtab', tabId);
+                        });
+                    });
+                });
+            }
+        }
+    };
+});
+
+
 app.directive('crudBody', function (contextService) {
     return {
         restrict: 'E',
@@ -31,7 +55,11 @@ app.directive('crudBody', function (contextService) {
             validationService, submitService, redirectService,
             associationService, contextService) {
 
-            $scope.$name = 'crudbody' + ($scope.ismodal ? 'modal' : '');
+            $scope.$name = 'crudbody' + ($scope.ismodal  == "false"? 'modal' : '');
+
+        
+
+          
 
             $scope.getFormattedValue = function (value, column) {
                 var formattedValue = formatService.format(value, column);
@@ -64,6 +92,7 @@ app.directive('crudBody', function (contextService) {
                     fixHeaderService.resetTableConfig($scope.schema);
                 }
             });
+
 
             $scope.$on('sw_errormessage', function (event, show) {
                 fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);

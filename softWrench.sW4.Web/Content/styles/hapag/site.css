@@ -664,14 +664,24 @@ textarea .readonly {
         margin-left: -190px !important;
     }
 
+    .col-main-content {
+        float: none;
+    }
+
     .pagebreak-before {
         display: block;
+        float: none;
+        position: initial;
         page-break-before: always;
+        break-before: page;
     }
 
     .pagebreak-after {
         display: block;
+        float: none;
+        position: initial;
         page-break-after: always;
+        break-after: page;
     }
 
     html, body {

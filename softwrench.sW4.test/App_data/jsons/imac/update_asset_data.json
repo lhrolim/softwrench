@@ -19,7 +19,7 @@
     "Asset owened by HLAG",
     "Commodity Test"
   ],
-  "costcenter": "6690-810-300",
+  "costcenter": "6200/300/000 // Maint+General",
   "asset_.description": "Unix Server",
   "asset_.serialnum": "FT-88654343",
   "asset_.item_.description": "Unix Server",

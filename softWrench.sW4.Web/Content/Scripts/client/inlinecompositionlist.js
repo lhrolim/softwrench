@@ -8,18 +8,33 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
         replace: true,
         template: "<div></div>",
         scope: {
-            compositionschemadefinition: '=',
-            compositiondata: '=',
-            iscollection: '=',
+            parentdata: '=',
+            metadata: '=',
+            iscollection : '='
         },
 
         link: function (scope, element, attrs) {
-            element.append(
-                "<inline-composition-list compositionschemadefinition='compositionschemadefinition'" +
-                         "compositiondata='compositiondata'" +
-                         "iscollection='iscollection' />"
-            );
-            $compile(element.contents())(scope);
+
+            var doLoad = function () {
+                scope.compositionschemadefinition = scope.metadata.schema;
+                scope.compositiondata = scope.parentdata[scope.metadata.relationship];
+                element.append(
+                    "<inline-composition-list parentdata='parentdata'" +
+                             "metadata='metadata' iscollection='iscollection' compositionschemadefinition='compositionschemadefinition' compositiondata='compositiondata'/>"
+                );
+                $compile(element.contents())(scope);
+                scope.loaded = true;
+            }
+
+
+            doLoad();
+
+            scope.$on("sw_lazyloadtab", function (event, tabid) {
+                if (scope.tabid == tabid && !scope.loaded) {
+                    doLoad();
+                }
+            });
+
         }
     };
 });
@@ -32,9 +47,11 @@ app.directive('inlineCompositionList', function (contextService, commandService)
         replace: true,
         templateUrl: contextService.getResourceUrl('/Content/Templates/crud/inline_composition_list.html'),
         scope: {
-            compositionschemadefinition: '=',
-            compositiondata: '=',
+            parentdata: '=',
+            metadata: '=',
             iscollection: '=',
+            compositionschemadefinition: '=',
+            compositiondata:'=',
         },
 
         controller: function ($scope, $filter, $http, $element, $rootScope, tabsService) {

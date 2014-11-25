@@ -7,7 +7,7 @@
             <span ng-if="$index < compositiondata.length-1">,&nbsp;</span>
         </label>
     </span>
-    <label ng-repeat="item in compositiondata" class="control-label" style="text-align:left; word-break:break-all; cursor: pointer;" ng-click="handleItemClick(item,compositionschemadefinition)" ng-if="compositionschemadefinition.rendererParameters.showaslink != 'true'">
+    <label ng-repeat="item in compositiondata" class="control-label" style="text-align:left; word-break:break-all;" ng-click="handleItemClick(item,compositionschemadefinition)" ng-if="compositionschemadefinition.rendererParameters.showaslink != 'true'">
         {{item[compositionschemadefinition.rendererParameters.attributeToDisplay]}}<span ng-if="$index < compositiondata.length-1">,&nbsp;</span>
     </label>
 </div>

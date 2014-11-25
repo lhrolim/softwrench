@@ -18,15 +18,12 @@ using DocumentFormat.OpenXml.Packaging;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 
-namespace softWrench.sW4.Web.Util
-{
-    public class ExcelUtil : ISingletonComponent
-    {
+namespace softWrench.sW4.Web.Util {
+    public class ExcelUtil : ISingletonComponent {
 
         private Dictionary<String, String> cellStyleDictionary;
 
-        public ExcelUtil()
-        {
+        public ExcelUtil() {
             // setup style dictionary for back colors
             cellStyleDictionary = new Dictionary<string, string>();
             cellStyleDictionary.Add("NEW", "5");
@@ -43,8 +40,7 @@ namespace softWrench.sW4.Web.Util
             IEnumerable<ApplicationFieldDefinition> applicationFields = result.Schema.Fields;
 
             using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
-            using (SpreadsheetDocument xl = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook))
-            {
+            using (SpreadsheetDocument xl = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook)) {
                 // attributes of elements
                 List<OpenXmlAttribute> xmlAttributes;
                 // the xml writer
@@ -94,8 +90,7 @@ namespace softWrench.sW4.Web.Util
 
                 // write data rows
                 value = string.Empty;
-                foreach (var item in result.ResultObject)
-                {
+                foreach (var item in result.ResultObject) {
                     var attributes = item.Attributes;
 
                     // create new row
@@ -103,11 +98,14 @@ namespace softWrench.sW4.Web.Util
                     xmlAttributes.Add(new OpenXmlAttribute("r", null, rowIdx.ToString()));
                     writer.WriteStartElement(new Row(), xmlAttributes);
 
-                    var nonHiddenFields = applicationFields.Where(f => !f.IsHidden || (f.Renderer.ParametersAsDictionary().TryGetValue(FieldRendererConstants.EXPORTTOEXCEL, out value)));
-                    foreach (var applicationField in nonHiddenFields)
-                    {
+                    var nonHiddenFields = applicationFields.Where(ShouldShowField());
+                    foreach (var applicationField in nonHiddenFields) {
                         object dataAux;
                         attributes.TryGetValue(applicationField.Attribute, out dataAux);
+                        if (dataAux == null && applicationField.Attribute.StartsWith("#") && Char.IsNumber(applicationField.Attribute[1])) {
+                            attributes.TryGetValue(applicationField.Attribute.Substring(2), out dataAux);
+                        }
+
                         var data = dataAux == null ? string.Empty : dataAux.ToString();
 
                         xmlAttributes = new List<OpenXmlAttribute>();
@@ -115,7 +113,7 @@ namespace softWrench.sW4.Web.Util
                         xmlAttributes.Add(new OpenXmlAttribute("t", null, "str"));
 
                         // that's the default style
-                        String styleId = "1";
+                        var styleId = "1";
                         if (applicationField.Attribute.Contains("status") && ApplicationConfiguration.ClientName == "hapag") {
                             bool success = cellStyleDictionary.TryGetValue(data.Trim(), out styleId);
                             if (!success) {
@@ -126,8 +124,7 @@ namespace softWrench.sW4.Web.Util
                                     bool compundStatus = cellStyleDictionary.TryGetValue(status, out styleId);
                                     if (!compundStatus)
                                         styleId = "1";
-                                }
-                                else {
+                                } else {
                                     styleId = "1";
                                 }
                             }
@@ -138,9 +135,12 @@ namespace softWrench.sW4.Web.Util
                         writer.WriteStartElement(new Cell(), xmlAttributes);
                         // write cell content
                         DateTime dtTimeAux;
-                        var dataToCell = DateTime.TryParse(data, out dtTimeAux) ?
-                            dtTimeAux.ToString("dd/MM/yyyy H:mm") : data;
-                        writer.WriteElement(new CellValue(dataToCell.ToString()));
+                        var formatToUse = "dd/MM/yyyy HH:mm";
+                        if (applicationField.RendererParameters.ContainsKey("format")) {
+                            formatToUse = applicationField.RendererParameters["format"];
+                        }
+                        var dataToCell = DateTime.TryParse(data, out dtTimeAux) ? dtTimeAux.ToString(formatToUse) : data;
+                        writer.WriteElement(new CellValue(dataToCell));
                         // end cell
                         writer.WriteEndElement();
                     }
@@ -162,8 +162,7 @@ namespace softWrench.sW4.Web.Util
                 writer.WriteStartElement(new Workbook());
                 writer.WriteStartElement(new Sheets());
 
-                writer.WriteElement(new Sheet()
-                {
+                writer.WriteElement(new Sheet() {
                     Name = "Sheet1",
                     SheetId = 1,
                     Id = xl.WorkbookPart.GetIdOfPart(worksheetpart)
@@ -185,17 +184,23 @@ namespace softWrench.sW4.Web.Util
             }
         }
 
+        private static Func<ApplicationFieldDefinition, bool> ShouldShowField() {
+            return f => {
+                var rendererParameters = f.Renderer.ParametersAsDictionary();
+                if (rendererParameters.ContainsKey(FieldRendererConstants.Exporttoexcel)) {
+                    return "true".EqualsIc(rendererParameters[FieldRendererConstants.Exporttoexcel]);
+                }
+                return !f.IsHidden;
+            };
+        }
+
         private void createHeaderRow(IEnumerable<ApplicationFieldDefinition> applicationFields, OpenXmlWriter writer, int rowIdx, ref string value) {
             List<OpenXmlAttribute> xmlAttributes;
             xmlAttributes = new List<OpenXmlAttribute>();
             xmlAttributes.Add(new OpenXmlAttribute("r", null, rowIdx.ToString()));
             writer.WriteStartElement(new Row(), xmlAttributes);
-            foreach (var applicationField in applicationFields) {
+            foreach (var applicationField in applicationFields.Where(ShouldShowField())) {
                 //Exporting to Excel, even if field is hidden
-                if (applicationField.IsHidden && !applicationField.Renderer.ParametersAsDictionary().TryGetValue(FieldRendererConstants.EXPORTTOEXCEL, out value)) {
-                    continue;
-                }
-
                 xmlAttributes = new List<OpenXmlAttribute>();
                 // add new datatype for cell
                 xmlAttributes.Add(new OpenXmlAttribute("t", null, "str"));
@@ -213,8 +218,7 @@ namespace softWrench.sW4.Web.Util
             writer.WriteEndElement();
         }
 
-        private void createCellFormats(WorkbookStylesPart stylesPart)
-        {
+        private void createCellFormats(WorkbookStylesPart stylesPart) {
             stylesPart.Stylesheet.CellFormats = new CellFormats();
             // empty one for index 0, seems to be required
             stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat());
@@ -239,14 +243,14 @@ namespace softWrench.sW4.Web.Util
 
         private void createCellFormat(WorkbookStylesPart stylesPart, UInt32 formatId, UInt32 fontId, UInt32 borderId, UInt32 fillId, bool applyFill) {
             stylesPart.Stylesheet.CellFormats.AppendChild(
-                new CellFormat { 
-                    FormatId = formatId, FontId = fontId, BorderId = borderId, FillId = fillId, ApplyFill = applyFill 
-                }).AppendChild(new Alignment { 
-                    Horizontal = HorizontalAlignmentValues.Left, WrapText = BooleanValue.FromBoolean(true), Vertical = VerticalAlignmentValues.Top });
+                new CellFormat {
+                    FormatId = formatId, FontId = fontId, BorderId = borderId, FillId = fillId, ApplyFill = applyFill
+                }).AppendChild(new Alignment {
+                    Horizontal = HorizontalAlignmentValues.Left, WrapText = BooleanValue.FromBoolean(true), Vertical = VerticalAlignmentValues.Top
+                });
         }
 
-        private void createFonts(WorkbookStylesPart stylesPart)
-        {
+        private void createFonts(WorkbookStylesPart stylesPart) {
             stylesPart.Stylesheet.Fonts = new Fonts();
 
             // normal font
@@ -263,8 +267,7 @@ namespace softWrench.sW4.Web.Util
             stylesPart.Stylesheet.Fonts.Count = 2;
         }
 
-        private void buildFills(WorkbookStylesPart stylesPart)
-        {
+        private void buildFills(WorkbookStylesPart stylesPart) {
             stylesPart.Stylesheet.Fills = new Fills();
 
             // create a solid red fill
@@ -301,15 +304,12 @@ namespace softWrench.sW4.Web.Util
         }
 
 
-        private void SetColumnWidth(SLDocument excelFile, IEnumerable<ApplicationFieldDefinition> applicationFields)
-        {
+        private void SetColumnWidth(SLDocument excelFile, IEnumerable<ApplicationFieldDefinition> applicationFields) {
             var columnIndex = 1;
-            foreach (var applicationField in applicationFields)
-            {
+            foreach (var applicationField in applicationFields) {
                 double excelWidthAux;
                 string excelwidthAux;
-                if (applicationField.IsHidden)
-                {
+                if (applicationField.IsHidden) {
                     continue;
                 }
                 applicationField.RendererParameters.TryGetValue("excelwidth", out excelwidthAux);

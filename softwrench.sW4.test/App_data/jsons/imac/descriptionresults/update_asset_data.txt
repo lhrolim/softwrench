@@ -22,6 +22,8 @@ Services
 Asset owened by HLAG
 Commodity Test
 =====================================================================
+Cost Center:   6200/300/000 // Maint+General
+=====================================================================
 Specifications
 
 Computer Name:   Unix Server --> Unix Server Test
