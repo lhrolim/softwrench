@@ -51,14 +51,12 @@
                                                    ng-enter="filterSearch(column.attribute)" />
                                             <span class="input-group-addon" data-calendericon="true"><i class="glyphicon glyphicon-calendar"></i></span>
 
-                                            <advanced-filter-toogle />
                                         </div>
 
                                         <div ng-switch-default class="input-group input-group-sm">
                                             <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
                                                    ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" />
 
-                                            <advanced-filter-toogle />
                                         </div>
 
                                     </ng-switch>

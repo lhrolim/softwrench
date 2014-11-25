@@ -1648,7 +1648,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </componentdisplayable>
 
         <componentdisplayable id="readonlycostcenter">
-          <field label="Cost Center" attribute="asset_.assetglaccount_.displaycostcenter" readonly="true" showexpression="@asset!=null" />
+          <field label="Cost Center" attribute="costcenter" readonly="true" showexpression="@asset!=null" />
+<!--          <field label="Cost Center" attribute="asset_.assetglaccount_.displaycostcenter" readonly="true" showexpression="@asset!=null" />-->
         </componentdisplayable>
 
         <componentdisplayable id="updateasset">
@@ -2090,7 +2091,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section id="other" parameters="detaildescription= ">
             <reference id="readonlyuserid"/>
             <reference id="currentitc"/>
-            <field label="Cost Center" attribute="costcenter" readonly="true" showexpression="@asset!=null" />
+            <reference id="readonlycostcenter"/>
           </section>
 
         </schema>
@@ -2183,8 +2184,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
           </section>
 
-          <reference id="readonlycostcenter" />
-
+          <section id="other" parameters="detaildescription= ">
+            <reference id="readonlycostcenter" />
+          </section>
           <section id="specification" showexpression="@asset!=null" resourcepath="/Content/Templates/crud/update_section.html" parameters="detaildescription=Specifications">
             <header displacement="sameline" label="Specifications"/>
             <field attribute="asset_.computername" label="Computer Name" />

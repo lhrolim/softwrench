@@ -36,9 +36,17 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
         afterChangeAsset: function (event) {
             var userId = event.fields['asset_.aucisowner_.person_.personid'];
             var costCenter = event.fields['asset_.assetglaccount_.glaccount'];
+            var costCenterLabel = event.fields['asset_.assetglaccount_.displaycostcenter'];
             var currentITC = event.fields['asset_.primaryuser_.hlagdisplayname'];
             event.fields['userid'] = userId;
-            event.fields['costcenter'] = costCenter;
+            var schemaId = event.scope.schema.schemaId;
+            if (schemaId.startsWith('replace') || schemaId.startsWith('update')) {
+                //if replace then we have a readonly costcenter instead of an optionfield, so we need the label as the "value"
+                event.fields['costcenter'] = costCenterLabel;
+            } else {
+                //if there´s an association, then, we set the value, and the label would be picked from the associationOptions list
+                event.fields['costcenter'] = costCenter;
+            }
             event.fields['currentitc'] = currentITC;
             parseLocations(event.fields, event.fields['asset_.location'], event.triggerparams);
         },
