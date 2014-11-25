@@ -38,12 +38,11 @@
     <div class="container" ng-controller="LayoutController">
         <div class="row">
             <div class="col-side-bar" ng-if="popupmode == 'none'">
-
                 <div id="sidebar" class="side-bar-container affix">
                     <div class="alignment-logo">
                         <img ng-src="{{mainlogo}}" alt="logo" class="img-responsive" />
                     </div>
-                    <menu menu="menu" />
+                    <menu-wrapper menu="menu" popupmode="{{popupmode}}" />
                 </div>
             </div>
             <div class="col-main-content">

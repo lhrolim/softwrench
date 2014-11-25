@@ -191,6 +191,12 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
         $scope.mainlogo = config.logo;
         $scope.myprofileenabled = config.myProfileEnabled;
+        var popupMode = GetPopUpMode();
+        $scope.popupmode = popupMode;
+        if (popupMode != "none") {
+            return;
+        }
+
 
         $http({
             method: "GET",
@@ -213,8 +219,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             $scope.menu = menuAndNav.menu;
             $scope.isSysAdmin = menuAndNav.isSysAdmin;
             $scope.isClientAdmin = menuAndNav.isClientAdmin;
-            var popupMode = GetPopUpMode();
-            $scope.popupmode = popupMode;
+          
             $('.hapag-body').addClass('hapag-body-loaded');
         })
         .error(function (data) {
