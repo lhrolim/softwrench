@@ -98,6 +98,11 @@ app.directive('crudBody', function (contextService) {
                 fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
             });
 
+            $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
+                //make sure we are seeing the top of the grid 
+                window.scrollTo(0, 0);
+            });
+
             function defaultSuccessFunction(data) {
                 $scope.$parent.multipleSchema = false;
                 $scope.$parent.schemas = null;
