@@ -3,6 +3,7 @@
         restrict: 'E',
         replace: true,
         templateUrl: contextService.getResourceUrl('/Content/Templates/directives/commandBar.html'),
+        /* Here I would need - require: '^crudList', */
         scope: {
             applicationschema: '=',
             schema: '=',
@@ -12,6 +13,13 @@
             cancelfn: '&',
             savefn: '&',
             datamap: '='
+        },
+
+        link: function (scope, element, attrs, ctrl) {
+            scope.ctrlfns = {};
+            for (var fn in ctrl) {
+                scope.ctrlfns[fn] = ctrl[fn];
+            }
         },
 
         controller: function ($scope, $http, $element, $log, $rootScope, printService, i18NService, commandService, redirectService, alertService) {
@@ -240,12 +248,33 @@
 
             $scope.isCommandEnabled = function (schema, command) {
                 var tabId = $element.parents('.tab-pane').attr('id');
+
+                var enableExpression = command.enableExpression;
+                if (enableExpression && enableExpression.startsWith("$scope:")) {
+                    var result = $scope.invokeOuterScopeFn(enableExpression);
+                    if (result == null) {
+                        return true;
+                    }
+                    return result;
+                }
+                // if there is no $scope use regular expression evaluation
                 return commandService.isCommandEnabled($scope.datamap, schema, command, tabId);
             }
 
             $scope.isEditing = function (schema, datamap) {
                 return datamap[schema.idFieldName] != null;
             };
+
+            $scope.invokeOuterScopeFn = function (expr, throwExceptionIfNotFound) {
+                var methodname = expr.substr(7);
+                var fn = $scope.ctrlfns[methodname];
+                if (fn != null) {
+                    return fn();
+                } else if (throwExceptionIfNotFound) {
+                    throw new Error("parameterless method {0} not found on outer scope".format(methodname));
+                }
+                return null;
+            }
 
         }
     };
