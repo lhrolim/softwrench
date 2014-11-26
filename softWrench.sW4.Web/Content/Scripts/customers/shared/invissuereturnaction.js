@@ -11,7 +11,7 @@
             return "low-opacity gray";
         }
 
-        return "blue";
+        return "black";
     };
 
     $scope.isReturnHidden = function (matusetransitem) {

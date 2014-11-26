@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('inventoryService', function ($http, contextService, redirectService, modalService, searchService, restService, alertService) {
+app.factory('inventoryService', function ($http, $rootScope, contextService, redirectService, modalService, searchService, restService, alertService) {
     var formatQty = function (datamap, value, column) {
         if (datamap['issuetype'] == 'ISSUE') {
             if (datamap[column.attribute] != null) {
@@ -265,7 +265,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             redirectService.goToApplicationView("invissue", "list", null, null, null, null);
         },
         displayNewIssueModal: function (parentschema, parentdatamap) {
-            var clonedCompositionData = parentdatamap['invissue_'];
+            //var clonedCompositionData = parentdatamap['invissue_'];
             var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
             var parentdata = parentdatamap;
             var user = contextService.getUserData();
@@ -282,39 +282,57 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             itemDatamap['storeloc'] = parentdata['#storeloc'];
             itemDatamap['gldebitacct'] = parentdata['#gldebitacct'];
 
-            contextService.insertIntoContext('clonedCompositionData', clonedCompositionData, false);
-            modalService.show(compositionschema, itemDatamap, null);
+            //contextService.insertIntoContext('clonedCompositionData', clonedCompositionData, false);
+            modalService.show(compositionschema, itemDatamap, null, parentdatamap, parentschema);
+        },
+        batchissuelistclick: function (datamap, schema) {
+            var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
+
+            var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
+            if (clonedCompositionData['invissue_'] == null) {
+                clonedCompositionData['invissue_'] = [];
+            }
+
+            var itemDatamap = {};
+
+            for (var key in clonedCompositionData) {
+                var item = clonedCompositionData[key];
+                //Records with a value for the matusetransid are being hidden from the user.
+                if (item['matusetransid'] == null) {
+                    if (item['itemnum'] == data) {
+                        angular.copy(item,itemDatamap);
+                    }
+                }
+            }
+
+            modalService.show(compositionschema, itemDatamap, null, parentdatamap, parentschema);
+
         },
         cancelNewInvIssueItem: function () {
             modalService.hide();
         },
-        addItemToInvIssue: function (schema, datamap, parentdata, clonedcompositiondata, originalDatamap, previousdata) {
-            var newRecord = {};
-            newRecord['itemnum'] = fields['itemnum'];
-            newRecord['quantity'] = 1;
-            newRecord['item_.description'] = fields['description'];
-            newRecord['issuetype'] = matusetransData['#issuetype'];
-            newRecord['matusetransid'] = null;
-            newRecord['assetnum'] = matusetransData['#assetnum'];
-            newRecord['issueto'] = matusetransData['#issueto'];
-            newRecord['location'] = matusetransData['#location'];
-            newRecord['refwo'] = matusetransData['#refwo'];
-            var user = contextService.getUserData();
-            newRecord['siteid'] = user.siteid;
-            newRecord['storeloc'] = matusetransData['#storeloc'];
-            parameters.clonedCompositionData.push(newRecord);
-            redirectService.redirectToTab('invissue_');
-        },
         addItemToBatch: function (datamap) {
-            var test = contextService.fetchFromContext('clonedCompositionData', true, false);
-            if (test['invissue_'] == null) {
-                test['invissue_'] = [];
+            var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
+            if (clonedCompositionData['invissue_'] == null) {
+                clonedCompositionData['invissue_'] = [];
             }
             var newissue = {};
-            newissue.matusetransid = "";
-            newissue.assetnum = "2235";
-            newissue.itemnum = "Z-RAGS";
-            test['invissue_'].push(newissue);
+            newissue.matusetransid = null;
+            newissue.assetnum = datamap['assetnum'];
+            newissue.itemnum = datamap['itemnum'];
+            newissue['item_.description'] = datamap['item_.description'];
+            newissue.enterby = datamap['enterby'];
+            newissue.gldebitacct = datamap['gldebitacct'];
+            newissue.issueto = datamap['issueto'];
+            newissue.issuetype = datamap['issuetype'];
+            newissue.binnum = datamap['invbalances_.binnum'];
+            newissue.location = datamap['location'];
+            newissue.quantity = datamap['quantity'];
+            newissue.refwo = datamap['refwo'];
+            newissue.siteid = datamap['siteid'];
+            newissue.storeloc = datamap['storeloc'];
+
+            clonedCompositionData.push(newissue);
             modalService.hide();
         },
         invIssue_afterChangeWorkorder: function (parameters) {

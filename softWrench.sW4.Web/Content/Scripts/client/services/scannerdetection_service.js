@@ -75,6 +75,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
                         newRecord['issuetype'] = 'ISSUE';
                         newRecord['matusetransid'] = null;
                         newRecord['assetnum'] = matusetransData['#assetnum'];
+                        newRecord['gldebitacct'] = matusetransData['#gldebitacct'];
                         newRecord['issueto'] = matusetransData['#issueto'];
                         newRecord['location'] = matusetransData['#location'];
                         newRecord['refwo'] = matusetransData['#refwo'];
