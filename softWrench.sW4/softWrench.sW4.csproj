@@ -201,6 +201,7 @@
     <Compile Include="Data\Persistence\WS\Commons\BasePhysicalCountCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePurchaseRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseInvuseCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\BaseReceiptCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\CommLogHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\HapagChangeHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\HapagSRLongDescriptionHandler.cs" />
