@@ -173,6 +173,18 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         contextService.clearContext();
     };
 
+    $scope.$on('sw_goToApplicationView', function (event, data) {
+        if (data != null) {
+            $scope.goToApplicationView(data.applicationName, data.schemaId, data.mode, data.title, data.parameters);
+        }
+    });
+
+    $scope.$on('sw_indexPageLoaded', function (event, url) {
+        if (url != null && $rootScope.menu) {
+            menuService.setActiveLeafByUrl($rootScope.menu, url);
+        }
+    });
+
     function initController() {
         var configsJSON = $(hddn_configs)[0].value;
         var config = JSON.parse(configsJSON);
@@ -196,25 +208,12 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         if (popupMode != "none") {
             return;
         }
-
-
         $http({
             method: "GET",
             url: url("/api/menu?" + platformQS()),
             cache: $templateCache
         })
         .success(function (menuAndNav) {
-            $scope.$on('sw_goToApplicationView', function (event, data) {
-                if (data != null) {
-                    $scope.goToApplicationView(data.applicationName, data.schemaId, data.mode, data.title, data.parameters);
-                }
-            });
-
-            $scope.$on('sw_indexPageLoaded', function (event, url) {
-                if (url != null) {
-                    menuService.setActiveLeafByUrl(menuAndNav.menu, url);
-                }
-            });
             $rootScope.menu = menuAndNav.menu;
             $scope.menu = menuAndNav.menu;
             $scope.isSysAdmin = menuAndNav.isSysAdmin;

@@ -76,10 +76,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
                         var w = window.open(redirectURL);
                         //                    w.moveto(0, 0);
                     } else {
-                        var x = screen.width / 2 - 800 / 2;
-                        var y = screen.height / 2 - 600 / 2;
-                        var w = window.open(redirectURL, '_blank', 'height=600px,width=800px,left=' + x + ',top=' + y + ',resizable=1,scrollbars=yes', false);
-                        w.focus();
+                        openPopup(redirectURL);
                     }
                     return;
                 }
@@ -150,14 +147,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
                     var w = window.open(redirectURL);
                     //                    w.moveto(0, 0);
                 } else {
-                    var width = 1024;
-                    var height = 768;
-
-                    var x = screen.width / 2 - width / 2;
-                    var y = screen.height / 2 - height / 2;
-                    
-                    var w = window.open(redirectURL, '_blank', 'height=' + height + 'px,width=' + width + 'px,left=' + x + ',top=' + y + ',resizable=1,scrollbars=yes', false);
-                    w.focus();
+                    openPopup(redirectURL);
                 }
                 return;
             }
@@ -193,7 +183,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             }
 
             var cbk = function (view) {
-                var x = window.open('', '_blank', 'height=600px,width=800px,left=350px,top=100px,resizable=yes,scrollbars=yes', false);
+                var x = openPopup('');
 
                 x.document.open();
                 x.document.write(view);
@@ -219,4 +209,15 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
 
 });
 
+function openPopup(redirectURL) {
+    var width = 1024;
+    var height = 768;
 
+    var x = screen.width / 2 - width / 2;
+    var y = screen.height / 2 - height / 2;
+
+    var w = window.open(redirectURL, '_blank', 'height=' + height + 'px,width=' + width + 'px,left=' + x + ',top=' + y + ',resizable=yes,scrollbars=yes', false);
+    w.focus();
+
+    return w;
+}

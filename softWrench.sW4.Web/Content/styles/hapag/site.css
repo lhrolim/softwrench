@@ -32,6 +32,7 @@ body {
     float: left;
     width: 195px;
     position: fixed; /*Added fr adding scrollbar and hiding it for menu*/
+    z-index: 2;
 }
 
     .col-side-bar > .affix {
@@ -750,21 +751,15 @@ textarea .readonly {
  ***********************************************************************
  ***********************************************************************/
 
-/*SM - 07-02 - ADD - Start rules to fix Hapag pagination & table header location*/
 .affix-pagination {
     top: 84px !important;
 }
-/*.listgrid-thead {
-    top: 116px !important;
-}*/
 
-
-/*SM - 07-02 - ADD - Start rules to fix Hapag pagination & table header location*/
 /******************************
  * 1024px Compatibility BEGIN *
  ******************************/
 body {
-    overflow-x: hidden;
+    /*overflow-x: hidden;*/
 }
 
 body,
@@ -843,6 +838,7 @@ body,
 
     #listgrid thead {
         width: 874px;
+        z-index: 1;
     }
 
     #listgrid thead tr.header-row, #listgrid tfoot tr.footer-row {
@@ -948,6 +944,7 @@ select {
     margin-left: -10px;
     margin-top: -2px;
     padding-top: 2px;
+    z-index: 2;
 }
 
 .detail-body {
@@ -1345,3 +1342,9 @@ select {
     max-height: 265px;
 }
 /*SM - 09/17 - HAP-558 #T-ITC-030*/
+
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+    opacity: 1;
+    filter: alpha(opacity=100);
+    background: #aaa !important;
+}

@@ -1,10 +1,12 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('fieldService', function (expressionService) {
+app.factory('fieldService', function (expressionService,$log) {
 
     var isFieldHidden = function (datamap, application, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);
+        var log =$log.getInstance('fieldService.isFieldHidden');
         if (fieldMetadata.jscache.isHidden != undefined) {
+            log.trace('retrieving hidden expression from cache');
             return fieldMetadata.jscache.isHidden;
         }
         var baseHidden = fieldMetadata.isHidden || (fieldMetadata.type != "ApplicationSection" &&

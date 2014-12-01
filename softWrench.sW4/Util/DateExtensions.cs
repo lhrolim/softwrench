@@ -3,7 +3,7 @@ using softWrench.sW4.Metadata.Security;
 using System;
 
 namespace softWrench.sW4.Util {
-    static class DateExtensions {
+    public static class DateExtensions {
 
         public static double ToTimeInMillis(this DateTime time) {
             return time.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;

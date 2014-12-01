@@ -6,6 +6,7 @@ using System.Web.Http;
 using DocumentFormat.OpenXml.Spreadsheet;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Pagination;
+using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
@@ -38,7 +39,7 @@ namespace softWrench.sW4.Web.Util {
 
         public SLDocument ConvertGridToExcel(string application, ApplicationMetadataSchemaKey key, ApplicationListResult result) {
             IEnumerable<ApplicationFieldDefinition> applicationFields = result.Schema.Fields;
-
+            var user = SecurityFacade.CurrentUser();
             using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
             using (SpreadsheetDocument xl = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook)) {
                 // attributes of elements
@@ -139,7 +140,11 @@ namespace softWrench.sW4.Web.Util {
                         if (applicationField.RendererParameters.ContainsKey("format")) {
                             formatToUse = applicationField.RendererParameters["format"];
                         }
-                        var dataToCell = DateTime.TryParse(data, out dtTimeAux) ? dtTimeAux.ToString(formatToUse) : data;
+                        var dateParsed = DateTime.TryParse(data, out dtTimeAux);
+                        var dataToCell = data;
+                        if (dateParsed) {
+                            dataToCell = dtTimeAux.FromMaximoToUser(user).ToString(formatToUse);
+                        }
                         writer.WriteElement(new CellValue(dataToCell));
                         // end cell
                         writer.WriteEndElement();

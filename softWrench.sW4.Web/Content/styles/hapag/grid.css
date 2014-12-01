@@ -1,4 +1,8 @@
-﻿.listgrid-table.unfixed {
+﻿.listgrid-table {
+    margin-top: 25px !important;
+}
+
+.listgrid-table.unfixed {
     margin-top: 25px !important;
 }
 
@@ -6,27 +10,18 @@
         top: 114px;
     }
 
-.listgrid-table.affixed > thead {
-    position: fixed;
-}
-
 .gridcolumnvalue {
     color: black;
     padding-left: 8px;
     word-wrap: break-word;
+    max-width: 135px;
 }
 
-.listgrid-table.affixed > thead {
-    position: fixed;
+@media only screen and (min-width: 1090px) {
+    .listgrid-table {
+    margin-top: 117px !important;
 }
-
-
-@media only screen and (min-width: 1200px) {
-
-    
-}
-
-@media only screen and (max-width: 1199px) {
-
-   
+        .listgrid-table.affixed > thead {
+        position: fixed;
+    }
 }

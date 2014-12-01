@@ -2,28 +2,19 @@
 =====================================================================
 Request Details
 
-Location:   MT4
-Asset:   A5006
-Child Asset:   
+Location:   HLAG-MT4
+Asset:   (7115) Standard Laptop Computer // JL7YK0J
+Child Asset:   (13150) Top Breaker System // 32R5G
 =====================================================================
 Service Attributes
 
+IBM technician – Yes/No:   yes
 Installation date:   
 Remarks:   
-Usage:   TEST
 =====================================================================
-Asset Data
-
-Parent Asset Status:   
-Building:   
-Floor:   
-Room:   
-=====================================================================
-Child Asset Data
-
-Building:   
-Floor:   
-Room:   
-=====================================================================
-Cost Center:   6200-300-000
+Location:   RO:13/FL:0/HAPAG-LLOYD GERMANY/ROSENSTRASSE 17/HAMBURG/HAMBURG/20095
+User ID:   FINLEY
+Current ITC:   FINLEY
+Usage:   SalesWS
+Cost Center:   6200/300/000 // Maint+General
 =====================================================================

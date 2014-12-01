@@ -38,14 +38,18 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
             var costCenter = event.fields['asset_.assetglaccount_.glaccount'];
             var costCenterLabel = event.fields['asset_.assetglaccount_.displaycostcenter'];
             var currentITC = event.fields['asset_.primaryuser_.hlagdisplayname'];
+            var assetLocation = event.fields['asset_.location_.description'];
+            var assetUsage = event.fields['asset_.usage'];
             event.fields['userid'] = userId;
+            event.fields['assetlocation'] = assetLocation;
+            event.fields['assetusage'] = assetUsage;
             var schemaId = event.scope.schema.schemaId;
-            if (schemaId.startsWith('replace') || schemaId.startsWith('update')) {
-                //if replace then we have a readonly costcenter instead of an optionfield, so we need the label as the "value"
-                event.fields['costcenter'] = costCenterLabel;
-            } else {
+            if (schemaId.startsWith('install') || schemaId.startsWith('move')) {
                 //if there´s an association, then, we set the value, and the label would be picked from the associationOptions list
                 event.fields['costcenter'] = costCenter;
+            } else {
+                //if replace then we have a readonly costcenter instead of an optionfield, so we need the label as the "value"
+                event.fields['costcenter'] = costCenterLabel;
             }
             event.fields['currentitc'] = currentITC;
             parseLocations(event.fields, event.fields['asset_.location'], event.triggerparams);
