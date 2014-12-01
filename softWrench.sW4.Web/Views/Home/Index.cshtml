@@ -13,12 +13,10 @@
     </script>
 
 
-    <div style="margin-top: 1px; margin-left: 1px; margin-bottom: 2px; padding-top: 2px;" ng-if="popupmode=='browser'" ng-cloak>
+    <div style="margin-top: 1px; margin-left: -20px; margin-bottom: 2px; padding-top: 2px;" ng-if="popupmode=='browser'" ng-cloak>
         <img ng-src="{{mainlogo}}" alt="logo" style="width: 195px; height: 100%" />
        <div id="headerline" ng-show="resultObject.mode == 'input'" class="headerline"> {{title}} </div>
     </div>
-
     <messagesection></messagesection>
     <ng-include src="includeURL" onload="onTemplateLoad()" id="mainbodysection" />
-
 </article>
