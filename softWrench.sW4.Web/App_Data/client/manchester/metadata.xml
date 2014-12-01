@@ -34,6 +34,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
         </relationship>
       </relationships>
+      <connectorParameters>
+        <!--        <connectorParameter key="audittable" value="A_WORKORDER" />-->
+        <connectorParameter key="dbtable" value="SR" />
+        <connectorParameter key="integration_interface" value="SWSR" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.HapagServiceRequestCrudConnector" />
+      </connectorParameters>
     </entity>
 
     <entity name ="failurelistonly" parententity="failurelist" idAttribute="failurelist" whereclause="((failurelistonly.TYPE is null)) " >
@@ -369,17 +375,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <number decimals="0" min="0" max="999" />
             </field>-->
 
-            <association label="Priority:" target="wopriority" labelfield="synpriority.description" required="true">
+            <!--<association label="Priority:" target="wopriority" labelfield="synpriority.description" required="true">
               <renderer type="combo"/>
-            </association>
-            
-            <!--<field attribute="wopriority" label="Priority Code:" readonly="true" required="true">
-              <renderer type="fieldwithbuttons"/>
-            </field>-->
+            </association>-->
 
-            <!--<optionfield attribute="wopriority" label="Priority:" providerattribute="_WorkorderPriorityType" default="@wopriority">
+            <optionfield attribute="wopriority" label="Priority:" providerattribute="_WorkorderPriorityType" default="@wopriority" required="true">
               <renderer type="autocompleteclient"/>
-            </optionfield>-->  
+            </optionfield>  
             
             <association label="Location:" target="location" labelfield="location_.description" >
               <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
