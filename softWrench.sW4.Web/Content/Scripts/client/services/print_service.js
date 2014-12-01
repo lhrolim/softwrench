@@ -211,7 +211,6 @@ app.factory('printService', function ($rootScope, $http, $timeout, $log, tabsSer
         },
 
         printCompositionDetail: function (schema, datamap, printOptions) {
-            debugger;
             var log = $log.getInstance("print_service#printCompositionDetail");
             var params = {};
             params.key = {};
@@ -222,11 +221,13 @@ app.factory('printService', function ($rootScope, $http, $timeout, $log, tabsSer
             params.key.schemaId = schema.schemaId;
             params.key.mode = schema.mode;
             params.key.platform = platform();
+            printOptions.compositionsToExpand = "worklogs";
             var notExpansibleCompositions = [];
             if (printOptions != null) {
                 params.options.compositionsToExpand = tabsService.buildCompositionsToExpand(printOptions.compositionsToExpand, schema, datamap, 'print', notExpansibleCompositions);
             }
             params.options.compositionsToExpand = "worklogs";
+            var shouldPrintMain = false;
             log.info('calling expanding compositions on service; params: {0}'.format(params));
             var urlToInvoke = removeEncoding(url("/api/generic/ExtendedData/ExpandCompositions?" + $.param(params)));
             $http.get(urlToInvoke).success(function (result) {
