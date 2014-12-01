@@ -273,8 +273,10 @@ app.directive('crudBody', function (contextService) {
                 if ($scope.schema == null || $scope.datamap == null || $scope.schema.stereotype == 'Detail') {
                     $scope.renderListView(parameters);
                 } else {
-                    $scope.$emit('sw_titlechanged', schema.title);
-                    $scope.$parent.toList(null);
+                    if (schema) { //SM - SWWEB-619 temp fix, at times (before everything is loaded?), this is run without a schema causing an exception, resulting in a UI glich
+                        $scope.$emit('sw_titlechanged', schema.title);
+                    }
+                        $scope.$parent.toList(null);
                 }
                 //}
             };
