@@ -939,8 +939,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
       <schemas>
 
-        
-        
+
+
         <schema title="Service Request Grid" abstract="true" id="baselist" stereotype="list">
           <field attribute="ticketid" label="Request#">
             <renderer type="default" params="minwidth=88px;maxwidth=100px" />
@@ -991,7 +991,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </list>
 
         <schema id="excellist" parentschema="list" title="Service Request Grid">
-          
+
         </schema>
 
         <detail id="detail" mode="output" title="Request Details">
@@ -1552,6 +1552,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </optionfield>
         </componentdisplayable>
 
+        <componentdisplayable id="lanattributessectionreplaceremove">
+          <section showexpression="@fromlocation!=null">
+            <header displacement="sameline" label="Service Attributes"/>
+            <field attribute="#subtitle" label="Attribute" default="Value" readonly="true" qualifier="nodescription">
+              <renderer type="label" params="color=blue;"/>
+            </field>
+            <field attribute="titleoforder" label="Title of Order" qualifier="nodescription" required="true">
+              <renderer type="default" params="maxlength=85" />
+            </field>
+
+            <reference id="lantype"/>
+            <reference id="ibmtechnician"/>
+            <field attribute="installationdate" label="Installation date">
+              <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;allowpast=false"/>
+            </field>
+
+            <field attribute="remarks" label="Remarks">
+              <renderer type="textarea"/>
+            </field>
+          </section>
+        </componentdisplayable>
+
         <componentdisplayable id="lanattributessection">
 
           <section>
@@ -1649,7 +1671,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <componentdisplayable id="readonlycostcenter">
           <field label="Cost Center" attribute="costcenter" readonly="true" showexpression="@asset!=null" />
-<!--          <field label="Cost Center" attribute="asset_.assetglaccount_.displaycostcenter" readonly="true" showexpression="@asset!=null" />-->
+          <!--          <field label="Cost Center" attribute="asset_.assetglaccount_.displaycostcenter" readonly="true" showexpression="@asset!=null" />-->
         </componentdisplayable>
 
         <componentdisplayable id="updateasset">
@@ -1709,7 +1731,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="autocompleteserver"/>
           </association>
         </componentdisplayable>
-        
+
         <componentdisplayable id="readonlyuserid">
           <field label="User ID" attribute="userid" readonly="true" showexpression="@asset!=null" />
         </componentdisplayable>
@@ -1855,12 +1877,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
 
           <section id="other" parameters="detaildescription= ">
-          <field label="Location" attribute="assetlocation" readonly="true" showexpression="@asset!=null" />
+            <field label="Location" attribute="assetlocation" readonly="true" showexpression="@asset!=null" />
 
-          <field label="User ID" attribute="userid" readonly="true"/>
-          <reference id="currentitc"/>
-          <field label="Usage" attribute="assetusage" readonly="true" showexpression="@asset!=null" />
-          <reference id="readonlycostcenter"/>
+            <field label="User ID" attribute="userid" readonly="true"/>
+            <reference id="currentitc"/>
+            <field label="Usage" attribute="assetusage" readonly="true" showexpression="@asset!=null" />
+            <reference id="readonlycostcenter"/>
           </section>
         </schema>
 
@@ -2004,25 +2026,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </properties>
 
           <section id="attributes" parameters="detaildescription=Service Attributes">
-            <section showexpression="@fromlocation!=null">
-              <header displacement="sameline" label="Service Attributes"/>
-              <field attribute="#subtitle" label="Attribute" default="Value" readonly="true" qualifier="nodescription">
-                <renderer type="label" params="color=blue;"/>
-              </field>
-              <field attribute="titleoforder" label="Title of Order" qualifier="nodescription" required="true">
-                <renderer type="default" params="maxlength=85" />
-              </field>
-
-              <reference id="lantype"/>
-              <reference id="ibmtechnician"/>
-              <field attribute="installationdate" label="Installation date">
-                <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;allowpast=false"/>
-              </field>
-
-              <field attribute="remarks" label="Remarks">
-                <renderer type="textarea"/>
-              </field>
-            </section>
+            <reference id="lanattributessectionreplaceremove"/>
           </section>
         </schema>
 
@@ -2102,25 +2106,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="servicename" value="Lan Printer"/>
           </properties>
           <section id="attributes" parameters="detaildescription=Service Attributes">
-            <section showexpression="@fromlocation!=null">
-              <header displacement="sameline" label="Service Attributes"/>
-              <field attribute="#subtitle" label="Attribute" default="Value" readonly="true" qualifier="nodescription">
-                <renderer type="label" params="color=blue;"/>
-              </field>
-              <field attribute="titleoforder" label="Title of Order" qualifier="nodescription" required="true">
-                <renderer type="default" params="maxlength=85" />
-              </field>
-
-              <reference id="lantype"/>
-              <reference id="ibmtechnician"/>
-              <field attribute="installationdate" label="Installation date">
-                <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;allowpast=false"/>
-              </field>
-
-              <field attribute="remarks" label="Remarks">
-                <renderer type="textarea"/>
-              </field>
-            </section>
+            <reference id="lanattributessectionreplaceremove"/>
           </section>
         </schema>
 
