@@ -301,6 +301,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="quantity" label="Quantity" default="1">
             <renderer type="numericinput" params="min=1;max=@curbal;"/>
           </field>
+          <field attribute="inventory_.location" hidden="true" />
+          <field attribute="inventory_.itemnum" hidden="true" />
+          <field attribute="inventory_.siteid" hidden="true" />
+          
           <field attribute="unitcost" label="Unit Cost" readonly="true"/>
           <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
           <field attribute="enterby" label="Entered By" readonly="true"/>

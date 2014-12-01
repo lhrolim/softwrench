@@ -399,6 +399,7 @@ app.factory('inventoryService', function ($http, $rootScope, contextService, red
 
         invIssue_afterChangeItem: function(parameters) {
             setBatchIssueBin(parameters);
+            doUpdateUnitCostFromInventoryCost(parameters, 'unitcost');
         },
 
         batchinvIssue_afterChangeBin: function(parameters) {
