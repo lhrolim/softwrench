@@ -57,6 +57,11 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Ism {
             DoTest("removeother", "removeother.json", "removeother.txt");
         }
 
+        [TestMethod]
+        public void AddSubComponentAsset() {
+            DoTest("add", "add_subcomponent.json", "add_subcomponent.txt");
+        }
+
         private static void DoTest(string schemaId, string input, string output) {
             var appMetadata = MetadataProvider.Application("imac")
                 .ApplyPolicies(new ApplicationMetadataSchemaKey(schemaId), InMemoryUser.TestInstance("test"),

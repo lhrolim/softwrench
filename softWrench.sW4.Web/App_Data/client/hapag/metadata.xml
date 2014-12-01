@@ -1812,7 +1812,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="asset_primaryuser_.hlagdisplayname" label="User ID"/>
           <field attribute="hlagaffectedperson" label="Reported By"/>
           <field attribute="hlagreportedby" label="On Behalf Of"/>
-          <field attribute="asset_.assetglaccount_.displaycostcenter" label="Cost Center"/>
+          <field attribute="asset_assetglaccount_.displaycostcenter" label="Cost Center"/>
 
           <field attribute="classstructure_.description" hidden="true"/>
 
@@ -1854,13 +1854,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </association>
           </section>
 
-          <field label="Location" attribute="asset_.location_.description" readonly="true" showexpression="@asset!=null" />
+          <section id="other" parameters="detaildescription= ">
+          <field label="Location" attribute="assetlocation" readonly="true" showexpression="@asset!=null" />
 
-          <field label="User ID" attribute="asset_.aucisowner_.person_.personid" readonly="true"/>
+          <field label="User ID" attribute="userid" readonly="true"/>
           <reference id="currentitc"/>
-          <field label="Usage" attribute="asset_.usage" readonly="true" showexpression="@asset!=null" />
-          <field label="Cost Center" attribute="asset_.assetglaccount_.displaycostcenter" readonly="true" showexpression="@asset!=null" />
-
+          <field label="Usage" attribute="assetusage" readonly="true" showexpression="@asset!=null" />
+          <reference id="readonlycostcenter"/>
+          </section>
         </schema>
 
         <schema id="install" abstract="true" stereotype="detail">
@@ -1992,7 +1993,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
           <section parameters="detaildescription= ">
             <reference id="currentitc"/>
-            <field label="Cost Center" attribute="asset_.assetglaccount_.displaycostcenter" readonly="true" showexpression="@asset!=null" />
+            <reference id="readonlycostcenter"/>
           </section>
 
         </schema>

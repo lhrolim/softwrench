@@ -180,7 +180,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
     });
 
     $scope.$on('sw_indexPageLoaded', function (event, url) {
-        if (url != null) {
+        if (url != null && $rootScope.menu) {
             menuService.setActiveLeafByUrl($rootScope.menu, url);
         }
     });
