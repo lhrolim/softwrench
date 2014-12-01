@@ -114,6 +114,10 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
         },
 
         redirectWithData: function (applicationName, schemaId, mode, searchData, extraParameters) {
+            /// <summary>
+            /// Shortcut method to redirect to an application with search data 
+            /// </summary>
+            
             if (!extraParameters) {
                 //to avoid extra checkings all along
                 extraParameters = {};
