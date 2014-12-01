@@ -32,6 +32,7 @@ body {
     float: left;
     width: 195px;
     position: fixed; /*Added fr adding scrollbar and hiding it for menu*/
+    z-index: 2;
 }
 
     .col-side-bar > .affix {
@@ -750,21 +751,15 @@ textarea .readonly {
  ***********************************************************************
  ***********************************************************************/
 
-/*SM - 07-02 - ADD - Start rules to fix Hapag pagination & table header location*/
 .affix-pagination {
     top: 84px !important;
 }
-/*.listgrid-thead {
-    top: 116px !important;
-}*/
 
-
-/*SM - 07-02 - ADD - Start rules to fix Hapag pagination & table header location*/
 /******************************
  * 1024px Compatibility BEGIN *
  ******************************/
 body {
-    overflow-x: hidden;
+    /*overflow-x: hidden;*/
 }
 
 body,
@@ -949,6 +944,7 @@ select {
     margin-left: -10px;
     margin-top: -2px;
     padding-top: 2px;
+    z-index: 2;
 }
 
 .detail-body {
