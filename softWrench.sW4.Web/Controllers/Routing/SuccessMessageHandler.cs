@@ -9,7 +9,7 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Web.Controllers.Routing {
     public class SuccessMessageHandler : IComponent {
         private static readonly I18NResolver Resolver = new I18NResolver();
-        public String FillSucessMessage(ApplicationMetadata applicationMetadata, string id, string operation) {
+        public String FillSuccessMessage(ApplicationMetadata applicationMetadata, string id, string operation) {
             string successMessage = null;
             var applicationCommand = ApplicationCommandUtils.GetApplicationCommand(applicationMetadata, operation);
             if (applicationCommand != null) {

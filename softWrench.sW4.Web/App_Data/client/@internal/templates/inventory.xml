@@ -62,6 +62,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </relationship>
       </relationships>
     </entity>
+    
+    <entity name="invreserve" idAttribute="requestnum" whereclause="reservedqty > 0">
+      <relationships>
+        <relationship to="invissue">
+          <relationshipAttribute from="wonum" to="refwo" primary="true"/>
+          <relationshipAttribute from="assetnum" to="assetnum"/>
+          <relationshipAttribute from="issueto" to="issueto"/>
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="location" to="location"/>
+        </relationship>
+      </relationships>
+    </entity>
   </entities>
 
   <applications>
@@ -101,6 +121,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="siteid"/>
           <field attribute="orgid"/>
           <field attribute="status"/>
+          <field attribute="costtype"/>
         </list>
       </schemas>
     </application>
@@ -453,11 +474,73 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </schemas>
     </application>
 
-    
-
+    <application name="reservedMaterials" entity="invreserve" title="Reserved Materials">
+      <schemas>
+        <list>
+          <field attribute="wonum" label="Work Order">
+            <renderer type="default" params="width=11%"/>
+          </field>
+          <field attribute="asset" label="Asset">
+            <renderer type="default" params="width=11%"/>
+          </field>
+          <field attribute="location" label="location">
+            <renderer type="default" params="width=11%"/>
+          </field>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="width=11%"/>
+          </field>
+          <field attribute="siteid" label="Site ID">
+            <renderer type="default" params="width=11%"/>
+          </field>
+          <field attribute="reservedqty" label="Reserved Quantity">
+            <renderer type="default" params="width=11%"/>
+          </field>
+          <field attribute="actualqty" label="Quantity Issued">
+            <renderer type="default" params="width=11%"/>
+          </field>
+          <field attribute="location" hidden="true"/>
+        </list>
+        
+        <schema id="detail" mode="input">
+          <field attribute="invreserveid" hidden="true"/>
+          <field attribute="requireddate" hidden="true"/>
+          <field attribute="requestnum" hidden="true"/>
+          <field attribute="itemsetid" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="rowstamp" label="Row Stamp" hidden="true"/>
+          <field attribute="wonum" label="Work Order" readonly="true"/>
+          <field attribute="assetnum" label="Asset" readonly="true"/>
+          <field attribute="issueto" label="Issue To" readonly="true"/>
+          <field attribute="tostoreloc" label="Location" readonly="true"/>
+          <field attribute="glaccount" label="GL Account" readonly="true"/>
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="location" label="Storeroom" readonly="true"/>
+          <field attribute="reservedqty" label="Reserved Quantity" readonly="true"/>
+          <field attribute="actualqty" label="Quantity Issued" readonly="true" hidden="true"/>
+          <optionfield attribute="#frombin" label="From Bin" providerattribute="_AvailableBins">
+            <event type="afterchange" service="inventoryService" method="afterChangeInvreserveFromBin"/>
+            <renderer type="AUTOCOMPLETECLIENT"/>
+          </optionfield>
+          <optionfield attribute="#fromlot" label="From Lot" providerattribute="_AvailableLots" dependantfields="#frombin">
+            <event type="afterchange" service="inventoryService" method="afterChangeInvreserveFromLot"/>
+            <renderer type="AUTOCOMPLETECLIENT"/>
+          </optionfield>
+          <field attribute="#curbal" label="Current Balance" readonly="true"/>
+          <field attribute="#issueqty" label="Issue Quantity">
+            <renderer type="numericinput" params="min=1;max=@reservedqty;"/>
+            <event type="afterchange" service="inventoryService" method="afterChangeIssueQuantity"/>
+          </field>
+          <event type="onload" service="inventoryService" method="onloadReservation"/>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <command id="saveIssue" icon="fa fa-save" label="Submit" service="inventoryService" method="submitReservedInventoryIssue" position="left" parameters="schema,datamap"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
   </applications>
-
-
-
-
 </metadata>

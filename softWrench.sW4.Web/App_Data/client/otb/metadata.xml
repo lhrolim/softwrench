@@ -139,11 +139,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="storelocsiteid" type="varchar" required="false" />
         <attribute name="rowstamp" type="timestamp" required="false" />
       </attributes>
-      <relationships>
-        <relationship to="inventory">
-          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
-        </relationship>
-      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="inventory" />
       </connectorParameters>
@@ -451,6 +446,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Change Grid">
           <field attribute="workorderid" hidden="true">
+
           </field>
           <field attribute="wonum" label="Change ID">
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
@@ -679,6 +675,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Description:" attribute="item_.description" readonly="true"/>
           <field label="Storeroom:" attribute="location" readonly="true"/>
           <field label="Bin:" attribute="binnum" readonly="true"/>
+          <field label="Lot:" attribute="lotnum" readonly="true"/>
           <field label="Issue Unit:" attribute="item_.issueunit" readonly="true"/>
           <field label="Balance:" attribute="curbal"/>
           <field label="Site:" attribute="siteid" readonly="true"/>
@@ -981,10 +978,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <dataprovider prefilterfunction="FilterFromStoreLoc"/>
             <event type="afterchange" service="inventoryService" method="invUse_afterChangeFromStoreroom"/>
           </association>
-          <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true">
-            <dataprovider prefilterfunction="FilterFromBin" />
-            <event type="afterchange" service="inventoryService" method="invUse_afterChangeFromBin"/>
-            <renderer type="Lookup"/>
+          <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true" required="true">
+            <dataprovider prefilterfunction="FilterFromBin"/>
+            <event type="afterchange" service="inventoryService" method="getTransferBinQuantity"/>
+            <renderer type="lookup"/>
           </association>
           <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>
