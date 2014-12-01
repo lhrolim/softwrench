@@ -1,5 +1,5 @@
 ﻿.listgrid-table {
-    margin-top: 25px !important;
+    margin-top: -85px !important;
 }
 
 .listgrid-table.unfixed {
@@ -17,11 +17,30 @@
     max-width: 135px;
 }
 
+.affix {
+    position: relative;
+}
+
+.affix-pagination {
+    position: relative;
+    top: -85px;
+}
+
 @media only screen and (min-width: 1090px) {
     .listgrid-table {
     margin-top: 117px !important;
 }
-        .listgrid-table.affixed > thead {
+
+    .listgrid-table.affixed > thead {
         position: fixed;
+    }
+
+    .affix {
+        position: fixed;
+    }
+
+    .affix-pagination {
+        position: fixed;
+        top: 84px !important;
     }
 }
