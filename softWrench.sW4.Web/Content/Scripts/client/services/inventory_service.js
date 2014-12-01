@@ -426,7 +426,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 itemsetid: parameters['fields']['inventory_.itemsetid'],
                 location: parameters['fields']['fromstoreloc']
             };
-            getBinQuantity(searchData, parameters, '#curbal');
+            getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
         },
         invUse_afterChangeFromBin: function (parameters) {
 
@@ -446,7 +446,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 itemsetid: parameters['fields']['inventory_.itemsetid'],
                 location: parameters['fields']['fromstoreloc']
             };
-            getBinQuantity(searchData, parameters, '#curbal', binnum);
+            getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
             return;
         },
         invUse_afterChangeItem: function (parameters) {
