@@ -30,7 +30,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default"  params="width=39%"/>
           </field>
           <!--          <field attribute="status" label="Status" >-->
-          <!--            <renderer type="default" params="filterenabled=false; width=15%" />-->
+          <!--            <renderer type="default" params="hidefilter=true; width=15%" />-->
           <!--          </field>-->
           <optionfield attribute="crewid" label="Crews" providerattribute="crews">
             <renderer type="combo" params="filteronly=true;width=16%;"/>
@@ -66,7 +66,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </commandbars>
 
           <field attribute="wonum" label="Work Order #" >
-            <renderer type="default" params="filterenabled=false; width=10%" />
+            <renderer type="default" params="hidefilter=true;width=10%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="limit=14;"  />
@@ -113,7 +113,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </commandbars>
 
           <field attribute="wonum" label="Work Order #" >
-            <renderer type="default" params="filterenabled=false; width=10%" />
+            <renderer type="default" params="hidefilter=true;width=10%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="limit=14;"  />

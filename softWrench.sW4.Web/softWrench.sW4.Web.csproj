@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -361,6 +361,7 @@
     </Content>
     <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Client\%40internal\templates\materials.xml">
       <SubType>Designer</SubType>
@@ -512,7 +513,12 @@
     <Content Include="Content\Images\kongsberg\header.jpg" />
     <Content Include="Content\Images\kongsberg\signin.jpg" />
     <Content Include="Content\Images\logo-main.png" />
-    <Content Include="Content\Images\manchester\manchester.png" />
+    <Content Include="Content\Images\manchester\branding.png" />
+    <Content Include="Content\Images\manchester\divider.png" />
+    <Content Include="Content\Images\manchester\header.jpg" />
+    <Content Include="Content\Images\manchester\logo-main.png" />
+    <Content Include="Content\Images\manchester\signin-branding.png" />
+    <Content Include="Content\Images\manchester\signin.jpg" />
     <Content Include="Content\Images\pagination-first.png" />
     <Content Include="Content\Images\pagination-last.png" />
     <Content Include="Content\Images\pagination-next.png" />
@@ -638,6 +644,7 @@
     <Content Include="Content\Scripts\client\components\lookupcomponent.js" />
     <Content Include="Content\Scripts\client\components\richtext.js" />
     <Content Include="Content\Scripts\client\crud_body_modal.js" />
+    <Content Include="Content\Scripts\client\directives\columnWidth.js" />
     <Content Include="Content\Scripts\client\directives\gridtoolBar.js" />
     <Content Include="Content\Scripts\client\makeSWAdmin.js" />
     <Content Include="Content\Scripts\client\crud_base_controller.js" />
@@ -859,8 +866,7 @@
     <Content Include="Content\styles\hapag\site.css" />
     <Content Include="Content\styles\kongsberg\signin.css" />
     <Content Include="Content\styles\kongsberg\site.css" />
-    <Content Include="Content\styles\manchester\signin.css" />
-    <Content Include="Content\styles\manchester\site.css" />
+    <Content Include="Content\styles\manchester\branding.css" />
     <Content Include="Content\styles\otb\application\grids.css" />
     <Content Include="Content\styles\scottsdale\signin.css" />
     <Content Include="Content\styles\scottsdale\site.css" />

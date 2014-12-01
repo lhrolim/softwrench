@@ -1,5 +1,45 @@
 ﻿var app = angular.module('sw_layout');
 
+app.directive('tabsrendered', function ($timeout, $log, $rootScope) {
+    /// <summary>
+    /// This directive allows for a hookup method when all the tabs of the crud_body have finished rendered successfully.
+    /// 
+    /// Since the tabs are lazy loaded, we will replace default bootstrap behaviour of tab-toggle to use a custom engine that will dispatch an event, listened by all possible 
+    /// tab implementations (compositionlist.js, crud_output.js and crud_input.js)
+    /// 
+    /// </summary>
+    /// <param name="$timeout"></param>
+    /// <param name="$log"></param>
+    /// <param name="$rootScope"></param>
+    /// <returns type=""></returns>
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            if (scope.$last !== true) {
+                //nothing to do until last iteration of ng-repeat has been reached
+                return;
+            }
+
+            var log = $log.getInstance('tabsrendered');
+            log.debug("finished rendering tabs of detail screen");
+            $timeout(function () {
+                $('.compositiondetailtab li>a').each(function () {
+                    var $this = $(this);
+                    $this.click(function (e) {
+                        e.preventDefault();
+                        $this.tab('show');
+                        var tabId = $(this).data('tabid');
+
+                        log.trace('lazy loading tab {0}'.format(tabId));
+                        $rootScope.$broadcast('sw_lazyloadtab', tabId);
+                    });
+                });
+            },0,false);
+        }
+    };
+});
+
+
 app.directive('crudBody', function (contextService) {
     return {
         restrict: 'E',
@@ -13,7 +53,7 @@ app.directive('crudBody', function (contextService) {
             associationSchemas: '=',
             schema: '=',
             datamap: '=',
-            extraparameters:'=',
+            extraparameters: '=',
             isDirty: '=',
             originalDatamap: '=',
             savefn: '&',
@@ -26,12 +66,11 @@ app.directive('crudBody', function (contextService) {
             searchSort: '=',
             ismodal: '@',
             checked: '='
-           
+
         },
 
         link: function (scope, element, attrs) {
             scope.$name = 'crudbody';
-            
         },
 
         controller: function ($scope, $http, $rootScope, $filter, $injector,
@@ -41,7 +80,7 @@ app.directive('crudBody', function (contextService) {
             submitService, redirectService,
             associationService, contextService, alertService, validationService, schemaService) {
 
-           
+
             $scope.getFormattedValue = function (value, column, datamap) {
                 var formattedValue = formatService.format(value, column, datamap);
                 if (formattedValue == "-666") {
@@ -52,11 +91,11 @@ app.directive('crudBody', function (contextService) {
                 return formattedValue;
             };
 
-            $scope.setActiveTab=function(tabId) {
+            $scope.setActiveTab = function (tabId) {
                 contextService.setActiveTab(tabId);
             }
 
-            $scope.hasTabs = function (schema) {          
+            $scope.hasTabs = function (schema) {
                 return tabsService.hasTabs(schema);
             };
             $scope.isEditDetail = function (datamap, schema) {
@@ -65,8 +104,8 @@ app.directive('crudBody', function (contextService) {
             $scope.request = function (datamap, schema) {
                 return datamap.fields[schema.idFieldName];
             };
-           
-           
+
+
             $scope.isCommand = function (schema) {
                 if ($scope.schema.properties['command.select'] == "true") {
                     return true;
@@ -90,12 +129,15 @@ app.directive('crudBody', function (contextService) {
                 fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
             });
 
-            $scope.$on('sw_bodyrenderedevent', function(ngRepeatFinishedEvent, parentElementId) {
+            $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
                 var tab = contextService.getActiveTab();
                 if (tab != null) {
                     redirectService.redirectToTab(tab);
                 }
-                
+
+                //make sure we are seeing the top of the grid 
+                window.scrollTo(0, 0);
+
             });
 
             function defaultSuccessFunction(data) {
@@ -124,7 +166,7 @@ app.directive('crudBody', function (contextService) {
                 return id != null;
             };
 
-          
+
 
             $scope.shouldShowField = function (expression) {
                 if (expression == "true") {
@@ -140,7 +182,7 @@ app.directive('crudBody', function (contextService) {
                 return $rootScope.clientName == "hapag";
             };
 
-            $scope.getTabIcon=function(tab) {
+            $scope.getTabIcon = function (tab) {
                 return tab.schema.schemas.list.properties['icon.composition.tab'];
             }
 
@@ -170,7 +212,7 @@ app.directive('crudBody', function (contextService) {
                 $scope.$parent.renderView(applicationToGo, schemaToGo, 'none', $scope.title, parameters);
             };
             $scope.toConfirmCancel = function (data, schema) {
-                
+
                 if (validationService.getDirty()) {
                     alertService.confirmCancel(null, null, function () {
                         $scope.toListSchema(data, schema);
@@ -188,14 +230,14 @@ app.directive('crudBody', function (contextService) {
                     return;
                 }
 
-                    var mode = $scope.$parent.mode;
-                    var popupmode = $scope.$parent.popupmode;
-                    var schemaid = $scope.$parent.schema.schemaId;
-                    var applicationname = $scope.$parent.schema.applicationName;
-                    var title = $scope.$parent.title;
-                 
-                    $scope.$emit("sw_renderview", applicationname, schemaid, mode, title, { id: id, popupmode: popupmode });
-                
+                var mode = $scope.$parent.mode;
+                var popupmode = $scope.$parent.popupmode;
+                var schemaid = $scope.$parent.schema.schemaId;
+                var applicationname = $scope.$parent.schema.applicationName;
+                var title = $scope.$parent.title;
+
+                $scope.$emit("sw_renderview", applicationname, schemaid, mode, title, { id: id, popupmode: popupmode });
+
             };
             $scope.toListSchema = function (data, schema) {
                 /*if (schema instanceof Array) {
@@ -203,7 +245,7 @@ app.directive('crudBody', function (contextService) {
                 } else {*/
                 $scope.$parent.multipleSchema = false;
                 $scope.$parent.schemas = null;
-//                $('#crudmodal').modal('hide');
+                //                $('#crudmodal').modal('hide');
                 $scope.showingModal = false;
                 if (GetPopUpMode() == 'browser') {
                     open(location, '_self').close();
@@ -218,12 +260,12 @@ app.directive('crudBody', function (contextService) {
                     var cancelSchema = $scope.schema.properties['detail.cancel.click'];
                     if (cancelSchema) {
                         //if this schema registers another application/schema/mode entry for the cancel click, let´s use it
-                        var result =schemaService.parseAppAndSchema(cancelSchema);
+                        var result = schemaService.parseAppAndSchema(cancelSchema);
                         parameters.application = result.app;
                         parameters.schema = result.schemaId;
                         parameters.mode = result.mode;
                     }
-                    
+
                 }
 
                 // at this point, usually schema should be a list schema, on cancel call for instance, where we pass the previous schema. same goes for the datamap
@@ -236,7 +278,7 @@ app.directive('crudBody', function (contextService) {
                 }
                 //}
             };
-          
+
             $scope.delete = function () {
 
                 var schema = $scope.schema;
@@ -352,7 +394,7 @@ app.directive('crudBody', function (contextService) {
                 fieldService: fieldService,
                 commandService: commandService
             });
-           
+
 
         }
 

@@ -1,4 +1,24 @@
-﻿app.directive('menu', function (contextService) {
+﻿app.directive('menuWrapper', function ($compile) {
+    return {
+        restrict: 'E',
+        replace: true,
+        template: "<div></div>",
+        scope: {
+            menu: '=',
+            popupmode: '@'
+        },
+        link: function (scope, element, attrs) {
+            if (scope.popupmode == 'none') {
+                element.append(
+                  "<menu menu='menu'/>"
+              );
+                $compile(element.contents())(scope);
+            }
+        }
+    }
+});
+
+app.directive('menu', function (contextService) {
     return {
         restrict: 'E',
         replace: true,

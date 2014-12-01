@@ -43,6 +43,17 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
     var doGetFullObject = function (associationFieldMetadata, associationOptions, selectedValue) {
         if (selectedValue == null) {
             return null;
+        } else if (Array.isArray(selectedValue)) {
+            var ObjectArray = [];
+
+            // Extract each item into an array object
+            for (var i = 0; i < selectedValue.length; i++) {
+                var Object = doGetFullObject(associationFieldMetadata, associationOptions, selectedValue[i]);
+                ObjectArray = ObjectArray.concat(Object);
+            }
+
+            // Return results for multi-value selection
+            return ObjectArray;
         }
 
         //we need to locate the value from the list of association options
@@ -92,24 +103,33 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
         ///it only makes sense for associations which have extraprojections
         updateUnderlyingAssociationObject: function (associationFieldMetadata, underlyingValue, scope) {
 
-            if (associationFieldMetadata.extraProjectionFields.length == 0) {
-                //do nothing because it has no extraprojection fields
-                return;
-            }
+           
 
             var key = associationFieldMetadata.associationKey;
-            var i;
+            var fullObject = this.getFullObject(associationFieldMetadata, scope.datamap, scope.associationOptions);
             if (underlyingValue == null) {
                 //we need to locate the value from the list of association options
                 // we only have the "value" on the datamap
-                underlyingValue = this.getFullObject(associationFieldMetadata, scope.datamap, scope.associationOptions);
+                underlyingValue = fullObject;
+            } else if (fullObject == null) {
+                //now, the object was not present in the array, let´s update it. For instance, we have a lookup with a single initial option, and changed it to another.
+                //the array should contain 2 elements in the end. If the object was already there, no need to do anything
+                if (scope.associationOptions[key] == undefined) {
+                    scope.associationOptions[key] = [];
+                }
+                scope.associationOptions[key].push(underlyingValue);
+                $log.getInstance('associationService#updateUnderlyingAssociationObject').debug('updating association array {0} pushing new item'.format(key));
             }
             if (underlyingValue == null && scope.associationOptions[key] == null) {
                 //the value remains null, but this is because the list of options is lazy loaded, nothing to do
                 return;
             }
 
-            doUpdateExtraFields(associationFieldMetadata, underlyingValue, scope.datamap);
+            if (associationFieldMetadata.extraProjectionFields.length > 0) {
+                doUpdateExtraFields(associationFieldMetadata, underlyingValue, scope.datamap);
+            }
+
+            
         },
 
         ///
@@ -238,7 +258,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     }
                 });
             }
-            
+
         },
 
         getEagerAssociations: function (scope) {
@@ -357,7 +377,14 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 var targetName = value.target;
                 var labelName = "#" + targetName + "_label";
                 var realValue = fn.getFullObject(value, datamap, associationoptions);
-                if (realValue != null) {
+                if (realValue != null && Array.isArray(realValue)) {
+                    datamap[labelName] = "";
+                    // store result into a string with newline delimiter
+                    for (var i = 0; i < realValue.length; i++) {
+                        datamap[labelName] += "\\n" + realValue[i].label;
+                    }
+                }
+                else if (realValue != null) {
                     datamap[labelName] = realValue.label;
                 }
             });

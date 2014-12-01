@@ -3,7 +3,7 @@
  * Place form specific CSS (based on data-application/data-schema attributes)  *
  *******************************************************************************
  *******************************************************************************/
-@media all and (min-width: 1px) {
+/*@media all and (min-width: 1px) {
     #listgrid[data-application="servicerequest"][data-schema="list"] th:nth-child(3),
     #listgrid[data-application="servicerequest"][data-schema="list"] td:nth-child(3) {
         width: 30% !important;
@@ -534,4 +534,4 @@
         width: 15% !important;
         display: table-cell;
     }
-}
+}*/

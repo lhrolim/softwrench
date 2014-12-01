@@ -443,6 +443,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="ticketid" to="recordkey" primary="true"/>
           <relationshipAttribute to="class" literal="SR" quoteLiteral="true"/>
         </relationship>
+        <relationship to ="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
         <relationship to="synonymdomain" qualifier="synstatus">
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="SRSTATUS" quoteLiteral="true" />
@@ -1348,6 +1351,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </relationship>
       </relationships>
       <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWWO" />
         <connectorParameter key="dbtable" value="workorder" />
       </connectorParameters>
 
@@ -2698,6 +2702,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="binnum" to="binnum" primary="true"/>
           <relationshipAttribute from="lotnum" to="lotnum"/>
         </relationship>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to="siteid" primary="true"/>
+        </relationship>
+        <relationship to="chartofaccounts" >
+          <relationshipAttribute from="glaccount" to="glaccount" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
@@ -3535,7 +3546,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <connectorParameter key="dbtable" value="invlot" />
       </connectorParameters>
     </entity>
-
+    
     <entity name="invreserve" idAttribute="requestnum">
       <attributes>
         <attribute name="requestnum" type="varchar" required="true" />
@@ -3585,6 +3596,31 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       <connectorParameters>
         <connectorParameter key="dbtable" value="invreserve" />
         <connectorParameter key="integration_interface" value="SWINVRES" />
+      </connectorParameters>
+    </entity>
+    
+    <entity name="classstructure" idAttribute="classstructureid">
+      <attributes>
+        <attribute name="classstructureid" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="genassetdesc" type="smallint" required="true" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="parent" type="varchar" required="false" />
+        <attribute name="classificationid" type="varchar" required="true" />
+        <attribute name="useclassindesc" type="smallint" required="true" />
+        <attribute name="type" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="classstructureuid" type="bigint" required="true" />
+        <attribute name="haschildren" type="smallint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="showinassettopo" type="smallint" required="false" />
+        <attribute name="plusdusewithtnd" type="smallint" required="true" />
+        <attribute name="permitfees" type="decimal" required="false" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="classstructure" />
       </connectorParameters>
     </entity>
   </entities>
