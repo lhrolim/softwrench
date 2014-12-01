@@ -142,7 +142,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
                 var inputPaddingAndBorder = input.outerWidth() - width;
                 var trWidth = theadArray[i];
                 var resultValue = trWidth - addonWidth - inputPaddingAndBorder;
-                $log.getInstance('fixheader#updateFilterVisibility').debug("result:{0} | Previous:{1} | tr:{2} | addon:{3} | Padding{4}".format(resultValue, width, trWidth, addonWidth, inputPaddingAndBorder));
+                $log.getInstance('fixheaderService#updateFilterVisibility').debug("result:{0} | Previous:{1} | tr:{2} | addon:{3} | Padding{4}".format(resultValue, width, trWidth, addonWidth, inputPaddingAndBorder));
                 input.width(resultValue);
             });
         },
@@ -166,7 +166,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         },
 
         fixThead: function (schema, params) {
-            var log = $log.getInstance('sw4.fixheader_service#fixThead');
+            var log = $log.getInstance('fixheaderService#fixThead');
             log.debug('starting fix Thead');
 
             if (!params || !params.resizing) {
@@ -213,7 +213,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
                 //var isNewHighResolution = newWidth > resolutionBarrier + 15; // lets add some margin to give the browser time to render the new table...
                 //var isNewLowResolution = newWidth < resolutionBarrier - 15; // lets add some margin to give the browser time to render the new table...
                 //if ((isNewHighResolution && !highResolution) || (isNewLowResolution && highResolution)) {
-                    $log.getInstance("crudlistdir#resize").debug('switching resolutions');
+                $log.getInstance("fixheaderService#resize").debug('switching resolutions');
                     fn.fixThead(null, {
                         resizing: true
                     });
@@ -237,7 +237,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         },
 
         unfix: function () {
-            var log = $log.getInstance('sw4.fixheader_service#unfix');
+            var log = $log.getInstance('fixheaderService#unfix');
             log.debug('unfix started');
             var table = $(".listgrid-table");
             table.removeClass("affixed");
