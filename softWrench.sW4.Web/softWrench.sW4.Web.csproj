@@ -324,6 +324,8 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\Client\%40internal\templates\purchasing.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\receiving.xml" />
     <Content Include="App_Data\Client\%40internal\templates\solution.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -656,6 +658,7 @@
     <Content Include="Content\Scripts\client\services\date_service.js" />
     <Content Include="Content\Scripts\client\services\physicalinventory_service.js" />
     <Content Include="Content\Scripts\client\services\inventory_service.js" />
+    <Content Include="Content\Scripts\client\services\poreceiving_service.js" />
     <Content Include="Content\Scripts\client\services\securityService.js" />
     <Content Include="Content\Scripts\client\services\rest_service.js" />
     <Content Include="Content\Scripts\client\services\generalsr_service.js" />
@@ -714,6 +717,7 @@
     <Content Include="Content\Scripts\customers\hapag\sr_service.js" />
     <Content Include="Content\Scripts\customers\hapag\sr_summary_service.js" />
     <Content Include="Content\Scripts\customers\shared\invissuereturnaction.js" />
+    <Content Include="Content\Scripts\customers\shared\receiving.js" />
     <Content Include="Content\Scripts\customers\shared\solution_service.js" />
     <Content Include="Content\Scripts\customers\shared\commlogactions.js" />
     <Content Include="Content\Scripts\client\services\commlog_service.js" />
@@ -903,6 +907,7 @@
     <Content Include="Content\Templates\hapag\commaseparatedcomposition.html" />
     <Content Include="Content\Templates\otb\invissuereturnaction.html" />
     <Content Include="Content\Templates\otb\commlogaction.html" />
+    <Content Include="Content\Templates\otb\receiving.html" />
     <Content Include="Content\Templates\samelinepickers.html" />
     <Content Include="Content\Templates\hapag\conditionalfield.html" />
     <Content Include="Content\Templates\configConditionModal.html" />
