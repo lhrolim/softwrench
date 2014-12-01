@@ -90,8 +90,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <schema id="newdetail" stereotype="detail" mode="input">
           <field attribute="wonum" hidden="true"/>
           <field attribute="#issuetype" hidden="true" default="ISSUE"/>
-          <field attribute="#refwo" label="Workorder" readonly="true"/>
-          <field attribute="#siteid" label="Site Id" readonly="true"/>
+          <field attribute="#refwo" label="Work Order" readonly="true"/>
+          <field attribute="#siteid" label="Site" readonly="true"/>
           <field attribute="#assetnum" label="Asset" readonly="true"/>
           <field attribute="#location" label="Location" readonly="true"/>
           <field attribute="#issueto" label="Issue To" readonly="true"/>
@@ -145,7 +145,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="itemnum" label="Item">
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
-          <field attribute="refwo" label="Workorder">
+          <field attribute="refwo" label="Work Order">
             <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=18%" />
           </field>
           <field attribute="issueto" label="Issue To">
@@ -205,7 +205,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="itemnum" label="Item" readonly="true"/>
           <field attribute="item_.description" label="Description" readonly="true"/>
-          <field attribute="refwo" label="Workorder" readonly="true"/>
+          <field attribute="refwo" label="Work Order" readonly="true"/>
           <field attribute="issueto" label="Issue To" readonly="true"/>
           <field attribute="assetnum" label="Asset" readonly="true"/>
           <field attribute="location" label="Location" readonly="true"/>
@@ -225,7 +225,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="itemnum" label="Item" readonly="true"/>
           <field attribute="item_.description" label="Description" readonly="true"/>
-          <field attribute="refwo" label="Workorder" readonly="true"/>
+          <field attribute="refwo" label="Work Order" readonly="true"/>
           <field attribute="issueto" label="Issue To" readonly="true"/>
           <field attribute="assetnum" label="Asset" readonly="true"/>
           <field attribute="location" label="Location" readonly="true"/>
@@ -248,7 +248,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="itemnum" label="Item" readonly="true"/>
           <field attribute="item_.description" label="Description" readonly="true"/>
-          <field attribute="refwo" label="Workorder" readonly="true"/>
+          <field attribute="refwo" label="Work Order" readonly="true"/>
           <field attribute="issueto" label="Issue To" readonly="true"/>
           <field attribute="assetnum" label="Asset" readonly="true"/>
           <field attribute="location" label="Location" readonly="true"/>
@@ -280,7 +280,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
         <schema id="newitem" stereotype="compositiondetail" mode="input" >
           <field attribute="matusetransid" hidden="true"/>
-          <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" required="true">
+          <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" required="true">
             <renderer type="lookup"/>
           </association>
           <field label="Storeroom" attribute="storeloc" readonly="true"/>
@@ -306,10 +306,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
         <schema id="batchInvIssueFilter" stereotype="detail" title="Issues and Returns" mode="input" platform="Web">
           <field attribute="matusetransid" hidden="true"/>
-          <association label="Site Id" target="siteid" labelfield="site_.siteid" extraprojectionvalues="description" required="true">
+          <association label="Site" target="siteid" labelfield="site_.siteid" extraprojectionvalues="description" required="true">
             <renderer type="lookup"/>
           </association>
-          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount" dependantfields="siteid">
+          <association label="Work Order" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount" dependantfields="siteid">
             <!--<dataprovider prefilterfunction="FilterWorkorders"/>-->
             <renderer type="lookup"/>
             <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeWorkorder"/>-->
@@ -343,7 +343,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       
         <schema id="newInvIssueDetail" mode="input" stereotype="detail">
           <field attribute="matusetransid" hidden="true"/>
-          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount,location,assetnum">
+          <association label="Work Order" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount,location,assetnum">
             <dataprovider prefilterfunction="FilterWorkorders"/>
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterchangeworkorder"/>
@@ -359,7 +359,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>
           </association>
           <field attribute="issuetype" label="Issue Type" required="true" readonly="true" default="ISSUE"/>
-          <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit" required="true">
+          <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit" required="true">
             <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
             <renderer type="lookup"/>
           </association>
@@ -489,7 +489,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="itemnum" label="Item">
             <renderer type="default" params="width=11%"/>
           </field>
-          <field attribute="siteid" label="Site ID">
+          <field attribute="siteid" label="Site">
             <renderer type="default" params="width=11%"/>
           </field>
           <field attribute="reservedqty" label="Reserved Quantity">
