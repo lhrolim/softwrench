@@ -127,8 +127,8 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             }
 
 
-            //                        thead tr:eq(2) th ==> picks all the elements of the second line of the thead of the table, i.e the filters
-            $('thead tr:eq(2) th', table).each(function (i, v) {
+            //                        thead tr:eq(1) th ==> picks all the elements of the first line of the thead of the table, i.e the filters
+            $('thead tr:eq(1) th', table).each(function (i, v) {
                 var inputGroupElements = $('.input-group', v).children();
                 //filtering only the inputs (ignoring divs...)
                 var addonWidth = 0;
@@ -178,7 +178,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             $('thead tr:eq(0) th', table).each(function (i, v) {
                 $(v).width(thead[i]);
             });
-            $('thead tr:eq(2) th', table).each(function (i, v) {
+            $('thead tr:eq(1) th', table).each(function (i, v) {
                 $(v).width(thead[i]);
             });
 
