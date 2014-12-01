@@ -643,7 +643,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
             </commandgroup>
           </commandbars>
-          <field attribute="itemnum" label="Item No">
+          <field attribute="itemnum" label="Item">
             <renderer type="default" params="widthXS=35%;widthSM=30%;widthMD=20%;widthLG=10%" />
           </field>
           <field attribute="item_.description" label="Description">
@@ -670,15 +670,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </list>
 
         <schema id="detail" stereotype="detail" title="Inventory Balance Details">
-          <field label="Inventory Balances ID:" attribute="invbalancesid" required="true" readonly="true" hidden="true"/>
-          <field label="Item:" attribute="itemnum" readonly="true"/>
-          <field label="Description:" attribute="item_.description" readonly="true"/>
-          <field label="Storeroom:" attribute="location" readonly="true"/>
-          <field label="Bin:" attribute="binnum" readonly="true"/>
-          <field label="Lot:" attribute="lotnum" readonly="true"/>
-          <field label="Issue Unit:" attribute="item_.issueunit" readonly="true"/>
-          <field label="Balance:" attribute="curbal"/>
-          <field label="Site:" attribute="siteid" readonly="true"/>
+          <field label="Inventory Balances ID" attribute="invbalancesid" required="true" readonly="true" hidden="true"/>
+          <field label="Item" attribute="itemnum" readonly="true"/>
+          <field label="Description" attribute="item_.description" readonly="true"/>
+          <field label="Storeroom" attribute="location" readonly="true"/>
+          <field label="Bin" attribute="binnum" readonly="true"/>
+          <field label="Lot" attribute="lotnum" readonly="true"/>
+          <field label="Issue Unit" attribute="item_.issueunit" readonly="true"/>
+          <field label="Balance" attribute="curbal"/>
+          <field label="Site" attribute="siteid" readonly="true"/>
           <field attribute="physcnt" hidden="true"/>
         </schema>
       </schemas>
@@ -964,7 +964,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <schema id="newdetail" stereotype="detail" mode="input">
           <field attribute="usetype" hidden="true"/>
-          <association label="Site Id" target="siteid" labelfield="site_.description" extraprojectionvalues="description" required="true">
+          <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" required="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="invUse_afterChangeSite"/>
           </association>
