@@ -1242,7 +1242,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!--<properties>
             --><!--<property key="list.click.popup" value="modal"/>--><!--
           </properties>-->
-          <section resourcepath="/Content/Templates/otb/receiving.html"/>
+          
           <field attribute="ponum" label="PO No" readonly="true"/>
           <field attribute="polinenum" label="Line No" />
           <field attribute="itemnum" label="Item"/>
@@ -1258,6 +1258,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Entered Date &amp; Time" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
+          <section resourcepath="/Content/Templates/otb/receiving.html"/>
           <commandbars>
             <commandgroup position="compositiontop" removeundeclared="false">
               <command id ="Complete" icon="fa-thumbs-o-up" service="poreceivingService" method="completeReceipts" label="Complete Receipts" parameters="schema,datamap,parentdata" />
