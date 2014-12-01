@@ -1809,7 +1809,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="asset_.hlagdescription2" label="Asset"/>
           <field attribute="longdescription_.ldtext" label="Service Attributes"/>
           <field attribute="asset_location_.description" label="Location"/>
-          <field attribute="asset_primaryuser_.hlagdisplayname" label="User ID"/>
+          <field attribute="asset_aucisowner_person_.hlagdisplayname" label="User ID"/>
           <field attribute="hlagaffectedperson" label="Reported By"/>
           <field attribute="hlagreportedby" label="On Behalf Of"/>
           <field attribute="asset_assetglaccount_.displaycostcenter" label="Cost Center"/>

@@ -13,7 +13,7 @@ namespace softWrench.sW4.Data.Persistence {
 
         private static readonly ILog Log = LogManager.GetLogger(SwConstants.SQL_LOG);
 
-        public static ISession CurrentSession() {
+        public static object CurrentSession() {
             if (SWDBHibernateDAO.SessionManager.SessionFactory.IsClosed) {
                 return SessionManager.Instance.OpenSession();
             }
@@ -44,9 +44,9 @@ namespace softWrench.sW4.Data.Persistence {
 
             public ISession OpenSession() {
                 //nhibernate is always readonly
-                var openSession = Instance.GetSessionFactory().OpenSession();
-                openSession.FlushMode = FlushMode.Never;
-                return openSession;
+                var openSession = Instance.GetSessionFactory().OpenStatelessSession();
+//                openSession.FlushMode = FlushMode.Never;
+                return new SessionAdapter(openSession);
             }
 
             public ISession CurrentSession {

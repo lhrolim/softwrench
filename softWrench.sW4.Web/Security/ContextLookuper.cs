@@ -62,7 +62,7 @@ namespace softWrench.sW4.Web.Security {
                 } else {
                     LogicalThreadContext.SetData("context", context);
                 }
-                Log.DebugFormat("adding context " + context);
+                Log.DebugFormat("adding context {0}", context);
                 return context;
             } catch (Exception e) {
                 //not logged users

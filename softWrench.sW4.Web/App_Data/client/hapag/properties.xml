@@ -45,7 +45,7 @@
 		<property key="globalwsdlpath" value="https://170.225.28.205/MPWSNTestProxyWS/DocHandler?wsdl"/>
 		<property key="globaservletpath_inc" value="https://170.225.28.205/HAPAGLLOYDINCTestWS/DocHandlerServlet"/>
 		<property key="globaservletpath_chg" value="https://170.225.28.205/HAPAGLLOYDCHGTestWS/DocHandlerServlet"/>
-		<property key="maximo_DB_url" value="Server=10.50.100.129:50005;Database=maxdb71;UID=maximo;PWD=Max1mo;CurrentSchema=maximo" />
+		<property key="maximo_DB_url" value="Server=10.50.100.129:50005;Database=maxdb71;UID=maximo;PWD=Max1mo;CurrentSchema=maximo;Max Pool Size=100;Min Pool Size=10;" />
 		<property key="basewsURL" value="http://10.50.100.129/meaweb/wsdl/" />
 		<property key="swdb_url" value="server=10.50.100.129;database=swdb_hapagdev;UID=sw;Pwd=sw;" />
 		<property key="swdb_provider" value="MySql.Data.MySqlClient" />

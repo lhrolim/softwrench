@@ -114,11 +114,9 @@ namespace softWrench.sW4.Data.Persistence {
 
         public IList<dynamic> FindByNativeQuery(String queryst, params object[] parameters) {
             using (var session = GetSessionManager().OpenSession()) {
-                using (session.BeginTransaction()) {
-                    var query = BuildQuery(queryst, parameters, session, true);
-                    query.SetResultTransformer(NhTransformers.ExpandoObject);
-                    return query.List<dynamic>();
-                }
+                var query = BuildQuery(queryst, parameters, session, true);
+                query.SetResultTransformer(NhTransformers.ExpandoObject);
+                return query.List<dynamic>();
             }
         }
 
@@ -146,6 +144,7 @@ namespace softWrench.sW4.Data.Persistence {
 
         public int CountByNativeQuery(String queryst, ExpandoObject parameters) {
             var before = Stopwatch.StartNew();
+
             using (var session = GetSessionManager().OpenSession()) {
                 var query = BuildQuery(queryst, parameters, session, true);
                 var result = (int)query.UniqueResult();

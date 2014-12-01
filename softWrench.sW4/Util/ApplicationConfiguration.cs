@@ -316,7 +316,8 @@ namespace softWrench.sW4.Util {
                 }
                 var url = MetadataProvider.GlobalProperty(MetadataProperties.SWDBUrl, true);
                 var provider = MetadataProvider.GlobalProperty(MetadataProperties.SWDBProvider, true);
-                return new ConnectionStringSettings("swdb", url, provider);
+                var connectionStringSettings = new ConnectionStringSettings("swdb", url, provider);
+                return connectionStringSettings;
             }
         }
 
@@ -330,12 +331,14 @@ namespace softWrench.sW4.Util {
                 };
             }
             var builder = new DbConnectionStringBuilder() { ConnectionString = dbConnectionString };
-            if (IsDB2(dbType)) {
-                return new DBConnectionResult {
+            if (IsDB2(dbType))
+            {
+                var dbConnectionResult = new DBConnectionResult {
                     Catalog = (string)builder["Server"],
                     DataSource = (string)builder["Database"],
                     Schema = (string)builder["CurrentSchema"]
                 };
+                return dbConnectionResult;
             }
             return new DBConnectionResult {
                 Catalog = (string)builder["database"],

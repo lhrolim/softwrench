@@ -10,6 +10,7 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Entities;
 using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Entities.SyncManagers {
     public class UserSyncManager : AMaximoRowstampManager, IUserSyncManager {
@@ -69,6 +70,8 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             dto.AppendProjectionField(ProjectionField.Default("personid"));
             dto.AppendProjectionField(ProjectionField.Default("maxuser_.defsite"));
             dto.AppendProjectionField(ProjectionField.Default("maxuser_.loginid"));
+            dto.AppendProjectionField(new ProjectionField("rowstamp1", "maxuser_rowstamp"));
+            dto.AppendProjectionField(ProjectionField.Default("rowstamp"));
             return dto;
         }
 
@@ -126,6 +129,10 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
 
         private static bool IsValidUser(User.UserNameEqualityUser user) {
             var userToIntegrate = user.user;
+            if (userToIntegrate.MaximoPersonId == null || userToIntegrate.MaximoPersonId.EqualsIc("swadmin")) {
+                return false;
+            }
+
             // todo: remove temporary validation solution
             if (string.IsNullOrEmpty(userToIntegrate.FirstName)) {
                 userToIntegrate.FirstName = userToIntegrate.UserName;
