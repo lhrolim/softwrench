@@ -201,12 +201,12 @@ namespace softWrench.sW4.Web.Controllers {
             if (nextSchemaKey != null) {
                 var response = _nextSchemaRouter.RedirectToNextSchema(applicationMetadata, operation, maximoResult.Id,
                     platform, currentschemaKey, nextSchemaKey, mockMaximo);
-                response.SuccessMessage = _successMessageHandler.FillSucessMessage(applicationMetadata, maximoResult.Id,
+                response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.Id,
                     operation);
                 return response;
             }
             return new BlankApplicationResponse() {
-                SuccessMessage = _successMessageHandler.FillSucessMessage(applicationMetadata, maximoResult.Id, operation)
+                SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.Id, operation)
             };
         }
 

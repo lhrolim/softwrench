@@ -93,7 +93,7 @@ namespace softWrench.sW4.Util {
                         value = true;
                     }
                 }
-                prop.SetValue(baseObject, value);
+                prop.SetValue(baseObject, "Int64".EqualsIc(prop.PropertyType.Name) ? Convert.ToInt64(value) : value);
             } catch (Exception e) {
                 throw new InvalidOperationException(String.Format("Error setting property {0} of object {1}. {2}", propertyName, baseObject, e.Message), e);
             }

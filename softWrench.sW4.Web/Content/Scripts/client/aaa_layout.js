@@ -64,14 +64,16 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
     $rootScope.$on('sw_ajaxinit', function (ajaxinitevent) {
         var savingMain = true === $rootScope.savingMain;
-        if (!$rootScope.avoidspin) {
+        if (!$rootScope.avoidspin && !$rootScope.showingspin) {
             spin = startSpin(savingMain);
+            $rootScope.showingspin = true;
         }
     });
 
     $rootScope.$on('sw_ajaxend', function (data) {
         if (spin != undefined) {
             spin.stop();
+            $rootScope.showingspin = false;
         }
         $rootScope.savingMain = undefined;
         fixHeaderService.callWindowResize();
@@ -147,7 +149,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             log.debug("redirection detected new:{0} old:{1}".format(newUrl, $scope.includeURL));
             $scope.includeURL = newUrl;
         }
-        
+
         if (result.title != null) {
             log.debug("dispatching title changed event. Title: {0}".format(result.title));
             $scope.$emit('sw_titlechanged', result.title);
@@ -159,7 +161,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         $timeout(
             function () {
                 window.scrollTo(0, 0);
-            }, 100, false);               
+            }, 100, false);
     };
 
     $scope.logout = function () {
@@ -177,7 +179,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         contextService.loadConfigs(config);
 
         contextService.insertIntoContext("isLocal", config.isLocal);
-        
+
         $rootScope.clientName = config.clientName;
         $rootScope.environment = config.environment;
         $rootScope.isLocal = config.isLocal;
@@ -192,7 +194,12 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             }
         });
 
-       
+        var popupMode = GetPopUpMode();
+        $scope.popupmode = popupMode;
+        if (popupMode != "none") {
+            return;
+        }
+
         $http({
             method: "GET",
             url: url("/api/menu?" + platformQS()),
@@ -209,8 +216,6 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             $scope.menu = menuAndNav.menu;
             $scope.isSysAdmin = menuAndNav.isSysAdmin;
             $scope.isClientAdmin = menuAndNav.isClientAdmin;
-            var popupMode = GetPopUpMode();
-            $scope.popupmode = popupMode;
             $('.hapag-body').addClass('hapag-body-loaded');
         })
         .error(function (data) {

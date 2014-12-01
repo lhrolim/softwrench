@@ -113,6 +113,46 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData);
         },
 
+        redirectWithData: function (applicationName, schemaId, mode, searchData, extraParameters) {
+            /// <summary>
+            /// Shortcut method to redirect to an application with search data 
+            /// </summary>
+            
+            if (!extraParameters) {
+                //to avoid extra checkings all along
+                extraParameters = {};
+            }
+            if (!searchData) {
+                searchData = {};
+            }
+            var log = $log.getInstance('redirectService#redirectWithData');
+
+            var searchDTO = this.buildSearchDTO(searchData, {}, {}, null);
+            searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
+            searchDTO.totalCount = 0;
+            searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;
+
+            var restParameters = {
+                key: {
+                    schemaId: schema ? schema : "list",
+                    mode: extraParameters.mode ? extraParameters.mode : 'none',
+                    platform: "web"
+                },
+                SearchDTO: searchDTO
+            };
+            var queryString = $.param(restParameters);
+            var urlToUse = url("/api/Data/{0}?{1}".format(application, queryString));
+            log.info("invoking url {0}".format(urlToUse));
+            var jsonData = {};
+            $http.get(urlToUse).success(function(data) {
+                jsonData = data;
+                this.goToApplicationView(applicationName, schemaId, null, null, null,jsonData);
+                }).
+                error(function(data) {
+
+                });
+        },
+
         goToApplicationView: function (applicationName, schemaId, mode, title, parameters, jsonData) {
             var log = $log.getInstance('redirectService#goToApplication');
 
