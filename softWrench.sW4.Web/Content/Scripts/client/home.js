@@ -1,4 +1,4 @@
-﻿function HomeController($scope, $http, $templateCache, $rootScope, $timeout,$log, contextService, menuService, i18NService, alertService) {
+﻿function HomeController($scope, $http, $templateCache, $rootScope, $timeout,$log, $compile, contextService, menuService, i18NService, alertService) {
 
     $scope.$name = 'HomeController';
 
@@ -60,6 +60,8 @@
             if (!nullOrUndef(windowTitle)) {
                 window.document.title = windowTitle;
             }
+            var content=angular.element('#headerline');
+            $compile(content.contents())($scope);
         });
     };
 

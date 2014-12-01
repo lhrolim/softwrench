@@ -628,6 +628,17 @@ textarea .readonly {
         float: right;
     }
 
+.headerline {
+    float: right;
+    padding: 10px;
+    text-align: center;
+    background-color: #E75200;
+    color: #fff;
+    width: 690px;
+    margin-top: 25px;
+    font-size: 16px;
+}
+
 @media screen {
     .hideRows {
         display: none;

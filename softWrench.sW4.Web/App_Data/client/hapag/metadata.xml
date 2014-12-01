@@ -1113,13 +1113,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
         </schema>
 
-        <schema id="general" title="General" parentschema="AnewSR">
+        <schema id="general" title="New Service Request - General" parentschema="AnewSR">
           <section id="abstractSection">
             <reference id="generaloutlookassetsection"/>
           </section>
         </schema>
 
-        <schema id="printer" title="Printer" parentschema="AnewSR">
+        <schema id="printer" title="New Service Request - Printer" parentschema="AnewSR">
           <properties>
             <property key="usefulfaqlinks" value="5;4"/>
           </properties>
@@ -1191,7 +1191,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
         </schema>
 
-        <schema id="outlook" title="Outlook" parentschema="AnewSR">
+        <schema id="outlook" title="New Service Request - Outlook" parentschema="AnewSR">
           <properties>
             <property key="usefulfaqlinks" value="6;2;3"/>
           </properties>
@@ -1217,7 +1217,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
         </schema>
 
-        <schema id="phone" stereotype="detail" title="Phone" parentschema="AnewSR">
+        <schema id="phone" stereotype="detail" title="New Service Request - Phone" parentschema="AnewSR">
           <section id="abstractSection">
 
             <optionfield label="Affected Device:" attribute="affectedDevice">
