@@ -80,14 +80,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="itemsetid" to="itemsetid"/>
           <relationshipAttribute from="location" to="location"/>
         </relationship>
-        <relationship to="invbalances">
-          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
-          <relationshipAttribute from="itemnum" to="itemnum"/>
-          <relationshipAttribute from="siteid" to="siteid"/>
-          <relationshipAttribute from="orgid" to="orgid"/>
-          <relationshipAttribute from="itemsetid" to="itemsetid"/>
-          <relationshipAttribute from="location" to="location"/>
-        </relationship>
       </relationships>
     </entity>
   </entities>
