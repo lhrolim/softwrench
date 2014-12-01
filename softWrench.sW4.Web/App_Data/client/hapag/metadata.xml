@@ -1762,7 +1762,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="excelwidth=50;minwidth=135px;maxwidth=300px" />
           </field>
           <field attribute="hlagservice" label="Service">
-            <renderer type="default" params="width=85px;excelwidth=50;wordwrap=break-word" />
+            <renderer type="default" params="min-width=85px;excelwidth=50;wordwrap=break-word" />
           </field>
           <field attribute="reportdate" label="Date &amp; Time">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=109px;showtime=false" />
@@ -1771,7 +1771,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=70px" />
           </field>
           <field attribute="hlagaffectedperson" label="Requester">
-            <renderer type="default" params="width=100px" />
+            <renderer type="default" params="min-width=100px" />
           </field>
           <field attribute="status" hidden="true" />
           <field attribute="hlagimacstatus" label="Status">
