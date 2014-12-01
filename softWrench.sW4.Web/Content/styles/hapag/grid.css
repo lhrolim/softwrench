@@ -1,14 +1,15 @@
 ﻿.listgrid-table {
-    margin-top: -85px !important;
+    position: relative;
+    top: -200px;
 }
 
-.listgrid-table.unfixed {
-    margin-top: 25px !important;
-}
-
-    .listgrid-table.unfixed > thead {
-        top: 114px;
+    .listgrid-table.unfixed {
+        margin-top: 25px !important;
     }
+
+        .listgrid-table.unfixed > thead {
+            top: 114px;
+        }
 
 .gridcolumnvalue {
     color: black;
@@ -28,12 +29,13 @@
 
 @media only screen and (min-width: 1090px) {
     .listgrid-table {
-    margin-top: 117px !important;
-}
-
-    .listgrid-table.affixed > thead {
-        position: fixed;
+        /*margin-top: 117px !important;*/
+        top: 0;
     }
+
+        .listgrid-table.affixed > thead {
+            position: fixed;
+        }
 
     .affix {
         position: fixed;
