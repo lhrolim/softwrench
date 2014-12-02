@@ -11,21 +11,35 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
             compositionschemadefinition: '=',
             compositiondata: '=',
             iscollection: '=',
+            parentdata: '=',
+            metadata: '=',
             mode: '@',
             previousdata: '=',
             previousschema: '='
         },
 
         link: function (scope, element, attrs) {
-            element.append(
-                "<inline-composition-list compositionschemadefinition='compositionschemadefinition'" +
-                         "compositiondata='compositiondata'" +
-                         "mode='mode'" +
-                         "iscollection='iscollection'" +
-                         "previousdata='previousdata'" +
-                         "previousschema='previousschema' />"
-            );
-            $compile(element.contents())(scope);
+
+            var doLoad = function () {
+                scope.compositionschemadefinition = scope.metadata.schema;
+                scope.compositiondata = scope.parentdata[scope.metadata.relationship];
+                element.append(
+                    "<inline-composition-list parentdata='parentdata'" +
+                             "metadata='metadata' iscollection='iscollection' compositionschemadefinition='compositionschemadefinition' compositiondata='compositiondata' mode='mode' previousdata='previousdata' previousschema='previousschema'/>"
+                );
+                $compile(element.contents())(scope);
+                scope.loaded = true;
+            }
+
+
+            doLoad();
+
+            scope.$on("sw_lazyloadtab", function (event, tabid) {
+                if (scope.tabid == tabid && !scope.loaded) {
+                    doLoad();
+                }
+            });
+
         }
     };
 });
@@ -38,9 +52,11 @@ app.directive('inlineCompositionList', function (contextService) {
         replace: true,
         templateUrl: contextService.getResourceUrl('/Content/Templates/crud/inline_composition_list.html'),
         scope: {
+            parentdata: '=',
+            metadata: '=',
+            iscollection: '=',
             compositionschemadefinition: '=',
             compositiondata: '=',
-            iscollection: '=',
             mode: '@',
             previousdata: '=',
             previousschema: '='

@@ -10,16 +10,19 @@ app.config(['$httpProvider', function ($httpProvider) {
             config.headers['currentmetadata'] = contextService.retrieveFromContext('currentmetadata');
             config.headers['mockerror'] = sessionStorage['mockerror'];
             var log = $log.getInstance('sw4.ajaxint#started');
-            log.trace("url: {0} | current module:{1} | current metadata:{2} "
-                .format(config.url, config.headers['currentmodule'], config.headers['currentmetadata']));
-            if (activeRequests == 0) {
-                log.info("started request {0}".format(config.url));
-                if (!$rootScope.avoidspin && !contextService.get("avoidspin",false,true)) {
+            if (config.url.indexOf("/Content/") == -1) {
+                //let´s ignore angularjs templates loading, that would pass through here as well
+                if (!log.isLevelEnabled('trace')) {
+                    log.info("started request {0}".format(config.url));
+                }
+                if (!$rootScope.avoidspin) {
                     $rootScope.$broadcast('sw_ajaxinit');
                 }
-
             }
+            log.trace("url: {0} | current module:{1} | current metadata:{2} "
+               .format(config.url, config.headers['currentmodule'], config.headers['currentmetadata']));
             activeRequests++;
+
         };
         var endedok = function (response) {
             //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)

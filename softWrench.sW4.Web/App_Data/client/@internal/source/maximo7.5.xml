@@ -443,6 +443,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="ticketid" to="recordkey" primary="true"/>
           <relationshipAttribute to="class" literal="SR" quoteLiteral="true"/>
         </relationship>
+        <relationship to ="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
         <relationship to="synonymdomain" qualifier="synstatus">
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="SRSTATUS" quoteLiteral="true" />
@@ -2968,7 +2971,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
-    <entity name="MATRECTRANS" idAttribute="matrectransid">
+    <entity name="matrectrans" idAttribute="matrectransid">
       <attributes>
         <attribute name="itemnum" type="varchar" required="false" />
         <attribute name="tostoreloc" type="varchar" required="false" />
@@ -3546,6 +3549,83 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </attributes>
       <connectorParameters>
         <connectorParameter key="dbtable" value="invlot" />
+      </connectorParameters>
+    </entity>
+    
+    <entity name="invreserve" idAttribute="requestnum">
+      <attributes>
+        <attribute name="requestnum" type="varchar" required="true" />
+        <attribute name="itemnum" type="varchar" required="false" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="wonum" type="varchar" required="false" />
+        <attribute name="actualqty" type="double" required="true" />
+        <attribute name="reservedqty" type="double" required="true" />
+        <attribute name="initflag" type="smallint" required="true" />
+        <attribute name="directreq" type="smallint" required="true" />
+        <attribute name="glaccount" type="varchar" required="false" />
+        <attribute name="requestedby" type="varchar" required="false" />
+        <attribute name="requesteddate" type="datetime" required="false" />
+        <attribute name="requireddate" type="datetime" required="false" />
+        <attribute name="ponum" type="varchar" required="false" />
+        <attribute name="polinenum" type="int" required="false" />
+        <attribute name="dellocation" type="varchar" required="false" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="polineid" type="bigint" required="false" />
+        <attribute name="mrnum" type="varchar" required="false" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="mrlinenum" type="int" required="false" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="issueto" type="varchar" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="fincntrlid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="itemsetid" type="varchar" required="false" />
+        <attribute name="conditioncode" type="varchar" required="false" />
+        <attribute name="invreserveid" type="bigint" required="true" />
+        <attribute name="storelocsiteid" type="varchar" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="porevisionnum" type="int" required="false" />
+        <attribute name="pendingqty" type="double" required="false" />
+        <attribute name="shippedqty" type="double" required="false" />
+        <attribute name="stagedqty" type="double" required="false" />
+        <attribute name="oplocation" type="varchar" required="false" />
+        <attribute name="tostoreloc" type="varchar" required="false" />
+        <attribute name="restype" type="varchar" required="true" />
+        <attribute name="hardbackorder" type="smallint" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="invreserve" />
+        <connectorParameter key="integration_interface" value="SWINVRES" />
+      </connectorParameters>
+    </entity>
+    
+    <entity name="classstructure" idAttribute="classstructureid">
+      <attributes>
+        <attribute name="classstructureid" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="genassetdesc" type="smallint" required="true" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="parent" type="varchar" required="false" />
+        <attribute name="classificationid" type="varchar" required="true" />
+        <attribute name="useclassindesc" type="smallint" required="true" />
+        <attribute name="type" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="classstructureuid" type="bigint" required="true" />
+        <attribute name="haschildren" type="smallint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="showinassettopo" type="smallint" required="false" />
+        <attribute name="plusdusewithtnd" type="smallint" required="true" />
+        <attribute name="permitfees" type="decimal" required="false" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="classstructure" />
       </connectorParameters>
     </entity>
   </entities>

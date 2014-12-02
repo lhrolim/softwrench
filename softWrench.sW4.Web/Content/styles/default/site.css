@@ -535,6 +535,10 @@ textarea .readonly {
             float: left;
             height: 34px;
         }
+
+    #crudbodyform .context {
+        padding: 5px 20px 5px 5px;
+    }
 }
 
 @media all and (min-width: 768px) {
@@ -583,6 +587,10 @@ textarea .readonly {
 
         .container .context .group:first-child {
             margin-left: 10px;
+        }
+
+        #crudbodyform .context .group:first-child {
+            margin-left: 0;
         }
 }
 

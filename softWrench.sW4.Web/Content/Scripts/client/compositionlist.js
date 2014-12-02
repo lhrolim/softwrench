@@ -87,6 +87,63 @@ app.directive('newItemInput', function ($compile, fieldService) {
     }
 });
 
+app.directive('compositionListWrapper', function ($compile, i18NService, $log, $rootScope) {
+    return {
+        restrict: 'E',
+        replace: true,
+        template: "<div></div>",
+        scope: {
+            metadata: '=',
+            parentschema: '=',
+            parentdata: '=',
+            cancelfn: '&',
+            previousschema: '=',
+            previousdata: '=',
+            inline: '@',
+            tabid: '@'
+        },
+        link: function (scope, element, attrs) {
+
+            var doLoad = function () {
+                $log.getInstance('compositionlistwrapper#doLoad').debug('loading composition {0}'.format(scope.tabid));
+                var metadata = scope.metadata;
+                scope.tabLabel = i18NService.get18nValue(metadata.schema.schemas.list.applicationName + '._title', metadata.label);
+                if (scope.parentdata.fields) {
+                    scope.compositiondata = scope.parentdata.fields[scope.metadata.relationship];
+                } else {
+                    scope.compositiondata = scope.parentdata[scope.metadata.relationship];
+                }
+                scope.compositionschemadefinition = metadata.schema;
+                scope.relationship = metadata.relationship;
+                element.append("<composition-list title='{{tabLabel}}'" +
+                    "compositionschemadefinition='compositionschemadefinition'" +
+                    "relationship='{{relationship}}'" +
+                    "compositiondata='compositiondata'" +
+                    "parentschema='parentschema'" +
+                    "parentdata='parentdata'" +
+                    "cancelfn='toListSchema(data,schema)'" +
+                    "previousschema='previousschema' previousdata='previousdata'/>");
+                $compile(element.contents())(scope);
+                scope.loaded = true;
+            }
+
+            var custom = scope.metadata.schema.renderer.rendererType == 'custom';
+            var isInline = scope.metadata.inline;
+
+            if (scope.metadata.type == "ApplicationCompositionDefinition" && isInline && !custom) {
+                doLoad();
+            }
+
+            scope.$on("sw_lazyloadtab", function (event, tabid) {
+                if (scope.tabid == tabid && !scope.loaded) {
+                    doLoad();
+                }
+            });
+
+        }
+    }
+});
+
 app.directive('compositionList', function (contextService) {
 
     return {
@@ -339,7 +396,7 @@ app.directive('compositionList', function (contextService) {
             //this is for the call to submit without having any item on composition selected, due to having the submit as the default button
             $log.getInstance("compositionlist#save").debug("calling save on server without composition selected");
             //this flag must be true for the spin to work properly... TODO: improve this
-            $scope.$parent.save(null, { isComposition: true });
+            $scope.$parent.$parent.save(null, { isComposition: true });
             return;
         }
 
@@ -354,7 +411,7 @@ app.directive('compositionList', function (contextService) {
                 //interrupting here, can´t be done inside service
                 return;
             }
-            $scope.$parent.save(null, {
+            $scope.$parent.$parent.save(null, {
                 successCbk: function (data) {
                     var updatedArray = data.resultObject.fields[$scope.relationship];
                     var alwaysrefresh = $scope.compositiondetailschema.properties && "true" == $scope.compositiondetailschema.properties['compositions.alwaysrefresh'];
@@ -386,7 +443,7 @@ app.directive('compositionList', function (contextService) {
                     $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
                 },
                 isComposition: true,
-                nextSchemaObj: { schemaId: $scope.$parent.schema.schemaId }
+                nextSchemaObj: { schemaId: $scope.$parent.$parent.schema.schemaId }
             });
         }
 

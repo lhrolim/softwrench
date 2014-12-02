@@ -330,8 +330,10 @@
                             </div>
                         </div>
                         <div ng-switch-when="ApplicationCompositionDefinition">
-                            <inline-composition-list-wrapper compositionschemadefinition="fieldMetadata.schema"
-                                                             compositiondata="datamap[fieldMetadata.relationship]"
+                            
+
+                            <inline-composition-list-wrapper parentdata="datamap"
+                                                             metadata="fieldmetadata"
                                                              iscollection="fieldMetadata.collection"
                                                              previousdata="datamap"
                                                              previousschema="schema" />

@@ -12,10 +12,10 @@
             <ng-switch on="fieldMetadata.type">
                 <div ng-switch-when="ApplicationCompositionDefinition">
                     <inline-composition-list-wrapper compositionschemadefinition="fieldMetadata.schema"
-                                                     compositiondata="datamap[fieldMetadata.relationship]"
-                                                     iscollection="fieldMetadata.collection"
-                                                     previousdata="datamap"
-                                                     previousschema="schema" />
+                                             compositiondata="datamap[fieldMetadata.relationship]"
+                                             iscollection="fieldMetadata.collection" 
+                                             previousdata="datamap"
+                                             previousschema="schema" />
                 </div>
                 <div ng-switch-when="ApplicationSection">
                     <div ng-if="fieldMetadata.resourcepath != null" ng-include="contextPath(fieldMetadata.resourcepath)" href="#" style="width: 100%" />

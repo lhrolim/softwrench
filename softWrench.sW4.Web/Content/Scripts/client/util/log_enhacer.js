@@ -17,15 +17,56 @@ function ltEnabledLevel(currLevel, enabledLevel) {
         return currLevel.equalsAny('trace');
     }
     if (enabledLevel == "info") {
-        return currLevel.equalsAny('trace','debug');
+        return currLevel.equalsAny('trace', 'debug');
     }
     if (enabledLevel == "warn") {
-        return currLevel.equalsAny('trace','debug', 'info');
+        return currLevel.equalsAny('trace', 'debug', 'info');
     }
     if (enabledLevel == "error") {
-        return currLevel.equalsAny('trace','debug', 'info', 'error');
+        return currLevel.equalsAny('trace', 'debug', 'info', 'error');
     }
     return true;
+}
+
+function getContextLevel(context) {
+
+    var methodLogLevel = sessionStorage["log_" + context];
+    if (methodLogLevel !== undefined) {
+        return methodLogLevel;
+    }
+    var indexOf = context.indexOf("#");
+    if (indexOf != -1) {
+        var serviceName = context.substr(0, indexOf);
+        var serviceLogLevel = sessionStorage["log_" + serviceName];
+        if (serviceLogLevel !== undefined) {
+            return serviceLogLevel;
+        }
+    }
+    return null;
+};
+
+function getMinLevel(globalLevel, contextLevel) {
+    if (contextLevel == null) {
+        return globalLevel;
+    }
+
+    if (contextLevel == "trace") {
+        return contextLevel;
+    }
+
+    if (contextLevel == "debug") {
+        return globalLevel == "trace" ? globalLevel : contextLevel;
+    }
+
+    if (contextLevel == "info") {
+        return globalLevel.equalsAny("trace", "debug") ? globalLevel : contextLevel;
+    }
+
+    if (contextLevel == "warn") {
+        return globalLevel.equalsAny("trace", "debug", "info") ? globalLevel : contextLevel;
+    }
+
+    return globalLevel;
 }
 
 function enhanceAngularLog($log, contextService) {
@@ -43,23 +84,32 @@ function enhanceAngularLog($log, contextService) {
             error: enhanceLogging($log.error, 'error', context, contextService),
             enableLogging: function (enable) {
                 $log.enabledContexts[context] = enable;
+            },
+            isLevelEnabled: function (level) {
+                return isLevelEnabled(level, context);
             }
         };
     };
 
+    function isLevelEnabled(level, context) {
+        var enabledLevel = sessionStorage.loglevel;
+        if (enabledLevel == undefined) {
+            enabledLevel = contextService.retrieveFromContext('defaultlevel');
+        }
+        var contextLevel = getContextLevel(context);
+        enabledLevel = getMinLevel(enabledLevel, contextLevel);
+
+        return !ltEnabledLevel(level, enabledLevel);
+    }
+
     function enhanceLogging(loggingFunc, level, context) {
         return function () {
-            var enabledLevel = sessionStorage.loglevel;
-            if (enabledLevel == undefined) {
-                enabledLevel = contextService.retrieveFromContext('defaultlevel');
-            }
-            if (ltEnabledLevel(level, enabledLevel)) {
+            var isEnabled = this.isLevelEnabled(level, context);
+            if (!isEnabled) {
                 return;
             }
-
             //var modifiedArguments = [].slice.call(arguments);
             //modifiedArguments[0] = [moment().format("dddd hh:mm:ss:SSS a") + '::[' + context + ']> '] + modifiedArguments[0];
-
             //add timestamp and context to array of arguments (inspect object using the bowser console)
             var currentargs = [].slice.call(arguments);
             var contextarg = [moment().format("dddd hh:mm:ss:SSS a") + '::[' + context + ']> '];
