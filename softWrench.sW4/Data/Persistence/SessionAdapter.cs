@@ -24,7 +24,7 @@ namespace softWrench.sW4.Data.Persistence {
         }
 
         public void Flush() {
-            //            RealSession.
+            //                        RealSession.
         }
 
         public IDbConnection Disconnect() {
@@ -32,7 +32,6 @@ namespace softWrench.sW4.Data.Persistence {
         }
 
         public void Reconnect() {
-            throw new NotImplementedException();
         }
 
         public void Reconnect(IDbConnection connection) {
@@ -40,7 +39,8 @@ namespace softWrench.sW4.Data.Persistence {
         }
 
         public IDbConnection Close() {
-            throw new NotImplementedException();
+            RealSession.Close();
+            return null;
         }
 
         public void CancelQuery() {
@@ -335,15 +335,24 @@ namespace softWrench.sW4.Data.Persistence {
             throw new NotImplementedException();
         }
 
-        public EntityMode ActiveEntityMode { get; private set; }
-        public FlushMode FlushMode { get; set; }
+        public EntityMode ActiveEntityMode {
+            get { return EntityMode.Poco; }
+        }
+
+        public FlushMode FlushMode { get { return FlushMode.Never; } set { } }
         public CacheMode CacheMode { get; set; }
         public ISessionFactory SessionFactory { get; private set; }
         public IDbConnection Connection { get; private set; }
-        public bool IsOpen { get; private set; }
-        public bool IsConnected { get; private set; }
-        public bool DefaultReadOnly { get; set; }
-        public ITransaction Transaction { get; private set; }
+        public bool IsOpen { get { return RealSession.IsOpen; } }
+        public bool IsConnected { get { return RealSession.IsConnected; } }
+        public bool DefaultReadOnly {
+            get { return true; }
+            set { }
+        }
+
+        public ITransaction Transaction {
+            get { return RealSession.Transaction; }
+        }
         public ISessionStatistics Statistics { get; private set; }
     }
 }

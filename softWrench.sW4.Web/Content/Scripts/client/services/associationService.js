@@ -30,7 +30,6 @@ app.factory('associationService', function ($injector, $http, $timeout, $log,$ro
                 FillRelationship(datamap.extrafields, fullKey, valueToSet);
                 datamap.extrafields[GetRelationshipName(fullKey)] = valueToSet;
                 datamap.extrafields[key][extrafield] = valueToSet;
-
             }
         };
     }
@@ -93,7 +92,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log,$ro
             //TODO: Return full object.
             var resultValue = doGetFullObject(associationFieldMetadata, associationOptions, selectedValue);
             if (resultValue == null) {
-                $log.getInstance('associationService#getFullObject').warn('value not found in association options for {0} '.format(associationFieldMetadata.associationKey));
+                $log.getInstance('sw4.associationService#getFullObject').warn('value not found in association options for {0} '.format(associationFieldMetadata.associationKey));
             }
             return resultValue;
         },
