@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('associationService', function ($injector, $http, $timeout, $log,$rootScope, submitService, fieldService) {
+app.factory('associationService', function ($injector, $http, $timeout, $log, $rootScope, submitService, fieldService) {
 
     var doUpdateExtraFields = function (associationFieldMetadata, underlyingValue, datamap) {
         var log = $log.getInstance('sw4.associationservice#doUpdateExtraFields');
@@ -35,7 +35,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log,$ro
     }
 
 
-  
+
 
     var doGetFullObject = function (associationFieldMetadata, associationOptions, selectedValue) {
         if (selectedValue == null) {
@@ -61,7 +61,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log,$ro
             //if the list is lazy (ex: lookups, there´s nothing we can do, except for static option field )
             if (associationFieldMetadata.options != undefined) {
                 //this means this is an option field with static options
-                var resultArr = $.grep(associationFieldMetadata.options, function(option) {
+                var resultArr = $.grep(associationFieldMetadata.options, function (option) {
                     return selectedValue.equalIc(option.value);
                 });
                 return resultArr == null ? null : resultArr[0];
@@ -81,7 +81,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log,$ro
 
     return {
 
-        getFullObject : function (associationFieldMetadata, datamap, associationOptions) {
+        getFullObject: function (associationFieldMetadata, datamap, associationOptions) {
             //we need to locate the value from the list of association options
             // we only have the "value" on the datamap 
             var target = associationFieldMetadata.target;
@@ -167,7 +167,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log,$ro
             scope.associationSchemas = instantiateIfUndefined(scope.associationSchemas);
             scope.disabledassociations = instantiateIfUndefined(scope.disabledassociations);
             for (var dependantFieldName in serverOptions) {
-                
+
                 //this iterates for list of fields which were dependant of a first one. 
                 var array = instantiateIfUndefined(serverOptions[dependantFieldName]);
 
@@ -186,6 +186,13 @@ app.factory('associationService', function ($injector, $http, $timeout, $log,$ro
                 $.each(associationFieldMetadatas, function (index, value) {
                     if (value.target == null) {
                         return;
+                    }
+                    if (isIe9()) {
+                        //due to a crazy ie9-angular bug, we need to do it like this
+                        // taken from https://github.com/angular/angular.js/issues/2809
+                        var element = $("select[data-comboassociationkey='" + value.associationKey + "']");
+                        element.hide();
+                        element.show();
                     }
                     //clear datamap for the association updated -->This is needed due to a IE9 issue
                     var previousValue = datamap[value.target];

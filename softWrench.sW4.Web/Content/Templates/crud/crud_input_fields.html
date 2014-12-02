@@ -59,7 +59,7 @@
                             ng-model="datamap[fieldMetadata.target]"
                             ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                             ng-enabled="isSelectEnabled(fieldMetadata)"
-                             />
+                            data-comboassociationkey="{{fieldMetadata.associationKey}}"/>
                     <!--<div class="arrow"></div>-->
                 </div>
 
