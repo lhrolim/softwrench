@@ -27,17 +27,10 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var result = MaxDAO.FindByNativeQuery(query, null);
             var list = new List<AssociationOption>();
 
-            if (result.Any()) {
-                foreach (var record in result)
-                    list.Add(new AssociationOption(record["VALUE"].ToString(), string.Format("{0} - {1}", record["VALUE"], record["LABEL"])));
-            }
-            else {
-                list.Add(new AssociationOption("1", "1"));
-                list.Add(new AssociationOption("2", "2"));
-                list.Add(new AssociationOption("3", "3"));
-                list.Add(new AssociationOption("4", "4"));
-                list.Add(new AssociationOption("5", "5"));
-            }
+            foreach (var record in result)
+                list.Add(new AssociationOption(record["VALUE"].ToString(), string.Format("{0} - {1}", record["VALUE"], record["LABEL"])));
+
+            list.Add(new AssociationOption(null, "Unassigned Priority")); 
 
             return list;
         }

@@ -53,10 +53,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="EXCEPTIONREASON" quoteLiteral="true" />
         </relationship>
-        <relationship to="numericdomain" qualifier="synpriority">
-          <relationshipAttribute from="wopriority" to="value" primary="true"/>
-          <relationshipAttribute to="domainid" literal="WO PRIORITY" quoteLiteral="true" />
-        </relationship>
       </relationships>
     </entity>
   </entities>
@@ -146,15 +142,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
               <renderer type="lookup"/>
             </association>
-            
-            <!--<field attribute="wopriority" label="Priority:" required="true" default="1">
+            <field attribute="wopriority" label="Priority:" required="true" default="1">
               <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-            </field>-->
-
-            <association label="Priority:" target="wopriority" labelfield="synpriority_.description">
-              <renderer type="lookup"/>
-            </association>
-            
+            </field>
             <association label="Location:" target="location" labelfield="location_.description" >
               <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
               <!--renderer type="lookup"/-->

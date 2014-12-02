@@ -4,9 +4,6 @@ Request Details
 
 Location:   HLAG-MT4
 Asset:   (13150) Top Breaker System // 32R5G
-:   150 IDLE
-:   BPM3100
-:   
 Old Child Asset:   
 New Asset:   (A5006) 95 FLD112 TRACTOR // 1FG44093300009
 New Child Asset:   

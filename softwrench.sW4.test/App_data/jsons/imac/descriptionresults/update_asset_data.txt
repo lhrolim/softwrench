@@ -4,7 +4,6 @@ Request Details
 
 Location:   MT4
 Asset:   A8005
-:   OPERATING
 Update Child Asset:   update
 =====================================================================
 Service Attributes
