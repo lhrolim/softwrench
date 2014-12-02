@@ -2197,7 +2197,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </schema>
 
         <schema id="imacDashboardList" stereotype="list">
-          <field attribute="ticketid" label="SRNum" />
+          <field attribute="ticketid" label="Request #" />
           <field attribute="description" label="Parent Title" />
           <field attribute="woactivity_.description" label="Summary" />
           <field attribute="" label="Owner" />
