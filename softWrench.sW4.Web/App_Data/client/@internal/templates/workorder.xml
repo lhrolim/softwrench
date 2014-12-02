@@ -53,6 +53,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="EXCEPTIONREASON" quoteLiteral="true" />
         </relationship>
+        <relationship to="numericdomain" qualifier="synpriority">
+          <relationshipAttribute from="wopriority" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="WO PRIORITY" quoteLiteral="true" />
+        </relationship>
       </relationships>
     </entity>
   </entities>
@@ -130,6 +134,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <field attribute="woclass" hidden="true"/>
             <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
             <field attribute="wonum" label="WO No:" readonly="true"/>
+            <!--COMSW-2-->
+            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" default="@classstructureid">
+              <renderer type="autocompleteclient" />
+            </optionfield>
             <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
               <renderer type="lookup"/>
               <event type="afterchange" service="genericTicetService" method="afterchangeowner"/>
@@ -146,9 +154,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
               <renderer type="lookup"/>
             </association>
-            <field attribute="wopriority" label="Priority:" required="true" default="1">
+            <!--COMSW-2 Fix For Priority Selection-->
+            <!--<field attribute="wopriority" label="Priority:" required="true" default="1">
               <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-            </field>
+            </field>-->
+            <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
+              <renderer type="autocompleteclient"/>
+            </optionfield>
             <association label="Location:" target="location" labelfield="location_.description" >
               <event type="beforechange" service="genericTicetService" method="beforeChangeLocation"/>
               <!--renderer type="lookup"/-->
