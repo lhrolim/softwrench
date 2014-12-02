@@ -42,6 +42,10 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
         public override ISet<EntityAssociation> NonListAssociations() {
             var resultList = new List<EntityAssociation>();
             var directAssociations = base.NonListAssociations();
+            if (!directAssociations.Any() && !InnerMetadatas.Any()) {
+                return new HashSet<EntityAssociation>(resultList);
+            }
+
             if (!String.IsNullOrEmpty(ContextAlias)) {
                 foreach (var directAssociation in directAssociations) {
                     var innerMetadata = InnerMetadatas.FirstOrDefault(i => i.ContextAlias == directAssociation.Qualifier);
@@ -58,7 +62,23 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
             }
 
             foreach (var innerMetadata in InnerMetadatas) {
-                resultList.AddRange(innerMetadata.NonListAssociations());
+                var nonListAssociations = innerMetadata.NonListAssociations();
+                if (nonListAssociations.Any()) {
+                    //to make debug easier
+                    if (ContextAlias != null) {
+                        foreach (var nonListAssociation in nonListAssociations) {
+                            if (!nonListAssociation.Qualifier.StartsWith(ContextAlias)) {
+                                //this is a workaround used to handle 3 or more level relationships (ex: asset_aucisowner_person_displayname)
+                                nonListAssociation.Qualifier = ContextAlias + nonListAssociation.Qualifier;
+                                nonListAssociation.EntityName = ContextAlias + nonListAssociation.EntityName;
+                                if (nonListAssociation is SlicedEntityAssociation) {
+                                    ((SlicedEntityAssociation)nonListAssociation).RefreshSlicedAttributes(ContextAlias);
+                                }
+                            }
+                        }
+                    }
+                    resultList.AddRange(nonListAssociations);
+                }
             }
             return new HashSet<EntityAssociation>(resultList);
         }

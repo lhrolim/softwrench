@@ -21,5 +21,13 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
         }
 
         public IEnumerable<EntityAttribute> SlicedAttributes { get; set; }
+
+        public void RefreshSlicedAttributes(string contextAlias) {
+            var refreshedAttributes = new HashSet<EntityAttribute>();
+            foreach (var slicedAttribute in SlicedAttributes) {
+                refreshedAttributes.Add(slicedAttribute.ClonePrependingContext(contextAlias));
+            }
+            SlicedAttributes = refreshedAttributes;
+        }
     }
 }

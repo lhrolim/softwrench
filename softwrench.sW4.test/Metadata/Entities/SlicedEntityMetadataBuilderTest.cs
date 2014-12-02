@@ -86,6 +86,9 @@ namespace softwrench.sW4.test.Metadata.Entities {
             Debug.Write(select);
             Assert.IsFalse(select.Contains("case when imac.serialnum"));
             Assert.IsTrue(select.Contains("case when asset_.serialnum"));
+            var from =QueryFromBuilder.Build(sliced, null);
+//            Debug.Write(from);
+            Assert.IsTrue(from.Contains("left join person as asset_aucisowner_person_ on (asset_aucisowner_.personid = asset_aucisowner_person_.personid)"));
         }
 
         [TestMethod]
