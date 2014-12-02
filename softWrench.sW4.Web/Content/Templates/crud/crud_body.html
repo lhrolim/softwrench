@@ -28,7 +28,7 @@
                 <div class="detail-header clearfix">
                     <ul class="nav nav-tabs compositiondetailtab hapag-composition">
                         <li class="active">
-                            <a href="#main" data-tabid="{{main}}" ng-click=" setactivetab(null)"><i class="fa fa-file-text-o"></i> {{schema.title}}</a>
+                            <a href="#main" data-tabid="{{main}}" ng-click="setActiveTab(null)"><i class="fa fa-file-text-o"></i> {{schema.title}}</a>
                         </li>
                         <li ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type" tabsrendered>
                             <a ng-switch-when="ApplicationCompositionDefinition"

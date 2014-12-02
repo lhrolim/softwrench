@@ -186,7 +186,7 @@ app.factory('contextService', function ($rootScope) {
             this.insertIntoContext('currenttab', tabId);
         },
 
-        getActiveTab: function(tabId) {
+        getActiveTab: function() {
             return this.fetchFromContext('currenttab');
         },
 
