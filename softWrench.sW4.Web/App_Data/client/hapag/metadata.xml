@@ -3210,7 +3210,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="wonum" label="WO Number" />
           <field attribute="wosequence" label="Sequence" />
-          <field attribute="ownergroup" label="Owner Group" />
+          <field attribute="ownergroup" label="Owner Group" >
+            <renderer type="default" params="minwidth=160px;maxwidth=200px"/>
+          </field>
           <field attribute="status" label="Status"/>
           <field attribute="schedstart" label="Schedule Start">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
@@ -3218,7 +3220,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="actfinish" label="Actual Finish">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
           </field>
-          <field attribute="description" label="Summary"/>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="minwidth=180px;maxwidth=200px"/>
+          </field>
           <section resourcepath="/Content/Templates/hapag/jobplancompleteaction.html">
             <header label="Action"/>
           </section>

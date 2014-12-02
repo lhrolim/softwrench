@@ -293,6 +293,23 @@ app.directive('compositionList', function (contextService) {
                     });
             };
 
+            $scope.getGridColumnStyle = function (column, propertyName) {
+                var property = column.rendererParameters[propertyName];
+
+                if (property != null) {
+                    return property;
+                }
+
+                if (propertyName == 'maxwidth') {
+                    var high = $(window).width() > 1199;
+                    if (high) {
+                        return '135px';
+                    }
+                    return '100px';
+                }
+                return null;
+            }
+
             $scope.cancelComposition = function () {
                 $scope.newDetail = false;
                 //                $scope.isReadonly = true;
