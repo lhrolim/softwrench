@@ -210,40 +210,6 @@ app.factory('printService', function ($rootScope, $http, $timeout, $log, tabsSer
             $rootScope.$broadcast("sw_hideprintmodal");
         },
 
-        printCompositionDetail: function (schema, datamap, printOptions) {
-            var log = $log.getInstance("print_service#printCompositionDetail");
-            var params = {};
-            params.key = {};
-
-            params.options = {};
-
-            params.application = schema.applicationName;
-            params.key.schemaId = schema.schemaId;
-            params.key.mode = schema.mode;
-            params.key.platform = platform();
-            printOptions.compositionsToExpand = "worklogs";
-            var notExpansibleCompositions = [];
-            if (printOptions != null) {
-                params.options.compositionsToExpand = tabsService.buildCompositionsToExpand(printOptions.compositionsToExpand, schema, datamap, 'print', notExpansibleCompositions);
-            }
-            params.options.compositionsToExpand = "worklogs";
-            var shouldPrintMain = false;
-            log.info('calling expanding compositions on service; params: {0}'.format(params));
-            var urlToInvoke = removeEncoding(url("/api/generic/ExtendedData/ExpandCompositions?" + $.param(params)));
-            $http.get(urlToInvoke).success(function (result) {
-
-                var compositions = result.resultObject;
-                $.each(emptyCompositions, function (key, obj) {
-                    compositions[key] = obj;
-                });
-
-                log.debug('sw_readytoprintevent dispatched after server return');
-                var compositionsToPrint = mergeCompositionData(datamap, notExpansibleCompositions, compositions);
-                $rootScope.$broadcast("sw_readytoprintevent", compositionsToPrint, false, false);
-            });
-
-        },
-
     };
 
 });
