@@ -87,6 +87,15 @@ app.factory('genericTicketService', function (alertService, associationService, 
             if (event.fields['owner'] != null) {
                 alertService.alert("You may select an Owner or an Owner Group; not both");
             }
+        },
+
+        beforeWOPriorty: function (event) {
+            // Clean User-Personal Asset
+            if (event.fields['wopriority'] != null) {
+                event.fields['wopriority'] = '$null$ignorewatch';
+            }
+            //event.fields['assetnum'] = null;
+
         }
     };
 

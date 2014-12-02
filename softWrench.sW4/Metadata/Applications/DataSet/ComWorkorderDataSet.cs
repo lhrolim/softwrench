@@ -28,9 +28,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var list = new List<AssociationOption>();
 
             foreach (var record in result)
-                list.Add(new AssociationOption(record["VALUE"].ToString(), string.Format("{0} - {1}", record["VALUE"], record["LABEL"])));
-
-            list.Add(new AssociationOption(null, "Unassigned Priority")); 
+                list.Add(new AssociationOption(record["VALUE"], string.Format("{0} - {1}", record["VALUE"], record["LABEL"])));
 
             return list;
         }

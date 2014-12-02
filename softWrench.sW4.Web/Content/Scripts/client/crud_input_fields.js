@@ -190,9 +190,8 @@ app.directive('crudInputFields', function (contextService) {
                             return;
                         }
                         if (newValue != null) {
-                            // this is a hacky thing when we want to change a value of a field without triggering the watch
-                            // had to convert the newValue to string before performing the check for $ignorewatch
-                            var ignoreWatchIdx = String(newValue).indexOf('$ignorewatch');
+                            //this is a hacky thing when we want to change a value of a field without triggering the watch
+                            var ignoreWatchIdx = newValue.indexOf('$ignorewatch');
                             if (ignoreWatchIdx != -1) {
                                 shouldDoWatch = false;
                                 $scope.datamap[association.attribute] = newValue.substring(0, ignoreWatchIdx);
