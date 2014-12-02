@@ -1987,6 +1987,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <properties>
             <property key="nextschema.schemaid" value="creationSummary"/>
             <property key="popup.window.titlestrategy" value=""/>
+            <property key="showusage" value="false"/>
           </properties>
           <section id="requestdetails" parameters="detaildescription=Request Details">
             <reference id="servicelabel"/>
