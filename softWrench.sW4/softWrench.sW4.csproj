@@ -201,6 +201,7 @@
     <Compile Include="Data\Persistence\WS\Commons\BasePhysicalCountCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePurchaseRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseInvuseCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\BaseReceiptCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\CommLogHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\HapagChangeHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\HapagSRLongDescriptionHandler.cs" />
@@ -241,8 +242,10 @@
     <Compile Include="Metadata\Applications\Command\ApplicationCommandExtensions.cs" />
     <Compile Include="Metadata\Applications\DataSet\AssociationPostFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseInvuseDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\ComServiceRequestDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\ComToolTransDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\IncidentDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\OtbInvreserveDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbServiceRequestDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\GricServiceRequestDataSet.cs" />

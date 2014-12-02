@@ -768,6 +768,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="classification" qualifier="classification">
           <relationshipAttribute from="classificationid" to ="classificationid" primary="true"/>
         </relationship>
+        <relationship to ="classusewith" qualifier="incidentclassstructures">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+          <relationshipAttribute to="objectvalue" literal="INCIDENT" quoteLiteral="true"/>
+        </relationship>
+        
         <relationship to="incidentclassifications" qualifier="incidentclassifications">
           <relationshipAttribute from="classificationid" to="classificationid" primary="true"/>
         </relationship>
@@ -1710,7 +1715,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
             <renderer type="lookup"/>
           </association>
-          <association label="Project Classification:" target="classificationid" labelfield="incidentclassifications_.description">
+          <association label="Project Classification:" target="classificationid" labelfield="incidentclassstructures_.description">
             <renderer type="lookup"/>
           </association>
           <!-- Kongsberg wont require location and asset fields

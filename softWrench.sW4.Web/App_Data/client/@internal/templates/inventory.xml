@@ -62,6 +62,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </relationship>
       </relationships>
     </entity>
+    
+    <entity name="invreserve" idAttribute="requestnum" whereclause="reservedqty > 0">
+      <relationships>
+        <relationship to="invissue">
+          <relationshipAttribute from="wonum" to="refwo" primary="true"/>
+          <relationshipAttribute from="assetnum" to="assetnum"/>
+          <relationshipAttribute from="issueto" to="issueto"/>
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="location" to="location"/>
+        </relationship>
+      </relationships>
+    </entity>
   </entities>
 
   <applications>
@@ -70,8 +90,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <schema id="newdetail" stereotype="detail" mode="input">
           <field attribute="wonum" hidden="true"/>
           <field attribute="#issuetype" hidden="true" default="ISSUE"/>
-          <field attribute="#refwo" label="Workorder" readonly="true"/>
-          <field attribute="#siteid" label="Site Id" readonly="true"/>
+          <field attribute="#refwo" label="Work Order" readonly="true"/>
+          <field attribute="#siteid" label="Site" readonly="true"/>
           <field attribute="#assetnum" label="Asset" readonly="true"/>
           <field attribute="#location" label="Location" readonly="true"/>
           <field attribute="#issueto" label="Issue To" readonly="true"/>
@@ -101,6 +121,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="siteid"/>
           <field attribute="orgid"/>
           <field attribute="status"/>
+          <field attribute="costtype"/>
         </list>
       </schemas>
     </application>
@@ -122,22 +143,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="storeloc" hidden="true"/>
           <field attribute="binnum" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
-          <field attribute="refwo" label="Workorder">
-            <renderer type="default" />
+          <field attribute="refwo" label="Work Order">
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=18%" />
           </field>
           <field attribute="issueto" label="Issue To">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=15%" />
           </field>
           <field attribute="assetnum" label="Asset">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%;widthLG=15%" />
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
           </field>
           <field attribute="issuetype" label="Issue Type">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
           </field>
           <field attribute="quantity" label="Qty">
             <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyList;"/>
@@ -146,7 +167,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
-            <renderer type="default" params="width=6%;"/>
+            <renderer type="default" params="width=4%"/>
           </section>
         </list>
 
@@ -184,7 +205,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="itemnum" label="Item" readonly="true"/>
           <field attribute="item_.description" label="Description" readonly="true"/>
-          <field attribute="refwo" label="Workorder" readonly="true"/>
+          <field attribute="refwo" label="Work Order" readonly="true"/>
           <field attribute="issueto" label="Issue To" readonly="true"/>
           <field attribute="assetnum" label="Asset" readonly="true"/>
           <field attribute="location" label="Location" readonly="true"/>
@@ -204,7 +225,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="itemnum" label="Item" readonly="true"/>
           <field attribute="item_.description" label="Description" readonly="true"/>
-          <field attribute="refwo" label="Workorder" readonly="true"/>
+          <field attribute="refwo" label="Work Order" readonly="true"/>
           <field attribute="issueto" label="Issue To" readonly="true"/>
           <field attribute="assetnum" label="Asset" readonly="true"/>
           <field attribute="location" label="Location" readonly="true"/>
@@ -227,7 +248,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="itemnum" label="Item" readonly="true"/>
           <field attribute="item_.description" label="Description" readonly="true"/>
-          <field attribute="refwo" label="Workorder" readonly="true"/>
+          <field attribute="refwo" label="Work Order" readonly="true"/>
           <field attribute="issueto" label="Issue To" readonly="true"/>
           <field attribute="assetnum" label="Asset" readonly="true"/>
           <field attribute="location" label="Location" readonly="true"/>
@@ -259,7 +280,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
         <schema id="newitem" stereotype="compositiondetail" mode="input" >
           <field attribute="matusetransid" hidden="true"/>
-          <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" required="true">
+          <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" required="true">
             <renderer type="lookup"/>
           </association>
           <field label="Storeroom" attribute="storeloc" readonly="true"/>
@@ -285,10 +306,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
         <schema id="batchInvIssueFilter" stereotype="detail" title="Issues and Returns" mode="input" platform="Web">
           <field attribute="matusetransid" hidden="true"/>
-          <association label="Site Id" target="siteid" labelfield="site_.siteid" extraprojectionvalues="description" required="true">
+          <association label="Site" target="siteid" labelfield="site_.siteid" extraprojectionvalues="description" required="true">
             <renderer type="lookup"/>
           </association>
-          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount" dependantfields="siteid">
+          <association label="Work Order" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount" dependantfields="siteid">
             <!--<dataprovider prefilterfunction="FilterWorkorders"/>-->
             <renderer type="lookup"/>
             <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeWorkorder"/>-->
@@ -322,7 +343,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       
         <schema id="newInvIssueDetail" mode="input" stereotype="detail">
           <field attribute="matusetransid" hidden="true"/>
-          <association label="Workorder" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount,location,assetnum">
+          <association label="Work Order" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount,location,assetnum">
             <dataprovider prefilterfunction="FilterWorkorders"/>
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterchangeworkorder"/>
@@ -338,7 +359,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>
           </association>
           <field attribute="issuetype" label="Issue Type" required="true" readonly="true" default="ISSUE"/>
-          <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit" required="true">
+          <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit" required="true">
             <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
             <renderer type="lookup"/>
           </association>
@@ -370,16 +391,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <list title="Physical Count">
           <field attribute="invbalancesid" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="widthMD=15%;widthLG=15%" />
           </field>
           <field attribute="inventory_.siteid" label="Site">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%" />
           </field>
           <field attribute="location" label="Storeroom">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%" />
           </field>
           <field attribute="binnum" label="Bin">
-            <renderer type="default" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%" />
           </field>
         </list>
         
@@ -413,19 +434,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <list title="Physical Count">
           <field attribute="invbalancesid" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="width=15%"/>
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=15%" />
           </field>
           <field attribute="inventory_.siteid" label="Site">
-            <renderer type="default" params="width=15%"/>
+            <renderer type="default"  />
           </field>
           <field attribute="location" label="Storeroom">
-            <renderer type="default" params="width=16%"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=20%" />
           </field>
           <field attribute="binnum" label="Bin">
-            <renderer type="default" params="width=15%"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%" />
           </field>
           <field attribute="physcnt" label="Physical Count">
-            <renderer type="default" params="width=15%"/>
+            <renderer type="default" params="widthXS=30%;widthSM=20%" />
           </field>
         </list>
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
@@ -453,11 +474,73 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </schemas>
     </application>
 
-    
-
+    <application name="reservedMaterials" entity="invreserve" title="Reserved Materials">
+      <schemas>
+        <list>
+          <field attribute="wonum" label="Work Order">
+            <renderer type="default" params="width=11%"/>
+          </field>
+          <field attribute="asset" label="Asset">
+            <renderer type="default" params="width=11%"/>
+          </field>
+          <field attribute="location" label="location">
+            <renderer type="default" params="width=11%"/>
+          </field>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="width=11%"/>
+          </field>
+          <field attribute="siteid" label="Site">
+            <renderer type="default" params="width=11%"/>
+          </field>
+          <field attribute="reservedqty" label="Reserved Quantity">
+            <renderer type="default" params="width=11%"/>
+          </field>
+          <field attribute="actualqty" label="Quantity Issued">
+            <renderer type="default" params="width=11%"/>
+          </field>
+          <field attribute="location" hidden="true"/>
+        </list>
+        
+        <schema id="detail" mode="input">
+          <field attribute="invreserveid" hidden="true"/>
+          <field attribute="requireddate" hidden="true"/>
+          <field attribute="requestnum" hidden="true"/>
+          <field attribute="itemsetid" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="rowstamp" label="Row Stamp" hidden="true"/>
+          <field attribute="wonum" label="Work Order" readonly="true"/>
+          <field attribute="assetnum" label="Asset" readonly="true"/>
+          <field attribute="issueto" label="Issue To" readonly="true"/>
+          <field attribute="tostoreloc" label="Location" readonly="true"/>
+          <field attribute="glaccount" label="GL Account" readonly="true"/>
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="location" label="Storeroom" readonly="true"/>
+          <field attribute="reservedqty" label="Reserved Quantity" readonly="true"/>
+          <field attribute="actualqty" label="Quantity Issued" readonly="true" hidden="true"/>
+          <optionfield attribute="#frombin" label="From Bin" providerattribute="_AvailableBins">
+            <event type="afterchange" service="inventoryService" method="afterChangeInvreserveFromBin"/>
+            <renderer type="AUTOCOMPLETECLIENT"/>
+          </optionfield>
+          <optionfield attribute="#fromlot" label="From Lot" providerattribute="_AvailableLots" dependantfields="#frombin">
+            <event type="afterchange" service="inventoryService" method="afterChangeInvreserveFromLot"/>
+            <renderer type="AUTOCOMPLETECLIENT"/>
+          </optionfield>
+          <field attribute="#curbal" label="Current Balance" readonly="true"/>
+          <field attribute="#issueqty" label="Issue Quantity">
+            <renderer type="numericinput" params="min=1;max=@reservedqty;"/>
+            <event type="afterchange" service="inventoryService" method="afterChangeIssueQuantity"/>
+          </field>
+          <event type="onload" service="inventoryService" method="onloadReservation"/>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <command id="saveIssue" icon="fa fa-save" label="Submit" service="inventoryService" method="submitReservedInventoryIssue" position="left" parameters="schema,datamap"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
   </applications>
-
-
-
-
 </metadata>

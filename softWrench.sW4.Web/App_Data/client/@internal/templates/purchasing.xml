@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
+
+  <entities>
+    <entity name="po" idAttribute="ponum">
+      <relationships>
+        <relationship to="synonymdomain" qualifier="postatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="POSTATUS" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="synonymdomain" qualifier="potype">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="POTYPE" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="currency" qualifier="currency" collection="true">
+          <relationshipAttribute from="currencycode" to="currencycode" primary="true"/>
+        </relationship>
+        <relationship to="companies" qualifier="companies" collection="true">
+          <relationshipAttribute from="vendor" to="company" primary="true"/>
+          <relationshipAttribute to="type" literal="V" quoteLiteral="true"/>
+        </relationship>
+        <relationship to ="poline" qualifier="poline" collection ="true">
+          <relationshipAttribute from="ponum" to="ponum" primary="true"/>
+        </relationship>
+        <relationship to="matrectrans" qualifier="matrectrans" collection="true">
+          <relationshipAttribute from="ponum" to ="ponum" primary="true"/>
+          <relationshipAttribute from="siteid" to ="siteid"/>
+          <relationshipAttribute from ="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWPO" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BasePurchaseOrderCrudConnector" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="poline" idAttribute="polinenum">
+      <relationships>
+        <relationship to ="item">
+          <relationshipAttribute from ="itemnum" to="itemnum" primary="true"/>
+        </relationship>
+        <relationship to="matrectrans" qualifier="matrectrans" collection="true">
+          <relationshipAttribute from="ponum" to="ponum" primary="true"/>
+          <relationshipAttribute from="polinenum" to="polinenum"/>
+        </relationship>
+      </relationships>
+    </entity>
+  </entities>
+
+  <applications>
+    <application entity="po" name="po" title="Puchase Orders">
+      <properties>
+        <property key ="mobile.disabled" value="true"/>
+      </properties>
+      <schemas>
+        <list title="Purchase Order Grid">
+          <field attribute ="ponum" label="PO">
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
+          </field>
+          <field attribute ="description" label="Description">
+            <renderer type="default" params="excelwidth=50"/>
+          </field>
+          <field attribute ="status" label="Status">
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%" />
+          </field>
+          <field attribute ="siteid" label="Site">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute ="potype" label="Type">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=10%" />
+          </field>
+          <field attribute ="priority" label="Priority">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=10%;widthLG=10%" />
+          </field>
+          <field attribute ="requireddate" label="Required Date">
+            <renderer type="datetime" params="widthXS=-1%;widthSM=20%;widthMD=15%;format=MM/dd/yyyy HH:mm;showtime=false"/>
+          </field>
+          <field attribute ="totalcost" label="Total Cost">
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%" />
+          </field>
+          <field attribute="receipts" hidden="true"/>
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+          </properties>
+        </list>
+
+        <schema id ="editdetail" title="PO Details"  stereotype="detail">
+
+          <field attribute="ponum" label="PO #:" readonly="true"/>
+          <field attribute="description" label="Description:">
+            <renderer type="richtext"/>
+          </field>
+          <field attribute="siteid" hidden="true" />
+
+          <association label="Type:" target="type" labelfield="potype_.description">
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="priority" label="Priority:">
+            <renderer type="default" params="placeholder=Please enter a value from 0-9"/>
+          </field>
+          <field attribute="orderdate" label="Date:" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+          <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
+          <section id="requireddate" resourcepath="/Content/Templates/samelinepickers.html"
+                         parameters="joinattribute=requireddate;">
+            <header label="Required Date:" displacement="sameline"/>
+          </section>
+          <!--<association label="Currency:" target="currencycode" labelfield="currency_.description">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Vendor:" target="vendor" labelfield="companies_.name" extraprojectionvalues="phone">
+            <renderer type="lookup" params="application=companies;schemaId=companiesLookupList;"/>
+          </association>-->
+          <field attribute="companies_.phone" label="Phone:"/>
+
+          <composition relationship="poline" label="PO Lines" >
+            <collectionproperties allowupdate="true" allowcreation="true"/>
+          </composition>
+        </schema>
+
+        <!--<schema id="editdetail" parentschema="adetail" title="Purchase Order Detail">
+          <section id="siteidsection">
+            <field attribute="ponum" label="PO #:" readonly="true" required="true"/>
+            <field label="Site:" attribute="siteid" readonly="true"/>
+          </section>
+          <section id="statussection">
+            <association label="Status:" target="status" labelfield="postatus.description" required="true">
+              <renderer type="combo" />
+            </association>
+          </section>
+          <section id="compositions">
+            <composition relationship="poline" label="PO Lines" ></composition>
+          </section>
+        </schema>-->
+      </schemas>
+    </application>
+
+    <application name="poline" entity="poline" title="PO Lines">
+      <properties>
+        <!--will need to change the icon later-->
+        <property key ="icon.composition.tab" value="fa fa-tags"/>
+      </properties>
+      <schemas>
+
+        <schema id="list" stereotype="compositionlist">
+          <!--<properties>
+            -->
+          <!--<property key="list.click.popup" value="modal"/>-->
+          <!--
+          </properties>-->
+
+          <field attribute="ponum" label="PO No" readonly="true"/>
+          <field attribute="polinenum" label="Line No" />
+          <field attribute="itemnum" label="Item"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="orderqty" label="Quantity"/>
+          <field attribute="unitcost" label="Unit Cost"/>
+          <field attribute="gldebitacct" hidden="true"/>
+          <field attribute="siteid" hidden="true" />
+          <field attribute="orgid" hidden="true" />
+          <field attribute="itemsetid" hidden="true"/>
+          <field attribute="linetype" hidden="true"/>
+          <field label="Entered Date &amp; Time" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          <section resourcepath="/Content/Templates/otb/receiving.html"/>
+          <commandbars>
+            <commandgroup position="compositiontop" removeundeclared="false">
+              <command id ="Complete" icon="fa-thumbs-o-up" service="poreceivingService" method="completeReceipts" label="Complete Receipts" parameters="schema,datamap,parentdata" />
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+        <detail stereotype="compositiondetail">
+          <field attribute="ponum" label="PO Num:" readonly="true"/>
+          <field attribute="itemnum" label="Item:" readonly="true"/>
+          <field attribute="#qtydue" label="Quantity Due:" readonly="true"/>
+          <field attribute="#qtytoreceive" label="Quantity to Receive:">
+            <renderer type="numericinput" params="min=1;max=@#qtydue;"/>
+          </field>
+          <commandbars>
+
+            <commandgroup position="detailform" removeundeclared="true">
+              <command id="Receive" icon="fa-save" service="poreceivingService" method="submitMatrecTrans" label="Submit" tooltip="Submit" parameters="schema,datamap"/>
+              <command id="cancel" icon="fa-backward" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>
+            </commandgroup>
+          </commandbars>
+        </detail>
+
+      </schemas>
+    </application>
+  </applications>
+
+</metadata>

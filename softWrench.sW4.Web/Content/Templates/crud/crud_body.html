@@ -1,11 +1,18 @@
 <div>
     <section class="container" ng-if="isList">
         <crud-list datamap="datamap"
-                   schema="schema"
-                   pagination-data="paginationdata"
-                   search-data="searchData"
-                   search-operator="searchOperator"
-                   search-sort="searchSort" />
+                           schema="schema"
+                           pagination-data="paginationdata"
+                           search-data="searchData"
+                           search-operator="searchOperator"
+                           search-sort="searchSort"
+                           is-list="isList" />
+        <!--        <crud-list datamap="datamap"-->
+        <!--                   schema="schema"-->
+        <!--                   pagination-data="paginationdata"-->
+        <!--                   search-data="searchData"-->
+        <!--                   search-operator="searchOperator"-->
+        <!--                   search-sort="searchSort" />-->
     </section>
 
     <form id="crudbodyform" class="form-horizontal" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" method="post" enctype="multipart/form-data" ng-if="isDetail">
@@ -15,21 +22,21 @@
                 <div class="well well-sm ticketid">
                     <h5>{{schema.idDisplayable}} {{request(datamap,schema)}}&emsp;Summary: {{datamap.fields.description}}</h5>
                 </div>
-             </div>
+            </div>
 
             <div ng-switch-when="true" class="hiddenonprint detail-body">
                 <div class="detail-header clearfix">
                     <ul class="nav nav-tabs compositiondetailtab hapag-composition">
                         <li class="active">
-                            <a href="#main" data-toggle="tab" ng-click="setActiveTab(null)"><i class="fa fa-file-text-o"></i> {{schema.title}}</a>
+                            <a href="#main" data-tabid="{{main}}" ng-click=" setactivetab(null)"><i class="fa fa-file-text-o"></i> {{schema.title}}</a>
                         </li>
-                        <li ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type">
+                        <li ng-repeat="tab in tabsDisplayables(schema)" ng-switch on="tab.type" tabsrendered>
                             <a ng-switch-when="ApplicationCompositionDefinition"
-                               ng-href="#{{tab.tabId}}" data-toggle="tab" ng-show="!composition.hidden" ng-click="setActiveTab(tab.tabId)">
+                               ng-href="#{{tab.tabId}}" data-tabid="{{tab.tabId}}" ng-show="!composition.hidden" ng-click="setActiveTab(tab.tabId)">
                                 <i class="{{getTabIcon(tab)}}"></i> {{i18N(tab.tabId + '._title',tab.label)}}
                             </a>
                             <a ng-switch-when="ApplicationTabDefinition"
-                               ng-href="#{{tab.tabId}}" data-toggle="tab" ng-show="!composition.hidden" ng-click="setActiveTab(tab.tabId)">
+                               ng-href="#{{tab.tabId}}" ng-show="!composition.hidden" ng-click="setActiveTab(tab.tabId)" data-tabid="{{tab.tabId}}">
                                 <i class=" {{tab.icon}}">
                                 </i>
                                 {{i18NTabLabel(tab)}}
@@ -38,7 +45,7 @@
                     </ul>
                     <div class="buttons" ng-if="isNotHapagTest()" ng-show="!disableNavigationButtons(schema)">
                         <button type="button" class="btn btn-primary" ng-click="toConfirmCancel(previousdata,previousschema)" rel="tooltip" data-original-title="Back"><i class="glyphicon ng-scope glyphicon-backward"></i></button>
-                        <button type="button" class="btn btn-primary" ng-click="crawl(0)" rel="tooltip" data-original-title="Previous"><i class ="fa fa-arrow-left"></i></button>
+                        <button type="button" class="btn btn-primary" ng-click="crawl(0)" rel="tooltip" data-original-title="Previous"><i class="fa fa-arrow-left"></i></button>
                         <button type="button" class="btn btn-primary" ng-click="crawl(1)" rel="tooltip" data-original-title="Next"><i class="fa fa-arrow-right"></i></button>
                     </div>
                 </div>
@@ -46,71 +53,70 @@
                     <div class="tab-pane active" id="main">
                         <ng-switch on="schema.mode">
                             <!--<div ng-if="isNotHapagTest()">
-                                <button type="button" class="btn btn-primary" ng-click="toConfirmCancel(previousdata,previousschema)">Back</button>
-                            </div>-->
+                                    <button type="button" class="btn btn-primary" ng-click="toConfirmCancel(previousdata,previousschema)">Back</button>
+                                </div>-->
                             <div ng-switch-when="input">
-                                <crud-input 
-                                            extraparameters="extraparameters"
-                                            elementid="crudInputMainComposition"
-                                            schema="schema" datamap="datamap.fields"
-                                            original-datamap="originalDatamap.fields"
-                                            is-dirty="isDirty"
-                                            association-options="associationOptions"
-                                            association-schemas="associationSchemas"
-                                            blockedassociations="blockedassociations"
-                                            displayables="schema.displayables"
-                                            cancelfn="toConfirmCancel(data,schema)"
-                                            savefn="save(selecteditem, parameters)"
-                                            previousschema="previousschema" previousdata="previousdata" />
+                                <crud-input-wrapper extraparameters="extraparameters"
+                                                    elementid="crudInputMainComposition"
+                                                    schema="schema" datamap="datamap.fields"
+                                                    original-datamap="originalDatamap.fields"
+                                                    is-dirty="isDirty"
+                                                    association-options="associationOptions"
+                                                    association-schemas="associationSchemas"
+                                                    blockedassociations="blockedassociations"
+                                                    displayables="schema.displayables"
+                                                    cancelfn="toConfirmCancel(data,schema)"
+                                                    savefn="save(selecteditem, parameters)"
+                                                    previousschema="previousschema" previousdata="previousdata"
+                                                    is-main-tab='true' tabid="main" />
 
                             </div>
                             <div ng-switch-when="output">
-                                <crud-output extraparameters="extraparameters"
-                                             schema="schema" datamap="datamap.fields"
-                                             displayables="schema.displayables"
-                                             cancelfn="toListSchema(data,schema)" previousschema="previousschema" previousdata="previousdata" />
+                                <crud-output-wrapper extraparameters="extraparameters"
+                                                     schema="schema" datamap="datamap.fields"
+                                                     displayables="schema.displayables"
+                                                     cancelfn="toListSchema(data,schema)" previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="main" />
                             </div>
                         </ng-switch>
                     </div>
                     <div class="tab-pane" ng-repeat="tab in tabsDisplayables(schema)" id="{{tab.tabId}}" ng-switch on="tab.type">
                         <div ng-switch-when="ApplicationCompositionDefinition" ng-switch on="tab.collection">
                             <div ng-switch-when="true" class="hiddenonprint">
-                                <composition-list title="{{i18N(tab.schema.schemas.detail.applicationName + '._title',tab.label)}}"
-                                                  compositionschemadefinition="tab.schema"
-                                                  relationship="{{tab.relationship}}"
-                                                  compositiondata="datamap.fields[tab.relationship]"
-                                                  parentschema="schema"
-                                                  parentdata="datamap"
-                                                  cancelfn="toListSchema(data,schema)"
-                                                  previousschema="previousschema" previousdata="previousdata"></composition-list>
+                                <composition-list-wrapper parentschema="schema"
+                                                          parentdata="datamap"
+                                                          cancelfn="toListSchema(data,schema)"
+                                                          previousschema="previousschema" previousdata="previousdata"
+                                                          metadata="tab"
+                                                          tabid="{{tab.tabId}}" />
                             </div>
                             <div ng-switch-when="false">
                             </div>
                         </div>
                         <div class="tab-pane" ng-switch-when="ApplicationTabDefinition" ng-switch on="schema.mode">
                             <div ng-switch-when="input">
-                                <crud-input extraparameters="extraparameters"
-                                            elementid="tab_{{tab.tabid}}"
-                                            displayables="tab.displayables"
-                                            schema="schema" datamap="datamap.fields"
-                                            association-options="associationOptions"
-                                            association-schemas="associationSchemas"
-                                            blockedassociations="blockedassociations"
-                                            cancelfn="toListSchema(data,schema)"
-                                            savefn="save(selecteditem, parameters)"
-                                            previousschema="previousschema" previousdata="previousdata" />
+                                <crud-input-wrapper extraparameters="extraparameters"
+                                                    elementid="tab_{{tab.tabid}}"
+                                                    displayables="tab.displayables"
+                                                    schema="schema" datamap="datamap.fields"
+                                                    association-options="associationOptions"
+                                                    association-schemas="associationSchemas"
+                                                    blockedassociations="blockedassociations"
+                                                    cancelfn="toListSchema(data,schema)"
+                                                    savefn="save(selecteditem, parameters)"
+                                                    previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}" />
                             </div>
                             <div ng-switch-when="output">
-                                <crud-output extraparameters="extraparameters"
-                                             schema="schema" datamap="datamap.fields"
-                                             displayables="tab.displayables"
-                                             cancelfn="toListSchema(data,schema)" previousschema="previousschema" previousdata="previousdata" />
+                                <crud-output-wrapper extraparameters="extraparameters"
+                                                     schema="schema" datamap="datamap.fields"
+                                                     displayables="tab.displayables"
+                                                     cancelfn="toListSchema(data,schema)" previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}" />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- the false == no tabs at all. Is this really needed?-->
+
+            <!-- the false == no tabs at all. like on a new screen-->
             <div ng-switch-when="false" class="hiddenonprint detail-body">
                 <ng-switch on="schema.mode">
                     <div ng-switch-when="input">
@@ -123,14 +129,14 @@
                                     cancelfn="toListSchema(data,schema)"
                                     displayables="schema.displayables"
                                     savefn="save(selecteditem, parameters)"
-                                    previousschema="previousschema" previousdata="previousdata" />
+                                    previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="{{tab.tabId}}" />
                     </div>
                     <div ng-switch-when="output">
                         <crud-output schema="schema"
                                      extraparameters="extraparameters"
                                      datamap="datamap.fields"
                                      displayables="schema.displayables"
-                                     cancelfn="toListSchema(data,schema)" previousschema="previousschema" previousdata="previousdata" />
+                                     cancelfn="toListSchema(data,schema)" previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="{{tab.tabId}}" />
                     </div>
                     <div ng-switch-default>
                         {{i18N('general.modeundefined','Error, mode is undefined')}}!
