@@ -32,7 +32,7 @@ body {
     float: left;
     width: 195px;
     position: fixed; /*Added fr adding scrollbar and hiding it for menu*/
-    z-index: 2;
+    z-index: 5;
 }
 
     .col-side-bar > .affix {
@@ -49,7 +49,7 @@ body {
 
     .col-main-content > .affix {
         width: 975px;
-        z-index: 100;
+        z-index: 2;
     }
 
 .printModal {
@@ -362,7 +362,7 @@ nav.hapag-topbar {
     }
 
 .affix-pagination {
-    position: fixed;
+    /*position: fixed;*/
     width: 100%;
     max-width: 1139px;
     margin-top: -2px;
@@ -751,10 +751,6 @@ textarea .readonly {
  ***********************************************************************
  ***********************************************************************/
 
-.affix-pagination {
-    top: 84px !important;
-}
-
 /******************************
  * 1024px Compatibility BEGIN *
  ******************************/
@@ -939,12 +935,12 @@ select {
 
 .affix-pagination {
     background-color: white;
-    position: fixed;
+    /*position: fixed;*/
     width: 792px;
     margin-left: -10px;
     margin-top: -2px;
     padding-top: 2px;
-    z-index: 2;
+    z-index: 3;
 }
 
 .detail-body {
