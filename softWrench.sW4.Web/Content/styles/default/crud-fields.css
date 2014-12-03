@@ -27,6 +27,10 @@ input:focus, select:focus, textarea:focus {
     z-index: 1000 !important;
 }
 
+#crudbodyform .combobox-container {
+    margin-bottom: 0;
+}
+
 .combobox-container:before, .combobox-container:after {
     content: none;
 }
