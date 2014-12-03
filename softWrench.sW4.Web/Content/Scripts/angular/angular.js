@@ -4393,9 +4393,12 @@ function Browser(window, document, $log, $sniffer) {
    * counter. If the counter reaches 0, all the `outstandingRequestCallbacks` are executed.
    */
   function completeOutstandingRequest(fn) {
-    try {
-      fn.apply(null, sliceArgs(arguments, 1));
-    } finally {
+      try {
+          var t0 = performance.now();
+          fn.apply(null, sliceArgs(arguments, 1));
+          var t1 = performance.now();
+          console.log("{0} complete outstanding req took {1}".format(moment().format("dddd hh:mm:ss:SSS a"), t1 - t0));
+      } finally {
       outstandingRequestCount--;
       if (outstandingRequestCount === 0) {
         while(outstandingRequestCallbacks.length) {
@@ -8358,6 +8361,7 @@ function $HttpProvider() {
        *  - calls $apply
        */
       function done(status, response, headersString, statusText) {
+          var t0 = performance.now();
         if (cache) {
           if (isSuccess(status)) {
             cache.put(url, [status, response, parseHeaders(headersString), statusText]);
@@ -8368,7 +8372,9 @@ function $HttpProvider() {
         }
 
         resolvePromise(response, status, headersString, statusText);
-        if (!$rootScope.$$phase) $rootScope.$apply();
+        if (!$rootScope.$$phase) { $rootScope.$apply(); }
+        var t1 = performance.now();
+        console.log("{0} done took {1}".format(moment().format("dddd hh:mm:ss:SSS a"), t1 - t0));
       }
 
 
@@ -12777,7 +12783,7 @@ function $RootScopeProvider(){
                 var t0 =performance.now();
                 $rootScope.$digest();
                 var t1 = performance.now();
-                console.log("apply took {0}".format(t1 - t0));
+                console.log("{0} apply took {1}".format(moment().format("dddd hh:mm:ss:SSS a"), t1 - t0));
             } catch (e) {
             $exceptionHandler(e);
             throw e;

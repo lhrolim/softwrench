@@ -504,6 +504,7 @@
     <Content Include="Content\Scripts\client\components\autocompleteserver.js" />
     <Content Include="Content\Scripts\client\components\autocompleteclient.js" />
     <Content Include="Content\Scripts\client\components\combodropdown.js" />
+    <Content Include="Content\Scripts\client\directives\performancetools.js" />
     <Content Include="Content\Scripts\client\makeSWAdmin.js" />
     <Content Include="Content\Scripts\client\crud_base_controller.js" />
     <Content Include="Content\Scripts\client\crud_list.js" />
