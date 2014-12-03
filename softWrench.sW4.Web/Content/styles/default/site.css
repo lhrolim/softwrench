@@ -162,46 +162,6 @@ input:focus, select:focus, textarea:focus {
     position: relative;
 }
 
-#listgrid {
-    color: #000;
-    width: 100%;
-    border-spacing: 0px;
-    margin-left: 0;
-    margin-right: 0;
-    margin-bottom: 0;
-}
-
-    #listgrid thead {
-        background-color: #fff;
-    }
-
-        #listgrid thead tr.header-row {
-            background-color: #fff;
-            color: #000;
-        }
-
-            #listgrid thead tr.header-row th {
-                cursor: pointer;
-            }
-
-        #listgrid thead tr.filter-row {
-            background-color: #fff;
-            color: #000;
-        }
-
-    #listgrid th {
-        word-break: break-word;
-    }
-
-    #listgrid td {
-        word-break: break-all;
-        word-break: break-word;
-    }
-
-        #listgrid td .input-group, #listgrid td .input-group .glyphicon {
-            position: initial;
-        }
-
 .affix-thead {
     position: fixed;
 }
