@@ -87,83 +87,59 @@
                 </tr>
             </thead>
             <tbody>
-                {{schema.IdFieldName}}
-                <tr ng-repeat="dm in datamap track by dm.fields[schema.idFieldName]" style="cursor: pointer" listtablerendered rel="hideRow" bindonce ng-init="firstrow = $first">
+                <tr ng-repeat="dm in ::datamap track by dm.fields[schema.idFieldName]" style="cursor: pointer" listtablerendered rel="hideRow" bindonce ng-init="firstrow = $first">
 
                     <!--for the first row we need to set some extra styles-->
                     <td ng-if="firstrow" ng-repeat="column in schema.displayables" bo-show="!isFieldHidden(schema,column)" ng-click="showDetail(dm,column)"
                         bo-style="{'min-width': column.rendererParameters['minwidth'],
                                 'max-width': column.rendererParameters['maxwidth'],
                                 'width': column.rendererParameters['width']}">
-                        <ng-switch on="column.rendererType">
-                            <div ng-switch-when="checkbox">
-                                <input type="checkbox"
-                                       class="check"
-                                       name="column.attribute"
-                                       value="{{option.value}}"
-                                       ng-click="toogleCheckboxSelection(option,column.associationKey,dm)"
-                                       ng-model="dm.fields['checked']"
-                                       ng-init="dm.fields['checked']=false" />
-                            </div>
-                        </ng-switch>
-                        <ng-switch on="column.type">
-                            <div ng-switch-when="ApplicationFieldDefinition">
 
-                                <ng-switch on="column.rendererType">
-                                    <div ng-switch-when="color" class="statuscolumncolor" bo-style="{'background-color':statusColor(dm.fields[column.rendererParameters['column']] || 'null',null)}">
-
-                                    </div>
-
-                                    <div ng-switch-default class="gridcolumnvalue"
-                                         bo-style="{
+                        <div ng-if="::column.rendererType == 'checkbox'">
+                            <input type="checkbox"
+                                   class="check"
+                                   name="column.attribute"
+                                   value="{{option.value}}"
+                                   ng-click="toogleCheckboxSelection(option,column.associationKey,dm)"
+                                   ng-model="dm.fields['checked']"
+                                   ng-init="dm.fields['checked']=false" />
+                        </div>
+                        <div ng-if="::column.rendererType == 'color'">
+                            <div class="statuscolumncolor" bo-style="{'background-color':statusColor(dm.fields[column.rendererParameters['column']] || 'null',null)}" />
+                        </div>
+                        <div ng-if="column.type == 'ApplicationFieldDefinition'" class="gridcolumnvalue" bo-style="{
                                          'min-width':getGridColumnStyle(column,'minwidth'),
                                          'max-width':getGridColumnStyle(column,'maxwidth'),
                                          'width':getGridColumnStyle(column,'width')
                                          }">
-                                        {{::getFormattedValue(dm.fields[column.attribute],column)}}
-                                    </div>
-                                </ng-switch>
-                            </div>
-
-                            <div ng-switch-when="ApplicationSection">
-                                <div ng-include="contextPath(column.resourcepath)" href="#" style="width: 100%"></div>
-                            </div>
-
-                        </ng-switch>
+                            {{::getFormattedValue(dm.fields[column.attribute],column)}}
+                        </div>
+                        <div ng-if="column.type == 'ApplicationSection'" class="gridcolumnvalue">
+                            <div ng-include="contextPath(column.resourcepath)" href="#" style="width: 100%"></div>
+                        </div>
                     </td>
 
                     <!--for the other rows, we do not need to evaulate some ng-style operations which improves performance especially in ff and ie... this is basically copy and paste, unfortunately-->
-                    <td ng-if="!firstrow" ng-repeat="column in schema.displayables" bo-show="!isFieldHidden(schema,column)" ng-click="showDetail(dm,column)">
-                        <ng-switch on="column.rendererType">
-                            <div ng-switch-when="checkbox">
-                                <input type="checkbox"
-                                       class="check"
-                                       name="column.attribute"
-                                       value="{{option.value}}"
-                                       ng-click="toogleCheckboxSelection(option,column.associationKey,dm)"
-                                       ng-model="dm.fields['checked']"
-                                       ng-init="dm.fields['checked']=false" />
-                            </div>
-                        </ng-switch>
-                        <ng-switch on="column.type">
-                            <div ng-switch-when="ApplicationFieldDefinition">
+                    <td ng-if="!firstrow" ng-repeat="column in ::schema.displayables" ng-show="::!isFieldHidden(schema,column)" ng-click="showDetail(dm,column)">
+                        <div ng-if="::column.rendererType == 'checkbox'">
+                            <input type="checkbox"
+                                   class="check"
+                                   name="column.attribute"
+                                   value="{{::option.value}}"
+                                   ng-click="toogleCheckboxSelection(option,column.associationKey,dm)"
+                                   ng-model="dm.fields['checked']"
+                                   ng-init="dm.fields['checked']=false" />
+                        </div>
+                        <div ng-if="::column.rendererType == 'color'">
+                            <div class="statuscolumncolor" bo-style="{'background-color':statusColor(dm.fields[column.rendererParameters['column']] || 'null',null)}" />
+                        </div>
+                        <div ng-if="::column.type == 'ApplicationFieldDefinition'" class="gridcolumnvalue">
+                            {{::getFormattedValue(dm.fields[column.attribute],column)}}
+                        </div>
 
-                                <ng-switch on="column.rendererType">
-                                    <div ng-switch-when="color" class="statuscolumncolor" bo-style="{'background-color':statusColor(dm.fields[column.rendererParameters['column']] || 'null',null)}">
-
-                                    </div>
-
-                                    <div ng-switch-default class="gridcolumnvalue">
-                                        {{::getFormattedValue(dm.fields[column.attribute],column)}}
-                                    </div>
-                                </ng-switch>
-                            </div>
-
-                            <div ng-switch-when="ApplicationSection">
-                                <div ng-include="contextPath(column.resourcepath)" href="#" style="width: 100%"></div>
-                            </div>
-
-                        </ng-switch>
+                        <div ng-if="::column.type == 'ApplicationSection'" class="gridcolumnvalue">
+                            <div ng-include="::contextPath(column.resourcepath)" href="#" style="width: 100%"></div>
+                        </div>
                     </td>
                 </tr>
             </tbody>

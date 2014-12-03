@@ -14075,7 +14075,9 @@ function $RootScopeProvider() {
        * ```
        *
        */
-      $digest: function() {
+      $digest: function () {
+       
+       
         var watch, value, last,
             watchers,
             length,
@@ -14112,8 +14114,11 @@ function $RootScopeProvider() {
           }
 
           traverseScopesLoop:
-          do { // "traverse the scopes" loop
-            if ((watchers = current.$$watchers)) {
+                do { // "traverse the scopes" loop
+                    var t0 = performance.now();
+                    
+              if ((watchers = current.$$watchers)) {
+
               // process our watches
               length = watchers.length;
               while (length--) {
@@ -14162,6 +14167,8 @@ function $RootScopeProvider() {
                 current = current.$parent;
               }
             }
+            var t1= performance.now();
+//            console.log("digest for {0} took {1} milliseconds.".format(current.$id, (t1 - t0)));
           } while ((current = next));
 
           // `break traverseScopesLoop;` takes us to here
@@ -14177,7 +14184,7 @@ function $RootScopeProvider() {
         } while (dirty || asyncQueue.length);
 
         clearPhase();
-
+        
         while (postDigestQueue.length) {
           try {
             postDigestQueue.shift()();
@@ -14185,6 +14192,7 @@ function $RootScopeProvider() {
             $exceptionHandler(e);
           }
         }
+       
       },
 
 
@@ -14391,14 +14399,18 @@ function $RootScopeProvider() {
           $exceptionHandler(e);
         } finally {
           clearPhase();
-          try {
+            try {
+            var t0 = performance.now();
             $rootScope.$digest();
-          } catch (e) {
+            var t1 = performance.now();
+            console.log("{0} apply took {1} milliseconds.".format(moment().format("dddd hh:mm:ss:SSS a"), (t1 - t0)));
+            } catch (e) {
             $exceptionHandler(e);
             throw e;
           }
         }
       },
+
 
       /**
        * @ngdoc method

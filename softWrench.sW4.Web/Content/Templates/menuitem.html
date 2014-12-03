@@ -1,13 +1,13 @@
 <li ng-switch on="leaf.type">
 
     <a id="{{::leaf.type + '_' + leaf.id}}" ng-switch-when="ActionMenuItemDefinition" rel="tooltip" data-original-title="{{::i18NMenuLabel(leaf,true)}}"
-       ng-click="doAction(leaf, null)" href="#"
+       local-click="doAction(leaf, null)" href="#"
        class="level{{::level}}">
         {{::i18NMenuLabel(leaf,false)}}
     </a>
 
     <a id="{{leaf.type + '_' + leaf.id}}" ng-switch-when="ApplicationMenuItemDefinition" rel="tooltip" data-original-title="{{::i18NMenuLabel(leaf,true)}}"
-       ng-click="goToApplication(leaf, null)" href="#"
+       local-click="goToApplication(leaf, null)" href="#"
        class="level{{::level}}">
         <i class="{{::isMenuItemTitle(leaf,false)}}"> </i>
         {{::i18NMenuLabel(leaf,false)}}
@@ -19,16 +19,16 @@
 
     <div ng-switch-when="MenuContainerDefinition" class="dropdown dropdown-container">
         
-        <button ng-if="isButtonStyleContainer(level,leaf)" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                rel="tooltip" data-original-title="{{::i18NMenuLabel(leaf,true)}}" ng-click="handleContainerClick(leaf,null)">
+        <button ng-if="::isButtonStyleContainer(level,leaf)" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                rel="tooltip" data-original-title="{{::i18NMenuLabel(leaf,true)}}" local-click="handleContainerClick(leaf,null)">
            <i class="{{::isMenuItemTitle(leaf,false)}}"> </i>
             {{::i18NMenuLabel(leaf,false)}}
             <span class="level{{::level}}" ng-class="{'right-caret': displacement == 'vertical', 'bottom-caret' : displacement == 'horizontal'}" />
          </button>
            
-        <a ng-if="!isButtonStyleContainer(level,leaf)" href="#"
+        <a ng-if="::!isButtonStyleContainer(level,leaf)" href="#"
            data-toggle="dropdown" rel="tooltip" data-original-title="{{::i18NMenuLabel(leaf,true)}}"
-           ng-click="handleContainerClick(leaf,null)" class="level{{::level}}">
+           local-click="handleContainerClick(leaf,null)" class="level{{::level}}">
             
             {{::i18NMenuLabel(leaf,false)}}
             <span class="right-caret level{{::level}}" />

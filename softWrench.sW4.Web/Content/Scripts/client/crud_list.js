@@ -139,7 +139,7 @@ app.directive('crudList', function (contextService) {
 
                 // fix status column height
                 $('.statuscolumncolor').each(function (key, value) {
-                    $(value).height($(value).parent().parent().parent().parent().parent().height());
+                    $(value).height($(value).parent().parent().parent().height());
                 });
 
                 $('[rel=tooltip]').tooltip({ container: 'body' });
