@@ -11,7 +11,7 @@
   <property key="defaultSiteId" value="BEDFORD"/>
   <property key="faqfspath" value="C:\faqAttachments\" />
   <property key="i18nrequired" value="true" />
-  <property key="list.paginationsize" value="100"/>
+  <property key="list.paginationsize" value="30"/>
   <property key="list.paginationoptions" value="10,30,100"/>
   <property key="successmessagetimeout" value="10000"/>
 
