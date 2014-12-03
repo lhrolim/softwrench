@@ -1,0 +1,92 @@
+﻿.affix-pagination {
+    width: 100%;
+    max-width: 1139px;
+}
+
+    .affix-pagination .pagination-pager a:hover {
+        text-decoration: none;
+    }
+    
+    .container .context {
+    width: 100%;
+    background: #eee;
+    border-bottom: #000 1px solid;
+    padding: 5px 20px 10px 10px;
+}
+
+    .container .context .group {
+        margin: 5px 10px 0;
+    }
+
+        .container .context .group.pagesize {
+            padding-top: 5px;
+        }
+
+        .container .context .group.pagination {
+            padding-top: 3px;
+        }
+
+        .container .context .group.total {
+            margin-top: 10px;
+        }
+
+    .container .context label {
+        font-weight: normal;
+    }
+
+@media all and (min-width: 480px) {
+    .container .context {
+        padding: 5px 20px 5px 10px;
+    }
+
+        .container .context .group {
+            float: left;
+            height: 34px;
+        }
+
+    #crudbodyform .context {
+        padding: 5px 20px 5px 5px;
+    }
+}
+
+@media all and (min-width: 768px) {
+    .container .context .hidden-xs {
+        display: inline-block !important;
+    }
+
+    .container .context .group {
+        margin: 5px 10px 0;
+    }
+
+    .container .context .right .group {
+        float: right;
+    }
+
+    .container .context .group.total {
+        height: auto;
+    }
+
+        .container .context .group.total label {
+            margin: 0;
+        }
+}
+
+@media all and (min-width: 992px) {
+    .container .context .group {
+        margin: 5px 0 0 20px;
+    }
+
+        .container .context .group:first-child {
+            margin-left: 10px;
+        }
+
+        #crudbodyform .context .group:first-child {
+            margin-left: 0;
+        }
+}
+
+@media all and (min-width: 1170px) {
+    .container .context .group.total {
+        display: block;
+    }
+}

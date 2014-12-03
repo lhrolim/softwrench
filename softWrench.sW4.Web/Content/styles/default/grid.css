@@ -1,4 +1,49 @@
-﻿#listgrid {
+﻿.advanced-filter-toogle {
+    cursor: pointer;
+    text-align: center;
+}
+
+.advanced-filter > div.advanced-filter-item {
+    float: left;
+    margin: 4px;
+    margin-right: 14px;
+}
+
+    .advanced-filter > div.advanced-filter-item .filter-label {
+        color: black;
+    }
+
+    .advanced-filter > div.advanced-filter-item .filter-input {
+        float: left;
+    }
+
+    .advanced-filter > div.advanced-filter-item div.text-input {
+        width: 150px;
+    }
+
+    .advanced-filter > div.advanced-filter-item div.datetime-input {
+        width: 140px;
+    }
+
+.input-group .glyphicon,
+.grid-filter-button {
+    cursor: pointer;
+    color: black;
+}
+
+.filter-row .grid-filter-button {
+    font-weight: bold;
+}
+
+.filter-row .dropdown {
+    text-align: left;
+}
+
+.filter-row .input-group {
+    width: 100%;
+}
+
+#listgrid {
     color: #000;
     width: 100%;
     border-spacing: 0px;
@@ -62,4 +107,14 @@
     .gridcolumnvalue {
         max-width: 100px;
     }
+}
+
+#scanConfigTable thead tr td:nth-child(1) {
+    width: 30%;
+}
+#scanConfigTable thead tr td:nth-child(2) {
+    width: 45%;
+}
+#scanConfigTable thead tr td:nth-child(3) {
+    width: 25%;
 }
