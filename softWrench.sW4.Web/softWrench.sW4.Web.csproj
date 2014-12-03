@@ -737,10 +737,14 @@
     <Content Include="Content\styles\default\application\forms.css" />
     <Content Include="Content\styles\default\application\pages.css" />
     <Content Include="Content\styles\default\branding.css" />
+    <Content Include="Content\styles\default\context-bar.css" />
+    <Content Include="Content\styles\default\crud-fields.css" />
     <Content Include="Content\styles\default\grid.css" />
     <Content Include="Content\styles\default\header.css" />
     <Content Include="Content\styles\default\media\screen.css" />
     <Content Include="Content\styles\default\modal.css" />
+    <Content Include="Content\styles\default\page-admin.css" />
+    <Content Include="Content\styles\default\page-details.css" />
     <Content Include="Content\styles\default\signin.css" />
     <Content Include="Content\styles\default\menu.css" />
     <Content Include="Content\styles\default\media\print.css" />
@@ -864,6 +868,7 @@
     <Content Include="Content\Scripts\locales\bootstrap-datetimepicker.zh-TW.js" />
     <Content Include="Content\Scripts\spin-min.js" />
     <Content Include="Content\Scripts\typeahead.js" />
+    <Content Include="Content\styles\default\tooltips.css" />
     <Content Include="Content\styles\gric\application\grids.css" />
     <Content Include="Content\styles\hapag\grid.css" />
     <Content Include="Content\styles\hapag\signin.css" />
