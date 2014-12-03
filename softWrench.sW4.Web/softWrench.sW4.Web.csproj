@@ -741,6 +741,7 @@
     <Content Include="Content\styles\default\crud-fields.css" />
     <Content Include="Content\styles\default\grid.css" />
     <Content Include="Content\styles\default\header.css" />
+    <Content Include="Content\styles\default\media\max-width.css" />
     <Content Include="Content\styles\default\media\screen.css" />
     <Content Include="Content\styles\default\modal.css" />
     <Content Include="Content\styles\default\page-admin.css" />

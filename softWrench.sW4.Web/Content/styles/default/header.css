@@ -1,7 +1,6 @@
 ﻿.container header {
     margin-left: auto !important;
     margin-right: auto !important;
-    max-width: 1139px;
     width: 100%;
     position: fixed;
 }
@@ -70,7 +69,6 @@
         }
 
     .container header .menu-grid {
-        max-width: 1139px;
         width: 100%;
     }
 
