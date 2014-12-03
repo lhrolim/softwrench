@@ -56,10 +56,12 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             return ObjectArray;
         }
 
-        //we need to locate the value from the list of association options
+        // we need to locate the value from the list of association options
         // we only have the "value" on the datamap 
         var key = associationFieldMetadata.associationKey;
+
         var listToSearch = associationOptions[key];
+
         if (listToSearch == null) {
             //if the list is lazy (ex: lookups, there´s nothing we can do, except for static option field )
             if (associationFieldMetadata.options != undefined) {
@@ -103,7 +105,9 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
         ///it only makes sense for associations which have extraprojections
         updateUnderlyingAssociationObject: function (associationFieldMetadata, underlyingValue, scope) {
 
-           
+            //if association options have no fields, we need to define it as an empty array. 
+            if (scope.associationOptions == undefined)
+                scope.associationOptions = [];
 
             var key = associationFieldMetadata.associationKey;
             var fullObject = this.getFullObject(associationFieldMetadata, scope.datamap, scope.associationOptions);
