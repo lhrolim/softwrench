@@ -478,25 +478,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       <schemas>
         <list>
           <field attribute="wonum" label="Work Order">
-            <renderer type="default" params="width=11%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
           <field attribute="asset" label="Asset">
-            <renderer type="default" params="width=11%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
           <field attribute="location" label="location">
-            <renderer type="default" params="width=11%"/>
+            <renderer type="default" params="width=16%"/>
           </field>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="width=11%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
           <field attribute="siteid" label="Site">
-            <renderer type="default" params="width=11%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
-          <field attribute="reservedqty" label="Reserved Quantity">
-            <renderer type="default" params="width=11%"/>
+          <field attribute="reservedqty" label="Reserved">
+            <renderer type="default" params="hidefilter=true;width=8%"/>
           </field>
-          <field attribute="actualqty" label="Quantity Issued">
-            <renderer type="default" params="width=11%"/>
+          <field attribute="actualqty" label="Issued">
+            <renderer type="default" params="hidefilter=true;width=8%"/>
+          </field>
+          <field attribute="availablequantity" label="Available">
+            <renderer type="default" params="hidefilter=true;width=8%;"/>
           </field>
           <field attribute="location" hidden="true"/>
         </list>
