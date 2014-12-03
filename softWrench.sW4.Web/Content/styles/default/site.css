@@ -18,7 +18,6 @@ body {
 .container {
     padding: 0;
     width: 100%;
-    max-width: 1139px;
 }
 
 .content .container {
@@ -56,16 +55,7 @@ body {
 
     .alignment-logo img {
         vertical-align: middle;
-    }
-
-.affix-pagination {
-    width: 100%;
-    max-width: 1139px;
-}*/
-
-    .affix-pagination .pagination-pager a:hover {
-        text-decoration: none;
-    }
+    }*/
 
 .divAuxTable {
     z-index: 990;
@@ -200,7 +190,6 @@ body {
     messagesection .alerts {
         position: fixed;
         width: 100%;
-        max-width: 1139px;
     }
 
     .affix-pagination {
@@ -209,7 +198,6 @@ body {
 
     .listgrid-thead {
         position: fixed;
-        max-width: 1139px;
         width: 100%;
     }
 }
@@ -229,7 +217,7 @@ body {
     z-index: 1000;
     margin-left: auto !important;
     margin-right: auto !important;
-    max-width: 1139px;
+    /*max-width: 1139px;*/
     width: 100%;
 }
 /*SUCCESS MESSAGE - END */

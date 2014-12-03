@@ -78,7 +78,7 @@ textarea .readonly {
 }
 
 .richtext .ta-editor {
-    max-width: 859px; /*add max-width to stop richtext from moving off the screen horizontally*/
+    /*max-width: 859px;*/ /*add max-width to stop richtext from moving off the screen horizontally*/
 }
 
     .richtext .ta-editor p {
