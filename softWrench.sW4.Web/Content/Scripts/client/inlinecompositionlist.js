@@ -8,28 +8,24 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
         replace: true,
         template: "<div></div>",
         scope: {
-            compositionschemadefinition: '=',
-            compositiondata: '=',
             iscollection: '=',
             parentdata: '=',
             metadata: '=',
-            mode: '@',
-            previousdata: '=',
-            previousschema: '='
+            mode: '@'
         },
 
         link: function (scope, element, attrs) {
 
-            var doLoad = function () {
+            var doLoad = function() {
                 scope.compositionschemadefinition = scope.metadata.schema;
                 scope.compositiondata = scope.parentdata[scope.metadata.relationship];
                 element.append(
                     "<inline-composition-list parentdata='parentdata'" +
-                             "metadata='metadata' iscollection='iscollection' compositionschemadefinition='compositionschemadefinition' compositiondata='compositiondata' mode='mode' previousdata='previousdata' previousschema='previousschema'/>"
+                    "metadata='metadata' iscollection='iscollection' compositionschemadefinition='compositionschemadefinition' compositiondata='compositiondata' mode='mode'/>"
                 );
                 $compile(element.contents())(scope);
                 scope.loaded = true;
-            }
+            };
 
 
             doLoad();
@@ -57,9 +53,7 @@ app.directive('inlineCompositionList', function (contextService) {
             iscollection: '=',
             compositionschemadefinition: '=',
             compositiondata: '=',
-            mode: '@',
-            previousdata: '=',
-            previousschema: '='
+            mode: '@'
         },
 
         controller: function ($scope, $filter, $http, $element, $rootScope, tabsService) {

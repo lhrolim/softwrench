@@ -48,10 +48,9 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 return;
             }
 
-            var user = SecurityFacade.CurrentUser();
             var commaSeparatedIds = string.Join(",", matusetransidlist);
             var query = MaxDAO.FindByNativeQuery(
-                String.Format("SELECT issueid, sum(quantity) FROM matusetrans WHERE issueid in ({0}) and siteid='{1}' group by issueid having sum(quantity) > 0",commaSeparatedIds,user.SiteId));
+                String.Format("SELECT issueid, sum(quantity) FROM matusetrans WHERE issueid in ({0}) group by issueid having sum(quantity) > 0",commaSeparatedIds));
 
             if (query == null) { 
                 return;
@@ -65,13 +64,20 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             //Quantity returned is set to 0 if no match is found (i.e. no items have been returned to the issue)
             foreach (var attributeHolder in datamap) {
                 var matusetransid = attributeHolder.GetAttribute("MATUSETRANSID");
-                foreach (var record in query) {
-                    if (record["issueid"] == matusetransid.ToString()) {
-                        double qtyReturned;
-                        var anyReturned = Double.TryParse(record[""], out qtyReturned);
-                        attributeHolder.SetAttribute("QTYRETURNED", anyReturned ? qtyReturned : 0);
+
+                var matusetransRecord = (from record in query
+                    where record["issueid"] == matusetransid.ToString()
+                    select record).SingleOrDefault();
+
+                var qtyReturned = 0.0;
+                if (matusetransRecord != null) {
+                    var qtyReturnedString = "";
+                    if (matusetransRecord.TryGetValue("", out qtyReturnedString)) { 
+                        qtyReturned = Double.Parse(qtyReturnedString);
                     }
                 }
+
+                attributeHolder.SetAttribute("QTYRETURNED", qtyReturned);
             }
         }
 

@@ -552,6 +552,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 return;
             }
 
+            var lotnum = parameters['fields']['invuseline_.fromlot'];
             var binnum = parameters['fields']['invuseline_.frombin'];
             var searchData = {
                 itemnum: parameters['fields']['invuseline_.itemnum'],

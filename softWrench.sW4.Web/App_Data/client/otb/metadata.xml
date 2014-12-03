@@ -965,6 +965,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <event type="afterchange" service="inventoryService" method="invUse_afterChangeFromBin"/>
             <renderer type="lookup"/>
           </association>
+          <optionfield attribute="invuseline_.fromlot" label="From Lot" providerattribute="_AvailableLots" dependantfields="invuseline_.frombin">
+            <event type="afterchange" service="inventoryService" method="afterChangeInvreserveFromLot"/>
+            <renderer type="AUTOCOMPLETECLIENT"/>
+          </optionfield>
           <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>
           <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" required="true">
