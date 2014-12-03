@@ -483,7 +483,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="asset" label="Asset">
             <renderer type="default" params="width=15%"/>
           </field>
-          <field attribute="location" label="location">
+          <field attribute="location" label="Location">
             <renderer type="default" params="width=16%"/>
           </field>
           <field attribute="itemnum" label="Item">
