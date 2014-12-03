@@ -90,7 +90,7 @@
                 <tr ng-repeat="dm in datamap track by dm.fields[schema.idFieldName]" style="cursor: pointer" listtablerendered rel="hideRow" bindonce ng-init="firstrow = $first">
 
                     <!--for the first row we need to set some extra styles-->
-                    <td ng-if="firstrow" ng-repeat="column in schema.displayables" bo-show="!isFieldHidden(schema,column)" ng-click="showDetail(dm,column)"
+                    <td ng-if="firstrow" ng-repeat="column in schema.displayables" bo-show="!isFieldHidden(schema,column)" local-click="showDetail(dm,column)"
                         bo-style="{'min-width': column.rendererParameters['minwidth'],
                                 'max-width': column.rendererParameters['maxwidth'],
                                 'width': column.rendererParameters['width']}">
@@ -120,7 +120,7 @@
                     </td>
 
                     <!--for the other rows, we do not need to evaulate some ng-style operations which improves performance especially in ff and ie... this is basically copy and paste, unfortunately-->
-                    <td ng-if="!firstrow" ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)" ng-click="showDetail(dm,column)">
+                    <td ng-if="!firstrow" ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)" local-click="showDetail(dm,column)">
                         <div ng-if="column.rendererType == 'checkbox'">
                             <input type="checkbox"
                                    class="check"
