@@ -18,30 +18,30 @@
         </span>
         <span class="pagination-pager">
             <a ng-click="selectPage(1)" href="#">
-                <img ng-src="{{contextPath('/Content/Images/first.png')}}" alt="first" />
+                <img ng-src="{{::contextPath('/Content/Images/first.png')}}" alt="first" />
             </a>
             <a ng-click="previousPage()" href="#">
-                <img ng-src="{{contextPath('/Content/Images/previous.png')}}" alt="previous" />
+                <img ng-src="{{::contextPath('/Content/Images/previous.png')}}" alt="previous" />
             </a>
             <label>{{i18N('_grid.pagination.page','Page')}}: </label>
             <input type="text" ng-model="paginationData.pageNumber" ng-change="selectPage(paginationData.pageNumber)" style="width: 25px !important; text-align: center" />
             <label>{{i18N('_grid.pagination.of','of')}} {{paginationData.pageCount}}</label>
             <a ng-click="nextPage()" href="#">
-                <img ng-src="{{contextPath('/Content/Images/next.png')}}" alt="next" />
+                <img ng-src="{{::contextPath('/Content/Images/next.png')}}" alt="next" />
             </a>
             <a ng-click="selectPage(paginationData.pageCount)" href="#">
-                <img ng-src="{{contextPath('/Content/Images/last.png')}}" alt="last" />
+                <img ng-src="{{::contextPath('/Content/Images/last.png')}}" alt="last" />
             </a>
         </span>
         <span ng-if="isHapag()" class="pagination-actions">
             <a ng-click="exportToPrint()" href="#" rel="tooltip" data-original-title="{{i18N('_grid.pagination.actions.print','Print')}}" ng-hide="disablePrint">
-                <img ng-src="{{contextPath('/Content/Images/print_small.gif')}}" alt="print" />
+                <img ng-src="{{::contextPath('/Content/Images/print_small.gif')}}" alt="print" />
             </a>
             <a ng-click="exportToExcel()" href="#" rel="tooltip" data-original-title="{{i18N('_grid.pagination.actions.excel','Export to Excel')}}" ng-hide="disableExport">
-                <img ng-src="{{contextPath('/Content/Images/excel_small.gif')}}" alt="excel" />
+                <img ng-src="{{::contextPath('/Content/Images/excel_small.gif')}}" alt="excel" />
             </a>
             <a ng-click="selectPage(1)" href="#" rel="tooltip" data-original-title="{{i18N('_grid.pagination.actions.refresh','Refresh content')}}">
-                <img ng-src="{{contextPath('/Content/Images/refresh_sm.gif')}}" alt="refresh" />
+                <img ng-src="{{::contextPath('/Content/Images/refresh_sm.gif')}}" alt="refresh" />
             </a>
         </span>
     </div>

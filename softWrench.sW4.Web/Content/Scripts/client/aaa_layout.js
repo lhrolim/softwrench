@@ -1,4 +1,6 @@
-﻿var app = angular.module('sw_layout', ['pasvaz.bindonce', 'angularTreeview', 'ngSanitize']);
+﻿var app = angular.module('sw_layout', ['pasvaz.bindonce', 'angularTreeview', 'ngSanitize']).config(function ($controllerProvider) {
+    $controllerProvider.allowGlobals()
+});
 
 
 app.filter('linebreak', function () {
@@ -76,6 +78,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
     $rootScope.$on('sw_ajaxend', function (data) {
         if (spin != undefined) {
+            $log.getInstance("layoutcontroller#onajaxend").debug('stop spinning due to success ajax');
             spin.stop();
             $rootScope.showingspin = false;
         }
@@ -85,6 +88,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
     $rootScope.$on('sw_ajaxerror', function (data) {
         if (spin != undefined) {
+            $log.getInstance("layoutcontroller#onajaxerror").debug('stop spinning due to error ajax');
             spin.stop();
         }
         $rootScope.savingMain = undefined;

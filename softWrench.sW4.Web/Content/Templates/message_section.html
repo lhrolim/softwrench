@@ -17,7 +17,7 @@
 
     <div id="diverrormessagedetail" class="alert alert-danger" ng-show="$root.hasErrorDetail">
         <a class="close" ng-click="removeAlert()">x</a>
-        <img ng-src="{{contextPath('/Content/Images/1386143956_info.png')}}" alt="details" ng-click="openModal()" />
+        <img ng-src="{{::contextPath('/Content/Images/1386143956_info.png')}}" alt="details" ng-click="openModal()" />
         <span class="col-lg-offset-2">{{i18N('general.error','Error')}} {{errorMsg}}.
         </span>
     </div>
@@ -25,7 +25,7 @@
 
     <div id="diverrormessagelist" class="alert alert-danger topMessageAux affix-thead" ng-show="$root.hasErrorList" style="height: 62px;">
         <a class="close" ng-click="removeAlert()">x</a>
-        <img ng-src="{{contextPath('/Content/Images/1386143956_info.png')}}" alt="details" ng-click="openModal()" />
+        <img ng-src="{{::contextPath('/Content/Images/1386143956_info.png')}}" alt="details" ng-click="openModal()" />
         <span class="col-lg-offset-2">{{i18N('general.error','Error')}} {{errorMsg}}.
         </span>
     </div>

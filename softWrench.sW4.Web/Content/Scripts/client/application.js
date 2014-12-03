@@ -24,10 +24,15 @@ app.directive('listtablerendered', function ($timeout, $log, menuService) {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
-            $log.getInstance('application_dir#bodyrendered').trace('list table rendered');
+            var log = $log.getInstance('application_dir#bodyrendered');
+            if (scope.$first) {
+                log.debug('init list table rendered');
+            } else {
+                log.trace('list table rendered');
+            }
             if (scope.$last === true || scope.datamap.length == 0) {
                 $timeout(function () {
-                    $log.getInstance('application_dir#bodyrendered').debug('list table rendered will get dispatched');
+                    log.debug('list table rendered will get dispatched');
                     //                    menuService.adjustHeight();
                     scope.$emit('listTableRenderedEvent');
                 });
