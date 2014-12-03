@@ -12773,9 +12773,12 @@ function $RootScopeProvider(){
           $exceptionHandler(e);
         } finally {
           clearPhase();
-          try {
-            $rootScope.$digest();
-          } catch (e) {
+            try {
+                var t0 =performance.now();
+                $rootScope.$digest();
+                var t1 = performance.now();
+                console.log("apply took {0}".format(t1 - t0));
+            } catch (e) {
             $exceptionHandler(e);
             throw e;
           }
