@@ -47,7 +47,7 @@
                                     <span class="input-group-addon " data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}"><i class="glyphicon glyphicon-calendar"></i></span>
 
                                     <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                    The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                        The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                     <div class="input-group-addon dropdown">
                                         <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                               data-toggle="dropdown" rel="tooltip"
@@ -66,7 +66,7 @@
                                     <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
                                            ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" />
                                     <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                    The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                        The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                     <div class="input-group-addon dropdown">
                                         <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                               data-toggle="dropdown" rel="tooltip"
@@ -86,61 +86,7 @@
                     </th>
                 </tr>
             </thead>
-            <tbody>
-                <tr ng-repeat="dm in datamap track by dm.fields[schema.idFieldName]" style="cursor: pointer" listtablerendered rel="hideRow" bindonce ng-init="firstrow = $first">
-
-                    <!--for the first row we need to set some extra styles-->
-                    <td ng-if="firstrow" ng-repeat="column in schema.displayables" bo-show="!isFieldHidden(schema,column)" local-click="showDetail(dm,column)"
-                        bo-style="{'min-width': column.rendererParameters['minwidth'],
-                                'max-width': column.rendererParameters['maxwidth'],
-                                'width': column.rendererParameters['width']}">
-
-                        <div ng-if="column.rendererType == 'checkbox'">
-                            <input type="checkbox"
-                                   class="check"
-                                   name="column.attribute"
-                                   value="{{option.value}}"
-                                   ng-click="toogleCheckboxSelection(option,column.associationKey,dm)"
-                                   ng-model="dm.fields['checked']"
-                                   ng-init="dm.fields['checked']=false" />
-                        </div>
-                        <div ng-if="column.rendererType == 'color'">
-                            <div class="statuscolumncolor" bo-style="{'background-color':statusColor(dm.fields[column.rendererParameters['column']] || 'null',null)}" />
-                        </div>
-                        <div ng-if="column.type == 'ApplicationFieldDefinition'" class="gridcolumnvalue" bo-style="{
-                                         'min-width':getGridColumnStyle(column,'minwidth'),
-                                         'max-width':getGridColumnStyle(column,'maxwidth'),
-                                         'width':getGridColumnStyle(column,'width')
-                                         }">
-                            {{getFormattedValue(dm.fields[column.attribute],column)}}
-                        </div>
-                        <div ng-if="column.type == 'ApplicationSection'" class="gridcolumnvalue">
-                            <div ng-include="contextPath(column.resourcepath)" href="#" style="width: 100%"></div>
-                        </div>
-                    </td>
-
-                    <!--for the other rows, we do not need to evaulate some ng-style operations which improves performance especially in ff and ie... this is basically copy and paste, unfortunately-->
-                    <td ng-if="!firstrow" ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)" local-click="showDetail(dm,column)">
-                        <div ng-if="column.rendererType == 'checkbox'">
-                            <input type="checkbox"
-                                   class="check"
-                                   name="column.attribute"
-                                   value="{{option.value}}"
-                                   ng-click="toogleCheckboxSelection(option,column.associationKey,dm)"
-                                   ng-model="dm.fields['checked']"
-                                   ng-init="dm.fields['checked']=false" />
-                        </div>
-                        <div ng-if="column.rendererType == 'color'" class="statuscolumncolor" bo-style="{'background-color':statusColor(dm.fields[column.rendererParameters['column']] || 'null',null)}" />
-                        <div ng-if="column.type == 'ApplicationFieldDefinition'" class="gridcolumnvalue">
-                            {{getFormattedValue(dm.fields[column.attribute],column)}}
-                        </div>
-
-                        <div ng-if="column.type == 'ApplicationSection'" class="gridcolumnvalue">
-                            <div ng-include="contextPath(column.resourcepath)" href="#" style="width: 100%"></div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
+            <tbody crudtbody schema="schema" datamap="datamap" timestamp="{{timestamp}}" bindonce />
             <!-- footer line -->
             <tfoot ng-show="datamap.length != 0">
                 <tr class="footer-row">

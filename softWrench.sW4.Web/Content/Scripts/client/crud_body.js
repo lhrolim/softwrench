@@ -45,6 +45,7 @@ app.directive('crudBody', function (contextService) {
             searchOperator: '=',
             searchSort: '=',
             ismodal: '@',
+            timestamp: '=',
             checked: '='
         },
 

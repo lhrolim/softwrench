@@ -204,6 +204,7 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
 
         // resultObject can be null only when SW is pointing to a Maximo DB different from Maximo WS DB
         scope.datamap = instantiateIfUndefined(result.resultObject);
+        scope.timeStamp = result.timeStamp;
 
         scope.mode = result.mode;
         if (scope.schema != null) {
@@ -232,6 +233,7 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
             log.debug("Application List Result handled");
             $scope.toList(result, scope);
             fixHeaderService.FixHeader();
+            $scope.$broadcast('sw_griddatachanged', scope.datamap, scope.schema);
         } else if (result.crudSubTemplate != null) {
 
             log.debug("Crud Sub Template handled");

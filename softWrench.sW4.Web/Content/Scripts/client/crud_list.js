@@ -9,7 +9,7 @@ app.directive('advancedFilterToogle', function (contextService) {
 });
 
 
-app.directive('crudListWrapper', function (contextService,$compile) {
+app.directive('crudListWrapper', function (contextService, $compile) {
     return {
         restrict: 'E',
         replace: true,
@@ -25,7 +25,8 @@ app.directive('crudListWrapper', function (contextService,$compile) {
             searchSort: '=',
             ismodal: '@',
             checked: '=',
-            isList:"="
+            isList: "=",
+            timestamp: '=',
         },
         link: function (scope, element, attrs) {
             if (scope.isList) {
@@ -33,7 +34,8 @@ app.directive('crudListWrapper', function (contextService,$compile) {
                     "<crud-list datamap='datamap' schema='schema' pagination-data='paginationData' " +
                     "search-data='searchData' " +
                     "search-operator='searchOperator' " +
-                    "search-sort='searchSort' />"
+                    "search-sort='searchSort'" +
+                    "timestamp='{{timestamp}}' />"
                 );
                 $compile(element.contents())(scope);
             }
@@ -59,10 +61,11 @@ app.directive('crudList', function (contextService) {
             searchOperator: '=',
             searchSort: '=',
             ismodal: '@',
-            checked: '='
+            checked: '=',
+            timestamp: '@',
         },
 
-        controller: function ($scope, $http, $rootScope, $filter, $injector, $log,$timeout,
+        controller: function ($scope, $http, $rootScope, $filter, $injector, $log, $timeout,
             formatService, fixHeaderService,
             searchService, tabsService,
             fieldService, commandService, i18NService,
@@ -98,7 +101,7 @@ app.directive('crudList', function (contextService) {
                 return tabsService.tabsDisplayables(schema);
             };
 
-            $scope.getGridColumnStyle=function(column,propertyName) {
+            $scope.getGridColumnStyle = function (column, propertyName) {
                 var property = column.rendererParameters[propertyName];
 
                 if (property != null) {
@@ -295,7 +298,7 @@ app.directive('crudList', function (contextService) {
                 if (operator.id == "") {
                     searchData[columnName] = '';
                     $scope.selectPage(1);
-                } else if (searchData[columnName] != null && searchData[columnName] != '')  {
+                } else if (searchData[columnName] != null && searchData[columnName] != '') {
                     $scope.selectPage(1);
                 } else if (operator.id == "BLANK") {
                     searchData[columnName] = '';
@@ -384,7 +387,7 @@ app.directive('crudList', function (contextService) {
                     $(selector).show();
                 }
                 fixHeaderService.fixTableTop($(".fixedtable"));
-                };
+            };
 
 
             $injector.invoke(BaseController, this, {
