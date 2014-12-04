@@ -4394,9 +4394,9 @@ function Browser(window, document, $log, $sniffer) {
    */
   function completeOutstandingRequest(fn) {
       try {
-          var t0 = performance.now();
+          var t0 = new Date().getTime();
           fn.apply(null, sliceArgs(arguments, 1));
-          var t1 = performance.now();
+          var t1 = new Date().getTime();
           console.log("{0} complete outstanding req took {1}".format(moment().format("dddd hh:mm:ss:SSS a"), t1 - t0));
       } finally {
       outstandingRequestCount--;
@@ -8361,7 +8361,7 @@ function $HttpProvider() {
        *  - calls $apply
        */
       function done(status, response, headersString, statusText) {
-          var t0 = performance.now();
+          var t0 = new Date().getTime();
         if (cache) {
           if (isSuccess(status)) {
             cache.put(url, [status, response, parseHeaders(headersString), statusText]);
@@ -8373,7 +8373,7 @@ function $HttpProvider() {
 
         resolvePromise(response, status, headersString, statusText);
         if (!$rootScope.$$phase) { $rootScope.$apply(); }
-        var t1 = performance.now();
+        var t1 = new Date().getTime();
         console.log("{0} done took {1}".format(moment().format("dddd hh:mm:ss:SSS a"), t1 - t0));
       }
 
@@ -12780,9 +12780,9 @@ function $RootScopeProvider(){
         } finally {
           clearPhase();
             try {
-                var t0 =performance.now();
+                var t0 =new Date().getTime();
                 $rootScope.$digest();
-                var t1 = performance.now();
+                var t1 = new Date().getTime();
                 console.log("{0} apply took {1}".format(moment().format("dddd hh:mm:ss:SSS a"), t1 - t0));
             } catch (e) {
             $exceptionHandler(e);

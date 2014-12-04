@@ -73,7 +73,7 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
             scope.refreshGrid = function (datamap, schema) {
                 scope.datamap = datamap;
                 scope.schema = schema;
-                var t0 = performance.now();
+                var t0 = new Date().getTime();;
                 var columnarray = scope.columnarray = [];
                 var hiddencolumnArray = [];
                 for (var j = 0; j < schema.displayables.length; j++) {
@@ -135,8 +135,8 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                 if (hasCheckBox) {
                     $compile(element.contents())(scope);
                 }
-                var t1 = performance.now();
-                $log.getInstance('crudtbody#link').debug('grid compilation took {0}'.format(t1 - t0));
+                var t1 = new Date().getTime();
+                $log.getInstance('crudtbody#link').debug('grid compilation took {0} ms'.format(t1 - t0));
                 $timeout(function (key, value) {
                     scope.$emit('listTableRenderedEvent');
                     if (!hasCheckBox) {
