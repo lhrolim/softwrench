@@ -40,7 +40,7 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService,$lo
 
                     $log.getInstance('sw4.screenshotservice').debug('handling screenshot paste name = ' + rtbAttribute);
 
-                    form.append("<input type='hidden' name='" + rtbAttribute + "' value='" + Base64.encode(this.contentWindow.binaryData()) + "' />");
+                    form.append("<input type='hidden' name='" + rtbAttribute + "' value='" + B64.encode(this.contentWindow.binaryData()) + "' />");
 
                     var now = new Date();
                     var timestamp = '' + now.getFullYear() + (now.getMonth() + 1) + now.getDate();
