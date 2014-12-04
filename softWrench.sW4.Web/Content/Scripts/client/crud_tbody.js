@@ -127,7 +127,7 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                         }
                      
                         html += "</div>";
-                        html += "</td>'";
+                        html += "</td>";
                     }
                     html += "</tr>";
                 }
