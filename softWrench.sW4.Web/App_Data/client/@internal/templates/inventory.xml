@@ -522,6 +522,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="tostoreloc" label="Location" readonly="true"/>
           <field attribute="glaccount" label="GL Account" readonly="true"/>
           <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="item_.rotating" label="Rotating" readonly="true">
+            <renderer type="default" params="formatter=numberToBoolean;"/>
+          </field>
           <field attribute="item_.iskit" label="Kit" readonly="true">
             <renderer type="default" params="formatter=numberToBoolean;"/>
           </field>
