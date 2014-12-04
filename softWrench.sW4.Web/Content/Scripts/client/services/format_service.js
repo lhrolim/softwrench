@@ -48,15 +48,15 @@ app.factory('formatService', function ($filter, i18NService, dispatcherService) 
     };
 
     return {
-        format: function (value, column, datamap) {
-            if (column == undefined) {
+        format: function (value, field, datamap) {
+            if (field == undefined) {
                 return value;
             }
 
-            if (column.rendererParameters['formatter'] != undefined) {
+            if (field.rendererParameters['formatter'] != undefined) {
                 //If the formatter starts with an @ symbol
-                if (column.rendererParameters['formatter'].startsWith("@")) {
-                    var formatter = column.rendererParameters['formatter'];
+                if (field.rendererParameters['formatter'].startsWith("@")) {
+                    var formatter = field.rendererParameters['formatter'];
                     formatter = formatter.substring(1); //Removes the leading '@' symbol
                     var serviceCall = formatter.split('.');
                     var serviceName = serviceCall[0];
@@ -66,7 +66,7 @@ app.factory('formatService', function ($filter, i18NService, dispatcherService) 
 
                     var parameters = {
                         'value': value,
-                        'column': column,
+                        'column': field,
                         'datamap': datamap
                     };
                     return fn(parameters);
@@ -74,30 +74,30 @@ app.factory('formatService', function ($filter, i18NService, dispatcherService) 
             }
             
             var dateFormat;
-            if (column.rendererType == "datetime") {
+            if (field.rendererType == "datetime") {
                 if (value != null) {
-                    dateFormat = column.rendererParameters['format'];
+                    dateFormat = field.rendererParameters['format'];
                     if (dateFormat == null) {
                         //TODO: make default client specific
                         dateFormat = "MM/dd/yyyy hh:mm";
                     }
                     return doFormatDate(value, dateFormat, false);
                 }
-            } else if (column.type == "ApplicationSection" && column.parameters['format']) {
-                if (column.parameters['format'] != null && value != null) {
-                    dateFormat = column.parameters['format'];
+            } else if (field.type == "ApplicationSection" && field.parameters['format']) {
+                if (field.parameters['format'] != null && value != null) {
+                    dateFormat = field.parameters['format'];
                     return doFormatDate(value, dateFormat, false);
                 }
-            } else if (column.rendererParameters != undefined && column.rendererParameters['formatter'] != null) {
-                if (column.rendererParameters['formatter'] == 'numberToBoolean') {
+            } else if (field.rendererParameters != undefined && field.rendererParameters['formatter'] != null) {
+                if (field.rendererParameters['formatter'] == 'numberToBoolean') {
                     value = value == 1 ? i18NService.get18nValue('general.yes', 'Yes') : i18NService.get18nValue('general.no', 'No');
                 }
-                else if (column.rendererParameters['formatter'] == 'numberToAbs') {
+                else if (field.rendererParameters['formatter'] == 'numberToAbs') {
                     if (!isNaN(value)) {
                         value = Math.abs(value);
                     }
                 }
-                else if (column.rendererParameters['formatter'] == 'doubleToTime') {
+                else if (field.rendererParameters['formatter'] == 'doubleToTime') {
                     if (value == null) {
                         return "";
                     }
@@ -112,16 +112,16 @@ app.factory('formatService', function ($filter, i18NService, dispatcherService) 
                     var mins = Math.round(Math.round(parseFloat(0 + '.' + tempMins) * 60 * 100) / 100);
                     return (hours < 10 ? "0" + hours : hours) + " : " + (mins < 10 ? "0" + mins : "" + mins);
                 }
-                else if (column.rendererParameters['formatter'] == 'descriptionDataHandler') {
-                    return descriptionDataHandler(value, column);
+                else if (field.rendererParameters['formatter'] == 'descriptionDataHandler') {
+                    return descriptionDataHandler(value, field);
                 }
-            } else if (column.rendererParameters != undefined && column.rendererParameters['limit'] != null) {
+            } else if (field.rendererParameters != undefined && field.rendererParameters['limit'] != null) {
                 //format the word to only display the first n characters based on the limit 
                 //once its formatted, also need to register a custom html but may not be here 
                 if (typeof value != 'undefined') {
                     var val = value.toString();
-                    var limit = column.rendererParameters['limit'];
-                    var truncatedText = val.substring(0, column.rendererParameters['limit']);
+                    var limit = field.rendererParameters['limit'];
+                    var truncatedText = val.substring(0, field.rendererParameters['limit']);
                     if (val.length > limit) {
                         truncatedText += "...";
                     }

@@ -65,6 +65,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     
     <entity name="invreserve" idAttribute="requestnum" whereclause="reservedqty > 0">
       <relationships>
+        <relationship to="item">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+        </relationship>
         <relationship to="invissue">
           <relationshipAttribute from="wonum" to="refwo" primary="true"/>
           <relationshipAttribute from="assetnum" to="assetnum"/>
@@ -518,6 +522,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="tostoreloc" label="Location" readonly="true"/>
           <field attribute="glaccount" label="GL Account" readonly="true"/>
           <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="item_.iskit" label="Kit" readonly="true">
+            <renderer type="default" params="formatter=numberToBoolean;"/>
+          </field>
           <field attribute="location" label="Storeroom" readonly="true"/>
           <field attribute="reservedqty" label="Reserved Quantity" readonly="true"/>
           <field attribute="actualqty" label="Quantity Issued" readonly="true" hidden="true"/>
