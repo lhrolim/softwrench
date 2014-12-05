@@ -631,6 +631,18 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="binnum" label="Bin">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
           </field>
+          <optionfield attribute="item_.rotating" label="Rotating" providerattribute="kitOptions">
+            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
+            <!--<option label="" value=""/>
+            <option label="Yes" value="1"/>
+            <option label="No" value="0"/>-->
+          </optionfield>
+          <optionfield attribute="item_.iskit" label="Kit" providerattribute="item_.iskit">
+            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
+            <!--<option label="" value=""/>
+            <option label="Yes" value="1"/>
+            <option label="No" value="0"/>-->
+          </optionfield>
           <field attribute="curbal" label="Balance">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
