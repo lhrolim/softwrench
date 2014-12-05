@@ -1,4 +1,15 @@
-﻿app.directive('ngrepeatinspector', function ($timeout, $log) {
+﻿//ie9 fix, since performance object doesn´t exist
+if (!performance) {
+    var performance = {};
+}
+if (!performance.now) {
+    performance.now = function () {
+        return new Date().getTime();
+    };
+}
+
+
+app.directive('ngrepeatinspector', function ($timeout, $log) {
     return {
         restrict: 'A',
         scope: {

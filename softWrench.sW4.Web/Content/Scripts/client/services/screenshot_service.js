@@ -1,11 +1,11 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('screenshotService', function ($rootScope, $timeout, i18NService,$log) {
+app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $log) {
 
     return {
 
         init: function (bodyElement, datamap) {
-            $log.getInstance('sw4.screenshotservice').debug('init screenshot service');
+            $log.getInstance('screenshotservice#init').debug('init screenshot service');
             var fn = this;
             // Configure image holders
             $('.image-holder', bodyElement).bind('paste', function (event) {
@@ -21,42 +21,44 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService,$lo
 
         hasScreenshotData: function () {
             $('.richtextbox', form).each(function () {
-                if (this.contentWindow.asciiData != null && this.contentWindow.asciiData() != undefined && this.contentWindow.asciiData() != "") {
-                    return true;
-                }
-                return false;
+                return this.contentWindow.asciiData != null && this.contentWindow.asciiData() != "";
             });
         },
 
         handleRichTextBoxSubmit: function (form, event) {
 
             $('.richtextbox', form).each(function () {
-
-                if (this.contentWindow.asciiData != null && this.contentWindow.asciiData() != undefined && this.contentWindow.asciiData() != "") {
-
-                    
-
-                    var rtbAttribute = this.id.substring('richTextBox_'.length);
-
-                    $log.getInstance('sw4.screenshotservice').debug('handling screenshot paste name = ' + rtbAttribute);
-
-                    form.append("<input type='hidden' name='" + rtbAttribute + "' value='" + B64.encode(this.contentWindow.binaryData()) + "' />");
-
-                    var now = new Date();
-                    var timestamp = '' + now.getFullYear() + (now.getMonth() + 1) + now.getDate();
-
-                    form.append("<input type='hidden' name='" + rtbAttribute + "_path' value='" + "Screen" + timestamp + ".rtf" + "' />");
+                //this is for ie9
+                if (this.contentWindow.asciiData == null || this.contentWindow.asciiData() == "") {
+                    //if nothing pasted, do nothing
+                    return;
                 }
+
+                var rtbAttribute = this.id.substring('richTextBox_'.length);
+                var log = $log.getInstance('screenshotservice#ie9conversion');
+
+                var t0 = performance.now();
+                var binaryData = this.contentWindow.binaryData();
+                var t1 = performance.now();
+                var encode = B64.encode(binaryData);
+                var t2 = performance.now();
+                log.debug("get binary data took {0} ms".format(t1 - t0));
+                log.debug("full screenshot conversion took {0} ms".format(t2 - t1));
+
+                form.append("<input type='hidden' name='" + rtbAttribute + "' value='" + encode + "' />");
+                var now = new Date();
+                var timestamp = '' + now.getFullYear() + (now.getMonth() + 1) + now.getDate();
+                form.append("<input type='hidden' name='" + rtbAttribute + "_path' value='" + "Screen" + timestamp + ".rtf" + "' />");
             });
         },
 
 
         handleImgHolderBlur: function (imgHolder, datamap) {
+            var t0 = performance.now();
             var imgAttribute = imgHolder.id.substring('imgHolder_'.length);
-
             datamap[imgAttribute] = Base64.encode(imgHolder.innerHTML);
-
-            var now = new Date();
+            var t1 = performance.now();
+            $log.getInstance('screenshotservice#handleImgHolderBlur').debug('base64 converstion took {0}'.format(t1 - t0));
             var timestamp = '' + now.getFullYear() + (now.getMonth() + 1) + now.getDate();
             datamap[imgAttribute + "_path"] = "Screen" + timestamp + ".html";
         },
