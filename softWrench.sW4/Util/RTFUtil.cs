@@ -14,12 +14,12 @@ namespace softWrench.sW4.Util {
 
         public static string ConvertRtfToHtml(string screenshotString, ref string screenshotName) {
             var before = Stopwatch.StartNew();
-            var bytes = Convert.FromBase64String(screenshotString);
-            var decodedString = Encoding.UTF8.GetString(bytes);
+
+            var decodedString = screenshotString;
             var compressedScreenshot = CompressionUtil.CompressRtf(decodedString);
             var convertedScreeshot = RTFUtil.ConvertToHTML(compressedScreenshot);
 
-            bytes = Encoding.UTF8.GetBytes(convertedScreeshot);
+            var bytes = Encoding.UTF8.GetBytes(convertedScreeshot);
             screenshotString = Convert.ToBase64String(bytes);
             screenshotName = screenshotName.Substring(0, screenshotName.Length - 3) + "html";
             var message = LoggingUtil.BaseDurationMessageFormat(before, "PERFORMANCE - Done RTL HTML conversion.");

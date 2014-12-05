@@ -40,12 +40,9 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
                 var t0 = performance.now();
                 var binaryData = this.contentWindow.binaryData();
                 var t1 = performance.now();
-                var encode = B64.encode(binaryData);
-                var t2 = performance.now();
                 log.debug("get binary data took {0} ms".format(t1 - t0));
-                log.debug("full screenshot conversion took {0} ms".format(t2 - t1));
 
-                form.append("<input type='hidden' name='" + rtbAttribute + "' value='" + encode + "' />");
+                form.append("<input type='hidden' name='" + rtbAttribute + "' value='" + binaryData + "' />");
                 var now = new Date();
                 var timestamp = '' + now.getFullYear() + (now.getMonth() + 1) + now.getDate();
                 form.append("<input type='hidden' name='" + rtbAttribute + "_path' value='" + "Screen" + timestamp + ".rtf" + "' />");
