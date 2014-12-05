@@ -30,10 +30,13 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
             };
 
             scope.getGridColumnStyle = function (column, propertyName) {
-                var property = column.rendererParameters[propertyName];
+                if (column.rendererParameters != null) {
+                    //sections for instance dont have it
+                    var property = column.rendererParameters[propertyName];
 
-                if (property != null) {
-                    return property;
+                    if (property != null) {
+                        return property;
+                    }
                 }
 
                 if (propertyName == 'maxwidth') {
@@ -93,10 +96,14 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                         column = schema.displayables[j];
                         var formattedText = scope.getFormattedValue(datamap[i].fields[column.attribute], column);
 
+                        if (!column.rendererParameters) {
+                            column.rendererParameters = {};
+                        }
+
                         var minwidthDiv = scope.getGridColumnStyle(column, 'minwidth');
                         var maxwidthDiv = scope.getGridColumnStyle(column, 'maxwidth');
                         var widthDiv = scope.getGridColumnStyle(column, 'width');
-
+                        
                         var minWidth = column.rendererParameters['minwidth'];
                         var maxWidth = column.rendererParameters['maxwidth'];
                         var width = column.rendererParameters['width'];
