@@ -421,9 +421,20 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
         },
 
-        invIssue_afterChangeItem: function(parameters) {
+        invIssue_afterChangeItem: function (parameters) {
+            var itemnum = parameters['fields']['itemnum'];
+            if (itemnum == null || itemnum.trim() == "") {
+                parameters['fields']['itemnum'] = null;
+                parameters['fields']['binnum'] = null;
+                parameters['fields']['#curbal'] = null;
+                parameters['fields']['unitcost'] = null;
+                parameters['fields']['inventory_.issueunit'] = null;
+                parameters['fields']['inventory_.itemtype'] = null;
+                return;
+            }
+
             setBatchIssueBin(parameters);
-            doUpdateUnitCostFromInventoryCost(parameters, 'unitcost');
+            updateInventoryCosttype(parameters);
         },
 
         batchinvIssue_afterChangeBin: function(parameters) {
@@ -577,6 +588,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             if (parameters['fields']['invuseline_.siteid'] == null ||
                 parameters['fields']['invuseline_.siteid'].trim() == "") {
                 parameters['fields']['invuseline_.itemnum'] = null;
+                parameters['fields']['fromstoreloc'] = null;
+                parameters['fields']['invuseline_.frombin'] = null;
                 parameters['fields']['invuseline_.tostoreloc'] = null;
                 parameters['fields']['invuseline_.tobin'] = null;
                 return;
