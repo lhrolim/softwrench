@@ -4397,7 +4397,9 @@ function Browser(window, document, $log, $sniffer) {
           var t0 = new Date().getTime();
           fn.apply(null, sliceArgs(arguments, 1));
           var t1 = new Date().getTime();
-          console.log("{0} complete outstanding req took {1}".format(moment().format("dddd hh:mm:ss:SSS a"), t1 - t0));
+          if (sessionStorage.debugangular) {
+              console.log("{0} complete outstanding req took {1}".format(moment().format("dddd hh:mm:ss:SSS a"), t1 - t0));
+          }
       } finally {
       outstandingRequestCount--;
       if (outstandingRequestCount === 0) {
@@ -8374,7 +8376,9 @@ function $HttpProvider() {
         resolvePromise(response, status, headersString, statusText);
         if (!$rootScope.$$phase) { $rootScope.$apply(); }
         var t1 = new Date().getTime();
-        console.log("{0} done took {1}".format(moment().format("dddd hh:mm:ss:SSS a"), t1 - t0));
+          if (sessionStorage.debugangular) {
+              console.log("{0} done took {1}".format(moment().format("dddd hh:mm:ss:SSS a"), t1 - t0));
+          }
       }
 
 
@@ -12783,7 +12787,9 @@ function $RootScopeProvider(){
                 var t0 =new Date().getTime();
                 $rootScope.$digest();
                 var t1 = new Date().getTime();
-                console.log("{0} apply took {1}".format(moment().format("dddd hh:mm:ss:SSS a"), t1 - t0));
+                if (sessionStorage.debugangular) {
+                    console.log("{0} apply took {1}".format(moment().format("dddd hh:mm:ss:SSS a"), t1 - t0));
+                }
             } catch (e) {
             $exceptionHandler(e);
             throw e;
