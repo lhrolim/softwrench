@@ -21,7 +21,7 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
 
         hasScreenshotData: function () {
             $('.richtextbox', form).each(function () {
-                return this.contentWindow.asciiData != null && this.contentWindow.asciiData() != "";
+                return this.contentWindow.asciiData() != null && this.contentWindow.asciiData() != "";
             });
         },
 
@@ -29,7 +29,7 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
 
             $('.richtextbox', form).each(function () {
                 //this is for ie9
-                if (this.contentWindow.asciiData == null || this.contentWindow.asciiData() == "") {
+                if (this.contentWindow.asciiData() == null || this.contentWindow.asciiData() == "") {
                     //if nothing pasted, do nothing
                     return;
                 }
