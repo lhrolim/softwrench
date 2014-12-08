@@ -107,8 +107,9 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                         var minWidth = column.rendererParameters['minwidth'];
                         var maxWidth = column.rendererParameters['maxwidth'];
                         var width = column.rendererParameters['width'];
-                        html += "<td {2} onclick='testclick({0},{1},this)'".format(i, j, hiddencolumnArray[j] ? 'style="display:none"' : '');
-                        if (i == 0) {
+                        var isHidden = hiddencolumnArray[j];
+                        html += "<td {2} onclick='testclick({0},{1},this)'".format(i, j, isHidden ? 'style="display:none"' : '');
+                        if (i == 0 && !isHidden) {
                             html += "style=\" minwidth:{0};maxwidth:{1};width:{2} \" >".format(minWidth, maxWidth, width);
                         } else {
                             html += ">";
@@ -126,7 +127,7 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                             hasCheckBox = true;
                         }else if (column.type == 'ApplicationFieldDefinition') {
                             html += "<div class='gridcolumnvalue'".format(columnst);
-                            if (i == 0) {
+                            if (i == 0 && !isHidden) {
                                 html += "style=\" minwidth:{0};maxwidth:{1};width:{2} \" ".format(minwidthDiv, maxwidthDiv, widthDiv);
                             }
                             html += ">";

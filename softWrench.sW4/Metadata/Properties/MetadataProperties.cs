@@ -44,6 +44,12 @@ namespace softWrench.sW4.Metadata.Properties {
             get { return _globalProperties; }
         }
 
+        public int QueryTimeout() {
+            var querytimeout = GlobalProperty("querytimeout");
+            var stValue = string.IsNullOrEmpty(querytimeout) ? "60" : querytimeout;
+            return Int32.Parse(stValue);
+        }
+
         public string GlobalProperty(string key, bool throwException = false, bool testRequired = false) {
             string value;
             var profile = ApplicationConfiguration.Profile;

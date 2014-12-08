@@ -70,6 +70,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
                 // do something usefull here like update your UI.
                 asyncResult.AsyncWaitHandle.WaitOne();
 
+
                 // get the response from the completed web request.
                 var result = "";
                 using (var webResponse = webRequest.EndGetResponse(asyncResult)) {

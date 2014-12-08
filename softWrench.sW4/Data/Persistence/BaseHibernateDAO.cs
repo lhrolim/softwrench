@@ -2,6 +2,8 @@
 using NHibernate;
 using NHibernate.Transform;
 using NHibernate.Type;
+using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Properties;
 using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
@@ -17,15 +19,16 @@ namespace softWrench.sW4.Data.Persistence {
 
     public abstract class BaseHibernateDAO : ISingletonComponent {
 
-        private static ILog HibernateLog = LogManager.GetLogger(typeof(BaseHibernateDAO));
+        private static readonly ILog HibernateLog = LogManager.GetLogger(typeof(BaseHibernateDAO));
 
         public IQuery BuildQuery(string queryst, object[] parameters, ISession session, bool native = false) {
             var result = HibernateUtil.TranslateQueryString(queryst, parameters);
             queryst = result.query;
             parameters = result.Parameters;
-
+            
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
             query.SetFlushMode(FlushMode.Never);
+            query.SetTimeout(MetadataProvider.GlobalProperties.QueryTimeout());
             LogQuery(queryst, parameters);
             if (result.Parameters == null) {
                 return query;
@@ -62,7 +65,7 @@ namespace softWrench.sW4.Data.Persistence {
         public IQuery BuildQuery(string queryst, ISession session, bool native = false) {
             LogQuery(queryst, null);
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
-
+            query.SetTimeout(MetadataProvider.GlobalProperties.QueryTimeout());
             return query;
         }
 
@@ -75,6 +78,7 @@ namespace softWrench.sW4.Data.Persistence {
             LogPaginationQuery(queryst, parameters);
 
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
+            query.SetTimeout(MetadataProvider.GlobalProperties.QueryTimeout());
 
             if (!ApplicationConfiguration.IsDB2(ApplicationConfiguration.DBType.Maximo) && paginationData != null) {
                 var pageSize = paginationData.PageSize;
