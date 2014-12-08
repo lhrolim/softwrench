@@ -631,17 +631,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="binnum" label="Bin">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
           </field>
-          <optionfield attribute="item_.rotating" label="Rotating" providerattribute="kitOptions">
+          <optionfield attribute="item_.rotating" label="Rotating">
             <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
-            <!--<option label="" value=""/>
-            <option label="Yes" value="1"/>
-            <option label="No" value="0"/>-->
+            <option value="1" label="Yes"/>
+            <option value="0" label="No"/>
           </optionfield>
-          <optionfield attribute="item_.iskit" label="Kit" providerattribute="item_.iskit">
+          <optionfield attribute="item_.iskit" label="Kit">
             <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
-            <!--<option label="" value=""/>
-            <option label="Yes" value="1"/>
-            <option label="No" value="0"/>-->
+            <option value="1" label="Yes"/>
+            <option value="0" label="No"/>
           </optionfield>
           <field attribute="curbal" label="Balance">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
@@ -661,6 +659,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Inventory Balances ID" attribute="invbalancesid" required="true" readonly="true" hidden="true"/>
           <field label="Item" attribute="itemnum" readonly="true"/>
           <field label="Description" attribute="item_.description" readonly="true"/>
+          <field label="Rotating" attribute="item_.rotating" readonly="true">
+            <renderer type="default" params="formatter=numberToBoolean"/>
+          </field>
+          <field label="Kit" attribute="item_.iskit" readonly="true">
+            <renderer type="default" params="formatter=numberToBoolean"/>
+          </field>
           <field label="Storeroom" attribute="location" readonly="true"/>
           <field label="Bin" attribute="binnum" readonly="true"/>
           <field label="Lot" attribute="lotnum" readonly="true"/>

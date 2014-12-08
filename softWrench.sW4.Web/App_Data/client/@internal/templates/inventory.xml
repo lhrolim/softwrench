@@ -150,28 +150,38 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="refwo" label="Work Order">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=18%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=10%" />
           </field>
           <field attribute="issueto" label="Issue To">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=15%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=10%" />
           </field>
           <field attribute="assetnum" label="Asset">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%;widthLG=15%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%;widthLG=10%" />
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=14%" />
           </field>
           <field attribute="issuetype" label="Issue Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=10%" />
           </field>
+          <optionfield attribute="item_.rotating" label="Rotating">
+            <renderer type="combo" params="widthLG=10%;filteronly=true;formatter=numberToBoolean"/>
+            <option value="1" label="Yes"/>
+            <option value="0" label="No"/>
+          </optionfield>
+          <optionfield attribute="item_.iskit" label="Kit">
+            <renderer type="combo" params="widthLG=10%;filteronly=true;formatter=numberToBoolean"/>
+            <option value="1" label="Yes"/>
+            <option value="0" label="No"/>
+          </optionfield>
           <field attribute="quantity" label="Qty">
-            <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyList;"/>
+            <renderer type="default" params="hidefilter=true;width=5%;formatter=@inventoryService.formatQtyList;"/>
           </field>
           <field attribute="qtyreturned" label="Qty Rtn">
-            <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyReturnedList;"/>
+            <renderer type="default" params="hidefilter=true;width=6%;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
-            <renderer type="default" params="width=4%"/>
+            <renderer type="default" params="width=5%"/>
           </section>
         </list>
 

@@ -4,7 +4,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI
 {
     public class OptionFieldRenderer : FieldRenderer {
 
-        private const string WrongRenderer = "renderer {0} not found. Possible options are COMBO,COMBODROPDOWN, CHECKBOX,AUTOCOMPLETECLIENT, and RADIO";
+        private const string WrongRenderer = "renderer {0} not found. Possible options are COMBO, COMBODROPDOWN, CHECKBOX, AUTOCOMPLETECLIENT, and RADIO";
 
         private OptionRendererType EnumRendererType { get; set; }
 
