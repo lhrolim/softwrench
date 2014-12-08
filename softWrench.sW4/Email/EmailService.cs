@@ -33,13 +33,15 @@ namespace softWrench.sW4.Email {
                 }
             }
             email.IsBodyHtml = true;
-            string file = "C:\\Users\\Public\\Pictures\\Sample Pictures\\Desert.jpg";
-            Attachment data = new Attachment(file, MediaTypeNames.Application.Octet);
-            ContentDisposition disposition = data.ContentDisposition;
-            disposition.CreationDate = System.IO.File.GetCreationTime(file);
-            disposition.ModificationDate = System.IO.File.GetLastWriteTime(file);
-            disposition.ReadDate = System.IO.File.GetLastAccessTime(file);
-            email.Attachments.Add(data);
+            //string file = "C:\\Users\\Public\\Pictures\\Sample Pictures\\Desert.jpg";
+            //Attachment data = new Attachment(file, MediaTypeNames.Application.Octet);
+            //ContentDisposition disposition = data.ContentDisposition;
+            //disposition.CreationDate = System.IO.File.GetCreationTime(file);
+            //disposition.ModificationDate = System.IO.File.GetLastWriteTime(file);
+            //disposition.ReadDate = System.IO.File.GetLastAccessTime(file);
+            //email.Attachments.Add(data);
+            // Convert that Base 64 string data into attachment data and try sending email 
+
 
             try {
                 objsmtpClient.Send(email);
@@ -50,13 +52,15 @@ namespace softWrench.sW4.Email {
         }
 
         public class EmailData {
-            public EmailData(string sendFrom, string sendTo, string subject, string message) {
+            public EmailData(string sendFrom, string sendTo, string subject,string attachmentData, string attachmentName, string message) {
                 Validate.NotNull(sendTo, "sentTo");
                 Validate.NotNull(subject, "Subject");
                 SendFrom = sendFrom;
                 SendTo = sendTo;
                 Subject = subject;
                 Message = message;
+                AttachmentData = attachmentData;
+                AttachmentName = attachmentName;
             }
 
 
@@ -64,7 +68,8 @@ namespace softWrench.sW4.Email {
             public string SendTo { get; set; }
             public string Cc { get; set; }
             public string Subject { get; set; }
-
+            public string AttachmentData { get; set; }
+            public string AttachmentName { get; set; }
             public string Message { get; set; }
         }
 

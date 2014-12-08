@@ -54,9 +54,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 w.CopyFromRootEntity(rootObject, integrationObject, modifydate, DateTime.Now.FromServerToRightKind());
                 w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
-                HandleAttachments(entity, commlogs, maximoTemplateData.ApplicationMetadata);
+                HandleAttachments(crudData, commlogs, maximoTemplateData.ApplicationMetadata);
                 if (w.GetRealValue(integrationObject, sendto) != null) {
-                    maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject));
+                    maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
                 }
             });
         }
@@ -65,7 +65,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             Metadata.Applications.ApplicationMetadata applicationMetadata)
         {
             // Check if Attachment is present
-            var attachmentData = data.GetUnMappedAttribute("newattachment");
+            var attachmentData = data.GetUnMappedAttribute("attachment");
             var attachmentPath = data.GetUnMappedAttribute("newattachment_path");
 
             if (!String.IsNullOrWhiteSpace(attachmentData) && !String.IsNullOrWhiteSpace(attachmentPath))
@@ -93,14 +93,17 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
         }
 
-        private static EmailService.EmailData GenerateEmailObject(object integrationObject)
+        private static EmailService.EmailData GenerateEmailObject(object integrationObject, CrudOperationData crudData)
         {
             return new EmailService.EmailData(w.GetRealValue<string>(integrationObject, sendfrom),
                 w.GetRealValue<string>(integrationObject, sendto),
                 w.GetRealValue<string>(integrationObject, subject),
+                crudData.GetUnMappedAttribute("attachment"),
+                crudData.GetUnMappedAttribute("newattachment_path"),
                 w.GetRealValue<string>(integrationObject, message)) {
                     Cc = w.GetRealValue<string>(integrationObject, cc)
                 };
+
             
         }
     }
