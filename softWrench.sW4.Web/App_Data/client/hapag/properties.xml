@@ -24,6 +24,7 @@
   <property key="globaservletpath" value="https://170.225.28.205/HAPAGLLOYDINCTestWS/DocHandlerServlet"/>
   <property key="ignoreWsCertErrors" value="true"/>
   <property key="maximoRequestTimeout" value="600000"/>
+  <property key="querytimeout" value="300"/>
   <!-- in ms -->
 
   <property key="faqusefullinksPath" value="C:\ServiceIT\config\SR_FAQ.txt"/>

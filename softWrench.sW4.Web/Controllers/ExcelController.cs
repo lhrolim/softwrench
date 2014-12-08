@@ -26,6 +26,7 @@ using softWrench.sW4.Data.API;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Util;
 using softwrench.sw4.Shared2.Util;
+using SpreadsheetLight;
 
 namespace softWrench.sW4.Web.Controllers {
 
@@ -65,6 +66,7 @@ namespace softWrench.sW4.Web.Controllers {
             [FromUri] PaginatedSearchRequestDto searchDto, string module) {
 
             var before = Stopwatch.StartNew();
+            var before2 = Stopwatch.StartNew();
 
             searchDto.PageSize = searchDto.TotalCount + 1;
             var ctx = _contextLookuper.LookupContext();
@@ -82,7 +84,11 @@ namespace softWrench.sW4.Web.Controllers {
             var tempResultMap = new SortedDictionary<Int32, IReadOnlyList<AttributeHolder>>();
             var schema = applicationMetadata.Schema;
 
-            if (count > maxChunk) {
+            var needChunk = count > maxChunk;
+
+            SLDocument excelFile;
+
+            if (needChunk) {
                 //in that case, we need to do the queries using multiple threads, to avoid a out of memory error or timeout.
                 var numberOfThreads = (count / maxChunk) + 1;
                 var tasks = new Task[numberOfThreads];
@@ -98,24 +104,22 @@ namespace softWrench.sW4.Web.Controllers {
                     }, chunkContext);
                 }
                 Task.WaitAll(tasks);
+                var rows = new List<AttributeHolder>();
+                foreach (var item in tempResultMap) {
+                    rows.AddRange(item.Value);
+                }
+                Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "finished gathering export excel data"));
+                excelFile = _excelUtil.ConvertGridToExcel(user, schema, rows);
             } else {
                 SingleExecution(searchDto, schema, tempResultMap, entityMetadata, 0);
+                excelFile = _excelUtil.ConvertGridToExcel(user, schema, tempResultMap[0]);
+                Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "finished gathering export excel data"));
             }
-
-            var rows = new List<AttributeHolder>();
-            foreach (var item in tempResultMap) {
-                rows.AddRange(item.Value);
-            }
-
-            Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "finished gathering export excel data"));
-
-
-            var excelFile = _excelUtil.ConvertGridToExcel(user, schema, rows);
             var stream = new MemoryStream();
             excelFile.SaveAs(stream);
             stream.Close();
 
-            Log.Info(LoggingUtil.BaseDurationMessageFormat(before, "finished export excel data"));
+            Log.Info(LoggingUtil.BaseDurationMessageFormat(before2, "finished export excel data"));
 
             var fileName = GetFileName(application, key.SchemaId) + ".xls";
             var result = new FileContentResult(stream.ToArray(), System.Net.Mime.MediaTypeNames.Application.Octet) {

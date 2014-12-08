@@ -59,7 +59,7 @@ namespace softWrench.sW4.Data.Configuration {
 
             facade.Register(ConfigurationConstants.MaxQuerySizeChunk, new PropertyDefinition {
                 Description = "Max number of entries to be fetch from database before applying chunk",
-                StringValue = "1000",
+                StringValue = "50000",
                 DataType = "long",
                 Contextualized = false
             });
