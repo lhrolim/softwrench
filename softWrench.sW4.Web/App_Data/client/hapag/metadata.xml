@@ -2369,7 +2369,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </properties>
           <field attribute="assetnum" label="" qualifier="title" hidden="true" />
           <field attribute="siteid" label="" qualifier="title" hidden="true">
-            <renderer type="default" params="minwidth=88px"/>
+            <renderer type="default"/>
           </field>
           <field label="Location Code" attribute="hlagpluspcustomer">
             <renderer type="default" params="minwidth=79px;excelwidth=15"/>
