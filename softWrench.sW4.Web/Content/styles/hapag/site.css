@@ -647,6 +647,14 @@ textarea .readonly {
         -webkit-print-color-adjust: exact !important;
     }
 
+    .affix {
+        position: relative;
+    }
+
+    .listgrid-table {
+    top: 0;
+}
+
     .col-main-content {
         margin-left: 0px !important;
     }
