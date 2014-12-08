@@ -313,24 +313,23 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             redirectService.goToApplicationView("invissue", "list", null, null, null, null);
         },
         displayNewIssueModal: function (parentschema, parentdatamap) {
-            //var clonedCompositionData = parentdatamap['invissue_'];
             var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
-            var parentdata = parentdatamap;
             var user = contextService.getUserData();
             var itemDatamap = {};
             itemDatamap['itemnum'] = null;
+            itemDatamap['inventory_'] = null;
+            itemDatamap['#gldebitacct'] = null;
             itemDatamap['enterby'] = user.login.toUpperCase();
             itemDatamap['siteid'] = user.siteId;
             itemDatamap['matusetransid'] = null;
-            itemDatamap['refwo'] = parentdata['#refwo'];
-            itemDatamap['assetnum'] = parentdata['#assetnum'];
-            itemDatamap['issuetype'] = parentdata['#issuetype'];
-            itemDatamap['issueto'] = parentdata['#issueto'];
-            itemDatamap['location'] = parentdata['#location'];
-            itemDatamap['storeloc'] = parentdata['#storeloc'];
-            itemDatamap['gldebitacct'] = parentdata['#gldebitacct'];
+            itemDatamap['refwo'] = parentdatamap['#refwo'];
+            itemDatamap['assetnum'] = parentdatamap['#assetnum'];
+            itemDatamap['issuetype'] = parentdatamap['#issuetype'];
+            itemDatamap['issueto'] = parentdatamap['#issueto'];
+            itemDatamap['location'] = parentdatamap['#location'];
+            itemDatamap['storeloc'] = parentdatamap['#storeloc'];
+            itemDatamap['gldebitacct'] = parentdatamap['#gldebitacct'];
 
-            //contextService.insertIntoContext('clonedCompositionData', clonedCompositionData, false);
             modalService.show(compositionschema, itemDatamap, null, parentdatamap, parentschema);
         },
         batchissuelistclick: function (datamap, schema) {
@@ -364,23 +363,23 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             if (clonedCompositionData['invissue_'] == null) {
                 clonedCompositionData['invissue_'] = [];
             }
-            var newissue = {};
-            newissue.matusetransid = null;
-            newissue.assetnum = datamap['assetnum'];
-            newissue.itemnum = datamap['itemnum'];
-            newissue['item_.description'] = datamap['item_.description'];
-            newissue.enterby = datamap['enterby'];
-            newissue.gldebitacct = datamap['gldebitacct'];
-            newissue.issueto = datamap['issueto'];
-            newissue.issuetype = datamap['issuetype'];
-            newissue.binnum = datamap['binnum'];
-            newissue.location = datamap['location'];
-            newissue.quantity = datamap['quantity'];
-            newissue.refwo = datamap['refwo'];
-            newissue.siteid = datamap['siteid'];
-            newissue.storeloc = datamap['storeloc'];
-            newissue.unitcost = datamap['unitcost'];
 
+            var newissue = angular.copy(datamap);
+            newissue['item_.description'] = newissue['inventory_.item_.description'];
+            newissue.matusetransid = null;
+
+            datamap['assetnum'] = null;
+            datamap['itemnum'] = null;
+            datamap['inventory_.item_.description'] = null;
+            datamap['enterby'] = null;
+            datamap['#gldebitacct'] = null;
+            datamap['chartofaccounts_'] = null;
+            datamap['gldebitacct'] = null;
+            datamap['binnum'] = null;
+            datamap['unitcost'] = null;
+            datamap['quantity'] = null;
+            datamap['gldebitacct'] = null;
+            
             clonedCompositionData.push(newissue);
             modalService.hide();
         },
@@ -452,7 +451,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             parameters['fields']['#curbal'] = null;
             if (itemnum == null || itemnum.trim() == "") {
                 parameters['fields']['itemnum'] = null;
-
                 parameters['fields']['unitcost'] = null;
                 parameters['fields']['inventory_.issueunit'] = null;
                 parameters['fields']['inventory_.itemtype'] = null;
@@ -679,9 +677,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         overrideGlAccount: function(event) {
-            if (event.fields['#gldebitacct'] != null || event.fields['gldebitacct'].trim != "") {
-                event.fields['gldebitacct'] = event.fields['#gldebitacct'];
-            }
+            event.fields['gldebitacct'] = event.fields['#gldebitacct'];
         },
 
         afterChangeIssueQuantity: function (event) {
