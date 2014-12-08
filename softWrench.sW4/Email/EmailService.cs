@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Mime;
 using System.Text.RegularExpressions;
 using softWrench.sW4.SimpleInjector;
 using System.Net.Mail;
@@ -32,6 +33,14 @@ namespace softWrench.sW4.Email {
                 }
             }
             email.IsBodyHtml = true;
+            string file = "C:\\Users\\Public\\Pictures\\Sample Pictures\\Desert.jpg";
+            Attachment data = new Attachment(file, MediaTypeNames.Application.Octet);
+            ContentDisposition disposition = data.ContentDisposition;
+            disposition.CreationDate = System.IO.File.GetCreationTime(file);
+            disposition.ModificationDate = System.IO.File.GetLastWriteTime(file);
+            disposition.ReadDate = System.IO.File.GetLastAccessTime(file);
+            email.Attachments.Add(data);
+
             try {
                 objsmtpClient.Send(email);
             } catch (Exception ex) {
