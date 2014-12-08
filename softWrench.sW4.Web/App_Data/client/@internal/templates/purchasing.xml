@@ -151,12 +151,24 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <!--
           </properties>-->
 
-          <field attribute="ponum" label="PO No" readonly="true"/>
-          <field attribute="polinenum" label="Line No" />
-          <field attribute="itemnum" label="Item"/>
-          <field attribute="description" label="Description"/>
-          <field attribute="orderqty" label="Quantity"/>
-          <field attribute="unitcost" label="Unit Cost"/>
+          <field attribute="ponum" label="PO No" readonly="true">
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=12%" />
+          </field>
+          <field attribute="polinenum" label="Line No">
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%;widthLG=12%"/>
+          </field>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%;widthLG=12%"/>
+          </field>
+          <field attribute="description" label="Description">
+            <renderer type="default" />
+          </field>
+          <field attribute="orderqty" label="Quantity">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=12%"/>
+          </field>
+          <field attribute="unitcost" label="Unit Cost">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=12%"/>
+          </field>
           <field attribute="gldebitacct" hidden="true"/>
           <field attribute="siteid" hidden="true" />
           <field attribute="orgid" hidden="true" />
@@ -165,7 +177,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field label="Entered Date &amp; Time" attribute="enterdate" readonly="true"  hidden="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
-          <section resourcepath="/Content/Templates/otb/receiving.html"/>
+          <section resourcepath="/Content/Templates/otb/receiving.html">
+            <renderer type="default" params="width=4%"/>
+          </section>
           <commandbars>
             <commandgroup position="compositiontop" removeundeclared="false">
               <command id ="Complete" icon="fa-thumbs-o-up" service="poreceivingService" method="completeReceipts" label="Complete Receipts" parameters="schema,datamap,parentdata" />

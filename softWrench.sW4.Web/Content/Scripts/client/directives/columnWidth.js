@@ -8,7 +8,7 @@ app.directive('columnWidths', function ($log) {
             log.debug('Render Listgrid CSS');
      
             //look for user changing modules
-            attr.$observe('columnWidths', function (value) {
+            attr.$observe('columns', function (value) {
 
                 //convert string column data to object column data
                 var json = angular.fromJson(value);
@@ -17,7 +17,11 @@ app.directive('columnWidths', function ($log) {
                 //build object for columns and responsive widths
                 for (id in json) {
                     //convert metadata to html columns (add 2 for select columns and 1 for index base)
-                    var column = parseInt(id) + 3;
+                    if (attr.gridtype === 'listgrid') {
+                        var column = parseInt(id) + 3;
+                    } else {
+                        var column = parseInt(id) + 1;
+                    }
 
                     //new row object
                     var row = {};
@@ -67,11 +71,11 @@ app.directive('columnWidths', function ($log) {
                 balanceColumns(widths, 'widthLG');
 
                 //build css rules
-                var css = getViewRules(widths, 'width', null);
-                css = css + getViewRules(widths, 'widthXS', '1px');
-                css = css + getViewRules(widths, 'widthSM', '480px');
-                css = css + getViewRules(widths, 'widthMD', '768px');
-                css = css + getViewRules(widths, 'widthLG', '992px');
+                var css = getViewRules(widths, 'width', null, attr);
+                css = css + getViewRules(widths, 'widthXS', '1px', attr);
+                css = css + getViewRules(widths, 'widthSM', '480px', attr);
+                css = css + getViewRules(widths, 'widthMD', '768px', attr);
+                css = css + getViewRules(widths, 'widthLG', '992px', attr);
 
                 if (css) {
                     //log.debug(css);
@@ -130,17 +134,18 @@ function balanceColumns(widths, param) {
     }
 }
 
-function getCSSrule(column, columnWidth) {
-    if (columnWidth) {
+function getCSSrule(column, columnWidth, attr) {
+    //console.log(attr.gridtype);
 
+    if (columnWidth) {
         //-1 hide this column, else set width and show
         if (columnWidth === -1) {
-            css = '#listgrid th:nth-child(' + column +
-                '), #listgrid td:nth-child(' + column +
+            css = '#' + attr.gridtype + ' th:nth-child(' + column +
+                '), #' + attr.gridtype + ' td:nth-child(' + column +
                 ') {display: none;}';
         } else {
-            css = '#listgrid th:nth-child(' + column +
-                '), #listgrid td:nth-child(' + column +
+            css = '#' + attr.gridtype + ' th:nth-child(' + column +
+                '), #' + attr.gridtype + ' td:nth-child(' + column +
                 ') {width: ' + columnWidth + '%; display: table-cell;}';
         }
     }
@@ -148,7 +153,7 @@ function getCSSrule(column, columnWidth) {
 	return css;
 }
 
-function getViewRules(widths, param, viewWidth) {
+function getViewRules(widths, param, viewWidth, attr) {
     var newCSS = '';
 
     //look for the viewWidth in each column
@@ -158,7 +163,7 @@ function getViewRules(widths, param, viewWidth) {
 
             //get the css rule & add it other rules
             if (columnWidth) {
-                var temp = getCSSrule(column, columnWidth);
+                var temp = getCSSrule(column, columnWidth, attr);
                 if (temp) {
                     newCSS = newCSS + temp;
                 }
