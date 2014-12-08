@@ -42,6 +42,10 @@ namespace softWrench.sW4.Configuration.Definitions {
         public Boolean ProfileAsked { get; set; }
         public Boolean ModuleAsked { get; set; }
 
+        public static ConditionMatchResult Match() {
+            return new ConditionMatchResult(null, null) {MatchType = ConditionMatch.Exact};
+        }
+
         public int CompareTo(ConditionMatchResult other) {
             var comparison = other.MatchType.GetPriority().CompareTo(MatchType.GetPriority());
             if (comparison == 0) {

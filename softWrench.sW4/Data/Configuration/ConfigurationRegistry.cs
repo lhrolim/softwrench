@@ -14,48 +14,61 @@ namespace softWrench.sW4.Data.Configuration {
 
             });
 
-            facade.Register(ConfigurationConstants.UserRowstampKey, new PropertyDefinition() {
+            facade.Register(ConfigurationConstants.UserRowstampKey, new PropertyDefinition {
                 Description = "current user rowstamp from maximo",
                 StringValue = "0",
                 DataType = "long",
+                Contextualized = false
             });
 
-            facade.Register(ConfigurationConstants.PersonGroupRowstampKey, new PropertyDefinition() {
+            facade.Register(ConfigurationConstants.PersonGroupRowstampKey, new PropertyDefinition {
                 Description = "current person group rowstamp from maximo",
                 StringValue = "0",
                 DataType = "long",
+                Contextualized = false
             });
 
-            facade.Register(ConfigurationConstants.PersonGroupAssociationRowstampKey, new PropertyDefinition() {
+            facade.Register(ConfigurationConstants.PersonGroupAssociationRowstampKey, new PropertyDefinition {
                 Description = "current person group association rowstamp from maximo",
                 StringValue = "0",
                 DataType = "long",
+                Contextualized = false
             });
 
-            facade.Register(ConfigurationConstants.MyProfileEnabled, new PropertyDefinition() {
+            facade.Register(ConfigurationConstants.MyProfileEnabled, new PropertyDefinition {
                 Description = "Is My Profile Module Enabled for the system",
                 StringValue = "true",
                 DataType = "boolean",
+                Contextualized = false
             });
 
-            facade.Register(ConfigurationConstants.MyProfileReadOnly, new PropertyDefinition() {
+            facade.Register(ConfigurationConstants.MyProfileReadOnly, new PropertyDefinition {
                 Description = "Is My Profile Module ReadOnly for the system",
                 StringValue = "true",
                 DataType = "boolean",
+                Contextualized = false
             });
 
 
-            facade.Register(ConfigurationConstants.ClientSideLogLevel, new PropertyDefinition() {
+            facade.Register(ConfigurationConstants.ClientSideLogLevel, new PropertyDefinition {
                 Description = "Level of client side logs",
                 StringValue = "warn",
                 DataType = "string",
+                Contextualized = false
             });
 
-//            facade.Register(ConfigurationConstants.LdapAuthNonMaximoUsers, new PropertyDefinition() {
-//                Description = "Allow non maximo users to login into the system",
-//                StringValue = "true",
-//                DataType = "boolean",
-//            });
+            facade.Register(ConfigurationConstants.MaxQuerySizeChunk, new PropertyDefinition {
+                Description = "Max number of entries to be fetch from database before applying chunk",
+                StringValue = "1000",
+                DataType = "long",
+                Contextualized = false
+            });
+
+            //            facade.Register(ConfigurationConstants.LdapAuthNonMaximoUsers, new PropertyDefinition() {
+            //                Description = "Allow non maximo users to login into the system",
+            //                StringValue = "true",
+            //                DataType = "boolean",
+            //            });
 
 
 
