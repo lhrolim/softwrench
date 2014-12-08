@@ -324,7 +324,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             itemDatamap['matusetransid'] = null;
             itemDatamap['refwo'] = parentdatamap['#refwo'];
             itemDatamap['assetnum'] = parentdatamap['#assetnum'];
-            itemDatamap['issuetype'] = parentdatamap['#issuetype'];
             itemDatamap['issueto'] = parentdatamap['#issueto'];
             itemDatamap['location'] = parentdatamap['#location'];
             itemDatamap['storeloc'] = parentdatamap['#storeloc'];
@@ -332,27 +331,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
             modalService.show(compositionschema, itemDatamap, null, parentdatamap, parentschema);
         },
-        batchissuelistclick: function (datamap, schema) {
-            var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
+        batchissuelistclick: function (datamap, column, schema) {
+            var newDatamap = {};
+            angular.copy(datamap, newDatamap);
 
-            var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
-            if (clonedCompositionData['invissue_'] == null) {
-                clonedCompositionData['invissue_'] = [];
-            }
-
-            var itemDatamap = {};
-
-            for (var key in clonedCompositionData) {
-                var item = clonedCompositionData[key];
-                //Records with a value for the matusetransid are being hidden from the user.
-                if (item['matusetransid'] == null) {
-                    if (item['itemnum'] == data) {
-                        angular.copy(item,itemDatamap);
-                    }
-                }
-            }
-
-            modalService.show(compositionschema, itemDatamap, null, parentdatamap, parentschema);
+            modalService.show(schema, newDatamap);
 
         },
         cancelNewInvIssueItem: function () {
@@ -360,14 +343,13 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
         addItemToBatch: function (datamap) {
             var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
-            if (clonedCompositionData['invissue_'] == null) {
-                clonedCompositionData['invissue_'] = [];
-            }
 
+            datamap['issuetype'] = "ISSUE";
             var newissue = angular.copy(datamap);
             newissue['item_.description'] = newissue['inventory_.item_.description'];
             newissue.matusetransid = null;
 
+            datamap['issuetype'] = null;
             datamap['assetnum'] = null;
             datamap['itemnum'] = null;
             datamap['inventory_.item_.description'] = null;
@@ -381,6 +363,48 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             datamap['gldebitacct'] = null;
             
             clonedCompositionData.push(newissue);
+            modalService.hide();
+        },
+        updateItemInBatch: function (datamap) {
+            var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
+
+            var compositionItem = null;
+            for (var i = 0; i < clonedCompositionData.length; i++) {
+                compositionItem = clonedCompositionData[i];
+                if (compositionItem['matusetransid'] != null) {
+                    continue;
+                }
+
+                if (compositionItem['itemnum'] == datamap['itemnum']) {
+                    break;
+                }
+            }
+
+            if (compositionItem != null) {
+                var newissue = angular.copy(datamap);
+                compositionItem['item_.description'] = newissue['inventory_.item_.description'];
+                compositionItem['itemnum'] = newissue['itemnum'];
+                compositionItem['#gldebitacct'] = newissue['#gldebitacct'];
+                compositionItem['gldebitacct'] = newissue['gldebitacct'];
+                compositionItem['binnum'] = newissue['binnum'];
+                compositionItem['unitcost'] = newissue['unitcost'];
+                compositionItem['quantity'] = newissue['quantity'];
+                compositionItem['itemtype'] = newissue['itemtype'];
+                compositionItem['costtype'] = newissue['costtype'];
+
+                datamap['issuetype'] = null;
+                datamap['assetnum'] = null;
+                datamap['itemnum'] = null;
+                datamap['inventory_.item_.description'] = null;
+                datamap['enterby'] = null;
+                datamap['#gldebitacct'] = null;
+                datamap['chartofaccounts_'] = null;
+                datamap['gldebitacct'] = null;
+                datamap['binnum'] = null;
+                datamap['unitcost'] = null;
+                datamap['quantity'] = null;
+                datamap['gldebitacct'] = null;
+            }
             modalService.hide();
         },
         invIssue_afterChangeWorkorder: function (parameters) {

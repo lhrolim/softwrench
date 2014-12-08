@@ -101,7 +101,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="#issueto" label="Issue To" readonly="true"/>
           <field attribute="#storeloc" label="Storeroom" readonly="true"/>
           <field attribute="#gldebitacct" label="GL Debit Account" readonly="true"/>
-          <composition relationship="invissue" label="Items" detailschema="newitem" inline="true" >
+          <composition relationship="invissue" label="Items" detailschema="newitem" inline="true">
             <collectionproperties listschema="itemlist" hideexistingdata="true" allowcreation="false" autocommit="false" />
           </composition>
           <properties>
@@ -190,6 +190,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <properties>
             <property key="list.click.popup" value="modal"/>
             <property key="list.click.service" value="inventoryService.batchissuelistclick"/>
+            <property key="list.click.schema" value="updateitem"/>
             <property key="list.disablepagination" value="true"/>
             <property key="nextschema.schemaid" value="newitem"/>
           </properties>
@@ -206,9 +207,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="item_.description" label="Description"/>
           <field attribute="binnum" label="Bin"/>
           <field attribute="gldebitacct" label="GL Debit Account"/>
-          <field attribute="quantity" label="Quantity"/>
+          <field attribute="quantity" label="Issue Quantity"/>
           <field attribute="issuetype" label="Issue Type" default="ISSUE" hidden="true"/>
           <field attribute="storeloc" hidden="true"/>
+          <section resourcepath="/Content/Templates/otb/compositionlistdeleteaction.html">
+            <renderer type="default" params="width=4%"/>
+          </section>
         </schema>
 
         <schema id="viewinvreturndetail" stereotype="detail" mode="output">
@@ -308,6 +312,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="inventory_.itemnum" hidden="true" />
           <field attribute="inventory_.siteid" hidden="true" />
           <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+          <field attribute="issuetype" hidden="true"/>
           <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
           <field attribute="inventory_.item_.itemtype" label="Item Type" readonly="true"/>
           <field attribute="inventory_.costtype" hidden="true"/>
@@ -322,7 +327,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <removecommand id="cancel"/>
               <removecommand id="print"/>
               <removecommand id="save"/>
-              <command id="additemtobatch" label="Add" service="inventoryService" method="addItemToBatch" parameters="datamap,previousdata"/>
+              <command id="additemtobatch" label="Add" service="inventoryService" method="addItemToBatch" showexpression="@issuetype == null" parameters="datamap,previousdata"/>
+              <command id="updateiteminbatch" label="Update" service="inventoryService" method="updateItemInBatch" showexpression="@issuetype != null" parameters="datamap,previousdata"/>
               <command id="cancel" label="Cancel" service="modalService" method="hide"/>
             </commandgroup>
           </commandbars>
