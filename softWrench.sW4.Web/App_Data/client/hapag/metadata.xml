@@ -1864,7 +1864,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </properties>
         </detail>
 
-        <schema id="add" title="Add Subcomponent" stereotype="detail">
+        <schema id="add" title="IMAC - Add Subcomponent" stereotype="detail">
 
           <properties>
             <property key="showusage" value="false"/>
@@ -1958,7 +1958,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </properties>
         </schema>
 
-        <schema id="move" title="Move" stereotype="detail">
+        <schema id="move" title="IMAC - Move" stereotype="detail">
           <properties>
             <property key="showlantype" value="@tolocation!=null &amp;&amp; @tolocation!=@fromlocation"/>
             <property key="showibmtechnician" value="@tolocation!=null &amp;&amp; @tolocation==@fromlocation"/>
