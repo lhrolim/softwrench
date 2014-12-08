@@ -233,7 +233,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             
             if (siteid == null || siteid.trim() == "") {
                 alertService.alert("A Site Id is required.");
-                return;
+                return; 
             }
     
             var storeloc = datamap['storeloc'];
@@ -373,12 +373,13 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             newissue.gldebitacct = datamap['gldebitacct'];
             newissue.issueto = datamap['issueto'];
             newissue.issuetype = datamap['issuetype'];
-            newissue.binnum = datamap['invbalances_.binnum'];
+            newissue.binnum = datamap['binnum'];
             newissue.location = datamap['location'];
             newissue.quantity = datamap['quantity'];
             newissue.refwo = datamap['refwo'];
             newissue.siteid = datamap['siteid'];
             newissue.storeloc = datamap['storeloc'];
+            newissue.unitcost = datamap['unitcost'];
 
             clonedCompositionData.push(newissue);
             modalService.hide();
@@ -447,10 +448,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
         invIssue_afterChangeItem: function (parameters) {
             var itemnum = parameters['fields']['itemnum'];
+            parameters['fields']['binnum'] = null;
+            parameters['fields']['#curbal'] = null;
             if (itemnum == null || itemnum.trim() == "") {
                 parameters['fields']['itemnum'] = null;
-                parameters['fields']['binnum'] = null;
-                parameters['fields']['#curbal'] = null;
+
                 parameters['fields']['unitcost'] = null;
                 parameters['fields']['inventory_.issueunit'] = null;
                 parameters['fields']['inventory_.itemtype'] = null;
@@ -458,7 +460,26 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
 
             setBatchIssueBin(parameters);
-            updateInventoryCosttype(parameters);
+            
+            var searchData = {
+                itemnum: parameters['fields']['itemnum'],
+                location: parameters['fields']['storeloc'],
+                siteid: parameters['fields']['siteid'],
+                orgid: parameters['fields']['orgid'],
+                itemsetid: parameters['fields']['itemsetid']
+            };
+            searchService.searchWithData("inventory", searchData).success(function (data) {
+                var resultObject = data.resultObject;
+                var fields = resultObject[0].fields;
+                var costtype = fields['costtype'];
+                parameters['fields']['inventory_.costtype'] = costtype;
+                var locationFieldName = "";
+                if (parameters['fields'].storeloc != undefined) {
+                    locationFieldName = "storeloc";
+                }
+                //parameters['fields']['inventory_.issueunit'] = fields['issueunit'];
+                doUpdateUnitCostFromInventoryCost(parameters, "unitcost", locationFieldName);
+            });
         },
 
         batchinvIssue_afterChangeBin: function(parameters) {

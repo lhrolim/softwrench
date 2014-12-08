@@ -106,7 +106,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <commandbars>
             <commandgroup position="detailform" removeundeclared="true">
               <command id="additemtobatchissue" label="Add Item" service="inventoryService" method="displayNewIssueModal" parameters="schema,datamap"/>
-              <command id="submitnewbatchissue" label="Submit" service="inventoryService" method="submitNewInvIssue" parameters="schema,datamap,$scope" />
+              <command id="submitnewbatchissue" label="Submit" service="inventoryService" method="submitNewBatchIssue" parameters="schema,datamap" />
               <command id="cancelnewbatchissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" />
             </commandgroup>
           </commandbars>
@@ -124,6 +124,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="orgid"/>
           <field attribute="status"/>
           <field attribute="costtype"/>
+          <field attribute="itemtype"/>
+          <field attribute="issueunit"/>
         </list>
       </schemas>
     </application>
@@ -282,7 +284,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="siteid" label="Site" readonly="true"/>
           <field label="Storeroom" attribute="storeloc" readonly="true"/>
-          <association label="Item" target="itemnum" labelfield="inventory_.itemnum" extraprojectionvalues="itemtype,costtype" dependantfields="siteid,storeloc" required="true">
+          <association label="Item" target="itemnum" labelfield="inventory_.itemnum" extraprojectionvalues="itemtype,costtype,issueunit" dependantfields="siteid,storeloc" required="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="invIssue_afterChangeItem"/>
           </association>
