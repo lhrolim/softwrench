@@ -834,7 +834,7 @@ body,
 
     #listgrid thead {
         width: 874px;
-        z-index: 1;
+        z-index: 3;
     }
 
     #listgrid thead tr.header-row, #listgrid tfoot tr.footer-row {
