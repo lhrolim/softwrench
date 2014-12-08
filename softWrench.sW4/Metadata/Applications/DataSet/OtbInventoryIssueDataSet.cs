@@ -48,7 +48,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 return;
             }
 
-            var commaSeparatedIds = string.Join(",", matusetransidlist);
+            var commaSeparatedIds = String.Join(",", matusetransidlist);
             var query = MaxDAO.FindByNativeQuery(
                 String.Format("SELECT issueid, sum(quantity) FROM matusetrans WHERE issueid in ({0}) group by issueid having sum(quantity) > 0",commaSeparatedIds));
 

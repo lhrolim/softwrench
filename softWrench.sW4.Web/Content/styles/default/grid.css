@@ -1,25 +1,100 @@
-﻿/*SM - 09/29 - SWWEB-439 Make Grid Columns Response*/
-/*.listgrid-table.unfixed {
-    margin-top: 41px !important;
+﻿.advanced-filter-toogle {
+    cursor: pointer;
+    text-align: center;
 }
 
-    .listgrid-table.unfixed > thead {
-        top: 289px;
-    }*/
-
-.listgrid-table.affixed > thead {
-    /*position: fixed;
-    top: 266px;*/
+.advanced-filter > div.advanced-filter-item {
+    float: left;
+    margin: 4px;
+    margin-right: 14px;
 }
+
+    .advanced-filter > div.advanced-filter-item .filter-label {
+        color: black;
+    }
+
+    .advanced-filter > div.advanced-filter-item .filter-input {
+        float: left;
+    }
+
+    .advanced-filter > div.advanced-filter-item div.text-input {
+        width: 150px;
+    }
+
+    .advanced-filter > div.advanced-filter-item div.datetime-input {
+        width: 140px;
+    }
+
+.input-group .glyphicon,
+.grid-filter-button {
+    cursor: pointer;
+    color: black;
+}
+
+.filter-row .grid-filter-button {
+    font-weight: bold;
+}
+
+.filter-row .dropdown {
+    text-align: left;
+}
+
+.filter-row .input-group {
+    width: 100%;
+}
+
+#listgrid {
+    color: #000;
+    width: 100%;
+    border-spacing: 0px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+}
+
+    #listgrid thead {
+        background-color: #fff;
+    }
+
+        #listgrid thead tr.header-row {
+            background-color: #fff;
+            color: #000;
+        }
+
+            #listgrid thead tr.header-row th {
+                cursor: pointer;
+            }
+
+        #listgrid thead tr.filter-row {
+            background-color: #fff;
+            color: #000;
+        }
+
+    #listgrid tbody tr {
+        cursor: pointer;
+    }
+
+    #listgrid th {
+        word-break: break-word;
+    }
+
+    #listgrid td {
+        word-break: break-all;
+        word-break: break-word;
+    }
+
+        #listgrid td .input-group, #listgrid td .input-group .glyphicon {
+            position: initial;
+        }
+
+        #listgrid td.select-multiple {
+            text-align: center;
+        }
 
 .gridcolumnvalue {
     color: black;
     padding-left: 8px;
     word-wrap: break-word;
-}
-
-.listgrid-table.affixed {
-    /*margin-top: 126px;*/
 }
 
 @media only screen and (min-width: 1200px) {
@@ -33,4 +108,13 @@
         max-width: 100px;
     }
 }
-/*SM - 09/29 - SWWEB-439 Make Grid Columns Response*/
+
+#scanConfigTable thead tr td:nth-child(1) {
+    width: 30%;
+}
+#scanConfigTable thead tr td:nth-child(2) {
+    width: 45%;
+}
+#scanConfigTable thead tr td:nth-child(3) {
+    width: 25%;
+}

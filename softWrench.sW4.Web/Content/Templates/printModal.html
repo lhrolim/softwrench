@@ -15,8 +15,8 @@
                     <ng-switch on="composition.type">
                         <input type="checkbox"
                                ng-switch-when="ApplicationCompositionDefinition"
-                               ng-model="compositionstoprint[composition.relationship].value"
-                               ng-checked="false">
+                               ng-checked="compositionstoprint[composition.relationship].value"
+                               ng-model="compositionstoprint[composition.relationship].value">
                         <input type="checkbox" ng-switch-default
                                ng-model="compositionstoprint[composition.id].value"
                                ng-checked="false">

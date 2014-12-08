@@ -65,6 +65,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     
     <entity name="invreserve" idAttribute="requestnum" whereclause="reservedqty > 0">
       <relationships>
+        <relationship to="item">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+        </relationship>
         <relationship to="invissue">
           <relationshipAttribute from="wonum" to="refwo" primary="true"/>
           <relationshipAttribute from="assetnum" to="assetnum"/>
@@ -455,7 +459,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <list title="Physical Count">
           <field attribute="invbalancesid" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=15%" />
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="inventory_.siteid" label="Site">
             <renderer type="default"  />
@@ -499,25 +503,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       <schemas>
         <list>
           <field attribute="wonum" label="Work Order">
-            <renderer type="default" params="width=11%"/>
+            <renderer type="default" params="widthXS=40%;widthSM=30%;widthMD=20%;widthLG=10%" />
           </field>
           <field attribute="asset" label="Asset">
-            <renderer type="default" params="width=11%"/>
+            <renderer type="default" />
           </field>
-          <field attribute="location" label="location">
-            <renderer type="default" params="width=11%"/>
+          <field attribute="location" label="Location">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="width=11%"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="siteid" label="Site">
-            <renderer type="default" params="width=11%"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
-          <field attribute="reservedqty" label="Reserved Quantity">
-            <renderer type="default" params="width=11%"/>
+          <field attribute="reservedqty" label="Reserved">
+            <renderer type="default" params="hidefilter=true;widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=8%"/>
           </field>
-          <field attribute="actualqty" label="Quantity Issued">
-            <renderer type="default" params="width=11%"/>
+          <field attribute="actualqty" label="Issued">
+            <renderer type="default" params="hidefilter=true;widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=8%"/>
+          </field>
+          <field attribute="availablequantity" label="Available">
+            <renderer type="default" params="hidefilter=true;widthXS=-1%;widthSM=20%;widthMD=15%;widthLG=8%;"/>
           </field>
           <field attribute="location" hidden="true"/>
         </list>
@@ -536,6 +543,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="tostoreloc" label="Location" readonly="true"/>
           <field attribute="glaccount" label="GL Account" readonly="true"/>
           <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="item_.rotating" label="Rotating" readonly="true">
+            <renderer type="default" params="formatter=numberToBoolean;"/>
+          </field>
+          <field attribute="item_.iskit" label="Kit" readonly="true">
+            <renderer type="default" params="formatter=numberToBoolean;"/>
+          </field>
           <field attribute="location" label="Storeroom" readonly="true"/>
           <field attribute="reservedqty" label="Reserved Quantity" readonly="true"/>
           <field attribute="actualqty" label="Quantity Issued" readonly="true" hidden="true"/>

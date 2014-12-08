@@ -55,24 +55,34 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="icon" params="iconcss=fa fa-mail-forward"/>
           </field>-->
           <field attribute="inbound">
-            <renderer type="icon" params="expression={'1':'fa-long-arrow-left green','0':'fa-long-arrow-right orange'} "/>
+            <renderer type="icon" params="expression={'1':'fa-long-arrow-left green','0':'fa-long-arrow-right orange'};widthXS=-1%;widthSM=5%;widthMD=5%;widthLG=3%"/>
           </field>
           <field attribute="read">
-            <renderer type="icon" params="expression={'#default':'fa-envelope envelopeYellow','true':''}"/>
+            <renderer type="icon" params="expression={'#default':'fa-envelope envelopeYellow','true':''};widthXS=-1%;widthSM=5%;widthMD=5%;widthLG=3%"/>
           </field>
-          <field attribute="orgobject" label="Origination"/>
+          <field attribute="orgobject" label="Origination">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=10%"/>
+          </field>
           <field attribute="createdate" label="Created Date/Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;widthXS=45%;widthSM=45%;widthMD=21%;widthLG=15%"/>
           </field>
-          <field attribute="sendto" label="To"/>
+          <field attribute="sendto" label="To">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=35%;widthLG=25%"/>
+          </field>
           <field attribute="cc" hidden="true"/>
           <field attribute="ccflag" label="Cc">
-            <renderer type="checkbox"/>
+            <renderer type="checkbox"  params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=5%"/>
           </field>
           <field attribute="message" hidden="true"/>
-          <field attribute="sendfrom" label="Send From" />
-          <field attribute="subject" label="Subject" />
-          <section resourcepath="/Content/Templates/otb/commlogaction.html"/>
+          <field attribute="sendfrom" label="Send From">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=20%"/>
+          </field>
+          <field attribute="subject" label="Subject">
+            <renderer type="default"/>
+          </field>
+          <section resourcepath="/Content/Templates/otb/commlogaction.html">
+            <renderer type="default" params="widthXS=-1%;widthSM=30%;widthMD=20%;widthLG=13%"/>
+          </section>
         </schema>
 
 

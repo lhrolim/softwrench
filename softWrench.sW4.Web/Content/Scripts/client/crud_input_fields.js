@@ -448,8 +448,8 @@ app.directive('crudInputFields', function (contextService) {
                 }
             };
 
-            $scope.getFormattedValue = function (value, column, datamap) {
-                var formattedValue = formatService.format(value, column, datamap);
+            $scope.getFormattedValue = function (value, field, datamap) {
+                var formattedValue = formatService.format(value, field, datamap);
                 if (formattedValue == "-666") {
                     //this magic number should never be displayed! 
                     //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
@@ -512,13 +512,19 @@ app.directive('crudInputFields', function (contextService) {
                 }
                 return result;
             }
-            //SM - 09/24 - SWWEB-441 change OTM column classes
             $scope.getLabelClass = function (fieldMetadata) {
-                //return $scope.hasSameLineLabel(fieldMetadata) ? 'col-md-2' : 'col-md-12';
                 if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
                     return null;
                 }
-                return $scope.hasSameLineLabel(fieldMetadata) ? 'col-sm-3 col-md-2' : 'col-xs-12';
+                var returnClass = $scope.hasSameLineLabel(fieldMetadata) ? 'col-sm-3 col-md-2' : 'col-xs-12';
+
+                //fix SWWEB-732, blank lable adding extra space
+                if (returnClass === 'col-xs-12' && fieldMetadata.label === null) {
+                    returnClass = returnClass + ' ng-hide';
+                }
+
+                //console.log(fieldMetadata);
+                return returnClass;
             }
             $scope.getFieldClass = function (fieldMetadata) {
                 if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
@@ -526,7 +532,7 @@ app.directive('crudInputFields', function (contextService) {
                 }
                 return $scope.hasSameLineLabel(fieldMetadata) ? 'col-sm-9 col-md-10' : 'col-xs-12';
             }
-            //SM - 09/24 - SWWEB-441 change OTM column classes
+
             ///
             // legendevaluation is boolean indicating the mode we are calling this method, either for an ordinary field or for a header with legend
             ////

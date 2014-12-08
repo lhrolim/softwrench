@@ -107,7 +107,6 @@ app.factory('printService', function ($rootScope, $http, $timeout, $log, tabsSer
             params.key.schemaId = schema.schemaId;
             params.key.mode = schema.mode;
             params.key.platform = platform();
-
             var notExpansibleCompositions = [];
             var expansibleCompositions = {};
             if (printOptions != null) {
@@ -209,7 +208,8 @@ app.factory('printService', function ($rootScope, $http, $timeout, $log, tabsSer
 
         hidePrintModal: function () {
             $rootScope.$broadcast("sw_hideprintmodal");
-        }
+        },
+
     };
 
 });

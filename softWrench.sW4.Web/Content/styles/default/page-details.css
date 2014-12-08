@@ -1,0 +1,113 @@
+﻿.detail-body {
+    padding-top: 20px;
+}
+
+.detail-header {
+    margin-bottom: 30px;
+}
+
+    .detail-header .nav-tabs {
+        border-bottom: none;
+        margin-bottom: 10px;
+    }
+
+        .detail-header .nav-tabs > li {
+            float: none;
+        }
+
+            .detail-header .nav-tabs > li.active > a, .detail-header .nav-tabs > li > a {
+                border: 1px solid #999;
+                border-radius: 0;
+            }
+
+                .detail-header .nav-tabs > li.active > a:hover, .detail-header .nav-tabs > li > a:hover {
+                    border-color: #999;
+                }
+
+            .detail-header .nav-tabs > li:first-child > a {
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+            }
+
+            .detail-header .nav-tabs > li:last-child > a {
+                border-bottom-left-radius: 3px;
+                border-bottom-right-radius: 3px;
+            }
+
+    .detail-header .buttons .btn {
+        margin-top: 10px;
+        width: 32%;
+    }
+
+@media all and (min-width: 480px) {
+    .detail-header .buttons .btn {
+        width: auto;
+    }
+}
+
+@media all and (min-width: 768px) {
+    .detail-header {
+        margin-bottom: 30px;
+        border-bottom: 1px solid #999;
+    }
+
+        .detail-header .nav-tabs > li {
+            float: left;
+        }
+
+            .detail-header .nav-tabs > li > a {
+                margin-right: 0;
+                border: 1px solid #ddd;
+                border-bottom: 1px solid #999;
+                border-left: none;
+                border-radius: 0;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
+            }
+
+            .detail-header .nav-tabs > li:last-child > a {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            .detail-header .nav-tabs > li.active > a, .detail-header .nav-tabs > li.active > a:hover, .detail-header .nav-tabs > li.active > a:focus {
+                border: 1px solid #999;
+                border-bottom: 1px solid #fff;
+            }
+
+            .detail-header .nav-tabs > li > a:hover {
+                border-color: #eee #eee #999;
+            }
+
+        .detail-header .nav-tabs {
+            float: left;
+            margin-bottom: 0;
+        }
+
+        .detail-header .buttons {
+            float: right;
+        }
+
+            .detail-header .buttons .btn {
+                margin-top: 0;
+            }
+}
+
+.ticketid_spacer {
+    height: 1px;
+}
+
+.ticketid {
+    margin-top: 20px;
+}
+
+    .ticketid.well {
+        margin-bottom: 0;
+    }
+
+    .ticketid h5 {
+        font-weight: bold;
+        font-size: 16px;
+        text-align: center;
+        word-wrap: break-word; /*make sure title wraps if summary is really long and doesn't have any spaces*/
+    }

@@ -47,18 +47,23 @@ app.directive('printModal', function ($log, contextService) {
             $scope.$on('sw_showprintmodal', function (event, schema) {
                 $log.getInstance('printmodal').info("starting printing modal");
                 $scope.compositionstoprint = {};
+                $scope.shouldPrintMain = true;
                 $scope.printSchema = schema;
-
+                var activetab = contextService.getActiveTab();
                 var tabs = tabsService.tabsDisplayables($scope.printSchema);
                 for (var i = 0; i < tabs.length ; i++) {
                     var tab = tabs[i];
                     if (tab.type == "ApplicationCompositionDefinition") {
-                        $scope.compositionstoprint[tab.relationship] = { value: false, schema: tab.schema.schemas.list };
+                        if (tab.relationship.isEqual(activetab)) {
+                            $scope.compositionstoprint[tab.relationship] = { value: true, schema: tab.schema.schemas.list };
+                            $scope.shouldPrintMain = false;
+                        } else {
+                            $scope.compositionstoprint[tab.relationship] = { value: false, schema: tab.schema.schemas.list };
+                        }
                     } else {
                         $scope.compositionstoprint[tab.id] = { value: false, schema: tab };
                     }
                 }
-                
                 var modal = $(PRINTMODAL_$_KEY);
                 modal.draggable();
                 modal.modal('show');
@@ -70,7 +75,7 @@ app.directive('printModal', function ($log, contextService) {
                 $scope.printSchema = $scope.schema.printSchema != null ? $scope.schema.printSchema : $scope.schema;
 
                 //make all the ng-models´s objects true by default... angular will just work on binding upon click
-                $scope.compositionstoprint = {};
+                //$scope.compositionstoprint = {};
                 $scope.shouldPageBreak = false;
                 $scope.shouldPrintMain = true;
                 

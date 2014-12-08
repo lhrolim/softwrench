@@ -38,7 +38,7 @@
 
     <div class="divAuxTable">
         <!--build responsive css rules based on metadata-->
-        <style column-widths="{{schema.displayables}}"></style>
+        <style column-widths columns="{{schema.displayables}}" gridtype="listgrid"></style>
 
         <table class="table table-hover hidden-phone fixedtable listgrid-table" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" id="listgrid">
             <thead id="listgridthread" class="listgrid-thead">
@@ -157,16 +157,14 @@
                 </tr>
             </thead>
             <tbody>
-
-                <tr ng-repeat="dm in datamap" style="cursor: pointer" listtablerendered rel="hideRow" bindonce
+                <tr ng-repeat="dm in datamap" listtablerendered rel="hideRow" bindonce
                     ng-style="{'cursor':cursortype()}">
-                    <td ng-show="schema.properties['list.selectionstyle'] == 'multiple'" style="text-align: center;">
+                    <td ng-show="schema.properties['list.selectionstyle'] == 'multiple'" class="select-multiple">
                         <!--Multiselect-->
-                        <!-- TODO: Move style to css -->
                         <input type="checkbox"
                                ng-model="dm.fields['_#selected']">
                     </td>
-                    <td ng-show="compositionlistschema.properties['list.selectionstyle'] == 'single'">
+                    <td ng-show="compositionlistschema.properties['list.selectionstyle'] == 'single'" class="select-single">
                         <!--Singleselect-->
                     </td>
                     <td ng-repeat="column in schema.displayables"
