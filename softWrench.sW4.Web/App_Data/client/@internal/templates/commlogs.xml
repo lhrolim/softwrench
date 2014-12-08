@@ -47,10 +47,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
       <schemas>
         <schema id="list" stereotype="compositionlist">
-          <properties>
+          <!--<properties>
 
             <property key="list.click.popup" value="modal"/>
-          </properties>
+          </properties>-->
           <!--<field attribute="#inboundicon">
             <renderer type="icon" params="iconcss=fa fa-mail-forward"/>
           </field>-->
@@ -88,10 +88,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
         <schema id="detail" stereotype="compositiondetail">
           <field attribute="commlogid" hidden="true" />
-          <!--field attribute="sendto" label="To:" /-->
-          <association label="To:" target="sendto" labelfield="email_.emailaddress">
+          <field attribute="sendto" label="To:" />
+          <!--<association label="To:" target="sendto" labelfield="email_.emailaddress">
             <renderer type="autocompleteserver"/>
-          </association>
+          </association>-->
           <field attribute="cc" label="Cc:"/>
           <field attribute="sendfrom" label="From:"  />
           <field attribute="subject" label="Subject:" />
