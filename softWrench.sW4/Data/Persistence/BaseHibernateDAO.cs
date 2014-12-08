@@ -16,6 +16,7 @@ namespace softWrench.sW4.Data.Persistence {
 
 
     public abstract class BaseHibernateDAO : ISingletonComponent {
+        private const int QueryTimeout = 180;
 
         private static ILog HibernateLog = LogManager.GetLogger(typeof(BaseHibernateDAO));
 
@@ -26,6 +27,7 @@ namespace softWrench.sW4.Data.Persistence {
 
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
             query.SetFlushMode(FlushMode.Never);
+            query.SetTimeout(QueryTimeout);
             LogQuery(queryst, parameters);
             if (result.Parameters == null) {
                 return query;
@@ -62,7 +64,7 @@ namespace softWrench.sW4.Data.Persistence {
         public IQuery BuildQuery(string queryst, ISession session, bool native = false) {
             LogQuery(queryst, null);
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
-
+            query.SetTimeout(QueryTimeout);
             return query;
         }
 
@@ -75,6 +77,7 @@ namespace softWrench.sW4.Data.Persistence {
             LogPaginationQuery(queryst, parameters);
 
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
+            query.SetTimeout(QueryTimeout);
 
             if (!ApplicationConfiguration.IsDB2(ApplicationConfiguration.DBType.Maximo) && paginationData != null) {
                 var pageSize = paginationData.PageSize;
