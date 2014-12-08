@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using log4net;
 using Quartz.Util;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data;
@@ -35,6 +37,8 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly MaximoConnectorEngine _maximoEngine;
         private readonly IConfigurationFacade _configurationFacade;
 
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ExcelController));
+
         public ExcelController(IContextLookuper contextLookuper, DataController dataController, ExcelUtil excelUtil, MaximoConnectorEngine maximoEngine, IConfigurationFacade configurationFacade) {
             _contextLookuper = contextLookuper;
             _dataController = dataController;
@@ -60,6 +64,7 @@ namespace softWrench.sW4.Web.Controllers {
         public FileContentResult Export(string application, [FromUri]ApplicationMetadataSchemaKey key,
             [FromUri] PaginatedSearchRequestDto searchDto, string module) {
 
+            var before = Stopwatch.StartNew();
 
             searchDto.PageSize = searchDto.TotalCount + 1;
             var ctx = _contextLookuper.LookupContext();
@@ -102,12 +107,16 @@ namespace softWrench.sW4.Web.Controllers {
                 rows.AddRange(item.Value);
             }
 
+            Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "finished gathering export excel data"));
 
 
             var excelFile = _excelUtil.ConvertGridToExcel(user, schema, rows);
             var stream = new MemoryStream();
             excelFile.SaveAs(stream);
             stream.Close();
+
+            Log.Info(LoggingUtil.BaseDurationMessageFormat(before, "finished export excel data"));
+
             var fileName = GetFileName(application, key.SchemaId) + ".xls";
             var result = new FileContentResult(stream.ToArray(), System.Net.Mime.MediaTypeNames.Application.Octet) {
                 FileDownloadName = (string)StringUtil.FirstLetterToUpper(fileName)
@@ -140,6 +149,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         private void SingleExecution(PaginatedSearchRequestDto searchDto, ApplicationSchemaDefinition schema, IDictionary<int, IReadOnlyList<AttributeHolder>> tempResultMap, SlicedEntityMetadata entityMetadata, int pageNumber) {
+            var before = Stopwatch.StartNew();
             var applicationCompositionSchemata = new Dictionary<string, ApplicationCompositionSchema>();
             searchDto.PageNumber = pageNumber + 1;
             if (searchDto.CompositionsToFetch != null && searchDto.CompositionsToFetch.Count > 0) {
@@ -151,7 +161,10 @@ namespace softWrench.sW4.Web.Controllers {
                     }
                 }
             }
-            tempResultMap.Add(pageNumber, _maximoEngine.Find(entityMetadata, searchDto, applicationCompositionSchemata));
+
+            var readOnlyList = _maximoEngine.Find(entityMetadata, searchDto, applicationCompositionSchemata);
+            Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "finished gathering chunk {0}", pageNumber));
+            tempResultMap.Add(pageNumber, readOnlyList);
         }
 
         public string GetFileName(string application, string schemaId) {
