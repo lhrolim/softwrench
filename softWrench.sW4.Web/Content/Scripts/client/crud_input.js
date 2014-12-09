@@ -47,6 +47,11 @@
             scope.save = function () {
                 scope.savefn();
             };
+
+            scope.cancel = function () {
+                scope.cancelfn({ data: scope.previousdata, schema: scope.previousschema });
+                scope.$emit('sw_cancelclicked');
+            };
         }
     }
 });
@@ -78,8 +83,8 @@ app.directive('crudInput', function (contextService) {
             $scope.$name = 'crudinput';
 
             this.cancel = function () {
-                $scope.cancelfn({ data: $scope.previousdata, schema: $scope.previousschema });
-                $scope.$emit('sw_cancelclicked');
+                $scope.$parent.cancel();
+//                $scope.$emit('sw_cancelclicked');
             };
 
             this.save = function () {
