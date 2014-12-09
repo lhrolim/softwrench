@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Net.Mime;
 using System.Text.RegularExpressions;
+using DocumentFormat.OpenXml.Math;
 using softWrench.sW4.SimpleInjector;
 using System.Net.Mail;
 using softWrench.sW4.Metadata;
 using Common.Logging;
 using softWrench.sW4.Util;
+
 
 namespace softWrench.sW4.Email {
     public class EmailService : ISingletonComponent {
@@ -41,8 +43,14 @@ namespace softWrench.sW4.Email {
             //disposition.ReadDate = System.IO.File.GetLastAccessTime(file);
             //email.Attachments.Add(data);
             // Convert that Base 64 string data into attachment data and try sending email 
-            Attachment data = Attachment.CreateAttachmentFromString(emailData.AttachmentData, emailData.AttachmentName,null,null);
-            email.Attachments.Add(data);
+            if (emailData.AttachmentData != null)
+            {
+                Tuple<Byte[], string> fileTuple;
+                fileTuple = Tuple.Create(emailData.AttachmentData.GetBytes(), emailData.AttachmentName);
+                string encodedAttachment = emailData.AttachmentData.Substring(emailData.AttachmentData.IndexOf(",") + 1);
+                Attachment data = Attachment.CreateAttachmentFromString(encodedAttachment, emailData.AttachmentName, System.Text.Encoding.GetEncoding(encodedAttachment) , "image/jpeg");
+                email.Attachments.Add(data);
+            }
 
             try {
                 objsmtpClient.Send(email);
