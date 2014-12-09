@@ -41,7 +41,8 @@ namespace softWrench.sW4.Email {
             //disposition.ReadDate = System.IO.File.GetLastAccessTime(file);
             //email.Attachments.Add(data);
             // Convert that Base 64 string data into attachment data and try sending email 
-
+            Attachment data = Attachment.CreateAttachmentFromString(emailData.AttachmentData, emailData.AttachmentName,null,null);
+            email.Attachments.Add(data);
 
             try {
                 objsmtpClient.Send(email);
