@@ -51,7 +51,7 @@ namespace softWrench.sW4.Email {
                 string encodedAttachment = emailData.AttachmentData.Substring(emailData.AttachmentData.IndexOf(",") + 1);
                 byte[] data1 = Convert.FromBase64String(encodedAttachment);
                 string decodedString = Encoding.UTF8.GetString(data1);
-                Attachment data = Attachment.CreateAttachmentFromString(decodedString, emailData.AttachmentName, System.Text.Encoding.UTF8 , "image/jpeg");
+                Attachment data = Attachment.CreateAttachmentFromString(decodedString, emailData.AttachmentName, System.Text.Encoding.UTF8, MediaTypeNames.Application.Octet);
                 email.Attachments.Add(data);
             }
 
