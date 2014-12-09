@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Mime;
+using System.Text;
 using System.Text.RegularExpressions;
 using DocumentFormat.OpenXml.Math;
 using softWrench.sW4.SimpleInjector;
@@ -48,7 +49,9 @@ namespace softWrench.sW4.Email {
                 Tuple<Byte[], string> fileTuple;
                 fileTuple = Tuple.Create(emailData.AttachmentData.GetBytes(), emailData.AttachmentName);
                 string encodedAttachment = emailData.AttachmentData.Substring(emailData.AttachmentData.IndexOf(",") + 1);
-                Attachment data = Attachment.CreateAttachmentFromString(encodedAttachment, emailData.AttachmentName, System.Text.Encoding.GetEncoding(encodedAttachment) , "image/jpeg");
+                byte[] data1 = Convert.FromBase64String(encodedAttachment);
+                string decodedString = Encoding.UTF8.GetString(data1);
+                Attachment data = Attachment.CreateAttachmentFromString(decodedString, emailData.AttachmentName, System.Text.Encoding.UTF8 , "image/jpeg");
                 email.Attachments.Add(data);
             }
 
