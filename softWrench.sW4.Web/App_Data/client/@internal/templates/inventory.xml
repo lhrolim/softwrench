@@ -393,7 +393,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="lookup"/>
           </association>
           <field attribute="item_.itemtype" readonly="true" label="Item Type"/>
-          <association label="Storeroom" target="storeloc" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,issueunit,itemtype" required="true">
+          <association label="Storeroom" target="storeloc" labelfield="storeroom_.location" hideDescription="true" extraprojectionvalues="costtype,issueunit,itemtype" required="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterChangeStoreroom"/>
           </association>
@@ -407,7 +407,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="numericinput" params="min=1;"/>
           </field>
           <field attribute="unitcost" label="Unit Cost" readonly="true"/>
-          <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
+          <field attribute="storeroom_.issueunit" label="Issue Unit" readonly="true"/>
           <association label="Workorder" target="refwo" labelfield="workorder_.description" dependantfields="siteid" extraprojectionvalues="glaccount,location,assetnum">
             <dataprovider prefilterfunction="FilterWorkorders"/>
             <renderer type="lookup"/>
@@ -425,7 +425,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname">
             <renderer type="lookup"/>
           </association>
-          <field attribute="enterby" label="Entered By" readonly="true"/>
+          <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
           <field attribute="inventory_.costtype" hidden="true"/>
         </schema>
       </schemas>

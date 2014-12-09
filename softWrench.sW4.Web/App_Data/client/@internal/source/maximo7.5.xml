@@ -2695,6 +2695,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="storeloc" to="location" />
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
+        <relationship to="inventory" qualifier="storeroom">
+          <relationshipAttribute from="storeloc" to="location" primary="true" />
+          <relationshipAttribute from="itemnum" to="itemnum" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
         <relationship to="invbalances">
           <relationshipAttribute from="itemnum" to="itemnum"/>
           <relationshipAttribute from="siteid" to="siteid"/>

@@ -62,7 +62,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         });
     };
 
-    var doUpdateUnitCostFromInventoryCost = function(parameters, unitCostFieldName, locationFieldName) {
+    var doUpdateUnitCostFromInventoryCost = function(parameters, unitCostFieldName, locationFieldName, inventoryFieldName) {
         var searchData = {
             itemnum: parameters['fields']['itemnum'],
             location: parameters['fields'][locationFieldName],
@@ -231,14 +231,14 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         navToBatchIssueDetail: function (schema, datamap) {
             var siteid = datamap['siteid'];
             
-            if (siteid == null || siteid.trim() == "") {
+            if (nullOrEmpty(siteid)) {
                 alertService.alert("A Site Id is required.");
                 return; 
             }
     
             var storeloc = datamap['storeloc'];
 
-            if (storeloc == null || storeloc.trim() == "") {
+            if (nullOrEmpty(storeloc)) {
                 alertService.alert("A Storeroom is required.");
                 return;
             }
@@ -248,10 +248,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var assetnum = datamap['assetnum'];
             var gldebitacct = datamap['gldebitacct'];
 
-            if ((refwo == null || storeloc.trim() == "") &&
-                (location == null || location.trim() == "") &&
-                (assetnum == null || assetnum.trim() == "") &&
-                (gldebitacct == null || gldebitacct.trim() == "")) {
+            if (nullOrEmpty(refwo) &&
+                nullOrEmpty(location) &&
+                nullOrEmpty(assetnum) &&
+                nullOrEmpty(gldebitacct)) {
                 alertService.alert("Either a Workorder, Location, Asset, or GL Debit Account is required.");
                 return;
             }
@@ -408,7 +408,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             modalService.hide();
         },
         invIssue_afterChangeWorkorder: function (parameters) {
-            if (parameters.fields['refwo'] == null || parameters.fields['refwo'].trim() == "") {
+            if (nullOrEmpty(parameters.fields['refwo'])) {
                 parameters.fields['refwo'] = null;
                 parameters.fields['location'] = null;
                 parameters.fields['assetnum'] = null;
@@ -473,7 +473,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var itemnum = parameters['fields']['itemnum'];
             parameters['fields']['binnum'] = null;
             parameters['fields']['#curbal'] = null;
-            if (itemnum == null || itemnum.trim() == "") {
+            if (nullOrEmpty(itemnum)) {
                 parameters['fields']['itemnum'] = null;
                 parameters['fields']['unitcost'] = null;
                 parameters['fields']['inventory_.issueunit'] = null;
@@ -509,10 +509,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var siteid = parameters['fields']['siteid'];
             var storeloc = parameters['fields']['storeloc'];
             var binnum = parameters['fields']['binnum'];
-            if (binnum != null && binnum.trim() != "") {
-                if (itemnum != null && itemnum.trim() != "" &&
-                    siteid != null && siteid.trim() != "" &&
-                    storeloc != null && storeloc.trim() != "") {
+            if (!nullOrEmpty(binnum)) {
+                if (!nullOrEmpty(itemnum) &&
+                    !nullOrEmpty(siteid) &&
+                    !nullOrEmpty(storeloc)) {
                     var searchData = {
                         itemnum: itemnum,
                         siteid: siteid,
