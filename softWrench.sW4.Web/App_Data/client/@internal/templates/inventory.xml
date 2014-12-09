@@ -157,7 +157,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="item_.itemtype" label="Item Type">
             <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=11%" />
           </field>
-          <field attribute="refwo" label="Workorder">
+          <field attribute="refwo" label="Work Order">
             <renderer type="default" params="width=11%;"/>
           </field>
           <field attribute="issueto" label="Issue To">
@@ -293,35 +293,47 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </schema>
 
         <schema id="newitem" stereotype="compositiondetail" mode="input" title="New Issue">
-          <field attribute="matusetransid" hidden="true"/>
-          <field attribute="siteid" label="Site" readonly="true"/>
-          <field attribute="storeloc" label="Storeroom" readonly="true"/>
-          <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="costtype,issueunit,item_.description,item_.itemtype" dependantfields="siteid,storeloc" required="true">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="inventoryService" method="invIssue_afterChangeItem"/>
-          </association>
-          <association label="Bin" target="binnum" labelfield="invbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="inventoryService" method="batchinvIssue_afterChangeBin"/>
-          </association>
-          <field attribute="#curbal" label="Current Balance" readonly="true"/>
-          <field attribute="quantity" label="Issue Quantity" default="1">
-            <renderer type="numericinput" params="min=1;max=@curbal;"/>
-          </field>
-          <field attribute="inventory_.location" hidden="true" />
-          <field attribute="inventory_.itemnum" hidden="true" />
-          <field attribute="inventory_.siteid" hidden="true" />
-          <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+          <section>
+            <header displacement="ontop" label="Record Information" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="matusetransid" hidden="true"/>
+            <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
+            <field attribute="storeloc" label="Storeroom" readonly="true"/>
+            <field attribute="siteid" label="Site" readonly="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Inventory Information" params="fieldset=true;font-weight=bold;"/>
+            <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="costtype,issueunit,item_.description,item_.itemtype" dependantfields="siteid,storeloc" required="true">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeItem"/>
+            </association>
+            <field attribute="inventory_.item_.itemtype" label="Item Type" readonly="true"/>
+            <association label="Bin" target="binnum" labelfield="invbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="batchinvIssue_afterChangeBin"/>
+            </association>
+            <field attribute="#curbal" label="Current Balance" readonly="true"/>
+            <field attribute="quantity" label="Issue Quantity" default="1">
+              <renderer type="numericinput" params="min=1;max=@curbal;"/>
+            </field>
+            <field attribute="inventory_.location" hidden="true" />
+            <field attribute="inventory_.itemnum" hidden="true" />
+            <field attribute="inventory_.siteid" hidden="true" />
+          </section>
+          <section>
+            <header displacement="ontop" label="Cost Information" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
+            <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+            <field attribute="inventory_.costtype" hidden="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Charge Information" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
+            <association label="Override GL Debit Account" target="#gldebitacct" labelfield="chartofaccounts_.accountname">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="overrideGlAccount"/>
+            </association>
+          </section>
           <field attribute="issuetype" hidden="true"/>
-          <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
-          <field attribute="inventory_.item_.itemtype" label="Item Type" readonly="true"/>
-          <field attribute="inventory_.costtype" hidden="true"/>
-          <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
-          <association label="Override Debit Account" target="#gldebitacct" labelfield="chartofaccounts_.accountname">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="inventoryService" method="overrideGlAccount"/>
-          </association>
-          <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
           <commandbars>
             <commandgroup position="detailform">
               <removecommand id="cancel"/>
