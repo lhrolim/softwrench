@@ -337,8 +337,7 @@ app.directive('compositionList', function (contextService) {
 
         var fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
         if (fullServiceName != null) {
-            var compositionschema = $scope.compositionschemadefinition['schemas']['detail'];
-            commandService.executeClickCustomCommand(fullServiceName, item, column, compositionschema);
+            commandService.executeClickCustomCommand(fullServiceName, item, column);
             return;
         };
         if ($scope.compositiondetailschema == null) {
