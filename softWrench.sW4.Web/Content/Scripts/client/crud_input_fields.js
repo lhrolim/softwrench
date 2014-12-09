@@ -527,10 +527,22 @@ app.directive('crudInputFields', function (contextService) {
                 return returnClass;
             }
             $scope.getFieldClass = function (fieldMetadata) {
-                if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
-                    return 'col-md-12';
+                var cssclass = "";
+                if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['css'] != null) {
+                    cssclass += fieldMetadata.rendererParameters['css'];
+                } else
+                    if (fieldMetadata.schema != null &&
+                    fieldMetadata.schema.rendererParameters != null &&
+                    fieldMetadata.schema.rendererParameters['css'] != null) {
+                    cssclass += fieldMetadata.schema.rendererParameters['css'];
                 }
-                return $scope.hasSameLineLabel(fieldMetadata) ? 'col-sm-9 col-md-10' : 'col-xs-12';
+                
+                if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
+                    cssclass += ' col-md-12';
+                    return cssclass;
+                }
+                cssclass += $scope.hasSameLineLabel(fieldMetadata) ? ' col-sm-9 col-md-10' : ' col-xs-12';
+                return cssclass;
             }
 
             ///

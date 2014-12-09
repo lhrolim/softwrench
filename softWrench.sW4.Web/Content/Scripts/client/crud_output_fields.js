@@ -109,15 +109,27 @@ app.directive('crudOutputFields', function (contextService) {
             };
 
             $scope.getFieldClass = function (fieldMetadata) {
+                var cssclass = "";
+                if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['css'] != null) {
+                    cssclass += fieldMetadata.rendererParameters['css'];
+                } else
+                    if (fieldMetadata.schema != null &&
+                    fieldMetadata.schema.rendererParameters != null &&
+                    fieldMetadata.schema.rendererParameters['css'] != null) {
+                        cssclass += fieldMetadata.schema.rendererParameters['css'];
+                    }
+
                 if ($scope.hasSameLineLabel(fieldMetadata)) {
-                    return 'col-sm-9';
+                    cssclass += ' col-sm-9';
+                    return cssclass;
                 }
 
-                if (fieldMetadata.rendererType== "TABLE") {
+                if (fieldMetadata.rendererType == "TABLE") {
                     //workaround because compositions are appending "" as default label values, but we dont want it!
                     return null;
                 }
-                return 'col-sm-12';
+                cssclass += ' col-sm-12';
+                return cssclass;
             };
 
             $scope.bindEvalExpression = function (fieldMetadata) {
