@@ -49,7 +49,6 @@
   <environment key="dev">
     <!--    <property key="wsprovider" value="mif" />-->
     <!--    <property key="targetmapping" value="maximo7.2.1"/>-->
-    <property key="globalwsdlpath" value="https://170.225.28.205/MPWSNTestProxyWS/DocHandler?wsdl"/>
     <property key="globaservletpath_inc" value="https://195.183.78.161/HAPAGLLOYDSNINCWS/DocHandlerServlet"/>
     <property key="globaservletpath_chg" value="https://195.183.78.161/HAPAGLLOYDSNCHGWS/DocHandlerServlet"/>
     <property key="maximo_DB_url" value="Server=10.50.100.129:50005;Database=maxdb71;UID=maximo;PWD=Max1mo;CurrentSchema=maximo" />

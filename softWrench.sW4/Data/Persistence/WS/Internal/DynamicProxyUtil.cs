@@ -14,7 +14,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
     internal class DynamicProxyUtil {
 
         private const string MissingKeyMsg = "Please provide integration_interface key for entity {0}";
-        
+
         private const string QueryInterfaceParam = "integration_query_interface";
         private static readonly Dictionary<String, IDynamicProxyFactory> DynamicProxyCache = new Dictionary<string, IDynamicProxyFactory>();
         private readonly static ILog Log = LogManager.GetLogger(typeof(DynamicProxyUtil));
@@ -32,9 +32,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
         public static DynamicObject LookupProxy(String integrationInterface, Boolean applyPrefix = true) {
-            string wsdlUri = GetWsdlFromKey(integrationInterface, applyPrefix);
-            var factory = LookupFactory(wsdlUri);
-            return factory.CreateMainProxy();
+            try {
+                var wsdlUri = GetWsdlFromKey(integrationInterface, applyPrefix);
+                var factory = LookupFactory(wsdlUri);
+                return factory.CreateMainProxy();
+            } catch (Exception e) {
+                return new DynamicObject(new object());
+            }
         }
 
         public static void ClearCache() {
