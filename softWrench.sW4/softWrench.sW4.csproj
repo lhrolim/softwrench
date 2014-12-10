@@ -244,6 +244,7 @@
     <Compile Include="Metadata\Applications\DataSet\BaseInvuseDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\ComToolTransDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\IncidentDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\OtbInvbalancesDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInvreserveDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbServiceRequestDataSet.cs" />
