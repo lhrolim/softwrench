@@ -56,6 +56,7 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
             datamap[imgAttribute] = Base64.encode(imgHolder.innerHTML);
             var t1 = performance.now();
             $log.getInstance('screenshotservice#handleImgHolderBlur').debug('base64 converstion took {0}'.format(t1 - t0));
+            var now = new Date();
             var timestamp = '' + now.getFullYear() + (now.getMonth() + 1) + now.getDate();
             datamap[imgAttribute + "_path"] = "Screen" + timestamp + ".html";
         },

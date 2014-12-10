@@ -905,8 +905,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section>
             <header label="User-Personal Asset" params="fieldset=true" displacement="ontop" showexpression="@isitcortom==true"/>
             <association label="Asset:" target="assetnum" labelfield="asset_.hlagdescription2"
-												 extraprojectionvalues="location, location_.description, pluspcustomer" >
-              <renderer type="autocompleteclient" params="minLength=3;"/>
+												 extraprojectionvalues="location, location_.description, pluspcustomer, assetid" >
+              <renderer type="autocompleteclient" params="minLength=3;opendetails=true;idtopendetails=asset_.assetid"/>
               <dataprovider prefilterfunction="FilterAssets"/>
               <event type="afterchange" service="srservice" method="afterUserAssetChange"/>
             </association>
@@ -917,8 +917,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <header label="ITC-Responsible Asset" params="fieldset=true" displacement="ontop"/>
             <optionfield providerattribute="hlagUserLocations" attribute="itcassetlocation" label="Location" />
             <association label="Asset:" target="itcassetnum" labelfield="2asset_.hlagdescription2"
-                         extraprojectionvalues="location, location_.description, pluspcustomer" dependantfields="itcassetlocation">
-              <renderer type="autocompleteclient" params="minLength=3;"/>
+                         extraprojectionvalues="location, location_.description, pluspcustomer, assetid" dependantfields="itcassetlocation">
+              <renderer type="autocompleteclient" params="minLength=3;opendetails=true;idtopendetails=2asset_.assetid"/>
               <dataprovider prefilterfunction="FilterAssetsByItcLocation" />
               <event type="afterchange" service="srservice" method="afterITCAssetChange" />
             </association>
@@ -1222,8 +1222,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 															 enableexpression="@affectedDevice == 'Cisco-IP-Phone'"/>
 
             <association label="Affected Phone:" target="assetnum" labelfield="asset_.description"
-                         dependantfields="phonepluspcustomer" extraprojectionvalues="pluspcustomer" enableexpression="@affectedDevice == 'Cisco-IP-Phone'">
-              <renderer type="autocompleteclient" params="minLength=3;"/>
+                         dependantfields="phonepluspcustomer" extraprojectionvalues="pluspcustomer, assetid" enableexpression="@affectedDevice == 'Cisco-IP-Phone'">
+              <renderer type="autocompleteclient" params="minLength=3;opendetails=true;idtopendetails=asset_.assetid"/>
               <dataprovider prefilterfunction="FilterAssets"/>
             </association>
             <field hidden="true" attribute="asset_.pluspcustomer"></field>
@@ -1718,7 +1718,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </componentdisplayable>
 
         <componentdisplayable id="inputaccel">
-          <optionfield attribute="inputaccel" label="Input Accel ֠Yes/No">
+          <optionfield attribute="inputaccel" label="Input Accel - Yes/No">
             <!--HAP-672 Revised the order of yes/no-->
             <option label="no" value="no"/>
             <option label="yes" value="yes"/>
