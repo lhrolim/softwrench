@@ -373,10 +373,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>
           </association>
           <field attribute="issuetype" label="Issue Type" required="true" readonly="true" default="ISSUE"/>
-          <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit" required="true">
+          <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit,iskit,rotating" required="true">
             <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
             <renderer type="lookup"/>
           </association>
+          <field attribute="item_.rotating" label="Rotating" readonly="true">
+            <renderer type="default" params="formatter=numberToBoolean"/>
+          </field>
+          <field attribute="item_.iskit" label="Kit" readonly="true">
+            <renderer type="default" params="formatter=numberToBoolean"/>
+          </field>
           <association label="Storeroom" target="storeloc" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,issueunit,itemtype" required="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterChangeStoreroom"/>
