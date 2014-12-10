@@ -152,29 +152,39 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="binnum" hidden="true"/>
           <field attribute="item_.itemnum" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=11%" />
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=9%" />
           </field>
           <field attribute="item_.itemtype" label="Item Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=11%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=9%" />
           </field>
           <field attribute="refwo" label="Work Order">
-            <renderer type="default" params="width=11%;"/>
+            <renderer type="default" params="width=9%;"/>
           </field>
           <field attribute="issueto" label="Issue To">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=11%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=9%" />
           </field>
           <field attribute="assetnum" label="Asset">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%;widthLG=11%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%;widthLG=9%" />
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=11%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=9%" />
           </field>
           <field attribute="siteid" label="Site">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=11%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=9%" />
           </field>
           <field attribute="issuetype" label="Issue Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=11%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=9%" />
           </field>
+          <optionfield attribute="item_.rotating" label="Rotating">
+            <renderer type="combo" params="widthLG=8%;filteronly=true;formatter=numberToBoolean"/>
+            <option value="1" label="Yes"/>
+            <option value="0" label="No"/>
+          </optionfield>
+          <optionfield attribute="item_.iskit" label="Kit">
+            <renderer type="combo" params="widthLG=8%;filteronly=true;formatter=numberToBoolean"/>
+            <option value="1" label="Yes"/>
+            <option value="0" label="No"/>
+          </optionfield>
           <field attribute="quantity" label="Qty">
             <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyList;"/>
           </field>
@@ -388,11 +398,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <association label="Site" target="siteid" labelfield="site_.siteid" extraprojectionvalues="description" required="true">
             <renderer type="lookup"/>
           </association>
-         <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit" required="true">
+         <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit,iskit,rotating" required="true">
             <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
             <renderer type="lookup"/>
           </association>
           <field attribute="item_.itemtype" readonly="true" label="Item Type"/>
+          <field attribute="item_.rotating" label="Rotating" readonly="true">
+            <renderer type="default" params="formatter=numberToBoolean"/>
+          </field>
+          <field attribute="item_.iskit" label="Kit" readonly="true">
+            <renderer type="default" params="formatter=numberToBoolean"/>
+          </field>
           <association label="Storeroom" target="storeloc" labelfield="storeroom_.location" hideDescription="true" extraprojectionvalues="costtype,issueunit,itemtype" required="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterChangeStoreroom"/>
