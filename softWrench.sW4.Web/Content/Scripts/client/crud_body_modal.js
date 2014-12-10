@@ -76,8 +76,6 @@ app.directive('crudBodyModal', function ($rootScope,modalService) {
             originalDatamap: '=',
             cancelfn: '&',
             savefn: '&',
-            previousschema: '=',
-            previousdata: '=',
             paginationdata: '=',
             searchData: '=',
             searchOperator: '=',
@@ -120,7 +118,8 @@ app.directive('crudBodyModal', function ($rootScope,modalService) {
                 fieldService.fillDefaultValues(schema.displayables, datamap);
                 $scope.schema = schema;
                 $scope.originalsavefn = modaldata.savefn;
-                $scope.parentCompositionData = modaldata.parentCompositionData;
+                $scope.previousschema = modaldata.previousschema;
+                $scope.previousdata = modaldata.previousdata;
                 $scope.datamap = {
                     fields: datamap
                 };

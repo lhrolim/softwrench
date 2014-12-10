@@ -89,9 +89,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
   </entities>
 
   <applications>
-    <application name="invissuewo" title="Issue/Return" entity="invissuewo">
+    <application name="invissuewo" title="Batch Issuing" entity="invissuewo">
       <schemas>
-        <schema id="newdetail" stereotype="detail" mode="input">
+        <schema id="newdetail" stereotype="detail" mode="input" title="Batch Issue Details">
           <field attribute="wonum" hidden="true"/>
           <field attribute="#issuetype" hidden="true" default="ISSUE"/>
           <field attribute="#refwo" label="Work Order" readonly="true"/>
@@ -101,15 +101,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="#issueto" label="Issue To" readonly="true"/>
           <field attribute="#storeloc" label="Storeroom" readonly="true"/>
           <field attribute="#gldebitacct" label="GL Debit Account" readonly="true"/>
-          <composition relationship="invissue" label="Items" detailschema="newitem">
-            <collectionproperties listschema="itemlist" allowcreation="true" hideexistingdata="true" autocommit="false" />
+          <composition relationship="invissue" label="Items" detailschema="newitem" inline="true">
+            <collectionproperties listschema="itemlist" hideexistingdata="true" allowcreation="false" autocommit="false" />
           </composition>
           <properties>
             <property key="detail.navigationbuttons.disabled" value="true"/>
           </properties>
           <commandbars>
             <commandgroup position="detailform" removeundeclared="true">
-              <command id="cancelnewinvissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" />
+              <command id="additemtobatchissue" label="Add Item" service="inventoryService" method="displayNewIssueModal" parameters="schema,datamap"/>
+              <command id="submitnewbatchissue" label="Submit" service="inventoryService" method="submitNewBatchIssue" parameters="schema,datamap" />
+              <command id="cancelnewbatchissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" />
             </commandgroup>
           </commandbars>
         </schema>
@@ -126,6 +128,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="orgid"/>
           <field attribute="status"/>
           <field attribute="costtype"/>
+          <field attribute="itemtype"/>
+          <field attribute="issueunit"/>
         </list>
       </schemas>
     </application>
@@ -146,23 +150,30 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="storeloc" hidden="true"/>
           <field attribute="binnum" hidden="true"/>
+          <field attribute="item_.itemnum" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
+            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=11%" />
+          </field>
+          <field attribute="item_.itemtype" label="Item Type">
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=11%" />
           </field>
           <field attribute="refwo" label="Work Order">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=18%" />
+            <renderer type="default" params="width=11%;"/>
           </field>
           <field attribute="issueto" label="Issue To">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=15%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=11%" />
           </field>
           <field attribute="assetnum" label="Asset">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%;widthLG=15%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%;widthLG=11%" />
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=11%" />
+          </field>
+          <field attribute="siteid" label="Site">
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=11%" />
           </field>
           <field attribute="issuetype" label="Issue Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=11%" />
           </field>
           <field attribute="quantity" label="Qty">
             <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyList;"/>
@@ -178,31 +189,30 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <schema id="itemlist" stereotype="compositionlist">
           <properties>
             <property key="list.click.popup" value="modal"/>
+            <property key="list.click.service" value="inventoryService.batchissuelistclick"/>
+            <property key="list.click.schema" value="updateitem"/>
             <property key="list.disablepagination" value="true"/>
             <property key="nextschema.schemaid" value="newitem"/>
           </properties>
-          <commandbars>
-            <commandgroup position="compositiontop" removeundeclared="true"/>
-            <commandgroup position="compositionbottom" >
-              <removecommand id="print"/>
-              <removecommand id="cancel"/>
-              <removecommand id="add"/>
-              <command id="additem" label="Add Item" service="inventoryService" method="displayPopupModal" parameters="parentschema,parentdatamap"/>
-              <command id="savenewinvissue" label="Submit" service="inventoryService" method="submitNewInvIssue" parameters="schema,datamap" />
-              <command id="cancelnewinvissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" />
-            </commandgroup>
-          </commandbars>
           <event type="onload" service="scannerdetectionService" method="initIssueItemListener"/>
-          <field attribute="itemnum" label="Item"/>
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="refwo" hidden="true"/>
           <field attribute="issueto" hidden="true"/>
           <field attribute="assetnum" hidden="true"/>
           <field attribute="location" hidden="true"/>
+          <field attribute="unitcost" hidden="true"/>
+          <field attribute="itemtype" hidden="true"/>
+          <field attribute="costtype" hidden="true"/>
+          <field attribute="itemnum" label="Item"/>
           <field attribute="item_.description" label="Description"/>
-          <field attribute="quantity" label="Quantity"/>
-          <field attribute="issuetype" label="Issue Type"/>
+          <field attribute="binnum" label="Bin"/>
+          <field attribute="gldebitacct" label="GL Debit Account"/>
+          <field attribute="quantity" label="Issue Quantity"/>
+          <field attribute="issuetype" label="Issue Type" default="ISSUE" hidden="true"/>
           <field attribute="storeloc" hidden="true"/>
+          <section resourcepath="/Content/Templates/otb/compositionlistdeleteaction.html">
+            <renderer type="default" params="width=4%"/>
+          </section>
         </schema>
 
         <schema id="viewinvreturndetail" stereotype="detail" mode="output">
@@ -282,30 +292,58 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </commandbars>
         </schema>
 
-        <schema id="newitem" stereotype="compositiondetail" mode="input" >
-          <field attribute="matusetransid" hidden="true"/>
-          <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" required="true">
-            <renderer type="lookup"/>
-          </association>
-          <field label="Storeroom" attribute="storeloc" readonly="true"/>
-          <association label="Bin" target="binnum" labelfield="invbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="inventoryService" method="getIssueBinQuantity"/>
-          </association>
-          <field attribute="#gldebitacct" label="GL Debit Acct" readonly="true"/>
-          <association label="Override Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname">
-            <renderer type="lookup"/>
-          </association>
-          <field attribute="#curbal" label="Current Balance" readonly="true"/>
-          <field attribute="quantity" label="Quantity" default="1">
-            <renderer type="numericinput" params="min=1;max=@curbal;"/>
-          </field>
-          <field attribute="unitcost" label="Unit Cost" readonly="true"/>
-          <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
-          <field attribute="enterby" label="Entered By" readonly="true"/>
-          <field attribute="inventory_.itemtype" label="Item Type" readonly="true"/>
-          <field attribute="siteid" label="Site" readonly="true"/>
-          <field attribute="inventory_.costtype" hidden="true"/>
+        <schema id="newitem" stereotype="compositiondetail" mode="input" title="New Issue">
+          <section>
+            <header displacement="ontop" label="Record Information" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="matusetransid" hidden="true"/>
+            <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
+            <field attribute="storeloc" label="Storeroom" readonly="true"/>
+            <field attribute="siteid" label="Site" readonly="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Inventory Information" params="fieldset=true;font-weight=bold;"/>
+            <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="costtype,issueunit,item_.description,item_.itemtype" dependantfields="siteid,storeloc" required="true">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeItem"/>
+            </association>
+            <field attribute="inventory_.item_.itemtype" label="Item Type" readonly="true"/>
+            <association label="Bin" target="binnum" labelfield="invbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="batchinvIssue_afterChangeBin"/>
+            </association>
+            <field attribute="#curbal" label="Current Balance" readonly="true"/>
+            <field attribute="quantity" label="Issue Quantity" default="1">
+              <renderer type="numericinput" params="min=1;max=@curbal;"/>
+            </field>
+            <field attribute="inventory_.location" hidden="true" />
+            <field attribute="inventory_.itemnum" hidden="true" />
+            <field attribute="inventory_.siteid" hidden="true" />
+          </section>
+          <section>
+            <header displacement="ontop" label="Cost Information" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
+            <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+            <field attribute="inventory_.costtype" hidden="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Charge Information" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
+            <association label="Override GL Debit Account" target="#gldebitacct" labelfield="chartofaccounts_.accountname">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="overrideGlAccount"/>
+            </association>
+          </section>
+          <field attribute="issuetype" hidden="true"/>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="cancel"/>
+              <removecommand id="print"/>
+              <removecommand id="save"/>
+              <command id="additemtobatch" label="Add" service="inventoryService" method="addItemToBatch" showexpression="@issuetype == null" parameters="datamap,previousdata"/>
+              <command id="updateiteminbatch" label="Update" service="inventoryService" method="updateItemInBatch" showexpression="@issuetype != null" parameters="datamap,previousdata"/>
+              <command id="cancel" label="Cancel" service="modalService" method="hide"/>
+            </commandgroup>
+          </commandbars>
         </schema>
 
         <schema id="batchInvIssueFilter" stereotype="detail" title="Issues and Returns" mode="input" platform="Web">
@@ -321,11 +359,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <association label="Issue To" target="issueto" labelfield="issuetoperson_.displayname">
             <renderer type="lookup"/>
           </association>
-          <association label="Location" target="location" labelfield="location_.location" dependantfields="siteid" extraprojectionvalues="glaccount">
+          <association label="Location" target="location" labelfield="location_.location" dependantfields="siteid">
             <renderer type="lookup"/>
             <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>-->
           </association>
-          <association label="Asset" target="assetnum" labelfield="asset_.assetnum" dependantfields="siteid" extraprojectionvalues="glaccount">
+          <association label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid">
             <renderer type="lookup"/>
             <!--<dataprovider prefilterfunction="FilterAssets" />-->
             <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>-->
@@ -338,7 +376,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </association>
           <commandbars>
             <commandgroup position="detailform">
-              <command id="start_issuing" label="Next" service="inventoryService" position="&lt;save" method="editinvissuewo" parameters="schema,datamap"/>
+              <command id="start_issuing" label="Next" service="inventoryService" position="&lt;save" method="navToBatchIssueDetail" parameters="schema,datamap"/>
               <removecommand id="save"/>
               <removecommand id="print"/>
             </commandgroup>
@@ -347,27 +385,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       
         <schema id="newInvIssueDetail" mode="input" stereotype="detail">
           <field attribute="matusetransid" hidden="true"/>
-          <association label="Work Order" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount,location,assetnum">
-            <dataprovider prefilterfunction="FilterWorkorders"/>
-            <renderer type="lookup"/>
-            <event type="afterchange" service="inventoryService" method="afterchangeworkorder"/>
-          </association>
-          <association label="Issue To" target="issueto" labelfield="issuetoperson_.displayname">
+          <association label="Site" target="siteid" labelfield="site_.siteid" extraprojectionvalues="description" required="true">
             <renderer type="lookup"/>
           </association>
-          <association label="Asset" target="assetnum" labelfield="asset_.assetnum" extraprojectionvalues="location">
-            <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="inventoryService" method="invIssue_afterChangeAsset"/>
-          </association>
-          <association label="Location" target="location" labelfield="location_.description">
-            <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>
-          </association>
-          <field attribute="issuetype" label="Issue Type" required="true" readonly="true" default="ISSUE"/>
-          <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit" required="true">
+         <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit" required="true">
             <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
             <renderer type="lookup"/>
           </association>
-          <association label="Storeroom" target="storeloc" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,issueunit,itemtype" required="true">
+          <field attribute="item_.itemtype" readonly="true" label="Item Type"/>
+          <association label="Storeroom" target="storeloc" labelfield="storeroom_.location" hideDescription="true" extraprojectionvalues="costtype,issueunit,itemtype" required="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterChangeStoreroom"/>
           </association>
@@ -377,14 +403,29 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </association>
           <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>
-          <field attribute="quantity" label="Quantity" default="1">
+          <field attribute="quantity" label="Issue Quantity" default="1">
             <renderer type="numericinput" params="min=1;"/>
           </field>
           <field attribute="unitcost" label="Unit Cost" readonly="true"/>
-          <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
-          <field attribute="enterby" label="Entered By" readonly="true"/>
-          <field attribute="inventory_.itemtype" label="Item Type" readonly="true"/>
-          <field attribute="siteid" label="Site" readonly="true"/>
+          <field attribute="storeroom_.issueunit" label="Issue Unit" readonly="true"/>
+          <association label="Workorder" target="refwo" labelfield="workorder_.description" dependantfields="siteid" extraprojectionvalues="glaccount,location,assetnum">
+            <dataprovider prefilterfunction="FilterWorkorders"/>
+            <renderer type="lookup"/>
+            <event type="afterchange" service="inventoryService" method="afterchangeworkorder"/>
+          </association>
+          <association label="Issue To" target="issueto" labelfield="issuetoperson_.displayname">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Location" target="location" labelfield="location_.location" dependantfields="siteid">
+            <renderer type="lookup"/>
+          </association>
+          <association label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid">
+            <renderer type="lookup"/>
+          </association>
+          <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname">
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
           <field attribute="inventory_.costtype" hidden="true"/>
         </schema>
       </schemas>

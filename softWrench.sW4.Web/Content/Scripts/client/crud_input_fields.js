@@ -90,6 +90,8 @@ app.directive('crudInputFields', function (contextService) {
             elementid: '@',
             orientation: '@',
             insidelabellesssection: '@',
+            previousdata: '=',
+            previousschema: '='
         },
 
         link: function (scope, element, attrs) {
