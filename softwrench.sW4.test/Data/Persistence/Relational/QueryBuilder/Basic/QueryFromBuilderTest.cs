@@ -103,7 +103,7 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
             var dto = new SearchRequestDto();
             dto.AppendSearchEntry("aucisnotowner_.personid", "xxx");
             var result = QueryFromBuilder.Build(MetadataProvider.Entity("asset"), dto);
-            Assert.AreEqual("from asset as asset left join AssetUserCust as aucisnotowner_ on (asset.assetnum = aucisnotowner_.assetnum and asset.siteid = aucisnotowner_.siteid and (aucisnotowner_.itdassetrole is null or aucisnotowner_.itdassetrole !='Owner') and aucisnotowner_.isuser = 1)", result);
+            Assert.AreEqual("from asset as asset left join AssetUserCust as aucisnotowner_ on (asset.assetnum = aucisnotowner_.assetnum and (aucisnotowner_.itdassetrole is null or aucisnotowner_.itdassetrole !='Owner') and aucisnotowner_.isuser = 1)", result);
 
         }
 

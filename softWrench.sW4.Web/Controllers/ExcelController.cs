@@ -178,7 +178,7 @@ namespace softWrench.sW4.Web.Controllers {
             if (schemaId == "categories") {
                 return "AssetCategoriesExport";
             }
-            if (schemaId == "exportallthecolumns") {
+            if (schemaId == "assetlistreport") {
                 return "AssetListExport";
             }
             return "AssetExport";

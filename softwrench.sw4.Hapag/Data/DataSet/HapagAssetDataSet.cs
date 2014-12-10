@@ -49,7 +49,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             if (string.IsNullOrEmpty(schemaId)) {
                 return;
             }
-            if (schemaId == "exportallthecolumns") {
+            if (schemaId == "assetlistreport") {
                 HapagAssetListReportDataSet.FieldsHandler(resultObject);
             }
         }

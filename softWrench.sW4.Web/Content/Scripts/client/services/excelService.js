@@ -4,7 +4,7 @@
 
 app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService,
     i18NService,
-    redirectService, searchService, contextService, fileService) {
+    redirectService, searchService, contextService, fileService,alertService) {
 
     return {
         showModalExportToExcel: function (fn,schema, searchData, searchSort, searchOperator, paginationData) {
@@ -24,7 +24,7 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
                     + exportModeGridOnlyText +
                     "</label><br>" +
                     "<label class='control-label' for='allthecolumnsid'>" +
-                    "<input type='radio' name='exportMode' id='allthecolumnsid' value='exportallthecolumns' /> "
+                    "<input type='radio' name='exportMode' id='allthecolumnsid' value='assetlistreport' /> "
                     + exportModeAllTheColumnsText +
                     "</label>"+
                     "</form>",
@@ -78,7 +78,9 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
             searchDTO.pageSize = paginationData.pageSize;
 
             parameters.searchDTO = searchDTO;
-            fileService.download(url("/Excel/Export" + "?" + $.param(parameters)));
+            fileService.download(url("/Excel/Export" + "?" + $.param(parameters)), function (html, url) { }, function (html, url) {
+                alertService.alert("Error generating the {0}.{1} report. Please contact your administrator".format(application,schemaToUse));
+            });
         }
     }
 

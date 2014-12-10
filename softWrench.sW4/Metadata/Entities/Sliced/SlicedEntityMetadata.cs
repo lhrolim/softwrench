@@ -84,10 +84,12 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
         }
 
         protected override IEnumerable<EntityAttribute> GetAttributesToIterate(EntityMetadata relatedEntity, EntityAssociation usedRelationship) {
-
-
-
-            var innerMetadata = InnerMetadatas.FirstOrDefault(i => i.Name == relatedEntity.Name);
+            SlicedEntityMetadata innerMetadata;
+            if (usedRelationship.Qualifier != null) {
+                innerMetadata = InnerMetadatas.FirstOrDefault(i => i.ContextAlias == usedRelationship.Qualifier);
+            } else {
+                innerMetadata = InnerMetadatas.FirstOrDefault(i => i.Name == relatedEntity.Name);
+            }
             if (innerMetadata != null) {
                 return innerMetadata.Schema.Attributes;
             }
@@ -107,7 +109,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
             return UnionSchema != null;
         }
         public override string ToString() {
-            return string.Format("Application: {0}, Name: {1}", _applicationName, Name);
+            return string.Format("Context: {0}, Name: {1}", ContextAlias, Name);
         }
     }
 }

@@ -12,9 +12,6 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         public static void FieldsHandler(IEnumerable<AttributeHolder> resultObject) {
             foreach (var attributeHolder in resultObject) {
                 LocationDescriptionHandler(attributeHolder);
-                FillDepartmentField(attributeHolder);
-                DescriptionHandler(attributeHolder);
-                FillNoIdField(attributeHolder);
             }
         }
 
@@ -23,25 +20,6 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             FillCustomLocationDescriptionFields(attributeHolder, "#room", "RO:");
         }
 
-        private static void FillDepartmentField(AttributeHolder attributeHolder) {
-            const string field = "#department";
-            try {
-                DataSetUtil.FillBlank(attributeHolder, field);
-                var glaccount = attributeHolder.GetAttribute("glaccount");
-                if (DataSetUtil.IsValid(glaccount, typeof(String))) {
-                    var department = string.Empty;
-                    var attribute = Regex.Split(glaccount.ToString(), "-");
-                    if (attribute.Count() > 1) {
-                        department = attribute[1];
-                    }
-                    var accountname = attributeHolder.GetAttribute("assetglaccount_.accountname");
-                    department += " " + accountname;
-                    attributeHolder.Attributes[field] = department;
-                }
-            } catch {
-                DataSetUtil.FillBlank(attributeHolder, field);
-            }
-        }
 
         private static void FillCustomLocationDescriptionFields(AttributeHolder attributeHolder, string field, string filter) {
             try {
@@ -62,38 +40,9 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             } catch {
                 DataSetUtil.FillBlank(attributeHolder, field);
             }
-        }      
-
-        private static void DescriptionHandler(AttributeHolder attributeHolder) {
-            FillDescriptionFields(attributeHolder, "#computername", false);
-            FillDescriptionFields(attributeHolder, "#product", true);
         }
 
-        private static void FillDescriptionFields(AttributeHolder attributeHolder, string field, bool isAfter) {
-            try {
-                DataSetUtil.FillBlank(attributeHolder, field);
-                var description = attributeHolder.GetAttribute("description");
-                if (DataSetUtil.IsValid(description, typeof(String))) {
-                    var attribute = Regex.Split(description.ToString(), "//");
-                    if (attribute.Count() > 1) {
-                        attributeHolder.Attributes[field] = attribute[isAfter ? 1 : 0];
-                    }
-                }
-            } catch {
-                DataSetUtil.FillBlank(attributeHolder, field);
-            }
-        }
 
-        private static void FillNoIdField(AttributeHolder attributeHolder) {
-            const string field = "#noid";
-            try {
-                DataSetUtil.FillBlank(attributeHolder, field);
-                var parent = attributeHolder.GetAttribute("parent");
-                var assetnum = attributeHolder.GetAttribute("assetnum");
-                attributeHolder.Attributes[field] = parent + " " + assetnum;
-            } catch {
-                DataSetUtil.FillBlank(attributeHolder, field);
-            }
-        }
+
     }
 }

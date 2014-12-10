@@ -49,6 +49,19 @@ namespace softwrench.sW4.test.Metadata.Entities {
             Assert.IsTrue(select.Contains("location_serv_.address1 as \"location_serv_.address1\""));
         }
 
+        /// <summary>
+        /// userId and currentITc were blank due to a bug on the framework
+        /// </summary>
+        [TestMethod]
+        public void TestAssetListReportBug() {
+            var schemas = MetadataProvider.Application("asset").Schemas();
+            var schema = schemas[new ApplicationMetadataSchemaKey("assetlistreport", null, "web")];
+            var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("asset"), schema);
+            var select = QuerySelectBuilder.BuildSelectAttributesClause(sliced, QueryCacheKey.QueryMode.List);
+            Debug.Write(select);
+            Assert.IsTrue(select.Contains("CASE WHEN LOCATE('@',aucisowner_.PERSONID) > 0 THEN SUBSTR(aucisowner_.PERSONID,1,LOCATE('@',aucisowner_.PERSONID)-1) ELSE aucisowner_.PERSONID END as \"aucisowner_.hlagdisplayname\""));
+        }
+
        
 
         [TestMethod]
