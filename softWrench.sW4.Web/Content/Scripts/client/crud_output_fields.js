@@ -110,14 +110,55 @@ app.directive('crudOutputFields', function (contextService) {
 
             $scope.getFieldClass = function (fieldMetadata) {
                 var cssclass = "";
-                if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['css'] != null) {
-                    cssclass += fieldMetadata.rendererParameters['css'];
-                } else
+                if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['fieldclass'] != null) {
+                    cssclass += fieldMetadata.rendererParameters['fieldclass'];
+                } else {
                     if (fieldMetadata.schema != null &&
                     fieldMetadata.schema.rendererParameters != null &&
-                    fieldMetadata.schema.rendererParameters['css'] != null) {
-                        cssclass += fieldMetadata.schema.rendererParameters['css'];
+                    fieldMetadata.schema.rendererParameters['fieldclass'] != null) {
+                        cssclass += fieldMetadata.schema.rendererParameters['fieldclass'];
                     }
+                }
+
+                return cssclass;
+            };
+
+            $scope.getLabelClass = function (fieldMetadata) {
+                var cssclass = "";
+                if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['labelclass'] != null) {
+                    cssclass += fieldMetadata.rendererParameters['labelclass'];
+                } else {
+                    if (fieldMetadata.schema != null &&
+                    fieldMetadata.schema.rendererParameters != null &&
+                    fieldMetadata.schema.rendererParameters['labelclass'] != null) {
+                        cssclass += fieldMetadata.schema.rendererParameters['labelclass'];
+                    }
+                }
+
+                if ($scope.hasSameLineLabel(fieldMetadata)) {
+                    cssclass += ' col-sm-9';
+                    return cssclass;
+                }
+
+                if (fieldMetadata.rendererType == "TABLE") {
+                    //workaround because compositions are appending "" as default label values, but we dont want it!
+                    return null;
+                }
+                cssclass += ' col-sm-12';
+                return cssclass;
+            };
+
+            $scope.getInputClass = function (fieldMetadata) {
+                var cssclass = "";
+                if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['inputclass'] != null) {
+                    cssclass += fieldMetadata.rendererParameters['inputclass'];
+                } else {
+                    if (fieldMetadata.schema != null &&
+                    fieldMetadata.schema.rendererParameters != null &&
+                    fieldMetadata.schema.rendererParameters['inputclass'] != null) {
+                        cssclass += fieldMetadata.schema.rendererParameters['inputclass'];
+                    }
+                }
 
                 if ($scope.hasSameLineLabel(fieldMetadata)) {
                     cssclass += ' col-sm-9';

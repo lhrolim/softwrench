@@ -102,6 +102,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="#storeloc" label="Storeroom" readonly="true"/>
           <field attribute="#gldebitacct" label="GL Debit Account" readonly="true"/>
           <composition relationship="invissue" label="Items" detailschema="newitem" inline="true">
+            <renderer type="default" params="fieldclass=issue-items" />
             <collectionproperties listschema="itemlist" hideexistingdata="true" allowcreation="false" autocommit="false" />
           </composition>
           <properties>

@@ -512,35 +512,68 @@ app.directive('crudInputFields', function (contextService) {
                 }
                 return result;
             }
-            $scope.getLabelClass = function (fieldMetadata) {
-                if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
-                    return null;
+            $scope.getFieldClass = function (fieldMetadata) {
+                var cssclass = "";
+
+                if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['fieldclass'] != null) {
+                    cssclass += fieldMetadata.rendererParameters['fieldclass'];
+                } else {
+                    if (fieldMetadata.schema != null &&
+                    fieldMetadata.schema.rendererParameters != null &&
+                    fieldMetadata.schema.rendererParameters['fieldclass'] != null) {
+                        cssclass += fieldMetadata.schema.rendererParameters['fieldclass'];
+                    }
                 }
+                console.log('Field', cssclass);
+
+                return cssclass;
+            }
+            $scope.getLabelClass = function (fieldMetadata) {
+                var cssclass = "";
+
+                if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['labelclass'] != null) {
+                    cssclass += fieldMetadata.rendererParameters['labelclass'];
+                } else {
+                    if (fieldMetadata.schema != null &&
+                    fieldMetadata.schema.rendererParameters != null &&
+                    fieldMetadata.schema.rendererParameters['labelclass'] != null) {
+                        cssclass += fieldMetadata.schema.rendererParameters['labelclass'];
+                    }
+                }
+
+                if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
+                    cssclass = null;
+                    return cssclass;
+                }
+
                 var returnClass = $scope.hasSameLineLabel(fieldMetadata) ? 'col-sm-3 col-md-2' : 'col-xs-12';
 
                 //fix SWWEB-732, blank lable adding extra space
                 if (returnClass === 'col-xs-12' && fieldMetadata.label === null) {
-                    returnClass = returnClass + ' ng-hide';
+                    returnClass = cssclass + ' ' + returnClass + ' ng-hide';
                 }
 
                 //console.log(fieldMetadata);
-                return returnClass;
+                return cssclass + ' ' + returnClass;
             }
-            $scope.getFieldClass = function (fieldMetadata) {
+            $scope.getInputClass = function (fieldMetadata) {
                 var cssclass = "";
-                if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['css'] != null) {
-                    cssclass += fieldMetadata.rendererParameters['css'];
-                } else
+
+                if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['inputclass'] != null) {
+                    cssclass += fieldMetadata.rendererParameters['inputclass'];
+                } else {
                     if (fieldMetadata.schema != null &&
                     fieldMetadata.schema.rendererParameters != null &&
-                    fieldMetadata.schema.rendererParameters['css'] != null) {
-                    cssclass += fieldMetadata.schema.rendererParameters['css'];
+                    fieldMetadata.schema.rendererParameters['inputclass'] != null) {
+                        cssclass += fieldMetadata.schema.rendererParameters['inputclass'];
+                    }
                 }
                 
                 if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
                     cssclass += ' col-md-12';
                     return cssclass;
                 }
+
                 cssclass += $scope.hasSameLineLabel(fieldMetadata) ? ' col-sm-9 col-md-10' : ' col-xs-12';
                 return cssclass;
             }
