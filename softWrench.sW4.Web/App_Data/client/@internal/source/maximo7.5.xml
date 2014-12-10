@@ -2677,6 +2677,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       <relationships>
         <relationship to="workorder" >
           <relationshipAttribute from="refwo" to="wonum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
         <relationship to="person" qualifier="issuetoperson">
           <relationshipAttribute from="issueto" to="personid" primary="true"/>
@@ -2690,8 +2691,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
         <relationship to="inventory">
-          <relationshipAttribute from="itemnum" to="itemnum"/>
-          <relationshipAttribute from="storeloc" to="location" primary="true"/>
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="storeloc" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="inventory" qualifier="storeroom">
+          <relationshipAttribute from="storeloc" to="location" primary="true" />
+          <relationshipAttribute from="itemnum" to="itemnum" />
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
         <relationship to="invbalances">
@@ -3098,6 +3104,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <attribute name="orgrcvexternalrefid" type="varchar" required="false" />
         <attribute name="rowstamp" type="timestamp" required="true" />
       </attributes>
+      <relationships>
+        <relationship to="item" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="MATRECTRANS" />
       </connectorParameters>

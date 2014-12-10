@@ -31,7 +31,8 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
             //This function will look for an item being scanned for the Issue Inventory application. 
             //Scanned items are added to the invissue composition.  
             $(document).scannerDetection(function (data) {
-               
+
+                var parentdata = parameters.previousdata;
                 //Checks to see if the item has already been added to the composition list.
                 //If the item is found, this will increment the quantity by 1.
                 for (var key in parameters.clonedCompositionData) {
@@ -40,7 +41,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
                     if (item['matusetransid'] == null) {
                         if (item['itemnum'] == data) {
                             item['quantity']++;
-                            redirectService.redirectToTab('invissue_');
+                            $rootScope.$digest();
                             return;
                         }
                     }
@@ -65,15 +66,16 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
                         }
                         var fields = data.resultObject['fields'];
                         
-                        var matusetransData = datamap['fields'];
+                        var matusetransData = parentdata;
 
                         var newRecord = {};
                         newRecord['itemnum'] = fields['itemnum'];
                         newRecord['quantity'] = 1;
                         newRecord['item_.description'] = fields['description'];
-                        newRecord['issuetype'] = matusetransData['#issuetype'];
+                        newRecord['issuetype'] = 'ISSUE';
                         newRecord['matusetransid'] = null;
                         newRecord['assetnum'] = matusetransData['#assetnum'];
+                        newRecord['gldebitacct'] = matusetransData['#gldebitacct'];
                         newRecord['issueto'] = matusetransData['#issueto'];
                         newRecord['location'] = matusetransData['#location'];
                         newRecord['refwo'] = matusetransData['#refwo'];
@@ -81,7 +83,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
                         newRecord['siteid'] = user.siteid;
                         newRecord['storeloc'] = matusetransData['#storeloc'];
                         parameters.clonedCompositionData.push(newRecord);
-                        redirectService.redirectToTab('invissue_');
+                        $rootScope.$digest();
                         return;
                     });
             });
