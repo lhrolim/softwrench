@@ -115,6 +115,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute query="(!@itdassetrole is null or !@itdassetrole !='Owner')" />
           <relationshipAttribute to="isuser" literal="1" quoteLiteral="false"/>
         </relationship>
+        <relationship to="AssetUserCust" qualifier="aucisnotownerexternal">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute query="(!@itdassetrole is null or !@itdassetrole !='Owner')" />
+          <relationshipAttribute to="isuser" literal="1" quoteLiteral="false"/>
+          <relationshipAttribute query="(!@personid not like '%@%')"/>
+        </relationship>
         <relationship to="AssetUserCust" qualifier="aucisowner">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
           <relationshipAttribute to="itdassetrole" literal="Owner" quoteLiteral="true"/>
@@ -2549,7 +2555,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Country" attribute="location_pluspservaddr_.country">
             <renderer type="default" params="minwidth=100px;excelwidth=15"/>
           </field>
-          <field label="Area" attribute="aucisnotowner_person_.displayname">
+          <field label="Area" attribute="aucisnotownerexternal_person_.displayname">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
           <field label="Location Code" attribute="hlagpluspcustomer">
