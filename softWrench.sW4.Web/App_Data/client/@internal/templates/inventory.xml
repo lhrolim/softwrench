@@ -388,15 +388,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <association label="Site" target="siteid" labelfield="site_.siteid" extraprojectionvalues="description" required="true">
             <renderer type="lookup"/>
           </association>
-         <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit" required="true">
-            <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
-            <renderer type="lookup"/>
-          </association>
-          <field attribute="item_.itemtype" readonly="true" label="Item Type"/>
-          <association label="Storeroom" target="storeloc" labelfield="storeroom_.location" hideDescription="true" extraprojectionvalues="costtype,issueunit,itemtype" required="true">
+          <association label="Storeroom" target="storeloc" labelfield="storeroom_.location" extraprojectionvalues="costtype,issueunit,itemtype" required="true" dependantfields="siteid">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterChangeStoreroom"/>
           </association>
+          <!--<association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description,issueunit" required="true">
+            <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
+            <renderer type="lookup"/>
+          </association>-->
+          <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="costtype,issueunit,item_.description,item_.itemtype" dependantfields="siteid,storeloc" required="true">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
+          </association>
+          <field attribute="item_.itemtype" readonly="true" label="Item Type"/>
           <association label="Bin" target="binnum" labelfield="invbalances_.binnum" hideDescription="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="getIssueBinQuantity"/>
@@ -409,7 +413,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="unitcost" label="Unit Cost" readonly="true"/>
           <field attribute="storeroom_.issueunit" label="Issue Unit" readonly="true"/>
           <association label="Workorder" target="refwo" labelfield="workorder_.description" dependantfields="siteid" extraprojectionvalues="glaccount,location,assetnum">
-            <dataprovider prefilterfunction="FilterWorkorders"/>
+            <!--<dataprovider prefilterfunction="FilterWorkorders"/>-->
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="afterchangeworkorder"/>
           </association>

@@ -62,7 +62,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         });
     };
 
-    var doUpdateUnitCostFromInventoryCost = function(parameters, unitCostFieldName, locationFieldName, inventoryFieldName) {
+    var doUpdateUnitCostFromInventoryCost = function(parameters, unitCostFieldName, locationFieldName) {
         var searchData = {
             itemnum: parameters['fields']['itemnum'],
             location: parameters['fields'][locationFieldName],
