@@ -24,6 +24,7 @@ namespace softWrench.sW4.Util {
                 } catch (Exception e) {
                     var rootException = ExceptionUtil.DigRootException(e);
                     Log.Error(rootException, e);
+                    throw;
                 }
             }
             , state);
@@ -38,6 +39,7 @@ namespace softWrench.sW4.Util {
                 } catch (Exception e) {
                     var rootException = ExceptionUtil.DigRootException(e);
                     Log.Error(rootException, e);
+                    throw;
                 }
             });
         }

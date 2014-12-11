@@ -1,4 +1,5 @@
-﻿using softwrench.sw4.Shared2.Util;
+﻿using System.Globalization;
+using softwrench.sw4.Shared2.Util;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Data.Persistence;
@@ -72,7 +73,7 @@ namespace softWrench.sW4.Data.Search {
             var where = GetWhere(dto, entityName);
             var parameters = GetParameters(dto);
             foreach (var parameter in parameters) {
-                where = where.Replace(":"+parameter.Key, "'"+(string)parameter.Value+"'");
+                where = where.Replace(":" + parameter.Key, "'" + (string)parameter.Value + "'");
             }
             return where;
         }
@@ -106,14 +107,17 @@ namespace softWrench.sW4.Data.Search {
         private static string HandleSearchParams(SearchRequestDto listDto, string entityName) {
             var sb = new StringBuilder();
             var sbReplacingIdx = 0;
-            sb.Append(listDto.SearchParams);
-            var parameters = Regex.Split(listDto.SearchParams, SearchParamSpliter).Where(f => !String.IsNullOrWhiteSpace(f));
-            var searchParameters = listDto.GetParameters();
 
-            foreach (var param in parameters) {
+
+            sb.Append(listDto.SearchParams);
+            var searchParameters = listDto.GetParameters();
+            var j = 0;
+            foreach (var searchParameterEntry in searchParameters) {
+
+                var searchParameter = searchParameterEntry.Value;
+                var param = searchParameterEntry.Key;
                 var statement = new StringBuilder();
 
-                var searchParameter = searchParameters[param];
                 var parameterData = GetParameterData(entityName, searchParameter, param);
                 var operatorPrefix = searchParameter.SearchOperator.OperatorPrefix();
 
@@ -159,8 +163,13 @@ namespace softWrench.sW4.Data.Search {
                     }
                 }
                 var idxToReplace = sb.ToString().IndexOf(param, sbReplacingIdx, StringComparison.Ordinal);
+                if (idxToReplace == -1) {
+                    param = param.Replace(j.ToString(CultureInfo.InvariantCulture), "");
+                    idxToReplace = sb.ToString().IndexOf(param, sbReplacingIdx, StringComparison.Ordinal);
+                }
                 sb.Replace(param, statement.ToString(), idxToReplace, param.Length);
                 sbReplacingIdx += statement.ToString().Length;
+                j++;
             }
             sb.Replace("&&", " AND ");
             sb.Replace("||,", " OR ");
@@ -195,8 +204,7 @@ namespace softWrench.sW4.Data.Search {
                         try {
                             var int32 = Convert.ToInt32(parameter.Value);
                             resultDictionary.Add(searchParameter.Key, int32);
-                        }
-                        catch {
+                        } catch {
                             //its declared as a number, but the client passed a string like %10%, for contains, or even SR123 
                             resultDictionary.Add(searchParameter.Key, parameter.Value);
                         }
@@ -216,12 +224,17 @@ namespace softWrench.sW4.Data.Search {
             // UNION statements cases
             if (paramName.StartsWith("null")) {
                 return new Tuple<string, ParameterType>("null", ParameterType.Default);
-            } else if (paramName.EndsWith("_union")) {
+            }
+            if (paramName.EndsWith("_union")) {
                 paramName = paramName.Substring(0, paramName.Length - "_union".Length);
             }
 
             var entity = MetadataProvider.Entity(entityName);
-            paramName = paramName.Contains("___") ? paramName.Split(new string[] { "___" }, StringSplitOptions.RemoveEmptyEntries)[0] : paramName;
+            paramName = paramName.Contains("___") ? paramName.Split(new[] { "___" }, StringSplitOptions.RemoveEmptyEntries)[0] : paramName;
+            if (Char.IsNumber(paramName[0])) {
+                //if the param was duplicated on the search for some reason
+                paramName = paramName.Substring(1);
+            }
             var baseResult = paramName.Contains(".") ? paramName : entityName + "." + paramName;
             var attributeDefinition = entity.Attributes(EntityMetadata.AttributesMode.NoCollections).FirstOrDefault(f => f.Name == paramName);
             var resultType = ParameterType.Default;

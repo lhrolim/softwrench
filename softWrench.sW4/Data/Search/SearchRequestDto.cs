@@ -55,7 +55,7 @@ namespace softWrench.sW4.Data.Search {
 
         public virtual bool ShouldPaginate {
             get { return false; }
-            set {}
+            set { }
         }
 
         public string FilterFixedWhereClause { get; set; }
@@ -236,8 +236,14 @@ namespace softWrench.sW4.Data.Search {
                 if (String.IsNullOrEmpty(paramName)) {
                     continue;
                 }
-                _valuesDictionary[paramName] = new SearchParameter(values[i]);
+                if (_valuesDictionary.ContainsKey(paramName)) {
+                    //this can happen only if we already have a parameter declared with the same name (ex: a report)
+                    _valuesDictionary[i + paramName] = new SearchParameter(values[i]);
+                } else {
+                    _valuesDictionary[paramName] = new SearchParameter(values[i]);
+                }
             }
+            //rebuilding search parameters cause some of the names might have been modified in the process due to duplication
             return _valuesDictionary;
         }
 

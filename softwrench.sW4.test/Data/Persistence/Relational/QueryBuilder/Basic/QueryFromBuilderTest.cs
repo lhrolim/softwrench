@@ -112,7 +112,7 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
             var dto = new SearchRequestDto();
             dto.AppendSearchEntry("asset_aucisowner_person_.hlagdisplayname", "xxx");
             var result = QueryFromBuilder.Build(MetadataProvider.Entity("imac"), dto);
-            Assert.AreEqual("from SR as imac left join asset as asset_ on (imac.assetnum = asset_.assetnum and imac.siteid = asset_.siteid)left join AssetUserCust as asset_aucisowner_ on (asset_.assetnum = asset_aucisowner_.assetnum and asset_.siteid = asset_aucisowner_.siteid and asset_aucisowner_.itdassetrole = 'Owner' and asset_aucisowner_.isuser = 1)left join person as asset_aucisowner_person_ on (asset_aucisowner_.personid = asset_aucisowner_person_.personid)", result);
+            Assert.AreEqual("from SR as imac left join asset as asset_ on (imac.assetnum = asset_.assetnum and imac.siteid = asset_.siteid)left join AssetUserCust as asset_aucisowner_ on (asset_.assetnum = asset_aucisowner_.assetnum and asset_aucisowner_.itdassetrole = 'Owner' and asset_aucisowner_.isuser = 1)left join person as asset_aucisowner_person_ on (asset_aucisowner_.personid = asset_aucisowner_person_.personid)", result);
 
         }
 
