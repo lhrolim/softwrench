@@ -156,10 +156,14 @@ namespace softWrench.sW4.Metadata {
         ///     application, specified by its name.
         /// </summary>
         /// <param name="name">The name of the application.</param>
-        [NotNull]
-        public static CompleteApplicationMetadataDefinition Application([NotNull] string name) {
+        /// <param name="throwException"></param>
+        public static CompleteApplicationMetadataDefinition Application([NotNull] string name, bool throwException=true) {
             if (name == null) throw new ArgumentNullException("name");
-
+            if (!throwException) {
+                return
+                    _applicationMetadata.FirstOrDefault(
+                        a => String.Equals(a.ApplicationName, name, StringComparison.CurrentCultureIgnoreCase));
+            }
             return _applicationMetadata
                 .FirstWithException(a => String.Equals(a.ApplicationName, name, StringComparison.CurrentCultureIgnoreCase), "application {0} not found", name);
         }
@@ -261,6 +265,19 @@ namespace softWrench.sW4.Metadata {
         public static string TargetMapping() {
             var targetMapping = GlobalProperty(MetadataProperties.Target);
             return targetMapping ?? GlobalProperty(MetadataProperties.Source);
+        }
+
+        public static CompleteApplicationMetadataDefinition GetCompositionApplication(ApplicationSchemaDefinition schema, string relationship) {
+            var application = Application(EntityUtil.GetApplicationName(relationship), false);
+            if (application != null) {
+                return application;
+            }
+            var parentAppName = schema.ApplicationName;
+            var entityName = Application(parentAppName).Entity;
+            var entity = Entity(entityName);
+            var association = entity.Associations.FirstWithException(f => f.Qualifier == relationship, "could not locate relationship with qualifier {0}", relationship);
+            var realName = association.To;
+            return Application(realName);
         }
     }
 }
