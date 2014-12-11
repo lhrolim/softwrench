@@ -21,16 +21,15 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             }
             var compositionMetadatas = new Dictionary<string, ApplicationCompositionSchema>();
             foreach (var composition in schema.Compositions) {
-                compositionMetadatas.Add(composition.Relationship, DoInitializeCompositionSchemas(composition, new IdentitySet()));
+                compositionMetadatas.Add(composition.Relationship, DoInitializeCompositionSchemas(schema, composition, new IdentitySet()));
             }
             schema.CachedCompositions = compositionMetadatas;
             return compositionMetadatas;
         }
 
-        private static ApplicationCompositionSchema DoInitializeCompositionSchemas(ApplicationCompositionDefinition composition, IdentitySet checkedCompositions) {
+        private static ApplicationCompositionSchema DoInitializeCompositionSchemas(ApplicationSchemaDefinition schema, ApplicationCompositionDefinition composition, IdentitySet checkedCompositions) {
             var relationship = composition.Relationship;
-            //TODO: need to locate the application by checking the qualifier of the available relationships and doing a search
-            var compositionApplication = MetadataProvider.Application(EntityUtil.GetApplicationName(relationship));
+            var compositionApplication = MetadataProvider.GetCompositionApplication(schema, relationship);
             var compositionResult = new CompositionSchemas();
             var applicationCompositionSchema = composition.Schema;
             if (applicationCompositionSchema.Schemas != null) {
@@ -50,7 +49,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
                 foreach (var innerComposition in compositionResult.Detail.Compositions) {
                     if (!checkedCompositions.Contains(innerComposition.Relationship)) {
                         //to avod infinte loop
-                        DoInitializeCompositionSchemas(innerComposition, checkedCompositions);
+                        DoInitializeCompositionSchemas(schema, innerComposition, checkedCompositions);
                     }
                 }
             }
