@@ -177,7 +177,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
     <entity name="location" idAttribute="locationsid">
       <attributes>
-        <attribute name="floor" type="varchar" required="false" query="CASE WHEN (!@location is not null and LOCATE('/FL:',!@location) > 0 ) THEN SUBSTR(!@location,LOCATE('/FL:',!@location)+4,LOCATE('/',REPLACE(!@location,'/FL:',''))-5) ELSE '' END" />
+        <attribute name="floor" type="varchar" required="false" query="CASE WHEN (!@location is not null and LOCATE('/FL:',!@location) > 0 ) THEN SUBSTR(!@location,LOCATE('/FL:',!@location)+4,LOCATE('/',REPLACE(!@location,'/FL:','')) - LOCATE('/',!@location)) ELSE '' END" />
         <attribute name="room" type="varchar" required="false" query="CASE WHEN (!@location is not null and LOCATE('/RO:',!@location) > 0 ) THEN SUBSTR(!@location,LOCATE('/RO:',!@location)+4) ELSE '' END" />
       </attributes>
     </entity>
@@ -2549,7 +2549,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </detail>
 
         <schema id="assetlistreport" stereotype="list">
-          <field label="Region" attribute="aucisnotowner_person_.department">
+          <field label="Region" attribute="aucisnotownerexternal_person_.department">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
           <field label="Country" attribute="location_pluspservaddr_.country">
