@@ -51,7 +51,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
            
           
 
-            var emailData = new EmailService.EmailData("noreply@controltechnologysolutions.com", user.Email,null,null, "Batch Submission Finished", msg);
+            var emailData = new EmailService.EmailData("noreply@controltechnologysolutions.com", user.Email, "Batch Submission Finished", msg);
             _emailService.SendEmail(emailData);
 
         }

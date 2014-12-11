@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Mime;
 using System.Text;
@@ -37,10 +38,8 @@ namespace softWrench.sW4.Email {
                 }
             }
             email.IsBodyHtml = true;
-            if (emailData.AttachmentData != null){
-                string encodedAttachment = emailData.AttachmentData.Substring(emailData.AttachmentData.IndexOf(",") + 1);
-                byte[] bytes = Convert.FromBase64String(encodedAttachment);
-                email.Attachments.Add(new Attachment(new MemoryStream(bytes), emailData.AttachmentName));
+            if (emailData.Attachments != null){
+                HandleAttachments(emailData.Attachments, email);
             }
 
             try {
@@ -51,26 +50,42 @@ namespace softWrench.sW4.Email {
             }
         }
 
+        private void HandleAttachments(List<EmailAttachment> attachments, MailMessage email) {
+            foreach (var attachment in attachments){
+                string encodedAttachment = attachment.AttachmentData.Substring(attachment.AttachmentData.IndexOf(",") + 1);
+                byte[] bytes = Convert.FromBase64String(encodedAttachment);
+                email.Attachments.Add(new Attachment(new MemoryStream(bytes), attachment.AttachmentName));
+            }
+            
+        }
+
         public class EmailData {
-            public EmailData(string sendFrom, string sendTo, string subject, string attachmentData, string attachmentName, string message) {
+            public EmailData(string sendFrom, string sendTo, string subject, string message, List<EmailAttachment> attachments = null) {
                 Validate.NotNull(sendTo, "sentTo");
                 Validate.NotNull(subject, "Subject");
                 SendFrom = sendFrom;
                 SendTo = sendTo;
                 Subject = subject;
                 Message = message;
-                AttachmentData = attachmentData;
-                AttachmentName = attachmentName;
+                Attachments = attachments;
             }
-
 
             public string SendFrom { get; set; }
             public string SendTo { get; set; }
             public string Cc { get; set; }
             public string Subject { get; set; }
+            public List<EmailAttachment> Attachments { get; set; }
+            public string Message { get; set; }
+        }
+
+        public class EmailAttachment{
+            public EmailAttachment(string attachmentData, string attachmentName){
+                AttachmentData = attachmentData;
+                AttachmentName = attachmentName;
+            }
+
             public string AttachmentData { get; set; }
             public string AttachmentName { get; set; }
-            public string Message { get; set; }
         }
 
 

@@ -95,12 +95,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         private static EmailService.EmailData GenerateEmailObject(object integrationObject, CrudOperationData crudData)
         {
+            List<EmailService.EmailAttachment> attachments = new List<EmailService.EmailAttachment>();
+            EmailService.EmailAttachment attachment= new EmailService.EmailAttachment(crudData.GetUnMappedAttribute("attachment"),crudData.GetUnMappedAttribute("newattachment_path"));
+            attachments.Add(attachment);
+            
             return new EmailService.EmailData(w.GetRealValue<string>(integrationObject, sendfrom),
                 w.GetRealValue<string>(integrationObject, sendto),
                 w.GetRealValue<string>(integrationObject, subject),
-                crudData.GetUnMappedAttribute("attachment"),
-                crudData.GetUnMappedAttribute("newattachment_path"),
-                w.GetRealValue<string>(integrationObject, message)) {
+                w.GetRealValue<string>(integrationObject, message),
+                attachments) {
                     Cc = w.GetRealValue<string>(integrationObject, cc)
                 };
 
