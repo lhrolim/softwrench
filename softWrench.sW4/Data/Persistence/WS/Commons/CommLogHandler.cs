@@ -36,7 +36,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         public static void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
             var user = SecurityFacade.CurrentUser();
             var commlogs = (IEnumerable<CrudOperationData>)entity.GetRelationship(commlog);
-            var newCommLogs = commlogs.Where(r => r.GetAttribute(commloguid) == null);
+            var newCommLogs = commlogs.Where(r => r.GetAttribute("commloguid") == null);
             var ownerid = w.GetRealValue(rootObject, ticketuid);
             w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate(object integrationObject, CrudOperationData crudData) {
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.Add.ToString());
