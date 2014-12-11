@@ -2650,7 +2650,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
 
           <field attribute="description" hidden="true" />
-          <field attribute="aucisnotowner_.assetnum" hidden="true"/>
           <field attribute="location_.serviceaddresscode" hidden="true" />
           <field attribute="pluspcustomer" hidden="true" />
           <field attribute="glaccount" hidden="true" />
