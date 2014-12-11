@@ -187,16 +187,16 @@ namespace softWrench.sW4.Metadata {
         ///     application, specified by its name.
         /// </summary>
         /// <param name="name">The name of the application.</param>
-        [NotNull]
-        public static CompleteApplicationMetadataDefinition Application([NotNull] string name) {
+        /// <param name="throwException"></param>
+        public static CompleteApplicationMetadataDefinition Application([NotNull] string name, bool throwException = true) {
+            if (name == null) throw new ArgumentNullException("name");
             Validate.NotNull(name, "name");
-            IReadOnlyCollection<CompleteApplicationMetadataDefinition> apps;
-            if (name.StartsWith("_")) {
-                apps = _swdbapplicationMetadata;
-            } else {
-                apps = _applicationMetadata;
+            var apps = name.StartsWith("_") ? _swdbapplicationMetadata : _applicationMetadata;
+            if (!throwException) {
+                return
+                    apps.FirstOrDefault(
+                        a => String.Equals(a.ApplicationName, name, StringComparison.CurrentCultureIgnoreCase));
             }
-
             return apps
                 .FirstWithException(a => String.Equals(a.ApplicationName, name, StringComparison.CurrentCultureIgnoreCase), "application {0} not found", name);
         }
@@ -274,20 +274,20 @@ namespace softWrench.sW4.Metadata {
 
             }
         }
-        public void SaveColor([NotNull] Stream data, bool internalFramework = false){
-        
-            try{
+        public void SaveColor([NotNull] Stream data, bool internalFramework = false) {
+
+            try {
                 using (var stream = File.Create(MetadataParsingUtils.GetPath(StatusColor, internalFramework))) {
-                
+
                     data.CopyTo(stream);
                     stream.Flush();
                 }
-                
+
             } catch (Exception e) {
                 Log.Error("error saving statuscolor", e);
                 throw;
             }
-       }
+        }
 
         public void SaveMenu([NotNull] Stream data, ClientPlatform platform = ClientPlatform.Web) {
             try {
@@ -302,7 +302,7 @@ namespace softWrench.sW4.Metadata {
                 throw;
             }
         }
-       
+
 
         private static void FillFields() {
             _entityMetadata = _metadataXmlInitializer.Entities;
@@ -346,6 +346,18 @@ namespace softWrench.sW4.Metadata {
 
         public static IDictionary<string, CommandBarDefinition> CommandBars() {
             return _commandBars;
+        }
+        public static CompleteApplicationMetadataDefinition GetCompositionApplication(ApplicationSchemaDefinition schema, string relationship) {
+            var application = Application(EntityUtil.GetApplicationName(relationship), false);
+            if (application != null) {
+                return application;
+            }
+            var parentAppName = schema.ApplicationName;
+            var entityName = Application(parentAppName).Entity;
+            var entity = Entity(entityName);
+            var association = entity.Associations.FirstWithException(f => f.Qualifier == relationship, "could not locate relationship with qualifier {0}", relationship);
+            var realName = association.To;
+            return Application(realName);
         }
     }
 }
