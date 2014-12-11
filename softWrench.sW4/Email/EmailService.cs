@@ -37,23 +37,10 @@ namespace softWrench.sW4.Email {
                 }
             }
             email.IsBodyHtml = true;
-            //string file = "C:\\Users\\Public\\Pictures\\Sample Pictures\\Desert.jpg";
-            //Attachment data = new Attachment(file, MediaTypeNames.Application.Octet);
-            //ContentDisposition disposition = data.ContentDisposition;
-            //disposition.CreationDate = System.IO.File.GetCreationTime(file);
-            //disposition.ModificationDate = System.IO.File.GetLastWriteTime(file);
-            //disposition.ReadDate = System.IO.File.GetLastAccessTime(file);
-            //email.Attachments.Add(data);
-            // Convert that Base 64 string data into attachment data and try sending email 
-            if (emailData.AttachmentData != null)
-            {
-                Tuple<Byte[], string> fileTuple;
-                fileTuple = Tuple.Create(emailData.AttachmentData.GetBytes(), emailData.AttachmentName);
+            if (emailData.AttachmentData != null){
                 string encodedAttachment = emailData.AttachmentData.Substring(emailData.AttachmentData.IndexOf(",") + 1);
-                byte[] data1 = Convert.FromBase64String(encodedAttachment);
-                string decodedString = Encoding.UTF8.GetString(data1);
-                Attachment data = new Attachment(new MemoryStream(data1), emailData.AttachmentName);
-                email.Attachments.Add(data);
+                byte[] bytes = Convert.FromBase64String(encodedAttachment);
+                email.Attachments.Add(new Attachment(new MemoryStream(bytes), emailData.AttachmentName));
             }
 
             try {
@@ -65,7 +52,7 @@ namespace softWrench.sW4.Email {
         }
 
         public class EmailData {
-            public EmailData(string sendFrom, string sendTo, string subject,string attachmentData, string attachmentName, string message) {
+            public EmailData(string sendFrom, string sendTo, string subject, string attachmentData, string attachmentName, string message) {
                 Validate.NotNull(sendTo, "sentTo");
                 Validate.NotNull(subject, "Subject");
                 SendFrom = sendFrom;
