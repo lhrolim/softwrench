@@ -208,8 +208,9 @@ app.directive('compositionList', function (contextService) {
 
             var parameters = {};
             parameters.clonedCompositionData = $scope.clonedCompositionData;
-            eventService.onload($scope.compositionlistschema, $scope.parentdata, parameters);
-
+            parameters.previousdata = $scope.previousdata;
+            eventService.onload($scope.compositionlistschema, $scope.datamap, parameters);
+            contextService.insertIntoContext('clonedCompositionData', $scope.clonedCompositionData, true);
         };
 
     init();
@@ -336,7 +337,8 @@ app.directive('compositionList', function (contextService) {
 
         var fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
         if (fullServiceName != null) {
-            commandService.executeClickCustomCommand(fullServiceName, item, column);
+            var compositionschema = $scope.compositionschemadefinition['schemas']['detail'];
+            commandService.executeClickCustomCommand(fullServiceName, item, column, compositionschema);
             return;
         };
         if ($scope.compositiondetailschema == null) {

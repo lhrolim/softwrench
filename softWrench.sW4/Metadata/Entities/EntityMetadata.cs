@@ -96,12 +96,16 @@ namespace softWrench.sW4.Metadata.Entities {
             get { return _associations; }
         }
 
+        public ISet<EntityAssociation> ReverseAssociations() {
+            return new HashSet<EntityAssociation>(_associations.Where(entityAssociation => (entityAssociation.Reverse)));
+        }
+
         public ISet<EntityAssociation> ListAssociations() {
-            return new HashSet<EntityAssociation>(_associations.Where(entityAssociation => entityAssociation.Collection));
+            return new HashSet<EntityAssociation>(_associations.Where(entityAssociation => (entityAssociation.Collection)));
         }
 
         public virtual ISet<EntityAssociation> NonListAssociations() {
-            return new HashSet<EntityAssociation>(_associations.Where(entityAssociation => !entityAssociation.Collection));
+            return new HashSet<EntityAssociation>(_associations.Where(entityAssociation => (!entityAssociation.Collection && !entityAssociation.Reverse)));
         }
 
         public virtual AttributeHolder GetAttributeHolder(IEnumerable<KeyValuePair<string, object>> keyValuePairs) {
