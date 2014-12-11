@@ -17,8 +17,8 @@ namespace softwrench.sW4.test.Metadata.Entities {
         
         private static ApplicationSchemaDefinition _schema;
 
-        [ClassInitialize]
-        public static void Init(TestContext testContext) {
+        [TestInitialize]
+        public void Init() {
             ApplicationConfiguration.TestclientName = "hapag";
             MetadataProvider.StubReset();
             var schemas = MetadataProvider.Application("asset").Schemas();
