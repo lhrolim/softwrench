@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.Mime;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -51,7 +52,7 @@ namespace softWrench.sW4.Email {
                 string encodedAttachment = emailData.AttachmentData.Substring(emailData.AttachmentData.IndexOf(",") + 1);
                 byte[] data1 = Convert.FromBase64String(encodedAttachment);
                 string decodedString = Encoding.UTF8.GetString(data1);
-                Attachment data = Attachment.CreateAttachmentFromString(decodedString, emailData.AttachmentName, System.Text.Encoding.UTF8, MediaTypeNames.Application.Octet);
+                Attachment data = new Attachment(new MemoryStream(data1), emailData.AttachmentName);
                 email.Attachments.Add(data);
             }
 
