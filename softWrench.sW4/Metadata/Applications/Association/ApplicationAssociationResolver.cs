@@ -144,7 +144,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
         private SearchRequestDto ApplyPreFilterFunction(AssociationPreFilterFunctionParameters preFilterParam, string prefilterFunctionName) {
             var applicationName = preFilterParam.Metadata.Name;
-            var dataSet = FindDataSet(applicationName,preFilterParam.Metadata.Schema.SchemaId,prefilterFunctionName);
+            var dataSet = FindDataSet(applicationName, preFilterParam.Metadata.Schema.SchemaId, prefilterFunctionName);
             var mi = dataSet.GetType().GetMethod(prefilterFunctionName);
             if (mi == null) {
                 throw new InvalidOperationException(String.Format(MethodNotFound, prefilterFunctionName, dataSet.GetType().Name));
@@ -156,7 +156,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         }
 
         private IEnumerable<IAssociationOption> ApplyFilters(ApplicationMetadata app, AttributeHolder originalEntity, string filterFunctionName, ISet<IAssociationOption> options, ApplicationAssociationDefinition association) {
-            var dataSet = FindDataSet(app.Name,app.Schema.SchemaId, filterFunctionName);
+            var dataSet = FindDataSet(app.Name, app.Schema.SchemaId, filterFunctionName);
             var mi = dataSet.GetType().GetMethod(filterFunctionName);
             if (mi == null) {
                 throw new InvalidOperationException(String.Format(MethodNotFound, filterFunctionName, dataSet.GetType().Name));
@@ -174,7 +174,11 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
         private static ProjectionResult BuildProjections(SearchRequestDto searchRequestDto, ApplicationAssociationDefinition association) {
 
-            var valueField = association.EntityAssociation.PrimaryAttribute().To;
+            var entityAssociation = association.EntityAssociation;
+            var valueField = entityAssociation.PrimaryAttribute().To;
+            if (entityAssociation.Reverse) {
+                valueField = entityAssociation.ReverseLookupAttribute;
+            }
 
             // See if association has a schema defined
             var associationMetadata = GetAssociationApplicationMetadata(association);
@@ -194,7 +198,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 }
             }
 
-            if (valueKey == ValueKeyConst && valueField!=null) {
+            if (valueKey == ValueKeyConst && valueField != null) {
                 searchRequestDto.AppendProjectionField(new ProjectionField { Alias = ValueKeyConst, Name = valueField });
             }
 
