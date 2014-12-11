@@ -141,8 +141,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
           </association>
-
-
           <section id="compositions"/>
         </schema>
 
