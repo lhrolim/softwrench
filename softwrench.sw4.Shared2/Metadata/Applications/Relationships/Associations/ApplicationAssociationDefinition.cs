@@ -14,7 +14,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         ApplicationRelationshipDefinition, IDataProviderContainer, IDefaultValueApplicationDisplayable, IDependableField, IApplicationAttributeDisplayable, IPCLCloneable {
 
         private string _label;
-//        protected string LabelField;
+        // protected string LabelField;
         public string DefaultValue { get; set; }
         public string Target { get; set; }
         public string LabelPattern { get; set; }
@@ -66,7 +66,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             : base(from, labelData.Label, showExpression, toolTip) {
             _labelData = labelData;
             _label = labelData.Label;
-//            LabelField = labelData.LabelField;
+            // LabelField = labelData.LabelField;
             LabelPattern = labelData.LabelPattern;
             Target = target;
             _applicationAssociationSchema = applicationAssociationSchema;
@@ -141,6 +141,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             set { _events = value; }
         }
 
+        public Boolean Reverse {
+            get { return EntityAssociation.Reverse; }
+        }
 
         public string ApplicationPath {
             get { return From + "." + _applicationTo; }
@@ -191,7 +194,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public override string Role { get { return From + "." + Target; } }
 
         public object Clone() {
-            var cloned = new ApplicationAssociationDefinition(From, _labelData, Target,Qualifier, Schema, ShowExpression, ToolTip, IsRequired,
+            var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, ToolTip, IsRequired,
                 DefaultValue, HideDescription, EnableExpression, _eventsSet) {
                     ExtraProjectionFields = ExtraProjectionFields,
                     LabelFields = LabelFields,

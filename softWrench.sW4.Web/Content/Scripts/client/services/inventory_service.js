@@ -27,6 +27,25 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         redirectService.goToApplicationView("invuse", "newdetail", "Input", null, null, null);
     };
 
+    var setBatchIssueBin = function(parameters) {
+        var itemnum = parameters['fields']['itemnum'];
+        var siteid = parameters['fields']['siteid'];
+        var storeloc = parameters['fields']['storeloc'];
+        if (itemnum != null && itemnum.trim() != "" &&
+            siteid != null && siteid.trim() != "" &&
+            storeloc != null && storeloc.trim() != "") {
+            var searchData = {
+                itemnum: itemnum,
+                siteid: siteid,
+                location: parameters['fields']['storeloc']
+            };
+            getBinQuantity(searchData, parameters, '#curbal', null);
+        } else {
+            parameters['fields']['#curbal'] = null;
+            parameters['fields']['invbalances_.binnum'] = null;
+        }
+    };
+
     var getBinQuantity = function (searchData, parameters, balanceField, binnum, lotnum) {
         searchService.searchWithData("invbalances", searchData).success(function (data) {
             var resultObject = data.resultObject;
@@ -43,7 +62,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         });
     };
 
-    var doUpdateUnitCostFromInventoryCost = function(parameters, unitCostFieldName, locationFieldName) {
+    var doUpdateUnitCostFromInventoryCost = function(parameters, unitCostFieldName, locationFieldName, inventoryFieldName) {
         var searchData = {
             itemnum: parameters['fields']['itemnum'],
             location: parameters['fields'][locationFieldName],
@@ -209,7 +228,34 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             redirectService.goToApplicationView(application, detail, mode, null, param, null);
         },
 
-        editinvissuewo: function (schema, datamap) {
+        navToBatchIssueDetail: function (schema, datamap) {
+            var siteid = datamap['siteid'];
+            
+            if (nullOrEmpty(siteid)) {
+                alertService.alert("A Site Id is required.");
+                return; 
+            }
+    
+            var storeloc = datamap['storeloc'];
+
+            if (nullOrEmpty(storeloc)) {
+                alertService.alert("A Storeroom is required.");
+                return;
+            }
+
+            var refwo = datamap['refwo'];
+            var location = datamap['location'];
+            var assetnum = datamap['assetnum'];
+            var gldebitacct = datamap['gldebitacct'];
+
+            if (nullOrEmpty(refwo) &&
+                nullOrEmpty(location) &&
+                nullOrEmpty(assetnum) &&
+                nullOrEmpty(gldebitacct)) {
+                alertService.alert("Either a Workorder, Location, Asset, or GL Debit Account is required.");
+                return;
+            }
+
             var newDatamap = {};
             newDatamap['assetnum'] = datamap['assetnum'];
             newDatamap['#refwo'] = datamap['refwo'];
@@ -226,55 +272,143 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             param.id = datamap['refwo'];
             redirectService.goToApplicationView('invissuewo', 'newdetail', null, null, param, newDatamap);
         },
-        submitNewInvIssue: function (schema, datamap, saveFn) {
-            modalService.show(schema.compositiondetailschema, datamap, saveFn);
+        submitNewBatchIssue: function (schema, datamap) {
+            var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
+
+            for (var i = 0; i < clonedCompositionData.length; i++) {
+                var fields = clonedCompositionData[i];
+                if (fields['matusetransid'] != null) {
+                    continue;
+                }
+
+                var newIssueItem = {};
+                newIssueItem['matusetransid'] = null;
+                newIssueItem['rowstamp'] = null;
+                newIssueItem['quantity'] = fields['quantity'];
+                newIssueItem['issuetype'] = 'ISSUE';
+                newIssueItem['itemnum'] = fields['itemnum'];
+                newIssueItem['location'] = fields['location'];
+                newIssueItem['unitcost'] = fields['unitcost'];
+                newIssueItem['binnum'] = fields['binnum'];
+                newIssueItem['siteid'] = fields['siteid'];
+                newIssueItem['storeloc'] = datamap['#storeloc'];
+                newIssueItem['refwo'] = datamap['#refwo'];
+                newIssueItem['issueto'] = datamap['#issueto'];
+                newIssueItem['assetnum'] = datamap['#assetnum'];
+                newIssueItem['gldebitacct'] = (fields['gldebitacct'] == null) ?
+                    datamap['#gldebitacct'] : fields['gldebitacct'];
+
+                var jsonString = angular.toJson(newIssueItem);
+                var httpParameters = {
+                    application: "invissue",
+                    platform: "web",
+                    currentSchemaKey: "editinvissuedetail.input.web"
+                };
+                restService.invokePost("data", "post", httpParameters, jsonString, function () {
+                    fields['matusetransid'] = -1;
+                });
+            };
         },
         cancelNewInvIssue: function () {
             redirectService.goToApplicationView("invissue", "list", null, null, null, null);
         },
-        displayPopupModal: function (parentschema, parentdatamap) {
+        displayNewIssueModal: function (parentschema, parentdatamap) {
             var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
-            var parentdata = parentdatamap['fields'];
             var user = contextService.getUserData();
             var itemDatamap = {};
-            itemDatamap['itemnum'] = "";
+            itemDatamap['itemnum'] = null;
+            itemDatamap['inventory_'] = null;
+            itemDatamap['#gldebitacct'] = null;
             itemDatamap['enterby'] = user.login.toUpperCase();
             itemDatamap['siteid'] = user.siteId;
             itemDatamap['matusetransid'] = null;
-            itemDatamap['refwo'] = parentdata['#refwo'];
-            itemDatamap['assetnum'] = parentdata['#assetnum'];
-            itemDatamap['issuetype'] = parentdata['#issuetype'];
-            itemDatamap['issueto'] = parentdata['#issueto'];
-            itemDatamap['location'] = parentdata['#location'];
-            itemDatamap['storeloc'] = parentdata['#storeloc'];
-            itemDatamap['gldebitacct'] = parentdata['#gldebitacct'];
-            var compositiondata = parentdatamap['fields']['invissue_'];
+            itemDatamap['refwo'] = parentdatamap['#refwo'];
+            itemDatamap['assetnum'] = parentdatamap['#assetnum'];
+            itemDatamap['issueto'] = parentdatamap['#issueto'];
+            itemDatamap['location'] = parentdatamap['#location'];
+            itemDatamap['storeloc'] = parentdatamap['#storeloc'];
+            itemDatamap['gldebitacct'] = parentdatamap['#gldebitacct'];
 
-            modalService.show(compositionschema, itemDatamap, null, compositiondata);
+            modalService.show(compositionschema, itemDatamap, null, parentdatamap, parentschema);
+        },
+        batchissuelistclick: function (datamap, column, schema) {
+            var newDatamap = {};
+            angular.copy(datamap, newDatamap);
+
+            modalService.show(schema, newDatamap);
 
         },
         cancelNewInvIssueItem: function () {
             modalService.hide();
         },
-        addItemToInvIssue: function (schema, datamap, parentdata, clonedcompositiondata, originalDatamap, previousdata) {
-            var newRecord = {};
-            newRecord['itemnum'] = fields['itemnum'];
-            newRecord['quantity'] = 1;
-            newRecord['item_.description'] = fields['description'];
-            newRecord['issuetype'] = matusetransData['#issuetype'];
-            newRecord['matusetransid'] = null;
-            newRecord['assetnum'] = matusetransData['#assetnum'];
-            newRecord['issueto'] = matusetransData['#issueto'];
-            newRecord['location'] = matusetransData['#location'];
-            newRecord['refwo'] = matusetransData['#refwo'];
-            var user = contextService.getUserData();
-            newRecord['siteid'] = user.siteid;
-            newRecord['storeloc'] = matusetransData['#storeloc'];
-            parameters.clonedCompositionData.push(newRecord);
-            redirectService.redirectToTab('invissue_');
+        addItemToBatch: function (datamap) {
+            var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
+
+            datamap['issuetype'] = "ISSUE";
+            var newissue = angular.copy(datamap);
+            newissue['item_.description'] = newissue['inventory_.item_.description'];
+            newissue.matusetransid = null;
+
+            datamap['issuetype'] = null;
+            datamap['assetnum'] = null;
+            datamap['itemnum'] = null;
+            datamap['inventory_.item_.description'] = null;
+            datamap['enterby'] = null;
+            datamap['#gldebitacct'] = null;
+            datamap['chartofaccounts_'] = null;
+            datamap['gldebitacct'] = null;
+            datamap['binnum'] = null;
+            datamap['unitcost'] = null;
+            datamap['quantity'] = null;
+            datamap['gldebitacct'] = null;
+            
+            clonedCompositionData.push(newissue);
+            modalService.hide();
+        },
+        updateItemInBatch: function (datamap) {
+            var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
+
+            var compositionItem = null;
+            for (var i = 0; i < clonedCompositionData.length; i++) {
+                compositionItem = clonedCompositionData[i];
+                if (compositionItem['matusetransid'] != null) {
+                    continue;
+                }
+
+                if (compositionItem['itemnum'] == datamap['itemnum']) {
+                    break;
+                }
+            }
+
+            if (compositionItem != null) {
+                var newissue = angular.copy(datamap);
+                compositionItem['item_.description'] = newissue['inventory_.item_.description'];
+                compositionItem['itemnum'] = newissue['itemnum'];
+                compositionItem['#gldebitacct'] = newissue['#gldebitacct'];
+                compositionItem['gldebitacct'] = newissue['gldebitacct'];
+                compositionItem['binnum'] = newissue['binnum'];
+                compositionItem['unitcost'] = newissue['unitcost'];
+                compositionItem['quantity'] = newissue['quantity'];
+                compositionItem['itemtype'] = newissue['itemtype'];
+                compositionItem['costtype'] = newissue['costtype'];
+
+                datamap['issuetype'] = null;
+                datamap['assetnum'] = null;
+                datamap['itemnum'] = null;
+                datamap['inventory_.item_.description'] = null;
+                datamap['enterby'] = null;
+                datamap['#gldebitacct'] = null;
+                datamap['chartofaccounts_'] = null;
+                datamap['gldebitacct'] = null;
+                datamap['binnum'] = null;
+                datamap['unitcost'] = null;
+                datamap['quantity'] = null;
+                datamap['gldebitacct'] = null;
+            }
+            modalService.hide();
         },
         invIssue_afterChangeWorkorder: function (parameters) {
-            if (parameters.fields['refwo'] == null || parameters.fields['refwo'].trim() == "") {
+            if (nullOrEmpty(parameters.fields['refwo'])) {
                 parameters.fields['refwo'] = null;
                 parameters.fields['location'] = null;
                 parameters.fields['assetnum'] = null;
@@ -334,6 +468,66 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 parameters['fields']['invuseline_.frombin'] = null;
             }
         },
+
+        invIssue_afterChangeItem: function (parameters) {
+            var itemnum = parameters['fields']['itemnum'];
+            parameters['fields']['binnum'] = null;
+            parameters['fields']['#curbal'] = null;
+            if (nullOrEmpty(itemnum)) {
+                parameters['fields']['itemnum'] = null;
+                parameters['fields']['unitcost'] = null;
+                parameters['fields']['inventory_.issueunit'] = null;
+                parameters['fields']['inventory_.itemtype'] = null;
+                return;
+            }
+
+            setBatchIssueBin(parameters);
+            
+            var searchData = {
+                itemnum: parameters['fields']['itemnum'],
+                location: parameters['fields']['storeloc'],
+                siteid: parameters['fields']['siteid'],
+                orgid: parameters['fields']['orgid'],
+                itemsetid: parameters['fields']['itemsetid']
+            };
+            searchService.searchWithData("inventory", searchData).success(function (data) {
+                var resultObject = data.resultObject;
+                var fields = resultObject[0].fields;
+                var costtype = fields['costtype'];
+                parameters['fields']['inventory_.costtype'] = costtype;
+                var locationFieldName = "";
+                if (parameters['fields'].storeloc != undefined) {
+                    locationFieldName = "storeloc";
+                }
+                //parameters['fields']['inventory_.issueunit'] = fields['issueunit'];
+                doUpdateUnitCostFromInventoryCost(parameters, "unitcost", locationFieldName);
+            });
+        },
+
+        batchinvIssue_afterChangeBin: function(parameters) {
+            var itemnum = parameters['fields']['itemnum'];
+            var siteid = parameters['fields']['siteid'];
+            var storeloc = parameters['fields']['storeloc'];
+            var binnum = parameters['fields']['binnum'];
+            if (!nullOrEmpty(binnum)) {
+                if (!nullOrEmpty(itemnum) &&
+                    !nullOrEmpty(siteid) &&
+                    !nullOrEmpty(storeloc)) {
+                    var searchData = {
+                        itemnum: itemnum,
+                        siteid: siteid,
+                        location: parameters['fields']['storeloc']
+                    };
+                    getBinQuantity(searchData, parameters, '#curbal', binnum);
+                } else {
+                    parameters['fields']['#curbal'] = null;
+                }
+            } else {
+                setBatchIssueBin(parameters);
+            }
+            
+        },
+
 
         invIssue_afterChangeAsset: function (parameters) {
             //Sets the associated GL Debit Account
@@ -436,10 +630,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 return;
             }
 
+            var lotnum = parameters['fields']['invuseline_.fromlot'];
             var binnum = parameters['fields']['invuseline_.frombin'];
-            //if (binnum == '[No Bin]') {
-            //    binnum = null;
-            //}
             var searchData = {
                 itemnum: parameters['fields']['invuseline_.itemnum'],
                 siteid: parameters['fields']['inventory_.siteid'],
@@ -463,6 +655,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             if (parameters['fields']['invuseline_.siteid'] == null ||
                 parameters['fields']['invuseline_.siteid'].trim() == "") {
                 parameters['fields']['invuseline_.itemnum'] = null;
+                parameters['fields']['fromstoreloc'] = null;
+                parameters['fields']['invuseline_.frombin'] = null;
                 parameters['fields']['invuseline_.tostoreloc'] = null;
                 parameters['fields']['invuseline_.tobin'] = null;
                 return;
@@ -504,6 +698,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 alertService.alert("The quantity being transferred cannot be greater than the current balance of the From Bin.");
                 event.scope.datamap['invuseline_.quantity'] = event.fields['#curbal'];
             }
+        },
+
+        overrideGlAccount: function(event) {
+            event.fields['gldebitacct'] = event.fields['#gldebitacct'];
         },
 
         afterChangeIssueQuantity: function (event) {

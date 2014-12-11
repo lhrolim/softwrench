@@ -231,6 +231,7 @@
     <Compile Include="Data\Persistence\WS\Ism\Entities\SR\IsmSRCrudConnectorDecorator.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Base\ISMConstants.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Base\ISMCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Manchester\ComServiceRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Manchester\ComWorkOrderCrudConnector.cs" />
     <Compile Include="Data\SWDBDatamapBuilder.cs" />
     <Compile Include="Exceptions\MetadataException.cs" />
@@ -244,6 +245,7 @@
     <Compile Include="Metadata\Applications\DataSet\BaseInvuseDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\ComToolTransDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\IncidentDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\OtbInvbalancesDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInvreserveDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbServiceRequestDataSet.cs" />

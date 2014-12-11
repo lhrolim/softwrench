@@ -45,7 +45,5 @@ namespace softWrench.sW4.Web.Common {
             filterContext.HttpContext.Response.StatusCode = 200;
             filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
         }
-
-
     }
 }

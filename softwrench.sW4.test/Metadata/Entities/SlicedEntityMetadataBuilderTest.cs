@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using softWrench.sW4.Data.Search;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
@@ -16,8 +17,8 @@ namespace softwrench.sW4.test.Metadata.Entities {
         
         private static ApplicationSchemaDefinition _schema;
 
-        [ClassInitialize]
-        public static void Init(TestContext testContext) {
+        [TestInitialize]
+        public void Init() {
             ApplicationConfiguration.TestclientName = "hapag";
             MetadataProvider.StubReset();
             var schemas = MetadataProvider.Application("asset").Schemas();
@@ -97,6 +98,26 @@ namespace softwrench.sW4.test.Metadata.Entities {
             var select = QuerySelectBuilder.BuildSelectAttributesClause(sliced, QueryCacheKey.QueryMode.List);
             Debug.Write(select);
             Assert.IsTrue(select.Contains("null"));
+        }
+
+        [TestMethod]
+        public void TestReverseMapping() {
+            if (!"manchester".Equals(ApplicationConfiguration.TestclientName)) {
+                ApplicationConfiguration.TestclientName = "manchester";
+                MetadataProvider.StubReset();
+            }
+        
+            var schemas = MetadataProvider.Application("servicerequest").Schemas();
+            var schema = schemas[new ApplicationMetadataSchemaKey("editdetail", null, "web")];
+            var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("sr"), schema, 300, true);
+            var result = QuerySelectBuilder.BuildSelectAttributesClause(sliced, QueryCacheKey.QueryMode.Detail);
+            Debug.Write(result);
+        
+            //should not cointain the reverse associations here
+            Assert.IsFalse(result.Contains("tkserviceaddress"));
+            var from = QueryFromBuilder.Build(sliced);
+            Debug.Write(from);
+            Assert.IsFalse(from.Contains("tkserviceaddress"));
         }
     }
 }
