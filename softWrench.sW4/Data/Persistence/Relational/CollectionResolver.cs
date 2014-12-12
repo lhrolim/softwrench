@@ -61,7 +61,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var ctx = ContextLookuper.LookupContext();
             foreach (var collectionAssociation in collectionAssociations) {
                 var association = collectionAssociation;
-                tasks[i++] = Task.Factory.NewThread(() => FetchAsync(association, compositionSchemas, entitiesList, ctx));
+                tasks[i++] = Task.Factory.NewThread(() => FetchAsync(entityMetadata, association, compositionSchemas, entitiesList, ctx));
             }
             Task.WaitAll(tasks);
             _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections",
@@ -69,7 +69,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
         }
 
 
-        private void FetchAsync(EntityAssociation collectionAssociation, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
+        private void FetchAsync(SlicedEntityMetadata entityMetadata, EntityAssociation collectionAssociation, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
             IEnumerable<AttributeHolder> entitiesList, ContextHolder ctx) {
             Quartz.Util.LogicalThreadContext.SetData("context", ctx);
             var lookupAttributes = collectionAssociation.Attributes;
@@ -89,8 +89,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
             var firstAttributeHolder = attributeHolders.First();
             if (applicationCompositionSchema.PrefilterFunction != null) {
-                var applicationName = applicationCompositionSchema.Schemas.List.ApplicationName;
-                var dataSet = DataSetProvider.GetInstance().LookupAsBaseDataSet(applicationName);
+                var dataSet = DataSetProvider.GetInstance().LookupAsBaseDataSet(entityMetadata.ApplicationName);
                 //we will call the function passing the first entry, altough this method could have been invoked for a list of items (printing)
                 //TODO: think about it
                 var preFilterParam = new CompositionPreFilterFunctionParameters(searchRequestDto, firstAttributeHolder, applicationCompositionSchema);

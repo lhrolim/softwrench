@@ -17,7 +17,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet.Filter {
             if (mi == null) {
                 throw new InvalidOperationException(String.Format(MethodNotFound, prefilterFunctionName, dataSet.GetType().Name));
             }
-            if (mi.GetParameters().Count() != 1 || mi.ReturnType != typeof(SearchRequestDto) || mi.GetParameters()[0].ParameterType != typeof(AssociationPreFilterFunctionParameters)) {
+            if (mi.GetParameters().Count() != 1 || mi.ReturnType != typeof(SearchRequestDto) || typeof(BasePreFilterParameters<>).IsAssignableFrom(mi.GetParameters()[0].ParameterType)) {
                 throw new InvalidOperationException(String.Format(WrongPreFilterMethod, prefilterFunctionName, dataSet.GetType().Name));
             }
             return (SearchRequestDto)mi.Invoke(dataSet, new object[] { preFilterParam });

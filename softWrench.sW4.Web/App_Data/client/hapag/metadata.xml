@@ -165,15 +165,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute query="(!@classificationid is null or !@classificationid not like '8151%')"/>
         </relationship>
-        <relationship to="ticket" collection="true">
-          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
-          <relationshipAttribute from="siteid" to="siteid"/>
-          <relationshipAttribute query="(!@classificationid is null or !@classificationid not like '8151%')"/>
-        </relationship>
-
-        <relationship to="multiassetlocci" collection="true">
-          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
-        </relationship>
 
         <relationship to="ticket" collection="true" qualifier="histticket">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
@@ -2556,11 +2547,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <tab label="History" id="history">
             <composition relationship="ticket" inline="true" label="" detailschema="">
               <header label="Tickets" displacement="ontop"/>
-              <collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false" prefilterfunction="fetchTicketHistory"/>
+              <collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false" prefilterfunction="AppendMultiLocciTicketHistoryQuery"/>
             </composition>
             <composition relationship="imac" inline="true" label="" detailschema="">
               <header label="IMAC" displacement="ontop"/>
-              <collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false" prefilterfunction="fetchImacHistory"/>
+              <collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false" prefilterfunction="AppendMultiLocciTicketHistoryQuery"/>
             </composition>
           </tab>
 

@@ -101,9 +101,15 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
              */
 
             var ticketData = GetDAO().FindByQuery<HistTicket>(HistTicket.ByAssetnum, assetId.ToString());
+            var ticketList = (IList<Dictionary<string, object>>)resultObject.Attributes["ticket_"];
+            var imacList = (IList<Dictionary<string, object>>)resultObject.Attributes["imac_"];
             foreach (var row in ticketData) {
-                var list = (IList<Dictionary<string, object>>)resultObject.Attributes["ticket_"];
-                list.Add(row.toAttributeHolder());
+                var attributeHolder = row.toAttributeHolder();
+                if (row.Classification != null && row.Classification.StartsWith("8151")) {
+                    imacList.Add(attributeHolder);
+                } else {
+                    ticketList.Add(attributeHolder);
+                }
             }
         }
 
@@ -134,8 +140,12 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             resultObject.Attributes["#assettree"] = new List<Dictionary<string, object>> { rootNode };
         }
 
-        public SearchRequestDto GetFetchTicketHistory(CompositionPreFilterFunctionParameters preFilter) {
+        public SearchRequestDto AppendMultiLocciTicketHistoryQuery(CompositionPreFilterFunctionParameters preFilter) {
             var dto = preFilter.BASEDto;
+            dto.SearchValues = null;
+            dto.SearchParams = null;
+            var assetNum = preFilter.OriginalEntity.GetAttribute("assetnum");
+            dto.AppendWhereClauseFormat("ticketid in (select recordkey from MULTIASSETLOCCI multi where multi.assetnum = '{0}' and RECORDCLASS in ({1}) )", assetNum, "'CHANGE','INCIDENT','PROBLEM','SR'");
             return dto;
         }
 
