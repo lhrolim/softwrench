@@ -2792,6 +2792,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="nextschema.schemaid" value="creationSummary"/>
             <property key="addassociationlabels" value="true"/>
             <property key="popup.window.titlestrategy" value="schematitle"/>
+            <property key="oncrudsaveevent.validationservice" value="changeservice.validateNewForm"/>
           </properties>
 
           <field attribute="templateid" hidden="true" default="HLCDECHG" />

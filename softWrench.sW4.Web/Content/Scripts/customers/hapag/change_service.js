@@ -27,9 +27,9 @@ app.factory('changeservice', function ($http, redirectService, formatService, fi
         },
 
         duplicate: function (schema, datamap) {
-            
+
             var initialData = {};
-            
+
             var changeid = datamap['wonum'];
 
             /* workaround to make samelinepicker work - REFACTOR */
@@ -59,14 +59,25 @@ app.factory('changeservice', function ($http, redirectService, formatService, fi
             initialData['targcompdate'] = targcompdate;
             initialData['priority'] = datamap['wopriority'];
             initialData['remarks'] = 'Copy of ' + changeid + '\n' + datamap['longdescription_.ldtext'];
-                        
+
             var parameters = {
                 popupmode: 'nomenu'
-            };            
+            };
 
             redirectService.goToApplicationView('newchange', 'newchange', 'input', 'New Change Request', parameters, initialData);
 
-            
+
+        },
+
+        validateNewForm: function (schema, datamap) {
+            var arr = [];
+            var targstartdate = datamap['targstartdate'];
+            var targcompdate = datamap['targcompdate'];
+            if (targstartdate > targcompdate) {
+                arr.push('Target Start Date cannot be later than Target Finish Date');
+            }
+            return arr;
+
         }
     };
 
