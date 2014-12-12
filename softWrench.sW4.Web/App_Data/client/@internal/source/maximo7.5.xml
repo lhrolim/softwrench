@@ -2705,8 +2705,24 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute from="inventory_.itemsetid" to="itemsetid"/>
           <relationshipAttribute from="storeloc" to="location"/>
-          <relationshipAttribute from="binnum" to="binnum" primary="true"/>
-          <relationshipAttribute from="lotnum" to="lotnum"/>
+          <relationshipAttribute from="binnum" to="binnum"/>
+          <relationshipAttribute from="lotnum" to="lotnum" primary="true"/>
+        </relationship>
+        <relationship to="invbalances" qualifier="binbalances">
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="inventory_.itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="storeloc" to="location"/>
+          <relationshipAttribute from="binnum" to="binnum" />
+          <relationshipAttribute from="lotnum" to="lotnum" primary="true"/>
+
+        </relationship>
+        <relationship to="invbalances" qualifier="lotbalances">
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="inventory_.itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="storeloc" to="location"/>
+          <relationshipAttribute from="lotnum" to="lotnum" primary="true"/>
         </relationship>
         <relationship to="site">
           <relationshipAttribute from="siteid" to="siteid" primary="true"/>
@@ -2714,6 +2730,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <relationship to="chartofaccounts" >
           <relationshipAttribute from="glaccount" to="glaccount" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="location" qualifier="storeroom">
+          <relationshipAttribute from="storeloc" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
         </relationship>
       </relationships>
       <connectorParameters>
@@ -3170,6 +3191,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </attributes>
       <relationships>
         <relationship to="invcost" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="invbalances" >
           <relationshipAttribute from="itemnum" to="itemnum" primary="true" />
           <relationshipAttribute from="itemsetid" to="itemsetid" />
           <relationshipAttribute from="location" to="location" />

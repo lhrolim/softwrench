@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DocumentFormat.OpenXml.ExtendedProperties;
 using Iesi.Collections.Generic;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Scheduler;
@@ -31,7 +32,7 @@ namespace softWrench.sW4.Security.Init {
                             user = _dao.FindSingleByQuery<User>(User.UserByUserName, "swadmin");
                             if (user == null && (ApplicationConfiguration.IsDev() || ApplicationConfiguration.ClientName!="hapag")) {
                                 var adminUser = new User("swadmin", "admin", "admin", ApplicationConfiguration.DefaultSiteId ?? ApplicationConfiguration.DefaultOrgId,
-                                    ApplicationConfiguration.DefaultOrgId ?? "ble", "test", "1-800-433-7300", "en", "sw@dm1n");
+                                    ApplicationConfiguration.DefaultOrgId ?? "ble", "test", "1-800-433-7300", "en", "sw@dm1n", ApplicationConfiguration.DefaultStoreloc);
                                 _dao.Save(adminUser);
                                 CreateUserRoles(adminUser, UserType.Admin);
                             }
@@ -40,7 +41,7 @@ namespace softWrench.sW4.Security.Init {
                             user = _dao.FindSingleByQuery<User>(User.UserByUserName, JobManager.JobUser);
                             if (user == null && (ApplicationConfiguration.IsDev() || ApplicationConfiguration.ClientName != "hapag")) {
                                 var jobUser = new User(JobManager.JobUser, "jobuser", "jobuser", ApplicationConfiguration.DefaultSiteId ?? "bla",
-                                    ApplicationConfiguration.DefaultOrgId ?? "ble", "test", "1-800-433-7300", "en", null);
+                                    ApplicationConfiguration.DefaultOrgId ?? "ble", "test", "1-800-433-7300", "en", null, ApplicationConfiguration.DefaultStoreloc);
                                 _dao.Save(jobUser);
                                 CreateUserRoles(jobUser, UserType.Job);
                             }
@@ -51,6 +52,7 @@ namespace softWrench.sW4.Security.Init {
                     }
                     UpdateOrgId(user);
                     UpdateSiteId(user);
+                    UpdateStoreloc(user);
                 }
             } catch (Exception e) {
                 Console.Write(e.StackTrace);
@@ -105,6 +107,14 @@ namespace softWrench.sW4.Security.Init {
             if (defaultSiteId == null) return;
             if (user.SiteId == defaultSiteId) return;
             user.SiteId = defaultSiteId;
+            _dao.Save(user);
+        }
+
+        private static void UpdateStoreloc(User user) {
+            var defaultStoreloc = ApplicationConfiguration.DefaultStoreloc;
+            if (defaultStoreloc == null) return;
+            if (user.Storeloc == defaultStoreloc) return;
+            user.Storeloc = defaultStoreloc;
             _dao.Save(user);
         }
     }
