@@ -1,4 +1,6 @@
-﻿using softwrench.sW4.Shared2.Data;
+﻿using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
+using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
@@ -21,7 +23,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         //TODO: make these datasets injectables via SimpleInjector
         public HapagAssetDataSet() {
-            
+
         }
 
         private HapagImacDataSet GetImacDataSet() {
@@ -87,6 +89,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 return;
             }
 
+            var histTickets = resultObject.GetAttribute("histticket");
+
             // The workorder grid was replaced by IMAC grid
             /* 
             var woData = GetDAO().FindByQuery<HistWorkorder>(HistWorkorder.ByAssetnum, assetId.ToString());
@@ -128,6 +132,11 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             }
 
             resultObject.Attributes["#assettree"] = new List<Dictionary<string, object>> { rootNode };
+        }
+
+        public SearchRequestDto GetFetchTicketHistory(CompositionPreFilterFunctionParameters preFilter) {
+            var dto = preFilter.BASEDto;
+            return dto;
         }
 
         public override string ApplicationName() {

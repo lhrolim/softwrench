@@ -16,6 +16,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
         public CompositionSchemas Schemas { get; set; }
 
+     
+
         public ApplicationCompositionSchema(bool inline, string detailSchema, SchemaMode renderMode, CompositionFieldRenderer renderer, 
             string printSchema, string dependantfields) {
             _inline = inline;
@@ -49,6 +51,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         }
 
         public SchemaMode RenderMode { get; set; }
+
 
         public HashSet<string> DependantFields {
             get { return _dependantFields; }

@@ -19,14 +19,17 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             _autoCommit = true;
         }
 
-        public CompositionCollectionProperties(string allowRemoval, string allowInsertion, string allowUpdate, string listSchema, bool autoCommit, string orderByField) {
+        public CompositionCollectionProperties(string allowRemoval, string allowInsertion, string allowUpdate, string listSchema, bool autoCommit, string orderByField, string prefilterFunction) {
             AllowRemoval = allowRemoval;
             AllowInsertion = allowInsertion;
             AllowUpdate = allowUpdate;
             _listSchema = listSchema;
             _autoCommit = autoCommit;
             OrderByField = orderByField;
+            PrefilterFunction = prefilterFunction;
         }
+
+        public string PrefilterFunction { get; set; }
 
 
         public string ListSchema {

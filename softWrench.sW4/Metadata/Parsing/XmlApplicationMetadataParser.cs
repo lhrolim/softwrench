@@ -351,7 +351,8 @@ namespace softWrench.sW4.Metadata.Parsing {
             var listSchema = collectionProperties.Attribute(XmlMetadataSchema.ApplicationCompositionCollectionListSchemaAttribute).ValueOrDefault("list");
             var autoCommit = collectionProperties.Attribute(XmlMetadataSchema.ApplicationCompositionCollectionAutoCommitAttribute).ValueOrDefault(true);
             var orderbyfield = collectionProperties.Attribute(XmlMetadataSchema.ApplicationCompositionCollectionOrderByField).ValueOrDefault((String)null);
-            return new CompositionCollectionProperties(allowRemoval, allowInsertion, allowUpdate, listSchema, autoCommit, orderbyfield);
+            var prefilterFunction = collectionProperties.Attribute(XmlMetadataSchema.ApplicationCompositionCollectionPreFilterFunctionField).ValueOrDefault((String)null);
+            return new CompositionCollectionProperties(allowRemoval, allowInsertion, allowUpdate, listSchema, autoCommit, orderbyfield,prefilterFunction);
 
         }
 
