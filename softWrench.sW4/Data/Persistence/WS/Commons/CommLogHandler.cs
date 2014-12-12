@@ -54,44 +54,42 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 w.CopyFromRootEntity(rootObject, integrationObject, modifydate, DateTime.Now.FromServerToRightKind());
                 w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
-                //HandleAttachments(crudData, commlogs, maximoTemplateData.ApplicationMetadata);
+                HandleAttachments(crudData, commlogs, maximoTemplateData.ApplicationMetadata);
                 if (w.GetRealValue(integrationObject, sendto) != null) {
                     maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
                 }
             });
         }
 
-        //private static void HandleAttachments(CrudOperationData data, IEnumerable<CrudOperationData> maximoObj,
-        //    Metadata.Applications.ApplicationMetadata applicationMetadata)
-        //{
-        //    // Check if Attachment is present
-        //    var attachmentData = data.GetUnMappedAttribute("attachment");
-        //    var attachmentPath = data.GetUnMappedAttribute("newattachment_path");
+        private static void HandleAttachments(CrudOperationData data, IEnumerable<CrudOperationData> maximoObj,
+            Metadata.Applications.ApplicationMetadata applicationMetadata){
+            // Check if Attachment is present
+            var attachmentData = data.GetUnMappedAttribute("attachment");
+            var attachmentPath = data.GetUnMappedAttribute("newattachment_path");
 
-        //    if (!String.IsNullOrWhiteSpace(attachmentData) && !String.IsNullOrWhiteSpace(attachmentPath))
-        //    {
-        //        var user = SecurityFacade.CurrentUser();
-        //        if (String.IsNullOrEmpty(attachmentData))
-        //        {
-        //            return;
-        //        }
-        //        var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
-        //        w.SetValue(docLink, "ADDINFO", true);
-        //        w.CopyFromRootEntity(maximoObj, docLink, "CREATEBY", user.Login, "reportedby");
-        //        w.CopyFromRootEntity(maximoObj, docLink, "CREATEDATE", DateTime.Now.FromServerToRightKind());
-        //        w.CopyFromRootEntity(maximoObj, docLink, "CHANGEBY", user.Login, "reportedby");
-        //        w.CopyFromRootEntity(maximoObj, docLink, "CHANGEDATE", DateTime.Now.FromServerToRightKind());
-        //        w.CopyFromRootEntity(maximoObj, docLink, "SITEID", user.SiteId);
-        //        w.CopyFromRootEntity(maximoObj, docLink, "ORGID", user.OrgId);
-        //        w.SetValue(docLink, "URLTYPE", "FILE");
-        //        w.SetValue(docLink, "URLNAME", attachmentPath);
-        //        w.SetValue(docLink, "UPLOAD", true);
-        //        w.SetValue(docLink, "DOCTYPE", "Attachments");
-        //        w.SetValue(docLink, "DOCUMENT", FileUtils.GetNameFromPath(attachmentPath, 100));
-        //        w.SetValue(docLink, "DESCRIPTION", attachmentPath);
-        //        w.SetValue(docLink, "DOCUMENTDATA", FileUtils.ToByteArrayFromHtmlString(attachmentData));
-        //    }
-        //}
+            if (!String.IsNullOrWhiteSpace(attachmentData) && !String.IsNullOrWhiteSpace(attachmentPath)){
+                var user = SecurityFacade.CurrentUser();
+                if (String.IsNullOrEmpty(attachmentData)){
+                    return;
+                }
+                var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
+                w.SetValue(docLink, "ADDINFO", true);
+                w.CopyFromRootEntity(maximoObj, docLink, "CREATEBY", user.Login, "reportedby");
+                w.CopyFromRootEntity(maximoObj, docLink, "CREATEDATE", DateTime.Now.FromServerToRightKind());
+                w.CopyFromRootEntity(maximoObj, docLink, "CHANGEBY", user.Login, "reportedby");
+                w.CopyFromRootEntity(maximoObj, docLink, "CHANGEDATE", DateTime.Now.FromServerToRightKind());
+                w.CopyFromRootEntity(maximoObj, docLink, "SITEID", user.SiteId);
+                w.CopyFromRootEntity(maximoObj, docLink, "ORGID", user.OrgId);
+                w.SetValue(docLink, "URLTYPE", "FILE");
+                w.SetValue(docLink, "URLNAME", attachmentPath);
+                w.SetValue(docLink, "UPLOAD", true);
+                w.SetValue(docLink, "DOCTYPE", "Attachments");
+                w.SetValue(docLink, "DOCUMENT", FileUtils.GetNameFromPath(attachmentPath, 100));
+                w.SetValue(docLink, "DESCRIPTION", attachmentPath);
+                w.SetValue(docLink, "DOCUMENTDATA", FileUtils.ToByteArrayFromHtmlString(attachmentData));
+                
+            }
+        }
 
         private static EmailService.EmailData GenerateEmailObject(object integrationObject, CrudOperationData crudData)
         {
