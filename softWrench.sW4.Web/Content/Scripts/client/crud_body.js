@@ -218,8 +218,12 @@ app.directive('crudBody', function (contextService) {
                 var applicationName = $scope.schema.applicationName;
                 var idFieldName = $scope.schema.idFieldName;
                 var id = fields[idFieldName];
+
+                //hook for updating doing custom logic before sending the data to the server
+                $rootScope.$broadcast("sw_beforeSave", fields);
+
                 if (sessionStorage.mockclientvalidation == undefined) {
-                    var validationErrors = validationService.validate($scope.schema.displayables, fields);
+                    var validationErrors = validationService.validate($scope.schema,$scope.schema.displayables, fields);
                     if (validationErrors.length > 0) {
                         //interrupting here, can´t be done inside service
                         return;
@@ -231,8 +235,7 @@ app.directive('crudBody', function (contextService) {
                 submitService.translateFields($scope.schema.displayables, fields);
                 associationService.insertAssocationLabelsIfNeeded($scope.schema, fields, $scope.associationOptions);
 
-                //hook for updating doing custom logic before sending the data to the server
-                $rootScope.$broadcast("sw_beforeSave", fields);
+                
 
 
                 var jsonString = angular.toJson(fields);
