@@ -32,7 +32,7 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
         }
     };
 
-    var checkCostCenterAvailability = function (availablecostcenters,costCenter, field) {
+    var checkCostCenterAvailability = function (availablecostcenters, costCenter, field) {
         for (var i = 0; i < availablecostcenters.length; i++) {
             if (availablecostcenters[i][field] == costCenter) {
                 return true;
@@ -63,9 +63,7 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
                 }
             } else {
                 //if replace then we have a readonly costcenter instead of an optionfield, so we need the label as the "value"
-                if (checkCostCenterAvailability(availablecostcenters, costCenterLabel, 'label')) {
-                    event.fields['costcenter'] = costCenterLabel;
-                }
+                event.fields['costcenter'] = costCenterLabel;
             }
             event.fields['currentitc'] = currentITC;
             parseLocations(event.fields, event.fields['asset_.location'], event.triggerparams);
