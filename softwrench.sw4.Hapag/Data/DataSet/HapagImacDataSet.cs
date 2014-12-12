@@ -1,11 +1,15 @@
+using softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac;
+using softwrench.sw4.Hapag.Data.DataSet.Helper;
 ﻿using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac;
 using softwrench.sw4.Hapag.Data.DataSet.Helper;
+﻿using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Data.Sync;
 using softwrench.sw4.Hapag.Security;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -23,7 +27,6 @@ using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
@@ -121,8 +124,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             var searchDTO = parameters.BASEDto;
             var fromLocation = parameters.OriginalEntity.GetAttribute("fromlocation") as String;
             var schema = parameters.Metadata.Schema.SchemaId;
-            var target = parameters.ASSOCIATION.Target;
-            var childAsset = parameters.ASSOCIATION.Target.Contains("child");
+            var target = parameters.Relationship.Target;
+            var childAsset = parameters.Relationship.Target.Contains("child");
             var isNew = target.Contains("new");
 
             AppendLocationCondition(searchDTO, fromLocation, schema, childAsset, isNew);

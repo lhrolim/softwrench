@@ -1,23 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.Pagination;
-using softWrench.sW4.Data.Persistence.Relational;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
-using softWrench.sW4.Metadata.Applications.DataSet;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softWrench.sW4.SimpleInjector;
-using softWrench.sW4.Util;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Metadata.Entities;
-using softWrench.sW4.Metadata.Entities.Schema;
-using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 
 namespace softWrench.sW4.Metadata.Applications.Association {
 
@@ -25,7 +22,6 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
 
         private const string WrongPostFilterMethod = "PostfilterFunction {0} of dataset {1} was implemented with wrong signature. See IDataSet documentation";
-        private const string WrongPreFilterMethod = "PrefilterFunction {0} of dataset {1} was implemented with wrong signature. See IDataSet documentation";
         private const string ValueKeyConst = "value";
 
         //        private readonly EntityRepository _entityRepository = new EntityRepository();
@@ -84,7 +80,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             var prefilterFunctionName = association.Schema.DataProvider.PreFilterFunctionName;
             if (prefilterFunctionName != null) {
                 var preFilterParam = new AssociationPreFilterFunctionParameters(applicationMetadata, associationFilter, association, originalEntity);
-                associationFilter = ApplyPreFilterFunction(preFilterParam, prefilterFunctionName);
+                associationFilter = PrefilterInvoker.ApplyPreFilterFunction(DataSetProvider.GetInstance().LookupDataSet(applicationMetadata.Name,applicationMetadata.Schema.SchemaId),preFilterParam, prefilterFunctionName);
             }
 
             var entityMetadata = MetadataProvider.Entity(association.EntityAssociation.To);
@@ -140,19 +136,6 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 fmt[i] = attributeHolder.GetAttribute(association.LabelFields[i], true);
             }
             return String.Format(association.LabelPattern, fmt);
-        }
-
-        private SearchRequestDto ApplyPreFilterFunction(AssociationPreFilterFunctionParameters preFilterParam, string prefilterFunctionName) {
-            var applicationName = preFilterParam.Metadata.Name;
-            var dataSet = FindDataSet(applicationName, preFilterParam.Metadata.Schema.SchemaId, prefilterFunctionName);
-            var mi = dataSet.GetType().GetMethod(prefilterFunctionName);
-            if (mi == null) {
-                throw new InvalidOperationException(String.Format(MethodNotFound, prefilterFunctionName, dataSet.GetType().Name));
-            }
-            if (mi.GetParameters().Count() != 1 || mi.ReturnType != typeof(SearchRequestDto) || mi.GetParameters()[0].ParameterType != typeof(AssociationPreFilterFunctionParameters)) {
-                throw new InvalidOperationException(String.Format(WrongPreFilterMethod, prefilterFunctionName, dataSet.GetType().Name));
-            }
-            return (SearchRequestDto)mi.Invoke(dataSet, new object[] { preFilterParam });
         }
 
         private IEnumerable<IAssociationOption> ApplyFilters(ApplicationMetadata app, AttributeHolder originalEntity, string filterFunctionName, ISet<IAssociationOption> options, ApplicationAssociationDefinition association) {
