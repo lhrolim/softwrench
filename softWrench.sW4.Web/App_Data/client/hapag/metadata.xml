@@ -165,14 +165,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute query="(!@classificationid is null or !@classificationid not like '8151%')"/>
         </relationship>
-
-        <relationship to="ticket" collection="true" qualifier="histticket">
-          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
-          <relationshipAttribute query="(!@classificationid is null or !@classificationid not like '8151%')"/>
-          <!--this is a workaround cause we cannot bring data from the relationship table it self, but still want the composition schema on screen-->
-          <relationshipAttribute query="1=2"/>
-        </relationship>
-        
         
         <relationship to="imac" collection="true">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
