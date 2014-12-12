@@ -251,7 +251,7 @@ body {
 }
 
 .hapag-body {
-    /*margin-top: 225px;*/
+    margin-top: 225px;
 }
 
 .hapag-body-loaded {
@@ -981,7 +981,7 @@ select {
 
 .hapag-body {
     margin-left: 1px;
-    /*margin-top: 84px;*/
+    margin-top: 84px;
 }
 
 .hapag-body-loaded {

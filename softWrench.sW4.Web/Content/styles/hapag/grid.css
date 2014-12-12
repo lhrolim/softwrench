@@ -27,14 +27,6 @@
     top: -85px;
 }
 
-.col-side-bar > .affix {
-    position: fixed;
-}
-
-.hapag-body {
-    margin-top: 0;
-}
-
 @media only screen and (min-width: 1090px) {
     .listgrid-table {
         /*margin-top: 117px !important;*/
@@ -52,9 +44,5 @@
     .affix-pagination {
         position: fixed;
         top: 84px !important;
-    }
-
-    .hapag-body {
-        margin-top: 84px;
     }
 }
