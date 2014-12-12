@@ -31,6 +31,16 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
             datamap['room'] = location;
         }
     };
+
+    var checkCostCenterAvailability = function (availablecostcenters,costCenter, field) {
+        for (var i = 0; i < availablecostcenters.length; i++) {
+            if (availablecostcenters[i][field] == costCenter) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     return {
 
         afterChangeAsset: function (event) {
@@ -44,12 +54,18 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
             event.fields['assetlocation'] = assetLocation;
             event.fields['assetusage'] = assetUsage;
             var schemaId = event.scope.schema.schemaId;
+            var availablecostcenters = event.scope.associationOptions.costCentersByPrimaryUser;
             if (schemaId.startsWith('install') || schemaId.startsWith('move')) {
                 //if there´s an association, then, we set the value, and the label would be picked from the associationOptions list
-                event.fields['costcenter'] = costCenter;
+                //if the asset had a costcenter that is not one of the user´s costcentes, we need to remove it
+                if (checkCostCenterAvailability(availablecostcenters, costCenter, 'value')) {
+                    event.fields['costcenter'] = costCenter;
+                }
             } else {
                 //if replace then we have a readonly costcenter instead of an optionfield, so we need the label as the "value"
-                event.fields['costcenter'] = costCenterLabel;
+                if (checkCostCenterAvailability(availablecostcenters, costCenterLabel, 'label')) {
+                    event.fields['costcenter'] = costCenterLabel;
+                }
             }
             event.fields['currentitc'] = currentITC;
             parseLocations(event.fields, event.fields['asset_.location'], event.triggerparams);
