@@ -1,4 +1,7 @@
+﻿using softwrench.sW4.Shared2.Data;
 ﻿using softWrench.sW4.Data.Persistence.Dataset.Commons;
+﻿using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
@@ -22,12 +25,12 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         //TODO: make these datasets injectables via SimpleInjector
         public HapagAssetDataSet() {
-            
+
         }
 
         private HapagImacDataSet GetImacDataSet() {
             if (_imacDataSet == null) {
-                _imacDataSet = (HapagImacDataSet)DataSetProvider.GetInstance().LookupDataSet("imac",null);
+                _imacDataSet = (HapagImacDataSet)DataSetProvider.GetInstance().LookupDataSet("imac", null);
             }
             return _imacDataSet;
         }
@@ -95,9 +98,15 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             }
 
             var ticketData = GetDAO().FindByQuery<HistTicket>(HistTicket.ByAssetnum, assetId.ToString());
+            var ticketList = (IList<Dictionary<string, object>>)resultObject.Attributes["ticket_"];
+            var imacList = (IList<Dictionary<string, object>>)resultObject.Attributes["imac_"];
             foreach (var row in ticketData) {
-                var list = (IList<Dictionary<string, object>>)resultObject.Attributes["ticket_"];
-                list.Add(row.toAttributeHolder());
+                var attributeHolder = row.toAttributeHolder();
+                if (row.Classification != null && row.Classification.StartsWith("8151")) {
+                    imacList.Add(attributeHolder);
+                } else {
+                    ticketList.Add(attributeHolder);
+                }
             }
         }
 
@@ -124,8 +133,15 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 parent["children"] = new List<Dictionary<string, object>>() { currentAsset };
                 rootNode = parent;
             }
+        }
 
-            resultObject.Attributes["#assettree"] = new List<Dictionary<string, object>> { rootNode };
+        public SearchRequestDto AppendMultiLocciTicketHistoryQuery(CompositionPreFilterFunctionParameters preFilter) {
+            var dto = preFilter.BASEDto;
+            dto.SearchValues = null;
+            dto.SearchParams = null;
+            var assetNum = preFilter.OriginalEntity.GetAttribute("assetnum");
+            dto.AppendWhereClauseFormat("ticketid in (select recordkey from MULTIASSETLOCCI multi where multi.assetnum = '{0}' and RECORDCLASS in ({1}) )", assetNum, "'CHANGE','INCIDENT','PROBLEM','SR'");
+            return dto;
         }
 
         public override string ApplicationName() {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -7,12 +7,13 @@ using softWrench.sW4.Data;
 using softWrench.sW4.Metadata.Entities.Connectors;
 using softWrench.sW4.Metadata.Entities.Schema;
 using softwrench.sW4.Shared2.Data;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
 
 namespace softWrench.sW4.Metadata.Entities.Sliced {
     public class SlicedEntityMetadata : EntityMetadata {
 
-        private readonly string _applicationName;
+        private readonly ApplicationSchemaDefinition _appSchema;
         private readonly int? _fetchLimit;
         private readonly SlicedEntityMetadata _unionSchema;
         //key= base alias of the entity
@@ -22,9 +23,10 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
 
 
         public SlicedEntityMetadata([NotNull] string name, [NotNull] EntitySchema schema,
-               [NotNull] IEnumerable<EntityAssociation> associations, [NotNull] ConnectorParameters connectorParameters, string applicationName, IEnumerable<SlicedEntityMetadata> innerMetadatas, int? fetchLimit = 300, SlicedEntityMetadata unionSchema = null)
+               [NotNull] IEnumerable<EntityAssociation> associations, [NotNull] ConnectorParameters connectorParameters, ApplicationSchemaDefinition appSchema,
+            IEnumerable<SlicedEntityMetadata> innerMetadatas, int? fetchLimit = 300, SlicedEntityMetadata unionSchema = null)
             : base(name, schema, associations, connectorParameters) {
-            _applicationName = applicationName;
+            _appSchema = appSchema;
             _fetchLimit = fetchLimit;
             _innerMetadatas.AddRange(innerMetadatas);
             _unionSchema = unionSchema;
@@ -36,7 +38,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
         }
 
         public override AttributeHolder GetAttributeHolder(IEnumerable<KeyValuePair<string, object>> keyValuePairs) {
-            return new DataMap(_applicationName, keyValuePairs.ToDictionary(pair => pair.Key, pair => pair.Value),null);
+             return new DataMap(ApplicationName, keyValuePairs.ToDictionary(pair => pair.Key, pair => pair.Value));
         }
 
         public override ISet<EntityAssociation> NonListAssociations() {
@@ -79,6 +81,14 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
             return _fetchLimit;
         }
 
+        public string ApplicationName {
+            get { return _appSchema.ApplicationName; }
+        }
+
+        public ApplicationSchemaDefinition AppSchema {
+            get { return _appSchema; }
+        }
+
         public SlicedEntityMetadata UnionSchema {
             get { return _unionSchema; }
         }
@@ -87,7 +97,9 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
             return UnionSchema != null;
         }
         public override string ToString() {
-            return string.Format("Application: {0}, Name: {1}", _applicationName, Name);
+            return string.Format("Application: {0}, Name: {1}", ApplicationName, Name);
         }
+
+
     }
 }

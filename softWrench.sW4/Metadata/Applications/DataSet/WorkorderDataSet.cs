@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Search;

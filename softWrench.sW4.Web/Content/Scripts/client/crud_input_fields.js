@@ -524,7 +524,6 @@ app.directive('crudInputFields', function (contextService) {
                         cssclass += fieldMetadata.schema.rendererParameters['fieldclass'];
                     }
                 }
-                console.log('Field', cssclass);
 
                 return cssclass;
             }

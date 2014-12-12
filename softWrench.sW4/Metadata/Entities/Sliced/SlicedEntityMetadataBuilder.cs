@@ -53,7 +53,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
                 unionSchema = GetUnionInstance(appSchema.UnionSchema);
             }
             return new SlicedEntityMetadata(entityMetadata.Name, schema,
-                usedRelationships, entityMetadata.ConnectorParameters, appSchema.ApplicationName, result.InnerEntityMetadatas, fetchLimit, unionSchema);
+                usedRelationships, entityMetadata.ConnectorParameters, appSchema, result.InnerEntityMetadatas, fetchLimit, unionSchema);
         }
 
 

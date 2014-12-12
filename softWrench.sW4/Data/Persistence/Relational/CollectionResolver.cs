@@ -1,4 +1,9 @@
+using log4net;
+using log4net;
 ﻿using log4net;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softWrench.sW4.Metadata.Applications.DataSet;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
@@ -71,7 +76,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var ctx = ContextLookuper.LookupContext();
             foreach (var collectionAssociation in collectionAssociations) {
                 var association = collectionAssociation;
-                tasks[i++] = Task.Factory.NewThread(() => FetchAsync(association, compositionSchemas, entitiesList, ctx));
+                tasks[i++] = Task.Factory.NewThread(() => FetchAsync(entityMetadata, association, compositionSchemas, entitiesList, ctx));
             }
             Task.WaitAll(tasks);
             _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections",
@@ -79,7 +84,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
         }
 
 
-        private void FetchAsync(EntityAssociation collectionAssociation, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
+        private void FetchAsync(SlicedEntityMetadata entityMetadata, EntityAssociation collectionAssociation, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
             IEnumerable<AttributeHolder> entitiesList, ContextHolder ctx) {
             Quartz.Util.LogicalThreadContext.SetData("context", ctx);
             var lookupAttributes = collectionAssociation.Attributes;
@@ -89,16 +94,29 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             if (applicationCompositionSchema == null) {
                 throw ExceptionUtil.InvalidOperation("collection schema {0} not found", collectionAssociation.Qualifier);
             }
+
+
             var lookupattributes = lookupAttributes as EntityAssociationAttribute[] ?? lookupAttributes.ToArray();
             var attributeHolders = entitiesList as AttributeHolder[] ?? entitiesList.ToArray();
             var matchingResultWrapper = new CollectionMatchingResultWrapper();
 
             var searchRequestDto = BuildSearchRequestDto(applicationCompositionSchema, lookupattributes, matchingResultWrapper, attributeHolders, collectionEntityMetadata);
 
-            var listOfCollections = EntityRepository.GetAsRawDictionary(collectionEntityMetadata, searchRequestDto);
+            var firstAttributeHolder = attributeHolders.First();
+            if (applicationCompositionSchema.PrefilterFunction != null) {
+                var dataSet = DataSetProvider.GetInstance().LookupDataSet(entityMetadata.ApplicationName,entityMetadata.AppSchema.SchemaId);
+                //we will call the function passing the first entry, altough this method could have been invoked for a list of items (printing)
+                //TODO: think about it
+                var preFilterParam = new CompositionPreFilterFunctionParameters(searchRequestDto, firstAttributeHolder, applicationCompositionSchema);
+                searchRequestDto = PrefilterInvoker.ApplyPreFilterFunction(dataSet, preFilterParam, applicationCompositionSchema.PrefilterFunction);
+            }
+
+           
+           var listOfCollections = EntityRepository.GetAsRawDictionary(collectionEntityMetadata, searchRequestDto);
+
             if (attributeHolders.Count() == 1) {
                 //default scenario, we have just one entity here
-                attributeHolders.First().Attributes.Add(targetCollectionAttribute, listOfCollections);
+                firstAttributeHolder.Attributes.Add(targetCollectionAttribute, listOfCollections);
                 return;
             }
             MatchResults(listOfCollections, matchingResultWrapper, targetCollectionAttribute);

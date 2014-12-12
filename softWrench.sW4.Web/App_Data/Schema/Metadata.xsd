@@ -445,6 +445,7 @@
             <attribute name="autocommit" type="boolean" use="optional"/>
             <attribute name="hideexistingdata" type="boolean" use="optional"/>
             <attribute name="orderbyfield" type="string" use="optional"/>
+            <attribute name="prefilterfunction" type="string" use="optional"/>
           </complexType>
         </element>
         <element name="event" type="tns:schemaEvent" minOccurs="0"
