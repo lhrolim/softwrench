@@ -321,16 +321,16 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                         //(cause we´d need to fetch one-value list for displaying)
                         continue;
                     }
-
+                    var threadSafeContext = new ContextHolderWithSearchDto(ctx, searchRequest);
                     tasks.Add(Task.Factory.NewThread(c => {
-                        Quartz.Util.LogicalThreadContext.SetData("context", c);
+                        Quartz.Util.LogicalThreadContext.SetData("context", threadSafeContext.Context);
                         var options = _associationOptionResolver.ResolveOptions(application, cruddata, association,
-                           searchRequest);
+                           threadSafeContext.Dto);
 
                         resultObject.Add(association.AssociationKey,
                             new LookupAssociationUpdateResult(searchRequest.TotalCount, searchRequest.PageNumber,
                                 searchRequest.PageSize, options, associationApplicationMetadata, PaginatedSearchRequestDto.DefaultPaginationOptions));
-                    }, ctx));
+                    }, threadSafeContext));
                 }
             }
 
@@ -342,6 +342,25 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                     "Finished execution of options fetching. Resolved collections: {0}", keys));
             }
             return resultObject;
+        }
+
+        class ContextHolderWithSearchDto {
+            readonly ContextHolder _context;
+            readonly PaginatedSearchRequestDto _dto;
+
+            public ContextHolderWithSearchDto(ContextHolder context, PaginatedSearchRequestDto dto) {
+                _context = context == null ? null : ReflectionUtil.DeepClone(context);
+                _dto = dto == null ? null : ReflectionUtil.DeepClone(dto);
+            }
+
+            public ContextHolder Context {
+                get { return _context; }
+            }
+
+            public PaginatedSearchRequestDto Dto {
+                get { return _dto; }
+            }
+
         }
 
         private static PaginatedSearchRequestDto BuildSearchDTO(AssociationUpdateRequest request, ApplicationAssociationDefinition association, AttributeHolder cruddata) {

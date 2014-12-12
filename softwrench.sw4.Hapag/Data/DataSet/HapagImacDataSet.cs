@@ -126,7 +126,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             if (String.IsNullOrWhiteSpace(fromLocation)) {
                 throw ExceptionUtil.InvalidOperation("from location parameter should not be null");
             }
-            searchDTO.IgnoreWhereClause = true;
+//            searchDTO.IgnoreWhereClause = true;
             var locations = LocationManager.FindAllLocationsOfCurrentUser();
             var location = locations.FirstOrDefault(l => l.SubCustomer.Contains(fromLocation));
             if (location == null) {

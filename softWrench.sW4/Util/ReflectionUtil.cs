@@ -110,7 +110,7 @@ namespace softWrench.sW4.Util {
             if (value != null) {
                 return value;
             }
-            value= InstantiateProperty(baseObject, propertyName, new { });
+            value = InstantiateProperty(baseObject, propertyName, new { });
             SetProperty(baseObject, propertyName, value);
             return value;
         }
