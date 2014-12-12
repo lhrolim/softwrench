@@ -219,8 +219,11 @@
     <Compile Include="Metadata\Applications\Association\AssociationHelper.cs" />
     <Compile Include="Metadata\Applications\Association\BaseDependableResolver.cs" />
     <Compile Include="Metadata\Applications\Association\DynamicOptionFieldResolver.cs" />
-    <Compile Include="Metadata\Applications\DataSet\AssociationPostFilterFunctionParameters.cs" />
+    <Compile Include="Metadata\Applications\DataSet\Filter\AssociationPostFilterFunctionParameters.cs" />
+    <Compile Include="Metadata\Applications\DataSet\Filter\BasePreFilterParameters.cs" />
+    <Compile Include="Metadata\Applications\DataSet\Filter\CompositionPreFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\ComToolTransDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\Filter\PrefilterInvoker.cs" />
     <Compile Include="Metadata\Applications\DataSet\IncidentDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbServiceRequestDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\GricServiceRequestDataSet.cs" />
@@ -392,7 +395,7 @@
     <Compile Include="Data\Offline\SynchronizationRequestDto.cs" />
     <Compile Include="Data\Offline\SynchronizationResultDto.cs" />
     <Compile Include="Metadata\Applications\Association\DependencyBuilder.cs" />
-    <Compile Include="Metadata\Applications\DataSet\AssociationPreFilterFunctionParameters.cs" />
+    <Compile Include="Metadata\Applications\DataSet\Filter\AssociationPreFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\FaqUtils.cs" />
     <Compile Include="Metadata\Applications\DataSet\FaqDescription.cs" />
     <Compile Include="Metadata\Applications\Association\ApplicationAssociationResolver.cs" />

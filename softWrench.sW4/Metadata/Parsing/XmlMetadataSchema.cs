@@ -126,6 +126,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ApplicationCompositionCollectionListSchemaAttribute = "listschema";
         public const string ApplicationCompositionCollectionAutoCommitAttribute = "autocommit";
         public const string ApplicationCompositionCollectionOrderByField = "orderbyfield";
+        public const string ApplicationCompositionCollectionPreFilterFunctionField = "prefilterfunction";
 
 
         public const string ApplicationCommandsElement = "commands";
