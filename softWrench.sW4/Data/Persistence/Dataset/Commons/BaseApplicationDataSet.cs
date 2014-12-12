@@ -246,7 +246,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     var toAttribute = applicationAssociation.EntityAssociation.PrimaryAttribute().To;
                     var prefilledValue = dataMap.GetAttribute(applicationAssociation.Target).ToString();
                     search.AppendSearchEntry(toAttribute, prefilledValue);
-                } else if (dataMap != null && applicationAssociation.EntityAssociation.Reverse) {
+                }
+                else if (dataMap != null && applicationAssociation.EntityAssociation.Reverse && dataMap.GetAttribute(applicationAssociation.EntityAssociation.PrimaryAttribute().From) != null)
+                {
                     var toAttribute = applicationAssociation.EntityAssociation.PrimaryAttribute().To;
                     var prefilledValue = dataMap.GetAttribute(applicationAssociation.EntityAssociation.PrimaryAttribute().From).ToString();
                     search.AppendSearchEntry(toAttribute, prefilledValue);
