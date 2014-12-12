@@ -13,7 +13,7 @@ using System.Linq;
 namespace softwrench.sW4.test.Metadata.Entities {
     
     [TestClass]
-    public class SlicedEntityMetadataBuilderTest {
+    public class HapagSlicedEntityMetadataBuilderTest {
         
         private static ApplicationSchemaDefinition _schema;
 
