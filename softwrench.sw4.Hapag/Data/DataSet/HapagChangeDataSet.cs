@@ -47,7 +47,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 if (!approvalGroup.StartsWith("C-")) {
                     HandleNonCustomerApprovers(user, wfassignment, approvalGroup, approval, wftransactions, rejectedTransaction);
                 } else {
-                    HandleCustomerApprovers(result, approvalGroup, worklogs, approval);
+                    HandleCustomerApprovers(user,result, approvalGroup, worklogs, approval);
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             Log.DebugFormat("non customer approval handled " + string.Join(", ", approval.Select(m => m.Key + ":" + m.Value).ToArray()));
         }
 
-        private void HandleCustomerApprovers(DataMap result, string approvalGroup, IEnumerable<Dictionary<string, object>> worklogs, IDictionary<string, object> approval) {
+        private void HandleCustomerApprovers(InMemoryUser user, DataMap result, string approvalGroup, IEnumerable<Dictionary<string, object>> worklogs, IDictionary<string, object> approval) {
             var apprDescription = c.GetWorkLogDescriptions(approvalGroup, true);
             var rejDescription = c.GetWorkLogDescriptions(approvalGroup, false);
 
@@ -88,7 +88,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
               w["description"].ToString().StartsWith(c.RejectedWorklogDescription, StringComparison.CurrentCultureIgnoreCase)
               && w["logtype"].ToString().Equals(c.WlRejLogType));
 
-            approval["#shouldshowaction"] = LevelMatches(result, approval);
+            approval["#shouldshowaction"] = LevelMatches(result, approval) && user.HasPersonGroup(approvalGroup); ;
 
             if (apprWl != null || rejWl != null) {
                 approval[c.ChangeByColumn] = apprWl != null ? apprWl[c.CreateByColumn] : rejWl[c.CreateByColumn];
