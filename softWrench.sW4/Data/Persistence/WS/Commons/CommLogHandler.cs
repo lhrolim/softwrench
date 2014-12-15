@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -72,7 +73,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 if (String.IsNullOrEmpty(attachmentData)){
                     return;
                 }
-                var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
+                var commlogDocs = (IEnumerable<CrudOperationData>) data.GetRelationship("commlogdocs");
+                var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "COMMLOGDOCS");
                 w.SetValue(docLink, "ADDINFO", true);
                 w.CopyFromRootEntity(maximoObj, docLink, "CREATEBY", user.Login, "reportedby");
                 w.CopyFromRootEntity(maximoObj, docLink, "CREATEDATE", DateTime.Now.FromServerToRightKind());

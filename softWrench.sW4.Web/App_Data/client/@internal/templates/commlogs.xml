@@ -38,10 +38,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <relationship to="commlogdocs" >
           <relationshipAttribute from="commlogid" to="commlogid" primary="true"/>
         </relationship>
-        <relationship to="DOCLINKS" qualifier="attachment" collection="true">
-          <relationshipAttribute from="commloguid" to="ownerid" primary="true"/>
-          <relationshipAttribute to="ownertable" literal="COMMLOG" quoteLiteral="true"/>
-        </relationship>
+<!--        <relationship to="DOCLINKS" qualifier="attachment" collection="true">-->
+<!--          <relationshipAttribute from="commloguid" to="ownerid" primary="true"/>-->
+<!--          <relationshipAttribute to="ownertable" literal="COMMLOG" quoteLiteral="true"/>-->
+<!--        </relationship>-->
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="commlog" />

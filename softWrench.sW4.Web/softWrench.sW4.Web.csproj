@@ -915,7 +915,6 @@
     <Content Include="Content\Templates\hapag\assetremarks.html" />
     <Content Include="Content\Templates\crud\update_section.html" />
     <Content Include="Content\Templates\hapag\commaseparatedcomposition.html" />
-    <Content Include="Content\Templates\otb\attachmentType.html" />
     <Content Include="Content\Templates\otb\compositionlistdeleteaction.html" />
     <Content Include="Content\Templates\otb\invissuereturnaction.html" />
     <Content Include="Content\Templates\otb\commlogaction.html" />
