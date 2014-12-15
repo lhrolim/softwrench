@@ -102,11 +102,11 @@ namespace softWrench.sW4.Web {
                     return;
                 }
 
-//
-//                if (HasApplicationVersionChangedSinceCookieIssued(ticket)) {
-//                    //if the cookie was setted on a different system version, if though it might still be valid, let´s force a new login
-//                    return; // Not authorised
-//                }
+                //
+                //                if (HasApplicationVersionChangedSinceCookieIssued(ticket)) {
+                //                    //if the cookie was setted on a different system version, if though it might still be valid, let´s force a new login
+                //                    return; // Not authorised
+                //                }
                 if (ticket.Expiration < DateTime.Now) {
                     FormsAuthentication.SignOut();
                     throw new HttpResponseException(HttpStatusCode.Unauthorized);
@@ -116,16 +116,16 @@ namespace softWrench.sW4.Web {
             }
         }
 
-//        private bool HasApplicationVersionChangedSinceCookieIssued(FormsAuthenticationTicket ticket) {
-//            var userData = ticket.UserData;
-//            var ticketDict = PropertyUtil.ConvertToDictionary(userData);
-//            string cookieVersion;
-//            ticketDict.TryGetValue("cookiesystemdate", out cookieVersion);
-//            if (ApplicationConfiguration.IsLocal()) {
-//                return ApplicationConfiguration.StartTimeMillis.ToString(CultureInfo.InvariantCulture) != cookieVersion;
-//            }
-//            return ApplicationConfiguration.SystemBuildDateInMillis.ToString(CultureInfo.InvariantCulture) != cookieVersion;
-//        }
+        //        private bool HasApplicationVersionChangedSinceCookieIssued(FormsAuthenticationTicket ticket) {
+        //            var userData = ticket.UserData;
+        //            var ticketDict = PropertyUtil.ConvertToDictionary(userData);
+        //            string cookieVersion;
+        //            ticketDict.TryGetValue("cookiesystemdate", out cookieVersion);
+        //            if (ApplicationConfiguration.IsLocal()) {
+        //                return ApplicationConfiguration.StartTimeMillis.ToString(CultureInfo.InvariantCulture) != cookieVersion;
+        //            }
+        //            return ApplicationConfiguration.SystemBuildDateInMillis.ToString(CultureInfo.InvariantCulture) != cookieVersion;
+        //        }
 
         //        protected void Application_BeginRequest(
         //           object sender, EventArgs e) {
@@ -138,8 +138,9 @@ namespace softWrench.sW4.Web {
             var context = new HttpContextWrapper(Context);
             if (Context.Response.StatusCode == 302 && Context.Response.RedirectLocation.Contains("/SignIn")) {
                 if (Request.AppRelativeCurrentExecutionFilePath != "~/Signout/SignOut") {
-                    if (Request.CurrentExecutionFilePath.Equals(Request.ApplicationPath))
-                    Context.Response.RedirectLocation += "&timeout=true";
+                    if (Request.Params["HTTP_REFERER"]!=null) {
+                        Context.Response.RedirectLocation += "&timeout=true";
+                    }
                 }
 
             }
