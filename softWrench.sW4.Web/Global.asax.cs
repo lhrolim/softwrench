@@ -1,10 +1,13 @@
-﻿using log4net;
+﻿using System.Globalization;
+using log4net;
 using Microsoft.Web.Mvc;
 using Newtonsoft.Json.Serialization;
 using NHibernate.Context;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
+using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.SimpleInjector.Events;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.App_Start;
@@ -27,13 +30,12 @@ namespace softWrench.sW4.Web {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
-    public class WebApiApplication : System.Web.HttpApplication
-    {
+    public class WebApiApplication : System.Web.HttpApplication {
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof (WebApiApplication));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WebApiApplication));
 
         protected void Application_Start(object sender, EventArgs args) {
-            
+
             var before = Stopwatch.StartNew();
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(new ClientAwareRazorViewEngine());
@@ -59,7 +61,7 @@ namespace softWrench.sW4.Web {
             var dispatcher = (IEventDispatcher)container.GetInstance(typeof(IEventDispatcher));
             dispatcher.Dispatch(new ApplicationStartedEvent());
             Log.Info(LoggingUtil.BaseDurationMessage("**************App started in {0}*************", before));
-            ApplicationConfiguration.StartTimeMillis =  (long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
+            ApplicationConfiguration.StartDate = DateTime.Now;
         }
 
         private static void ConfigureLogging() {
@@ -95,11 +97,16 @@ namespace softWrench.sW4.Web {
                 return;
             }
             try {
-                var ticket = FormsAuthentication.Decrypt(
-                    Request.Cookies[FormsAuthentication.FormsCookieName].Value);
+                var ticket = FormsAuthentication.Decrypt(Request.Cookies[FormsAuthentication.FormsCookieName].Value);
                 if (ticket == null) {
-                    return; // Not authorised
+                    return;
                 }
+
+//
+//                if (HasApplicationVersionChangedSinceCookieIssued(ticket)) {
+//                    //if the cookie was setted on a different system version, if though it might still be valid, let´s force a new login
+//                    return; // Not authorised
+//                }
                 if (ticket.Expiration < DateTime.Now) {
                     FormsAuthentication.SignOut();
                     throw new HttpResponseException(HttpStatusCode.Unauthorized);
@@ -108,29 +115,41 @@ namespace softWrench.sW4.Web {
                 //error handling
             }
         }
-//        protected void Application_BeginRequest(
-//           object sender, EventArgs e) {
-//            ManagedWebSessionContext.Bind(
-//                System.Web.HttpContext.Current,
-//                SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
-//        }
-//
-//        protected void Application_EndRequest(
-//            object sender, EventArgs e) {
-//            var session = ManagedWebSessionContext.Unbind(
-//                System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory);
-//            if (session != null && session.IsOpen) {
-//                //                if (session.Transaction != null && session.Transaction.IsActive)
-//                //                {
-//                //                    session.Transaction.Rollback();
-//                //                }
-//                //                else
-//                //                {
-//                //                    session.Flush();
-//                //                }
-//                session.Close();
+
+//        private bool HasApplicationVersionChangedSinceCookieIssued(FormsAuthenticationTicket ticket) {
+//            var userData = ticket.UserData;
+//            var ticketDict = PropertyUtil.ConvertToDictionary(userData);
+//            string cookieVersion;
+//            ticketDict.TryGetValue("cookiesystemdate", out cookieVersion);
+//            if (ApplicationConfiguration.IsLocal()) {
+//                return ApplicationConfiguration.StartTimeMillis.ToString(CultureInfo.InvariantCulture) != cookieVersion;
 //            }
+//            return ApplicationConfiguration.SystemBuildDateInMillis.ToString(CultureInfo.InvariantCulture) != cookieVersion;
 //        }
+
+        //        protected void Application_BeginRequest(
+        //           object sender, EventArgs e) {
+        //            ManagedWebSessionContext.Bind(
+        //                System.Web.HttpContext.Current,
+        //                SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
+        //        }
+        //
+        protected void Application_EndRequest(object sender, EventArgs e) {
+            var context = new HttpContextWrapper(Context);
+            if (context.Request.IsAjaxRequest()) {
+                Context.User = new InactivityPrincipal();
+            }
+            if (Context.Response.StatusCode == 401) {
+                Context.User = new InactivityPrincipal();
+            } else if (Context.Response.StatusCode == 302 && Context.Response.RedirectLocation.Contains("/SignIn")) {
+                if (Request.AppRelativeCurrentExecutionFilePath != "~/Signout/SignOut") {
+                    if (Request.CurrentExecutionFilePath.Equals(Request.ApplicationPath))
+                    Context.Response.RedirectLocation += "&timeout=true";
+                }
+
+            }
+
+        }
 
         /// <summary>
         /// this is used for allowing to place a user with more data then simply a username on the current request.

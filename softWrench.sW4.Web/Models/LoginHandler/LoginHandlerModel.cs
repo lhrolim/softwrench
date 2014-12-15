@@ -11,6 +11,7 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
         private readonly string _loginMessage;
         private readonly bool _incorrectLogin;
         private readonly bool _isHapagClient;
+        public bool Inactivity { get; set; }
 
         public LoginHandlerModel(bool isLoginEnabled, string loginMessage) {
             _isLoginEnabled = isLoginEnabled;
@@ -52,7 +53,7 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
             get { return ApplicationConfiguration.SystemRevision; }
         }
         public bool ShowRevision {
-            get { 
+            get {
                 var showRevision = false;
                 Boolean.TryParse(ConfigurationManager.AppSettings["showRevision"], out showRevision);
                 return showRevision;

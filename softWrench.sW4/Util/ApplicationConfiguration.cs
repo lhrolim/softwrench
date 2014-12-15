@@ -27,8 +27,8 @@ namespace softWrench.sW4.Util {
             }
         }
 
-        public static long SystemBuildDateInMillis{
-            get { return (long) (SystemBuildDate - new DateTime(1970, 1, 1)).TotalMilliseconds; }
+        public static long SystemBuildDateInMillis {
+            get { return (long)(SystemBuildDate - new DateTime(1970, 1, 1)).TotalMilliseconds; }
         }
 
         public static DateTime SystemBuildDate {
@@ -217,7 +217,7 @@ namespace softWrench.sW4.Util {
                     return ext.Split(',');
                 } else {
                     return new string[0];
-                }               
+                }
             }
         }
 
@@ -270,8 +270,14 @@ namespace softWrench.sW4.Util {
         public static Boolean IsUnitTest {
             get { return GetProfile() == UnitTestProfile; }
         }
-        
-        public static long StartTimeMillis { get; set; }
+
+        public static long StartTimeMillis {
+            get {
+                return (long)(StartDate - new DateTime(1970, 1, 1)).TotalMilliseconds;
+            }
+        }
+
+        public static DateTime StartDate { get; set; }
 
         public static Boolean IsLocal() {
             var baseDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\";
@@ -331,8 +337,7 @@ namespace softWrench.sW4.Util {
                 };
             }
             var builder = new DbConnectionStringBuilder() { ConnectionString = dbConnectionString };
-            if (IsDB2(dbType))
-            {
+            if (IsDB2(dbType)) {
                 var dbConnectionResult = new DBConnectionResult {
                     Catalog = (string)builder["Server"],
                     DataSource = (string)builder["Database"],
