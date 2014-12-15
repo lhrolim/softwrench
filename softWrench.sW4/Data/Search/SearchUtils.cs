@@ -109,7 +109,7 @@ namespace softWrench.sW4.Data.Search {
             var sbReplacingIdx = 0;
 
 
-            sb.Append(listDto.SearchParams);
+            sb.Append(listDto.SearchParams).Replace("#","");
             var searchParameters = listDto.GetParameters();
             var j = 0;
             foreach (var searchParameterEntry in searchParameters) {
@@ -222,7 +222,7 @@ namespace softWrench.sW4.Data.Search {
         private static Tuple<string, ParameterType> GetParameterData(string entityName, SearchParameter searchParameter, string paramName) {
 
             // UNION statements cases
-            if (paramName.StartsWith("null")) {
+            if (paramName.StartsWith("null") || paramName.StartsWith("#null")) {
                 return new Tuple<string, ParameterType>("null", ParameterType.Default);
             }
             if (paramName.EndsWith("_union")) {
