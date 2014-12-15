@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -915,6 +915,7 @@
     <Content Include="Content\Templates\hapag\assetremarks.html" />
     <Content Include="Content\Templates\crud\update_section.html" />
     <Content Include="Content\Templates\hapag\commaseparatedcomposition.html" />
+    <Content Include="Content\Templates\otb\attachmentType.html" />
     <Content Include="Content\Templates\otb\compositionlistdeleteaction.html" />
     <Content Include="Content\Templates\otb\invissuereturnaction.html" />
     <Content Include="Content\Templates\otb\commlogaction.html" />
