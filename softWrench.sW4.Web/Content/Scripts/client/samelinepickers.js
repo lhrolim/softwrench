@@ -41,5 +41,5 @@ function SamelinePickersController($scope, $rootScope, formatService) {
 
 var hideKeyboard = function () {
     document.activeElement.blur();
-    $("input").blur();
+    $("input.datetime").blur();
 };
