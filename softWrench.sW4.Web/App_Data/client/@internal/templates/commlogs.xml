@@ -125,7 +125,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="upload"/>
           </field>
           
-          <composition inline="true" label="Attachments" relationship="attachment"/>
         </schema>
       </schemas>
     </application>
