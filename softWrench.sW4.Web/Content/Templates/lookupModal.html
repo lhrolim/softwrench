@@ -132,6 +132,7 @@
                                                     <select class="hidden-phone form-control combobox"
                                                             ng-init="handleDefaultValue(option.extrafields,column)"
                                                             ng-model="searchObj[column.target]"
+                                                            ng-change="lookupModalSearch()"
                                                             ng-options="option.value as option.label for option in GetAssociationOptions(column,true)" />
 
                                                     <div class="input-group-addon dropdown">
