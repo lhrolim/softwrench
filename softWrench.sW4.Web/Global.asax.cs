@@ -136,12 +136,7 @@ namespace softWrench.sW4.Web {
         //
         protected void Application_EndRequest(object sender, EventArgs e) {
             var context = new HttpContextWrapper(Context);
-            if (context.Request.IsAjaxRequest()) {
-                Context.User = new InactivityPrincipal();
-            }
-            if (Context.Response.StatusCode == 401) {
-                Context.User = new InactivityPrincipal();
-            } else if (Context.Response.StatusCode == 302 && Context.Response.RedirectLocation.Contains("/SignIn")) {
+            if (Context.Response.StatusCode == 302 && Context.Response.RedirectLocation.Contains("/SignIn")) {
                 if (Request.AppRelativeCurrentExecutionFilePath != "~/Signout/SignOut") {
                     if (Request.CurrentExecutionFilePath.Equals(Request.ApplicationPath))
                     Context.Response.RedirectLocation += "&timeout=true";
