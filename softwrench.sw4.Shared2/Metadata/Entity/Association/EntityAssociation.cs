@@ -8,6 +8,9 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
         private string _qualifier;
         private string _to;
         public string EntityName { get; set; }
+        public bool Collection { get; set; }
+        public string ReverseLookupAttribute { get; set; }
+        public bool Reverse { get { return ReverseLookupAttribute != null; } }
 
         private IEnumerable<EntityAssociationAttribute> _attributes;
 
@@ -16,7 +19,8 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
         }
 
         public EntityAssociation(string qualifier, string to,
-              IEnumerable<EntityAssociationAttribute> attributes, bool collection) {
+                                 IEnumerable<EntityAssociationAttribute> attributes, bool collection, string reverseLookupAttribute) {
+            
             //            if (qualifier == null) throw new ArgumentNullException("qualifier");
             if (to == null) throw new ArgumentNullException("to");
             if (attributes == null) throw new ArgumentNullException("attributes");
@@ -27,6 +31,7 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
                 throw new InvalidOperationException(String.Format("Entity must have a primary attribute on association {0}", to));
             }
             Collection = collection;
+            ReverseLookupAttribute = reverseLookupAttribute;
         }
 
         private static string BuildQualifier(string qualifier, string to) {
@@ -43,9 +48,6 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
             get { return _to; }
             set { _to = value; }
         }
-
-        public bool Collection { get; set; }
-
 
         public IEnumerable<EntityAssociationAttribute> Attributes {
             get { return _attributes; }
@@ -68,7 +70,7 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
         }
 
         public EntityAssociation CloneWithContext(string contextAlias) {
-            var cloned = new EntityAssociation(contextAlias + Qualifier, To, Attributes, Collection);
+            var cloned = new EntityAssociation(contextAlias + Qualifier, To, Attributes, Collection, ReverseLookupAttribute);
             if (EntityName == null) {
                 cloned.EntityName = contextAlias;
             } else {

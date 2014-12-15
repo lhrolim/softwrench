@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using System.Collections.Generic;
@@ -22,6 +22,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             get { return _events; }
             set { _events = value; }
         }
+     
 
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
         private ISet<ApplicationEvent> _eventsSet;
@@ -63,6 +64,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         }
 
         public SchemaMode RenderMode { get; set; }
+
 
         public HashSet<string> DependantFields {
             get { return _dependantFields; }

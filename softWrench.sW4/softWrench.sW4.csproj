@@ -231,6 +231,7 @@
     <Compile Include="Data\Persistence\WS\Ism\Entities\SR\IsmSRCrudConnectorDecorator.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Base\ISMConstants.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Base\ISMCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Manchester\ComServiceRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Manchester\ComWorkOrderCrudConnector.cs" />
     <Compile Include="Data\SWDBDatamapBuilder.cs" />
     <Compile Include="Exceptions\MetadataException.cs" />
@@ -240,10 +241,14 @@
     <Compile Include="Metadata\Applications\Association\BaseDependableResolver.cs" />
     <Compile Include="Metadata\Applications\Association\DynamicOptionFieldResolver.cs" />
     <Compile Include="Metadata\Applications\Command\ApplicationCommandExtensions.cs" />
-    <Compile Include="Metadata\Applications\DataSet\AssociationPostFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseInvuseDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\Filter\AssociationPostFilterFunctionParameters.cs" />
+    <Compile Include="Metadata\Applications\DataSet\Filter\BasePreFilterParameters.cs" />
+    <Compile Include="Metadata\Applications\DataSet\Filter\CompositionPreFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\ComToolTransDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\Filter\PrefilterInvoker.cs" />
     <Compile Include="Metadata\Applications\DataSet\IncidentDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\OtbInvbalancesDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInvreserveDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbServiceRequestDataSet.cs" />
@@ -435,7 +440,7 @@
     <Compile Include="Data\Offline\SynchronizationRequestDto.cs" />
     <Compile Include="Data\Offline\SynchronizationResultDto.cs" />
     <Compile Include="Metadata\Applications\Association\DependencyBuilder.cs" />
-    <Compile Include="Metadata\Applications\DataSet\AssociationPreFilterFunctionParameters.cs" />
+    <Compile Include="Metadata\Applications\DataSet\Filter\AssociationPreFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\FaqUtils.cs" />
     <Compile Include="Metadata\Applications\DataSet\FaqDescription.cs" />
     <Compile Include="Metadata\Applications\Association\ApplicationAssociationResolver.cs" />

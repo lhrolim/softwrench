@@ -36,7 +36,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         public static void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
             var user = SecurityFacade.CurrentUser();
             var commlogs = (IEnumerable<CrudOperationData>)entity.GetRelationship(commlog);
-            var newCommLogs = commlogs.Where(r => r.GetAttribute(commloguid) == null);
+            var newCommLogs = commlogs.Where(r => r.GetAttribute("commloguid") == null);
             var ownerid = w.GetRealValue(rootObject, ticketuid);
             w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate(object integrationObject, CrudOperationData crudData) {
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.Add.ToString());
@@ -54,20 +54,59 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 w.CopyFromRootEntity(rootObject, integrationObject, modifydate, DateTime.Now.FromServerToRightKind());
                 w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
+                //HandleAttachments(crudData, commlogs, maximoTemplateData.ApplicationMetadata);
                 if (w.GetRealValue(integrationObject, sendto) != null) {
-                    maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject));
+                    maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
                 }
             });
         }
 
-        private static EmailService.EmailData GenerateEmailObject(object integrationObject)
+        //private static void HandleAttachments(CrudOperationData data, IEnumerable<CrudOperationData> maximoObj,
+        //    Metadata.Applications.ApplicationMetadata applicationMetadata)
+        //{
+        //    // Check if Attachment is present
+        //    var attachmentData = data.GetUnMappedAttribute("attachment");
+        //    var attachmentPath = data.GetUnMappedAttribute("newattachment_path");
+
+        //    if (!String.IsNullOrWhiteSpace(attachmentData) && !String.IsNullOrWhiteSpace(attachmentPath))
+        //    {
+        //        var user = SecurityFacade.CurrentUser();
+        //        if (String.IsNullOrEmpty(attachmentData))
+        //        {
+        //            return;
+        //        }
+        //        var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
+        //        w.SetValue(docLink, "ADDINFO", true);
+        //        w.CopyFromRootEntity(maximoObj, docLink, "CREATEBY", user.Login, "reportedby");
+        //        w.CopyFromRootEntity(maximoObj, docLink, "CREATEDATE", DateTime.Now.FromServerToRightKind());
+        //        w.CopyFromRootEntity(maximoObj, docLink, "CHANGEBY", user.Login, "reportedby");
+        //        w.CopyFromRootEntity(maximoObj, docLink, "CHANGEDATE", DateTime.Now.FromServerToRightKind());
+        //        w.CopyFromRootEntity(maximoObj, docLink, "SITEID", user.SiteId);
+        //        w.CopyFromRootEntity(maximoObj, docLink, "ORGID", user.OrgId);
+        //        w.SetValue(docLink, "URLTYPE", "FILE");
+        //        w.SetValue(docLink, "URLNAME", attachmentPath);
+        //        w.SetValue(docLink, "UPLOAD", true);
+        //        w.SetValue(docLink, "DOCTYPE", "Attachments");
+        //        w.SetValue(docLink, "DOCUMENT", FileUtils.GetNameFromPath(attachmentPath, 100));
+        //        w.SetValue(docLink, "DESCRIPTION", attachmentPath);
+        //        w.SetValue(docLink, "DOCUMENTDATA", FileUtils.ToByteArrayFromHtmlString(attachmentData));
+        //    }
+        //}
+
+        private static EmailService.EmailData GenerateEmailObject(object integrationObject, CrudOperationData crudData)
         {
+            List<EmailService.EmailAttachment> attachments = new List<EmailService.EmailAttachment>();
+            EmailService.EmailAttachment attachment= new EmailService.EmailAttachment(crudData.GetUnMappedAttribute("attachment"),crudData.GetUnMappedAttribute("newattachment_path"));
+            attachments.Add(attachment);
+            
             return new EmailService.EmailData(w.GetRealValue<string>(integrationObject, sendfrom),
                 w.GetRealValue<string>(integrationObject, sendto),
                 w.GetRealValue<string>(integrationObject, subject),
-                w.GetRealValue<string>(integrationObject, message)) {
+                w.GetRealValue<string>(integrationObject, message),
+                attachments) {
                     Cc = w.GetRealValue<string>(integrationObject, cc)
                 };
+
             
         }
     }

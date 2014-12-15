@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using softWrench.sW4.Data;
@@ -13,6 +13,7 @@ using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SimpleInjector;
 using softwrench.sw4.Shared2.Data.Association;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
     class OtbServiceRequestDataSet : MaximoApplicationDataSet {

@@ -13,12 +13,16 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         /// </summary>
         public Boolean FetchFromServer { get; set; }
 
+        
 
         public ApplicationCompositionCollectionSchema(bool inline, string detailSchema, CompositionCollectionProperties collectionProperties,
             SchemaMode renderMode, CompositionFieldRenderer renderer, string printSchema, string dependantfield, ISet<ApplicationEvent> events = null) :
             base(inline, detailSchema, renderMode, renderer, printSchema, dependantfield, events) {
             _collectionProperties = collectionProperties;
         }
+
+
+        public string PrefilterFunction { get { return _collectionProperties.PrefilterFunction; } }
 
         public CompositionCollectionProperties CollectionProperties {
             get { return _collectionProperties; }

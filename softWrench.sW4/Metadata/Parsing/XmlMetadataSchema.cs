@@ -76,6 +76,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string RelationshipAttributeToAttribute = "attribute";
         public const string RelationshipAttributePrimary = "primary";
         public const string RelationshipAttributeCollection = "collection";
+        public const string RelationshipAttributeReverse = "reverselookupattribute";
         public const string RelationshipAttributeElement = "relationshipAttribute";
         public const string RelationshipAttributeAttributeTo = "to";
         public const string RelationshipAttributeAttributeFrom = "from";
@@ -94,6 +95,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ApplicationAssociationDefaultValueAttribute = "default";
         public const string ApplicationAssociationAssociationAttributeElement = "associationAttribute";
         public const string ApplicationAssociationHideDescription = "hideDescription";
+        public const string ApplicationAssociationLookupAttribute = "lookupattribute";
 
         public const string DataProviderElement = "dataprovider";
         public const string DataProviderWhereClause = "whereClause";
@@ -124,6 +126,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ApplicationCompositionCollectionAutoCommitAttribute = "autocommit";
         public const string ApplicationCompositionCollectionHideExistingDataAttribute = "hideexistingdata";
         public const string ApplicationCompositionCollectionOrderByField = "orderbyfield";
+        public const string ApplicationCompositionCollectionPreFilterFunctionField = "prefilterfunction";
 
 
         public const string ApplicationCommandElement = "command";

@@ -15,6 +15,7 @@ using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Data;

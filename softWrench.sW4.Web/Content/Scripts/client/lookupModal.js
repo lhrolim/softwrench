@@ -138,6 +138,11 @@ app.directive('lookupModal', function (contextService) {
                 var fieldMetadata = $scope.lookupObj.fieldMetadata;
 
                 $scope.datamap[fieldMetadata.target] = option.value;
+
+                //if (fieldMetadata.lookupAttribute != null) {
+                //    $scope.datamap[fieldMetadata.target] = option.
+                //}
+
                 $scope.lookupAssociationsCode[fieldMetadata.attribute] = option.value;
                 $scope.lookupAssociationsDescription[fieldMetadata.attribute] = option.label;
 

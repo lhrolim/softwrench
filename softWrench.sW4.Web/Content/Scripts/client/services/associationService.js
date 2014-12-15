@@ -91,6 +91,12 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             // we only have the "value" on the datamap 
             var target = associationFieldMetadata.target;
             var selectedValue = datamap[target];
+
+            var lookupAttribute = associationFieldMetadata.lookupAttribute;
+            if (lookupAttribute != null) {
+                selectedValue = datamap[associationFieldMetadata.lookupAttribute];
+            }
+            
             if (selectedValue == null) {
                 return null;
             }
@@ -132,8 +138,6 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             if (associationFieldMetadata.extraProjectionFields.length > 0) {
                 doUpdateExtraFields(associationFieldMetadata, underlyingValue, scope.datamap);
             }
-
-            
         },
 
         ///
@@ -198,7 +202,9 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 log.debug('updating association from server {0} length {1}'.format(dependantFieldName, array.associationData == null ? 0 : array.associationData.length));
 
                 scope.associationOptions[dependantFieldName] = array.associationData;
-                scope.blockedassociations[dependantFieldName] = (array.associationData == null || array.associationData.length == 0);
+                // scope.blockedassociations[dependantFieldName] = (array.associationData == null || array.associationData.length == 0);
+                var zeroEntriesFound = (array.associationData == null || array.associationData.length == 0);
+                scope.blockedassociations[dependantFieldName] = zeroEntriesFound;
                 scope.associationSchemas[dependantFieldName] = array.associationSchemaDefinition;
 
                 var associationFieldMetadatas = fieldService.getDisplayablesByAssociationKey(scope.schema, dependantFieldName);
@@ -208,6 +214,15 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 }
                 var fn = this;
                 $.each(associationFieldMetadatas, function (index, value) {
+                    if (zeroEntriesFound && (value.rendererType == "lookup" || value.rendererType == "autocompleteserver")) {
+                        //this should never be blocked, but the server might still be returning 0 entries due to a reverse association mapping
+                        scope.blockedassociations[dependantFieldName] = false;
+                    }
+
+                    if (value.reverse && !zeroEntriesFound) {
+                        datamap[value.target] = scope.associationOptions[dependantFieldName][0].value;
+                    }
+
                     if (value.target == null || datamap == null) {
                         //the datamap could be null if this method is called from a list schema
                         return;
@@ -234,6 +249,11 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                                     doUpdateExtraFields(value, fullObject, datamap);
                                     if (fn.postAssociationHook) {
                                         fn.postAssociationHook(value, scope, { phase: 'initial', dispatchedbytheuser: false });
+                                    }
+                                    try {
+                                        scope.digest();
+                                    } catch (e) {
+                                        //digest already in progress
                                     }
                                 }, 0, false);
                                 break;

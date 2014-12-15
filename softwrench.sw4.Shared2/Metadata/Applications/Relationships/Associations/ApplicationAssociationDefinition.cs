@@ -14,7 +14,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         ApplicationRelationshipDefinition, IDataProviderContainer, IDefaultValueApplicationDisplayable, IDependableField, IApplicationAttributeDisplayable, IPCLCloneable {
 
         private string _label;
-//        protected string LabelField;
+        // protected string LabelField;
         public string DefaultValue { get; set; }
         public string Target { get; set; }
         public string LabelPattern { get; set; }
@@ -34,6 +34,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         private IList<String> _labelFields = new List<string>();
         private LabelData _labelData;
+        private string _lookupAttribute;
         private ISet<ApplicationEvent> _eventsSet;
 
         public class LabelData {
@@ -62,11 +63,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public ApplicationAssociationDefinition() { }
 
         public ApplicationAssociationDefinition(string @from, LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
-            string showExpression, string toolTip, Boolean required, string defaultValue, bool hideDescription, string enableExpression = "true", ISet<ApplicationEvent> events = null)
+            string showExpression, string toolTip, Boolean required, string defaultValue, bool hideDescription, string enableExpression = "true", ISet<ApplicationEvent> events = null, string lookupAttribute = null)
             : base(from, labelData.Label, showExpression, toolTip) {
             _labelData = labelData;
             _label = labelData.Label;
-//            LabelField = labelData.LabelField;
+            // LabelField = labelData.LabelField;
             LabelPattern = labelData.LabelPattern;
             Target = target;
             _applicationAssociationSchema = applicationAssociationSchema;
@@ -74,6 +75,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             EnableExpression = enableExpression;
             IsRequired = required;
             _eventsSet = events;
+            _lookupAttribute = lookupAttribute;
             Qualifier = qualifier;
             HideDescription = hideDescription;
 
@@ -141,6 +143,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             set { _events = value; }
         }
 
+        public Boolean Reverse {
+            get { return EntityAssociation.Reverse; }
+        }
+
+        public string LookupAttribute {
+            get { return _lookupAttribute; }
+        }
 
         public string ApplicationPath {
             get { return From + "." + _applicationTo; }
@@ -191,7 +200,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public override string Role { get { return From + "." + Target; } }
 
         public object Clone() {
-            var cloned = new ApplicationAssociationDefinition(From, _labelData, Target,Qualifier, Schema, ShowExpression, ToolTip, IsRequired,
+            var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, ToolTip, IsRequired,
                 DefaultValue, HideDescription, EnableExpression, _eventsSet) {
                     ExtraProjectionFields = ExtraProjectionFields,
                     LabelFields = LabelFields,

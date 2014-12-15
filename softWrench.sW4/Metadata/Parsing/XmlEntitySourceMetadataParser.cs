@@ -39,7 +39,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             if (_isSWDDB && parentEntity != null) {
                 parentEntity = "_" + parentEntity;
             }
-            var associations = XmlAssociationsParser.Parse(entity);
+            var associations = XmlAssociationsParser.Parse(name, entity);
             return new EntityMetadata(name,
                 XmlSchemaParser.Parse(name, entity, idAttributeName, associations.Item2, whereClause, parentEntity),
                 associations.Item1,
@@ -181,11 +181,12 @@ namespace softWrench.sW4.Metadata.Parsing {
             ///     <seealso cref="EntityAssociation"/> representation.
             /// </summary>
             /// <param name="association">The XML association to parse.</param>
-            private static EntityAssociation ParseAssociation(XElement association) {
+            private static EntityAssociation ParseAssociation(string entityName, XElement association) {
                 var qualifier = association.Attribute(XmlMetadataSchema.RelationshipAttributeQualifier).ValueOrDefault((string)null);
                 var to = association.Attribute(XmlMetadataSchema.RelationshipAttributeTo).Value;
                 var collection = association.Attribute(XmlMetadataSchema.RelationshipAttributeCollection).ValueOrDefault(false);
-                return new EntityAssociation(qualifier, to, ParseAssociationAttributes(association), collection);
+                var reverseLookupAttribute = association.Attribute(XmlMetadataSchema.RelationshipAttributeReverse).ValueOrDefault((string)null);
+                return new EntityAssociation(qualifier, to, ParseAssociationAttributes(association), collection, reverseLookupAttribute);
             }
 
             /// <summary>
@@ -194,7 +195,8 @@ namespace softWrench.sW4.Metadata.Parsing {
             ///     representation.
             /// </summary>
             /// <param name="entity">The `entity` element to parse.</param>
-            public static Tuple<IEnumerable<EntityAssociation>, Boolean> Parse(XContainer entity) {
+            /// <param name="name"></param>
+            public static Tuple<IEnumerable<EntityAssociation>, bool> Parse(string entityName, XContainer entity) {
                 var associations =
                     entity.Elements().FirstOrDefault(e => e.IsNamed(XmlMetadataSchema.RelationshipsElement));
 
@@ -204,7 +206,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
                 var entityAssociations = associations
                     .Elements().Where(e => e.IsNamed(XmlMetadataSchema.RelationshipElement))
-                    .Select(ParseAssociation)
+                    .Select(a=>ParseAssociation(entityName, a))
                     .ToList();
                 var excludeUndeclared = associations.Attribute(XmlMetadataSchema.ExcludeUndeclared).ValueOrDefault(false);
                 return new Tuple<IEnumerable<EntityAssociation>, Boolean>(entityAssociations, false);

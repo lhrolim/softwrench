@@ -1,4 +1,5 @@
-﻿using softwrench.sw4.Shared2.Util;
+﻿using log4net;
+using softwrench.sw4.Shared2.Util;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -15,6 +16,8 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
 
     internal class SlicedEntityMetadataBuilder {
         private const string MissingAssociation = "couldn´t find association {0} on entity {1}. Please, review metadata.xml";
+
+        private static ILog Log = LogManager.GetLogger(typeof (SlicedEntityMetadataBuilder));
 
         public static SlicedEntityMetadata GetInstance(EntityMetadata entityMetadata,
                                                      ApplicationSchemaDefinition appSchema, int? fetchLimit = 300, bool isUnionSchema = false) {
@@ -50,7 +53,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
                 unionSchema = GetUnionInstance(appSchema.UnionSchema);
             }
             return new SlicedEntityMetadata(entityMetadata.Name, schema,
-                usedRelationships, entityMetadata.ConnectorParameters, appSchema.ApplicationName, result.InnerEntityMetadatas, fetchLimit, unionSchema);
+                usedRelationships, entityMetadata.ConnectorParameters, appSchema, result.InnerEntityMetadatas, fetchLimit, unionSchema);
         }
 
 
@@ -79,7 +82,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
 
             var result = SlicedRelationshipBuilderHelper.HandleRelationshipFields(attributes.Where(r => r.Contains('.')), entityMetadata);
             usedRelationships.UnionWith(result.DirectRelationships);
-            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity,entityMetadata.Schema.MappingType);
+            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity, entityMetadata.Schema.MappingType);
             return new SlicedEntityMetadata(entityMetadata.Name, schema,
                 usedRelationships, entityMetadata.ConnectorParameters, null, result.InnerEntityMetadatas);
         }
@@ -123,17 +126,21 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
                     throw ExceptionUtil.InvalidOperation(MissingAssociation, association.Attribute, entityMetadata.Name);
                     //                    throw new InvalidOperationException(String.Format(MissingAssociation, entityAssociation.Qualifier, entityMetadata.Name));
                 }
+                if (entityAssociation.Reverse) {
+                    Log.DebugFormat("ignoring reverse mapping {0}", association);
+                    continue;
+                }
                 var usedAttributes = new HashSet<string>();
                 var labelFields = association.LabelFields;
                 usedAttributes.AddAll(labelFields);
-//                usedAttributes.AddAll(entityAssociation.Attributes.Select(a => a.To));
+                // usedAttributes.AddAll(entityAssociation.Attributes.Select(a => a.To));
 
                 var entity = MetadataProvider.Entity(entityAssociation.To);
                 var slicedAttributes = entity.Attributes(EntityMetadata.AttributesMode.NoCollections)
                       .Where(attribute => labelFields
                           .Any(r => r.Equals(attribute.Name)));
 
-                usedRelationships.Add(new SlicedEntityAssociation(entityAssociation, slicedAttributes,entityAssociation.Qualifier));
+                usedRelationships.Add(new SlicedEntityAssociation(entityAssociation, slicedAttributes, entityAssociation.Qualifier));
             }
             return usedRelationships;
         }

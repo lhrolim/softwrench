@@ -28,6 +28,7 @@ using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Security.Context;
 using softwrench.sW4.Shared2.Data;
+using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -208,7 +209,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             Task.WaitAll(tasks);
             var listOptionsPrefetchRequest = new ListOptionsPrefetchRequest();
             var associationResults = BuildAssociationOptions(DataMap.BlankInstance(application.Name), application, listOptionsPrefetchRequest);
-            return new ApplicationListResult(totalCount, searchDto, entities, schema,associationResults);
+            return new ApplicationListResult(totalCount, searchDto, entities, schema, associationResults);
         }
 
 
@@ -236,15 +237,20 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     continue;
                 }
 
-                //only resolve the association options for non lazy associations or lazy loaded with value set.
-                SearchRequestDto search;
+                //only resolve the association options for non lazy associations or (lazy loaded with value set or reverse associations)
+                var search = new SearchRequestDto();
                 if (!applicationAssociation.IsLazyLoaded()) {
-                    search = new SearchRequestDto();
+                    // default branch
                 } else if (dataMap != null && dataMap.GetAttribute(applicationAssociation.Target) != null) {
                     //if the field has a value, fetch only this single element, for showing eventual extra label fields... ==> lookup with a selected value
-                    search = new SearchRequestDto();
                     var toAttribute = applicationAssociation.EntityAssociation.PrimaryAttribute().To;
                     var prefilledValue = dataMap.GetAttribute(applicationAssociation.Target).ToString();
+                    search.AppendSearchEntry(toAttribute, prefilledValue);
+                }
+                else if (dataMap != null && applicationAssociation.EntityAssociation.Reverse && dataMap.GetAttribute(applicationAssociation.EntityAssociation.PrimaryAttribute().From) != null)
+                {
+                    var toAttribute = applicationAssociation.EntityAssociation.PrimaryAttribute().To;
+                    var prefilledValue = dataMap.GetAttribute(applicationAssociation.EntityAssociation.PrimaryAttribute().From).ToString();
                     search.AppendSearchEntry(toAttribute, prefilledValue);
                 } else {
                     //lazy association with no default value
@@ -255,7 +261,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 tasks.Add(Task.Factory.NewThread(c => {
                     Quartz.Util.LogicalThreadContext.SetData("context", c);
                     var associationOptions = _associationOptionResolver.ResolveOptions(application, dataMap, association, search);
-                    associationOptionsDictionary.Add(association.AssociationKey, new BaseAssociationUpdateResult(associationOptions));
+                    var associationData = associationOptions as IAssociationOption[] ?? associationOptions.ToArray();
+                    associationOptionsDictionary.Add(association.AssociationKey, new BaseAssociationUpdateResult(associationData));
                 }, ctx));
 
             }

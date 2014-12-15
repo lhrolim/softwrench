@@ -277,6 +277,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var labelPattern = association.Attribute(XmlMetadataSchema.ApplicationAssociationLabelPatternAttribute).ValueOrDefault((string)null);
             var target = association.Attribute(XmlMetadataSchema.ApplicationAssociationTargetAttribute).Value;
             var defaultValue = association.Attribute(XmlMetadataSchema.ApplicationAssociationDefaultValueAttribute).ValueOrDefault((string)null);
+            var lookupAttribute = association.Attribute(XmlMetadataSchema.ApplicationAssociationLookupAttribute).ValueOrDefault((string)null);
             var labelData = new ApplicationAssociationDefinition.LabelData(label, labelPattern, labelField, applicationName);
             var showExpression = association.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute).ValueOrDefault("true");
             var enableExpression = association.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAttribute).ValueOrDefault("true");
@@ -286,7 +287,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var required = association.Attribute(XmlBaseSchemaConstants.BaseDisplayableRequiredAttribute).ValueOrDefault(false);
             var hideDescription = association.Attribute(XmlMetadataSchema.ApplicationAssociationHideDescription).ValueOrDefault(false);
 
-            return ApplicationAssociationFactory.GetInstance(applicationName, labelData, target, qualifier, ParseAssociationSchema(association, target), showExpression, tooltip, required, ParseEvents(association), defaultValue, hideDescription, extraProjectionFields, enableExpression);
+            return ApplicationAssociationFactory.GetInstance(applicationName, labelData, target, qualifier, ParseAssociationSchema(association, target), showExpression, tooltip, required, ParseEvents(association), defaultValue, hideDescription, extraProjectionFields, enableExpression, lookupAttribute);
         }
 
         private static ApplicationAssociationSchemaDefinition ParseAssociationSchema(XElement association, string targetName) {
@@ -372,8 +373,8 @@ namespace softWrench.sW4.Metadata.Parsing {
             var autoCommit = collectionProperties.Attribute(XmlMetadataSchema.ApplicationCompositionCollectionAutoCommitAttribute).ValueOrDefault(true);
             var hideExistingData = collectionProperties.Attribute(XmlMetadataSchema.ApplicationCompositionCollectionHideExistingDataAttribute).ValueOrDefault(false);
             var orderbyfield = collectionProperties.Attribute(XmlMetadataSchema.ApplicationCompositionCollectionOrderByField).ValueOrDefault((String)null);
-            return new CompositionCollectionProperties(allowRemoval, allowInsertion, allowUpdate, listSchema, autoCommit, hideExistingData, orderbyfield);
-
+            var prefilterFunction = collectionProperties.Attribute(XmlMetadataSchema.ApplicationCompositionCollectionPreFilterFunctionField).ValueOrDefault((String)null);
+            return new CompositionCollectionProperties(allowRemoval, allowInsertion, allowUpdate, listSchema, autoCommit, hideExistingData, orderbyfield,prefilterFunction);
         }
 
 

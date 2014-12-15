@@ -1,6 +1,6 @@
-﻿var app = angular.module('sw_layout');
+var app = angular.module('sw_layout');
 
-app.factory('validationService', function (i18NService, fieldService, $rootScope) {
+app.factory('validationService', function (i18NService, fieldService, $rootScope, dispatcherService) {
 
 
 
@@ -35,13 +35,13 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
         },
 
 
-        validate: function (displayables, datamap, innerValidation) {
+        validate: function (schema, displayables, datamap, innerValidation) {
             var validationArray = [];
             for (var i = 0; i < displayables.length; i++) {
                 var displayable = displayables[i];
                 var label = displayable.label;
-                if (fieldService.isNullInvisible(displayable, datamap)) {
-                    continue;
+                if (fieldService.isNullInvisible(displayable,datamap)) {
+                     continue;
                 }
                 if (displayable.isRequired && nullOrEmpty(datamap[displayable.attribute])) {
                     var applicationName = i18NService.get18nValue(displayable.applicationName + ".name", displayable.applicationName);
@@ -53,12 +53,23 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                 }
                 if (displayable.displayables != undefined) {
                     //validating section
-                    var innerArray = this.validate(displayable.displayables, datamap, true);
+                    var innerArray = this.validate(schema, displayable.displayables, datamap, true);
                     validationArray = validationArray.concat(innerArray);
                 }
             }
             if (validationArray.length > 0 && !innerValidation) {
+                var validationService = schema.properties['oncrudsaveevent.validationservice'];
+                if (validationService != null) {
+                    var service = validationService.split('.')[0];
+                    var method = validationService.split('.')[1];
+                    var fn = dispatcherService.loadService(service, method);
+                    var customErrorArray = fn(schema, datamap);
+                    if (customErrorArray != null && Array.isArray(customErrorArray)) {
+                        validationArray = validationArray.concat(customErrorArray);
+                    }
+                }
                 $rootScope.$broadcast('sw_validationerrors', validationArray);
+
             }
             return validationArray;
         },
