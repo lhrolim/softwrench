@@ -2,6 +2,10 @@
 <metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
 
+  <templates>
+    <template path="@attachments.xml"/>
+  </templates>
+  
   <entities>
     <entity name="commlog" idAttribute="commloguid">
       <attributes>
@@ -34,6 +38,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <relationship to="commlogdocs" >
           <relationshipAttribute from="commlogid" to="commlogid" primary="true"/>
         </relationship>
+        <relationship to="DOCLINKS" qualifier="attachment" collection="true">
+          <relationshipAttribute from="commloguid" to="ownerid" primary="true"/>
+          <relationshipAttribute to="ownertable" literal="COMMLOG" quoteLiteral="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="commlog" />
@@ -48,11 +56,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <attribute name="urlname" type="varchar" required="false" />
         <attribute name="rowstamp" type="timestamp" required="true" />
       </attributes>
-      <relationships>
-        <relationship to="DOCINFO" qualifier="docinfo">
-          <relationshipAttribute from="docinfoid" to="docinfoid" primary="true"/>
-        </relationship>
-      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="commlogdocs" />
       </connectorParameters>
@@ -121,6 +124,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field label="Attachment:" attribute="attachment" >
             <renderer type="upload"/>
           </field>
+          
+          <composition inline="true" label="Attachments" relationship="attachment"/>
         </schema>
       </schemas>
     </application>
