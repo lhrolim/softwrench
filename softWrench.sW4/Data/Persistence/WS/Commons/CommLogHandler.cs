@@ -79,10 +79,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 AttachmentHandler attachment = new AttachmentHandler();
                 attachment.HandleAttachments(maximoObj, attachmentData, attachmentPath, applicationMetadata);
 
-                //Create a commlogdoc here when ever there is an attachment 
-                var commlogdoc = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "COMMLOGDOCS");
-                w.SetValue(commlogdoc, "commlogid", data.GetAttribute("commlogid"));
-
             }
         }
 
