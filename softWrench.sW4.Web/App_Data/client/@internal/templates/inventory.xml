@@ -137,21 +137,21 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="storeloc" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
           <field label="Item" attribute="itemnum">
-            <renderer type="default" params="widthXS=24%;widthSM=24%;widthMD=24%;widthLG=24%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
           <field label="Description" attribute="item_.description">
-            <renderer type="default" params="widthXS=24%;widthSM=24%;widthMD=24%;widthLG=24%"/>
+            <renderer type="default"/>
           </field>
           <field label="Type" attribute="item_.itemtype">
-            <renderer type="default" params="widthXS=24%;widthSM=24%;widthMD=24%;widthLG=24%"/>
+            <renderer type="default" params="width=15%"/>
           </field>
           <optionfield label="Rotating" attribute="item_.rotating">
-            <renderer type="combo" params="widthXS=14%;widthSM=14%;widthMD=14%;widthLG=14%;filteronly=true;formatter=numberToBoolean"/>
+            <renderer type="combo" params="width=19%;filteronly=true;formatter=numberToBoolean"/>
             <option label="Yes" value="1"/>
             <option label="No" value="0"/>
           </optionfield>
           <optionfield label="Kit" attribute="item_.iskit">
-            <renderer type="combo" params="widthXS=14%;widthSM=14%;widthMD=14%;widthLG=14%;filteronly=true;formatter=numberToBoolean"/>
+            <renderer type="combo" params="width=19%;filteronly=true;formatter=numberToBoolean"/>
             <option value="1" label="Yes"/>
             <option value="0" label="No"/>
           </optionfield>
