@@ -465,6 +465,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         afterchangeinvissueitem: function(parameters) {
             doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
             var itemnum = parameters['fields']['itemnum'];
+            
             parameters['fields']['binnum'] = null;
             parameters['fields']['lotnum'] = null;
             parameters['fields']['#curbal'] = null;
@@ -475,8 +476,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 parameters['fields']['inventory_.itemtype'] = null;
                 return;
             }
-            //var defaultBinnum = parameters['fields']['inventory_.binnum'];
-            //parameters['fields']['binnum'] = defaultBinnum;
+            var defaultBinnum = parameters['fields']['inventory_.binnum'];
+            parameters['fields']['binnum'] = defaultBinnum;
         },
 
         invUse_afterChangeFromStoreroom: function(parameters) {
