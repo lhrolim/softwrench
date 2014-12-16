@@ -12,7 +12,7 @@ namespace softWrench.sW4.Web.Controllers {
                 MetadataProvider.StubReset();
             }
             FormsAuthentication.SignOut();
-            return Redirect("~");
+            return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f".Fmt(Request.ApplicationPath.Replace("/","")));
         }
 
     }
