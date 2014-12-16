@@ -86,7 +86,7 @@
         if ($scope.position.equalsAny('detailform', 'compositionbottom')) {
             return "btn btn-primary commandButton navbar-btn";
         }
-        return "btn btn-default btn-sm hidden-xs";
+        return "btn btn-default btn-sm";
     }
 
 

@@ -89,3 +89,15 @@
         display: block;
     }
 }
+
+/*SM - -SWML-10*/
+.gridtop .applicationcommand {
+    display: none;
+}
+
+@media all and (min-width: 480px) {
+    .gridtop .applicationcommand {
+        display: inline-block;
+    }
+}
+/*SM - SWML-10*/
