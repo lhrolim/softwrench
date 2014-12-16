@@ -109,11 +109,11 @@ namespace softWrench.sW4.Data.Search {
             var sbReplacingIdx = 0;
 
 
-            sb.Append(listDto.SearchParams).Replace("#","");
+            sb.Append(listDto.SearchParams).Replace("#", "");
             var searchParameters = listDto.GetParameters();
+            var parameters = Regex.Split(listDto.SearchParams, SearchParamSpliter).Where(f => !String.IsNullOrWhiteSpace(f));
             var j = 0;
             foreach (var searchParameterEntry in searchParameters) {
-
                 var searchParameter = searchParameterEntry.Value;
                 var param = searchParameterEntry.Key;
                 var statement = new StringBuilder();
@@ -163,12 +163,18 @@ namespace softWrench.sW4.Data.Search {
                     }
                 }
                 var idxToReplace = sb.ToString().IndexOf(param, sbReplacingIdx, StringComparison.Ordinal);
-                if (idxToReplace == -1) {
+                if (idxToReplace == -1 && param.IndexOf(j.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal) != -1) {
+                    //if the parameter contains a number, let´s try now replacing it
+                    //this is used on scenarios where we have a fixed query and grid query where we constrain one of the parameters of the original query with a gridfilter value
+                    //then we would have two parameters with the same name. To vaoid it, we rename it to the position+ name (ex: 5status;)
                     param = param.Replace(j.ToString(CultureInfo.InvariantCulture), "");
                     idxToReplace = sb.ToString().IndexOf(param, sbReplacingIdx, StringComparison.Ordinal);
                 }
-                sb.Replace(param, statement.ToString(), idxToReplace, param.Length);
-                sbReplacingIdx += statement.ToString().Length;
+                if (idxToReplace != -1) {
+                    //there´s just one case which was done as a workaround for fetching the commodities. see HapagImacDataSet#GetAssetCommodities
+                    sb.Replace(param, statement.ToString(), idxToReplace, param.Length);
+                    sbReplacingIdx += statement.ToString().Length;
+                }
                 j++;
             }
             sb.Replace("&&", " AND ");
