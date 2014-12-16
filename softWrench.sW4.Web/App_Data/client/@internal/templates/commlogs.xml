@@ -124,11 +124,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field label="Attachment:" attribute="attachment" >
             <renderer type="upload"/>
           </field>
+
+          <composition relationship="commlogdocs" label="commlogdocs" />
           
         </schema>
       </schemas>
     </application>
 
+    <application entity="commlogdocs" name="commlogdocs" title="Docs">
+      
+    </application>
   </applications>
 
 
