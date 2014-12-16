@@ -192,6 +192,10 @@ namespace softWrench.sW4.Util {
             get { return MetadataProvider.GlobalProperty("defaultSiteId"); }
         }
 
+        public static string DefaultStoreloc {
+            get { return MetadataProvider.GlobalProperty("defaultStoreloc"); }
+        }
+
         #endregion
 
         #region Change

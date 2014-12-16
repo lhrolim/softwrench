@@ -9,12 +9,15 @@ namespace softwrench.sw4.Shared2.Data.Association {
 
         public string Label { get; set; }
 
+        public bool ForceDistinctOptions { get; set; }
+
         public GenericAssociationOption() {
         }
 
-        public GenericAssociationOption(string value, string label) {
+        public GenericAssociationOption(string value, string label, bool forceDistinctOptions = true) {
             Value = value;
             Label = label;
+            ForceDistinctOptions = forceDistinctOptions;
         }
 
         public int CompareTo(GenericAssociationOption other) {
@@ -30,12 +33,15 @@ namespace softwrench.sw4.Shared2.Data.Association {
         }
 
         public int CompareTo(object obj) {
-            var other = (GenericAssociationOption)obj;
-            var labelComparison = System.String.Compare(Label, other.Label, System.StringComparison.Ordinal);
-            if (labelComparison == 0) {
-                return System.String.Compare(Value, other.Value, System.StringComparison.Ordinal);
+            if (ForceDistinctOptions) { 
+                var other = (GenericAssociationOption)obj;
+                var labelComparison = System.String.Compare(Label, other.Label, System.StringComparison.Ordinal);
+                if (labelComparison == 0) {
+                    return System.String.Compare(Value, other.Value, System.StringComparison.Ordinal);
+                }
+                return labelComparison;
             }
-            return labelComparison;
+            return 1;
         }
     }
 

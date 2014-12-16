@@ -77,6 +77,9 @@ namespace softWrench.sW4.Security.Entities {
         public virtual string Phone { get; set; }
 
         [Property]
+        public virtual string Storeloc { get; set; }
+
+        [Property]
         public virtual string Language {
             get { return _language == null ? null : _language.Trim().ToUpper(); }
             set { _language = value; }
@@ -142,7 +145,7 @@ namespace softWrench.sW4.Security.Entities {
             Profiles = new HashedSet<UserProfile>();
         }
 
-        public User(string userName, string firstName, string lastName, string siteId, string orgId, string department, string phone, string language, string password) {
+        public User(string userName, string firstName, string lastName, string siteId, string orgId, string department, string phone, string language, string password, string storeloc) {
             UserName = userName;
             FirstName = firstName;
             LastName = lastName;
@@ -153,6 +156,7 @@ namespace softWrench.sW4.Security.Entities {
             Phone = phone;
             Language = language;
             Password = !string.IsNullOrEmpty(password) ? AuthUtils.GetSha1HashData(password) : null;
+            Storeloc = storeloc;
         }
 
         public void MergeFromDBUser(User dbUSer) {
@@ -229,6 +233,7 @@ namespace softWrench.sW4.Security.Entities {
             user.Department = (String)jObject["department"];
             user.Phone = (String)jObject["phone"];
             user.Language = (String)jObject["language"];
+            user.Storeloc = (String)jObject["storeloc"];
             var inputPassword = (String)jObject["password"];
             if (inputPassword != null) {
                 user.Password = AuthUtils.GetSha1HashData(inputPassword);

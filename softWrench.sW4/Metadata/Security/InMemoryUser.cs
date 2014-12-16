@@ -27,6 +27,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly string _phone;
         private readonly string _language;
         private readonly string _maximoPersonId;
+        private readonly string _storeloc;
         private readonly int? _timezoneOffset;
         private readonly UserPreferences _userPreferences;
         private readonly IList<Role> _roles;
@@ -64,6 +65,7 @@ namespace softWrench.sW4.Metadata.Security {
             _dbId = dbUser.Id;
             _timezoneOffset = timezoneOffset;
             _maximoPersonId = dbUser.MaximoPersonId;
+            _storeloc = dbUser.Storeloc;
             _personGroups = (dbUser.PersonGroups ?? new HashedSet<PersonGroupAssociation>());
             var userProfiles = initializedProfiles as UserProfile[] ?? initializedProfiles.ToArray();
             _profiles = userProfiles;
@@ -140,6 +142,10 @@ namespace softWrench.sW4.Metadata.Security {
 
         public string Language {
             get { return _language; }
+        }
+
+        public string Storeloc {
+            get { return _storeloc; }
         }
 
         public string MaximoPersonId {

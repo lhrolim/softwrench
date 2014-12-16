@@ -13,6 +13,7 @@
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
   <property key="defaultOrgId" value="EAGLENA"/>
   <property key="defaultSiteId" value="BEDFORD"/>
+  <property key="defaultStoreloc" value="CENTRAL"/>
   <property key="sourcemapping" value="maximo7.5"/>
   <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
   <!--property key="email.smtp.port" value="587"/-->
