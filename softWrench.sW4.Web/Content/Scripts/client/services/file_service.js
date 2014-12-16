@@ -3,7 +3,7 @@
 */
 var app = angular.module('sw_layout');
 
-app.factory('fileService', function ($rootScope) {
+app.factory('fileService', function ($rootScope, contextService) {
 
     return {
         download: function (url, successCallback, failCallback) {
@@ -22,11 +22,20 @@ app.factory('fileService', function ($rootScope) {
                         successCallback(html, url);
                     }
                 },
-                failCallback: function (html, url) {
+                failCallback: function (html, url,formURL) {
                     //this is for removing the busy cursor
                     $rootScope.$broadcast('sw_ajaxend');
                     if (failCallback) {
-                        failCallback(html, url);
+                        if (formURL.indexOf("SignIn") != -1) {
+                            sessionStorage.removeItem("swGlobalRedirectURL");
+                            contextService.clearContext();
+                            //this means that the server wanted a redirection to login page (302), due to session expiration.
+                            //Since we´re using an inner iframe the contents of the signin might not be show. Let´s redirect manually, and there´s no way to override that.
+                            window.location.reload();
+                        } else {
+                            failCallback(html, url);
+                        }
+                        
                     }
                 }
             });
