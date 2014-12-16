@@ -217,3 +217,16 @@ input[type=search] {
         border-bottom: 2px solid #fff;
     }
 /*SM - SWWEB-724*/
+
+/*SM - SWML-10*/
+.compositiontoolbar button {
+        margin-bottom: 5px;
+        width: 100%;
+    }
+
+@media all and (min-width: 480px) {
+.compositiontoolbar button {
+        width: auto;
+    }
+}
+/*SM - SWML-10*/
