@@ -78,6 +78,16 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return filter;
         }
 
+
+        public SearchRequestDto AppendCommlogDoclinks(CompositionPreFilterFunctionParameters preFilter) {
+            var dto = preFilter.BASEDto;
+            dto.SearchValues = null;
+            dto.SearchParams = null;
+            var ticketuid = preFilter.OriginalEntity.GetAttribute("ticketuid");
+            dto.AppendWhereClauseFormat("(( DOCLINKS.ownerid = '{0}' ) AND ( UPPER(COALESCE(DOCLINKS.ownertable,'')) = 'SR' )  or (ownerid in (select commloguid from commlog where ownerid = '{0}' and ownertable like 'SR') and ownertable like 'COMMLOG')) and ( 1=1 )", ticketuid);
+            return dto;
+        }
+
         public IEnumerable<IAssociationOption> GetSRClassStructureType(OptionFieldProviderParameters parameters)
         {
 

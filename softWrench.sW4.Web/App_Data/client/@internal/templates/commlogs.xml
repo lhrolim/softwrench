@@ -2,6 +2,10 @@
 <metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
 
+  <templates>
+    <template path="@attachments.xml"/>
+  </templates>
+  
   <entities>
     <entity name="commlog" idAttribute="commloguid">
       <attributes>
@@ -48,11 +52,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <attribute name="urlname" type="varchar" required="false" />
         <attribute name="rowstamp" type="timestamp" required="true" />
       </attributes>
-      <relationships>
-        <relationship to="DOCINFO" qualifier="docinfo">
-          <relationshipAttribute from="docinfoid" to="docinfoid" primary="true"/>
-        </relationship>
-      </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="commlogdocs" />
       </connectorParameters>
@@ -124,7 +123,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </schema>
       </schemas>
     </application>
-
   </applications>
 
 
