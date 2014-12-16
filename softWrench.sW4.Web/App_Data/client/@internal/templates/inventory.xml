@@ -347,11 +347,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="storeloc" label="Storeroom" readonly="true"/>
           <section>
             <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
-            <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="costtype,issueunit,item_.description,item_.itemtype" dependantfields="siteid,storeloc" required="true">
-              <renderer type="lookup"/>
+            <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,storeloc" required="true">
+              <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeItem"/>
             </association>
             <field attribute="inventory_.item_.itemtype" label="Item Type" readonly="true"/>
+            <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
+            <field attribute="inventory_.item_.iskit" label="Kit" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
             <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="itemnum,location,siteid,commoditygroup,itemsetid,curbal,lotnum,binnum">
               <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
@@ -460,11 +466,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <association label="Storeroom" target="storeloc" default="@storeloc" labelfield="storeroom_.description" extraprojectionvalues="costtype,itemtype" required="true" dependantfields="siteid">
               <renderer type="lookup"/>
             </association>
-            <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="binnum,costtype,issueunit,item_.description,item_.itemtype,item_.itemsetid" dependantfields="siteid,storeloc" required="true">
-              <renderer type="lookup"/>
+            <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,storeloc" required="true">
+              <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
               <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
             </association>
             <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
+            <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
+            <field attribute="inventory_.item_.iskit" label="Kit" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean"/>
+            </field>
             <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="itemnum,location,siteid,commoditygroup,itemsetid,curbal,lotnum,binnum">
               <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
               <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>-->
