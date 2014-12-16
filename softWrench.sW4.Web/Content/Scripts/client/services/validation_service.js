@@ -27,7 +27,7 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                     validationArray = validationArray.concat(innerArray);
                 }
             }
-            if (validationArray.length > 0 && !innerValidation) {
+            if (!innerValidation) {
                 var validationService = schema.properties['oncrudsaveevent.validationservice'];
                 if (validationService != null) {
                     var service = validationService.split('.')[0];
@@ -38,7 +38,9 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                         validationArray = validationArray.concat(customErrorArray);
                     }
                 }
-                $rootScope.$broadcast('sw_validationerrors', validationArray);
+                if (validationArray.length > 0) {
+                    $rootScope.$broadcast('sw_validationerrors', validationArray);
+                }
 
             }
             return validationArray;

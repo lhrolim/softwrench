@@ -73,7 +73,7 @@ app.factory('changeservice', function ($http, redirectService, formatService, fi
             var arr = [];
             var targstartdate = datamap['targstartdate'];
             var targcompdate = datamap['targcompdate'];
-            if (targstartdate > targcompdate) {
+            if (Date.parse(targstartdate) > Date.parse(targcompdate)) {
                 arr.push('Target Start Date cannot be later than Target Finish Date');
             }
             return arr;
