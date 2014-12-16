@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Email;
@@ -33,7 +34,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         private const string subject = "subject";
         private const string message = "message";
         private const string cc = "cc";
+//        protected AttachmentHandler attachment = new AttachmentHandler();
 
+       
         public static void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
             var user = SecurityFacade.CurrentUser();
             var commlogs = (IEnumerable<CrudOperationData>)entity.GetRelationship(commlog);
@@ -55,41 +58,26 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 w.CopyFromRootEntity(rootObject, integrationObject, modifydate, DateTime.Now.FromServerToRightKind());
                 w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
-                HandleAttachments(crudData, commlogs, maximoTemplateData.ApplicationMetadata);
+                HandleAttachments(crudData, rootObject, maximoTemplateData.ApplicationMetadata);
                 if (w.GetRealValue(integrationObject, sendto) != null) {
                     maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
                 }
             });
         }
 
-        private static void HandleAttachments(CrudOperationData data, IEnumerable<CrudOperationData> maximoObj,
-            Metadata.Applications.ApplicationMetadata applicationMetadata){
+        private static void HandleAttachments(CrudOperationData data, [NotNull] object maximoObj,
+            [NotNull] Metadata.Applications.ApplicationMetadata applicationMetadata){
+            if (maximoObj == null)
+                throw new ArgumentNullException("maximoObj");
+            if (applicationMetadata == null)
+                throw new ArgumentNullException("applicationMetadata");
             // Check if Attachment is present
             var attachmentData = data.GetUnMappedAttribute("attachment");
             var attachmentPath = data.GetUnMappedAttribute("newattachment_path");
 
             if (!String.IsNullOrWhiteSpace(attachmentData) && !String.IsNullOrWhiteSpace(attachmentPath)){
-                var user = SecurityFacade.CurrentUser();
-                if (String.IsNullOrEmpty(attachmentData)){
-                    return;
-                }
-                var commlogDocs = (IEnumerable<CrudOperationData>) data.GetRelationship("commlogdocs");
-                var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "COMMLOGDOCS");
-                w.SetValue(docLink, "ADDINFO", true);
-                w.CopyFromRootEntity(maximoObj, docLink, "CREATEBY", user.Login, "reportedby");
-                w.CopyFromRootEntity(maximoObj, docLink, "CREATEDATE", DateTime.Now.FromServerToRightKind());
-                w.CopyFromRootEntity(maximoObj, docLink, "CHANGEBY", user.Login, "reportedby");
-                w.CopyFromRootEntity(maximoObj, docLink, "CHANGEDATE", DateTime.Now.FromServerToRightKind());
-                w.CopyFromRootEntity(maximoObj, docLink, "SITEID", user.SiteId);
-                w.CopyFromRootEntity(maximoObj, docLink, "ORGID", user.OrgId);
-                w.SetValue(docLink, "URLTYPE", "FILE");
-                w.SetValue(docLink, "URLNAME", attachmentPath);
-                w.SetValue(docLink, "UPLOAD", true);
-                w.SetValue(docLink, "DOCTYPE", "Attachments");
-                w.SetValue(docLink, "DOCUMENT", FileUtils.GetNameFromPath(attachmentPath, 100));
-                w.SetValue(docLink, "DESCRIPTION", attachmentPath);
-                w.SetValue(docLink, "DOCUMENTDATA", FileUtils.ToByteArrayFromHtmlString(attachmentData));
-                
+                AttachmentHandler attachment = new AttachmentHandler();
+                attachment.HandleAttachments(maximoObj, attachmentData, attachmentPath, applicationMetadata);
             }
         }
 
