@@ -41,7 +41,8 @@ app.directive('lookupModal', function (contextService) {
             datamap: '='
         },
 
-        controller: function ($scope, $http, $element, searchService, i18NService, associationService) {
+        controller: function ($injector, $scope, $http, $element, searchService, i18NService, associationService,
+                              formatService, expressionService) {
 
             $scope.lookupModalSearch = function (pageNumber) {
                 var schema = $scope.schema;
@@ -166,16 +167,23 @@ app.directive('lookupModal', function (contextService) {
 
             });
 
-            $scope.hideLookupModal = function () {
+            $scope.hideLookupModal = function() {
                 var modals = $('[data-class="lookupModal"]');
-                modals.modal('hide')
-            }
+                modals.modal('hide');
+            };
 
             $element.on('shown.bs.modal', function (e) {
                 $scope.searchObj = {};
                 if ($scope.lookupObj != undefined) {
                     $scope.lookupModalSearch();
                 }
+            });
+
+            $injector.invoke(BaseList, this, {
+                $scope: $scope,
+                formatService: formatService,
+                expressionService: expressionService,
+                searchService: searchService
             });
         }
     };

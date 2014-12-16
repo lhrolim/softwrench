@@ -142,8 +142,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="rowstamp" type="timestamp" required="false" />
       </attributes>
       <relationships>
-        <relationship to="inventory">
-          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+        <relationship to="invcost" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
         <relationship to="item">
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
