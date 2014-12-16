@@ -2848,7 +2848,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="textarea" params="maxlength=8000" />
           </field>
           <field attribute="targstartdate" default="@currentdatetime" hidden="true" />
-          <section id="targStartDate" resourcepath="/Content/Templates/samelinepickers.html" parameters="joinattribute=targstartdate;default=@currentdatetime;dateformat=dd/MM/yyyy;allowpast=false">
+          <section id="targStartDate" resourcepath="/Content/Templates/samelinepickers.html" parameters="joinattribute=targstartdate;default=@currentdatetime;dateformat=dd/MM/yyyy;">
             <header label="Target Start Date:" displacement="sameline"/>
           </section>
           <field attribute="targcompdate" default="@currentdatetime" hidden="true" />
