@@ -6,13 +6,13 @@ namespace softwrench.sw4.Shared2.Data.Association {
 
         private readonly IDictionary<string, object> _extrafields;
 
-        public MultiValueAssociationOption(string value, string label, DataMapDefinition extrafields)
-            : base(value, label) {
+        public MultiValueAssociationOption(string value, string label, DataMapDefinition extrafields, bool forceDistinctOptions = true)
+            : base(value, label, forceDistinctOptions) {
                 _extrafields = extrafields.Fields;
         }
 
-        public MultiValueAssociationOption(string value, string label, IDictionary<string, object> fields)
-            : base(value, label) {
+        public MultiValueAssociationOption(string value, string label, IDictionary<string, object> fields, bool forceDistinctOptions = true) 
+            : base(value, label, forceDistinctOptions) {
             _extrafields = fields;
         }
 
