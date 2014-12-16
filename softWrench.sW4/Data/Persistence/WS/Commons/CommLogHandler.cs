@@ -34,7 +34,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         private const string subject = "subject";
         private const string message = "message";
         private const string cc = "cc";
-//        protected AttachmentHandler attachment = new AttachmentHandler();
 
        
         public static void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
