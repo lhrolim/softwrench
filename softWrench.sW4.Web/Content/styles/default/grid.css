@@ -127,3 +127,7 @@
     background: #fff;
     border-color: #ddd;
 }
+
+table .detaildata {
+    display: table-cell !important;
+}
