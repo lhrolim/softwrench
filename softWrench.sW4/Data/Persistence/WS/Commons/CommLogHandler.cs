@@ -58,7 +58,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 w.CopyFromRootEntity(rootObject, integrationObject, modifydate, DateTime.Now.FromServerToRightKind());
                 w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
-                HandleAttachments(crudData, rootObject, maximoTemplateData.ApplicationMetadata);
+                HandleAttachments(crudData, integrationObject, maximoTemplateData.ApplicationMetadata);
                 if (w.GetRealValue(integrationObject, sendto) != null) {
                     maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
                 }
@@ -78,6 +78,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (!String.IsNullOrWhiteSpace(attachmentData) && !String.IsNullOrWhiteSpace(attachmentPath)){
                 AttachmentHandler attachment = new AttachmentHandler();
                 attachment.HandleAttachments(maximoObj, attachmentData, attachmentPath, applicationMetadata);
+
+                //Create a commlogdoc here when ever there is an attachment 
+                var commlogdoc = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "COMMLOGDOCS");
+                w.SetValue(commlogdoc, "commlogid", data.GetAttribute("commlogid"));
+
             }
         }
 
