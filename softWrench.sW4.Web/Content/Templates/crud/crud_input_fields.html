@@ -25,7 +25,7 @@
             </legend>
 
             <div ng-class="getInputClass(fieldMetadata)" ng-if="fieldMetadata.isReadOnly" ng-switch on="fieldMetadata.rendererType">
-                <input type="text" ng-switch-when="datetime"
+                <input type="datetime" ng-switch-when="datetime"
                        ng-model="datamap[fieldMetadata.attribute]"
                        data-date-time
                        data-show-time="{{fieldMetadata.rendererParameters['showtime']}}"

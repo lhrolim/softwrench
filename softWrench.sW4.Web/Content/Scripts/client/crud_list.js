@@ -72,16 +72,6 @@ app.directive('crudList', function (contextService) {
 
             fixHeaderService.activateResizeHandler();
 
-            $scope.getFormattedValue = function (value, column, datamap) {
-                var formattedValue = formatService.format(value, column, datamap);
-                if (formattedValue == "-666") {
-                    //this magic number should never be displayed! 
-                    //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
-                    return null;
-                }
-                return formattedValue;
-            };
-
             $scope.loadIcon = function (value, metadata) {
                 return iconService.loadIcon(value, metadata);
             };
@@ -92,9 +82,10 @@ app.directive('crudList', function (contextService) {
             $scope.isCommand = function (schema) {
                 return $scope.schema && $scope.schema.properties['command.select'] == "true";
             };
-            $scope.isNotHapagTest = function () {
+            $scope.isNotHapagTest = function() {
                 return $rootScope.clientName != 'hapag';
-            }
+            };
+
             $scope.tabsDisplayables = function (schema) {
                 return tabsService.tabsDisplayables(schema);
             };
@@ -198,14 +189,14 @@ app.directive('crudList', function (contextService) {
                 fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
             });
 
-            $scope.doAdvancedSearch = function (filterdata) {
+            $scope.doAdvancedSearch = function(filterdata) {
                 searchService.advancedSearch($scope.datamap, $scope.schema, filterdata);
-            }
+            };
 
-            $scope.cursortype = function () {
+            $scope.cursortype = function() {
                 var editDisabled = $scope.schema.properties['list.disabledetails'];
                 return "true" != editDisabled ? "pointer" : "default";
-            }
+            };
 
             $scope.isEditing = function (schema) {
                 var idFieldName = schema.idFieldName;
@@ -278,8 +269,6 @@ app.directive('crudList', function (contextService) {
                 $scope.$emit("sw_renderview", $scope.schema.applicationName, listSchema, 'none', $scope.title, parameters);
             };
 
-
-
             $scope.selectPage = function (pageNumber, pageSize, printMode) {
                 if (pageNumber === undefined || pageNumber <= 0 || pageNumber > $scope.paginationData.pageCount) {
                     $scope.paginationData.pageNumber = pageNumber;
@@ -330,24 +319,10 @@ app.directive('crudList', function (contextService) {
                 }
             };
 
-            $scope.toggleSelectAll = function (checked) {
-                $.each($scope.datamap, function (key, value) {
+            $scope.toggleSelectAll = function(checked) {
+                $.each($scope.datamap, function(key, value) {
                     value.fields["_#selected"] = checked;
                 });
-            }
-
-            $scope.getSearchIcon = function (columnName) {
-                var showSearchIcon = $scope.schema.properties["list.advancedfilter.showsearchicon"] != "false";
-                var operator = $scope.getOperator(columnName);
-                return showSearchIcon ? operator.symbol : "";
-            }
-
-            $scope.searchOperations = function () {
-                return searchService.searchOperations();
-            }
-
-            $scope.getDefaultOperator = function () {
-                return searchService.defaultSearchOperation();
             };
 
             $scope.selectOperator = function (columnName, operator) {
@@ -367,14 +342,6 @@ app.directive('crudList', function (contextService) {
                 }
             };
 
-            $scope.getOperator = function (columnName) {
-                var searchOperator = $scope.searchOperator;
-                if (searchOperator != null && searchOperator[columnName] != null) {
-                    return searchOperator[columnName];
-                }
-                return searchService.getSearchOperation(0);
-            };
-
             $scope.filterSearch = function (columnName, event) {
 
                 if ($scope.searchOperator[columnName] == null) {
@@ -388,58 +355,13 @@ app.directive('crudList', function (contextService) {
 
             };
 
-            $scope.GetAssociationOptions = function (fieldMetadata, forfilter) {
-                if (fieldMetadata.type == "OptionField") {
-                    return $scope.GetOptionFieldOptions(fieldMetadata, forfilter);
-                }
-                $scope.$parent.associationOptions = instantiateIfUndefined($scope.$parent.associationOptions);
-                return $scope.$parent.associationOptions[fieldMetadata.associationKey];
-            }
-
-            $scope.GetOptionFieldOptions = function (optionField, forfilter) {
-                if (optionField.providerAttribute == null) {
-                    return optionField.options;
-                }
-                optionField.jscache = instantiateIfUndefined(optionField.jscache);
-                if (optionField.jscache.providerOptions) {
-                    return optionField.jscache.providerOptions;
-                }
-                $scope.$parent.associationOptions = instantiateIfUndefined($scope.$parent.associationOptions);
-                var associationOptions = $scope.$parent.associationOptions[optionField.providerAttribute];
-                if (forfilter || optionField.addBlankOption) {
-                    associationOptions.unshift({
-                        label: "", value: ""
-                    });
-                }
-                optionField.jscache.providerOptions = associationOptions;
-                return associationOptions;
-            }
-
-            $scope.isColumnEditable = function (column) {
+            $scope.isColumnEditable = function(column) {
                 return column.rendererParameters['editable'] == "true";
-            }
+            };
 
-            $scope.shouldShowHeaderLabel = function (column) {
-                return (column.type == "ApplicationFieldDefinition" || column.type == "OptionField") && column.rendererType != "color" && column.rendererType != "icon";
-            }
-
-            $scope.handleDefaultValue = function (data, column) {
-                var key = column.target ? column.target : column.attribute;
-
-                if (column.defaultValue != null && data[key] == null) {
-                    if (column.enableDefault != null && expressionService.evaluate(column.enableDefault, data)) {
-                        data[key] = column.defaultValue;
-                    }
-                }
-            }
-
-            $scope.shouldShowHeaderFilter = function (column) {
-                return $scope.shouldShowHeaderLabel(column) && !column.rendererParameters["hidefilter"];
-            }
-
-            $scope.statusColor = function (status, gridname) {
+            $scope.statusColor = function(status, gridname) {
                 return statuscolorService.getColor(status, $scope.schema.applicationName);
-            }
+            };
 
             $scope.sort = function (column) {
                 if (!$scope.shouldShowHeaderLabel(column) || "none" == $scope.schema.properties["list.sortmode"]) {
@@ -466,13 +388,18 @@ app.directive('crudList', function (contextService) {
                 fixHeaderService.fixTableTop($(".fixedtable"));
             };
 
-
-
             $injector.invoke(BaseController, this, {
                 $scope: $scope,
                 i18NService: i18NService,
                 fieldService: fieldService,
                 commandService: commandService
+            });
+
+            $injector.invoke(BaseList, this, {
+                $scope: $scope,
+                formatService: formatService,
+                expressionService: expressionService,
+                searchService: searchService
             });
 
         }

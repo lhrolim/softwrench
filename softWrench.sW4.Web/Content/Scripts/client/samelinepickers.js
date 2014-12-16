@@ -38,3 +38,8 @@ function SamelinePickersController($scope, $rootScope, formatService) {
 
     doInit();
 }
+
+var hideKeyboard = function () {
+    document.activeElement.blur();
+    $("input").blur();
+};
