@@ -638,6 +638,7 @@
     <Content Include="Content\Scripts\bootstrap-multiselect.js" />
     <Content Include="Content\Scripts\client\aa_dateutils.js" />
     <Content Include="Content\Scripts\client\aa_stringutils.js" />
+    <Content Include="Content\Scripts\client\crud_base_list.js" />
     <Content Include="Content\Scripts\client\each.js" />
     <Content Include="Content\Scripts\client\services\dispatcher_service.js" />
     <Content Include="Content\Scripts\client\each.js" />
