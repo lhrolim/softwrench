@@ -300,7 +300,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 newIssueItem['issueto'] = datamap['#issueto'];
                 newIssueItem['assetnum'] = datamap['#assetnum'];
                 newIssueItem['gldebitacct'] = (fields['gldebitacct'] == null) ?
-                    datamap['#gldebitacct'] : fields['gldebitacct'];
+                datamap['#gldebitacct'] : fields['gldebitacct'];
 
                 var jsonString = angular.toJson(newIssueItem);
                 var httpParameters = {
@@ -335,6 +335,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
             modalService.show(compositionschema, itemDatamap, null, parentdatamap, parentschema);
         },
+        hideNewIssueModal: function (parameters) {
+            modalService.hide();
+            parameters['datamap'] = null;
+        },
         batchissuelistclick: function(datamap, column, schema) {
             var newDatamap = {};
             angular.copy(datamap, newDatamap);
@@ -345,7 +349,21 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         cancelNewInvIssueItem: function() {
             modalService.hide();
         },
-        addItemToBatch: function(datamap) {
+        addItemToBatch: function (datamap) {
+            var itemtype = datamap['inventory_.item_.itemtype'];
+            var issueto = datamap['issueto'];
+            if (itemtype == 'TOOL' && nullOrEmpty(issueto)) {
+                alertService.alert("Issued To is required when issuing a tool.");
+                return;
+            }
+
+            var itemnum = datamap['itemnum'];
+
+            if (nullOrEmpty(itemnum)) {
+                alertService.alert("An item is required.");
+                return;
+            }
+
             var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
 
             datamap['issuetype'] = "ISSUE";
@@ -446,8 +464,19 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
         afterchangeinvissueitem: function(parameters) {
             doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
-            var defaultBinnum = parameters['fields']['inventory_.binnum'];
-            parameters['fields']['binnum'] = defaultBinnum;
+            var itemnum = parameters['fields']['itemnum'];
+            parameters['fields']['binnum'] = null;
+            parameters['fields']['lotnum'] = null;
+            parameters['fields']['#curbal'] = null;
+            if (nullOrEmpty(itemnum)) {
+                parameters['fields']['itemnum'] = null;
+                parameters['fields']['unitcost'] = null;
+                parameters['fields']['inventory_.issueunit'] = null;
+                parameters['fields']['inventory_.itemtype'] = null;
+                return;
+            }
+            //var defaultBinnum = parameters['fields']['inventory_.binnum'];
+            //parameters['fields']['binnum'] = defaultBinnum;
         },
 
         invUse_afterChangeFromStoreroom: function(parameters) {
@@ -475,7 +504,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         invIssue_afterChangeItem: function(parameters) {
             var itemnum = parameters['fields']['itemnum'];
             parameters['fields']['binnum'] = null;
-            parameters['fields']['#curbal'] = null;
+            parameters['fields']['lotnum'] = null;
+            parameters['fields']['binbalances_.curbal'] = null;
             if (nullOrEmpty(itemnum)) {
                 parameters['fields']['itemnum'] = null;
                 parameters['fields']['unitcost'] = null;
@@ -675,6 +705,49 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 datamap['binnum'] = "";
             }
 
+            var siteid = datamap['siteid'];
+
+            if (nullOrEmpty(siteid)) {
+                alertService.alert("A Site Id is required.");
+                return;
+            }
+
+            var storeloc = datamap['storeloc'];
+
+            if (nullOrEmpty(storeloc)) {
+                alertService.alert("A Storeroom is required.");
+                return;
+            }
+
+            var itemnum = datamap['itemnum'];
+
+            if (nullOrEmpty(itemnum)) {
+                alertService.alert("An item is required.");
+                return;
+            }
+
+            var refwo = datamap['refwo'];
+            var location = datamap['location'];
+            var assetnum = datamap['assetnum'];
+            var gldebitacct = datamap['gldebitacct'];
+
+            var itemtype = datamap['inventory_.item_.itemtype'];
+            var issueto = datamap['issueto'];
+            if (itemtype == 'TOOL') {
+                if (nullOrEmpty(issueto)) {
+                    alertService.alert("Issued To is required when issuing a tool.");
+                    return;
+                }
+            } else {
+                if (nullOrEmpty(refwo) &&
+                    nullOrEmpty(location) &&
+                    nullOrEmpty(assetnum) &&
+                    nullOrEmpty(gldebitacct)) {
+                    alertService.alert("Either a Workorder, Location, Asset, or GL Debit Account is required.");
+                    return;
+                }
+            }
+
             var jsonString = angular.toJson(datamap);
             var httpParameters = {
                 application: "invissue",
@@ -682,18 +755,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 currentSchemaKey: "newInvIssueDetail.input.web"
             };
             restService.invokePost("data", "post", httpParameters, jsonString, function() {
-                var restParameters = {
-                    key: {
-                        schemaId: "list",
-                        mode: "none",
-                        platform: "web"
-                    },
-                    SearchDTO: null
-                };
-                var urlToUse = url("/api/Data/invissue?" + $.param(restParameters));
-                $http.get(urlToUse).success(function(data) {
-                    redirectService.goToApplication("invissue", "itemlist", null, data);
-                });
+                redirectService.goToApplicationView("invissue", "list", null , null, null, null);
             });
         },
 
@@ -884,13 +946,24 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
         },
 
-        invIssue_afterChangeBin: function(parameters) {
-            parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+        invIssue_afterChangeBin: function (parameters) {
+            parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
+            //TODO: Uncomment below line after fix so that other lookup values can be changed in an afterchange event
+            //parameters['fields']['binnum'] = parameters['fields']['binbalances_.binnum'];
         },
 
         invIssue_afterChangeLot: function(parameters) {
+            parameters['fields']['binnum'] = parameters['fields']['lotbalances_.binnum'];
+            //TODO: Uncomment below line after fix so that other lookup values can be changed in an afterchange event
+            //parameters['fields']['lotnum'] = parameters['fields']['lotbalances_.lotnum'];
+        },
+
+        invIssue_afterChangeBinBalance: function (parameters) {
+            parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+        },
+
+        invIssue_afterChangeLotBalance: function (parameters) {
             parameters['fields']['#curbal'] = parameters['fields']['lotbalances_.curbal'];
         }
-
 };
 });

@@ -131,6 +131,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="costtype"/>
           <field attribute="itemtype"/>
           <field attribute="issueunit"/>
+          <field attribute="costtype"/>
+          <field attribute="binnum"/>
         </list>
       </schemas>
     </application>
@@ -307,7 +309,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <commandbars>
             <commandgroup position="detailform">
               <removecommand id="save"/>
+              <removecommand id="cancel"/>
               <command id="return" position="&lt;print" label="Return" service="inventoryService" method="returnInvIssue" parameters="datamap,$scope" successmessage="Return created"/>
+              <command id="cancelinvissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" parameters="schema,datamap" position=">print"/>
             </commandgroup>
           </commandbars>
         </schema>
@@ -324,10 +328,27 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeItem"/>
             </association>
             <field attribute="inventory_.item_.itemtype" label="Item Type" readonly="true"/>
-            <association label="Bin" target="binnum" labelfield="invbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal">
-              <renderer type="lookup"/>
-              <event type="afterchange" service="inventoryService" method="batchinvIssue_afterChangeBin"/>
+            <association label="Bin" target="binnum" lookupattribute="binnum" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="itemnum,location,siteid,commoditygroup,itemsetid,curbal,lotnum,binnum">
+              <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
+              <dataprovider prefilterfunction="FilterBins"/>
             </association>
+            <association target="lotnum" label="Lot" labelfield="lotbalances_.lotnum" hideDescription="true" extraprojectionvalues="itemnum,location,siteid,commoditygroup,itemsetid,curbal,binnum,lotnum">
+              <renderer type="lookup" params="application=invbalances;schemaId=lotLookupList;"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLot"/>
+            </association>
+            <field attribute="binbalances_.binnum" hidden="true">
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
+            </field>
+            <field attribute="lotbalances_.lotnum" hidden="true">
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLot"/>
+            </field>
+            <field attribute="binbalances_.curbal" hidden="true">
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBinBalance"/>
+            </field>
+            <field attribute="lotbalances_.curbal" hidden="true">
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLotBalance"/>
+            </field>
             <field attribute="#curbal" label="Current Balance" readonly="true"/>
             <field attribute="quantity" label="Issue Quantity" default="1">
               <renderer type="numericinput" params="min=1;max=@curbal;"/>
@@ -358,7 +379,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <removecommand id="save"/>
               <command id="additemtobatch" label="Add" service="inventoryService" method="addItemToBatch" showexpression="@issuetype == null" parameters="datamap,previousdata"/>
               <command id="updateiteminbatch" label="Update" service="inventoryService" method="updateItemInBatch" showexpression="@issuetype != null" parameters="datamap,previousdata"/>
-              <command id="cancel" label="Cancel" service="modalService" method="hide"/>
+              <command id="cancel" label="Cancel" service="inventoryService" method="hideNewIssueModal"/>
             </commandgroup>
           </commandbars>
         </schema>
@@ -402,6 +423,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       
         <schema id="newInvIssueDetail" mode="input" stereotype="detail">
           <field attribute="matusetransid" hidden="true"/>
+          <field attribute="issuetype" hidden="true" default="ISSUE"/>
           <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
           <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname">
             <renderer type="lookup"/>
@@ -419,17 +441,27 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
             </association>
             <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
-            <association label="Bin" target="binnum" lookupattribute="binnum" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="itemnum,location,siteid,commoditygroup,itemsetid,curbal">
+            <association label="Bin" target="binnum" lookupattribute="binnum" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="itemnum,location,siteid,commoditygroup,itemsetid,curbal,lotnum,binnum">
               <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
-              <!--<dataprovider prefilterfunction="FilterBins"/>-->
+              <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>-->
+              <dataprovider prefilterfunction="FilterBins"/>
             </association>
-            <association target="lotnum" label="Lot" labelfield="lotbalances_.lotnum" hideDescription="true" extraprojectionvalues="itemnum,location,siteid,commoditygroup,itemsetid,curbal">
+            <association target="lotnum" label="Lot" labelfield="lotbalances_.lotnum" hideDescription="true" extraprojectionvalues="itemnum,location,siteid,commoditygroup,itemsetid,curbal,binnum,lotnum">
               <renderer type="lookup" params="application=invbalances;schemaId=lotLookupList;"/>
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLot"/>
             </association>
-            <field attribute="binbalances_.curbal" label="Current Balance (bin)" readonly="true"/>
-            <field attribute="lotbalances_.curbal" label="Current Balance (lot)" readonly="true"/>
+            <field attribute="binbalances_.binnum" hidden="true">
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
+            </field>
+            <field attribute="lotbalances_.lotnum" hidden="true">
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLot"/>
+            </field>
+            <field attribute="binbalances_.curbal" hidden="true">
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBinBalance"/>
+            </field>
+            <field attribute="lotbalances_.curbal" hidden="true">
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLotBalance"/>
+            </field>
             <field attribute="#curbal" label="Current Balance" readonly="true"/>
             <field attribute="quantity" label="Issue Quantity" default="1">
               <renderer type="numericinput" params="min=1;"/>
@@ -459,7 +491,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <commandbars>
             <commandgroup position="detailform">
               <removecommand id="save"/>
+              <removecommand id="cancel"/>
               <command id="submitinvissue" label="Submit" service="inventoryService" method="submitInvIssue" parameters="schema,datamap" position="&lt;print"/>
+              <command id="cancelinvissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" parameters="schema,datamap" position=">print"/>
             </commandgroup>
           </commandbars>
         </schema>

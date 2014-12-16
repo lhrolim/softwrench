@@ -32,7 +32,6 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
             //Scanned items are added to the invissue composition.  
             $(document).scannerDetection(function (data) {
 
-                var parentdata = parameters.previousdata;
                 //Checks to see if the item has already been added to the composition list.
                 //If the item is found, this will increment the quantity by 1.
                 for (var key in parameters.clonedCompositionData) {
@@ -64,14 +63,15 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
                         if (data.resultObject['fields'] === undefined) {
                             return;
                         }
-                        var fields = data.resultObject['fields'];
+                        var itemdata = data.resultObject['fields'];
                         
-                        var matusetransData = parentdata;
+                        var matusetransData = parameters.parentdata;
 
                         var newRecord = {};
-                        newRecord['itemnum'] = fields['itemnum'];
+                        newRecord['itemnum'] = itemdata['itemnum'];
                         newRecord['quantity'] = 1;
-                        newRecord['item_.description'] = fields['description'];
+                        newRecord['item_.description'] = itemdata['description'];
+                        newRecord['binnum'] = itemdata['inventory_.binnum'];
                         newRecord['issuetype'] = 'ISSUE';
                         newRecord['matusetransid'] = null;
                         newRecord['assetnum'] = matusetransData['#assetnum'];
@@ -82,9 +82,24 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
                         var user = contextService.getUserData();
                         newRecord['siteid'] = user.siteid;
                         newRecord['storeloc'] = matusetransData['#storeloc'];
-                        parameters.clonedCompositionData.push(newRecord);
-                        $rootScope.$digest();
-                        return;
+
+                        var searchData = {
+                            itemnum: newRecord['itemnum'],
+                            location: newRecord['storeloc'],
+                            siteid: newRecord['siteid']
+                        };
+                        searchService.searchWithData("invcost", searchData).success(function (costdata) {
+                            var resultObject = costdata.resultObject;
+                            var resultFields = resultObject[0].fields;
+                            var costtype = itemdata['inventory_.costtype'];
+                            if (costtype === 'STANDARD') {
+                                newRecord['unitcost'] = resultFields.stdcost;
+                            } else if (costtype === 'AVERAGE') {
+                                newRecord['unitcost'] = resultFields.avgcost;
+                            }
+                            parameters.clonedCompositionData.push(newRecord);
+                            return;
+                        });
                     });
             });
 
