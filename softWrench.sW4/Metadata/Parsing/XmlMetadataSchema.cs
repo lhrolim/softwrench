@@ -95,7 +95,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ApplicationAssociationDefaultValueAttribute = "default";
         public const string ApplicationAssociationAssociationAttributeElement = "associationAttribute";
         public const string ApplicationAssociationHideDescription = "hideDescription";
-        public const string ApplicationAssociationLookupAttribute = "lookupattribute";
+        public const string ApplicationAssociationForceDistinctOptions = "forcedistinctoptions";
 
         public const string DataProviderElement = "dataprovider";
         public const string DataProviderWhereClause = "whereClause";

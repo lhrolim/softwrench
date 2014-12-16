@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('scannerdetectionService', function ($http, $rootScope, restService, searchService, redirectService, contextService) {
+app.factory('scannerdetectionService', function ($http, $rootScope, restService, searchService, redirectService, contextService, alertService, modalService) {
 
     return {
         initInventoryGridListener: function (schema, datamap, parameters) {
@@ -66,6 +66,27 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
                         var itemdata = data.resultObject['fields'];
                         
                         var matusetransData = parameters.parentdata;
+
+                        if (itemdata['itemtype'] == 'TOOL' && matusetransData['#issueto'] == null) {
+                            //var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
+                            //var itemDatamap = {};
+                            //itemDatamap['itemnum'] = null;
+                            //itemDatamap['inventory_'] = null;
+                            //itemDatamap['#gldebitacct'] = null;
+                            //itemDatamap['enterby'] = user.login.toUpperCase();
+                            //itemDatamap['siteid'] = user.siteId;
+                            //itemDatamap['matusetransid'] = null;
+                            //itemDatamap['refwo'] = matusetransData['#refwo'];
+                            //itemDatamap['assetnum'] = matusetransData['#assetnum'];
+                            //itemDatamap['issueto'] = matusetransData['#issueto'];
+                            //itemDatamap['location'] = matusetransData['#location'];
+                            //itemDatamap['storeloc'] = matusetransData['#storeloc'];
+                            //itemDatamap['gldebitacct'] = matusetransData['#gldebitacct'];
+
+                            //modalService.show(compositionschema, itemDatamap, null, matusetransData, parameters.parentschema);
+                            alertService.alert("Issued To is required when issuing a tool.");
+                            return;
+                        }
 
                         var newRecord = {};
                         newRecord['itemnum'] = itemdata['itemnum'];

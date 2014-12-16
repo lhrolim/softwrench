@@ -463,12 +463,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         afterchangeinvissueitem: function(parameters) {
-            doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
-            var itemnum = parameters['fields']['itemnum'];
-            
             parameters['fields']['binnum'] = null;
             parameters['fields']['lotnum'] = null;
             parameters['fields']['#curbal'] = null;
+
+            var itemnum = parameters['fields']['itemnum'];
             if (nullOrEmpty(itemnum)) {
                 parameters['fields']['itemnum'] = null;
                 parameters['fields']['unitcost'] = null;
@@ -476,6 +475,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 parameters['fields']['inventory_.itemtype'] = null;
                 return;
             }
+            
+            doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
             var defaultBinnum = parameters['fields']['inventory_.binnum'];
             parameters['fields']['binnum'] = defaultBinnum;
         },
@@ -949,14 +950,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
         invIssue_afterChangeBin: function (parameters) {
             parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
-            //TODO: Uncomment below line after fix so that other lookup values can be changed in an afterchange event
-            //parameters['fields']['binnum'] = parameters['fields']['binbalances_.binnum'];
         },
 
         invIssue_afterChangeLot: function(parameters) {
             parameters['fields']['binnum'] = parameters['fields']['lotbalances_.binnum'];
-            //TODO: Uncomment below line after fix so that other lookup values can be changed in an afterchange event
-            //parameters['fields']['lotnum'] = parameters['fields']['lotbalances_.lotnum'];
         },
 
         invIssue_afterChangeBinBalance: function (parameters) {

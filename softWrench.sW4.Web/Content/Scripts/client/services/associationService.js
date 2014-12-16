@@ -92,11 +92,6 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             var target = associationFieldMetadata.target;
             var selectedValue = datamap[target];
 
-            var lookupAttribute = associationFieldMetadata.lookupAttribute;
-            if (lookupAttribute != null) {
-                selectedValue = datamap[associationFieldMetadata.lookupAttribute];
-            }
-            
             if (selectedValue == null) {
                 return null;
             }

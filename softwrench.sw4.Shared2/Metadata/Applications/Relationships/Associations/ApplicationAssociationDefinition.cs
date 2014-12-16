@@ -34,7 +34,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         private IList<String> _labelFields = new List<string>();
         private LabelData _labelData;
-        private string _lookupAttribute;
+        private bool _forceDistinctOptions;
         private ISet<ApplicationEvent> _eventsSet;
 
         public class LabelData {
@@ -63,7 +63,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public ApplicationAssociationDefinition() { }
 
         public ApplicationAssociationDefinition(string @from, LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
-            string showExpression, string toolTip, Boolean required, string defaultValue, bool hideDescription, string enableExpression = "true", ISet<ApplicationEvent> events = null, string lookupAttribute = null)
+            string showExpression, string toolTip, Boolean required, string defaultValue, bool hideDescription, string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = false)
             : base(from, labelData.Label, showExpression, toolTip) {
             _labelData = labelData;
             _label = labelData.Label;
@@ -75,7 +75,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             EnableExpression = enableExpression;
             IsRequired = required;
             _eventsSet = events;
-            _lookupAttribute = lookupAttribute;
+            _forceDistinctOptions = forceDistinctOptions;
             Qualifier = qualifier;
             HideDescription = hideDescription;
 
@@ -147,8 +147,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             get { return EntityAssociation.Reverse; }
         }
 
-        public string LookupAttribute {
-            get { return _lookupAttribute; }
+        public bool ForceDistinctOptions {
+            get { return _forceDistinctOptions; }
         }
 
         public string ApplicationPath {

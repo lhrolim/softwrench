@@ -121,7 +121,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                                     : BuildComplexLabel(attributeHolder, association);
 
                 if (association.ExtraProjectionFields.Count > 0) {
-                    options.Add(new MultiValueAssociationOption((string)value, label, attributeHolder, association.LookupAttribute == null));
+                    options.Add(new MultiValueAssociationOption((string)value, label, attributeHolder, association.ForceDistinctOptions));
                 } else {
 
                     options.Add(new AssociationOption(Convert.ToString(value), label));
@@ -161,9 +161,6 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             var valueField = entityAssociation.PrimaryAttribute().To;
             if (entityAssociation.Reverse) {
                 valueField = entityAssociation.ReverseLookupAttribute;
-            }
-            if (association.LookupAttribute != null) {
-                valueField = association.LookupAttribute;
             }
 
             // See if association has a schema defined

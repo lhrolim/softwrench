@@ -2713,8 +2713,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute from="inventory_.itemsetid" to="itemsetid"/>
           <relationshipAttribute from="storeloc" to="location"/>
-          <relationshipAttribute from="binnum" to="binnum" />
-          <relationshipAttribute from="lotnum" to="lotnum" primary="true"/>
+          <relationshipAttribute from="binnum" to="binnum" primary="true"/>
+          <relationshipAttribute from="lotnum" to="lotnum" />
         </relationship>
         <relationship to="invbalances" qualifier="lotbalances">
           <relationshipAttribute from="itemnum" to="itemnum"/>
