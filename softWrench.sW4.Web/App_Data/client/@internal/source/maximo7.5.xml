@@ -2686,6 +2686,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
+        <relationship to="asset" qualifier="rotatingasset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="storeloc" to="location"/>
+          <relationshipAttribute to="moved" literal="0" quoteLiteral="true"/>
+          <relationshipAttribute to="returnedtovendor" literal="0" quoteLiteral="true"/>
+        </relationship>
         <relationship to="location">
           <relationshipAttribute from="location" to="location" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
