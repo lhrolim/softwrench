@@ -17,8 +17,13 @@
                 <i class="glyphicon glyphicon-calendar"></i>
             </span>
         </div>
-        <input ng-if="isMobile()" type="date" class="form-control" ng-model="date1">
-    </div>
+        <div ng-if="isMobile()" class="input-group">
+            <input type="date" class="form-control" ng-model="date1">
+            <span class="input-group-addon">
+                <i class="glyphicon glyphicon-calendar"></i>
+            </span>
+        </div>
+        </div>
 
     <div class="col-md-6 clearfix">
         <div ng-if="isDesktop()" class="input-group" data-datepicker="true">
@@ -36,7 +41,12 @@
                 <i class="glyphicon glyphicon-time"></i>
             </span>
         </div>
-        <input ng-if="isMobile()" type="time" class="form-control" ng-model="date2">
+        <div ng-if="isMobile()" class="input-group">
+            <input type="time" class="form-control" ng-model="date2">
+            <span class="input-group-addon">
+                <i class="glyphicon glyphicon-time"></i>
+            </span>
+        </div>
     </div>
 </div>
 
