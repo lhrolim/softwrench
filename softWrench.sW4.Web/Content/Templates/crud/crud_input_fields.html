@@ -131,15 +131,8 @@
                         <div ng-if="fieldMetadata.rendererParameters['opendetails'] != 'true'">
                             <div ng-switch-when="OptionField">
                                 <select id="{{formatId(fieldMetadata.target)}}"
-                                        class="hidden-phone form-control combobox combobox-dynamic"
-                                        ng-if="isDesktop()"
-                                        ng-model="datamap[fieldMetadata.target]"
-                                        ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
-                                        ng-enabled="isSelectEnabled(fieldMetadata)"
-                                        data-associationkey="{{fieldMetadata.associationKey}}" />
-                                <select id="{{formatId(fieldMetadata.target)}}"
                                         class="hidden-phone form-control combobox"
-                                        ng-if="isMobile()"
+                                        ng-class="{'combobox-dynamic' : isDesktop()}"
                                         ng-model="datamap[fieldMetadata.target]"
                                         ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
@@ -147,15 +140,8 @@
                             </div>
                             <div ng-switch-default>
                                 <select id="{{formatId(fieldMetadata.target)}}"
-                                        class="hidden-phone form-control combobox combobox-dynamic"
-                                        ng-if="isDesktop()"
-                                        ng-model="datamap[fieldMetadata.target]"
-                                        ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
-                                        ng-enabled="isSelectEnabled(fieldMetadata)"
-                                        data-associationkey="{{fieldMetadata.associationKey}}" />
-                                <select id="{{formatId(fieldMetadata.target)}}"
                                         class="hidden-phone form-control combobox"
-                                        ng-if="isMobile()"
+                                        ng-class="{'combobox-dynamic' : isDesktop()}"
                                         ng-model="datamap[fieldMetadata.target]"
                                         ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
