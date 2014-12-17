@@ -1,4 +1,4 @@
-﻿var app = angular.module('sw_layout', ['pasvaz.bindonce', 'angularTreeview', 'ngSanitize', 'textAngular']);
+﻿var app = angular.module('sw_layout', ['pasvaz.bindonce', 'angularTreeview', 'ngSanitize', 'textAngular', 'angularFileUpload']);
 
 
 app.filter('linebreak', function () {

@@ -122,7 +122,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="richtext"/>
           </field>
           <field label="Attachment:" attribute="attachment" >
-            <renderer type="upload"/>
+            <renderer type="multipleupload"/>
           </field>
         </schema>
       </schemas>
