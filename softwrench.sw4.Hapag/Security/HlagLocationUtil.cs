@@ -33,7 +33,7 @@ namespace softwrench.sw4.Hapag.Security {
             return group.Name.StartsWith(HapagPersonGroupConstants.HExternalUser);
         }
 
-        public static bool ContainsProfilesGroup(PersonGroup group) {
+        public static bool IsAProfileGroup(PersonGroup group) {
             return group.Name.StartsWith(HapagPersonGroupConstants.BaseHapagProfilePrefix);
         }
 

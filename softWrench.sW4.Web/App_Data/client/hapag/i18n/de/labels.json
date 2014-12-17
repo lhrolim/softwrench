@@ -14,7 +14,11 @@
 		list:Bekanntgabedatum & Zeit,
 		dashboardList:Erstellungsdatum & Zeit
 	},
-	siteid:{
+	
+    #2reportdate: Bekanntgabedatum,
+    #3reportdate: Zeit,
+    
+    siteid:{
 		_:Standort ID:
 		list:Standort ID,
 		detail:Standort ID:

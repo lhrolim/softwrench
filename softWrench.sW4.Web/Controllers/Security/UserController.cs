@@ -54,7 +54,12 @@ namespace softWrench.sW4.Web.Controllers.Security {
         }
 
         private static bool CanChangeLanguage(InMemoryUser user) {
-            return user.PersonGroups.All(f => HlagLocationUtil.IsEndUser(f.PersonGroup) || !HlagLocationUtil.ContainsProfilesGroup(f.PersonGroup));
+            foreach (PersonGroupAssociation f in user.PersonGroups) {
+                if (HlagLocationUtil.IsAProfileGroup(f.PersonGroup) &&!HlagLocationUtil.IsEndUser(f.PersonGroup)) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private static bool CanViewRestrictions(InMemoryUser user) {

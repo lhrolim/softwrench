@@ -196,6 +196,9 @@ app.factory('i18NService', function ($rootScope, contextService) {
         },
 
         changeCurrentLanguage: function (language) {
+            if (language == null) {
+                language = "en";
+            }
             $rootScope['sw_userlanguage'] = language;
             $rootScope['sw_currentcatalog'] = $rootScope['sw_i18ncatalogs'][language.toLowerCase()];
             //broadcast language changed event to update filter label translations.

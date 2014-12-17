@@ -138,8 +138,27 @@ namespace softWrench.sW4.Util {
         }
 
 
+        private string ValueConsideringSchema(string value, string schema) {
+            if (schema == null || value == null) {
+                return value;
+            }
 
-        public string I18NValue([NotNull] string key, [NotNull] string defaultValue, object[] parameters = null) {
+            try {
+                var jsonobject = JObject.Parse(value);
+                var jToken = jsonobject[schema];
+                if (jToken != null) {
+                    return jToken.ToString();
+                }
+                return jsonobject["_"].ToString();
+            } catch (Exception e) {
+                //this was not a json
+                return value;
+            }
+        }
+
+
+
+        public string I18NValue([NotNull] string key, [NotNull] string defaultValue, string schema = null, object[] parameters = null) {
             _jObject = null;
             if (key == null) {
                 throw new ArgumentNullException("key");
@@ -163,7 +182,7 @@ namespace softWrench.sW4.Util {
                     _jObject = _jObject == null ? catalog[s] : _jObject[s];
                     if (lastKey == s && _jObject != null) {
                         var result = ApplyParameters(_jObject.ToString(), parameters);
-                        return result;
+                        return ValueConsideringSchema(result, schema);
                     }
                 }
                 return defaultValue;

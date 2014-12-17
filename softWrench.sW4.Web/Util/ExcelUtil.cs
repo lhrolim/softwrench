@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using DocumentFormat.OpenXml.Spreadsheet;
 using softWrench.sW4.Metadata.Security;
+using softWrench.sW4.Security.Context;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SimpleInjector;
@@ -19,7 +20,14 @@ namespace softWrench.sW4.Web.Util {
 
         private readonly Dictionary<String, String> _cellStyleDictionary;
 
-        public ExcelUtil() {
+        private readonly I18NResolver _i18NResolver;
+
+        private readonly IContextLookuper _contextLookuper;
+
+
+        public ExcelUtil(I18NResolver i18NResolver, IContextLookuper contextLookuper) {
+            _i18NResolver = i18NResolver;
+            _contextLookuper = contextLookuper;
             // setup style dictionary for back colors
             _cellStyleDictionary = new Dictionary<string, string>{
                 {"NEW", "5"},
@@ -75,7 +83,7 @@ namespace softWrench.sW4.Web.Util {
                 var rowIdx = 1;
 
                 // create header row
-                CreateHeaderRow(applicationFields, writer, rowIdx);
+                CreateHeaderRow(applicationFields, writer, rowIdx, schema.Name);
                 //count up row
                 rowIdx++;
 
@@ -187,7 +195,7 @@ namespace softWrench.sW4.Web.Util {
             };
         }
 
-        private static void CreateHeaderRow(IEnumerable<ApplicationFieldDefinition> applicationFields, OpenXmlWriter writer, int rowIdx) {
+        private void CreateHeaderRow(IEnumerable<ApplicationFieldDefinition> applicationFields, OpenXmlWriter writer, int rowIdx, string schemaId) {
             var xmlAttributes = new List<OpenXmlAttribute>
             {
                 new OpenXmlAttribute("r", null, rowIdx.ToString(CultureInfo.InvariantCulture))
@@ -202,8 +210,10 @@ namespace softWrench.sW4.Web.Util {
                 // add new datatype for cell
                 // add header style
 
+                //                _i18NResolver.I18NValue()
+
                 writer.WriteStartElement(new Cell(), xmlAttributes);
-                writer.WriteElement(new CellValue(applicationField.Label));
+                writer.WriteElement(new CellValue(GetI18NLabel(applicationField,schemaId)));
 
                 // this is for Cell
                 writer.WriteEndElement();
@@ -211,6 +221,16 @@ namespace softWrench.sW4.Web.Util {
 
             // end Row
             writer.WriteEndElement();
+        }
+
+        private string GetI18NLabel(ApplicationFieldDefinition applicationField,string schemaId) {
+            var module = _contextLookuper.LookupContext().Module;
+            if (module != null) {
+                return applicationField.Label;
+            }
+            var i18NKey = applicationField.ApplicationName + "." + applicationField.Attribute;
+            var i18NValue = _i18NResolver.I18NValue(i18NKey, applicationField.Label, schemaId);
+            return i18NValue;
         }
 
         private void CreateCellFormats(WorkbookStylesPart stylesPart) {

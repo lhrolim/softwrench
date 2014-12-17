@@ -15,7 +15,11 @@
 		list:Fecha y hora de notificación,
 		dashboardList:Fecha y hora de creación
 	},
-	siteid:{
+	
+    #2reportdate: Fecha de notificación:,
+    #3reportdate: Hora de notificación:,
+    
+    siteid:{
 		_:ID de ubicación:
 		list:ID de ubicación,
 		detail:ID de ubicación:
@@ -499,11 +503,21 @@ incident:{
 		detail:Severidad:
 	},
 	reportdate:{
-		_:Fecha y hora de notificación:
+		_:Fecha y hora de notificación:,
 		list:Fecha y hora de notificación,
 		dashboardList:Fecha y hora de notificación
 	},
-	siteid:{
+	
+    #2reportdate:{
+		_:Fecha de notificación:,
+	},
+    
+    #3reportdate:{
+		_:Hora de notificación:,
+	},
+    
+
+    siteid:{
 		_:ID de ubicación:
 		list:ID de ubicación,
 		detail:ID de ubicación:

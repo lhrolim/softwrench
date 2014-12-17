@@ -120,7 +120,7 @@ namespace softWrench.sW4.Web.Controllers {
             var nextschemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, nextSchemaKey, platform);
             var response = DoExecute(application, new JObject(), id, OperationConstants.CRUD_DELETE, schemaKey, mockmaximo, nextschemaKey, platform);
             var defaultMsg = String.Format("{0} {1} deleted successfully", application, id);
-            response.SuccessMessage = _i18NResolver.I18NValue("general.defaultcommands.delete.confirmmsg", defaultMsg, new object[]{
+            response.SuccessMessage = _i18NResolver.I18NValue("general.defaultcommands.delete.confirmmsg", defaultMsg,null, new object[]{
                 application, id});
             return response;
         }
