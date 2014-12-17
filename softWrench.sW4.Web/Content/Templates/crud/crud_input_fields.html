@@ -220,8 +220,9 @@
                                    type="file" accept=".jpg,.bmp,.png,.pdf,.zip,text/plain,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,application/xml,.xsl,text/html"
                                    fileread="datamap[fieldMetadata.attribute]"
                                    path="datamap.newattachment_path"
-                                   title="{{handlerTitleInputFile('uploadfile_tooltip')}}" 
-                                   multiple/>
+                                   title="{{handlerTitleInputFile('uploadfile_tooltip')}}"
+                                   multiple
+                                   ng-click="addToQueue(datamap[fieldMetadata.attribute],datamap.newattachment_path)" />
                         </div>
                         <span></span>
                         <div>

@@ -13,16 +13,18 @@
                     var reader = new FileReader();
                     if (changeEvent.target.files.length > 0) {
                         //Getting the File extension.
-                        var temp = changeEvent.target.files[0].name.split(".").pop().toLowerCase();
-                        if (validFileTypes.indexOf(temp) == -1) {
-                            changeEvent.currentTarget.value = "";
-                            alertService.alert("Invalid file type. Allowed file types are:"+validFileTypes.join(', '));
-                            //Updating the model
-                            scope.$apply(function () {
-                                scope.fileread = undefined;
-                                scope.path = undefined;
-                            });
-                            return;
+                        for (i = 0; i < changeEvent.target.files.length; i++) {
+                            var temp = changeEvent.target.files[i].name.split(".").pop().toLowerCase();
+                            if (validFileTypes.indexOf(temp) == -1) {
+                                changeEvent.currentTarget.value = "";
+                                alertService.alert("Invalid file type. Allowed file types are:" + validFileTypes.join(', '));
+                                //Updating the model
+                                scope.$apply(function() {
+                                    scope.fileread = undefined;
+                                    scope.path = undefined;
+                                });
+                                return;
+                            }
                         }
                         flag = 1;
                         reader.onload = function (loadEvent) {
