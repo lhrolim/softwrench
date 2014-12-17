@@ -94,12 +94,24 @@
                                             ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                                             ng-enabled="isSelectEnabled(fieldMetadata)"
                                             data-associationkey="{{fieldMetadata.associationKey}}" />
+                                    <select id="{{formatId(fieldMetadata.target)}}"
+                                            class="hidden-phone form-control combobox"
+                                            ng-model="datamap[fieldMetadata.target]"
+                                            ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
+                                            ng-enabled="isSelectEnabled(fieldMetadata)"
+                                            data-associationkey="{{fieldMetadata.associationKey}}" />
                                 </div>
                             </div>
                             <div class="col-xs-6 autocompleteclientopendetails">
                                 <div ng-switch-default class="input-group">
                                     <select id="{{formatId(fieldMetadata.target)}}"
                                             class="hidden-phone form-control combobox combobox-dynamic"
+                                            ng-model="datamap[fieldMetadata.target]"
+                                            ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
+                                            ng-enabled="isSelectEnabled(fieldMetadata)"
+                                            data-associationkey="{{fieldMetadata.associationKey}}" />
+                                    <select id="{{formatId(fieldMetadata.target)}}"
+                                            class="hidden-phone form-control combobox"
                                             ng-model="datamap[fieldMetadata.target]"
                                             ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
                                             ng-enabled="isSelectEnabled(fieldMetadata)"
@@ -120,10 +132,22 @@
                                         ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
                                         data-associationkey="{{fieldMetadata.associationKey}}" />
+                                <select id="{{formatId(fieldMetadata.target)}}"
+                                        class="hidden-phone form-control combobox"
+                                        ng-model="datamap[fieldMetadata.target]"
+                                        ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
+                                        ng-enabled="isSelectEnabled(fieldMetadata)"
+                                        data-associationkey="{{fieldMetadata.associationKey}}" />
                             </div>
                             <div ng-switch-default>
                                 <select id="{{formatId(fieldMetadata.target)}}"
                                         class="hidden-phone form-control combobox combobox-dynamic"
+                                        ng-model="datamap[fieldMetadata.target]"
+                                        ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
+                                        ng-enabled="isSelectEnabled(fieldMetadata)"
+                                        data-associationkey="{{fieldMetadata.associationKey}}" />
+                                <select id="{{formatId(fieldMetadata.target)}}"
+                                        class="hidden-phone form-control combobox"
                                         ng-model="datamap[fieldMetadata.target]"
                                         ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
