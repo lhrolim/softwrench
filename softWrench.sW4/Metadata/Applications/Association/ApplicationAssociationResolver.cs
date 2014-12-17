@@ -121,7 +121,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                                     : BuildComplexLabel(attributeHolder, association);
 
                 if (association.ExtraProjectionFields.Count > 0) {
-                    options.Add(new MultiValueAssociationOption((string)value, label, attributeHolder));
+                    options.Add(new MultiValueAssociationOption((string)value, label, attributeHolder, association.ForceDistinctOptions));
                 } else {
 
                     options.Add(new AssociationOption(Convert.ToString(value), label));
@@ -172,6 +172,8 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 //if we have a schema then the projections should be all the fields out of it, except collections, instead of default labelfields
                 var entityMetatada = MetadataProvider.SlicedEntityMetadata(associationMetadata);
                 fields = entityMetatada.Attributes(EntityMetadata.AttributesMode.NoCollections).Select(a => a.Name).ToList();
+
+                
             }
 
             foreach (var field in fields) {

@@ -27,6 +27,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly string _phone;
         private readonly string _language;
         private readonly string _maximoPersonId;
+        private readonly string _storeloc;
         private readonly int? _timezoneOffset;
         private readonly UserPreferences _userPreferences;
         private readonly IList<Role> _roles;
@@ -58,6 +59,7 @@ namespace softWrench.sW4.Metadata.Security {
             _lastName = dbUser.LastName;
             _email = dbUser.Email;
             _orgId = dbUser.OrgId;
+            _storeloc = dbUser.Storeloc;
             _department = dbUser.Department;
             _phone = dbUser.Phone;
             _language = dbUser.Language;
@@ -140,6 +142,10 @@ namespace softWrench.sW4.Metadata.Security {
 
         public string Language {
             get { return _language; }
+        }
+
+        public string Storeloc {
+            get { return _storeloc; }
         }
 
         public string MaximoPersonId {

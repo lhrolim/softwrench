@@ -51,7 +51,10 @@ app.directive('sectionElementInput', function ($compile) {
             extraparameters: '=',
             elementid: '@',
             orientation: '@',
-            islabelless: '@'
+            islabelless: '@',
+            lookupAssociationsCode: '=',
+            lookupAssociationsDescription: '=',
+
         },
         template: "<div></div>",
         link: function (scope, element, attrs) {
@@ -66,7 +69,9 @@ app.directive('sectionElementInput', function ($compile) {
                 "association-schemas='associationSchemas'" +
                 "blockedassociations='blockedassociations'" +
                 "elementid='{{elementid}}'" +
-                "orientation='{{orientation}}' insidelabellesssection={{islabelless}}></crud-input-fields>"
+                "orientation='{{orientation}}' insidelabellesssection='{{islabelless}}'" +
+                "outerassociationcode='lookupAssociationsCode' outerassociationdescription='lookupAssociationsDescription' issection='true'" +
+                "></crud-input-fields>"
                 );
                 $compile(element.contents())(scope);
             }
@@ -91,12 +96,23 @@ app.directive('crudInputFields', function (contextService) {
             orientation: '@',
             insidelabellesssection: '@',
             previousdata: '=',
-            previousschema: '='
+            previousschema: '=',
+            outerassociationcode: '=',
+            outerassociationdescription: '=',
+            issection: '@'
         },
 
         link: function (scope, element, attrs) {
-            scope.lookupAssociationsCode = {};
-            scope.lookupAssociationsDescription = {};
+            if (scope.outerassociationcode && scope.issection == "true") {
+                //this is for sections, we receive it as parameters
+                scope.lookupAssociationsCode = scope.outerassociationcode;
+                scope.lookupAssociationsDescription = scope.outerassociationdescription;
+            } else {
+                scope.lookupAssociationsCode = {};
+                scope.lookupAssociationsDescription = {};
+            }
+
+            
         },
 
         controller: function ($scope, $http, $element, $injector, $timeout,

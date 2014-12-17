@@ -24,8 +24,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }*/
 
         private static SWDBHibernateDAO _swdbDao;
-        private const string application = "SR";
-
+        
         private SWDBHibernateDAO GetSWDBDAO() {
             if (_swdbDao == null) {
                 _swdbDao = SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));

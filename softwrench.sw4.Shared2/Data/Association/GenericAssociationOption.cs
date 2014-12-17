@@ -29,7 +29,7 @@ namespace softwrench.sw4.Shared2.Data.Association {
             return string.Format("Value: {0}, Label: {1}", Value, Label);
         }
 
-        public int CompareTo(object obj) {
+        public virtual int CompareTo(object obj) {
             var other = (GenericAssociationOption)obj;
             var labelComparison = System.String.Compare(Label, other.Label, System.StringComparison.Ordinal);
             if (labelComparison == 0) {

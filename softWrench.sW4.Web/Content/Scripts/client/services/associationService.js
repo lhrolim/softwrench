@@ -91,6 +91,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             // we only have the "value" on the datamap 
             var target = associationFieldMetadata.target;
             var selectedValue = datamap[target];
+
             if (selectedValue == null) {
                 return null;
             }
@@ -330,7 +331,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             var urlToUse = url("/api/generic/Data/UpdateAssociation?" + $.param(parameters));
             var jsonString = angular.toJson(fieldsTosubmit);
             var log = $log.getInstance('sw4.associationservice#updateAssociations');
-            log.info('going to server for dependat associations of {0}'.format(triggerFieldName));
+            log.info('going to server for dependent associations of {0}'.format(triggerFieldName));
             log.debug('Content: \n {0}'.format(jsonString));
             $http.post(urlToUse, jsonString).success(function (data) {
                 var options = data.resultObject;

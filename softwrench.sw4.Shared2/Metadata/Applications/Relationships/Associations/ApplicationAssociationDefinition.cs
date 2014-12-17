@@ -34,6 +34,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         private IList<String> _labelFields = new List<string>();
         private LabelData _labelData;
+        private bool _forceDistinctOptions;
         private ISet<ApplicationEvent> _eventsSet;
 
         public class LabelData {
@@ -62,7 +63,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public ApplicationAssociationDefinition() { }
 
         public ApplicationAssociationDefinition(string @from, LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
-            string showExpression, string toolTip, Boolean required, string defaultValue, bool hideDescription, string enableExpression = "true", ISet<ApplicationEvent> events = null)
+            string showExpression, string toolTip, Boolean required, string defaultValue, bool hideDescription, string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true)
             : base(from, labelData.Label, showExpression, toolTip) {
             _labelData = labelData;
             _label = labelData.Label;
@@ -74,6 +75,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             EnableExpression = enableExpression;
             IsRequired = required;
             _eventsSet = events;
+            _forceDistinctOptions = forceDistinctOptions;
             Qualifier = qualifier;
             HideDescription = hideDescription;
 
@@ -143,6 +145,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public Boolean Reverse {
             get { return EntityAssociation.Reverse; }
+        }
+
+        public bool ForceDistinctOptions {
+            get { return _forceDistinctOptions; }
         }
 
         public string ApplicationPath {

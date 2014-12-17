@@ -32,6 +32,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="itemnum"/>
           <field attribute="description"/>
           <field attribute="issueunit"/>
+          <field attribute="itemtype"/>
+          <field attribute="inventory_.itemnum"/>
+          <field attribute="inventory_.costtype"/>
+          <field attribute="inventory_.binnum"/>
         </schema>
       </schemas>
     </application>

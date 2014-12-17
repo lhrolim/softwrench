@@ -683,6 +683,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Site" attribute="siteid" readonly="true"/>
           <field attribute="physcnt" hidden="true"/>
         </schema>
+
+        <schema id="binLookupList" stereotype="list">
+          <field attribute="itemnum" label="Item" hidden="true"/>
+          <field attribute="binnum" label="Bin"/>
+          <field attribute="lotnum" label="Lot"/>
+          <field attribute="location" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="itemsetid" hidden="true"/>
+          <field attribute="curbal" label="Current Balance"/>
+        </schema>
+
+        <schema id="lotLookupList" stereotype="list">
+          <field attribute="itemnum" label="Item" hidden="true"/>
+          <field attribute="lotnum" label="Lot"/>
+          <field attribute="binnum" label="Bin"/>
+          <field attribute="location" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="itemsetid" hidden="true"/>
+          <field attribute="curbal" label="Current Balance"/>
+        </schema>
       </schemas>
     </application>
 
