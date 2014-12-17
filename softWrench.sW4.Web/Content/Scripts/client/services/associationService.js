@@ -182,6 +182,23 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     //should never happen, playing safe here
                     continue;
                 }
+            }
+        },
+
+        restorePreviousValues: function (scope, serverOptions, datamap) {
+            var log = $log.getInstance('sw4.associationservice#restorePrevious');
+            for (var dependantFieldName in serverOptions) {
+
+                //this iterates for list of fields which were dependant of a first one. 
+                var array = instantiateIfUndefined(serverOptions[dependantFieldName]);
+
+                log.debug('restoring previous values for {0}'.format(dependantFieldName));
+
+                var associationFieldMetadatas = fieldService.getDisplayablesByAssociationKey(scope.schema, dependantFieldName);
+                if (associationFieldMetadatas == null) {
+                    //should never happen, playing safe here
+                    continue;
+                }
                 var fn = this;
                 $.each(associationFieldMetadatas, function (index, value) {
                     if (value.target == null) {
@@ -194,7 +211,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                         element.hide();
                         element.show();
                     }
-                    //clear datamap for the association updated -->This is needed due to a IE9 issue
+                    //                    clear datamap for the association updated -->This is needed due to a IE9 issue
                     var previousValue = datamap[value.target];
                     datamap[value.target] = null;
 
@@ -203,7 +220,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                         return;
                     }
 
-
+                    //
                     if (previousValue != null) {
                         for (var j = 0; j < array.associationData.length; j++) {
                             if (array.associationData[j].value == previousValue) {
@@ -242,9 +259,12 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                             }
                         }
                     }
-                });
+                }
+                );
             }
         },
+
+
 
         getEagerAssociations: function (scope) {
             var associations = fieldService.getDisplayablesOfTypes(scope.schema.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
@@ -274,6 +294,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 return false;
             }
             var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
+            var restorePreviousValues = this.restorePreviousValues;
             var postAssociationHook = this.postAssociationHook;
 
             var applicationName = schema.applicationName;
@@ -309,6 +330,8 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     $rootScope.avoidspin = false;
                     $rootScope.$broadcast("sw_associationsupdated", scope.associationOptions);
                 }
+                //let´s restore after the hooks have been runned to avoid any stale data
+                restorePreviousValues(scope, options, fields);
             }).error(
             function data() {
             });

@@ -33,6 +33,10 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
     };
 
     var checkCostCenterAvailability = function (availablecostcenters, costCenter, field) {
+        if (!availablecostcenters) {
+            //asset deselected
+            return false;
+        }
         for (var i = 0; i < availablecostcenters.length; i++) {
             if (availablecostcenters[i][field] == costCenter) {
                 return true;
@@ -60,6 +64,8 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
                 //if the asset had a costcenter that is not one of the user´s costcentes, we need to remove it
                 if (checkCostCenterAvailability(availablecostcenters, costCenter, 'value')) {
                     event.fields['costcenter'] = costCenter;
+                } else {
+                    event.fields['costcenter'] = null;
                 }
             } else {
                 //if replace then we have a readonly costcenter instead of an optionfield, so we need the label as the "value"
