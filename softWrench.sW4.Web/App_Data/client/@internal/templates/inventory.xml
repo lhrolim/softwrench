@@ -334,7 +334,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <commandgroup position="detailform">
               <removecommand id="save"/>
               <removecommand id="cancel"/>
-              <command id="return" position="&lt;print" label="Return" service="inventoryService" method="returnInvIssue" parameters="datamap,$scope" successmessage="Return created"/>
+              <command id="return" position="&lt;print" label="Submit" service="inventoryService" method="returnInvIssue" parameters="datamap,$scope" successmessage="Return created"/>
               <command id="cancelinvissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" parameters="schema,datamap" position=">print"/>
             </commandgroup>
           </commandbars>

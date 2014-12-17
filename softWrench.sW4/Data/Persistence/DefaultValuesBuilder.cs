@@ -45,7 +45,7 @@ namespace softWrench.sW4.Data.Persistence {
             if (fields.Any(f => f.Attribute == "siteid")) {
                 dictionary["siteid"] = user.SiteId;
             }
-            if (fields.Any(f => f.Attribute == "siteid")) {
+            if (fields.Any(f => f.Attribute == "storeloc")) {
                 dictionary["storeloc"] = user.Storeloc;
             }
             var schemaDefaultValues = new DataMap(application.Name, dictionary, mappingType);

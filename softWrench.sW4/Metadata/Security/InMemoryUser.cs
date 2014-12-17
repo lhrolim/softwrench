@@ -59,13 +59,13 @@ namespace softWrench.sW4.Metadata.Security {
             _lastName = dbUser.LastName;
             _email = dbUser.Email;
             _orgId = dbUser.OrgId;
+            _storeloc = dbUser.Storeloc;
             _department = dbUser.Department;
             _phone = dbUser.Phone;
             _language = dbUser.Language;
             _dbId = dbUser.Id;
             _timezoneOffset = timezoneOffset;
             _maximoPersonId = dbUser.MaximoPersonId;
-            _storeloc = dbUser.Storeloc;
             _personGroups = (dbUser.PersonGroups ?? new HashedSet<PersonGroupAssociation>());
             var userProfiles = initializedProfiles as UserProfile[] ?? initializedProfiles.ToArray();
             _profiles = userProfiles;
