@@ -352,6 +352,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeItem"/>
             </association>
             <field attribute="inventory_.item_.itemtype" label="Item Type" readonly="true"/>
+            <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid">
+              <renderer type="lookup"/>
+            </association>
             <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
             </field>
@@ -471,6 +474,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
             </association>
             <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
+            <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid">
+              <renderer type="lookup"/>
+            </association>
             <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
             </field>
