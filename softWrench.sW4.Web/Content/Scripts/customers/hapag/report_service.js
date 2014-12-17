@@ -164,7 +164,7 @@ app.factory('reportservice', function ($http, alertService, fieldService, search
 
         viewITCReport: function (datamap, schema) {
 
-            var validationErrors = validationService.validate(schema.displayables, datamap);
+            var validationErrors = validationService.validate(schema,schema.displayables, datamap);
             if (validationErrors.length > 0) {
                 //interrupting here, can´t be done inside service
                 return;
