@@ -1,4 +1,5 @@
 ﻿using softWrench.sW4.Data.API;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Web.Common;
 using System;
@@ -43,7 +44,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
             if (value.RedirectURL == null) {
                 value.RedirectURL = url;
             }
-            if (value.CrudSubTemplate == null && redirectAttribute != null && redirectAttribute.CrudSubTemplate!=null) {
+            if (value.CrudSubTemplate == null && redirectAttribute != null && redirectAttribute.CrudSubTemplate != null) {
                 if (!redirectAttribute.CrudSubTemplate.StartsWith("/Content")) {
                     redirectAttribute.CrudSubTemplate = "/Content" + redirectAttribute.CrudSubTemplate;
                 }
@@ -52,11 +53,21 @@ namespace softWrench.sW4.Web.SPF.Filters {
             value.TimeStamp = DateTime.Now;
 
             var actionArguments = LookupArguments(actionExecutedContext.ActionContext);
+            if (value is ApplicationDetailResult) {
+                var detailResult = value as ApplicationDetailResult;
+                var fixedTitle = detailResult.Schema.GetProperty(ApplicationSchemaPropertiesCatalog.WindowPopupHeaderTitle);
+                if (fixedTitle != null) {
+                    value.Title = fixedTitle;
+                }
+                //to avoid any further evaluation
+                return;
+            }
+
             if (actionArguments != null && !String.IsNullOrWhiteSpace(actionArguments.Title)) {
                 value.Title = actionArguments.Title;
             } else if (value.Title == null && redirectAttribute != null) {
                 value.Title = redirectAttribute.Title;
-            }
+            } 
         }
 
         private static IDataRequest LookupArguments(HttpActionContext actionContext) {

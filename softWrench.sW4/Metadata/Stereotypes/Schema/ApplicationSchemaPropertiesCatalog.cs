@@ -54,6 +54,11 @@
         /// Defines strategy on how to render the popup titltes
         /// </summary>
         public static string WindowPopupTitleStrategy = "popup.window.titlestrategy";
+
+        /// <summary>
+        /// Fix a Header title for the popups
+        /// </summary>
+        public static string WindowPopupHeaderTitle = "popup.window.headertitle";
         /// <summary>
         /// whether to show or not the print command
         /// </summary>

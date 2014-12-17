@@ -96,7 +96,7 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
             contextService.insertIntoContext("currentmodule", leaf.module);
             $log.getInstance('sw4.menu').info("current module: " + leaf.module);
 
-            var title = leaf.parameters['application'] + " - " + leaf.title;
+            var title = 'New ' +  leaf.parameters['application'] + " - " + leaf.title;
             redirectService.redirectToAction(title, leaf.controller, leaf.action, leaf.parameters, leaf.target);
         },
 

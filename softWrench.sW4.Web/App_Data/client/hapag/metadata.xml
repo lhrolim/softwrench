@@ -1871,6 +1871,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="showremarktext" value="true"/>
             <property key="nextschema.schemaid" value="creationSummary"/>
             <property key="popup.window.titlestrategy" value="schematitle"/>
+            <property key="popup.window.headertitle" value="New Imac - Add Subcomponent"/>
           </properties>
 
           <section id="requestdetails" parameters="detaildescription=Request Details">
@@ -1904,6 +1905,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <properties>
             <property key="nextschema.schemaid" value="creationSummary"/>
             <property key="popup.window.titlestrategy" value=""/>
+            <property key="popup.window.headertitle" value="New Imac - Install"/>
           </properties>
 
           <section id="requestdetails" parameters="detaildescription=Request Details">
@@ -1965,6 +1967,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="showusage" value="false"/>
             <property key="nextschema.schemaid" value="creationSummary"/>
             <property key="popup.window.titlestrategy" value="schematitle"/>
+            <property key="popup.window.headertitle" value="New Imac - Move"/>
           </properties>
           <!--          <reference id="servicelabel" properties="servicename=Move"/>-->
           <section id="requestdetails" parameters="detaildescription=Request Details">
@@ -2002,6 +2005,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="nextschema.schemaid" value="creationSummary"/>
             <property key="popup.window.titlestrategy" value=""/>
             <property key="showusage" value="false"/>
+            <property key="popup.window.headertitle" value="New Imac - Remove"/>
           </properties>
           <section id="requestdetails" parameters="detaildescription=Request Details">
             <reference id="servicelabel"/>
@@ -2069,6 +2073,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <properties>
             <property key="nextschema.schemaid" value="creationSummary"/>
             <property key="popup.window.titlestrategy" value=""/>
+            <property key="popup.window.headertitle" value="New Imac - Replace"/>
           </properties>
           <section id="requestdetails" parameters="detaildescription=Request Details">
             <reference id="servicelabel"/>
@@ -2153,6 +2158,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="showibmtechnician" value="false"/>
             <property key="nextschema.schemaid" value="creationSummary"/>
             <property key="popup.window.titlestrategy" value="schematitle"/>
+            <property key="popup.window.headertitle" value="New Imac - Update Asset Data"/>
           </properties>
 
           <section id="requestdetails" parameters="detaildescription=Request Details">

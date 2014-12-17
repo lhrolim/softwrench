@@ -190,7 +190,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 						  title="Install" tooltip="Click to create a new Install IMAC Request"
 							 action="ListSchemas" controller="Data"
 							 parameters="application=imac;
-            title=Install;label=Service;placeholder=--Select One--;
+            title=New Imac - Install;label=Service;placeholder=--Select One--;
             filter.stereotype=detail;filter.mode=input;filter.namePattern=install;popupmode=browser" />
       
 			<application id="newmoveimac" title="Move" tooltip="Click to create a new Move IMAC Request" schema="move" ref="imac" parameters="popupmode=browser"/>

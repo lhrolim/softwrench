@@ -3,6 +3,7 @@ using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
@@ -120,7 +121,7 @@ namespace softWrench.sW4.Web.Controllers {
             var nextschemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, nextSchemaKey, platform);
             var response = DoExecute(application, new JObject(), id, OperationConstants.CRUD_DELETE, schemaKey, mockmaximo, nextschemaKey, platform);
             var defaultMsg = String.Format("{0} {1} deleted successfully", application, id);
-            response.SuccessMessage = _i18NResolver.I18NValue("general.defaultcommands.delete.confirmmsg", defaultMsg,null, new object[]{
+            response.SuccessMessage = _i18NResolver.I18NValue("general.defaultcommands.delete.confirmmsg", defaultMsg, null, new object[]{
                 application, id});
             return response;
         }
@@ -143,7 +144,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// </summary>
         public IApplicationResponse Post([NotNull] string application, JObject json,
             ClientPlatform platform, [NotNull] string currentSchemaKey, string nextSchemaKey = null, bool mockmaximo = false) {
-            
+
             Log.InfoFormat("PERFORMANCE - Data controller POST started at {0}.", DateTime.Now);
             var before = Stopwatch.StartNew();
 
@@ -152,7 +153,7 @@ namespace softWrench.sW4.Web.Controllers {
             }
             var schemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, currentSchemaKey, platform);
             _contextLookuper.FillContext(schemaKey);
-            var nextschemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, nextSchemaKey, platform);            
+            var nextschemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, nextSchemaKey, platform);
             var response = DoExecute(application, json, null, OperationConstants.CRUD_CREATE, schemaKey, mockmaximo, nextschemaKey, platform);
 
             var msDelta = LoggingUtil.MsDelta(before);
@@ -264,10 +265,19 @@ namespace softWrench.sW4.Web.Controllers {
                 var matchesMode = schema.Key.Mode == null || (schema.Key.Mode == filter.Mode);
                 var matchesStereotype = filter.Stereotype == null || filter.Stereotype == schema.Value.Stereotype;
                 var matchesName = filter.NamePattern == null || schema.Key.SchemaId.StartsWith(filter.NamePattern);
-                if (matchesMode && matchesStereotype && matchesName && !schema.Value.Abstract) {
-                    resultingSchemas.Add(schema.Value);
+                if (matchesMode && matchesStereotype && matchesName) {
+                    if (!schema.Value.Abstract) {
+                        resultingSchemas.Add(schema.Value);
+                    } else {
+                        var fixedTitle = schema.Value.GetProperty(ApplicationSchemaPropertiesCatalog.WindowPopupHeaderTitle);
+                        if (fixedTitle != null) {
+                            title = fixedTitle;
+                        }
+                    }
                 }
             }
+
+
             return new SchemaChoosingDataResponse(resultingSchemas, label, placeholder) { Title = title };
         }
 
