@@ -477,8 +477,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
             
             doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
-            var defaultBinnum = parameters['fields']['inventory_.binnum'];
-            parameters['fields']['binnum'] = defaultBinnum;
+            //var defaultBinnum = parameters['fields']['inventory_.binnum'];
+            //parameters['fields']['binnum'] = defaultBinnum;
         },
 
         invUse_afterChangeFromStoreroom: function(parameters) {
