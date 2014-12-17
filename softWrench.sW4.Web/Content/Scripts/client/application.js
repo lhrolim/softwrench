@@ -171,8 +171,14 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
             window.document.title = String.format(overridenTitle, id);
             return;
         }
-        if (strategy == "idonly") {
+        if (nullOrEmpty(strategy)) {
+            window.document.title = scope.title;
+        }
+        else if (strategy == "idonly") {
             window.document.title = id;
+            if (id == null) {
+                window.document.title = scope.title;
+            }
         } else if (strategy == "nameandid") {
             window.document.title = scope.schema.applicationName + " " + id;
         } else if (strategy == "schematitle") {
