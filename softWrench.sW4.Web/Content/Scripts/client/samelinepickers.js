@@ -37,6 +37,14 @@ function SamelinePickersController($scope, $rootScope, formatService) {
     };
 
     doInit();
+
+    $scope.isMobile = function () {
+        return isMobile();
+    };
+
+    $scope.isDesktop = function () {
+        return isDesktop();
+    };
 }
 
 var hideKeyboard = function () {

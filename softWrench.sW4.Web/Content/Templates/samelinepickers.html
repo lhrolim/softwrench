@@ -2,7 +2,7 @@
 <div class="form-group samelinepickers" ng-controller="SamelinePickersController">
     <input type="hidden" ng-model="datamap[fieldMetadata.parameters['joinattribute']]" />
     <div class="col-md-6 clearfix">
-        <div class="input-group" data-datepicker="true" style="float: left">
+        <div ng-if="isDesktop()" class="input-group" data-datepicker="true" style="float: left">
             <input type="text" ng-model="date1"
                    data-original-attribute="{{date1}}"
                    data-date-time
@@ -17,10 +17,11 @@
                 <i class="glyphicon glyphicon-calendar"></i>
             </span>
         </div>
+        <input ng-if="isMobile()" type="date" class="form-control" ng-model="date1">
     </div>
 
     <div class="col-md-6 clearfix">
-        <div class="input-group" data-datepicker="true">
+        <div ng-if="isDesktop()" class="input-group" data-datepicker="true">
             <input type="text" ng-model="date2"
                    data-original-attribute="{{date2}}"
                    data-date-time
@@ -35,6 +36,7 @@
                 <i class="glyphicon glyphicon-time"></i>
             </span>
         </div>
+        <input ng-if="isMobile()" type="time" class="form-control" ng-model="date2">
     </div>
 </div>
 

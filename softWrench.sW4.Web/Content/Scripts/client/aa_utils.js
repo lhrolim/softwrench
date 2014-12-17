@@ -49,6 +49,66 @@ var BrowserDetect =
 };
 BrowserDetect.init();
 
+var DeviceDetect =
+{
+    init: function () {
+        this.os = this.searchString(this.dataOS) || 'Unknown';
+        this.catagory = this.getType(this.os) || 'Unknown';
+    },
+
+    searchString: function (data) {
+        for (var i = 0 ; i < data.length ; i++) {
+            var dataString = data[i].string;
+            this.versionSearchString = data[i].subString;
+
+            if (dataString.indexOf(data[i].subString) != -1) {
+                return data[i].identity;
+            }
+        }
+    },
+
+    getType: function (os) {
+        if (os === 'Unknown') {
+            return;
+        }
+
+        var catagory;
+
+        switch (os) {
+            case 'Windows':
+            case 'Macintosh':
+            default:
+                catagory = 'Desktop';
+                break;
+            case 'Android':
+            case 'iPhone':
+            case 'iPad':
+                catagory = 'Mobile';
+        }
+
+        return catagory;
+    },
+
+    dataOS:
+    [
+        { string: navigator.userAgent, subString: 'Windows', identity: 'Windows' },
+        { string: navigator.userAgent, subString: 'Macintosh', identity: 'Macintosh' },
+        { string: navigator.userAgent, subString: 'Android', identity: 'Android' },
+        { string: navigator.userAgent, subString: 'iPhone', identity: 'iPhone' },
+        { string: navigator.userAgent, subString: 'iPad', identity: 'iPad' }
+    ]
+
+};
+DeviceDetect.init();
+
+function isMobile() {
+    return DeviceDetect.catagory == 'Mobile';
+};
+
+function isDesktop() {
+    return DeviceDetect.catagory == 'Desktop';
+};
+
 var spin;
 
 function instantiateIfUndefined(obj, nullcheck) {
