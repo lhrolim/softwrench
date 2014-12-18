@@ -307,6 +307,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="itemnum" label="Item" readonly="true"/>
           <field attribute="item_.description" label="Description" readonly="true"/>
+          <field attribute="rotassetnum" label="Rotating Asset" readonly="true"/>
           <field attribute="refwo" label="Work Order" readonly="true"/>
           <field attribute="issueto" label="Issued To" readonly="true"/>
           <field attribute="assetnum" label="Asset" readonly="true"/>
@@ -352,6 +353,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeItem"/>
             </association>
             <field attribute="inventory_.item_.itemtype" label="Item Type" readonly="true"/>
+            <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
+              <renderer type="lookup"/>
+            </association>
             <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
             </field>
@@ -380,7 +384,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLotBalance"/>
             </field>
             <field attribute="#curbal" label="Current Balance" readonly="true"/>
-            <field attribute="quantity" label="Issue Quantity" default="1">
+            <field attribute="quantity" label="Issue Quantity" default="1" required="true">
               <renderer type="numericinput" params="min=1;max=@curbal;"/>
             </field>
             <field attribute="inventory_.location" hidden="true" />
@@ -463,7 +467,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" required="true">
               <renderer type="lookup"/>
             </association>
-            <association label="Storeroom" target="storeloc" default="@storeloc" labelfield="storeroom_.description" extraprojectionvalues="costtype,itemtype" required="true" dependantfields="siteid">
+            <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" extraprojectionvalues="description" dependantfields="siteid" required="true" >
               <renderer type="lookup"/>
             </association>
             <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,storeloc" required="true">
@@ -471,6 +475,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
             </association>
             <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
+            <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
+              <renderer type="lookup"/>
+            </association>
             <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
             </field>
@@ -499,7 +506,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLotBalance"/>
             </field>
             <field attribute="#curbal" label="Current Balance" readonly="true"/>
-            <field attribute="quantity" label="Issue Quantity" default="1">
+            <field attribute="quantity" label="Issue Quantity" default="1" required="true">
               <renderer type="numericinput" params="min=1;"/>
             </field>
           </section>

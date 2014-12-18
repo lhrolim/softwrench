@@ -139,6 +139,7 @@
                                             <select class="hidden-phone form-control combobox"
                                                     ng-init="handleDefaultValue(dm.fields,column)"
                                                     ng-model="searchData[column.target]"
+                                                    ng-change="refreshGrid()"
                                                     ng-options="option.value as i18NOptionField(option,column,schema)
                                                 for option in GetAssociationOptions(column,true)" />
 

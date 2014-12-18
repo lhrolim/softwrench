@@ -696,6 +696,14 @@ app.directive('crudInputFields', function (contextService) {
                 }
                 return null;
             };
+
+            $scope.isMobile = function () {
+                return isMobile();
+            };
+
+            $scope.isDesktop = function () {
+                return isDesktop();
+            };
         }
     }
 });

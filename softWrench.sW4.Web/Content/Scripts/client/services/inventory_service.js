@@ -27,6 +27,54 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         redirectService.goToApplicationView("invuse", "newdetail", "Input", null, null, null);
     };
 
+    var submitInvIssueRec = function (datamap, clonedCompositionData, index) {
+        if (index == clonedCompositionData.length) {
+            return;
+        }
+
+        var fields = clonedCompositionData[index];
+        if (fields['matusetransid'] != null) {
+            submitInvIssueRec(datamap, clonedCompositionData, ++index);
+            return;
+        }
+
+        if (fields['binnum'] == null) {
+            fields['binnum'] = "";
+        }
+
+        var newIssueItem = {};
+        newIssueItem['matusetransid'] = null;
+        newIssueItem['rowstamp'] = null;
+        newIssueItem['quantity'] = fields['quantity'];
+        newIssueItem['issuetype'] = 'ISSUE';
+        newIssueItem['itemnum'] = fields['itemnum'];
+        newIssueItem['location'] = fields['location'];
+        newIssueItem['unitcost'] = fields['unitcost'];
+        newIssueItem['binnum'] = fields['binnum'];
+        newIssueItem['siteid'] = fields['siteid'];
+        newIssueItem['storeloc'] = datamap['#storeloc'];
+        newIssueItem['refwo'] = datamap['#refwo'];
+        newIssueItem['issueto'] = datamap['#issueto'];
+        newIssueItem['assetnum'] = datamap['#assetnum'];
+        newIssueItem['gldebitacct'] = (fields['gldebitacct'] == null) ?
+        datamap['#gldebitacct'] : fields['gldebitacct'];
+
+        var jsonString = angular.toJson(newIssueItem);
+        var httpParameters = {
+            application: "invissue",
+            platform: "web",
+            currentSchemaKey: "editinvissuedetail.input.web"
+        };
+        restService.invokePost("data", "post", httpParameters, jsonString, function() {
+            fields['matusetransid'] = -1;
+            submitInvIssueRec(datamap, clonedCompositionData, ++index);
+            return;
+        }, function() {
+            submitInvIssueRec(datamap, clonedCompositionData, ++index);
+            return;
+        });
+    };
+
     var setBatchIssueBin = function(parameters) {
         var itemnum = parameters['fields']['itemnum'];
         var siteid = parameters['fields']['siteid'];
@@ -274,44 +322,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
         submitNewBatchIssue: function(schema, datamap) {
             var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
-
-            for (var i = 0; i < clonedCompositionData.length; i++) {
-                var fields = clonedCompositionData[i];
-                if (fields['matusetransid'] != null) {
-                    continue;
-                }
-
-                if (fields['binnum'] == null) {
-                    fields['binnum'] = "";
-                }
-
-                var newIssueItem = {};
-                newIssueItem['matusetransid'] = null;
-                newIssueItem['rowstamp'] = null;
-                newIssueItem['quantity'] = fields['quantity'];
-                newIssueItem['issuetype'] = 'ISSUE';
-                newIssueItem['itemnum'] = fields['itemnum'];
-                newIssueItem['location'] = fields['location'];
-                newIssueItem['unitcost'] = fields['unitcost'];
-                newIssueItem['binnum'] = fields['binnum'];
-                newIssueItem['siteid'] = fields['siteid'];
-                newIssueItem['storeloc'] = datamap['#storeloc'];
-                newIssueItem['refwo'] = datamap['#refwo'];
-                newIssueItem['issueto'] = datamap['#issueto'];
-                newIssueItem['assetnum'] = datamap['#assetnum'];
-                newIssueItem['gldebitacct'] = (fields['gldebitacct'] == null) ?
-                datamap['#gldebitacct'] : fields['gldebitacct'];
-
-                var jsonString = angular.toJson(newIssueItem);
-                var httpParameters = {
-                    application: "invissue",
-                    platform: "web",
-                    currentSchemaKey: "editinvissuedetail.input.web"
-                };
-                restService.invokePost("data", "post", httpParameters, jsonString, function() {
-                    fields['matusetransid'] = -1;
-                });
-            };
+            submitInvIssueRec(datamap, clonedCompositionData, 0);
         },
         cancelNewInvIssue: function() {
             redirectService.goToApplicationView("invissue", "list", null, null, null, null);
