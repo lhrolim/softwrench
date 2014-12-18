@@ -34,7 +34,7 @@
                         var current = 0;
                         var readFiles= function () {
                             if (changeEvent.target.files.length > 0) { // if we still have files left
-                                var fileNew = changeEvent.target.files[current]; // remove first from queue and store in file
+                                var fileNew = changeEvent.target.files[current]; // get the first from queue and store in file
                                 current++;
                                 if (current == changeEvent.target.files.length + 1) {
                                     scope.fileread = fileRead;
@@ -55,20 +55,6 @@
                             }
                         };
                         readFiles();
-//                        reader.readAsDataURL(changeEvent.target.files[0]);
-//                        for (var i = 1, f; f = changeEvent.target.files[i]; i++) {
-//                            reader.onload = function(loadEvent) {
-//                                scope.$apply(function() {
-//                                    if (flag == 1) {
-//                                        fileRead.push(loadEvent.target.result);
-//                                        reader.readAsDataURL(f);
-//                                    }
-//                                });
-//                            };
-                             
-                            
-//                        }
-
                         for (i = 0; i < changeEvent.target.files.length; i++) {
                             file = changeEvent.target.files[i];
                             fileName.push(file.name);
