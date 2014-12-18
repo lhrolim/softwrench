@@ -305,7 +305,7 @@
 //        Stop autofocus on detail page load (update to v1.1.6)
         var val = this.$element.val();
         if (!this.source || ($.inArray(val, this.source) == -1 || val.trim() == "")) {
-            this.$element.val('');
+            this.clearElement();
         }
     }
 
