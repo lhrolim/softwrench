@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmpAutocompleteClient, cmpAutocompleteServer, screenshotService, fieldService) {
+app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmpAutocompleteClient, cmpAutocompleteServer, cmpCombobox, screenshotService, fieldService) {
 
     return {
 
@@ -33,6 +33,8 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmpAutocomp
                 //                cmpAutocompleteServer.unblock(displayable, scope);
             else if (rendererType == 'combodropdown') {
                 cmpComboDropdown.block(displayable.associationKey);
+            }else if (rendererType == "combo") {
+                cmpCombobox.refreshFromAttribute(displayable);
             }
             this.digestAndrefresh(displayable, scope);
         },
@@ -40,9 +42,9 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmpAutocomp
 
         digestAndrefresh: function (displayable, scope) {
             var rendererType = displayable.rendererType;
-            if (rendererType != 'autocompleteclient' && rendererType != 'autocompleteserver' && rendererType != 'combodropdown') {
-                return;
-            }
+            //            if (rendererType != 'autocompleteclient' && rendererType != 'autocompleteserver' && rendererType != 'combodropdown') {
+            //                return;
+            //            }
             try {
                 scope.$digest();
                 this.refresh(displayable, scope, true);
@@ -74,6 +76,8 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmpAutocomp
                 cmpAutocompleteServer.refreshFromAttribute(displayable, scope);
             } else if (rendererType == 'combodropdown') {
                 cmpComboDropdown.refreshFromAttribute(attribute);
+            } else if (rendererType == 'default' || rendererType == 'combo') {
+                cmpCombobox.refreshFromAttribute(displayable);
             }
         },
 

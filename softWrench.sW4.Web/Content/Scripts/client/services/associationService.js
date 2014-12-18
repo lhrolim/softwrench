@@ -206,12 +206,6 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 scope.associationOptions[dependantFieldName] = array.associationData;
                 scope.blockedassociations[dependantFieldName] = (array.associationData == null || array.associationData.length == 0);
                 scope.associationSchemas[dependantFieldName] = array.associationSchemaDefinition;
-
-                var associationFieldMetadatas = fieldService.getDisplayablesByAssociationKey(scope.schema, dependantFieldName);
-                if (associationFieldMetadatas == null) {
-                    //should never happen, playing safe here
-                    continue;
-                }
             }
         },
 
@@ -247,7 +241,6 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     }
                     //                    clear datamap for the association updated -->This is needed due to a IE9 issue
                     var previousValue = datamap[value.target];
-                    datamap[value.target] = "$null$ignorewatch";
 
                     if (array.associationData == null) {
                         //if no options returned from the server, nothing else to do
@@ -256,6 +249,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
                     //
                     if (previousValue != null) {
+                        datamap[value.target] = "$null$ignorewatch";
                         previousValue =previousValue.replace("$ignorewatch", "");
                         for (var j = 0; j < array.associationData.length; j++) {
                             if (array.associationData[j].value == previousValue) {
