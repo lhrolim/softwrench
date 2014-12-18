@@ -153,9 +153,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         createIssue: function() {
             redirectService.goToApplicationView("invissue", "newInvIssueDetail", "input", null, null, null);
         },
+
         navToBatchFilter: function() {
             redirectService.goToApplicationView("invissue", "batchInvIssueFilter", "input", null, null, null);
         },
+
         formatQtyReturnedList: function(parameters) {
             var value = parameters.value;
             var column = parameters.column;
@@ -167,6 +169,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
             return formatQtyReturned(dm, value, column);
         },
+
         formatQtyList: function(parameters) {
             var value = parameters.value;
             var column = parameters.column;
@@ -178,6 +181,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
             return formatQty(dm, value, column);
         },
+
         formatQtyReturnedDetail: function(parameters) {
             var value = parameters.value;
             var column = parameters.column;
@@ -192,6 +196,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
             return;
         },
+
         formatQtyDetail: function(parameters) {
             var value = parameters.value;
             var column = parameters.column;
@@ -206,7 +211,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
             return;
         },
-
 
         returnInvIssue: function(matusetransitem) {
             var returnQty = matusetransitem['#quantityadj'];
@@ -241,6 +245,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 modalService.hide();
             });
         },
+
         invissuelistclick: function(datamap, schema) {
             var param = {};
             param.id = datamap['matusetransid'];
@@ -320,13 +325,16 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             param.id = datamap['refwo'];
             redirectService.goToApplicationView('invissuewo', 'newdetail', null, null, param, newDatamap);
         },
+
         submitNewBatchIssue: function(schema, datamap) {
             var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
             submitInvIssueRec(datamap, clonedCompositionData, 0);
         },
+
         cancelNewInvIssue: function() {
             redirectService.goToApplicationView("invissue", "list", null, null, null, null);
         },
+
         displayNewIssueModal: function(parentschema, parentdatamap) {
             var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
             var user = contextService.getUserData();
@@ -346,10 +354,12 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
             modalService.show(compositionschema, itemDatamap, null, parentdatamap, parentschema);
         },
+
         hideNewIssueModal: function (parameters) {
             modalService.hide();
             parameters['datamap'] = null;
         },
+
         batchissuelistclick: function(datamap, column, schema) {
             var newDatamap = {};
             angular.copy(datamap, newDatamap);
@@ -357,9 +367,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             modalService.show(schema, newDatamap);
 
         },
+
         cancelNewInvIssueItem: function() {
             modalService.hide();
         },
+
         addItemToBatch: function (datamap) {
             var itemtype = datamap['inventory_.item_.itemtype'];
             var issueto = datamap['issueto'];
@@ -398,6 +410,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             clonedCompositionData.push(newissue);
             modalService.hide();
         },
+
         updateItemInBatch: function(datamap) {
             var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
 
@@ -440,6 +453,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
             modalService.hide();
         },
+
         invIssue_afterChangeWorkorder: function(parameters) {
             if (nullOrEmpty(parameters.fields['refwo'])) {
                 parameters.fields['refwo'] = null;
@@ -550,31 +564,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             });
         },
 
-        batchinvIssue_afterChangeBin: function(parameters) {
-            var itemnum = parameters['fields']['itemnum'];
-            var siteid = parameters['fields']['siteid'];
-            var storeloc = parameters['fields']['storeloc'];
-            var binnum = parameters['fields']['binnum'];
-            if (!nullOrEmpty(binnum)) {
-                if (!nullOrEmpty(itemnum) &&
-                    !nullOrEmpty(siteid) &&
-                    !nullOrEmpty(storeloc)) {
-                    var searchData = {
-                        itemnum: itemnum,
-                        siteid: siteid,
-                        location: parameters['fields']['storeloc']
-                    };
-                    getBinQuantity(searchData, parameters, '#curbal', binnum);
-                } else {
-                    parameters['fields']['#curbal'] = null;
-                }
-            } else {
-                setBatchIssueBin(parameters);
-            }
-
-        },
-
-
         invIssue_afterChangeAsset: function(parameters) {
             //Sets the associated GL Debit Account
             //if a workorder isn't already specified
@@ -631,22 +620,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             createInvUse(schema, "TRANSFER");
         },
 
-
-        getIssueBinQuantity: function(parameters) {
-            var binnum = parameters['fields']['binnum'];
-            if (binnum == '') {
-                binnum = null;
-            }
-            var lotnum = parameters['fields']['lotnum'];
-            var searchData = {
-                itemnum: parameters['fields']['itemnum'],
-                siteid: parameters['fields']['siteid'],
-                itemsetid: parameters['fields']['inventory_.item_.itemsetid'],
-                location: parameters['fields']['storeloc']
-            };
-            getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
-        },
-
         getReserveBinQuantity: function(parameters) {
             var binnum = parameters['fields']['#frombin'];
             var lotnum = parameters['fields']['#fromlot'];
@@ -671,34 +644,21 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             };
             getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
         },
+
         invUse_afterChangeFromBin: function(parameters) {
-
-            if (parameters['fields']['invuseline_.frombin'] == null ||
-                parameters['fields']['invuseline_.frombin'].trim() == "") {
-                parameters['fields']['#curbal'] = null;
-                return;
-            }
-
-            var lotnum = parameters['fields']['invuseline_.fromlot'];
-            var binnum = parameters['fields']['invuseline_.frombin'];
-            var searchData = {
-                itemnum: parameters['fields']['invuseline_.itemnum'],
-                siteid: parameters['fields']['inventory_.siteid'],
-                itemsetid: parameters['fields']['inventory_.itemsetid'],
-                location: parameters['fields']['fromstoreloc']
-            };
-            getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
-            return;
+            parameters['fields']['lotnum'] = parameters['fields']['invuseline_.lotnum'];
+            parameters['fields']['#curbal'] = parameters['fields']['invuseline_.curbal'];
+            $rootScope.$digest();
         },
-        invUse_afterChangeItem: function(parameters) {
 
+        invUse_afterChangeItem: function(parameters) {
             if (parameters['fields']['invuseline_.itemnum'] == null ||
                 parameters['fields']['invuseline_.itemnum'].trim() == "") {
                 parameters['fields']['fromstoreloc'] = null;
                 return;
             }
-
         },
+
         invUse_afterChangeSite: function(parameters) {
 
             if (parameters['fields']['invuseline_.siteid'] == null ||
@@ -712,6 +672,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
 
         },
+
         submitInvIssue: function(schema, datamap) {
             // Save transfer
             if (datamap['binnum'] == null) {
@@ -945,34 +906,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
         },
 
-        afterChangeInvIssueLot: function(parameters) {
-            var binnum = parameters['fields']['binnum'];
-            var lotnum = parameters['fields']['lotnum'];
-            var searchData = {
-                itemnum: parameters['fields']['itemnum'],
-                siteid: parameters['fields']['siteid'],
-                itemsetid: parameters['fields']['inventory_.item_.itemsetid'],
-                location: parameters['fields']['storeloc'],
-                binnum: parameters['fields']['binnum'],
-                lotnum: parameters['fields']['lotnum']
-            };
-            getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
-        },
-
         invIssue_afterChangeBin: function (parameters) {
             parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
-        },
-
-        invIssue_afterChangeLot: function(parameters) {
-            parameters['fields']['binnum'] = parameters['fields']['lotbalances_.binnum'];
-        },
-
-        invIssue_afterChangeBinBalance: function (parameters) {
             parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+            $rootScope.$digest();
         },
 
-        invIssue_afterChangeLotBalance: function (parameters) {
-            parameters['fields']['#curbal'] = parameters['fields']['lotbalances_.curbal'];
-        }
-};
+    };
 });

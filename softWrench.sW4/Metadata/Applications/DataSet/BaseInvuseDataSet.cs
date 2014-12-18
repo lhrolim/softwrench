@@ -30,23 +30,15 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
         public SearchRequestDto FilterFromStoreLoc(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
-            var siteid = parameters.OriginalEntity.GetAttribute("siteid");
-            
-            if (siteid != null) {
-                filter.AppendSearchEntry("inventory.siteid", siteid.ToString().ToUpper());
-                filter.SearchSort = "inventory.location asc";
-            }
+            filter.SearchSort = "location.location asc";
+
             return filter;
         }
 
         public SearchRequestDto FilterItem(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
-            var siteid = parameters.OriginalEntity.GetAttribute("siteid");
+            filter.SearchSort = "inventory.itemnum";
             
-            if (siteid != null) {
-                filter.AppendSearchEntry("inventory.siteid", siteid.ToString().ToUpper());
-                filter.SearchSort = "inventory.itemnum";
-            }
             return filter;
         }
 
