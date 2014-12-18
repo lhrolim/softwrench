@@ -4,6 +4,8 @@
             fileread: "=",
             path: "="
         },
+
+        
         link: function (scope, element, attributes) {
             element.bind("change", function (changeEvent) {
                 var validFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html" , "png"];
@@ -29,19 +31,43 @@
                         flag = 1;
                         var file;
                         var fileRead = [];
-                        reader.readAsDataURL(changeEvent.target.files[0]);
-                        for (var i = 1, f; f = changeEvent.target.files[i]; i++) {
-                            reader.onload = function(loadEvent) {
-                                scope.$apply(function() {
-                                    if (flag == 1) {
-                                        fileRead.push(loadEvent.target.result);
-                                        reader.readAsDataURL(f);
-                                    }
-                                });
-                            };
+                        var current = 0;
+                        var readFiles= function () {
+                            if (changeEvent.target.files.length > 0) { // if we still have files left
+                                var fileNew = changeEvent.target.files[current]; // remove first from queue and store in file
+                                current++;
+                                if (current == changeEvent.target.files.length + 1) {
+                                    scope.fileread = fileRead;
+                                    return;
+                                }
+                                reader.onloadend = function (loadEvent) { // when finished reading file, call recursive readFiles function
+                                    scope.$apply(function() {
+                                        if (flag == 1) {
+                                            fileRead.push(loadEvent.target.result);
+                                            readFiles();
+                                        }
+                                    });
+                                };
+                                reader.readAsDataURL(fileNew);
+
+                            } else {
+                                
+                            }
+                        };
+                        readFiles();
+//                        reader.readAsDataURL(changeEvent.target.files[0]);
+//                        for (var i = 1, f; f = changeEvent.target.files[i]; i++) {
+//                            reader.onload = function(loadEvent) {
+//                                scope.$apply(function() {
+//                                    if (flag == 1) {
+//                                        fileRead.push(loadEvent.target.result);
+//                                        reader.readAsDataURL(f);
+//                                    }
+//                                });
+//                            };
                              
                             
-                        }
+//                        }
 
                         for (i = 0; i < changeEvent.target.files.length; i++) {
                             file = changeEvent.target.files[i];
@@ -57,6 +83,9 @@
                     scope.path = fileName;
                 }
             });
-        }
+        },
+        
+
+        
     };
 });
