@@ -223,7 +223,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     //
                     if (previousValue != null) {
                         for (var j = 0; j < array.associationData.length; j++) {
-                            if (array.associationData[j].value == previousValue) {
+                            if (array.associationData[j].value == previousValue.replace("$ignorewatch","")) {
                                 var fullObject = array.associationData[j];
                                 $timeout(function () {
                                     log.debug('restoring {0} to previous value {1}. '.format(value.target, previousValue));
