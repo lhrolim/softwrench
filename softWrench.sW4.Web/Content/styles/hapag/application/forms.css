@@ -10,3 +10,14 @@
 [data-application="servicerequest"] .col-xs-10 {
     width: 75%;
 }
+
+/*SM - SWML-17*/
+[data-application="asset"][data-schema="detail"] .container form {
+    width: 874px;
+}
+
+[data-application="asset"][data-schema="detail"] table th:nth-child(1), [data-application="asset"][data-schema="detail"] table td:nth-child(1),
+[data-application="asset"][data-schema="detail"] table th:nth-child(2), [data-application="asset"][data-schema="detail"] table td:nth-child(2) {
+    width: 125px;
+}
+/*SM - SWML-17*/
