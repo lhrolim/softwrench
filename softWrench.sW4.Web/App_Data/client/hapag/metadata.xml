@@ -1794,6 +1794,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="ticketid" label="IMAC #">
             <renderer type="default" params="minwidth=88px;maxwidth=100px;wordwrap=break-word" />
           </field>
+          <!-- for the search to work  -->
+          <field attribute="description" hidden="true"/>
           <field attribute="hlagsummary" label="Title">
             <renderer type="default" params="excelwidth=50;minwidth=135px;maxwidth=300px" />
           </field>
