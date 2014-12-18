@@ -3,7 +3,7 @@
 app.factory('associationService', function ($injector, $http, $timeout, $log, $rootScope, submitService, fieldService) {
 
     var doUpdateExtraFields = function (associationFieldMetadata, underlyingValue, datamap) {
-        var log = $log.getInstance('sw4.associationservice#doUpdateExtraFields');
+        var log = $log.getInstance('associationService#doUpdateExtraFields');
         var key = associationFieldMetadata.associationKey;
         datamap[key] = {};
         datamap.extrafields = instantiateIfUndefined(datamap.extrafields);
@@ -34,6 +34,8 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
         };
     }
 
+
+  
 
 
 
@@ -81,6 +83,27 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
     return {
 
+        cleanupDependantAssociationChain: function (triggerFieldName, scope) {
+            var schema = scope.schema;
+            var datamap = scope.datamap;
+            var associationOptions = scope.associationOptions;
+            var depFields = schema.dependantFields;
+            var firstLevelDeps = depFields[triggerFieldName];
+            if (firstLevelDeps == null) {
+                return;
+            }
+            for (var i = 0; i < firstLevelDeps.length; i++) {
+                var value = firstLevelDeps[i];
+                var associatedDisplayable = fieldService.getDisplayablesByAssociationKey(schema, value);
+                var target = associatedDisplayable[0].target;
+                $log.getInstance('associationService#cleanupDependantAssociationChain').debug('cleaning up dependant association of {0} {1}'.format(triggerFieldName, target));
+                associationOptions[value] = [];
+                datamap[target] = null;
+                this.cleanupDependantAssociationChain(target, scope);
+            }
+        },
+
+
         getFullObject: function (associationFieldMetadata, datamap, associationOptions) {
             //we need to locate the value from the list of association options
             // we only have the "value" on the datamap 
@@ -92,7 +115,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             //TODO: Return full object.
             var resultValue = doGetFullObject(associationFieldMetadata, associationOptions, selectedValue);
             if (resultValue == null) {
-                $log.getInstance('sw4.associationService#getFullObject').warn('value not found in association options for {0} '.format(associationFieldMetadata.associationKey));
+                $log.getInstance('associationService#getFullObject').warn('value not found in association options for {0} '.format(associationFieldMetadata.associationKey));
             }
             return resultValue;
         },
@@ -153,7 +176,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 scope: scope,
                 triggerparams: instantiateIfUndefined(triggerparams)
             };
-            $log.getInstance('sw4.associationservice#postAssociationHook').debug('invoking post hook service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));
+            $log.getInstance('associationService#postAssociationHook').debug('invoking post hook service {0} method {1}'.format(afterChangeEvent.service, afterChangeEvent.method));
             fn(afterchangeEvent);
         },
 
@@ -161,7 +184,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
         //to be shown on screen
         ///It would be called at the first time the detail screen is opened as well
         updateAssociationOptionsRetrievedFromServer: function (scope, serverOptions, datamap) {
-            var log = $log.getInstance('sw4.associationservice#updateAssociationOptionsRetrievedFromServer');
+            var log = $log.getInstance('associationService#updateAssociationOptionsRetrievedFromServer');
             scope.associationOptions = instantiateIfUndefined(scope.associationOptions);
             scope.blockedassociations = instantiateIfUndefined(scope.blockedassociations);
             scope.associationSchemas = instantiateIfUndefined(scope.associationSchemas);
@@ -186,7 +209,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
         },
 
         restorePreviousValues: function (scope, serverOptions, datamap) {
-            var log = $log.getInstance('sw4.associationservice#restorePrevious');
+            var log = $log.getInstance('associationService#restorePrevious');
             for (var dependantFieldName in serverOptions) {
 
                 //this iterates for list of fields which were dependant of a first one. 
@@ -223,7 +246,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     //
                     if (previousValue != null) {
                         for (var j = 0; j < array.associationData.length; j++) {
-                            if (array.associationData[j].value == previousValue.replace("$ignorewatch","")) {
+                            if (array.associationData[j].value == previousValue.replace("$ignorewatch", "")) {
                                 var fullObject = array.associationData[j];
                                 $timeout(function () {
                                     log.debug('restoring {0} to previous value {1}. '.format(value.target, previousValue));
@@ -293,6 +316,9 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 //false is to indicate that no value has been updated
                 return false;
             }
+
+            this.cleanupDependantAssociationChain(triggerFieldName, scope);
+
             var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
             var restorePreviousValues = this.restorePreviousValues;
             var postAssociationHook = this.postAssociationHook;
@@ -316,7 +342,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             var fieldsTosubmit = submitService.removeExtraFields(fields, true, scope.schema);
             var urlToUse = url("/api/data/" + applicationName + "?" + $.param(parameters));
             var jsonString = angular.toJson(fieldsTosubmit);
-            var log = $log.getInstance('sw4.associationservice#updateAssociations');
+            var log = $log.getInstance('associationService#updateAssociations');
             log.info('going to server for dependat associations of {0}'.format(triggerFieldName));
             log.debug('Content: \n {0}'.format(jsonString));
             $http.post(urlToUse, jsonString).success(function (data) {
@@ -402,7 +428,9 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 }
             }
             return null;
-        }
+        },
+
+        
     };
 
 });
