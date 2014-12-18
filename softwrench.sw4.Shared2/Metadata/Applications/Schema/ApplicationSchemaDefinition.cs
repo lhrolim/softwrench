@@ -329,8 +329,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// Ex: when we select the siteID we might need to update both asset and location.
         /// </summary>
         /// <returns></returns>
-        public IDictionary<string, ISet<string>> DependantFields() {
-            return _depandantFields;
+        public IDictionary<string, ISet<string>> DependantFields {
+            get { return _depandantFields; } 
         }
 
         public Boolean IsWebPlatform() {

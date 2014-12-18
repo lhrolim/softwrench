@@ -54,7 +54,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             MergeWithStereotypeSchema(schema);
 
             schema.DepandantFields(DependencyBuilder.BuildDependantFields(schema.Fields, schema.DependableFields));
-            schema._fieldWhichHaveDeps = schema.DependantFields().Keys;
+            schema._fieldWhichHaveDeps = schema.DependantFields.Keys;
             schema.FkLazyFieldsResolver = ApplicationSchemaLazyFkHandler.LazyFkResolverDelegate;
             schema.ComponentDisplayableResolver = ReferenceHandler.ComponentDisplayableResolver;
             return schema;

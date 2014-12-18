@@ -1695,6 +1695,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="autocompleteclient" params="minLength=3;opendetails=true;idtopendetails=asset_.assetid"/>
             <dataprovider prefilterfunction="FilterAssetByHlagLocation"/>
             <event type="afterchange" service="imacservice" method="afterChangeAsset"/>
+            <event type="beforechange" service="imacservice" method="beforeChangeAsset"/>
           </association>
           <field hidden="true" attribute="asset_.status"/>
           <field hidden="true" attribute="asset_.location"/>

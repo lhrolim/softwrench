@@ -287,7 +287,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 associationsToUpdate = new HashSet<String> { request.AssociationFieldName };
             } else if (!String.IsNullOrWhiteSpace(request.TriggerFieldName)) {
                 var triggerFieldName = request.TriggerFieldName;
-                if (!application.Schema.DependantFields().TryGetValue(triggerFieldName, out associationsToUpdate)) {
+                if (!application.Schema.DependantFields.TryGetValue(triggerFieldName, out associationsToUpdate)) {
                     throw new InvalidOperationException();
                 }
             }

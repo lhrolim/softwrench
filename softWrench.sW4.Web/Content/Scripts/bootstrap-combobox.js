@@ -302,11 +302,11 @@
         this.source = this.parse();
         this.options.items = this.source.length;
 
-        //Stop autofocus on detail page load (update to v1.1.6)
-        //var val = this.$element.val();
-        //if (!this.source || ($.inArray(val, this.source) == -1 || val.trim() == "")) {
-        //    this.clearElement();
-        //}
+//        Stop autofocus on detail page load (update to v1.1.6)
+        var val = this.$element.val();
+        if (!this.source || ($.inArray(val, this.source) == -1 || val.trim() == "")) {
+            this.clearElement();
+        }
     }
 
     , listen: function () {

@@ -185,22 +185,24 @@ app.directive('crudInputFields', function (contextService) {
                 //reversing to preserve focus order. see https://controltechnologysolutions.atlassian.net/browse/HAP-674
                 associations = associations.reverse();
                 $.each(associations, function (key, association) {
-                    var shouldDoWatch = true;
+                    //                    var shouldDoWatch = true;
 
                     var isMultiValued = association.multiValued;
 
                     $scope.$watch('datamap["' + association.attribute + '"]', function (newValue, oldValue) {
 
+                        var oldValueIgnoreWatch = oldValue == null ? false : oldValue.indexOf('$ignorewatch') != -1;
+                        var newValueIgnoreWatchIdx = newValue == null ? -1 : newValue.indexOf('$ignorewatch');
 
-                        if (oldValue == newValue || !shouldDoWatch) {
+                        if ((oldValue == newValue || oldValueIgnoreWatch) && !(oldValueIgnoreWatch && newValueIgnoreWatchIdx != -1)) {
+                            //if both are ignoring, there´s something wrong, I´ve seen this only on ie9, let´s fix the newvalue removing the $ignorewatch instead of simply returning
                             return;
                         }
                         if (newValue != null) {
                             //this is a hacky thing when we want to change a value of a field without triggering the watch
-                            var ignoreWatchIdx = newValue.indexOf('$ignorewatch');
-                            if (ignoreWatchIdx != -1) {
-                                shouldDoWatch = false;
-                                newValue = newValue.substring(0, ignoreWatchIdx);
+                            if (newValueIgnoreWatchIdx != -1) {
+                                //                                shouldDoWatch = false;
+                                newValue = newValue.substring(0, newValueIgnoreWatchIdx);
                                 if (newValue == '$null') {
                                     newValue = null;
                                 }
@@ -208,7 +210,7 @@ app.directive('crudInputFields', function (contextService) {
                                 cmpfacade.digestAndrefresh(association, $scope);
 
                                 $timeout(function () {
-                                    shouldDoWatch = true;
+                                    //                                    shouldDoWatch = true;
                                 }, 0, false);
 
                                 /*
@@ -255,9 +257,12 @@ app.directive('crudInputFields', function (contextService) {
                                 shouldDoWatch = true;
                             }
                         };
+                        if (newValueIgnoreWatchIdx == -1) {
+                            //let´s avoid this call if we´ve set the $ignorewatch value, otherwise this may lead to unwanted events to be called, for instance when refreshing the data
+                            associationService.onAssociationChange(association, isMultiValued, eventToDispatch);
+                            cmpfacade.digestAndrefresh(association, $scope);
+                        }
 
-                        associationService.onAssociationChange(association, isMultiValued, eventToDispatch);
-                        cmpfacade.digestAndrefresh(association, $scope);
                     });
 
                     $scope.$watchCollection('associationOptions.' + association.associationKey, function (newvalue, old) {
