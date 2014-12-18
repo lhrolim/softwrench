@@ -29,6 +29,7 @@ namespace softWrench.sW4.Web.Util {
             _i18NResolver = i18NResolver;
             _contextLookuper = contextLookuper;
             // setup style dictionary for back colors
+            // 2 = red, 3 = green, 4 = yellow, 5 = orange, 6 = blue
             _cellStyleDictionary = new Dictionary<string, string>{
                 {"NEW", "5"},
                 {"QUEUED", "4"},
@@ -37,7 +38,10 @@ namespace softWrench.sW4.Web.Util {
                 {"CANCELLED", "2"},
                 {"RESOLVED", "6"},
                 {"SLAHOLD", "6"},
-                {"RESOLVCONF", "3"}
+                {"RESOLVCONF", "3"},
+                {"AUTH", "6"},
+                {"INPRG", "6"},
+                {"ACC_CAT", "6"}
             };
         }
 
