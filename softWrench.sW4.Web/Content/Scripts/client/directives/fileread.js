@@ -27,20 +27,27 @@
                             }
                         }
                         flag = 1;
-                        reader.onload = function (loadEvent) {
-                            scope.$apply(function () {
-                                if (flag == 1) {
-                                    scope.fileread = scope.fileread + "#$%^"+(loadEvent.target.result);
-                                }
-                            });
-                        };
                         var file;
+                        var fileRead = [];
+                        reader.readAsDataURL(changeEvent.target.files[0]);
+                        for (var i = 1, f; f = changeEvent.target.files[i]; i++) {
+                            reader.onload = function(loadEvent) {
+                                scope.$apply(function() {
+                                    if (flag == 1) {
+                                        fileRead.push(loadEvent.target.result);
+                                        reader.readAsDataURL(f);
+                                    }
+                                });
+                            };
+                             
+                            
+                        }
+
                         for (i = 0; i < changeEvent.target.files.length; i++) {
                             file = changeEvent.target.files[i];
                             fileName.push(file.name);
-                            
                         }
-                        reader.readAsDataURL(file);
+
                     }
                 }
                 if (flag == 1) {
