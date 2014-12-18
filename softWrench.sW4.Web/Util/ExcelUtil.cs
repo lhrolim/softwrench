@@ -141,6 +141,11 @@ namespace softWrench.sW4.Web.Util {
                         if (dateParsed) {
                             dataToCell = dtTimeAux.FromMaximoToUser(user).ToString(formatToUse);
                         }
+                        if (dataToCell == "-666") {
+                            //this magic number should never be displayed! 
+                            //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
+                            dataToCell = "";
+                        }
                         writer.WriteElement(new CellValue(dataToCell));
                         // end cell
                         writer.WriteEndElement();
@@ -213,7 +218,7 @@ namespace softWrench.sW4.Web.Util {
                 //                _i18NResolver.I18NValue()
 
                 writer.WriteStartElement(new Cell(), xmlAttributes);
-                writer.WriteElement(new CellValue(GetI18NLabel(applicationField,schemaId)));
+                writer.WriteElement(new CellValue(GetI18NLabel(applicationField, schemaId)));
 
                 // this is for Cell
                 writer.WriteEndElement();
@@ -223,7 +228,7 @@ namespace softWrench.sW4.Web.Util {
             writer.WriteEndElement();
         }
 
-        private string GetI18NLabel(ApplicationFieldDefinition applicationField,string schemaId) {
+        private string GetI18NLabel(ApplicationFieldDefinition applicationField, string schemaId) {
             var module = _contextLookuper.LookupContext().Module;
             if (module != null) {
                 return applicationField.Label;
