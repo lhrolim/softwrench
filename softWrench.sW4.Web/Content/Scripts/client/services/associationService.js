@@ -98,7 +98,14 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 var target = associatedDisplayable[0].target;
                 $log.getInstance('associationService#cleanupDependantAssociationChain').debug('cleaning up dependant association of {0} {1}'.format(triggerFieldName, target));
                 associationOptions[value] = [];
-                datamap[target] = null;
+                if (isIe9()) {
+                    //due to a crazy ie9-angular bug, we need to do it like this
+                    // taken from https://github.com/angular/angular.js/issues/2809
+                    var element = $("select[data-comboassociationkey='" + value + "']");
+                    element.hide();
+                    element.show();
+                }
+                datamap[target] = "$null$ignorewatch";
                 this.cleanupDependantAssociationChain(target, scope);
             }
         },
@@ -233,6 +240,10 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                         var element = $("select[data-comboassociationkey='" + value.associationKey + "']");
                         element.hide();
                         element.show();
+                        //this workaround, fixes a bug where only the fist charachter would show...
+                        //taken from http://stackoverflow.com/questions/5908494/select-only-shows-first-char-of-selected-option
+                        element.css('width', 0);
+                        element.css('width', ''); 
                     }
                     //                    clear datamap for the association updated -->This is needed due to a IE9 issue
                     var previousValue = datamap[value.target];
@@ -245,8 +256,9 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
                     //
                     if (previousValue != null) {
+                        previousValue =previousValue.replace("$ignorewatch", "");
                         for (var j = 0; j < array.associationData.length; j++) {
-                            if (array.associationData[j].value == previousValue.replace("$ignorewatch", "")) {
+                            if (array.associationData[j].value == previousValue) {
                                 var fullObject = array.associationData[j];
                                 $timeout(function () {
                                     log.debug('restoring {0} to previous value {1}. '.format(value.target, previousValue));

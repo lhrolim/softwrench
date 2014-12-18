@@ -10,19 +10,19 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
     */
     var parseLocations = function (datamap, location, triggerparams) {
         if (location == null) {
-            datamap['building'] = datamap['floor'] = datamap['room'] = null;
+            datamap['building'] = datamap['floor'] = datamap['room'] = "$null$ignorewatch";
             return;
         }
         var idxBldg = location.indexOf('/BLDG');
         if (idxBldg != -1) {
             //point straight to building only
             datamap['building'] = location.substring(0, idxBldg) + '$ignorewatch';
-            datamap['floor'] = datamap['room'] = null;
+            datamap['floor'] = datamap['room'] = "$null$ignorewatch";
         } else {
             var parts = location.split("/");
             if (parts.length != 3) {
                 //this should never at hapag´s... but let´s play safe
-                datamap['building'] = datamap['floor'] = datamap['room'] = null;
+                datamap['building'] = datamap['floor'] = datamap['room'] = "$null$ignorewatch";
                 return;
             }
             var shouldIgnoreWatch = triggerparams.dispatchedbytheuser && triggerparams.phase != 'initial';
@@ -46,6 +46,14 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
     }
 
     return {
+
+        beforeChangeAsset: function (event) {
+            var datamap =event.fields;
+            datamap['building'] = "$null$ignorewatch";
+            datamap['floor'] = "$null$ignorewatch";
+            datamap['room'] = "$null$ignorewatch";
+            datamap['costcenter'] = "$null$ignorewatch";
+        },
 
         afterChangeAsset: function (event) {
             var userId = event.fields['asset_.aucisowner_.person_.personid'];
