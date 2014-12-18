@@ -7,7 +7,7 @@
         link: function (scope, element, attributes) {
             element.bind("change", function (changeEvent) {
                 var validFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html" , "png"];
-                var fileName;
+                var fileName = [];
                 var flag = -1;
                 if (!isIe9()) {
                     var reader = new FileReader();
@@ -30,17 +30,23 @@
                         reader.onload = function (loadEvent) {
                             scope.$apply(function () {
                                 if (flag == 1) {
-                                    scope.fileread = loadEvent.target.result;
+                                    scope.fileread = scope.fileread + "#$%^"+(loadEvent.target.result);
                                 }
                             });
                         };
-                        var file = changeEvent.target.files[0];
-                        fileName = file.name;
+                        var file;
+                        for (i = 0; i < changeEvent.target.files.length; i++) {
+                            file = changeEvent.target.files[i];
+                            fileName.push(file.name);
+                            
+                        }
                         reader.readAsDataURL(file);
                     }
                 }
                 if (flag == 1) {
-                    changeEvent.currentTarget.parentNode.parentNode.children[0].value = fileName;
+                    for (i = 0; i < changeEvent.target.files.length; i++) {
+                        changeEvent.currentTarget.parentNode.parentNode.children[i].value = fileName[i];
+                    }
                     scope.path = fileName;
                 }
             });
