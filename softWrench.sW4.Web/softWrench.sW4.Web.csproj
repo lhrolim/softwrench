@@ -676,6 +676,7 @@
     <Content Include="Content\Scripts\client\services\detailService.js" />
     <Content Include="Content\Scripts\client\services\scannerdetection_service.js" />
     <Content Include="Content\Scripts\client\services\statuscolor_service.js" />
+    <Content Include="Content\Scripts\client\services\workorder_service.js" />
     <Content Include="Content\Scripts\client\util\log_enhacer.js" />
     <Content Include="Content\Scripts\client\samelinepickers.js" />
     <Content Include="Content\Scripts\client\crud_output_fields.js" />
