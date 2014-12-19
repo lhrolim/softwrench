@@ -6,6 +6,10 @@ app.directive('dateTime', function ($timeout, formatService) {
         return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() == "true";
     }
 
+    function parseBooleanValueDefaultFalse(attrValue) {
+        return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() == "true";
+    }
+
     return {
         restrict: 'A',
         require: '?ngModel',
@@ -22,7 +26,7 @@ app.directive('dateTime', function ($timeout, formatService) {
             var showDate = parseBooleanValue(attrs.showDate);
             var dateFormat = formatService.adjustDateFormatForPicker(attrs.dateFormat, showTime);
             attrs.language = (userLanguage != '') ? userLanguage : "en-US";
-            var showMeridian = parseBooleanValue(attrs.showMeridian);
+            var showMeridian = attrs.showAmpm == undefined ? undefined : attrs.showAmpm.toLowerCase() == "true";
             var istimeOnly = showTime && !showDate;
 
             datetimeclassHandler(istimeOnly);
@@ -50,12 +54,17 @@ app.directive('dateTime', function ($timeout, formatService) {
                     var futureOnly = (attrs.futureOnly != undefined && attrs.futureOnly.toLowerCase() == "true");
                     //                attrs.startDate = futureOnly ? '+0d' : -Infinity;
 
+                    //if the date format starts with dd --> we don´t have the AM/PM thing, which is just an american thing where the dates starts with months
+                    if (showMeridian == undefined) {
+                        showMeridian = dateFormat.startsWith('MM');
+                    }
+
                     element.datetimepicker({
                         format: dateFormat,
                         autoclose: true,
                         language: attrs.language,
                         todayBtn: false,
-                        showMeridian: false,
+                        showMeridian: showMeridian,
                         startDate: attrs.startDate,
                         formatViewType: 'time',
                         startView: 1,
@@ -73,7 +82,8 @@ app.directive('dateTime', function ($timeout, formatService) {
                         format: dateFormat,
                         autoclose: true,
                         language: attrs.language,
-                        maxView: 3
+                        maxView: 3,
+                        showMeridian:false
                     });
                 }
             }
