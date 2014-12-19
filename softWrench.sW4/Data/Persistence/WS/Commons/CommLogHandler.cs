@@ -76,7 +76,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             if (!String.IsNullOrWhiteSpace(attachmentData) && !String.IsNullOrWhiteSpace(attachmentPath)){
                 var attachmentsData = data.GetUnMappedAttribute("attachment").Split(',');
-                var attachmentsPath = data.GetUnMappedAttribute("newattachment_path").Split(',');
+                var attachmentsPath = attachmentPath.Split(',');
                 AttachmentHandler attachment = new AttachmentHandler();
                 for (int i = 0, j=0; i < attachmentsPath.Length; i++){
                     attachment.HandleAttachments(maximoObj, attachmentsData[j] +','+ attachmentsData[j+1], attachmentsPath[i], applicationMetadata);
