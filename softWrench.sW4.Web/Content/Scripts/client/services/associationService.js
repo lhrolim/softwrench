@@ -105,7 +105,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     element.hide();
                     element.show();
                 }
-                datamap[target] = "$null$ignorewatch";
+                datamap[target] = null;
                 this.cleanupDependantAssociationChain(target, scope);
             }
         },
