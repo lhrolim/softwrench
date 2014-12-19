@@ -13,7 +13,7 @@
                    ng-show="isLabelVisible(fieldMetadata,false)"
                    ng-style="getLabelStyle(fieldMetadata)"
                    ng-class="getLabelClass(fieldMetadata)">
-                <span ng-show="fieldMetadata.isRequired" class="requiredfieldmark">* </span>
+                <span ng-show="fieldMetadata.requiredExpression" class="requiredfieldmark">* </span>
                 <!--this will bring either label or header in case of section-->
                 {{i18NLabel(fieldMetadata)}}
             </label>

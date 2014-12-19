@@ -26,7 +26,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
-        public Boolean IsRequired { get; set; }
+        public Boolean RequiredExpression { get; set; }
 
         public string Qualifier { get; set; }
 
@@ -73,7 +73,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             _applicationAssociationSchema = applicationAssociationSchema;
             DefaultValue = defaultValue;
             EnableExpression = enableExpression;
-            IsRequired = required;
+            RequiredExpression = required;
             _eventsSet = events;
             _forceDistinctOptions = forceDistinctOptions;
             Qualifier = qualifier;
@@ -200,7 +200,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public override string Role { get { return From + "." + Target; } }
 
         public object Clone() {
-            var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, ToolTip, IsRequired,
+            var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, ToolTip, RequiredExpression,
                 DefaultValue, HideDescription, EnableExpression, _eventsSet) {
                     ExtraProjectionFields = ExtraProjectionFields,
                     LabelFields = LabelFields,

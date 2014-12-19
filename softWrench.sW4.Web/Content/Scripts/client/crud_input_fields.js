@@ -363,7 +363,8 @@ app.directive('crudInputFields', function (contextService) {
             $scope.lookupCodeBlur = function (fieldMetadata) {
                 var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                 var targetValue = $scope.datamap[fieldMetadata.target];
-                if (code != null && code != '' && (targetValue == null || targetValue == " ")) {
+                var lookupOnBlur = fieldMetadata.rendererParameters['lookuponblur'];
+                if (code != null && code != '' && (targetValue == null || targetValue == " ") && lookupOnBlur == true) {
                     $scope.showLookupModal(fieldMetadata);
                 }
             };

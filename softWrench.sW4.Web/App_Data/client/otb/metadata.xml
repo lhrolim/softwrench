@@ -381,11 +381,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="description" label="Description" qualifier="excerpt"/>
         </list>
         <detail>
-          <field attribute="locationsid" label="ID:"  required="true" />
-          <field attribute="location" label="Location:"  required="true" />
-          <field attribute="description" label="Description:"  required="true" />
-          <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
-          <field attribute="type"  required="true" readonly="true" hidden="true"/>
+          <field attribute="locationsid" label="ID:"  requiredexpression="true" />
+          <field attribute="location" label="Location:"  requiredexpression="true" />
+          <field attribute="description" label="Description:"  requiredexpression="true" />
+          <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
+          <field attribute="type"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
       </schemas>
     </application>
@@ -402,10 +402,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         </list>
         <detail>
-          <field attribute="failurecodeid" label="ID:"  required="true" />
-          <field attribute="failurecode" label="Failure Class:"  required="true" />
-          <field attribute="description" label="Description:"  required="true" />
-          <field attribute="orgid"  required="true" readonly="true" hidden="true"/>
+          <field attribute="failurecodeid" label="ID:"  requiredexpression="true" />
+          <field attribute="failurecode" label="Failure Class:"  requiredexpression="true" />
+          <field attribute="description" label="Description:"  requiredexpression="true" />
+          <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
       </schemas>
     </application>
@@ -421,10 +421,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="wtypedesc" label="Description" qualifier="excerpt"/>
         </list>
         <detail>
-          <field attribute="worktypeid" label="ID:"  required="true" />
-          <field attribute="worktype" label="Work Type:"  required="true" />
-          <field attribute="wtypedesc" label="Description:"  required="true" />
-          <field attribute="orgid"  required="true" readonly="true" hidden="true"/>
+          <field attribute="worktypeid" label="ID:"  requiredexpression="true" />
+          <field attribute="worktype" label="Work Type:"  requiredexpression="true" />
+          <field attribute="wtypedesc" label="Description:"  requiredexpression="true" />
+          <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
       </schemas>
     </application>
@@ -466,7 +466,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="workorder_.status" hidden="true" />
 
 
-          <field attribute="wonum" label="Change Id:" required="true"/>
+          <field attribute="wonum" label="Change Id:" requiredexpression="true"/>
           <field attribute="ownergroup" label="Owner Group:"/>
           <field attribute="location" label="Location:"/>
 
@@ -492,7 +492,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="targcompdate" label="Target Finish Date:"/>
           <!--field attribute="itdcreatedate" label="CR Activation Date/Time"/-->
           <field attribute="wopriority" label="Priority:"/>
-          <field attribute="status" label="Status:" required="true"/>
+          <field attribute="status" label="Status:" requiredexpression="true"/>
           <field attribute="longdescription_.ldtext" label="Remarks:"/>
           <!--field attribute="itdclosurecode" label="Implementation Result"/-->
           <section id="compositions">
@@ -512,7 +512,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </schema>
 
         <schema id="newdetail" title="New Change" abstract="true" stereotype="detail" platform="web">
-          <field attribute="wonum" label="Change Id:" required="true"/>
+          <field attribute="wonum" label="Change Id:" requiredexpression="true"/>
           <field attribute="ownergroup" label="Owner Group:"/>
           <field attribute="location" label="Location:"/>
           <field attribute="estdur"            default="0" hidden="true"/>
@@ -563,7 +563,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="targcompdate" label="Target Finish Date:"/>
           <!--field attribute="itdcreatedate" label="CR Activation Date/Time"/-->
           <field attribute="wopriority" label="Priority:"/>
-          <field attribute="status" label="Status:" readonly="true" default="WAPPR" required="true"/>
+          <field attribute="status" label="Status:" readonly="true" default="WAPPR" requiredexpression="true"/>
           <field attribute="statusdate" hidden="true" default="@currentdatetime"/>
           <field attribute="longdescription_.ldtext" label="Remarks:"/>
           <!--field attribute="itdclosurecode" label="Implementation Result"/-->
@@ -613,7 +613,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </list>
         <detail>
           <field attribute="personid" hidden="true" />
-          <field attribute="displayname" label="Display Name:" required="true" />
+          <field attribute="displayname" label="Display Name:" requiredexpression="true" />
         </detail>
       </schemas>
     </application>
@@ -666,7 +666,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </list>
 
         <schema id="detail" stereotype="detail" title="Inventory Balance Details">
-          <field label="Inventory Balances ID" attribute="invbalancesid" required="true" readonly="true" hidden="true"/>
+          <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
           <field label="Item" attribute="itemnum" readonly="true"/>
           <field label="Description" attribute="item_.description" readonly="true"/>
           <field label="Rotating" attribute="item_.rotating" readonly="true">
@@ -769,7 +769,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="prnum" label="PR No:" hidden="true">
             <renderer type="default"/>
           </field>
-          <field attribute="priority" label="Priority:" required="true">
+          <field attribute="priority" label="Priority:" requiredexpression="true">
             <renderer type="numericinput" params="min=0;max=9;decimals=0" />
           </field>
           <!--SWWEB 194: Add Supervisor Field-->
@@ -783,15 +783,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default"/>
           </field>
           <!--SWWEB-197: Add Total Cost Field-->
-          <field attribute="totalcost" label="Total Cost:" required="true" >
+          <field attribute="totalcost" label="Total Cost:" requiredexpression="true" >
             <renderer type="default"/>
           </field>
           <!--SWWEB 199: Add Currency Type Field-->
-          <field attribute="currencycode" label="Currency:" required="true">
+          <field attribute="currencycode" label="Currency:" requiredexpression="true">
             <renderer type="default"/>
           </field>
           <!--SWWEB 202: Add No Vendor Checkbox-->
-          <optionfield attribute="novendor" label="No Vendor? :" required="true" >
+          <optionfield attribute="novendor" label="No Vendor? :" requiredexpression="true" >
             <renderer type="radio"/>
             <option label="No" value="FALSE"/>
             <option label="Yes" value="TRUE"/>
@@ -820,7 +820,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <schema id="newdetail" stereotype="detail" mode="input" title="Purchase Request Details">
           <!--SWWEB 192: Add Reported Priority Field-->
-          <field attribute="priority" label="Priority:" required="true" default="0">
+          <field attribute="priority" label="Priority:" requiredexpression="true" default="0">
             <renderer type="numericinput" params="min=0;max=9;decimals=0" />
           </field>
           <!--SWWEB 194: Add Supervisor Field-->
@@ -833,15 +833,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default"/>
           </field>
           <!--SWWEB-197: Add Total Cost Field-->
-          <field attribute="totalcost" label="Total Cost:" default="0" required="true">
+          <field attribute="totalcost" label="Total Cost:" default="0" requiredexpression="true">
             <renderer type="default"/>
           </field>
           <!--SWWEB 199: Add Currency Type Field-->
-          <field attribute="currencycode" label="Currency:" default="USD" required="true">
+          <field attribute="currencycode" label="Currency:" default="USD" requiredexpression="true">
             <renderer type="default"/>
           </field>
           <!--SWWEB 202: Add No Vendor Checkbox-->
-          <optionfield attribute="novendor" label="No Vendor? :"  required="true" >
+          <optionfield attribute="novendor" label="No Vendor? :"  requiredexpression="true" >
             <renderer type="radio"/>
             <option label="No" value="FALSE"/>
             <option label="Yes" value="TRUE"/>
@@ -881,7 +881,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </schema>
 
         <detail stereotype="compositiondetail">
-          <!--field attribute="description" label="Summary:" required="true" /-->
+          <!--field attribute="description" label="Summary:" requiredexpression="true" /-->
           <optionfield attribute="linetype" label="Line Type:" >
             <renderer type="radio"/>
             <option label="Item" value="item"/>
@@ -987,17 +987,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <schema id="newdetail" stereotype="detail" mode="input">
           <field attribute="usetype" hidden="true"/>
-          <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" required="true">
+          <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="inventoryService" method="invUse_afterChangeSite"/>
           </association>
-          <association label="Item" target="invuseline_.itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid" required="true">
+          <association label="Item" target="invuseline_.itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid" requiredexpression="true">
             <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
             <dataprovider prefilterfunction="FilterItem"/>
             <event type="afterchange" service="inventoryService" method="invUse_afterChangeItem"/>
           </association>
           <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
-          <association target="fromstoreloc" label="From Storeroom" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,itemsetid,location" required="true">
+          <association target="fromstoreloc" label="From Storeroom" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,itemsetid,location" requiredexpression="true">
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterFromStoreLoc"/>
             <event type="afterchange" service="inventoryService" method="invUse_afterChangeFromStoreroom"/>
@@ -1005,7 +1005,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true">
             <dataprovider prefilterfunction="FilterFromBin" />
             <event type="afterchange" service="inventoryService" method="invUse_afterChangeFromBin"/>
-            <renderer type="lookup"/>
+            <renderer type="lookup" params="lookuponblur=false;"/>
           </association>
           <optionfield attribute="invuseline_.fromlot" label="From Lot" providerattribute="_AvailableLots" dependantfields="invuseline_.frombin">
             <event type="afterchange" service="inventoryService" method="afterChangeInvreserveFromLot"/>
@@ -1013,7 +1013,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </optionfield>
           <field attribute="inventory_.item_.issueunit" label="Issue Unit" readonly="true"/>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>
-          <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" required="true">
+          <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" requiredexpression="true">
             <dataprovider prefilterfunction="FilterToStoreLoc"/>
             <event type="afterchange" service="inventoryService" method="invUse_afterChangeToStoreroom"/>
             <renderer type="lookup"/>
@@ -1022,7 +1022,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <dataprovider prefilterfunction="FilterToBin" />
             <renderer type="Lookup"/>
           </association>
-          <field attribute="invuseline_.quantity" label="Quantity" required="true">
+          <field attribute="invuseline_.quantity" label="Quantity" requiredexpression="true">
             <event type="afterchange" service="inventoryService" method="afterChangeTransferQuantity"/>
             <renderer type="numericinput" params="min=1;"/>
           </field>

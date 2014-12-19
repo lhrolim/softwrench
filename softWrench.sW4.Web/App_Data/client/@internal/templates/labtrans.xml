@@ -66,7 +66,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="transtype" hidden="true" />
           <field attribute="refwo" hidden="true" />
           <field attribute="enterby" hidden="true" />
-          <association label="Labor:" target="laborcode" labelfield="labor_.laborcode,labor_.person_.displayname" labelpattern="{0} {1}" required="true" >
+          <association label="Labor:" target="laborcode" labelfield="labor_.laborcode,labor_.person_.displayname" labelpattern="{0} {1}" requiredexpression="true" >
             <renderer type="lookup"/>
           </association>
           <field label="Start Date:" attribute="startdate">
@@ -81,11 +81,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field label="End Time:" attribute="finishtime" >
             <renderer type="datetime" params="format=HH:mm;showdate=false" />
           </field>
-          <field attribute="regularhrs" label="Regular Hours:" required="true"/>
+          <field attribute="regularhrs" label="Regular Hours:" requiredexpression="true"/>
           <association label="GL Debit Account:" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
             <renderer type="lookup"/>
           </association>
-          <field attribute="payrate" label="Pay Rate:" required="true" default="0">
+          <field attribute="payrate" label="Pay Rate:" requiredexpression="true" default="0">
             <renderer type="numericinput" params="min=0;max=999;decimals=0"/>
           </field>
         </detail>
@@ -131,7 +131,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               </lookupFilters>
             </lookup>
           </field>
-          <field attribute="payrate" label="Pay Rate:" required="true" default="0">
+          <field attribute="payrate" label="Pay Rate:" requiredexpression="true" default="0">
             <renderer type="numericinput" params="min=0;max=999;decimals=0"/>
           </field>
         </detail>

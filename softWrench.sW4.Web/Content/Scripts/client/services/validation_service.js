@@ -21,7 +21,7 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                 if (fieldService.isNullInvisible(displayable, datamap)) {
                     continue;
                 }
-                if (displayable.isRequired && nullOrEmpty(datamap[displayable.attribute])) {
+                if (displayable.requiredExpression && nullOrEmpty(datamap[displayable.attribute])) {
                     validationArray.push(label);
                 }
                 if (displayable.displayables != undefined) {
@@ -43,12 +43,12 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                 if (fieldService.isNullInvisible(displayable,datamap)) {
                      continue;
                 }
-                if (displayable.isRequired && nullOrEmpty(datamap[displayable.attribute])) {
+                if (displayable.requiredExpression && nullOrEmpty(datamap[displayable.attribute])) {
                     var applicationName = i18NService.get18nValue(displayable.applicationName + ".name", displayable.applicationName);
                     if (label.endsWith('s') || label.endsWith('S')) {
-                        validationArray.push(i18NService.get18nValue('messagesection.validation.isrequired', 'Field {0} for {1} are required', [label, applicationName]));
+                        validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Field {0} for {1} are required', [label, applicationName]));
                     } else {
-                        validationArray.push(i18NService.get18nValue('messagesection.validation.isrequired', 'Field {0} for {1} is required', [label, applicationName]));
+                        validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Field {0} for {1} is required', [label, applicationName]));
                     }
                 }
                 if (displayable.displayables != undefined) {

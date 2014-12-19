@@ -11,9 +11,9 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
 
         public string TargetPath { get; set; }
 
-        public EntityTargetAttribute([NotNull] string name, [NotNull] string type, bool isRequired,
+        public EntityTargetAttribute([NotNull] string name, [NotNull] string type, bool requiredExpression,
             [NotNull] ConnectorParameters connectorParameters, string targetPath)
-            : base(name, type, isRequired, false, connectorParameters, null) {
+            : base(name, type, requiredExpression, false, connectorParameters, null) {
             TargetPath = targetPath;
         }
 
