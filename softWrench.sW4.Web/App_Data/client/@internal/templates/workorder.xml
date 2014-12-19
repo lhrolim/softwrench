@@ -65,6 +65,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <application name="workorder" title="Work Order" entity="workorder">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
+        <property key="oncrudsaveevent.validationservice" value="workorderservice.defaultvalidation"/>
       </properties>
       <schemas>
         <list title="Work Order Grid" platform="web">
