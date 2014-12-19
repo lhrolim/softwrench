@@ -35,7 +35,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
     }
 
 
-  
+
 
 
 
@@ -237,7 +237,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                         //this workaround, fixes a bug where only the fist charachter would show...
                         //taken from http://stackoverflow.com/questions/5908494/select-only-shows-first-char-of-selected-option
                         element.css('width', 0);
-                        element.css('width', ''); 
+                        element.css('width', '');
                     }
                     //                    clear datamap for the association updated -->This is needed due to a IE9 issue
                     var previousValue = datamap[value.target];
@@ -250,7 +250,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     //
                     if (previousValue != null) {
                         datamap[value.target] = "$null$ignorewatch";
-                        previousValue =previousValue.replace("$ignorewatch", "");
+                        previousValue = previousValue.replace("$ignorewatch", "");
                         for (var j = 0; j < array.associationData.length; j++) {
                             if (array.associationData[j].value == previousValue) {
                                 var fullObject = array.associationData[j];
@@ -397,9 +397,8 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 //sometimes the event might be syncrhonous, returning either true of false
                 if (result != undefined && result == false) {
                     event.interrupt();
-                } else if (result == undefined || result == true) {
-                    event.continue();
                 }
+                event.continue();
             }
         },
 
@@ -437,7 +436,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             return null;
         },
 
-        
+
     };
 
 });
