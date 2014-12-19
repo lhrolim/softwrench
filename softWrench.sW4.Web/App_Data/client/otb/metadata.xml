@@ -981,10 +981,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterFromStoreLoc"/>
           </association>
-          <association label="Item" target="invuseline_.itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,fromstoreloc" required="true">
+          <association label="Item" target="invuseline_.itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description" extraprojectionvalues="costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,fromstoreloc" required="true">
             <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
-            <dataprovider prefilterfunction="FilterItem"/>
-            <event type="afterchange" service="inventoryService" method="invUse_afterChangeItem"/>
           </association>
           <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
           

@@ -651,13 +651,13 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             $rootScope.$digest();
         },
 
-        invUse_afterChangeItem: function(parameters) {
-            if (parameters['fields']['invuseline_.itemnum'] == null ||
-                parameters['fields']['invuseline_.itemnum'].trim() == "") {
-                parameters['fields']['fromstoreloc'] = null;
-                return;
-            }
-        },
+        //invUse_afterChangeItem: function(parameters) {
+        //    if (parameters['fields']['invuseline_.itemnum'] == null ||
+        //        parameters['fields']['invuseline_.itemnum'].trim() == "") {
+        //        parameters['fields']['fromstoreloc'] = null;
+        //        return;
+        //    }
+        //},
 
         invUse_afterChangeSite: function(parameters) {
 
