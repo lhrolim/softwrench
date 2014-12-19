@@ -70,13 +70,18 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 throw new ArgumentNullException("maximoObj");
             if (applicationMetadata == null)
                 throw new ArgumentNullException("applicationMetadata");
-            // Check if Attachment is present
+            // Check if Attachment is present and make arrays of attachment paths and attachments 
             var attachmentData = data.GetUnMappedAttribute("attachment");
             var attachmentPath = data.GetUnMappedAttribute("newattachment_path");
 
             if (!String.IsNullOrWhiteSpace(attachmentData) && !String.IsNullOrWhiteSpace(attachmentPath)){
-                AttachmentHandler attachment = new AttachmentHandler();
-                attachment.HandleAttachments(maximoObj, attachmentData, attachmentPath, applicationMetadata);
+                var attachmentsData = data.GetUnMappedAttribute("attachment").Split(',');
+                var attachmentsPath = data.GetUnMappedAttribute("newattachment_path").Split(',');
+                for (int i = 0, j=0; i < attachmentsPath.Length; i++){
+                    AttachmentHandler attachment = new AttachmentHandler();
+                    attachment.HandleAttachments(maximoObj, attachmentsData[j] +','+ attachmentsData[j+1], attachmentsPath[i], applicationMetadata);
+                    j = j + 2;
+                }
 
             }
         }
