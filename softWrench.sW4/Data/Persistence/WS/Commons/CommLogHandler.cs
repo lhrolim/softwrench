@@ -77,8 +77,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (!String.IsNullOrWhiteSpace(attachmentData) && !String.IsNullOrWhiteSpace(attachmentPath)){
                 var attachmentsData = data.GetUnMappedAttribute("attachment").Split(',');
                 var attachmentsPath = data.GetUnMappedAttribute("newattachment_path").Split(',');
+                AttachmentHandler attachment = new AttachmentHandler();
                 for (int i = 0, j=0; i < attachmentsPath.Length; i++){
-                    AttachmentHandler attachment = new AttachmentHandler();
                     attachment.HandleAttachments(maximoObj, attachmentsData[j] +','+ attachmentsData[j+1], attachmentsPath[i], applicationMetadata);
                     j = j + 2;
                 }
@@ -89,8 +89,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         private static EmailService.EmailData GenerateEmailObject(object integrationObject, CrudOperationData crudData)
         {
             List<EmailService.EmailAttachment> attachments = new List<EmailService.EmailAttachment>();
-            EmailService.EmailAttachment attachment= new EmailService.EmailAttachment(crudData.GetUnMappedAttribute("attachment"),crudData.GetUnMappedAttribute("newattachment_path"));
-            attachments.Add(attachment);
+            var attachmentsData = crudData.GetUnMappedAttribute("attachment").Split(',');
+            var attachmentsPath = crudData.GetUnMappedAttribute("newattachment_path").Split(',');
+            for (int i = 0, j = 0; i < attachmentsPath.Length; i++) {
+                EmailService.EmailAttachment attachment = new EmailService.EmailAttachment(attachmentsData[j] + ',' + attachmentsData[j + 1], attachmentsPath[i]);
+                attachments.Add(attachment);
+                j = j + 2;
+            }
+            
             
             return new EmailService.EmailData(w.GetRealValue<string>(integrationObject, sendfrom),
                 w.GetRealValue<string>(integrationObject, sendto),
