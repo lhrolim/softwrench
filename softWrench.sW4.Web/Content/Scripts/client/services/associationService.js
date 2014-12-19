@@ -397,7 +397,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 //sometimes the event might be syncrhonous, returning either true of false
                 if (result != undefined && result == false) {
                     event.interrupt();
-                } else if (result != undefined && result == true) {
+                } else if (result == undefined || result == true) {
                     event.continue();
                 }
             }
