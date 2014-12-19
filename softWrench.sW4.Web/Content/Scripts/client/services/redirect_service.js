@@ -171,6 +171,10 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             }
         },
 
+        redirectToTab: function (tabId) {
+            var tab = $('a[href="#' + tabId + '"]');
+            tab.trigger('click');
+        },
 
 
         redirectNewWindow: function (newWindowURL, needReload, initialData) {

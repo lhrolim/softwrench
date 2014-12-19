@@ -6,7 +6,9 @@ app.directive('bodyrendered', function ($timeout, $log, menuService) {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
-            element.data('selectenabled', scope.isSelectEnabled(scope.fieldMetadata));
+            if (scope.schema.mode != 'output') {
+                element.data('selectenabled', scope.isSelectEnabled(scope.fieldMetadata));
+            }
             if (scope.$last === true) {
                 $timeout(function () {
                     var parentElementId = scope.elementid;
@@ -54,7 +56,7 @@ app.directive('filterrowrendered', function ($timeout) {
     };
 });
 
-function ApplicationController($scope, $http, $templateCache, $timeout, $log, fixHeaderService, $rootScope, associationService, alertService) {
+function ApplicationController($scope, $http, $templateCache, $timeout, $log, fixHeaderService, $rootScope, associationService, alertService,contextService) {
     $scope.$name = 'applicationController';
 
     function switchMode(mode, scope) {
@@ -267,6 +269,7 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
             $scope.schemas = null;
             //            fixHeaderService.unfix();
             $scope.isDetail = false;
+            contextService.setActiveTab(null);
             //            $scope.isList = false;
         });
 
@@ -304,6 +307,7 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
         $scope.searchData = {};
         $scope.searchOperator = {};
         $scope.searchSort = {};
+        
 
         if (dataObject.schemas == null) {
             if (dataObject.resultObject == null) {

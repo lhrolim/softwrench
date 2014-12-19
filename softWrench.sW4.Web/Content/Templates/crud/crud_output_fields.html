@@ -2,7 +2,8 @@
     <div ng-repeat="fieldMetadata in nonTabFields(displayables)" class="row" style="width:100%;"
          ng-show="!isFieldHidden(schema,fieldMetadata)"
          ng-class="getSectionClass(fieldMetadata)"
-         ng-style="getSectionStyle(fieldMetadata)">
+         ng-style="getSectionStyle(fieldMetadata)"
+         bodyrendered>
 
 
         <label class="control-label detail-output" ng-style="getHeaderStyle(fieldMetadata)" ng-if="hasLabelOrHeader(fieldMetadata)"

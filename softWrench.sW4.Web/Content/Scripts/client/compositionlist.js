@@ -109,7 +109,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
             previousschema: '=',
             previousdata: '=',
             inline: '@',
-            tabid:'@'
+            tabid: '@'
         },
         link: function (scope, element, attrs) {
 
@@ -137,7 +137,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
             }
 
             var custom = scope.metadata.schema.renderer.rendererType == 'custom';
-            var isInline =scope.metadata.inline;
+            var isInline = scope.metadata.inline;
 
             if (scope.metadata.type == "ApplicationCompositionDefinition" && isInline && !custom) {
                 doLoad();
@@ -148,7 +148,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
                     doLoad();
                 }
             });
-            
+
         }
 
 
@@ -207,18 +207,6 @@ app.directive('compositionList', function (contextService) {
             };
 
             init();
-            checktabaftersave();
-
-            function checktabaftersave() {
-                $timeout(function () {
-                    var compositiontabaftersave = sessionStorage.compositiontabaftersave;
-                    if (!nullOrUndef(compositiontabaftersave)) {
-                        var tab = $('a[href="' + compositiontabaftersave + '"]');
-                        sessionStorage.compositiontabaftersave = null;
-                        tab.click();
-                    }
-                }, 1000);
-            }
 
             $scope.compositionProvider = function () {
                 var localCommands = {};
@@ -266,7 +254,7 @@ app.directive('compositionList', function (contextService) {
                     commandService.executeClickCustomCommand(fullServiceName, item, $scope.compositionlistschema.displayables);
                     return;
                 };
-                
+
                 $scope.isReadOnly = !updating;
                 var compositionId = item[$scope.compositionlistschema.idFieldName];
                 var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
@@ -324,6 +312,11 @@ app.directive('compositionList', function (contextService) {
                 $scope.$emit('sw_cancelclicked');
             };
 
+            $scope.refresh = function () {
+                //TODO: make a composition refresh only --> now it will be samething as F5
+                window.location.reload();
+            };
+
             $scope.allowButton = function (value) {
                 return expressionService.evaluate(value, $scope.parentdata) && $scope.inline;
             };
@@ -336,7 +329,7 @@ app.directive('compositionList', function (contextService) {
                 }
                 $scope.compositiondata.push(selecteditem);
                 if ($scope.collectionproperties.autoCommit) {
-                    var validationErrors = validationService.validate($scope.compositionschemadefinition.schemas.detail,$scope.compositionschemadefinition.schemas.detail.displayables, selecteditem);
+                    var validationErrors = validationService.validate($scope.compositionschemadefinition.schemas.detail, $scope.compositionschemadefinition.schemas.detail.displayables, selecteditem);
                     if (validationErrors.length > 0) {
                         //interrupting here, can´t be done inside service
                         return;
@@ -347,9 +340,6 @@ app.directive('compositionList', function (contextService) {
                             var alwaysrefresh = $scope.compositiondetailschema.properties && "true" == $scope.compositiondetailschema.properties['compositions.alwaysrefresh'];
 
                             if (alwaysrefresh || updatedArray == null || updatedArray.length == 0) {
-                                var compositions = window.location.href.split(/[\s#]+/);
-                                var compositiontabaftersave = '#' + compositions[compositions.length - 1].replace('/', '');
-                                sessionStorage.compositiontabaftersave = compositiontabaftersave;
                                 window.location.reload();
                                 return;
                             }

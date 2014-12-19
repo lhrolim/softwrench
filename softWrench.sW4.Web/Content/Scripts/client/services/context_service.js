@@ -166,13 +166,24 @@ app.factory('contextService', function ($rootScope) {
                 return true;
             }
             if (typeof (name) === 'array') {
-                if (jQuery.inArray(clientName, name)!=-1) {
+                if (jQuery.inArray(clientName, name) != -1) {
                     return true;
                 }
             }
             return false;
         },
+
+        setActiveTab: function (tabId) {
+            this.insertIntoContext('currenttab', tabId);
+        },
+
+        getActiveTab: function () {
+            return this.fetchFromContext('currenttab');
+        }
+
     };
+
+
 
 });
 
