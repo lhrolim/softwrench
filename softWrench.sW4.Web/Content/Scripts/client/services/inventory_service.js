@@ -506,26 +506,60 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             //parameters['fields']['binnum'] = defaultBinnum;
         },
 
-        invUse_afterChangeFromStoreroom: function(parameters) {
-            doUpdateUnitCostFromInventoryCost(parameters, 'invuseline_.unitcost');
-            var itemnum = parameters['fields']['invuseline_.itemnum'];
-            var siteid = parameters['fields']['siteid'];
-            var fromstoreloc = parameters['fields']['fromstoreloc'];
-            if (itemnum !== undefined && itemnum.trim() != "" &&
-                siteid !== undefined && siteid.trim() != "" &&
-                fromstoreloc !== undefined && fromstoreloc.trim() != "") {
-                var searchData = {
-                    itemnum: itemnum,
-                    siteid: siteid,
-                    itemsetid: parameters['fields']['inventory_.itemsetid'],
-                    location: parameters['fields']['fromstoreloc']
-                };
-                getBinQuantity(searchData, parameters, '#curbal', null);
-            } else {
-                parameters['fields']['invuseline_.tobin'] = null;
-                parameters['fields']['#curbal'] = null;
-                parameters['fields']['invuseline_.frombin'] = null;
+        //invUse_afterChangeFromStoreroom: function(parameters) {
+        //    doUpdateUnitCostFromInventoryCost(parameters, 'invuseline_.unitcost');
+        //    var itemnum = parameters['fields']['invuseline_.itemnum'];
+        //    var siteid = parameters['fields']['siteid'];
+        //    var fromstoreloc = parameters['fields']['fromstoreloc'];
+        //    if (itemnum !== undefined && itemnum.trim() != "" &&
+        //        siteid !== undefined && siteid.trim() != "" &&
+        //        fromstoreloc !== undefined && fromstoreloc.trim() != "") {
+        //        var searchData = {
+        //            itemnum: itemnum,
+        //            siteid: siteid,
+        //            itemsetid: parameters['fields']['inventory_.itemsetid'],
+        //            location: parameters['fields']['fromstoreloc']
+        //        };
+        //        getBinQuantity(searchData, parameters, '#curbal', null);
+        //    } else {
+        //        parameters['fields']['invuseline_.tobin'] = null;
+        //        parameters['fields']['#curbal'] = null;
+        //        parameters['fields']['invuseline_.frombin'] = null;
+        //    }
+        //},
+
+        invUseAfterChangeItem: function(parameters) {
+            var itemnum = parameters['fields']['itemnum'];
+            parameters['fields']['binnum'] = null;
+            parameters['fields']['lotnum'] = null;
+            parameters['fields']['binbalances_.curbal'] = null;
+            if (nullOrEmpty(itemnum)) {
+                parameters['fields']['itemnum'] = null;
+                parameters['fields']['unitcost'] = null;
+                parameters['fields']['invuseline_.issueunit'] = null;
+                parameters['fields']['invuseline_.itemtype'] = null;
+                return;
             }
+
+            var searchData = {
+                itemnum: parameters['fields']['itemnum'],
+                location: parameters['fields']['fromstoreloc'],
+                siteid: parameters['fields']['siteid'],
+                orgid: parameters['fields']['orgid'],
+                itemsetid: parameters['fields']['itemsetid']
+            };
+
+            searchService.searchWithData("inventory", searchData).success(function (data) {
+                var resultObject = data.resultObject;
+                var fields = resultObject[0].fields;
+                var costtype = fields['costtype'];
+                parameters['fields']['inventory_.costtype'] = costtype;
+                var locationFieldName = "";
+                if (parameters['fields'].fromstoreloc != undefined) {
+                    locationFieldName = "fromstoreloc";
+                }
+                doUpdateUnitCostFromInventoryCost(parameters, "unitcost", locationFieldName);
+            });
         },
 
         invIssue_afterChangeItem: function(parameters) {
@@ -646,18 +680,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         invUse_afterChangeFromBin: function(parameters) {
-            parameters['fields']['lotnum'] = parameters['fields']['invuseline_.lotnum'];
-            parameters['fields']['#curbal'] = parameters['fields']['invuseline_.curbal'];
+            parameters['fields']['lotnum'] = parameters['fields']['frominvbalance_.lotnum'];
+            parameters['fields']['#curbal'] = parameters['fields']['frominvbalance_.curbal'];
             $rootScope.$digest();
         },
-
-        //invUse_afterChangeItem: function(parameters) {
-        //    if (parameters['fields']['invuseline_.itemnum'] == null ||
-        //        parameters['fields']['invuseline_.itemnum'].trim() == "") {
-        //        parameters['fields']['fromstoreloc'] = null;
-        //        return;
-        //    }
-        //},
 
         invUse_afterChangeSite: function(parameters) {
 
@@ -909,7 +935,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         invIssue_afterChangeBin: function (parameters) {
             parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
             parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
-            $rootScope.$digest();
+            //$rootScope.$digest();
         },
 
     };

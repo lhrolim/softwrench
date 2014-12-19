@@ -46,7 +46,20 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var filter = parameters.BASEDto;
             var siteid = parameters.OriginalEntity.GetAttribute("siteid");
             var location = parameters.OriginalEntity.GetAttribute("fromstoreloc");
-            return FilterBin(filter, siteid, location);
+            if (siteid == null || location == null) {
+                return filter;
+            }
+            filter.AppendSearchEntry("invbalances.siteid", siteid.ToString().ToUpper());
+            filter.AppendSearchEntry("invbalances.location", location.ToString().ToUpper());
+            filter.AppendWhereClauseFormat("invbalances.stagingbin = 0");
+            filter.ProjectionFields.Clear();
+            filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '')"));
+            filter.ProjectionFields.Add(new ProjectionField("curbal", "invbalances.curbal"));
+            filter.ProjectionFields.Add(new ProjectionField("lotnum", "invbalances.lotnum"));
+            filter.SearchSort = "invbalances.binnum";
+            filter.SearchAscending = true;
+
+            return filter;
         }
 
         public SearchRequestDto FilterToBin(AssociationPreFilterFunctionParameters parameters) {
