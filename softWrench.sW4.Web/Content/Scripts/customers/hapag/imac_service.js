@@ -52,7 +52,7 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
             datamap['building'] = "$null$ignorewatch";
             datamap['floor'] = "$null$ignorewatch";
             datamap['room'] = "$null$ignorewatch";
-            datamap['costcenter'] = "$null$ignorewatch";
+            datamap['costcenter'] = null;
         },
 
         afterChangeAsset: function (event) {
