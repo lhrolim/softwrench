@@ -58,7 +58,7 @@ namespace softWrench.sW4.Web.Common {
             int i = 1;
             foreach (var applicationDisplayable in applicationDisplayables) {
                 var field = applicationDisplayable as BaseApplicationFieldDefinition;
-                if (field != null) {
+                if (field != null && !dictionary.ContainsKey(field.Attribute)) {
                     dictionary.Add(field.Attribute, "mocked value " + i);
                 }
                 i++;
