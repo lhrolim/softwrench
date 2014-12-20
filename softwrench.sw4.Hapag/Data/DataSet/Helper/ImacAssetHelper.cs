@@ -17,15 +17,13 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
             if (schema.Equals(ImacConstants.Add)) {
                 return childAsset ? new[] { AssetConstants.Idle } : new[] { AssetConstants.Active };
             }
+            if (schema.EqualsIc(ImacConstants.ReplaceStd)) {
+                //fix for https://controltechnologysolutions.atlassian.net/browse/HAP-683
+                return new[] { AssetConstants.Operating, AssetConstants.Active };
+            }
             if (schema.StartsWith(ImacConstants.Install) || (schema.StartsWith(ImacConstants.Replace) && isNew)) {
                 //on replace the new assets should behave like the install ones, and the "old" as the remove ones
                 return new[] { AssetConstants.Ordered, AssetConstants.Idle };
-            } if (schema.StartsWith(ImacConstants.Replace) && !isNew) {
-                //fix for https://controltechnologysolutions.atlassian.net/browse/HAP-683
-                return new[] { AssetConstants.Active };
-            }
-            if (schema.EqualsIc(ImacConstants.RemoveStd)) {
-                return new[] { AssetConstants.Operating, AssetConstants.Active };
             }
             return new[] { AssetConstants.Operating, AssetConstants.Active, AssetConstants.Idle };
         }

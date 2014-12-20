@@ -233,6 +233,7 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
                 });
             }
             associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, scope.datamap.fields);
+            associationService.restorePreviousValues(scope, result.associationOptions, scope.datamap.fields);
             scope.compositions = result.compositions;
             toDetail(scope);
         } else if (result.type == 'ApplicationListResult') {

@@ -406,7 +406,13 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         public SortedSet<IAssociationOption> GetAvailableImacsFromAsset(DataMap asset) {
             var toFilter = ImacAssetHelper.GetImacOptionsFromStatus((string)asset.GetAttribute(AssetConstants.StatusColumn));
-            var fromClassStructure = ImacAssetHelper.GetImacOptionsFromClassStructure((string)asset.GetAttribute(AssetConstants.ClassStructureIdColumn));
+            var classstructure = (string)asset.GetAttribute(AssetConstants.ClassStructureIdColumn);
+            var assetStatus = (string)asset.GetAttribute(AssetConstants.StatusColumn);
+            var fromClassStructure = ImacAssetHelper.GetImacOptionsFromClassStructure(classstructure);
+            if (AssetConstants.Idle.Equals(assetStatus) && IsStdAsset(classstructure)) {
+                //HAP-683 constraint
+                toFilter.Add(ImacConstants.Replace);
+            }
             toFilter.UnionWith(fromClassStructure);
             return new SortedSet<IAssociationOption>(ImacConstants.DefaultTemplateOptions.Where(w => toFilter.All(a => a != w.Value)));
         }
