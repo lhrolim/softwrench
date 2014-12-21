@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('labtranService', function ($http, contextService, redirectService, modalService, restService, searchService, alertService) {
+app.factory('labtranService', function ($http, contextService, redirectService, modalService, restService, searchService, alertService, validationService) {
     return {
         displayModal: function (parentschema, parentdatamap) {
             var compositionschema = parentschema.cachedCompositions['labtrans_'].schemas['detail'];
@@ -30,6 +30,12 @@ app.factory('labtranService', function ($http, contextService, redirectService, 
             modalService.show(compositionschema, newdatamap);
         },
         submitLaborTrans: function (schema, datamap) {
+            var validationErrors = validationService.validate(schema, schema.displayables, datamap);
+            if (validationErrors.length > 0) {
+                //interrupting here, can´t be done inside service
+                return;
+            }
+
             var jsonString = angular.toJson(datamap);
             var httpParameters = {
                 application: "labtrans",
