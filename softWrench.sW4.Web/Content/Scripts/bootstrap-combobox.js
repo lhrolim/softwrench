@@ -204,13 +204,13 @@
                 //if we´re not on current page, let´s avoid calling hide whenever the scroll reaches the end
                 this.$target.val(this.previousTarget);
                 this.$source.val(this.previousTarget);
-//                this.$element.val(this.previousTarget);
+                //                this.$element.val(this.previousTarget);
                 this.refresh();
                 if (this.shown) {
                     return this.hide();
                 }
                 return this;
-                
+
             }
             return this;
         }
@@ -289,6 +289,7 @@
         }
 
         next.addClass('active');
+        return next;
     }
 
     , prev: function (event) {
@@ -300,6 +301,7 @@
         }
 
         prev.addClass('active');
+        return prev;
     }
 
     , toggle: function () {
@@ -412,12 +414,14 @@
                 break;
             case 38: // up arrow
                 e.preventDefault();
-                this.prev();
+                var element = this.prev();
+                this.$menu.scrollTop(element.position().top + this.$menu.scrollTop());
                 break;
 
             case 40: // down arrow
                 e.preventDefault();
-                this.next();
+                var element = this.next();
+                this.$menu.scrollTop(element.position().top + this.$menu.scrollTop());
                 break;
         }
 
