@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using Microsoft.CSharp;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Email;
@@ -108,5 +109,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             
         }
-    }
+
+   }
 }
