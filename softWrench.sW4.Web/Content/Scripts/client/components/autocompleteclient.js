@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldService) {
+app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldService, contextService) {
 
     return {
 
@@ -33,16 +33,21 @@ app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldServic
                 if (parent.data('selectenabled') == false || select.data('alreadyconfigured')) {
                     continue;
                 }
-                
+
                 var fieldMetadata = fieldService.getDisplayablesByAssociationKey(schema, associationKey);
                 var minLength = null;
+                var pageSize = contextService.isLocal() ? 30 : 300;
                 if (fieldMetadata != null && fieldMetadata.length > 0 && fieldMetadata[0].rendererParameters['minLength'] != null) {
                     minLength = parseInt(fieldMetadata[0].rendererParameters['minLength']);
+                }
+                if (fieldMetadata != null && fieldMetadata.length > 0 && fieldMetadata[0].rendererParameters['pageSize'] != null) {
+                    pageSize = parseInt(fieldMetadata[0].rendererParameters['pageSize']);
                 }
 
                 select.data('alreadyconfigured', true);
                 select.combobox({
-                    minLength : minLength
+                    minLength: minLength,
+                    pageSize: pageSize
                 });
             }
         }

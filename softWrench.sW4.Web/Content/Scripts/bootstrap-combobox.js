@@ -25,6 +25,7 @@
 
     var Combobox = function (element, options) {
         this.options = $.extend({}, $.fn.combobox.defaults, options);
+        this.options.pageSize = this.options.pageSize || 30000;
         this.$source = $(element);
         this.$container = this.setup();
         this.$element = this.$container.find('input[type=text]');
@@ -144,7 +145,7 @@
           })
           .show();
         $('.dropdown-menu').on('mousedown', $.proxy(this.scrollSafety, this));
-
+        $('.dropdown-menu').on('scroll', $.proxy(this.paginate, this));
         this.shown = true;
         return this;
     }
@@ -152,8 +153,8 @@
     , hide: function () {
         this.$menu.hide();
         $('.dropdown-menu').off('mousedown', $.proxy(this.scrollSafety, this));
+        $('.dropdown-menu').off('scroll', $.proxy(this.paginate, this));
         this.$element.on('blur', $.proxy(this.blur, this));
-
         this.shown = false;
         if (this.$target.val() == '') {
             this.triggerChange();
@@ -161,28 +162,59 @@
         return this;
     }
 
-    , lookup: function (event) {
+    , lookup: function (event, initialPage) {
+        initialPage = initialPage || 0;
         var val = this.$element.val();
         if (val.length >= this.options.minLength || val == '') {
             this.query = this.$element.val();
-            return this.process(this.source);
+            this.currentPage = initialPage;
+            if (this.idxShown == undefined) {
+                this.idxShown = [];
+            }
+            return this.process(this.source, initialPage);
         }
     }
 
-    , process: function (items) {
+    , process: function (items, initialPage) {
         var that = this;
+        var foundItems = [];
 
-        items = $.grep(items, function (item) {
-            return that.matcher(item);
-        })
-
-        items = this.sorter(items);
-
-        if (!items.length) {
-            return this.shown ? this.hide() : this;
+        var pageSize = this.options.pageSize;
+        var pageLimit = pageSize;
+        if (items.length < pageLimit) {
+            pageLimit = items.length;
         }
 
-        return this.render(items.slice(0, this.options.items)).show();
+
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var idxNotPresent = this.currentPage == 0 || this.idxShown.indexOf(i) == -1;
+            if (that.matcher(item) && idxNotPresent && foundItems.length < pageLimit) {
+                foundItems.push(item);
+                this.idxShown.push(i);
+            }
+        }
+
+
+
+        foundItems = this.sorter(foundItems);
+
+        if (!foundItems.length) {
+            if (initialPage == 0) {
+                //if we´re not on current page, let´s avoid calling hide whenever the scroll reaches the end
+                return this.shown ? this.hide() : this;
+            }
+            return this;
+        }
+
+
+        var appendItems = initialPage != 0;
+        this.render(foundItems.slice(0, foundItems.length), appendItems);
+        if (initialPage == 0) {
+            //if we´re on the first page, it means we oughtta show the menu, otherwise it´s stil opened and the user is only scrolling it
+            return this.show();
+        }
+        return this;
     }
 
     , matcher: function (item) {
@@ -220,21 +252,27 @@
         })
     }
 
-    , render: function (items) {
+    , render: function (items, appendItems) {
         var that = this;
 
         items = $(items).map(function (i, item) {
             i = $(that.options.item).attr('data-value', item);
             i.find('a').html(that.highlighter(item));
             return i[0];
-        })
+        });
+        if (appendItems) {
+            //if we are not on first page then we need to append the items to the existing html element instead of creating one
+            this.$menu.append(items);
+        } else {
+            items.first().addClass('active');
+            this.$menu.html(items);
+        }
 
-        items.first().addClass('active');
-        this.$menu.html(items);
         return this;
     }
 
     , next: function (event) {
+
         var active = this.$menu.find('.active').removeClass('active')
           , next = active.next();
 
@@ -260,7 +298,7 @@
         if (this.disabled) {
             return;
         }
-
+        this.idxShown = [];
         if (this.$container.hasClass('combobox-selected')) {
             this.clearTarget();
             this.triggerChange();
@@ -283,6 +321,14 @@
             }
         },
 
+        paginate: function (e) {
+            var target = e.target;
+            if (target.offsetHeight + target.scrollTop >= target.scrollHeight) {
+                this.lookup(e, this.currentPage + 1);
+            }
+
+        },
+
         clearElement: function () {
             this.$element.val('').focus();
         }
@@ -302,7 +348,7 @@
         this.source = this.parse();
         this.options.items = this.source.length;
 
-//        Stop autofocus on detail page load (update to v1.1.6)
+        //        Stop autofocus on detail page load (update to v1.1.6)
         var val = this.$element.val();
         if (!this.source || ($.inArray(val, this.source) == -1 || val.trim() == "")) {
             this.clearElement();
@@ -349,7 +395,7 @@
     , move: function (e) {
         if (!this.shown) {
             return;
-        } 
+        }
         switch (e.keyCode) {
             case 9: // tab
             case 13: // enter
