@@ -63,10 +63,8 @@
                     }
                 }
                 if (flag == 1) {
-                    for (i = 0; i < changeEvent.target.files.length; i++) {
-                        changeEvent.currentTarget.parentNode.parentNode.children[i].value = fileName[i];
-                    }
                     scope.path = fileName;
+                    changeEvent.currentTarget.parentNode.parentNode.children[0].value = fileName;
                 }
             });
         },
