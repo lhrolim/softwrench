@@ -24,7 +24,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .datepicker-dropdown {
-    z-index: 1000 !important;
+    /*z-index: 1000 !important;*/
 }
 
 #crudbodyform .combobox-container {

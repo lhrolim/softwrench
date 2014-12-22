@@ -9,29 +9,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
   
   <entities>
     <entity name="labtrans" idAttribute="labtransid">
-      <attributes>
-        <attribute name="transdate" type="datetime" required="true" />
-        <attribute name="labtransid" type="bigint"/>
-        <attribute name="laborcode" type="varchar"/>
-        <attribute name="craft" type="varchar" required="true" />
-        <attribute name="payrate" type="double" required="true" />
-        <attribute name="transtype" type="varchar"/>
-        <attribute name="orgid" type="varchar"/>
-        <attribute name="siteid" type="varchar"/>
-        <attribute name="refwo" type="varchar"/>
-        <attribute name="gldebitacct" type="varchar" required="false" />
-        <attribute name="linecost" type="double" required="true" />
-        <attribute name="enterby"  type="varchar" required="true" />
-        <attribute name="enterdate"  type="datetime" required="true" />
-        <attribute name="startdate" type="datetime"/>
-        <attribute name="starttime" type="datetime"/>
-        <attribute name="finishdate" type="datetime"/>
-        <attribute name="finishtime" type="datetime"/>
-        <attribute name="regularhrs" type="float"/>
-      </attributes>
       <relationships>
         <relationship to="labor">
           <relationshipAttribute from="laborcode" to="laborcode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="laborcraftrate">
+          <relationshipAttribute from="craft" to="craft" primary="true"/>
+          <relationshipAttribute from="laborcode" to="laborcode"/>
           <relationshipAttribute from="orgid" to="orgid" />
         </relationship>
         <relationship to="chartofaccounts" >
@@ -39,26 +24,36 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="orgid" to="orgid" />
         </relationship>
       </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="labtrans" />
+        <connectorParameter key="integration_interface" value="SWLABTRANS" />
+      </connectorParameters>
     </entity>
-
   </entities>
 
 
   <applications>
-    <application name="labtrans" entity="labtrans" title="Labor" id="00000000-0000-0000-0000-000000000011">
+    <application name="labtrans" entity="labtrans" title="Labor">
       <properties>
-        <property key="mobile.userInteractionEnabled" value="false"/>
-        <property key="mobile.fetchlimit" value="300"/>
         <property key ="icon.composition.tab" value="fa fa-users"/>
       </properties>
       <schemas>
-        <list>
+        <schema id="list" stereotype="compositionlist">
+          <properties>
+            <property key="list.click.popup" value="modal"/>
+          </properties>
           <field attribute="labtransid" hidden="true"/>
           <field attribute="laborcode" label="Labor" qualifier="title"/>
           <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
-        </list>
+          <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
+          <commandbars>
+            <commandgroup position="compositionbottom" removeundeclared="true">
+              <command icon="fa fa-users" id ="addnewlabor" label="Add New Labor" service="labtranService" method="displayModal" parameters="parentschema,parentdatamap"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
 
-        <detail platform="web">
+        <schema id="detail" stereotype="compositiondetail" mode="input">
           <field attribute="labtransid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
@@ -66,8 +61,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="transtype" hidden="true" />
           <field attribute="refwo" hidden="true" />
           <field attribute="enterby" hidden="true" />
-          <association label="Labor:" target="laborcode" labelfield="labor_.laborcode,labor_.person_.displayname" labelpattern="{0} {1}" required="true" >
+          <field attribute="payrate" hidden="true" />
+          <association label="Labor:" target="laborcode" labelfield="labor_.laborcode" required="true" >
             <renderer type="lookup"/>
+            <event type="afterchange" service="labtranService" method="afterlaborchange"/>
+          </association>
+          <association label="Craft:" required="true" target="craft" labelfield="laborcraftrate_.craft" extraprojectionvalues="defaultcraft, rate">
+            <event type="afterchange" service="labtranService" method="aftercraftchange"/>
           </association>
           <field label="Start Date:" attribute="startdate">
             <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
@@ -81,60 +81,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field label="End Time:" attribute="finishtime" >
             <renderer type="datetime" params="format=HH:mm;showdate=false" />
           </field>
-          <field attribute="regularhrs" label="Regular Hours:" required="true"/>
+          <field attribute="regularhrs" label="Regular Hours:" required="true" default="8"/>
           <association label="GL Debit Account:" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
             <renderer type="lookup"/>
           </association>
-          <field attribute="payrate" label="Pay Rate:" required="true" default="0">
-            <renderer type="numericinput" params="min=0;max=999;decimals=0"/>
-          </field>
-        </detail>
-
-        <detail platform="mobile" title="Labor">
-          <field attribute="labtransid" hidden="true"/>
-          <field attribute="orgid" hidden="true"/>
-          <field attribute="siteid" hidden="true"/>
-          <field attribute="laborcode" hidden="true" />
-          <field attribute="gldebitacct" hidden="true" />
-          <field attribute="transtype" hidden="true" />
-          <field attribute="refwo" hidden="true" />
-          <field attribute="enterby" hidden="true" />
-          <field attribute="enterdate" hidden="true" />
-          <association label="Labor:" target="laborcode" labelfield="labor_.laborcode,person_.displayname" />
-          <field attribute="labor_.laborcode" label="Labor:" >
-            <lookup sourceApplication="labor" sourceField="laborcode" sourceDisplay="laborcode,person_.displayname" targetField="laborcode" targetQualifier="">
-              <lookupFilters >
-                <lookupFilter sourceField="orgid" targetField="orgid" />
-              </lookupFilters>
-            </lookup>
-          </field>
-          <field attribute="startdate" label="Start Date:">
-            <date format="Short" time="false" />
-          </field>
-          <field attribute="starttime" label="Start Time:">
-            <date format="HH:mm" time="true" />
-          </field>
-          <field attribute="finishdate" label="End Date:">
-            <date format="Short" time="false" />
-          </field>
-          <field attribute="finishtime" label="End Time:">
-            <date format="HH:mm" time="true" />
-          </field>
-          <field attribute="regularhrs" label="Regular Hours:"/>
-          <!--          <association label="GL Debit Account:" target="gldebitacct" labelfield="chartofaccounts_.accountname" >-->
-          <!--            <renderer type="lookup"/>-->
-          <!--          </association>-->
-          <field attribute="chartofaccounts_.accountname" label="GL Account:" >
-            <lookup sourceApplication="chartofaccounts" sourceField="glaccount" sourceDisplay="accountname,glaccount" targetField="gldebitacct" targetQualifier="">
-              <lookupFilters>
-                <lookupFilter sourceField="orgid" targetField="orgid" />
-              </lookupFilters>
-            </lookup>
-          </field>
-          <field attribute="payrate" label="Pay Rate:" required="true" default="0">
-            <renderer type="numericinput" params="min=0;max=999;decimals=0"/>
-          </field>
-        </detail>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="print"/>
+              <removecommand id="save"/>
+              <removecommand id="cancel"/>
+              <command id="addnewlabor" label="Submit" service="labtranService" method="addLaborTrans"/>
+              <command id="cancelnewlabor" label="Cancel" service="labtranService" method="cancelLaborTrans" />
+            </commandgroup>
+          </commandbars>
+        </schema>
       </schemas>
     </application>
 

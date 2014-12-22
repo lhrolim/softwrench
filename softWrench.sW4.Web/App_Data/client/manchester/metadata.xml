@@ -88,6 +88,24 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Manchester.ComWorkOrderCrudConnector" />
       </connectorParameters>
     </entity>
+
+    <entity name="labtrans" idAttribute="labtransid">
+      <relationships>
+        <relationship to="labor">
+          <relationshipAttribute from="laborcode" to="laborcode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="laborcraftrate">
+          <relationshipAttribute from="craft" to="craft" primary="true"/>
+          <relationshipAttribute from="laborcode" to="laborcode"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="glcomponents">
+          <relationshipAttribute from="gldebitacct" to="compvalue" primary="true"/>
+          <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
   </entities>
 
   <applications>
@@ -531,6 +549,45 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <field attribute="longdescription_.ldtext" label="Details" name="description_longdescription" />
           </detail>
         </schemas>
+      </schemas>
+    </application>
+
+    <application name="labtrans" entity="labtrans" title="Labor">
+      <schemas>
+        <schema id="detail" stereotype="compositiondetail" mode="input">
+          <field attribute="labtransid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="laborcode" hidden="true" />
+          <field attribute="transtype" hidden="true" />
+          <field attribute="refwo" hidden="true" />
+          <field attribute="enterby" hidden="true" />
+          <field attribute="payrate" hidden="true" />
+          <field attribute="transtype" default="WORK" hidden="true"/>
+          <association label="Labor:" required="true" target="laborcode" labelfield="labor_.laborcode" default="@personid">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="labtranService" method="afterlaborchange"/>
+          </association>
+          <association label="Craft:" required="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
+            <event type="afterchange" service="labtranService" method="aftercraftchange"/>
+          </association>
+          <field label="Start Date:" required="true" attribute="startdate" default="@currentdatetime">
+            <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
+          </field>
+          <field attribute="regularhrs" label="Regular Hours:" required="true" default="8"/>
+          <association label="GL Debit Account:" required="true" target="gldebitacct" labelfield="glcomponents_.comptext" labelpattern="{0}">
+            <renderer type="lookup"/>
+          </association>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="print"/>
+              <removecommand id="save"/>
+              <removecommand id="cancel"/>
+              <command id="addnewlabor" label="Submit" service="labtranService" method="submitLaborTrans" parameters="schema,datamap" />
+              <command id="cancelnewlabor" label="Cancel" service="labtranService" method="cancelLaborTrans" />
+            </commandgroup>
+          </commandbars>
+        </schema>
       </schemas>
     </application>
   </applications>
