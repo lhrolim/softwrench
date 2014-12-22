@@ -202,7 +202,15 @@
         if (!foundItems.length) {
             if (initialPage == 0) {
                 //if we´re not on current page, let´s avoid calling hide whenever the scroll reaches the end
-                return this.shown ? this.hide() : this;
+                this.$target.val(this.previousTarget);
+                this.$source.val(this.previousTarget);
+//                this.$element.val(this.previousTarget);
+                this.refresh();
+                if (this.shown) {
+                    return this.hide();
+                }
+                return this;
+                
             }
             return this;
         }
@@ -463,6 +471,9 @@
                 }
 
             default:
+                if (this.$target.val() != '') {
+                    this.previousTarget = this.$target.val()
+                }
                 this.clearTarget();
                 this.lookup();
         }
