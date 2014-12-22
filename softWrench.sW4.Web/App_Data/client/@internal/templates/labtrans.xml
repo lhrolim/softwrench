@@ -64,6 +64,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="payrate" hidden="true" />
           <association label="Labor:" target="laborcode" labelfield="labor_.laborcode" required="true" >
             <renderer type="lookup"/>
+            <event type="afterchange" service="labtranService" method="afterlaborchange"/>
           </association>
           <association label="Craft:" required="true" target="craft" labelfield="laborcraftrate_.craft" extraprojectionvalues="defaultcraft, rate">
             <event type="afterchange" service="labtranService" method="aftercraftchange"/>
