@@ -105,7 +105,7 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmpAutocomp
                 $.each(displayables, function (idx, value) {
                     fn.unblock(value, scope);
                 });
-            } else if (oldValue == false && newValue == true) {
+            } else if ((oldValue == false || oldValue == undefined) && newValue == true) {
                 $.each(displayables, function (idx, value) {
                     fn.block(value, scope);
                 });
