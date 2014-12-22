@@ -201,15 +201,17 @@
 
         if (!foundItems.length) {
             if (initialPage == 0) {
+                //if we´re not on current page, let´s avoid calling hide whenever the scroll reaches the end
                 return this.shown ? this.hide() : this;
             }
             return this;
         }
 
-        //if we are not on first page then we need to append the items to the existing html element instead of creating one
+
         var appendItems = initialPage != 0;
         this.render(foundItems.slice(0, foundItems.length), appendItems);
-        if (!appendItems) {
+        if (initialPage == 0) {
+            //if we´re on the first page, it means we oughtta show the menu, otherwise it´s stil opened and the user is only scrolling it
             return this.show();
         }
         return this;
@@ -257,10 +259,9 @@
             i = $(that.options.item).attr('data-value', item);
             i.find('a').html(that.highlighter(item));
             return i[0];
-        })
-
-
+        });
         if (appendItems) {
+            //if we are not on first page then we need to append the items to the existing html element instead of creating one
             this.$menu.append(items);
         } else {
             items.first().addClass('active');
