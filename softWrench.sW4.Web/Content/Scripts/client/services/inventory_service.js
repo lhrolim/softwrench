@@ -528,40 +528,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         //    }
         //},
 
-        invUseAfterChangeItem: function(parameters) {
-            var itemnum = parameters['fields']['itemnum'];
-            parameters['fields']['binnum'] = null;
-            parameters['fields']['lotnum'] = null;
-            parameters['fields']['binbalances_.curbal'] = null;
-            if (nullOrEmpty(itemnum)) {
-                parameters['fields']['itemnum'] = null;
-                parameters['fields']['unitcost'] = null;
-                parameters['fields']['invuseline_.issueunit'] = null;
-                parameters['fields']['invuseline_.itemtype'] = null;
-                return;
-            }
-
-            var searchData = {
-                itemnum: parameters['fields']['itemnum'],
-                location: parameters['fields']['fromstoreloc'],
-                siteid: parameters['fields']['siteid'],
-                orgid: parameters['fields']['orgid'],
-                itemsetid: parameters['fields']['itemsetid']
-            };
-
-            searchService.searchWithData("inventory", searchData).success(function (data) {
-                var resultObject = data.resultObject;
-                var fields = resultObject[0].fields;
-                var costtype = fields['costtype'];
-                parameters['fields']['inventory_.costtype'] = costtype;
-                var locationFieldName = "";
-                if (parameters['fields'].fromstoreloc != undefined) {
-                    locationFieldName = "fromstoreloc";
-                }
-                doUpdateUnitCostFromInventoryCost(parameters, "unitcost", locationFieldName);
-            });
-        },
-
         invIssue_afterChangeItem: function(parameters) {
             var itemnum = parameters['fields']['itemnum'];
             parameters['fields']['binnum'] = null;
@@ -628,6 +594,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 }
             }
         },
+
         invIssue_afterChangeLocation: function(parameters) {
             //Sets the gldebitacct and clears the asset 
             //if there is no refwo defined
@@ -679,13 +646,14 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
         },
 
-        invUse_afterChangeFromBin: function(parameters) {
-            parameters['fields']['lotnum'] = parameters['fields']['frominvbalance_.lotnum'];
+        invUseAfterChangeFromBin: function(parameters) {
+            parameters['fields']['invuseline_.fromlot'] = parameters['fields']['frominvbalance_.lotnum'];
+            parameters['fields']['invuseline_.tolot'] = parameters['fields']['frominvbalance_.lotnum'];
             parameters['fields']['#curbal'] = parameters['fields']['frominvbalance_.curbal'];
-            $rootScope.$digest();
+            //$rootScope.$digest();
         },
 
-        invUse_afterChangeSite: function(parameters) {
+        invUseAfterChangeSite: function(parameters) {
 
             if (parameters['fields']['invuseline_.siteid'] == null ||
                 parameters['fields']['invuseline_.siteid'].trim() == "") {
@@ -697,6 +665,41 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 return;
             }
 
+        },
+
+        invUseAfterChangeItem: function (parameters) {
+            var itemnum = parameters['fields']['invuseline_.itemnum'];
+            parameters['fields']['itemnum'] = itemnum;
+            parameters['fields']['binnum'] = null;
+            parameters['fields']['lotnum'] = null;
+            parameters['fields']['binbalances_.curbal'] = null;
+            if (nullOrEmpty(itemnum)) {
+                parameters['fields']['itemnum'] = null;
+                parameters['fields']['unitcost'] = null;
+                parameters['fields']['invuseline_.issueunit'] = null;
+                parameters['fields']['invuseline_.itemtype'] = null;
+                return;
+            }
+
+            var searchData = {
+                itemnum: itemnum,
+                location: parameters['fields']['fromstoreloc'],
+                siteid: parameters['fields']['siteid'],
+                orgid: parameters['fields']['orgid'],
+                itemsetid: parameters['fields']['itemsetid']
+            };
+
+            searchService.searchWithData("inventory", searchData).success(function (data) {
+                var resultObject = data.resultObject;
+                var fields = resultObject[0].fields;
+                var costtype = fields['costtype'];
+                parameters['fields']['inventory_.costtype'] = costtype;
+                var locationFieldName = "";
+                if (parameters['fields'].fromstoreloc != undefined) {
+                    locationFieldName = "fromstoreloc";
+                }
+                doUpdateUnitCostFromInventoryCost(parameters, "invuseline_.unitcost", locationFieldName);
+            });
         },
 
         submitInvIssue: function(schema, datamap) {

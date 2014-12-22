@@ -975,23 +975,23 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="usetype" hidden="true"/>
           <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" required="true">
             <renderer type="lookup"/>
-            <!--<event type="afterchange" service="inventoryService" method="invUse_afterChangeSite"/>-->
+            <!--<event type="afterchange" service="inventoryService" method="invUseAfterChangeSite"/>-->
           </association>
           <association target="fromstoreloc" label="Storeroom" labelfield="fromlocation_.description" required="true" dependantfields="siteid">
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterFromStoreLoc"/>
           </association>
-          <association label="Item" target="invuseline_.itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description" extraprojectionvalues="costtype,issueunit,unitcost,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,fromstoreloc" required="true">
+          <association label="Item" target="invuseline_.itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,costtype,issueunit,unitcost,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,fromstoreloc" required="true">
             <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
             <event type="afterchange" service="inventoryService" method="invUseAfterChangeItem"/>
           </association>
           <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
           <association label="From Bin" target="invuseline_.frombin" forcedistinctoptions="false" labelfield="frominvbalance_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
             <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
-            <event type="afterchange" service="inventoryService" method="invUse_afterChangeFromBin"/>
+            <event type="afterchange" service="inventoryService" method="invUseAfterChangeFromBin"/>
             <dataprovider prefilterfunction="FilterFromBin"/>
           </association>
-          <field label="Lot" attribute="lotnum" readonly="true"/>
+          <field label="Lot" attribute="invuseline_.fromlot" readonly="true"/>
           <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>
           <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" required="true">
@@ -1001,7 +1001,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </association>
           <association target="invuseline_.tobin" label="To Bin" labelfield="toinvbalance_.binnum" hideDescription="true">
             <dataprovider prefilterfunction="FilterToBin" />
-            <renderer type="Lookup"/>
+            <renderer type="autocompleteclient"/>
           </association>
           <field attribute="invuseline_.quantity" label="Quantity" required="true">
             <event type="afterchange" service="inventoryService" method="afterChangeTransferQuantity"/>
