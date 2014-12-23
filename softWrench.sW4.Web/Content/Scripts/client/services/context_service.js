@@ -18,9 +18,9 @@ app.factory('contextService', function ($rootScope) {
 
 
         },
-        fetchFromContext: function (key, isJson, userootscope) {
+        fetchFromContext: function (key, isJson, userootscope, removeentry) {
             //shortcut method
-            var value = this.retrieveFromContext(key, userootscope);
+            var value = this.retrieveFromContext(key, userootscope, removeentry);
             if (value == "undefined") {
                 return undefined;
             }
@@ -35,11 +35,18 @@ app.factory('contextService', function ($rootScope) {
             return this.fetchFromContext(key, isJson, userootscope);
         },
 
-        retrieveFromContext: function (key, userootscope) {
+        retrieveFromContext: function (key, userootscope, removeentry) {
             if (userootscope) {
-                return $rootScope['ctx_' + key];
+                var object = $rootScope['ctx_' + key];
+                if (removeentry) {
+                    delete $rootScope['ctx_' + key];
+                }
+                return object;
             }
             var sessionContextValue = sessionStorage['ctx_' + key];
+            if (removeentry) {
+                delete sessionStorage['ctx_' + key];
+            }
             if (sessionContextValue == "null") {
                 return null;
             }
@@ -144,6 +151,13 @@ app.factory('contextService', function ($rootScope) {
             });
         },
 
+        deleteFromContext: function (key) {
+
+            delete sessionStorage["ctx_" + key];
+            delete $rootScope["ctx_" + key];
+
+        },
+
         insertReportSearchDTO: function (reportSchemaId, searchDTO) {
             this.insertIntoContext('repSearchDTO_' + reportSchemaId, searchDTO);
         },
@@ -166,13 +180,24 @@ app.factory('contextService', function ($rootScope) {
                 return true;
             }
             if (typeof (name) === 'array') {
-                if (jQuery.inArray(clientName, name)!=-1) {
+                if (jQuery.inArray(clientName, name) != -1) {
                     return true;
                 }
             }
             return false;
         },
+
+        setActiveTab: function (tabId) {
+            this.insertIntoContext('currenttab', tabId);
+        },
+
+        getActiveTab: function () {
+            return this.fetchFromContext('currenttab');
+        }
+
     };
+
+
 
 });
 

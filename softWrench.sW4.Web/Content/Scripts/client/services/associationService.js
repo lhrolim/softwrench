@@ -105,7 +105,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     element.hide();
                     element.show();
                 }
-                datamap[target] = null;
+                datamap[target] = "$null$ignorewatch";
                 this.cleanupDependantAssociationChain(target, scope);
             }
         },
@@ -335,7 +335,6 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             if (scope.datamap.fields) {
                 fields = scope.datamap.fields;
             }
-
 
             var parameters = {
                 key: {

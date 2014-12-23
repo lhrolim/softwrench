@@ -1,7 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 
-app.directive('tabsrendered', function ($timeout, $log, $rootScope) {
+app.directive('tabsrendered', function ($timeout, $log, $rootScope, contextService) {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -15,6 +15,7 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope) {
                             var tabId = $(this).data('tabid');
                             $log.getInstance('tabsrendered').trace('lazy loading tab {0}'.format(tabId));
                             $rootScope.$broadcast('sw_lazyloadtab', tabId);
+                            contextService.setActiveTab(tabId);
                         });
                     });
                 });
@@ -54,13 +55,13 @@ app.directive('crudBody', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             validationService, submitService, redirectService,
-            associationService, contextService) {
+            associationService, $timeout) {
 
-            $scope.$name = 'crudbody' + ($scope.ismodal  == "false"? 'modal' : '');
+            $scope.$name = 'crudbody' + ($scope.ismodal == "false" ? 'modal' : '');
 
-        
 
-          
+
+
 
             $scope.getFormattedValue = function (value, column) {
                 var formattedValue = formatService.format(value, column);
@@ -71,6 +72,10 @@ app.directive('crudBody', function (contextService) {
                 }
                 return formattedValue;
             };
+
+            $scope.setActiveTab = function (tabId) {
+                contextService.setActiveTab(tabId);
+            }
 
             $scope.hasTabs = function (schema) {
                 return tabsService.hasTabs(schema);
@@ -88,6 +93,25 @@ app.directive('crudBody', function (contextService) {
                 return tabsService.tabsDisplayables(schema);
             };
 
+            $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
+                var tab = contextService.getActiveTab();
+                if (tab != null) {
+                    redirectService.redirectToTab(tab);
+                }
+                //make sure we are seeing the top of the grid 
+                window.scrollTo(0, 0);
+                var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false,true);
+                if (onLoadMessage) {
+                    var data = {
+                        successMessage: onLoadMessage
+                    }
+                    $rootScope.$broadcast('sw_successmessage', data);
+                    $timeout(function () {
+                        $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
+                    }, contextService.retrieveFromContext('successMessageTimeOut'));
+                }
+            });
+
             $scope.$on('sw_successmessagetimeout', function (event, data) {
                 if (!$rootScope.showSuccessMessage) {
                     fixHeaderService.resetTableConfig($scope.schema);
@@ -99,10 +123,6 @@ app.directive('crudBody', function (contextService) {
                 fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
             });
 
-            $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
-                //make sure we are seeing the top of the grid 
-                window.scrollTo(0, 0);
-            });
 
             function defaultSuccessFunction(data) {
                 $scope.$parent.multipleSchema = false;
@@ -223,7 +243,7 @@ app.directive('crudBody', function (contextService) {
                 $rootScope.$broadcast("sw_beforeSave", fields);
 
                 if (sessionStorage.mockclientvalidation == undefined) {
-                    var validationErrors = validationService.validate($scope.schema,$scope.schema.displayables, fields);
+                    var validationErrors = validationService.validate($scope.schema, $scope.schema.displayables, fields);
                     if (validationErrors.length > 0) {
                         //interrupting here, can´t be done inside service
                         return;
@@ -235,7 +255,7 @@ app.directive('crudBody', function (contextService) {
                 submitService.translateFields($scope.schema.displayables, fields);
                 associationService.insertAssocationLabelsIfNeeded($scope.schema, fields, $scope.associationOptions);
 
-                
+
 
 
                 var jsonString = angular.toJson(fields);

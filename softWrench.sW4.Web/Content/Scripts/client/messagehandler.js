@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('messagesection', function (contextService) {
+app.directive('messagesection', function (contextService,$timeout) {
     return {
         restrict: 'E',
         templateUrl: contextService.getResourceUrl('Content/Templates/message_section.html'),
@@ -33,6 +33,7 @@ app.directive('messagesection', function (contextService) {
                     }
                     $scope.successMsg = data.successMessage;
                     $rootScope.showSuccessMessage = true;
+
                 } else {
                     hideSuccessMessage();
                 }

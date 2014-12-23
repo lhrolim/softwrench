@@ -44,10 +44,18 @@ app.config(['$httpProvider', function ($httpProvider) {
         function successMessageHandler(data) {
             var timeOut = contextService.retrieveFromContext('successMessageTimeOut');
             if (data.successMessage != null) {
-                $rootScope.$broadcast('sw_successmessage', data);
-                $timeout(function () {
-                    $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
-                }, timeOut);
+                var willRefresh = contextService.fetchFromContext("refreshscreen", false, true);
+                if (!willRefresh) {
+                    //if we´re sure the page will refresh we shall not display the successmessage now, since it would disappear quickly
+                    $rootScope.$broadcast('sw_successmessage', data);
+                    $timeout(function() {
+                        $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
+                    }, timeOut);
+                } else {
+                    contextService.insertIntoContext("onloadMessage", data.successMessage);
+                    contextService.deleteFromContext("refreshscreen");
+                }
+                
             }
         }
 
