@@ -334,11 +334,14 @@ app.directive('compositionList', function (contextService) {
                         //interrupting here, can´t be done inside service
                         return;
                     }
+                    var alwaysrefresh = $scope.compositiondetailschema.properties && "true" == $scope.compositiondetailschema.properties['compositions.alwaysrefresh'];
+                    if (alwaysrefresh) {
+                        //this will disable success message, since we know we´ll need to refresh the screen
+                        contextService.insertIntoContext("refreshscreen", true, true);
+                    }
                     $scope.$parent.$parent.save(null, {
                         successCbk: function (data) {
                             var updatedArray = data.resultObject.fields[$scope.relationship];
-                            var alwaysrefresh = $scope.compositiondetailschema.properties && "true" == $scope.compositiondetailschema.properties['compositions.alwaysrefresh'];
-
                             if (alwaysrefresh || updatedArray == null || updatedArray.length == 0) {
                                 window.location.reload();
                                 return;
@@ -358,7 +361,8 @@ app.directive('compositionList', function (contextService) {
                             $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
                         },
                         isComposition: true,
-                        nextSchemaObj: { schemaId: $scope.$parent.$parent.schema.schemaId }
+                        nextSchemaObj: { schemaId: $scope.$parent.$parent.schema.schemaId },
+                        refresh: alwaysrefresh
                     });
                 }
 

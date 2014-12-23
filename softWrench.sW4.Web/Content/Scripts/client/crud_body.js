@@ -1,7 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 
-app.directive('tabsrendered', function ($timeout, $log, $rootScope,contextService) {
+app.directive('tabsrendered', function ($timeout, $log, $rootScope, contextService) {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -55,7 +55,7 @@ app.directive('crudBody', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             validationService, submitService, redirectService,
-            associationService, contextService) {
+            associationService, $timeout) {
 
             $scope.$name = 'crudbody' + ($scope.ismodal == "false" ? 'modal' : '');
 
@@ -98,6 +98,18 @@ app.directive('crudBody', function (contextService) {
                 if (tab != null) {
                     redirectService.redirectToTab(tab);
                 }
+                //make sure we are seeing the top of the grid 
+                window.scrollTo(0, 0);
+                var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false,true);
+                if (onLoadMessage) {
+                    var data = {
+                        successMessage: onLoadMessage
+                    }
+                    $rootScope.$broadcast('sw_successmessage', data);
+                    $timeout(function () {
+                        $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
+                    }, contextService.retrieveFromContext('successMessageTimeOut'));
+                }
             });
 
             $scope.$on('sw_successmessagetimeout', function (event, data) {
@@ -111,10 +123,6 @@ app.directive('crudBody', function (contextService) {
                 fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
             });
 
-            $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
-                //make sure we are seeing the top of the grid 
-                window.scrollTo(0, 0);
-            });
 
             function defaultSuccessFunction(data) {
                 $scope.$parent.multipleSchema = false;

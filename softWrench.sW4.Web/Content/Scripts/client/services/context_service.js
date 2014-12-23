@@ -18,9 +18,9 @@ app.factory('contextService', function ($rootScope) {
 
 
         },
-        fetchFromContext: function (key, isJson, userootscope) {
+        fetchFromContext: function (key, isJson, userootscope, removeentry) {
             //shortcut method
-            var value = this.retrieveFromContext(key, userootscope);
+            var value = this.retrieveFromContext(key, userootscope, removeentry);
             if (value == "undefined") {
                 return undefined;
             }
@@ -35,11 +35,18 @@ app.factory('contextService', function ($rootScope) {
             return this.fetchFromContext(key, isJson, userootscope);
         },
 
-        retrieveFromContext: function (key, userootscope) {
+        retrieveFromContext: function (key, userootscope, removeentry) {
             if (userootscope) {
-                return $rootScope['ctx_' + key];
+                var object = $rootScope['ctx_' + key];
+                if (removeentry) {
+                    delete $rootScope['ctx_' + key];
+                }
+                return object;
             }
             var sessionContextValue = sessionStorage['ctx_' + key];
+            if (removeentry) {
+                delete sessionStorage['ctx_' + key];
+            }
             if (sessionContextValue == "null") {
                 return null;
             }
@@ -142,6 +149,13 @@ app.factory('contextService', function ($rootScope) {
                     delete sessionStorage[key];
                 }
             });
+        },
+
+        deleteFromContext: function (key) {
+
+            delete sessionStorage["ctx_" + key];
+            delete $rootScope["ctx_" + key];
+
         },
 
         insertReportSearchDTO: function (reportSchemaId, searchDTO) {
