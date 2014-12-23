@@ -101,6 +101,10 @@ app.directive('crudList', function (contextService) {
                 return tabsService.tabsDisplayables(schema);
             };
 
+            $scope.shouldShowSort = function(column,orientation) {
+                return column.attribute != null && ($scope.searchSort.field == column.attribute || $scope.searchSort.field == column.rendererParameters['sortattribute']) && $scope.searchSort.order == orientation;
+            };
+
             $scope.getGridColumnStyle = function (column, propertyName) {
                 var property = column.rendererParameters[propertyName];
 
