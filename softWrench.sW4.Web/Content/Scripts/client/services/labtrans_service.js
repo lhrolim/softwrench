@@ -75,6 +75,10 @@ app.factory('labtranService', function ($http, contextService, redirectService, 
                 event.fields['payrate'] = event.fields['laborcraftrate_.rate'];
                 event.fields['linecost'] = event.fields['laborcraftrate_.rate'] * event.fields['regularhrs'];
             }
+            else {
+                event.fields['payrate'] = 0.0;
+                event.fields['linecost'] = 0.0;
+            }
         }
     };
 });
