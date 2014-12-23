@@ -5,7 +5,9 @@ function testclick(rowNumber, columnNumber, element) {
     //with this, we can generate the table without compiling it to angular, making it faster
     //first tests pointed a 100ms gain, but need to gather more data.
     var scope = angular.element(element).scope();
-    scope.showDetail(scope.datamap[rowNumber], scope.schema.displayables[columnNumber]);
+    if (scope.showDetail) {
+        scope.showDetail(scope.datamap[rowNumber], scope.schema.displayables[columnNumber]);
+    }
 }
 
 app.directive('crudtbody', function (contextService, $compile, $parse, formatService, i18NService, fieldService, commandService, $injector, $timeout, $log) {

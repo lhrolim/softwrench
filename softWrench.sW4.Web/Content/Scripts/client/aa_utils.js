@@ -71,12 +71,7 @@ function instantiateIfUndefined(obj, nullcheck) {
 
 
 
-function lockCommandBars() {
-    var bars = $('[data-class=commandbar]');
-    bars.each(function (index, element) {
-        $(element).children('button').prop('disabled', 'disabled');
-    });
-}
+
 
 
 function FillRelationship(obj, property, valueToSet) {
@@ -188,10 +183,32 @@ function nullOrUndef(obj) {
     return obj === undefined || obj == null;
 }
 
+function lockCommandBars() {
+    var bars = $('[data-class=commandbar]');
+    bars.each(function (index, element) {
+        var buttons = $(element).children('button');
+        for (var i = 0; i < buttons.length; i++) {
+            var button = $(buttons[i]);
+            if (button.prop('disabled') != true) {
+                //lets disable only those who aren´t already disabled
+                button.attr('disabled', 'disabled');
+                button.attr('forceddisable', 'disabled');
+            }            
+        }
+        
+    });
+}
+
 function unLockCommandBars() {
     var bars = $('[data-class=commandbar]');
     bars.each(function (index, element) {
-        $(element).children('button').removeAttr('disabled');
+        var buttons = $(element).children('button');
+        for (var i = 0; i < buttons.length; i++) {
+            var button = $(buttons[i]);
+            if (button.attr('forceddisable') == 'disabled') {
+                button.removeAttr('disabled');
+            }
+        }
     });
 }
 

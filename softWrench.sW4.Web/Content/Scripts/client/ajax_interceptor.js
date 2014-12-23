@@ -30,11 +30,11 @@ app.config(['$httpProvider', function ($httpProvider) {
             //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
             $('[rel=tooltip]').tooltip('hide');
             activeRequests--;
-            unLockCommandBars();
-            unLockTabs();
             var log = $log.getInstance('sw4.ajaxint#endedok');
             log.trace("status :{0}, url: {1} ".format(response.status, response.config.url));
             if (activeRequests == 0) {
+                unLockCommandBars();
+                unLockTabs();
                 log.info("Requests ended");
                 $rootScope.$broadcast('sw_ajaxend', response.data);
                 successMessageHandler(response.data);
