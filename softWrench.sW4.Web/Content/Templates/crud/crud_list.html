@@ -58,10 +58,9 @@
                                 {{i18NLabel(column)}}
                             </span>
                             <span class="glyphicon glyphicon-sort-by-attributes"
-                                  ng-show="column.attribute != null && searchSort.field == column.attribute && searchSort.order == 'asc'"
+                                  ng-show="shouldShowSort(column,'asc')"
                                   rel="tooltip" data-original-title="Sorted ascendant"></span>
-                            <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-show="column.attribute != null
-                                  && searchSort.field == column.attribute && searchSort.order == 'desc'"
+                           <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-show="shouldShowSort(column,'desc')"
                                   rel="tooltip" data-original-title="Sorted descendant"></span>
                         </div>
                     </th>

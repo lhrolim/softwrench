@@ -90,6 +90,28 @@ app.directive('crudList', function (contextService) {
                 return tabsService.tabsDisplayables(schema);
             };
 
+  			$scope.getGridColumnStyle = function (column, propertyName) {
+                var property = column.rendererParameters[propertyName];
+
+                if (property != null) {
+                    return property;
+                }
+
+                if (propertyName == 'maxwidth') {
+                    var high = $(window).width() > 1199;
+                    if (high) {
+                        return '135px';
+                    }
+                    return '100px';
+                }
+                return null;
+            }
+
+		   $scope.shouldShowSort = function(column,orientation) {
+                return column.attribute != null && ($scope.searchSort.field == column.attribute || $scope.searchSort.field == column.rendererParameters['sortattribute']) && $scope.searchSort.order == orientation;
+		   };
+
+
             $scope.$on('filterRowRenderedEvent', function (filterRowRenderedEvent) {
                 if ($scope.datamap.length == 0) {
                     // only update filter visibility if there are no results to shown on grid... else the filter visibility will be updated on "listTableRenderedEvent"
