@@ -32,6 +32,10 @@
     top: -85px;
 }
 
+.menu-affix {
+    position: fixed !important;
+}
+
 @media only screen and (min-width: 1090px) {
     .listgrid-table {
         /*margin-top: 117px !important;*/
