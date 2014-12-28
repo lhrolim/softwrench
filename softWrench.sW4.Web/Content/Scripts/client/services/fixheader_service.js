@@ -76,9 +76,14 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         // loop over the first row of td's in &lt;tbody> and get the widths of individual &lt;td>'s
         var classToUse = emptyGrid ?  'thead tr:eq(0) th' : 'tbody tr:eq(0) td';
 
-        $(classToUse, table).each(function (i, firstrow) {
-            var width = $(firstrow).width();
-            thead.push(width);
+        $(classToUse, table).each(function (i, firstrowIterator) {
+            var firstTd = $(firstrowIterator);
+            if (!(firstTd.css("display") == "none")) {
+                var width = firstTd.width();
+                thead.push(width);
+            } else {
+                thead.push(0);
+            }
         });
         log.trace('thead array: ' + thead);
         var total = 0;

@@ -2391,7 +2391,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=79px;excelwidth=15"/>
           </field>
           <field label="User Id" attribute="aucisowner_.hlagdisplayname">
-            <renderer type="default" params="maxwidth=99px;minwidth=99px;excelwidth=15"/>
+            <renderer type="default" params="maxwidth=115px;minwidth=99px;excelwidth=15"/>
           </field>
           <field label="Description" attribute="hlagdescription">
             <renderer type="default" params="minwidth=200px;excelwidth=15"/>
