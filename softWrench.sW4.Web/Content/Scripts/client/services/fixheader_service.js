@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextService,fieldService) {
+app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextService, fieldService) {
 
     var addClassErrorMessageListHander = function (showerrormessage) {
         var affixpaginationid = $("#affixpagination");
@@ -74,13 +74,13 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
     var buildTheadArray = function (log, table, emptyGrid) {
         var thead = [];
         // loop over the first row of td's in &lt;tbody> and get the widths of individual &lt;td>'s
-        var classToUse = emptyGrid ?  'thead tr:eq(0) th' : 'tbody tr:eq(0) td';
+        var classToUse = emptyGrid ? 'thead tr:eq(0) th' : 'tbody tr:eq(0) td';
 
         $(classToUse, table).each(function (i, firstrowIterator) {
             var firstTd = $(firstrowIterator);
             if (!(firstTd.css("display") == "none")) {
                 var width = firstTd.width();
-                var maxwidth = firstTd.css('max-width').replace('px','');
+                var maxwidth = firstTd.css('max-width').replace('px', '');
                 if (maxwidth && maxwidth < width) {
                     thead.push(maxwidth);
                 }
@@ -184,25 +184,27 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             var table = $(".listgrid-table");
             var thead = buildTheadArray(log, table, params.empty);
 
-//            $('thead tr:eq(0) th', table).each(function (i, v) {
-//                $(v).width(thead[i]);
-//            });
-//            $('thead tr:eq(1) th', table).each(function (i, v) {
-//                $(v).width(thead[i]);
-//            });
-//
-//            // set the columns width back
-//            $('tbody tr:eq(0) td', table).each(function (i, v) {
-//                $(v).width(thead[i]);
-//            });
-//
-//            log.debug('updating filter visibility');
-//            this.updateFilterVisibility(schema, thead);
-//            contextService.insertIntoContext('currentgridarray', thead);
-//            log.debug('updated filter visibility');
-//
-//            //update the style, to fixed
-//            this.fixTableTop(table, params);
+            if (isIe9()) {
+                $('thead tr:eq(0) th', table).each(function (i, v) {
+                    $(v).width(thead[i]);
+                });
+                $('thead tr:eq(1) th', table).each(function (i, v) {
+                    $(v).width(thead[i]);
+                });
+
+                // set the columns width back
+                $('tbody tr:eq(0) td', table).each(function (i, v) {
+                    $(v).width(thead[i]);
+                });
+
+                log.debug('updating filter visibility');
+                this.updateFilterVisibility(schema, thead);
+                contextService.insertIntoContext('currentgridarray', thead);
+                log.debug('updated filter visibility');
+
+                //update the style, to fixed
+                this.fixTableTop(table, params);
+            }
 
             //hack to fix HAP-610 T-ITOM-015
             $('#pagesize').width($('#pagesize').width());
@@ -223,11 +225,11 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
                 //var isNewLowResolution = newWidth < resolutionBarrier - 15; // lets add some margin to give the browser time to render the new table...
                 //if ((isNewHighResolution && !highResolution) || (isNewLowResolution && highResolution)) {
                 $log.getInstance("fixheaderService#resize").debug('switching resolutions');
-                    fn.fixThead(null, {
-                        resizing: true
-                    });
-                    //width = newWidth;
-                    //highResolution = width >= resolutionBarrier;
+                fn.fixThead(null, {
+                    resizing: true
+                });
+                //width = newWidth;
+                //highResolution = width >= resolutionBarrier;
                 //}
             });
         },
