@@ -960,7 +960,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="minwidth=109px;maxwidth=200px;excelwidth=50;wordwrap=break-word" />
+            <renderer type="default" params="minwidth=109px;maxwidth=230px;excelwidth=50;wordwrap=break-word" />
           </field>
           <field attribute="asset_.description" label="Asset">
             <renderer type="default" params="minwidth=109px;wordwrap=break-word" />
@@ -3227,7 +3227,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="wonum" label="WO Number" />
           <field attribute="wosequence" label="Sequence" />
           <field attribute="ownergroup" label="Owner Group" >
-            <renderer type="default" params="minwidth=160px;maxwidth=200px"/>
+            <renderer type="default" params="minwidth=160px;maxwidth=230px"/>
           </field>
           <field attribute="status" label="Status"/>
           <field attribute="schedstart" label="Schedule Start">

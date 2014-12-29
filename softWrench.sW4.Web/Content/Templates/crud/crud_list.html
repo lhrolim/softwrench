@@ -10,9 +10,9 @@
                 <!-- Header row -->
                 <tr class="header-row">
                     <th ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)"
-                        ng-style="{'min-width': column.rendererParameters['minwidth'],
-                                           'max-width': column.rendererParameters['maxwidth'],
-                                           'width': column.rendererParameters['width'],
+                        ng-style="{'min-width': getGridHeaderStyle(column,'minwidth'),
+                                           'max-width': getGridHeaderStyle(column,'maxwidth'),
+                                           'width': getGridHeaderStyle(column,'width'),
                                            'word-wrap': column.rendererParameters['wordwrap']}"
                         ng-click="sort(column)">
                         <div ng-if="shouldShowFilter(column)">
@@ -29,9 +29,9 @@
                 <!-- Filter row shown when there are few columns to be displayed -->
                 <tr class="filter-row hidden-too-much-columns hiddenonprint">
                     <th ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)"
-                        filterrowrendered ng-style="{'min-width': column.rendererParameters['minwidth'],
-                                           'max-width': column.rendererParameters['maxwidth'],
-                                           'width': column.rendererParameters['width'],
+                        filterrowrendered ng-style="{'min-width': getGridHeaderStyle(column,'minwidth'),
+                                           'max-width': getGridHeaderStyle(column,'maxwidth'),
+                                           'width': getGridHeaderStyle(column,'width'),
                                            'word-wrap': column.rendererParameters['wordwrap']}">
 
                         <div ng-if="shouldShowFilter(column)" ng-style="{'min-width': column.rendererParameters['minwidth'],

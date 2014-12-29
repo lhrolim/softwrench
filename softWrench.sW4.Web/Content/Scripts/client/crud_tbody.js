@@ -128,7 +128,7 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                         var width = column.rendererParameters['width'];
                         var isHidden = hiddencolumnArray[j];
                         html += "<td {2} onclick='griditemclick({0},{1},this)'".format(i, j, isHidden ? 'style="display:none"' : '');
-                        if (i == 0 && !isHidden) {
+                        if (!isHidden) {
                             html += buildStyle(minWidth, maxWidth, width);
                         } 
                         html += ">";
@@ -145,7 +145,7 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                             hasCheckBox = true;
                         }else if (column.type == 'ApplicationFieldDefinition') {
                             html += "<div class='gridcolumnvalue'".format(columnst);
-                            if (i==0 && !isHidden) {
+                            if (!isHidden) {
                                 html += buildStyle(minwidthDiv, maxwidthDiv, widthDiv);
                             }
                             html += ">";

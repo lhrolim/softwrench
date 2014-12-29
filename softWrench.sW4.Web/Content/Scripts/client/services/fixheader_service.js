@@ -180,27 +180,31 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             var table = $(".listgrid-table");
             var thead = buildTheadArray(log, table, params.empty);
 
-            if (isIe9()) {
-                $('thead tr:eq(0) th', table).each(function (i, v) {
-                    $(v).width(thead[i]);
-                });
-                $('thead tr:eq(1) th', table).each(function (i, v) {
-                    $(v).width(thead[i]);
-                });
+            $('thead tr:eq(0) th', table).each(function (i, v) {
+                $(v).width(thead[i]);
+            });
+            $('thead tr:eq(1) th', table).each(function (i, v) {
+                $(v).width(thead[i]);
+            });
 
-                // set the columns width back
-                $('tbody tr:eq(0) td', table).each(function (i, v) {
-                    $(v).width(thead[i]);
-                });
+            // set the columns width back
+            $('tbody tr:eq(0) td', table).each(function (i, v) {
+                var width = thead[i];
+                var column = $(v);
+                var maxWidth = column.css("max-width");
+                if (maxWidth && maxWidth.replace('px', '') > width) {
+                    column.css('max-width', "none");
+                }
+                column.width(width);
+            });
 
-                log.debug('updating filter visibility');
-                this.updateFilterVisibility(schema, thead);
-                contextService.insertIntoContext('currentgridarray', thead);
-                log.debug('updated filter visibility');
+            log.debug('updating filter visibility');
+            this.updateFilterVisibility(schema, thead);
+            contextService.insertIntoContext('currentgridarray', thead);
+            log.debug('updated filter visibility');
 
-                //update the style, to fixed
-                this.fixTableTop(table, params);
-            }
+            //update the style, to fixed
+            this.fixTableTop(table, params);
 
             //hack to fix HAP-610 T-ITOM-015
             $('#pagesize').width($('#pagesize').width());
