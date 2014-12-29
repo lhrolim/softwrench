@@ -1,4 +1,4 @@
-var app = angular.module('sw_layout');
+﻿var app = angular.module('sw_layout');
 
 app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextService, fieldService) {
 
@@ -191,10 +191,6 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             $('tbody tr:eq(0) td', table).each(function (i, v) {
                 var width = thead[i];
                 var column = $(v);
-                var maxWidth = column.css("max-width");
-                if (maxWidth && maxWidth.replace('px', '') > width) {
-                    column.css('max-width', "none");
-                }
                 column.width(width);
             });
 

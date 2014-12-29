@@ -1,4 +1,4 @@
-var app = angular.module('sw_layout');
+﻿var app = angular.module('sw_layout');
 
 function griditemclick(rowNumber, columnNumber, element) {
     //this is a trick to call a angular scope function from an ordinary onclick listener (same used by batarang...)
@@ -19,6 +19,7 @@ function buildStyle(minWidth, maxWidth, width,isdiv) {
         style += 'min-width:' + minWidth + ";";
     }
     if (isdiv && maxWidth != undefined) {
+        //we cannot set max-widths for the tds
         style += 'max-width:' + maxWidth + ";";
     }
     if (width != undefined) {
