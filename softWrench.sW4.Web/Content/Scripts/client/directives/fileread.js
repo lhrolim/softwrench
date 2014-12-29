@@ -13,9 +13,6 @@
             var validFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html", "png"];
 
             var readFiles = function (changeEvent,fileRead,reader,current) {
-                if (isIe9() || changeEvent.target.files.length == 0) {
-                    return;
-                }
                 var fileNew = changeEvent.target.files[current]; // get the first from queue and store in file
                 current++;
                 if (current == changeEvent.target.files.length + 1) {
