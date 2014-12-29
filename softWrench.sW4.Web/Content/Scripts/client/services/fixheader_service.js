@@ -80,10 +80,6 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             var firstTd = $(firstrowIterator);
             if (!(firstTd.css("display") == "none")) {
                 var width = firstTd.width();
-                var maxwidth = firstTd.css('max-width').replace('px', '');
-                if (maxwidth && maxwidth < width) {
-                    thead.push(maxwidth);
-                }
                 thead.push(width);
             } else {
                 thead.push(0);
