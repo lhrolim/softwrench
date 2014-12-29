@@ -445,12 +445,6 @@ app.directive('crudInputFields', function (contextService) {
                 return cmpComboDropdown.getSelectedTexts(fieldMetadata);
             };
 
-            $scope.addToQueue = function(attachmentName, attachmentPath) {
-                var attachment = {};
-                attachment.attachmentName = attachmentName;
-                attachment.attachmentPath = attachmentPath;
-                $scope.datamap.attachments.add(attachment);
-            };
             $scope.opendetails = function (fieldMetadata) {
                 if ($scope.enabletoopendetails(fieldMetadata)) {
                     var parameters = { id: $scope.paramstopendetails.idtopendetails, popupmode: 'browser' };
