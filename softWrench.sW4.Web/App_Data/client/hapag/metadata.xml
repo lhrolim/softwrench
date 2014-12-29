@@ -957,16 +957,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <schema title="Service Request Grid" abstract="true" id="baselist" stereotype="list">
           <field attribute="ticketid" label="Request#">
-            <renderer type="default" params="minwidth=88px;maxwidth=100px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="minwidth=109px;excelwidth=50;wordwrap=break-word" />
+            <renderer type="default" params="minwidth=109px;maxwidth=200px;excelwidth=50;wordwrap=break-word" />
           </field>
           <field attribute="asset_.description" label="Asset">
             <renderer type="default" params="minwidth=109px;wordwrap=break-word" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=109px;showtime=false;exporttoexcel=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=90px;showtime=false;exporttoexcel=false" />
           </field>
           <field attribute="#2reportdate" label="Reported Date" hidden="true">
             <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=109px;showtime=false;exporttoexcel=true" />
@@ -976,7 +976,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
 
           <field attribute="hlagpluspcustomer" label="Site Id">
-            <renderer type="default" params="minwidth=80px;maxwidth=80px;" />
+            <renderer type="default" params="minwidth=75px;maxwidth=70px;" />
           </field>
           <field attribute="hlagaffectedperson" label="Affected Person">
             <renderer type="default" params="minwidth=109px;maxwidth=100px;" />

@@ -80,6 +80,10 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             var firstTd = $(firstrowIterator);
             if (!(firstTd.css("display") == "none")) {
                 var width = firstTd.width();
+                var maxwidth = firstTd.css('max-width').replace('px','');
+                if (maxwidth && maxwidth < width) {
+                    thead.push(maxwidth);
+                }
                 thead.push(width);
             } else {
                 thead.push(0);
@@ -180,25 +184,25 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
             var table = $(".listgrid-table");
             var thead = buildTheadArray(log, table, params.empty);
 
-            $('thead tr:eq(0) th', table).each(function (i, v) {
-                $(v).width(thead[i]);
-            });
-            $('thead tr:eq(1) th', table).each(function (i, v) {
-                $(v).width(thead[i]);
-            });
-
-            // set the columns width back
-            $('tbody tr:eq(0) td', table).each(function (i, v) {
-                $(v).width(thead[i]);
-            });
-
-            log.debug('updating filter visibility');
-            this.updateFilterVisibility(schema, thead);
-            contextService.insertIntoContext('currentgridarray', thead);
-            log.debug('updated filter visibility');
-
-            //update the style, to fixed
-            this.fixTableTop(table, params);
+//            $('thead tr:eq(0) th', table).each(function (i, v) {
+//                $(v).width(thead[i]);
+//            });
+//            $('thead tr:eq(1) th', table).each(function (i, v) {
+//                $(v).width(thead[i]);
+//            });
+//
+//            // set the columns width back
+//            $('tbody tr:eq(0) td', table).each(function (i, v) {
+//                $(v).width(thead[i]);
+//            });
+//
+//            log.debug('updating filter visibility');
+//            this.updateFilterVisibility(schema, thead);
+//            contextService.insertIntoContext('currentgridarray', thead);
+//            log.debug('updated filter visibility');
+//
+//            //update the style, to fixed
+//            this.fixTableTop(table, params);
 
             //hack to fix HAP-610 T-ITOM-015
             $('#pagesize').width($('#pagesize').width());
