@@ -105,7 +105,11 @@ app.directive('crudList', function (contextService) {
                 return column.attribute != null && ($scope.searchSort.field == column.attribute || $scope.searchSort.field == column.rendererParameters['sortattribute']) && $scope.searchSort.order == orientation;
             };
 
-            $scope.getGridColumnStyle = function (column, propertyName) {
+            $scope.getGridHeaderStyle = function (column, propertyName) {
+                if (!isIe9()) {
+                    return null;
+                }
+
                 var property = column.rendererParameters[propertyName];
 
                 if (property != null) {

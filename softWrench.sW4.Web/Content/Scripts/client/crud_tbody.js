@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-function testclick(rowNumber, columnNumber, element) {
+function griditemclick(rowNumber, columnNumber, element) {
     //this is a trick to call a angular scope function from an ordinary onclick listener (same used by batarang...)
     //with this, we can generate the table without compiling it to angular, making it faster
     //first tests pointed a 100ms gain, but need to gather more data.
@@ -9,6 +9,24 @@ function testclick(rowNumber, columnNumber, element) {
         scope.showDetail(scope.datamap[rowNumber], scope.schema.displayables[columnNumber]);
     }
 }
+
+function buildStyle(minWidth, maxWidth, width,isdiv) {
+    if (minWidth == undefined && maxWidth == undefined && width == undefined) {
+        return "";
+    }
+    var style = "style=\"";
+    if (minWidth != undefined) {
+        style += 'min-width:' + minWidth + ";";
+    }
+    if (isdiv && maxWidth != undefined) {
+        //we cannot set max-widths for the tds
+        style += 'max-width:' + maxWidth + ";";
+    }
+    if (width != undefined) {
+        style += 'width:' + width + ";";
+    }
+    return style + " \"";
+};
 
 app.directive('crudtbody', function (contextService, $compile, $parse, formatService, i18NService, fieldService, commandService, $injector, $timeout, $log) {
     return {
@@ -110,12 +128,11 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                         var maxWidth = column.rendererParameters['maxwidth'];
                         var width = column.rendererParameters['width'];
                         var isHidden = hiddencolumnArray[j];
-                        html += "<td {2} onclick='testclick({0},{1},this)'".format(i, j, isHidden ? 'style="display:none"' : '');
-                        if (i == 0 && !isHidden) {
-                            html += "style=\" minwidth:{0};maxwidth:{1};width:{2} \" >".format(minWidth, maxWidth, width);
-                        } else {
-                            html += ">";
-                        }
+                        html += "<td {2} onclick='griditemclick({0},{1},this)'".format(i, j, isHidden ? 'style="display:none"' : '');
+                        if (!isHidden) {
+                            html += buildStyle(minWidth, maxWidth, width,false);
+                        } 
+                        html += ">";
                         if (column.rendererType == 'color') {
                             var color = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', null);
                             html += "<div class='statuscolumncolor' style='background-color:{0}'>".format(color);
@@ -129,8 +146,8 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                             hasCheckBox = true;
                         }else if (column.type == 'ApplicationFieldDefinition') {
                             html += "<div class='gridcolumnvalue'".format(columnst);
-                            if (i == 0 && !isHidden) {
-                                html += "style=\" minwidth:{0};maxwidth:{1};width:{2} \" ".format(minwidthDiv, maxwidthDiv, widthDiv);
+                            if (!isHidden) {
+                                html += buildStyle(minwidthDiv, maxwidthDiv, widthDiv,true);
                             }
                             html += ">";
                             html += formattedText;
@@ -154,6 +171,8 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                     }
                 });
             }
+
+          
 
             scope.$on('sw_griddatachanged', function (event, datamap, schema) {
                 scope.refreshGrid(datamap, schema);

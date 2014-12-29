@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextService,fieldService) {
+app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextService, fieldService) {
 
     var addClassErrorMessageListHander = function (showerrormessage) {
         var affixpaginationid = $("#affixpagination");
@@ -74,7 +74,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
     var buildTheadArray = function (log, table, emptyGrid) {
         var thead = [];
         // loop over the first row of td's in &lt;tbody> and get the widths of individual &lt;td>'s
-        var classToUse = emptyGrid ?  'thead tr:eq(0) th' : 'tbody tr:eq(0) td';
+        var classToUse = emptyGrid ? 'thead tr:eq(0) th' : 'tbody tr:eq(0) td';
 
         $(classToUse, table).each(function (i, firstrowIterator) {
             var firstTd = $(firstrowIterator);
@@ -189,7 +189,9 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
 
             // set the columns width back
             $('tbody tr:eq(0) td', table).each(function (i, v) {
-                $(v).width(thead[i]);
+                var width = thead[i];
+                var column = $(v);
+                column.width(width);
             });
 
             log.debug('updating filter visibility');
@@ -219,11 +221,11 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
                 //var isNewLowResolution = newWidth < resolutionBarrier - 15; // lets add some margin to give the browser time to render the new table...
                 //if ((isNewHighResolution && !highResolution) || (isNewLowResolution && highResolution)) {
                 $log.getInstance("fixheaderService#resize").debug('switching resolutions');
-                    fn.fixThead(null, {
-                        resizing: true
-                    });
-                    //width = newWidth;
-                    //highResolution = width >= resolutionBarrier;
+                fn.fixThead(null, {
+                    resizing: true
+                });
+                //width = newWidth;
+                //highResolution = width >= resolutionBarrier;
                 //}
             });
         },

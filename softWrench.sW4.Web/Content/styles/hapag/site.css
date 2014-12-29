@@ -821,7 +821,7 @@ body,
 }
 
 .table thead > tr > th {
-    padding: 8px 4px;
+    padding: 8px 0px 8px 8px;
 }
 
 .table tbody > tr > td {
