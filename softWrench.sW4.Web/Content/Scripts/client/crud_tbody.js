@@ -1,4 +1,4 @@
-﻿var app = angular.module('sw_layout');
+var app = angular.module('sw_layout');
 
 function griditemclick(rowNumber, columnNumber, element) {
     //this is a trick to call a angular scope function from an ordinary onclick listener (same used by batarang...)
@@ -10,7 +10,7 @@ function griditemclick(rowNumber, columnNumber, element) {
     }
 }
 
-function buildStyle(minWidth, maxWidth, width) {
+function buildStyle(minWidth, maxWidth, width,isdiv) {
     if (minWidth == undefined && maxWidth == undefined && width == undefined) {
         return "";
     }
@@ -18,7 +18,7 @@ function buildStyle(minWidth, maxWidth, width) {
     if (minWidth != undefined) {
         style += 'min-width:' + minWidth + ";";
     }
-    if (maxWidth != undefined) {
+    if (isdiv && maxWidth != undefined) {
         style += 'max-width:' + maxWidth + ";";
     }
     if (width != undefined) {
@@ -129,7 +129,7 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                         var isHidden = hiddencolumnArray[j];
                         html += "<td {2} onclick='griditemclick({0},{1},this)'".format(i, j, isHidden ? 'style="display:none"' : '');
                         if (!isHidden) {
-                            html += buildStyle(minWidth, maxWidth, width);
+                            html += buildStyle(minWidth, maxWidth, width,false);
                         } 
                         html += ">";
                         if (column.rendererType == 'color') {
@@ -146,7 +146,7 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                         }else if (column.type == 'ApplicationFieldDefinition') {
                             html += "<div class='gridcolumnvalue'".format(columnst);
                             if (!isHidden) {
-                                html += buildStyle(minwidthDiv, maxwidthDiv, widthDiv);
+                                html += buildStyle(minwidthDiv, maxwidthDiv, widthDiv,true);
                             }
                             html += ">";
                             html += formattedText;
