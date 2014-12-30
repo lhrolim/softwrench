@@ -71,7 +71,6 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                 if (validationArray.length > 0) {
                     $rootScope.$broadcast('sw_validationerrors', validationArray);
                 }
-
             }
             return validationArray;
         },
