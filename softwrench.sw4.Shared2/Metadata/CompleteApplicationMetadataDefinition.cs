@@ -68,6 +68,9 @@ namespace softwrench.sW4.Shared2.Metadata {
                 if (!schema.Properties.ContainsKey(parameterKey)) {
                     schema.Properties.Add(parameterKey, parameters[parameterKey]);
                 }
+                else {
+                    schema.Properties[parameterKey] = parameters[parameterKey];
+                }
             }
         }
 

@@ -28,11 +28,11 @@ app.config(['$httpProvider', function ($httpProvider) {
             //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
             $('.no-touch [rel=tooltip]').tooltip('hide');
             activeRequests--;
-            unLockCommandBars();
-            unLockTabs();
             var log = $log.getInstance('sw4.ajaxint#endedok');
             log.trace("status :{0}, url: {1} ".format(response.status, response.config.url));
             if (activeRequests == 0) {
+                unLockCommandBars();
+                unLockTabs();
                 log.info("Requests ended");
                 $rootScope.$broadcast('sw_ajaxend', response.data);
                 successMessageHandler(response.data);
@@ -44,10 +44,17 @@ app.config(['$httpProvider', function ($httpProvider) {
         function successMessageHandler(data) {
             var timeOut = contextService.retrieveFromContext('successMessageTimeOut');
             if (data.successMessage != null) {
-                $rootScope.$broadcast('sw_successmessage', data);
-                $timeout(function () {
-                    $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
-                }, timeOut);
+                contextService.insertIntoContext("refreshscreen", true, true);
+                var willRefresh = contextService.fetchFromContext("refreshscreen", false, true);
+                if (!willRefresh) {
+                    $rootScope.$broadcast('sw_successmessage', data);
+                    $timeout(function () {
+                        $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
+                    }, timeOut);
+                } else {
+                    contextService.insertIntoContext("onloadMessage", data.successMessage);
+                    contextService.deleteFromContext("refreshscreen");
+                }
             }
         }
 

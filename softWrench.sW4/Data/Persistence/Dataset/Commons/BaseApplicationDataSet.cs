@@ -261,7 +261,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 tasks.Add(Task.Factory.NewThread(c => {
                     Quartz.Util.LogicalThreadContext.SetData("context", c);
                     var associationOptions = _associationOptionResolver.ResolveOptions(application, dataMap, association, search);
-                    var associationData = associationOptions as IAssociationOption[] ?? associationOptions.ToArray();
+                    // update this line of code to return an empty array if associationOptions is null; associationOptions.ToArray will cause an compilation error.
+                    // var associationData = associationOptions as IAssociationOption[] ?? associationOptions.ToArray();
+                    var associationData = (associationOptions == null) ? new IAssociationOption[0] : associationOptions.ToArray();
                     associationOptionsDictionary.Add(association.AssociationKey, new BaseAssociationUpdateResult(associationData));
                 }, ctx));
 

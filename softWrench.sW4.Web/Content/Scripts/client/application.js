@@ -6,7 +6,9 @@ app.directive('bodyrendered', function ($timeout, $log, menuService) {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
-            element.data('selectenabled', scope.isSelectEnabled(scope.fieldMetadata));
+            if (scope.schema.mode != 'output') {
+                element.data('selectenabled', scope.isSelectEnabled(scope.fieldMetadata));
+            }
             if (scope.$last === true) {
                 $timeout(function () {
                     var parentElementId = scope.elementid;
@@ -268,7 +270,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
                 $timeout(function () {
                     log.info('fetching eager associations of {0}'.format(scope.schema.applicationName));
                     associationService.getEagerAssociations(scope);
-                    
+
                 });
             }
             associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, scope.datamap.fields);

@@ -34,7 +34,7 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope) {
                         $rootScope.$broadcast('sw_lazyloadtab', tabId);
                     });
                 });
-            },0,false);
+            }, 0, false);
         }
     };
 });
@@ -78,7 +78,7 @@ app.directive('crudBody', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             submitService, redirectService,
-            associationService, contextService, alertService, validationService, schemaService) {
+            associationService, contextService, alertService, validationService, schemaService, $timeout) {
 
 
             $scope.getFormattedValue = function (value, column, datamap) {
@@ -137,6 +137,20 @@ app.directive('crudBody', function (contextService) {
 
                 //make sure we are seeing the top of the grid 
                 window.scrollTo(0, 0);
+
+                
+                var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
+                if (onLoadMessage) {
+                    //if we have a message to display upon page load
+                    var data = {
+                        successMessage: onLoadMessage
+                    }
+                    $rootScope.$broadcast('sw_successmessage', data);
+                    $timeout(function () {
+                        $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
+                    }, contextService.retrieveFromContext('successMessageTimeOut'));
+                }
+
 
             });
 
@@ -276,7 +290,7 @@ app.directive('crudBody', function (contextService) {
                     if (schema) { //SM - SWWEB-619 temp fix, at times (before everything is loaded?), this is run without a schema causing an exception, resulting in a UI glich
                         $scope.$emit('sw_titlechanged', schema.title);
                     }
-                        $scope.$parent.toList(null);
+                    $scope.$parent.toList(null);
                 }
                 //}
             };
@@ -335,7 +349,7 @@ app.directive('crudBody', function (contextService) {
                 $rootScope.$broadcast("sw_beforeSave", fields);
 
                 if (sessionStorage.mockclientvalidation == undefined) {
-                    var validationErrors = validationService.validate($scope.schema,$scope.schema.displayables, fields);
+                    var validationErrors = validationService.validate($scope.schema, $scope.schema.displayables, fields);
                     if (validationErrors.length > 0) {
                         //interrupting here, can´t be done inside service
                         return;
@@ -347,7 +361,7 @@ app.directive('crudBody', function (contextService) {
                 submitService.translateFields($scope.schema.displayables, fields);
                 associationService.insertAssocationLabelsIfNeeded($scope.schema, fields, $scope.associationOptions);
 
-                
+
 
 
                 var jsonString = angular.toJson(fields);

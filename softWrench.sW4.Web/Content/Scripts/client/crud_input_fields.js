@@ -445,6 +445,7 @@ app.directive('crudInputFields', function (contextService) {
             $scope.getSelectedTexts = function (fieldMetadata) {
                 return cmpComboDropdown.getSelectedTexts(fieldMetadata);
             };
+
             $scope.opendetails = function (fieldMetadata) {
                 if ($scope.enabletoopendetails(fieldMetadata)) {
                     var parameters = { id: $scope.paramstopendetails.idtopendetails, popupmode: 'browser' };
