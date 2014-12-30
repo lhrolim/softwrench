@@ -22,7 +22,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         }
 
-        public ApplicationFieldDefinition(string applicationName, string attribute, string label, bool requiredExpression, bool isReadOnly, bool isIsHidden,
+        public ApplicationFieldDefinition(string applicationName, string attribute, string label, string requiredExpression, bool isReadOnly, bool isIsHidden,
              FieldRenderer renderer, FieldFilter filter, IWidgetDefinition widgetDefinition, string defaultValue, string qualifier, string showExpression, string toolTip,
              string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression, string enableDefault)
             : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression) {
@@ -114,12 +114,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public static ApplicationFieldDefinition HiddenInstance(string applicationName, string attributeName) {
-            return new ApplicationFieldDefinition(applicationName, attributeName, "", false, false, true,
+            return new ApplicationFieldDefinition(applicationName, attributeName, "", "false", false, true,
                         new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null,null, null);
         }
 
         public static ApplicationFieldDefinition DefaultColumnInstance(string applicationName, string attributeName,string label) {
-            return new ApplicationFieldDefinition(applicationName, attributeName, label, false, false, false,
+            return new ApplicationFieldDefinition(applicationName, attributeName, label, "false", false, false,
                         new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null, null, null);
         }
     }

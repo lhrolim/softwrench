@@ -14,9 +14,9 @@ namespace softWrench.sW4.Metadata.Applications.Association {
     public class ApplicationAssociationFactory {
 
         public static ApplicationAssociationDefinition GetInstance([NotNull] string @from, ApplicationAssociationDefinition.LabelData labelData, string target,string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema, 
-            string showExpression, string toolTip, bool required, ISet<ApplicationEvent> events, string defaultValue, bool hideDescription, string extraProjectionFields = null, string isEnabled = "true", bool forceDistinctOptions = true) {
+            string showExpression, string toolTip, string requiredExpression, ISet<ApplicationEvent> events, string defaultValue, bool hideDescription, string extraProjectionFields = null, string isEnabled = "true", bool forceDistinctOptions = true) {
             var association = new ApplicationAssociationDefinition(from, labelData, target,qualifier, applicationAssociationSchema, showExpression,
-                toolTip, required, defaultValue, hideDescription, isEnabled, events, forceDistinctOptions);
+                toolTip, requiredExpression, defaultValue, hideDescription, isEnabled, events, forceDistinctOptions);
             var labelField = labelData.LabelField;
             association.LabelFields = ParseLabelFields(labelField);
             association.ApplicationTo = ParseApplicationTo(labelField);

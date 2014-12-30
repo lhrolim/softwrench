@@ -11,7 +11,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public string ApplicationName { get; set; }
         public string Label { get; set; }
         public string Attribute { get; set; }
-        public bool RequiredExpression { get; set; }
+        public string RequiredExpression { get; set; }
         public bool IsReadOnly { get; set; }
         public string DefaultValue { get; set; }
         public string Qualifier { get; set; }
@@ -36,7 +36,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         protected BaseApplicationFieldDefinition(string applicationName, string label,
-            string attribute, bool requiredExpression, bool isReadOnly,
+            string attribute, string requiredExpression, bool isReadOnly,
             string defaultValue, string qualifier, string showExpression, string toolTip,
             string attributeToServer, ISet<ApplicationEvent> events, string enableExpression) {
             if (attribute == null) {

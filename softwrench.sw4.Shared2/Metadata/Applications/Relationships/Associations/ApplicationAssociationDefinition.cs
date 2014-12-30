@@ -26,7 +26,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
-        public Boolean RequiredExpression { get; set; }
+        public string RequiredExpression { get; set; }
 
         public string Qualifier { get; set; }
 
@@ -63,7 +63,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public ApplicationAssociationDefinition() { }
 
         public ApplicationAssociationDefinition(string @from, LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
-            string showExpression, string toolTip, Boolean required, string defaultValue, bool hideDescription, string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true)
+            string showExpression, string toolTip, string requiredExpression, string defaultValue, bool hideDescription, string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true)
             : base(from, labelData.Label, showExpression, toolTip) {
             _labelData = labelData;
             _label = labelData.Label;
@@ -73,7 +73,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             _applicationAssociationSchema = applicationAssociationSchema;
             DefaultValue = defaultValue;
             EnableExpression = enableExpression;
-            RequiredExpression = required;
+            RequiredExpression = requiredExpression;
             _eventsSet = events;
             _forceDistinctOptions = forceDistinctOptions;
             Qualifier = qualifier;

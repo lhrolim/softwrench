@@ -2,7 +2,7 @@
 
 app.factory('expressionService', function ($rootScope, contextService) {
 
-    var preCompiledReplaceRegex = /(?:^|\W)@(\#*)(\w+)(?!\w)/g;
+    var preCompiledReplaceRegex = /(?:^|\W)@(\#*)(\w+(\.?\w?)*)(?!\w)/g;
 
     return {
         isPrecompiledReplaceRegexMatch: function (expression) {
@@ -10,18 +10,23 @@ app.factory('expressionService', function ($rootScope, contextService) {
         },
 
         getExpression: function (expression, datamap) {
-            if (datamap.fields != undefined) {
-                expression = expression.replace(/\@/g, 'datamap.fields.');
-            } else {
-                if (expression.startsWith('@#')) {
-                    expression = expression.replace(/\@#/g, 'datamap[\'#');
-                    expression = expression + '\']';
+            var variables = this.getVariables(expression);
+
+            for (var i = 0, len = variables.length; i < len; i++) {
+                var datamapPath = 'datamap';
+                if (datamap.fields != undefined) {
+                    datamapPath = 'datamap.fields';
                 }
-                expression = expression.replace(/\@/g, 'datamap.');
+
+                var currentVariable = variables[i];
+                var variableRegex = new RegExp('@' + currentVariable);
+                expression = expression.replace(variableRegex, datamapPath + "['" + currentVariable + "']");
             }
+
             expression = expression.replace(/ctx:/g, 'contextService.');
             return expression;
         },
+
 
 
         getVariables: function (expression) {
