@@ -241,6 +241,7 @@
     <Compile Include="Metadata\Applications\Association\BaseDependableResolver.cs" />
     <Compile Include="Metadata\Applications\Association\DynamicOptionFieldResolver.cs" />
     <Compile Include="Metadata\Applications\Command\ApplicationCommandExtensions.cs" />
+    <Compile Include="Metadata\Applications\DataSet\BaseIncidentDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseInvuseDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\AssociationPostFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\BasePreFilterParameters.cs" />

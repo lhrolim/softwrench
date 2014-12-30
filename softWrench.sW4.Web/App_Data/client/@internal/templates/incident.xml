@@ -128,9 +128,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <association label ="Priority" target="internalpriority" labelfield="numericdomain_.description">
             <renderer type="lookup"/>
           </association>
-          <association label="Classification:" target="classificationid" labelfield="incidentclassifications_.description">
-            <renderer type="lookup"/>
-          </association>
+<!--          <association label="Classification:" target="classificationid" labelfield="incidentclassifications_.description">-->
+<!--            <renderer type="lookup"/>-->
+<!--          </association>-->
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid">
+            <renderer type="autocompleteclient" />
+          </optionfield>
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             <!--renderer type="lookup"/-->
