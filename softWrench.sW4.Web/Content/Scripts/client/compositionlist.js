@@ -406,7 +406,7 @@ app.directive('compositionList', function (contextService) {
                 }
                 $scope.compositiondata.push(selecteditem);
                 if ($scope.collectionproperties.autoCommit) {
-                    var validationErrors = validationService.validate($scope.compositionschemadefinition.schemas.detail.displayables, selecteditem);
+                    var validationErrors = validationService.validate($scope.compositionschemadefinition.schemas.detail,$scope.compositionschemadefinition.schemas.detail.displayables, selecteditem);
                     if (validationErrors.length > 0) {
                         //interrupting here, can´t be done inside service
                         return;
