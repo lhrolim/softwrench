@@ -50,10 +50,10 @@ app.factory('expressionService', function ($rootScope, contextService) {
 
 
         evaluate: function (expression, datamap) {
-            if (expression == undefined || expression == "true") {
+            if (expression == undefined || expression == "true" || expression == true) {
                 return true;
             }
-            if (expression == "false") {
+            if (expression == "false" || expression == false) {
                 return false;
             }
             var expressionToEval = this.getExpression(expression, datamap);

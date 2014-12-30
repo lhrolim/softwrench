@@ -698,6 +698,13 @@ app.directive('crudInputFields', function (contextService) {
             $scope.isDesktop = function () {
                 return isDesktop();
             };
+
+            $scope.isFieldRequired = function (requiredExpression) {
+                if (requiredExpression != undefined) {
+                    return expressionService.evaluate(requiredExpression, $scope.datamap);
+                }
+                return requiredExpression;
+            };
         }
     }
 });
