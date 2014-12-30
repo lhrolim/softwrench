@@ -101,7 +101,7 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
                 $.each(displayables, function (idx, value) {
                     fn.unblock(value, scope);
                 });
-            } else if (oldValue == false && newValue == true) {
+            } else if ((oldValue == false || oldValue == undefined) && newValue == true) {
                 displayables = fieldService.getDisplayablesByAssociationKey(scope.schema, association.associationKey);
                 fn = this;
                 $.each(displayables, function (idx, value) {
