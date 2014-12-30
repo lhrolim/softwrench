@@ -2,6 +2,19 @@
 
 app.factory('expressionService', function ($rootScope, contextService) {
 
+
+    /*       This regex matches variables that start with an @     */
+    /*      Matching Strings:                                      */
+    /*                  @inventory_.item_.itemnum                  */
+    /*                  @assetnum                                  */
+    /*                  @#customfield                              */
+    /*                                                             */
+    /*       The leading @ is then removed from the matches        */
+    /*      Resulting Strings:                                     */
+    /*                  inventory_.item_.itemnum                   */
+    /*                  assetnum                                   */
+    /*                  #customfield                               */
+
     var preCompiledReplaceRegex = /(?:^|\W)@(\#*)(\w+(\.?\w?)*)(?!\w)/g;
 
     return {
