@@ -243,6 +243,7 @@
     <Compile Include="Metadata\Applications\Command\ApplicationCommandExtensions.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseIncidentDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseInvuseDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\ComMatusetranDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\AssociationPostFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\BasePreFilterParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\CompositionPreFilterFunctionParameters.cs" />

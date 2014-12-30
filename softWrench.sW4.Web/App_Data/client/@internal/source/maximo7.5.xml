@@ -3883,5 +3883,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <connectorParameter key="dbtable" value="glcomponents" />
       </connectorParameters>
     </entity>
+    <entity name="alndomain" idAttribute="alndomainid">
+      <attributes>
+        <attribute name="domainid" type="varchar" required="true" />
+        <attribute name="value" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="alndomainid" type="bigint" required="true" />
+        <attribute name="valueid" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+        <connectorParameters>
+          <connectorParameter key="dbtable" value="ALNDOMAIN" />
+        </connectorParameters>
+    </entity>
   </entities>
 </metadata>
