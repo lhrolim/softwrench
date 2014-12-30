@@ -23,9 +23,10 @@ namespace softWrench.sW4.Web.Common {
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath) {
 
             if (String.IsNullOrEmpty(masterPath)) {
-                masterPath = FetchMasterPath(controllerContext);
+                masterPath = FetchMasterPath(controllerContext, viewPath);
             }
             var clientPath = String.Format(ClientPattern, ApplicationConfiguration.ClientName);
+
 
             if (base.FileExists(controllerContext,
                 viewPath.Replace("%1", clientPath))) {
@@ -44,10 +45,14 @@ namespace softWrench.sW4.Web.Common {
 
         }
 
-        private string FetchMasterPath(ControllerContext controllerContext) {
+        private string FetchMasterPath(ControllerContext controllerContext, string viewPath) {
             var clientLayout = String.Format(ClientLayoutPattern, ApplicationConfiguration.ClientName);
             if (!controllerContext.HttpContext.User.Identity.IsAuthenticated ||
                 controllerContext.Controller is softWrench.sW4.Web.Controllers.ReportController) {
+                return "";
+
+            } if (viewPath.Contains("SignIn")) {
+                //FIX for HAP-780
                 return "";
             }
             if (base.FileExists(controllerContext, clientLayout)) {
