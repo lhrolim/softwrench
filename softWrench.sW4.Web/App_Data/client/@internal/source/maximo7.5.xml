@@ -2588,7 +2588,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <attribute name="quantity" type="double" required="true" />
         <attribute name="curbal" type="decimal" required="true" />
         <attribute name="physcnt" type="decimal" required="true" />
-        <attribute name="unitcost" type="double" required="false" />
+        <attribute name="unitcost" type="double" required="true" />
         <attribute name="actualcost" type="double" required="true" />
         <attribute name="ponum" type="varchar" required="false" />
         <attribute name="conversion" type="decimal" required="false" />
