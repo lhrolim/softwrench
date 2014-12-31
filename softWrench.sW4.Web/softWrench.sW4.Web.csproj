@@ -322,6 +322,10 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\Client\%40internal\templates\inventory_maximo71.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\inventory.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -398,6 +402,14 @@
     <Content Include="App_Data\Client\%40internal\target\maximo7.5.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\Client\bering\commands.xml" />
+    <Content Include="App_Data\Client\bering\deploy.xml" />
+    <Content Include="App_Data\Client\bering\menu.mobile.xml" />
+    <Content Include="App_Data\Client\bering\menu.web.xml" />
+    <Content Include="App_Data\Client\bering\metadata.xml" />
+    <Content Include="App_Data\Client\bering\properties.xml">
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Client\entegra\menu.mobile.xml" />
     <Content Include="App_Data\Client\entegra\menu.web.xml" />
@@ -956,6 +968,7 @@
     <Content Include="App_Data\Client\entegra\deploy.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="App_Data\Client\bering\statuscolors.json" />
     <None Include="App_Data\Client\hapag\i18n\en\labels.json" />
     <Content Include="IBM.Data.DB2.dll" />
     <Content Include="Content\Images\update_16.png" />

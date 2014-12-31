@@ -14,11 +14,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValueIfNull(invIssue, "ACTUALDATE", DateTime.Now.FromServerToRightKind());
             w.SetValueIfNull(invIssue, "TRANSDATE", DateTime.Now.FromServerToRightKind());
             w.SetValueIfNull(invIssue, "SENDERSYSID", "SW");
-            double units = Convert.ToDouble(w.GetRealValue(invIssue, "QUANTITY"));
-            double unitCost = Convert.ToDouble(w.GetRealValue(invIssue, "UNITCOST"));
-            w.SetValueIfNull(invIssue, "ACTUALCOST", unitCost);
-            double lineCost = units * unitCost;
-            w.SetValueIfNull(invIssue, "LINECOST", lineCost);
+            //double units = Convert.ToDouble(w.GetRealValue(invIssue, "QUANTITY"));
+            //double unitCost = Convert.ToDouble(w.GetRealValue(invIssue, "UNITCOST"));
+            //w.SetValueIfNull(invIssue, "ACTUALCOST", unitCost);
+            //double lineCost = units * unitCost;
+            //w.SetValueIfNull(invIssue, "LINECOST", lineCost);
             var quantity = w.GetRealValue(invIssue, "QUANTITY");
             w.SetValueIfNull(invIssue, "QTYREQUESTED", quantity);
 

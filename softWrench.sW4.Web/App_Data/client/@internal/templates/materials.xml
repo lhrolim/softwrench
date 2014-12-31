@@ -19,7 +19,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <attribute name="description"  type="varchar" required="true" />
         <attribute name="transdate"  type="datetime" required="true" />
         <attribute name="qtyrequested"  type="double" required="true" />
-        <attribute name="unitcost"  type="decimal" required="true" />
+        <attribute name="unitcost"  type="decimal" required="false" />
         <attribute name="gldebitacct" type="varchar" required="false" />
       </attributes>
       <relationships>
