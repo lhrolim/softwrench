@@ -349,6 +349,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="item">
           <relationshipAttribute from="invuseline_.itemnum" to="itemnum" primary="true"/>
         </relationship>
+        <relationship to="asset">
+          <relationshipAttribute from="invuseline_.rotassetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.frombin" to="binnum"/>
+          <relationshipAttribute from="invuseline_.fromlot" to="lotnum"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWINVUSE"/>
@@ -635,6 +643,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
           </field>
           <field attribute="binnum" label="Bin">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
+          </field>
+          <field attribute="lotnum" label="Lot">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
           </field>
           <optionfield attribute="item_.rotating" label="Rotating">
@@ -986,6 +997,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <event type="afterchange" service="inventoryService" method="invUseAfterChangeItem"/>
           </association>
           <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
+          <association target="invuseline_.rotassetnum" label="Rotating Asset" labelfield="asset_.description" required="false" extraprojectionvalues="binnum,lotnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
+            <renderer type="lookup" />
+          </association>
+          <!--<field label="Rotating" target="inventory_.item_.rotating"/>-->
+          <!--<field label="Kit" target="inventory_.item_.iskit"/>-->
           <association label="From Bin" target="invuseline_.frombin" forcedistinctoptions="false" labelfield="frominvbalance_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
             <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
             <event type="afterchange" service="inventoryService" method="invUseAfterChangeFromBin"/>
