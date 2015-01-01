@@ -10,10 +10,7 @@
                 <!-- Header row -->
                 <tr class="header-row">
                     <th ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)"
-                        ng-style="{'min-width': getGridHeaderStyle(column,'minwidth'),
-                                           'max-width': getGridHeaderStyle(column,'maxwidth'),
-                                           'width': getGridHeaderStyle(column,'width'),
-                                           'word-wrap': column.rendererParameters['wordwrap']}"
+                        ng-style="{'word-wrap': column.rendererParameters['wordwrap']}"
                         ng-click="sort(column)">
                         <div ng-if="shouldShowFilter(column)">
                             <span class="add-on" rel="tooltip" data-original-title="{{i18N('_grid.filter.clicksort','Click here to sort')}}">{{i18NLabel(column)}}</span>
@@ -29,15 +26,9 @@
                 <!-- Filter row shown when there are few columns to be displayed -->
                 <tr class="filter-row hidden-too-much-columns hiddenonprint">
                     <th ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)"
-                        filterrowrendered ng-style="{'min-width': getGridHeaderStyle(column,'minwidth'),
-                                           'max-width': getGridHeaderStyle(column,'maxwidth'),
-                                           'width': getGridHeaderStyle(column,'width'),
-                                           'word-wrap': column.rendererParameters['wordwrap']}">
+                        filterrowrendered ng-style="{'word-wrap': column.rendererParameters['wordwrap']}">
 
-                        <div ng-if="shouldShowFilter(column)" ng-style="{'min-width': column.rendererParameters['minwidth'],
-                                           'max-width': column.rendererParameters['maxwidth'],
-                                           'width': column.rendererParameters['width'],
-                                           'word-wrap': column.rendererParameters['wordwrap']}">
+                        <div ng-if="shouldShowFilter(column)" ng-style="{'word-wrap': column.rendererParameters['wordwrap']}">
                             <ng-switch on="column.rendererType">
                                 <div ng-switch-when="datetime" data-datepicker="true" class="input-group input-group-sm">
                                     <input type="text" ng-model="searchData[column.attribute]" class="form-control"
@@ -51,7 +42,7 @@
                                     <span class="input-group-addon " data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}"><i class="glyphicon glyphicon-calendar"></i></span>
 
                                     <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                    The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                     <div class="input-group-addon dropdown">
                                         <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                               data-toggle="dropdown" rel="tooltip"
@@ -70,7 +61,7 @@
                                     <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
                                            ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" />
                                     <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                    The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                     <div class="input-group-addon dropdown">
                                         <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                               data-toggle="dropdown" rel="tooltip"
