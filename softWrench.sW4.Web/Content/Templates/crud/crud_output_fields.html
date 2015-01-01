@@ -72,7 +72,7 @@
                                 </div>
 
                                 <div ng-switch-default>
-                                    <label class="control-label" style="text-align:left; word-break:break-word;"
+                                    <label class="control-label" style="text-align:left; word-wrap: break-word;max-width: 600px;"
                                            ng-bind-html="getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata) | linebreak"
                                            ng-init="bindEvalExpression(fieldMetadata)"
                                            data-attribute="{{fieldMetadata.attribute}}">
