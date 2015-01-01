@@ -150,7 +150,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
                 }
 
                 if (addonWidth == 0) {
-                    $(v).width(trWidth);
+                    //there´s no filter to update
                     return;
                 }
 
