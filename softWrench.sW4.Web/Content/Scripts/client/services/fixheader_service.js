@@ -73,12 +73,13 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
 
     var buildTheadArray = function (log, table, emptyGrid) {
         var thead = [];
-        // loop over the first row of td's in &lt;tbody> and get the widths of individual &lt;td>'s
+        //if the grid is empty, let´s just keep the th array
         var classToUse = emptyGrid ? 'thead tr:eq(0) th' : 'tbody tr:eq(0) td';
 
         $(classToUse, table).each(function (i, firstrowIterator) {
             var firstTd = $(firstrowIterator);
             if (!(firstTd.css("display") == "none")) {
+                //let´s push only the visible entries
                 var width = firstTd.width();
                 thead.push(width);
             } else {
@@ -134,6 +135,12 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
 
             //                        thead tr:eq(1) th ==> picks all the elements of the first line of the thead of the table, i.e the filters
             $('thead tr:eq(1) th', table).each(function (i, v) {
+                var trWidth = theadArray[i];
+                if (trWidth == 0) {
+                    //hidden fields
+                    return;
+                }
+
                 var inputGroupElements = $('.input-group', v).children();
                 //filtering only the inputs (ignoring divs...)
                 var addonWidth = 0;
@@ -141,11 +148,18 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
                     //sums both the filter input + the filter button
                     addonWidth += inputGroupElements.eq(j).outerWidth();
                 }
+
+                if (addonWidth == 0) {
+                    $(v).width(trWidth);
+                    return;
+                }
+
+
                 //first element will be the filter input itself
                 var input = inputGroupElements.eq(0);
                 var width = input.width();
                 var inputPaddingAndBorder = input.outerWidth() - width;
-                var trWidth = theadArray[i];
+                
                 var resultValue = trWidth - addonWidth - inputPaddingAndBorder;
                 $log.getInstance('fixheaderService#updateFilterVisibility').debug("result:{0} | Previous:{1} | tr:{2} | addon:{3} | Padding{4}".format(resultValue, width, trWidth, addonWidth, inputPaddingAndBorder));
                 input.width(resultValue);
