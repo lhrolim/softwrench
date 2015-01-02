@@ -109,18 +109,16 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var siteid = parameters.OriginalEntity.Attributes["siteid"];
             if (siteid != null) {
                 filter.AppendSearchEntry("workorder.siteid", siteid.ToString().ToUpper());
-                var validWorkOrderStatus = new List<string> { "APPR", "WMAT", "WSCH", "WORKING" };
-                filter.AppendSearchEntry("STATUS", validWorkOrderStatus);
             }
+            var validWorkOrderStatus = new List<string> { "APPR", "WMAT", "WSCH", "WORKING" };
+            filter.AppendSearchEntry("STATUS", validWorkOrderStatus);
             return filter;
         }
 
         public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
-            var siteid = parameters.OriginalEntity.Attributes["siteid"];
-            if (siteid != null) {
-                filter.AppendSearchEntry("asset.siteid", siteid.ToString().ToUpper());
-            }
+            var validAssetStatus = new List<string> { "NOT READY", "OPERATING", "ACTIVE" };
+            filter.AppendSearchEntry("STATUS", validAssetStatus);
             return filter;
         }
 
@@ -138,7 +136,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '')"));
             filter.ProjectionFields.Add(new ProjectionField("curbal", "invbalances.curbal"));
             filter.ProjectionFields.Add(new ProjectionField("lotnum", "invbalances.lotnum"));
-            filter.SearchSort = "invbalances.binnum";
+            filter.SearchSort = "invbalances.binnum,invbalances.lotnum";
             filter.SearchAscending = true;
             
             return filter;
