@@ -124,13 +124,18 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
             <renderer type="lookup"/>
           </association>
-          <field label="Site Id:" attribute="siteid"  readonly="true"/>
+          <field label="Site Id:" attribute="siteid"  hidden="true"/>
+          <field attribute ="orgid" hidden ="true"/>
+          <field attribute ="class" hidden ="true"/>
           <association label ="Priority" target="internalpriority" labelfield="numericdomain_.description">
             <renderer type="lookup"/>
           </association>
-          <association label="Classification:" target="classificationid" labelfield="incidentclassifications_.description">
-            <renderer type="lookup"/>
-          </association>
+<!--          <association label="Classification:" target="classificationid" labelfield="incidentclassifications_.description">-->
+<!--            <renderer type="lookup"/>-->
+<!--          </association>-->
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid">
+            <renderer type="autocompleteclient" />
+          </optionfield>
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             <!--renderer type="lookup"/-->
@@ -185,7 +190,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
             <renderer type="lookup"/>
           </association>
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid">
+            <renderer type="autocompleteclient" />
+          </optionfield>
           <field label="Site Id:" attribute="siteid"  readonly="true"/>
+          <field attribute ="orgid" hidden ="true"/>
+          <field attribute ="class" hidden="true"/>
           <optionfield label="Priority:" attribute="internalpriority" default="1">
             <renderer type="radio"/>
             <option label="Critical" value="1"/>
