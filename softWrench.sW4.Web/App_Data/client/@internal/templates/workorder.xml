@@ -57,10 +57,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="wopriority" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WO PRIORITY" quoteLiteral="true" />
         </relationship>
-          <relationship to="alndomain" qualifier="syndivision">
-          <relationshipAttribute from="division" to="value" primary="true"/>
-          <relationshipAttribute to="domainid" literal="DIVISION" quoteLiteral="true" />
-        </relationship>
       </relationships>
     </entity>
   </entities>
@@ -143,9 +139,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" default="@classstructureid">
               <renderer type="autocompleteclient" />
             </optionfield>
-            <association label="Division:" target="division" labelfield="syndivision_.value, syndivision_.description" labelpattern="{1}">
-              <renderer type="lookup"/>
-            </association>
             <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
               <renderer type="lookup"/>
               <event type="afterchange" service="genericTicetService" method="afterchangeowner"/>
