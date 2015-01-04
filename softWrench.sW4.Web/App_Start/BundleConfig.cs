@@ -19,7 +19,6 @@ namespace softWrench.sW4.Web {
             bundles.Add(new StyleBundle("~/Content/bootstrap/css/twitter-bootstrap").Include(
                 "~/Content/bootstrap/css/bootstrap-min.css",
                 "~/Content/bootstrap/css/bootstrap-theme-min.css",
-                //                        "~/Content/bootstrap/css/bootstrap-responsive.css",
                 "~/Content/bootstrap/css/bootstrap-combobox.css",
                 "~/Content/bootstrap/css/datepicker.css",
                 "~/Content/bootstrap/css/bootstrap-select.css",
@@ -62,63 +61,64 @@ namespace softWrench.sW4.Web {
         private static void AddScripts(BundleCollection bundles) {
             // When try
             bundles.Add(new ScriptBundle("~/Content/Scripts/jquery/jquery").Include(
-                "~/Content/Scripts/jquery/jquery-2.0.3-max.js",
-                "~/Content/Scripts/jquery/jquery-ui-1.10.3.js",
-                "~/Content/Scripts/jquery/jquery-file-style.js",
-                "~/Content/Scripts/jquery/jquery-filedownload-1.2.0.js",
-                "~/Content/Scripts/jquery/jquery-fileupload-5.40.1.js",
-                "~/Content/Scripts/spin-min.js"
+                "~/Content/Scripts/vendor/jquery/jquery-2.0.3-max.js",
+                "~/Content/Scripts/vendor/jquery/jquery-ui-1.10.3.js",
+                "~/Content/Scripts/vendor/jquery/jquery-file-style.js",
+                "~/Content/Scripts/vendor/jquery/jquery-filedownload-1.2.0.js",
+                "~/Content/Scripts/vendor/jquery/jquery-fileupload-5.40.1.js",
+                "~/Content/Scripts/vendor/other/spin-min.js"
                 ));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/thirdparty").Include(
-                "~/Content/Scripts/thirdparty/moment.js",
-                "~/Content/Scripts/thirdparty/textAngular-sanitize-min.js",
-                "~/Content/Scripts/thirdparty/textAngular-min.js",
-                "~/Content/Scripts/thirdparty/jquery.scannerdetection.js",
-                "~/Content/Scripts/thirdparty/angular-fileUpload.js"));
+                "~/Content/Scripts/vendor/other/moment.js",
+                "~/Content/Scripts/vendor/other/textAngular-sanitize-min.js",
+                "~/Content/Scripts/vendor/other/textAngular-min.js",
+                "~/Content/Scripts/vendor/other/jquery.scannerdetection.js",
+                "~/Content/Scripts/vendor/other/angular-fileUpload.js"));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/jqueryui").Include(
-                "~/Content/Scripts/jquery-ui-{version}.js"));
+                "~/Content/Scripts/vendor/jquery/jquery-ui-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/jqueryval").Include(
-                "~/Content/Scripts/jquery.unobtrusive*",
-                "~/Content/Scripts/jquery.validate*"));
+                "~/Content/Scripts/vendor/jquery/jquery.unobtrusive*",
+                "~/Content/Scripts/vendor/jquery/query.validate*"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/Content/Scripts/modernizr").Include(
-                "~/Content/Scripts/modernizr-*"));
+                "~/Content/Scripts/vendor/other/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/angular/angular").Include(
-                "~/Content/Scripts/" + "angular/angular.js",
-                "~/Content/Scripts/" + "angular/angular-strap.js",
-                "~/Content/Scripts/" + "angular/angular-sanitize.js",
-                "~/Content/Scripts/" + "angular/bindonce.js"
+                "~/Content/Scripts/vendor/angular/angular.js",
+                "~/Content/Scripts/vendor/angular/angular-strap.js",
+                "~/Content/Scripts/vendor/angular/angular-sanitize.js",
+                "~/Content/Scripts/vendor/angular/bindonce.js",
+                "~/Content/Scripts/vendor/angular/components/*.js"
+
                 ));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/twitter-bootstrap").Include(
-                "~/Content/Scripts/bootstrap.max.js",
-                "~/Content/Scripts/bootstrap-datepicker.js",
-                "~/Content/Scripts/bootstrap-combobox.js",
-                "~/Content/Scripts/bootstrap-datetimepicker.js",
-                "~/Content/Scripts/bootstrap-collapse.js",
-                "~/Content/Scripts/bootstrap-richtext.js",
-                "~/Content/Scripts/bootbox.js",
-                "~/Content/Scripts/typeahead.js",
-                "~/Content/Scripts/hogan.js",
-                "~/Content/Scripts/locales/bootstrap-datepicker.de.js",
-                "~/Content/Scripts/locales/bootstrap-datetimepicker.de.js",
-                "~/Content/Scripts/locales/bootstrap-datepicker.es.js",
-                "~/Content/Scripts/locales/bootstrap-datetimepicker.es.js",
-                "~/Content/Scripts/modal.js",
-                "~/Content/Scripts/bootstrap-multiselect.js"
+                "~/Content/Scripts/vendor/bootstrap/bootstrap.max.js",
+                "~/Content/Scripts/vendor/bootstrap/bootstrap-datepicker.js",
+                "~/Content/Scripts/vendor/bootstrap/bootstrap-combobox.js",
+                "~/Content/Scripts/vendor/bootstrap/bootstrap-datetimepicker.js",
+                "~/Content/Scripts/vendor/bootstrap/bootstrap-collapse.js",
+                "~/Content/Scripts/vendor/bootstrap/bootstrap-richtext.js",
+                "~/Content/Scripts/vendor/other/bootbox.js",
+                "~/Content/Scripts/vendor/other/typeahead.js",
+                "~/Content/Scripts/vendor/bootstrap/locales/bootstrap-datepicker.de.js",
+                "~/Content/Scripts/vendor/bootstrap/locales/bootstrap-datetimepicker.de.js",
+                "~/Content/Scripts/vendor/bootstrap/locales/bootstrap-datepicker.es.js",
+                "~/Content/Scripts/vendor/bootstrap/locales/bootstrap-datetimepicker.es.js",
+                "~/Content/Scripts/vendor/bootstrap/modal.js",
+                "~/Content/Scripts/vendor/bootstrap/bootstrap-multiselect.js"
                 ));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/ace/ace").Include(
-                "~/Content/Scripts/ace/ace.js"));
+                "~/Content/Scripts/vendor/ace/ace.js"));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/client/signin").Include(
-                "~/Content/Scripts/signin.js"
+                "~/Content/Scripts/client/signin.js"
                 ));
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/client/application").Include(
