@@ -1,13 +1,13 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('scannerdetectionService', function ($http, $rootScope, restService, searchService, redirectService, contextService, alertService, modalService) {
+app.factory('scannerdetectionService', function ($http, $rootScope, restService, searchService, redirectService, contextService, alertService, associationService, modalService) {
 
     return {
         initInventoryGridListener: function (schema, datamap, parameters) {
             var searchData = parameters.searchData;
 
             $(document).scannerDetection(function (data) {
-                var scanOrderString = contextService.scanOrder();
+                var scanOrderString = contextService.invbalancesScanOrder();
                 var scanOrder = scanOrderString.split(",");
                 var extraparameters = { keepfilterparameters: true };
                 for (var attribute in scanOrder) {
@@ -129,6 +129,30 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
             $(document).scannerDetection(function (data) {
                 datamap['invuseline_.itemnum'] = data;
                 $rootScope.$digest();
+            });
+        },
+        initInvIssueListener: function (schema, datamap) {
+            $(document).scannerDetection(function (data) {
+                var scanOrderString = contextService.scanOrder(schema.applicationName);
+                var scanOrder = scanOrderString.split(",");
+                var extraparameters = { keepfilterparameters: true };
+                for (var attribute in scanOrder) {
+                    var currentAttribute = scanOrder[attribute];
+                    // If the property is not already in th escan data, add it and its value
+                    if (!datamap.hasOwnProperty(currentAttribute)) {
+                        var localSearchData = {};
+                        localSearchData[currentAttribute] = data;
+                        searchService.refreshGrid(localSearchData, extraparameters);
+                        return;
+                        // Else if the property exists but is blank, set it to its new value
+                    } else if (datamap[currentAttribute] === '' || datamap[currentAttribute] === null) {
+                        datamap[currentAttribute] = data;
+                        $rootScope.$digest();
+
+                        //associationService.updateUnderlyingAssociationObject(null, null, scope);
+                        return;
+                    }
+                }
             });
         },
         

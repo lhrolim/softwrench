@@ -20,5 +20,6 @@ namespace softWrench.sW4.Web.Models.Home {
         public string ClientSideLogLevel { get; set; }
         public int SuccessMessageTimeOut { get; set; }
         public string InvbalancesScanOrder { get; set; }
+        public string NewInvIssueDetailScanOrder { get; set; }
     }
 }

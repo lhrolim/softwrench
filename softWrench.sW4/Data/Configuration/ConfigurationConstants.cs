@@ -14,7 +14,8 @@
         
         public const string ClientSideLogLevel = "/Global/Logs/ClientLevel";
 
-        public const string InventoryGridScanConfig = "/Global/Grids/ScanBar";
+        public const string InventoryGridScanConfig = "/Global/Grids/InvBalances/ScanBar";
+        public const string NewInvIssueDetailScanConfig = "/Global/Details/InvIssue/ScanBar";
 
         //        public static class Global {
         //            public static class Rowstamps {

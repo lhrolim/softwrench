@@ -661,7 +661,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
           <properties>
             <property key="list.click.schema" value="detail"/>
-            <property key="config.fullKey" value="/Global/Grids/Scanbar"/>
+            <property key="config.fullKey" value="/Global/Grids/InvBalances/ScanBar"/>
           </properties>
         </list>
 

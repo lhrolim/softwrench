@@ -58,6 +58,13 @@ namespace softWrench.sW4.Data.Configuration {
                 Visible = false,
             });
 
+            facade.Register(ConfigurationConstants.NewInvIssueDetailScanConfig, new PropertyDefinition() {
+                Description = "Inventory Issuing field scan order",
+                DataType = "string",
+                DefaultValue = "itemnum",
+                Visible = false,
+            });
+
 //            facade.Register(ConfigurationConstants.LdapAuthNonMaximoUsers, new PropertyDefinition() {
 //                Description = "Allow non maximo users to login into the system",
 //                StringValue = "true",
