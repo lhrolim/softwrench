@@ -170,7 +170,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <commandgroup position="gridtop">
               <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap"
                        successmessage="Issue created" position="&lt;filter"/>
-              <command id="batch_issue" label="Batch Issuing" service="inventoryService" method="navToBatchFilter" parameters="" successmessage="New issue(s) created" position="&lt;filter"/>
+              <!--<command id="batch_issue" label="Batch Issuing" service="inventoryService" method="navToBatchFilter" parameters="" successmessage="New issue(s) created" position="&lt;filter"/>-->
             </commandgroup>
           </commandbars>
           <field attribute="matusetransid" hidden="true"/>
@@ -195,7 +195,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="assetnum" label="Asset">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%;widthLG=8%" />
           </field>
-          <field attribute="location" label="Location">
+          <field attribute="location" label="Location" default="OFFICE">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=8%" />
           </field>
           <field attribute="siteid" label="Site">
