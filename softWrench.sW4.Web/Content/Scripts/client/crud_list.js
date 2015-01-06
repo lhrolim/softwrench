@@ -136,9 +136,20 @@ app.directive('crudList', function (contextService) {
 
                 var params = {};
                 fixHeaderService.fixThead($scope.schema, params);
-                if ($rootScope.showSuccessMessage) {
-                    fixHeaderService.fixSuccessMessageTop(true);
+                var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
+                if (onLoadMessage) {
+                    //if we have a message to display upon page load
+                    var data = {
+                        successMessage: onLoadMessage
+                    };
+                    $rootScope.$broadcast('sw_successmessage', data);
+                    $timeout(function () {
+                        $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
+                    }, contextService.retrieveFromContext('successMessageTimeOut'));
                 }
+//                if ($rootScope.showSuccessMessage) {
+//                    fixHeaderService.fixSuccessMessageTop(true);
+//                }
 
                 // fix status column height
                 $('.statuscolumncolor').each(function (key, value) {
