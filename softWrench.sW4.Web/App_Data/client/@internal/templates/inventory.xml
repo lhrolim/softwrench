@@ -350,7 +350,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
             <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,storeloc" required="true">
               <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeItem"/>
+              <event type="afterchange" service="inventoryService" method="invIssueBatch_afterChangeItem"/>
             </association>
             <field attribute="inventory_.item_.itemtype" label="Item Type" readonly="true"/>
             <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
