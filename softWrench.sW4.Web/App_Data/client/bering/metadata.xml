@@ -186,13 +186,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="item_.itemtype" label="Item Type">
             <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=9%" />
           </field>
+          <field attribute="rotassetnum" label="Rotating Asset">
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=9%" />
+          </field>
           <field attribute="lotnum" label="Lot">
             <renderer type="default" params="widthLG=9%" />
           </field>
           <field attribute="issueto" label="Issued To">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=9%" />
-          </field>
-          <field attribute="rotassetnum" label="Rotating Asset">
             <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=9%" />
           </field>
           <field attribute="refwo" label="Work Order">
