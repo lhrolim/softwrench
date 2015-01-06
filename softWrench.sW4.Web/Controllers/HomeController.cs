@@ -67,7 +67,8 @@ namespace softWrench.sW4.Web.Controllers {
             var logoIcon = _facade.Lookup<string>(ConfigurationConstants.MainIconKey);
             var myProfileEnabled = _facade.Lookup<Boolean>(ConfigurationConstants.MyProfileEnabled);
             var clientSideLogLevel = _facade.Lookup<string>(ConfigurationConstants.ClientSideLogLevel);
-            var scanOrder = _facade.Lookup<string>(ConfigurationConstants.InventoryGridScanConfig);
+            var invbalancesScanOrder = _facade.Lookup<string>(ConfigurationConstants.InventoryGridScanConfig);
+            var newInvIssueDetailScanOrder = _facade.Lookup<string>(ConfigurationConstants.NewInvIssueDetailScanConfig);
             return new HomeConfigs() {
                 Logo = logoIcon,
                 MyProfileEnabled = myProfileEnabled,
@@ -78,7 +79,8 @@ namespace softWrench.sW4.Web.Controllers {
                 ClientSideLogLevel = clientSideLogLevel,
                 SuccessMessageTimeOut = GetSuccessMessageTimeOut(),
                 InitTimeMillis = ApplicationConfiguration.SystemBuildDateInMillis,
-                InvbalancesScanOrder = scanOrder,
+                InvbalancesScanOrder = invbalancesScanOrder,
+                NewInvIssueDetailScanOrder = newInvIssueDetailScanOrder,
             };
         }
 

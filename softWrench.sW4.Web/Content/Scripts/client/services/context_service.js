@@ -158,7 +158,8 @@ app.factory('contextService', function ($rootScope) {
                 config.clientSideLogLevel = 'warn';
             }
             this.insertIntoContext('defaultlevel', config.clientSideLogLevel.toLowerCase());
-            this.insertIntoContext('scanOrder', config.invbalancesScanOrder);
+            this.insertIntoContext('invbalancesScanOrder', config.invbalancesScanOrder);
+            this.insertIntoContext('newInvIssueDetailScanOrder', config.newInvIssueDetailScanOrder);
         },
 
         getResourceUrl: function (path) {
@@ -202,8 +203,13 @@ app.factory('contextService', function ($rootScope) {
             return this.fetchFromContext('currenttab');
         },
 
-        scanOrder: function () {
-            return this.retrieveFromContext('scanOrder');
+        scanOrder: function (application) {
+            if (application == 'invbalances') {
+                return this.retrieveFromContext('invbalancesScanOrder');
+            }
+            else if (application == 'invissue') {
+                return this.retrieveFromContext('newInvIssueDetailScanOrder');
+            }
         }
     }
 

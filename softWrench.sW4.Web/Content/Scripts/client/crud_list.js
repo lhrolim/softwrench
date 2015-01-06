@@ -125,7 +125,7 @@ app.directive('crudList', function (contextService) {
                 log.debug('init table rendered listener');
 
                 var parameters = {
-                    fullKey: "/Global/Grids/ScanBar",
+                    fullKey: "/Global/Grids/InvBalances/ScanBar",
                     searchData: $scope.searchData
                 };
                 eventService.onload($scope.schema, $scope.datamap, parameters);
