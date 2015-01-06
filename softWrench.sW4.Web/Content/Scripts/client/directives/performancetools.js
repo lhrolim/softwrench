@@ -30,7 +30,7 @@ app.directive('ngrepeatinspector', function ($timeout, $log) {
     };
 });
 
-app.directive('localClick', ['$parse', '$rootScope', function ($parse, $rootScope) {
+app.directive('localClick', ['$parse', '$rootScope', '$exceptionHandler', function ($parse, $rootScope, $exceptionHandler) {
     var directiveName = 'localClick';
     var eventName = 'click';
     return {
