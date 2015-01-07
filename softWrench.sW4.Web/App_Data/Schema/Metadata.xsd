@@ -380,6 +380,7 @@
         </documentation>
       </annotation>
     </attribute>
+    <attribute name="returnattribute" type="string" use="optional"/>
     <attribute name="default" type="string"></attribute>
     <attribute name="labelpattern" type="string"></attribute>
     <attribute name="placeholder" type="string"></attribute>

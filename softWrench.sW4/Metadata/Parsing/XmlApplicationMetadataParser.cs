@@ -286,8 +286,9 @@ namespace softWrench.sW4.Metadata.Parsing {
             var qualifier = association.Attribute(XmlMetadataSchema.FieldAttributeQualifier).ValueOrDefault((string)null);
             var required = association.Attribute(XmlBaseSchemaConstants.BaseDisplayableRequiredAttribute).ValueOrDefault(false);
             var hideDescription = association.Attribute(XmlMetadataSchema.ApplicationAssociationHideDescription).ValueOrDefault(false);
+            var returnAttribute = association.Attribute(XmlMetadataSchema.ApplicationAssociationReturnAttribute).ValueOrDefault((string)null);
 
-            return ApplicationAssociationFactory.GetInstance(applicationName, labelData, target, qualifier, ParseAssociationSchema(association, target), showExpression, tooltip, required, ParseEvents(association), defaultValue, hideDescription, extraProjectionFields, enableExpression, forceDistinctOptions);
+            return ApplicationAssociationFactory.GetInstance(applicationName, labelData, target, qualifier, ParseAssociationSchema(association, target), showExpression, tooltip, required, ParseEvents(association), defaultValue, hideDescription, extraProjectionFields, enableExpression, forceDistinctOptions, returnAttribute);
         }
 
         private static ApplicationAssociationSchemaDefinition ParseAssociationSchema(XElement association, string targetName) {

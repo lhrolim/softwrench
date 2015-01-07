@@ -830,7 +830,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 issuetype: 'ISSUE',
                 itemnum: datamap['itemnum'],
                 storeloc: datamap['location'],
-                binnum: datamap['invbalances_.binnum'],
+                binnum: datamap['#frombin'],
                 lotnum: datamap['invbalances_.lotnum'],
                 quantity: datamap['#issueqty'],
                 unitcost: datamap['unitcost'],

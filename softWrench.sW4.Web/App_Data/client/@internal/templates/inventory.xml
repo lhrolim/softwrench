@@ -674,7 +674,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="location" label="Storeroom" readonly="true"/>
           <field attribute="reservedqty" label="Reserved Quantity" readonly="true"/>
           <field attribute="actualqty" label="Quantity Issued" readonly="true" hidden="true"/>
-          <association label="Bin" target="invbalances_.binnum" labelfield="invbalances_.itemnum" hideDescription="true" extraprojectionvalues="itemnum,curbal,lotnum,binnum">
+          <association label="Bin" target="#frombin" labelfield="invbalances_.binnum" returnattribute="binnum" hideDescription="true" extraprojectionvalues="itemnum,curbal,lotnum,binnum">
             <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
             <dataprovider prefilterfunction="FilterBins"/>
           </association>
