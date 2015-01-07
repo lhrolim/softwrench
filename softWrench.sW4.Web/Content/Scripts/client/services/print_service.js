@@ -28,7 +28,7 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
     var doPrintGrid = function(schema) {
         fixHeaderService.unfix();
         innerDoPrint();
-        fixHeaderService.fixThead(schema);
+        fixHeaderService.fixThead(schema,{empty:false});
     };
 
     var innerDoPrint = function() {
