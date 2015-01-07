@@ -107,11 +107,8 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             foreach (var attributeHolder1 in queryResponse) {
                 var attributeHolder = (DataMap)attributeHolder1;
                 var value = attributeHolder.GetAttribute(projectionResult.ValueKey);
-                // If the value of the target column is null, continue to the next record.
-                if (value == null) {
-                    continue;
-                }
-                if (value.GetType() == typeof(decimal)) {
+                // If the value is null, skip this conversion and continue executing
+                if (value != null && value.GetType() == typeof(decimal)) {
                     value = Convert.ToInt32(value);
                 }
 
