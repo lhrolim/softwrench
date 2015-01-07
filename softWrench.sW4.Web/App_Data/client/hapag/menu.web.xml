@@ -110,7 +110,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Assets" role="itcsearch"
 					 params="id=assetmenusearch;application=asset;label=Asset Search;searchFields=hlagdescription,serialnum,computername" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search IMACS" role="itcsearch"
-					 params="id=imacsearch;application=imac;label=IMAC Search;searchFields=ticketid,description"/>
+					 params="id=imacsearch;application=imac;label=IMAC Search;searchFields=ticketid,hlagsummary"/>
     <!-- Finish ITC Search -->
 
     <!-- Merged SSO declaration-->
@@ -231,7 +231,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchxitc;application=problem;label=Problem Search;
                  searchFields=ticketid,description" tooltip="Search Problems"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=imacsearch_xitc;application=imac;label=IMAC Search;
-                 searchFields=ticketid,description" tooltip="Search IMACS"/>
+                 searchFields=ticketid,hlagsummary" tooltip="Search IMACS"/>
 	</container>
 
 	<divider role="change"/>
@@ -321,7 +321,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchitom;application=problem;label=Problem Search;
                  searchFields=ticketid,description" tooltip="Search Problems"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=imacsearchitom;application=imac;label=IMAC Search;
-                 searchFields=ticketid,description" tooltip="Search IMACS"/>
+                 searchFields=ticketid,hlagsummary" tooltip="Search IMACS"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=assetmenusearchitom;application=asset;label=Asset Search;
                  searchFields=hlagdescription,serialnum,computername" tooltip="Search Assets"/>
 	</container>
