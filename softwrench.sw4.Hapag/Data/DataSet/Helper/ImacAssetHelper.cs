@@ -17,7 +17,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
             if (schema.Equals(ImacConstants.Add)) {
                 return childAsset ? new[] { AssetConstants.Idle } : new[] { AssetConstants.Active };
             }
-            if (schema.EqualsIc(ImacConstants.ReplaceStd)) {
+            if (schema.EqualsIc(ImacConstants.ReplaceStd) && !isNew) {
                 //fix for https://controltechnologysolutions.atlassian.net/browse/HAP-683
                 return new[] { AssetConstants.Operating, AssetConstants.Active };
             }
