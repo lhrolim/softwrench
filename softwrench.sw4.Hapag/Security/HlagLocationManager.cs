@@ -311,7 +311,10 @@ namespace softwrench.sw4.Hapag.Security {
         public IEnumerable<IAssociationOption> FindCostCentersOfITC(string subCustomer, string personId) {
             var user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
             var result = FillUserLocations(new InMemoryUser(user, new List<UserProfile>(), null));
-            var groupedLocation = result.GroupedLocations.FirstOrDefault(f => f.SubCustomerSuffix == subCustomer);
+            var context = _contextLookuper.LookupContext();
+            //if the user is not on XITC context, then we should pick just the costcenters directly bound to him (HAP-799)
+            var locationsToUse = context.IsInModule(FunctionalRole.XItc) ? result.GroupedLocations : result.DirectGroupedLocations;
+            var groupedLocation = locationsToUse.FirstOrDefault(f => f.SubCustomerSuffix == subCustomer);
             if (groupedLocation == null) {
                 return null;
             }
