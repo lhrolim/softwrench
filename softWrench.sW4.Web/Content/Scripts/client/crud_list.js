@@ -158,8 +158,18 @@ app.directive('crudList', function (contextService) {
                     }
                 });
 
-                //make sure we are seeing the top of the grid 
-                window.scrollTo(0, 0);
+                //restore the last scroll position, else scroll to the top of the page
+                var scrollposition = contextService.retrieveFromContext('scrollto')
+                if (typeof scrollposition === 'undefined') {
+                    scrollposition = 0;
+                }
+
+                $timeout(
+                    function () {
+                        window.scrollTo(0, scrollposition);
+                    }, 100, false);
+
+                log.info('Scroll To', scrollposition);
 
                 $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
                 log.debug('finish table rendered listener');
