@@ -159,17 +159,38 @@ app.directive('crudList', function (contextService) {
                 });
 
                 //restore the last scroll position, else scroll to the top of the page
-                var scrollposition = contextService.retrieveFromContext('scrollto')
-                if (typeof scrollposition === 'undefined') {
-                    scrollposition = 0;
+                var scrollObject = contextService.retrieveFromContext('scrollto');
+                if (typeof scrollObject === 'undefined') {
+                    scrollPosition = 0;
+                } else {
+                    if ($scope.schema.applicationName === scrollObject.applicationName) {
+                        scrollPosition = scrollObject.scrollTop;
+                    } else {
+                        scrollPosition = 0;
+                    }
                 }
 
                 $timeout(
                     function () {
-                        window.scrollTo(0, scrollposition);
+                        window.scrollTo(0, scrollPosition);
                     }, 100, false);
 
-                log.info('Scroll To', scrollposition);
+                log.info('Scroll To', scrollObject);
+
+                ////restore the last scroll position, else scroll to the top of the page
+                //var scrollObject = contextService.retrieveFromContext('scrollto');
+                //if (typeof scrollObject === 'undefined') {
+                //    scrollposition = 0;
+                //}
+
+                //$timeout(
+                //    function () {
+                //        window.scrollTo(0, scrollposition);
+                //    }, 100, false);
+
+                ////log.info('Scroll To', $scope.schema.applicationName, scrollposition);
+                //log.info('Scroll To', scrollposition);
+                ////log.info('Scroll To', contextService.retrieveFromContext('scrollto'));
 
                 $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
                 log.debug('finish table rendered listener');

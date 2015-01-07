@@ -187,8 +187,8 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         log.info("calling url".format(urlToCall));
 
         //save the current scroll position to resotre when switching back
-        contextService.insertIntoContext("scrollto", document.body.scrollTop);
-        log.info('Scroll From', document.body.scrollTop);
+        contextService.insertIntoContext('scrollto', { 'applicationName': applicationName, 'scrollTop': document.body.scrollTop });
+        log.info('Scroll From', applicationName, document.body.scrollTop);
 
         $http.get(urlToCall)
             .success(function (data) {
