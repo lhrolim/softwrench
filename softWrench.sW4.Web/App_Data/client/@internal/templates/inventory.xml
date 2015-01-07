@@ -421,7 +421,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="lookup"/>
           </association>
           <association label="Work Order" target="refwo" labelfield="workorder_.description" extraprojectionvalues="glaccount" dependantfields="siteid">
-            <!--<dataprovider prefilterfunction="FilterWorkorders"/>-->
+            <dataprovider prefilterfunction="FilterWorkorders"/>
             <renderer type="lookup"/>
             <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeWorkorder"/>-->
           </association>
@@ -502,6 +502,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <section>
             <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
             <association label="Workorder" target="refwo" labelfield="workorder_.description" dependantfields="siteid" extraprojectionvalues="glaccount,location,assetnum">
+              <dataprovider prefilterfunction="FilterWorkorders"/>
               <renderer type="lookup"/>
             </association>
             <association label="Location" target="location" labelfield="location_.location" dependantfields="siteid">
