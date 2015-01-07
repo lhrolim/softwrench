@@ -1631,7 +1631,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <componentdisplayable id="showremarktext">
 
-          <field label="" attribute="" default="Please enter a detail Sub-Component information in the Remarks box." readonly="true" qualifier="nodescription">
+          <field label="" attribute="" default="Please enter detailed Sub-Component information in the Remarks box." readonly="true" qualifier="nodescription">
             <renderer type="label"/>
           </field>
         </componentdisplayable>
