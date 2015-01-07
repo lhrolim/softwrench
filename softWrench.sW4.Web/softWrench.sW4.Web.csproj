@@ -512,6 +512,8 @@
     <Content Include="Content\font-awesome-4.1.0\css\font-awesome.css" />
     <Content Include="Content\font-awesome-4.1.0\css\font-awesome.min.css" />
     <Content Include="Content\ie\ie9.css" />
+    <Content Include="Content\Images\bering\header.jpg" />
+    <Content Include="Content\Images\bering\signin.jpg" />
     <Content Include="Content\Images\branding.png" />
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\folder-closed.png" />
@@ -756,6 +758,7 @@
     <Content Include="Content\Scripts\thirdparty\textAngular-min.js" />
     <Content Include="Content\styles\default\application\forms.css" />
     <Content Include="Content\styles\default\application\pages.css" />
+    <Content Include="Content\styles\bering\branding.css" />
     <Content Include="Content\styles\default\branding.css" />
     <Content Include="Content\styles\default\context-bar.css" />
     <Content Include="Content\styles\default\crud-fields.css" />
