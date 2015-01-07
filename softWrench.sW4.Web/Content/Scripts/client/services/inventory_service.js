@@ -934,7 +934,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         invIssue_afterChangeBin: function (parameters) {
-            if (parameters['fields']['binbalances_.lotnum']) {
+            if (parameters['fields']['binbalances_']) {
                 parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
                 parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
                 return;
