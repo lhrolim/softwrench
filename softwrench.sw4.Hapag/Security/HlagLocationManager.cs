@@ -312,14 +312,9 @@ namespace softwrench.sw4.Hapag.Security {
             var user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
             var result = FillUserLocations(new InMemoryUser(user, new List<UserProfile>(), null));
             var context = _contextLookuper.LookupContext();
-            HlagGroupedLocation groupedLocation;
-            if (context.IsInModule(FunctionalRole.XItc)) {
-                //if the user is on XITC module, then we need to retrieve all cost centers
-                groupedLocation = result.GroupedLocations.FirstOrDefault(f => f.SubCustomerSuffix == subCustomer);
-            } else {
-                //using DirectGroupsedLocations due to Thomas´s comments on HAP-799 --> cost centers only if directly bound to location
-                groupedLocation = result.DirectGroupedLocations.FirstOrDefault(f => f.SubCustomerSuffix == subCustomer);
-            }
+            //if the user is not on XITC context, then we should pick just the costcenters directly bound to him (HAP-799)
+            var locationsToUse = context.IsInModule(FunctionalRole.XItc) ? result.GroupedLocations : result.DirectGroupedLocations;
+            var groupedLocation = locationsToUse.FirstOrDefault(f => f.SubCustomerSuffix == subCustomer);
             if (groupedLocation == null) {
                 return null;
             }
