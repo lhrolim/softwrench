@@ -48,6 +48,9 @@ namespace softWrench.sW4.Data.Persistence {
             if (fields.Any(f => f.Attribute == "storeloc")) {
                 dictionary["storeloc"] = user.Storeloc;
             }
+            if (fields.Any(f => f.Attribute == "fromstoreloc")) {
+                dictionary["fromstoreloc"] = user.Storeloc;
+            }
             var schemaDefaultValues = new DataMap(application.Name, dictionary, mappingType);
             if (initialValues != null) {
                 MergeWithPrefilledValues(schemaDefaultValues, initialValues);

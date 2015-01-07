@@ -322,7 +322,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
         <relationship to="inventory">
-          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+	  <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
           <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
           <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
           <relationshipAttribute from="invuseline_.fromstoreloc" to="location" primary="true"/>
@@ -330,6 +330,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="location" qualifier="fromlocation">
           <relationshipAttribute from="invuseline_.fromstoreloc" to="location" primary="true"/>
           <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
           <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
         </relationship>
         <relationship to="invbalances" qualifier="frominvbalance">
@@ -352,6 +353,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="item">
           <relationshipAttribute from="invuseline_.itemnum" to="itemnum" primary="true"/>
           <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="asset">
+          <relationshipAttribute from="invuseline_.rotassetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.frombin" to="binnum"/>
+          <relationshipAttribute from="invuseline_.fromlot" to="lotnum"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -641,6 +650,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="binnum" label="Bin">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
           </field>
+          <field attribute="lotnum" label="Lot">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
+          </field>
           <optionfield attribute="item_.rotating" label="Rotating">
             <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
             <option value="1" label="Yes"/>
@@ -685,7 +697,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </schema>
 
         <schema id="binLookupList" stereotype="list">
+          <field attribute="siteid" hidden="true"/>
           <field attribute="itemnum" label="Item" hidden="true"/>
+          <field attribute="itemsetid" hidden="true"/>
+          <field attribute="location" hidden="true"/>
           <field attribute="binnum" label="Bin"/>
           <field attribute="lotnum" label="Lot"/>
           <field attribute="location" hidden="true"/>
@@ -989,29 +1004,29 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="usetype" hidden="true"/>
           <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true">
             <renderer type="lookup"/>
-            <event type="afterchange" service="inventoryService" method="invUse_afterChangeSite"/>
+            <!--<event type="afterchange" service="inventoryService" method="invUseAfterChangeSite"/>-->
           </association>
-          <association label="Item" target="invuseline_.itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid" requiredexpression="true">
-            <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
-            <dataprovider prefilterfunction="FilterItem"/>
-            <event type="afterchange" service="inventoryService" method="invUse_afterChangeItem"/>
-          </association>
-          <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
-          <association target="fromstoreloc" label="From Storeroom" labelfield="inventory_.location" hideDescription="true" extraprojectionvalues="costtype,itemsetid,location" requiredexpression="true">
+          <association target="fromstoreloc" label="Storeroom" labelfield="fromlocation_.description" requiredexpression="true" dependantfields="siteid">
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterFromStoreLoc"/>
-            <event type="afterchange" service="inventoryService" method="invUse_afterChangeFromStoreroom"/>
           </association>
-          <association target="invuseline_.frombin" label="From Bin" labelfield="frominvbalance_.binnum" hideDescription="true">
-            <dataprovider prefilterfunction="FilterFromBin" />
-            <event type="afterchange" service="inventoryService" method="invUse_afterChangeFromBin"/>
-            <renderer type="lookup" params="lookuponblur=false;"/>
+          <association label="Item" target="invuseline_.itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,costtype,issueunit,unitcost,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,fromstoreloc" requiredexpression="true">
+            <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
+            <event type="afterchange" service="inventoryService" method="invUseAfterChangeItem"/>
           </association>
-          <optionfield attribute="invuseline_.fromlot" label="From Lot" providerattribute="_AvailableLots" dependantfields="invuseline_.frombin">
-            <event type="afterchange" service="inventoryService" method="afterChangeInvreserveFromLot"/>
-            <renderer type="AUTOCOMPLETECLIENT"/>
-          </optionfield>
-          <field attribute="inventory_.item_.issueunit" label="Issue Unit" readonly="true"/>
+          <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
+          <association target="invuseline_.rotassetnum" label="Rotating Asset" labelfield="asset_.description" requiredexpression="false" extraprojectionvalues="binnum,lotnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
+            <renderer type="lookup" />
+          </association>
+          <!--<field label="Rotating" target="inventory_.item_.rotating"/>-->
+          <!--<field label="Kit" target="inventory_.item_.iskit"/>-->
+          <association label="From Bin" target="invuseline_.frombin" forcedistinctoptions="false" labelfield="frominvbalance_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
+            <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
+            <event type="afterchange" service="inventoryService" method="invUseAfterChangeFromBin"/>
+            <dataprovider prefilterfunction="FilterFromBin"/>
+          </association>
+          <field label="Lot" attribute="invuseline_.fromlot" readonly="true"/>
+          <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
           <field attribute="#curbal" label="Current Balance" readonly="true"/>
           <association target="invuseline_.tostoreloc" label="To Storeroom" labelfield="tolocation_.description" hideDescription="true" requiredexpression="true">
             <dataprovider prefilterfunction="FilterToStoreLoc"/>

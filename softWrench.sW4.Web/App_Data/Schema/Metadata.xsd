@@ -407,9 +407,8 @@
     <attribute name="showexpression" type="string"></attribute>
     <attribute name="dependantfields" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
-    <attribute name="enableexpression" type="string" use="optional">
-    </attribute>
-    <attribute name="forcedistinctoptions" type="bool" use="optional"></attribute>
+    <attribute name="enableexpression" type="string" use="optional"></attribute>
+    <attribute name="forcedistinctoptions" type="boolean" use="optional"></attribute>
     <attribute name="required" type="boolean"></attribute>
     <attribute name="qualifier" type="string"></attribute>
     <attribute name="hideDescription" type="boolean"></attribute>

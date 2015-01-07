@@ -210,7 +210,7 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
             searchDto.searchSort = buildSearchSortString(searchSort);
             searchDto.SearchAscending = searchSort.order == "asc";
             searchDto.filterFixedWhereClause = filterFixedWhereClause;
-            searchDto.needsCountUpdate = searchDto.searchValues != searchData.lastSearchedValues;
+            searchDto.needsCountUpdate = true;
             searchData.lastSearchedValues = searchDto.searchValues;
             return searchDto;
 
