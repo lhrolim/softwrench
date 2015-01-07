@@ -134,10 +134,9 @@ app.directive('crudBody', function (contextService) {
                     redirectService.redirectToTab(tab);
                 }
 
-                //make sure we are seeing the top of the grid 
+                //make sure we are seeing the top of the detail page 
                 window.scrollTo(0, 0);
 
-                
                 var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
                 if (onLoadMessage) {
                     //if we have a message to display upon page load
@@ -149,8 +148,6 @@ app.directive('crudBody', function (contextService) {
                         $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
                     }, contextService.retrieveFromContext('successMessageTimeOut'));
                 }
-
-
             });
 
             function defaultSuccessFunction(data) {

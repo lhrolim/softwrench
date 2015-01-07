@@ -185,6 +185,11 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
             sessionStorage.swGlobalRedirectURL = urlToCall;
         }
         log.info("calling url".format(urlToCall));
+
+        //save the current scroll position to resotre when switching back
+        contextService.insertIntoContext("scrollto", document.body.scrollTop);
+        log.info('Scroll From', document.body.scrollTop);
+
         $http.get(urlToCall)
             .success(function (data) {
                 if (printMode != undefined) {
