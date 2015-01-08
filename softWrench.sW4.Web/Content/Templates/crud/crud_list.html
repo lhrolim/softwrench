@@ -124,7 +124,7 @@
                                                 <ul class="dropdown-menu">
                                                     <li ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
                                                         ng-show="operation.renderType.indexOf(column.rendererType) > -1 || column.rendererType == null"
-                                                        ng-clasicos="{'active' : searchOperator[column.attribute].id == operation.id}">
+                                                        ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
                                                         <a href="#">{{operation.title}}</a>
                                                     </li>
                                                 </ul>
@@ -144,9 +144,17 @@
 
                                             <div class="input-group-addon dropdown">
                                                 <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
+                                                      data-toggle="dropdown"
                                                       rel="tooltip"
-                                                      ng-click="refreshGrid()"
                                                       data-original-title="{{getOperator(column.attribute).tooltip}}">{{getSearchIcon(column.attribute)}}</span>
+
+                                                <ul class="dropdown-menu">
+                                                    <li ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
+                                                        ng-show="operation.renderType.indexOf(column.rendererType) > -1 || column.rendererType == null"
+                                                        ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
+                                                        <a href="#">{{operation.title}}</a>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>

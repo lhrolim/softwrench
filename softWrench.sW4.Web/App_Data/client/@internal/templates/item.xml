@@ -25,8 +25,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="description" label="Description" qualifier="excerpt"/>
         </list>
         <detail>
-          <field attribute="itemnum" label="Item:"  required="true" />
-          <field attribute="description" label="Description:"  required="true" />
+          <field attribute="itemnum" label="Item:"  requiredexpression="true" />
+          <field attribute="description" label="Description:"  requiredexpression="true" />
         </detail>
         <schema id="itemlookup" stereotype="detail" mode="output">
           <field attribute="itemnum"/>

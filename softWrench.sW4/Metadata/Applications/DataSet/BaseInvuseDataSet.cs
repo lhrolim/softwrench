@@ -66,18 +66,31 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var filter = parameters.BASEDto;
             var siteid = parameters.OriginalEntity.GetAttribute("siteid");
             var location = parameters.OriginalEntity.GetAttribute("invuseline_.tostoreloc");
-            return FilterBin(filter, siteid, location);
-        }
-
-        public SearchRequestDto FilterBin(SearchRequestDto filter, object siteid, object location) {
             if (siteid == null || location == null) {
                 return filter;
             }
-            filter.AppendSearchEntry("inventory_.siteid", siteid.ToString().ToUpper());
+            filter.AppendSearchEntry("invbalances.siteid", siteid.ToString().ToUpper());
             filter.AppendSearchEntry("invbalances.location", location.ToString().ToUpper());
+            filter.AppendWhereClauseFormat("invbalances.stagingbin = 0");
+            filter.ProjectionFields.Clear();
+            filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '')"));
+            filter.ProjectionFields.Add(new ProjectionField("curbal", "invbalances.curbal"));
+            filter.ProjectionFields.Add(new ProjectionField("lotnum", "invbalances.lotnum"));
+            filter.SearchSort = "invbalances.binnum";
             filter.SearchAscending = true;
+
             return filter;
         }
+
+        //public SearchRequestDto FilterBin(SearchRequestDto filter, object siteid, object location) {
+        //    if (siteid == null || location == null) {
+        //        return filter;
+        //    }
+        //    filter.AppendSearchEntry("inventory_.siteid", siteid.ToString().ToUpper());
+        //    filter.AppendSearchEntry("invbalances.location", location.ToString().ToUpper());
+        //    filter.SearchAscending = true;
+        //    return filter;
+        //}
 
         public IEnumerable<IAssociationOption> GetAvailableLots(OptionFieldProviderParameters parameters) {
             var siteid = parameters.OriginalEntity.GetAttribute("siteid");

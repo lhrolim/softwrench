@@ -165,7 +165,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
                          parameters="joinattribute=actualfinish;">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
-          <field label="Status:" attribute="status" readonly="true" default="NEW" required="true"/>
+          <field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="true"/>
           <field attribute="statusdate" hidden="true" />
         </schema>
 
@@ -173,7 +173,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="actlabcost" default="0" hidden="true"/>
           <field attribute="actlabhrs" default="0" hidden="true" />
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
-          <field attribute="ticketid" label="Incident Number:" readonly="true" required="true"/>
+          <field attribute="ticketid" label="Incident Number:" readonly="true" requiredexpression="true"/>
           <field attribute="description" label="Summary:"/>
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="textarea"/>

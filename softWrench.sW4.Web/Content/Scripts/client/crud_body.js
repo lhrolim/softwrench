@@ -93,8 +93,7 @@ app.directive('crudBody', function (contextService) {
 
             $scope.setActiveTab = function (tabId) {
                 contextService.setActiveTab(tabId);
-            }
-
+            };
             $scope.hasTabs = function (schema) {
                 return tabsService.hasTabs(schema);
             };
@@ -114,7 +113,7 @@ app.directive('crudBody', function (contextService) {
             $scope.isNotHapagTest = function () {
                 if ($rootScope.clientName != 'hapag')
                     return true;
-            }
+            };
             $scope.tabsDisplayables = function (schema) {
                 return tabsService.tabsDisplayables(schema);
             };
@@ -135,23 +134,20 @@ app.directive('crudBody', function (contextService) {
                     redirectService.redirectToTab(tab);
                 }
 
-                //make sure we are seeing the top of the grid 
+                //make sure we are seeing the top of the detail page 
                 window.scrollTo(0, 0);
 
-                
                 var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
                 if (onLoadMessage) {
                     //if we have a message to display upon page load
                     var data = {
                         successMessage: onLoadMessage
-                    }
+                    };
                     $rootScope.$broadcast('sw_successmessage', data);
                     $timeout(function () {
                         $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
                     }, contextService.retrieveFromContext('successMessageTimeOut'));
                 }
-
-
             });
 
             function defaultSuccessFunction(data) {
@@ -171,9 +167,7 @@ app.directive('crudBody', function (contextService) {
             $scope.disableNavigationButtons = function (schema) {
                 var property = schema.properties['detail.navigationbuttons.disabled'];
                 return property == "true";
-            }
-
-
+            };
             $scope.isEditing = function (schema) {
                 var idFieldName = schema.idFieldName;
                 var id = $scope.datamap.fields[idFieldName];
@@ -198,9 +192,7 @@ app.directive('crudBody', function (contextService) {
 
             $scope.getTabIcon = function (tab) {
                 return tab.schema.schemas.list.properties['icon.composition.tab'];
-            }
-
-
+            };
             $scope.renderListView = function (parameters) {
                 /// <summary>
                 /// 
@@ -236,7 +228,7 @@ app.directive('crudBody', function (contextService) {
                 else {
                     $scope.toListSchema(data, schema);
                 }
-            }
+            };
             $scope.crawl = function (direction) {
                 var value = contextService.fetchFromContext("crud_context", true);
                 var id = direction == 1 ? value.detail_previous : value.detail_next;
