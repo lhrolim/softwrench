@@ -108,10 +108,10 @@ namespace softWrench.sW4.Metadata.Parsing {
         private EntityTargetAttribute ParseTargetAttributes(XElement element) {
             var name = element.Attribute(XmlMetadataSchema.AttributeAttributeName).Value;
             var type = element.Attribute(XmlMetadataSchema.AttributeAttributeType).Value;
-            var isRequired = element.Attribute(XmlBaseSchemaConstants.BaseDisplayableRequiredAttribute).ValueOrDefault(false);
+            var requiredExpression = element.Attribute(XmlBaseSchemaConstants.BaseDisplayableRequiredExpressionAttribute).ValueOrDefault(false);
             var connectorParameters = XmlConnectorParametersParser.Parse(element);
             var targetPath = element.Attribute(XmlMetadataSchema.TargetPathAttribute).ValueOrDefault("");
-            return new EntityTargetAttribute(name, type, isRequired, connectorParameters, targetPath);
+            return new EntityTargetAttribute(name, type, requiredExpression, connectorParameters, targetPath);
         }
 
 

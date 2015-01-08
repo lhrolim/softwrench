@@ -74,10 +74,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="unid" label="UNID">
             <renderer type="default" params="width=8%"  />
           </field>
-          <optionfield attribute="#ReconCd" label="Reconciliation Codes" required="true" providerattribute="reconciliationCodes">
+          <optionfield attribute="#ReconCd" label="Reconciliation Codes" requiredexpression="true" providerattribute="reconciliationCodes">
             <renderer type="COMBO" params="width=12%"  />
           </optionfield>
-          <field attribute="actfinish" label="Actual Finish" default="@now" required="true">
+          <field attribute="actfinish" label="Actual Finish" default="@now" requiredexpression="true">
             <renderer type="datetime" params="editable=true;format=MM/dd/yyyy;width=15%"/>
           </field>
           <optionfield attribute="#pmchange" label="PM Change" default="N">
@@ -91,7 +91,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="#lognote" label="Log Note">
             <renderer type="default" params="width=12%"/>
           </field>
-          <field attribute="#closed" label="Close" required="true">
+          <field attribute="#closed" label="Close" requiredexpression="true">
             <renderer type="checkbox" params="width=5%"/>
           </field>
 
@@ -121,10 +121,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="unid" label="UNID">
             <renderer type="default" params="width=8%"  />
           </field>
-          <field attribute="#ReconCd" label="Reconciliation Codes" required="true">
+          <field attribute="#ReconCd" label="Reconciliation Codes" requiredexpression="true">
             <renderer type="default" params="width=8%"  />
           </field>
-          <field attribute="actfinish" label="Actual Finish" default="@now" required="true">
+          <field attribute="actfinish" label="Actual Finish" default="@now" requiredexpression="true">
             <renderer type="datetime" params="format=MM/dd/yyyy;width=15%"/>
           </field>
           <field attribute="#pmchange" label="PM Change" default="N">

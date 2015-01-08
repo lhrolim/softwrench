@@ -372,7 +372,11 @@ app.directive('crudInputFields', function (contextService) {
             $scope.lookupCodeBlur = function (fieldMetadata) {
                 var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                 var targetValue = $scope.datamap[fieldMetadata.target];
-                if (code != null && code != '' && (targetValue == null || targetValue == " ")) {
+                var lookupOnBlur = "true";
+                if (fieldMetadata.rendererParameters['lookuponblur'] != null) {
+                    lookupOnBlur = fieldMetadata.rendererParameters['lookuponblur'];
+                }
+                if (code != null && code != '' && (targetValue == null || targetValue == " ") && lookupOnBlur == "true") {
                     $scope.showLookupModal(fieldMetadata);
                 }
             };
@@ -706,6 +710,13 @@ app.directive('crudInputFields', function (contextService) {
 
             $scope.isDesktop = function () {
                 return isDesktop();
+            };
+
+            $scope.isFieldRequired = function (requiredExpression) {
+                if (requiredExpression != undefined) {
+                    return expressionService.evaluate(requiredExpression, $scope.datamap);
+                }
+                return requiredExpression;
             };
         }
     }

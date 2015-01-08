@@ -64,6 +64,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public static ICommandDisplayable GetCommandDisplayable(XElement xElement) {
             var id = xElement.AttributeValue(XmlBaseSchemaConstants.IdAttribute, true);
             var role = xElement.AttributeValue(XmlBaseSchemaConstants.RoleAttribute);
+            var showExpression = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute);
             var position = xElement.AttributeValue(cnst.PositionAttribute);
             if (xElement.IsNamed(cnst.ResourceCommand)) {
                 var path = xElement.AttributeValue(cnst.ResourceCommandPath);

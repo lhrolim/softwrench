@@ -270,7 +270,7 @@
       </annotation>
     </attribute>
     <attribute name="label" type="string"></attribute>
-    <attribute name="required" type="boolean"></attribute>
+    <attribute name="requiredexpression" type="boolean"></attribute>
     <attribute name="readonly" type="boolean"></attribute>
     <attribute name="hidden" type="boolean"></attribute>
     <attribute name="showexpression" type="string"></attribute>
@@ -418,7 +418,7 @@
     </sequence>
     <attribute name="label" type="string"></attribute>
     <attribute name="attribute" type="string" use="required"></attribute>
-    <attribute name="required" type="boolean"></attribute>
+    <attribute name="requiredexpression" type="boolean"></attribute>
     <attribute name="default" type="string"></attribute>
     <attribute name="showexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>

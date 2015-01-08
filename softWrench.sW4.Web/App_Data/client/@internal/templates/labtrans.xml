@@ -62,11 +62,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="refwo" hidden="true" />
           <field attribute="enterby" hidden="true" />
           <field attribute="payrate" hidden="true" />
-          <association label="Labor:" target="laborcode" labelfield="labor_.laborcode" required="true" >
+          <association label="Labor:" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" >
             <renderer type="lookup"/>
             <event type="afterchange" service="labtranService" method="afterlaborchange"/>
           </association>
-          <association label="Craft:" required="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
+          <association label="Craft:" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
             <event type="afterchange" service="labtranService" method="aftercraftchange"/>
           </association>
           <field label="Start Date:" attribute="startdate">
@@ -81,7 +81,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field label="End Time:" attribute="finishtime" >
             <renderer type="datetime" params="format=HH:mm;showdate=false" />
           </field>
-          <field attribute="regularhrs" label="Regular Hours:" required="true" default="8"/>
+          <field attribute="regularhrs" label="Regular Hours:" requiredexpression="true" default="8"/>
           <association label="GL Debit Account:" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
             <renderer type="lookup"/>
           </association>
