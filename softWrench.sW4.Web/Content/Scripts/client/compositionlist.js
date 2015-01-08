@@ -104,6 +104,8 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
         },
         link: function (scope, element, attrs) {
 
+            scope.$name = 'compositionlistwrapper';
+
             var doLoad = function () {
                 $log.getInstance('compositionlistwrapper#doLoad').debug('loading composition {0}'.format(scope.tabid));
                 var metadata = scope.metadata;
@@ -121,7 +123,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
                     "compositiondata='compositiondata'" +
                     "parentschema='parentschema'" +
                     "parentdata='parentdata'" +
-                    "cancelfn='toListSchema(data,schema)'" +
+                    "cancelfn='cancel(data,schema)'" +
                     "previousschema='previousschema' previousdata='previousdata'/>");
                 $compile(element.contents())(scope);
                 scope.loaded = true;
@@ -132,6 +134,10 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
 
             if (scope.metadata.type == "ApplicationCompositionDefinition" && isInline && !custom) {
                 doLoad();
+            }
+
+            scope.cancel=function(data, schema) {
+                scope.cancelfn({ data: data, schema: schema });
             }
 
             scope.$on("sw_lazyloadtab", function (event, tabid) {
