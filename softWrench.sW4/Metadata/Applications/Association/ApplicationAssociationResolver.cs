@@ -107,7 +107,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             foreach (var attributeHolder1 in queryResponse) {
                 var attributeHolder = (DataMap)attributeHolder1;
                 var value = attributeHolder.GetAttribute(projectionResult.ValueKey);
-                // If the value of the target column is null, continue to the next record.
+                // If the value is null, skip this conversion and continue executing
                 if (value == null) {
                     continue;
                 }
@@ -158,7 +158,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         private static ProjectionResult BuildProjections(SearchRequestDto searchRequestDto, ApplicationAssociationDefinition association) {
 
             var entityAssociation = association.EntityAssociation;
-            var valueField = entityAssociation.PrimaryAttribute().To;
+            var valueField = association.ValueField == null ? entityAssociation.PrimaryAttribute().To : association.ValueField;
             if (entityAssociation.Reverse) {
                 valueField = entityAssociation.ReverseLookupAttribute;
             }

@@ -4,25 +4,30 @@
     initScanFilter();
 
     function initScanFilter() {
-        var scanOrderString = contextService.scanOrder();
-        var scanOrder = scanOrderString.split(",");
-
-        if (!scanOrder) {
+        var scanOrderString = contextService.scanOrder($scope.schema.schemaId);
+        if (scanOrderString) {
+            $scope.scanOrder = scanOrderString.split(",");
+        } else {
             $scope.scanOrder = [];
-        }
-        else {
-            $scope.scanOrder = scanOrder;
         }
 
         var filterField;
         var displayables = $scope.schema.displayables;
+        getFilterFields(displayables);
+    };
+
+    function getFilterFields(displayables) {
         for (item in displayables) {
-            if (!displayables[item].isHidden) {
-                filterField = { "label": displayables[item].label, "attribute": displayables[item].attribute };
-                $scope.filterFields.push(filterField);
+            if (!displayables[item].isHidden && !displayables[item].isReadOnly) {
+                if (displayables[item].type == "ApplicationSection") {
+                    getFilterFields(displayables[item].displayables);
+                } else {
+                    $scope.filterFields.push(
+                        { "label": displayables[item].label, "attribute": displayables[item].attribute });
+                }
             }
         }
-    };
+    }
 
     $scope.closeScanFilterModal = function() {
         var modal = $('#scanfilterModal');
@@ -66,7 +71,7 @@
             value: scanAttributesString
         };
         restService.invokePost("Configuration", "SetConfiguration", parameters, null,
-            contextService.insertIntoContext("scanOrder", scanAttributesString), null);
+            contextService.insertIntoContext($scope.schema.schemaId + "ScanOrder", scanAttributesString), null);
         $scope.closeScanFilterModal();
     };
 
@@ -102,4 +107,7 @@
         return remainingFilterFields;
     };
 
+    $scope.getSchemaType = function () {
+        return $scope.schema.stereotype;
+    };
 }

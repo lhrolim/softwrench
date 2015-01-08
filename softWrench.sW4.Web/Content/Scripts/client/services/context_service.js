@@ -158,7 +158,15 @@ app.factory('contextService', function ($rootScope) {
                 config.clientSideLogLevel = 'warn';
             }
             this.insertIntoContext('defaultlevel', config.clientSideLogLevel.toLowerCase());
-            this.insertIntoContext('scanOrder', config.invbalancesScanOrder);
+            this.insertIntoContext('invbalancesListScanOrder', config.invbalancesListScanOrder);
+            // Add additional scan config keys here
+            this.insertIntoContext('newInvIssueDetailScanOrder', config.newInvIssueDetailScanOrder);
+            this.insertIntoContext('invIssueListScanOrder', config.invIssueListScanOrder);
+            this.insertIntoContext('physicalcountListScanOrder', config.physicalcountListScanOrder);
+            this.insertIntoContext('physicaldeviationListScanOrder', config.physicaldeviationListScanOrder);
+            this.insertIntoContext('matrectransTransfersListScanOrder', config.matrectransTransfersListScanOrder);
+            this.insertIntoContext('reservedMaterialsListScanOrder', config.reservedMaterialsListScanOrder);
+
         },
 
         getResourceUrl: function (path) {
@@ -202,8 +210,25 @@ app.factory('contextService', function ($rootScope) {
             return this.fetchFromContext('currenttab');
         },
 
-        scanOrder: function () {
-            return this.retrieveFromContext('scanOrder');
+        scanOrder: function (schemaId) {
+            switch (schemaId) {
+                case 'invbalancesList':
+                    return this.retrieveFromContext('invbalancesListScanOrder');
+                case 'newInvIssueDetail':
+                    return this.retrieveFromContext('newInvIssueDetailScanOrder');
+                case 'invIssueList':
+                    return this.retrieveFromContext('invIssueListScanOrder');
+                case 'physicalcountList':
+                    return this.retrieveFromContext('physicalcountListScanOrder');
+                case 'physicaldeviationList':
+                    return this.retrieveFromContext('physicaldeviationListScanOrder');
+                case 'matrectransTransfersList':
+                    return this.retrieveFromContext('matrectransTransfersListScanOrder');
+                case 'reservedMaterialsList':
+                    return this.retrieveFromContext('reservedMaterialsListScanOrder');
+                default:
+                    return '';
+            };
         }
     }
 

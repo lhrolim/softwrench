@@ -814,7 +814,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         submitReservedInventoryIssue: function(schema, datamap) {
-            if (datamap['#issueqty'] > datamap['#curbal']) {
+            if (datamap['#issueqty'] > datamap['invbalances_.curbal']) {
                 alertService.alert("The quantity being issued cannot be greater than the current balance of the From Bin.");
                 return;
             }
@@ -829,7 +829,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 itemnum: datamap['itemnum'],
                 storeloc: datamap['location'],
                 binnum: datamap['#frombin'],
-                lotnum: datamap['#fromlot'],
+                lotnum: datamap['invbalances_.lotnum'],
                 quantity: datamap['#issueqty'],
                 unitcost: datamap['unitcost'],
                 issueunit: datamap['issueunit'],

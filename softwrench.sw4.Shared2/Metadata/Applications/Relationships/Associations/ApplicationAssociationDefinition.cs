@@ -26,7 +26,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
-        public Boolean IsRequired { get; set; }
+        public string RequiredExpression { get; set; }
 
         public string Qualifier { get; set; }
 
@@ -36,6 +36,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         private LabelData _labelData;
         private bool _forceDistinctOptions;
         private ISet<ApplicationEvent> _eventsSet;
+        private string _valueField;
 
         public class LabelData {
 
@@ -63,7 +64,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public ApplicationAssociationDefinition() { }
 
         public ApplicationAssociationDefinition(string @from, LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
-            string showExpression, string toolTip, Boolean required, string defaultValue, bool hideDescription, string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true)
+            string showExpression, string toolTip, string requiredExpression, string defaultValue, bool hideDescription, string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true, string valueField = null)
             : base(from, labelData.Label, showExpression, toolTip) {
             _labelData = labelData;
             _label = labelData.Label;
@@ -73,11 +74,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             _applicationAssociationSchema = applicationAssociationSchema;
             DefaultValue = defaultValue;
             EnableExpression = enableExpression;
-            IsRequired = required;
+            RequiredExpression = requiredExpression;
             _eventsSet = events;
             _forceDistinctOptions = forceDistinctOptions;
             Qualifier = qualifier;
             HideDescription = hideDescription;
+            _valueField = valueField;
 
             if (events != null) {
                 _events = events.ToDictionary(f => f.Type, f => f);
@@ -151,6 +153,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             get { return _forceDistinctOptions; }
         }
 
+        public string ValueField {
+            get { return _valueField; }
+            set { _valueField = value; }
+        }
+
         public string ApplicationPath {
             get { return From + "." + _applicationTo; }
         }
@@ -200,8 +207,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public override string Role { get { return From + "." + Target; } }
 
         public object Clone() {
-            var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, ToolTip, IsRequired,
-                DefaultValue, HideDescription, EnableExpression, _eventsSet) {
+            var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, ToolTip, RequiredExpression,
+                DefaultValue, HideDescription, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField) {
                     ExtraProjectionFields = ExtraProjectionFields,
                     LabelFields = LabelFields,
                     ApplicationTo = ApplicationTo,

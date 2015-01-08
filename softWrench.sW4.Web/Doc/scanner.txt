@@ -1,0 +1,13 @@
+﻿scannerdetection_service.js
+C:\Users\kpederson\Documents\Workspace\GitHub\softwrench\softWrench.sW4.Web\Content\Scripts\client\services\scannerdetection_service.js
+
+The scanner detection service is used to initialize scanner detection for the 
+jQuery.scanerdetection.js by setting a function to call when the jQuery 
+plugin detects a barcode scan.
+
+The inventory grid for example uses initInventoryGridListener(). The function 
+reads a scan order (list of properties to be filled and the order in which 
+to fill them) from the context. It then loops through the scan order and checks 
+the datamap to see if the properties currently have a value. When the loop 
+finds a property from the scan order that does not have a value in the datamap,
+the property in the datamap is set to the scanned value.
