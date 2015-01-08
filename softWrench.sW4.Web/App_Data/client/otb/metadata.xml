@@ -322,7 +322,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
         <relationship to="inventory">
-	        <relationshipAttribute from="invuseline_.itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum" primary="true"/>
           <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
           <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
           <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
@@ -632,7 +632,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <property key="mobile.fetchlimit" value="300"/>
       </properties>
       <schemas>
-        <list title="Inventory Grid" platform="web">
+        <schema stereotype="list" id="invbalancesList" title="Inventory Grid" platform="web">
           <commandbars>
             <commandgroup position="gridtop">
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
@@ -672,12 +672,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="invbalancesid" hidden="true"/>
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
           <properties>
-            <property key="list.click.schema" value="detail"/>
-            <property key="config.fullKey" value="/Global/Grids/Scanbar"/>
+            <property key="list.click.schema" value="invbalancesDetail"/>
+            <property key="config.fullKey" value="/Global/Grids/InvBalances/ScanBar"/>
           </properties>
-        </list>
+        </schema>
 
-        <schema id="detail" stereotype="detail" title="Inventory Balance Details">
+        <schema id="invbalancesDetail" stereotype="detail" title="Inventory Balance Details">
           <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
           <field label="Item" attribute="itemnum" readonly="true"/>
           <field label="Description" attribute="item_.description" readonly="true"/>
@@ -949,7 +949,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
     <application entity="matrectransTransfers" name="matrectransTransfers" title="Inventory Transfers">
       <schemas>
-        <list>
+        <schema stereotype="list" id="matrectransTransfersList" title="Inventory Transfers">
+          <properties>
+            <property key="config.fullKey" value="/Global/Grids/InventoryTransfer/ScanBar"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
+            </commandgroup>
+          </commandbars>
           <field attribute="itemnum" label="Item">
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
@@ -981,7 +989,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                        method="createTransfer" parameters="schema" position="&lt;filter"/>
             </commandgroup>
           </commandbars>
-        </list>
+        </schema>
 
         <schema id="detail" title="Inventory Transfer">
           <field attribute="itemnum" label="Item" readonly="true"/>
@@ -1050,7 +1058,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <command id="cancelTransfer" icon="fa fa-backward" label="Cancel" service="inventoryService" method="cancelTransfer"/>
             </commandgroup>
           </commandbars>
-          <event type="onload" service="scannerdetectionService" method="initInvuseTransferListener"/>
+          <event type="onload" service="scannerdetectionService" method="initInvuseTransferDetailListener"/>
         </schema>
       </schemas>
     </application>

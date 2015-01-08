@@ -14,7 +14,13 @@
         
         public const string ClientSideLogLevel = "/Global/Logs/ClientLevel";
 
-        public const string InventoryGridScanConfig = "/Global/Grids/ScanBar";
+        public const string InvbalancesListScanOrder = "/Global/Grids/InvBalances/ScanBar";
+        public const string InvIssueListScanOrder = "/Global/Grids/InvIssue/ScanBar";
+        public const string NewInvIssueDetailScanOrder = "/Global/Details/InvIssue/ScanBar";
+        public const string PhysicalcountListScanOrder = "/Global/Grids/PhysicalCount/ScanBar";
+        public const string PhysicaldeviationListScanOrder = "/Global/Grids/PhysicalDeviation/ScanBar";
+        public const string MatrectransTransfersListScanOrder = "/Global/Grids/InventoryTransfer/ScanBar";
+        public const string ReservedMaterialsListScanOrder = "/Global/Grids/ReservedMaterials/ScanBar";
 
         //        public static class Global {
         //            public static class Rowstamps {

@@ -51,8 +51,50 @@ namespace softWrench.sW4.Data.Configuration {
                 DataType = "string",
             });
 
-            facade.Register(ConfigurationConstants.InventoryGridScanConfig, new PropertyDefinition() {
-                Description = "Inventory filter field scan order",
+            facade.Register(ConfigurationConstants.InvbalancesListScanOrder, new PropertyDefinition() {
+                Description = "Inventory grid filter field scan order",
+                DataType = "string",
+                DefaultValue = "itemnum",
+                Visible = false,
+            });
+
+            facade.Register(ConfigurationConstants.PhysicalcountListScanOrder, new PropertyDefinition() {
+                Description = "Physical count grid filter field scan order",
+                DataType = "string",
+                DefaultValue = "itemnum",
+                Visible = false,
+            });
+
+            facade.Register(ConfigurationConstants.PhysicaldeviationListScanOrder, new PropertyDefinition() {
+                Description = "Physical deviation grid filter field scan order",
+                DataType = "string",
+                DefaultValue = "itemnum",
+                Visible = false,
+            });
+
+            facade.Register(ConfigurationConstants.MatrectransTransfersListScanOrder, new PropertyDefinition() {
+                Description = "Inventory transfer grid filter field scan order",
+                DataType = "string",
+                DefaultValue = "itemnum",
+                Visible = false,
+            });
+
+            facade.Register(ConfigurationConstants.ReservedMaterialsListScanOrder, new PropertyDefinition() {
+                Description = "Reserved materials grid filter field scan order",
+                DataType = "string",
+                DefaultValue = "itemnum",
+                Visible = false,
+            });
+
+            facade.Register(ConfigurationConstants.InvIssueListScanOrder, new PropertyDefinition() {
+                Description = "Inv issue grid filter field scan order",
+                DataType = "string",
+                DefaultValue = "itemnum",
+                Visible = false,
+            });
+
+            facade.Register(ConfigurationConstants.NewInvIssueDetailScanOrder, new PropertyDefinition() {
+                Description = "Inv issue detail field scan order",
                 DataType = "string",
                 DefaultValue = "itemnum",
                 Visible = false,
