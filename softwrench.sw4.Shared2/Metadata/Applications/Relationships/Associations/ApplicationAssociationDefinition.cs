@@ -36,7 +36,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         private LabelData _labelData;
         private bool _forceDistinctOptions;
         private ISet<ApplicationEvent> _eventsSet;
-        private string _returnAttribute;
+        private string _valueField;
 
         public class LabelData {
 
@@ -64,7 +64,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public ApplicationAssociationDefinition() { }
 
         public ApplicationAssociationDefinition(string @from, LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
-            string showExpression, string toolTip, Boolean required, string defaultValue, bool hideDescription, string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true, string returnAttribute = null)
+            string showExpression, string toolTip, Boolean required, string defaultValue, bool hideDescription, string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true, string valueField = null)
             : base(from, labelData.Label, showExpression, toolTip) {
             _labelData = labelData;
             _label = labelData.Label;
@@ -79,7 +79,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             _forceDistinctOptions = forceDistinctOptions;
             Qualifier = qualifier;
             HideDescription = hideDescription;
-            _returnAttribute = returnAttribute;
+            _valueField = valueField;
 
             if (events != null) {
                 _events = events.ToDictionary(f => f.Type, f => f);
@@ -153,9 +153,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             get { return _forceDistinctOptions; }
         }
 
-        public string ReturnAttribute {
-            get { return _returnAttribute; }
-            set { _returnAttribute = value; }
+        public string ValueField {
+            get { return _valueField; }
+            set { _valueField = value; }
         }
 
         public string ApplicationPath {
@@ -208,7 +208,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public object Clone() {
             var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, ToolTip, IsRequired,
-                DefaultValue, HideDescription, EnableExpression, _eventsSet, _forceDistinctOptions, _returnAttribute) {
+                DefaultValue, HideDescription, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField) {
                     ExtraProjectionFields = ExtraProjectionFields,
                     LabelFields = LabelFields,
                     ApplicationTo = ApplicationTo,

@@ -380,7 +380,13 @@
         </documentation>
       </annotation>
     </attribute>
-    <attribute name="returnattribute" type="string" use="optional"/>
+    <attribute name="valuefield" type="string" use="optional">
+      <annotation>
+        <documentation>
+          The name of the property that will be returned from a lookup modal.
+        </documentation>
+      </annotation>
+    </attribute>
     <attribute name="default" type="string"></attribute>
     <attribute name="labelpattern" type="string"></attribute>
     <attribute name="placeholder" type="string"></attribute>
