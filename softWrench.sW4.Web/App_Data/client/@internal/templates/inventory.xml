@@ -163,15 +163,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
     <application name="invissue" title="Issue Inventory" entity="invissue">
       <schemas>
-        <list id="invissuelist" title="Issues and Returns">
+        <schema stereotype="list" id="invIssueList" title="Issues and Returns">
           <properties>
             <property key="list.click.service" value="inventoryService.invissuelistclick"/>
+            <property key="config.fullKey" value="/Global/Grids/InvIssue/Scanbar"/>
           </properties>
           <commandbars>
             <commandgroup position="gridtop">
               <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap"
                        successmessage="Issue created" position="&lt;filter"/>
               <command id="batch_issue" label="Batch Issuing" service="inventoryService" method="navToBatchFilter" parameters="" successmessage="New issue(s) created" position="&lt;filter"/>
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
             </commandgroup>
           </commandbars>
           <field attribute="matusetransid" hidden="true"/>
@@ -224,7 +226,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
             <renderer type="default" params="width=3%"/>
           </section>
-        </list>
+        </schema>
 
         <schema id="itemlist" stereotype="compositionlist">
           <properties>
@@ -529,7 +531,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
     <application name="physicalcount" entity="physicalCount" title="Physical Count">
       <schemas>
-        <list title="Physical Count">
+        <schema stereotype="list" id="physicalcountList" title="Physical Count">
+          <properties>
+            <property key="config.fullKey" value="/Global/Grids/PhysicalCount/ScanBar"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
+            </commandgroup>
+          </commandbars>
           <field attribute="invbalancesid" hidden="true"/>
           <field attribute="itemnum" label="Item">
             <renderer type="default" params="widthMD=15%;widthLG=15%" />
@@ -543,7 +553,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="binnum" label="Bin">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%" />
           </field>
-        </list>
+        </schema>
         
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
           <field label="Inventory Balances ID" attribute="invbalancesid" required="true" readonly="true" hidden="true"/>
@@ -572,7 +582,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
     <application name="physicaldeviation" entity="physicalDeviation" title="Physical Deviation">
       <schemas>
-        <list title="Physical Count">
+        <schema stereotype="list" id="physicaldeviationList" title="Physical Count">
+          <properties>
+            <property key="config.fullKey" value="/Global/Grids/PhysicalDeviation/ScanBar"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
+            </commandgroup>
+          </commandbars>
           <field attribute="invbalancesid" hidden="true"/>
           <field attribute="itemnum" label="Item">
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
@@ -589,7 +607,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="physcnt" label="Physical Count">
             <renderer type="default" params="widthXS=30%;widthSM=20%" />
           </field>
-        </list>
+        </schema>
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
           <field label="Inventory Balances ID" attribute="invbalancesid" required="true" readonly="true" hidden="true"/>
           <field label="Item" attribute="itemnum" readonly="true"/>
@@ -617,14 +635,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
     <application name="reservedMaterials" entity="invreserve" title="Reserved Materials">
       <schemas>
-        <list>
+        <schema stereotype="list" id="reservedMaterialsList" title="Reserved Mateirals">
+          <properties>
+            <property key="config.fullKey" value="/Global/Grids/ReservedMaterials/ScanBar"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
+            </commandgroup>
+          </commandbars>
           <field attribute="wonum" label="Work Order">
             <renderer type="default" params="widthXS=40%;widthSM=30%;widthMD=20%;widthLG=10%" />
           </field>
           <field attribute="asset" label="Asset">
             <renderer type="default" />
           </field>
-          <field attribute="location" label="Location">
+          <field attribute="location" label="Storeroom">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="itemnum" label="Item">
@@ -643,7 +669,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="hidefilter=true;widthXS=-1%;widthSM=20%;widthMD=15%;widthLG=8%;"/>
           </field>
           <field attribute="location" hidden="true"/>
-        </list>
+        </schema>
         
         <schema id="detail" mode="input">
           <field attribute="invreserveid" hidden="true"/>

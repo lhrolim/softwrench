@@ -1,7 +1,14 @@
 <span id="scanFilterController" ng-controller="ScanFilterController">
-    <button data-toggle="modal" data-target="#scanfilterModal" ng-click="showScanFilterModal()" class="btn btn-default btn-sm">
-        <i class="fa fa-barcode"></i><span>&ensp;Scan Config</span>
-    </button>
+    <ng-switch on="getSchemaId()">
+        <button ng-switch-when="List" data-toggle="modal" data-target="#scanfilterModal"
+                ng-click="showScanFilterModal()" class="btn btn-default btn-sm">
+            <i class="fa fa-barcode"></i><span>&ensp;Scan Config</span>
+        </button>
+        <button ng-switch-default data-toggle="modal" data-target="#scanfilterModal"
+                ng-click="showScanFilterModal()" class="btn btn-primary commandButton navbar-btn">
+            <i class="fa fa-barcode"></i><span>&ensp;Scan Config</span>
+        </button>
+    </ng-switch>
     <div id="scanfilterModal" class="modal fade" data-class="scanfilterModal" data-backdrop="static"
          tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
