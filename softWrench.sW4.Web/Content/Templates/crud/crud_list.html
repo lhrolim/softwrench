@@ -124,7 +124,7 @@
                                                 <ul class="dropdown-menu">
                                                     <li ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
                                                         ng-show="operation.renderType.indexOf(column.rendererType) > -1 || column.rendererType == null"
-                                                        ng-clasicos="{'active' : searchOperator[column.attribute].id == operation.id}">
+                                                        ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
                                                         <a href="#">{{operation.title}}</a>
                                                     </li>
                                                 </ul>
@@ -151,7 +151,7 @@
                                                 <ul class="dropdown-menu">
                                                     <li ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
                                                         ng-show="operation.renderType.indexOf(column.rendererType) > -1 || column.rendererType == null"
-                                                        ng-clasicos="{'active' : searchOperator[column.attribute].id == operation.id}">
+                                                        ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
                                                         <a href="#">{{operation.title}}</a>
                                                     </li>
                                                 </ul>
