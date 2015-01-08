@@ -7,12 +7,14 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
             var searchData = parameters.searchData;
 
             $(document).scannerDetection(function (data) {
+                // Retrieve the scan order string from the context that relates to the current schema
                 var scanOrderString = contextService.scanOrder(schema.applicationName);
                 var scanOrder = scanOrderString.split(",");
                 var extraparameters = { keepfilterparameters: true };
+                // When the user scans a value, loop through the properties in the scan order
                 for (var attribute in scanOrder) {
                     var currentAttribute = scanOrder[attribute];
-                    // If the property is not already in th escan data, add it and its value
+                    // If the property is not already in the scan data, add it and its value
                     if (!searchData.hasOwnProperty(currentAttribute)) {
                         var localSearchData = {};
                         localSearchData[currentAttribute] = data;
