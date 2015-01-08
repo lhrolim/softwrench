@@ -95,7 +95,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
     };
 
     var getBinQuantity = function (searchData, parameters, balanceField, binnum, lotnum) {
-        searchService.searchWithData("invbalances", searchData).success(function (data) {
+        searchService.searchWithData("invbalances", searchData, "invbalancesList").success(function (data) {
             var resultObject = data.resultObject;
             
             for (var i = 0; i < resultObject.length; i++) {
@@ -951,7 +951,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     location: parameters['fields']['location'],
                     binnum: parameters['fields']['binnum']
                 };
-                searchService.searchWithData("invbalances", searchData).success(function (data) {
+                searchService.searchWithData("invbalances", searchData, "invbalancesList").success(function (data) {
                     var resultObject = data.resultObject;
                     var fields = resultObject[0].fields;
                     var lotnum = fields['lotnum'];
