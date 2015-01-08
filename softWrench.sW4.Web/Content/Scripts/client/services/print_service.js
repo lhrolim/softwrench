@@ -41,7 +41,7 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
         },
 
         printList: function (totalCount, printPageSize, gridRefreshFunction, schema) {
-
+            var log = $log.getInstance('printService#printList');
             $rootScope.printRequested = false;
             if ($rootScope.$$listeners['listTableRenderedEvent'] != undefined) {
                 //avoids multiple listener registration
@@ -86,7 +86,9 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
                 printMode: true,
             };
 
+            log.info('fetching print data on server');
             gridRefreshFunction(invokeObj);
+            
         },
 
         printDetail: function (schema, datamap, printOptions) {
