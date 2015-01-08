@@ -78,8 +78,8 @@
                 return true;
             }
             return result;
-        }
-        return true;
+        } 
+        return !commandService.isCommandHidden($scope.datamap, $scope.schema, command);
     }
 
     $scope.buttonClasses = function () {

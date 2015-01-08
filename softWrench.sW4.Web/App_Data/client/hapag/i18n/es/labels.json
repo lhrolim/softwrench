@@ -738,7 +738,7 @@ messagesection:{
 		user:Los datos de usuario guardados con éxito
 	},
 	validation:{
-		isrequired:Campo {0} obrigatório 
+		requiredexpression:Campo {0} obrigatório 
 	}
 }
 

@@ -62,7 +62,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="refwo" hidden="true" />
           <field attribute="description" hidden="true" />
           <field attribute="transdate" hidden="true" />
-          <field attribute="qtyrequested" label="Quantity:" required="true" qualifier="quantity">
+          <field attribute="qtyrequested" label="Quantity:" requiredexpression="true" qualifier="quantity">
             <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
           </field>
           <association label="Item:" target="itemnum" labelfield="item_.description">
@@ -84,11 +84,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="description" hidden="true" />
           <field attribute="gldebitacct" hidden="true" />
           <field attribute="transdate" label="Date:" readonly="true" />
-          <field attribute="qtyrequested" label="Quantity:" required="true" qualifier="quantity">
+          <field attribute="qtyrequested" label="Quantity:" requiredexpression="true" qualifier="quantity">
             <!--            <renderer type="numericinput" params="decimals=2"/>-->
             <number decimals="2"  min="" max="" />
           </field>
-          <!--                    <field attribute="unitcost" label="UnitCost" required="true">-->
+          <!--                    <field attribute="unitcost" label="UnitCost" requiredexpression="true">-->
           <!--                      <number decimals="2" min="0" max="" />-->
           <!--                    </field>-->
           <association label="Item:" target="itemnum" labelfield="item.itemnum,item.description" />
