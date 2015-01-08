@@ -15,6 +15,7 @@ using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Data;
@@ -133,6 +134,19 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 }
                 attributeHolder.SetAttribute("AVAILABLEQUANTITY", qtyAvailable);
             }
+        }
+
+        public SearchRequestDto FilterBins(AssociationPreFilterFunctionParameters parameters) {
+            var filter = parameters.BASEDto;
+            filter.AppendWhereClauseFormat("invbalances.stagingbin = 0");
+            filter.ProjectionFields.Clear();
+            filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '')"));
+            filter.ProjectionFields.Add(new ProjectionField("curbal", "invbalances.curbal"));
+            filter.ProjectionFields.Add(new ProjectionField("lotnum", "invbalances.lotnum"));
+            filter.SearchSort = "invbalances.binnum,invbalances.lotnum";
+            filter.SearchAscending = true;
+
+            return filter;
         }
 
         public override string ApplicationName() {

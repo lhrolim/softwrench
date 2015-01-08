@@ -84,6 +84,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="itemsetid" to="itemsetid"/>
           <relationshipAttribute from="location" to="location"/>
         </relationship>
+      <relationship to="invbalances">
+        <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+        <relationshipAttribute from="itemnum" to="itemnum"/>
+        <relationshipAttribute from="siteid" to="siteid"/>
+        <relationshipAttribute from="orgid" to="orgid"/>
+        <relationshipAttribute from="location" to="location"/>
+      </relationship>
       </relationships>
     </entity>
   </entities>
@@ -672,15 +679,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="location" label="Storeroom" readonly="true"/>
           <field attribute="reservedqty" label="Reserved Quantity" readonly="true"/>
           <field attribute="actualqty" label="Quantity Issued" readonly="true" hidden="true"/>
-          <optionfield attribute="#frombin" label="From Bin" providerattribute="_AvailableBins">
-            <event type="afterchange" service="inventoryService" method="afterChangeInvreserveFromBin"/>
-            <renderer type="AUTOCOMPLETECLIENT"/>
-          </optionfield>
-          <optionfield attribute="#fromlot" label="From Lot" providerattribute="_AvailableLots" dependantfields="#frombin">
-            <event type="afterchange" service="inventoryService" method="afterChangeInvreserveFromLot"/>
-            <renderer type="AUTOCOMPLETECLIENT"/>
-          </optionfield>
-          <field attribute="#curbal" label="Current Balance" readonly="true"/>
+          <association label="Bin" target="#frombin" labelfield="invbalances_.binnum" valuefield="binnum" hideDescription="true" extraprojectionvalues="itemnum,curbal,lotnum,binnum">
+            <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
+            <dataprovider prefilterfunction="FilterBins"/>
+          </association>
+          <field attribute="invbalances_.lotnum" label="Lot" readonly="true"/>
+          <field attribute="invbalances_.curbal" label="Current Balance" readonly="true"/>
           <field attribute="#issueqty" label="Issue Quantity">
             <renderer type="numericinput" params="min=1;max=@reservedqty;"/>
             <event type="afterchange" service="inventoryService" method="afterChangeIssueQuantity"/>

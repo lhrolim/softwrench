@@ -876,6 +876,7 @@
       <SubType>Designer</SubType>
     </Content>
     <None Include="App_Data\Client\hapag\i18n\en\labels.json" />
+    <Content Include="Doc\scanner.txt" />
     <Content Include="IBM.Data.DB2.dll" />
     <Content Include="Content\Images\update_16.png" />
     <Content Include="Content\Images\excel_small.gif" />

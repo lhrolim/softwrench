@@ -380,6 +380,14 @@
         </documentation>
       </annotation>
     </attribute>
+    <attribute name="valuefield" type="string" use="optional">
+      <annotation>
+        <documentation>
+          The name of the property (column) that should be used for picking up the value of the association entry. That value would then be inserted into the datamap[target] field. 
+          If none provided, then the framework would use the primary key of the entity relationship as the value column
+        </documentation>
+      </annotation>
+    </attribute>
     <attribute name="default" type="string"></attribute>
     <attribute name="labelpattern" type="string"></attribute>
     <attribute name="placeholder" type="string"></attribute>
