@@ -107,7 +107,7 @@
         return remainingFilterFields;
     };
 
-    $scope.getSchemaId = function () {
+    $scope.getSchemaType = function () {
         return $scope.schema.stereotype;
     };
 }
