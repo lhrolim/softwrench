@@ -251,12 +251,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             param.id = datamap['matusetransid'];
             var application = 'invissue';
             var detail = 'viewinvreturndetail';
-            var mode = 'output';
-
+            var mode = 'input';
             //Logic to determine whether the record is an ISSUE
             //and whether all of the issued items have been returned
             if (datamap['issuetype'] == 'ISSUE') {
-
                 //Sets qtyreturned to 0 if null
                 //Parses the qtyreturned if its in a strng format
                 var qtyreturned = 0;
@@ -265,19 +263,17 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 } else if (datamap['qtyreturned'] != null) {
                     qtyreturned = datamap['qtyreturned'];
                 }
-
                 //For an issue, the quantity will be a negative number, representing the # of items issued
                 //The below if statement will add the positive quantityreturned to the negative quantity.
                 //If the result is negative, then are still items to be returned
                 if (qtyreturned + datamap['quantity'] < 0) {
                     detail = 'editinvissuedetail';
-                    mode = 'input';
                 } else {
                     //If all of the items have been returned, show the viewdetail page for 'ISSUE' records
                     detail = 'viewinvissuedetail';
+                    mode = 'output';
                 }
             }
-
             redirectService.goToApplicationView(application, detail, mode, null, param, null);
         },
 
