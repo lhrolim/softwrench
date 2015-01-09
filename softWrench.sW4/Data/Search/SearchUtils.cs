@@ -257,7 +257,8 @@ namespace softWrench.sW4.Data.Search {
             if (resultType == ParameterType.Date || resultType == ParameterType.Number) {
                 return new Tuple<string, ParameterType>(baseResult, resultType);
             }
-            return new Tuple<string, ParameterType>("UPPER(COALESCE(" + baseResult + ",''))", resultType);
+            return new Tuple<string, ParameterType>(baseResult, resultType);
+            //return new Tuple<string, ParameterType>("UPPER(COALESCE(" + baseResult + ",''))", resultType);
         }
 
         enum ParameterType {
