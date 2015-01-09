@@ -19,7 +19,7 @@
             title: '=',
             elementid: '@',
             isMainTab: '@',
-            tabid:'@'
+            tabid: '@'
         },
 
         link: function (scope, element, attrs) {
@@ -27,7 +27,7 @@
                 element.append(
                   "<crud-input elementid='crudInputMain' schema='schema' extraparameters='extraparameters'" +
                   "datamap='datamap' association-options='associationOptions' blockedassociations='blockedassociations'" +
-                  "association-schemas='associationSchemas'cancelfn='toListSchema(data,schema)' displayables='displayables'" +
+                  "association-schemas='associationSchemas'cancelfn='cancel(data,schema)' displayables='displayables'" +
                   "savefn='save(selecteditem, parameters)' previousschema='previousschema' previousdata='previousdata' />"
                );
                 $compile(element.contents())(scope);
@@ -48,8 +48,8 @@
                 scope.savefn();
             };
 
-            scope.cancel = function () {
-                scope.cancelfn({ data: scope.previousdata, schema: scope.previousschema });
+            scope.cancel = function (data,schema) {
+                scope.cancelfn({ data: data, schema: schema });
                 scope.$emit('sw_cancelclicked');
             };
         }
@@ -65,7 +65,7 @@ app.directive('crudInput', function (contextService) {
             schema: '=',
             displayables: '=',
             datamap: '=',
-            extraparameters:'=',
+            extraparameters: '=',
             associationOptions: '=',
             associationSchemas: '=',
             blockedassociations: '=',
@@ -75,16 +75,18 @@ app.directive('crudInput', function (contextService) {
             previousdata: '=',
             title: '=',
             elementid: '@',
-            composition:'@'
+            composition: '@'
         },
 
+
+
         controller: function ($scope, $http, $injector, $element, printService, compositionService, commandService, fieldService, i18NService) {
-            
+
             $scope.$name = 'crudinput';
 
             this.cancel = function () {
-                $scope.$parent.cancel();
-//                $scope.$emit('sw_cancelclicked');
+                $scope.cancelfn({ data: $scope.previousdata, schema: $scope.previousschema });
+                $scope.$emit('sw_cancelclicked');
             };
 
             this.save = function () {
@@ -100,13 +102,13 @@ app.directive('crudInput', function (contextService) {
                 return id != null;
             };
 
-         
+
 
             $injector.invoke(BaseController, this, {
                 $scope: $scope,
                 i18NService: i18NService,
                 fieldService: fieldService,
-                commandService:commandService
+                commandService: commandService
             });
 
 

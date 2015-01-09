@@ -176,7 +176,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
 
-          <field attribute="description" label="Summary:" required="true"/>
+          <field attribute="description" label="Summary:" requiredexpression="true"/>
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
           </field>
@@ -201,7 +201,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schema parentschema="adetail" title="New Service Request" id="newdetail">
         <section id="siteidsection">
           <field attribute="ticketid" label="Request #:" hidden="true"/>
-          <association label="Site:" target="siteid" labelfield="site_.description" required="true" default='@usersite' enableexpression="true">
+          <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true" default='@usersite' enableexpression="true">
             <!-- removed default='@usersite' from the above association label-->
             <renderer type="lookup"/>
           </association>
@@ -220,11 +220,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
 
         <section id="siteidsection">
-          <field attribute="ticketid" label="Request #:" readonly="true" required="true"/>
+          <field attribute="ticketid" label="Request #:" readonly="true" requiredexpression="true"/>
           <field label="Site:" attribute="siteid" readonly="true"/>
         </section>
         <section id="statussection">
-          <association label="Status:" target="status" labelfield="synstatus.description" required="true">
+          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
             <renderer type="combo" />
           </association>
         </section>
@@ -260,14 +260,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="vendor" label="Vendor"  qualifier="featured"/>
         </list>
         <detail>
-          <field attribute="assetid" label="ID"  required="true" />
-          <field attribute="assetnum" label="Asset"  required="true" />
-          <field attribute="location" label="Location"  required="true" />
+          <field attribute="assetid" label="ID"  requiredexpression="true" />
+          <field attribute="assetnum" label="Asset"  requiredexpression="true" />
+          <field attribute="location" label="Location"  requiredexpression="true" />
           <field attribute="vendor" label="Vendor"  />
           <field attribute="description" label="Description"  />
           <field attribute="failurecode" label="Failure Code"  />
           <field attribute="priority" label="Priority"  />
-          <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
+          <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
         <schema id="assetLookupList" stereotype="list">
           <field attribute="assetnum" label="Asset"/>
@@ -292,11 +292,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="description" label="Description" qualifier="excerpt"/>
         </list>
         <detail>
-          <field attribute="locationsid" label="ID"  required="true" />
-          <field attribute="location" label="Location"  required="true" />
-          <field attribute="description" label="Description"  required="true" />
-          <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
-          <field attribute="type"  required="true" readonly="true" hidden="true"/>
+          <field attribute="locationsid" label="ID"  requiredexpression="true" />
+          <field attribute="location" label="Location"  requiredexpression="true" />
+          <field attribute="description" label="Description"  requiredexpression="true" />
+          <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
+          <field attribute="type"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
       </schemas>
     </application>
@@ -346,7 +346,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </schema>
 
         <detail>
-          <field label="Attachment:" attribute="newattachment" required="true">
+          <field label="Attachment:" attribute="newattachment" requiredexpression="true">
             <renderer type="upload"/>
           </field>
           <!--wip-->
@@ -435,9 +435,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="outservcost"       hidden="true"/>
           <field attribute="workorderid"  readonly="true" hidden="true"/>
 
-          <field attribute="orgid"  required="true" readonly="true" hidden="true"/>
+          <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
           <section id ="siteidsection"/>
-          <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
+          <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
           <section id="statussection"/>
@@ -458,7 +458,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
             <renderer type="lookup"/>
           </association>
-          <field attribute="wopriority" label="Priority:" required="true" default="1">
+          <field attribute="wopriority" label="Priority:" requiredexpression="true" default="1">
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
           </field>
           <association label="Location:" target="location" labelfield="location_.description" >
@@ -527,7 +527,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <schema parentschema="adetail" title="New Work Order" id="newdetail" platform="web">
           <section id="siteidsection">
-            <association label="Site:" target="siteid" labelfield="site_.description" required="true" default='@usersite'>
+            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true" default='@usersite'>
               <!-- removed default='@usersite' from the above association label-->
               <renderer type="lookup"/>
             </association>

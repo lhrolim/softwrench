@@ -112,7 +112,7 @@ app.directive('crudInputFields', function (contextService) {
                 scope.lookupAssociationsDescription = {};
             }
 
-            
+
         },
 
         controller: function ($scope, $http, $element, $injector, $timeout,
@@ -135,6 +135,15 @@ app.directive('crudInputFields', function (contextService) {
                 });
                 return title;
             };
+
+            $scope.$on('sw_block_association', function (event, association) {
+                $scope.blockedassociations[association] = true;
+            });
+
+            $scope.$on('sw_unblock_association', function (event, association) {
+                $scope.blockedassociations[association] = null;
+            });
+
             $scope.getCheckboxOptions = function (fieldMetadata) {
                 if (fieldMetadata.providerAttribute == null) {
                     return fieldMetadata.options;
@@ -297,7 +306,7 @@ app.directive('crudInputFields', function (contextService) {
 
             $scope.setMaxNumericInput = function (datamap, fieldMetadata) {
                 if (fieldMetadata.rendererParameters['max'] != null) {
-                    return parseInt(expressionService.evaluate(fieldMetadata.rendererParameters['max'],datamap));
+                    return parseInt(expressionService.evaluate(fieldMetadata.rendererParameters['max'], datamap));
                 }
                 return null;
             };
@@ -331,7 +340,7 @@ app.directive('crudInputFields', function (contextService) {
                 $scope.datamap[datamapKey] = model;
             };
             /* LOOKUP functions */
-        
+
 
             $scope.showLookupModal = function (fieldMetadata) {
                 if (!$scope.isSelectEnabled(fieldMetadata)) {
@@ -363,7 +372,11 @@ app.directive('crudInputFields', function (contextService) {
             $scope.lookupCodeBlur = function (fieldMetadata) {
                 var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                 var targetValue = $scope.datamap[fieldMetadata.target];
-                if (code != null && code != '' && (targetValue == null || targetValue == " ")) {
+                var lookupOnBlur = "true";
+                if (fieldMetadata.rendererParameters['lookuponblur'] != null) {
+                    lookupOnBlur = fieldMetadata.rendererParameters['lookuponblur'];
+                }
+                if (code != null && code != '' && (targetValue == null || targetValue == " ") && lookupOnBlur == "true") {
                     $scope.showLookupModal(fieldMetadata);
                 }
             };
@@ -584,7 +597,7 @@ app.directive('crudInputFields', function (contextService) {
                         cssclass += fieldMetadata.schema.rendererParameters['inputclass'];
                     }
                 }
-                
+
                 if (fieldMetadata.resourcepath != undefined && fieldMetadata.header == null) {
                     cssclass += ' col-md-12';
                     return cssclass;
@@ -697,6 +710,13 @@ app.directive('crudInputFields', function (contextService) {
 
             $scope.isDesktop = function () {
                 return isDesktop();
+            };
+
+            $scope.isFieldRequired = function (requiredExpression) {
+                if (requiredExpression != undefined) {
+                    return expressionService.evaluate(requiredExpression, $scope.datamap);
+                }
+                return requiredExpression;
             };
         }
     }

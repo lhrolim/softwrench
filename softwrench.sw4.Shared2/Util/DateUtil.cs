@@ -6,11 +6,13 @@ namespace softwrench.sw4.Shared2.Util {
 
     public class DateUtil {
 
-        public static readonly string[] FormatOptions = { "dd/MM/yyyy hh:mm", "MM/dd/yyyy hh:mm", "dd/MM/yyyy", "MM/dd/yyyy", "yyyy-MM-dd" };
+        // added additional acceptance format 
+        public static readonly string[] FormatOptions = { "dd/MM/yyyy hh:mm", "d/M/yyyy hh:mm", "MM/dd/yyyy hh:mm", "M/d/yyyy hh:mm", "dd/MM/yyyy", "d/M/yyyy", "MM/dd/yyyy", "M/d/yyy/", "yyyy-MM-dd", "yyyy-M-d" };
 
         public static DateTime? Parse(string date) {
             DateTime temp;
-            if (DateTime.TryParse(date, out temp)) {
+            // Switched from TryParse - it accepted 4500-5
+            if (DateTime.TryParseExact(date, FormatOptions, CultureInfo.InvariantCulture, DateTimeStyles.None, out temp)) {
                 return temp;
             }
             return null;

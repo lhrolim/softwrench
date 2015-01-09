@@ -462,8 +462,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label="Affected Person" target="affectedperson" labelfield="person_.displayname" default="@username">
             <renderer type="lookup"/>
           </association>
-          <field attribute="description" label="Summary" required="true"/>
-          <field label="Details" attribute="longdescription_.ldtext" required="true">
+          <field attribute="description" label="Summary" requiredexpression="true"/>
+          <field label="Details" attribute="longdescription_.ldtext" requiredexpression="true">
             <renderer type="textarea"/>
           </field>
           <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location,location_.description">
@@ -479,7 +479,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema parentschema="adetail" title="New Service Request" id="newdetail">
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #" hidden="true"/>
-            <association label="Site" target="siteid" labelfield="site_.description"  required="true">
+            <association label="Site" target="siteid" labelfield="site_.description"  requiredexpression="true">
               <renderer type="lookup"/>
             </association>
           </section>
@@ -530,14 +530,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="vendor" label="Vendor"  qualifier="featured"/>
         </list>
         <detail>
-          <field attribute="assetid" label="ID"  required="true" />
-          <field attribute="assetnum" label="Asset"  required="true" />
-          <field attribute="location" label="Location"  required="true" />
+          <field attribute="assetid" label="ID"  requiredexpression="true" />
+          <field attribute="assetnum" label="Asset"  requiredexpression="true" />
+          <field attribute="location" label="Location"  requiredexpression="true" />
           <field attribute="vendor" label="Vendor"  />
           <field attribute="description" label="Description"  />
           <field attribute="failurecode" label="Failure Code"  />
           <field attribute="priority" label="Priority"  />
-          <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
+          <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
       </schemas>
 
@@ -554,11 +554,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="description" label="Description" qualifier="excerpt"/>
         </list>
         <detail>
-          <field attribute="locationsid" label="ID"  required="true" />
-          <field attribute="location" label="Location"  required="true" />
-          <field attribute="description" label="Description"  required="true" />
-          <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
-          <field attribute="type"  required="true" readonly="true" hidden="true"/>
+          <field attribute="locationsid" label="ID"  requiredexpression="true" />
+          <field attribute="location" label="Location"  requiredexpression="true" />
+          <field attribute="description" label="Description"  requiredexpression="true" />
+          <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
+          <field attribute="type"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
       </schemas>
     </application>

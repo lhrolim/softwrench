@@ -16,7 +16,7 @@ namespace softwrench.sW4.test.Data.Search {
             ApplicationConfiguration.TestclientName = "otb";
             MetadataProvider.StubReset();
             var schemas = MetadataProvider.Application("invbalances").Schemas();
-            _schema = schemas[new ApplicationMetadataSchemaKey("list", "input", "web")];
+            _schema = schemas[new ApplicationMetadataSchemaKey("invbalancesList", "input", "web")];
         }
 
         [TestMethod]

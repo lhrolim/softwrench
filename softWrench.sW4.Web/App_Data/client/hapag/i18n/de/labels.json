@@ -722,7 +722,7 @@ messagesection:{
 		user:User-Daten erfolgreich gespeichert
 	},
 	validation:{
-		isrequired:Feld {0} benötigt
+		requiredexpression:Feld {0} benötigt
 	}
 }
 

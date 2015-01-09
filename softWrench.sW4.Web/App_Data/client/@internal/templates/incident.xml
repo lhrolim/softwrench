@@ -124,13 +124,18 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
             <renderer type="lookup"/>
           </association>
-          <field label="Site Id:" attribute="siteid"  readonly="true"/>
+          <field label="Site Id:" attribute="siteid"  hidden="true"/>
+          <field attribute ="orgid" hidden ="true"/>
+          <field attribute ="class" hidden ="true"/>
           <association label ="Priority" target="internalpriority" labelfield="numericdomain_.description">
             <renderer type="lookup"/>
           </association>
-          <association label="Classification:" target="classificationid" labelfield="incidentclassifications_.description">
-            <renderer type="lookup"/>
-          </association>
+<!--          <association label="Classification:" target="classificationid" labelfield="incidentclassifications_.description">-->
+<!--            <renderer type="lookup"/>-->
+<!--          </association>-->
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid">
+            <renderer type="autocompleteclient" />
+          </optionfield>
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             <!--renderer type="lookup"/-->
@@ -160,7 +165,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
                          parameters="joinattribute=actualfinish;">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
-          <field label="Status:" attribute="status" readonly="true" default="NEW" required="true"/>
+          <field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="true"/>
           <field attribute="statusdate" hidden="true" />
         </schema>
 
@@ -168,7 +173,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="actlabcost" default="0" hidden="true"/>
           <field attribute="actlabhrs" default="0" hidden="true" />
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
-          <field attribute="ticketid" label="Incident Number:" readonly="true" required="true"/>
+          <field attribute="ticketid" label="Incident Number:" readonly="true" requiredexpression="true"/>
           <field attribute="description" label="Summary:"/>
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="textarea"/>
@@ -185,7 +190,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
             <renderer type="lookup"/>
           </association>
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid">
+            <renderer type="autocompleteclient" />
+          </optionfield>
           <field label="Site Id:" attribute="siteid"  readonly="true"/>
+          <field attribute ="orgid" hidden ="true"/>
+          <field attribute ="class" hidden="true"/>
           <optionfield label="Priority:" attribute="internalpriority" default="1">
             <renderer type="radio"/>
             <option label="Critical" value="1"/>

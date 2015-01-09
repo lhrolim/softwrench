@@ -74,7 +74,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </schema>
         <schema id="editdetail" parentschema="adetail" title="Receipt Detail">
           <section id="siteidsection">
-            <field attribute="ponum" label="PO #:" readonly="true" required="true"/>
+            <field attribute="ponum" label="PO #:" readonly="true" requiredexpression="true"/>
             <field label="Site:" attribute="siteid" readonly="true"/>
           </section>
           <section id ="compositions">

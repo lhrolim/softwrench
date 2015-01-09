@@ -124,7 +124,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
 
-          <field attribute="description" label="Summary:" required="true"/>
+          <field attribute="description" label="Summary:" requiredexpression="true"/>
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
           </field>
@@ -147,7 +147,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <schema parentschema="adetail" title="New Service Request" id="newdetail">
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" hidden="true"/>
-            <association label="Site:" target="siteid" labelfield="site_.description" required="true">
+            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
               <!-- removed default='@usersite' from the above association label-->
               <renderer type="lookup"/>
             </association>
@@ -166,11 +166,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
 
           <section id="siteidsection">
-            <field attribute="ticketid" label="Request #:" readonly="true" required="true"/>
+            <field attribute="ticketid" label="Request #:" readonly="true" requiredexpression="true"/>
             <field label="Site:" attribute="siteid" readonly="true"/>
           </section>
           <section id="statussection">
-            <association label="Status:" target="status" labelfield="synstatus.description" required="true">
+            <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
               <renderer type="combo" />
             </association>
           </section>
