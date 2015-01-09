@@ -36,7 +36,7 @@ namespace softwrench.sW4.test.Data.Search {
 
             var whereClause = SearchUtils.GetWhere(searchRequestDto, "SR");
 
-            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) = :ticketid )", whereClause);
+            Assert.AreEqual("( SR.ticketid = :ticketid )", whereClause);
         }
 
         [TestMethod]
@@ -50,7 +50,7 @@ namespace softwrench.sW4.test.Data.Search {
 
             String whereClause = SearchUtils.GetWhere(searchRequestDto, "SR");
 
-            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) = :ticketid ) OR ( UPPER(COALESCE(SR.description,'')) = :description ) OR ( UPPER(COALESCE(asset_.description,'')) = :asset_.description ) OR ( UPPER(COALESCE(SR.status,'')) = :status )", whereClause);
+            Assert.AreEqual("( SR.ticketid = :ticketid ) OR ( SR.description = :description ) OR ( asset_.description = :asset_.description ) OR ( SR.status = :status )", whereClause);
         }
 
         [TestMethod]
@@ -102,7 +102,7 @@ namespace softwrench.sW4.test.Data.Search {
             var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
             searchRequestDto.SetFromSearchString(_assetSchema, "computername".Split(','), "test%");
             var actual = SearchUtils.GetWhere(searchRequestDto, "asset");
-            Assert.AreEqual("( UPPER(COALESCE(CASE WHEN LOCATE('//',asset.Description) > 0 THEN LTRIM(RTRIM(SUBSTR(asset.Description,1,LOCATE('//',asset.Description)-1))) ELSE LTRIM(RTRIM(asset.Description)) END,'')) like :computername )", actual);
+            Assert.AreEqual("( CASE WHEN LOCATE('//',asset.Description) > 0 THEN LTRIM(RTRIM(SUBSTR(asset.Description,1,LOCATE('//',asset.Description)-1))) ELSE LTRIM(RTRIM(asset.Description)) END like :computername )", actual);
 
         }
 
@@ -110,7 +110,7 @@ namespace softwrench.sW4.test.Data.Search {
         public void AssetSearch() {
             var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
             searchRequestDto.SetFromSearchString(_assetSchema, "hlagdescription,serialnum".Split(','), "test%");
-            Assert.AreEqual("( UPPER(COALESCE(CASE WHEN LOCATE('//',asset.Description) > 0 THEN LTRIM(RTRIM(SUBSTR(asset.Description, LOCATE('//', asset.Description)+3))) ELSE LTRIM(RTRIM(asset.Description)) END,'')) like :hlagdescription ) OR ( UPPER(COALESCE(asset.serialnum,'')) like :serialnum )",SearchUtils.GetWhere(searchRequestDto, "asset"));
+            Assert.AreEqual("( CASE WHEN LOCATE('//',asset.Description) > 0 THEN LTRIM(RTRIM(SUBSTR(asset.Description, LOCATE('//', asset.Description)+3))) ELSE LTRIM(RTRIM(asset.Description)) END like :hlagdescription ) OR ( asset.serialnum like :serialnum )", SearchUtils.GetWhere(searchRequestDto, "asset"));
 
         }
 
@@ -120,7 +120,7 @@ namespace softwrench.sW4.test.Data.Search {
             searchRequestDto.SetFromSearchString(_schema, "ticketid,description".Split(','), "%teste%");
             searchRequestDto.BuildFixedWhereClause("SR");
             var filterFixedWhereClause = searchRequestDto.FilterFixedWhereClause;
-            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) like '%TESTE%' ) OR ( UPPER(COALESCE(SR.description,'')) like '%TESTE%' )", filterFixedWhereClause);
+            Assert.AreEqual("( SR.ticketid like '%TESTE%' ) OR ( SR.description like '%TESTE%' )", filterFixedWhereClause);
         }
         [TestMethod]
         public void SearchWithFixedParam_Hapag_SEARCH_TEST_NOTEQ() {
@@ -128,7 +128,7 @@ namespace softwrench.sW4.test.Data.Search {
             searchRequestDto.SetFromSearchString(_schema, "ticketid".Split(','), "!=teste");
             searchRequestDto.BuildFixedWhereClause("SR");
             var filterFixedWhereClause = searchRequestDto.FilterFixedWhereClause;
-            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) != 'TESTE' OR UPPER(COALESCE(SR.ticketid,'')) IS NULL  )", filterFixedWhereClause);
+            Assert.AreEqual("( SR.ticketid != 'TESTE' OR SR.ticketid IS NULL  )", filterFixedWhereClause);
         }
 
         [Ignore]
