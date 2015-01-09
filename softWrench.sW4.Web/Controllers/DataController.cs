@@ -203,11 +203,11 @@ namespace softWrench.sW4.Web.Controllers {
                 //mobile requests doesn´t have to handle success messages or redirections
                 return null;
             }
-            if (nextSchemaKey != null) {
-                var response = _nextSchemaRouter.RedirectToNextSchema(applicationMetadata, operation, maximoResult.Id,
-                    platform, currentschemaKey, nextSchemaKey, mockMaximo);
-                response.SuccessMessage = _successMessageHandler.FillSucessMessage(applicationMetadata, maximoResult.Id,
-                    operation);
+            if (nextSchemaKey != null && id == null) {
+                // if the id is not null then we´re on a update context, and for hapag that would imply on refreshing the screen afterwards, making no sense to fetch the data twice
+                var response = _nextSchemaRouter.RedirectToNextSchema(applicationMetadata, operation,
+                        maximoResult.Id, platform, currentschemaKey, nextSchemaKey, mockMaximo);
+                response.SuccessMessage = _successMessageHandler.FillSucessMessage(applicationMetadata, maximoResult.Id, operation);
                 return response;
             }
             return new BlankApplicationResponse() {

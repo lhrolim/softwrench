@@ -341,8 +341,13 @@ app.directive('compositionList', function (contextService) {
                     }
                     $scope.$parent.$parent.save(null, {
                         successCbk: function (data) {
+                            
+                            if (alwaysrefresh) {
+                                window.location.reload();
+                                return;
+                            }
                             var updatedArray = data.resultObject.fields[$scope.relationship];
-                            if (alwaysrefresh || updatedArray == null || updatedArray.length == 0) {
+                            if (updatedArray == null||updatedArray.length == 0) {
                                 window.location.reload();
                                 return;
                             }
