@@ -68,6 +68,9 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
             parameters.key.mode = schema.mode;
             parameters.key.platform = "web";
             parameters.application = application;
+            parameters.currentmodule = contextService.retrieveFromContext('currentmodule');
+            parameters.currentmetadata = contextService.retrieveFromContext('currentmetadata');
+
             var searchDTO = searchService.buildSearchDTO(searchData, searchSort, searchOperator, paginationData.filterFixedWhereClause);
             var currentModule = contextService.currentModule();
             if (currentModule != null) {

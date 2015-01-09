@@ -47,7 +47,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
                     }
                 }
             }
-            return "null".Equals(value) ? null : value;
+            return ("null".Equals(value) || "".Equals(value))? null : value;
         }
 
 
