@@ -251,7 +251,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             param.id = datamap['matusetransid'];
             var application = 'invissue';
             var detail = 'viewinvreturndetail';
-            var mode = 'output';
+            var mode = 'input';
 
             //Logic to determine whether the record is an ISSUE
             //and whether all of the issued items have been returned
@@ -275,6 +275,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 } else {
                     //If all of the items have been returned, show the viewdetail page for 'ISSUE' records
                     detail = 'viewinvissuedetail';
+                    mode = 'input';
                 }
             }
 
@@ -331,8 +332,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             submitInvIssueRec(datamap, clonedCompositionData, 0);
         },
 
-        cancelNewInvIssue: function() {
-            redirectService.goToApplicationView("invissue", "list", null, null, null, null);
+        navToIssueReturnList: function() {
+            redirectService.goToApplicationView("invissue", "invIssueList", null, null, null, null);
         },
 
         displayNewIssueModal: function(parentschema, parentdatamap) {
