@@ -1,4 +1,5 @@
 ﻿using softwrench.sw4.Hapag.Data.DataSet.Helper;
+using softwrench.sw4.Hapag.Data.Init;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SimpleInjector;
@@ -23,6 +24,12 @@ namespace softwrench.sw4.Hapag.Data {
 
         public String ChangeGridQuery() {
             var user = SecurityFacade.CurrentUser();
+            var context = _contextLookuper.LookupContext();
+            var isTomOrItom = context.IsInModule(FunctionalRole.Itom) || context.IsInModule(FunctionalRole.Tom);
+            if (isTomOrItom) {
+                //HAP-805, tom or itom roles can see everything in the grid
+                return null;
+            }
             return String.Format(@"
             exists (select 1 from pmchgotherapprovers approvals_ where (wochange.wonum = approvals_.wonum) and approvals_.approvergroup IN ({0}) ) 
             or exists (select 1 from WOACTIVITY as woactivity_ where wochange.wonum = woactivity_.parent and woactivity_.ownergroup in ({0}) )"
