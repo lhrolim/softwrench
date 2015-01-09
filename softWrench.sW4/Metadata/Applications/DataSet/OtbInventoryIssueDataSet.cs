@@ -25,6 +25,7 @@ using softWrench.sW4.SimpleInjector;
 namespace softWrench.sW4.Metadata.Applications.DataSet {
     class OtbInventoryIssueDataSet : BaseInventoryIssueDataSet {
 
+        public override SearchRequestDto FilterBins(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             var siteid = parameters.OriginalEntity.GetAttribute("siteid");
             var location = parameters.OriginalEntity.GetAttribute("storeloc");
@@ -42,37 +43,6 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             filter.SearchAscending = true;
             
             return filter;
-        }
-
-        public IEnumerable<IAssociationOption> GetAvailableLots(OptionFieldProviderParameters parameters) {
-            var siteid = parameters.OriginalEntity.GetAttribute("siteid");
-            var itemnum = parameters.OriginalEntity.GetAttribute("itemnum");
-            var location = parameters.OriginalEntity.GetAttribute("storeloc");
-            var binnum = parameters.OriginalEntity.GetAttribute("binnum");
-
-            var query = string.Format("select distinct lotnum " +
-                                      "from invbalances " +
-                                      "where itemnum = '{0}' and " +
-                                            "siteid = '{1}' and " +
-                                            "location = '{2}' and " +
-                                            "binnum = '{3}' and " +
-                                            "curbal > 0 and " +
-                                            "binnum is not null and " +
-                                            "lotnum is not null",
-                                      itemnum, siteid, location, binnum);
-
-            var result = MaxDAO.FindByNativeQuery(query, null);
-            var availableLocations = new List<IAssociationOption>();
-            if (result != null) {
-                foreach (var record in result) {
-                    var recordAssociationOption = new AssociationOption(record["lotnum"], record["lotnum"]);
-                    if (!availableLocations.Contains(recordAssociationOption)) {
-                        availableLocations.Add(recordAssociationOption);
-                    }
-                }
-            }
-
-            return availableLocations.AsEnumerable();
         }
 
         public override string ApplicationName() {

@@ -137,7 +137,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '')"));
             filter.ProjectionFields.Add(new ProjectionField("curbal", "invbalances.curbal"));
             filter.ProjectionFields.Add(new ProjectionField("lotnum", "invbalances.lotnum"));
-            filter.SearchSort = "invbalances.binnum";
+            filter.SearchSort = "invbalances.binnum,invbalances.lotnum";
             filter.SearchAscending = true;
             
             return filter;
