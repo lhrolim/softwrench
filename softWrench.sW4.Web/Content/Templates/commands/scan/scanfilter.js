@@ -2,19 +2,16 @@
     $scope.scanOrder = [];
     $scope.filterFields = [];
     initScanFilter();
-    var schemaId = $scope.schema.schemaId;
 
     function initScanFilter() {
-        var scanOrderString = contextService.scanOrder($scope.schema.applicationName);
-        var scanOrder = scanOrderString.split(",");
-
-        if (!scanOrder) {
+        var scanOrderString = contextService.scanOrder($scope.schema.schemaId);
+        if (scanOrderString) {
+            $scope.scanOrder = scanOrderString.split(",");
+        } else {
             $scope.scanOrder = [];
         }
-        else {
-            $scope.scanOrder = scanOrder;
-        }
 
+        var filterField;
         var displayables = $scope.schema.displayables;
         getFilterFields(displayables);
     };
@@ -30,7 +27,7 @@
                 }
             }
         }
-    }
+    };
 
     $scope.closeScanFilterModal = function() {
         var modal = $('#scanfilterModal');
@@ -74,7 +71,7 @@
             value: scanAttributesString
         };
         restService.invokePost("Configuration", "SetConfiguration", parameters, null,
-            contextService.insertIntoContext("scanOrder", scanAttributesString), null);
+            contextService.insertIntoContext($scope.schema.schemaId + "ScanOrder", scanAttributesString), null);
         $scope.closeScanFilterModal();
     };
 
@@ -110,8 +107,7 @@
         return remainingFilterFields;
     };
 
-    $scope.getSchemaId = function() {
-        return schemaId;
+    $scope.getSchemaType = function () {
+        return $scope.schema.stereotype;
     };
-
 }

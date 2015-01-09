@@ -67,8 +67,15 @@ namespace softWrench.sW4.Web.Controllers {
             var logoIcon = _facade.Lookup<string>(ConfigurationConstants.MainIconKey);
             var myProfileEnabled = _facade.Lookup<Boolean>(ConfigurationConstants.MyProfileEnabled);
             var clientSideLogLevel = _facade.Lookup<string>(ConfigurationConstants.ClientSideLogLevel);
-            var invbalancesScanOrder = _facade.Lookup<string>(ConfigurationConstants.InventoryGridScanConfig);
-            var newInvIssueDetailScanOrder = _facade.Lookup<string>(ConfigurationConstants.NewInvIssueDetailScanConfig);
+            var invbalancesListScanOrder = _facade.Lookup<string>(ConfigurationConstants.InvbalancesListScanOrder);
+            var newInvIssueDetailScanOrder = _facade.Lookup<string>(ConfigurationConstants.NewInvIssueDetailScanOrder);
+            var invIssueListScanOrder = _facade.Lookup<string>(ConfigurationConstants.InvIssueListScanOrder);
+            var physicalcountListScanOrder = _facade.Lookup<string>(ConfigurationConstants.PhysicalcountListScanOrder);
+
+            var physicaldeviationListScanOrder = _facade.Lookup<string>(ConfigurationConstants.PhysicaldeviationListScanOrder);
+            var reservedMaterialsListScanOrder = _facade.Lookup<string>(ConfigurationConstants.ReservedMaterialsListScanOrder);
+            var matrectransTransfersListScanOrder = _facade.Lookup<string>(ConfigurationConstants.MatrectransTransfersListScanOrder);
+
             return new HomeConfigs() {
                 Logo = logoIcon,
                 MyProfileEnabled = myProfileEnabled,
@@ -79,8 +86,13 @@ namespace softWrench.sW4.Web.Controllers {
                 ClientSideLogLevel = clientSideLogLevel,
                 SuccessMessageTimeOut = GetSuccessMessageTimeOut(),
                 InitTimeMillis = ApplicationConfiguration.SystemBuildDateInMillis,
-                InvbalancesScanOrder = invbalancesScanOrder,
+                InvbalancesListScanOrder = invbalancesListScanOrder,
                 NewInvIssueDetailScanOrder = newInvIssueDetailScanOrder,
+                InvIssueListScanOrder = invIssueListScanOrder,
+                PhysicalcountListScanOrder = physicalcountListScanOrder,
+                PhysicaldeviationListScanOrder = physicaldeviationListScanOrder,
+                ReservedMaterialsListScanOrder = reservedMaterialsListScanOrder,
+                MatrectransTransfersListScanOrder = matrectransTransfersListScanOrder,
             };
         }
 
