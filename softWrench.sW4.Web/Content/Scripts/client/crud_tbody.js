@@ -49,7 +49,7 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                 return formattedValue == null ? "" : formattedValue;
             };
 
-            scope.getGridColumnStyle = function (column, propertyName) {
+            scope.getGridColumnStyle = function (column, propertyName, highResolution) {
                 if (column.rendererParameters != null) {
                     //sections for instance dont have it
                     var property = column.rendererParameters[propertyName];
@@ -60,8 +60,7 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                 }
 
                 if (propertyName == 'maxwidth') {
-                    var high = $(window).width() > 1199;
-                    if (high) {
+                    if (highResolution) {
                         return '135px';
                     }
                     return '100px';
@@ -107,6 +106,9 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                 var hasCheckBox = false;
 
                 var html = '';
+
+                var highResolution = $(window).width() > 1199;
+
                 for (var i = 0; i < datamap.length; i++) {
                     var rowst = "datamap[{0}]".format(i);
                     html += "<tr style='cursor: pointer' listtablerendered rel='hideRow'>";
@@ -120,9 +122,9 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                             column.rendererParameters = {};
                         }
 
-                        var minwidthDiv = scope.getGridColumnStyle(column, 'minwidth');
-                        var maxwidthDiv = scope.getGridColumnStyle(column, 'maxwidth');
-                        var widthDiv = scope.getGridColumnStyle(column, 'width');
+                        var minwidthDiv = scope.getGridColumnStyle(column, 'minwidth', highResolution);
+                        var maxwidthDiv = scope.getGridColumnStyle(column, 'maxwidth', highResolution);
+                        var widthDiv = scope.getGridColumnStyle(column, 'width', highResolution);
                         
                         var minWidth = column.rendererParameters['minwidth'];
                         var maxWidth = column.rendererParameters['maxwidth'];
