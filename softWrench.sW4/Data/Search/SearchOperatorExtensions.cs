@@ -23,52 +23,64 @@ namespace softWrench.sW4.Data.Search {
             }
         }
 
-        public static object NormalizedValue(this SearchOperator searchOperator, string rawValue) {
-            if (rawValue == null) {
+        public static object NormalizedValue(this SearchOperator searchOperator, string rawValue)
+        {
+            string rawValue1 = rawValue;
+            if (rawValue1 == null) {
                 return null;
             }
-            rawValue = rawValue.Trim().ToUpper();
-
+            var originalValue = rawValue1;
+            rawValue1 = rawValue1.Trim().ToUpper();
             switch (searchOperator) {
                 case SearchOperator.CONTAINS:
-                    if (!rawValue.StartsWith("%")) {
-                        rawValue = "%" + rawValue;
+                    if (!rawValue1.StartsWith("%")) {
+                        rawValue1 = "%" + rawValue1;
                     }
-                    if (!rawValue.EndsWith("%")) {
-                        rawValue = rawValue + "%";
+                    if (!rawValue1.EndsWith("%")) {
+                        rawValue1 = rawValue1 + "%";
                     }
-                    return rawValue;
+                    return rawValue1;
                 case SearchOperator.NCONTAINS:
-                    rawValue = rawValue.Replace("!", "");
-                    if (!rawValue.StartsWith("%")) {
-                        rawValue = "%" + rawValue;
+                    rawValue1 = rawValue1.Replace("!", "");
+                    if (!rawValue1.StartsWith("%")) {
+                        rawValue1 = "%" + rawValue1;
                     }
-                    if (!rawValue.EndsWith("%")) {
-                        rawValue = rawValue + "%";
+                    if (!rawValue1.EndsWith("%")) {
+                        rawValue1 = rawValue1 + "%";
                     }
-                    return rawValue;
+                    return rawValue1;
                 case SearchOperator.ENDWITH:
-                    if (!rawValue.StartsWith("%")) {
-                        rawValue = "%" + rawValue;
+                    if (!rawValue1.StartsWith("%")) {
+                        rawValue1 = "%" + rawValue1;
                     }
 
-                    return rawValue;
+                    return rawValue1;
                 case SearchOperator.STARTWITH:
-                    if (!rawValue.EndsWith("%")) {
-                        rawValue = rawValue + "%";
+                    if (!rawValue1.EndsWith("%")) {
+                        rawValue1 = rawValue1 + "%";
                     }
-                    return rawValue;
-                case SearchOperator.EQ: return rawValue.Replace("=", "");
-                case SearchOperator.GT: return rawValue.Replace(">", "");
-                case SearchOperator.GTE: return rawValue.Replace(">=", "");
-                case SearchOperator.LT: return rawValue.Replace("<", "");
-                case SearchOperator.LTE: return rawValue.Replace("<=", "");
-                case SearchOperator.NOTEQ: return rawValue.Replace("!=", "");
+                    return rawValue1;
+                case SearchOperator.EQ:
+                    if (rawValue1.Contains("="))
+                    {
+                        return rawValue1.Replace("=", "");    
+                    }
+                    return originalValue.Replace("=", "");
+                case SearchOperator.GT:
+                    return rawValue1.Replace(">", "");
+                case SearchOperator.GTE:
+                    return rawValue1.Replace(">=", "");
+                case SearchOperator.LT:
+                    return rawValue1.Replace("<", "");
+                case SearchOperator.LTE:
+                    return rawValue1.Replace("<=", "");
+                case SearchOperator.NOTEQ:
+                    return rawValue1.Replace("!=", "");
                 case SearchOperator.OR:
                 case SearchOperator.ORCONTAINS:
-                    rawValue = rawValue.Replace("=", "");
-                    rawValue = rawValue.Replace("%", "");
-                    var normalizedValue = rawValue.Split(',');
+                    rawValue1 = rawValue1.Replace("=", "");
+                    rawValue1 = rawValue1.Replace("%", "");
+                    var normalizedValue = rawValue1.Split(',');
                     ICollection<string> result = new List<string>();
                     foreach (var value in normalizedValue) {
                         if (!string.IsNullOrEmpty(value)) {
@@ -77,12 +89,13 @@ namespace softWrench.sW4.Data.Search {
                     }
                     return result;
                 case SearchOperator.BETWEEN:
-                    rawValue = rawValue.Replace(">=", "");
-                    rawValue = rawValue.Replace("<=", "");
-                    return rawValue;
+                    rawValue1 = rawValue1.Replace(">=", "");
+                    rawValue1 = rawValue1.Replace("<=", "");
+                    return rawValue1;
                 case SearchOperator.BLANK:
                     return "";
-                default: return rawValue;
+                default:
+                    return rawValue1;
             }
         }
     }
