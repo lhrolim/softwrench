@@ -255,6 +255,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             //Logic to determine whether the record is an ISSUE
             //and whether all of the issued items have been returned
             if (datamap['issuetype'] == 'ISSUE') {
+
                 //Sets qtyreturned to 0 if null
                 //Parses the qtyreturned if its in a strng format
                 var qtyreturned = 0;
@@ -263,6 +264,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 } else if (datamap['qtyreturned'] != null) {
                     qtyreturned = datamap['qtyreturned'];
                 }
+
                 //For an issue, the quantity will be a negative number, representing the # of items issued
                 //The below if statement will add the positive quantityreturned to the negative quantity.
                 //If the result is negative, then are still items to be returned
@@ -273,6 +275,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     detail = 'viewinvissuedetail';
                 }
             }
+
             redirectService.goToApplicationView(application, detail, mode, null, param, null);
         },
 
@@ -326,8 +329,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             submitInvIssueRec(datamap, clonedCompositionData, 0);
         },
 
-        cancelNewInvIssue: function() {
-            redirectService.goToApplicationView("invissue", "list", null, null, null, null);
+        navToIssueReturnList: function() {
+            redirectService.goToApplicationView("invissue", "invIssueList", null, null, null, null);
         },
 
         displayNewIssueModal: function(parentschema, parentdatamap) {
@@ -483,7 +486,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         afterchangeinvissueitem: function(parameters) {
-            parameters['fields']['binnum'] = null;
+            parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
             parameters['fields']['lotnum'] = null;
             parameters['fields']['#curbal'] = null;
 
@@ -497,31 +500,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
             
             doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
-            //var defaultBinnum = parameters['fields']['inventory_.binnum'];
-            //parameters['fields']['binnum'] = defaultBinnum;
         },
-
-        //invUse_afterChangeFromStoreroom: function(parameters) {
-        //    doUpdateUnitCostFromInventoryCost(parameters, 'invuseline_.unitcost');
-        //    var itemnum = parameters['fields']['invuseline_.itemnum'];
-        //    var siteid = parameters['fields']['siteid'];
-        //    var fromstoreloc = parameters['fields']['fromstoreloc'];
-        //    if (itemnum !== undefined && itemnum.trim() != "" &&
-        //        siteid !== undefined && siteid.trim() != "" &&
-        //        fromstoreloc !== undefined && fromstoreloc.trim() != "") {
-        //        var searchData = {
-        //            itemnum: itemnum,
-        //            siteid: siteid,
-        //            itemsetid: parameters['fields']['inventory_.itemsetid'],
-        //            location: parameters['fields']['fromstoreloc']
-        //        };
-        //        getBinQuantity(searchData, parameters, '#curbal', null);
-        //    } else {
-        //        parameters['fields']['invuseline_.tobin'] = null;
-        //        parameters['fields']['#curbal'] = null;
-        //        parameters['fields']['invuseline_.frombin'] = null;
-        //    }
-        //},
 
         invIssue_afterChangeItem: function(parameters) {
             var itemnum = parameters['fields']['itemnum'];
@@ -897,6 +876,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 siteid: parameters['fields']['siteid'],
                 itemsetid: parameters['fields']['itemsetid'],
                 location: parameters['fields']['location'],
+                binnum: parameters['fields']['#frombin']
             };
 
             getBinQuantity(searchData, parameters, '#curbal');
@@ -909,9 +889,35 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         invIssue_afterChangeBin: function (parameters) {
-            parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
-            parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
-            //$rootScope.$digest();
+            if (parameters['fields']['binbalances_']) {
+                parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
+                parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+                return;
+            };
+            // If the binbalances_ record is not filled but the binnum is
+            // (binnum filled after itemnum change) then use the available 
+            // fields to find an applicable lotnum and curbal. If the binnum
+            // has been cleared, clear the lot and curbal
+            if (parameters['fields']['binnum'] != null && parameters['fields']['binnum'] != " ") {
+                var searchData = {
+                    orgid: parameters['fields']['orgid'],
+                    siteid: parameters['fields']['siteid'],
+                    itemnum: parameters['fields']['itemnum'],
+                    location: parameters['fields']['location'],
+                    binnum: parameters['fields']['binnum']
+                };
+                searchService.searchWithData("invbalances", searchData, "invbalancesList").success(function (data) {
+                    var resultObject = data.resultObject;
+                    var fields = resultObject[0].fields;
+                    var lotnum = fields['lotnum'];
+                    var curbal = fields['curbal'];
+                    parameters['fields']['lotnum'] = lotnum;
+                    parameters['fields']['#curbal'] = curbal;
+                });
+            } else {
+                parameters['fields']['lotnum'] = null;
+                parameters['fields']['#curbal'] = null;
+            }
         },
 
     };
