@@ -27,7 +27,7 @@
                 }
             }
         }
-    }
+    };
 
     $scope.closeScanFilterModal = function() {
         var modal = $('#scanfilterModal');
