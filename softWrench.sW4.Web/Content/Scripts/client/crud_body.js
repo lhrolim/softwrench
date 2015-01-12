@@ -15,8 +15,10 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
+            // Do not execute until the last iteration of ng-repeat has been reached,
+            // or if $last is undefined (this happens when the tabsrendered directive 
+            // is placed on something other than ng-repeat).
             if (scope.$last === false) {
-                //nothing to do if there is no ng-repeat or until last iteration of ng-repeat has been reached
                 return;
             }
 
