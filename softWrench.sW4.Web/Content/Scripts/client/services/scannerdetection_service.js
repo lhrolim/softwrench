@@ -138,7 +138,6 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
             $(document).scannerDetection(function (data) {
                 var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
                 var scanOrder = scanOrderString.split(",");
-                var extraparameters = { keepfilterparameters: true };
                 for (var attribute in scanOrder) {
                     var currentAttribute = scanOrder[attribute];
                     if (datamap[currentAttribute] === '' || datamap[currentAttribute] === null) {
