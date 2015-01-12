@@ -149,6 +149,13 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             return filter;
         }
 
+        public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
+            var filter = parameters.BASEDto;
+            var validAssetStatus = new List<string> { "NOT READY", "OPERATING", "ACTIVE" };
+            filter.AppendSearchEntry("STATUS", validAssetStatus);
+            return filter;
+        }
+
         public override string ApplicationName() {
             return "reservedMaterials";
         }
