@@ -143,21 +143,23 @@ app.directive('crudList', function (contextService) {
                 }
 
                 var params = {};
-                fixHeaderService.fixThead($scope.schema, params);
-                if ($rootScope.showSuccessMessage) {
-                    fixHeaderService.fixSuccessMessageTop(true);
+
+                if (!$rootScope.printRequested) {
+
+                    fixHeaderService.fixThead($scope.schema, params);
+                    if ($rootScope.showSuccessMessage) {
+                        fixHeaderService.fixSuccessMessageTop(true);
+                    }
+                    // fix status column height
+                    $('.statuscolumncolor').each(function (key, value) {
+                        $(value).height($(value).parent().parent().height());
+                    });
+
+                    $('[rel=tooltip]').tooltip({ container: 'body' });
+                    log.debug('finish table rendered listener');
+                    //make sure we are seeing the top of the grid 
+                    window.scrollTo(0, 0);
                 }
-
-                // fix status column height
-                $('.statuscolumncolor').each(function (key, value) {
-                    $(value).height($(value).parent().parent().height());
-                });
-
-                $('[rel=tooltip]').tooltip({ container: 'body' });
-                log.debug('finish table rendered listener');
-
-                //make sure we are seeing the top of the grid 
-                window.scrollTo(0, 0);
             });
 
             $scope.$on('sw_successmessagetimeout', function (event, data) {
