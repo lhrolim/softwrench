@@ -444,8 +444,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <removecommand id="save"/>
               <removecommand id="cancel"/>
               <command id="submitinvissue" label="Submit" service="inventoryService" method="submitInvIssue" parameters="schema,datamap" position="&lt;print"/>
+              <command id="cancelinvissue" label="Cancel" service="inventoryService" method="navToIssueReturnList" parameters="schema,datamap" position=">print"/>
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position=">print"/>
-              <command id="cancelinvissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" parameters="schema,datamap" position=">print"/>
             </commandgroup>
           </commandbars>
           <event type="onload" service="scannerdetectionService" method="initInvIssueListener"/>
