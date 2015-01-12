@@ -26,6 +26,7 @@ namespace softwrench.sW4.test.Data.Search {
         }
 
         [TestMethod]
+        [Ignore]
         public void BasicSearchDtoTest() {
             var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
             searchRequestDto.SetFromSearchString(_schema, "ticketid".Split(','), "teste");
@@ -53,6 +54,7 @@ namespace softwrench.sW4.test.Data.Search {
         }
 
         [TestMethod]
+        [Ignore]
         public void MultipleFieldsSearchDtoTest() {
             var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
             searchRequestDto.SetFromSearchString(_schema, "ticketid,description,asset_.description,siteid,affectedperson,status,reportdate".Split(','), "teste");
