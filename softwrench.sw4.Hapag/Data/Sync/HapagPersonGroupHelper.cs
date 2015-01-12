@@ -249,5 +249,18 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             });
             user.Roles.Remove(_cachedDefaultRoles[type]);
         }
+
+        public bool HasMissingRoles(InMemoryUser user) {
+            foreach (var personGroup in user.PersonGroups) {
+                if (!_hapagModules.ContainsKey(personGroup.GroupName)) {
+                    continue;
+                }
+                var module = _hapagModules[personGroup.GroupName];
+                if (!user.Roles.Contains(module)) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

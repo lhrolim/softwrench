@@ -78,6 +78,13 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                 }
             }
 
+            if (!hasNewAssociation && HasMissingRoles(user)) {
+                //here we´re handling exceptional scenarios where theorically there are no new associations on maximo side, but anyway we have missing roles on swdb side.
+                //this could happen due to the presence of legacy-created users
+                groupsToAdd = new List<string>(user.PersonGroups.Select(p => p.GroupName));
+                hasNewAssociation = true;
+            }
+
             if (hasNewAssociation) {
                 Log.DebugFormat("new association found for user {0}", user.Login);
                 //run jobs now to avoid out of synch users
@@ -97,11 +104,12 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                     user.DBUser.PersonGroups.Add(personGroupAssociation);
                     _hapagHelper.AddHapagMatchingRolesAndProfiles(personGroup, user.DBUser);
                 }
-                
+
                 user.DBUser = DAO.Save(user.DBUser);
 
                 user = new InMemoryUser(user.DBUser, user.DBUser.Profiles, user.TimezoneOffset);
             }
+
             user = _hapagHelper.HandleSsotuiModulesMerge(user);
             user = _hapagHelper.RemoveOrphanEntities(user);
 
@@ -112,6 +120,13 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             user = _hapagHelper.HandleExternalUser(user);
 
             SecurityFacade.ClearUserFromCache(user.Login, user);
+        }
+
+        private bool HasMissingRoles(InMemoryUser user)
+        {
+            return _hapagHelper.HasMissingRoles(user);
+
+            //return !user.Roles.Any() && user.PersonGroups.Any(p => p.GroupName.StartsWith("C-HLC-WW-IFU") || p.GroupName.StartsWith("C-HLC-WW-EFU"));
         }
 
         public void Sync() {
