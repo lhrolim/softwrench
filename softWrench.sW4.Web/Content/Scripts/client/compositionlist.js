@@ -52,7 +52,7 @@ app.directive('expandedItemInput', function ($compile) {
     }
 });
 
-app.directive('newItemInput', function ($compile, fieldService) {
+app.directive('newItemInput', function ($compile, fieldService,associationService) {
 
     return {
         restrict: "E",
