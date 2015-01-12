@@ -192,7 +192,9 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
 
         $http.get(urlToCall)
             .success(function (data) {
-                if (printMode != undefined) {
+                // besides printMode is not undefined, we need to verify that printMode is true;
+                // otherwise disable printRequest, that will allow the pagination to update.
+                if (printMode != undefined && printMode) {
                     $rootScope.printRequested = true;
                 };
                 $scope.renderData(data, printMode);
