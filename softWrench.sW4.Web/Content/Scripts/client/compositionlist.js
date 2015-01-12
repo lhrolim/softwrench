@@ -327,50 +327,54 @@ app.directive('compositionList', function (contextService) {
                 if ($scope.compositiondata == null) {
                     $scope.compositiondata = [];
                 }
-                $scope.compositiondata.push(selecteditem);
-                if ($scope.collectionproperties.autoCommit) {
-                    var validationErrors = validationService.validate($scope.compositionschemadefinition.schemas.detail, $scope.compositionschemadefinition.schemas.detail.displayables, selecteditem);
-                    if (validationErrors.length > 0) {
-                        //interrupting here, can´t be done inside service
-                        return;
-                    }
-                    var alwaysrefresh = $scope.compositiondetailschema.properties && "true" == $scope.compositiondetailschema.properties['compositions.alwaysrefresh'];
-                    if (alwaysrefresh) {
-                        //this will disable success message, since we know we´ll need to refresh the screen
-                        contextService.insertIntoContext("refreshscreen", true, true);
-                    }
-                    $scope.$parent.$parent.save(null, {
-                        successCbk: function (data) {
-                            
-                            if (alwaysrefresh) {
-                                window.location.reload();
-                                return;
-                            }
-                            var updatedArray = data.resultObject.fields[$scope.relationship];
-                            if (updatedArray == null||updatedArray.length == 0) {
-                                window.location.reload();
-                                return;
-                            }
-                            $scope.clonedCompositionData = updatedArray;
-                            $scope.compositiondata = updatedArray;
-                            $scope.newDetail = false;
-                            $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
-                            $scope.selecteditem = {};
-                            $scope.collapseAll();
-                        },
-                        failureCbk: function (data) {
-                            var idx = $scope.compositiondata.indexOf(selecteditem);
-                            if (idx != -1) {
-                                $scope.compositiondata.splice(idx, 1);
-                            }
-                            $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
-                        },
-                        isComposition: true,
-                        nextSchemaObj: { schemaId: $scope.$parent.$parent.schema.schemaId },
-                        refresh: alwaysrefresh
-                    });
+
+                var validationErrors = validationService.validate($scope.compositionschemadefinition.schemas.detail, $scope.compositionschemadefinition.schemas.detail.displayables, selecteditem);
+                if (validationErrors.length > 0) {
+                    //interrupting here, can´t be done inside service
+                    return;
                 }
 
+                $scope.compositiondata.push(selecteditem);
+
+                if (!$scope.collectionproperties.autoCommit) {
+                    return;
+                }
+                
+                var alwaysrefresh = $scope.compositiondetailschema.properties && "true" == $scope.compositiondetailschema.properties['compositions.alwaysrefresh'];
+                if (alwaysrefresh) {
+                    //this will disable success message, since we know we´ll need to refresh the screen
+                    contextService.insertIntoContext("refreshscreen", true, true);
+                }
+                $scope.$parent.$parent.save(null, {
+                    successCbk: function (data) {
+                            
+                        if (alwaysrefresh) {
+                            window.location.reload();
+                            return;
+                        }
+                        var updatedArray = data.resultObject.fields[$scope.relationship];
+                        if (updatedArray == null||updatedArray.length == 0) {
+                            window.location.reload();
+                            return;
+                        }
+                        $scope.clonedCompositionData = updatedArray;
+                        $scope.compositiondata = updatedArray;
+                        $scope.newDetail = false;
+                        $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
+                        $scope.selecteditem = {};
+                        $scope.collapseAll();
+                    },
+                    failureCbk: function (data) {
+                        var idx = $scope.compositiondata.indexOf(selecteditem);
+                        if (idx != -1) {
+                            $scope.compositiondata.splice(idx, 1);
+                        }
+                        $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
+                    },
+                    isComposition: true,
+                    nextSchemaObj: { schemaId: $scope.$parent.$parent.schema.schemaId },
+                    refresh: alwaysrefresh
+                });
             };
 
             $scope.collapseAll = function () {
