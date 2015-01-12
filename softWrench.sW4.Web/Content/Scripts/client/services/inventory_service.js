@@ -95,7 +95,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
     };
 
     var getBinQuantity = function (searchData, parameters, balanceField, binnum, lotnum) {
-        searchService.searchWithData("invbalances", searchData).success(function (data) {
+        searchService.searchWithData("invbalances", searchData, "invbalancesList").success(function (data) {
             var resultObject = data.resultObject;
             
             for (var i = 0; i < resultObject.length; i++) {
@@ -251,7 +251,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             param.id = datamap['matusetransid'];
             var application = 'invissue';
             var detail = 'viewinvreturndetail';
-            var mode = 'output';
+            var mode = 'input';
 
             //Logic to determine whether the record is an ISSUE
             //and whether all of the issued items have been returned
@@ -275,6 +275,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 } else {
                     //If all of the items have been returned, show the viewdetail page for 'ISSUE' records
                     detail = 'viewinvissuedetail';
+                    mode = 'input';
                 }
             }
 
@@ -331,8 +332,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             submitInvIssueRec(datamap, clonedCompositionData, 0);
         },
 
-        cancelNewInvIssue: function() {
-            redirectService.goToApplicationView("invissue", "list", null, null, null, null);
+        navToIssueReturnList: function() {
+            redirectService.goToApplicationView("invissue", "invIssueList", null, null, null, null);
         },
 
         displayNewIssueModal: function(parentschema, parentdatamap) {
@@ -488,7 +489,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         afterchangeinvissueitem: function(parameters) {
-            parameters['fields']['binnum'] = null;
+            parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
             parameters['fields']['lotnum'] = null;
             parameters['fields']['#curbal'] = null;
 
@@ -502,8 +503,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
             
             doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
-            //var defaultBinnum = parameters['fields']['inventory_.binnum'];
-            //parameters['fields']['binnum'] = defaultBinnum;
         },
 
         //invUse_afterChangeFromStoreroom: function(parameters) {
@@ -936,9 +935,35 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         invIssue_afterChangeBin: function (parameters) {
-            parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
-            parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
-            //$rootScope.$digest();
+            if (parameters['fields']['binbalances_']) {
+                parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
+                parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+                return;
+            };
+            // If the binbalances_ record is not filled but the binnum is
+            // (binnum filled after itemnum change) then use the available 
+            // fields to find an applicable lotnum and curbal. If the binnum
+            // has been cleared, clear the lot and curbal
+            if (parameters['fields']['binnum'] != null && parameters['fields']['binnum'] != " ") {
+                var searchData = {
+                    orgid: parameters['fields']['orgid'],
+                    siteid: parameters['fields']['siteid'],
+                    itemnum: parameters['fields']['itemnum'],
+                    location: parameters['fields']['location'],
+                    binnum: parameters['fields']['binnum']
+                };
+                searchService.searchWithData("invbalances", searchData, "invbalancesList").success(function (data) {
+                    var resultObject = data.resultObject;
+                    var fields = resultObject[0].fields;
+                    var lotnum = fields['lotnum'];
+                    var curbal = fields['curbal'];
+                    parameters['fields']['lotnum'] = lotnum;
+                    parameters['fields']['#curbal'] = curbal;
+                });
+            } else {
+                parameters['fields']['lotnum'] = null;
+                parameters['fields']['#curbal'] = null;
+            }
         },
 
     };

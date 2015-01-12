@@ -10,11 +10,14 @@ namespace softWrench.sW4.Data.Search {
 
         public SearchParameter(string rawValue) {
             object value;
-            SearchOperator = ParseSearchOperator(rawValue, out value);
+            bool searchFilter = false;
+            SearchOperator = ParseSearchOperator(rawValue, out value, out searchFilter);
             Value = value;
+            FilterSearch = searchFilter;
         }
 
-        private SearchOperator ParseSearchOperator(string rawValue, out object value) {
+        private SearchOperator ParseSearchOperator(string rawValue, out object value, out bool searchFilter) {
+            searchFilter = false;
             var searchOperator = SearchOperator.EQ;
             if (rawValue.Contains(">=") && rawValue.Contains("<=")) {
                 searchOperator = SearchOperator.BETWEEN;
@@ -40,10 +43,18 @@ namespace softWrench.sW4.Data.Search {
                 searchOperator = SearchOperator.BLANK;
             }
             value = searchOperator.NormalizedValue(rawValue);
+            if (!value.Equals(rawValue)) {
+                searchFilter = true;
+            }
             return searchOperator;
         }
 
         public SearchOperator SearchOperator { get; private set; }
+
+        /// <summary>
+        /// if true this indicates a FilterSearch, that would need to be case-insensitive handled
+        /// </summary>
+        public bool FilterSearch { get; set; }
 
         public object Value { get; private set; }
         public bool IsList { get { return SearchOperator == SearchOperator.OR; } }
