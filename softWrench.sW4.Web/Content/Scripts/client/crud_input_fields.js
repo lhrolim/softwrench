@@ -182,7 +182,7 @@ app.directive('crudInputFields', function (contextService) {
                 });
                 if (parentElementId.equalsAny('crudInputMainCompositionFields', 'crudInputMainFields')) {
                     //to avoid registering these global listeners multiple times, as the page main contain sections.
-                    $scope.configureNumericInput();
+                    $scope.configureNumericInput($scope.schema.displayables);
                     $scope.configureOptionFields();
                     $scope.configureAssociationChangeEvents();
                     $scope.configureFieldChangeEvents();
@@ -380,9 +380,13 @@ app.directive('crudInputFields', function (contextService) {
                     $scope.showLookupModal(fieldMetadata);
                 }
             };
-            $scope.configureNumericInput = function () {
-                for (i in $scope.schema.displayables) {
-                    var fieldMetadata = $scope.schema.displayables[i];
+            $scope.configureNumericInput = function (displayables) {
+                for (i in displayables) {
+                    var fieldMetadata = displayables[i];
+                    if (fieldMetadata.type == "ApplicationSection") {
+                        $scope.configureNumericInput(fieldMetadata.displayables);
+                        continue;
+                    }
                     if (fieldMetadata.rendererType != 'numericinput') {
                         continue;
                     }
