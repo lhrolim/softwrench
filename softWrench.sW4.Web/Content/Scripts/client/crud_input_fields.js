@@ -360,7 +360,11 @@ app.directive('crudInputFields', function (contextService) {
                 modals.modal('show');
             };
             $scope.lookupCodeChange = function (fieldMetadata) {
-                if ($scope.datamap[fieldMetadata.target] != null) {
+                var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
+                if (allowFreeText == "true") {
+                    var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
+                    $scope.datamap[fieldMetadata.target] = code;
+                } else if ($scope.datamap[fieldMetadata.target] != null) {
                     $scope.datamap[fieldMetadata.target] = " "; // If the lookup value is changed to a null value, set a white space, so it can be updated on maximo WS.
                     $scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
                     associationService.updateUnderlyingAssociationObject(fieldMetadata, null, $scope);
@@ -372,11 +376,8 @@ app.directive('crudInputFields', function (contextService) {
             $scope.lookupCodeBlur = function (fieldMetadata) {
                 var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                 var targetValue = $scope.datamap[fieldMetadata.target];
-                var lookupOnBlur = "true";
-                if (fieldMetadata.rendererParameters['lookuponblur'] != null) {
-                    lookupOnBlur = fieldMetadata.rendererParameters['lookuponblur'];
-                }
-                if (code != null && code != '' && (targetValue == null || targetValue == " ") && lookupOnBlur == "true") {
+                var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
+                if (code != null && code != '' && (targetValue == null || targetValue == " ") && allowFreeText != "true") {
                     $scope.showLookupModal(fieldMetadata);
                 }
             };

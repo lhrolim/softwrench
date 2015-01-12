@@ -4,7 +4,7 @@
     initScanFilter();
 
     function initScanFilter() {
-        var scanOrderString = contextService.scanOrder($scope.schema.schemaId);
+        var scanOrderString = contextService.retrieveFromContext($scope.schema.schemaId + "ScanOrder");
         if (scanOrderString) {
             $scope.scanOrder = scanOrderString.split(",");
         } else {
