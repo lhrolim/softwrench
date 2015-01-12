@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('tabsrendered', function ($timeout, $log, $rootScope) {
+app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService) {
     /// <summary>
     /// This directive allows for a hookup method when all the tabs of the crud_body have finished rendered successfully.
     /// 
@@ -15,11 +15,12 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope) {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
-            if (scope.$last !== true) {
-                //nothing to do until last iteration of ng-repeat has been reached
+            if (scope.$last === false) {
+                //nothing to do if there is no ng-repeat or until last iteration of ng-repeat has been reached
                 return;
             }
 
+            eventService.onload(scope.schema, scope.datamap);
             var log = $log.getInstance('tabsrendered');
             log.debug("finished rendering tabs of detail screen");
             $timeout(function () {
@@ -78,7 +79,8 @@ app.directive('crudBody', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             submitService, redirectService,
-            associationService, contextService, alertService, validationService, schemaService, $timeout) {
+            associationService, contextService, alertService,
+            validationService, schemaService, $timeout) {
 
 
             $scope.getFormattedValue = function (value, column, datamap) {
