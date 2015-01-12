@@ -141,17 +141,9 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
                 var extraparameters = { keepfilterparameters: true };
                 for (var attribute in scanOrder) {
                     var currentAttribute = scanOrder[attribute];
-                    // If the property is not already in th escan data, add it and its value
-                    if (!datamap.hasOwnProperty(currentAttribute)) {
-                        var localSearchData = {};
-                        localSearchData[currentAttribute] = data;
-                        searchService.refreshGrid(localSearchData, extraparameters);
-                        return;
-                        // Else if the property exists but is blank, set it to its new value
-                    } else if (datamap[currentAttribute] === '' || datamap[currentAttribute] === null) {
+                    if (datamap[currentAttribute] === '' || datamap[currentAttribute] === null) {
                         datamap[currentAttribute] = data;
                         $rootScope.$digest();
-                        //associationService.updateUnderlyingAssociationObject(null, null, scope);
                         return;
                     }
                 };
