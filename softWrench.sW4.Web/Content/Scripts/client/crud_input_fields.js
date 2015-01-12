@@ -360,7 +360,11 @@ app.directive('crudInputFields', function (contextService) {
                 modals.modal('show');
             };
             $scope.lookupCodeChange = function (fieldMetadata) {
-                if ($scope.datamap[fieldMetadata.target] != null) {
+                var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
+                if (allowFreeText == "true") {
+                    var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
+                    $scope.datamap[fieldMetadata.target] = code;
+                } else if ($scope.datamap[fieldMetadata.target] != null) {
                     $scope.datamap[fieldMetadata.target] = " "; // If the lookup value is changed to a null value, set a white space, so it can be updated on maximo WS.
                     $scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
                     associationService.updateUnderlyingAssociationObject(fieldMetadata, null, $scope);

@@ -787,7 +787,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 };
                 var urlToUse = url("/api/Data/matrectransTransfers?" + $.param(restParameters));
                 $http.get(urlToUse).success(function(data) {
-                    redirectService.goToApplication("matrectransTransfers", "list", null, data);
+                    redirectService.goToApplication("matrectransTransfers", "matrectransTransfersList", null, data);
                 });
             });
         },
