@@ -966,6 +966,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <commandbars>
             <commandgroup position="gridtop">
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
+              <command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService"
+                       method="createTransfer" parameters="schema" position="&lt;filter"/>
             </commandgroup>
           </commandbars>
           <field attribute="itemnum" label="Item">
@@ -993,12 +995,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <properties>
             <property key="list.click.schema" value="detail"/>
           </properties>
-          <commandbars>
-            <commandgroup position="gridtop">
-              <command id="newTransfer" icon="fa-exchange" label="Transfer" service="inventoryService" 
-                       method="createTransfer" parameters="schema" position="&lt;filter"/>
-            </commandgroup>
-          </commandbars>
         </schema>
 
         <schema id="detail" title="Inventory Transfer">

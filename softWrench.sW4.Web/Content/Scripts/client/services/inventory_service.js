@@ -95,7 +95,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
     };
 
     var getBinQuantity = function (searchData, parameters, balanceField, binnum, lotnum) {
-        searchService.searchWithData("invbalances", searchData).success(function (data) {
+        searchService.searchWithData("invbalances", searchData, "invbalancesList").success(function (data) {
             var resultObject = data.resultObject;
             
             for (var i = 0; i < resultObject.length; i++) {
@@ -275,6 +275,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 } else {
                     //If all of the items have been returned, show the viewdetail page for 'ISSUE' records
                     detail = 'viewinvissuedetail';
+                    mode = 'input';
                 }
             }
 
@@ -331,7 +332,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             submitInvIssueRec(datamap, clonedCompositionData, 0);
         },
 
-        cancelNewInvIssue: function() {
+        navToIssueReturnList: function() {
             redirectService.goToApplicationView("invissue", "invIssueList", null, null, null, null);
         },
 
@@ -488,7 +489,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         afterchangeinvissueitem: function(parameters) {
-            parameters['fields']['binnum'] = null;
+            parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
             parameters['fields']['lotnum'] = null;
             parameters['fields']['#curbal'] = null;
 
@@ -500,10 +501,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 parameters['fields']['inventory_.itemtype'] = null;
                 return;
             }
-
+            
             doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
-            //var defaultBinnum = parameters['fields']['inventory_.binnum'];
-            //parameters['fields']['binnum'] = defaultBinnum;
         },
 
         //invUse_afterChangeFromStoreroom: function(parameters) {
@@ -550,7 +549,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 orgid: parameters['fields']['orgid'],
                 itemsetid: parameters['fields']['itemsetid']
             };
-            searchService.searchWithData("inventory", searchData).success(function (data) {
+            searchService.searchWithData("inventory", searchData).success(function(data) {
                 var resultObject = data.resultObject;
                 var fields = resultObject[0].fields;
                 var costtype = fields['costtype'];
@@ -991,7 +990,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         invIssue_afterChangeBin: function (parameters) {
-            if (parameters['fields']['binbalances_.lotnum']) {
+            if (parameters['fields']['binbalances_']) {
                 parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
                 parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
                 return;
@@ -1021,7 +1020,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 parameters['fields']['#curbal'] = null;
             }
         },
-
 
     };
 });
