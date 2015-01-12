@@ -95,7 +95,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
     };
 
     var getBinQuantity = function (searchData, parameters, balanceField, binnum, lotnum) {
-        searchService.searchWithData("invbalances", searchData).success(function (data) {
+        searchService.searchWithData("invbalances", searchData, "invbalancesList").success(function (data) {
             var resultObject = data.resultObject;
             
             for (var i = 0; i < resultObject.length; i++) {
@@ -271,7 +271,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 } else {
                     //If all of the items have been returned, show the viewdetail page for 'ISSUE' records
                     detail = 'viewinvissuedetail';
-                    mode = 'output';
                 }
             }
             redirectService.goToApplicationView(application, detail, mode, null, param, null);
@@ -823,10 +822,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 issueto: datamap['issueto'],
                 location: datamap['oplocation'],
                 glaccount: datamap['glaccount'],
-                issuetype: 'ISSUE',
+                issuetype: datamap['issuetype'],
                 itemnum: datamap['itemnum'],
                 storeloc: datamap['location'],
-                binnum: datamap['#frombin'],
+                binnum: datamap['invbalances_.binnum'],
                 lotnum: datamap['invbalances_.lotnum'],
                 quantity: datamap['#issueqty'],
                 unitcost: datamap['unitcost'],
@@ -890,45 +889,23 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             };
             updateInventoryCosttype(parameters);
             datamap['#issueqty'] = datamap['reservedqty'];
+            datamap['#issuetype'] = "ISSUE";
+            var user = contextService.getUserData();
+            datamap['#enterby'] = user.login.toUpperCase();
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 siteid: parameters['fields']['siteid'],
                 itemsetid: parameters['fields']['itemsetid'],
                 location: parameters['fields']['location'],
-                binnum: parameters['fields']['#frombin']
             };
 
             getBinQuantity(searchData, parameters, '#curbal');
         },
 
-        afterChangeInvreserveFromBin: function(parameters) {
-            // The fromlot should be getting cleared already because it is dependant on the binnum
-            //parameters['fields']['#fromlot'] = undefined;
-            var binnum = parameters['fields']['#frombin'];
-            var lotnum = parameters['fields']['#fromlot'];
-            var searchData = {
-                itemnum: parameters['fields']['itemnum'],
-                siteid: parameters['fields']['siteid'],
-                itemsetid: parameters['fields']['itemsetid'],
-                location: parameters['fields']['location'],
-                binnum: parameters['fields']['#frombin'],
-                lotnum: parameters['fields']['#fromlot']
-            };
-            getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
-        },
-
-        afterChangeInvreserveFromLot: function(parameters) {
-            var binnum = parameters['fields']['#frombin'];
-            var lotnum = parameters['fields']['#fromlot'];
-            var searchData = {
-                itemnum: parameters['fields']['itemnum'],
-                siteid: parameters['fields']['siteid'],
-                itemsetid: parameters['fields']['itemsetid'],
-                location: parameters['fields']['location'],
-                binnum: parameters['fields']['#frombin'],
-                lotnum: parameters['fields']['#fromlot']
-            };
-            getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
+        afterChangeInvreserveAsset: function(parameters) {
+            if (parameters['fields']['asset_.binnum']) {
+                parameters['fields']['invbalances_.binnum'] = parameters['fields']['asset_.binnum'];
+            }
         },
 
         invIssue_afterChangeBin: function (parameters) {

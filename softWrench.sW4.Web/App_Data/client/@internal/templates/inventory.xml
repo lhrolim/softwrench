@@ -84,13 +84,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="itemsetid" to="itemsetid"/>
           <relationshipAttribute from="location" to="location"/>
         </relationship>
-      <relationship to="invbalances">
-        <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
-        <relationshipAttribute from="itemnum" to="itemnum"/>
-        <relationshipAttribute from="siteid" to="siteid"/>
-        <relationshipAttribute from="orgid" to="orgid"/>
-        <relationshipAttribute from="location" to="location"/>
-      </relationship>
+        <relationship to="invbalances">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute from="location" to="location"/>
+        </relationship>
+        <relationship to="asset">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="location" to="location"/>
+        </relationship>
       </relationships>
     </entity>
   </entities>
@@ -309,24 +316,42 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </commandbars>
         </schema>
         
-        <schema id="viewinvissuedetail" stereotype="detail" mode="output">
-          <field attribute="matusetransid" hidden="true"/>
-          <field attribute="itemnum" label="Item" readonly="true"/>
-          <field attribute="item_.description" label="Description" readonly="true"/>
-          <field attribute="refwo" label="Work Order" readonly="true"/>
-          <field attribute="issueto" label="Issued To" readonly="true"/>
-          <field attribute="assetnum" label="Asset" readonly="true"/>
-          <field attribute="location" label="Location" readonly="true"/>
-          <field attribute="issuetype" label="Issue Type" readonly="true"/>
-          <field attribute="storeloc" label="Storeroom" readonly="true"/>
-          <field attribute="binnum" label="Bin" readonly="true"/>
-          <field attribute="lotnum" label="Lot" readonly="true"/>
-          <field attribute="quantity" label="Quantity Issued">
-            <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
-          </field>
-          <field attribute="qtyreturned" label="Quantity Returned">
-            <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
-          </field>
+        <schema id="viewinvissuedetail" stereotype="detail" mode="input">
+          <section>
+            <field attribute="matusetransid" hidden="true"/>
+            <field attribute="enterby" label="Entered By" readonly="true"/>
+            <field attribute="issuetype" label="Issue Type" readonly="true"/>
+            <field attribute="issueto" label="Issued To" readonly="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="siteid" label="Site" readonly="true"/>
+            <field attribute="storeloc" label="Storeroom" readonly="true"/>
+            <field attribute="itemnum" label="Item" readonly="true"/>
+            <field attribute="item_.description" label="Description" readonly="true"/>
+            <field attribute="item_.itemtype" label="Item Type" readonly="true"/>
+            <field attribute="rotassetnum" readonly="true" label="Rotating Asset"/>
+            <field attribute="binnum" label="Bin" readonly="true"/>
+            <field attribute="lotnum" label="Lot" readonly="true"/>
+            <field attribute="quantity" label="Quantity Issued" readonly="true">
+              <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
+            </field>
+            <field attribute="qtyreturned" label="Quantity Returned" readonly="true">
+              <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
+            </field>
+          </section>
+          <section>
+            <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
+            <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="refwo" label="Work Order" readonly="true"/>
+            <field attribute="location" label="Location" readonly="true"/>
+            <field attribute="assetnum" label="Asset" readonly="true"/>
+            <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
+          </section>
           <commandbars>
             <commandgroup position="detailform">
               <removecommand id="save"/>
@@ -335,39 +360,55 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </schema>
 
         <schema id="editinvissuedetail" stereotype="detail" mode="input" platform="web">
-          <field attribute="matusetransid" hidden="true"/>
-          <field attribute="itemnum" label="Item" readonly="true"/>
-          <field attribute="item_.description" label="Description" readonly="true"/>
-          <field attribute="rotassetnum" label="Rotating Asset" readonly="true"/>
-          <field attribute="refwo" label="Work Order" readonly="true"/>
-          <field attribute="issueto" label="Issued To" readonly="true"/>
-          <field attribute="assetnum" label="Asset" readonly="true"/>
-          <field attribute="location" label="Location" readonly="true"/>
-          <field attribute="issuetype" label="Issue Type" readonly="true"/>
-          <field attribute="storeloc" label="Storeroom" readonly="true"/>
-          <field attribute="binnum" label="Bin" readonly="true"/>
-          <field attribute="lotnum" label="Lot" readonly="true"/>
-          <field attribute="unitcost" label="Unit Cost" readonly="true"/>
-          <field attribute="actualcost" label="Actual Cost" readonly="true"/>
-          <field attribute="gldebitacct" hidden="true"/>
-          <field attribute="glcreditacct" hidden="true"/>
-          <field attribute="linecost" hidden="true"/>
-          <field attribute="issueid" hidden="true"/>
-          <field attribute="quantity" label="Quantity Issued" readonly="true">
-            <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
-          </field>
-          <field attribute="qtyreturned" label="Quantity Returned" readonly="true">
-            <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
-          </field>
-          <field attribute="#quantityadj" label="New Return Quantity">
-            <renderer type="numericinput" params="min=1;max=(@quantity - @qtyreturned);"/>
-          </field>
+          <section>
+            <field attribute="matusetransid" hidden="true"/>
+            <field attribute="enterby" label="Entered By" readonly="true"/>
+            <field attribute="issuetype" label="Issue Type" readonly="true"/>
+            <field attribute="issueto" label="Issued To" readonly="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="siteid" label="Site" readonly="true"/>
+            <field attribute="storeloc" label="Storeroom" readonly="true"/>
+            <field attribute="itemnum" label="Item" readonly="true"/>
+            <field attribute="item_.description" label="Description" readonly="true"/>
+            <field attribute="item_.itemtype" label="Item Type" readonly="true"/>
+            <field attribute="rotassetnum" readonly="true" label="Rotating Asset"/>
+            <field attribute="binnum" label="Bin" readonly="true"/>
+            <field attribute="lotnum" label="Lot" readonly="true"/>
+            <field attribute="quantity" label="Quantity Issued" readonly="true">
+              <renderer type="default" params="formatter=@inventoryService.formatQtyDetail;"/>
+            </field>
+            <field attribute="qtyreturned" label="Quantity Returned" readonly="true">
+              <renderer type="default" params="formatter=@inventoryService.formatQtyReturnedDetail;"/>
+            </field>
+            <field attribute="#quantityadj" label="New Return Quantity" default="1">
+              <renderer type="numericinput" params="min=1;max=(@quantity - @qtyreturned);"/>
+            </field>
+          </section>
+          <section>
+            <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
+            <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+            <field attribute="actualcost" label="Actual Cost" hidden="true"/>
+            <field attribute="linecost" hidden="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="refwo" label="Work Order" readonly="true"/>
+            <field attribute="issueid" hidden="true"/>
+            <field attribute="location" label="Location" readonly="true"/>
+            <field attribute="assetnum" label="Asset" readonly="true"/>
+            <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
+            <field attribute="glcreditacct" hidden="true"/>
+            <field attribute="issueid" hidden="true"/>
+          </section>
           <commandbars>
             <commandgroup position="detailform">
               <removecommand id="save"/>
               <removecommand id="cancel"/>
               <command id="return" position="&lt;print" label="Submit" service="inventoryService" method="returnInvIssue" parameters="datamap,$scope" successmessage="Return created"/>
-              <command id="cancelinvissue" label="Cancel" service="inventoryService" method="cancelNewInvIssue" parameters="schema,datamap" position=">print"/>
+              <command id="cancelinvissue" label="Cancel" service="inventoryService" method="navToIssueReturnList" parameters="schema,datamap" position=">print"/>
             </commandgroup>
           </commandbars>
         </schema>
@@ -704,39 +745,63 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="location" hidden="true"/>
         </schema>
         
-        <schema id="detail" mode="input">
-          <field attribute="invreserveid" hidden="true"/>
-          <field attribute="requireddate" hidden="true"/>
-          <field attribute="requestnum" hidden="true"/>
-          <field attribute="itemsetid" hidden="true"/>
-          <field attribute="siteid" hidden="true"/>
-          <field attribute="orgid" hidden="true"/>
-          <field attribute="rowstamp" label="Row Stamp" hidden="true"/>
-          <field attribute="wonum" label="Work Order" readonly="true"/>
-          <field attribute="assetnum" label="Asset" readonly="true"/>
-          <field attribute="issueto" label="Issued To" readonly="true"/>
-          <field attribute="tostoreloc" label="Location" readonly="true"/>
-          <field attribute="glaccount" label="GL Account" readonly="true"/>
-          <field attribute="itemnum" label="Item" readonly="true"/>
-          <field attribute="item_.rotating" label="Rotating" readonly="true">
-            <renderer type="default" params="formatter=numberToBoolean;"/>
-          </field>
-          <field attribute="item_.iskit" label="Kit" readonly="true">
-            <renderer type="default" params="formatter=numberToBoolean;"/>
-          </field>
-          <field attribute="location" label="Storeroom" readonly="true"/>
-          <field attribute="reservedqty" label="Reserved Quantity" readonly="true"/>
-          <field attribute="actualqty" label="Quantity Issued" readonly="true" hidden="true"/>
-          <association label="Bin" target="#frombin" labelfield="invbalances_.binnum" valuefield="binnum" hideDescription="true" extraprojectionvalues="itemnum,curbal,lotnum,binnum">
-            <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
-            <dataprovider prefilterfunction="FilterBins"/>
-          </association>
-          <field attribute="invbalances_.lotnum" label="Lot" readonly="true"/>
-          <field attribute="invbalances_.curbal" label="Current Balance" readonly="true"/>
-          <field attribute="#issueqty" label="Issue Quantity">
-            <renderer type="numericinput" params="min=1;max=@reservedqty;"/>
-            <event type="afterchange" service="inventoryService" method="afterChangeIssueQuantity"/>
-          </field>
+        <schema id="detail" mode="input" stereotype="detail">
+          <section>
+            <field attribute="invreserveid" hidden="true"/>
+            <field attribute="requireddate" hidden="true"/>
+            <field attribute="requestnum" hidden="true"/>
+            <field attribute="itemsetid" hidden="true"/>
+            <field attribute="siteid" hidden="true"/>
+            <field attribute="orgid" hidden="true"/>
+            <field attribute="rowstamp" label="Row Stamp" hidden="true"/>
+            <field attribute="requestedby" label="Requested By" readonly="true"/>
+            <field attribute="#enterby" label="Entered By" readonly="true"/>
+            <field attribute="#issuetype" label="Issue Type" readonly="true"/>
+            <field attribute="issueto" label="Issue To" readonly="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Inventory Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="siteid" label="Site" readonly="true"/>
+            <field attribute="location" label="Storeroom" readonly="true"/>
+            <field attribute="itemnum" label="Item" readonly="true"/>
+            <field attribute="item_.itemtype" label="Item Type" readonly="true"/>
+            <association target="#rotatingAssetNumber" label="Rotating Asset" valuefield="assetnum" labelfield="asset_.description" extraprojectionvalues="binnum" enableexpression="@item_.rotating==1" requiredexpression="@item_.rotating==1">
+              <dataprovider prefilterfunction="FilterAssets"/>
+              <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="afterChangeInvreserveAsset"/>
+            </association>
+            <field attribute="item_.rotating" label="Rotating" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean;"/>
+            </field>
+            <field attribute="item_.iskit" label="Kit" readonly="true">
+              <renderer type="default" params="formatter=numberToBoolean;"/>
+            </field>
+            <association label="Bin" target="invbalances_.binnum" labelfield="invbalances_.binnum" valuefield="binnum" hideDescription="true" extraprojectionvalues="itemnum,curbal,lotnum,binnum" enableexpression="@item_.rotating!=1">
+              <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
+              <dataprovider prefilterfunction="FilterBins"/>
+            </association>
+            <field attribute="invbalances_.lotnum" label="Lot" readonly="true"/>
+            <field attribute="invbalances_.curbal" label="Current Balance" readonly="true"/>
+            <field attribute="reservedqty" label="Reserved Quantity" readonly="true"/>
+            <field attribute="actualqty" label="Quantity Issued" readonly="true" hidden="true"/>
+            <field attribute="#issueqty" label="Issue Quantity">
+              <renderer type="numericinput" params="min=1;max=@reservedqty;"/>
+              <event type="afterchange" service="inventoryService" method="afterChangeIssueQuantity"/>
+            </field>
+          </section>
+          <section>
+            <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="item_.issueunit" label="Issue Unit" readonly="true"/>
+            <field attribute="unitcost" label="Unit Cost" readonly="true"/>
+            <field attribute="inventory_.costtype" hidden="true"/>
+          </section>
+          <section>
+            <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
+            <field attribute="wonum" label="Work Order" readonly="true"/>
+            <field attribute="tostoreloc" label="Location" readonly="true"/>
+            <field attribute="assetnum" label="Asset" readonly="true"/>
+            <field attribute="glaccount" label="GL Account" readonly="true"/>
+          </section>
           <event type="onload" service="inventoryService" method="onloadReservation"/>
           <commandbars>
             <commandgroup position="detailform">
