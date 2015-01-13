@@ -22,6 +22,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
                 //on replace the new assets should behave like the install ones, and the "old" as the remove ones
                 return new[] { AssetConstants.Ordered, AssetConstants.Idle };
             }
+            //TODO: should we apply these conditions for associated child assets?
             return new[] { AssetConstants.Operating, AssetConstants.Active, AssetConstants.Idle };
         }
 
