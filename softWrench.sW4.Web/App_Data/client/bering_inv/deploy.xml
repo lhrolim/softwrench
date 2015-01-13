@@ -6,7 +6,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Deploy_Metadata
     <!--MAximo Properties-->
     <environment key="dev">
       <property key="iispath" value="Softwrench/Softwrench" />
-      <property key="msdeploy_url" value="http://10.50.100.146:8172/msdeploy.axd,username=BS7116DEV\IISAdministrator,password=$@$Adm1n" />
+      <property key="msdeploy_url" value="10.50.100.146:8172/msdeploy.axd,username=BS7116DEV\IISAdministrator,password=$@$Adm1n" />
     </environment>
 
   </globalproperties>
