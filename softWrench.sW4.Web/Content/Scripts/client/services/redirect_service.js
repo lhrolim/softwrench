@@ -5,7 +5,11 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
         var crudUrl = $(routes_homeurl)[0].value;
         var currentModule = contextService.retrieveFromContext('currentmodule');
         var currentMetadata = contextService.retrieveFromContext('currentmetadata');
-
+        var currentModuleNewWindow = contextService.retrieveFromContext('currentmodulenewwindow');
+        if (currentModuleNewWindow != "null" && currentModuleNewWindow != "") {
+            currentModule = currentModuleNewWindow;
+            contextService.deleteFromContext('currentmodulenewwindow');
+        }
         parameters.currentmodule = currentModule;
         parameters.currentmetadata = currentMetadata;
         var params = $.param(parameters);
@@ -26,7 +30,11 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
         var crudUrl = $(routes_homeurl)[0].value;
         var currentModule = contextService.retrieveFromContext('currentmodule');
         var currentMetadata = contextService.retrieveFromContext('currentmetadata');
-
+        var currentModuleNewWindow = contextService.retrieveFromContext('currentmodulenewwindow');
+        if (currentModuleNewWindow != "null" && currentModuleNewWindow != "") {
+            currentModule = currentModuleNewWindow;
+            contextService.deleteFromContext('currentmodulenewwindow');
+        }
         parameters.currentmodule = currentModule;
         parameters.currentmetadata = currentMetadata;
         var params = $.param(parameters);
