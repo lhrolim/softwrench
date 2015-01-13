@@ -91,13 +91,13 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
             if (target != undefined) {
                 this.setActiveLeaf(target);
             }
-            contextService.insertIntoContext('currentmetadata', null);
             contextService.insertIntoContext('currentgridarray', null);
             if (leaf.parameters && leaf.parameters.popupmode == "browser") {
                 //HAP-813 --> since we´ll open that into a new browser window, let´s make sure we don´t change the main window module
                 contextService.insertIntoContext("currentmodulenewwindow", leaf.module);
             } else {
                 contextService.insertIntoContext("currentmodule", leaf.module);
+                contextService.insertIntoContext('currentmetadata', null);
             }
             $log.getInstance('sw4.menu').info("current module: " + leaf.module);
 
@@ -112,7 +112,7 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
                 this.setActiveLeaf(target);
             }
             $log.getInstance('sw4.menu').info("current module: " + leaf.module);
-            contextService.insertIntoContext('currentmetadata', null);
+            
             contextService.insertIntoContext('currentgridarray', null);
 
             if (leaf.parameters && leaf.parameters.popupmode == "browser") {
@@ -120,6 +120,7 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
                 contextService.insertIntoContext("currentmodulenewwindow", leaf.module);
             } else {
                 contextService.insertIntoContext("currentmodule", leaf.module);
+                contextService.insertIntoContext('currentmetadata', null);
             }
 
 
