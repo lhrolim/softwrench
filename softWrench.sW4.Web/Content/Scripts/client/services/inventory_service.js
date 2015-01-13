@@ -903,7 +903,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     orgid: parameters['fields']['orgid'],
                     siteid: parameters['fields']['siteid'],
                     itemnum: parameters['fields']['itemnum'],
-                    location: parameters['fields']['location'],
+                    location: parameters['fields']['storeloc'],
                     binnum: parameters['fields']['binnum']
                 };
                 searchService.searchWithData("invbalances", searchData, "invbalancesList").success(function (data) {
@@ -912,7 +912,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     var lotnum = fields['lotnum'];
                     var curbal = fields['curbal'];
                     parameters['fields']['lotnum'] = lotnum;
-                    parameters['fields']['#curbal'] = curbal;
+                    parameters['fields']['#curbal'] = curbal == null ? 0 : curbal;
                 });
             } else {
                 parameters['fields']['lotnum'] = null;

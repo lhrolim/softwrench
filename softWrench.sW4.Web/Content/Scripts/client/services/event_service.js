@@ -18,12 +18,12 @@ app.factory('eventService', function ($log, dispatcherService) {
         return dispatcherService.loadService(service, method);
     };
     return {
-        onload: function(eventholder, datamap, parameters) {
+        onload: function(scope, eventholder, datamap, parameters) {
             var fn = loadEvent(eventholder, 'onload');
             if (!fn) {
                 return;
             }
-            fn(eventholder, datamap, parameters);
+            fn(scope, eventholder, datamap, parameters);
         },
         onviewdetail: function (eventholder, parameters) {
             var fn = loadEvent(eventholder, 'onviewdetail');

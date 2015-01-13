@@ -1,6 +1,8 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('scannerdetectionService', function ($http, $rootScope, restService, searchService, redirectService, contextService, alertService, associationService, modalService) {
+app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, restService, searchService, redirectService,
+                                                 contextService, alertService, associationService, modalService,
+                                                 fieldService) {
 
     return {
         initInventoryGridListener: function (schema, datamap, parameters) {
@@ -134,16 +136,75 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
             });
         },
 
-        initInvIssueDetailListener: function (schema, datamap) {
+        initInvIssueDetailListener: function (scope, schema, datamap) {
             $(document).scannerDetection(function (data) {
                 var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
                 var scanOrder = scanOrderString.split(",");
                 for (var attribute in scanOrder) {
                     var currentAttribute = scanOrder[attribute];
-                    if (datamap[currentAttribute] === '' || datamap[currentAttribute] === null) {
-                        datamap[currentAttribute] = data;
-                        $rootScope.$digest();
-                        return;
+                    if (datamap.fields[currentAttribute] === '' || datamap.fields[currentAttribute] === null) {
+                        datamap.fields[currentAttribute] = data;
+
+                        var fieldMetadata = fieldService.getDisplayableByKey(schema, currentAttribute);
+                        var lookupObj = {
+                            code: data,
+                            description: "",
+                            fieldMetadata: fieldMetadata
+                        };
+                        var parameters = {};
+                        parameters.application = schema.applicationName;
+                        parameters.key = {};
+                        parameters.key.schemaId = schema.schemaId;
+                        parameters.key.mode = schema.mode;
+                        parameters.key.platform = platform();
+                        parameters.associationFieldName = lookupObj.fieldMetadata.associationKey;
+                        var lookupApplication = lookupObj.fieldMetadata.schema.rendererParameters["application"];
+                        var lookupSchemaId = lookupObj.fieldMetadata.schema.rendererParameters["schemaId"];
+                        if (lookupApplication != null && lookupSchemaId != null) {
+                            parameters.associationApplication = lookupApplication;
+                            parameters.associationKey = {};
+                            parameters.associationKey.schemaId = lookupSchemaId;
+                            parameters.associationKey.platform = platform();
+                        }
+
+                        var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
+                        var searchValues = {};
+                        searchValues[currentAttribute] = data;
+                        var searchOperators = {}
+                        for (var field in searchValues) {
+                            searchOperators[field] = defaultLookupSearchOperator;
+                        }
+                        parameters.SearchDTO = searchService.buildSearchDTO(searchValues, {}, searchOperators);
+                        parameters.hasClientSearch = true;
+
+                        var urlToUse = url("/api/generic/Data/UpdateAssociation?" + $.param(parameters));
+                        var jsonString = angular.toJson(datamap.fields);
+                        //$rootScope.$digest();
+                        $http.post(urlToUse, jsonString).success(function (data) {
+                            var result = data.resultObject;
+                            for (var association in result) {
+                                if (lookupObj.fieldMetadata.associationKey == association) {
+                                    var associationResult = result[association];
+                                    lookupObj.options = associationResult.associationData;
+                                    lookupObj.schema = associationResult.associationSchemaDefinition;
+                                }
+                            }
+                            datamap.fields[fieldMetadata.target] = lookupObj.options[0].value;
+                            if (!scope.lookupAssociationsCode) {
+                                scope["lookupAssociationsCode"] = {};
+                            }
+                            if (!scope.lookupAssociationsDescription) {
+                                scope["lookupAssociationsDescription"] = {};
+                            }
+                            scope.lookupAssociationsCode[fieldMetadata.attribute] = lookupObj.options[0].value;
+                            scope.lookupAssociationsDescription[fieldMetadata.attribute] = lookupObj.options[0].label;
+                            associationService.updateAssociationOptionsRetrievedFromServer(scope, result, datamap.fields);
+                            associationService.updateUnderlyingAssociationObject(fieldMetadata, lookupObj.options[0], scope);
+                            //$rootScope.$broadcast("sw_associationsupdated", scope.associationOptions);
+                            //associationService.postAssociationHook(fieldMetadata, scope, { dispatchedbytheuser: true, phase: 'configured' });
+                        }).error(function data() {
+                        });
+                        break;
                     }
                 };
             });

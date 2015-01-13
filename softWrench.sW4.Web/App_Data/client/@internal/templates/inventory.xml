@@ -525,7 +525,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" extraprojectionvalues="description" dependantfields="siteid" requiredexpression="true" >
               <renderer type="lookup"/>
             </association>
-            <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,storeloc" requiredexpression="true">
+            <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,storeloc" requiredexpression="true">
               <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
               <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
             </association>
@@ -578,9 +578,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <removecommand id="save"/>
               <removecommand id="cancel"/>
               <command id="submitinvissue" label="Submit" service="inventoryService" method="submitInvIssue" parameters="schema,datamap" position="&lt;print"/>
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position=">print"/>
               <command id="cancelinvissue" label="Cancel" service="inventoryService" method="navToIssueReturnList" parameters="schema,datamap" position=">print"/>
             </commandgroup>
           </commandbars>
+          <event type="onload" service="scannerdetectionService" method="initInvIssueDetailListener"/>
+          <properties>
+            <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
+            <property key="nextschema.schemaid" value="invIssueList"/>
+          </properties>
         </schema>
       </schemas>
     </application>
