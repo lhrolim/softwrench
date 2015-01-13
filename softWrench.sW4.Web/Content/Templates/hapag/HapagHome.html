@@ -23,7 +23,7 @@
 
             <ul class="nav nav-tabs hapag-dashboardtab">
                 <li ng-class="{active: currentDashboardIndex == $index}" ng-repeat="dashboard in dashboards">
-                    <a ng-href="#{{dashboard.id}}" data-toggle="tab" ng-click="renderDashboard($index,true)" rel="tooltip" data-original-title="{{dashboard.tooltip}}">{{dashboard.title + ' (' + dashboard.totalCount + ')'}}</a>
+                    <a data-toggle="tab" ng-click="renderDashboard($index,true)" rel="tooltip" data-original-title="{{dashboard.tooltip}}">{{dashboard.title + ' (' + dashboard.totalCount + ')'}}</a>
                 </li>
             </ul>
 
