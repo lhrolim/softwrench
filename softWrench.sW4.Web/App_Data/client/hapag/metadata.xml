@@ -3073,6 +3073,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <detail>
           <properties>
             <property key="compositions.alwaysrefresh" value="true"/>
+            <property key="oncrudsaveevent.validationservice" value="attachmentservice.validateNewForm"/>
           </properties>
 
           <!--          <field label="Title:" attribute="document" />-->
