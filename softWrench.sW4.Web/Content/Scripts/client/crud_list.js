@@ -177,21 +177,6 @@ app.directive('crudList', function (contextService) {
 
                 log.info('Scroll To', scrollObject);
 
-                ////restore the last scroll position, else scroll to the top of the page
-                //var scrollObject = contextService.retrieveFromContext('scrollto');
-                //if (typeof scrollObject === 'undefined') {
-                //    scrollposition = 0;
-                //}
-
-                //$timeout(
-                //    function () {
-                //        window.scrollTo(0, scrollposition);
-                //    }, 100, false);
-
-                ////log.info('Scroll To', $scope.schema.applicationName, scrollposition);
-                //log.info('Scroll To', scrollposition);
-                ////log.info('Scroll To', contextService.retrieveFromContext('scrollto'));
-
                 $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
                 log.debug('finish table rendered listener');
             });
