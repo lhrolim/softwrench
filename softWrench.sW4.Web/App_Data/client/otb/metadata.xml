@@ -295,6 +295,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </entity>
 
     <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN')">
+      <relationships>
+        <relationship to="asset" qualifier="rotatingasset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="itemnum" to="itemnum"/>
+          <relationshipAttribute from="storeloc" to="location"/>
+          <relationshipAttribute to="moved" literal="0" quoteLiteral="true"/>
+          <relationshipAttribute to="returnedtovendor" literal="0" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
       </connectorParameters>
@@ -1039,7 +1049,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </association>
           <association target="invuseline_.tobin" label="To Bin" labelfield="toinvbalance_.binnum" forcedistinctoptions="false" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
             <dataprovider prefilterfunction="FilterToBin" />
-            <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;lookuponblur=false;"/>
+            <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;allowFreeText=true;"/>
           </association>
           <field attribute="invuseline_.quantity" label="Quantity" requiredexpression="true">
             <event type="afterchange" service="inventoryService" method="afterChangeTransferQuantity"/>

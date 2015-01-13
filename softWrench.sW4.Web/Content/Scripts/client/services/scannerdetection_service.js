@@ -8,7 +8,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
 
             $(document).scannerDetection(function (data) {
                 // Retrieve the scan order string from the context that relates to the current schema
-                var scanOrderString = contextService.scanOrder(schema.applicationName);
+                var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
                 var scanOrder = scanOrderString.split(",");
                 var extraparameters = { keepfilterparameters: true };
                 // When the user scans a value, loop through the properties in the scan order
@@ -136,22 +136,13 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
 
         initInvIssueDetailListener: function (schema, datamap) {
             $(document).scannerDetection(function (data) {
-                var scanOrderString = contextService.scanOrder(schema.applicationName);
+                var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
                 var scanOrder = scanOrderString.split(",");
-                var extraparameters = { keepfilterparameters: true };
                 for (var attribute in scanOrder) {
                     var currentAttribute = scanOrder[attribute];
-                    // If the property is not already in th escan data, add it and its value
-                    if (!datamap.hasOwnProperty(currentAttribute)) {
-                        var localSearchData = {};
-                        localSearchData[currentAttribute] = data;
-                        searchService.refreshGrid(localSearchData, extraparameters);
-                        return;
-                        // Else if the property exists but is blank, set it to its new value
-                    } else if (datamap[currentAttribute] === '' || datamap[currentAttribute] === null) {
+                    if (datamap[currentAttribute] === '' || datamap[currentAttribute] === null) {
                         datamap[currentAttribute] = data;
                         $rootScope.$digest();
-                        //associationService.updateUnderlyingAssociationObject(null, null, scope);
                         return;
                     }
                 };

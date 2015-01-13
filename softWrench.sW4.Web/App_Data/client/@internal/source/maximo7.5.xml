@@ -2686,14 +2686,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
-        <relationship to="asset" qualifier="rotatingasset">
-          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
-          <relationshipAttribute from="siteid" to="siteid"/>
-          <relationshipAttribute from="itemnum" to="itemnum"/>
-          <relationshipAttribute from="storeloc" to="location"/>
-          <relationshipAttribute to="moved" literal="0" quoteLiteral="true"/>
-          <relationshipAttribute to="returnedtovendor" literal="0" quoteLiteral="true"/>
-        </relationship>
         <relationship to="location">
           <relationshipAttribute from="location" to="location" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
@@ -3775,6 +3767,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
+    <entity name="maxvars" idAttribute="varname">
+      <attributes>
+        <attribute name="varname" type="varchar" required="true" />
+        <attribute name="varvalue" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="maxvarsid" type="int" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="maxvars" />
+      </connectorParameters>
+    </entity>
+    
     <entity name="labtrans" idAttribute="labtransid">
       <attributes>
         <attribute name="transdate" type="datetime" required="true" />

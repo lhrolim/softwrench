@@ -1,0 +1,16 @@
+﻿servicerequest:{
+    new: green,
+    wappr: orange,
+    closed: green,
+    queued: yellow,
+    pending: yellow,
+    inprog: blue,
+    resolved: blue,
+    wmatl: red
+},
+
+workorder:{
+    new: orange,
+    wappr: orange,
+    close: green
+}
