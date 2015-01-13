@@ -713,6 +713,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </schema>
         
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
+          <properties>
+            <property key="nextschema.schemaid" value="physicalcountList"/>
+          </properties>
           <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
           <field label="Item" attribute="itemnum" readonly="true"/>
           <field label="Description" attribute="item_.description" readonly="true"/>
@@ -766,6 +769,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </field>
         </schema>
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
+          <properties>
+            <property key="nextschema.schemaid" value="physicaldeviationList"/>
+          </properties>
           <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
           <field label="Item" attribute="itemnum" readonly="true"/>
           <field label="Description" attribute="item_.description" readonly="true"/>
@@ -948,6 +954,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </schema>
 
         <schema id="invbalancesDetail" stereotype="detail" title="Inventory Balance Details">
+          <properties>
+            <property key="nextschema.schemaid" value="invbalancesList"/>
+          </properties>
           <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
           <field label="Item" attribute="itemnum" readonly="true"/>
           <field label="Description" attribute="item_.description" readonly="true"/>
