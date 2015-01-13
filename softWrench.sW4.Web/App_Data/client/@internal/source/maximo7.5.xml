@@ -482,8 +482,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <attribute name="stagingbin" type="smallint" required="true" />
         <attribute name="stagedcurbal" type="decimal" required="false" />
         <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="ib1" type="varchar" required="false" />
       </attributes>
+      <relationships>
+        <relationship to="item" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="inventory" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+        </relationship>
+        <relationship to="invlot">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="lotnum" to="lotnum"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWINVBAL" />
         <connectorParameter key="dbtable" value="invbalances" />
       </connectorParameters>
     </entity>
@@ -3270,7 +3290,67 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <attribute name="rowstamp" type="timestamp" required="true" />
         <attribute name="workorderid" type="bigint" required="false" />
       </attributes>
+      <relationships>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to="siteid" primary="true"/>
+        </relationship>
+        <relationship to="invuseline">
+          <relationshipAttribute from="invusenum" to="invusenum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="fromstoreloc" to="fromstoreloc"/>
+          <relationshipAttribute from="usetype" to="usetype"/>
+        </relationship>
+        <relationship to="invcost">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="fromstoreloc" to="location"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="inventory">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
+        </relationship>
+        <relationship to="location" qualifier="fromlocation">
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="invbalances" qualifier="frominvbalance">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.frombin" to="binnum" primary="true"/>
+        </relationship>
+        <relationship to="location" qualifier="tolocation">
+          <relationshipAttribute from="invuseline_.tostoreloc" to="location" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="invbalances" qualifier="toinvbalance">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="invuseline_.tostoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.tobin" to="binnum" primary="true"/>
+        </relationship>
+        <relationship to="item">
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="asset">
+          <relationshipAttribute from="invuseline_.rotassetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="invuseline_.siteid" to="siteid"/>
+          <relationshipAttribute from="invuseline_.itemnum" to="itemnum"/>
+          <relationshipAttribute from="invuseline_.fromstoreloc" to="location"/>
+          <relationshipAttribute from="invuseline_.frombin" to="binnum"/>
+          <relationshipAttribute from="invuseline_.fromlot" to="lotnum"/>
+        </relationship>
+      </relationships>
       <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWINVUSE"/>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInvuseCrudConnector"/>
         <connectorParameter key="dbtable" value="invuse" />
       </connectorParameters>
     </entity>

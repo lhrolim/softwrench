@@ -227,6 +227,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section>
             <field attribute="matusetransid" hidden="true"/>
             <field attribute="enterby" label="Entered By" readonly="true"/>
+            <field attribute="issuetype" label="Issue Type" readonly="true"/>
             <field attribute="issueto" label="Issued To" readonly="true"/>
           </section>
           <section>

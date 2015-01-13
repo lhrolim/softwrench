@@ -809,7 +809,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             restService.invokePost("data", "post", httpParameters, jsonString, function() {
                 var restParameters = {
                     key: {
-                        schemaId: "list",
+                        schemaId: "matrectransTransfersList",
                         mode: "none",
                         platform: "web"
                     },
