@@ -15,7 +15,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
         /// <returns></returns>
         public static string[] GetImacStatusToSearch(string schema, bool childAsset, bool isNew) {
             if (schema.Equals(ImacConstants.Add)) {
-                return childAsset ? new[] { AssetConstants.Idle } : new[] { AssetConstants.Active };
+                return new[] { AssetConstants.Idle, AssetConstants.Active, AssetConstants.Operating};
             }
             if (schema.EqualsIc(ImacConstants.ReplaceStd) && !isNew) {
                 //fix for https://controltechnologysolutions.atlassian.net/browse/HAP-683
@@ -32,9 +32,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
 
         public static SortedSet<string> GetImacOptionsFromStatus(string assetStatus) {
             var toFilter = new SortedSet<string>();
-            if (!assetStatus.Equals(AssetConstants.Active)) {
-                toFilter.Add(ImacConstants.Add);
-            }
+            
             if (!assetStatus.EqualsAny(AssetConstants.Ordered, AssetConstants.Idle)) {
                 toFilter.Add(ImacConstants.Install);
             }
@@ -43,6 +41,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
                 toFilter.Add(ImacConstants.Remove);
                 toFilter.Add(ImacConstants.Move);
                 toFilter.Add(ImacConstants.Replace);
+                toFilter.Add(ImacConstants.Add);
             }
             return toFilter;
         }
