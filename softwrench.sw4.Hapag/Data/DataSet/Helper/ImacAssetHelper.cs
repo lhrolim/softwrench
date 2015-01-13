@@ -14,9 +14,6 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
         /// <param name="isNew"></param>
         /// <returns></returns>
         public static string[] GetImacStatusToSearch(string schema, bool childAsset, bool isNew) {
-            if (schema.Equals(ImacConstants.Add)) {
-                return new[] { AssetConstants.Idle, AssetConstants.Active, AssetConstants.Operating};
-            }
             if (schema.EqualsIc(ImacConstants.ReplaceStd) && !isNew) {
                 //fix for https://controltechnologysolutions.atlassian.net/browse/HAP-683
                 return new[] { AssetConstants.Operating, AssetConstants.Active };
