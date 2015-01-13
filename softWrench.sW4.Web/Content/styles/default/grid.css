@@ -59,14 +59,15 @@
         #listgrid thead tr.header-row {
             background-color: #fff;
             color: #000;
+            border: none;
         }
 
-            #listgrid thead tr.header-row::after, #listgrid thead tr.filter-row::after {
+        #listgrid thead tr.header-row:after, #listgrid thead tr.filter-row:after {
                 content: " ";
             }
 
             /*SWWEB-841 ~ fix header width for Firefox*/
-            @-moz-document url-prefix() {
+            @-moz-document url-prefix() {            
                 #listgrid thead tr.filter-row .input-group-sm > .form-control {
                     font-size: 14px;
                 }
