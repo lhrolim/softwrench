@@ -25,6 +25,7 @@ namespace softWrench.sW4.Data.Persistence {
                 //need to remove the select keyword here
                 queryst = queryst.Substring("select".Length);
             }
+            queryst = queryst.Replace(orderBy, "");
             var paginationCondition = pagingCondition + " <= " + pageSize;
             if (firstValue != 0) {
                 paginationCondition = pagingCondition + " between " + (firstValue + 1) + " and " + (firstValue + pageSize);
