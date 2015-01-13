@@ -159,7 +159,8 @@ app.directive('crudList', function (contextService) {
                 });
 
                 //restore the last scroll position, else scroll to the top of the page
-                var scrollObject = contextService.retrieveFromContext('scrollto');
+                var scrollObject = contextService.fetchFromContext('scrollto', true);
+
                 if (typeof scrollObject === 'undefined') {
                     scrollPosition = 0;
                 } else {
@@ -173,9 +174,8 @@ app.directive('crudList', function (contextService) {
                 $timeout(
                     function () {
                         window.scrollTo(0, scrollPosition);
+                        log.info('Scroll To', scrollPosition, scrollObject);
                     }, 100, false);
-
-                log.info('Scroll To', scrollObject);
 
                 $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
                 log.debug('finish table rendered listener');
