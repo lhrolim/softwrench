@@ -26,7 +26,6 @@ namespace softwrench.sW4.test.Data.Search {
         }
 
         [TestMethod]
-        [Ignore]
         public void BasicSearchDtoTest() {
             var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
             searchRequestDto.SetFromSearchString(_schema, "ticketid".Split(','), "teste");
@@ -37,7 +36,7 @@ namespace softwrench.sW4.test.Data.Search {
 
             String whereClause = SearchUtils.GetWhere(searchRequestDto, "SR");
 
-            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) = :ticketid )", whereClause);
+            Assert.AreEqual("( SR.ticketid = :ticketid )", whereClause);
         }
 
         public void EmptySearchDtoTest() {
@@ -54,7 +53,6 @@ namespace softwrench.sW4.test.Data.Search {
         }
 
         [TestMethod]
-        [Ignore]
         public void MultipleFieldsSearchDtoTest() {
             var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
             searchRequestDto.SetFromSearchString(_schema, "ticketid,description,asset_.description,siteid,affectedperson,status,reportdate".Split(','), "teste");
@@ -65,7 +63,7 @@ namespace softwrench.sW4.test.Data.Search {
 
             String whereClause = SearchUtils.GetWhere(searchRequestDto, "SR");
 
-            Assert.AreEqual(@"( UPPER(COALESCE(SR.ticketid,'')) = :ticketid ) OR ( UPPER(COALESCE(SR.description,'')) = :description ) OR ( UPPER(COALESCE(asset_.description,'')) = :asset_.description ) OR ( UPPER(COALESCE(SR.status,'')) = :status )", whereClause);
+            Assert.AreEqual(@"( SR.ticketid = :ticketid ) OR ( SR.description = :description ) OR ( asset_.description = :asset_.description ) OR ( SR.status = :status )", whereClause);
         }
 
         [TestMethod]
@@ -137,33 +135,33 @@ namespace softwrench.sW4.test.Data.Search {
             Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) != 'TESTE' OR UPPER(COALESCE(SR.ticketid,'')) IS NULL  )", filterFixedWhereClause);
         }
 
-      
-        [Ignore]
+
+        [TestMethod]
         public void NotEqEmptySearchDtoTest() {
             var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
             searchRequestDto.SetFromSearchString(_schema, "ticketid".Split(','), "!=");
 
             Assert.IsNotNull(searchRequestDto);
             Assert.IsTrue(searchRequestDto.SearchParams.Equals("ticketid"));
-            Assert.IsTrue(searchRequestDto.SearchValues.Equals(""));
+            Assert.IsTrue(searchRequestDto.SearchValues.Equals("!="));
 
             var whereClause = SearchUtils.GetWhere(searchRequestDto, "SR");
 
-            Assert.AreEqual("( UPPER(SR.ticketid) != :ticketid and SR.ticketid is not null)", whereClause);
+            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) != :ticketid OR UPPER(COALESCE(SR.ticketid,'')) IS NULL  )", whereClause);
         }
 
-        [Ignore]
+        [TestMethod]
         public void NotEqNotEmptySearchDtoTest() {
             var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
             searchRequestDto.SetFromSearchString(_schema, "ticketid".Split(','), "!=a");
 
             Assert.IsNotNull(searchRequestDto);
             Assert.IsTrue(searchRequestDto.SearchParams.Equals("ticketid"));
-            Assert.IsTrue(searchRequestDto.SearchValues.Equals(""));
+            Assert.IsTrue(searchRequestDto.SearchValues.Equals("!=a"));
 
             var whereClause = SearchUtils.GetWhere(searchRequestDto, "SR");
 
-            Assert.AreEqual("( UPPER(SR.ticketid) != :ticketid or SR.ticketid is null)", whereClause);
+            Assert.AreEqual("( UPPER(COALESCE(SR.ticketid,'')) != :ticketid OR UPPER(COALESCE(SR.ticketid,'')) IS NULL  )", whereClause);
         }
     }
 }

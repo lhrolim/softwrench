@@ -1,5 +1,6 @@
 ﻿using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Parsing;
 using softWrench.sW4.Metadata.Properties;
 using System;
 using System.Configuration;
@@ -319,7 +320,7 @@ namespace softWrench.sW4.Util {
             return !IsMif() && !IsISM();
         }
 
-        public static String DBConnectionString(DBType dbType) {
+        public static String DBConnectionString(ApplicationConfiguration.DBType dbType) {
             var connectionStringSettings = DBConnection(dbType);
             return connectionStringSettings == null ? null : connectionStringSettings.ConnectionString;
         }
@@ -332,6 +333,17 @@ namespace softWrench.sW4.Util {
                 return new ConnectionStringSettings("maximo", url, provider);
             } else {
                 if (IsLocal() && IsDev()) {
+                    var localFilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\local.properties";
+                    if (new FileInfo(localFilePath).Length != 0) {
+                        var stream = new StreamReader(localFilePath);
+                        var localProperties = new XmlPropertyMetadataParser().Parse(stream);
+                        var overridenLocalDB = localProperties.GlobalProperty("swdb_url");
+                        var overridenLocalSwdbpRovider = localProperties.GlobalProperty("swdb_provider");
+                        if (overridenLocalDB != null && overridenLocalSwdbpRovider != null) {
+                            LoggingUtil.DefaultLog.Info("using customized local database {0} | {1} ".Fmt(overridenLocalDB, overridenLocalSwdbpRovider));
+                            return new ConnectionStringSettings("swdb", overridenLocalDB, overridenLocalSwdbpRovider);
+                        }
+                    }
                     var swdbConnectionString = ConfigurationManager.ConnectionStrings["swdb"];
                     if (swdbConnectionString == null) {
                         swdbConnectionString = new ConnectionStringSettings("swdb", "Server=localhost;Database=swdb;Uid=sw;Pwd=sw;", "MySql.Data.MySqlClient");

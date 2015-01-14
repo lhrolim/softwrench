@@ -217,7 +217,7 @@ app.directive('compositionList', function (contextService) {
                 var parameters = {};
                 parameters.clonedCompositionData = $scope.clonedCompositionData;
                 parameters.parentdata = $scope.parentdata;
-                eventService.onload($scope.compositionlistschema, $scope.datamap, parameters);
+                eventService.onload($scope, $scope.compositionlistschema, $scope.datamap, parameters);
                 contextService.insertIntoContext('clonedCompositionData', $scope.clonedCompositionData, true);
             };
 

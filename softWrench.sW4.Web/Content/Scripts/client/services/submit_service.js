@@ -20,7 +20,7 @@ app.factory('submitService', function ($rootScope, fieldService,contextService) 
             formToSubmit.append("<input type='hidden' name='currentmodule' value='" + contextService.retrieveFromContext('currentmodule') + "' />");
 
             formToSubmit.append("<input type='hidden' name='application' value='" + applicationName + "' />");
-            formToSubmit.append("<input type='hidden' name='json' value='" + jsonString.replace("'", "&apos;") + "' />");
+            formToSubmit.append("<input type='hidden' name='json' value='" + replaceAll(jsonString, "'", "&apos;") + "' />");
 
             // start spin befor submitting form
             var savingMain = true === $rootScope.savingMain;

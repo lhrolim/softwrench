@@ -19,15 +19,12 @@ app.factory('eventService', function ($log, dispatcherService) {
         return dispatcherService.loadService(service, method);
     };
     return {
-        loadEvent: function (schema, eventName) {
-            return loadEvent(schema, eventName);
-        },
-        onload: function(schema, datamap, parameters) {
+        onload: function(scope, schema, datamap, parameters) {
             var fn = loadEvent(schema, 'onload');
             if (!fn) {
                 return;
             }
-            fn(schema, datamap, parameters);
+            fn(scope, schema, datamap, parameters);
         },
         onviewdetail: function (schema, parameters) {
             var fn = loadEvent(schema, 'onviewdetail');
@@ -57,7 +54,6 @@ app.factory('eventService', function ($log, dispatcherService) {
             }
             return fn(schema, datamap, parameters);
         }
-        
     };
 
 });
