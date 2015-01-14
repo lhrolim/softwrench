@@ -490,10 +490,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             </commandgroup>
           </commandbars>
           <!--<event type="onvalidation" service="inventoryService" method="validateReturn"/>-->
-          <event type="beforesubmit.confirmation" service="inventoryService" method="submitReturnConfirmation"/>
-          <event type="beforesubmit.transformation" service="inventoryService" method="submitReturnTransformation"/>
+          <event type="beforesubmit.postvalidation" service="inventoryService" method="submitReturnConfirmation"/>
+          <!--<event type="beforesubmit.onvalidation" service="inventoryService" method="validateReturn"/>-->
+          <event type="beforesubmit.prevalidation" service="inventoryService" method="submitReturnTransformation"/>
           <properties>
-            <!--<property key="oncrudsaveevent.validationservice" value="inventoryService.validateReturn"/>-->
+            <property key="nextschema.schemaid" value="invIssueList"/>
           </properties>
         </schema>
 

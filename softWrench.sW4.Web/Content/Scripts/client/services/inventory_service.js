@@ -212,6 +212,20 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             return;
         },
 
+        submitReturnConfirmation: function (event, datamap, parameters) {
+            var returnQty = datamap['#quantityadj'];
+            var item = datamap['itemnum'];
+            var storeloc = datamap['storeloc'];
+            var binnum = datamap['binnum'];
+            var message = "Return (" + returnQty + ") " + item + " to " + storeloc + "?";
+            if (binnum != null) {
+                message = message + " (Bin: " + binnum + ")";
+            }
+            return alertService.confirm(null, null, function () {
+                parameters.continue();
+            }, message);
+        },
+
         submitReturnTransformation: function (event, datamap) {
             datamap['issueid'] = datamap['matusetransid'];
             datamap['matusetransid'] = null;
@@ -220,7 +234,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             datamap['issuetype'] = 'RETURN';
             datamap['qtyreturned'] = null;
             datamap['qtyrequested'] = datamap['#quantityadj'];
-            return datamap;
         },
 
         returnInvIssue: function(matusetransitem) {

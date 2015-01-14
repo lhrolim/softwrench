@@ -322,6 +322,59 @@ app.directive('crudBody', function (contextService) {
                     return;
                 }
 
+                //selectedItem would be passed in the case of a composition with autocommit=true. 
+                //Otherwise, fetching from the $scope.datamap
+                var fromDatamap = selecteditem == null;
+                var itemToSave = fromDatamap ? $scope.datamap : selecteditem;
+                var fields = fromDatamap ? itemToSave.fields : itemToSave;
+
+                var transformedFields = angular.copy(fields);
+                
+                var eventParameters = {};
+                eventParameters.continue = function () {
+                    $scope.validateSubmission(selecteditem, parameters, transformedFields);
+                };
+
+                var eventResult = eventService.beforesubmit_prevalidation($scope.schema, transformedFields, eventParameters);
+                if (eventResult == false) {
+                    return;
+                }
+
+                $scope.validateSubmission(selecteditem, parameters, transformedFields);
+            };
+
+            $scope.validateSubmission = function (selecteditem, parameters, transformedFields) {
+                //hook for updating doing custom logic before sending the data to the server
+                $rootScope.$broadcast("sw_beforeSave", transformedFields);
+
+                if (sessionStorage.mockclientvalidation == undefined) {
+                    var validationErrors = validationService.validate($scope.schema, $scope.schema.displayables, transformedFields);
+                    if (validationErrors.length > 0) {
+                        //interrupting here, can´t be done inside service
+                        return;
+                    }
+                }
+
+                var eventParameters = {};
+                eventParameters.continue = function () {
+                    $scope.submitToServer(selecteditem, parameters, transformedFields);
+                };
+
+                var eventResult = eventService.beforesubmit_postvalidation($scope.schema, transformedFields, eventParameters);
+                if (eventResult == false) {
+                    return;
+                }
+
+                $scope.submitToServer(selecteditem, parameters, transformedFields);
+            };
+
+            $scope.submitToServer = function (selecteditem, parameters, transformedFields) {
+                //some fields might require special handling
+                submitService.removeNullInvisibleFields($scope.schema.displayables, transformedFields);
+                transformedFields = submitService.removeExtraFields(transformedFields, true, $scope.schema);
+                submitService.translateFields($scope.schema.displayables, transformedFields);
+                associationService.insertAssocationLabelsIfNeeded($scope.schema, transformedFields, $scope.associationOptions);
+
                 if (parameters == undefined) {
                     parameters = {};
                 }
@@ -332,37 +385,17 @@ app.directive('crudBody', function (contextService) {
                 var applyDefaultFailure = parameters.applyDefaultFailure;
                 var isComposition = parameters.isComposition;
 
-                //selectedItem would be passed in the case of a composition with autocommit=true. 
-                //Otherwise, fetching from the $scope.datamap
-                var fromDatamap = selecteditem == null;
-                var itemToSave = fromDatamap ? $scope.datamap : selecteditem;
-                var fields = fromDatamap ? itemToSave.fields : itemToSave;
                 var applicationName = $scope.schema.applicationName;
                 var idFieldName = $scope.schema.idFieldName;
-                var id = fields[idFieldName];
+                var id = transformedFields[idFieldName];
 
-                //hook for updating doing custom logic before sending the data to the server
-                $rootScope.$broadcast("sw_beforeSave", fields);
 
-                if (sessionStorage.mockclientvalidation == undefined) {
-                    var validationErrors = validationService.validate($scope.schema, $scope.schema.displayables, fields);
-                    if (validationErrors.length > 0) {
-                        //interrupting here, can´t be done inside service
-                        return;
-                    }
-                }
-                //some fields might require special handling
-                submitService.removeNullInvisibleFields($scope.schema.displayables, fields);
-                fields = submitService.removeExtraFields(fields, true, $scope.schema);
-                submitService.translateFields($scope.schema.displayables, fields);
-                associationService.insertAssocationLabelsIfNeeded($scope.schema, fields, $scope.associationOptions);
+                //var transformedFields = eventService.beforesubmit_transformation($scope.schema, $scope.datamap);
+                //if (transformedFields != null) {
+                //    jsonString = angular.toJson(transformedFields);
+                //}
 
-                var jsonString = angular.toJson(fields);
-
-                var transformedFields = eventService.beforesubmit_transformation($scope.schema, $scope.datamap);
-                if (transformedFields != null) {
-                    jsonString = angular.toJson(transformedFields);
-                }
+                var jsonString = angular.toJson(transformedFields);
 
                 parameters = {};
                 if (sessionStorage.mockmaximo == "true") {
@@ -375,7 +408,7 @@ app.directive('crudBody', function (contextService) {
                 $rootScope.savingMain = !isComposition;
 
                 if (isIe9()) {
-                    var formToSubmitId = submitService.getFormToSubmitIfHasAttachement($scope.schema.displayables, fields);
+                    var formToSubmitId = submitService.getFormToSubmitIfHasAttachement($scope.schema.displayables, transformedFields);
                     if (formToSubmitId != null) {
                         var form = $(formToSubmitId);
                         submitService.submitForm(form, parameters, jsonString, applicationName);

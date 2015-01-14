@@ -66,18 +66,13 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                 }
             }
             if (!innerValidation) {
-                var validationService = schema.properties['oncrudsaveevent.validationservice'];
-                if (validationService != null) {
-                    var service = validationService.split('.')[0];
-                    var method = validationService.split('.')[1];
-                    var fn = dispatcherService.loadService(service, method);
-                    var customErrorArray = fn(schema, datamap);
-                    if (customErrorArray != null && Array.isArray(customErrorArray)) {
-                        validationArray = validationArray.concat(customErrorArray);
-                    }
+                var customErrorArray = eventService.beforesubmit_onvalidation(schema, datamap);
+                if (customErrorArray != null && Array.isArray(customErrorArray)) {
+                    validationArray = validationArray.concat(customErrorArray);
                 }
-                $rootScope.$broadcast('sw_validationerrors', validationArray);
-
+                if (validationArray.length > 0) {
+                    $rootScope.$broadcast('sw_validationerrors', validationArray);
+                }
             }
             return validationArray;
         },

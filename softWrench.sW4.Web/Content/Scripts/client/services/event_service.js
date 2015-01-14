@@ -3,11 +3,11 @@
 var app = angular.module('sw_layout');
 
 app.factory('eventService', function ($log, dispatcherService) {
-    var loadEvent = function(eventholder, eventName) {
-        if (eventholder.events === undefined) {
+    var loadEvent = function(schema, eventName) {
+        if (schema.events === undefined) {
             return null;
         }
-        var event = eventholder.events[eventName];
+        var event = schema.events[eventName];
         if (!event) {
             return null;
         }
@@ -19,44 +19,43 @@ app.factory('eventService', function ($log, dispatcherService) {
         return dispatcherService.loadService(service, method);
     };
     return {
-        loadEvent: function (eventholder, eventName) {
-            return loadEvent(eventholder, eventName);
+        loadEvent: function (schema, eventName) {
+            return loadEvent(schema, eventName);
         },
-        onload: function(eventholder, datamap, parameters) {
-            var fn = loadEvent(eventholder, 'onload');
+        onload: function(schema, datamap, parameters) {
+            var fn = loadEvent(schema, 'onload');
             if (!fn) {
                 return;
             }
-            fn(eventholder, datamap, parameters);
+            fn(schema, datamap, parameters);
         },
-        onviewdetail: function (eventholder, parameters) {
-            var fn = loadEvent(eventholder, 'onviewdetail');
+        onviewdetail: function (schema, parameters) {
+            var fn = loadEvent(schema, 'onviewdetail');
             if (!fn) {
                 return;
             }
             fn(parameters);
         },
-        onvalidation: function (eventholder, datamap, parameters) {
-            var fn = loadEvent(eventholder, 'onvalidation');
+        beforesubmit_onvalidation: function (schema, datamap, parameters) {
+            var fn = loadEvent(schema, 'beforesubmit.onvalidation');
             if (!fn) {
                 return [];
             }
-            return fn(eventholder, datamap, parameters);
+            return fn(schema, datamap, parameters);
         },
-        beforesubmit_confirmation: function (eventholder, datamap, parameters) {
-            var fn = loadEvent(eventholder, 'beforesubmit.confirmation');
+        beforesubmit_prevalidation: function (schema, datamap, parameters) {
+            var fn = loadEvent(schema, 'beforesubmit.prevalidation');
             if (!fn) {
                 return;
             }
-            fn(eventholder, datamap, parameters);
+            return fn(schema, datamap, parameters);
         },
-        beforesubmit_transformation: function (eventholder, datamap, parameters) {
-            var fn = loadEvent(eventholder, 'beforesubmit.transformation');
+        beforesubmit_postvalidation: function (schema, datamap, parameters) {
+            var fn = loadEvent(schema, 'beforesubmit.postvalidation');
             if (!fn) {
                 return null;
             }
-            var transformedDatamap = angular.copy(datamap);
-            return fn(eventholder, transformedDatamap.fields, parameters);
+            return fn(schema, datamap, parameters);
         }
         
     };

@@ -28,6 +28,7 @@ app.factory('alertService', function ($rootScope, $timeout, i18NService) {
                     callbackFunction();
                 }
             });
+            return false;
         },
         confirmCancel: function (applicationName, applicationId, callbackFunction, msg, cancelcallback) {
             var defaultConfirmMsg = "Are you sure you want to cancel {0} {1}?".format(applicationName, applicationId);
