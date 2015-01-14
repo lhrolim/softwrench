@@ -137,10 +137,10 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
                 if (value.endsWith('%')) {
                     return this.getSearchOperationById('CONTAINS');
                 }
-                return this.getSearchOperationById('STARTWITH');
+                return this.getSearchOperationById('ENDWITH');
             }
             if (value.endsWith("%")) {
-                return this.getSearchOperationById('ENDWITH');
+                return this.getSearchOperationById('STARTWITH');
             }
             if (value.startsWith("!%")) {
                 return this.getSearchOperationById('NCONTAINS');
