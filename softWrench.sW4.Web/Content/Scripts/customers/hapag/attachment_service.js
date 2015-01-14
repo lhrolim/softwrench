@@ -16,7 +16,7 @@ app.factory('attachmentservice', function (submitService) {
             }
             var newAttachment = datamap['newattachment'];
             var newScreenshot = datamap['newscreenshot'];
-            if (newScreenshot == "" && !newAttachment) {
+            if ((!newScreenshot || newScreenshot == "") && !newAttachment) {
                 arr.push('Either an attachment or a screenshot should be selected');
             }
             return arr;
