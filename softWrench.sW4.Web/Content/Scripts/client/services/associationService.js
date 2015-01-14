@@ -298,11 +298,10 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             return this.updateAssociations({ attribute: "#eagerassociations" }, scope);
         },
 
-        //
         // This method is called whenever an association value changes, in order to update all the dependant associations 
-        //of this very first association.
+        // of this very first association.
         // This would only affect the eager associations, not the lookups, because they would be fetched at the time the user opens it.
-        //Ex: An asset could be filtered by the location, so if a user changes the location field, the asset should be refetched.
+        // Ex: An asset could be filtered by the location, so if a user changes the location field, the asset should be refetched.
         updateAssociations: function (association, scope) {
             var triggerFieldName = association.attribute;
             var schema = scope.schema;

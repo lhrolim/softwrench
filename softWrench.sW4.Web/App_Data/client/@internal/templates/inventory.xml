@@ -585,7 +585,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <event type="onload" service="scannerdetectionService" method="initInvIssueDetailListener"/>
           <properties>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
-            <property key="nextschema.schemaid" value="invIssueList"/>
           </properties>
         </schema>
       </schemas>

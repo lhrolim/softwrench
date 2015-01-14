@@ -732,7 +732,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 currentSchemaKey: "newInvIssueDetail.input.web"
             };
             restService.invokePost("data", "post", httpParameters, jsonString, function() {
-                redirectService.goToApplicationView("invissue", "list", null , null, null, null);
+                redirectService.goToApplicationView("invissue", "invIssueList", null , null, null, null);
             });
         },
 
