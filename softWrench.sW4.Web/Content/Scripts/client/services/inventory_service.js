@@ -236,40 +236,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             datamap['qtyrequested'] = datamap['#quantityadj'];
         },
 
-        returnInvIssue: function(matusetransitem) {
-            var returnQty = matusetransitem['#quantityadj'];
-            var item = matusetransitem['itemnum'];
-            var storeloc = matusetransitem['storeloc'];
-            var binnum = matusetransitem['binnum'];
-            var message = "Return (" + returnQty + ") " + item + " to " + storeloc + "?";
-            if (binnum != null) {
-                message = message + " (Bin: " + binnum + ")";
-            }
-            alertService.confirm(null, null, function() {
-                var newReturnItem = angular.copy(matusetransitem);
-                newReturnItem['issueid'] = matusetransitem['matusetransid'];
-                newReturnItem['matusetransid'] = null;
-                newReturnItem['rowstamp'] = null;
-                newReturnItem['quantity'] = matusetransitem['#quantityadj'];
-                newReturnItem['issuetype'] = 'RETURN';
-                newReturnItem['qtyreturned'] = null;
-                newReturnItem['qtyrequested'] = matusetransitem['#quantityadj'];
-
-                var jsonString = angular.toJson(newReturnItem);
-                var httpParameters = {
-                    application: "invissue",
-                    platform: "web",
-                    currentSchemaKey: "editinvissuedetail.input.web"
-                };
-                restService.invokePost("data", "post", httpParameters, jsonString, function() {
-                    redirectService.goToApplicationView("invissue", "invIssueList", null, null, null, null);
-                });
-                modalService.hide();
-            }, message, function() {
-                modalService.hide();
-            });
-        },
-
         invissuelistclick: function(datamap, schema) {
             var param = {};
             param.id = datamap['matusetransid'];

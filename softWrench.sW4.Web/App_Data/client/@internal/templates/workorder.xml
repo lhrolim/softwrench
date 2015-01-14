@@ -225,7 +225,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <!--					<section id="labtranssection"/>-->
           </section>
           <section id="compositions"/>
-          <event type="beforesubmit.onvalidation" service="workorderservice" method="defaultvalidation" />
         </schema>
 
         <schema parentschema="adetail" title="New Work Order" id="newdetail" platform="web">
@@ -236,6 +235,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             </association>
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
           </section>
+          <event type="beforesubmit.onvalidation" service="workorderservice" method="defaultvalidation" />
         </schema>
 
         <schema parentschema="adetail" id="editdetail" title="Work Order Detail" platform="web">
@@ -262,6 +262,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
           </section>
+          <event type="beforesubmit.onvalidation" service="workorderservice" method="defaultvalidation" />
         </schema>
 
         <list platform="mobile">
