@@ -2399,7 +2399,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </tab>
         </detail>
 
-        <schema id="exportallthecolumns" stereotype="list">
+        <schema id="assetlistreport" stereotype="list">
           <field label="Region" attribute="aucisnotowner_person_.department">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>

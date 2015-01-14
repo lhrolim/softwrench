@@ -116,7 +116,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
                 foreach (var param in searchRequestDto.ValuesDictionary) {
                     foreach (var entityAttribute in entityAttributes) {
-                        if (param.Key == entityAttribute.Name) {
+                        if (param.Key.StartsWith(entityAttribute.Name)) {
                             searchParameterUtilsList.Add(new SearchParameterUtils(param.Key, param.Value.Value, entityAttribute.Type));
                         }
                     }
