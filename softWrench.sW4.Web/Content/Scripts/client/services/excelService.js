@@ -70,8 +70,15 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
             parameters.application = application;
             parameters.currentmodule = contextService.retrieveFromContext('currentmodule');
             parameters.currentmetadata = contextService.retrieveFromContext('currentmetadata');
-
-            var searchDTO = searchService.buildSearchDTO(searchData, searchSort, searchOperator, paginationData.filterFixedWhereClause);
+            var searchDTO;
+            var reportDto = contextService.retrieveReportSearchDTO(schema.schemaId);
+            if (reportDto != null) {
+                reportDto = $.parseJSON(reportDto);
+                searchDTO = searchService.buildReportSearchDTO(reportDto, searchData, searchSort, searchOperator, paginationData.filterFixedWhereClause);
+            } else {
+                searchDTO=  searchService.buildSearchDTO(searchData, searchSort, searchOperator, paginationData.filterFixedWhereClause);
+            }
+            
             var currentModule = contextService.currentModule();
             if (currentModule != null) {
                 parameters.module = currentModule;
