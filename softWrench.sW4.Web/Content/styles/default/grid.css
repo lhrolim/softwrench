@@ -59,11 +59,23 @@
         #listgrid thead tr.header-row {
             background-color: #fff;
             color: #000;
+            border: none;
         }
 
-            #listgrid thead tr.header-row th {
-                cursor: pointer;
+        #listgrid thead tr.header-row:after, #listgrid thead tr.filter-row:after {
+                content: " ";
             }
+
+            /*SWWEB-841 ~ fix header width for Firefox*/
+            @-moz-document url-prefix() {            
+                #listgrid thead tr.filter-row .input-group-sm > .form-control {
+                    font-size: 14px;
+                }
+            }
+
+        #listgrid thead tr.header-row th {
+            cursor: pointer;
+        }
 
         #listgrid thead tr.filter-row {
             background-color: #fff;
@@ -112,9 +124,11 @@
 #scanConfigTable thead tr td:nth-child(1) {
     width: 30%;
 }
+
 #scanConfigTable thead tr td:nth-child(2) {
     width: 45%;
 }
+
 #scanConfigTable thead tr td:nth-child(3) {
     width: 25%;
 }

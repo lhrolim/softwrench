@@ -809,7 +809,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             restService.invokePost("data", "post", httpParameters, jsonString, function() {
                 var restParameters = {
                     key: {
-                        schemaId: "list",
+                        schemaId: "matrectransTransfersList",
                         mode: "none",
                         platform: "web"
                     },
@@ -967,7 +967,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     var lotnum = fields['lotnum'];
                     var curbal = fields['curbal'];
                     parameters['fields']['lotnum'] = lotnum;
-                    parameters['fields']['#curbal'] = curbal;
+                    parameters['fields']['#curbal'] = curbal == null ? 0 : curbal;
                 });
             } else {
                 parameters['fields']['lotnum'] = null;

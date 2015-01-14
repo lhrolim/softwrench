@@ -36,12 +36,10 @@
                     <div class="col-sm-offset-1 col-sm-10">
                         @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-main.png")))
                         {
-
                             <img class="logo" src="~/Content/Images/@Model.ClientName/logo-main.png">
                         }
                         else
                         {
-
                             <img class="logo" src="~/Content/Images/logo-main.png">
                         }
                     </div>
@@ -114,7 +112,14 @@
                     <div class="row divider bottom"></div>
                     <div class="row text-center">
                         <div class="col-sm-offset-1 col-sm-10">
-                            <img class="cts-name" src="~/Content/Images/cts-name.png">
+                            @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/name-softwrench.png")))
+                            {
+                                <img class="cts-name" src="~/Content/Images/@Model.ClientName/name-softwrench.png">
+                            }
+                            else
+                            {
+                                <img class="cts-name" src="~/Content/Images/name-cts.png">
+                            }
                         </div>
                     </div>
                 }
