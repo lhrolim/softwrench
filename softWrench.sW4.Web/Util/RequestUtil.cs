@@ -35,12 +35,14 @@ namespace softWrench.sW4.Web.Util {
 
         public static string GetValue(HttpRequestMessage request, string key) {
             IEnumerable<string> headers;
-            string value;            
+            string value;
+            var pair = request.GetQueryNameValuePairs().FirstOrDefault(f => f.Key == key);
+            value = pair.Value;
+            if (value != null && "null".Equals(value)) {
+                return null;
+            }
             if (request.Headers.TryGetValues(key, out headers)) {
                 value = headers.First();
-            } else {
-                var pair = request.GetQueryNameValuePairs().FirstOrDefault(f => f.Key == key);
-                value = pair.Value;
             }
             return "null".Equals(value) ? null : value;
         }

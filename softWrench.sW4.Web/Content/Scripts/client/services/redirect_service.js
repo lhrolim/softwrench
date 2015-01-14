@@ -4,14 +4,17 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
     var buildApplicationURLForBrowser = function (applicationName, parameters) {
         var crudUrl = $(routes_homeurl)[0].value;
         var currentModule = contextService.retrieveFromContext('currentmodule');
-        var currentMetadata = contextService.retrieveFromContext('currentmetadata');
+        var currentMetadata = "null";
         var currentModuleNewWindow = contextService.retrieveFromContext('currentmodulenewwindow');
-        if (currentModuleNewWindow != "null" && currentModuleNewWindow != "") {
+        if (currentModuleNewWindow && currentModuleNewWindow != "null" && currentModuleNewWindow != "") {
             currentModule = currentModuleNewWindow;
             contextService.deleteFromContext('currentmodulenewwindow');
         }
-        parameters.currentmodule = currentModule;
+        if (parameters.popupmode != "browser") {
+            currentMetadata = contextService.retrieveFromContext('currentmetadata');
+        }
         parameters.currentmetadata = currentMetadata;
+        parameters.currentmodule = currentModule;
         var params = $.param(parameters);
         params = replaceAll(params, "=", "$");
         params = replaceAll(params, "&", "@");
