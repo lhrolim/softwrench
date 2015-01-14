@@ -1,19 +1,24 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('redirectService', function ($http, $rootScope, $log, contextService, fixHeaderService) {
+
+    var adjustCurrentModuleForNewWindow = function (currentModule) {
+        var currentModuleNewWindow = contextService.retrieveFromContext('currentmodulenewwindow');
+        if (currentModuleNewWindow != "null" && currentModuleNewWindow != "") {
+            currentModule = currentModuleNewWindow;
+            if (currentModule == null) {
+                currentModule = "null";
+            }
+            contextService.deleteFromContext('currentmodulenewwindow');
+        }
+        return currentModule;
+    };
+
     var buildApplicationURLForBrowser = function (applicationName, parameters) {
         var crudUrl = $(routes_homeurl)[0].value;
         var currentModule = contextService.retrieveFromContext('currentmodule');
-        var currentMetadata = "null";
-        var currentModuleNewWindow = contextService.retrieveFromContext('currentmodulenewwindow');
-        if (currentModuleNewWindow && currentModuleNewWindow != "null" && currentModuleNewWindow != "") {
-            currentModule = currentModuleNewWindow;
-            contextService.deleteFromContext('currentmodulenewwindow');
-        }
-        if (parameters.popupmode != "browser") {
-            currentMetadata = contextService.retrieveFromContext('currentmetadata');
-        }
-        parameters.currentmetadata = currentMetadata;
+        currentModule = adjustCurrentModuleForNewWindow(currentModule);
+        var currentMetadata = parameters.currentmetadata = "null";
         parameters.currentmodule = currentModule;
         var params = $.param(parameters);
         params = replaceAll(params, "=", "$");
@@ -32,12 +37,8 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
     var buildActionURLForBrowser = function (controller, action, parameters) {
         var crudUrl = $(routes_homeurl)[0].value;
         var currentModule = contextService.retrieveFromContext('currentmodule');
-        var currentMetadata = contextService.retrieveFromContext('currentmetadata');
-        var currentModuleNewWindow = contextService.retrieveFromContext('currentmodulenewwindow');
-        if (currentModuleNewWindow != "null" && currentModuleNewWindow != "") {
-            currentModule = currentModuleNewWindow;
-            contextService.deleteFromContext('currentmodulenewwindow');
-        }
+        var currentMetadata = parameters.currentmetadata = "null";
+        currentModule = adjustCurrentModuleForNewWindow(currentModule);
         parameters.currentmodule = currentModule;
         parameters.currentmetadata = currentMetadata;
         var params = $.param(parameters);
