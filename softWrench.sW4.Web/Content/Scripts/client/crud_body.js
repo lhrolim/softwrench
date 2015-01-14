@@ -82,7 +82,7 @@ app.directive('crudBody', function (contextService) {
             fieldService, commandService, i18NService,
             submitService, redirectService,
             associationService, contextService, alertService,
-            validationService, schemaService, $timeout) {
+            validationService, schemaService, $timeout, eventService) {
 
 
             $scope.getFormattedValue = function (value, column, datamap) {
@@ -357,10 +357,12 @@ app.directive('crudBody', function (contextService) {
                 submitService.translateFields($scope.schema.displayables, fields);
                 associationService.insertAssocationLabelsIfNeeded($scope.schema, fields, $scope.associationOptions);
 
-
-
-
                 var jsonString = angular.toJson(fields);
+
+                var transformedFields = eventService.beforesubmit_transformation($scope.schema, $scope.datamap);
+                if (transformedFields != null) {
+                    jsonString = angular.toJson(transformedFields);
+                }
 
                 parameters = {};
                 if (sessionStorage.mockmaximo == "true") {

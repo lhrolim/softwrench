@@ -212,6 +212,17 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             return;
         },
 
+        submitReturnTransformation: function (event, datamap) {
+            datamap['issueid'] = datamap['matusetransid'];
+            datamap['matusetransid'] = null;
+            datamap['rowstamp'] = null;
+            datamap['quantity'] = datamap['#quantityadj'];
+            datamap['issuetype'] = 'RETURN';
+            datamap['qtyreturned'] = null;
+            datamap['qtyrequested'] = datamap['#quantityadj'];
+            return datamap;
+        },
+
         returnInvIssue: function(matusetransitem) {
             var returnQty = matusetransitem['#quantityadj'];
             var item = matusetransitem['itemnum'];

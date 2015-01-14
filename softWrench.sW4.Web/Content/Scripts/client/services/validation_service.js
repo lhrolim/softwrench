@@ -1,6 +1,6 @@
 var app = angular.module('sw_layout');
 
-app.factory('validationService', function (i18NService, fieldService, $rootScope, dispatcherService, expressionService) {
+app.factory('validationService', function (i18NService, fieldService, $rootScope, dispatcherService, expressionService, eventService) {
 
 
 

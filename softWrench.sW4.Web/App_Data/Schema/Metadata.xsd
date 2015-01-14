@@ -867,6 +867,8 @@
             <restriction base="string">
               <enumeration value="onviewdetail"></enumeration>
               <enumeration value="onload"></enumeration>
+              <enumeration value="beforesubmit.confirmation"></enumeration>
+              <enumeration value="beforesubmit.transformation"></enumeration>
             </restriction>
           </simpleType>
         </attribute>
