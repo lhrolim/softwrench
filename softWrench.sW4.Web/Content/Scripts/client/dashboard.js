@@ -48,6 +48,7 @@ function DashboardController($scope, $http, $templateCache, $rootScope, formatSe
         parameters.SearchDTO.searchValues = currentDashboard.searchValues;
         parameters.SearchDTO.Context = {};
         parameters.SearchDTO.Context.MetadataId = currentDashboard.id;
+        parameters.currentmetadata= currentDashboard.id;
 
 
         $http.get(url("/api/data/" + currentDashboard.applicationName + "?" + $.param(parameters)))

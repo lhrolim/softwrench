@@ -153,6 +153,10 @@ namespace softWrench.sW4.Util {
             get { return MetadataProvider.GlobalProperty("ssoServicesQueryPath"); }
         }
 
+        public static string SertiveItTuiServicesQueryPath {
+            get { return MetadataProvider.GlobalProperty("tuiServicesQueryPath"); }
+        }
+
         #endregion
 
         #region Login
