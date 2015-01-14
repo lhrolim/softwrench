@@ -514,6 +514,7 @@
     <Content Include="Content\ie\ie9.css" />
     <Content Include="Content\Images\bering_inv\header.jpg" />
     <Content Include="Content\Images\bering_inv\logo-main.png" />
+    <Content Include="Content\Images\bering_inv\name-softwrench.png" />
     <Content Include="Content\Images\bering_inv\signin.jpg" />
     <Content Include="Content\Images\branding.png" />
     <Content Include="Content\Images\file.png" />
@@ -536,6 +537,7 @@
     <Content Include="Content\Images\manchester\logo-main.png" />
     <Content Include="Content\Images\manchester\signin-branding.png" />
     <Content Include="Content\Images\manchester\signin.jpg" />
+    <Content Include="Content\Images\name-cts.png" />
     <Content Include="Content\Images\pagination-first.png" />
     <Content Include="Content\Images\pagination-last.png" />
     <Content Include="Content\Images\pagination-next.png" />
