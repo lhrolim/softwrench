@@ -31,6 +31,7 @@
   <property key="serviceItLoginPath" value="C:\ServiceIT\config\ServiceITLogin.properties"/>
   <property key="businessmatrixPath" value="C:\ServiceIT\config\businessmatrix"/>
   <property key="ssoServicesQueryPath" value="C:\ServiceIT\config\SSO_SERVICES_QUERY.txt"/>
+  <property key="tuiServicesQueryPath" value="C:\ServiceIT\config\TUI_SERVICES_QUERY.txt"/>
   <property key="loginErrorMessage" value="Ungültiger Username oder falsches Passwort \n Invalid Username or Bad Password \n No válido Nombre de usuario o contraseña incorreta"/>
   <property key="loginUserNameMessage" value="Username is required \n Username wird benötigt \n nombre de usuario es necessario"/>
   <property key="loginPasswordMessage" value="Password is required \n Passwort wird benötigt \n se requiere contraseña"/>

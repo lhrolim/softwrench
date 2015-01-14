@@ -38,6 +38,15 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 
 
     <!-- Merged TUI declaration-->
+    <application id="SR" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid" role="tui" modulealias="tui" modulename="tui"/>
+    <container title="New Service Request" tooltip="Click to create a new Service Request" id="NewSR" role="tui" modulealias="tui" modulename="tui">
+      <application id="Generalsr" title="General" tooltip="Click to create a new General Service Request" schema="general" ref="servicerequest" parameters="popupmode=browser"/>
+      <!-- <application id="sdsr" title="Software Distribution" tooltip="Click to create a new Software Distribution Service Request" schema="sd" ref="servicerequest" parameters="popupmode=browser"/> -->
+      <application id="printersr" title="Printer" tooltip="Click to create a new Printer Service Request" schema="printer" ref="servicerequest" parameters="popupmode=browser"/>
+      <application id="Outlooksr" title="Outlook" tooltip="Click to create a new Outlook Service Request" schema="outlook" ref="servicerequest" parameters="popupmode=browser"/>
+      <application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
+    </container>
+    <application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" role="tui" modulealias="tui" modulename="tui" />
     <application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes" role="tui" modulealias="tui" modulename="tui"/>
     <application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser" role="tui" modulealias="tui" modulename="tui"/>
     <!-- Ended TUI Merged declaration-->
@@ -84,8 +93,10 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 	<divider role="itcreport" />
 
   <divider role="sso" />
-  
-	<container title="Reports" tooltip="Click Here to access your Reports" id="Reports">
+
+  <divider role="tui" />
+
+  <container title="Reports" tooltip="Click Here to access your Reports" id="Reports">
 
 		<application id="tapebackupreport" title="Tape BackUp Report" tooltip="Click to view Tape Back Up Report" schema="tapebackupreport" ref="incident" role="tapebackupreport"/>
 		<application id="incidentdetailreport" title="Incident Detail Report" tooltip="Click to view Incident Detail Report" schema="incidentdetailreportfilters" ref="incident" role="incidentdetailsreport"/>
@@ -125,6 +136,10 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
     <!-- Ended SSO Merged declaration-->
 
     <!-- Merged tui declaration-->
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Request ID &amp; Summary"
+     params="id=servicerequestmenusearchtui;application=servicerequest;schema=list;label=Service Request Search;searchFields=ticketid,description" modulealias="tui" modulename="tui" role="tui"/>
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Incidents"
+							 params="id=incidentsearchtui;application=incident;label=Incident Search;searchFields=ticketid,description" modulealias="tui" modulename="tui" role="tui" />
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchtui;application=change;label=Change Search;
                  searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search" role="tui" modulealias="tui" modulename="tui"/>
     <!-- ended tui declaration-->

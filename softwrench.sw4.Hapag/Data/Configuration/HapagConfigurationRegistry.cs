@@ -126,8 +126,12 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
         }
 
         private void CreateTuiWhereClauses() {
-            //noop
-            //change queries already registered in CreateChangeWhereClauses
+            _wcFacade.Register("servicerequest", TuiWhereClauseProvider("DashboardServiceRequestWhereClause"), MetadataIdForModule(dc.ActionRequiredForOpenRequests, fr.Tui));
+            _wcFacade.Register("servicerequest", TuiWhereClauseProvider("EuOpenRequests"), MetadataIdForModule(dc.EUOpenRequests, fr.Tui));
+            _wcFacade.Register("incident", TuiWhereClauseProvider("DashboardIncidentWhereClause"), MetadataIdForModule(dc.ActionRequiredForOpenIncidents, fr.Tui));
+
+            _wcFacade.Register("servicerequest", TuiWhereClauseProvider("ServiceRequestWhereClause"), ForModule(fr.Tui));
+            _wcFacade.Register("incident", TuiWhereClauseProvider("IncidentWhereClause"), ForModule(fr.Tui));
         }
 
         private void CreateSsoWhereClauses() {
@@ -157,6 +161,10 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
 
         private string SsoWhereClauseProvider(String methodName) {
             return "@ssoWhereClauseProvider." + methodName;
+        }
+
+        private string TuiWhereClauseProvider(String methodName) {
+            return "@tuiWhereClauseProvider." + methodName;
         }
 
         private string DR0017Method(String methodName) {

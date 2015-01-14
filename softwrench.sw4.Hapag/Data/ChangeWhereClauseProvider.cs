@@ -30,10 +30,17 @@ namespace softwrench.sw4.Hapag.Data {
                 //HAP-805, tom or itom roles can see everything in the grid
                 return null;
             }
+            var personGroupsForQuery = user.GetPersonGroupsForQuery();
+            if (context.IsInModule(FunctionalRole.Tui)) {
+                //HAP-815 
+                personGroupsForQuery += ",'C-HLC-WW-X-TUI'";
+            }
+
+
             return String.Format(@"
             exists (select 1 from pmchgotherapprovers approvals_ where (wochange.wonum = approvals_.wonum) and approvals_.approvergroup IN ({0}) ) 
             or exists (select 1 from WOACTIVITY as woactivity_ where wochange.wonum = woactivity_.parent and woactivity_.ownergroup in ({0}) )"
-                , user.GetPersonGroupsForQuery());
+                , personGroupsForQuery);
         }
 
         //used on the sr union schema
