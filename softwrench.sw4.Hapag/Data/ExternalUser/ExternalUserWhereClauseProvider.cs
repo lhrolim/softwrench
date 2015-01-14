@@ -72,14 +72,14 @@ namespace softwrench.sw4.Hapag.Data.ExternalUser {
         protected string DoGetWhereClause(string entity, DashBoardType? dashboard = null) {
             var sb = new StringBuilder();
 
-            var ssoListOfServices = GetListOfServices();
-            if (ssoListOfServices != null) {
-                sb.Append(ServicesWhereClause.Fmt(entity, ssoListOfServices));
+            var listOfServices = GetListOfServices();
+            if (listOfServices != null) {
+                sb.Append(ServicesWhereClause.Fmt(entity, listOfServices));
 
             }
             if (dashboard != null && dashboard != DashBoardType.EuOpenRequests) {
                 //this first condition goes except for the EuOpenRequests
-                if (ssoListOfServices != null) {
+                if (listOfServices != null) {
                     sb.Append(" and ");
                 }
                 sb.Append(HapagQueryConstants.ITCActionRequired(entity));
