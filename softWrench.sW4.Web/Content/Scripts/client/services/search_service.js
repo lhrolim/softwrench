@@ -133,6 +133,9 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
             if (value.startsWith('<')) {
                 return this.getSearchOperationById('LT');
             }
+            if (value.startsWith("!") && value.endsWith("%")) {
+                return this.getSearchOperationById('NCONTAINS');
+            }
             if (value.startsWith('%')) {
                 if (value.endsWith('%')) {
                     return this.getSearchOperationById('CONTAINS');
@@ -142,14 +145,14 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
             if (value.endsWith("%")) {
                 return this.getSearchOperationById('STARTWITH');
             }
-            if (value.startsWith("!%")) {
-                return this.getSearchOperationById('NCONTAINS');
-            }
             if (value.startsWith("=")) {
                 return this.getSearchOperationById('EQ');
             }
             if (value.startsWith("!=")) {
                 return this.getSearchOperationById('NEQ');
+            }
+            if(value === "IS NULL") {
+                return this.getSearchOperationById('BLANK');
             }
 
             return value;
