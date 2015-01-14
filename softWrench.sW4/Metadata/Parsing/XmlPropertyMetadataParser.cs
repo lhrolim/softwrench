@@ -15,7 +15,7 @@ namespace softWrench.sW4.Metadata.Parsing {
     ///     Provides parsing and deserialization of
     ///     entity metadata stored in a XML file.
     /// </summary>
-    internal sealed class XmlPropertyMetadataParser {
+    public sealed class XmlPropertyMetadataParser {
 
         /// <summary>
         ///     Parses the XML document provided by the specified

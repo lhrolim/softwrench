@@ -83,7 +83,7 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             var datamap = scope.datamap;
             var schema = scope.schema;
             cmpComboDropdown.init(bodyElement);
-            cmpAutocompleteClient.init(bodyElement, scope);
+            cmpAutocompleteClient.init(bodyElement, datamap, schema, scope);
             cmpAutocompleteServer.init(bodyElement, datamap, schema, scope);
             screenshotService.init(bodyElement, datamap);
         },
@@ -101,7 +101,7 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
                 $.each(displayables, function (idx, value) {
                     fn.unblock(value, scope);
                 });
-            } else if (oldValue == false && newValue == true) {
+            } else if ((oldValue == false || oldValue == undefined) && newValue == true) {
                 displayables = fieldService.getDisplayablesByAssociationKey(scope.schema, association.associationKey);
                 fn = this;
                 $.each(displayables, function (idx, value) {

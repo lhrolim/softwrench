@@ -12,7 +12,8 @@ namespace softWrench.sW4.Util {
     public class LoggingUtil
     {
 
-        
+
+        public static ILog DefaultLog = LogManager.GetLogger("DEFAULT_LOG");
 
         public static string MsDelta(Stopwatch watch) {
             watch.Stop();

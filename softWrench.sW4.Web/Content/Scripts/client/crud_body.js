@@ -22,7 +22,7 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService
                 return;
             }
 
-            eventService.onload(scope.schema, scope.datamap);
+            eventService.onload(scope, scope.schema, scope.datamap);
             var log = $log.getInstance('tabsrendered');
             log.debug("finished rendering tabs of detail screen");
             $timeout(function () {

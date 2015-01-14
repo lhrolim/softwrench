@@ -11,10 +11,10 @@ using System.Diagnostics;
 using System.Linq;
 
 namespace softwrench.sW4.test.Metadata.Entities {
-    
+
     [TestClass]
     public class HapagSlicedEntityMetadataBuilderTest {
-        
+
         private static ApplicationSchemaDefinition _schema;
 
         [TestInitialize]
@@ -27,8 +27,8 @@ namespace softwrench.sW4.test.Metadata.Entities {
 
         [TestMethod]
         public void TestFrom() {
-            var sliced =SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("asset"),_schema);
-            Assert.AreEqual(4,sliced.InnerMetadatas.Count);
+            var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("asset"), _schema);
+            Assert.AreEqual(4, sliced.InnerMetadatas.Count);
             var from = QueryFromBuilder.Build(sliced);
             Debug.Write(from);
             Assert.IsTrue(from.Contains("address as location_shipto_"));
@@ -50,7 +50,7 @@ namespace softwrench.sW4.test.Metadata.Entities {
             Assert.IsTrue(select.Contains("location_serv_.address1 as \"location_serv_.address1\""));
         }
 
-       
+
 
         [TestMethod]
         public void TestSelect2() {
@@ -93,11 +93,24 @@ namespace softwrench.sW4.test.Metadata.Entities {
         public void TestSelectNullAttributes() {
             var schemas = MetadataProvider.Application("srforchange").Schemas();
             var schema = schemas[new ApplicationMetadataSchemaKey("changeunionschema", null, "web")];
-            var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("srforchange"), schema,300,true);
+            var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("srforchange"), schema, 300, true);
             Assert.AreEqual(12, sliced.Attributes(EntityMetadata.AttributesMode.NoCollections).Count());
             var select = QuerySelectBuilder.BuildSelectAttributesClause(sliced, QueryCacheKey.QueryMode.List);
             Debug.Write(select);
             Assert.IsTrue(select.Contains("null"));
+        }
+
+        /// <summary>
+        /// userId and currentITc were blank due to a bug on the framework
+        /// </summary>
+        [TestMethod]
+        public void TestAssetListReportBug() {
+            var schemas = MetadataProvider.Application("asset").Schemas();
+            var schema = schemas[new ApplicationMetadataSchemaKey("assetlistreport", null, "web")];
+            var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("asset"), schema);
+            var select = QuerySelectBuilder.BuildSelectAttributesClause(sliced, QueryCacheKey.QueryMode.List);
+            Debug.Write(select);
+            Assert.IsTrue(select.Contains("CASE WHEN LOCATE('@',aucisowner_.PERSONID) > 0 THEN SUBSTR(aucisowner_.PERSONID,1,LOCATE('@',aucisowner_.PERSONID)-1) ELSE aucisowner_.PERSONID END as \"aucisowner_.hlagdisplayname\""));
         }
 
         [TestMethod]
@@ -106,13 +119,13 @@ namespace softwrench.sW4.test.Metadata.Entities {
                 ApplicationConfiguration.TestclientName = "manchester";
                 MetadataProvider.StubReset();
             }
-        
+
             var schemas = MetadataProvider.Application("servicerequest").Schemas();
             var schema = schemas[new ApplicationMetadataSchemaKey("editdetail", null, "web")];
             var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("sr"), schema, 300, true);
             var result = QuerySelectBuilder.BuildSelectAttributesClause(sliced, QueryCacheKey.QueryMode.Detail);
             Debug.Write(result);
-        
+
             //should not cointain the reverse associations here
             Assert.IsFalse(result.Contains("tkserviceaddress"));
             var from = QueryFromBuilder.Build(sliced);

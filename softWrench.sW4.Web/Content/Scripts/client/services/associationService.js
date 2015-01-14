@@ -5,6 +5,10 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
     var doUpdateExtraFields = function (associationFieldMetadata, underlyingValue, datamap) {
         var log = $log.getInstance('sw4.associationservice#doUpdateExtraFields');
         var key = associationFieldMetadata.associationKey;
+        if (datamap.fields != undefined) {
+            datamap = datamap.fields;
+        }
+
         datamap[key] = {};
         datamap.extrafields = instantiateIfUndefined(datamap.extrafields);
         if (associationFieldMetadata.extraProjectionFields == null) {
@@ -234,7 +238,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
                     if (previousValue != null) {
                         for (var j = 0; j < array.associationData.length; j++) {
-                            if (array.associationData[j].value == previousValue) {
+                            if (array.associationData[j].value.toUpperCase() == previousValue.toUpperCase()) {
                                 var fullObject = array.associationData[j];
                                 $timeout(function () {
                                     log.debug('restoring {0} to previous value {1}. '.format(value.target, previousValue));
@@ -294,11 +298,10 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             return this.updateAssociations({ attribute: "#eagerassociations" }, scope);
         },
 
-        //
         // This method is called whenever an association value changes, in order to update all the dependant associations 
-        //of this very first association.
+        // of this very first association.
         // This would only affect the eager associations, not the lookups, because they would be fetched at the time the user opens it.
-        //Ex: An asset could be filtered by the location, so if a user changes the location field, the asset should be refetched.
+        // Ex: An asset could be filtered by the location, so if a user changes the location field, the asset should be refetched.
         updateAssociations: function (association, scope) {
             var triggerFieldName = association.attribute;
             var schema = scope.schema;
@@ -380,9 +383,8 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 //sometimes the event might be syncrhonous, returning either true of false
                 if (result != undefined && result == false) {
                     event.interrupt();
-                } else if (result != undefined && result == true) {
-                    event.continue();
                 }
+                event.continue();
             }
         },
 

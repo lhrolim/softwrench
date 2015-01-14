@@ -58,6 +58,9 @@ namespace softWrench.sW4.Data.Entities {
                     entity.UnmappedAttributes.Add(property.Name, String.Join(", ", array));
                 } else {
                     var value = property.Value.Type == JTokenType.Null ? null : property.Value.ToString();
+                    if (value == "$null$ignorewatch") {
+                        value = null;
+                    }
                     entity.UnmappedAttributes.Add(property.Name, value);
                 }
             }
@@ -134,9 +137,11 @@ namespace softWrench.sW4.Data.Entities {
                 if (stValue == "") {
                     return value.Type == JTokenType.Null ? null : value.ToString();
                 }
-
+                if (stValue == "$null$ignorewatch") {
+                    return null;
+                }
                 return ConversionUtil.ConvertFromMetadataType(type, stValue);
-
+               
             }
             var array = value.ToObject<Object[]>();
             for (var i = 0; i < array.Length; i++) {

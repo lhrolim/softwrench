@@ -28,7 +28,7 @@ app.directive('columnWidths', function ($log) {
 
                     //log.debug('css', id, json[id], json[id].rendererParameters);
 
-                    //if the column has rendererParameters, else defaul to 0 width
+                    //if the column has rendererParameters, else default to 0 width
                     //log.debug(json[id]);
 
                     if (!json[id].isHidden) {
@@ -136,21 +136,26 @@ function balanceColumns(widths, param) {
 
 function getCSSrule(column, columnWidth, attr) {
     //console.log(attr.gridtype);
+    var properties = '';
 
     if (columnWidth) {
         //-1 hide this column, else set width and show
         if (columnWidth === -1) {
-            css = '#' + attr.gridtype + ' th:nth-child(' + column +
-                '), #' + attr.gridtype + ' td:nth-child(' + column +
-                ') {display: none;}';
+            properties = 'display:none;';
         } else {
-            css = '#' + attr.gridtype + ' th:nth-child(' + column +
-                '), #' + attr.gridtype + ' td:nth-child(' + column +
-                ') {width: ' + columnWidth + '%; display: table-cell;}';
+            properties = 'width:' + columnWidth + '%;display:table-cell;';
         }
     }
 
-	return css;
+    return buildCSSrule(attr.gridtype, attr.applicationname, column, properties);
+}
+
+function buildCSSrule(gridtype, applicationname, column, properties) {
+    return buildCSSselector(gridtype, applicationname, column, 'th') + ',' + buildCSSselector(gridtype, applicationname, column, 'td') + '{' + properties + '}'
+}
+
+function buildCSSselector(gridtype, applicationname, column, element) {
+    return '#' + gridtype + '[data-application="' + applicationname + '"] ' + element + ':nth-child(' + column + ')';
 }
 
 function getViewRules(widths, param, viewWidth, attr) {
