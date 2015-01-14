@@ -1,6 +1,63 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('scannerdetectionService', function ($http, $rootScope, restService, searchService, redirectService, contextService, alertService, associationService, modalService) {
+app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, restService, searchService, redirectService,
+                                                 contextService, alertService, associationService, modalService,
+                                                 fieldService) {
+
+    var updateAssociations = function (scope, schema, datamap, fieldMetadata) {
+        var lookupObj = {
+            fieldMetadata: fieldMetadata
+        };
+        var parameters = {};
+        parameters.application = schema.applicationName;
+        parameters.key = {};
+        parameters.key.schemaId = schema.schemaId;
+        parameters.key.mode = schema.mode;
+        parameters.key.platform = platform();
+        parameters.associationFieldName = lookupObj.fieldMetadata.associationKey;
+        var lookupApplication = lookupObj.fieldMetadata.schema.rendererParameters["application"];
+        var lookupSchemaId = lookupObj.fieldMetadata.schema.rendererParameters["schemaId"];
+        if (lookupApplication != null && lookupSchemaId != null) {
+            parameters.associationApplication = lookupApplication;
+            parameters.associationKey = {};
+            parameters.associationKey.schemaId = lookupSchemaId;
+            parameters.associationKey.platform = platform();
+        }
+
+        var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
+        var searchValues = {};
+        searchValues[fieldMetadata.attribute] = datamap.fields[fieldMetadata.attribute];
+        var searchOperators = {}
+        for (var field in searchValues) {
+            searchOperators[field] = defaultLookupSearchOperator;
+        }
+        parameters.SearchDTO = searchService.buildSearchDTO(searchValues, {}, searchOperators);
+        parameters.hasClientSearch = true;
+
+        var urlToUse = url("/api/generic/Data/UpdateAssociation?" + $.param(parameters));
+        var jsonString = angular.toJson(datamap.fields);
+        $http.post(urlToUse, jsonString).success(function (data) {
+            var result = data.resultObject;
+            for (var association in result) {
+                if (lookupObj.fieldMetadata.associationKey == association) {
+                    var associationResult = result[association];
+                    lookupObj.options = associationResult.associationData;
+                    lookupObj.schema = associationResult.associationSchemaDefinition;
+                }
+            }
+            datamap.fields[fieldMetadata.target] = lookupObj.options[0].value;
+            if (!scope.lookupAssociationsCode) {
+                scope["lookupAssociationsCode"] = {};
+            }
+            if (!scope.lookupAssociationsDescription) {
+                scope["lookupAssociationsDescription"] = {};
+            }
+            scope.lookupAssociationsCode[fieldMetadata.attribute] = lookupObj.options[0].value;
+            scope.lookupAssociationsDescription[fieldMetadata.attribute] = lookupObj.options[0].label;
+            associationService.updateAssociationOptionsRetrievedFromServer(scope, result, datamap.fields);
+        }).error(function data() {
+        });
+    };
 
     return {
         initInventoryGridListener: function (schema, datamap, parameters) {
@@ -134,16 +191,22 @@ app.factory('scannerdetectionService', function ($http, $rootScope, restService,
             });
         },
 
-        initInvIssueDetailListener: function (schema, datamap) {
+        initInvIssueDetailListener: function (scope, schema, datamap) {
             $(document).scannerDetection(function (data) {
                 var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
                 var scanOrder = scanOrderString.split(",");
                 for (var attribute in scanOrder) {
+                    // Loop through the scan order, checking the corresponding fields in the datamap
+                    // to see if they have a value
                     var currentAttribute = scanOrder[attribute];
-                    if (datamap[currentAttribute] === '' || datamap[currentAttribute] === null) {
-                        datamap[currentAttribute] = data;
-                        $rootScope.$digest();
-                        return;
+                    if (datamap.fields[currentAttribute] === '' || datamap.fields[currentAttribute] === null) {
+                        // If the field in the datamap has no value, set it to the scanned data
+                        datamap.fields[currentAttribute] = data;
+                        // Update the associated values
+                        var fieldMetadata = fieldService.getDisplayableByKey(schema, currentAttribute);
+                        updateAssociations(scope, schema, datamap, fieldMetadata);
+                        // Exit the loop once we have set a value from the scan
+                        break;
                     }
                 };
             });
