@@ -76,8 +76,9 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                         validationArray = validationArray.concat(customErrorArray);
                     }
                 }
-                $rootScope.$broadcast('sw_validationerrors', validationArray);
-
+                if (validationArray.length > 0) {
+                    $rootScope.$broadcast('sw_validationerrors', validationArray);
+                }
             }
             return validationArray;
         },

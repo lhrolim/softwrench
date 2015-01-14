@@ -521,11 +521,15 @@
 			this.picker.find('.datetimepicker-days thead th:eq(1)')
 				.text(dates[this.language].months[month] + ' ' + year);
 			if (this.formatViewType == "time") {
-				var hourConverted = hours % 12 ? hours % 12 : 12;
-				var hoursDisplay = (hourConverted < 10 ? '0' : '') + hourConverted;
-				var minutesDisplay = (minutes < 10 ? '0' : '') + minutes;
-				var meridianDisplay = dates[this.language].meridiem[hours < 12 ? 0 : 1];
-				if (meridianDisplay == undefined) meridianDisplay = '';
+			    var hourConverted = hours % 12 ? hours % 12 : 12;
+			    var meridianDisplay = dates[this.language].meridiem[hours < 12 ? 0 : 1];
+			    if (meridianDisplay == undefined) meridianDisplay = '';
+                if (!this.showMeridian) {
+                    hourConverted = hours;
+                    meridianDisplay = '';
+                }
+                var hoursDisplay = (hourConverted < 10 ? '0' : '') + hourConverted;
+                var minutesDisplay = (minutes < 10 ? '0' : '') + minutes;
 				this.picker.find('.datetimepicker-hours thead th:eq(1)')
 					.text(hoursDisplay + ':' + minutesDisplay + ' ' + meridianDisplay.toUpperCase());
 				this.picker.find('.datetimepicker-minutes thead th:eq(1)')
