@@ -15,9 +15,9 @@
     </div>
 
     <!--build responsive css rules based on metadata-->
-    <style column-widths columns="{{compositionlistschema.displayables}}" gridtype="compositionlistgrid"></style>
+    <style column-widths columns="{{compositionlistschema.displayables}}" applicationname="{{compositionlistschema.applicationName}}" gridtype="compositionlistgrid"></style>
 
-    <table class="table table-hover" id="compositionlistgrid">
+    <table class="table table-hover" data-application="{{compositionlistschema.applicationName}}" data-schema="{{compositionlistschema.schemaId}}" id="compositionlistgrid">
         <thead>
             <tr class="hapag-table-header">
                 <th ng-if="compositionlistschema.properties['list.selectionstyle'] == 'multiple'">
@@ -51,7 +51,6 @@
                         <div ng-switch-when="ApplicationSection">
                             <div ng-include="contextPath(column.resourcepath)" href="#" style="width: 100%" />
                         </div>
-
                         <div ng-switch-when="ApplicationFieldDefinition">
                             <ng-switch on="column.rendererType">
                                 <div ng-switch-when="checkbox">
@@ -67,7 +66,6 @@
                                     </a>
                                 </div>
 
-
                                 <a style="color: black; cursor: pointer; word-break:break-all;"
                                    ng-switch-default
                                    ng-click="toggleDetails(compositionitem,column)">
@@ -75,25 +73,20 @@
                                 </a>
                             </ng-switch>
 
-
                         </div>
                     </ng-switch>
-
                 </td>
             </tr>
             <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
                 <td colspan="100%" style="background-color: white" class="detaildata">
                     <div class="expanded-item-composition" ng-if="noupdateallowed">
-
                         <expanded-item-output displayables="compositiondetailschema.displayables"
                                               schema="compositiondetailschema"
                                               datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
                                               cancelfn="cancelComposition()">
                         </expanded-item-output>
-
                     </div>
                     <div class="expanded-item-composition" ng-if="!noupdateallowed">
-
                         <expanded-item-input displayables="compositiondetailschema.displayables"
                                              schema="compositiondetailschema"
                                              datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
@@ -101,9 +94,7 @@
                                              cancelfn="cancelComposition()"
                                              savefn="save()">
                         </expanded-item-input>
-
                     </div>
-
                 </td>
             </tr>
         </tbody>
