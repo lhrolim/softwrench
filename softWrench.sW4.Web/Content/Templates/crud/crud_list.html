@@ -39,7 +39,7 @@
 
     <div class="divAuxTable">
         <!--build responsive css rules based on metadata-->
-        <style column-widths columns="{{schema.displayables}}" gridtype="listgrid"></style>
+        <style column-widths columns="{{schema.displayables}}" applicationname="{{schema.applicationName}}" gridtype="listgrid"></style>
 
         <table class="table table-hover hidden-phone fixedtable listgrid-table" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" id="listgrid">
             <thead id="listgridthread" class="listgrid-thead">
@@ -60,13 +60,13 @@
                             <span class="glyphicon glyphicon-sort-by-attributes"
                                   ng-show="shouldShowSort(column,'asc')"
                                   rel="tooltip" data-original-title="Sorted ascendant"></span>
-                           <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-show="shouldShowSort(column,'desc')"
+                            <span class="glyphicon glyphicon-sort-by-attributes-alt" ng-show="shouldShowSort(column,'desc')"
                                   rel="tooltip" data-original-title="Sorted descendant"></span>
                         </div>
                     </th>
                     <th class="clear"><!--SWWEB-841--></th>
                 </tr>
-                
+
                 <!-- Filter row -->
                 <tr class="filter-row hidden-too-much-columns hiddenonprint" ng-if="schema.properties['list.disablefilter'] != 'true'">
                     <th ng-show="schema.properties['list.selectionstyle'] == 'multiple'">
@@ -96,7 +96,7 @@
                                                 <i class="glyphicon glyphicon-calendar"></i>
                                             </span>
                                             <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                    The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                        The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                             <div class="input-group-addon dropdown">
                                                 <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                                       data-toggle="dropdown" rel="tooltip"
@@ -114,7 +114,7 @@
                                             <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
                                                    ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" />
                                             <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                    The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                        The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                             <div class="input-group-addon dropdown">
                                                 <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                                       data-toggle="dropdown" rel="tooltip"
@@ -178,7 +178,6 @@
                         ng-click="showDetail(dm,column)">
                         <ng-switch on="column.type">
                             <div ng-switch-when="ApplicationFieldDefinition">
-
                                 <ng-switch on="column.rendererType">
                                     <div ng-switch-when="color" class="statuscolumncolor"
                                          bo-style="{'background-color':statusColor(dm.fields[column.rendererParameters['column']] || 'null',null)}">
@@ -213,14 +212,13 @@
                                             {{getFormattedValue(dm.fields[column.attribute],column,dm)}}
                                         </div>
                                     </div>
-
                                     <!--<div ng-switch-default style="color: black; word-break:break-word; padding-left:8px; word-wrap: break-word;">-->
                                     <div ng-switch-default style="color: black; padding-left: 8px;">
                                         <div ng-if="isColumnEditable(column)" class="input-group" data-datepicker="true">
                                             <input type="text"
                                                    ng-model="dm[column.attribute]" class="hidden-phone form-control"
                                                    data-ng-maxlength="{{column.rendererParameters['maxlength']}}"
-                                                   maxlength="{{column.rendererParameters['maxlength']}}"  />
+                                                   maxlength="{{column.rendererParameters['maxlength']}}" />
                                         </div>
                                         <div ng-if="!isColumnEditable(column)" ng-init="handleDefaultValue(dm.fields,column)">
                                             {{getFormattedValue(dm.fields[column.attribute],column,dm)}}
@@ -232,7 +230,6 @@
                                 <div ng-if="column.rendererParameters['filteronly']=='true'">
                                     {{getFormattedValue(dm.fields[column.attribute],column,dm)}}
                                 </div>
-
                                 <div ng-switch on="column.rendererType" ng-if="column.rendererParameters['filteronly']!='true'">
                                     <div ng-switch-when="combo" class="sw-combobox-container">
                                         <select class="hidden-phone form-control combobox"
@@ -246,7 +243,6 @@
                             <div ng-switch-when="ApplicationSection">
                                 <div ng-include="contextPath(column.resourcepath)" href="#" style="width: 100%"></div>
                             </div>
-
                         </ng-switch>
                     </td>
                 </tr>
