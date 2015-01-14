@@ -19,6 +19,9 @@ app.factory('eventService', function ($log, dispatcherService) {
         return dispatcherService.loadService(service, method);
     };
     return {
+        loadEvent: function (schema, eventName) {
+            return loadEvent(schema, eventName);
+        },
         onload: function(scope, schema, datamap, parameters) {
             var fn = loadEvent(schema, 'onload');
             if (!fn) {
