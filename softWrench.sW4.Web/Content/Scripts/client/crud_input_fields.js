@@ -381,14 +381,13 @@ app.directive('crudInputFields', function (contextService) {
                 }
             };
             $scope.configureNumericInput = function () {
-                for (i in $scope.schema.displayables) {
-                    var fieldMetadata = $scope.schema.displayables[i];
-                    if (fieldMetadata.rendererType != 'numericinput') {
-                        continue;
-                    }
+                var displayables = fieldService.getDisplayablesOfRendererTypes($scope.displayables, ['numericinput']);
+                for (i in displayables) {
+                    var fieldMetadata = displayables[i];
                     if ($scope.datamap != null) {
                         var currentValue = $scope.datamap[fieldMetadata.attribute];
-                        if (currentValue == null) /* without default value */ {
+                        if (currentValue == null) {
+                            /* without default value */
                             $scope.datamap[fieldMetadata.attribute] = 1;
                         } else if (typeof currentValue == "string") {
                             $scope.datamap[fieldMetadata.attribute] = parseInt(currentValue);
@@ -441,15 +440,17 @@ app.directive('crudInputFields', function (contextService) {
                 if ($scope.schema.properties["optionfield.donotusefirstoptionasdefault"] == "true") {
                     return;
                 }
-                if ($scope.displayables != null && $scope.datamap != null) {
-                    var optionsFields = fieldService.getDisplayablesOfTypes($scope.displayables, ['OptionField']);
-                    for (var i = 0; i < optionsFields.length; i++) {
-                        var optionfield = optionsFields[i];
-                        if ($scope.datamap[optionfield.target] == null && optionfield.providerAttribute == null && optionfield.rendererType != 'checkbox') {
-                            var values = $scope.GetOptionFieldOptions(optionfield);
-                            if (values != null) {
-                                $scope.datamap[optionfield.target] = values[0].value;
-                            }
+                if ($scope.displayables == null || $scope.datamap == null) {
+                    //no need to further check it
+                    return;
+                }
+                var optionsFields = fieldService.getDisplayablesOfTypes($scope.displayables, ['OptionField']);
+                for (var i = 0; i < optionsFields.length; i++) {
+                    var optionfield = optionsFields[i];
+                    if ($scope.datamap[optionfield.target] == null && optionfield.providerAttribute == null && optionfield.rendererType != 'checkbox') {
+                        var values = $scope.GetOptionFieldOptions(optionfield);
+                        if (values != null) {
+                            $scope.datamap[optionfield.target] = values[0].value;
                         }
                     }
                 }
