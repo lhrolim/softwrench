@@ -148,6 +148,13 @@ function getCSSrule(column, columnWidth, attr) {
                 '), #' + attr.gridtype + ' td:nth-child(' + column +
                 ') {width: ' + columnWidth + '%; display: table-cell;}';
         }
+        //if (columnWidth === -1) {
+        //    css = '#' + attr.gridtype + ' th:nth-child(' + column +
+        //        ') {display: none;}';
+        //} else {
+        //    css = '#' + attr.gridtype + ' th:nth-child(' + column +
+        //        ') {width: ' + columnWidth + '%; display: table-cell;}';
+        //}
     }
 
 	return css;

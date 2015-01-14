@@ -399,6 +399,16 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\Client\bering_inv\commands.xml" />
+    <Content Include="App_Data\Client\bering_inv\deploy.xml" />
+    <Content Include="App_Data\Client\bering_inv\menu.mobile.xml" />
+    <Content Include="App_Data\Client\bering_inv\menu.web.xml" />
+    <Content Include="App_Data\Client\bering_inv\metadata.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\Client\bering_inv\properties.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\entegra\menu.mobile.xml" />
     <Content Include="App_Data\Client\entegra\menu.web.xml" />
     <Content Include="App_Data\Client\entegra\properties.xml">
@@ -502,6 +512,9 @@
     <Content Include="Content\font-awesome-4.1.0\css\font-awesome.css" />
     <Content Include="Content\font-awesome-4.1.0\css\font-awesome.min.css" />
     <Content Include="Content\ie\ie9.css" />
+    <Content Include="Content\Images\bering_inv\header.jpg" />
+    <Content Include="Content\Images\bering_inv\logo-main.png" />
+    <Content Include="Content\Images\bering_inv\signin.jpg" />
     <Content Include="Content\Images\branding.png" />
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\folder-closed.png" />
@@ -743,6 +756,7 @@
     <Content Include="Content\Scripts\vendor\other\textAngular-min.js" />
     <Content Include="Content\styles\default\application\forms.css" />
     <Content Include="Content\styles\default\application\pages.css" />
+    <Content Include="Content\styles\bering_inv\branding.css" />
     <Content Include="Content\styles\default\branding.css" />
     <Content Include="Content\styles\default\context-bar.css" />
     <Content Include="Content\styles\default\crud-fields.css" />
@@ -875,6 +889,7 @@
     <Content Include="App_Data\Client\entegra\deploy.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="App_Data\Client\bering_inv\statuscolors.json" />
     <None Include="App_Data\Client\hapag\i18n\en\labels.json" />
     <Content Include="Doc\scanner.txt" />
     <Content Include="IBM.Data.DB2.dll" />

@@ -21,6 +21,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 			</connectorParameters>
 		</entity>
 
+    <entity name="maxvars" idAttribute="varname">
+      <attributes>
+        <attribute name="varname" type="varchar" required="true" />
+        <attribute name="varvalue" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="maxvarsid" type="int" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="maxvars" />
+      </connectorParameters>
+    </entity>
+
 		<entity name="DOCLINKS" idAttribute="doclinksid">
 			<attributes>
 				<attribute name="changeby" type="varchar" required="false" />

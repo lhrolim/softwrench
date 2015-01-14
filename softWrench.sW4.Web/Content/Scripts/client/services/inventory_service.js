@@ -238,7 +238,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     currentSchemaKey: "editinvissuedetail.input.web"
                 };
                 restService.invokePost("data", "post", httpParameters, jsonString, function() {
-                    redirectService.goToApplicationView("invissue", "list", null, null, null, null);
+                    redirectService.goToApplicationView("invissue", "invIssueList", null, null, null, null);
                 });
                 modalService.hide();
             }, message, function() {
@@ -502,7 +502,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
         },
 
-        invIssue_afterChangeItem: function(parameters) {
+        invIssueBatch_afterChangeItem: function(parameters) {
             var itemnum = parameters['fields']['itemnum'];
             parameters['fields']['binnum'] = null;
             parameters['fields']['lotnum'] = null;
@@ -536,6 +536,61 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 //parameters['fields']['inventory_.issueunit'] = fields['issueunit'];
                 doUpdateUnitCostFromInventoryCost(parameters, "unitcost", locationFieldName);
             });
+        },
+        invIssue_maximo71_afterChangeItem: function(parameters) {
+            var maxvarsSearchData = {
+                varname: 'DEFISSUECOST',
+                siteid: parameters['fields']['siteid']
+            };
+            searchService.searchWithData("maxvars", maxvarsSearchData).success(function (maxvarsData) {
+                var resultObject = maxvarsData.resultObject;
+                var fields = resultObject[0].fields;
+                var costtype = fields['varvalue'];
+                parameters['fields']['inventory_.costtype'] = costtype;
+                parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
+                parameters['fields']['lotnum'] = null;
+                parameters['fields']['#curbal'] = null;
+
+                var itemnum = parameters['fields']['itemnum'];
+                if (nullOrEmpty(itemnum)) {
+                    parameters['fields']['itemnum'] = null;
+                    parameters['fields']['unitcost'] = null;
+                    parameters['fields']['inventory_.issueunit'] = null;
+                    parameters['fields']['inventory_.itemtype'] = null;
+                    return;
+                }
+
+                var searchData = {
+                    itemnum: parameters['fields']['itemnum'],
+                    location: parameters['fields']['storeloc'],
+                    siteid: parameters['fields']['siteid']
+                };
+                searchService.searchWithData("invcost", searchData).success(function (data) {
+                    var invcostRo = data.resultObject;
+                    var invcostFields = invcostRo[0].fields;
+                    if (costtype === 'STDCOST') {
+                        parameters.fields['unitcost'] = invcostFields.stdcost;
+                    } else if (costtype === 'AVGCOST') {
+                        parameters.fields['unitcost'] = invcostFields.avgcost;
+                    }
+                });
+            });
+        },
+        afterchangeinvissueitem: function(parameters) {
+            parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
+            parameters['fields']['lotnum'] = null;
+            parameters['fields']['#curbal'] = null;
+
+            var itemnum = parameters['fields']['itemnum'];
+            if (nullOrEmpty(itemnum)) {
+                parameters['fields']['itemnum'] = null;
+                parameters['fields']['unitcost'] = null;
+                parameters['fields']['inventory_.issueunit'] = null;
+                parameters['fields']['inventory_.itemtype'] = null;
+                return;
+            }
+            
+            doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
         },
 
         invIssue_afterChangeAsset: function(parameters) {
@@ -754,7 +809,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             restService.invokePost("data", "post", httpParameters, jsonString, function() {
                 var restParameters = {
                     key: {
-                        schemaId: "list",
+                        schemaId: "matrectransTransfersList",
                         mode: "none",
                         platform: "web"
                     },

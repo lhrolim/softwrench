@@ -14,6 +14,7 @@ app.factory('eventService', function ($log, dispatcherService) {
 
         var service = event['service'];
         var method = event['method'];
+        
 
         return dispatcherService.loadService(service, method);
     };

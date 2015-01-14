@@ -56,7 +56,7 @@
     }
 });
 
-app.directive('crudInput', function (contextService) {
+app.directive('crudInput', function (contextService, associationService) {
     return {
         restrict: 'E',
         replace: true,
@@ -77,7 +77,6 @@ app.directive('crudInput', function (contextService) {
             elementid: '@',
             composition: '@'
         },
-
 
 
         controller: function ($scope, $http, $injector, $element, printService, compositionService, commandService, fieldService, i18NService) {
@@ -102,6 +101,9 @@ app.directive('crudInput', function (contextService) {
                 return id != null;
             };
 
+            if ($scope.composition == "true") {
+                associationService.getEagerAssociations($scope);
+            }
 
 
             $injector.invoke(BaseController, this, {

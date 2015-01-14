@@ -1,6 +1,6 @@
 var app = angular.module('sw_layout');
 
-app.factory('cmplookup', function ($rootScope, $timeout) {
+app.factory('cmplookup', function ($rootScope, $timeout,$log) {
 
     return {
 
@@ -13,11 +13,13 @@ app.factory('cmplookup', function ($rootScope, $timeout) {
         },
 
         refreshFromAttribute: function (fieldMetadata, scope) {
+            var log = $log.getInstance('cmplookup#refreshFromAttribute');
             if (scope.associationOptions == null) {
                 //this scenario happens when a composition has lookup-associations on its details,
                 //but the option list has not been fetched yet
                 scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
                 scope.lookupAssociationsCode[fieldMetadata.attribute] = null;
+                log.debug('cleaning up association code/description');
                 return;
             }
 
