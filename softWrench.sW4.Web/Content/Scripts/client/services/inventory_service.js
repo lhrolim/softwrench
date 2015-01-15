@@ -527,6 +527,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     parameters['fields']['unitcost'] = null;
                     parameters['fields']['inventory_.issueunit'] = null;
                     parameters['fields']['inventory_.itemtype'] = null;
+                    parameters['fields']['#curbal'] = null;
                     return;
                 }
 
@@ -545,7 +546,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     }
                     parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
                     parameters['fields']['lotnum'] = null;
-                    parameters['fields']['#curbal'] = null;
                 });
             });
         },
