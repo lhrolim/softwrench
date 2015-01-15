@@ -394,27 +394,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
             </field>
-            <!--<field attribute="inventory_.item_.iskit" label="Kit" readonly="true">
-              <renderer type="default" params="formatter=numberToBoolean"/>
-            </field>-->
             <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
               <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
               <dataprovider prefilterfunction="FilterBins"/>
             </association>
             <field label="Lot" attribute="lotnum" readonly="true"/>
-            <field attribute="binbalances_.binnum" hidden="true">
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
-            </field>
-            <field attribute="lotbalances_.lotnum" hidden="true">
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLot"/>
-            </field>
-            <field attribute="binbalances_.curbal" hidden="true">
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBinBalance"/>
-            </field>
-            <field attribute="lotbalances_.curbal" hidden="true">
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLotBalance"/>
-            </field>
             <field attribute="#curbal" label="Current Balance" readonly="true"/>
             <field attribute="quantity" label="Issue Quantity" default="1" requiredexpression="true">
               <renderer type="numericinput" params="min=1;"/>
@@ -424,7 +409,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <header displacement="ontop" label="Cost Details" params="fieldset=true;font-weight=bold;"/>
             <field attribute="inventory_.issueunit" label="Issue Unit" readonly="true"/>
             <field attribute="unitcost" label="Unit Cost" readonly="true"/>
-            <!--<field attribute="inventory_.costtype" hidden="true"/>-->
           </section>
           <section>
             <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
