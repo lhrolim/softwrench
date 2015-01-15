@@ -10,6 +10,7 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
         value = replaceAll(value, '>', '');
         value = replaceAll(value, '=', '');
         value = replaceAll(value, '<', '');
+        value = replaceAll(value, '!', '');
         return value;
     };
 
