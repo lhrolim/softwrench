@@ -19,15 +19,15 @@
   <property key="email.stmp.enableSSL" value="true"/>
 
   <environment key="dev">
-    <property key="swdb_url" value="Data Source=10.50.100.127;Initial Catalog=SWDB_COM75MAX;User Id=sw;password=softwrench;" />
+    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_COM75MAX;User Id=sw;password=softwrench;" />
   </environment>
 
   <environment key="qa">
-    <property key="swdb_url" value="Data Source=10.50.100.127;Initial Catalog=SWDB_COM75MAX;User Id=sw;password=softwrench;" />
+    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_COM75MAX;User Id=sw;password=softwrench;" />
   </environment>
 
   <environment key="qa-wk">
-    <property key="swdb_url" value="Data Source=10.50.100.127;Initial Catalog=SWDB_COM75MAX;User Id=sw;password=softwrench;" />
+    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_COM75MAX;User Id=sw;password=softwrench;" />
   </environment>
 
 </Properties>
