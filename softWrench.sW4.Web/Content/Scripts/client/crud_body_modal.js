@@ -126,6 +126,10 @@ app.directive('crudBodyModal', function ($rootScope,modalService) {
                 $('#crudmodal').modal('show');
                 $("#crudmodal").draggable();
                 $rootScope.showingModal = true;
+                //TODO: review this decision here it might not be suitable for all the scenarios
+                var datamapToUse = $.isEmptyObject(datamap) ? $scope.previousdata : datamap;
+
+                associationService.getEagerAssociations($scope, { datamap: datamapToUse });
             }
 
          

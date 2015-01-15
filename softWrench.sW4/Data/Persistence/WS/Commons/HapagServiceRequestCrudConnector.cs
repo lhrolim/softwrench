@@ -24,7 +24,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         private static string FindFormat(ApplicationMetadata metadata, string fieldName, string defaultValue) {
             var field = metadata.Schema.Fields.First(f => f.Attribute == fieldName);
             var dateFormat = field.RendererParameters.FirstOrDefault(f => f.Key == "format").Value;
-            return dateFormat ?? defaultValue;
+            return dateFormat as string ?? defaultValue;
         }
 
         private void HandleLongDescription(object integrationObject, CrudOperationData entity, ApplicationMetadata metadata) {

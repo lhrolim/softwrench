@@ -248,6 +248,7 @@
     <Compile Include="Metadata\Applications\DataSet\Filter\CompositionPreFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\ComToolTransDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\PrefilterInvoker.cs" />
+    <Compile Include="Metadata\Applications\DataSet\GLComponentsDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\IncidentDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInvbalancesDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInvreserveDataSet.cs" />

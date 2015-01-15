@@ -14,7 +14,10 @@ app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldServic
 
         block: function (displayable) {
             var element = $("select[data-associationkey='" + displayable.associationKey + "']");
-            $(element).data('combobox').disable();
+            var combobox = $(element).data('combobox');
+            if (combobox != undefined) {
+                combobox.disable();
+            }
         },
 
         refreshFromAttribute: function (attribute) {

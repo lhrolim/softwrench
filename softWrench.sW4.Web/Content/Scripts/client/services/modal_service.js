@@ -22,6 +22,10 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
                 return;
             }
 
+            if (datamap == null) {
+                datamap = {};
+            }
+
             if (schemaorModalData.mode.equalIc("none")) {
                 schemaorModalData.mode = "input";
             }

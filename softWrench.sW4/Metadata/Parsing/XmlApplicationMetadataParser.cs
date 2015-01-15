@@ -240,6 +240,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var toolTip = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute).ValueOrDefault(label);
             var attributeToServer = xElement.Attribute(XmlMetadataSchema.FieldAttributeAttributeToServer).ValueOrDefault((string)null);
             var providerAttribute = xElement.Attribute(XmlMetadataSchema.OptionFieldProviderAttribute).ValueOrDefault((string)null);
+            var extraParameter = xElement.Attribute(XmlMetadataSchema.OptionFieldProviderAttributeExtraParameter).ValueOrDefault((string)null);
             var sort = xElement.Attribute(XmlMetadataSchema.OptionFieldSortAttribute).ValueOrDefault(providerAttribute != null);
             var dependantFields = xElement.Attribute(XmlMetadataSchema.ApplicationAssociationDependantFieldsAttribute).ValueOrDefault((string)null);
             var isEnabled = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAttribute).ValueOrDefault("true");
@@ -253,8 +254,8 @@ namespace softWrench.sW4.Metadata.Parsing {
             var filterElement = xElement.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.FilterElement);
             var events = ParseEvents(xElement);
             return new OptionField(applicationName, label, attribute, qualifier, requiredExpression, isReadOnly, isHidden, renderer, ParseFilterNew(filterElement, attribute),
-                xElement.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.OptionElement).Select(ParseOption).ToList(),
-                defaultValue, sort, showExpression, toolTip, attributeToServer, events, providerAttribute, dependantFields, isEnabled, evalExpression);
+                                   xElement.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.OptionElement).Select(ParseOption).ToList(),
+                                   defaultValue, sort, showExpression, toolTip, attributeToServer, events, providerAttribute, dependantFields, isEnabled, evalExpression, extraParameter);
         }
 
         private static IAssociationOption ParseOption(XElement xElement) {

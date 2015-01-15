@@ -22,6 +22,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private readonly OptionFieldRenderer _renderer;
         private readonly FieldFilter _filter;
         private readonly String _providerAttribute;
+        private readonly String _extraParameter;
         private readonly ISet<string> _dependantFields = new HashSet<string>();
         private readonly bool _sort;
         private readonly ISet<ApplicationEvent> _eventsSet;
@@ -33,12 +34,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public OptionField(string applicationName, string label, string attribute, string qualifier, string requiredExpression, bool isReadOnly, bool isHidden,
             OptionFieldRenderer renderer, FieldFilter filter, List<IAssociationOption> options, string defaultValue, bool sort, string showExpression,
-            string toolTip, string attributeToServer, ISet<ApplicationEvent> events, string providerAttribute, string dependantFields, string enableExpression, string evalExpression)
+            string toolTip, string attributeToServer, ISet<ApplicationEvent> events, string providerAttribute, string dependantFields, string enableExpression, string evalExpression, string extraParameter)
             : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression) {
             _renderer = renderer;
             _filter = filter;
             _options = options;
             _providerAttribute = providerAttribute;
+            _extraParameter = extraParameter;
             IsHidden = isHidden;
             _sort = sort;
             if (sort) {
@@ -78,6 +80,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get { return _providerAttribute; }
         }
 
+         public string ExtraParameter {
+             get { return _extraParameter; }
+         }
 
         public IEnumerable<IAssociationOption> Options {
             get { return _options; }
@@ -95,7 +100,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             return new OptionField(ApplicationName, Label, Attribute, Qualifier, RequiredExpression, IsReadOnly, IsHidden, _renderer, _filter,
                 _options,
                 DefaultValue, _sort, ShowExpression, ToolTip, AttributeToServer, _eventsSet, ProviderAttribute,
-                _dependantFieldsString, EnableExpression, EvalExpression);
+                _dependantFieldsString, EnableExpression, EvalExpression, _extraParameter);
         }
 
         public override string ToString() {

@@ -99,7 +99,8 @@ app.directive('crudInputFields', function (contextService) {
             previousschema: '=',
             outerassociationcode: '=',
             outerassociationdescription: '=',
-            issection: '@'
+            issection: '@',
+            ismodal: '@'
         },
 
         link: function (scope, element, attrs) {
@@ -118,7 +119,7 @@ app.directive('crudInputFields', function (contextService) {
         controller: function ($scope, $http, $element, $injector, $timeout,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
-            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService) {
+            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService) {
             $scope.$name = 'crud_input_fields';
             $scope.handlerTitleInputFile = function (cssclassaux) {
                 var title = $scope.i18N('attachment.' + cssclassaux, 'No file selected');
@@ -358,6 +359,24 @@ app.directive('crudInputFields', function (contextService) {
                 modals.draggable();
                 modals.modal('show');
             };
+
+            $scope.showCustomModal = function (fieldMetadata, schema, datamap) {
+                if (fieldMetadata.rendererParameters['schema'] != undefined) {
+                    var service = fieldMetadata.rendererParameters['onsave'];
+                    var savefn = function(){};
+                    if (service != null) {
+                        var servicepart = service.split('.');
+                        savefn = dispatcherService.loadService(servicepart[0], servicepart[1]);
+                    }
+                    
+                    modalService.show(fieldMetadata.rendererParameters['schema'], null, function (selecteditem) {
+                        savefn(datamap, schema, selecteditem, fieldMetadata)
+                    }, datamap, schema, fieldMetadata.attribute);
+
+                    return;
+                }
+            };
+
             $scope.lookupCodeChange = function (fieldMetadata) {
                 var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
                 if (allowFreeText == "true") {

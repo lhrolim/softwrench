@@ -318,7 +318,7 @@ app.directive('crudBody', function (contextService) {
                 if ($rootScope.showingModal && $scope.$parent.$parent.$name == "crudbodymodal") {
                     //workaround to invoke the original method that was passed to the modal, instead of the default save.
                     //TODO: use angular's & support
-                    $scope.$parent.$parent.originalsavefn(selecteditem);
+                    $scope.$parent.$parent.originalsavefn($scope.datamap.fields);
                     return;
                 }
 
