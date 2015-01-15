@@ -317,6 +317,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
             <renderer type="default" params="width=3%"/>
           </section>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
 
         <schema id="itemlist" stereotype="compositionlist">
@@ -717,6 +718,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="binnum" label="Bin">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%" />
           </field>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
         
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
@@ -774,6 +776,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="physcnt" label="Physical Count">
             <renderer type="default" params="widthXS=30%;widthSM=20%" />
           </field>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
           <properties>
@@ -839,6 +842,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="hidefilter=true;widthXS=-1%;widthSM=20%;widthMD=15%;widthLG=8%;"/>
           </field>
           <field attribute="location" hidden="true"/>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
         
         <schema id="detail" mode="input" stereotype="detail">
@@ -1045,6 +1049,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <properties>
             <property key="list.click.schema" value="detail"/>
           </properties>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
 
         <schema id="detail" title="Inventory Transfer">
