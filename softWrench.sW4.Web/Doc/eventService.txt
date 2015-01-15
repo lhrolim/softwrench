@@ -1,0 +1,22 @@
+﻿event_service.js
+--------------------------------------------------------
+TODO: Add high level description for event_service.js
+
+FUNCTION: beforesubmit.prevalidation & beforesubmit.postvalidation
+Works as a normal custom service method where we can calculate/transform
+data, however, there is support to call a confirmation alert in either
+the prevalidation or postvalidation method. The only requirement to
+using the event as a confirmation is that you must return false from the
+custom service (or return alert.confirm, which will return a false by
+default), and in the success function you will need to call
+parameters.continue();
+
+EX:
+return alertService.confirm(null, null, function () {
+parameters.continue();
+}, "Are you sure you want to accept?");
+
+FUNCTION: beforesubmit.onvalidation
+Attaches to a custom service/method
+reference and appends the array of strings to the red validation error
+banner. This occurs during the creation or update of a record.

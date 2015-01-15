@@ -101,6 +101,10 @@ app.directive('messagesection', function (contextService) {
             $scope.$on('sw_validationerrors', function (event, validationArray) {
                 log.debug('sw_validationerrors#enter');
 
+                if (validationArray == null || validationArray.length == 0) {
+                    return;
+                }
+
                 $scope.hasValidationError = true;
                 $scope.validationArray = validationArray;
                 $('html, body').animate({ scrollTop: 0 }, 'fast');

@@ -1,6 +1,6 @@
 var app = angular.module('sw_layout');
 
-app.factory('validationService', function (i18NService, fieldService, $rootScope, dispatcherService, expressionService) {
+app.factory('validationService', function (i18NService, fieldService, $rootScope, dispatcherService, expressionService, eventService) {
 
 
 
@@ -66,15 +66,9 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                 }
             }
             if (!innerValidation) {
-                var validationService = schema.properties['oncrudsaveevent.validationservice'];
-                if (validationService != null) {
-                    var service = validationService.split('.')[0];
-                    var method = validationService.split('.')[1];
-                    var fn = dispatcherService.loadService(service, method);
-                    var customErrorArray = fn(schema, datamap);
-                    if (customErrorArray != null && Array.isArray(customErrorArray)) {
-                        validationArray = validationArray.concat(customErrorArray);
-                    }
+                var customErrorArray = eventService.beforesubmit_onvalidation(schema, datamap);
+                if (customErrorArray != null && Array.isArray(customErrorArray)) {
+                    validationArray = validationArray.concat(customErrorArray);
                 }
                 if (validationArray.length > 0) {
                     $rootScope.$broadcast('sw_validationerrors', validationArray);

@@ -128,7 +128,7 @@ app.directive('crudList', function (contextService) {
                     fullKey: $scope.schema.properties['config.fullKey'],
                     searchData: $scope.searchData
                 };
-                eventService.onload($scope.schema, $scope.datamap, parameters);
+                eventService.onload($scope, $scope.schema, $scope.datamap, parameters);
 
                 if ($scope.ismodal == 'true' && !(true === $scope.$parent.showingModal)) {
                     return;

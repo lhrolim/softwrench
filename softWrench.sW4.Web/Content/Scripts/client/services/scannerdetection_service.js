@@ -60,7 +60,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
     };
 
     return {
-        initInventoryGridListener: function (schema, datamap, parameters) {
+        initInventoryGridListener: function (scope, schema, datamap, parameters) {
             var searchData = parameters.searchData;
 
             $(document).scannerDetection(function (data) {
@@ -86,7 +86,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                 }
             });
         },
-        initIssueItemListener: function (schema, datamap, parameters) {
+        initIssueItemListener: function (scope, schema, datamap, parameters) {
             //This function will look for an item being scanned for the Issue Inventory application. 
             //Scanned items are added to the invissue composition.  
             $(document).scannerDetection(function (data) {
