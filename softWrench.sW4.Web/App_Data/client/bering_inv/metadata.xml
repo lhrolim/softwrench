@@ -364,6 +364,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </commandbars>
           <event type="beforesubmit.postvalidation" service="inventoryService" method="submitReturnConfirmation"/>
           <event type="beforesubmit.prevalidation" service="inventoryService" method="submitReturnTransformation"/>
+          <properties>
+            <property key="nextschema.schemaid" value="invIssueList"/>
+          </properties>
         </schema>
       
         <schema id="newInvIssueDetail" mode="input" stereotype="detail">
