@@ -189,7 +189,7 @@ namespace softWrench.sW4.Web.Controllers {
                 .Application(application)
                 .ApplyPolicies(currentschemaKey, user, platform);
 
-            var maximoResult = new MaximoResult(null, null);
+            var maximoResult = new TargetResult(null, null);
             if (!mockMaximo) {
                 maximoResult = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
                     .Execute(applicationMetadata, json, id, operation);
@@ -199,8 +199,8 @@ namespace softWrench.sW4.Web.Controllers {
                 return null;
             }
             if (nextSchemaKey != null) {
-                var response = _nextSchemaRouter.RedirectToNextSchema(applicationMetadata, operation, maximoResult.Id,
-                    platform, currentschemaKey, nextSchemaKey, mockMaximo);
+                var routerParameters = new RouterParameters(applicationMetadata, platform, null, operation, mockMaximo, maximoResult);
+                var response = _nextSchemaRouter.RedirectToNextSchema(routerParameters);
                 response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.Id,
                     operation);
                 return response;

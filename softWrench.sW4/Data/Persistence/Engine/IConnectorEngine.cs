@@ -20,6 +20,6 @@ namespace softWrench.sW4.Data.Persistence.Engine {
         AttributeHolder FindById(ApplicationSchemaDefinition schema, SlicedEntityMetadata entityMetadata, string id, IDictionary<string, ApplicationCompositionSchema> applicationCompositionSchemas);
         IReadOnlyList<AttributeHolder> Find(SlicedEntityMetadata entityMetadata, PaginatedSearchRequestDto searchDto, IDictionary<string, ApplicationCompositionSchema> applicationCompositionSchemata);
         SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData, SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null);
-        MaximoResult Execute(OperationWrapper operationWrapper);
+        TargetResult Execute(OperationWrapper operationWrapper);
     }
 }

@@ -263,6 +263,8 @@
     <Compile Include="Controllers\Log\LogAdminController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ReportFilterController.cs" />
+    <Compile Include="Controllers\Routing\CrudContext.cs" />
+    <Compile Include="Controllers\Routing\RouterParameters.cs" />
     <Compile Include="Controllers\Security\MakeSWAdminController.cs" />
     <Compile Include="DB_Migration\1.0\20140324_SWWEB-93.cs" />
     <Compile Include="DB_Migration\1.0\Issue20140314_HAP_113.cs" />

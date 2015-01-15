@@ -67,8 +67,15 @@ namespace softWrench.sW4.Web.Controllers.Routing {
         }
 
 
-        public IApplicationResponse RedirectToNextSchema(ApplicationMetadata applicationMetadata, string operation, string id, ClientPlatform platform,
-            ApplicationMetadataSchemaKey currentschemaKey, ApplicationMetadataSchemaKey nextSchemaKey, bool maximoMocked = false) {
+        public IApplicationResponse RedirectToNextSchema(RouterParameters routerParameter) {
+            var applicationMetadata = routerParameter.NextApplication;
+            var nextSchemaKey = routerParameter.NextKey;
+            var operation = routerParameter.Operation;
+            var currentschemaKey = routerParameter.CurrentKey;
+            var platform = routerParameter.Platform;
+            var targetMocked = routerParameter.TargetMocked;
+            var id = routerParameter.TargetResult.Id;
+
             var applicationName = applicationMetadata.Name;
             if (nextSchemaKey == null) {
                 if (HasActionRedirectionDefinedByProperties(applicationMetadata.Schema, operation)) {
@@ -81,9 +88,9 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             var resultSchema = metadata.Schema(nextSchemaKey, true);
             var user = SecurityFacade.CurrentUser();
             var nextMetadata = metadata.ApplyPolicies(nextSchemaKey, user, ClientPlatform.Web);
-            var dataSet = _dataSetProvider.LookupDataSet(applicationName,applicationMetadata.Schema.SchemaId);
+            var dataSet = _dataSetProvider.LookupDataSet(applicationName, applicationMetadata.Schema.SchemaId);
             if (resultSchema.Stereotype == SchemaStereotype.Detail) {
-                if (maximoMocked) {
+                if (targetMocked) {
                     return MockingUtils.GetMockedDataMap(applicationName, resultSchema, nextMetadata);
                 }
                 var detailRequest = new DetailRequest(nextSchemaKey, null) { Id = id };
