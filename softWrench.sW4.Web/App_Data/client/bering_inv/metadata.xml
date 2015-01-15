@@ -221,6 +221,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
             <renderer type="default" params="width=3%"/>
           </section>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
 
         <schema id="viewinvreturndetail" stereotype="detail" mode="input">
@@ -450,7 +451,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position=">print"/>
             </commandgroup>
           </commandbars>
-          <event type="onload" service="scannerdetectionService" method="initInvIssueListener"/>
+          <event type="onload" service="scannerdetectionService" method="initInvIssueDetailListener"/>
           <properties>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
           </properties>
