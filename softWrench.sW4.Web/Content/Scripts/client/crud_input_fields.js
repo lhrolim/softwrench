@@ -111,9 +111,14 @@ app.directive('crudInputFields', function (contextService) {
             } else {
                 scope.lookupAssociationsCode = {};
                 scope.lookupAssociationsDescription = {};
+
+                if (scope.ismodal =="true") {
+                    scope.$on('sw.modal.show', function (event, modaldata) {
+                        scope.lookupAssociationsCode = {};
+                        scope.lookupAssociationsDescription = {};
+                    });
+                }
             }
-
-
         },
 
         controller: function ($scope, $http, $element, $injector, $timeout,
@@ -160,6 +165,7 @@ app.directive('crudInputFields', function (contextService) {
             });
             //this will get called when the input form is done rendering
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
+                eventService.onload($scope.schema, $scope.datamap);
                 var bodyElement = $('#' + parentElementId);
                 if (bodyElement.length <= 0) {
                     return;

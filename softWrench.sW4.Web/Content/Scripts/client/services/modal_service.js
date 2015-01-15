@@ -10,7 +10,7 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
             }
         },
 
-        show: function (schemaorModalData, datamap,savefn, previousdata, previousschema) {
+        show: function (schemaorModalData, datamap, savefn, previousdata, previousschema) {
             /// <summary>
             /// method to be called for showing the modal a screen, 
             /// could receive as first parameter either the already filled modaldata, or a schema.
