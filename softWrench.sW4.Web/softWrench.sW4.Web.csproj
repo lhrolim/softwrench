@@ -49,6 +49,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <ExcludeGeneratedDebugSymbol>true</ExcludeGeneratedDebugSymbol>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -263,6 +264,7 @@
     <Compile Include="Controllers\Log\LogAdminController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ReportFilterController.cs" />
+    <Compile Include="Controllers\Routing\RouterParameters.cs" />
     <Compile Include="Controllers\Security\MakeSWAdminController.cs" />
     <Compile Include="DB_Migration\1.0\20140324_SWWEB-93.cs" />
     <Compile Include="DB_Migration\1.0\Issue20140314_HAP_113.cs" />
@@ -551,6 +553,7 @@
     <Content Include="Content\Images\tva\header.jpg" />
     <Content Include="Content\Images\tva\logo-main.png" />
     <Content Include="Content\Images\tva\signin.jpg" />
+    <Content Include="Content\Scripts\client\services\checkpoint_service.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angulartreeview.js" />
     <Compile Include="Controllers\Application\ApplicationController.cs" />
     <Compile Include="Controllers\AttachmentController.cs" />

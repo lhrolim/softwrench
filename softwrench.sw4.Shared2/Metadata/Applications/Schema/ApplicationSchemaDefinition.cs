@@ -25,7 +25,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
-        private ISet<ApplicationEvent> _eventsSet;
+        private readonly ISet<ApplicationEvent> _eventsSet;
 
         /// <summary>
         /// This fields can only be resolved once the entire metadata.xml are parsed, so that´s why we are using this Lazy strategy.
@@ -117,10 +117,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             _properties = schemaProperties;
             IdFieldName = idFieldName;
             UnionSchema = unionSchema;
-            for (int i = 0; i < displayables.Count; i++)
-            {
-                if (displayables[i].Role == ApplicationName + "." + IdFieldName)
-                {
+            for (int i = 0; i < displayables.Count; i++) {
+                if (displayables[i].Role == ApplicationName + "." + IdFieldName) {
                     IdDisplayable = displayables[i].ToolTip;
                 }
             }
@@ -146,7 +144,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         //TODO: test the JsonIgnore field on Ipad
         [JsonIgnore]
-        public virtual IList<ApplicationFieldDefinition> Fields {
+        public IList<ApplicationFieldDefinition> Fields {
             get { return GetDisplayable<ApplicationFieldDefinition>(typeof(ApplicationFieldDefinition)); }
         }
 
@@ -193,6 +191,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         [JsonIgnore]
+        public virtual IList<ApplicationRelationshipDefinition> Relationships {
+            get { return GetDisplayable<ApplicationRelationshipDefinition>(typeof(ApplicationRelationshipDefinition)); }
+        }
+
+        [JsonIgnore]
         public virtual IList<OptionField> OptionFields {
             get { return GetDisplayable<OptionField>(typeof(OptionField)); }
         }
@@ -208,8 +211,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         [JsonIgnore]
-        public virtual IEnumerable<ApplicationFieldDefinition> NonRelationshipFields {
-            get { return Fields.Where(f => !f.Attribute.Contains(".") && (!f.Attribute.Contains("#") || f.Attribute.StartsWith("#null"))); }
+        public IEnumerable<ApplicationFieldDefinition> NonRelationshipFields {
+            get
+            {
+                long before = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                var applicationFieldDefinitions = Fields.Where(f => !f.Attribute.Contains(".") && (!f.Attribute.Contains("#") || f.Attribute.StartsWith("#null")));
+                long after = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                return applicationFieldDefinitions;
+            }
         }
 
         public IList<T> GetDisplayable<T>(Type displayableType, bool fetchInner = true) {
@@ -378,8 +387,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             return Properties[propertyKey];
         }
 
-        public ApplicationSchemaDefinition PaginationSize()
-        {
+        public ApplicationSchemaDefinition PaginationSize() {
             throw new NotImplementedException();
         }
     }

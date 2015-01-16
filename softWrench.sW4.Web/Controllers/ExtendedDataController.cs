@@ -8,6 +8,7 @@ using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Metadata;
@@ -24,6 +25,33 @@ namespace softWrench.sW4.Web.Controllers {
     public class ExtendedDataController : DataController {
         public ExtendedDataController(I18NResolver i18NResolver, IContextLookuper lookuper,CompositionExpander compositionExpander)
             : base(i18NResolver, lookuper, compositionExpander) {
+        }
+
+        /// <summary>
+        /// API Method to provide updated Association Options, for given application, according the Association Update Request
+        /// This method will provide options for depedant associations, lookup association and autocomplete association.
+        /// </summary>
+        ///
+        [NotNull]
+        [HttpPost]
+        public GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>> UpdateAssociation(string application,
+            [FromUri] AssociationUpdateRequest request, JObject currentData) {
+            var user = SecurityFacade.CurrentUser();
+
+            if (null == user) {
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+            }
+            ContextLookuper.FillContext(request.Key);
+            var applicationMetadata = MetadataProvider
+                .Application(application)
+                .ApplyPolicies(request.Key, user, ClientPlatform.Web);
+
+            var baseDataSet = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId);
+
+
+            var response = baseDataSet.UpdateAssociations(applicationMetadata, request, currentData);
+
+            return response;
         }
 
         /// <summary>

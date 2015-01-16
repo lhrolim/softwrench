@@ -16,7 +16,7 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Security.Services {
     internal class UserProfileManager {
 
-        private static readonly log4net.ILog Log = LogManager.GetLogger(typeof(UserProfileManager));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(UserProfileManager));
 
         private static readonly IDictionary<int?, UserProfile> ProfileCache = new Dictionary<int?, UserProfile>();
         private static readonly DataConstraintValidator ConstraintValidator = new DataConstraintValidator();

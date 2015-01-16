@@ -66,7 +66,7 @@ app.directive('crudList', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             validationService, submitService, redirectService,
-            associationService, statuscolorService, contextService, eventService, iconService, expressionService) {
+            associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService) {
 
             $scope.$name = 'crudlist';
 
@@ -356,6 +356,8 @@ app.directive('crudList', function (contextService) {
 
                 //avoids table flickering
                 fixHeaderService.unfix();
+
+                checkpointService.createGridCheckpoint($scope.schema, searchDTO);
 
                 $scope.renderListView({
                     SearchDTO: searchDTO, printMode: printMode

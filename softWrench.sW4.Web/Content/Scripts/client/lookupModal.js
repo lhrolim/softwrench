@@ -99,7 +99,7 @@ app.directive('lookupModal', function (contextService) {
                     };
                 }
 
-                var urlToUse = url("/api/generic/Data/UpdateAssociation?" + $.param(parameters));
+                var urlToUse = url("/api/generic/ExtendedData/UpdateAssociation?" + $.param(parameters));
                 var jsonString = angular.toJson(fields);
                 $http.post(urlToUse, jsonString).success(function (data) {
                     var result = data.resultObject;

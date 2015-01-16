@@ -17,7 +17,7 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
             _connectorTemplate = connectorTemplate;
         }
 
-        public MaximoResult InvokeCustomOperation(OperationWrapper operationWrapper) {
+        public TargetResult InvokeCustomOperation(OperationWrapper operationWrapper) {
             var operationName = operationWrapper.OperationName;
             var entityMetadata = operationWrapper.EntityMetadata;
             try {
@@ -42,10 +42,10 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
                     return null;
                 }
                 var ob = mi.Invoke(_connectorTemplate, new object[] { param });
-                if (ob is MaximoResult) {
-                    return (MaximoResult)ob;
+                if (ob is TargetResult) {
+                    return (TargetResult)ob;
                 }
-                return new MaximoResult(param.Id, ob);
+                return new TargetResult(param.Id, ob);
             } catch (AmbiguousMatchException e) {
                 throw new InvalidOperationException(
                     String.Format("multiples methods found for operation {0} on entity {1}. Unable to decide", operationName,

@@ -26,7 +26,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto);
         IDictionary<string, BaseAssociationUpdateResult> BuildAssociationOptions(AttributeHolder dataMap, ApplicationMetadata application, IAssociationPrefetcherRequest request);
         SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData);
-        MaximoResult Execute(ApplicationMetadata application, JObject json, string id, string operation);
+        TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation);
 
         GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>> UpdateAssociations(ApplicationMetadata application,
             AssociationUpdateRequest request, JObject currentData);
