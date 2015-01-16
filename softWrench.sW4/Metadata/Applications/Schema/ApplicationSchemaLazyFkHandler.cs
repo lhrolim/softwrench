@@ -61,11 +61,13 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
             var cache = MetadataProvider.InternalCache;
 
-            if (!cache.RelationshipsByNameCache.ContainsKey(thisSchema.ApplicationName)) {
+            var relationshipName = EntityUtil.GetRelationshipName(thisSchema.ApplicationName);
+
+            if (!cache.RelationshipsByNameCache.ContainsKey(relationshipName)) {
                 return resultList;
             }
 
-            var relationships = MetadataProvider.InternalCache.RelationshipsByNameCache[thisSchema.ApplicationName];
+            var relationships = MetadataProvider.InternalCache.RelationshipsByNameCache[relationshipName];
 
             foreach (var association in relationships) {
                 var entityAssociation = association.EntityAssociation;
