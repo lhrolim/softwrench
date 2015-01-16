@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Providers.Entities;
 using JetBrains.Annotations;
@@ -11,6 +12,7 @@ using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Util;
 
 namespace softWrench.sW4.Web.Controllers.Routing {
@@ -29,9 +31,11 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             Operation = operation;
             TargetMocked = targetMocked;
             TargetResult = targetResult;
-            CheckPointContext = routerDTO.CheckPointData ?? new CheckPointCrudContext();
+            CheckPointContext = new Dictionary<ApplicationKey, CheckPointCrudContext>();
+            if (routerDTO.CheckPointData != null) {
+                CheckPointContext = routerDTO.CheckPointData.ToDictionary(f => f.ApplicationKey, f => f);
+            }
             User = user;
-
             //we could have a custom next action/controller to be executed, although usually it would stay in the crud application context
             FillNextActionAndController(currentApplication, routerDTO);
             FillNextSchema(currentApplication, routerDTO, platform, user, resolvedNextSchemaKey);
@@ -145,7 +149,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
         /// Specifies exactly how a certain schema should be routed to. 
         /// </summary>
         [NotNull]
-        public CheckPointCrudContext CheckPointContext { get; set; }
+        public IDictionary<ApplicationKey, CheckPointCrudContext> CheckPointContext { get; set; }
 
 
     }

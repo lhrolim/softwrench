@@ -1,4 +1,5 @@
-﻿using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+﻿using System.Collections.Generic;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Data.API {
     
@@ -11,7 +12,8 @@ namespace softWrench.sW4.Data.API {
         
         public string NextSchemaKey { get; set; }
 
-        public CheckPointCrudContext CheckPointData { get; set; }
+        //due to mvc5 json converter restriction, we cannot afford to use dictionaries here
+        public List<CheckPointCrudContext> CheckPointData { get; set; }
 
         public string NextController { get; set; }
 

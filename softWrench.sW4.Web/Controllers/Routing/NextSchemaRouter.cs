@@ -8,6 +8,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Web.Common;
 
 namespace softWrench.sW4.Web.Controllers.Routing {
@@ -55,7 +56,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
                     Log.DebugFormat("No redirect needed");
                     return new BlankApplicationResponse();
                 }
-                
+
                 Log.DebugFormat("redirecting to custom controller/action {0}/{1} ", routerParameter.NextController, routerParameter.NextAction);
                 return new ActionRedirectResponse {
                     Controller = routerParameter.NextController,
@@ -77,9 +78,10 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             }
             if (nextSchema.Stereotype == SchemaStereotype.List) {
                 var paginatedSearchRequestDto = PaginatedSearchRequestDto.DefaultInstance(nextSchema);
-                if (routerParameter.CheckPointContext.ListContext != null) {
+                var applicationKey = new ApplicationKey(nextSchema);
+                if (routerParameter.CheckPointContext.ContainsKey(applicationKey)) {
                     Log.DebugFormat("applying checkpoint search");
-                    paginatedSearchRequestDto = routerParameter.CheckPointContext.ListContext;
+                    paginatedSearchRequestDto = routerParameter.CheckPointContext[applicationKey].ListContext;
                 }
                 return dataSet.Get(nextMetadata, routerParameter.User, new DataRequestAdapter(paginatedSearchRequestDto));
             }

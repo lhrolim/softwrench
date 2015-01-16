@@ -204,8 +204,18 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
             return resultString;
         },
 
-        buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause) {
-            var btwFlag = false;
+        /// <summary>
+        /// 
+        /// Builds the server side PaginatedSearchDTO object gathering data from the screen arrays
+        /// 
+        /// </summary>
+        /// <param name="searchData">the array of filter entries</param>
+        /// <param name="searchSort">a sort property to apply</param>
+        /// <param name="searchOperator">the array of filter operations, in the same order of searchData</param>
+        /// <param name="filterFixedWhereClause">a fallback query applied.it could be null</param>
+        /// <param name="paginationData">an object containing pageNumber and pageSize properties</param>
+        /// <returns type=""></returns>        
+        buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause, paginationData) {
             var searchDto = {};
             searchDto.searchParams = buildSearchParamsString(searchData, searchOperator);
             specialCharactersHandler(searchData, searchOperator);
@@ -215,6 +225,10 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
             searchDto.filterFixedWhereClause = filterFixedWhereClause;
             searchDto.needsCountUpdate = true;
             searchData.lastSearchedValues = searchDto.searchValues;
+            if (paginationData) {
+                searchDto.pageNumber = paginationData.pageNumber;
+                searchDto.pageSize = paginationData.pageSize;
+            }
             return searchDto;
 
         },
