@@ -29,19 +29,39 @@ namespace softWrench.sW4.Web.Util {
             _i18NResolver = i18NResolver;
             _contextLookuper = contextLookuper;
             // setup style dictionary for back colors
-            // 2 = red, 3 = green, 4 = yellow, 5 = orange, 6 = blue
+            // 2 = red, 3 = green, 4 = yellow, 5 = orange, 6 = blue, 7 = white
             _cellStyleDictionary = new Dictionary<string, string>{
-                {"NEW", "5"},
-                {"QUEUED", "4"},
-                {"INPROG", "4"},
-                {"CLOSED", "3"},
-                {"CANCELLED", "2"},
-                {"RESOLVED", "6"},
-                {"SLAHOLD", "6"},
-                {"RESOLVCONF", "3"},
+                {"ACC_CAT", "6"},
+                {"APPR", "6"},
+                {"ASSESSES", "6"},
                 {"AUTH", "6"},
+                {"AUTHORIZED", "6"},
+                {"CAN", "2"},
+                {"CANCELLED", "2"},
+                {"CLOSE", "3"},
+                {"CLOSED", "3"},
+                {"COMP", "3"},
+                {"DRAFT", "7"},
+                {"FAIL", "2"},
+                {"FAILPIR", "2"},
+                {"HISTEDIT", "3"},
+                {"HOLDINPRG", "6"},
+                {"IMPL", "3"},
                 {"INPRG", "6"},
-                {"ACC_CAT", "6"}
+                {"INPROG", "4"},
+                {"NEW", "5"},
+                {"NOTREQ", "2"},
+                {"null", "4"},
+                {"PLANNED", "6"},
+                {"QUEUED", "4"},
+                {"REJECTED", "2"},
+                {"RESOLVCONF", "3"},
+                {"RESOLVED", "6"},
+                {"REVIEW", "3"},
+                {"SCHED", "6"},
+                {"SLAHOLD", "6"},
+                {"WAPPR", "5"},
+                {"WSCH", "5"}
             };
         }
 
@@ -258,6 +278,8 @@ namespace softWrench.sW4.Web.Util {
             createCellFormat(stylesPart, 0, 0, 0, 5, true);
             // blue
             createCellFormat(stylesPart, 0, 0, 0, 6, true);
+            // white
+            createCellFormat(stylesPart, 0, 0, 0, 7, true);
 
             // header style
             createCellFormat(stylesPart, 0, 1, 0, 0, true);
@@ -307,6 +329,8 @@ namespace softWrench.sW4.Web.Util {
             var orange = createColor("FFff7d00");
             // create blue
             var blue = createColor("ff002fff");
+            // create white
+            var white = createColor("ffffffff");
 
             stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = new PatternFill { PatternType = PatternValues.None } }); // required, reserved by Excel
             stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = new PatternFill { PatternType = PatternValues.Gray125 } }); // required, reserved by Excel
@@ -316,6 +340,7 @@ namespace softWrench.sW4.Web.Util {
             stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = yellow });
             stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = orange });
             stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = blue });
+            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = white });
 
             stylesPart.Stylesheet.Fills.Count = 7;
         }
