@@ -15,6 +15,11 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
             SchemaKey = schema.GetSchemaKey();
         }
 
+        public ApplicationKey(Tuple<String,ApplicationMetadataSchemaKey> tuple) {
+            ApplicationName = tuple.Item1;
+            SchemaKey = tuple.Item2;
+        }
+
 
         public string ApplicationName { get; set; }
         public ApplicationMetadataSchemaKey SchemaKey { get; set; }

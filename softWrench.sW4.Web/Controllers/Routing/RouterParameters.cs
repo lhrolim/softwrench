@@ -33,7 +33,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             TargetResult = targetResult;
             CheckPointContext = new Dictionary<ApplicationKey, CheckPointCrudContext>();
             if (routerDTO.CheckPointData != null) {
-                CheckPointContext = routerDTO.CheckPointData.ToDictionary(f => f.ApplicationKey, f => f);
+                CheckPointContext = routerDTO.CheckPointData.ToDictionary(f => f.GetApplicationKey(), f => f);
             }
             User = user;
             //we could have a custom next action/controller to be executed, although usually it would stay in the crud application context

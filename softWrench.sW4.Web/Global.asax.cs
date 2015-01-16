@@ -66,8 +66,8 @@ namespace softWrench.sW4.Web {
         private static void ConfigureLogging() {
             XmlConfigurator.Configure();
             if (ApplicationConfiguration.IsLocal()) {
-                Log4NetUtil.ChangeLevel("DEFAULT_LOG", "DEBUG", null);
-                Log4NetUtil.ChangeLevel("softwrench", "DEBUG", null);
+                //Log4NetUtil.ChangeLevel("DEFAULT_LOG", "DEBUG", null);
+                //Log4NetUtil.ChangeLevel("softwrench", "DEBUG", null);
             }
             else if(!ApplicationConfiguration.IsDev()) {
                 Log4NetUtil.ChangeLevel("MAXIMO.SQL", "WARN", null);

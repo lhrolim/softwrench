@@ -82,7 +82,7 @@ app.directive('crudBody', function (contextService) {
             fieldService, commandService, i18NService,
             submitService, redirectService,
             associationService, contextService, alertService,
-            validationService, schemaService, $timeout, eventService, $log) {
+            validationService, schemaService, $timeout, eventService, $log,checkpointService) {
 
 
             $scope.getFormattedValue = function (value, column, datamap) {
@@ -166,6 +166,7 @@ app.directive('crudBody', function (contextService) {
                         $scope.$parent.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
                     }
                 }
+
             }
 
             $scope.disableNavigationButtons = function (schema) {
@@ -348,6 +349,7 @@ app.directive('crudBody', function (contextService) {
             };
 
             $scope.validateSubmission = function (selecteditem, parameters, transformedFields) {
+                var log = $log.getInstance('crudbody#validateSubmission');
                 //hook for updating doing custom logic before sending the data to the server
                 $rootScope.$broadcast("sw_beforeSave", transformedFields);
 
@@ -404,7 +406,7 @@ app.directive('crudBody', function (contextService) {
 
                 var jsonString = angular.toJson(transformedFields);
 
-                var submissionParameters = submitService.createSubmissionParameters($scope.schema,nextSchemaObj);
+                var submissionParameters = submitService.createSubmissionParameters($scope.schema,nextSchemaObj,id);
 
                 $rootScope.savingMain = !isComposition;
 
@@ -417,7 +419,7 @@ app.directive('crudBody', function (contextService) {
                     }
                 }
 
-                var urlToUse = url("/api/data/" + applicationName + "/" + id + "?" + $.param(submissionParameters));
+                var urlToUse = url("/api/data/" + applicationName + "/?" + $.param(submissionParameters));
                 var command = id == null ? $http.post : $http.put;
 
                 command(urlToUse, jsonString)

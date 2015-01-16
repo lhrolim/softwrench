@@ -81,32 +81,7 @@ namespace softWrench.sW4.Web.Controllers {
 
 
 
-        /// <summary>
-        /// API Method to provide updated Association Options, for given application, according the Association Update Request
-        /// This method will provide options for depedant associations, lookup association and autocomplete association.
-        /// </summary>
-        ///
-        [NotNull]
-        [HttpPost]
-        public GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>> UpdateAssociation(string application,
-            [FromUri] AssociationUpdateRequest request, JObject currentData) {
-            var user = SecurityFacade.CurrentUser();
-
-            if (null == user) {
-                throw new HttpResponseException(HttpStatusCode.Unauthorized);
-            }
-            ContextLookuper.FillContext(request.Key);
-            var applicationMetadata = MetadataProvider
-                .Application(application)
-                .ApplyPolicies(request.Key, user, ClientPlatform.Web);
-
-            var baseDataSet = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId);
-
-
-            var response = baseDataSet.UpdateAssociations(applicationMetadata, request, currentData);
-
-            return response;
-        }
+      
 
         /// <summary>
         /// API Method to handle Delete operations

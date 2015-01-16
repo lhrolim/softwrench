@@ -343,15 +343,18 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
         /// </summary>
         /// <param name="application"></param>
         /// <param name="searchData"></param>
+        /// <param name="searchOperators"> </param>
         /// <param name="schema"></param>
         /// <param name="extraParameters">Accepts an object with the following:
         /// 
         /// pageNumber --> the page in which to perform the search, would be 1 by default
         /// pageSize --> the number of items to display per page, would be 30 by default
         /// mode --> the mode of the schema to use, defaults to none
+        /// searchOperators --> the array of operators to apply to searchdata array, in the same order
+        /// searchSort --> the sorting object
         /// 
         /// </param>
-        searchWithData: function (application, searchData, schema, extraParameters) {
+        searchWithData: function (application, searchData,schema, extraParameters) {
             if (application == null) {
                 throw new Error("application cannot be null");
             }
@@ -365,7 +368,7 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
             }
             var log = $log.getInstance('searchService#searchWithData');
 
-            var searchDTO = this.buildSearchDTO(searchData, {}, {}, null);
+            var searchDTO = this.buildSearchDTO(searchData, extraParameters.searchSort, extraParameters.searchOperators, null);
             searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
             searchDTO.totalCount = 0;
             searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;

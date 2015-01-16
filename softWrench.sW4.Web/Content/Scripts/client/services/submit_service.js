@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('submitService', function ($rootScope, fieldService, contextService) {
+app.factory('submitService', function ($rootScope, fieldService, contextService,checkpointService) {
 
     function addSchemaDataToParameters(parameters, schema, nextSchema) {
         parameters["currentSchemaKey"] = schema.schemaId + "." + schema.mode + "." + platform();
@@ -110,7 +110,7 @@ app.factory('submitService', function ($rootScope, fieldService, contextService)
             }
         },
 
-        createSubmissionParameters: function (schema,nextSchemaObj) {
+        createSubmissionParameters: function (schema,nextSchemaObj,id) {
             var parameters = {};
             if (sessionStorage.mockmaximo == "true") {
                 //this will cause the maximo layer to be mocked, allowing testing of workflows without actually calling the backend
@@ -118,7 +118,12 @@ app.factory('submitService', function ($rootScope, fieldService, contextService)
             }
             parameters.routeParametersDTO = {};
             parameters = addSchemaDataToParameters(parameters, schema, nextSchemaObj);
-            
+            var checkPointArray = checkpointService.fetchCheckpoint();
+            if (checkPointArray && checkPointArray.length > 0) {
+                parameters.routeParametersDTO.checkPointData = checkPointArray;
+            }
+            parameters.applicationName = schema.applicationName;
+            parameters.id = id;
             parameters.platform = platform();
             return parameters;
         }
