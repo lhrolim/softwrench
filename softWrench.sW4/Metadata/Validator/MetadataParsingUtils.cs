@@ -37,8 +37,7 @@ namespace softWrench.sW4.Metadata.Validator {
                 }
                 return @"" + baseDirectory + TemplatesInternalPath.Fmt(resource);
             }
-            if (ApplicationConfiguration.IsUnitTest)
-            {
+            if (ApplicationConfiguration.IsUnitTest) {
                 return @"" + baseDirectory + TestMetadataPath.Fmt(ApplicationConfiguration.ClientName) + resource;
             }
 
@@ -84,8 +83,11 @@ namespace softWrench.sW4.Metadata.Validator {
                 var path = GetPath(resource);
                 if (File.Exists(path)) {
                     return new StreamReader(path);
-                }
+                } 
                 path = GetPath(resource, false, true);
+                if (!File.Exists(path)) {
+                    return null;
+                } 
                 return new StreamReader(path);
             } catch (Exception) {
                 //nothing to do here.

@@ -45,6 +45,8 @@ namespace softWrench.sW4.Metadata {
         private static IDictionary<ClientPlatform, MenuDefinition> _menus;
         private static readonly IDictionary<SlicedEntityMetadataKey, SlicedEntityMetadata> SlicedEntityMetadataCache = new Dictionary<SlicedEntityMetadataKey, SlicedEntityMetadata>();
 
+        public static MetadataProviderInternalCache InternalCache { get; set; }
+
 
         private const string Metadata = "metadata.xml";
         private const string StatusColor = "statuscolors.json";
@@ -57,6 +59,7 @@ namespace softWrench.sW4.Metadata {
 
         public static void DoInit() {
             var before = Stopwatch.StartNew();
+            InternalCache = null;
             InitializeMetadata();
             //force eager initialization to allow eager catching of errors.
             //            DataSetProvider.GetInstance();
@@ -99,7 +102,9 @@ namespace softWrench.sW4.Metadata {
         }
 
 
-        private static void BuildSlicedMetadataCache() {
+        private static void BuildSlicedMetadataCache()
+        {
+            var watch =Stopwatch.StartNew();
             SlicedEntityMetadataCache.Clear();
             IEnumerable<CompleteApplicationMetadataDefinition> apps = _applicationMetadata;
             if (_swdbapplicationMetadata != null) {
@@ -117,7 +122,7 @@ namespace softWrench.sW4.Metadata {
                     var instance = SlicedEntityMetadataBuilder.GetInstance(entityMetadata, schema, app.FetchLimit);
                     SlicedEntityMetadataCache[new SlicedEntityMetadataKey(webSchema.Key, entityName)] = instance;
                     if (schema.CommandSchema != null && schema.CommandSchema.HasDeclaration) {
-                        //mobile schemas, doesnt have command schema for now...
+                        //mobile schemas, dont have command schema for now...
                         foreach (var overridenBarKey in schema.CommandSchema.ApplicationCommands.Keys) {
                             //adding overriding command bars here
                             var overridenKey = "{0}_{1}_{2}.{3}".Fmt(schema.ApplicationName, schema.SchemaId, schema.Mode.ToString().ToLower(), overridenBarKey);
@@ -125,8 +130,9 @@ namespace softWrench.sW4.Metadata {
                         }
                     }
                 }
-
+                LoggingUtil.DefaultLog.DebugFormat("finished registering metadata {0}",app.ApplicationName);
             }
+            LoggingUtil.DefaultLog.InfoFormat("Sliced metadata cache built in {0}",LoggingUtil.MsDelta(watch));
         }
 
 

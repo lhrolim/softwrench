@@ -138,7 +138,8 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             var isValid =
                 (
                     !string.IsNullOrEmpty(userToIntegrate.FirstName) &&
-                    !string.IsNullOrEmpty(userToIntegrate.LastName)
+                    !string.IsNullOrEmpty(userToIntegrate.LastName) &&
+                    !string.IsNullOrEmpty(userToIntegrate.MaximoPersonId)
                 );
             return isValid;
         }

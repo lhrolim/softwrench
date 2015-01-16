@@ -440,21 +440,7 @@ function addSchemaDataToJson(json, schema, nextSchemaObj) {
     return json;
 }
 
-function addSchemaDataToParameters(parameters, schema, nextSchema) {
-    parameters["currentSchemaKey"] = schema.schemaId + "." + schema.mode + "." + platform();
-    if (nextSchema != null && nextSchema.schemaId != null) {
-        parameters["nextSchemaKey"] = nextSchema.schemaId + ".";
-        if (nextSchema.mode != null) {
-            parameters["nextSchemaKey"] += nextSchema.mode;
-        }
-        parameters["nextSchemaKey"] += "." + platform();
-    }
-    if (schema.properties != null && schema.properties['nextschema.schemaid'] != null && !parameters["nextSchemaKey"]) {
-        parameters["nextSchemaKey"] = schema.properties['nextschema.schemaid'];
-    }
 
-    return parameters;
-}
 
 function removeEncoding(crudUrl) {
     //this first one indicates an []

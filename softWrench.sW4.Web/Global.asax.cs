@@ -1,8 +1,10 @@
 ﻿using log4net;
+using log4net.Config;
 using Microsoft.Web.Mvc;
 using Newtonsoft.Json.Serialization;
 using NHibernate.Context;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.log4net;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SimpleInjector.Events;
@@ -62,7 +64,16 @@ namespace softWrench.sW4.Web {
         }
 
         private static void ConfigureLogging() {
-            log4net.Config.XmlConfigurator.Configure();
+            XmlConfigurator.Configure();
+            if (ApplicationConfiguration.IsLocal()) {
+                Log4NetUtil.ChangeLevel("DEFAULT_LOG", "DEBUG", null);
+                Log4NetUtil.ChangeLevel("softwrench", "DEBUG", null);
+            }
+            else if(!ApplicationConfiguration.IsDev()) {
+                Log4NetUtil.ChangeLevel("MAXIMO.SQL", "WARN", null);
+                Log4NetUtil.ChangeLevel("SWDB.SQL", "WARN", null);
+            }
+            
             Log.Info("*****Starting web app****************");
         }
 
@@ -109,7 +120,7 @@ namespace softWrench.sW4.Web {
         }
         protected void Application_BeginRequest(
            object sender, EventArgs e) {
-          
+
         }
         //
         //        protected void Application_EndRequest(

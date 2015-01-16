@@ -12,7 +12,7 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
     public abstract class BaseMaximoCrudConnector : IMaximoCrudConnector {
 
-        private static readonly ILog Log = log4net.LogManager.GetLogger(typeof(BaseMaximoCrudConnector));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(BaseMaximoCrudConnector));
 
         public virtual DynamicObject CreateProxy(EntityMetadata metadata) {
             return DynamicProxyUtil.LookupProxy(metadata);
