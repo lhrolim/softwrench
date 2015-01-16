@@ -40,7 +40,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
         }
 
 
-        public IDictionary<string, string> ParametersAsDictionary() {
+        public IDictionary<string, object> ParametersAsDictionary() {
             return PropertyUtil.ConvertToDictionary(Parameters);
         }
 

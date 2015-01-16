@@ -10,6 +10,7 @@ using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
+using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.SimpleInjector;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -43,8 +44,8 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             // See if association has a schema defined
             string optionApplication;
             string optionSchemaId;
-            association.Schema.RendererParameters.TryGetValue("application", out optionApplication);
-            association.Schema.RendererParameters.TryGetValue("schemaId", out optionSchemaId);
+            association.Schema.RendererParameters.TryGetValueAsString("application", out optionApplication);
+            association.Schema.RendererParameters.TryGetValueAsString("schemaId", out optionSchemaId);
 
             if (!String.IsNullOrWhiteSpace(optionApplication) && !String.IsNullOrWhiteSpace(optionSchemaId)) {
                 return MetadataProvider

@@ -5,9 +5,9 @@ namespace softwrench.sW4.Shared2.Util {
     public class PropertyUtil {
 
         
-        public static IDictionary<string, string> ConvertToDictionary(string propertyString) {
+        public static IDictionary<string, object> ConvertToDictionary(string propertyString) {
             try {
-                var result = new Dictionary<string, string>();
+                var result = new Dictionary<string, object>();
                 if (propertyString == null) {
                     return result;
                 }

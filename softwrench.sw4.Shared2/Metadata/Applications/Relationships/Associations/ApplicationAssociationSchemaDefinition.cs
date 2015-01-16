@@ -9,13 +9,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public AssociationDataProvider DataProvider { get; set; }
         public FieldRenderer Renderer { get; set; }
-        public IDictionary<string, string> RendererParameters {
-            get { return Renderer == null ? new Dictionary<string, string>() : Renderer.ParametersAsDictionary(); }
+        public IDictionary<string, object> RendererParameters {
+            get { return Renderer == null ? new Dictionary<string, object>() : Renderer.ParametersAsDictionary(); }
         }
 
         public FieldFilter Filter { get; set; }
-        public IDictionary<string, string> FilterParameters {
-            get { return Filter == null ? new Dictionary<string, string>() : Filter.ParametersAsDictionary(); }
+        public IDictionary<string, object> FilterParameters {
+            get { return Filter == null ? new Dictionary<string, object>() : Filter.ParametersAsDictionary(); }
         }
 
         protected HashSet<string> _dependantFields = new HashSet<string>();

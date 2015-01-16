@@ -8,6 +8,7 @@ using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Util;
+using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.Reference {
@@ -119,7 +120,7 @@ namespace softWrench.sW4.Metadata.Applications.Reference {
 
 
             string value;
-            if (!reference.Properties.TryGetValue(propName, out value)) {
+            if (!reference.Properties.TryGetValueAsString(propName, out value)) {
                 if (!schema.Properties.TryGetValue(propName, out value)) {
                     if (!schema.Abstract) {
                         if (defaultValue == null) {

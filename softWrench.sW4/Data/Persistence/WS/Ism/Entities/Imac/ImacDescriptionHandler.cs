@@ -9,6 +9,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Util;
+using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
@@ -140,7 +141,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
         public static void OpenSection(StringBuilder sb, ApplicationSection section) {
             sb.AppendLine(SectionSeparator);
             string sectionTitle;
-            if (!section.Parameters.TryGetValue("detaildescription", out sectionTitle)) {
+            if (!section.Parameters.TryGetValueAsString("detaildescription", out sectionTitle)) {
                 if (section.Header != null) {
                     sectionTitle = section.Header.Label;
                 } else {

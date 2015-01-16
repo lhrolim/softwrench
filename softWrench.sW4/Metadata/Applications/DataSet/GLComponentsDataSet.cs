@@ -18,21 +18,24 @@ namespace softWrench.sW4.Metadata.Applications.DataSet
     {
         public IEnumerable<IAssociationOption> GetGLAccountPartN(OptionFieldProviderParameters parameters)
         {
-//            if (parameters.OptionField.ExtraParameter != null) {
-//                var user = SecurityFacade.CurrentUser();
-//                var orgid = parameters.OriginalEntity.Attributes.Any() ? parameters.OriginalEntity.Attributes["orgid"] : null;
-//                // default orgid if none was found. this is usually the case if it is a new entry.
-//                if (orgid == null) orgid = user.OrgId;
-//                var query = string.Format(@"SELECT compvalue, compvalue + ' - ' + comptext AS comptext FROM glcomponents
-//                                            where glorder = {0} and active = 1 and orgid = '{1}'",
-//                parameters.OptionField.ExtraParameter, orgid);
+            if (parameters.OptionField.ExtraParameter != null)
+            {
+                var user = SecurityFacade.CurrentUser();
+                var orgid = parameters.OriginalEntity.Attributes.Any() ? parameters.OriginalEntity.Attributes["orgid"] : null;
                 
-//                var result = MaxDAO.FindByNativeQuery(query, null);
+                // default orgid if none was found. this is usually the case if it is a new entry.
+                if (orgid == null) orgid = user.OrgId;
+                var query = string.Format(@"SELECT compvalue, compvalue + ' - ' + comptext AS comptext FROM glcomponents
+                                            where glorder = {0} and active = 1 and orgid = '{1}'", parameters.OptionField.ExtraParameter, orgid);
 
-//                if (result != null && result.Any()) {
-//                    return result.Select(row => new AssociationOption(row["compvalue"], row["comptext"]));
-//                }
-//            }
+                var result = MaxDAO.FindByNativeQuery(query, null);
+
+                if (result != null && result.Any())
+                {
+                    return result.Select(row => new AssociationOption(row["compvalue"], row["comptext"]));
+                }
+            }
+
             return new List<IAssociationOption>();
         }
 

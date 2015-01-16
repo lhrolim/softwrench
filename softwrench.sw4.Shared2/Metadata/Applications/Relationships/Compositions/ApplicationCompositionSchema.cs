@@ -59,8 +59,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
         public CompositionFieldRenderer Renderer { get; set; }
 
-        public IDictionary<string, string> RendererParameters {
-            get { return Renderer == null ? new Dictionary<string, string>() : Renderer.ParametersAsDictionary(); }
+        public IDictionary<string, object> RendererParameters {
+            get { return Renderer == null ? new Dictionary<string, object>() : Renderer.ParametersAsDictionary(); }
         }
 
         public SchemaMode RenderMode { get; set; }

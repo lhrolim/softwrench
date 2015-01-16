@@ -7,6 +7,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Pagination;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Controllers;
@@ -65,7 +66,7 @@ namespace softWrench.sW4.Web.Util {
                 var attributes = item.Attributes;
                 var columnIndex = 1;
 
-                var nonHiddenFields = applicationFields.Where(f => !f.IsHidden || (f.Renderer.ParametersAsDictionary().TryGetValue(FieldRendererConstants.EXPORTTOEXCEL, out value)));
+                var nonHiddenFields = applicationFields.Where(f => !f.IsHidden || (f.Renderer.ParametersAsDictionary().TryGetValueAsString(FieldRendererConstants.EXPORTTOEXCEL, out value)));
                 foreach (var applicationField in nonHiddenFields) {
                     object dataAux;
                     attributes.TryGetValue(applicationField.Attribute, out dataAux);
@@ -120,7 +121,7 @@ namespace softWrench.sW4.Web.Util {
             string value = string.Empty;
             foreach (var applicationField in applicationFields) {
                 //Exporting to Excel, even if field is hidden
-                if (applicationField.IsHidden && !applicationField.Renderer.ParametersAsDictionary().TryGetValue(FieldRendererConstants.EXPORTTOEXCEL, out value)) {
+                if (applicationField.IsHidden && !applicationField.Renderer.ParametersAsDictionary().TryGetValueAsString(FieldRendererConstants.EXPORTTOEXCEL, out value)) {
                     continue;
                 }
                 excelFile.SetCellValue(1, i, applicationField.Label);
@@ -143,7 +144,7 @@ namespace softWrench.sW4.Web.Util {
             foreach (var applicationField in applicationFields) {
                 double excelWidthAux;
                 string excelwidthAux;
-                applicationField.RendererParameters.TryGetValue("excelwidth", out excelwidthAux);
+                applicationField.RendererParameters.TryGetValueAsString("excelwidth", out excelwidthAux);
                 double.TryParse(excelwidthAux, out excelWidthAux);
                 var excelWidth = excelWidthAux > 0 ? excelWidthAux : (applicationField.Label.Length * 1.5);
                 excelFile.SetColumnWidth(columnIndex, excelWidth);

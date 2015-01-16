@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
@@ -37,6 +38,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         private bool _forceDistinctOptions;
         private ISet<ApplicationEvent> _eventsSet;
         private string _valueField;
+
+        //used to resolve renderer parameters that needs access to a scope outside of the shared dll project
+        protected Lazy<IDictionary<string, object>> LazyRendererParametersResolver;
 
         public class LabelData {
 
@@ -173,11 +177,25 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
 
         public override string RendererType {
-            get { return base.RendererType ?? _applicationAssociationSchema.Renderer.RendererType.ToLower(); }        
+            get { return base.RendererType ?? _applicationAssociationSchema.Renderer.RendererType.ToLower(); }
         }
 
-        public IDictionary<string, string> RendererParameters {
-            get { return _applicationAssociationSchema.Renderer == null ? new Dictionary<string, string>() : _applicationAssociationSchema.Renderer.ParametersAsDictionary(); }
+        public IDictionary<string, object> RendererParameters {
+            get {
+                var metadataParameters = _applicationAssociationSchema.Renderer == null ? new Dictionary<string, object>() : _applicationAssociationSchema.Renderer.ParametersAsDictionary();
+                var resultParameters = LazyRendererParametersResolver.Value;
+                foreach (var metadataParamter in metadataParameters) {
+                    if (!resultParameters.ContainsKey(metadataParamter.Key)) {
+                        resultParameters.Add(metadataParamter);
+                    }
+                }
+                return resultParameters;
+            }
+        }
+
+        [JsonIgnore]
+        public IDictionary<string, object> InnerRendererParameters {
+            get { return _applicationAssociationSchema.Renderer == null ? new Dictionary<string, object>() : _applicationAssociationSchema.Renderer.ParametersAsDictionary(); }
         }
 
         public ISet<string> ExtraProjectionFields {
@@ -206,6 +224,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public override string Role { get { return From + "." + Target; } }
 
+        public void SetLazyRendererParametersResolver(Lazy<IDictionary<string, object>> resolver) {
+            LazyRendererParametersResolver = resolver;
+        }
+
         public object Clone() {
             var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, ToolTip, RequiredExpression,
                 DefaultValue, HideDescription, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField) {
@@ -214,6 +236,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
                     ApplicationTo = ApplicationTo,
                 };
             cloned.SetLazyResolver(LazyEntityAssociation);
+            cloned.SetLazyRendererParametersResolver(LazyRendererParametersResolver);
             return cloned;
         }
     }

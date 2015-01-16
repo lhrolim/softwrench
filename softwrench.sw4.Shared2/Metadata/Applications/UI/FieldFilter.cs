@@ -37,7 +37,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
             CONTAINS, NCONTAINS, STARTWITH, ENDWITH, EQ, BTW, NOTEQ, GT, LT, GTE, LTE
         }
         
-        public IDictionary<string, string> ParametersAsDictionary() {
+        public IDictionary<string, object> ParametersAsDictionary() {
             return PropertyUtil.ConvertToDictionary(Parameters);
         }
 
