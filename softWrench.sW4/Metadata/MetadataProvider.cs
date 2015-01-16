@@ -187,9 +187,7 @@ namespace softWrench.sW4.Metadata {
             get { return _siteIds; }
         }
 
-
-
-
+        public static MetadataProviderInternalCache InternalCache { get; set; }
 
 
         [NotNull]

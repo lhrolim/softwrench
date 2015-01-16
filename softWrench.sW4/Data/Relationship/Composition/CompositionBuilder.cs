@@ -38,7 +38,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             compositionResult.Detail = GetDetailSchema(compositionApplication, applicationCompositionSchema);
             if (composition.Collection && applicationCompositionSchema is ApplicationCompositionCollectionSchema) {
                 compositionResult.List = GetListSchema(applicationCompositionSchema, compositionApplication);
-                compositionResult.Print = GetPrintSchema(applicationCompositionSchema, compositionApplication);
+                compositionResult.Print = GetPrintSchema(applicationCompositionSchema, compositionApplication, compositionResult.Detail, compositionResult.List);
                 var collSchema = (ApplicationCompositionCollectionSchema)applicationCompositionSchema;
                 collSchema.FetchFromServer = ShouldFetchFromServer(compositionResult.Detail, compositionResult.List);
             }
@@ -64,13 +64,13 @@ namespace softWrench.sW4.Data.Relationship.Composition {
         /// <param name="compositionApplication"></param>
         /// <returns></returns>
         private static ApplicationSchemaDefinition GetPrintSchema(ApplicationCompositionSchema compositionSchema,
-            CompleteApplicationMetadataDefinition compositionApplication) {
+            CompleteApplicationMetadataDefinition compositionApplication, ApplicationSchemaDefinition detailSchema, ApplicationSchemaDefinition listSchema) {
             var applicationSchemaDefinitions = compositionApplication.Schemas();
             var printKey = new ApplicationMetadataSchemaKey(compositionSchema.PrintSchema, compositionSchema.RenderMode, ClientPlatform.Web);
             if (applicationSchemaDefinitions.ContainsKey(printKey)) {
                 return applicationSchemaDefinitions[printKey];
             }
-            return GetDetailSchema(compositionApplication, compositionSchema);
+            return detailSchema ?? listSchema;
         }
 
         private static bool ShouldFetchFromServer(ApplicationSchemaDefinition detail, ApplicationSchemaDefinition list) {

@@ -23,7 +23,7 @@ app.directive('ngrepeatinspector', function ($timeout, $log) {
             } else {
                 log.trace('ngrepeat processed for {0}'.format(name));
             }
-            if (scope.$last === true || scope.datamap.length == 0) {
+            if (scope.$last === true || (scope.datamap && scope.datamap.length == 0)) {
                 log.debug('finish ngrepeat for {0}').format(name);
             }
         }

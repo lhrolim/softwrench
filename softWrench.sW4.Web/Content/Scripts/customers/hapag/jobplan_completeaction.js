@@ -38,6 +38,10 @@
     };
     
     $scope.getAvailableOptions = function (schema, compositionschema) {
+        if (schema == null) {
+            //this would happen only for printing
+            return [];
+        }
         var applicationName = schema.applicationName;
         var schemaId = compositionschema.schemaId;
         if (applicationName == "imac") {

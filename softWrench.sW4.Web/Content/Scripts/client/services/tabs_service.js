@@ -140,6 +140,12 @@ app.factory('tabsService', function (fieldService,i18NService) {
                     }
                     return;
                 }
+                var printSchema = getCompositionSchema(schema, key, schemaId);
+                if (printSchema.schemaId == currentSchema.schemaId) {
+                    notExpansible.push({ key: key, schema: currentSchema });
+                    return;
+                }
+
 
                 var compositionIdField = getCompositionIdName(schema, key, schemaId);
                 var compositionIdArray = [];

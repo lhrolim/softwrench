@@ -236,6 +236,7 @@
     <Compile Include="Metadata\Entities\Schema\EntityTargetRelationship.cs" />
     <Compile Include="Metadata\Entities\Schema\EntityTargetSchema.cs" />
     <Compile Include="Metadata\Entities\Sliced\SlicedEntityAssociation.cs" />
+    <Compile Include="Metadata\MetadataProviderInternalCache.cs" />
     <Compile Include="Metadata\Parsing\XmlConnectorParametersParser.cs" />
     <Compile Include="Metadata\Parsing\XmlEntityTargetMetadataParser.cs" />
     <Compile Include="Metadata\Stereotypes\Schema\OutputDetailStereotype.cs" />

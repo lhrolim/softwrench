@@ -47,34 +47,32 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
         private static IEnumerable<IApplicationAttributeDisplayable> InverseFKsFields(ApplicationSchemaDefinition thisSchema) {
             var resultList = new List<IApplicationAttributeDisplayable>();
             var applications = MetadataProvider.Applications();
-            foreach (var metadata in applications) {
-                foreach (var schema in metadata.Schemas().Values) {
-                    if (schema.Stereotype != SchemaStereotype.Detail) {
-                        continue;
-                    }
-                    var reverseComposition = schema.Compositions.FirstOrDefault(f => f.Relationship == EntityUtil.GetRelationshipName(thisSchema.ApplicationName));
-                    if (reverseComposition != null) {
-                        var association = reverseComposition.EntityAssociation;
-                        foreach (var attribute in association.Attributes) {
-                            if (attribute.To != null) {
-                                resultList.Add(ApplicationFieldDefinition.HiddenInstance(thisSchema.ApplicationName,
-                                    attribute.To));
-                            }
-                        }
-                    }
-                    var reverseAssociation = schema.Associations.FirstOrDefault(f => f.EntityAssociation.Qualifier == thisSchema.ApplicationName);
-                    if (reverseAssociation != null) {
-                        var association = reverseAssociation.EntityAssociation;
-                        foreach (var attribute in association.Attributes) {
-                            if (attribute.To != null) {
-                                resultList.Add(ApplicationFieldDefinition.HiddenInstance(thisSchema.ApplicationName,
-                                    attribute.To));
-                            }
-                        }
-                    }
 
+            if (MetadataProvider.InternalCache == null) {
+                MetadataProvider.InternalCache = new MetadataProviderInternalCache();
+            }
+
+            var cache = MetadataProvider.InternalCache;
+
+            var relationshipName = EntityUtil.GetRelationshipName(thisSchema.ApplicationName);
+
+            if (!cache.RelationshipsByNameCache.ContainsKey(relationshipName)) {
+                return resultList;
+            }
+
+            var relationships = MetadataProvider.InternalCache.RelationshipsByNameCache[relationshipName];
+
+            foreach (var association in relationships) {
+                var entityAssociation = association.EntityAssociation;
+                foreach (var attribute in entityAssociation.Attributes) {
+                    if (attribute.To != null) {
+                        resultList.Add(ApplicationFieldDefinition.HiddenInstance(thisSchema.ApplicationName,
+                            attribute.To));
+                    }
                 }
             }
+
+
             return resultList;
         }
 
