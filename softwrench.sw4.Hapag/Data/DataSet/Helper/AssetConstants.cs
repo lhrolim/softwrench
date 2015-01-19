@@ -9,6 +9,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
         internal const string Active = "120 Active";
         internal const string Idle = "150 Idle";
         internal const string Ordered = "010 Ordered";
+        internal const string Unexistent = "LANCHILDSTATUS";
 
         internal const string ClassStructureIdColumn = "classstructureid";
         internal const string StatusColumn = "status";

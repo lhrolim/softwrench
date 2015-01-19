@@ -167,24 +167,14 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             var schema = parameters.Metadata.Schema.SchemaId;
 
             if (schema.StartsWithAny(ImacConstants.Replace, ImacConstants.Remove, ImacConstants.Move)) {
-                //add extra parent asset filter
+                //replace new child asset uses FilterAssetByHlagLocation as the pre filter function, so it wont hit here
+                //add extra parent asset filter -->note that install wont use it
                 var asset = parameters.OriginalEntity.GetAttribute("asset");
                 searchDTO.AppendSearchEntry("parent", asset.ToString());
             }
             return searchDTO;
         }
 
-
-        public SearchRequestDto FilterAssetByHlagLocationAndNewParentAsset(AssociationPreFilterFunctionParameters parameters) {
-            var searchDTO = FilterAssetByHlagLocation(parameters);
-            var schema = parameters.Metadata.Schema.SchemaId;
-
-            //add extra parent asset filter
-            var asset = parameters.OriginalEntity.GetAttribute("newasset");
-            searchDTO.AppendSearchEntry("parent", asset.ToString());
-
-            return searchDTO;
-        }
 
         public SearchRequestDto FilterMovedAsset(AssociationPreFilterFunctionParameters parameters) {
             var searchDTO = FilterAssetByHlagLocation(parameters);
