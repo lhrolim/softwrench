@@ -127,21 +127,17 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 throw ExceptionUtil.InvalidOperation("from location parameter should not be null");
             }
             //here we should indeed ignore the whereclauses, since the user can select assets which are not currently under his domain
-            searchDTO.IgnoreWhereClause = true;
             var locations = LocationManager.FindAllLocationsOfCurrentUser();
             var location = locations.FirstOrDefault(l => l.SubCustomer.Contains(fromLocation));
             if (location == null) {
                 throw ExceptionUtil.InvalidOperation("current user can not access location {0}", fromLocation);
             }
-
             searchDTO.AppendSearchEntry(ISMConstants.PluspCustomerColumn, "%" + fromLocation);
 
-            if (schema.StartsWith(ImacConstants.Install) ||
-                (schema.EqualsAny(ImacConstants.ReplaceStd, ImacConstants.ReplaceOther) && isNew && !childAsset)
-                || (schema.Equals(ImacConstants.RemoveLan) && isNew)) {
-                return;
+            if (childAsset && (schema.StartsWith(ImacConstants.Remove) || (schema.EqualsAny(ImacConstants.Replace) && !isNew))) {
+                //HAP-827 impl --> child assets of remove, or "old child assets" of replace should ignore R0017
+                searchDTO.IgnoreWhereClause = true;
             }
-            searchDTO.AppendWhereClause(location.CostCentersForQuery("asset.glaccount"));
         }
 
         private string AppendClassificationCondition(string schema, bool childAsset) {
