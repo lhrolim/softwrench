@@ -26,38 +26,25 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             _attachmentHandler = new AttachmentHandler();
             _emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
         }
+
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
-            var user = SecurityFacade.CurrentUser();
+            // Update common fields or transactions prior to maximo operation exection
+            CommonTransaction(maximoTemplateData);
+
             var sr = maximoTemplateData.IntegrationObject;
-            w.SetValueIfNull(sr, "ACTLABHRS", 0.0);
-            w.SetValueIfNull(sr, "ACTLABCOST", 0.0);
-            w.SetValueIfNull(sr, "CHANGEDATE", DateTime.Now.FromServerToRightKind(), true);
-            w.SetValueIfNull(sr, "CHANGEBY", user.Login);
-            w.SetValueIfNull(sr, "REPORTDATE", DateTime.Now.FromServerToRightKind());
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
+
             var mailObject = maximoTemplateData.Properties;
+            
             WorkLogHandler.HandleWorkLogs(crudData, sr);
             CommLogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
 
-            LongDescriptionHandler.HandleLongDescription(sr, crudData);
-            var attachments = crudData.GetRelationship("attachment");
-            foreach (var attachment in (IEnumerable<CrudOperationData>)attachments) {
-                HandleAttachmentAndScreenshot(attachment, sr, maximoTemplateData.ApplicationMetadata);
-            }
             base.BeforeUpdate(maximoTemplateData);
         }
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
-            var user = SecurityFacade.CurrentUser();
-            var sr = maximoTemplateData.IntegrationObject;
-            w.SetValue(sr, "ACTLABHRS", 0);
-            w.SetValue(sr, "ACTLABCOST", 0);
-            w.SetValueIfNull(sr, "REPORTDATE", DateTime.Now.FromServerToRightKind());
-
-            var crudData = (CrudOperationData)maximoTemplateData.OperationData;
-            LongDescriptionHandler.HandleLongDescription(sr, crudData);
-
-            HandleAttachmentAndScreenshot(crudData, sr, maximoTemplateData.ApplicationMetadata);
+            // Update common fields or transactions prior to maximo operation exection
+            CommonTransaction(maximoTemplateData);
 
             base.BeforeCreation(maximoTemplateData);
         }
@@ -70,6 +57,30 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             //TODO: Delete the failed commlog entry or marked as failed : Input from JB needed 
             base.AfterUpdate(maximoTemplateData);
         }
+
+
+        private void CommonTransaction(MaximoOperationExecutionContext maximoTemplateData) {
+            // Get current username that trigger the transaction
+            var user = SecurityFacade.CurrentUser();
+
+            var sr = maximoTemplateData.IntegrationObject;
+            w.SetValueIfNull(sr, "ACTLABHRS", 0.0);
+            w.SetValueIfNull(sr, "ACTLABCOST", 0.0);
+            w.SetValueIfNull(sr, "CHANGEDATE", DateTime.Now.FromServerToRightKind(), true);
+            w.SetValueIfNull(sr, "CHANGEBY", user.Login);
+            w.SetValueIfNull(sr, "REPORTDATE", DateTime.Now.FromServerToRightKind());
+
+            // Update or create new long description 
+            var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
+            LongDescriptionHandler.HandleLongDescription(sr, crudData);
+
+            // Update or create attachments
+            var attachments = crudData.GetRelationship("attachment");
+            foreach (var attachment in (IEnumerable<CrudOperationData>)attachments) {
+                HandleAttachmentAndScreenshot(attachment, sr, maximoTemplateData.ApplicationMetadata);
+            }
+        }
+
         private void HandleAttachmentAndScreenshot(CrudOperationData data, object maximoObj, ApplicationMetadata applicationMetadata) {
 
             // Check if Attachment is present

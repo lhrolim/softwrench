@@ -99,11 +99,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
 
-          <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualfinish" hidden="true" attributeToServer="#notusedattribute"/>
-
+          <field attribute="targetstart" hidden="true"/>
+          <field attribute="targetfinish" hidden="true"/>
+          <field attribute="actualstart" hidden="true"/>
+          <field attribute="actualfinish" hidden="true"/>
+          
           <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
                          parameters="joinattribute=targetstart;">
             <header label="Target Start Date:" displacement="sameline"/>
@@ -128,6 +128,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
           </field>
+          
           <!-- Code added from gric metadata.xml SWWEB 173-->
           <section id="attachmentsection" />
           <!-- SWWEB 173-->
