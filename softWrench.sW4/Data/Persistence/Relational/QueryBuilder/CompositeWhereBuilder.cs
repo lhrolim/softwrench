@@ -28,10 +28,6 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
                     sb.Append(" where ");
                     firstMatch = false;
                 }
-                if (sb.ToString().Contains(result)) {
-                    //this is to avoid MultiTenantCustomerWhereBuilder, or other type of security clause builders to re-append the exact same query.
-                    continue;
-                }
                 sb.Append("(").Append(result).Append(")").Append(And);
             }
             if (sb.Length > 0) {

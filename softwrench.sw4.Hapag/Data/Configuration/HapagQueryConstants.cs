@@ -78,12 +78,12 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
         ";
 
         internal const string EndUserOpenRequests = @"
-              SR.pluspcustomer like 'HLC-%' AND SR.status in ('QUEUED','PENDING','INPROG','REJECTED')
+              SR.status in ('QUEUED','PENDING','INPROG','REJECTED')
               AND (UPPER(affectedperson) = UPPER(@personid) OR UPPER(reportedby) = UPPER(@personid)) 
         ";
 
         internal const string EndUserActionRequired = @"
-              SR.pluspcustomer like 'HLC-%' AND SR.status in ('SLAHOLD','RESOLVED') 
+              SR.status in ('SLAHOLD','RESOLVED') 
               AND (UPPER(affectedperson) = UPPER(@personid) OR UPPER(reportedby) = UPPER(@personid)) 
         ";
         //TODO: and SR.reportdate > @past(3 months) ??
