@@ -475,23 +475,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             return;
         },
 
-        afterchangeinvissueitem: function(parameters) {
-            parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
-            parameters['fields']['lotnum'] = null;
-            parameters['fields']['#curbal'] = null;
-
-            var itemnum = parameters['fields']['itemnum'];
-            if (nullOrEmpty(itemnum)) {
-                parameters['fields']['itemnum'] = null;
-                parameters['fields']['unitcost'] = null;
-                parameters['fields']['inventory_.issueunit'] = null;
-                parameters['fields']['inventory_.itemtype'] = null;
-                return;
-            }
-            
-            doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
-        },
-
         invIssueBatch_afterChangeItem: function(parameters) {
             var itemnum = parameters['fields']['itemnum'];
             parameters['fields']['binnum'] = null;
@@ -537,9 +520,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 var fields = resultObject[0].fields;
                 var costtype = fields['varvalue'];
                 parameters['fields']['inventory_.costtype'] = costtype;
-                parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
-                parameters['fields']['lotnum'] = null;
-                parameters['fields']['#curbal'] = null;
 
                 var itemnum = parameters['fields']['itemnum'];
                 if (nullOrEmpty(itemnum)) {
@@ -547,6 +527,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     parameters['fields']['unitcost'] = null;
                     parameters['fields']['inventory_.issueunit'] = null;
                     parameters['fields']['inventory_.itemtype'] = null;
+                    parameters['fields']['#curbal'] = null;
                     return;
                 }
 
@@ -563,6 +544,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     } else if (costtype === 'AVGCOST') {
                         parameters.fields['unitcost'] = invcostFields.avgcost;
                     }
+                    parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
+                    parameters['fields']['lotnum'] = null;
                 });
             });
         },

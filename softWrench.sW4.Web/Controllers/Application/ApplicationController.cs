@@ -11,6 +11,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
+using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Controllers.Routing;
@@ -73,7 +74,7 @@ namespace softWrench.sW4.Web.Controllers.Application {
 
             Log.Info("receiving ie9 attachment request");
 
-            var currentSchema = _nextSchemaRouter.GetSchemaKeyFromString(application, currentSchemaKey, platform);
+            var currentSchema = SchemaUtil.GetSchemaKeyFromString(currentSchemaKey, platform);
             var applicationMetadata = MetadataProvider
                 .Application(application)
                 .ApplyPolicies(currentSchema, user, ClientPlatform.Web);
@@ -90,13 +91,22 @@ namespace softWrench.sW4.Web.Controllers.Application {
                 var mockMaximo = MockingUtils.IsMockingMaximoModeActive(datamap);
 
                 IApplicationResponse response;
+                var operationRequest = new OperationDataRequest {
+                    Application = application,
+                    CurrentSchemaKey = currentSchemaKey,
+                    RouteParametersDTO = new RouterParametersDTO() {
+                        NextSchemaKey = nextSchemaKey
+                    },
+                    Id = entityId,
+                    MockMaximo = mockMaximo,
+                    Platform = platform
+                };
                 if (String.IsNullOrWhiteSpace(entityId)) {
                     Log.DebugFormat("redirecting to datacontroller post with datamap " + datamap);
-                    response = _dataController.Post(application, datamap, platform, currentSchemaKey, nextSchemaKey, mockMaximo);
+                    response = _dataController.Post(operationRequest, datamap);
                 } else {
                     Log.DebugFormat("redirecting to datacontroller put");
-                    response = _dataController.Put(application, entityId, datamap, platform, currentSchemaKey,
-                        nextSchemaKey, mockMaximo);
+                    response = _dataController.Put(operationRequest, datamap);
                 }
                 return RedirectToAction("RedirectToAction", "Home", BuildParameter(application, platform, response, popupmode, applicationMetadata));
             } catch (Exception e) {

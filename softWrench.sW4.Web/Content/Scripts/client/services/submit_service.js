@@ -1,7 +1,18 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('submitService', function ($rootScope, fieldService,contextService) {
+app.factory('submitService', function ($rootScope, fieldService, contextService,checkpointService) {
 
+    function addSchemaDataToParameters(parameters, schema, nextSchema) {
+        parameters["currentSchemaKey"] = schema.schemaId + "." + schema.mode + "." + platform();
+        if (nextSchema != null && nextSchema.schemaId != null) {
+            parameters.routeParametersDTO["nextSchemaKey"] = nextSchema.schemaId + ".";
+            if (nextSchema.mode != null) {
+                parameters.routeParametersDTO["nextSchemaKey"] += nextSchema.mode;
+            }
+            parameters.routeParametersDTO["nextSchemaKey"] += "." + platform();
+        }
+        return parameters;
+    }
 
     return {
         ///used for ie9 form submission
@@ -57,7 +68,7 @@ app.factory('submitService', function ($rootScope, fieldService,contextService) 
             });
 
             $('input[type="file"]', form).each(function () {
-                if (this.value != null && this.value!="") {
+                if (this.value != null && this.value != "") {
                     formId = $(this).closest('form');
                 }
             });
@@ -97,6 +108,24 @@ app.factory('submitService', function ($rootScope, fieldService,contextService) 
                 datamap[field.attributeToServer] = datamap[field.attribute];
                 delete datamap[field.attribute];
             }
+        },
+
+        createSubmissionParameters: function (schema,nextSchemaObj,id) {
+            var parameters = {};
+            if (sessionStorage.mockmaximo == "true") {
+                //this will cause the maximo layer to be mocked, allowing testing of workflows without actually calling the backend
+                parameters.mockmaximo = true;
+            }
+            parameters.routeParametersDTO = {};
+            parameters = addSchemaDataToParameters(parameters, schema, nextSchemaObj);
+            var checkPointArray = checkpointService.fetchCheckpoint();
+            if (checkPointArray && checkPointArray.length > 0) {
+                parameters.routeParametersDTO.checkPointData = checkPointArray;
+            }
+            parameters.applicationName = schema.applicationName;
+            parameters.id = id;
+            parameters.platform = platform();
+            return parameters;
         }
 
     };

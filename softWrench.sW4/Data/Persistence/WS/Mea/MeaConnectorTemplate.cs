@@ -10,7 +10,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Mea
         public override void DoCreate(MaximoOperationExecutionContext maximoTemplateData) {
             var resultData = maximoTemplateData.InvokeProxy();
             var id = string.Empty;
-            maximoTemplateData.ResultObject = new MaximoResult(id, resultData);
+            maximoTemplateData.ResultObject = new TargetResult(id, resultData);
         }
 
         public override MaximoOperationExecutionContext CreateExecutionContext(WcfSamples.DynamicProxy.DynamicObject proxy, IOperationData operationData) {

@@ -213,14 +213,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=8%" />
           </field>
           <field attribute="quantity" label="Qty">
-            <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyList;"/>
+            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=10%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyList;"/>
           </field>
           <field attribute="qtyreturned" label="Qty Rtn">
-            <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyReturnedList;"/>
+            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=10%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
             <renderer type="default" params="width=3%"/>
           </section>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
         </schema>
 
         <schema id="viewinvreturndetail" stereotype="detail" mode="input">
@@ -357,12 +358,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
           <commandbars>
             <commandgroup position="detailform">
-              <removecommand id="save"/>
               <removecommand id="cancel"/>
-              <command id="return" position="&lt;print" label="Submit" service="inventoryService" method="returnInvIssue" parameters="datamap,$scope" successmessage="Return created"/>
               <command id="cancelinvissue" label="Cancel" service="inventoryService" method="navToIssueReturnList" parameters="schema,datamap" position=">print"/>
             </commandgroup>
           </commandbars>
+          <event type="beforesubmit.postvalidation" service="inventoryService" method="submitReturnConfirmation"/>
+          <event type="beforesubmit.prevalidation" service="inventoryService" method="submitReturnTransformation"/>
+          <properties>
+            <property key="nextschema.schemaid" value="invIssueList"/>
+          </properties>
         </schema>
       
         <schema id="newInvIssueDetail" mode="input" stereotype="detail">
@@ -382,12 +386,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" extraprojectionvalues="description" dependantfields="siteid" requiredexpression="true" >
               <renderer type="lookup"/>
             </association>
-            <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="binnum,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,storeloc" requiredexpression="true">
+            <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,binnum,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,storeloc" requiredexpression="true">
               <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
               <event type="afterchange" service="inventoryService" method="invIssue_maximo71_afterChangeItem"/>
             </association>
             <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
             <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
+              <dataprovider prefilterfunction="FilterAssets"/>
               <renderer type="lookup"/>
             </association>
             <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
@@ -402,18 +407,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <dataprovider prefilterfunction="FilterBins"/>
             </association>
             <field label="Lot" attribute="lotnum" readonly="true"/>
-            <field attribute="binbalances_.binnum" hidden="true">
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
-            </field>
-            <field attribute="lotbalances_.lotnum" hidden="true">
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLot"/>
-            </field>
-            <field attribute="binbalances_.curbal" hidden="true">
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBinBalance"/>
-            </field>
-            <field attribute="lotbalances_.curbal" hidden="true">
-              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeLotBalance"/>
-            </field>
             <field attribute="#curbal" label="Current Balance" readonly="true"/>
             <field attribute="quantity" label="Issue Quantity" default="1" requiredexpression="true">
               <renderer type="numericinput" params="min=1;"/>
@@ -427,7 +420,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
           <section>
             <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
-            <association label="Workorder" target="refwo" labelfield="workorder_.description" dependantfields="siteid" extraprojectionvalues="glaccount,location,assetnum">
+            <association label="Work Order" target="refwo" labelfield="workorder_.description" dependantfields="siteid" extraprojectionvalues="glaccount,location,assetnum">
               <dataprovider prefilterfunction="FilterWorkorders"/>
               <renderer type="lookup"/>
             </association>
@@ -450,7 +443,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position=">print"/>
             </commandgroup>
           </commandbars>
-          <event type="onload" service="scannerdetectionService" method="initInvIssueListener"/>
+          <event type="onload" service="scannerdetectionService" method="initInvIssueDetailListener"/>
           <properties>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
           </properties>

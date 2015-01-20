@@ -34,6 +34,14 @@ app.factory('schemaService', function () {
             return { app: application, schemaId: schemaId, mode: mode };
         },
 
+        buildApplicationKey: function (schema) {
+            var basekey = schema.applicationName + "." + schema.schemaId;
+            if (schema.mode && schema.mode != "none") {
+                basekey += "." +schema.mode;
+            }
+            return basekey;
+        },
+
 
     };
 

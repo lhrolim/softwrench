@@ -82,7 +82,7 @@ app.directive('crudBody', function (contextService) {
             fieldService, commandService, i18NService,
             submitService, redirectService,
             associationService, contextService, alertService,
-            validationService, schemaService, $timeout, eventService) {
+            validationService, schemaService, $timeout, eventService, $log,checkpointService) {
 
 
             $scope.getFormattedValue = function (value, column, datamap) {
@@ -168,6 +168,7 @@ app.directive('crudBody', function (contextService) {
                         $scope.$parent.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
                     }
                 }
+
             }
 
             $scope.disableNavigationButtons = function (schema) {
@@ -245,6 +246,8 @@ app.directive('crudBody', function (contextService) {
             }
 
             $scope.save = function (selecteditem, parameters) {
+                var log = $log.getInstance('crudbody#save');
+
                 if ($rootScope.showingModal && $scope.$parent.$parent.$name == "crudbodymodal") {
                     //workaround to invoke the original method that was passed to the modal, instead of the default save.
                     //TODO: use angular's & support
@@ -259,7 +262,7 @@ app.directive('crudBody', function (contextService) {
                 var fields = fromDatamap ? itemToSave.fields : itemToSave;
 
                 var transformedFields = angular.copy(fields);
-                
+
                 var eventParameters = {};
                 eventParameters.continue = function () {
                     $scope.validateSubmission(selecteditem, parameters, transformedFields);
@@ -267,6 +270,8 @@ app.directive('crudBody', function (contextService) {
 
                 var eventResult = eventService.beforesubmit_prevalidation($scope.schema, transformedFields, eventParameters);
                 if (eventResult == false) {
+                    //this means that the custom service should call the continue method
+                    log.debug('waiting on custom prevalidation to invoke the continue function');
                     return;
                 }
 
@@ -274,6 +279,7 @@ app.directive('crudBody', function (contextService) {
             };
 
             $scope.validateSubmission = function (selecteditem, parameters, transformedFields) {
+                var log = $log.getInstance('crudbody#validateSubmission');
                 //hook for updating doing custom logic before sending the data to the server
                 $rootScope.$broadcast("sw_beforeSave", transformedFields);
 
@@ -285,13 +291,16 @@ app.directive('crudBody', function (contextService) {
                     }
                 }
 
-                var eventParameters = {};
-                eventParameters.continue = function () {
-                    $scope.submitToServer(selecteditem, parameters, transformedFields);
-                };
+                var eventParameters = {
+                    'continue': function () {
+                        $scope.submitToServer(selecteditem, parameters, transformedFields);
+                    }
+                }
 
                 var eventResult = eventService.beforesubmit_postvalidation($scope.schema, transformedFields, eventParameters);
                 if (eventResult == false) {
+                    //this means that the custom postvalidator should call the continue method
+                    log.debug('waiting on custom postvalidator to invoke the continue function');
                     return;
                 }
 
@@ -327,13 +336,7 @@ app.directive('crudBody', function (contextService) {
 
                 var jsonString = angular.toJson(transformedFields);
 
-                parameters = {};
-                if (sessionStorage.mockmaximo == "true") {
-                    //this will cause the maximo layer to be mocked, allowing testing of workflows without actually calling the backend
-                    parameters.mockmaximo = true;
-                }
-                parameters = addSchemaDataToParameters(parameters, $scope.schema, nextSchemaObj);
-                parameters.platform = platform();
+                var submissionParameters = submitService.createSubmissionParameters($scope.schema,nextSchemaObj,id);
 
                 $rootScope.savingMain = !isComposition;
 
@@ -341,13 +344,12 @@ app.directive('crudBody', function (contextService) {
                     var formToSubmitId = submitService.getFormToSubmitIfHasAttachement($scope.schema.displayables, transformedFields);
                     if (formToSubmitId != null) {
                         var form = $(formToSubmitId);
-                        submitService.submitForm(form, parameters, jsonString, applicationName);
+                        submitService.submitForm(form, submissionParameters, jsonString, applicationName);
                         return;
                     }
                 }
 
-                var saveParams = $.param(parameters);
-                var urlToUse = url("/api/data/" + applicationName + "/" + id + "?" + saveParams);
+                var urlToUse = url("/api/data/" + applicationName + "/?" + $.param(submissionParameters));
                 var command = id == null ? $http.post : $http.put;
 
                 command(urlToUse, jsonString)

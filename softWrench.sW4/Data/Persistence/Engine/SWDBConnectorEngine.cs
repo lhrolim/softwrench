@@ -20,7 +20,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             throw new NotImplementedException();
         }
 
-        public override MaximoResult Execute(OperationWrapper operationWrapper) {
+        public override TargetResult Execute(OperationWrapper operationWrapper) {
             throw new NotImplementedException();
         }
 
