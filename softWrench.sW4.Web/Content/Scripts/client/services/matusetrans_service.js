@@ -45,8 +45,12 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
             event.fields["binnum"] = event.fields["inventory_.binnum"];
             event.fields["description"] = event.fields["inventory_.item_.description"];
             event.fields["itemsetid"] = event.fields["inventory_.itemsetid"];
+            event.fields["siteid"] = event.fields["inventory_.siteid"];
+            event.fields["curbal"] = event.fields["inventory_.invbalances_.curbal"];
+            event.fields["physcnt"] = event.fields["inventory_.invbalances_.physcnt"];
+            event.fields["unitcost"] = 0.00;
 
-            doUpdateUnitCostFromInventoryCost(event, 'unitcost');
+            doUpdateUnitCostFromInventoryCost(event, "unitcost");
         }
     }
 });

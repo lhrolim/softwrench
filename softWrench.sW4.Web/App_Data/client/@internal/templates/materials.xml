@@ -129,7 +129,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <event type="afterchange" service="matusetranService" method="afterlinetypechange"/>
           </optionfield>
 
-          <association label="Item:" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="location, itemsetid, binnum, costtype, item_.description" showexpression="@linetype == 'ITEM'">
+          <association label="Item:" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="location, itemsetid, binnum, costtype, siteid, item_.description, invbalances_.curbal, invbalances_.physcnt" showexpression="@linetype == 'ITEM'">
               <!--<dataprovider prefilterfunction="FilterMaterials"/>-->
               <!--<renderer type="lookup" params="application=inventory;schemaId=materialLookupList;"/>-->
             <renderer type="lookup"/>
