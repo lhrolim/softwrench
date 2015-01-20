@@ -376,8 +376,8 @@ app.directive('crudInputFields', function (contextService) {
                     }
                     
                     modalService.show(fieldMetadata.rendererParameters['schema'], null, function (selecteditem) {
-                        savefn(datamap, schema, selecteditem, fieldMetadata)
-                    }, datamap, schema, fieldMetadata.attribute);
+                        savefn(datamap, schema, selecteditem, fieldMetadata);
+                    },null, datamap, schema);
 
                     return;
                 }

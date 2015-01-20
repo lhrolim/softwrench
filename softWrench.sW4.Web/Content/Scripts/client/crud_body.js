@@ -109,6 +109,8 @@ app.directive('crudBody', function (contextService) {
             };
 
 
+
+
             $scope.isCommand = function (schema) {
                 if ($scope.schema.properties['command.select'] == "true") {
                     return true;
@@ -197,42 +199,7 @@ app.directive('crudBody', function (contextService) {
             $scope.getTabIcon = function (tab) {
                 return tab.schema.schemas.list.properties['icon.composition.tab'];
             };
-            $scope.renderListView = function (parameters) {
-                /// <summary>
-                /// 
-                /// </summary>
-                /// <param name="parameters">
-                ///  application --> overrides the default application which would be the same as current. Useful for cancel clicks that should span different applications (on F5)
-                /// </param>
-                var applicationToGo = $scope.$parent.applicationname;
-                if (parameters && parameters.application) {
-                    applicationToGo = parameters.application;
-                }
-                var schemaToGo = 'list';
-                if (parameters && parameters.schema) {
-                    schemaToGo = parameters.schema;
-                }
-
-                $scope.$parent.multipleSchema = false;
-                $scope.$parent.schemas = null;
-                if ($scope.schema != null && $scope.schema.stereotype.isEqual('list', true)) {
-                    //if we have a list schema already declared, keep it
-                    schemaToGo = $scope.schema.schemaId;
-                }
-                $scope.$parent.renderView(applicationToGo, schemaToGo, 'none', $scope.title, parameters);
-            };
-            $scope.toConfirmCancel = function (data, schema) {
-
-                if (validationService.getDirty()) {
-                    alertService.confirmCancel(null, null, function () {
-                        $scope.toListSchema(data, schema);
-                        $scope.$digest();
-                    }, "Are you sure you want to cancel ?", function () { return; });
-                }
-                else {
-                    $scope.toListSchema(data, schema);
-                }
-            };
+           
             $scope.crawl = function (direction) {
                 var value = contextService.fetchFromContext("crud_context", true);
                 var id = direction == 1 ? value.detail_previous : value.detail_next;
@@ -249,47 +216,7 @@ app.directive('crudBody', function (contextService) {
                 $scope.$emit("sw_renderview", applicationname, schemaid, mode, title, { id: id, popupmode: popupmode });
 
             };
-            $scope.toListSchema = function (data, schema) {
-                /*if (schema instanceof Array) {
-                    $scope.$parent.multipleSchemaHandling($scope.$parent.resultObject);
-                } else {*/
-                $scope.$parent.multipleSchema = false;
-                $scope.$parent.schemas = null;
-                //                $('#crudmodal').modal('hide');
-                $scope.showingModal = false;
-                if (GetPopUpMode() == 'browser') {
-                    open(location, '_self').close();
-                }
-                var parameters = {};
-                if (schema != null && data != null) {
-                    $scope.schema = schema;
-                    $scope.datamap = data;
-                } else {
-                    //if they are both null, it means that the previous data does not exist (F5 on browser). 
-                    //Let´s keep them untouched until the new one comes from server, otherwise after the $http call there will be errors on the $digest evalution
-                    var cancelSchema = $scope.schema.properties['detail.cancel.click'];
-                    if (cancelSchema) {
-                        //if this schema registers another application/schema/mode entry for the cancel click, let´s use it
-                        var result = schemaService.parseAppAndSchema(cancelSchema);
-                        parameters.application = result.app;
-                        parameters.schema = result.schemaId;
-                        parameters.mode = result.mode;
-                    }
-
-                }
-
-                // at this point, usually schema should be a list schema, on cancel call for instance, where we pass the previous schema. same goes for the datamap
-                // this first if is more of an unexpected case
-                if ($scope.schema == null || $scope.datamap == null || $scope.schema.stereotype == 'Detail') {
-                    $scope.renderListView(parameters);
-                } else {
-                    if (schema) { //SM - SWWEB-619 temp fix, at times (before everything is loaded?), this is run without a schema causing an exception, resulting in a UI glich
-                        $scope.$emit('sw_titlechanged', schema.title);
-                    }
-                    $scope.$parent.toList(null);
-                }
-                //}
-            };
+       
 
             $scope.delete = function () {
 
@@ -311,8 +238,11 @@ app.directive('crudBody', function (contextService) {
                     .success(function (data) {
                         defaultSuccessFunction(data);
                     });
-
             };
+
+            $scope.cancel = function(data, schema) {
+                $scope.cancelfn({ data: data, schema: schema });
+            }
 
             $scope.save = function (selecteditem, parameters) {
                 if ($rootScope.showingModal && $scope.$parent.$parent.$name == "crudbodymodal") {

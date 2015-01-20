@@ -17,8 +17,7 @@
             <crud-body-modal-wrapper></crud-body-modal-wrapper>
         </div>
 
-        <crud-body 
-                   extraparameters="extraparameters"
+        <crud-body extraparameters="extraparameters"
                    ismodal="false"
                    schema="schema"
                    datamap="datamap"
@@ -34,7 +33,8 @@
                    search-operator="searchOperator"
                    search-sort="searchSort"
                    previousschema="previousschema"
-                   previousdata="previousdata" />
+                   previousdata="previousdata"
+                   cancelfn="toConfirmCancel(data,schema)" />
 
     </div>
 

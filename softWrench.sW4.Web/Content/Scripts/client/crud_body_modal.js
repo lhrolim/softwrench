@@ -11,7 +11,8 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                 element.append(
                     "<crud-body-modal " +
                     "ismodal='true' schema='schema' " +
-                    "datamap='datamap' savefn='save(selecteditem)'" +
+                    "datamap='datamap' " +
+                    "savefn='save(selecteditem)'" +
                     "is-dirty='false' " +
                     "is-list='isList' " +
                     "is-detail='true' " +
@@ -37,7 +38,7 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                 $scope.hideModal();
             });
 
-
+     
 
             $scope.hideModal = function () {
                 $('#crudmodal').modal('hide');
@@ -108,6 +109,14 @@ app.directive('crudBodyModal', function ($rootScope,modalService) {
                 $scope.savefn({ selecteditem: selecteditem });
             }
 
+            $scope.cancel = function () {
+                $('#crudmodal').modal('hide');
+                $rootScope.showingModal = false;
+                if ($scope.cancelfn) {
+                    $scope.cancelfn();
+                }
+            }
+
             $scope.$on('sw.modal.show', function (event, modaldata) {
                 $scope.showModal(modaldata);
             });
@@ -118,6 +127,7 @@ app.directive('crudBodyModal', function ($rootScope,modalService) {
                 fieldService.fillDefaultValues(schema.displayables, datamap);
                 $scope.schema = schema;
                 $scope.originalsavefn = modaldata.savefn;
+                $scope.cancelfn = modaldata.cancelfn;
                 $scope.previousschema = modaldata.previousschema;
                 $scope.previousdata = modaldata.previousdata;
                 $scope.datamap = {
