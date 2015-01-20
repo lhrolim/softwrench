@@ -68,8 +68,8 @@ app.directive('crudBody', function (contextService) {
             searchOperator: '=',
             searchSort: '=',
             ismodal: '@',
-            checked: '='
-
+            checked: '=',
+            timestamp: '=',
         },
 
         link: function (scope, element, attrs) {
