@@ -228,7 +228,19 @@ app.directive('crudBody', function (contextService) {
                     alertService.confirmCancel(null, null, function () {
                         $scope.toListSchema(data, schema);
                         $scope.$digest();
-                    }, "Are you sure you want to cancel ?", function () { return; });
+                    }, "Are you sure you want to cancel?", function () { return; });
+                }
+                else {
+                    $scope.toListSchema(data, schema);
+                }
+            };
+            $scope.toConfirmBack = function (data, schema) {
+
+                if (validationService.getDirty()) {
+                    alertService.confirmCancel(null, null, function () {
+                        $scope.toListSchema(data, schema);
+                        $scope.$digest();
+                    }, "Are you sure you want to go back?", function () { return; });
                 }
                 else {
                     $scope.toListSchema(data, schema);
