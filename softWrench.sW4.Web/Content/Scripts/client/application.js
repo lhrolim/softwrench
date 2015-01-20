@@ -51,7 +51,7 @@ app.directive('filterrowrendered', function ($timeout) {
     };
 });
 
-function ApplicationController($scope, $http, $log, $templateCache, $timeout, fixHeaderService, $rootScope, associationService, validationService, contextService, searchService,alertService,schemaService) {
+function ApplicationController($scope, $http, $log, $templateCache, $timeout, fixHeaderService, $rootScope, associationService, validationService, contextService, searchService, alertService, schemaService) {
     $scope.$name = 'applicationController';
 
     function switchMode(mode, scope) {
@@ -300,21 +300,31 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
     };
 
 
-    $scope.toConfirmCancel = function (data, schema) {
+    $scope.$on('sw_canceldetail', function (event, data, schema, msg) {
+        $scope.doConfirmCancel(data, schema, "Are you sure you want to go back?");
+    });
 
+    $scope.doConfirmCancel = function (data, schema, msg) {
         if (validationService.getDirty()) {
             alertService.confirmCancel(null, null, function () {
                 $scope.toListSchema(data, schema);
                 $scope.$digest();
-            }, "Are you sure you want to cancel ?", function () { return; });
+            }, msg, function () { return; });
         }
         else {
             $scope.toListSchema(data, schema);
         }
+    }
+
+    $scope.toConfirmCancel = function (data, schema) {
+        doConfirmCancel(data, schema, "Are you sure you want to cancel ?");
+
     };
 
+
+
     $scope.toListSchema = function (data, schema) {
-        var log =$log.getInstance('application#toListSchema');
+        var log = $log.getInstance('application#toListSchema');
         $scope.multipleSchema = false;
         $scope.schemas = null;
         //                $('#crudmodal').modal('hide');
