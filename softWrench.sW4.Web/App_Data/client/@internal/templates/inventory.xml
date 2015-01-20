@@ -272,47 +272,47 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="binnum" hidden="true"/>
           <field attribute="item_.itemnum" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=9%" />
+            <renderer type="default" />
           </field>
           <field attribute="item_.itemtype" label="Item Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%" />
           </field>
           <field attribute="lotnum" label="Lot">
-            <renderer type="default" params="widthLG=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="refwo" label="Work Order">
-            <renderer type="default" params="width=8%;"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%"/>
           </field>
           <field attribute="issueto" label="Issued To">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="assetnum" label="Asset">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%;widthLG=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="siteid" label="Site">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%" />
           </field>
           <field attribute="issuetype" label="Issue Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <optionfield attribute="item_.rotating" label="Rotating">
-            <renderer type="combo" params="widthLG=8%;filteronly=true;formatter=numberToBoolean"/>
+            <renderer type="combo" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;filteronly=true;formatter=numberToBoolean"/>
             <option value="1" label="Yes"/>
             <option value="0" label="No"/>
           </optionfield>
           <optionfield attribute="item_.iskit" label="Kit">
-            <renderer type="combo" params="widthLG=8%;filteronly=true;formatter=numberToBoolean"/>
+            <renderer type="combo" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;filteronly=true;formatter=numberToBoolean"/>
             <option value="1" label="Yes"/>
             <option value="0" label="No"/>
           </optionfield>
           <field attribute="quantity" label="Qty">
-            <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyList;"/>
+            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=9%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyList;"/>
           </field>
           <field attribute="qtyreturned" label="Qty Rtn">
-            <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyReturnedList;"/>
+            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=9%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
             <renderer type="default" params="width=3%"/>
