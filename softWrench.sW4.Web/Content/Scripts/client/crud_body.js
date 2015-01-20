@@ -200,7 +200,56 @@ app.directive('crudBody', function (contextService) {
             $scope.getTabIcon = function (tab) {
                 return tab.schema.schemas.list.properties['icon.composition.tab'];
             };
-           
+
+            $scope.renderListView = function (parameters) {
+                /// <summary>
+                /// 
+                /// </summary>
+                /// <param name="parameters">
+                ///  application --> overrides the default application which would be the same as current. Useful for cancel clicks that should span different applications (on F5)
+                /// </param>
+                var applicationToGo = $scope.$parent.applicationname;
+                if (parameters && parameters.application) {
+                    applicationToGo = parameters.application;
+                }
+                var schemaToGo = 'list';
+                if (parameters && parameters.schema) {
+                    schemaToGo = parameters.schema;
+                }
+
+                $scope.$parent.multipleSchema = false;
+                $scope.$parent.schemas = null;
+                if ($scope.schema != null && $scope.schema.stereotype.isEqual('list', true)) {
+                    //if we have a list schema already declared, keep it
+                    schemaToGo = $scope.schema.schemaId;
+                }
+                $scope.$parent.renderView(applicationToGo, schemaToGo, 'none', $scope.title, parameters);
+            };
+            $scope.toConfirmCancel = function (data, schema) {
+
+                if (validationService.getDirty()) {
+                    alertService.confirmCancel(null, null, function () {
+                        $scope.toListSchema(data, schema);
+                        $scope.$digest();
+                    }, "Are you sure you want to cancel?", function () { return; });
+                }
+                else {
+                    $scope.toListSchema(data, schema);
+                }
+            };
+            $scope.toConfirmBack = function (data, schema) {
+
+                if (validationService.getDirty()) {
+                    alertService.confirmCancel(null, null, function () {
+                        $scope.toListSchema(data, schema);
+                        $scope.$digest();
+                    }, "Are you sure you want to go back?", function () { return; });
+                }
+                else {
+                    $scope.toListSchema(data, schema);
+                }
+            };
+
             $scope.crawl = function (direction) {
                 var value = contextService.fetchFromContext("crud_context", true);
                 var id = direction == 1 ? value.detail_previous : value.detail_next;

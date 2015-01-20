@@ -3,9 +3,9 @@
 app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, restService, searchService, redirectService,
                                                  contextService, alertService, associationService, modalService,
                                                  fieldService) {
-    var timeBetweenCharacters = isMobile() ? 35 : 14;
+    var timeBetweenCharacters = isMobile() ? 35 : 14; // Used by the jQuery scanner detection plug in to differentiate scanned data and data input from the keyboard
 
-    var updateAssociations = function (scope, schema, datamap, fieldMetadata) {
+    var updateAssociations = function (scope, schema, datamap, fieldMetadata, scannedData) {
         var lookupObj = {
             fieldMetadata: fieldMetadata
         };
@@ -27,7 +27,16 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
 
         var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
         var searchValues = {};
-        searchValues[fieldMetadata.attribute] = datamap.fields[fieldMetadata.attribute];
+        // Find the primary attribute of the associations relationship.
+        for (var key in fieldMetadata.entityAssociation.attributes) {
+            var attribute = fieldMetadata.entityAssociation.attributes[key];
+            if (attribute.primary == true) {
+                // Use the primary attribute to set the searchValues key 
+                // and the scanned data as the value.
+                searchValues[attribute.to] = scannedData;
+            }
+        }
+
         var searchOperators = {}
         for (var field in searchValues) {
             searchOperators[field] = defaultLookupSearchOperator;
@@ -39,14 +48,18 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
         var jsonString = angular.toJson(datamap.fields);
         $http.post(urlToUse, jsonString).success(function (data) {
             var result = data.resultObject;
-            for (var association in result) {
-                if (lookupObj.fieldMetadata.associationKey == association) {
-                    var associationResult = result[association];
-                    lookupObj.options = associationResult.associationData;
-                    lookupObj.schema = associationResult.associationSchemaDefinition;
-                }
+            if (Object.keys(result).length != 1 ||
+                !result[lookupObj.fieldMetadata.associationKey] ||
+                result[lookupObj.fieldMetadata.associationKey].associationData.length != 1) {
+                // Exit if more than one record is returned
+                alertService.alert("{0} is not a valid option for the {1} field".format(scannedData, fieldMetadata.label));
+                return false;
+            } else {
+                var associationResult = result[lookupObj.fieldMetadata.associationKey];
+                lookupObj.options = associationResult.associationData;
+                lookupObj.schema = associationResult.associationSchemaDefinition;
+                datamap.fields[fieldMetadata.target] = lookupObj.options[0].value;
             }
-            datamap.fields[fieldMetadata.target] = lookupObj.options[0].value;
             if (!scope.lookupAssociationsCode) {
                 scope["lookupAssociationsCode"] = {};
             }
@@ -209,11 +222,9 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                         // to see if they have a value
                         var currentAttribute = scanOrder[attribute];
                         if (datamap.fields[currentAttribute] === '' || datamap.fields[currentAttribute] === null) {
-                            // If the field in the datamap has no value, set it to the scanned data
-                            datamap.fields[currentAttribute] = data;
-                            // Update the associated values
+                            // Update the associated values using the new scanned data
                             var fieldMetadata = fieldService.getDisplayableByKey(schema, currentAttribute);
-                            updateAssociations(scope, schema, datamap, fieldMetadata);
+                            updateAssociations(scope, schema, datamap, fieldMetadata, data);
                             // Exit the loop once we have set a value from the scan
                             break;
                         }
@@ -221,6 +232,6 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                 },
             });
         },
-        
+
     };
 });

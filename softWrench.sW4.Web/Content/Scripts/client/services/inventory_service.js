@@ -116,7 +116,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             location: parameters['fields'][locationFieldName],
             siteid: parameters['fields']['siteid']
         };
-        searchService.searchWithData("invcost", searchData).success(function(data) {
+        searchService.searchWithData("invcost", searchData).success(function (data) {
             var resultObject = data.resultObject;
             var fields = resultObject[0].fields;
             var costtype = parameters['fields']['inventory_.costtype'];
@@ -796,7 +796,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         cancelTransfer: function() {
-            redirectService.goToApplication("matrectransTransfers", "list");
+            redirectService.goToApplication("matrectransTransfers", "matrectransTransfersList");
         },
 
         afterChangeTransferQuantity: function(event) {
@@ -821,6 +821,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             if (datamap['#issueqty'] > datamap['invbalances_.curbal']) {
                 alertService.alert("The quantity being issued cannot be greater than the current balance of the From Bin.");
                 return;
+            }
+            // If the bin is null, set to a blank space so the MIF interprets the blank bin value correctly.
+            if (datamap['invbalances_.binnum'] == null) {
+                datamap['invbalances_.binnum'] = "";
             }
             // Create new matusetrans record
             var matusetransDatamap = {
@@ -875,7 +879,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     var urlToUse = url("/api/data/reservedMaterials/" + datamap["requestnum"] + "?" + $.param(httpParameters));
                     $http.put(urlToUse, jsonString).success(function() {
                         // Return to the list of reserved materials
-                        redirectService.goToApplication("reservedMaterials", "list", null, null);
+                        redirectService.goToApplication("reservedMaterials", "reservedMaterialsList", null, null);
                     }).error(function() {
                         // Failed to update the material reservation
                     });
@@ -884,7 +888,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     var deleteUrl = url("/api/data/reservedMaterials/" + datamap["requestnum"] + "?" + $.param(httpParameters));
                     $http.delete(deleteUrl).success(function() {
                         // Return to the list of reserved materials
-                        redirectService.goToApplication("reservedMaterials", "list", null, null);
+                        redirectService.goToApplication("reservedMaterials", "reservedMaterialsList", null, null);
                     });
                 }
             });
