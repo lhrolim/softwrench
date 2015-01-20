@@ -686,7 +686,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <reference id="Location"/>
           <reference id="Status"/>
           <reference id ="Severity"/>
-          <association label ="System" target="system" labelfield="1commodities_.description">
+          <association label ="System" target="system" labelfield="1commodities_.description" >
             <dataprovider postfilterfunction="ParseCommoditiesList"/>
           </association>
           <association label ="Component" target="component" labelfield="2commodities_.description" dependantfields="system">
@@ -828,16 +828,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <reference id="Location"/>
           <reference id="Status"/>
           <reference id ="Severity"/>
-          <association label ="System" target="system" labelfield="1commodities_.description">
+          <association label ="System" target="system" labelfield="1commodities_.description" showexpression="!ctx:InModule(['tui','sso'])">
             <dataprovider postfilterfunction="ParseCommoditiesList"/>
           </association>
-          <association label ="Component" target="component" labelfield="2commodities_.description" dependantfields="system">
+          <association label ="Component" target="component" labelfield="2commodities_.description" dependantfields="system" showexpression="!ctx:InModule(['tui','sso'])">
             <dataprovider prefilterfunction="FilterComponent" postfilterfunction="ParseCommoditiesList"/>
           </association>
-          <association label ="Item" target ="item" labelfield="4commodities_.description" dependantfields="component">
+          <association label ="Item" target ="item" labelfield="4commodities_.description" dependantfields="component" showexpression="!ctx:InModule(['tui','sso'])">
             <dataprovider prefilterfunction="FilterItem" postfilterfunction="ParseCommoditiesList"/>
           </association>
-          <association label ="Module" target="module" labelfield="3commodities_.description" dependantfields="item">
+          <association label ="Module" target="module" labelfield="3commodities_.description" dependantfields="item" showexpression="!ctx:InModule(['tui','sso'])">
             <dataprovider prefilterfunction="FilterModule" postfilterfunction="ParseCommoditiesList" />
           </association>
           <commands removeundeclared="true">

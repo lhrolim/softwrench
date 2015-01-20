@@ -107,6 +107,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
     <application id="itcreport" title="ITC Report" tooltip="Click to view ITC Report" schema="itcreportfilters" ref="persongroupview" role="itcreport"/>
 
     <application id="incidentdetailreport" title="Incident Detail Report" tooltip="Click to view Incident Detail Report" schema="incidentdetailreportfilters" ref="incident"  modulealias="sso" modulename="sso" role="sso"/>
+    <application id="incidentdetailreport" title="Incident Detail Report" tooltip="Click to view Incident Detail Report" schema="incidentdetailreportfilters" ref="incident"  modulealias="tui" modulename="tui" role="tui"/>
 	</container>
   
 	<divider />

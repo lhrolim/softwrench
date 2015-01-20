@@ -217,10 +217,6 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             if (dbUser.CustomRoles == null) {
                 dbUser.CustomRoles = new HashedSet<UserCustomRole>();
             }
-            if (isTui) {
-                AddCustomRole(user, RoleType.IncidentDetailsReport);
-            }
-
             if (!isSSO && !isTui) {
                 //if not a tui nor sso, we need to add the default items on the menu (enduser...)
                 AddCustomRole(user, RoleType.Defaulthome);
@@ -233,6 +229,9 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                 RemoveCustomRole(user, RoleType.Defaultnewsr);
                 RemoveCustomRole(user, RoleType.Defaultsrgrid);
                 RemoveCustomRole(user, RoleType.Defaultssrsearch);
+
+                //remove it due to legacy data on swdb
+                RemoveCustomRole(user, RoleType.IncidentDetailsReport);
             }
             return user;
         }
