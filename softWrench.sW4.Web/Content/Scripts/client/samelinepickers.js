@@ -9,15 +9,17 @@ function SamelinePickersController($scope, $rootScope, formatService) {
     
     var joinDates = function (fields) {
         // Set value to null if neither date or time are present
-        if (fields[$scope.fieldMetadata.parameters['joinattribute'] + '_date'] == undefined && fields[$scope.fieldMetadata.parameters['joinattribute'] + '_time'] == undefined) {
+        var dateParameterName = $scope.fieldMetadata.parameters['joinattribute'] + '_date';
+        var timeParameterName = $scope.fieldMetadata.parameters['joinattribute'] + '_time';
+        if (fields[dateParameterName] == undefined && fields[timeParameterName] == undefined) {
             return;
         }
 
         // If date is not present, then apply today's date with desire time
-        var finalize_date = fields[$scope.fieldMetadata.parameters['joinattribute'] + '_date'] == undefined ? getCurrentDateString() : fields[$scope.fieldMetadata.parameters['joinattribute'] + '_date'];
+        var finalize_date = fields[dateParameterName] == undefined ? getCurrentDateString() : fields[dateParameterName];
 
         // If time is not present, then apply no time. 
-        var finalize_time = fields[$scope.fieldMetadata.parameters['joinattribute'] + '_time'] == undefined ? "" : " " + fields[$scope.fieldMetadata.parameters['joinattribute'] + '_time'];
+        var finalize_time = fields[timeParameterName] == undefined ? "" : " " + fields[timeParameterName];
 
         // Combine both date and time to form desire tiem.  
         fields[$scope.fieldMetadata.parameters['joinattribute']] = finalize_date + finalize_time;

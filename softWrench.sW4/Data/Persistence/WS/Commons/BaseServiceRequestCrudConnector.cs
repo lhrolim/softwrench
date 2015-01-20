@@ -19,39 +19,34 @@ using softWrench.sW4.Data.Persistence.Engine;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
-    class BaseServiceRequestCrudConnector : CrudConnectorDecorator
-    {
+    class BaseServiceRequestCrudConnector : CrudConnectorDecorator {
 
         protected AttachmentHandler _attachmentHandler;
 
         private readonly EmailService _emailService;
 
-        public BaseServiceRequestCrudConnector()
-        {
+        public BaseServiceRequestCrudConnector() {
             _attachmentHandler = new AttachmentHandler();
             _emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
         }
-        
-        public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData)
-        {
+
+        public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             // Update common fields or transactions prior to maximo operation exection
             CommonTransaction(maximoTemplateData);
 
             base.BeforeCreation(maximoTemplateData);
         }
 
-        public override void AfterCreation(MaximoOperationExecutionContext maximoTemplateData)
-        {
+        public override void AfterCreation(MaximoOperationExecutionContext maximoTemplateData) {
             base.AfterUpdate(maximoTemplateData);
             maximoTemplateData.OperationData.Id = maximoTemplateData.ResultObject.Id;
-            maximoTemplateData.OperationData.OperationType = Internal.OperationType.AddChange; 
+            maximoTemplateData.OperationData.OperationType = Internal.OperationType.AddChange;
 
             // Resubmitting MIF for ServiceAddress Update
             ConnectorEngine.Update((CrudOperationData)maximoTemplateData.OperationData);
         }
 
-        public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData)
-        {
+        public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             // Update common fields or transactions prior to maximo operation exection
             CommonTransaction(maximoTemplateData);
 
@@ -68,8 +63,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             base.BeforeUpdate(maximoTemplateData);
         }
 
-        public override void AfterUpdate(MaximoOperationExecutionContext maximoTemplateData)
-        {
+        public override void AfterUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             if (maximoTemplateData.Properties.ContainsKey("mailObject")) {
                 _emailService.SendEmail((EmailService.EmailData)maximoTemplateData.Properties["mailObject"]);
             }
@@ -79,8 +73,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         }
 
 
-        private void CommonTransaction(MaximoOperationExecutionContext maximoTemplateData)
-        {
+        private void CommonTransaction(MaximoOperationExecutionContext maximoTemplateData) {
             // Get current username that trigger the transaction
             var user = SecurityFacade.CurrentUser();
 
@@ -97,15 +90,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             // Update or create attachments
             var attachments = crudData.GetRelationship("attachment");
-            foreach (var attachment in (IEnumerable<CrudOperationData>)attachments)
-            {
+            foreach (var attachment in (IEnumerable<CrudOperationData>)attachments) {
                 HandleAttachmentAndScreenshot(attachment, sr, maximoTemplateData.ApplicationMetadata);
             }
         }
 
-        private bool HandleServiceAddress(MaximoOperationExecutionContext maximoTemplateData)
-        {
-            var data = (CrudOperationData)maximoTemplateData.OperationData; 
+        private bool HandleServiceAddress(MaximoOperationExecutionContext maximoTemplateData) {
+            var data = (CrudOperationData)maximoTemplateData.OperationData;
             var user = SecurityFacade.CurrentUser();
             var saddresscode = data.GetUnMappedAttribute("saddresscode");
 
@@ -127,17 +118,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValue(tkserviceaddress, "STADDRSTREET", streetaddr);
             w.SetValue(tkserviceaddress, "STADDRSTTYPE", streettype);
 
-            return true; 
+            return true;
         }
 
-        private void HandleAttachmentAndScreenshot(CrudOperationData data, object maximoObj, ApplicationMetadata applicationMetadata)
-        {
+        private void HandleAttachmentAndScreenshot(CrudOperationData data, object maximoObj, ApplicationMetadata applicationMetadata) {
             // Check if Attachment is present
             var attachmentString = data.GetUnMappedAttribute("newattachment");
             var attachmentPath = data.GetUnMappedAttribute("newattachment_path");
 
-            if (!String.IsNullOrWhiteSpace(attachmentString) && !String.IsNullOrWhiteSpace(attachmentPath))
-            {
+            if (!String.IsNullOrWhiteSpace(attachmentString) && !String.IsNullOrWhiteSpace(attachmentPath)) {
                 _attachmentHandler.HandleAttachments(maximoObj, attachmentString, attachmentPath, applicationMetadata);
             }
 
@@ -145,11 +134,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var screenshotString = data.GetUnMappedAttribute("newscreenshot");
             var screenshotName = data.GetUnMappedAttribute("newscreenshot_path");
 
-            if (!String.IsNullOrWhiteSpace(screenshotString) && !String.IsNullOrWhiteSpace(screenshotName))
-            {
+            if (!String.IsNullOrWhiteSpace(screenshotString) && !String.IsNullOrWhiteSpace(screenshotName)) {
 
-                if (screenshotName.ToLower().EndsWith("rtf"))
-                {
+                if (screenshotName.ToLower().EndsWith("rtf")) {
                     var bytes = Convert.FromBase64String(screenshotString);
                     var decodedString = Encoding.UTF8.GetString(bytes);
                     var compressedScreenshot = CompressionUtil.CompressRtf(decodedString);
