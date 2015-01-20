@@ -3,6 +3,7 @@
 app.directive('messagesection', function (contextService) {
     return {
         restrict: 'E',
+        //TODO: missing scope isolation here
         templateUrl: contextService.getResourceUrl('Content/Templates/message_section.html'),
         controller: function ($scope, i18NService, $rootScope, fixHeaderService, $log, $timeout) {
 

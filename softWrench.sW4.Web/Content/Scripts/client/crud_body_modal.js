@@ -5,7 +5,7 @@ app.directive('crudBodyModalWrapper', function ($compile) {
         restrict: 'E',
         replace: true,
         template: "<div data-id='crud-modal-wrapper'></div>",
-       
+
         link: function (scope, element, attrs) {
             if (scope.modalincluded) {
                 element.append(
@@ -27,29 +27,20 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                 $compile(element.contents())(scope);
             }
 
-           
+
         },
 
-        controller: function($injector,$scope,$rootScope,fieldService) {
+        controller: function ($injector, $scope, $rootScope, fieldService, $element) {
             $scope.$name = "crudbodymodalwrapper";
+
+
          
-
-            $scope.$on('sw.modal.hide', function (event) {
-                $scope.hideModal();
-            });
-
-     
-
-            $scope.hideModal = function () {
-                $('#crudmodal').modal('hide');
-                $rootScope.showingModal = false;
-            }
 
 
 
             function doInit() {
-              
-              
+
+
             }
 
             doInit();
@@ -60,7 +51,7 @@ app.directive('crudBodyModalWrapper', function ($compile) {
 });
 
 
-app.directive('crudBodyModal', function ($rootScope,modalService) {
+app.directive('crudBodyModal', function ($rootScope, modalService) {
     return {
         restrict: 'E',
         replace: true,
@@ -95,23 +86,33 @@ app.directive('crudBodyModal', function ($rootScope,modalService) {
             }
         },
 
-    
+
 
         controller: function ($scope, $http, $filter, $injector,
            formatService, fixHeaderService,
            searchService, tabsService,
            fieldService, commandService, i18NService,
            submitService, redirectService,
-           associationService, contextService, alertService, validationService) {
+           associationService, contextService, alertService, validationService, $element) {
 
             $scope.$name = "crudbodymodal";
             $scope.save = function (selecteditem) {
                 $scope.savefn({ selecteditem: selecteditem });
             }
 
-            $scope.cancel = function () {
+            $scope.$on('sw.modal.hide', function (event) {
+                $scope.closeModal();
+            });
+
+            $scope.closeModal = function () {
+                $scope.modalshown = false;
                 $('#crudmodal').modal('hide');
                 $rootScope.showingModal = false;
+                $('.no-touch [rel=tooltip]').tooltip('hide');
+            }
+
+            $scope.cancel = function () {
+                $scope.closeModal();
                 if ($scope.cancelfn) {
                     $scope.cancelfn();
                 }
@@ -119,6 +120,7 @@ app.directive('crudBodyModal', function ($rootScope,modalService) {
 
             $scope.$on('sw.modal.show', function (event, modaldata) {
                 $scope.showModal(modaldata);
+                $scope.modalshown = true;
             });
 
             $scope.showModal = function (modaldata) {
@@ -142,11 +144,11 @@ app.directive('crudBodyModal', function ($rootScope,modalService) {
                 associationService.getEagerAssociations($scope, { datamap: datamapToUse });
             }
 
-         
+
             $scope.save = function (selecteditem) {
                 $scope.savefn({ selecteditem: selecteditem });
             }
-          
+
             function doInit() {
 
 

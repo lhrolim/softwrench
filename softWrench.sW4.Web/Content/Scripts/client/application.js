@@ -314,6 +314,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
     };
 
     $scope.toListSchema = function (data, schema) {
+        var log =$log.getInstance('application#toListSchema');
         $scope.multipleSchema = false;
         $scope.schemas = null;
         //                $('#crudmodal').modal('hide');
@@ -342,12 +343,14 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         // at this point, usually schema should be a list schema, on cancel call for instance, where we pass the previous schema. same goes for the datamap
         // this first if is more of an unexpected case
         if ($scope.schema == null || $scope.datamap == null || $scope.schema.stereotype == 'Detail') {
+            log.debug('rendering list view from server');
             $scope.renderListView(parameters);
         } else {
             if (schema) {
                 //SM - SWWEB-619 temp fix, at times (before everything is loaded?), this is run without a schema causing an exception, resulting in a UI glich
                 $scope.$emit('sw_titlechanged', schema.title);
             }
+            log.debug('rendering list view with previous data');
             $scope.toList(null);
         }
         //}
