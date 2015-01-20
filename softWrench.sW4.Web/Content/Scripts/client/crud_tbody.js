@@ -69,21 +69,28 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
             }
 
             scope.statusColor = function (status, gridname) {
+                /* in case of change grid colors might be different */
+                if (gridname != null && gridname == "change") {
+                    if (status.equalsAny("INPRG"))
+                        return "blue";
+                }
+
+                /* otherwise use general coloring */
                 if (status.equalsAny("NEW", "WAPPR", "WSCH")) {
                     return "orange";
                 }
-                if (status.equalsAny("QUEUED", "INPROG", "null")) {
+                if (status.equalsAny("QUEUED", "INPROG", "INPRG", "PENDING", "null")) {
                     return "yellow";
                 }
 
-                if (status.equalsAny("CANCELLED", "FAIL", "CAN", "FAILPIR", "REJECTED", "NOTREQ")) {
+                if (status.equalsAny("CANCELLED", "FAIL", "FAILED", "CAN", "FAILPIR", "REJECTED", "NOTREQ")) {
                     return "red";
                 }
 
-                if (status.equalsAny("RESOLVED", "SLAHOLD", "SCHED", "APPR", "AUTHORIZED", "AUTH", "HOLDINPRG", "INPRG", "PLANNED", "ACC_CAT", "ASSESSES")) {
+                if (status.equalsAny("RESOLVED", "SLAHOLD", "SCHED", "APPR", "AUTHORIZED", "AUTH", "HOLDINPRG", "PLANNED", "ACC_CAT", "ASSESSES", "PENDAPPR", "RCACOMP", "WMATL")) {
                     return "blue";
                 }
-                if (status.equalsAny("CLOSED", "RESOLVCONF", "IMPL", "REVIEW", "CLOSE", "HISTEDIT", "COMP", "INPRG", "PLANNED")) {
+                if (status.equalsAny("CLOSED", "RESOLVCONF", "IMPL", "IMPLEMENTED", "REVIEW", "CLOSE", "HISTEDIT", "COMP")) {
                     return "green";
                 }
                 if (status.equalsAny("DRAFT")) {

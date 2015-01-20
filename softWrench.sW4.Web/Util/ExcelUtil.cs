@@ -19,6 +19,7 @@ namespace softWrench.sW4.Web.Util {
     public class ExcelUtil : ISingletonComponent {
 
         private readonly Dictionary<String, String> _cellStyleDictionary;
+        private readonly Dictionary<String, String> _changeCellStyleDictionary;
 
         private readonly I18NResolver _i18NResolver;
 
@@ -43,26 +44,36 @@ namespace softWrench.sW4.Web.Util {
                 {"COMP", "3"},
                 {"DRAFT", "7"},
                 {"FAIL", "2"},
+                {"FAILED", "2"},
                 {"FAILPIR", "2"},
                 {"HISTEDIT", "3"},
                 {"HOLDINPRG", "6"},
                 {"IMPL", "3"},
-                {"INPRG", "6"},
+                {"IMPLEMENTED", "3"},
+                {"INPRG", "4"},
                 {"INPROG", "4"},
                 {"NEW", "5"},
                 {"NOTREQ", "2"},
                 {"null", "4"},
+                {"PENDING", "4"},
+                {"PENDAPPR", "6"},
                 {"PLANNED", "6"},
                 {"QUEUED", "4"},
                 {"REJECTED", "2"},
+                {"RCACOMP", "6"},
                 {"RESOLVCONF", "3"},
                 {"RESOLVED", "6"},
                 {"REVIEW", "3"},
                 {"SCHED", "6"},
                 {"SLAHOLD", "6"},
                 {"WAPPR", "5"},
+                {"WMATL", "6"},
                 {"WSCH", "5"}
             };
+
+            _changeCellStyleDictionary = new Dictionary<string, string>{
+                {"ACC_CAT", "6"}
+             };
         }
 
         public SLDocument ConvertGridToExcel(InMemoryUser user, ApplicationSchemaDefinition schema, IEnumerable<AttributeHolder> rows) {
@@ -135,13 +146,14 @@ namespace softWrench.sW4.Web.Util {
                         // that's the default style
                         var styleId = "1";
                         if (applicationField.Attribute.Contains("status") && ApplicationConfiguration.ClientName == "hapag") {
-                            var success = _cellStyleDictionary.TryGetValue(data.Trim(), out styleId);
+                            var success = getColor(data.Trim(), schema.Name, ref styleId);
+                           
                             if (!success) {
                                 // check if status is something like NEW 1/4 (and make sure it doesn't match e.g. NEW REQUEST).
                                 var match = Regex.Match(data.Trim(), "(([A-Z]+ )+)[1-9]+/[1-9]+");
                                 if (match.Success) {
                                     var status = match.Groups[2].Value.Trim();
-                                    var compundStatus = _cellStyleDictionary.TryGetValue(status, out styleId);
+                                    var compundStatus = getColor(status, schema.Name, ref styleId);
                                     if (!compundStatus) {
                                         styleId = "1";
                                     }
@@ -212,6 +224,21 @@ namespace softWrench.sW4.Web.Util {
                 SetColumnWidth(excelFile, applicationFields);
                 return excelFile;
             }
+        }
+
+        private bool getColor(string status, string schemaName, ref string styleId) {
+            var success = false;
+            //var styleId2 = "1";
+            if (schemaName != null && schemaName.Equals("change"))
+            {
+                success = _changeCellStyleDictionary.TryGetValue(status, out styleId);
+            }
+            if (!success)
+            {
+                success = _cellStyleDictionary.TryGetValue(status, out styleId);
+            }
+           // styleId = styleId2;
+            return success;
         }
 
         private static Func<ApplicationFieldDefinition, bool> ShouldShowField() {
