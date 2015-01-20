@@ -37,7 +37,7 @@ namespace softWrench.sW4.Util {
                             var fieldMetadata = schema.Fields.Where(f => f.Attribute == key).FirstOrDefault();
                             if (fieldMetadata != null && fieldMetadata.RendererParameters.ContainsKey("format")) {
                                 var format = fieldMetadata.RendererParameters["format"];
-                                dr[key] = ((DateTime)map[key]).FromMaximoToUser(user).ToString(format);
+                                dr[key] = ((DateTime)map[key]).FromMaximoToUser(user).ToString(format as string);
                             } else {
                                 dr[key] = ((DateTime)map[key]).FromMaximoToUser(user).ToString();
                             }

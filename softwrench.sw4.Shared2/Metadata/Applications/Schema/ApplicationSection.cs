@@ -20,7 +20,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public string Resourcepath { get; set; }
         public string Label { get; set; }
         public string Attribute { get; set; }
-        public IDictionary<string, string> Parameters { get; set; }
+        public IDictionary<string, object> Parameters { get; set; }
         public string ShowExpression { get; set; }
         public string ToolTip { get; set; }
         public bool? ReadOnly {
@@ -42,8 +42,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get { return _renderer.RendererType; }
         }
 
-        public IDictionary<string, string> RendererParameters {
-            get { return _renderer == null ? new Dictionary<string, string>() : _renderer.ParametersAsDictionary(); }
+        public IDictionary<string, object> RendererParameters {
+            get { return _renderer == null ? new Dictionary<string, object>() : _renderer.ParametersAsDictionary(); }
         }
 
         public FieldRenderer Renderer {

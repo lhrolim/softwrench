@@ -258,6 +258,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string OptionFieldElement = "optionfield";
         public const string OptionFieldSortAttribute = "sort";
         public const string OptionFieldProviderAttribute = "providerattribute";
+        public const string OptionFieldProviderAttributeExtraParameter = "extraparameter";
         public const string OptionElement = "option";
         public const string OptionElementValueAttribute = "value";
         public const string OptionElementLabelAttribute = "label";

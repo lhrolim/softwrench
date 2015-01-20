@@ -6,7 +6,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
     public class AssociationFieldRenderer : FieldRenderer {
 
-        private const string WrongRenderer = "renderer {0} not found. Possible options are AUTOCOMPLETECLIENT, AUTOCOMPLETESERVER, COMBO, LOOKUP, CUSTOM and COMBODROPDOWN";
+        private const string WrongRenderer = "renderer {0} not found. Possible options are AUTOCOMPLETECLIENT, AUTOCOMPLETESERVER, COMBO, LOOKUP, MODAL, CUSTOM and COMBODROPDOWN";
 
         private AssociationRendererType EnumRendererType { get; set; }
 
@@ -31,7 +31,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         }
 
         public enum AssociationRendererType {
-            AUTOCOMPLETECLIENT, AUTOCOMPLETESERVER, COMBO, LOOKUP, CUSTOM, COMBODROPDOWN
+            AUTOCOMPLETECLIENT, AUTOCOMPLETESERVER, COMBO, LOOKUP, CUSTOM, COMBODROPDOWN, MODAL
         }
 
         public bool IsLazyLoaded {

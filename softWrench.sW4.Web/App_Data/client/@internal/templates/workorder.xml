@@ -9,6 +9,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <template path="@labtrans.xml"/>
     <template path="@woactivity.xml"/>
     <template path="@asset.xml"/>
+    <template path="@glcomponents.xml"/>
   </templates>
 
   <entities>
@@ -56,6 +57,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <relationship to="numericdomain" qualifier="synpriority">
           <relationshipAttribute from="wopriority" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WO PRIORITY" quoteLiteral="true" />
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
       </relationships>
     </entity>
@@ -183,8 +187,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <dataprovider prefilterfunction="FilterProblemCodes"/>
             </association>
             <field label="Job Plan:" attribute="jpnum" readonly="true" />
-            <association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
-              <renderer type="lookup"/>
+            <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >
+              <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
             </association>
 
 

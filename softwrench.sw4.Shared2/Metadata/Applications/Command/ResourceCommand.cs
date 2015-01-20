@@ -10,9 +10,9 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
         public string Position { get; set; }
         public string Role { get; set; }
 
-        private readonly IDictionary<string, string> _parameters;
+        private readonly IDictionary<string, object> _parameters;
 
-        public IDictionary<string, string> Parameters {
+        public IDictionary<string, object> Parameters {
             get { return _parameters; }
         }
 

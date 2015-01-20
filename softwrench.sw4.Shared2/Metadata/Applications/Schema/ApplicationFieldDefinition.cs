@@ -82,11 +82,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get { return _renderer.RendererType; }
         }
 
-        public IDictionary<string, string> RendererParameters {
-            get { return _renderer == null ? new Dictionary<string, string>() : _renderer.ParametersAsDictionary(); }
+        public IDictionary<string, object> RendererParameters {
+            get { return _renderer == null ? new Dictionary<string, object>() : _renderer.ParametersAsDictionary(); }
         }
-        public IDictionary<string, string> FilterParameters {
-            get { return _filter == null ? new Dictionary<string, string>() : _filter.ParametersAsDictionary(); }
+        public IDictionary<string, object> FilterParameters {
+            get { return _filter == null ? new Dictionary<string, object>() : _filter.ParametersAsDictionary(); }
         }
 
         protected bool Equals(ApplicationFieldDefinition other) {

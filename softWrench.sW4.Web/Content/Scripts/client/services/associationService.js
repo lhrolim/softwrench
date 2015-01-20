@@ -285,7 +285,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
         },
 
-        getEagerAssociations: function (scope) {
+        getEagerAssociations: function (scope,options) {
             var associations = fieldService.getDisplayablesOfTypes(scope.schema.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
             if (associations == undefined || associations.length == 0) {
                 //no need to hit server in that case
@@ -296,14 +296,14 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             scope.associationOptions = instantiateIfUndefined(scope.associationOptions);
             scope.blockedassociations = instantiateIfUndefined(scope.blockedassociations);
             scope.associationSchemas = instantiateIfUndefined(scope.associationSchemas);
-            return this.updateAssociations({ attribute: "#eagerassociations" }, scope);
+            return this.updateAssociations({ attribute: "#eagerassociations" }, scope, options);
         },
 
         // This method is called whenever an association value changes, in order to update all the dependant associations 
         // of this very first association.
         // This would only affect the eager associations, not the lookups, because they would be fetched at the time the user opens it.
         // Ex: An asset could be filtered by the location, so if a user changes the location field, the asset should be refetched.
-        updateAssociations: function (association, scope) {
+        updateAssociations: function (association, scope, options) {
             var triggerFieldName = association.attribute;
             var schema = scope.schema;
             if (triggerFieldName != "#eagerassociations" && $.inArray(triggerFieldName, schema.fieldWhichHaveDeps) == -1) {
@@ -316,11 +316,15 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
             var applicationName = schema.applicationName;
             var fields = scope.datamap;
+
             if (scope.datamap.fields) {
                 fields = scope.datamap.fields;
             }
 
-
+            if (options && options.datamap) {
+                fields = options.datamap;
+            }
+            
             var parameters = {
                 application: applicationName,
                 key: {

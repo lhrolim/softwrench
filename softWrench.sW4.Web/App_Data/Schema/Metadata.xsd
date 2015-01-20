@@ -531,6 +531,14 @@
         </documentation>
       </annotation>
     </attribute>
+    <attribute name="extraparameter" type="string" use="optional">
+      <annotation>
+        <documentation>
+          Use this attribute only if providerattribute is used.
+          This will provide addition input parameter if needed.
+        </documentation>
+      </annotation>
+    </attribute>
     <attribute name="sort" type="boolean"></attribute>
     <attribute name="dependantfields" type="string"></attribute>
     <attribute name="qualifier" type="string"></attribute>

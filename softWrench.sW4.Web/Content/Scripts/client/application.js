@@ -6,7 +6,7 @@ app.directive('bodyrendered', function ($timeout, $log, menuService) {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
-            if (scope.schema.mode != 'output') {
+            if (scope.schema.mode != 'output' && scope.isSelectEnabled) {
                 element.data('selectenabled', scope.isSelectEnabled(scope.fieldMetadata));
             }
             if (scope.$last === true) {
@@ -51,7 +51,7 @@ app.directive('filterrowrendered', function ($timeout) {
     };
 });
 
-function ApplicationController($scope, $http, $log, $templateCache, $timeout, fixHeaderService, $rootScope, associationService, validationService, contextService, searchService) {
+function ApplicationController($scope, $http, $log, $templateCache, $timeout, fixHeaderService, $rootScope, associationService, validationService, contextService, searchService,alertService,schemaService) {
     $scope.$name = 'applicationController';
 
     function switchMode(mode, scope) {
@@ -299,6 +299,87 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         $scope.requestpopup = null;
     };
 
+
+    $scope.toConfirmCancel = function (data, schema) {
+
+        if (validationService.getDirty()) {
+            alertService.confirmCancel(null, null, function () {
+                $scope.toListSchema(data, schema);
+                $scope.$digest();
+            }, "Are you sure you want to cancel ?", function () { return; });
+        }
+        else {
+            $scope.toListSchema(data, schema);
+        }
+    };
+
+    $scope.toListSchema = function (data, schema) {
+        var log =$log.getInstance('application#toListSchema');
+        $scope.multipleSchema = false;
+        $scope.schemas = null;
+        //                $('#crudmodal').modal('hide');
+        $scope.showingModal = false;
+        if (GetPopUpMode() == 'browser') {
+            open(location, '_self').close();
+        }
+        var parameters = {};
+        if (schema != null && data != null) {
+            $scope.schema = schema;
+            $scope.datamap = data;
+        } else {
+            //if they are both null, it means that the previous data does not exist (F5 on browser). 
+            //Let´s keep them untouched until the new one comes from server, otherwise after the $http call there will be errors on the $digest evalution
+            var cancelSchema = $scope.schema.properties['detail.cancel.click'];
+            if (cancelSchema) {
+                //if this schema registers another application/schema/mode entry for the cancel click, let´s use it
+                var result = schemaService.parseAppAndSchema(cancelSchema);
+                parameters.application = result.app;
+                parameters.schema = result.schemaId;
+                parameters.mode = result.mode;
+            }
+
+        }
+
+        // at this point, usually schema should be a list schema, on cancel call for instance, where we pass the previous schema. same goes for the datamap
+        // this first if is more of an unexpected case
+        if ($scope.schema == null || $scope.datamap == null || $scope.schema.stereotype == 'Detail') {
+            log.debug('rendering list view from server');
+            $scope.renderListView(parameters);
+        } else {
+            if (schema) {
+                //SM - SWWEB-619 temp fix, at times (before everything is loaded?), this is run without a schema causing an exception, resulting in a UI glich
+                $scope.$emit('sw_titlechanged', schema.title);
+            }
+            log.debug('rendering list view with previous data');
+            $scope.toList(null);
+        }
+        //}
+    };
+
+    $scope.renderListView = function (parameters) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameters">
+        ///  application --> overrides the default application which would be the same as current. Useful for cancel clicks that should span different applications (on F5)
+        /// </param>
+        var applicationToGo = $scope.applicationname;
+        if (parameters && parameters.application) {
+            applicationToGo = parameters.application;
+        }
+        var schemaToGo = 'list';
+        if (parameters && parameters.schema) {
+            schemaToGo = parameters.schema;
+        }
+
+        $scope.multipleSchema = false;
+        $scope.schemas = null;
+        if ($scope.schema != null && $scope.schema.stereotype.isEqual('list', true)) {
+            //if we have a list schema already declared, keep it
+            schemaToGo = $scope.schema.schemaId;
+        }
+        $scope.renderView(applicationToGo, schemaToGo, 'none', $scope.title, parameters);
+    };
 
 
 

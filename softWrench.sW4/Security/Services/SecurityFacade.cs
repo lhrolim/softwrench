@@ -157,7 +157,7 @@ namespace softWrench.sW4.Security.Services {
             var timezone = String.Empty;
             if (formsIdentity != null && formsIdentity.Ticket != null && !String.IsNullOrWhiteSpace(formsIdentity.Ticket.UserData)) {
                 var userData = PropertyUtil.ConvertToDictionary(formsIdentity.Ticket.UserData);
-                timezone = userData["userTimezoneOffset"];
+                timezone = userData["userTimezoneOffset"] as string;
             }
             UserFound(dbUser, timezone);
             return _users[currLogin];

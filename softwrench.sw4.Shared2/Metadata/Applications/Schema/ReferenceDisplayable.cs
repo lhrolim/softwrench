@@ -23,7 +23,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
 
         public string EnableExpression { get; set; }
 
-        public IDictionary<string, string> Properties { get; set; }
+        public IDictionary<string, object> Properties { get; set; }
 
         public string PropertiesString {
             set { Properties = PropertyUtil.ConvertToDictionary(value); }

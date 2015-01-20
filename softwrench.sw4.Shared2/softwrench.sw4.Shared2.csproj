@@ -121,6 +121,7 @@
     <Compile Include="Metadata\Offline\MobileMetadataDownloadResponseDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\DateUtil.cs" />
+    <Compile Include="Util\DictionaryUtil.cs" />
     <Compile Include="Util\DisplayableUtil.cs" />
     <Compile Include="Util\EntityUtil.cs" />
     <Compile Include="Util\ParsingUtil.cs" />
