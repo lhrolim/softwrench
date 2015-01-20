@@ -407,7 +407,7 @@ app.directive('compositionList', function (contextService) {
                 //                var compositionsToExpand = { 'worklog_': true };
 
                 params.options.compositionsToExpand = tabsService.buildCompositionsToExpand(compositionsToExpand, parentSchema,
-                    $scope.parentdata, $scope.compositiondetailschema.schemaId);
+                    $scope.parentdata, $scope.compositiondetailschema.schemaId,[],false);
                 params.options.printMode = true;
                 return params;
             }

@@ -82,6 +82,10 @@
 
 
     $scope.shouldshowaction = function (compositionitem, schema, compositionschema) {
+        if (!compositionschema) {
+            //print mode
+            return false;
+        }
         var schemaId = compositionschema.applicationName;
         var isJobPlan = schemaId == "woactivity";
         if (isJobPlan) {

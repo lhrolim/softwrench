@@ -112,7 +112,7 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
             var notExpansibleCompositions = [];
             var expansibleCompositions = {};
             if (printOptions != null) {
-                params.options.compositionsToExpand = tabsService.buildCompositionsToExpand(printOptions.compositionsToExpand, schema, datamap, 'print', notExpansibleCompositions);
+                params.options.compositionsToExpand = tabsService.buildCompositionsToExpand(printOptions.compositionsToExpand, schema, datamap, 'print', notExpansibleCompositions,true);
             }
             params.options.printMode = true;
             var shouldPageBreak = printOptions == undefined ? true : printOptions.shouldPageBreak;

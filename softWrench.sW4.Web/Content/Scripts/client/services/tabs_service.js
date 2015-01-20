@@ -106,7 +106,7 @@ app.factory('tabsService', function (fieldService,i18NService) {
         * Returns a string in the same format the server expects for expanding the compositions on the ExtendedDataController.ExpandCompositions method
         *
         */
-        buildCompositionsToExpand: function (compositionsToExpandObj, schema, datamap, schemaId, notExpansible) {
+        buildCompositionsToExpand: function (compositionsToExpandObj, schema, datamap, schemaId, notExpansible, printMode) {
             var resultString = "";
             if (compositionsToExpandObj == null) {
                 return "";
@@ -141,7 +141,7 @@ app.factory('tabsService', function (fieldService,i18NService) {
                     return;
                 }
                 var printSchema = getCompositionSchema(schema, key, schemaId);
-                if (printSchema.schemaId == currentSchema.schemaId) {
+                if (printMode && printSchema.schemaId == currentSchema.schemaId) {
                     notExpansible.push({ key: key, schema: currentSchema });
                     return;
                 }
