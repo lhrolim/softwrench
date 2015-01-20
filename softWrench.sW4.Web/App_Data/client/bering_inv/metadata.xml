@@ -7,6 +7,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <template path="@workorder.xml"/>
     <template path="@item.xml"/>
     <template path="@longdescription.xml"/>
+    <template path="@glcomponents.xml"/>
   </templates>
 
   <!--bering-->
@@ -40,9 +41,32 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute from="lotnum" to="lotnum"/>
         </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWINVBAL" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="glcomponents" idAttribute="glcomponentsid">
+      <attributes>
+        <attribute name="glorder" type="smallint" required="true" />
+        <attribute name="compvalue" type="varchar" required="true" />
+        <attribute name="comptext" type="varchar" required="true" />
+        <attribute name="userid" type="varchar" required="false" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="active" type="smallint" required="true" />
+        <attribute name="glcomponentsid" type="bigint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="glcomponents" />
       </connectorParameters>
     </entity>
 
@@ -99,6 +123,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="item">
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
         </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="inventory" />
@@ -114,6 +141,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="storeloc" to="location"/>
           <relationshipAttribute to="moved" literal="0" quoteLiteral="true"/>
           <!--<relationshipAttribute to="returnedtovendor" literal="0" quoteLiteral="true"/>-->
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -430,8 +460,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <association label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid">
               <renderer type="lookup"/>
             </association>
-            <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname">
-              <renderer type="lookup"/>
+            <association label="GL Debit Account" target="gldebitacct"  labelfield="glcomponents_.comptext" >
+              <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
             </association>
           </section>
           <commandbars>
@@ -541,6 +571,30 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <field attribute="siteid"/>
           </list>
         </schemas>
-      </application> 
+      </application>
+
+    <application name="glcomponents" title="GL-Selector" entity="glcomponents">
+      <schemas>
+        <schema id="detail" title="GL Details" abstract="true" stereotype="detail" mode="input">
+          <optionfield label="Cost Center:" attribute="glpart-0" requiredexpression="true" providerattribute="_0GLAccountPartN" extraparameter="0">
+            <renderer type="AUTOCOMPLETECLIENT"/>
+          </optionfield>
+          <optionfield label="Sub-Element:" attribute="glpart-1" requiredexpression="true" providerattribute="_1GLAccountPartN" extraparameter="1">
+            <renderer type="AUTOCOMPLETECLIENT"/>
+          </optionfield>
+          <optionfield label="Workload:" attribute="glpart-2" requiredexpression="true" providerattribute="_2GLAccountPartN" extraparameter="2">
+            <renderer type="AUTOCOMPLETECLIENT"/>
+          </optionfield>
+          <optionfield label="SLIN:" attribute="glpart-3" providerattribute="_3GLAccountPartN" extraparameter="3">
+            <renderer type="AUTOCOMPLETECLIENT"/>
+          </optionfield>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="print"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
   </applications>
 </metadata>
