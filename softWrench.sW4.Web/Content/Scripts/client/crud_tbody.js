@@ -136,7 +136,7 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                         } 
                         html += ">";
                         if (column.rendererType == 'color') {
-                            var color = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', null);
+                            var color = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);
                             html += "<div class='statuscolumncolor' style='background-color:{0}'>".format(color);
                         } else if (column.rendererType == 'checkbox') {
                             var name = column.attribute;

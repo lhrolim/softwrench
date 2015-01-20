@@ -346,30 +346,6 @@ app.directive('crudList', function (contextService) {
                 return column.type == "ApplicationFieldDefinition" && column.rendererType != "color";
             }
 
-            $scope.statusColor = function (status, gridname) {
-                if (status.equalsAny("NEW", "WAPPR", "WSCH")) {
-                    return "orange";
-                }
-                if (status.equalsAny("QUEUED", "INPROG", "null")) {
-                    return "yellow";
-                }
-
-                if (status.equalsAny("CANCELLED", "FAIL", "CAN", "FAILPIR", "REJECTED", "NOTREQ")) {
-                    return "red";
-                }
-
-                if (status.equalsAny("RESOLVED", "SLAHOLD", "SCHED", "APPR", "AUTHORIZED", "AUTH", "HOLDINPRG", "INPRG", "PLANNED", "ACC_CAT", "ASSESSES")) {
-                    return "blue";
-                }
-                if (status.equalsAny("CLOSED", "RESOLVCONF", "IMPL", "REVIEW", "CLOSE", "HISTEDIT", "COMP", "INPRG", "PLANNED")) {
-                    return "green";
-                }
-                if (status.equalsAny("DRAFT")) {
-                    return "white";
-                }
-                return "transparent";
-            }
-
 
 
             $scope.sort = function (column) {
