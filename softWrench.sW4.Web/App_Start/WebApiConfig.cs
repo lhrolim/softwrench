@@ -2,7 +2,7 @@
 using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.SPF.Filters;
 
-namespace softWrench.sW4.Web.App_Start {
+namespace softWrench.sW4.Web {
     public static class WebApiConfig {
         public static void Register(HttpConfiguration config) {
             ConfigRoutes(config);
@@ -22,10 +22,11 @@ namespace softWrench.sW4.Web.App_Start {
         }
 
         private static void ConfigRoutes(HttpConfiguration config) {
+            
             config.Routes.MapHttpRoute(
                 "DataApi",
-                "api/data/crud/{application}/{id}",
-                new { id = RouteParameter.Optional, application = RouteParameter.Optional, controller = "Data" });
+                "api/data/crud/",
+                new { controller = "Data" });
 
             config.Routes.MapHttpRoute(
                 "SyncApi",
@@ -50,9 +51,9 @@ namespace softWrench.sW4.Web.App_Start {
                 new { controller = "Menu" });
 
             config.Routes.MapHttpRoute(
-                name: "SecurityApi",
-                routeTemplate: "api/security/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                "SecurityApi",
+                "api/security/{controller}/{id}",
+                new { id = RouteParameter.Optional }
                 );
 
             config.Routes.MapHttpRoute(
@@ -63,9 +64,9 @@ namespace softWrench.sW4.Web.App_Start {
 
 
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{application}/{id}",
-                defaults: new { id = RouteParameter.Optional, application = RouteParameter.Optional }
+                "DefaultApi", 
+                "api/{controller}/{application}/{id}", 
+                new { id = RouteParameter.Optional, application = RouteParameter.Optional }
                 );
         }
     }

@@ -17,7 +17,7 @@ namespace softWrench.sW4.Configuration.Services {
         private const string NoLookupCondition = "Multiple values found for definition {0}, but no lookupcondition specified. Applying default";
         private const string NoPropertiesForContext = "No Properties found for context {0}, retrieving default value";
 
-        private static readonly ILog Log = log4net.LogManager.GetLogger(typeof(ConfigurationService));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigurationService));
 
         private static readonly ConcurrentDictionary<string, ConcurrentDictionary<ContextHolder, object>> ConfigCache = new ConcurrentDictionary<string, ConcurrentDictionary<ContextHolder, object>>();
 

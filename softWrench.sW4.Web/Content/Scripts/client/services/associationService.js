@@ -227,7 +227,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                         return;
                     }
                     //clear datamap for the association updated -->This is needed due to a IE9 issue
-                    var previousValue = datamap[value.target];
+                    var previousValue = datamap[value.target] == null ? null : datamap[value.target].toString();
                     datamap[value.target] = null;
 
                     if (array.associationData == null) {
@@ -238,8 +238,9 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
                     if (previousValue != null) {
                         for (var j = 0; j < array.associationData.length; j++) {
-                            if (array.associationData[j].value.toUpperCase() == previousValue.toUpperCase()) {
-                                var fullObject = array.associationData[j];
+                            var associationOption = array.associationData[j];
+                            if (associationOption.value.toUpperCase() == previousValue.toUpperCase()) {
+                                var fullObject = associationOption;
                                 $timeout(function () {
                                     log.debug('restoring {0} to previous value {1}. '.format(value.target, previousValue));
                                     //if still present on the new list, setting back the value which was 
@@ -331,7 +332,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 id: fields[schema.idFieldName]
             };
             var fieldsTosubmit = submitService.removeExtraFields(fields, true, scope.schema);
-            var urlToUse = url("/api/generic/Data/UpdateAssociation?" + $.param(parameters));
+            var urlToUse = url("/api/generic/ExtendedData/UpdateAssociation?" + $.param(parameters));
             var jsonString = angular.toJson(fieldsTosubmit);
             var log = $log.getInstance('sw4.associationservice#updateAssociations');
             log.info('going to server for dependent associations of {0}'.format(triggerFieldName));

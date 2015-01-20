@@ -35,7 +35,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
         parameters.SearchDTO = searchService.buildSearchDTO(searchValues, {}, searchOperators);
         parameters.hasClientSearch = true;
 
-        var urlToUse = url("/api/generic/Data/UpdateAssociation?" + $.param(parameters));
+        var urlToUse = url("/api/generic/ExtendedData/UpdateAssociation?" + $.param(parameters));
         var jsonString = angular.toJson(datamap.fields);
         $http.post(urlToUse, jsonString).success(function (data) {
             var result = data.resultObject;

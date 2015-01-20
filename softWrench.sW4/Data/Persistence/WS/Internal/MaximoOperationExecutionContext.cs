@@ -38,7 +38,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         public object IntegrationObject { get; set; }
 
-        public MaximoResult ResultObject { get; set; }
+        public TargetResult ResultObject { get; set; }
 
         public object RootInterfaceObject { get; set; }
 

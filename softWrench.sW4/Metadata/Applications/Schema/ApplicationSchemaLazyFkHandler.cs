@@ -1,4 +1,7 @@
-﻿using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+﻿using System.Diagnostics;
+using System.Globalization;
+using log4net;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Util;
 using System.Collections.Generic;
@@ -6,6 +9,8 @@ using System.Linq;
 
 namespace softWrench.sW4.Metadata.Applications.Schema {
     class ApplicationSchemaLazyFkHandler {
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(ApplicationSchemaLazyFkHandler));
 
         public static ApplicationSchemaDefinition.LazyFkResolverDelegate SyncSchemaLazyFkResolverDelegate =
             delegate(ApplicationSchemaDefinition definition) {
@@ -30,6 +35,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
 
         public static ApplicationSchemaDefinition.LazyFkResolverDelegate LazyFkResolverDelegate = delegate(ApplicationSchemaDefinition definition) {
+            var watch = Stopwatch.StartNew();
             if (!MetadataProvider.FinishedParsing) {
                 return null;
             }
@@ -41,40 +47,39 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             var resultList = new List<IApplicationAttributeDisplayable>();
             resultList.AddRange(DirectFKsFields(definition));
             resultList.AddRange(InverseFKsFields(definition));
+            Log.DebugFormat("finished LazyFkResolverDelegate took {0} ", watch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture));
             return resultList;
         };
 
         private static IEnumerable<IApplicationAttributeDisplayable> InverseFKsFields(ApplicationSchemaDefinition thisSchema) {
             var resultList = new List<IApplicationAttributeDisplayable>();
             var applications = MetadataProvider.Applications();
-            foreach (var metadata in applications) {
-                foreach (var schema in metadata.Schemas().Values) {
-                    if (schema.Stereotype != SchemaStereotype.Detail) {
-                        continue;
-                    }
-                    var reverseComposition = schema.Compositions.FirstOrDefault(f => f.Relationship == EntityUtil.GetRelationshipName(thisSchema.ApplicationName));
-                    if (reverseComposition != null) {
-                        var association = reverseComposition.EntityAssociation;
-                        foreach (var attribute in association.Attributes) {
-                            if (attribute.To != null) {
-                                resultList.Add(ApplicationFieldDefinition.HiddenInstance(thisSchema.ApplicationName,
-                                    attribute.To));
-                            }
-                        }
-                    }
-                    var reverseAssociation = schema.Associations.FirstOrDefault(f => f.EntityAssociation.Qualifier == thisSchema.ApplicationName);
-                    if (reverseAssociation != null) {
-                        var association = reverseAssociation.EntityAssociation;
-                        foreach (var attribute in association.Attributes) {
-                            if (attribute.To != null) {
-                                resultList.Add(ApplicationFieldDefinition.HiddenInstance(thisSchema.ApplicationName,
-                                    attribute.To));
-                            }
-                        }
-                    }
 
+            if (MetadataProvider.InternalCache == null) {
+                MetadataProvider.InternalCache = new MetadataProviderInternalCache();
+            }
+
+            var cache = MetadataProvider.InternalCache;
+
+            var relationshipName = EntityUtil.GetRelationshipName(thisSchema.ApplicationName);
+
+            if (!cache.RelationshipsByNameCache.ContainsKey(relationshipName)) {
+                return resultList;
+            }
+
+            var relationships = MetadataProvider.InternalCache.RelationshipsByNameCache[relationshipName];
+
+            foreach (var association in relationships) {
+                var entityAssociation = association.EntityAssociation;
+                foreach (var attribute in entityAssociation.Attributes) {
+                    if (attribute.To != null) {
+                        resultList.Add(ApplicationFieldDefinition.HiddenInstance(thisSchema.ApplicationName,
+                            attribute.To));
+                    }
                 }
             }
+
+
             return resultList;
         }
 

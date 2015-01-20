@@ -18,7 +18,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             _syncHandler = syncHandler;
         }
 
-        public override MaximoResult Execute(OperationWrapper operationWrapper) {
+        public override TargetResult Execute(OperationWrapper operationWrapper) {
             var entityMetadata = operationWrapper.EntityMetadata;
             var connector = GenericConnectorFactory.GetConnector(entityMetadata, operationWrapper.OperationName);
             var operationName = operationWrapper.OperationName;
@@ -43,7 +43,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
 
 
 
-        private static MaximoResult DoExecuteCrud(OperationWrapper operationWrapper, IMaximoConnector connector) {
+        private static TargetResult DoExecuteCrud(OperationWrapper operationWrapper, IMaximoConnector connector) {
 
             if (!OperationConstants.IsCrud(operationWrapper.OperationName)) {
                 //custom operation
@@ -92,7 +92,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
 
 
 
-            public MaximoResult Update(CrudOperationData operationData) {
+            public TargetResult Update(CrudOperationData operationData) {
                 operationData.OperationType = OperationType.AddChange;
                 var proxy = _crudConnector.CreateProxy(operationData.EntityMetadata);
                 var maximoTemplateData = _crudConnector.CreateExecutionContext(proxy, operationData);
@@ -103,7 +103,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                 return maximoTemplateData.ResultObject;
             }
 
-            public MaximoResult Create(CrudOperationData operationData) {
+            public TargetResult Create(CrudOperationData operationData) {
                 operationData.OperationType = OperationType.Add;
                 var proxy = _crudConnector.CreateProxy(operationData.EntityMetadata);
                 var maximoTemplateData = _crudConnector.CreateExecutionContext(proxy, operationData);
@@ -113,7 +113,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                 _crudConnector.AfterCreation(maximoTemplateData);
                 return maximoTemplateData.ResultObject;
             }
-            public MaximoResult Delete(CrudOperationData operationData) {
+            public TargetResult Delete(CrudOperationData operationData) {
                 operationData.OperationType = OperationType.Delete;
                 var proxy = _crudConnector.CreateProxy(operationData.EntityMetadata);
                 var maximoTemplateData = _crudConnector.CreateExecutionContext(proxy, operationData);
@@ -124,7 +124,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                 return maximoTemplateData.ResultObject;
             }
 
-            public MaximoResult FindById(CrudOperationData operationData) {
+            public TargetResult FindById(CrudOperationData operationData) {
                 operationData.OperationType = OperationType.Item;
                 var proxy = _crudConnector.CreateProxy(operationData.EntityMetadata);
                 var maximoTemplateData = _crudConnector.CreateExecutionContext(proxy, operationData);

@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('menuService', function ($rootScope, redirectService, contextService, i18NService,securityService, $log) {
+app.factory('menuService', function ($rootScope, redirectService, contextService, i18NService, securityService, checkpointService, $log) {
 
     var cleanSelectedLeaf = function () {
         var menu = $("#applicationmenu");
@@ -99,7 +99,7 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
             contextService.insertIntoContext('currentgridarray', null);
             contextService.insertIntoContext("currentmodule", leaf.module);
             $log.getInstance('sw4.menu').info("current module: " + leaf.module);
-
+            checkpointService.clearCheckpoints();
             redirectService.redirectToAction(leaf.title, leaf.controller, leaf.action, leaf.parameters, leaf.target);
         },
 
@@ -121,7 +121,7 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
             if (leaf.parameters != null) {
                 parameters.popupmode = leaf.parameters['popupmode'];
             }
-
+            checkpointService.clearCheckpoints();
             redirectService.goToApplicationView(leaf.application, leaf.schema, leaf.mode, this.getI18nMenuLabel(leaf, null), parameters);
         },
 

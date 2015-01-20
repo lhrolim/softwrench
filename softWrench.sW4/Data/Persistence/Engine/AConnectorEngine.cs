@@ -20,7 +20,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
         public abstract SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData,
             SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null);
 
-        public abstract MaximoResult Execute(OperationWrapper operationWrapper);
+        public abstract TargetResult Execute(OperationWrapper operationWrapper);
 
         private readonly CollectionResolver _collectionResolver = new CollectionResolver();
 

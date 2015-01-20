@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 
 namespace softWrench.sW4.Metadata.Stereotypes {
 
     abstract class ASchemaStereotype : IStereotype {
 
-        public const string NextSchemaId= "nextschema.schemaid";
+        public const string NextSchemaId= ApplicationSchemaPropertiesCatalog.RoutingNextSchemaId;
         public const string NextSchemaMode= "nextschema.schemamode";
 
         protected abstract IDictionary<string, string> DefaultValues();

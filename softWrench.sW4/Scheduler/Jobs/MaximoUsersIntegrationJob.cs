@@ -6,6 +6,7 @@ using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.SimpleInjector.Core.Order;
 using softWrench.sW4.SimpleInjector.Events;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Scheduler.Jobs {
     public class MaximoUsersIntegrationJob : ASwJob {
@@ -18,7 +19,7 @@ namespace softWrench.sW4.Scheduler.Jobs {
         }
 
         private void GetSyncManagers() {
-            var syncManagers =new List<IUserSyncManager>(_container.GetAllInstances<IUserSyncManager>());
+            var syncManagers = new List<IUserSyncManager>(_container.GetAllInstances<IUserSyncManager>());
             OrderComparator<IUserSyncManager>.Sort(syncManagers);
             _syncManagers = syncManagers;
         }
@@ -46,7 +47,7 @@ namespace softWrench.sW4.Scheduler.Jobs {
 
 
         public override bool RunAtStartup() {
-            return true;
+            return !ApplicationConfiguration.IsLocal();
         }
     }
 }
