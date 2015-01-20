@@ -83,7 +83,7 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
     var buildSearchSortString = function (searchSort) {
         //            var searchSort = scope.searchSort;
         var resultString = "";
-
+        
         if (searchSort.field != null && searchSort.field != '') {
             resultString = searchSort.field;
         }
@@ -218,6 +218,12 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
         /// <returns type=""></returns>        
         buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause, paginationData) {
             var searchDto = {};
+            if (!searchSort) {
+                searchSort = {};
+            }
+            if (!searchOperator) {
+                searchOperator = {};
+            }
             searchDto.searchParams = buildSearchParamsString(searchData, searchOperator);
             specialCharactersHandler(searchData, searchOperator);
             searchDto.searchValues = this.buildSearchValuesString(searchData, searchOperator);

@@ -116,7 +116,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             location: parameters['fields'][locationFieldName],
             siteid: parameters['fields']['siteid']
         };
-        searchService.searchWithData("invcost", searchData).success(function(data) {
+        searchService.searchWithData("invcost", searchData).success(function (data) {
             var resultObject = data.resultObject;
             var fields = resultObject[0].fields;
             var costtype = parameters['fields']['inventory_.costtype'];
