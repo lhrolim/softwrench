@@ -2,7 +2,6 @@
     margin-left: auto !important;
     margin-right: auto !important;
     width: 100%;
-    position: fixed;
 }
 
     /*Responsive Menu*/
@@ -152,7 +151,7 @@
 }
 
 @media all and (min-width: 768px) {
-    .container header {
+    .container.desktop header {
         position: fixed;
     }
 
