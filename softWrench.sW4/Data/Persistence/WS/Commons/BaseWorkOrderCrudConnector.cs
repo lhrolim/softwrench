@@ -7,6 +7,7 @@ using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using r = softWrench.sW4.Util.ReflectionUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
@@ -24,6 +25,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             CommonsBefore(maximoTemplateData);
+
+            if (maximoTemplateData.IntegrationObject != null) {
+                var maximoWO = maximoTemplateData.IntegrationObject;
+                WsUtil.SetAction(maximoWO, OperationType.Change);
+            }
+
             base.BeforeUpdate(maximoTemplateData);
         }
 
@@ -75,8 +82,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             WsUtil.SetValueIfNull(maximoWo, "OUTLABCOST", 0);
             WsUtil.SetValueIfNull(maximoWo, "OUTMATCOST", 0);
             WsUtil.SetValueIfNull(maximoWo, "OUTTOOLCOST", 0);
-            WsUtil.SetValueIfNull(maximoWo, "OUTSERVCOST", 0);
-            
+            WsUtil.SetValueIfNull(maximoWo, "OUTSERVCOST", 0); 
         }
 
         protected virtual void HandleLabors(CrudOperationData entity, object maximoWo) {
@@ -93,21 +99,38 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var newMaterials = materials.Where(r => r.GetAttribute("matusetransid") == null);
             var recordKey = entity.Id;
             var user = SecurityFacade.CurrentUser();
-            WsUtil.CloneArray(newMaterials, wo, "MATUSETRANS", delegate(object integrationObject, CrudOperationData crudData) {
+            var crudOperationDatas = newMaterials as CrudOperationData[] ?? newMaterials.ToArray();
+            
+            WsUtil.CloneArray(crudOperationDatas, wo, "MATUSETRANS", delegate(object integrationObject, CrudOperationData crudData) {
                 var qtyRequested = ReflectionUtil.GetProperty(integrationObject, "QTYREQUESTED");
                 if (qtyRequested == null) {
                     WsUtil.SetValue(integrationObject, "QTYREQUESTED", 0);
                 }
-                var realValue = (double)WsUtil.GetRealValue(integrationObject, "QTYREQUESTED");
-                WsUtil.SetValue(integrationObject, "QUANTITY", -1 * realValue);
-                WsUtil.SetValue(integrationObject, "MATUSETRANSID", -1);
-                WsUtil.SetValue(integrationObject, "ENTERBY", user.Login);
-                WsUtil.SetValue(integrationObject, "ORGID", user.OrgId);
-                WsUtil.SetValue(integrationObject, "SITEID", user.SiteId);
-                WsUtil.SetValue(integrationObject, "REFWO", recordKey);
-                WsUtil.SetValue(integrationObject, "ACTUALDATE", DateTime.Now.FromServerToRightKind(), true);
-                WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
 
+                WsUtil.SetValueIfNull(integrationObject, "QTYREQUESTED", 0);
+                WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0);
+
+                var realValue = (double)WsUtil.GetRealValue(integrationObject, "QTYREQUESTED");
+                var unitcost = (double)WsUtil.GetRealValue(integrationObject, "UNITCOST");
+                
+                WsUtil.SetValue(integrationObject, "ACTUALCOST", unitcost);
+                WsUtil.SetValue(integrationObject, "ACTUALDATE", DateTime.Now.FromServerToRightKind(), true);
+                WsUtil.SetValueIfNull(integrationObject, "CONDRATE", 100); 
+                WsUtil.SetValueIfNull(integrationObject, "CONVERSION", 1);
+                WsUtil.SetValueIfNull(integrationObject, "CURBAL", 0);
+                WsUtil.SetValue(integrationObject, "ENTERBY", user.Login);
+                WsUtil.SetValueIfNull(integrationObject, "EXCHANGERATE", 1);
+                WsUtil.SetValueIfNull(integrationObject, "ISSUETYPE", "ISSUE");
+                WsUtil.SetValue(integrationObject, "LINECOST", realValue * unitcost);
+                WsUtil.SetValue(integrationObject, "MATUSETRANSID", -1);
+                WsUtil.SetValue(integrationObject, "QUANTITY", -1 * realValue);
+                WsUtil.SetValue(integrationObject, "ORGID", user.OrgId);
+                WsUtil.SetValueIfNull(integrationObject, "PHYSCNT", 0); 
+                WsUtil.SetValue(integrationObject, "REFWO", recordKey);
+                WsUtil.SetValueIfNull(integrationObject, "ROLLUP", 0);
+                WsUtil.SetValue(integrationObject, "SITEID", user.SiteId);
+                WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
+                
                 ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
             });
         }

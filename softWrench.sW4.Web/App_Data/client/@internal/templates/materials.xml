@@ -19,17 +19,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <attribute name="description"  type="varchar" required="true" />
         <attribute name="transdate"  type="datetime" required="true" />
         <attribute name="qtyrequested"  type="double" required="true" />
-        <attribute name="unitcost"  type="decimal" required="true" />
+        <attribute name="unitcost"  type="double" required="true" />
         <attribute name="gldebitacct" type="varchar" required="false" />
       </attributes>
       <relationships>
-        <relationship to="location" qualifier="storeroom">
-          <relationshipAttribute from="storeloc" to="location" primary="true"/>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE"/>
           <relationshipAttribute from="siteid" to="siteid" />
-          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
         </relationship>
         <relationship to="item" >
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="location" qualifier="storeroom">
+          <relationshipAttribute from="siteid" to="siteid" primary="true" />
+          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
         </relationship>
         <relationship to="chartofaccounts" >
           <relationshipAttribute from="gldebitacct" to="glaccount" primary="true"/>
@@ -37,21 +42,74 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </relationship>
       </relationships>
     </entity>
-
+    
+    <entity name="inventory" idAttribute="inventoryid">
+      <relationships>
+        <relationship to="item" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+        </relationship>
+        <relationship to="invcost" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="invbalances" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="location" qualifier="storeroom">
+          <relationshipAttribute from="storeloc" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="inventory" />
+      </connectorParameters>
+    </entity>
   </entities>
 
-
   <applications>
+    <application name="inventory" title="Inventory" entity="inventory">
+      <schemas>
+        <schema id="materialLookupList" stereotype="list" mode="output">
+          <field attribute="siteid" hidden="true"/>
+          <field label="Item" attribute="itemnum"/>
+          <field label="Description" attribute="item_.description">
+            <renderer type="default" params="width=45%"/>
+          </field>
+          <field label="Storeroom" attribute="location">
+            <renderer type="default" params="width=30%"/>
+          </field>
+        </schema>
+      </schemas>
+    </application>
+    
+    <application entity="invcost" name="invcost" title="invcost">
+      <schemas>
+        <schema id="list" title="Invcost List" stereotype="list">
+          <field attribute="itemnum" label="Item"/>
+          <field attribute="store" label="location"/>
+          <field attribute="avgcost" label="Average Cost"/>
+          <field attribute="stdcost" label="Standard Cost"/>
+          <field attribute="lastcost" label="Last Cost"/>
+        </schema>
+      </schemas>
+    </application>
+    
     <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
       <properties>
-        <property key="mobile.userInteractionEnabled" value="false"/>
-        <property key="mobile.fetchlimit" value="300"/>
         <property key ="icon.composition.tab" value="fa fa-suitcase"/>
       </properties>
       <schemas>
         <list>
           <field attribute="matusetransid" hidden="true" />
-          <field attribute="item_.description" label="Description" qualifier="title"/>
+          <field attribute="itemnum" label="Item No." qualifier="title"/>
+          <field attribute="description" label="Description" qualifier="subtitle"/>
           <field attribute="qtyrequested" label="Quantity" qualifier="subtitle"/>
         </list>
 
@@ -62,61 +120,34 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="refwo" hidden="true" />
           <field attribute="description" hidden="true" />
           <field attribute="transdate" hidden="true" />
+          <field attribute="unitcost" hidden="true" />
+
+          <optionfield attribute="linetype" label="Type:">
+            <renderer type="combo"/>
+            <option label="ITEM" value="ITEM"/>
+            <option label="MATERIAL" value="MATERIAL"/>
+            <event type="afterchange" service="matusetranService" method="afterlinetypechange"/>
+          </optionfield>
+
+          <association label="Item:" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="location, itemsetid, binnum, costtype, item_.description" showexpression="@linetype == 'ITEM'">
+              <!--<dataprovider prefilterfunction="FilterMaterials"/>-->
+              <!--<renderer type="lookup" params="application=inventory;schemaId=materialLookupList;"/>-->
+            <renderer type="lookup"/>
+            <event type="afterchange" service="matusetranService" method="afteritemnumchange"/>
+          </association>
+          <field label="Storeroom:" attribute="storeloc" readonly="true" showexpression="@linetype == 'ITEM'"/>
+          <field label="Bin:" attribute="binnum" readonly="true" showexpression="@linetype == 'ITEM'"/>
+          
+          <field attribute="description" label="Material Description:" requiredexpression="true" showexpression="@linetype == 'MATERIAL'"/>
+          <field attribute="unitcost" label="Unit Cost:" qualifier="quantity" requiredexpression="true" showexpression="@linetype == 'MATERIAL'"/>
+
           <field attribute="qtyrequested" label="Quantity:" requiredexpression="true" qualifier="quantity">
             <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
           </field>
-          <association label="Item:" target="itemnum" labelfield="item_.description">
-            <renderer type="lookup"/>
-          </association>
-          <association label="Storeroom:" target="storeloc" labelfield="storeroom_.description">
-            <renderer type="lookup"/>
-          </association>
+          
           <association label="GL Debit Account:" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
             <renderer type="lookup"/>
           </association>
-        </detail>
-
-        <detail platform="mobile">
-          <field attribute="matusetransid" hidden="true" />
-          <field attribute="orgid" hidden="true" />
-          <field attribute="siteid" hidden="true" />
-          <field attribute="refwo" hidden="true" />
-          <field attribute="description" hidden="true" />
-          <field attribute="gldebitacct" hidden="true" />
-          <field attribute="transdate" label="Date:" readonly="true" />
-          <field attribute="qtyrequested" label="Quantity:" requiredexpression="true" qualifier="quantity">
-            <!--            <renderer type="numericinput" params="decimals=2"/>-->
-            <number decimals="2"  min="" max="" />
-          </field>
-          <!--                    <field attribute="unitcost" label="UnitCost" requiredexpression="true">-->
-          <!--                      <number decimals="2" min="0" max="" />-->
-          <!--                    </field>-->
-          <association label="Item:" target="itemnum" labelfield="item.itemnum,item.description" />
-          <association label="Storeroom:" target="storeloc" labelfield="storeroom.locationsid,storeroom.description" />
-
-          <field attribute="itemnum" hidden="true" />
-          <field attribute="item_.description" label="Item:" >
-            <lookup sourceApplication="item" sourceField="itemnum" sourceDisplay="description,itemnum" targetField="itemnum" targetQualifier=""/>
-          </field>
-
-          <field attribute="storeloc" hidden="true" />
-          <field attribute="storeroom_.description" label="Storeroom:" >
-            <lookup sourceApplication="location" sourceField="location" sourceDisplay="description,locationsid"
-                    targetField="storeloc" targetQualifier="storeroom_">
-              <lookupFilters>
-                <lookupFilter sourceField="siteid" targetField="siteid" />
-                <lookupFilter sourceField="type" literal="STOREROOM" />
-              </lookupFilters>
-            </lookup>
-          </field>
-          <field attribute="chartofaccounts_.accountname" label="GL Account:" >
-            <lookup sourceApplication="chartofaccounts" sourceField="glaccount" sourceDisplay="accountname,glaccount" targetField="gldebitacct" targetQualifier="">
-              <lookupFilters>
-                <lookupFilter sourceField="orgid" targetField="orgid" />
-              </lookupFilters>
-            </lookup>
-          </field>
-
         </detail>
       </schemas>
     </application>

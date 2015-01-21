@@ -21,7 +21,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Manchester {
             base.BeforeUpdate(maximoTemplateData);
             var entity = (CrudOperationData)maximoTemplateData.OperationData;
             var maximoWo = maximoTemplateData.IntegrationObject;
-            HandleTools(maximoTemplateData, entity, maximoWo);
+            //HandleTools(maximoTemplateData, entity, maximoWo);
+            HandleMaterials(maximoTemplateData, entity, maximoWo);
         }
 
         private static void HandleTools(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object wo) {
@@ -67,16 +68,32 @@ namespace softWrench.sW4.Data.Persistence.WS.Manchester {
             var recordKey = entity.Id;
             var user = SecurityFacade.CurrentUser();
             var crudOperationDatas = newMaterials as CrudOperationData[] ?? newMaterials.ToArray();
+
             WsUtil.CloneArray(crudOperationDatas, wo, "MATUSETRANS", delegate(object integrationObject, CrudOperationData crudData) {
-                var qtyRequested = ReflectionUtil.GetProperty(integrationObject, "QTYREQUESTED");
-                if (qtyRequested == null) {
-                    WsUtil.SetValue(integrationObject, "QTYREQUESTED", 0);
-                }
-                var lastcost = (double)crudOperationDatas[0].GetAttribute("item_inventory_invcost_.lastcost");
-                var realValue = (double)WsUtil.GetRealValue(integrationObject, "QTYREQUESTED");
-                var quantity = -1 * realValue;
-                WsUtil.SetValue(integrationObject, "QUANTITY", quantity);
-                WsUtil.SetValue(integrationObject, "LINECOST", (lastcost * quantity));
+
+                var cost = (double)WsUtil.GetRealValue(integrationObject, "UNITCOST");
+                var quantity = (double)WsUtil.GetRealValue(integrationObject, "QTYREQUESTED");
+
+                WsUtil.SetValueIfNull(integrationObject, "deleteForInsert", "false");
+                // These values will be assigned 0 if linetype is MATERIAL
+                WsUtil.SetValueIfNull(integrationObject, "CURBAL", 0);
+                WsUtil.SetValueIfNull(integrationObject, "PHYSNT", 0);
+
+                WsUtil.SetValue(integrationObject, "ACTUALCOST", cost);
+                WsUtil.SetValue(integrationObject, "CONVERSION", 1);
+                WsUtil.SetValue(integrationObject, "ROLLUP", 0);
+                WsUtil.SetValue(integrationObject, "ISSUETYPE", "ISSUE");
+                WsUtil.SetValue(integrationObject, "QUANTITY", (-1 * quantity));
+                WsUtil.SetValue(integrationObject, "LINECOST", (cost * quantity));
+                WsUtil.SetValue(integrationObject, "CURRENCYCODE", "USD");
+                WsUtil.SetValue(integrationObject, "CURRENCYUNITCOST", cost);
+                WsUtil.SetValue(integrationObject, "CURRENCYLINECOST", (cost * quantity));
+                WsUtil.SetValue(integrationObject, "EXCHANGERATE", 1.00);
+                WsUtil.SetValue(integrationObject, "ENTEREDASTASK", 0);
+                WsUtil.SetValue(integrationObject, "CONDRATE", 100);
+                WsUtil.SetValue(integrationObject, "TOSITE", user.SiteId);
+                WsUtil.SetValue(integrationObject, "CONSIGMENT", 0);
+                WsUtil.SetValue(integrationObject, "SPAREPARTADDED", 0);
                 WsUtil.SetValue(integrationObject, "MATUSETRANSID", -1);
                 WsUtil.SetValue(integrationObject, "ENTERBY", user.Login);
                 WsUtil.SetValue(integrationObject, "ORGID", user.OrgId);
@@ -85,7 +102,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Manchester {
                 WsUtil.SetValue(integrationObject, "ACTUALDATE", DateTime.Now.FromServerToRightKind(), true);
                 WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
 
-                ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Delete.ToString());
+                ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
             });
         }
 
