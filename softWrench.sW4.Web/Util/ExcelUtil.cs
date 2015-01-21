@@ -20,96 +20,37 @@ namespace softWrench.sW4.Web.Util {
     public class ExcelUtil : ISingletonComponent {
 
         private readonly Dictionary<String, String> _cellStyleDictionary;
-        private readonly Dictionary<String, String> _changeCellStyleDictionary;
 
         private readonly I18NResolver _i18NResolver;
 
         private readonly IContextLookuper _contextLookuper;
 
-        public ExcelUtil(I18NResolver i18NResolver, IContextLookuper contextLookuper)
+        private readonly StatusColorResolver _statusColorsService;
+
+        public ExcelUtil(I18NResolver i18NResolver, IContextLookuper contextLookuper, StatusColorResolver statusColorsService)
         {
             _i18NResolver = i18NResolver;
             _contextLookuper = contextLookuper;
+            _statusColorsService = statusColorsService;
+            
             // setup style dictionary for back colors
             // 2 = red, 3 = green, 4 = yellow, 5 = orange, 6 = blue, 7 = white
             _cellStyleDictionary = new Dictionary<string, string>{
-                {"ACC_CAT", "6"},
-                {"APPR", "6"},
-                {"ASSESSES", "6"},
-                {"AUTH", "6"},
-                {"AUTHORIZED", "6"},
-                {"CAN", "2"},
-                {"CANCELLED", "2"},
-                {"CLOSE", "3"},
-                {"CLOSED", "3"},
-                {"COMP", "3"},
-                {"DRAFT", "7"},
-                {"FAIL", "2"},
-                {"FAILED", "2"},
-                {"FAILPIR", "2"},
-                {"HISTEDIT", "3"},
-                {"HOLDINPRG", "6"},
-                {"IMPL", "3"},
-                {"IMPLEMENTED", "3"},
-                {"INPRG", "4"},
-                {"INPROG", "4"},
-                {"NEW", "5"},
-                {"NOTREQ", "2"},
-                {"null", "4"},
-                {"PENDING", "4"},
-                {"PENDAPPR", "6"},
-                {"PLANNED", "6"},
-                {"QUEUED", "4"},
-                {"REJECTED", "2"},
-                {"RCACOMP", "6"},
-                {"RESOLVCONF", "3"},
-                {"RESOLVED", "6"},
-                {"REVIEW", "3"},
-                {"SCHED", "6"},
-                {"SLAHOLD", "6"},
-                {"WAPPR", "5"},
-                {"WMATL", "6"},
-                {"WSCH", "5"}
+                {"red", "2"},
+                {"green", "3"},
+                {"yellow", "4"},
+                {"orange", "5"},
+                {"blue", "6"},
+                {"white", "7"}
             };
-
-            _changeCellStyleDictionary = new Dictionary<string, string>{
-                {"ACC_CAT", "6"}
-             };
         }
-
-            // case "NEW":
-            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Orange);
-            //    break;
-            //case "QUEUED":
-            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Yellow);
-            //    break;
-            //case "INPROG":
-            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Yellow);
-            //    break;
-            //case "CLOSED":
-            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Green);
-            //    break;
-            //case "CANCELLED":
-            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Red);
-            //    break;
-            //case "RESOLVED":
-            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Blue);
-            //    break;
-            //case "SLAHOLD":
-            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Blue);
-            //    break;
-            //case "RESOLVCONF":
-            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Green);
-            //    break;
-            //default:
-            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Transparent);
-            //    break;
             
 
-        //public SLDocument ConvertGridToExcel(InMemoryUser user, ApplicationSchemaDefinition schema, IEnumerable<AttributeHolder> rows)
-        public SLDocument ConvertGridToExcel(string application, ApplicationMetadataSchemaKey key, ApplicationListResult result)
+        public SLDocument ConvertGridToExcel(string application, ApplicationMetadataSchemaKey key, ApplicationListResult result, InMemoryUser user)
         {
             {
+                var colorStatusDict = _statusColorsService.GetColorsAsDict(application);
+
                 var schema = result.Schema;
                 IEnumerable<ApplicationFieldDefinition> applicationFields = schema.Fields;
                 using (var ms = new System.IO.MemoryStream())
@@ -183,9 +124,9 @@ namespace softWrench.sW4.Web.Util {
 
                             // that's the default style
                             var styleId = "1";
-                            if (applicationField.Attribute.Contains("status") && ApplicationConfiguration.ClientName == "hapag")
+                            if (applicationField.Attribute.Contains("status"))
                             {
-                                var success = getColor(data.Trim(), schema.Name, ref styleId);
+                                var success = getColor(data.Trim(), schema.Name, ref styleId,colorStatusDict);
 
                                 if (!success)
                                 {
@@ -194,7 +135,7 @@ namespace softWrench.sW4.Web.Util {
                                     if (match.Success)
                                     {
                                         var status = match.Groups[2].Value.Trim();
-                                        var compundStatus = getColor(status, schema.Name, ref styleId);
+                                        var compundStatus = getColor(status, schema.Name, ref styleId, colorStatusDict);
                                         if (!compundStatus)
                                         {
                                             styleId = "1";
@@ -219,10 +160,11 @@ namespace softWrench.sW4.Web.Util {
                             }
                             var dateParsed = DateTime.TryParse(data, out dtTimeAux);
                             var dataToCell = data;
-                            //if (dateParsed)
-                            //{
-                            //    dataToCell = dtTimeAux.FromMaximoToUser(user).ToString(formatToUse);
-                            //}
+
+                            if (dateParsed)
+                            {
+                                dataToCell = dtTimeAux.FromMaximoToUser(user).ToString(formatToUse);
+                            }
                             if (dataToCell == "-666")
                             {
                                 //this magic number should never be displayed! 
@@ -275,18 +217,14 @@ namespace softWrench.sW4.Web.Util {
             }
         }
 
-        private bool getColor(string status, string schemaName, ref string styleId)
+        private bool getColor(string status, string schemaName, ref string styleId, Dictionary<string, string> colorStatusDict)
         {
+            var colorCode = colorStatusDict.ContainsKey(status.ToLower()) ? colorStatusDict[status.ToLower()] : null;
             var success = false;
-            //var styleId2 = "1";
-            if (schemaName != null && schemaName.Equals("change"))
-            {
-                success = _changeCellStyleDictionary.TryGetValue(status, out styleId);
+            if (colorCode != null) {
+                success = _cellStyleDictionary.TryGetValue(colorCode, out styleId);
             }
-            if (!success)
-            {
-                success = _cellStyleDictionary.TryGetValue(status, out styleId);
-            }
+
             // styleId = styleId2;
             return success;
         }
