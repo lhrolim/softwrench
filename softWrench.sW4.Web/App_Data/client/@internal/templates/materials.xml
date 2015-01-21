@@ -48,6 +48,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <relationship to="item" >
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
           <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute to="itemtype" literal="ITEM" quoteLiteral="true"/>
         </relationship>
         <relationship to="invcost" >
           <relationshipAttribute from="itemnum" to="itemnum" primary="true" />
@@ -61,11 +62,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="location" to="location" />
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
-        <relationship to="location" qualifier="storeroom">
-          <relationshipAttribute from="storeloc" to="location" primary="true"/>
-          <relationshipAttribute from="siteid" to="siteid" />
-          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
-        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="inventory" />
@@ -77,13 +73,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <application name="inventory" title="Inventory" entity="inventory">
       <schemas>
         <schema id="materialLookupList" stereotype="list" mode="output">
+          <field attribute="storeloc" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
-          <field label="Item" attribute="itemnum"/>
-          <field label="Description" attribute="item_.description">
-            <renderer type="default" params="width=45%"/>
+          <field label="Item" attribute="itemnum">
+            <renderer type="default" params="width=19%"/>
           </field>
-          <field label="Storeroom" attribute="location">
-            <renderer type="default" params="width=30%"/>
+          <field label="Description" attribute="item_.description">
+            <renderer type="default"/>
+          </field>
+          <field label="Bin" attribute="location">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field label="Bin" attribute="invbalances_.binnum">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field label="Lot" attribute="invbalances_.lotnum">
+            <renderer type="default" params="width=15%"/>
           </field>
         </schema>
       </schemas>
@@ -129,14 +134,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <event type="afterchange" service="matusetranService" method="afterlinetypechange"/>
           </optionfield>
 
-          <association label="Item:" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="location, itemsetid, binnum, costtype, siteid, item_.description, invbalances_.curbal, invbalances_.physcnt" showexpression="@linetype == 'ITEM'">
+          <association label="Item:" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="itemsetid, location, binnum, invbalances_.lotnum, costtype, siteid, item_.description, invbalances_.curbal, invbalances_.physcnt" showexpression="@linetype == 'ITEM'">
               <!--<dataprovider prefilterfunction="FilterMaterials"/>-->
-              <!--<renderer type="lookup" params="application=inventory;schemaId=materialLookupList;"/>-->
-            <renderer type="lookup"/>
+            <renderer type="lookup" params="application=inventory;schemaId=materialLookupList;"/>
             <event type="afterchange" service="matusetranService" method="afteritemnumchange"/>
           </association>
           <field label="Storeroom:" attribute="storeloc" readonly="true" showexpression="@linetype == 'ITEM'"/>
           <field label="Bin:" attribute="binnum" readonly="true" showexpression="@linetype == 'ITEM'"/>
+          <field label="Lot:" attribute="lotnum" readonly="true" showexpression="@linetype == 'ITEM'"/>
           
           <field attribute="description" label="Material Description:" requiredexpression="true" showexpression="@linetype == 'MATERIAL'"/>
           <field attribute="unitcost" label="Unit Cost:" qualifier="quantity" requiredexpression="true" showexpression="@linetype == 'MATERIAL'"/>
