@@ -6,6 +6,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <template path="@chartofaccounts.xml"/>
     <template path="@workorder.xml"/>
     <template path="@item.xml"/>
+    <template path="@glcomponents.xml"/>
   </templates>
   
   <entities>
@@ -14,6 +15,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <relationship to="invissue" collection="true">
           <relationshipAttribute from="wonum" to="refwo" primary="true" />
           <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
       </relationships>
     </entity>
@@ -27,6 +31,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="storeloc" to="location"/>
           <relationshipAttribute to="moved" literal="0" quoteLiteral="true"/>
           <relationshipAttribute to="returnedtovendor" literal="0" quoteLiteral="true"/>
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -52,6 +59,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute from="lotnum" to="lotnum"/>
         </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BasePhysicalCountCrudConnector"/>
@@ -75,6 +85,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="location" to="location"/>
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute from="lotnum" to="lotnum"/>
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
       </relationships>
     </entity>
@@ -113,6 +126,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="orgid" to="orgid"/>
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute from="location" to="location"/>
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
       </relationships>
     </entity>
@@ -169,6 +185,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </relationship>
         <relationship to="item">
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -557,8 +576,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <section>
             <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
             <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
-            <association label="Override GL Debit Account" target="#gldebitacct" labelfield="chartofaccounts_.accountname">
-              <renderer type="lookup"/>
+            <association label="Override GL Debit Account" target="#gldebitacct"  labelfield="glcomponents_.comptext" >
+              <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
               <event type="afterchange" service="inventoryService" method="overrideGlAccount"/>
             </association>
           </section>
@@ -600,8 +619,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" default="@storeloc" dependantfields="siteid" requiredexpression="true" >
             <renderer type="lookup"/>
           </association>
-          <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname">
-            <renderer type="lookup"/>
+          <association label="GL Debit Account" target="gldebitacct"  labelfield="glcomponents_.comptext" >
+            <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
           </association>
           <commandbars>
             <commandgroup position="detailform">
@@ -673,8 +692,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <association label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid">
               <renderer type="lookup"/>
             </association>
-            <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname">
-              <renderer type="lookup"/>
+            <association label="GL Debit Account" target="gldebitacct"  labelfield="glcomponents_.comptext" >
+              <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
             </association>
           </section>
           <commandbars>
