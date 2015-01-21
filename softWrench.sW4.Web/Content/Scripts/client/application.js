@@ -291,6 +291,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
             $scope.toList(result, scope);
             associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, null);
             fixHeaderService.FixHeader();
+            $scope.$broadcast('sw_griddatachanged', scope.datamap, scope.schema);
         } else if (result.crudSubTemplate != null) {
 
             log.debug("Crud Sub Template handled");

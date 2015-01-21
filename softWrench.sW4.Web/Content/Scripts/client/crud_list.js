@@ -409,9 +409,7 @@ app.directive('crudList', function (contextService) {
 
             };
 
-            $scope.isColumnEditable = function (column) {
-                return column.rendererParameters['editable'] == "true";
-            };
+          
 
 
 

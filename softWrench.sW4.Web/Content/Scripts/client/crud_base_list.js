@@ -1,5 +1,9 @@
 ﻿//idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-function BaseList($scope, formatService, expressionService, searchService) {
+function BaseList($scope, formatService, expressionService, searchService, fieldService,i18NService) {
+
+    $scope.isFieldHidden = function (application, fieldMetadata) {
+        return fieldService.isFieldHidden($scope.datamap, application, fieldMetadata);
+    };
 
     $scope.getFormattedValue = function (value, column, datamap) {
         var formattedValue = formatService.format(value, column, datamap);
@@ -9,6 +13,18 @@ function BaseList($scope, formatService, expressionService, searchService) {
             return null;
         }
         return formattedValue;
+    };
+
+    $scope.i18NOptionField = function (option, fieldMetadata, schema) {
+        return i18NService.getI18nOptionField(option, fieldMetadata, schema);
+    };
+
+    $scope.isColumnEditable = function (column) {
+        return column.rendererParameters['editable'] == "true";
+    };
+
+    $scope.contextPath = function (path) {
+        return url(path);
     };
 
     $scope.searchOperations = function () {
