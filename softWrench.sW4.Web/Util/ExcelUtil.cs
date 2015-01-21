@@ -1,151 +1,472 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Web.Http;
 using DocumentFormat.OpenXml.Spreadsheet;
-using softWrench.sW4.Data.API;
-using softWrench.sW4.Data.Pagination;
+using softWrench.sW4.Metadata.Security;
+using softWrench.sW4.Security.Context;
+using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
-using softWrench.sW4.Web.Controllers;
 using softwrench.sw4.Shared2.Metadata.Applications.UI;
 using SpreadsheetLight;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using System.Text.RegularExpressions;
+using softWrench.sW4.Data.API;
 
 namespace softWrench.sW4.Web.Util {
     public class ExcelUtil : ISingletonComponent {
 
-        public SLDocument ConvertGridToExcel(string application, ApplicationMetadataSchemaKey key, ApplicationListResult result) {
-            IEnumerable<ApplicationFieldDefinition> applicationFields = result.Schema.Fields;
+        private readonly Dictionary<String, String> _cellStyleDictionary;
+        private readonly Dictionary<String, String> _changeCellStyleDictionary;
 
-            var theme = new SLThemeSettings();
-            theme.Accent1Color = System.Drawing.Color.Yellow;
-            theme.Accent2Color = System.Drawing.Color.Blue;
-            var excelFile = new SLDocument(theme);
+        private readonly I18NResolver _i18NResolver;
 
-            var defaultStyle = excelFile.CreateStyle();
-            defaultStyle.Alignment.Horizontal = HorizontalAlignmentValues.Left;
-            defaultStyle.Alignment.Vertical = VerticalAlignmentValues.Bottom;
-            defaultStyle.Font.FontName = "Calibri";
-            defaultStyle.Font.FontSize = 10;
-            defaultStyle.SetWrapText(true);
+        private readonly IContextLookuper _contextLookuper;
 
-            var headerStyle = excelFile.CreateStyle();
-            headerStyle.Alignment.Horizontal = HorizontalAlignmentValues.Center;
-            headerStyle.Alignment.Vertical = VerticalAlignmentValues.Bottom;
-            headerStyle.Font.FontName = "Calibri";
-            headerStyle.Font.FontSize = 10;
-            headerStyle.Font.Bold = true;
+        public ExcelUtil(I18NResolver i18NResolver, IContextLookuper contextLookuper)
+        {
+            _i18NResolver = i18NResolver;
+            _contextLookuper = contextLookuper;
+            // setup style dictionary for back colors
+            // 2 = red, 3 = green, 4 = yellow, 5 = orange, 6 = blue, 7 = white
+            _cellStyleDictionary = new Dictionary<string, string>{
+                {"ACC_CAT", "6"},
+                {"APPR", "6"},
+                {"ASSESSES", "6"},
+                {"AUTH", "6"},
+                {"AUTHORIZED", "6"},
+                {"CAN", "2"},
+                {"CANCELLED", "2"},
+                {"CLOSE", "3"},
+                {"CLOSED", "3"},
+                {"COMP", "3"},
+                {"DRAFT", "7"},
+                {"FAIL", "2"},
+                {"FAILED", "2"},
+                {"FAILPIR", "2"},
+                {"HISTEDIT", "3"},
+                {"HOLDINPRG", "6"},
+                {"IMPL", "3"},
+                {"IMPLEMENTED", "3"},
+                {"INPRG", "4"},
+                {"INPROG", "4"},
+                {"NEW", "5"},
+                {"NOTREQ", "2"},
+                {"null", "4"},
+                {"PENDING", "4"},
+                {"PENDAPPR", "6"},
+                {"PLANNED", "6"},
+                {"QUEUED", "4"},
+                {"REJECTED", "2"},
+                {"RCACOMP", "6"},
+                {"RESOLVCONF", "3"},
+                {"RESOLVED", "6"},
+                {"REVIEW", "3"},
+                {"SCHED", "6"},
+                {"SLAHOLD", "6"},
+                {"WAPPR", "5"},
+                {"WMATL", "6"},
+                {"WSCH", "5"}
+            };
 
-            var solidColorStyle = excelFile.CreateStyle();
-            solidColorStyle.Fill.SetPatternType(PatternValues.Solid);
+            _changeCellStyleDictionary = new Dictionary<string, string>{
+                {"ACC_CAT", "6"}
+             };
+        }
 
-            BuildHeader(excelFile, headerStyle, applicationFields);
+            // case "NEW":
+            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Orange);
+            //    break;
+            //case "QUEUED":
+            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Yellow);
+            //    break;
+            //case "INPROG":
+            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Yellow);
+            //    break;
+            //case "CLOSED":
+            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Green);
+            //    break;
+            //case "CANCELLED":
+            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Red);
+            //    break;
+            //case "RESOLVED":
+            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Blue);
+            //    break;
+            //case "SLAHOLD":
+            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Blue);
+            //    break;
+            //case "RESOLVCONF":
+            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Green);
+            //    break;
+            //default:
+            //    solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Transparent);
+            //    break;
+            
 
-            var rowIndex = 2;
-            var currentPage = 1;
+        //public SLDocument ConvertGridToExcel(InMemoryUser user, ApplicationSchemaDefinition schema, IEnumerable<AttributeHolder> rows)
+        public SLDocument ConvertGridToExcel(string application, ApplicationMetadataSchemaKey key, ApplicationListResult result)
+        {
+            {
+                var schema = result.Schema;
+                IEnumerable<ApplicationFieldDefinition> applicationFields = schema.Fields;
+                using (var ms = new System.IO.MemoryStream())
+                using (var xl = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook))
+                {
+                    // attributes of elements
+                    // the xml writer
 
-            //while (currentPage <= result.PageCount) {
-            //    var requestDTO = PaginatedSearchRequestDto.DefaultInstance();
-            //    requestDTO.PageNumber = currentPage;
+                    xl.AddWorkbookPart();
+                    var worksheetpart = xl.WorkbookPart.AddNewPart<WorksheetPart>();
 
-            //    dataResponse = new DataController().Get(application,
-            //                                            new DataRequestAdapter() {
-            //                                                Key = key,
-            //                                                SearchDTO = requestDTO
-            //                                            });
-            //    result = dataResponse as ApplicationListResult;
+                    var writer = OpenXmlWriter.Create(worksheetpart);
 
-            //Export To Excel even in case the Field is Hidden in the Grid.
-            string value = string.Empty;
+                    var worksheet = new Worksheet();
+                    writer.WriteStartElement(worksheet);
 
-            foreach (var item in result.ResultObject) {
-                rowIndex++;
-                var attributes = item.Attributes;
-                var columnIndex = 1;
+                    // create sheetdata element
+                    writer.WriteStartElement(new SheetData());
 
-                var nonHiddenFields = applicationFields.Where(f => !f.IsHidden || (f.Renderer.ParametersAsDictionary().TryGetValueAsString(FieldRendererConstants.EXPORTTOEXCEL, out value)));
-                foreach (var applicationField in nonHiddenFields) {
-                    object dataAux;
-                    attributes.TryGetValue(applicationField.Attribute, out dataAux);
-                    var data = dataAux == null ? string.Empty : dataAux.ToString();
+                    var stylesPart = xl.WorkbookPart.AddNewPart<WorkbookStylesPart>();
+                    stylesPart.Stylesheet = new Stylesheet();
 
-                    FillCell(excelFile, rowIndex, columnIndex, data, defaultStyle);
+                    // create 2 fonts (one normal, one header)
+                    createFonts(stylesPart);
 
-                    if (applicationField.Attribute == "status" && ApplicationConfiguration.ClientName == "hapag") {
 
-                        switch (data.Trim()) {
-                            case "NEW":
-                                solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Orange);
-                                break;
-                            case "QUEUED":
-                                solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Yellow);
-                                break;
-                            case "INPROG":
-                                solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Yellow);
-                                break;
-                            case "CLOSED":
-                                solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Green);
-                                break;
-                            case "CANCELLED":
-                                solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Red);
-                                break;
-                            case "RESOLVED":
-                                solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Blue);
-                                break;
-                            case "SLAHOLD":
-                                solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Blue);
-                                break;
-                            case "RESOLVCONF":
-                                solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Green);
-                                break;
-                            default:
-                                solidColorStyle.Fill.SetPatternForegroundColor(System.Drawing.Color.Transparent);
-                                break;
+                    // create fills
+                    BuildFills(stylesPart);
+
+                    // blank border list
+                    stylesPart.Stylesheet.Borders = new Borders { Count = 1 };
+                    stylesPart.Stylesheet.Borders.AppendChild(new Border());
+
+                    // blank cell format list
+                    stylesPart.Stylesheet.CellStyleFormats = new CellStyleFormats { Count = 1 };
+                    stylesPart.Stylesheet.CellStyleFormats.AppendChild(new CellFormat());
+
+                    // cell format list
+                    CreateCellFormats(stylesPart);
+
+                    var rowIdx = 1;
+
+                    // create header row
+                    CreateHeaderRow(applicationFields, writer, rowIdx, schema.Name);
+                    //count up row
+                    rowIdx++;
+
+                    // write data rows
+                    foreach (var item in result.ResultObject)
+                    {
+                        var attributes = item.Attributes;
+
+                        // create new row
+                        var xmlAttributes = new List<OpenXmlAttribute> { new OpenXmlAttribute("r", null, rowIdx.ToString(CultureInfo.InvariantCulture)) };
+                        writer.WriteStartElement(new Row(), xmlAttributes);
+
+                        var nonHiddenFields = applicationFields.Where(ShouldShowField());
+                        foreach (var applicationField in nonHiddenFields)
+                        {
+                            object dataAux;
+                            attributes.TryGetValue(applicationField.Attribute, out dataAux);
+                            if (dataAux == null && applicationField.Attribute.StartsWith("#") && Char.IsNumber(applicationField.Attribute[1]))
+                            {
+                                attributes.TryGetValue(applicationField.Attribute.Substring(2), out dataAux);
+                            }
+
+                            var data = dataAux == null ? string.Empty : dataAux.ToString();
+
+                            xmlAttributes = new List<OpenXmlAttribute> { new OpenXmlAttribute("t", null, "str") };
+                            // this is the data type ("t"), with CellValues.String ("str")
+
+                            // that's the default style
+                            var styleId = "1";
+                            if (applicationField.Attribute.Contains("status") && ApplicationConfiguration.ClientName == "hapag")
+                            {
+                                var success = getColor(data.Trim(), schema.Name, ref styleId);
+
+                                if (!success)
+                                {
+                                    // check if status is something like NEW 1/4 (and make sure it doesn't match e.g. NEW REQUEST).
+                                    var match = Regex.Match(data.Trim(), "(([A-Z]+ )+)[1-9]+/[1-9]+");
+                                    if (match.Success)
+                                    {
+                                        var status = match.Groups[2].Value.Trim();
+                                        var compundStatus = getColor(status, schema.Name, ref styleId);
+                                        if (!compundStatus)
+                                        {
+                                            styleId = "1";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        styleId = "1";
+                                    }
+                                }
+                            }
+                            xmlAttributes.Add(new OpenXmlAttribute("s", null, styleId));
+
+                            // start a cell
+                            writer.WriteStartElement(new Cell(), xmlAttributes);
+                            // write cell content
+                            DateTime dtTimeAux;
+                            var formatToUse = "dd/MM/yyyy HH:mm";
+                            if (applicationField.RendererParameters.ContainsKey("format"))
+                            {
+                                formatToUse = applicationField.RendererParameters["format"].ToString();
+                            }
+                            var dateParsed = DateTime.TryParse(data, out dtTimeAux);
+                            var dataToCell = data;
+                            //if (dateParsed)
+                            //{
+                            //    dataToCell = dtTimeAux.FromMaximoToUser(user).ToString(formatToUse);
+                            //}
+                            if (dataToCell == "-666")
+                            {
+                                //this magic number should never be displayed! 
+                                //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
+                                dataToCell = "";
+                            }
+                            writer.WriteElement(new CellValue(dataToCell));
+                            // end cell
+                            writer.WriteEndElement();
                         }
-                        FillCell(excelFile, rowIndex, columnIndex, data, solidColorStyle);
+
+                        // next row
+                        rowIdx++;
+                        // end row
+                        writer.WriteEndElement();
                     }
-                    columnIndex++;
+
+
+                    // end worksheet
+                    writer.WriteEndElement();
+                    writer.Close();
+
+
+                    // write root element
+                    writer = OpenXmlWriter.Create(xl.WorkbookPart);
+                    writer.WriteStartElement(new Workbook());
+                    writer.WriteStartElement(new Sheets());
+
+                    writer.WriteElement(new Sheet
+                    {
+                        Name = "Sheet1",
+                        SheetId = 1,
+                        Id = xl.WorkbookPart.GetIdOfPart(worksheetpart)
+                    });
+
+
+                    // end Sheets
+                    writer.WriteEndElement();
+                    // end Workbook
+                    writer.WriteEndElement();
+                    writer.Close();
+
+                    xl.Close();
+
+
+                    var excelFile = new SLDocument(ms);
+                    SetColumnWidth(excelFile, applicationFields);
+                    return excelFile;
                 }
-                excelFile.AutoFitRow(rowIndex);
             }
-            SetColumnWidth(excelFile, applicationFields);
-            return excelFile;
+        }
+
+        private bool getColor(string status, string schemaName, ref string styleId)
+        {
+            var success = false;
+            //var styleId2 = "1";
+            if (schemaName != null && schemaName.Equals("change"))
+            {
+                success = _changeCellStyleDictionary.TryGetValue(status, out styleId);
+            }
+            if (!success)
+            {
+                success = _cellStyleDictionary.TryGetValue(status, out styleId);
+            }
+            // styleId = styleId2;
+            return success;
+        }
+
+        private static Func<ApplicationFieldDefinition, bool> ShouldShowField()
+        {
+            return f =>
+            {
+                var rendererParameters = f.Renderer.ParametersAsDictionary();
+                if (rendererParameters.ContainsKey(FieldRendererConstants.EXPORTTOEXCEL))
+                {
+                    return "true".Equals(rendererParameters[FieldRendererConstants.EXPORTTOEXCEL]);
+                }
+                return !f.IsHidden;
+            };
+        }
+
+        private void CreateHeaderRow(IEnumerable<ApplicationFieldDefinition> applicationFields, OpenXmlWriter writer, int rowIdx, string schemaId)
+        {
+            var xmlAttributes = new List<OpenXmlAttribute>
+            {
+                new OpenXmlAttribute("r", null, rowIdx.ToString(CultureInfo.InvariantCulture))
+            };
+            writer.WriteStartElement(new Row(), xmlAttributes);
+            foreach (var applicationField in applicationFields.Where(ShouldShowField()))
+            {
+                //Exporting to Excel, even if field is hidden
+                xmlAttributes = new List<OpenXmlAttribute>{
+                    new OpenXmlAttribute("t", null, "str"),
+                    new OpenXmlAttribute("s", null, "7")
+                };
+                // add new datatype for cell
+                // add header style
+
+                //                _i18NResolver.I18NValue()
+
+                writer.WriteStartElement(new Cell(), xmlAttributes);
+                writer.WriteElement(new CellValue(GetI18NLabel(applicationField, schemaId)));
+
+                // this is for Cell
+                writer.WriteEndElement();
+            }
+
+            // end Row
+            writer.WriteEndElement();
+        }
+
+        private string GetI18NLabel(ApplicationFieldDefinition applicationField, string schemaId)
+        {
+            var module = _contextLookuper.LookupContext().Module;
+            if (module != null)
+            {
+                return applicationField.Label;
+            }
+            var i18NKey = applicationField.ApplicationName + "." + applicationField.Attribute;
+            var i18NValue = _i18NResolver.I18NValue(i18NKey, applicationField.Label, new object[] { schemaId });
+            return i18NValue;
+        }
+
+        private void CreateCellFormats(WorkbookStylesPart stylesPart)
+        {
+            stylesPart.Stylesheet.CellFormats = new CellFormats();
+            // empty one for index 0, seems to be required
+            stylesPart.Stylesheet.CellFormats.AppendChild(new CellFormat());
+            // no color
+            createCellFormat(stylesPart, 0, 0, 0, 0, true);
+            // red
+            createCellFormat(stylesPart, 0, 0, 0, 2, true);
+            // green
+            createCellFormat(stylesPart, 0, 0, 0, 3, true);
+            // yellow
+            createCellFormat(stylesPart, 0, 0, 0, 4, true);
+            // orange
+            createCellFormat(stylesPart, 0, 0, 0, 5, true);
+            // blue
+            createCellFormat(stylesPart, 0, 0, 0, 6, true);
+            // white
+            createCellFormat(stylesPart, 0, 0, 0, 7, true);
+
+            // header style
+            createCellFormat(stylesPart, 0, 1, 0, 0, true);
+
+            stylesPart.Stylesheet.CellFormats.Count = 8;
+        }
+
+        private void createCellFormat(WorkbookStylesPart stylesPart, UInt32 formatId, UInt32 fontId, UInt32 borderId, UInt32 fillId, bool applyFill)
+        {
+            stylesPart.Stylesheet.CellFormats.AppendChild(
+                new CellFormat
+                {
+                    FormatId = formatId,
+                    FontId = fontId,
+                    BorderId = borderId,
+                    FillId = fillId,
+                    ApplyFill = applyFill
+                }).AppendChild(new Alignment
+                {
+                    Horizontal = HorizontalAlignmentValues.Left,
+                    WrapText = BooleanValue.FromBoolean(true),
+                    Vertical = VerticalAlignmentValues.Top
+                });
+        }
+
+        private void createFonts(WorkbookStylesPart stylesPart)
+        {
+            stylesPart.Stylesheet.Fonts = new Fonts();
+
+            // normal font
+            var name = new FontName { Val = "Calibri" };
+            var size = new FontSize { Val = 10 };
+            stylesPart.Stylesheet.Fonts.AppendChild(new Font { FontName = name, FontSize = size });
+
+            // bold font for header
+            var boldFont = new Bold();
+            stylesPart.Stylesheet.Fonts.AppendChild(new Font { FontName = (FontName)name.Clone(), FontSize = (FontSize)size.Clone(), Bold = boldFont });
+
+            stylesPart.Stylesheet.Fonts.Count = 2;
+        }
+
+        private void BuildFills(WorkbookStylesPart stylesPart)
+        {
+            stylesPart.Stylesheet.Fills = new Fills();
+
+            // create a solid red fill
+            var solidRed = new PatternFill
+            {
+                PatternType = PatternValues.Solid,
+                ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString("FFFF0000") },
+                BackgroundColor = new BackgroundColor { Indexed = 64 }
+            };
+
+            // create green
+            var green = createColor("FF006836");
+            // create yellow
+            var yellow = createColor("FFffff00");
+            // create orange
+            var orange = createColor("FFff7d00");
+            // create blue
+            var blue = createColor("ff002fff");
+            // create white
+            var white = createColor("ffffffff");
+
+            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = new PatternFill { PatternType = PatternValues.None } }); // required, reserved by Excel
+            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = new PatternFill { PatternType = PatternValues.Gray125 } }); // required, reserved by Excel
+
+            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = solidRed });
+            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = green });
+            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = yellow });
+            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = orange });
+            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = blue });
+            stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = white });
+
+            stylesPart.Stylesheet.Fills.Count = 7;
+        }
+
+        private PatternFill createColor(string colorhex)
+        {
+            var color = new PatternFill
+            {
+                PatternType = PatternValues.Solid,
+                ForegroundColor = new ForegroundColor { Rgb = HexBinaryValue.FromString(colorhex) },
+                BackgroundColor = new BackgroundColor { Indexed = 64 }
+            };
+            return color;
         }
 
 
-        private static void BuildHeader(SLDocument excelFile, SLStyle headerStyle, IEnumerable<ApplicationFieldDefinition> applicationFields) {
-            var i = 1;
-            string value = string.Empty;
-            foreach (var applicationField in applicationFields) {
-                //Exporting to Excel, even if field is hidden
-                if (applicationField.IsHidden && !applicationField.Renderer.ParametersAsDictionary().TryGetValueAsString(FieldRendererConstants.EXPORTTOEXCEL, out value)) {
+        private void SetColumnWidth(SLDocument excelFile, IEnumerable<ApplicationFieldDefinition> applicationFields)
+        {
+            var columnIndex = 1;
+            foreach (var applicationField in applicationFields)
+            {
+                double excelWidthAux = 0;
+                object excelwidthAux;
+                if (applicationField.IsHidden)
+                {
                     continue;
                 }
-                excelFile.SetCellValue(1, i, applicationField.Label);
-                excelFile.SetCellStyle(1, i, headerStyle);
-                i++;
-            }
-        }
-
-        private static void FillCell(SLDocument excelFile, int rowIndex, int columnIndex, string data, SLStyle slStyle) {
-            DateTime dtTimeAux;
-            var dataToCell = DateTime.TryParse(data, out dtTimeAux) ?
-                dtTimeAux.ToString("dd/MM/yyyy H:mm") : data;
-
-            excelFile.SetCellValue(rowIndex, columnIndex, dataToCell);
-            excelFile.SetCellStyle(rowIndex, columnIndex, slStyle);
-        }
-
-        private static void SetColumnWidth(SLDocument excelFile, IEnumerable<ApplicationFieldDefinition> applicationFields) {
-            var columnIndex = 1;
-            foreach (var applicationField in applicationFields) {
-                double excelWidthAux;
-                string excelwidthAux;
-                applicationField.RendererParameters.TryGetValueAsString("excelwidth", out excelwidthAux);
-                double.TryParse(excelwidthAux, out excelWidthAux);
+                applicationField.RendererParameters.TryGetValue("excelwidth", out excelwidthAux);
+                if (excelwidthAux != null) double.TryParse(excelwidthAux.ToString(), out excelWidthAux);
                 var excelWidth = excelWidthAux > 0 ? excelWidthAux : (applicationField.Label.Length * 1.5);
                 excelFile.SetColumnWidth(columnIndex, excelWidth);
                 columnIndex++;
