@@ -11,7 +11,7 @@
     }
 
     init();
-    
+
 
     $scope.nonSharedFilters = function () {
         return userPreferenceService.loadUserNonSharedFilters($scope.schema.applicationName, $scope.schema.schemaId);
@@ -31,6 +31,11 @@
 
     $scope.toggleFilterMode = function () {
         $scope.basicMode = !$scope.basicMode;
+        for (var data in $scope.searchData) {
+            $scope.searchData[data] = "";
+        }
+        // Clear the previous filterFixedWhereClause when switching filter modes
+        $scope.paginationData.filterFixedWhereClause = null;
         contextService.insertIntoContext("filter_basicmode", $scope.basicMode, true);
         searchService.toggleAdvancedFilterMode();
     }
@@ -87,7 +92,7 @@
             if (data == "lastSearchedValues") {
                 continue;
             }
-            return searchData[data]!="";
+            return searchData[data] != "";
         }
         return false;
     }

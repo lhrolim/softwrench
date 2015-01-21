@@ -91,15 +91,17 @@
                                                    data-date-format="{{column.rendererParameters['format']}}"
                                                    data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
                                                    data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
-                                                   placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" ng-enter="filterSearch(column.attribute,$event)" />
+                                                   placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}"
+                                                   ng-enter="filterSearch(column.attribute,$event)"
+                                                   ng-disabled="advancedfiltermode" />
                                             <span class="input-group-addon " data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}">
                                                 <i class="glyphicon glyphicon-calendar"></i>
                                             </span>
                                             <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                        The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                            The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                             <div class="input-group-addon dropdown">
                                                 <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
-                                                      data-toggle="dropdown" rel="tooltip"
+                                                      ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}" rel="tooltip"
                                                       data-original-title="{{getOperator(column.attribute).tooltip}}">{{getSearchIcon(column.attribute)}}</span>
                                                 <ul class="dropdown-menu">
                                                     <li ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
@@ -112,12 +114,12 @@
                                         </div>
                                         <div ng-switch-default class="input-group input-group-sm">
                                             <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
-                                                   ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" />
+                                                   ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" ng-disabled="advancedfiltermode" />
                                             <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                        The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                                            The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                             <div class="input-group-addon dropdown">
                                                 <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
-                                                      data-toggle="dropdown" rel="tooltip"
+                                                      ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}" rel="tooltip"
                                                       data-original-title="{{getOperator(column.attribute).tooltip}}">{{getSearchIcon(column.attribute)}}</span>
                                                 <ul class="dropdown-menu">
                                                     <li ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
@@ -137,11 +139,12 @@
                                                     ng-init="handleDefaultValue(dm.fields,column)"
                                                     ng-model="searchData[column.target]"
                                                     ng-change="refreshGrid()"
+                                                    ng-disabled="advancedfiltermode"
                                                     ng-options="option.value as i18NOptionField(option,column,schema)
                                                 for option in GetAssociationOptions(column,true)" />
                                             <div class="input-group-addon dropdown">
                                                 <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
-                                                      data-toggle="dropdown"
+                                                      ng-attr-data-toggle="{{ advancedfiltermode ? '' : 'dropdown' }}"
                                                       rel="tooltip"
                                                       data-original-title="{{getOperator(column.attribute).tooltip}}">{{getSearchIcon(column.attribute)}}</span>
                                                 <ul class="dropdown-menu">
@@ -270,9 +273,9 @@
         </div>
     </div>
 
-<!--    <div ng-if="isCommand(schema)">-->
-<!--        <commandbar schema="schema" mode="schema.mode" datamap="datamap" />-->
-<!--    </div>-->
+    <!--    <div ng-if="isCommand(schema)">-->
+    <!--        <commandbar schema="schema" mode="schema.mode" datamap="datamap" />-->
+    <!--    </div>-->
 </form>
 
 
