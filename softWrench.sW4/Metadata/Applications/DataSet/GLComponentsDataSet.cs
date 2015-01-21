@@ -28,11 +28,23 @@ namespace softWrench.sW4.Metadata.Applications.DataSet
                 var query = string.Format(@"SELECT compvalue, compvalue + ' - ' + comptext AS comptext FROM glcomponents
                                             where glorder = {0} and active = 1 and orgid = '{1}'", parameters.OptionField.ExtraParameter, orgid);
 
-                var result = MaxDAO.FindByNativeQuery(query, null);
+                var results = MaxDAO.FindByNativeQuery(query, null);
 
-                if (result != null && result.Any())
+                if (results != null && results.Any())
                 {
-                    return result.Select(row => new AssociationOption(row["compvalue"], row["comptext"]));
+                    var gllengthquery = string.Format(@"SELECT gllength FROM glconfigure
+                                                        where glorder = {0} and orgid = '{1}'", parameters.OptionField.ExtraParameter, orgid);
+
+                    var gllengthresult = MaxDAO.FindSingleByNativeQuery<object>(gllengthquery, null);
+
+                    var ITEMs = new List<IAssociationOption>(); 
+                    
+                    ITEMs.Add(new AssociationOption(new String('?', (int)gllengthresult), String.Format(" {0}", new String('?', (int)gllengthresult))));
+                    foreach(var result in results) {
+                        ITEMs.Add(new AssociationOption(result["compvalue"], result["comptext"]));
+                    }
+
+                    return ITEMs; 
                 }
             }
 
