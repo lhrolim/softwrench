@@ -58,7 +58,6 @@ app.directive('crudBody', function (contextService) {
             datamap: '=',
             extraparameters: '=',
             isDirty: '=',
-            originalDatamap: '=',
             savefn: '&',
             cancelfn: '&',
             previousschema: '=',
@@ -133,6 +132,10 @@ app.directive('crudBody', function (contextService) {
             });
 
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
+                //Save the originalDatamap after the body finishes rendering. This will be used in the submit service to update
+                //associations that were "removed" with a " ". This is because a null value, when sent to the MIF, is ignored
+                $scope.originalDatamap = angular.copy($scope.datamap);
+                
                 var tab = contextService.getActiveTab();
                 if (tab != null) {
                     redirectService.redirectToTab(tab);
@@ -328,6 +331,8 @@ app.directive('crudBody', function (contextService) {
                 var itemToSave = fromDatamap ? $scope.datamap : selecteditem;
                 var fields = fromDatamap ? itemToSave.fields : itemToSave;
 
+                //need an angular.copy to prevent beforesubmit transformation events from modifying the original datamap.
+                //this preserves the datamap (and therefore the data presented to the user) in case of a submission failure
                 var transformedFields = angular.copy(fields);
                 
                 var eventParameters = {};
@@ -374,6 +379,7 @@ app.directive('crudBody', function (contextService) {
                 transformedFields = submitService.removeExtraFields(transformedFields, true, $scope.schema);
                 submitService.translateFields($scope.schema.displayables, transformedFields);
                 associationService.insertAssocationLabelsIfNeeded($scope.schema, transformedFields, $scope.associationOptions);
+                submitService.handleDatamapForMIF($scope.schema, $scope.originalDatamap.fields, transformedFields);
 
                 if (parameters == undefined) {
                     parameters = {};
@@ -388,12 +394,6 @@ app.directive('crudBody', function (contextService) {
                 var applicationName = $scope.schema.applicationName;
                 var idFieldName = $scope.schema.idFieldName;
                 var id = transformedFields[idFieldName];
-
-
-                //var transformedFields = eventService.beforesubmit_transformation($scope.schema, $scope.datamap);
-                //if (transformedFields != null) {
-                //    jsonString = angular.toJson(transformedFields);
-                //}
 
                 var jsonString = angular.toJson(transformedFields);
 

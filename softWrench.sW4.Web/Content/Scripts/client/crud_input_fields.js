@@ -363,11 +363,13 @@ app.directive('crudInputFields', function (contextService) {
                 if (allowFreeText == "true") {
                     var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                     $scope.datamap[fieldMetadata.target] = code;
-                } else if ($scope.datamap[fieldMetadata.target] != null) {
-                    $scope.datamap[fieldMetadata.target] = " "; // If the lookup value is changed to a null value, set a white space, so it can be updated on maximo WS.
-                    $scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
-                    associationService.updateUnderlyingAssociationObject(fieldMetadata, null, $scope);
                 }
+                //else
+                //    if ($scope.datamap[fieldMetadata.target] != null) {
+                //    $scope.datamap[fieldMetadata.target] = null;
+                //    $scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
+                //    associationService.updateUnderlyingAssociationObject(fieldMetadata, null, $scope);
+                //}
             };
             $scope.getLookUpDescriptionLabel = function (fieldMetadata) {
                 return i18NService.getLookUpDescriptionLabel(fieldMetadata);
@@ -376,7 +378,8 @@ app.directive('crudInputFields', function (contextService) {
                 var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                 var targetValue = $scope.datamap[fieldMetadata.target];
                 var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
-                if (code != null && code != '' && (targetValue == null || targetValue == " ") && allowFreeText != "true") {
+                if (code != null && code != targetValue && allowFreeText != "true") {
+                    associationService.updateDependentAssociationValues($scope, $scope.schema, $scope.datamap, fieldMetadata);
                     $scope.showLookupModal(fieldMetadata);
                 }
             };
