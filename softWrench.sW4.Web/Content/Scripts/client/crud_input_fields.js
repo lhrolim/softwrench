@@ -186,7 +186,9 @@ app.directive('crudInputFields', function (contextService) {
                         }
                     });
                 });
-                if (parentElementId.equalsAny('crudInputMainCompositionFields', 'crudInputMainFields')) {
+                //both ids refers to the main form, but crudInputMainCompositionFields when there are other tabs, or crudInputMainFields when there are no other tabs
+                //
+                if (parentElementId.equalsAny('crudInputMainCompositionFields', 'crudInputMainFields', 'crudInputNewItemCompositionFields')) {
                     //to avoid registering these global listeners multiple times, as the page main contain sections.
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();

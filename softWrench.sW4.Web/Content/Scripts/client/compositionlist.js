@@ -75,7 +75,7 @@ app.directive('newItemInput', function ($compile, fieldService) {
                     "<crud-input schema='schema'" +
                                 "datamap='datamap'" +
                                 "displayables='displayables'" +
-                                "elementid='elementid'" +
+                                "elementid='crudInputNewItemComposition'" +
                                 "association-options='associationOptions'" +
                                 "association-schemas='associationSchemas'" +
                                 "blockedassociations='blockedassociations'" +
