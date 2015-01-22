@@ -89,7 +89,7 @@ app.directive('dateTime', function ($timeout, formatService) {
             });
             */
             function datetimeclassHandler(timeOnly) {
-                var datetime = $('.datetime-class').last();
+                var datetime = $('.datetime-class', element.parent());
                 var calendar = 'glyphicon glyphicon-calendar';
                 var time = 'glyphicon glyphicon-time';
                 datetime.removeClass(calendar);

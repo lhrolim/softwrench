@@ -24,7 +24,8 @@ app.directive('crudListWrapper', function (contextService, $compile) {
             searchSort: '=',
             ismodal: '@',
             checked: '=',
-            isList: "="
+            isList: "=",
+            timestamp: '=',
         },
         link: function (scope, element, attrs) {
             if (scope.isList) {
@@ -32,7 +33,8 @@ app.directive('crudListWrapper', function (contextService, $compile) {
                     "<crud-list datamap='datamap' schema='schema' pagination-data='paginationData' " +
                     "search-data='searchData' " +
                     "search-operator='searchOperator' " +
-                    "search-sort='searchSort' />"
+                    "search-sort='searchSort'" +
+                     "timestamp='{{timestamp}}' />"
                 );
                 $compile(element.contents())(scope);
             }
@@ -58,7 +60,9 @@ app.directive('crudList', function (contextService) {
             searchSort: '=',
             ismodal: '@',
             hidebars: '@',
-            checked: '='
+            checked: '=',
+            timestamp: '@',
+            associationOptions:"="
         },
 
         controller: function ($scope, $http, $rootScope, $filter, $injector, $log, $timeout,
@@ -72,9 +76,7 @@ app.directive('crudList', function (contextService) {
 
             fixHeaderService.activateResizeHandler();
 
-            $scope.loadIcon = function (value, metadata) {
-                return iconService.loadIcon(value, metadata);
-            };
+        
 
             $scope.hasTabs = function (schema) {
                 return tabsService.hasTabs(schema);
@@ -82,7 +84,7 @@ app.directive('crudList', function (contextService) {
             $scope.isCommand = function (schema) {
                 return $scope.schema && $scope.schema.properties['command.select'] == "true";
             };
-            $scope.isNotHapagTest = function() {
+            $scope.isNotHapagTest = function () {
                 return $rootScope.clientName != 'hapag';
             };
 
@@ -90,7 +92,7 @@ app.directive('crudList', function (contextService) {
                 return tabsService.tabsDisplayables(schema);
             };
 
-  			$scope.getGridColumnStyle = function (column, propertyName) {
+            $scope.getGridColumnStyle = function (column, propertyName) {
                 var property = column.rendererParameters[propertyName];
 
                 if (property != null) {
@@ -107,9 +109,9 @@ app.directive('crudList', function (contextService) {
                 return null;
             }
 
-		   $scope.shouldShowSort = function(column,orientation) {
+            $scope.shouldShowSort = function (column, orientation) {
                 return column.attribute != null && ($scope.searchSort.field == column.attribute || $scope.searchSort.field == column.rendererParameters['sortattribute']) && $scope.searchSort.order == orientation;
-		   };
+            };
 
 
             $scope.$on('filterRowRenderedEvent', function (filterRowRenderedEvent) {
@@ -147,9 +149,9 @@ app.directive('crudList', function (contextService) {
                         $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
                     }, contextService.retrieveFromContext('successMessageTimeOut'));
                 }
-//                if ($rootScope.showSuccessMessage) {
-//                    fixHeaderService.fixSuccessMessageTop(true);
-//                }
+                //                if ($rootScope.showSuccessMessage) {
+                //                    fixHeaderService.fixSuccessMessageTop(true);
+                //                }
 
                 // fix status column height
                 $('.statuscolumncolor').each(function (key, value) {
@@ -238,11 +240,11 @@ app.directive('crudList', function (contextService) {
                 fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
             });
 
-            $scope.doAdvancedSearch = function(filterdata) {
+            $scope.doAdvancedSearch = function (filterdata) {
                 searchService.advancedSearch($scope.datamap, $scope.schema, filterdata);
             };
 
-            $scope.cursortype = function() {
+            $scope.cursortype = function () {
                 var editDisabled = $scope.schema.properties['list.disabledetails'];
                 return "true" != editDisabled ? "pointer" : "default";
             };
@@ -268,44 +270,7 @@ app.directive('crudList', function (contextService) {
                 return $rootScope.clientName == "hapag";
             };
 
-            $scope.showDetail = function (rowdm, column) {
 
-                var mode = $scope.schema.properties['list.click.mode'];
-                var popupmode = $scope.schema.properties['list.click.popupmode'];
-                var schemaid = $scope.schema.properties['list.click.schema'];
-                var fullServiceName = $scope.schema.properties['list.click.service'];
-                var editDisabled = $scope.schema.properties['list.disabledetails'];
-
-                if (popupmode == "report") {
-                    return;
-                }
-
-                if ("true" == editDisabled && nullOrUndef(fullServiceName)) {
-                    return;
-                }
-
-                if (fullServiceName != null) {
-                    commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema);
-                    return;
-                };
-
-                var id = rowdm.fields[$scope.schema.idFieldName];
-                if (id == null || id == "-666") {
-                    window.alert('error id is null');
-                    return;
-                }
-
-                var applicationname = $scope.schema.applicationName;
-                if (schemaid == '') {
-                    return;
-                }
-                if (schemaid == null) {
-                    schemaid = detailSchema();
-                }
-                $scope.$emit("sw_renderview", applicationname, schemaid, mode, $scope.title, {
-                    id: id, popupmode: popupmode
-                });
-            };
 
             $scope.renderListView = function (parameters) {
                 $scope.$parent.multipleSchema = false;
@@ -370,8 +335,8 @@ app.directive('crudList', function (contextService) {
                 }
             };
 
-            $scope.toggleSelectAll = function(checked) {
-                $.each($scope.datamap, function(key, value) {
+            $scope.toggleSelectAll = function (checked) {
+                $.each($scope.datamap, function (key, value) {
                     value.fields["_#selected"] = checked;
                 });
             };
@@ -406,13 +371,9 @@ app.directive('crudList', function (contextService) {
 
             };
 
-            $scope.isColumnEditable = function(column) {
-                return column.rendererParameters['editable'] == "true";
-            };
+          
 
-            $scope.statusColor = function(status, gridname) {
-                return statuscolorService.getColor(status, $scope.schema.applicationName);
-            };
+
 
             $scope.sort = function (column) {
                 if (!$scope.shouldShowHeaderLabel(column) || "none" == $scope.schema.properties["list.sortmode"]) {
@@ -450,7 +411,8 @@ app.directive('crudList', function (contextService) {
                 $scope: $scope,
                 formatService: formatService,
                 expressionService: expressionService,
-                searchService: searchService
+                searchService: searchService,
+                commandService:commandService
             });
 
         }

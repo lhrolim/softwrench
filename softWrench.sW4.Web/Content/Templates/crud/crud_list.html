@@ -39,7 +39,7 @@
 
     <div class="divAuxTable">
         <!--build responsive css rules based on metadata-->
-        <style column-widths columns="{{schema.displayables}}" applicationname="{{schema.applicationName}}" gridtype="listgrid"></style>
+        <style column-widths applicationname="{{schema.applicationName}}"  columns="{{schema.displayables}}" gridtype="listgrid"></style>
 
         <table class="table table-hover hidden-phone fixedtable listgrid-table" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" id="listgrid">
             <thead id="listgridthread" class="listgrid-thead">
@@ -161,92 +161,7 @@
                     <th class="clear"><!--SWWEB-841--></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr ng-repeat="dm in datamap" listtablerendered rel="hideRow" bindonce
-                    ng-style="{'cursor':cursortype()}">
-                    <td ng-show="schema.properties['list.selectionstyle'] == 'multiple'" class="select-multiple">
-                        <!--Multiselect-->
-                        <input type="checkbox"
-                               ng-model="dm.fields['_#selected']">
-                    </td>
-                    <td ng-show="compositionlistschema.properties['list.selectionstyle'] == 'single'" class="select-single">
-                        <!--Singleselect-->
-                    </td>
-                    <td ng-repeat="column in schema.displayables"
-                        bo-show="!isFieldHidden(schema,column)"
-                        class="xoupscolumns"
-                        ng-click="showDetail(dm,column)">
-                        <ng-switch on="column.type">
-                            <div ng-switch-when="ApplicationFieldDefinition">
-                                <ng-switch on="column.rendererType">
-                                    <div ng-switch-when="color" class="statuscolumncolor"
-                                         bo-style="{'background-color':statusColor(dm.fields[column.rendererParameters['column']] || 'null',null)}">
-                                    </div>
-                                    <input ng-switch-when="checkbox"
-                                           type="checkbox"
-                                           class="check"
-                                           name="column.attribute"
-                                           ng-click="toogleCheckboxSelection(option,column.associationKey,dm)"
-                                           ng-model="dm.fields[column.attribute]" />
-                                    <div ng-switch-when="icon">
-                                        <i class="fa" ng-class="loadIcon(dm.fields[column.attribute],column)"
-                                           rel="tooltip" data-original-title="{{column.toolTip}}"></i>
-                                    </div>
-                                    <div ng-switch-when="datetime">
-                                        <div ng-if="isColumnEditable(column)" class="input-group" data-datepicker="true">
-                                            <input type="text" ng-model="dm.fields[column.attribute]"
-                                                   data-date-time
-                                                   data-show-time="{{column.rendererParameters['showtime']}}"
-                                                   data-show-date="{{column.rendererParameters['showdate']}}"
-                                                   data-date-format="{{column.rendererParameters['format']}}"
-                                                   data-show-meridian="{{column.rendererParameters['showmeridian']}}"
-                                                   data-allow-past="{{column.rendererParameters['allowpast']}}"
-                                                   data-allow-future="{{column.rendererParameters['allowfuture']}}"
-                                                   class="form-control">
-                                            <span class="input-group-addon" data-calendericon="true" rel="tooltip"
-                                                  data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}" style="cursor: pointer;">
-                                                <i class="datetime-class"></i>
-                                            </span>
-                                        </div>
-                                        <div ng-if="!isColumnEditable(column)">
-                                            {{getFormattedValue(dm.fields[column.attribute],column,dm)}}
-                                        </div>
-                                    </div>
-                                    <!--<div ng-switch-default style="color: black; word-break:break-word; padding-left:8px; word-wrap: break-word;">-->
-                                    <div ng-switch-default style="color: black; padding-left: 8px;">
-                                        <div ng-if="isColumnEditable(column)" class="input-group" data-datepicker="true">
-                                            <input type="text"
-                                                   ng-model="dm[column.attribute]" class="hidden-phone form-control"
-                                                   data-ng-maxlength="{{column.rendererParameters['maxlength']}}"
-                                                   maxlength="{{column.rendererParameters['maxlength']}}" />
-                                        </div>
-                                        <div ng-if="!isColumnEditable(column)" ng-init="handleDefaultValue(dm.fields,column)">
-                                            {{getFormattedValue(dm.fields[column.attribute],column,dm)}}
-                                        </div>
-                                    </div>
-                                </ng-switch>
-                            </div>
-                            <div ng-switch-when="OptionField">
-                                <div ng-if="column.rendererParameters['filteronly']=='true'">
-                                    {{getFormattedValue(dm.fields[column.attribute],column,dm)}}
-                                </div>
-                                <div ng-switch on="column.rendererType" ng-if="column.rendererParameters['filteronly']!='true'">
-                                    <div ng-switch-when="combo" class="sw-combobox-container">
-                                        <select class="hidden-phone form-control combobox"
-                                                ng-init="handleDefaultValue(dm.fields,column)"
-                                                ng-model="dm.fields[column.target]"
-                                                ng-options="option.value as i18NOptionField(option,column,schema)
-                                                for option in GetAssociationOptions(column)" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div ng-switch-when="ApplicationSection">
-                                <div ng-include="contextPath(column.resourcepath)" href="#" style="width: 100%"></div>
-                            </div>
-                        </ng-switch>
-                    </td>
-                </tr>
-            </tbody>
+            <tbody crudtbody schema="schema" datamap="datamap" association-options="associationOptions" timestamp="{{timestamp}}" bindonce />
         </table>
     </div>
     <p class="text-center" ng-show="datamap.length == 0">

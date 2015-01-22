@@ -1,5 +1,9 @@
 ﻿//idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-function BaseList($scope, formatService, expressionService, searchService) {
+function BaseList($scope, formatService, expressionService, searchService, fieldService,i18NService,commandService) {
+
+    $scope.isFieldHidden = function (application, fieldMetadata) {
+        return fieldService.isFieldHidden($scope.datamap, application, fieldMetadata);
+    };
 
     $scope.getFormattedValue = function (value, column, datamap) {
         var formattedValue = formatService.format(value, column, datamap);
@@ -9,6 +13,22 @@ function BaseList($scope, formatService, expressionService, searchService) {
             return null;
         }
         return formattedValue;
+    };
+
+    $scope.i18NOptionField = function (option, fieldMetadata, schema) {
+        return i18NService.getI18nOptionField(option, fieldMetadata, schema);
+    };
+
+    $scope.isColumnEditable = function (column) {
+        return column.rendererParameters['editable'] == "true";
+    };
+
+    $scope.isColumnUpdatable = function (column) {
+        return this.isColumnEditable(column) || column.rendererParameters['updatable'] == "true";
+    };
+
+    $scope.contextPath = function (path) {
+        return url(path);
     };
 
     $scope.searchOperations = function () {
@@ -47,8 +67,8 @@ function BaseList($scope, formatService, expressionService, searchService) {
         if (fieldMetadata.type == "OptionField") {
             return $scope.GetOptionFieldOptions(fieldMetadata, forfilter);
         }
-        $scope.$parent.associationOptions = instantiateIfUndefined($scope.$parent.associationOptions);
-        return $scope.$parent.associationOptions[fieldMetadata.associationKey];
+        $scope.associationOptions = instantiateIfUndefined($scope.associationOptions);
+        return $scope.associationOptions[fieldMetadata.associationKey];
     };
 
     $scope.GetOptionFieldOptions = function (optionField, forfilter) {
@@ -59,8 +79,8 @@ function BaseList($scope, formatService, expressionService, searchService) {
         if (optionField.jscache.providerOptions) {
             return optionField.jscache.providerOptions;
         }
-        $scope.$parent.associationOptions = instantiateIfUndefined($scope.$parent.associationOptions);
-        var associationOptions = $scope.$parent.associationOptions[optionField.providerAttribute];
+        $scope.associationOptions = instantiateIfUndefined($scope.associationOptions);
+        var associationOptions = $scope.associationOptions[optionField.providerAttribute];
         if (forfilter || optionField.addBlankOption) {
             associationOptions.unshift({
                 label: "",
@@ -77,6 +97,45 @@ function BaseList($scope, formatService, expressionService, searchService) {
 
     $scope.shouldShowHeaderFilter = function (column) {
         return $scope.shouldShowHeaderLabel(column) && !column.rendererParameters["hidefilter"];
+    };
+
+    $scope.showDetail = function (rowdm, column) {
+
+        var mode = $scope.schema.properties['list.click.mode'];
+        var popupmode = $scope.schema.properties['list.click.popupmode'];
+        var schemaid = $scope.schema.properties['list.click.schema'];
+        var fullServiceName = $scope.schema.properties['list.click.service'];
+        var editDisabled = $scope.schema.properties['list.disabledetails'];
+
+        if (popupmode == "report") {
+            return;
+        }
+
+        if ("true" == editDisabled && nullOrUndef(fullServiceName)) {
+            return;
+        }
+
+        if (fullServiceName != null) {
+            commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema);
+            return;
+        };
+
+        var id = rowdm.fields[$scope.schema.idFieldName];
+        if (id == null || id == "-666") {
+            window.alert('error id is null');
+            return;
+        }
+
+        var applicationname = $scope.schema.applicationName;
+        if (schemaid == '') {
+            return;
+        }
+        if (schemaid == null) {
+            schemaid = detailSchema();
+        }
+        $scope.$emit("sw_renderview", applicationname, schemaid, mode, $scope.title, {
+            id: id, popupmode: popupmode
+        });
     };
 
 }
