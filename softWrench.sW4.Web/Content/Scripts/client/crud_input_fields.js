@@ -123,7 +123,7 @@ app.directive('crudInputFields', function (contextService) {
 
         controller: function ($scope, $http, $element, $injector, $timeout,
             printService, compositionService, commandService, fieldService, i18NService,
-            associationService, expressionService, styleService, glcomponentService,
+            associationService, expressionService, styleService,
             cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService) {
             $scope.$name = 'crud_input_fields';
             $scope.handlerTitleInputFile = function (cssclassaux) {
