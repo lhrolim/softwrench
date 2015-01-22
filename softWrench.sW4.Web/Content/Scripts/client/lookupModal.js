@@ -183,7 +183,8 @@ app.directive('lookupModal', function (contextService) {
                 $scope: $scope,
                 formatService: formatService,
                 expressionService: expressionService,
-                searchService: searchService
+                searchService: searchService,
+                commandService:null
             });
         }
     };

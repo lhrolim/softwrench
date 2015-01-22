@@ -6,7 +6,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <template path="@solution.xml"/>
     <template path="@attachments.xml"/>
   </templates>
-  
+
   <entities>
     <entity name="incident" idAttribute="ticketid">
 
@@ -130,9 +130,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <association label ="Priority" target="internalpriority" labelfield="numericdomain_.description">
             <renderer type="lookup"/>
           </association>
-<!--          <association label="Classification:" target="classificationid" labelfield="incidentclassifications_.description">-->
-<!--            <renderer type="lookup"/>-->
-<!--          </association>-->
+          <!--          <association label="Classification:" target="classificationid" labelfield="incidentclassifications_.description">-->
+          <!--            <renderer type="lookup"/>-->
+          <!--          </association>-->
           <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid">
             <renderer type="autocompleteclient" />
           </optionfield>
@@ -258,51 +258,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <!--composition relationship="solution" label="Solution">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
           </composition-->
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
         </detail>
-        <!--field attribute="statusdate" hidden="true" />
-          <composition relationship="relatedrecord" label="Related Records" inline="true" >
-            <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey" />
-          </composition>
-          <composition relationship="worklog" label="Work Log">
-            <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
-          </composition>
-          <tab label="Solution" id="solution">
-            <field attribute="solution_symptom_.ldtext" label="Symptom:"  >
-              <renderer type="textarea"/>
-            </field>
-            <field attribute="solution_cause_.ldtext" label="Cause:" >
-              <renderer type="textarea"/>
-            </field>
-            <field attribute="solution_resolution_.ldtext" label="Resolution:" >
-              <renderer type="textarea"/>
-            </field>
-          </tab>
-          
-        </schema>
-      
-        <schema id="tapebackupreport" stereotype="list" title="Tape BackUp Report">
-					<field label="Incident Number" attribute="ticketid">
-						<renderer type="default" params="minwidth=75px;maxwidth=75px" />
-					</field>
-					<field label="Location" attribute="reporter_.locationsite">
-						<renderer type="default" params="minwidth=80px;maxwidth=160px" />
-					</field>
-					<field label="Status" attribute="status">
-						<renderer type="default" params="minwidth=80px;maxwidth=160px" />
-					</field>
-					<field label="Open Date" attribute="affecteddate">
-						<renderer type="datetime" params="format=dd/MM/yyyy"/>
-					</field>
-					<field label="Last-Action Date" attribute="lastworklog_.createdate">
-						<renderer type="datetime" params="format=dd/MM/yyyy"/>
-					</field>
-					<field label="Last-Action Worklog" attribute="lastworklog_.description"/>
-					<field label="Owner Group" attribute="ownergroup"/>
-					<field label="Days Open" attribute="#daysopen">
-						<renderer type="default" params="minwidth=80px;maxwidth=160px" />
-					</field>
-				</schema-->
+
+        
       </schemas>
+
     </application>
 
   </applications>
