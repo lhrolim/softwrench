@@ -223,6 +223,10 @@ app.directive('compositionList', function (contextService) {
 
             init();
 
+            $scope.safeCSSselector = function (name) {
+                return safeCSSselector(name);
+            };
+
             $scope.isRowHidden = function (compositionlistschema, collectionproperties, compositionitem) {
                 if (collectionproperties.hideExistingData == true) {
                     var idFieldName = compositionlistschema.idFieldName;

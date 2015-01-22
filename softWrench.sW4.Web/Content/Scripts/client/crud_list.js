@@ -270,7 +270,9 @@ app.directive('crudList', function (contextService) {
                 return $rootScope.clientName == "hapag";
             };
 
-
+            $scope.safeCSSselector = function (name) {
+                return safeCSSselector(name);
+            };
 
             $scope.renderListView = function (parameters) {
                 $scope.$parent.multipleSchema = false;

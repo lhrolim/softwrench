@@ -109,6 +109,25 @@ function isDesktop() {
     return DeviceDetect.catagory == 'Desktop';
 };
 
+function safeCSSselector(name) {
+
+    //if column has an attribute property, else return an empty string
+    if (name) {
+        //make sure name is all lower case
+        var newName = name.toLowerCase();
+
+        //replace invaild characters with underscores
+
+        //TODO: make more robust, add additional invalid characters
+        newName = newName.replace('.', '_');
+        newName = newName.replace('#', '_');
+
+        return newName;
+    } else {
+        return "";
+    }
+}
+
 var spin;
 
 function instantiateIfUndefined(obj, nullcheck) {
@@ -118,12 +137,6 @@ function instantiateIfUndefined(obj, nullcheck) {
     }
     return obj;
 }
-
-
-
-
-
-
 
 function FillRelationship(obj, property, valueToSet) {
     property = property.replace(/_/g, '_\.');
@@ -141,7 +154,6 @@ function RemoveSpecialChars(id) {
     //remove all occurences of special chars (except _) (to remove # mainly)
     return id.replace(/[^\w\s]/gi, '');
 }
-
 
 function JsonProperty(obj, property, valueToSet, forceCreation) {
 
