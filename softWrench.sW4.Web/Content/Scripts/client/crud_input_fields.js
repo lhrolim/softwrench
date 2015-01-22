@@ -374,9 +374,19 @@ app.directive('crudInputFields', function (contextService) {
                         var servicepart = service.split('.');
                         savefn = dispatcherService.loadService(servicepart[0], servicepart[1]);
                     }
+
+                    var modaldatamap = null;
+
+                    var onloadservice = fieldMetadata.rendererParameters['onload'];
+                    var onloadfn = function (){};
+                    if (onloadservice != null) {
+                        var onloadservicepart = onloadservice.split('.');
+                        onloadfn = dispatcherService.loadService(onloadservicepart[0], onloadservicepart[1]);
+                        modaldatamap = onloadfn(datamap, fieldMetadata.rendererParameters['schema'], fieldMetadata);
+                    }
                     
-                    modalService.show(fieldMetadata.rendererParameters['schema'], null, function (selecteditem) {
-                        savefn(datamap, schema, selecteditem, fieldMetadata);
+                    modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, function (selecteditem) {
+                        savefn(datamap, fieldMetadata.rendererParameters['schema'], selecteditem, fieldMetadata);
                     },null, datamap, schema);
 
                     return;
