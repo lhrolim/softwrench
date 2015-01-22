@@ -19,6 +19,46 @@ namespace softWrench.sW4.Util {
         private Boolean _cacheSet =false;
 
         private Dictionary<string, Dictionary<string, string>> _cachedColorDict;
+        private Dictionary<string, string> _defaultColorDict;
+
+        public StatusColorResolver() {
+            // this should eventually use a config file
+            _defaultColorDict = new Dictionary<string, string>() {
+                {"acc_cat", "blue"},
+                {"appr", "blue"},
+                {"assesses", "blue"}, 
+                {"auth", "blue"},
+                {"authorized", "blue"},
+                {"can", "red"},
+                {"cancelled", "red"},
+                {"close", "green"},
+                {"closed", "green"},
+                {"comp", "green"},
+                {"draft", "white"},
+                {"fail", "red"},
+                {"failpir", "red"},
+                {"histedit", "green"},
+                {"holdinprg", "blue"},
+                {"impl", "green"},
+                {"inprg", "blue"},
+                {"inprog", "yellow"},
+                {"new", "orange"},
+                {"notreq", "red"},
+                {"null", "yellow"},
+                {"pending", "yellow"},
+                {"planned", "blue"},
+                {"queued", "yellow"},
+                {"rejected", "red"},
+                {"resolvconf", "green"},
+                {"resolved", "blue"},
+                {"review", "green"},
+                {"sched", "blue"},
+                {"slahold", "blue"},
+                {"wappr", "orange"},
+                {"wsch", "orange"}
+            };
+        }
+
 
         public JObject FetchCatalogs() {
             if (_cacheSet && !ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsUnitTest) {
@@ -60,7 +100,7 @@ namespace softWrench.sW4.Util {
         public Dictionary<string, string> GetColorsAsDict([NotNull] string applicationId)
         {
             if (_cacheSet && !ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsUnitTest && _cachedColorDict == null) {
-                return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : new Dictionary<string, string>();
+                return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : null;
             }
 
             _cachedColorDict = new Dictionary<string, Dictionary<string, string>>();
@@ -83,7 +123,11 @@ namespace softWrench.sW4.Util {
                 _cachedColorDict[application] = colorDict;
             }
 
-            return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : new Dictionary<string, string>();
+            return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : null;
+        }
+
+        public Dictionary<string, string> GetDefaultColorsAsDict() {
+            return _defaultColorDict;
         }
     }
 }

@@ -49,7 +49,7 @@ namespace softWrench.sW4.Web.Util {
         public SLDocument ConvertGridToExcel(string application, ApplicationMetadataSchemaKey key, ApplicationListResult result, InMemoryUser user)
         {
             {
-                var colorStatusDict = _statusColorsService.GetColorsAsDict(application);
+                var colorStatusDict = _statusColorsService.GetColorsAsDict(application) != null ? _statusColorsService.GetColorsAsDict(application) : _statusColorsService.GetDefaultColorsAsDict() ;
 
                 var schema = result.Schema;
                 IEnumerable<ApplicationFieldDefinition> applicationFields = schema.Fields;
@@ -220,13 +220,11 @@ namespace softWrench.sW4.Web.Util {
         private bool getColor(string status, string schemaName, ref string styleId, Dictionary<string, string> colorStatusDict)
         {
             var colorCode = colorStatusDict.ContainsKey(status.ToLower()) ? colorStatusDict[status.ToLower()] : null;
-            var success = false;
             if (colorCode != null) {
-                success = _cellStyleDictionary.TryGetValue(colorCode, out styleId);
+                return _cellStyleDictionary.TryGetValue(colorCode, out styleId);
             }
 
-            // styleId = styleId2;
-            return success;
+            return false;
         }
 
         private static Func<ApplicationFieldDefinition, bool> ShouldShowField()
@@ -356,6 +354,7 @@ namespace softWrench.sW4.Web.Util {
                 BackgroundColor = new BackgroundColor { Indexed = 64 }
             };
 
+            // the color codes should eventually be read from a config file
             // create green
             var green = createColor("FF006836");
             // create yellow
