@@ -7,6 +7,8 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Web.Util;
 using softwrench.sw4.Shared2.Util;
+using softWrench.sW4.Metadata.Security;
+using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Web.Controllers {
 
@@ -16,7 +18,8 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly DataController _dataController;
         private readonly ExcelUtil _excelUtil;
 
-        public ExcelController(IContextLookuper contextLookuper, DataController dataController, ExcelUtil excelUtil) {
+        public ExcelController(IContextLookuper contextLookuper, DataController dataController, ExcelUtil excelUtil)
+        {
             _contextLookuper = contextLookuper;
             _dataController = dataController;
             _excelUtil = excelUtil;
@@ -34,7 +37,10 @@ namespace softWrench.sW4.Web.Controllers {
                 Key = key,
                 SearchDTO = searchDTO
             });
-            var excelFile = _excelUtil.ConvertGridToExcel(application, key, (ApplicationListResult)dataResponse);
+
+            var loggedInUser = SecurityFacade.CurrentUser();
+
+            var excelFile = _excelUtil.ConvertGridToExcel(application, key, (ApplicationListResult)dataResponse, loggedInUser);
             var stream = new MemoryStream();
             excelFile.SaveAs(stream);
             stream.Close();

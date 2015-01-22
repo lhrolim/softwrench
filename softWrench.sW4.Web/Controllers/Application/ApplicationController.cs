@@ -238,7 +238,9 @@ namespace softWrench.sW4.Web.Controllers.Application {
                                                           Key = key,
                                                           SearchDTO = searchDTO
                                                       });
-            var excelFile = _excelUtil.ConvertGridToExcel(application, key, (ApplicationListResult)dataResponse);
+            var loggedInUser = SecurityFacade.CurrentUser();
+
+            var excelFile = _excelUtil.ConvertGridToExcel(application, key, (ApplicationListResult)dataResponse, loggedInUser);
             Response.Clear();
             Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             Response.AddHeader("content-disposition", "attachment;filename={0}.xlsx".Fmt(fileName));
