@@ -140,10 +140,9 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                     html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\">".format(rowst);
                     html += "</td>";
 
-
-                    html += "<td class='select-single style\"display:none\"'>";
+                    html += '<td class="select-single" style="display:none">';
                     //TODO: to be implemented
-                    html += "</td>";
+                    html += '</td>';
 
 
                     var dm = datamap[i];
