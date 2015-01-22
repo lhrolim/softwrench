@@ -111,6 +111,10 @@ function BaseList($scope, formatService, expressionService, searchService, field
             return;
         }
 
+        if (mode && !mode.equalsAny('none', 'output', 'input')) {
+            mode = expressionService.evaluate(mode, rowdm);
+        }
+
         if ("true" == editDisabled && nullOrUndef(fullServiceName)) {
             return;
         }
