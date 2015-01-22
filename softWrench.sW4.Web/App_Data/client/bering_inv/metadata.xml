@@ -576,16 +576,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <application name="glcomponents" title="GL-Selector" entity="glcomponents">
       <schemas>
         <schema id="detail" title="GL Details" abstract="true" stereotype="detail" mode="input">
-          <optionfield label="Cost Center:" attribute="glpart-0" requiredexpression="true" providerattribute="_0GLAccountPartN" extraparameter="0">
+          <optionfield label="Cost Center:" attribute="glpart-0" requiredexpression="true" providerattribute="_0GLComponents71" extraparameter="0">
             <renderer type="AUTOCOMPLETECLIENT"/>
           </optionfield>
-          <optionfield label="Sub-Element:" attribute="glpart-1" requiredexpression="true" providerattribute="_1GLAccountPartN" extraparameter="1">
+          <optionfield label="Sub-Element:" attribute="glpart-1" requiredexpression="true" providerattribute="_1GLComponents71" extraparameter="1">
             <renderer type="AUTOCOMPLETECLIENT"/>
           </optionfield>
-          <optionfield label="Workload:" attribute="glpart-2" requiredexpression="true" providerattribute="_2GLAccountPartN" extraparameter="2">
+          <optionfield label="Workload:" attribute="glpart-2" requiredexpression="true" providerattribute="_2GLComponents71" extraparameter="2">
             <renderer type="AUTOCOMPLETECLIENT"/>
           </optionfield>
-          <optionfield label="SLIN:" attribute="glpart-3" providerattribute="_3GLAccountPartN" extraparameter="3">
+          <optionfield label="SLIN:" attribute="glpart-3" providerattribute="_3GLComponents71" extraparameter="3">
             <renderer type="AUTOCOMPLETECLIENT"/>
           </optionfield>
           <commandbars>
