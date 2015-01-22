@@ -79,7 +79,7 @@ app.directive('columnWidths', function ($log) {
                 css += getViewRules(widths, 'widthMD', '768px', 'screen', attr);
                 css += getViewRules(widths, 'widthLG', '992px', 'screen', attr);
 
-                css += getViewRules(widths, 'widthLG', null, 'print', attr);
+                css += getViewRules(widths, 'widthLG', '1px', 'print', attr);
                 //css += '}';
 
                 if (css) {
