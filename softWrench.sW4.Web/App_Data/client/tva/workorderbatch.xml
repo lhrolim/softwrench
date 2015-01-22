@@ -86,10 +86,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <option label="No" value="N"/>
           </optionfield>
           <field attribute="#fdbckcomment" label="Feedback Comment">
-            <renderer type="default" params="limit=14;width=12%"  />
+            <renderer type="default" params="limit=14;width=12%;updatable=true"  />
           </field>
           <field attribute="#lognote" label="Log Note">
-            <renderer type="default" params="width=12%"/>
+            <renderer type="default" params="width=12%;updatable=true"/>
           </field>
           <field attribute="#closed" label="Close" requiredexpression="true">
             <renderer type="checkbox" params="width=5%"/>

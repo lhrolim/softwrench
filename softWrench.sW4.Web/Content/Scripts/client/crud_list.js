@@ -271,44 +271,7 @@ app.directive('crudList', function (contextService) {
                 return $rootScope.clientName == "hapag";
             };
 
-            $scope.showDetail = function (rowdm, column) {
 
-                var mode = $scope.schema.properties['list.click.mode'];
-                var popupmode = $scope.schema.properties['list.click.popupmode'];
-                var schemaid = $scope.schema.properties['list.click.schema'];
-                var fullServiceName = $scope.schema.properties['list.click.service'];
-                var editDisabled = $scope.schema.properties['list.disabledetails'];
-
-                if (popupmode == "report") {
-                    return;
-                }
-
-                if ("true" == editDisabled && nullOrUndef(fullServiceName)) {
-                    return;
-                }
-
-                if (fullServiceName != null) {
-                    commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema);
-                    return;
-                };
-
-                var id = rowdm.fields[$scope.schema.idFieldName];
-                if (id == null || id == "-666") {
-                    window.alert('error id is null');
-                    return;
-                }
-
-                var applicationname = $scope.schema.applicationName;
-                if (schemaid == '') {
-                    return;
-                }
-                if (schemaid == null) {
-                    schemaid = detailSchema();
-                }
-                $scope.$emit("sw_renderview", applicationname, schemaid, mode, $scope.title, {
-                    id: id, popupmode: popupmode
-                });
-            };
 
             $scope.renderListView = function (parameters) {
                 $scope.$parent.multipleSchema = false;
@@ -449,7 +412,8 @@ app.directive('crudList', function (contextService) {
                 $scope: $scope,
                 formatService: formatService,
                 expressionService: expressionService,
-                searchService: searchService
+                searchService: searchService,
+                commandService:commandService
             });
 
         }

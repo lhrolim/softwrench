@@ -10,9 +10,14 @@ function griditemclick(rowNumber, columnNumber, element) {
     }
 }
 
-function defaultAppending(formattedText) {
-    var st = "<div>";
-    if (formattedText) {
+function defaultAppending(formattedText,updatable, rowst, column) {
+    var st = "";
+    if (updatable) {
+        st += "<div swcontenteditable ng-model=\"{0}.fields['{1}']\">".format(rowst, column.attribute);
+    }
+    else if (formattedText) {
+        st += "<div>";
+        //else to avoid appending "null"
         st += formattedText;
     }
     return st;
@@ -38,7 +43,8 @@ function buildStyle(minWidth, maxWidth, width, isdiv) {
 
 
 
-app.directive('crudtbody', function (contextService,$rootScope, $compile, $parse, formatService, i18NService, fieldService, commandService, statuscolorService, $injector, $timeout, $log) {
+app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
+    fieldService, commandService, statuscolorService, $injector, $timeout, $log, searchService) {
     return {
         restrict: 'A',
         replace: false,
@@ -119,7 +125,7 @@ app.directive('crudtbody', function (contextService,$rootScope, $compile, $parse
                     var rowst = "datamap[{0}]".format(i);
 
                     html += "<tr style='cursor: {0}' listtablerendered rel='hideRow'>".format(cursortype);
-
+                    needsWatchers = hasMultipleSelector;
 
                     html += "<td class='select-multiple' {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');
                     html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\">".format(rowst);
@@ -143,6 +149,7 @@ app.directive('crudtbody', function (contextService,$rootScope, $compile, $parse
                         }
 
                         var editable = scope.isColumnEditable(column);
+                        var updatable = scope.isColumnUpdatable(column);
 
                         var isHidden = hiddencolumnArray[j];
 
@@ -155,8 +162,7 @@ app.directive('crudtbody', function (contextService,$rootScope, $compile, $parse
                             var name = attribute;
                             html += "<div>";
                             html += "<input type='checkbox' class='check' name='{0}' ".format(name);
-                            html += "ng-model=\"{0}.fields['checked']\"".format(rowst);
-                            html += "ng-init=\"{0}.fields['checked']=false\" >".format(rowst);
+                            html += "ng-model=\"{0}.fields['{1}']\" >".format(rowst,name);
                             needsWatchers = true;
                         } else if (column.rendererType == "datetime") {
 
@@ -165,14 +171,14 @@ app.directive('crudtbody', function (contextService,$rootScope, $compile, $parse
                                 html += "<div class=\"input-group\" data-datepicker=\"true\">";
                                 html += scope.appendDateTimeComponent(columnst, column.rendererParameters, attribute, openCalendarTooltip);
                             } else {
-                                html += defaultAppending(formattedText);
+                                html += defaultAppending(formattedText, updatable, rowst, column);
                             }
                         }
 
 
                         else if (column.type == 'ApplicationFieldDefinition') {
                             if (!editable) {
-                                html += defaultAppending(formattedText);
+                                html += defaultAppending(formattedText, updatable, rowst, column);
                             } else {
                                 needsWatchers = true;
                                 var maxlength = column.rendererParameters['maxlength'];
@@ -184,14 +190,14 @@ app.directive('crudtbody', function (contextService,$rootScope, $compile, $parse
 
                         else if (column.type == "OptionField") {
                             if (column.rendererParameters['filteronly'] == 'true') {
-                                html += defaultAppending(formattedText);
+                                html += defaultAppending(formattedText, updatable, rowst, column);
                             } else {
                                 if (column.rendererType == "combo") {
                                     needsWatchers = true;
                                     html += "<div class=\"sw-combobox-container\">";
                                     html += "<select class=\"hidden-phone form-control combobox\"";
-                                    html += "ng-model=\"{0}.fields[column.target]\" ".format(columnst);
-                                    html += " ng-options=\"option.value as i18NOptionField(option,column,schema) for option in GetAssociationOptions(column)\" ".format(columnst);
+                                    html += "ng-model=\"{0}.fields[column.target]\" ".format(rowst);
+                                    html += " ng-options=\"option.value as i18NOptionField(option,{0},schema) for option in GetAssociationOptions({0})\" ".format(columnst);
                                 }
                             }
                         } else if (column.type == "ApplicationSection") {
@@ -233,7 +239,8 @@ app.directive('crudtbody', function (contextService,$rootScope, $compile, $parse
                 $scope: scope,
                 i18NService: i18NService,
                 fieldService: fieldService,
-                commandService: commandService
+                commandService: commandService,
+                searchService: searchService
             });
 
             //first call when the directive is linked (listener was not yet in place)

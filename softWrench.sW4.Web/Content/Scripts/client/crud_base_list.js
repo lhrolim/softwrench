@@ -1,5 +1,5 @@
 ﻿//idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-function BaseList($scope, formatService, expressionService, searchService, fieldService,i18NService) {
+function BaseList($scope, formatService, expressionService, searchService, fieldService,i18NService,commandService) {
 
     $scope.isFieldHidden = function (application, fieldMetadata) {
         return fieldService.isFieldHidden($scope.datamap, application, fieldMetadata);
@@ -21,6 +21,10 @@ function BaseList($scope, formatService, expressionService, searchService, field
 
     $scope.isColumnEditable = function (column) {
         return column.rendererParameters['editable'] == "true";
+    };
+
+    $scope.isColumnUpdatable = function (column) {
+        return this.isColumnEditable(column) || column.rendererParameters['updatable'] == "true";
     };
 
     $scope.contextPath = function (path) {
@@ -93,6 +97,45 @@ function BaseList($scope, formatService, expressionService, searchService, field
 
     $scope.shouldShowHeaderFilter = function (column) {
         return $scope.shouldShowHeaderLabel(column) && !column.rendererParameters["hidefilter"];
+    };
+
+    $scope.showDetail = function (rowdm, column) {
+
+        var mode = $scope.schema.properties['list.click.mode'];
+        var popupmode = $scope.schema.properties['list.click.popupmode'];
+        var schemaid = $scope.schema.properties['list.click.schema'];
+        var fullServiceName = $scope.schema.properties['list.click.service'];
+        var editDisabled = $scope.schema.properties['list.disabledetails'];
+
+        if (popupmode == "report") {
+            return;
+        }
+
+        if ("true" == editDisabled && nullOrUndef(fullServiceName)) {
+            return;
+        }
+
+        if (fullServiceName != null) {
+            commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column, $scope.schema);
+            return;
+        };
+
+        var id = rowdm.fields[$scope.schema.idFieldName];
+        if (id == null || id == "-666") {
+            window.alert('error id is null');
+            return;
+        }
+
+        var applicationname = $scope.schema.applicationName;
+        if (schemaid == '') {
+            return;
+        }
+        if (schemaid == null) {
+            schemaid = detailSchema();
+        }
+        $scope.$emit("sw_renderview", applicationname, schemaid, mode, $scope.title, {
+            id: id, popupmode: popupmode
+        });
     };
 
 }
