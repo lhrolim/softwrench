@@ -150,7 +150,7 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
                 return this.getSearchOperationById('EQ');
             }
             if (value.startsWith("!=")) {
-                return this.getSearchOperationById('NEQ');
+                return this.getSearchOperationById('NOTEQ');
             }
             if(value === "IS NULL") {
                 return this.getSearchOperationById('BLANK');
