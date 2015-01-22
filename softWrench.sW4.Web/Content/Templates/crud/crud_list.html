@@ -51,7 +51,9 @@
                     <th ng-show="schema.properties['list.selectionstyle'] == 'single'">
                         <!--Singleselect-->
                     </th>
-                    <th ng-repeat="column in schema.displayables" ng-show="!isFieldHidden(schema,column)"
+                    <th class="{{safeCSSselector(column.attribute)}}"
+                        ng-repeat="column in schema.displayables"
+                        ng-show="!isFieldHidden(schema,column)"
                         ng-click="sort(column)">
                         <div ng-if="shouldShowHeaderLabel(column)">
                             <span class="add-on" rel="tooltip" data-container="body" data-original-title="{{i18N('_grid.filter.clicksort','Click here to sort')}}">
@@ -76,7 +78,8 @@
                     <th ng-show="schema.properties['list.selectionstyle'] == 'single'">
                         <!--Singleselect-->
                     </th>
-                    <th ng-repeat="column in schema.displayables"
+                    <th class="{{safeCSSselector(column.attribute)}}"
+                        ng-repeat="column in schema.displayables"
                         ng-show="!isFieldHidden(schema,column)"
                         filterrowrendered>
                         <div ng-if="shouldShowHeaderFilter(column)">
@@ -96,7 +99,7 @@
                                                 <i class="glyphicon glyphicon-calendar"></i>
                                             </span>
                                             <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                        The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                            The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                             <div class="input-group-addon dropdown">
                                                 <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                                       data-toggle="dropdown" rel="tooltip"
@@ -114,7 +117,7 @@
                                             <input type="search" placeholder="{{i18N('_grid.filter.placeholder','{0} Search',[column.label])}}" class="form-control"
                                                    ng-model="searchData[column.attribute]" ng-enter="filterSearch(column.attribute)" />
                                             <!-- Couldn't use directive "advanced-filter-toogle" here, due to fix/unfix header functionality.
-                                        The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
+                            The following div cant 'include' later, or else the grid header will break in firefox and ie. -->
                                             <div class="input-group-addon dropdown">
                                                 <span class="dropdown-toggle grid-filter-button" ng-class="{'glyphicon glyphicon-filter' : getSearchIcon(column.attribute) == ''}"
                                                       data-toggle="dropdown" rel="tooltip"
