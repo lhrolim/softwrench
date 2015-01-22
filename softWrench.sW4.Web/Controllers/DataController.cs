@@ -164,7 +164,8 @@ namespace softWrench.sW4.Web.Controllers {
             var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(currentschemaKey, user, platform);
             var mockMaximo = operationDataRequest.MockMaximo;
 
-            var maximoResult = new TargetResult(null, null);
+            //mocked instance by default
+            var maximoResult = new TargetResult(null, null,null);
             var operation = operationDataRequest.Operation;
 
             if (!mockMaximo) {
@@ -179,7 +180,7 @@ namespace softWrench.sW4.Web.Controllers {
             var routerParameters = new RouterParameters(applicationMetadata, platform, operationDataRequest.RouteParametersDTO, operation, mockMaximo, maximoResult, user, resolvedNextSchema);
 
             var response = _nextSchemaRouter.RedirectToNextSchema(routerParameters);
-            response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.Id,
+            response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.UserId,
                 operation);
             return response;
 

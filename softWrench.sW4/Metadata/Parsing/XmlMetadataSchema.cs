@@ -40,6 +40,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string EntityAttributeId = "id";
         public const string EntityAttributeName = "name";
         public const string EntityAttributeIdAttribute = "idAttribute";
+        public const string EntityAttributeUserIdAttribute = "useridAttribute";
         public const string EntityAttributeWhereClause = "whereclause";
         public const string EntityAttributeParentEntity = "parententity";
 

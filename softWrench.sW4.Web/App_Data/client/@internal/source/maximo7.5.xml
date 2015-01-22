@@ -1096,7 +1096,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
-    <entity name="workorder" idAttribute="wonum">
+    <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" >
       <attributes>
         <attribute name="wonum" type="varchar" required="true" />
         <attribute name="parent" type="varchar" required="false" />

@@ -37,6 +37,7 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
                         String.Format(ErrorParameter, operationName, entityMetadata.Name));
                 }
                 var param = operationWrapper.OperationData(fp.ParameterType);
+                operationWrapper.UserId = param.UserId;
                 if (mi.ReturnType == typeof(void)) {
                     mi.Invoke(_connectorTemplate, new object[] { param });
                     return null;
@@ -45,7 +46,7 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
                 if (ob is TargetResult) {
                     return (TargetResult)ob;
                 }
-                return new TargetResult(param.Id, ob);
+                return new TargetResult(param.Id,param.UserId, ob);
             } catch (AmbiguousMatchException e) {
                 throw new InvalidOperationException(
                     String.Format("multiples methods found for operation {0} on entity {1}. Unable to decide", operationName,

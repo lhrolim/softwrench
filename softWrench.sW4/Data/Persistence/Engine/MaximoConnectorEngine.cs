@@ -52,6 +52,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
 
             var crudConnector = new MaximoCrudConnectorEngine((IMaximoCrudConnector)connector);
             var crudOperationData = (CrudOperationData)operationWrapper.OperationData(null);
+            operationWrapper.UserId = crudOperationData.UserId;
             switch (operationWrapper.OperationName) {
                 case OperationConstants.CRUD_CREATE:
                     return crudConnector.Create(crudOperationData);

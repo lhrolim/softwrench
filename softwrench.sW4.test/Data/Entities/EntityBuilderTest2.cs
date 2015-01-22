@@ -29,8 +29,8 @@ namespace softwrench.sW4.test.Data.Entities {
             MetadataProvider.StubReset();
             var metadata = MetadataProvider.Entity("workorder");
             var wo = JObject.Parse(new StreamReader("jsons\\workorder\\test1.json").ReadToEnd());
-            var entity = EntityBuilder.BuildFromJson<Entity>(typeof(Entity),metadata,null, wo, null);
-            Assert.IsNull(entity.GetAttribute("wonum"));
+            var entity = EntityBuilder.BuildFromJson<Entity>(typeof(Entity), metadata, null, wo, null);
+            Assert.IsNull(entity.GetAttribute("workorderid"));
             var worktype = entity.GetRelationship("worktype") as Entity;
             Assert.IsNotNull(worktype);
             Assert.AreEqual("R0 Blade", worktype.GetAttribute("wtypedesc"));
@@ -51,8 +51,8 @@ namespace softwrench.sW4.test.Data.Entities {
         public void TestCreationNewWorkLog() {
             var metadata = MetadataProvider.Entity("workorder");
             var wo = JObject.Parse(new StreamReader("jsons\\workorder\\test4.json").ReadToEnd());
-            var entity = EntityBuilder.BuildFromJson<Entity>(typeof(Entity), metadata,null, wo, null);
-            Assert.IsNull(entity.GetAttribute("wonum"));
+            var entity = EntityBuilder.BuildFromJson<Entity>(typeof(Entity), metadata, null, wo, null);
+            Assert.IsNull(entity.GetAttribute("workorderid"));
             var worktype = entity.GetRelationship("worktype") as Entity;
             Assert.IsNotNull(worktype);
             Assert.AreEqual("R0 Blade", worktype.GetAttribute("wtypedesc"));
@@ -76,8 +76,9 @@ namespace softwrench.sW4.test.Data.Entities {
         public void TestUpdate() {
             var metadata = MetadataProvider.Entity("workorder");
             var wo = JObject.Parse(new StreamReader("jsons\\workorder\\test2.json").ReadToEnd());
-            var entity = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), metadata, null,wo, "10");
+            var entity = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), metadata, null,wo, "100");
             Assert.AreEqual("10",entity.GetAttribute("wonum"));
+            Assert.AreEqual("10",entity.UserId);
             var worktype = entity.GetRelationship("worktype") as Entity;
             Assert.IsNotNull(worktype);
             Assert.IsNotNull(worktype as CrudOperationData);

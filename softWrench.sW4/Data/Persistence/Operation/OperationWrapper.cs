@@ -11,7 +11,14 @@ namespace softWrench.sW4.Data.Persistence.Operation {
         private readonly JObject _json;
         private readonly EntityMetadata _entityMetadata;
         private readonly ApplicationMetadata _applicationMetadata;
-        private String _id;
+        private readonly String _id;
+        private String _userId;
+
+        public string UserId {
+            get { return _userId; }
+            set { _userId = value; }
+        }
+
         private IOperationData _operationData;
 
 
@@ -26,6 +33,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
         public OperationWrapper(CrudOperationData operationData, String operationName) {
             _entityMetadata = operationData.EntityMetadata;
             _id = operationData.Id;
+            _userId = operationData.UserId;
             _operationName = operationName;
             _operationData = operationData;
         }

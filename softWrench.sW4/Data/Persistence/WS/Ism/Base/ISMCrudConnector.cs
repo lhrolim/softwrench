@@ -47,7 +47,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             if (transactionComment != "Success - No Errors Encountered") {
                 throw new Exception("ISM Web Service Did Not Return a Successful Response: " + transactionComment);
             }
-            maximoTemplateData.ResultObject = new TargetResult(idProperty, null);
+            maximoTemplateData.ResultObject = new TargetResult(idProperty,idProperty, null);
         }
 
         public override void DoUpdate(MaximoOperationExecutionContext maximoTemplateData) {
@@ -60,7 +60,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             if (transactionComment != "Success - No Errors Encountered") {
                 throw new Exception("ISM Web Service Did Not Return a Successful Response: " + transactionComment);
             }
-            maximoTemplateData.ResultObject = new TargetResult(idProperty, null);
+            maximoTemplateData.ResultObject = new TargetResult(idProperty,idProperty, null);
         }
       
 

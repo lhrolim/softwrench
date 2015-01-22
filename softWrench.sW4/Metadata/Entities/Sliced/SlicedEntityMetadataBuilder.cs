@@ -54,7 +54,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
             var result = SlicedRelationshipBuilderHelper.HandleRelationshipFields(appSchema.RelationshipFields.Select(r => r.Attribute), entityMetadata);
 
             usedRelationships.UnionWith(result.DirectRelationships);
-            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity, entityMetadata.Schema.MappingType, !isUnionSchema);
+            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, entityMetadata.Schema.UserIdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity, entityMetadata.Schema.MappingType, !isUnionSchema);
             SlicedEntityMetadata unionSchema = null;
             if (appSchema.UnionSchema != null) {
                 unionSchema = GetUnionInstance(appSchema.UnionSchema);
@@ -93,7 +93,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
 
             var result = SlicedRelationshipBuilderHelper.HandleRelationshipFields(attributes.Where(r => r.Contains('.')), entityMetadata);
             usedRelationships.UnionWith(result.DirectRelationships);
-            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity, entityMetadata.Schema.MappingType);
+            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, entityMetadata.Schema.UserIdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity, entityMetadata.Schema.MappingType);
             return new SlicedEntityMetadata(entityMetadata.Name, schema,
                 usedRelationships, entityMetadata.ConnectorParameters, null, result.InnerEntityMetadatas);
         }

@@ -29,14 +29,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         class BaseOperationData : IOperationData {
             public string Id { get; set; }
+            public string UserId { get; set; }
             public string Class { get { return EntityMetadata.GetTableName(); } }
             public EntityMetadata EntityMetadata { get; set; }
             public OperationType OperationType { get; set; }
 
             public ApplicationMetadata ApplicationMetadata { get; set; }
 
-            public BaseOperationData(EntityMetadata entityMetadata, ApplicationMetadata applicationMetadata, OperationType operationType, string id = null) {
+            public BaseOperationData(EntityMetadata entityMetadata, ApplicationMetadata applicationMetadata, OperationType operationType, string id = null,string userId = null) {
                 Id = id;
+                UserId = userId;
                 EntityMetadata = entityMetadata;
                 OperationType = operationType;
                 ApplicationMetadata = ApplicationMetadata;
