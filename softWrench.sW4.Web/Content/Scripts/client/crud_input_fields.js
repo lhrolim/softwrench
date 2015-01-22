@@ -364,12 +364,6 @@ app.directive('crudInputFields', function (contextService) {
                     var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                     $scope.datamap[fieldMetadata.target] = code;
                 }
-                //else
-                //    if ($scope.datamap[fieldMetadata.target] != null) {
-                //    $scope.datamap[fieldMetadata.target] = null;
-                //    $scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
-                //    associationService.updateUnderlyingAssociationObject(fieldMetadata, null, $scope);
-                //}
             };
             $scope.getLookUpDescriptionLabel = function (fieldMetadata) {
                 return i18NService.getLookUpDescriptionLabel(fieldMetadata);
@@ -378,11 +372,26 @@ app.directive('crudInputFields', function (contextService) {
                 var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                 var targetValue = $scope.datamap[fieldMetadata.target];
                 var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
-                if (code != null && code != targetValue && allowFreeText != "true") {
-                    associationService.updateDependentAssociationValues($scope, $scope.schema, $scope.datamap, fieldMetadata);
-                    $scope.showLookupModal(fieldMetadata);
+                if (code != null && code != '' && code != targetValue && allowFreeText != "true") {
+                    associationService.updateDependentAssociationValues($scope, $scope.schema, $scope.datamap, fieldMetadata, code, $scope.handleMultipleLookupOptionsFn);
                 }
             };
+
+            $scope.handleMultipleLookupOptionsFn = function (result, lookupObj, searchValue, fieldMetadata, scope, datamap) {
+                if (Object.keys(result).length == 1 &&
+                    result[lookupObj.fieldMetadata.associationKey] &&
+                    result[lookupObj.fieldMetadata.associationKey].associationData.length == 1) {
+                    var associationResult = result[lookupObj.fieldMetadata.associationKey];
+                    lookupObj.options = associationResult.associationData;
+                    if (lookupObj.options[0].value == searchValue) {
+                        return true;
+                    }
+                }
+                associationService.updateAssociationOptionsRetrievedFromServer(scope, result, datamap);
+                $scope.showLookupModal(fieldMetadata);
+                return false;
+            };
+
             $scope.configureNumericInput = function () {
                 var displayables = fieldService.getDisplayablesOfRendererTypes($scope.displayables, ['numericinput']);
                 for (i in displayables) {

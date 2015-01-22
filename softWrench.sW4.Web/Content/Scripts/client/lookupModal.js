@@ -79,7 +79,7 @@ app.directive('lookupModal', function (contextService) {
                 if (lookupObj.schema != null) {
                     var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
                     var searchValues = $scope.searchObj;
-                    var searchOperators = {}
+                    var searchOperators = {};
                     for (var field in searchValues) {
                         searchOperators[field] = defaultLookupSearchOperator;
                     }
@@ -135,15 +135,15 @@ app.directive('lookupModal', function (contextService) {
                 return i18NService.getLookUpDescriptionLabel(fieldMetadata);
             };
             $scope.lookupModalSelect = function (option) {
-
                 var fieldMetadata = $scope.lookupObj.fieldMetadata;
+
+                $scope.selectedOption = option;
 
                 $scope.datamap[fieldMetadata.target] = option.value;
                 $scope.lookupAssociationsCode[fieldMetadata.attribute] = option.value;
                 $scope.lookupAssociationsDescription[fieldMetadata.attribute] = option.label;
 
                 associationService.updateUnderlyingAssociationObject(fieldMetadata, option, $scope);
-
 
                 $element.modal('hide');
             };
@@ -158,21 +158,33 @@ app.directive('lookupModal', function (contextService) {
                 }
 
                 var fieldMetadata = $scope.lookupObj.fieldMetadata;
-                if ($scope.datamap != null && ($scope.datamap[fieldMetadata.target] == null || $scope.datamap[fieldMetadata.target] == " ")) {
-                    $scope.$apply(function () {
+                if ($scope.selectedOption == null) {
+                    if ($scope.modalCanceled == true) {
+                        $scope.datamap[fieldMetadata.target] = null;
                         $scope.lookupAssociationsCode[fieldMetadata.attribute] = null;
                         $scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
-                    });
+                        associationService.updateUnderlyingAssociationObject(fieldMetadata, null, $scope);
+                    } else {
+                        $scope.$apply(function () {
+                            $scope.datamap[fieldMetadata.target] = null;
+                            $scope.lookupAssociationsCode[fieldMetadata.attribute] = null;
+                            $scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
+                            associationService.updateUnderlyingAssociationObject(fieldMetadata, null, $scope);
+                        });
+                    }
                 }
 
             });
 
-            $scope.hideLookupModal = function() {
+            $scope.hideLookupModal = function () {
+                $scope.modalCanceled = true;
                 var modals = $('[data-class="lookupModal"]');
                 modals.modal('hide');
             };
 
             $element.on('shown.bs.modal', function (e) {
+                $scope.modalCanceled = false;
+                $scope.selectedOption = null;
                 $scope.searchObj = {};
                 if ($scope.lookupObj != undefined) {
                     $scope.lookupModalSearch();

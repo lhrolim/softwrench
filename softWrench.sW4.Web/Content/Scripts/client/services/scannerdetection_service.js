@@ -4,6 +4,17 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                                                  contextService, alertService, associationService, modalService,
                                                  fieldService) {
 
+    var validateAssocationLookupFn = function (result, lookupObj, scannedData, fieldMetadata) {
+        if (Object.keys(result).length != 1 ||
+            !result[lookupObj.fieldMetadata.associationKey] ||
+            result[lookupObj.fieldMetadata.associationKey].associationData.length != 1) {
+            // Exit if more than one record is returned
+            alertService.alert("{0} is not a valid option for the {1} field".format(scannedData, fieldMetadata.label));
+            return false;
+        }
+        return true;
+    };
+
     return {
         initInventoryGridListener: function (scope, schema, datamap, parameters) {
             var searchData = parameters.searchData;
@@ -149,7 +160,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                         datamap.fields[currentAttribute] = data;
                         // Update the associated values
                         var fieldMetadata = fieldService.getDisplayableByKey(schema, currentAttribute);
-                        associationService.updateDependentAssociationValues(scope, schema, datamap, fieldMetadata);
+                        associationService.updateDependentAssociationValues(scope, schema, datamap, fieldMetadata, data, validateAssocationLookupFn);
                         // Exit the loop once we have set a value from the scan
                         break;
                     }

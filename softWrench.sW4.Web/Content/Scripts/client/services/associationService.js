@@ -358,7 +358,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
         
         //Updates dependent association values for all association rendererTypes.
         //This includes the associationOptions, associationDescriptions, etc.
-        updateDependentAssociationValues: function (scope, schema, datamap, fieldMetadata) {
+        updateDependentAssociationValues: function (scope, schema, datamap, fieldMetadata, searchValue, postFetchHook) {
             if (datamap.fields != null) {
                 datamap = datamap.fields;
             }
@@ -381,28 +381,50 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 parameters.associationKey.platform = platform();
             }
 
-            var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
-            var searchValues = {};
-            searchValues[fieldMetadata.attribute] = datamap[fieldMetadata.attribute];
-            var searchOperators = {}
-            for (var field in searchValues) {
-                searchOperators[field] = defaultLookupSearchOperator;
-            }
-            parameters.SearchDTO = searchService.buildSearchDTO(searchValues, {}, searchOperators);
-            parameters.hasClientSearch = true;
+            
 
-            var urlToUse = url("/api/generic/Data/UpdateAssociation?" + $.param(parameters));
-            var jsonString = angular.toJson(datamap);
-            $http.post(urlToUse, jsonString).success(function (data) {
-                var result = data.resultObject;
-                for (var association in result) {
-                    if (lookupObj.fieldMetadata.associationKey == association) {
-                        var associationResult = result[association];
-                        lookupObj.options = associationResult.associationData;
-                        lookupObj.schema = associationResult.associationSchemaDefinition;
+            if (lookupObj.schema != null) {
+                var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
+                var searchValues = {};
+                // Find the primary attribute of the associations relationship.
+                for (var key in fieldMetadata.entityAssociation.attributes) {
+                    var attribute = fieldMetadata.entityAssociation.attributes[key];
+                    if (attribute.primary == true) {
+                        // Use the primary attribute to set the searchValues key 
+                        // and the scanned data as the value.
+                        searchValues[attribute.to] = searchValue;
                     }
                 }
+                var searchOperators = {}
+                for (var field in searchValues) {
+                    searchOperators[field] = defaultLookupSearchOperator;
+                }
+                parameters.hasClientSearch = true;
+                parameters.SearchDTO = searchService.buildSearchDTO(searchValues, {}, searchOperators);
+            } else {
+                parameters.valueSearchString = searchValue;
+                parameters.labelSearchString = "";
+                parameters.hasClientSearch = true;
+            }
+
+            var urlToUse = url("/api/generic/ExtendedData/UpdateAssociation?" + $.param(parameters));
+            var jsonString = angular.toJson(datamap);
+            var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
+            $http.post(urlToUse, jsonString).success(function (data) {
+                var result = data.resultObject;
+
+                if (postFetchHook != null) {
+                    var continueFlag = postFetchHook(result, lookupObj, searchValue, fieldMetadata, scope, datamap);
+                    if (continueFlag == false) {
+                        return;
+                    }
+                }
+
+                var associationResult = result[lookupObj.fieldMetadata.associationKey];
+                lookupObj.options = associationResult.associationData;
+                lookupObj.schema = associationResult.associationSchemaDefinition;
                 datamap[fieldMetadata.target] = lookupObj.options[0].value;
+
                 if (!scope.lookupAssociationsCode) {
                     scope["lookupAssociationsCode"] = {};
                 }
@@ -411,8 +433,8 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 }
                 scope.lookupAssociationsCode[fieldMetadata.attribute] = lookupObj.options[0].value;
                 scope.lookupAssociationsDescription[fieldMetadata.attribute] = lookupObj.options[0].label;
-                associationService.updateAssociationOptionsRetrievedFromServer(scope, result, datamap);
-            }).error(function data() {
+                updateAssociationOptionsRetrievedFromServer(scope, result, datamap);
+            }).error(function (data) {
             });
         },
 
