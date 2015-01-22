@@ -194,7 +194,6 @@ app.directive('crudList', function (contextService) {
                 for (var key in $scope.searchOperator) {
                     $scope.searchOperator[key] = operator;
                 }
-                $scope.selectPage(1);
             });
 
             $scope.$on('sw_gridrefreshed', function (event, data, printmode) {
