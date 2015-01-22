@@ -76,9 +76,7 @@ app.directive('crudList', function (contextService) {
 
             fixHeaderService.activateResizeHandler();
 
-            $scope.loadIcon = function (value, metadata) {
-                return iconService.loadIcon(value, metadata);
-            };
+        
 
             $scope.hasTabs = function (schema) {
                 return tabsService.hasTabs(schema);

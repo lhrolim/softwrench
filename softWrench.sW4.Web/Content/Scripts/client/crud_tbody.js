@@ -48,7 +48,7 @@ function parseBooleanValue(attrValue) {
 
 
 app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
-    fieldService, commandService, statuscolorService, $injector, $timeout, $log, searchService) {
+    fieldService, commandService, statuscolorService, $injector, $timeout, $log, searchService, iconService) {
     return {
         restrict: 'A',
         replace: false,
@@ -104,6 +104,10 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 st += "<i class=\"datetime-class\"></i></span>";
                 return st;
             }
+
+            scope.loadIcon = function (value, metadata) {
+                return iconService.loadIcon(value, metadata);
+            };
 
             scope.refreshGrid = function (datamap, schema) {
                 scope.datamap = datamap;
@@ -178,9 +182,10 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                                 html += defaultAppending(formattedText, updatable, rowst, column);
                             }
                         } else if (column.rendererType == "icon") {
+                            var classtoLoad = "fa " + scope.loadIcon(dm.fields[column.attribute], column);
                             html += "<div>";
-                            html += " <i class=\"fa\" ng-class=\"loadIcon({0}.fields[column.attribute],column)\" ".format(rowst);
-                            html += "rel=\"tooltip\" data-original-title=\"{{column.toolTip}}\"></i>";
+                            html += " <i class=\"{0}\"".format(classtoLoad);
+                            html += "rel=\"tooltip\" data-original-title=\"{0}\"></i>".format(column.toolTip);
                         }
 
                         else if (column.type == 'ApplicationFieldDefinition') {
