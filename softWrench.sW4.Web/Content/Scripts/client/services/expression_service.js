@@ -25,6 +25,9 @@ app.factory('expressionService', function ($rootScope, contextService) {
         getExpression: function (expression, datamap) {
             var variables = this.getVariables(expression);
 
+            if (variables == null)
+                return expression;
+
             for (var i = 0, len = variables.length; i < len; i++) {
                 var datamapPath = 'datamap';
                 if (datamap.fields != undefined) {

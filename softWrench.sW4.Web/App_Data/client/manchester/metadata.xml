@@ -23,11 +23,83 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
     <entity name ="problemlist" parententity="failurelist" idAttribute="failurelist" whereclause="((problemlist.TYPE like 'PROBLEM')) " >
     </entity>
-    
+
+    <entity name="ALNDOMAIN" idAttribute="domainid">
+      <attributes>
+        <attribute name="domainid" type="varchar" required="true" />
+        <attribute name="value" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="alndomainid" type="bigint" required="true" />
+        <attribute name="valueid" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="ALNDOMAIN" />
+      </connectorParameters>
+    </entity>
+
     <entity name="workorder" idAttribute="wonum">
+      <relationships>
+        <relationship to="ALNDOMAIN" qualifier="division">
+          <relationshipAttribute from="division" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="DIVISION" quoteLiteral="true" />
+        </relationship>
+        <relationship to="worklog" collection="true">
+          <relationshipAttribute from="wonum" to="recordkey" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="class" literal="WORKORDER" quoteLiteral="true" />
+        </relationship>
+        <relationship to="matusetrans" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="labtrans" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="location" >
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="asset" >
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="failurecode" >
+          <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="worktype" >
+          <relationshipAttribute from="worktype" to="worktype" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="chartofaccounts" >
+          <relationshipAttribute from="glaccount" to="glaccount" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" >
+          <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+        <relationship to="DOCLINKS" qualifier="attachment" collection="true">
+          <relationshipAttribute from="workorderid" to="ownerid" primary="true"/>
+          <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="tooltrans" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+      </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
-        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Manchester.ComWorkOrderCrudConnector" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
       </connectorParameters>
     </entity>
 
@@ -275,12 +347,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="workorderid" hidden="true"/>
           <section id ="siteidsection"/>
           <section id="realfields">
-            <field attribute="orgid"  required="true" readonly="true" hidden="true"/>
-            <field attribute="siteid"  required="true" readonly="true" hidden="true"/>
+            <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
+            <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
             <field attribute="woclass" hidden="true"/>
             <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
             <field attribute="wonum" label="WO No:" readonly="true"/>
             <!--COMSW-2-->
+            <association label="Division:" target="division" labelfield="division_.description" requiredexpression="true">
+              <renderer type="lookup"/>
+            </association>
             <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" default="@classstructureid">
               <renderer type="autocompleteclient" />
             </optionfield>
