@@ -78,7 +78,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 maximoTemplateData.ResultObject = new TargetResult(null, null, resultData);
                 return;
             }
-            maximoTemplateData.ResultObject = new TargetResult(id.ToString(), userId.ToString(), resultData);
+            maximoTemplateData.ResultObject = new TargetResult(id==null ? null : id.ToString(), userId.ToString(), resultData);
         }
         public void AfterCreation(MaximoOperationExecutionContext maximoExecutionContext) {
             //NOOP
