@@ -260,14 +260,13 @@ namespace softWrench.sW4.Web.Util {
             foreach (var applicationField in applicationFields.Where(ShouldShowField())) {
                 //Exporting to Excel, even if field is hidden
                 xmlAttributes = new List<OpenXmlAttribute>{
+                    // add new datatype for cell
                     new OpenXmlAttribute("t", null, "str"),
-                    new OpenXmlAttribute("s", null, "7")
+                    // add header style
+                    new OpenXmlAttribute("s", null, "8")
                 };
-                // add new datatype for cell
-                // add header style
-
-                //                _i18NResolver.I18NValue()
-
+                
+               
                 writer.WriteStartElement(new Cell(), xmlAttributes);
                 writer.WriteElement(new CellValue(GetI18NLabel(applicationField, schemaId)));
 
