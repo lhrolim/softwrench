@@ -81,7 +81,7 @@ app.directive('crudInput', function (contextService, associationService) {
         },
 
 
-        controller: function ($scope, $http, $injector, $element, printService, compositionService, commandService, fieldService, i18NService) {
+        controller: function ($scope, $http, $injector, $element,alertService, printService, compositionService, commandService, fieldService, i18NService) {
 
             $scope.$name = 'crudinput';
 
