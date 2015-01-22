@@ -705,7 +705,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         submitInvIssue: function(schema, datamap) {
-            // Save transfer
             if (datamap['binnum'] == null) {
                 datamap['binnum'] = "";
             }
@@ -759,40 +758,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 platform: "web",
                 currentSchemaKey: "newInvIssueDetail.input.web"
             };
-            restService.invokePost("data", "post", httpParameters, jsonString, function() {
-                redirectService.goToApplicationView("invissue", "invIssueList", null , null, null, null);
-            });
-        },
-
-        submitTransfer: function(schema, datamap) {
-            // Save transfer
-            if (datamap['invuseline_.frombin'] == null) {
-                datamap['invuseline_.frombin'] = "";
-            }
-            if (datamap['invuseline_.tobin'] == null) {
-                datamap['invuseline_.tobin'] = "";
-            }
-
-            var jsonString = angular.toJson(datamap);
-            var httpParameters = {
-                application: "invuse",
-                platform: "web",
-                currentSchemaKey: "newdetail.input.web"
-            };
-            restService.invokePost("data", "post", httpParameters, jsonString, function() {
-                var restParameters = {
-                    key: {
-                        schemaId: "matrectransTransfersList",
-                        mode: "none",
-                        platform: "web"
-                    },
-                    SearchDTO: null
-                };
-                var urlToUse = url("/api/Data/matrectransTransfers?" + $.param(restParameters));
-                $http.get(urlToUse).success(function(data) {
-                    redirectService.goToApplication("matrectransTransfers", "matrectransTransfersList", null, data);
-                });
-            });
+            restService.invokePost("data", "post", httpParameters, jsonString);
         },
 
         cancelTransfer: function() {

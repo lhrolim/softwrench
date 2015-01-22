@@ -28,7 +28,8 @@ namespace softWrench.sW4.Metadata.Applications {
         public static ApplicationSchemaDefinition SchemaForPlatform([NotNull] this CompleteApplicationMetadataDefinition application, ApplicationMetadataSchemaKey metadataSchemaKey) {
             if (application == null) throw new ArgumentNullException("application");
             ApplicationSchemaDefinition resultingSchema;
-            if (!application.Schemas().TryGetValue(metadataSchemaKey, out resultingSchema)) {
+            if (!application.Schemas().TryGetValue(metadataSchemaKey, out resultingSchema) &&
+                !GetListSchema(application, ref resultingSchema)) {
                 throw new InvalidOperationException(String.Format(NoSchemaFound, metadataSchemaKey, application.ApplicationName));
             }
             return (ApplicationSchemaDefinition)resultingSchema;
@@ -47,6 +48,16 @@ namespace softWrench.sW4.Metadata.Applications {
                 default:
                     throw new ArgumentOutOfRangeException(platform.ToString());
             }
+        }
+
+        public static bool GetListSchema(CompleteApplicationMetadataDefinition application, ref ApplicationSchemaDefinition resultSchema) {
+            foreach(ApplicationSchemaDefinition schema in application.Schemas().Values) {
+                if(schema.Stereotype.ToString().ToUpper() == "LIST"){
+                    resultSchema = schema;
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
