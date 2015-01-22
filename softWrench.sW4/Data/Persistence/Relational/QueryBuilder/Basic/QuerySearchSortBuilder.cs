@@ -20,7 +20,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
         public static string BuildSearchSort(EntityMetadata entityMetadata, SearchRequestDto dto) {
             var searchSort = dto.SearchSort;
             if (String.IsNullOrWhiteSpace(searchSort)) {
-                return String.Format(" order by {1} desc", entityMetadata.Name, entityMetadata.Schema.IdAttribute.Name);
+                return String.Format(" order by {1} desc", entityMetadata.Name, entityMetadata.Schema.UserIdAttribute.Name);
             }
             var suffix = dto.SearchAscending ? " asc " : " desc ";
             if (searchSort.EndsWith("asc") || searchSort.EndsWith("desc")) {

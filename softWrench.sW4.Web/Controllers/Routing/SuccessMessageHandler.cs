@@ -9,14 +9,14 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Web.Controllers.Routing {
     public class SuccessMessageHandler : IComponent {
         private static readonly I18NResolver Resolver = new I18NResolver();
-        public String FillSuccessMessage(ApplicationMetadata applicationMetadata, string id, string operation) {
+        public String FillSuccessMessage(ApplicationMetadata applicationMetadata, string userId, string operation) {
             string successMessage = null;
             var applicationCommand = ApplicationCommandUtils.GetApplicationCommand(applicationMetadata, operation);
             if (applicationCommand != null) {
                 successMessage = applicationCommand.SuccessMessage;
             } else {
                 //TODO: refactor this
-                var baseMessage = applicationMetadata.Title + (id == null ? " " : " " + id + " ");
+                var baseMessage = applicationMetadata.Title + (userId == null ? " " : " " + userId + " ");
                 switch (operation) {
                     case OperationConstants.CRUD_CREATE:
                         return baseMessage + Resolver.I18NValue("messagesection.success.created", "successfully created");
@@ -25,7 +25,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
                     case OperationConstants.CRUD_DELETE:
                         return baseMessage + Resolver.I18NValue("messagesection.success.deleted", "successfully deleted");
                     default:
-                        return Resolver.I18NValue("messagesection.success." + operation.ToLower(), "Operation Executed successfully", new object[] { id });
+                        return Resolver.I18NValue("messagesection.success." + operation.ToLower(), "Operation Executed successfully", new object[] { userId });
                 }
             }
             return successMessage;

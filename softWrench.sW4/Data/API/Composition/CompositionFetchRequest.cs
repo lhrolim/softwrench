@@ -5,6 +5,7 @@ namespace softWrench.sW4.Data.API.Composition {
     public class CompositionFetchRequest {
 
         public string Id { get; set; }
+        public string UserId { get; set; }
 
         public ApplicationMetadataSchemaKey Key { get; set; }
     }

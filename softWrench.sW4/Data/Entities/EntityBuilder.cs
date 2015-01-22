@@ -84,10 +84,16 @@ namespace softWrench.sW4.Data.Entities {
             foreach (JObject jToken in array) {
                 JToken idTkn;
                 String idValue = null;
+                String userIdValue = null;
                 if (jToken.TryGetValue(collectionType.Schema.IdAttribute.Name, out idTkn)) {
                     var valueFromJson = GetValueFromJson(collectionType.Schema.IdAttribute.Type, idTkn);
                     idValue = valueFromJson == null ? null : valueFromJson.ToString();
                 }
+                if (jToken.TryGetValue(collectionType.Schema.UserIdAttribute.Name, out idTkn)) {
+                    var valueFromJson = GetValueFromJson(collectionType.Schema.UserIdAttribute.Type, idTkn);
+                    userIdValue = valueFromJson == null ? null : valueFromJson.ToString();
+                }
+
                 var entity = BuildFromJson<T>(entityType, collectionType, null, jToken, idValue);
                 collection.Add(entity);
             }
@@ -105,6 +111,7 @@ namespace softWrench.sW4.Data.Entities {
             }
             object relatedEntity;
             if (!associationAttributes.TryGetValue(relationshipName, out relatedEntity)) {
+                //TODO: why is that null?
                 relatedEntity = GetInstance(entityType, relationship, null, null);
                 associationAttributes.Add(relationshipName, relatedEntity);
             }
@@ -141,7 +148,7 @@ namespace softWrench.sW4.Data.Entities {
                     return null;
                 }
                 return ConversionUtil.ConvertFromMetadataType(type, stValue);
-               
+
             }
             var array = value.ToObject<Object[]>();
             for (var i = 0; i < array.Length; i++) {
