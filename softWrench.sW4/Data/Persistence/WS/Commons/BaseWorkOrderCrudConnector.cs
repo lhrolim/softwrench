@@ -91,7 +91,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             // Workorder id used for data association
             var recordKey = entity.Id;
 
-            // Filter work order materials for any new entries
+            // Filter work order materials for any new entries where matusetransid is null
             var Materials = (IEnumerable<CrudOperationData>)entity.GetRelationship("matusetrans");
             var newMaterials = Materials.Where(r => r.GetAttribute("matusetransid") == null);
 
@@ -102,35 +102,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 
                 WsUtil.SetValueIfNull(integrationObject, "QTYREQUESTED", 0);
                 WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0);
-                WsUtil.SetValueIfNull(integrationObject, "CURBAL", 0);
 
                 var quantity = (double)WsUtil.GetRealValue(integrationObject, "QTYREQUESTED");
                 var unitcost = (double)WsUtil.GetRealValue(integrationObject, "UNITCOST");
-                var curbal   = (double)WsUtil.GetRealValue(integrationObject, "CURBAL"); 
-                var transaction = WsUtil.GetRealValue(integrationObject, "LINETYPE");
 
                 WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
                 WsUtil.SetValue(integrationObject, "ACTUALDATE", DateTime.Now.FromServerToRightKind(), true);
                 WsUtil.SetValue(integrationObject, "QUANTITY", -1 * quantity);
-                WsUtil.SetValueIfNull(integrationObject, "PHYSCNT", 0);
                 WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0);
-                WsUtil.SetValue(integrationObject, "ACTUALCOST", unitcost);
-                WsUtil.SetValueIfNull(integrationObject, "CONVERSION", 1);
                 WsUtil.SetValue(integrationObject, "ENTERBY", user.Login);
-                WsUtil.SetValue(integrationObject, "ROLLUP", 0);
-                WsUtil.SetValue(integrationObject, "LINECOST", quantity * unitcost);
-                WsUtil.SetValue(integrationObject, "CURRENCYCODE", "USD");
-                WsUtil.SetValue(integrationObject, "CURRENCYUNITCOST", unitcost);
-                WsUtil.SetValue(integrationObject, "CURRENCYLINECOST", quantity * unitcost);
                 WsUtil.SetValueIfNull(integrationObject, "DESCRIPTION", "");
-                WsUtil.SetValueIfNull(integrationObject, "EXCHANGERATE", 1);
-                WsUtil.SetValueIfNull(integrationObject, "EXCHANGERATE2", 0.0000000);
-                WsUtil.SetValueIfNull(integrationObject, "LINECOST2", 0.00);
                 WsUtil.SetValue(integrationObject, "ORGID", user.OrgId);
                 WsUtil.SetValue(integrationObject, "SITEID", user.SiteId);
                 WsUtil.SetValue(integrationObject, "REFWO", recordKey);
-                WsUtil.SetValue(integrationObject, "CONDRATE", 100);
-                WsUtil.SetValue(integrationObject, "ENTEREDASTASK", 0); 
 
                 WsUtil.SetValueIfNull(integrationObject, "ISSUETYPE", "ISSUE");
                 WsUtil.SetValue(integrationObject, "MATUSETRANSID", -1);
