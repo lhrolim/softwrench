@@ -62,6 +62,7 @@ app.directive('crudList', function (contextService) {
             hidebars: '@',
             checked: '=',
             timestamp: '@',
+            associationOptions:"="
         },
 
         controller: function ($scope, $http, $rootScope, $filter, $injector, $log, $timeout,

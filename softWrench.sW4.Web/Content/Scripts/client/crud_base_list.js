@@ -67,8 +67,8 @@ function BaseList($scope, formatService, expressionService, searchService, field
         if (fieldMetadata.type == "OptionField") {
             return $scope.GetOptionFieldOptions(fieldMetadata, forfilter);
         }
-        $scope.$parent.associationOptions = instantiateIfUndefined($scope.$parent.associationOptions);
-        return $scope.$parent.associationOptions[fieldMetadata.associationKey];
+        $scope.associationOptions = instantiateIfUndefined($scope.associationOptions);
+        return $scope.associationOptions[fieldMetadata.associationKey];
     };
 
     $scope.GetOptionFieldOptions = function (optionField, forfilter) {
@@ -79,8 +79,8 @@ function BaseList($scope, formatService, expressionService, searchService, field
         if (optionField.jscache.providerOptions) {
             return optionField.jscache.providerOptions;
         }
-        $scope.$parent.associationOptions = instantiateIfUndefined($scope.$parent.associationOptions);
-        var associationOptions = $scope.$parent.associationOptions[optionField.providerAttribute];
+        $scope.associationOptions = instantiateIfUndefined($scope.associationOptions);
+        var associationOptions = $scope.associationOptions[optionField.providerAttribute];
         if (forfilter || optionField.addBlankOption) {
             associationOptions.unshift({
                 label: "",

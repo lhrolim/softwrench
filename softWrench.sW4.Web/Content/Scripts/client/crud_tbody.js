@@ -42,6 +42,10 @@ function buildStyle(minWidth, maxWidth, width, isdiv) {
 };
 
 
+function parseBooleanValue(attrValue) {
+    return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() == "true";
+}
+
 
 app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
     fieldService, commandService, statuscolorService, $injector, $timeout, $log, searchService) {
@@ -51,6 +55,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
         scope: {
             datamap: '=',
             schema: '=',
+            associationOptions: '='
         },
         template: "",
         link: function (scope, element, attrs) {
@@ -88,12 +93,12 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
             scope.appendDateTimeComponent = function (columnSt, rendererParameters, attribute, openCalendarTooltip) {
 
                 var st = "<input type=\"text\" ng-model=\"{0}.fields[{1}]\" data-date-time  class=\"form-control\" ".format(columnSt, attribute);
-                st += " data-show-time=\"{0}\" ".format(rendererParameters['showtime']);
-                st += " data-show-date=\"{0}\"".format(rendererParameters['showdate']);
+                st += " data-show-time=\"{0}\" ".format(parseBooleanValue(rendererParameters['showtime']));
+                st += " data-show-date=\"{0}\"".format(parseBooleanValue(rendererParameters['showdate']));
                 st += " data-date-format=\"{0}\"".format(rendererParameters['format']);
-                st += " data-show-meridian=\"{0}\"".format(rendererParameters['showmeridian']);
-                st += " data-allow-past=\"{0}\"".format(rendererParameters['allowpast']);
-                st += " data-allow-future=\"{0}\" >".format(rendererParameters['allowfuture']);
+                st += " data-show-meridian=\"{0}\"".format(parseBooleanValue(rendererParameters['showmeridian']));
+                st += " data-allow-past=\"{0}\"".format(parseBooleanValue(rendererParameters['allowpast']));
+                st += " data-allow-future=\"{0}\" >".format(parseBooleanValue(rendererParameters['allowfuture']));
                 st += "<span class=\"input-group-addon\" data-calendericon=\"true\" rel=\"tooltip\" ";
                 st += " data-original-title=\"{0}\" style=\"cursor: pointer;\">".format(openCalendarTooltip);
                 st += "<i class=\"datetime-class\"></i></span>";
@@ -165,7 +170,6 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                             html += "ng-model=\"{0}.fields['{1}']\" >".format(rowst,name);
                             needsWatchers = true;
                         } else if (column.rendererType == "datetime") {
-
                             if (editable) {
                                 needsWatchers = true;
                                 html += "<div class=\"input-group\" data-datepicker=\"true\">";
@@ -173,8 +177,11 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                             } else {
                                 html += defaultAppending(formattedText, updatable, rowst, column);
                             }
+                        } else if (column.rendererType == "icon") {
+                            html += "<div>";
+                            html += " <i class=\"fa\" ng-class=\"loadIcon({0}.fields[column.attribute],column)\" ".format(rowst);
+                            html += "rel=\"tooltip\" data-original-title=\"{{column.toolTip}}\"></i>";
                         }
-
 
                         else if (column.type == 'ApplicationFieldDefinition') {
                             if (!editable) {
@@ -183,7 +190,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                                 needsWatchers = true;
                                 var maxlength = column.rendererParameters['maxlength'];
                                 html += "<div class=\"input-group\" data-datepicker=\"true\">";
-                                html += "<input type=\"text\" ng-model=\"{0}[column.attribute]\" class=\"hidden-phone form-control\" ".format(columnst);
+                                html += "<input type=\"text\" ng-model=\"{0}['{1}']\" class=\"hidden-phone form-control\" ".format(columnst,column.attribute);
                                 html += "data-ng-maxlength=\"{0}\" />".format(maxlength);
                             }
                         }
@@ -196,7 +203,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                                     needsWatchers = true;
                                     html += "<div class=\"sw-combobox-container\">";
                                     html += "<select class=\"hidden-phone form-control combobox\"";
-                                    html += "ng-model=\"{0}.fields[column.target]\" ".format(rowst);
+                                    html += "ng-model=\"{0}.fields['{1}']\" ".format(rowst, column.target);
                                     html += " ng-options=\"option.value as i18NOptionField(option,{0},schema) for option in GetAssociationOptions({0})\" ".format(columnst);
                                 }
                             }
