@@ -71,11 +71,16 @@ app.directive('columnWidths', function ($log) {
                 balanceColumns(widths, 'widthLG');
 
                 //build css rules
-                var css = getViewRules(widths, 'width', null, attr);
-                css = css + getViewRules(widths, 'widthXS', '1px', attr);
-                css = css + getViewRules(widths, 'widthSM', '480px', attr);
-                css = css + getViewRules(widths, 'widthMD', '768px', attr);
-                css = css + getViewRules(widths, 'widthLG', '992px', attr);
+                var css = '';
+                //css += '@media print {';
+                css += getViewRules(widths, 'width', null, 'screen', attr);
+                css += getViewRules(widths, 'widthXS', '1px', 'screen', attr);
+                css += getViewRules(widths, 'widthSM', '480px', 'screen', attr);
+                css += getViewRules(widths, 'widthMD', '768px', 'screen', attr);
+                css += getViewRules(widths, 'widthLG', '992px', 'screen', attr);
+
+                css += getViewRules(widths, 'widthLG', null, 'print', attr);
+                //css += '}';
 
                 if (css) {
                     //log.debug(css);
@@ -158,7 +163,7 @@ function buildCSSselector(gridtype, applicationname, column, element) {
     return '#' + gridtype + '[data-application="' + applicationname + '"] ' + element + ':nth-child(' + column + ')';
 }
 
-function getViewRules(widths, param, viewWidth, attr) {
+function getViewRules(widths, param, viewWidth, media, attr) {
     var newCSS = '';
 
     //look for the viewWidth in each column
@@ -179,7 +184,7 @@ function getViewRules(widths, param, viewWidth, attr) {
     //if a viewWidth is supplied, create a media query
     if (viewWidth) {
         if (newCSS) {
-            newCSS = '@media all and (min-width: ' + viewWidth + ') {' + newCSS + '} ';
+            newCSS = '@media ' + media + ' and (min-width: ' + viewWidth + ') {' + newCSS + '} ';
         }
     }
 
