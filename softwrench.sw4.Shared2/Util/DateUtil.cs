@@ -7,7 +7,7 @@ namespace softwrench.sw4.Shared2.Util {
     public class DateUtil {
 
         // added additional acceptance format 
-        public static readonly string[] FormatOptions = { "dd/MM/yyyy hh:mm", "d/M/yyyy hh:mm", "MM/dd/yyyy hh:mm", "M/d/yyyy hh:mm", "dd/MM/yyyy", "d/M/yyyy", "MM/dd/yyyy", "M/d/yyy/", "yyyy-MM-dd", "yyyy-M-d" };
+        public static readonly string[] FormatOptions = { "yyyy/MM/dd", "yyyy/MM/dd hh:mm", "dd/MM/yyyy hh:mm", "d/M/yyyy hh:mm", "MM/dd/yyyy hh:mm", "M/d/yyyy hh:mm", "dd/MM/yyyy", "d/M/yyyy", "MM/dd/yyyy", "M/d/yyy/", "yyyy-MM-dd", "yyyy-M-d" };
 
         public static DateTime? Parse(string date) {
             DateTime temp;

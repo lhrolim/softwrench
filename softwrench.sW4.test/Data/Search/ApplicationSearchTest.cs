@@ -92,6 +92,7 @@ namespace softwrench.sW4.test.Data.Search {
             var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
             searchRequestDto.SetFromSearchString(_schema, "ticketid,description,asset_.description,siteid,affectedperson,status,reportdate".Split(','), ">=2013-01-01");
             Assert.IsTrue(SearchUtils.GetWhere(searchRequestDto, "SR").Equals("( SR.reportdate >= :reportdate_begin )"));
+            var where = SearchUtils.GetWhere(searchRequestDto, "sr", "sr");
             var parametersMap = SearchUtils.GetParameters(searchRequestDto);
             Assert.IsTrue(parametersMap.Count == 1);
             Assert.IsTrue(parametersMap["reportdate_begin"].Equals(DateUtil.BeginOfDay(DateTime.Parse("2013-01-01"))));
