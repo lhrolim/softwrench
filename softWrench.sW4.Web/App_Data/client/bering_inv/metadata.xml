@@ -153,6 +153,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
   </entities>
 
   <applications>
+    <application name="person" title="Person" entity="person" id="00000000-0000-0000-0000-000000000012">
+      <properties>
+        <property key="mobile.userInteractionEnabled" value="false"/>
+        <property key="mobile.fetchlimit" value="100"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="displayname" label="Display Name" qualifier="title"/>
+        </list>
+        <detail>
+          <field attribute="personid" hidden="true" />
+          <field attribute="displayname" label="Display Name:" requiredexpression="true" />
+        </detail>
+      </schemas>
+    </application>
+    
     <application name="inventory" title="Inventory" entity="inventory">
       <schemas>
         <list>
@@ -466,9 +482,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
           <commandbars>
             <commandgroup position="detailform">
-              <removecommand id="save"/>
               <removecommand id="cancel"/>
-              <command id="submitinvissue" label="Submit" service="inventoryService" method="submitInvIssue" parameters="schema,datamap" position="&lt;print"/>
               <command id="cancelinvissue" label="Cancel" service="inventoryService" method="navToIssueReturnList" parameters="schema,datamap" position=">print"/>
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position=">print"/>
             </commandgroup>

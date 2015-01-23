@@ -5,19 +5,20 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                                                  fieldService) {
     var timeBetweenCharacters = isMobile() ? 35 : 14; // Used by the jQuery scanner detection plug in to differentiate scanned data and data input from the keyboard
 
-    var updateAssociations = function (scope, schema, datamap, fieldMetadata, scannedData) {
-        var lookupObj = {
-            fieldMetadata: fieldMetadata
-        };
+    var updateAssociations = function (scope, datamap, searchObj, scannedData) {
+        var schema = scope.schema;
+        var fields = scope.datamap;
+
         var parameters = {};
         parameters.application = schema.applicationName;
         parameters.key = {};
         parameters.key.schemaId = schema.schemaId;
         parameters.key.mode = schema.mode;
         parameters.key.platform = platform();
-        parameters.associationFieldName = lookupObj.fieldMetadata.associationKey;
-        var lookupApplication = lookupObj.fieldMetadata.schema.rendererParameters["application"];
-        var lookupSchemaId = lookupObj.fieldMetadata.schema.rendererParameters["schemaId"];
+        parameters.associationFieldName = searchObj.fieldMetadata.associationKey;
+
+        var lookupApplication = searchObj.application;
+        var lookupSchemaId = searchObj.schema;
         if (lookupApplication != null && lookupSchemaId != null) {
             parameters.associationApplication = lookupApplication;
             parameters.associationKey = {};
@@ -25,40 +26,59 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
             parameters.associationKey.platform = platform();
         }
 
-        var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
-        var searchValues = {};
-        // Find the primary attribute of the associations relationship.
-        for (var key in fieldMetadata.entityAssociation.attributes) {
-            var attribute = fieldMetadata.entityAssociation.attributes[key];
-            if (attribute.primary == true) {
-                // Use the primary attribute to set the searchValues key 
-                // and the scanned data as the value.
-                searchValues[attribute.to] = scannedData;
-            }
+        var totalCount = 0;
+        var pageSize = 30;
+        if (scope.modalPaginationData != null) {
+            totalCount = scope.modalPaginationData.totalCount;
+            pageSize = scope.modalPaginationData.pageSize;
+        }
+        var pageNumber = null;
+        if (pageNumber === undefined) {
+            pageNumber = 1;
         }
 
-        var searchOperators = {}
-        for (var field in searchValues) {
-            searchOperators[field] = defaultLookupSearchOperator;
+        if (searchObj.schema != null) {
+            var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
+            var searchValues = {};
+            searchValues[searchObj.fieldMetadata.attribute] = scannedData;
+            var searchOperators = {};
+            for (var field in searchValues) {
+                searchOperators[field] = defaultLookupSearchOperator;
+            }
+            parameters.hasClientSearch = true;
+            parameters.SearchDTO = searchService.buildSearchDTO(searchValues, {}, searchOperators);
+            parameters.SearchDTO.pageNumber = pageNumber;
+            parameters.SearchDTO.totalCount = totalCount;
+            parameters.SearchDTO.pageSize = pageSize;
+        } else {
+            parameters.valueSearchString = searchObj.code == null ? "" : searchObj.code;
+            parameters.labelSearchString = searchObj.description == null ? "" : searchObj.description;
+            parameters.hasClientSearch = true;
+            parameters.SearchDTO = {
+                pageNumber: pageNumber,
+                totalCount: totalCount,
+                pageSize: pageSize
+            };
         }
-        parameters.SearchDTO = searchService.buildSearchDTO(searchValues, {}, searchOperators);
-        parameters.hasClientSearch = true;
+
+
+        
 
         var urlToUse = url("/api/generic/ExtendedData/UpdateAssociation?" + $.param(parameters));
         var jsonString = angular.toJson(datamap.fields);
         $http.post(urlToUse, jsonString).success(function (data) {
             var result = data.resultObject;
             if (Object.keys(result).length != 1 ||
-                !result[lookupObj.fieldMetadata.associationKey] ||
-                result[lookupObj.fieldMetadata.associationKey].associationData.length != 1) {
+                !result[searchObj.fieldMetadata.associationKey] ||
+                result[searchObj.fieldMetadata.associationKey].associationData.length != 1) {
                 // Exit if more than one record is returned
                 alertService.alert("{0} is not a valid option for the {1} field".format(scannedData, fieldMetadata.label));
                 return false;
             } else {
-                var associationResult = result[lookupObj.fieldMetadata.associationKey];
-                lookupObj.options = associationResult.associationData;
-                lookupObj.schema = associationResult.associationSchemaDefinition;
-                datamap.fields[fieldMetadata.target] = lookupObj.options[0].value;
+                var associationResult = result[searchObj.fieldMetadata.associationKey];
+                searchObj.options = associationResult.associationData;
+                searchObj.schema = associationResult.associationSchemaDefinition;
+                datamap.fields[searchObj.fieldMetadata.attribute] = searchObj.options[0].value;
             }
             if (!scope.lookupAssociationsCode) {
                 scope["lookupAssociationsCode"] = {};
@@ -66,8 +86,8 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
             if (!scope.lookupAssociationsDescription) {
                 scope["lookupAssociationsDescription"] = {};
             }
-            scope.lookupAssociationsCode[fieldMetadata.attribute] = lookupObj.options[0].value;
-            scope.lookupAssociationsDescription[fieldMetadata.attribute] = lookupObj.options[0].label;
+            scope.lookupAssociationsCode[searchObj.fieldMetadata.attribute] = searchObj.options[0].value;
+            scope.lookupAssociationsDescription[searchObj.fieldMetadata.attribute] = searchObj.options[0].label;
             associationService.updateAssociationOptionsRetrievedFromServer(scope, result, datamap.fields);
         }).error(function data() {
         });
@@ -222,9 +242,20 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                         // to see if they have a value
                         var currentAttribute = scanOrder[attribute];
                         if (datamap.fields[currentAttribute] === '' || datamap.fields[currentAttribute] === null) {
-                            // Update the associated values using the new scanned data
+                            // Update the associated values
                             var fieldMetadata = fieldService.getDisplayableByKey(schema, currentAttribute);
-                            updateAssociations(scope, schema, datamap, fieldMetadata, data);
+                            // Update the associated values using the new scanned data
+                            var searchObj = {};
+                            searchObj.code = data;
+                            searchObj.fieldMetadata = fieldMetadata
+                            searchObj.application = null;
+                            searchObj.schema = null;
+                            if (fieldMetadata.rendererParameters != undefined) {
+                                searchObj.application = fieldMetadata.rendererParameters.application;
+                                searchObj.schema = fieldMetadata.rendererParameters.schemaId;
+                            }
+                            searchObj.lastSearchedValues = "";
+                            updateAssociations(scope, datamap, searchObj, data);
                             // Exit the loop once we have set a value from the scan
                             break;
                         }
