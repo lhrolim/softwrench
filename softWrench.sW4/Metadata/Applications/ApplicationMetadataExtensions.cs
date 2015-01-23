@@ -5,6 +5,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using System;
+using System.Linq;
 
 namespace softWrench.sW4.Metadata.Applications {
     public static class ApplicationMetadataExtensions {
@@ -28,7 +29,8 @@ namespace softWrench.sW4.Metadata.Applications {
         public static ApplicationSchemaDefinition SchemaForPlatform([NotNull] this CompleteApplicationMetadataDefinition application, ApplicationMetadataSchemaKey metadataSchemaKey) {
             if (application == null) throw new ArgumentNullException("application");
             ApplicationSchemaDefinition resultingSchema;
-            if (!application.Schemas().TryGetValue(metadataSchemaKey, out resultingSchema)) {
+            if (!application.Schemas().TryGetValue(metadataSchemaKey, out resultingSchema) &&
+                !SearchByStereotype(application, "list", ref resultingSchema)) {
                 throw new InvalidOperationException(String.Format(NoSchemaFound, metadataSchemaKey, application.ApplicationName));
             }
             return (ApplicationSchemaDefinition)resultingSchema;
@@ -47,6 +49,16 @@ namespace softWrench.sW4.Metadata.Applications {
                 default:
                     throw new ArgumentOutOfRangeException(platform.ToString());
             }
+        }
+
+        public static bool SearchByStereotype(CompleteApplicationMetadataDefinition application, string stereoType, ref ApplicationSchemaDefinition resultSchema) {
+            try {
+                resultSchema = application.Schemas().Values.Single<ApplicationSchemaDefinition>(schema => schema.Stereotype.ToString().ToUpper() == stereoType.ToUpper());
+            } catch (Exception e) {
+                // More than one schema found of the specified type
+                return false;
+            }
+            return resultSchema != null;
         }
     }
 }
