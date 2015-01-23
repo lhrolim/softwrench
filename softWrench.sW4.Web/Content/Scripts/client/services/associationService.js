@@ -419,6 +419,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
         //This includes the associationOptions, associationDescriptions, etc.
         updateDependentAssociationValues: function (scope, datamap, searchObj, postFetchHook) {
             var getAssociationOptions = this.getAssociationOptions;
+            var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
             getAssociationOptions(scope, searchObj).success(function(data) {
                 var result = data.resultObject;
 
@@ -432,7 +433,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 var associationResult = result[searchObj.fieldMetadata.associationKey];
                 searchObj.options = associationResult.associationData;
                 searchObj.schema = associationResult.associationSchemaDefinition;
-                datamap[fieldMetadata.target] = searchObj.options[0].value;
+                datamap[searchObj.fieldMetadata.target] = searchObj.options[0].value;
 
                 if (!scope.lookupAssociationsCode) {
                     scope["lookupAssociationsCode"] = {};
@@ -440,9 +441,8 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 if (!scope.lookupAssociationsDescription) {
                     scope["lookupAssociationsDescription"] = {};
                 }
-                scope.lookupAssociationsCode[fieldMetadata.attribute] = searchObj.options[0].value;
-                scope.lookupAssociationsDescription[fieldMetadata.attribute] = searchObj.options[0].label;
-                var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
+                scope.lookupAssociationsCode[searchObj.fieldMetadata.attribute] = searchObj.options[0].value;
+                scope.lookupAssociationsDescription[searchObj.fieldMetadata.attribute] = searchObj.options[0].label;
                 updateAssociationOptionsRetrievedFromServer(scope, result, datamap);
             }).error(function (data) {
             });
