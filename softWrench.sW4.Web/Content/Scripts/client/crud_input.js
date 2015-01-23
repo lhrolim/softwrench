@@ -45,8 +45,8 @@
                 }
             });
 
-            scope.save = function (selecteditem, parameters) {
-                scope.savefn({ selecteditem: scope.selecteditem, parameters: scope.parameters});
+            scope.save = function () {
+                scope.savefn();
             };
 
             scope.cancel = function (data,schema) {
@@ -91,7 +91,7 @@ app.directive('crudInput', function (contextService, associationService) {
             };
 
             this.save = function () {
-                $scope.savefn({ selecteditem: $scope.selecteditem, parameters: $scope.parameters});
+                $scope.savefn();
             };
 
             this.shouldshowprint = function () {
