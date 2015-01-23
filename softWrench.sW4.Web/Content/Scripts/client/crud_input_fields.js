@@ -120,6 +120,7 @@ app.directive('crudInputFields', function (contextService) {
             associationService, expressionService, styleService,
             cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService) {
             $scope.$name = 'crud_input_fields';
+            $scope.lookupObj = {};
             $scope.handlerTitleInputFile = function (cssclassaux) {
                 var title = $scope.i18N('attachment.' + cssclassaux, 'No file selected');
                 var fileInput = $('.' + cssclassaux);
@@ -341,29 +342,29 @@ app.directive('crudInputFields', function (contextService) {
             /* LOOKUP functions */
 
 
-            $scope.showLookupModal = function (fieldMetadata) {
-                if (!$scope.isSelectEnabled(fieldMetadata)) {
+            $scope.showLookupModal = function (fieldMetadata, lookupObj) {
+                if (!$scope.isSelectEnabled(lookupObj.fieldMetadata)) {
                     return;
                 }
-                $scope.lookupModalSearch = {};
-                $scope.lookupModalSearch.descripton = '';
-                $scope.lookupModalSearch.fieldMetadata = fieldMetadata;
-                var targetValue = $scope.datamap[fieldMetadata.target];
-                if (targetValue == null || targetValue == " ") {
-                    $scope.lookupModalSearch.code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
+                if (lookupObj == null) {
+                    $scope.lookupObj = {};
+                    $scope.lookupObj.code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
+                    $scope.lookupObj.fieldMetadata = fieldMetadata;
+                    $scope.lookupObj.application = fieldMetadata.schema.rendererParameters["application"];
+                    $scope.lookupObj.schema = fieldMetadata.schema.rendererParameters["schemaId"];
                 } else {
-                    $scope.lookupModalSearch.code = '';
+                    $scope.lookupObj = lookupObj;
                 }
                 var modals = $('[data-class="lookupModal"]', $element);
                 modals.draggable();
                 modals.modal('show');
             };
             $scope.lookupCodeChange = function (fieldMetadata) {
+                var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                 var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
                 if (allowFreeText == "true") {
-                    var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                     $scope.datamap[fieldMetadata.target] = code;
-                }
+                } 
             };
             $scope.getLookUpDescriptionLabel = function (fieldMetadata) {
                 return i18NService.getLookUpDescriptionLabel(fieldMetadata);
@@ -373,22 +374,30 @@ app.directive('crudInputFields', function (contextService) {
                 var targetValue = $scope.datamap[fieldMetadata.target];
                 var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
                 if (code != null && code != '' && code != targetValue && allowFreeText != "true") {
-                    associationService.updateDependentAssociationValues($scope, $scope.schema, $scope.datamap, fieldMetadata, code, $scope.handleMultipleLookupOptionsFn);
+                    if ($scope.lookupObj == null) {
+                        $scope.lookupObj = {};
+                    }
+                    $scope.lookupObj.code = code;
+                    $scope.lookupObj.fieldMetadata = fieldMetadata;
+                    $scope.lookupObj.application = fieldMetadata.schema.rendererParameters["application"];
+                    $scope.lookupObj.schema = fieldMetadata.schema.rendererParameters["schemaId"];
+                    associationService.updateDependentAssociationValues($scope, $scope.datamap, $scope.lookupObj, $scope.handleMultipleLookupOptionsFn);
                 }
             };
 
-            $scope.handleMultipleLookupOptionsFn = function (result, lookupObj, searchValue, fieldMetadata, scope, datamap) {
+            $scope.handleMultipleLookupOptionsFn = function (result, lookupObj, scope, datamap) {
                 if (Object.keys(result).length == 1 &&
                     result[lookupObj.fieldMetadata.associationKey] &&
                     result[lookupObj.fieldMetadata.associationKey].associationData.length == 1) {
                     var associationResult = result[lookupObj.fieldMetadata.associationKey];
                     lookupObj.options = associationResult.associationData;
-                    if (lookupObj.options[0].value == searchValue) {
+                    if (lookupObj.options[0].value == lookupObj.code) {
                         return true;
                     }
                 }
-                associationService.updateAssociationOptionsRetrievedFromServer(scope, result, datamap);
-                $scope.showLookupModal(fieldMetadata);
+                lookupObj.initialResults = result;
+                //associationService.updateAssociationOptionsRetrievedFromServer(scope, result, datamap);
+                $scope.showLookupModal(lookupObj.fieldMetadata, lookupObj);
                 return false;
             };
 

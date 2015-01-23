@@ -355,25 +355,21 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             function data() {
             });
         },
-        
-        //Updates dependent association values for all association rendererTypes.
-        //This includes the associationOptions, associationDescriptions, etc.
-        updateDependentAssociationValues: function (scope, schema, datamap, fieldMetadata, searchValue, postFetchHook) {
-            if (datamap.fields != null) {
-                datamap = datamap.fields;
-            }
-            var lookupObj = {
-                fieldMetadata: fieldMetadata
-            };
+
+        getAssociationOptions: function (scope, searchObj, pageNumber) {
+            var schema = scope.schema;
+            var fields = scope.datamap;
+
             var parameters = {};
             parameters.application = schema.applicationName;
             parameters.key = {};
             parameters.key.schemaId = schema.schemaId;
             parameters.key.mode = schema.mode;
             parameters.key.platform = platform();
-            parameters.associationFieldName = lookupObj.fieldMetadata.associationKey;
-            var lookupApplication = lookupObj.fieldMetadata.schema.rendererParameters["application"];
-            var lookupSchemaId = lookupObj.fieldMetadata.schema.rendererParameters["schemaId"];
+            parameters.associationFieldName = searchObj.fieldMetadata.associationKey;
+
+            var lookupApplication = searchObj.application;
+            var lookupSchemaId = searchObj.schemaId;
             if (lookupApplication != null && lookupSchemaId != null) {
                 parameters.associationApplication = lookupApplication;
                 parameters.associationKey = {};
@@ -381,49 +377,62 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 parameters.associationKey.platform = platform();
             }
 
-            
+            var totalCount = 0;
+            var pageSize = 30;
+            if (scope.modalPaginationData != null) {
+                totalCount = scope.modalPaginationData.totalCount;
+                pageSize = scope.modalPaginationData.pageSize;
+            }
+            if (pageNumber === undefined) {
+                pageNumber = 1;
+            }
 
-            if (lookupObj.schema != null) {
+            if (searchObj.schema != null) {
                 var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
-                var searchValues = {};
-                // Find the primary attribute of the associations relationship.
-                for (var key in fieldMetadata.entityAssociation.attributes) {
-                    var attribute = fieldMetadata.entityAssociation.attributes[key];
-                    if (attribute.primary == true) {
-                        // Use the primary attribute to set the searchValues key 
-                        // and the scanned data as the value.
-                        searchValues[attribute.to] = searchValue;
-                    }
-                }
-                var searchOperators = {}
+                var searchValues = scope.searchObj;
+                var searchOperators = {};
                 for (var field in searchValues) {
                     searchOperators[field] = defaultLookupSearchOperator;
                 }
                 parameters.hasClientSearch = true;
                 parameters.SearchDTO = searchService.buildSearchDTO(searchValues, {}, searchOperators);
+                parameters.SearchDTO.pageNumber = pageNumber;
+                parameters.SearchDTO.totalCount = totalCount;
+                parameters.SearchDTO.pageSize = pageSize;
             } else {
-                parameters.valueSearchString = searchValue;
-                parameters.labelSearchString = "";
+                parameters.valueSearchString = searchObj.code == null ? "" : searchObj.code;
+                parameters.labelSearchString = searchObj.description == null ? "" : searchObj.description;
                 parameters.hasClientSearch = true;
+                parameters.SearchDTO = {
+                    pageNumber: pageNumber,
+                    totalCount: totalCount,
+                    pageSize: pageSize
+                };
             }
 
-            var urlToUse = url("/api/generic/ExtendedData/UpdateAssociation?" + $.param(parameters));
-            var jsonString = angular.toJson(datamap);
-            var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
-            $http.post(urlToUse, jsonString).success(function (data) {
+            var urlToUse = url("/api/generic/Data/UpdateAssociation?" + $.param(parameters));
+            var jsonString = angular.toJson(fields);
+            return $http.post(urlToUse, jsonString);
+        },
+        
+        //Updates dependent association values for all association rendererTypes.
+        //This includes the associationOptions, associationDescriptions, etc.
+        updateDependentAssociationValues: function (scope, datamap, searchObj, postFetchHook) {
+            var getAssociationOptions = this.getAssociationOptions;
+            getAssociationOptions(scope, searchObj).success(function(data) {
                 var result = data.resultObject;
 
                 if (postFetchHook != null) {
-                    var continueFlag = postFetchHook(result, lookupObj, searchValue, fieldMetadata, scope, datamap);
+                    var continueFlag = postFetchHook(result, searchObj, scope, datamap);
                     if (continueFlag == false) {
                         return;
                     }
                 }
 
-                var associationResult = result[lookupObj.fieldMetadata.associationKey];
-                lookupObj.options = associationResult.associationData;
-                lookupObj.schema = associationResult.associationSchemaDefinition;
-                datamap[fieldMetadata.target] = lookupObj.options[0].value;
+                var associationResult = result[searchObj.fieldMetadata.associationKey];
+                searchObj.options = associationResult.associationData;
+                searchObj.schema = associationResult.associationSchemaDefinition;
+                datamap[fieldMetadata.target] = searchObj.options[0].value;
 
                 if (!scope.lookupAssociationsCode) {
                     scope["lookupAssociationsCode"] = {};
@@ -431,8 +440,9 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 if (!scope.lookupAssociationsDescription) {
                     scope["lookupAssociationsDescription"] = {};
                 }
-                scope.lookupAssociationsCode[fieldMetadata.attribute] = lookupObj.options[0].value;
-                scope.lookupAssociationsDescription[fieldMetadata.attribute] = lookupObj.options[0].label;
+                scope.lookupAssociationsCode[fieldMetadata.attribute] = searchObj.options[0].value;
+                scope.lookupAssociationsDescription[fieldMetadata.attribute] = searchObj.options[0].label;
+                var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
                 updateAssociationOptionsRetrievedFromServer(scope, result, datamap);
             }).error(function (data) {
             });

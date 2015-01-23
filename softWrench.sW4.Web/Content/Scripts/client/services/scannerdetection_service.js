@@ -4,12 +4,12 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                                                  contextService, alertService, associationService, modalService,
                                                  fieldService) {
 
-    var validateAssocationLookupFn = function (result, lookupObj, scannedData, fieldMetadata) {
+    var validateAssocationLookupFn = function (result, searchObj) {
         if (Object.keys(result).length != 1 ||
-            !result[lookupObj.fieldMetadata.associationKey] ||
-            result[lookupObj.fieldMetadata.associationKey].associationData.length != 1) {
+            !result[searchObj.fieldMetadata.associationKey] ||
+            result[searchObj.fieldMetadata.associationKey].associationData.length != 1) {
             // Exit if more than one record is returned
-            alertService.alert("{0} is not a valid option for the {1} field".format(scannedData, fieldMetadata.label));
+            alertService.alert("{0} is not a valid option for the {1} field".format(searchObj.code, searchObj.fieldMetadata.label));
             return false;
         }
         return true;
@@ -160,7 +160,14 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                         datamap.fields[currentAttribute] = data;
                         // Update the associated values
                         var fieldMetadata = fieldService.getDisplayableByKey(schema, currentAttribute);
-                        associationService.updateDependentAssociationValues(scope, schema, datamap, fieldMetadata, data, validateAssocationLookupFn);
+
+                        var searchObj = {};
+                        searchObj.code = data;
+                        searchObj.fieldMetadata = fieldMetadata;
+                        searchObj.schema = schema;
+                        searchObj.application = $scope.application;
+
+                        associationService.updateDependentAssociationValues(scope, datamap, searchObj, validateAssocationLookupFn);
                         // Exit the loop once we have set a value from the scan
                         break;
                     }

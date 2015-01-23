@@ -45,84 +45,32 @@ app.directive('lookupModal', function (contextService) {
                               formatService, expressionService) {
 
             $scope.lookupModalSearch = function (pageNumber) {
-                var schema = $scope.schema;
-                var fields = $scope.datamap;
-                var lookupObj = $scope.lookupObj;
-
-                var parameters = {};
-                parameters.application = schema.applicationName;
-                parameters.key = {};
-                parameters.key.schemaId = schema.schemaId;
-                parameters.key.mode = schema.mode;
-                parameters.key.platform = platform();
-                parameters.associationFieldName = lookupObj.fieldMetadata.associationKey;
-
-                var lookupApplication = lookupObj.fieldMetadata.schema.rendererParameters["application"];
-                var lookupSchemaId = lookupObj.fieldMetadata.schema.rendererParameters["schemaId"];
-                if (lookupApplication != null && lookupSchemaId != null) {
-                    parameters.associationApplication = lookupApplication;
-                    parameters.associationKey = {};
-                    parameters.associationKey.schemaId = lookupSchemaId;
-                    parameters.associationKey.platform = platform();
-                }
-
-                var totalCount = 0;
-                var pageSize = 30;
-                if ($scope.modalPaginationData != null) {
-                    totalCount = $scope.modalPaginationData.totalCount;
-                    pageSize = $scope.modalPaginationData.pageSize;
-                }
-                if (pageNumber === undefined) {
-                    pageNumber = 1;
-                }
-
-                if (lookupObj.schema != null) {
-                    var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
-                    var searchValues = $scope.searchObj;
-                    var searchOperators = {};
-                    for (var field in searchValues) {
-                        searchOperators[field] = defaultLookupSearchOperator;
-                    }
-                    parameters.hasClientSearch = true;
-                    parameters.SearchDTO = searchService.buildSearchDTO(searchValues, {}, searchOperators);
-                    parameters.SearchDTO.pageNumber = pageNumber;
-                    parameters.SearchDTO.totalCount = totalCount;
-                    parameters.SearchDTO.pageSize = pageSize;
-                } else {
-                    parameters.valueSearchString = lookupObj.code == null ? "" : lookupObj.code;
-                    parameters.labelSearchString = lookupObj.description == null ? "" : lookupObj.description;
-                    parameters.hasClientSearch = true;
-                    parameters.SearchDTO = {
-                        pageNumber: pageNumber,
-                        totalCount: totalCount,
-                        pageSize: pageSize
-                    };
-                }
-
-                var urlToUse = url("/api/generic/Data/UpdateAssociation?" + $.param(parameters));
-                var jsonString = angular.toJson(fields);
-                $http.post(urlToUse, jsonString).success(function (data) {
+                associationService.getAssocationOptions($scope, $scope.lookupObj).success(function(data) {
                     var result = data.resultObject;
-                    for (var association in result) {
-                        if (lookupObj.fieldMetadata.associationKey == association) {
-                            var associationResult = result[association];
-                            lookupObj.options = associationResult.associationData;
-                            lookupObj.schema = associationResult.associationSchemaDefinition;
-
-                            $scope.modalPaginationData = {};
-                            $scope.modalPaginationData.pageCount = associationResult.pageCount;
-                            $scope.modalPaginationData.pageNumber = associationResult.pageNumber;
-                            $scope.modalPaginationData.pageSize = associationResult.pageSize;
-                            $scope.modalPaginationData.totalCount = associationResult.totalCount;
-                            $scope.modalPaginationData.selectedPage = associationResult.pageNumber;
-                            //TODO: this should come from the server side
-                            $scope.modalPaginationData.paginationOptions = [10, 30, 100];
-                        }
-                    }
-                }).error(function data() {
+                    $scope.populateModal(result, $scope.lookupObj);
+                }).error(function (data) {
                 });
             };
 
+            $scope.populateModal = function (resultData, lookupObj) {
+                for (var association in resultData) {
+                    if (lookupObj.fieldMetadata.associationKey == association) {
+                        var associationResult = resultData[association];
+                        lookupObj.options = associationResult.associationData;
+                        lookupObj.schema = associationResult.associationSchemaDefinition;
+
+                        $scope.modalPaginationData = {};
+                        $scope.modalPaginationData.pageCount = associationResult.pageCount;
+                        $scope.modalPaginationData.pageNumber = associationResult.pageNumber;
+                        $scope.modalPaginationData.pageSize = associationResult.pageSize;
+                        $scope.modalPaginationData.totalCount = associationResult.totalCount;
+                        $scope.modalPaginationData.selectedPage = associationResult.pageNumber;
+                        //TODO: this should come from the server side
+                        $scope.modalPaginationData.paginationOptions = [10, 30, 100];
+                    }
+                }
+            };
+          
             $scope.i18N = function (key, defaultValue, paramArray) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);
             };
@@ -153,7 +101,7 @@ app.directive('lookupModal', function (contextService) {
                 $('body').removeClass('modal-open');
                 $('.modal-backdrop').remove();
 
-                if ($scope.lookupObj == null) {
+                if ($scope.lookupObj.fieldMetadata == null) {
                     return;
                 }
 
@@ -185,10 +133,10 @@ app.directive('lookupModal', function (contextService) {
             $element.on('shown.bs.modal', function (e) {
                 $scope.modalCanceled = false;
                 $scope.selectedOption = null;
-                $scope.searchObj = {};
-                if ($scope.lookupObj != undefined) {
-                    $scope.lookupModalSearch();
-                }
+                //$scope.lookupObj = {};
+                //if ($scope.lookupObj != undefined) {
+                    $scope.populateModal($scope.lookupObj.initialResults, $scope.lookupObj);
+                //}
             });
 
             $injector.invoke(BaseList, this, {
