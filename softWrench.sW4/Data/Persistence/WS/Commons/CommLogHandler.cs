@@ -90,15 +90,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         private static EmailService.EmailData GenerateEmailObject(object integrationObject, CrudOperationData crudData)
         {
             List<EmailService.EmailAttachment> attachments = new List<EmailService.EmailAttachment>();
-            var attachmentsData = crudData.GetUnMappedAttribute("attachment").Split(',');
-            var attachmentsPath = crudData.GetUnMappedAttribute("newattachment_path").Split(',');
-            for (int i = 0, j = 0; i < attachmentsPath.Length; i++) {
-                EmailService.EmailAttachment attachment = new EmailService.EmailAttachment(attachmentsData[j] + ',' + attachmentsData[j + 1], attachmentsPath[i]);
-                attachments.Add(attachment);
-                j = j + 2;
+            if (!String.IsNullOrWhiteSpace(crudData.GetUnMappedAttribute("attachment")) &&
+                !String.IsNullOrWhiteSpace(crudData.GetUnMappedAttribute("newattachment_path"))){
+                var attachmentsData = crudData.GetUnMappedAttribute("attachment").Split(',');
+                var attachmentsPath = crudData.GetUnMappedAttribute("newattachment_path").Split(',');
+                for (int i = 0, j = 0; i < attachmentsPath.Length; i++){
+                    EmailService.EmailAttachment attachment =
+                        new EmailService.EmailAttachment(attachmentsData[j] + ',' + attachmentsData[j + 1],
+                            attachmentsPath[i]);
+                    attachments.Add(attachment);
+                    j = j + 2;
+                }
             }
-            
-            
+
             return new EmailService.EmailData(w.GetRealValue<string>(integrationObject, sendfrom),
                 w.GetRealValue<string>(integrationObject, sendto),
                 w.GetRealValue<string>(integrationObject, subject),
