@@ -124,6 +124,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field label="Attachment:" attribute="attachment" >
             <renderer type="multipleupload"/>
           </field>
+          <properties>
+            <property key="compositions.alwaysrefresh" value="true"/>
+          </properties>
         </schema>
       </schemas>
     </application>
