@@ -3,8 +3,8 @@
 xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
 
   <templates>
-    <template path="@labor.xml"/>
     <template path="@chartofaccounts.xml"/>
+    <template path="@labor.xml"/>
   </templates>
   
   <entities>
@@ -26,11 +26,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="labtrans" />
-        <connectorParameter key="integration_interface" value="SWLABTRANS" />
       </connectorParameters>
     </entity>
   </entities>
-
 
   <applications>
     <application name="labtrans" entity="labtrans" title="Labor">
@@ -38,22 +36,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <property key ="icon.composition.tab" value="fa fa-users"/>
       </properties>
       <schemas>
-        <schema id="list" stereotype="compositionlist">
-          <properties>
-            <property key="list.click.popup" value="modal"/>
-          </properties>
+        <list>
           <field attribute="labtransid" hidden="true"/>
           <field attribute="laborcode" label="Labor" qualifier="title"/>
           <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
           <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
-          <commandbars>
-            <commandgroup position="compositionbottom" removeundeclared="true">
-              <command icon="fa fa-users" id ="addnewlabor" label="Add New Labor" service="labtranService" method="displayModal" parameters="parentschema,parentdatamap"/>
-            </commandgroup>
-          </commandbars>
-        </schema>
+        </list>
 
-        <schema id="detail" stereotype="compositiondetail" mode="input">
+        <detail platform="web">
           <field attribute="labtransid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
@@ -69,7 +59,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <association label="Craft:" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
             <event type="afterchange" service="labtranService" method="aftercraftchange"/>
           </association>
-          <field label="Start Date:" attribute="startdate">
+          <field label="Start Date:" requiredexpression="true" attribute="startdate">
             <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
           </field>
           <field label="Start Time:" attribute="starttime" >
@@ -82,19 +72,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="datetime" params="format=HH:mm;showdate=false" />
           </field>
           <field attribute="regularhrs" label="Regular Hours:" requiredexpression="true" default="8"/>
-          <association label="GL Debit Account:" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
+          <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
             <renderer type="lookup"/>
           </association>
-          <commandbars>
-            <commandgroup position="detailform">
-              <removecommand id="print"/>
-              <removecommand id="save"/>
-              <removecommand id="cancel"/>
-              <command id="addnewlabor" label="Submit" service="labtranService" method="submitLaborTrans"  parameters="schema,datamap" />
-              <command id="cancelnewlabor" label="Cancel" service="labtranService" method="cancelLaborTrans" />
-            </commandgroup>
-          </commandbars>
-        </schema>
+        </detail>
       </schemas>
     </application>
 

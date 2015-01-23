@@ -75,13 +75,38 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             HandleAttachments((CrudOperationData)maximoTemplateData.OperationData, wo, maximoTemplateData.ApplicationMetadata);
         }
 
-        protected virtual void HandleLabors(CrudOperationData entity, object maximoWo) {
-            WsUtil.CloneArray((IEnumerable<CrudOperationData>)entity.GetRelationship("labtrans"), maximoWo, "LABTRANS",
-                delegate(object integrationObject, CrudOperationData crudData) {
-                    if (ReflectionUtil.IsNull(integrationObject, "LABTRANSID")) {
-                        WsUtil.SetValue(integrationObject, "LABTRANSID", -1);
-                    }
-                });
+        protected virtual void HandleLabors(CrudOperationData entity, object wo) {
+            // Use to obtain security information from current user
+            var user = SecurityFacade.CurrentUser();
+
+            // Workorder id used for data association
+            var recordKey = entity.UserId;
+
+            // Filter work order materials for any new entries where matusetransid is null
+            var Labors = (IEnumerable<CrudOperationData>)entity.GetRelationship("labtrans");
+            var newLabors = Labors.Where(r => r.GetAttribute("labtransid") == null);
+
+            // Convert collection into array, if any are available
+            var crudOperationData = newLabors as CrudOperationData[] ?? newLabors.ToArray();
+
+            WsUtil.CloneArray(crudOperationData, wo, "LABTRANS", delegate(object integrationObject, CrudOperationData crudData) {
+
+                if (ReflectionUtil.IsNull(integrationObject, "LABTRANSID")) {
+                    WsUtil.SetValue(integrationObject, "LABTRANSID", -1);
+                }
+
+                WsUtil.SetValue(integrationObject, "REFWO", recordKey);
+                WsUtil.SetValue(integrationObject, "TRANSTYPE", "WORK");
+                WsUtil.SetValueIfNull(integrationObject, "SITEID", user.SiteId);
+                WsUtil.SetValueIfNull(integrationObject, "ORGID", user.OrgId);
+                WsUtil.SetValueIfNull(integrationObject, "LABORCODE", user.Login.ToUpper());
+                WsUtil.SetValueIfNull(integrationObject, "ENTERBY", user.Login.ToUpper());
+                WsUtil.SetValueIfNull(integrationObject, "ENTERDATE", DateTime.Now.FromServerToRightKind(), true);
+                WsUtil.SetValueIfNull(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
+                WsUtil.SetValueIfNull(integrationObject, "PAYRATE", 0.0); 
+
+                ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
+            });
         }
 
         protected virtual void HandleMaterials(CrudOperationData entity, object wo) {
