@@ -38,31 +38,38 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
        
         public static void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
-            var user = SecurityFacade.CurrentUser();
-            var commlogs = (IEnumerable<CrudOperationData>)entity.GetRelationship(commlog);
-            var newCommLogs = commlogs.Where(r => r.GetAttribute("commloguid") == null);
-            var ownerid = w.GetRealValue(rootObject, ticketuid);
-            w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate(object integrationObject, CrudOperationData crudData) {
-                ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.Add.ToString());
-                var id = _dao.FindSingleByNativeQuery<object>("Select MAX(commlog.commlogid) from commlog", null);
-                var rnd = new Random();
-                var commlogid = Convert.ToInt32(id) + rnd.Next(1, 10);
-                w.SetValue(integrationObject, Commlogid, commlogid);
-                w.SetValue(integrationObject,Ownerid, ownerid);
-                w.SetValueIfNull(integrationObject, ownertable, entity.TableName);
-                w.SetValueIfNull(integrationObject, inbound, false);
-                w.CopyFromRootEntity(rootObject, integrationObject, siteid, user.SiteId);
-                w.CopyFromRootEntity(rootObject, integrationObject, orgid, user.OrgId);
-                w.CopyFromRootEntity(rootObject, integrationObject, createby, user.Login, "CHANGEBY");
-                w.CopyFromRootEntity(rootObject, integrationObject, createdate, DateTime.Now.FromServerToRightKind());
-                w.CopyFromRootEntity(rootObject, integrationObject, modifydate, DateTime.Now.FromServerToRightKind());
-                w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
-                LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
-                HandleAttachments(crudData, integrationObject, maximoTemplateData.ApplicationMetadata);
-                if (w.GetRealValue(integrationObject, sendto) != null) {
-                    maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
-                }
-            });
+            try {
+                var user = SecurityFacade.CurrentUser();
+                var commlogs = (IEnumerable<CrudOperationData>)entity.GetRelationship(commlog);
+                var newCommLogs = commlogs.Where(r => r.GetAttribute("commloguid") == null);
+                var ownerid = w.GetRealValue(rootObject, ticketuid);
+                w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate(object integrationObject, CrudOperationData crudData) {
+                    ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.Add.ToString());
+                    var id = _dao.FindSingleByNativeQuery<object>("Select MAX(commlog.commlogid) from commlog", null);
+                    var rnd = new Random();
+                    var commlogid = Convert.ToInt32(id) + rnd.Next(1, 10);
+                    w.SetValue(integrationObject, Commlogid, commlogid);
+                    w.SetValue(integrationObject, Ownerid, ownerid);
+                    w.SetValueIfNull(integrationObject, ownertable, entity.TableName);
+                    w.SetValueIfNull(integrationObject, inbound, false);
+                    w.CopyFromRootEntity(rootObject, integrationObject, siteid, user.SiteId);
+                    w.CopyFromRootEntity(rootObject, integrationObject, orgid, user.OrgId);
+                    w.CopyFromRootEntity(rootObject, integrationObject, createby, user.Login, "CHANGEBY");
+                    w.CopyFromRootEntity(rootObject, integrationObject, createdate, DateTime.Now.FromServerToRightKind());
+                    w.CopyFromRootEntity(rootObject, integrationObject, modifydate, DateTime.Now.FromServerToRightKind());
+                    w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
+                    LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
+                    HandleAttachments(crudData, integrationObject, maximoTemplateData.ApplicationMetadata);
+                    if (w.GetRealValue(integrationObject, sendto) != null) {
+                        maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
+                    } else {
+                        throw new System.ArgumentNullException("To:");
+                    }
+                });
+            } catch (Exception ex) {
+                throw ex;
+            }
+
         }
 
         private static void HandleAttachments(CrudOperationData data, [NotNull] object maximoObj,
