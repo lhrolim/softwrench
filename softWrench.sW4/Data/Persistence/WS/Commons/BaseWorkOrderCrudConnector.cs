@@ -115,7 +115,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var user = SecurityFacade.CurrentUser();
 
             // Workorder id used for data association
-            var recordKey = entity.Id;
+            var recordKey = entity.UserId;
 
             // Filter work order materials for any new entries where matusetransid is null
             var Materials = (IEnumerable<CrudOperationData>)entity.GetRelationship("matusetrans");

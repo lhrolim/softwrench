@@ -23,7 +23,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
-    <entity name="itemorginfo" idAttribute="itemorginfoid" whereclause="@status == 'ACTIVE'">
+    <entity name="itemorginfo" idAttribute="itemorginfoid">
       <attributes>
         <attribute name="itemnum" type="varchar" required="true" />
         <attribute name="itemsetid" type="varchar" required="true" />
@@ -53,7 +53,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
   </entities>
 
   <applications>
-    <application entity="itemorginfo" name="itemorginfo" title="toolhrcost">
+    <application entity="itemorginfo" name="itemorginfo" title="itemorginfo">
       <schemas>
         <schema id="list" title="Tool Hourly Cost" stereotype="list">
           <field attribute="itemnum" label="Item"/>
@@ -88,6 +88,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
             <association label="Tool:" target="itemnum" labelfield="tool_.description" requiredexpression="true" extraprojectionvalues="itemnum, itemsetid">
               <renderer type="lookup"/>
+              <event type="afterchange" service="tooltranService" method="aftertoolchange"/>
             </association>
             <field label="Quantity:" attribute="toolqty" requiredexpression="true">
               <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
