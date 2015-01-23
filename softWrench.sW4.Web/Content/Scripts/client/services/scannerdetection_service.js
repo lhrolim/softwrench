@@ -72,7 +72,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                 !result[searchObj.fieldMetadata.associationKey] ||
                 result[searchObj.fieldMetadata.associationKey].associationData.length != 1) {
                 // Exit if more than one record is returned
-                alertService.alert("{0} is not a valid option for the {1} field".format(scannedData, fieldMetadata.label));
+                alertService.alert("{0} is not a valid option for the {1} field".format(scannedData, searchObj.fieldMetadata.label));
                 return false;
             } else {
                 var associationResult = result[searchObj.fieldMetadata.associationKey];
