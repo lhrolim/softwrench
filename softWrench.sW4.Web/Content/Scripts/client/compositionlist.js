@@ -413,7 +413,7 @@ app.directive('compositionList', function (contextService,formatService) {
                     return;
                 }
 
-                //parentdata is bound to the datamap --> this is needed
+                //parentdata is bound to the datamap --> this is needed so that the sw_submitdata has the updated data
                 safePush($scope.parentdata.fields, $scope.relationship, selecteditem);
 
                 var log = $log.getInstance('compositionlist#save');
