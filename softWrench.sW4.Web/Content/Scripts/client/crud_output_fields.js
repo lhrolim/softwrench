@@ -52,13 +52,6 @@ app.directive('crudOutputFields', function (contextService) {
                 return label;
             };
 
-
-
-            $scope.getFormattedValue = function (value, column, datamap) {
-                return formatService.format(value, column, datamap);
-            };
-
-
             $scope.getChildrenExpanded = function (attribute) {
                 var root = datamap[attribute];
                 var result = [];
@@ -207,7 +200,8 @@ app.directive('crudOutputFields', function (contextService) {
                 $injector.invoke(BaseController, this, {
                     $scope: $scope,
                     i18NService: i18NService,
-                    fieldService: fieldService
+                    fieldService: fieldService,
+                    formatService: formatService
                 });
             }
 

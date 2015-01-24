@@ -85,45 +85,12 @@ app.directive('crudBody', function (contextService) {
             validationService, schemaService, $timeout, eventService, $log,checkpointService) {
 
 
-            $scope.getFormattedValue = function (value, column, datamap) {
-                var formattedValue = formatService.format(value, column, datamap);
-                if (formattedValue == "-666") {
-                    //this magic number should never be displayed! 
-                    //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
-                    return null;
-                }
-                return formattedValue;
-            };
 
-            $scope.setActiveTab = function (tabId) {
-                contextService.setActiveTab(tabId);
-            };
-            $scope.hasTabs = function (schema) {
-                return tabsService.hasTabs(schema);
-            };
-            $scope.isEditDetail = function (datamap, schema) {
-                return datamap.fields[schema.idFieldName] != null;
-            };
-            $scope.request = function (datamap, schema) {
-                return datamap.fields[schema.idFieldName];
-            };
+            // Listeners region
 
-            $scope.toConfirmBack = function (data, schema) {
-                $scope.$emit('sw_canceldetail', data, schema, "Are you sure you want to go back?");
-            };
-
-            $scope.isCommand = function (schema) {
-                if ($scope.schema.properties['command.select'] == "true") {
-                    return true;
-                }
-            };
-            $scope.isNotHapagTest = function () {
-                if ($rootScope.clientName != 'hapag')
-                    return true;
-            };
-            $scope.tabsDisplayables = function (schema) {
-                return tabsService.tabsDisplayables(schema);
-            };
+            $scope.$on("sw_submitdata", function (event, parameters) {
+                $scope.save(parameters);
+            });
 
             $scope.$on('sw_successmessagetimeout', function (event, data) {
                 if (!$rootScope.showSuccessMessage) {
@@ -156,6 +123,40 @@ app.directive('crudBody', function (contextService) {
                     }, contextService.retrieveFromContext('successMessageTimeOut'));
                 }
             });
+
+            // Listeners
+
+            $scope.setActiveTab = function (tabId) {
+                contextService.setActiveTab(tabId);
+            };
+            $scope.hasTabs = function (schema) {
+                return tabsService.hasTabs(schema);
+            };
+            $scope.isEditDetail = function (datamap, schema) {
+                return datamap.fields[schema.idFieldName] != null;
+            };
+            $scope.request = function (datamap, schema) {
+                return datamap.fields[schema.idFieldName];
+            };
+
+            $scope.toConfirmBack = function (data, schema) {
+                $scope.$emit('sw_canceldetail', data, schema, "Are you sure you want to go back?");
+            };
+
+            $scope.isCommand = function (schema) {
+                if ($scope.schema.properties['command.select'] == "true") {
+                    return true;
+                }
+            };
+            $scope.isNotHapagTest = function () {
+                if ($rootScope.clientName != 'hapag')
+                    return true;
+            };
+            $scope.tabsDisplayables = function (schema) {
+                return tabsService.tabsDisplayables(schema);
+            };
+
+
 
             function defaultSuccessFunction(data) {
                 $scope.$parent.multipleSchema = false;
@@ -251,7 +252,9 @@ app.directive('crudBody', function (contextService) {
                 $scope.cancelfn({ data: data, schema: schema });
             }
 
-            $scope.save = function (selecteditem, parameters) {
+            
+
+            $scope.save = function (parameters) {
                 var log = $log.getInstance('crudbody#save');
 
                 if ($rootScope.showingModal && $scope.$parent.$parent.$name == "crudbodymodal") {
@@ -260,8 +263,8 @@ app.directive('crudBody', function (contextService) {
                     $scope.$parent.$parent.originalsavefn($scope.datamap.fields);
                     return;
                 }
-
-                //selectedItem would be passed in the case of a composition with autocommit=true. 
+                var selecteditem = parameters.selecteditem;
+                //selectedItem would be passed in the case of a composition with autocommit=true, in the case the target would accept only the child instance... not yet supported. 
                 //Otherwise, fetching from the $scope.datamap
                 var fromDatamap = selecteditem == null;
                 var itemToSave = fromDatamap ? $scope.datamap : selecteditem;
@@ -360,6 +363,8 @@ app.directive('crudBody', function (contextService) {
 
                 command(urlToUse, jsonString)
                     .success(function (data) {
+                        //datamap should always be updated
+                        $scope.datamap = data.resultObject;
                         if (successCbk == null || applyDefaultSuccess) {
                             defaultSuccessFunction(data);
                         }
@@ -380,7 +385,8 @@ app.directive('crudBody', function (contextService) {
                 $scope: $scope,
                 i18NService: i18NService,
                 fieldService: fieldService,
-                commandService: commandService
+                commandService: commandService,
+                formatService: formatService
             });
 
 

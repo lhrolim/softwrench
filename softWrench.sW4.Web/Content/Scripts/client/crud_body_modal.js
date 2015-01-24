@@ -156,7 +156,8 @@ app.directive('crudBodyModal', function ($rootScope, modalService) {
                     $scope: $scope,
                     i18NService: i18NService,
                     fieldService: fieldService,
-                    commandService: commandService
+                    commandService: commandService,
+                    formatService: formatService
                 });
             }
 
