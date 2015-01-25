@@ -11,7 +11,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <template path="@servicerequest.xml"/>
     <template path="@asset.xml"/>
     <template path="@longdescription.xml"/>
-  
+    <template path="@tooltrans.xml"/>
     <template path="@materials.xml"/>
     <template path="@labtrans.xml"/>
     <template path="@woactivity.xml"/>
@@ -478,6 +478,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <composition relationship="labtrans" label="Labor">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
+            <composition relationship="tooltrans" label="Tool">
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+            </composition>
             <composition relationship="attachment" label="Attachments" >
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
@@ -585,7 +588,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
     <application name="labtrans" entity="labtrans" title="Labor">
       <schemas>
-        <schema id="detail" stereotype="compositiondetail" mode="input">
+        <list>
+          <field attribute="labtransid" hidden="true"/>
+          <field attribute="laborcode" label="Labor" qualifier="title"/>
+          <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
+          <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
+        </list>
+        
+        <detail platform="web">
           <field attribute="labtransid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
@@ -595,30 +605,21 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="enterby" hidden="true" />
           <field attribute="payrate" hidden="true" />
           <field attribute="transtype" default="WORK" hidden="true"/>
-          <association label="Labor:" required="true" target="laborcode" labelfield="labor_.laborcode" default="@personid">
+          <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" default="@personid">
             <renderer type="lookup"/>
             <event type="afterchange" service="labtranService" method="afterlaborchange"/>
           </association>
-          <association label="Craft:" required="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
+          <association label="Craft:" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
             <event type="afterchange" service="labtranService" method="aftercraftchange"/>
           </association>
-          <field label="Start Date:" required="true" attribute="startdate" default="@currentdatetime">
+          <field label="Start Date:" requiredexpression="true" attribute="startdate" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
           </field>
-          <field attribute="regularhrs" label="Regular Hours:" required="true" default="8"/>
-          <association label="GL Debit Account:" required="true" target="gldebitacct" labelfield="glcomponents_.comptext" labelpattern="{0}">
+          <field attribute="regularhrs" label="Regular Hours:" requiredexpression="true" default="8"/>
+          <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext" labelpattern="{0}">
             <renderer type="lookup"/>
           </association>
-          <commandbars>
-            <commandgroup position="detailform">
-              <removecommand id="print"/>
-              <removecommand id="save"/>
-              <removecommand id="cancel"/>
-              <command id="addnewlabor" label="Submit" service="labtranService" method="submitLaborTrans" parameters="schema,datamap" />
-              <command id="cancelnewlabor" label="Cancel" service="labtranService" method="cancelLaborTrans" />
-            </commandgroup>
-          </commandbars>
-        </schema>
+        </detail>
       </schemas>
     </application>
   </applications>

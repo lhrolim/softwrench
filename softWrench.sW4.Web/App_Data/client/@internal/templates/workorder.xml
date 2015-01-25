@@ -7,6 +7,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <template path="@attachments.xml"/>
     <template path="@materials.xml"/>
     <template path="@labtrans.xml"/>
+    <template path="@tooltrans.xml"/>
     <template path="@woactivity.xml"/>
     <template path="@asset.xml"/>
     <template path="@glcomponents.xml"/>
@@ -261,6 +262,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'"  />
             </composition>
             <composition relationship="labtrans" label="Labor">
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+            </composition>
+            <composition relationship="tooltrans" label="Tool">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="attachment" label="Attachments" >
