@@ -372,8 +372,12 @@ app.directive('crudInputFields', function (contextService) {
                 var targetValue = $scope.datamap[fieldMetadata.target];
                 var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
 
-                if (code != null && code != '' && code != targetValue && allowFreeText != "true") {
-                    $scope.showLookupModal(fieldMetadata);
+                if (code != targetValue) {
+                    if (code == null || code == '') {
+                        targetValue = null;
+                    } else if (allowFreeText != "true") {
+                        $scope.showLookupModal(fieldMetadata);    
+                    }
                 }
             };
 
@@ -390,7 +394,7 @@ app.directive('crudInputFields', function (contextService) {
 
             };
 
-            $scope.handleMultipleLookupOptionsFn = function (result, lookupObj, scope, datamap) {
+            $scope.handleMultipleLookupOptionsFn = function (result, lookupObj) {
                 var associationResult = result[lookupObj.fieldMetadata.associationKey];
                 lookupObj.schema = associationResult.associationSchemaDefinition;
                 lookupObj.options = associationResult.associationData;
