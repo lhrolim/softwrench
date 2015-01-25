@@ -825,7 +825,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="datetime" params="format=dd/MM/yyyy"/>
             <filter operation="btw" default="@CURR_DATE" />
           </field>
-          <reference id="Location"/>
+          <reference id="Location" showexpression="!ctx:InModule(['tui','sso'])"/>
           <reference id="Status"/>
           <reference id ="Severity"/>
           <association label ="System" target="system" labelfield="1commodities_.description" showexpression="!ctx:InModule(['tui','sso'])">
