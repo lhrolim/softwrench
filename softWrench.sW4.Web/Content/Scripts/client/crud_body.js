@@ -256,6 +256,7 @@ app.directive('crudBody', function (contextService) {
 
             $scope.save = function (parameters) {
                 var log = $log.getInstance('crudbody#save');
+                parameters = instantiateIfUndefined(parameters);
 
                 if ($rootScope.showingModal && $scope.$parent.$parent.$name == "crudbodymodal") {
                     //workaround to invoke the original method that was passed to the modal, instead of the default save.
