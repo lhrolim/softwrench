@@ -212,7 +212,7 @@ namespace softWrench.sW4.Metadata.Security {
             if (!secureLeafs.Any()) {
                 Log.Warn(String.Format(BlankUser, Login));
             }
-            var menuDefinition = new MenuDefinition(secureLeafs, unsecureMenu.MainMenuDisplacement.ToString(), unsecureMenu.IndexItem);
+            var menuDefinition = new MenuDefinition(secureLeafs, unsecureMenu.MainMenuDisplacement.ToString(), unsecureMenu.ItemindexId);
             try {
                 _cachedMenu.Add(platform, menuDefinition);
                 // ReSharper disable once EmptyGeneralCatchClause

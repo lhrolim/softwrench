@@ -14,6 +14,7 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Util;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web.Controllers.Routing {
 
@@ -21,6 +22,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
     /// Class that holds all the information necessary for the framework to know where the user should be routed to after some operation has ocurred
     /// </summary>
     public class RouterParameters {
+
 
 
         public RouterParameters(ApplicationMetadata currentApplication,
@@ -33,7 +35,16 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             TargetResult = targetResult;
             CheckPointContext = new Dictionary<ApplicationKey, CheckPointCrudContext>();
             if (routerDTO.CheckPointData != null) {
-                CheckPointContext = routerDTO.CheckPointData.ToDictionary(f => f.GetApplicationKey(), f => f);
+                CheckPointContext = new Dictionary<ApplicationKey, CheckPointCrudContext>();
+                foreach (var checkpointData in routerDTO.CheckPointData) {
+                    var applicationKey = checkpointData.GetApplicationKey();
+                    if (!CheckPointContext.ContainsKey(applicationKey)) {
+                        CheckPointContext.Add(applicationKey, checkpointData);
+                    } else {
+                        //playing safe SWWEB-871 --> better to redirect to wrong filter then interrupting
+                        LoggingUtil.DefaultLog.WarnFormat("duplicate checkpoint entry found for {0}", applicationKey);
+                    }
+                }
             }
             User = user;
             //we could have a custom next action/controller to be executed, although usually it would stay in the crud application context
