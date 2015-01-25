@@ -342,20 +342,21 @@ app.directive('crudInputFields', function (contextService) {
             /* LOOKUP functions */
 
 
-            $scope.showLookupModal = function (fieldMetadata) {
-                if (!$scope.isSelectEnabled(fieldMetadata)) {
-                    return;
-                }
-
-                var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
-                $scope.lookupObj.code = code;
-                $scope.lookupObj.fieldMetadata = fieldMetadata;
-                $scope.lookupObj.application = fieldMetadata.schema.rendererParameters["application"];
-                $scope.lookupObj.schema = fieldMetadata.schema.rendererParameters["schemaId"];
+            $scope.displayLookupModal = function () {
                 var modals = $('[data-class="lookupModal"]', $element);
                 modals.draggable();
                 modals.modal('show');
             };
+
+            $scope.showLookupModal = function(fieldMetadata) {
+                if (!$scope.isSelectEnabled(fieldMetadata)) {
+                    return;
+                }
+
+                $scope.updateLookupObject(fieldMetadata);
+                $scope.displayLookupModal();
+            };
+
             $scope.lookupCodeChange = function (fieldMetadata) {
                 var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                 var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
@@ -370,16 +371,23 @@ app.directive('crudInputFields', function (contextService) {
                 var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                 var targetValue = $scope.datamap[fieldMetadata.target];
                 var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
+
                 if (code != null && code != '' && code != targetValue && allowFreeText != "true") {
-                    if ($scope.lookupObj == null) {
-                        $scope.lookupObj = {};
-                    }
-                    $scope.lookupObj.code = code;
-                    $scope.lookupObj.fieldMetadata = fieldMetadata;
-                    $scope.lookupObj.application = fieldMetadata.schema.rendererParameters["application"];
-                    $scope.lookupObj.schema = fieldMetadata.schema.rendererParameters["schemaId"];
-                    associationService.updateDependentAssociationValues($scope, $scope.datamap, $scope.lookupObj, $scope.handleMultipleLookupOptionsFn);
+                    $scope.showLookupModal(fieldMetadata);
                 }
+            };
+
+            $scope.updateLookupObject = function(fieldMetadata) {
+                if ($scope.lookupObj == null) {
+                    $scope.lookupObj = {};
+                }
+                var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
+                $scope.lookupObj.code = code;
+                $scope.lookupObj.fieldMetadata = fieldMetadata;
+                $scope.lookupObj.application = fieldMetadata.schema.rendererParameters["application"];
+                $scope.lookupObj.schema = fieldMetadata.schema.rendererParameters["schemaId"];
+                associationService.updateDependentAssociationValues($scope, $scope.datamap, $scope.lookupObj, $scope.handleMultipleLookupOptionsFn);
+
             };
 
             $scope.handleMultipleLookupOptionsFn = function (result, lookupObj, scope, datamap) {
@@ -393,7 +401,6 @@ app.directive('crudInputFields', function (contextService) {
                     }
                 }
                 lookupObj.initialResults = result;
-                scope.showLookupModal(lookupObj.fieldMetadata);
                 return false;
             };
            

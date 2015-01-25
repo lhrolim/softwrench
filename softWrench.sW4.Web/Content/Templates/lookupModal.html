@@ -8,7 +8,7 @@
                     <h4 class="modal-title">{{i18N('general.select','Select')}} {{lookupObj.fieldMetadata.label}}</h4>
                 </div>
                 <div class="context clearfix">
-                    <pagination pagination-data="modalPaginationData"
+                    <pagination pagination-data="lookupObj.modalPaginationData"
                                 disable-export="true"
                                 disable-print="true"
                                 renderfn="lookupModalSearch(pageNumber)" ng-cloak />
