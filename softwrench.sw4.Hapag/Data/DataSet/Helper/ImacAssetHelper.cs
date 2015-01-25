@@ -21,6 +21,10 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
                 return childAsset ? new[] { AssetConstants.Idle } : new[] { AssetConstants.Operating, AssetConstants.Active };
             }
 
+            if (schema.Equals(ImacConstants.Decomissioned)) {
+                return new[] { AssetConstants.Released, AssetConstants.Stolen, AssetConstants.Lost };
+            }
+
             if ((schema.StartsWith(ImacConstants.Replace) && !isNew) || (schema.StartsWith(ImacConstants.Remove))) {
                 if (childAsset) {
                     //replace child assets should be only the associated child assets
@@ -46,6 +50,10 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
 
         public static SortedSet<string> GetImacOptionsFromStatus(string assetStatus) {
             var toFilter = new SortedSet<string>();
+
+            if (!assetStatus.EqualsAny(AssetConstants.Released,AssetConstants.Lost,AssetConstants.Stolen)){
+                toFilter.Add(ImacConstants.Decomissioned);
+            }
 
             if (!assetStatus.EqualsAny(AssetConstants.Operating, AssetConstants.Active)) {
                 toFilter.Add(ImacConstants.Add);

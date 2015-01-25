@@ -106,6 +106,14 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
             $("input[data-association-key=person_]").typeahead('val', event.fields['asset_.primaryuser_.person_.hlagdisplayname']);
             var costCenter = event.fields['asset_.assetglaccount_.glaccount'];
             event.fields['costcenter'] = costCenter;
+        },
+
+        validatedecommission: function (schema, datamap) {
+            var result = [];
+            if (!datamap["#accepted"]) {
+                result.push("Confirm that all data for DECOMMISION process has been provided")
+            }
+            return result;
         }
     };
 });

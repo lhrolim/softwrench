@@ -555,7 +555,6 @@
     <Content Include="Content\Scripts\client\services\print_service.js" />
     <Content Include="Content\Scripts\client\services\format_service.js" />
     <Content Include="Content\Scripts\customers\gric\sr_service.js" />
-    <Content Include="Content\Scripts\customers\hapag\attachment_service.js" />
     <Content Include="Content\Scripts\customers\hapag\createFromAsset.js" />
     <Content Include="Content\Scripts\customers\hapag\change_service.js" />
     <Content Include="Content\Scripts\customers\hapag\jobplan_completeaction.js" />
@@ -721,6 +720,7 @@
     <Content Include="Content\Templates\hapag\Actionentry.html" />
     <Content Include="Content\Templates\hapag\createfromasset.html" />
     <Content Include="Content\Templates\hapag\HapagHome.html" />
+    <Content Include="Content\Templates\hapag\decomissionaccept.html" />
     <Content Include="Content\Templates\hapag\jobplancompleteaction.html" />
     <Content Include="Content\Templates\hapag\assetremarks.html" />
     <Content Include="Content\Templates\crud\update_section.html" />
