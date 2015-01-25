@@ -49,6 +49,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
     <application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" role="tui" modulealias="tui" modulename="tui" />
     <application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes" role="tui" modulealias="tui" modulename="tui"/>
     <application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser" role="tui" modulealias="tui" modulename="tui"/>
+    <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems" role="tui" modulealias="tui" modulename="tui"/>
     <!-- Ended TUI Merged declaration-->
 
     <!--ITC Items-->
@@ -143,6 +144,8 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 							 params="id=incidentsearchtui;application=incident;label=Incident Search;searchFields=ticketid,description" modulealias="tui" modulename="tui" role="tui" />
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchtui;application=change;label=Change Search;
                  searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search" role="tui" modulealias="tui" modulename="tui"/>
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchtui;application=problem;label=Problem Search;
+                 searchFields=ticketid,description" tooltip="Search Problems" modulealias="tui" modulename="tui" role="tui"/>
     <!-- ended tui declaration-->
 
 	</container>

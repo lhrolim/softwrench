@@ -132,6 +132,7 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
 
             _wcFacade.Register("servicerequest", TuiWhereClauseProvider("ServiceRequestWhereClause"), ForModule(fr.Tui));
             _wcFacade.Register("incident", TuiWhereClauseProvider("IncidentWhereClause"), ForModule(fr.Tui));
+            _wcFacade.Register("problem", TuiWhereClauseProvider("ProblemWhereClause"), ForModule(fr.Tui));
         }
 
         private void CreateSsoWhereClauses() {

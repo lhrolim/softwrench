@@ -25,6 +25,9 @@ namespace softwrench.sw4.Hapag.Data.ExternalUser {
         public string IncidentWhereClause() {
             return DoGetWhereClause("incident");
         }
+        public string ProblemWhereClause() {
+            return DoGetWhereClause("problem");
+        }
 
 
         protected override string GetExternalFilePath() {
