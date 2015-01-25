@@ -634,7 +634,13 @@ app.directive('crudInputFields', function (contextService) {
                 cssclass += $scope.hasSameLineLabel(fieldMetadata) ? ' col-sm-9 col-md-10' : ' col-xs-12';
                 return cssclass;
             }
-
+            $scope.showLabelTooltip = function (fieldMetadata) {
+                if (fieldMetadata.label !== fieldMetadata.toolTip) {
+                    return 'tooltip';
+                } else {
+                    return '';
+                }
+            }
             ///
             // legendevaluation is boolean indicating the mode we are calling this method, either for an ordinary field or for a header with legend
             ////
