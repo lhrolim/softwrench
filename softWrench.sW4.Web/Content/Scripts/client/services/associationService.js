@@ -356,7 +356,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             });
         },
 
-        getAssociationOptions: function (scope, searchObj, pageNumber) {
+        getAssociationOptions: function (scope, lookupObj, pageNumber, searchObj) {
             var schema = scope.schema;
             var fields = scope.datamap;
 
@@ -366,10 +366,10 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             parameters.key.schemaId = schema.schemaId;
             parameters.key.mode = schema.mode;
             parameters.key.platform = platform();
-            parameters.associationFieldName = searchObj.fieldMetadata.associationKey;
+            parameters.associationFieldName = lookupObj.fieldMetadata.associationKey;
 
-            var lookupApplication = searchObj.application;
-            var lookupSchemaId = searchObj.schemaId;
+            var lookupApplication = lookupObj.application;
+            var lookupSchemaId = lookupObj.schemaId;
             if (lookupApplication != null && lookupSchemaId != null) {
                 parameters.associationApplication = lookupApplication;
                 parameters.associationKey = {};
@@ -379,20 +379,23 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
             var totalCount = 0;
             var pageSize = 30;
-            if (scope.modalPaginationData != null) {
-                totalCount = scope.modalPaginationData.totalCount;
-                pageSize = scope.modalPaginationData.pageSize;
+            if (lookupObj.modalPaginationData != null) {
+                totalCount = lookupObj.modalPaginationData.totalCount;
+                pageSize = lookupObj.modalPaginationData.pageSize;
             }
             if (pageNumber === undefined) {
                 pageNumber = 1;
             }
 
-            if (searchObj.schema != null) {
+            if (lookupObj.schema != null) {
                 var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
-                var searchValues = scope.searchObj;
+                var searchValues = searchObj;
                 var searchOperators = {};
                 for (var field in searchValues) {
                     searchOperators[field] = defaultLookupSearchOperator;
+                }
+                if (searchValues == null) {
+                    searchValues = {};
                 }
                 parameters.hasClientSearch = true;
                 parameters.SearchDTO = searchService.buildSearchDTO(searchValues, {}, searchOperators);
@@ -400,8 +403,8 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 parameters.SearchDTO.totalCount = totalCount;
                 parameters.SearchDTO.pageSize = pageSize;
             } else {
-                parameters.valueSearchString = searchObj.code == null ? "" : searchObj.code;
-                parameters.labelSearchString = searchObj.description == null ? "" : searchObj.description;
+                parameters.valueSearchString = lookupObj.code == null ? "" : lookupObj.code;
+                parameters.labelSearchString = lookupObj.description == null ? "" : lookupObj.description;
                 parameters.hasClientSearch = true;
                 parameters.SearchDTO = {
                     pageNumber: pageNumber,
@@ -417,23 +420,23 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
         
         //Updates dependent association values for all association rendererTypes.
         //This includes the associationOptions, associationDescriptions, etc.
-        updateDependentAssociationValues: function (scope, datamap, searchObj, postFetchHook) {
+        updateDependentAssociationValues: function (scope, datamap, lookupObj, postFetchHook) {
             var getAssociationOptions = this.getAssociationOptions;
             var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
-            getAssociationOptions(scope, searchObj).success(function(data) {
+            getAssociationOptions(scope, lookupObj).success(function(data) {
                 var result = data.resultObject;
 
                 if (postFetchHook != null) {
-                    var continueFlag = postFetchHook(result, searchObj, scope, datamap);
+                    var continueFlag = postFetchHook(result, lookupObj, scope, datamap);
                     if (continueFlag == false) {
                         return;
                     }
                 }
 
-                var associationResult = result[searchObj.fieldMetadata.associationKey];
-                searchObj.options = associationResult.associationData;
-                searchObj.schema = associationResult.associationSchemaDefinition;
-                datamap[searchObj.fieldMetadata.target] = searchObj.options[0].value;
+                var associationResult = result[lookupObj.fieldMetadata.associationKey];
+                lookupObj.options = associationResult.associationData;
+                lookupObj.schema = associationResult.associationSchemaDefinition;
+                datamap[lookupObj.fieldMetadata.target] = lookupObj.options[0].value;
 
                 if (!scope.lookupAssociationsCode) {
                     scope["lookupAssociationsCode"] = {};
@@ -441,8 +444,8 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 if (!scope.lookupAssociationsDescription) {
                     scope["lookupAssociationsDescription"] = {};
                 }
-                scope.lookupAssociationsCode[searchObj.fieldMetadata.attribute] = searchObj.options[0].value;
-                scope.lookupAssociationsDescription[searchObj.fieldMetadata.attribute] = searchObj.options[0].label;
+                scope.lookupAssociationsCode[lookupObj.fieldMetadata.attribute] = lookupObj.options[0].value;
+                scope.lookupAssociationsDescription[lookupObj.fieldMetadata.attribute] = lookupObj.options[0].label;
                 updateAssociationOptionsRetrievedFromServer(scope, result, datamap);
             }).error(function (data) {
             });

@@ -341,17 +341,20 @@ app.directive('crudInputFields', function (contextService) {
             };
             /* LOOKUP functions */
 
-
             $scope.showLookupModal = function (fieldMetadata) {
                 if (!$scope.isSelectEnabled(fieldMetadata)) {
                     return;
                 }
-
                 var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
+                $scope.lookupObj = {};
                 $scope.lookupObj.code = code;
                 $scope.lookupObj.fieldMetadata = fieldMetadata;
                 $scope.lookupObj.application = fieldMetadata.schema.rendererParameters["application"];
-                $scope.lookupObj.schema = fieldMetadata.schema.rendererParameters["schemaId"];
+                $scope.lookupObj.schemaId = fieldMetadata.schema.rendererParameters["schemaId"];
+                associationService.updateDependentAssociationValues($scope, $scope.datamap, $scope.lookupObj, $scope.handleMultipleLookupOptionsFn);
+            };
+
+            $scope.displayLookupModal = function (fieldMetadata) {
                 var modals = $('[data-class="lookupModal"]', $element);
                 modals.draggable();
                 modals.modal('show');
@@ -371,19 +374,13 @@ app.directive('crudInputFields', function (contextService) {
                 var targetValue = $scope.datamap[fieldMetadata.target];
                 var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
                 if (code != null && code != '' && code != targetValue && allowFreeText != "true") {
-                    if ($scope.lookupObj == null) {
-                        $scope.lookupObj = {};
-                    }
-                    $scope.lookupObj.code = code;
-                    $scope.lookupObj.fieldMetadata = fieldMetadata;
-                    $scope.lookupObj.application = fieldMetadata.schema.rendererParameters["application"];
-                    $scope.lookupObj.schema = fieldMetadata.schema.rendererParameters["schemaId"];
-                    associationService.updateDependentAssociationValues($scope, $scope.datamap, $scope.lookupObj, $scope.handleMultipleLookupOptionsFn);
+                    $scope.showLookupModal(fieldMetadata);
                 }
             };
 
             $scope.handleMultipleLookupOptionsFn = function (result, lookupObj, scope, datamap) {
                 var associationResult = result[lookupObj.fieldMetadata.associationKey];
+                lookupObj.schema = associationResult.associationSchemaDefinition;
                 lookupObj.options = associationResult.associationData;
                 if (Object.keys(result).length == 1 &&
                     result[lookupObj.fieldMetadata.associationKey] &&
@@ -392,8 +389,15 @@ app.directive('crudInputFields', function (contextService) {
                         return true;
                     }
                 }
-                lookupObj.initialResults = result;
-                scope.showLookupModal(lookupObj.fieldMetadata);
+                lookupObj.modalPaginationData = {};
+                lookupObj.modalPaginationData.pageCount = associationResult.pageCount;
+                lookupObj.modalPaginationData.pageNumber = associationResult.pageNumber;
+                lookupObj.modalPaginationData.pageSize = associationResult.pageSize;
+                lookupObj.modalPaginationData.totalCount = associationResult.totalCount;
+                lookupObj.modalPaginationData.selectedPage = associationResult.pageNumber;
+                //TODO: this should come from the server side
+                lookupObj.modalPaginationData.paginationOptions = [10, 30, 100];
+                $scope.displayLookupModal(lookupObj.fieldMetadata);
                 return false;
             };
            

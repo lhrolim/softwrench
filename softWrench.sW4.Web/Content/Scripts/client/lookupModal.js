@@ -45,28 +45,28 @@ app.directive('lookupModal', function (contextService) {
                               formatService, expressionService) {
 
             $scope.lookupModalSearch = function (pageNumber) {
-                associationService.getAssocationOptions($scope, $scope.lookupObj).success(function(data) {
+                associationService.getAssociationOptions($scope, $scope.lookupObj, pageNumber, $scope.searchObj).success(function(data) {
                     var result = data.resultObject;
-                    $scope.populateModal(result, $scope.lookupObj);
+                    $scope.populateModal(result);
                 }).error(function (data) {
                 });
             };
 
-            $scope.populateModal = function (resultData, lookupObj) {
+            $scope.populateModal = function (resultData) {
                 for (var association in resultData) {
-                    if (lookupObj.fieldMetadata.associationKey == association) {
+                    if ($scope.lookupObj.fieldMetadata.associationKey == association) {
                         var associationResult = resultData[association];
-                        lookupObj.options = associationResult.associationData;
-                        lookupObj.schema = associationResult.associationSchemaDefinition;
+                        $scope.lookupObj.options = associationResult.associationData;
+                        $scope.lookupObj.schema = associationResult.associationSchemaDefinition;
+                        var modalPaginationData = $scope.lookupObj.modalPaginationData;
 
-                        $scope.modalPaginationData = {};
-                        $scope.modalPaginationData.pageCount = associationResult.pageCount;
-                        $scope.modalPaginationData.pageNumber = associationResult.pageNumber;
-                        $scope.modalPaginationData.pageSize = associationResult.pageSize;
-                        $scope.modalPaginationData.totalCount = associationResult.totalCount;
-                        $scope.modalPaginationData.selectedPage = associationResult.pageNumber;
+                        modalPaginationData.pageCount = associationResult.pageCount;
+                        modalPaginationData.pageNumber = associationResult.pageNumber;
+                        modalPaginationData.pageSize = associationResult.pageSize;
+                        modalPaginationData.totalCount = associationResult.totalCount;
+                        modalPaginationData.selectedPage = associationResult.pageNumber;
                         //TODO: this should come from the server side
-                        $scope.modalPaginationData.paginationOptions = [10, 30, 100];
+                        modalPaginationData.paginationOptions = [10, 30, 100];
                     }
                 }
             };
@@ -132,11 +132,9 @@ app.directive('lookupModal', function (contextService) {
 
             $element.on('shown.bs.modal', function (e) {
                 $scope.modalCanceled = false;
-                $scope.selectedOption = null;
-                //$scope.lookupObj = {};
-                //if ($scope.lookupObj != undefined) {
-                    $scope.populateModal($scope.lookupObj.initialResults, $scope.lookupObj);
-                //}
+                $scope.selectedOption == null
+                $scope.searchObj = {};
+                $scope.populateModal($scope.lookupObj.initialResults);
             });
 
             $injector.invoke(BaseList, this, {
