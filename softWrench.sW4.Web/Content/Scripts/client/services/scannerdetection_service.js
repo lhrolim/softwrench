@@ -168,17 +168,21 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                             // Update the associated values
                             var fieldMetadata = fieldService.getDisplayableByKey(schema, currentAttribute);
                             // Update the associated values using the new scanned data
-                            var searchObj = {};
-                            searchObj.code = data;
-                            searchObj.fieldMetadata = fieldMetadata
-                            searchObj.application = null;
-                            searchObj.schema = null;
+                            var lookupObj = {};
+                            lookupObj.code = data;
+                            lookupObj.fieldMetadata = fieldMetadata;
+                            lookupObj.application = null;
+                            lookupObj.schemaId = null;
                             if (fieldMetadata.rendererParameters != undefined) {
-                                searchObj.application = fieldMetadata.rendererParameters.application;
-                                searchObj.schema = fieldMetadata.rendererParameters.schemaId;
+                                lookupObj.application = fieldMetadata.rendererParameters.application;
+                                lookupObj.schemaId = fieldMetadata.rendererParameters.schemaId;
                             }
-                            searchObj.lastSearchedValues = "";
-                             associationService.updateDependentAssociationValues(scope, datamap, searchObj, validateAssocationLookupFn);
+                            var searchObj = {};
+                            var lookupAttribute = fieldMetadata.schema.rendererParameters["attribute"];
+                            if (lookupAttribute) {
+                                searchObj[lookupAttribute] = data;
+                            }
+                            associationService.updateDependentAssociationValues(scope, datamap, lookupObj, validateAssocationLookupFn, searchObj);
                             // Exit the loop once we have set a value from the scan
                             break;
                         }

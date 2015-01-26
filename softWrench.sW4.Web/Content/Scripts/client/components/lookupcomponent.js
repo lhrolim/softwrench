@@ -68,7 +68,8 @@ app.factory('cmplookup', function ($rootScope, $timeout,$log, associationService
             lookupObj.schema = associationResult.associationSchemaDefinition;
             lookupObj.options = associationResult.associationData;
             if (Object.keys(result).length == 1 &&
-                result[lookupObj.fieldMetadata.associationKey] &&
+                result[lookupObj.fieldMetadata.associationKey] != null &&
+                result[lookupObj.fieldMetadata.associationKey].associationData != null &&
                 result[lookupObj.fieldMetadata.associationKey].associationData.length == 1) {
                 if (lookupObj.options[0].value == lookupObj.code &&
                     datamap[lookupObj.fieldMetadata.attribute] != lookupObj.options[0].value) {
@@ -90,8 +91,6 @@ app.factory('cmplookup', function ($rootScope, $timeout,$log, associationService
             var modals = $('[data-class="lookupModal"]', element);
             modals.draggable();
             modals.modal('show');
-            //var lookupBody = $('[id="lookupBody"]', modals.modal);
-            //lookupBody.scrollTop(0);
         }
 
 

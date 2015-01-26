@@ -388,7 +388,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 totalCount = lookupObj.modalPaginationData.totalCount;
                 pageSize = lookupObj.modalPaginationData.pageSize;
             }
-            if (pageNumber === undefined) {
+            if (pageNumber == null) {
                 pageNumber = 1;
             }
 
