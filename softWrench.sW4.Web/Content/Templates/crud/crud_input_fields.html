@@ -8,7 +8,7 @@
                   ng-class="{'col-horizontal-orientation' : !isVerticalOrientation(), 'fieldset-inside-section' : insidelabellesssection=='true'}"
                   ng-style="horizontalWidth">
             <label class="control-label"
-                   rel="tooltip"
+                   rel="{{showLabelTooltip(fieldMetadata)}}"
                    data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
                    ng-show="isLabelVisible(fieldMetadata,false)"
                    ng-style="getLabelStyle(fieldMetadata)"
