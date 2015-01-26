@@ -22,7 +22,7 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
                 }
 
                 imgHolder.bind('paste', function (event) {
-                    fn.handleImgHolderPaste(this,event.originalEvent);
+                    fn.handleImgHolderPaste(this, event.originalEvent, isRichTextBox);
                 });
 
                 imgHolder.bind('blur', function (event) {
@@ -80,9 +80,14 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
             datamap[attributeName + "_path"] = "Screen" + timestamp + ".html";
         },
 
-        handleImgHolderPaste: function (imgHolder, e) {
+        handleImgHolderPaste: function (imgHolder, e,isRichTextBox) {
+            
+
             if (isFirefox()) {
                 // Firefox: the pasted object will be automaticaly included on imgHolder, so do nothing
+                $timeout(function() {
+                    $('img', imgHolder).attr('max-width', $(imgHolder).css('width'));
+                }, 150, true);
                 return;
             }
 
@@ -114,13 +119,15 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
 
             pastedImage.onload = function () {
                 var img = new Image();
-                img.src = imgToBase64(this);
                 $(img).attr('contenteditable', 'true');
+                $(img).css('max-width', '100%');
+                img.src = imgToBase64(this);
                 $(imgHolder).empty();
                 $(imgHolder).attr('hasimage', 'true');
                 imgHolder.appendChild(img);
             };
             pastedImage.src = source;
+            $(pastedImage).attr('class', 'pastedimage');
         }
 
 
