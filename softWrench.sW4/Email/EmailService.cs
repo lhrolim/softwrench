@@ -32,7 +32,7 @@ namespace softWrench.sW4.Email {
                 Body = emailData.Message,
                 IsBodyHtml = true
             };
-            if (emailData.Cc != null) {
+            if (!string.IsNullOrEmpty(emailData.Cc)) {
                 foreach (var ccemail in emailData.Cc.Split(' ', ',', ';')) {
                     email.CC.Add(ccemail);
                 }
