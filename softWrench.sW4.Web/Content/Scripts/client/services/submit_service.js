@@ -145,7 +145,7 @@ app.factory('submitService', function ($rootScope, fieldService, contextService,
                 if (sections[i].displayables == null || sections[i].displayables.length == 0) {
                     continue;
                 }
-                handleDatamapForMIF(sections[i], originalDatamap, datamap);
+                this.handleDatamapForMIF(sections[i], originalDatamap, datamap);
             }
         }
 
