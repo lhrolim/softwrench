@@ -186,10 +186,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             }, 100, false);
     };
 
-    $scope.logout = function () {
-        sessionStorage.removeItem("swGlobalRedirectURL");
-        contextService.clearContext();
-    };
+
 
     $scope.resourceUrl = function(path) {
         return contextService.getResourceUrl(path);

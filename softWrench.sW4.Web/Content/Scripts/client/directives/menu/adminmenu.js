@@ -28,6 +28,11 @@
             scope.contextPath = function (path) {
                 return url(path);
             };
+
+            scope.logout = function () {
+                sessionStorage.removeItem("swGlobalRedirectURL");
+                contextService.clearContext();
+            };
             
         }
     };
