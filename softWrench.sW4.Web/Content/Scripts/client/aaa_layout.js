@@ -207,7 +207,6 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
         $rootScope.clientName = config.clientName;
         $rootScope.environment = config.environment;
-        $rootScope.isLocal = config.isLocal;
         $rootScope.i18NRequired = config.i18NRequired;
         $rootScope.deviceType = DeviceDetect.catagory.toLowerCase();
 
