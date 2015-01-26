@@ -557,6 +557,7 @@
     <Content Include="Content\Images\tva\logo-main.png" />
     <Content Include="Content\Images\tva\signin.jpg" />
     <Content Include="Content\Scripts\client\crud_tbody.js" />
+    <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
     <Content Include="Content\Scripts\client\services\glcomponent_service.js" />
     <Content Include="Content\Scripts\client\services\checkpoint_service.js" />
     <Content Include="Content\Scripts\client\services\matusetrans_service.js" />
@@ -708,7 +709,7 @@
     <Content Include="Content\Scripts\client\error.js" />
     <Content Include="Content\Scripts\client\datetime.js" />
     <Content Include="Content\Scripts\client\directives\fileread.js" />
-    <Content Include="Content\Scripts\client\directives\menuitem.js" />
+    <Content Include="Content\Scripts\client\directives\menu\menuitem.js" />
     <Content Include="Content\Scripts\client\directives\printSection.js" />
     <Content Include="Content\Scripts\client\directives\printModal.js" />
     <Content Include="Content\Scripts\client\download.js" />
@@ -866,6 +867,7 @@
     <Content Include="Content\Templates\hapag\assetremarks.html" />
     <Content Include="Content\Templates\crud\update_section.html" />
     <Content Include="Content\Templates\hapag\commaseparatedcomposition.html" />
+    <Content Include="Content\Templates\menu\adminmenu.html" />
     <Content Include="Content\Templates\otb\compositionlistdeleteaction.html" />
     <Content Include="Content\Templates\otb\invissuereturnaction.html" />
     <Content Include="Content\Templates\otb\commlogaction.html" />
@@ -1431,12 +1433,12 @@
     <Content Include="Content\Scripts\vendor\other\multiselect.js" />
     <None Include="Content\Templates\header.cshtml" />
     <Content Include="Content\Templates\crud\crud_body.html" />
-    <Content Include="Content\Templates\menu.html" />
+    <Content Include="Content\Templates\menu\menu.html" />
     <Content Include="Content\Templates\pagination.html" />
     <Content Include="Content\Templates\crud\crud_output.html" />
     <Content Include="Content\Templates\crud\crud_input.html" />
     <Content Include="Content\Templates\hapag\hapagsearch.html" />
-    <Content Include="Content\Templates\menuitem.html" />
+    <Content Include="Content\Templates\menu\menuitem.html" />
     <Content Include="softWrench.sW4.Controls.WebForms.dll" />
     <Content Include="Content\Scripts\client\signin.js" />
     <Content Include="UserControls\Report.ascx" />
