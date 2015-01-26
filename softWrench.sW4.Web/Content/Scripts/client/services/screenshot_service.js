@@ -80,13 +80,15 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
             datamap[attributeName + "_path"] = "Screen" + timestamp + ".html";
         },
 
-        handleImgHolderPaste: function (imgHolder, e,isRichTextBox) {
-            
+        handleImgHolderPaste: function (imgHolder, e, isRichTextBox) {
+
 
             if (isFirefox()) {
                 // Firefox: the pasted object will be automaticaly included on imgHolder, so do nothing
-                $timeout(function() {
-                    $('img', imgHolder).attr('max-width', $(imgHolder).css('width'));
+                $timeout(function () {
+                    var width = $(imgHolder).css('width');
+                    $('img', imgHolder).attr('max-width', '100%');
+                    $('img', imgHolder).attr('width', '100%');
                 }, 150, true);
                 return;
             }
@@ -120,10 +122,9 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
             pastedImage.onload = function () {
                 var img = new Image();
                 $(img).attr('contenteditable', 'true');
-                //                $(img).css('max-width', '100%');
-                //temporary cross-browser solution
+                $(img).css('max-width', '100%');
+                $(img).css('width', '100%');
                 var jimgHolder = $(imgHolder);
-                $(img).css('max-width', jimgHolder.css('width'));
                 img.src = imgToBase64(this);
                 jimgHolder.empty();
                 jimgHolder.attr('hasimage', 'true');
