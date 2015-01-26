@@ -10,7 +10,7 @@ namespace softWrench.sW4.Web.Util {
 
 
             var defaultValue = Scripts.Render(paths);
-            if (false &&ApplicationConfiguration.IsLocal()) {
+            if (ApplicationConfiguration.IsLocal()) {
                 return defaultValue;
             }
 
@@ -21,7 +21,7 @@ namespace softWrench.sW4.Web.Util {
 
         public static IHtmlString RenderCss(params string[] paths) {
             var defaultValue = Styles.Render(paths);
-            if (false && ApplicationConfiguration.IsLocal()) {
+            if (ApplicationConfiguration.IsLocal()) {
                 return defaultValue;
             }
             var totalMillis = ApplicationConfiguration.GetStartTimeInMillis();
