@@ -1,4 +1,6 @@
-﻿using log4net;
+﻿using System.Diagnostics;
+using System.Globalization;
+using log4net;
 using softwrench.sw4.Shared2.Util;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
@@ -17,15 +19,17 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
     internal class SlicedEntityMetadataBuilder {
         private const string MissingAssociation = "couldn´t find association {0} on entity {1}. Please, review metadata.xml";
 
-        private static ILog Log = LogManager.GetLogger(typeof (SlicedEntityMetadataBuilder));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SlicedEntityMetadataBuilder));
 
         public static SlicedEntityMetadata GetInstance(EntityMetadata entityMetadata,
                                                      ApplicationSchemaDefinition appSchema, int? fetchLimit = 300, bool isUnionSchema = false) {
             var entityAttributes = entityMetadata.Schema.Attributes;
             var usedRelationships = new HashSet<EntityAssociation>();
-
+            var watch = Stopwatch.StartNew();
+           
             ISet<EntityAttribute> usedAttributes = new HashSet<EntityAttribute>();
-            foreach (var field in appSchema.NonRelationshipFields) {
+            var nonRelationshipFields =appSchema.NonRelationshipFields;
+            foreach (var field in nonRelationshipFields) {
                 if (field.Attribute.StartsWith("#null")) {
                     usedAttributes.Add(new EntityAttribute(field.Attribute, "varchar", false, true,
                         ConnectorParameters.DefaultInstance(), null));
@@ -37,6 +41,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
                 }
             }
 
+
             usedAttributes.Add(entityMetadata.Schema.IdAttribute);
             if (!isUnionSchema) {
                 usedAttributes.Add(entityMetadata.Schema.RowstampAttribute);
@@ -45,13 +50,19 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
             usedRelationships.UnionWith(HandleAssociations(appSchema.Associations, entityMetadata));
             usedRelationships.UnionWith(HandleCompositions(appSchema.Compositions, entityMetadata, appSchema));
 
+
             var result = SlicedRelationshipBuilderHelper.HandleRelationshipFields(appSchema.RelationshipFields.Select(r => r.Attribute), entityMetadata);
+
             usedRelationships.UnionWith(result.DirectRelationships);
-            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity, entityMetadata.Schema.MappingType, !isUnionSchema);
+            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, entityMetadata.Schema.UserIdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity, entityMetadata.Schema.MappingType, !isUnionSchema);
             SlicedEntityMetadata unionSchema = null;
             if (appSchema.UnionSchema != null) {
                 unionSchema = GetUnionInstance(appSchema.UnionSchema);
             }
+
+
+            Log.DebugFormat("Finished Building Sliced Metadata for {0} in {1} ms", appSchema, watch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture));
+            watch.Stop();
             return new SlicedEntityMetadata(entityMetadata.Name, schema,
                 usedRelationships, entityMetadata.ConnectorParameters, appSchema, result.InnerEntityMetadatas, fetchLimit, unionSchema);
         }
@@ -82,7 +93,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
 
             var result = SlicedRelationshipBuilderHelper.HandleRelationshipFields(attributes.Where(r => r.Contains('.')), entityMetadata);
             usedRelationships.UnionWith(result.DirectRelationships);
-            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity, entityMetadata.Schema.MappingType);
+            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, entityMetadata.Schema.UserIdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity, entityMetadata.Schema.MappingType);
             return new SlicedEntityMetadata(entityMetadata.Name, schema,
                 usedRelationships, entityMetadata.ConnectorParameters, null, result.InnerEntityMetadatas);
         }

@@ -6,6 +6,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <template path="@chartofaccounts.xml"/>
     <template path="@workorder.xml"/>
     <template path="@item.xml"/>
+    <template path="@glcomponents.xml"/>
   </templates>
   
   <entities>
@@ -14,6 +15,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <relationship to="invissue" collection="true">
           <relationshipAttribute from="wonum" to="refwo" primary="true" />
           <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
       </relationships>
     </entity>
@@ -27,6 +31,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="storeloc" to="location"/>
           <relationshipAttribute to="moved" literal="0" quoteLiteral="true"/>
           <relationshipAttribute to="returnedtovendor" literal="0" quoteLiteral="true"/>
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -52,6 +59,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute from="lotnum" to="lotnum"/>
         </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BasePhysicalCountCrudConnector"/>
@@ -75,6 +85,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="location" to="location"/>
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute from="lotnum" to="lotnum"/>
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
       </relationships>
     </entity>
@@ -113,6 +126,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="orgid" to="orgid"/>
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute from="location" to="location"/>
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
       </relationships>
     </entity>
@@ -169,6 +185,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </relationship>
         <relationship to="item">
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+        </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -272,47 +291,47 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="binnum" hidden="true"/>
           <field attribute="item_.itemnum" hidden="true"/>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=9%" />
+            <renderer type="default" />
           </field>
           <field attribute="item_.itemtype" label="Item Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%" />
           </field>
           <field attribute="lotnum" label="Lot">
-            <renderer type="default" params="widthLG=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="refwo" label="Work Order">
-            <renderer type="default" params="width=8%;"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%"/>
           </field>
           <field attribute="issueto" label="Issued To">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="assetnum" label="Asset">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%;widthLG=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
           </field>
           <field attribute="location" label="Location">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="siteid" label="Site">
-            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%;widthLG=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=20%" />
           </field>
           <field attribute="issuetype" label="Issue Type">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <optionfield attribute="item_.rotating" label="Rotating">
-            <renderer type="combo" params="widthLG=8%;filteronly=true;formatter=numberToBoolean"/>
+            <renderer type="combo" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;filteronly=true;formatter=numberToBoolean"/>
             <option value="1" label="Yes"/>
             <option value="0" label="No"/>
           </optionfield>
           <optionfield attribute="item_.iskit" label="Kit">
-            <renderer type="combo" params="widthLG=8%;filteronly=true;formatter=numberToBoolean"/>
+            <renderer type="combo" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;filteronly=true;formatter=numberToBoolean"/>
             <option value="1" label="Yes"/>
             <option value="0" label="No"/>
           </optionfield>
           <field attribute="quantity" label="Qty">
-            <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyList;"/>
+            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=9%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyList;"/>
           </field>
           <field attribute="qtyreturned" label="Qty Rtn">
-            <renderer type="default" params="hidefilter=true;width=4%;formatter=@inventoryService.formatQtyReturnedList;"/>
+            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=9%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyReturnedList;"/>
           </field>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
             <renderer type="default" params="width=3%"/>
@@ -557,8 +576,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <section>
             <header displacement="ontop" label="Charge Details" params="fieldset=true;font-weight=bold;"/>
             <field attribute="gldebitacct" label="GL Debit Acct" readonly="true"/>
-            <association label="Override GL Debit Account" target="#gldebitacct" labelfield="chartofaccounts_.accountname">
-              <renderer type="lookup"/>
+            <association label="Override GL Debit Account" target="#gldebitacct"  labelfield="glcomponents_.comptext" >
+              <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
               <event type="afterchange" service="inventoryService" method="overrideGlAccount"/>
             </association>
           </section>
@@ -600,8 +619,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" default="@storeloc" dependantfields="siteid" requiredexpression="true" >
             <renderer type="lookup"/>
           </association>
-          <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname">
-            <renderer type="lookup"/>
+          <association label="GL Debit Account" target="gldebitacct"  labelfield="glcomponents_.comptext" >
+            <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
           </association>
           <commandbars>
             <commandgroup position="detailform">
@@ -673,15 +692,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <association label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid">
               <renderer type="lookup"/>
             </association>
-            <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname">
-              <renderer type="lookup"/>
+            <association label="GL Debit Account" target="gldebitacct"  labelfield="glcomponents_.comptext" >
+              <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount" />
             </association>
           </section>
           <commandbars>
             <commandgroup position="detailform">
-              <removecommand id="save"/>
               <removecommand id="cancel"/>
-              <command id="submitinvissue" label="Submit" service="inventoryService" method="submitInvIssue" parameters="schema,datamap" position="&lt;print"/>
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position=">print"/>
               <command id="cancelinvissue" label="Cancel" service="inventoryService" method="navToIssueReturnList" parameters="schema,datamap" position=">print"/>
             </commandgroup>
@@ -690,6 +707,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <properties>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
           </properties>
+          <event type="beforesubmit.onvalidation" service="inventoryService" method="validateInvIssue"/>
         </schema>
       </schemas>
     </application>
@@ -1070,6 +1088,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <application entity="invuse" name="invuse" title="Inventory Transfer">
       <schemas>
         <schema id="newdetail" stereotype="detail" mode="input">
+          <properties>
+            <property key="routing.nextapplication" value="matrectransTransfers"/>
+            <property key="nextschema.schemaid" value="matrectransTransfersList"/>
+          </properties>
           <field attribute="usetype" hidden="true"/>
           <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true">
             <renderer type="lookup"/>
@@ -1114,8 +1136,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="inventory_.costtype" label="Cost Type" hidden="true"/>
           <field attribute="lotnum" hidden="true"/>
           <commandbars>
-            <commandgroup position="detailform" removeundeclared="true">
-              <command id="saveTransfer" icon="fa fa-save" label="Submit" service="inventoryService" method="submitTransfer" position="left" parameters="schema,datamap"/>
+            <commandgroup position="detailform" removeundeclared="false">
+              <removecommand id="print"/>
+              <removecommand id="cancel"/>
               <command id="cancelTransfer" icon="fa fa-backward" label="Cancel" service="inventoryService" method="cancelTransfer"/>
             </commandgroup>
           </commandbars>

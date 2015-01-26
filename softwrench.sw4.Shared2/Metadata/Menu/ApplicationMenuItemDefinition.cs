@@ -13,12 +13,12 @@ namespace softwrench.sW4.Shared2.Metadata.Menu {
         
         [JsonConverter(typeof(StringEnumConverter))]
         public SchemaMode Mode { get; set; }
-        public IDictionary<string, string> Parameters { get; set; }
+        public IDictionary<string, object> Parameters { get; set; }
         
         public ApplicationMenuItemDefinition() { }
 
         public ApplicationMenuItemDefinition(string id, string title, string role, string tooltip, string icon, string application,
-            string schema, SchemaMode mode, IDictionary<string, string> parameters)
+            string schema, SchemaMode mode, IDictionary<string, object> parameters)
             : base(id, title, role, tooltip, icon) {
             Application = application;
             Schema = schema;

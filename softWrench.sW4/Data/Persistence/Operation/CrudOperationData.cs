@@ -8,16 +8,26 @@ using System.Collections.Generic;
 namespace softWrench.sW4.Data.Persistence.Operation {
     public sealed class CrudOperationData : Entity, IOperationData {
 
+        private string _userIdAttributeName;
+
         public CrudOperationData([CanBeNull] string id, [NotNull] IDictionary<string, object> attributes,
             [NotNull] IDictionary<string, object> associationAttributes, EntityMetadata metadata, ApplicationMetadata applicationMetadata)
             : base(id, attributes, associationAttributes, metadata) {
             Id = id;
             EntityMetadata = metadata;
             ApplicationMetadata = applicationMetadata;
+            _userIdAttributeName = metadata.Schema.UserIdAttribute.Name;
         }
 
         public new string Id { get; set; }
-        public string Class { get { return EntityMetadata.GetTableName(); }  }
+
+
+
+        public string UserId {
+            get { return (string)GetAttribute(_userIdAttributeName); }
+
+        }
+        public string Class { get { return EntityMetadata.GetTableName(); } }
         public EntityMetadata EntityMetadata { get; set; }
         public OperationType OperationType { get; set; }
 

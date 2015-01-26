@@ -13,8 +13,19 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
             return attributes.FirstWithException(a => a.Name.EqualsIc(idAttributeName), "Id attribute {0} not found on entity {1}", idAttributeName, EntityName);
         }
 
+        private EntityAttribute FindUserIdAttribute(IEnumerable<EntityAttribute> attributes, string userIdAttribute, string idAttribute) {
+            var entityAttributes = attributes as EntityAttribute[] ?? attributes.ToArray();
+            var userId = entityAttributes.FirstOrDefault(a => a.Name.EqualsIc(userIdAttribute));
+            if (userId == null) {
+                //fallback to the same value as the userId
+                return FindIdAttribute(entityAttributes, idAttribute);
+            }
+            return userId;
+        }
+
         private readonly ISet<EntityAttribute> _attributes;
         private readonly Lazy<EntityAttribute> _idAttribute;
+        private readonly Lazy<EntityAttribute> _userIdAttribute;
         private readonly EntityAttribute _rowstampAttribute;
 
         public String ParentEntity { get; set; }
@@ -30,7 +41,7 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
         /// </summary>
         public Type MappingType { get; set; }
 
-        public EntitySchema(string entityName, IEnumerable<EntityAttribute> attributes, [NotNull] string idAttributeName, Boolean excludeUndeclaredAttributes,
+        public EntitySchema(string entityName, IEnumerable<EntityAttribute> attributes, [NotNull] string idAttributeName, [NotNull] string userIdAttributeName, Boolean excludeUndeclaredAttributes,
              Boolean excludeUndeclaredAssociations, string whereClause, string parentEntity, Type mappingType, bool includeRowstamp = true) {
             if (idAttributeName == null) throw new ArgumentNullException("idAttributeName");
             EntityName = entityName;
@@ -40,6 +51,7 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
                 _attributes.Add(_rowstampAttribute);
             }
             _idAttribute = new Lazy<EntityAttribute>(() => FindIdAttribute(_attributes, idAttributeName));
+            _userIdAttribute = new Lazy<EntityAttribute>(() => FindUserIdAttribute(_attributes, userIdAttributeName, idAttributeName));
             ExcludeUndeclaredAttributes = excludeUndeclaredAttributes;
             ExcludeUndeclaredAssociations = excludeUndeclaredAssociations;
             ParentEntity = parentEntity;
@@ -59,6 +71,11 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
         public EntityAttribute IdAttribute {
             get { return _idAttribute.Value; }
         }
+
+        public EntityAttribute UserIdAttribute {
+            get { return _userIdAttribute.Value; }
+        }
+
 
         public EntityAttribute RowstampAttribute {
             get { return _rowstampAttribute; }

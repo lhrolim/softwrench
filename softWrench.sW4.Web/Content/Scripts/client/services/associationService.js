@@ -227,7 +227,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                         return;
                     }
                     //clear datamap for the association updated -->This is needed due to a IE9 issue
-                    var previousValue = datamap[value.target];
+                    var previousValue = datamap[value.target] == null ? null : datamap[value.target].toString();
                     datamap[value.target] = null;
 
                     if (array.associationData == null) {
@@ -238,8 +238,9 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
                     if (previousValue != null) {
                         for (var j = 0; j < array.associationData.length; j++) {
-                            if (array.associationData[j].value.toUpperCase() == previousValue.toUpperCase()) {
-                                var fullObject = array.associationData[j];
+                            var associationOption = array.associationData[j];
+                            if (associationOption.value.toUpperCase() == previousValue.toUpperCase()) {
+                                var fullObject = associationOption;
                                 $timeout(function () {
                                     log.debug('restoring {0} to previous value {1}. '.format(value.target, previousValue));
                                     //if still present on the new list, setting back the value which was 
@@ -284,7 +285,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
         },
 
-        getEagerAssociations: function (scope) {
+        getEagerAssociations: function (scope,options) {
             var associations = fieldService.getDisplayablesOfTypes(scope.schema.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
             if (associations == undefined || associations.length == 0) {
                 //no need to hit server in that case
@@ -295,14 +296,14 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             scope.associationOptions = instantiateIfUndefined(scope.associationOptions);
             scope.blockedassociations = instantiateIfUndefined(scope.blockedassociations);
             scope.associationSchemas = instantiateIfUndefined(scope.associationSchemas);
-            return this.updateAssociations({ attribute: "#eagerassociations" }, scope);
+            return this.updateAssociations({ attribute: "#eagerassociations" }, scope, options);
         },
 
         // This method is called whenever an association value changes, in order to update all the dependant associations 
         // of this very first association.
         // This would only affect the eager associations, not the lookups, because they would be fetched at the time the user opens it.
         // Ex: An asset could be filtered by the location, so if a user changes the location field, the asset should be refetched.
-        updateAssociations: function (association, scope) {
+        updateAssociations: function (association, scope, options) {
             var triggerFieldName = association.attribute;
             var schema = scope.schema;
             if (triggerFieldName != "#eagerassociations" && $.inArray(triggerFieldName, schema.fieldWhichHaveDeps) == -1) {
@@ -315,11 +316,15 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
             var applicationName = schema.applicationName;
             var fields = scope.datamap;
+
             if (scope.datamap.fields) {
                 fields = scope.datamap.fields;
             }
 
-
+            if (options && options.datamap) {
+                fields = options.datamap;
+            }
+            
             var parameters = {
                 application: applicationName,
                 key: {
@@ -331,7 +336,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 id: fields[schema.idFieldName]
             };
             var fieldsTosubmit = submitService.removeExtraFields(fields, true, scope.schema);
-            var urlToUse = url("/api/generic/Data/UpdateAssociation?" + $.param(parameters));
+            var urlToUse = url("/api/generic/ExtendedData/UpdateAssociation?" + $.param(parameters));
             var jsonString = angular.toJson(fieldsTosubmit);
             var log = $log.getInstance('sw4.associationservice#updateAssociations');
             log.info('going to server for dependent associations of {0}'.format(triggerFieldName));

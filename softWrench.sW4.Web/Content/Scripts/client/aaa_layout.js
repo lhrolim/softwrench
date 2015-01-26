@@ -1,6 +1,9 @@
 ﻿var app = angular.module('sw_layout', ['pasvaz.bindonce', 'angularTreeview', 'ngSanitize', 'textAngular', 'angularFileUpload']);
 
 
+
+
+
 app.filter('linebreak', function () {
     return function (value) {
         if (value != null) {
@@ -11,7 +14,29 @@ app.filter('linebreak', function () {
     };
 });
 
-
+app.directive('swcontenteditable', function () {
+    return {
+        restrict: 'A',
+        require: '?ngModel',
+        link: function (scope, element, attr, ngModel) {
+            var read;
+            if (!ngModel) {
+                return;
+            }
+            ngModel.$render = function () {
+                return element.html(ngModel.$viewValue);
+            };
+            element.bind('blur', function () {
+                if (ngModel.$viewValue !== $.trim(element.html())) {
+                    return scope.$apply(read);
+                }
+            });
+            return read = function () {
+                return ngModel.$setViewValue($.trim(element.html()));
+            };
+        }
+    };
+});
 
 app.directive('onFinishRender', function ($timeout) {
     return {
@@ -184,6 +209,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         $rootScope.environment = config.environment;
         $rootScope.isLocal = config.isLocal;
         $rootScope.i18NRequired = config.i18NRequired;
+        $rootScope.deviceType = DeviceDetect.catagory.toLowerCase();
 
         $scope.mainlogo = config.logo;
         $scope.myprofileenabled = config.myProfileEnabled;

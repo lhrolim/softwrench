@@ -7,7 +7,7 @@ namespace softWrench.sW4.Metadata.Menu {
 
 
         private readonly string _path;
-        private readonly IDictionary<string, string> _params = new Dictionary<string, string>();
+        private readonly IDictionary<string, object> _params = new Dictionary<string, object>();
 
         public ResourceMenuItem(string id, string role, string path, string @params, string tooltip)
             : base(id, null, role, tooltip, null) {
@@ -21,7 +21,7 @@ namespace softWrench.sW4.Metadata.Menu {
             get { return _path; }
         }
 
-        public IDictionary<string, string> Params {
+        public IDictionary<string, object> Params {
             get { return _params; }
         }
     }

@@ -307,7 +307,7 @@ app.factory('wobatchService', function (redirectService, $rootScope, restService
             doSubmit(true, datamap);
         },
 
-        configurePolling: function (schema, datamap, parameters) {
+        configurePolling: function (scope, schema, datamap, parameters) {
             var idxs = [];
             $.each(datamap, function (key, value) {
                 if (value.fields.status.toLowerCase().startsWith("submitting")) {

@@ -169,10 +169,13 @@
     <Compile Include="Data\API\Association\IAssociationPrefetcherRequest.cs" />
     <Compile Include="Data\API\Association\ListOptionsPrefetchRequest.cs" />
     <Compile Include="Data\API\AttachmentRequest.cs" />
+    <Compile Include="Data\API\CheckPointCrudContext.cs" />
     <Compile Include="Data\API\Composition\CompositionFetchRequest.cs" />
     <Compile Include="Data\API\Composition\CompositionFetchResult.cs" />
     <Compile Include="Data\API\BlankApplicationResponse.cs" />
+    <Compile Include="Data\API\OperationDataRequest.cs" />
     <Compile Include="Data\API\ReportRequest.cs" />
+    <Compile Include="Data\API\RouterParametersDTO.cs" />
     <Compile Include="Data\Configuration\ComWhereClauseProvider.cs" />
     <Compile Include="Data\Entities\MaxCommReadFlag.cs" />
     <Compile Include="Data\Entities\Historical\HistTicket.cs" />
@@ -232,10 +235,10 @@
     <Compile Include="Data\Persistence\WS\Ism\Base\ISMConstants.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Base\ISMCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Manchester\ComServiceRequestCrudConnector.cs" />
-    <Compile Include="Data\Persistence\WS\Manchester\ComWorkOrderCrudConnector.cs" />
     <Compile Include="Data\SWDBDatamapBuilder.cs" />
     <Compile Include="Exceptions\MetadataException.cs" />
     <Compile Include="Exceptions\InvalidAttachmentException.cs" />
+    <Compile Include="log4net\Log4NetUtil.cs" />
     <Compile Include="Metadata\Applications\Association\AssociationHelper.cs" />
     <Compile Include="Email\EmailService.cs" />
     <Compile Include="Metadata\Applications\Association\BaseDependableResolver.cs" />
@@ -248,6 +251,8 @@
     <Compile Include="Metadata\Applications\DataSet\Filter\CompositionPreFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\ComToolTransDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\PrefilterInvoker.cs" />
+    <Compile Include="Metadata\Applications\DataSet\WorkorderMaterialsDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\GLComponentsDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\IncidentDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInvbalancesDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInvreserveDataSet.cs" />
@@ -265,6 +270,7 @@
     <Compile Include="Metadata\Entities\Schema\EntityTargetRelationship.cs" />
     <Compile Include="Metadata\Entities\Schema\EntityTargetSchema.cs" />
     <Compile Include="Metadata\Entities\Sliced\SlicedEntityAssociation.cs" />
+    <Compile Include="Metadata\MetadataProviderInternalCache.cs" />
     <Compile Include="Metadata\Parsing\IXMLMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XElementExtensions.cs" />
     <Compile Include="Metadata\Parsing\XMLBaseSchemaConstants.cs" />

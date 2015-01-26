@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using JetBrains.Annotations;
+using Newtonsoft.Json.Linq;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.SimpleInjector.Events;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace softWrench.sW4.Util {
@@ -15,6 +17,48 @@ namespace softWrench.sW4.Util {
         private JObject _cachedCatalogs;
 
         private Boolean _cacheSet =false;
+
+        private Dictionary<string, Dictionary<string, string>> _cachedColorDict;
+        private Dictionary<string, string> _defaultColorDict;
+
+        public StatusColorResolver() {
+            // this should eventually use a config file
+            _defaultColorDict = new Dictionary<string, string>() {
+                {"acc_cat", "blue"},
+                {"appr", "blue"},
+                {"assesses", "blue"}, 
+                {"auth", "blue"},
+                {"authorized", "blue"},
+                {"can", "red"},
+                {"cancelled", "red"},
+                {"close", "green"},
+                {"closed", "green"},
+                {"comp", "green"},
+                {"draft", "white"},
+                {"fail", "red"},
+                {"failpir", "red"},
+                {"histedit", "green"},
+                {"holdinprg", "blue"},
+                {"impl", "green"},
+                {"inprg", "blue"},
+                {"inprog", "yellow"},
+                {"new", "orange"},
+                {"notreq", "red"},
+                {"null", "yellow"},
+                {"pending", "yellow"},
+                {"planned", "blue"},
+                {"queued", "yellow"},
+                {"rejected", "red"},
+                {"resolvconf", "green"},
+                {"resolved", "blue"},
+                {"review", "green"},
+                {"sched", "blue"},
+                {"slahold", "blue"},
+                {"wappr", "orange"},
+                {"wsch", "orange"}
+            };
+        }
+
 
         public JObject FetchCatalogs() {
             if (_cacheSet && !ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsUnitTest) {
@@ -43,6 +87,7 @@ namespace softWrench.sW4.Util {
         public void ClearCache() {
             _cachedCatalogs = null;
             _cacheSet = false;
+            _cachedColorDict = null;
         }
 
 
@@ -50,6 +95,39 @@ namespace softWrench.sW4.Util {
             if (_cacheSet && _cachedCatalogs != null) {
                 ClearCache();
             }
+        }
+
+        public Dictionary<string, string> GetColorsAsDict([NotNull] string applicationId)
+        {
+            if (_cacheSet && !ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsUnitTest && _cachedColorDict == null) {
+                return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : null;
+            }
+
+            _cachedColorDict = new Dictionary<string, Dictionary<string, string>>();
+            JObject catalogs = FetchCatalogs();
+
+            foreach (var currentToken in catalogs) {
+
+                var application = currentToken.Key;
+                var colors = currentToken.Value;
+
+                var colorDict = new Dictionary<string, string>();
+            
+                foreach (var color in colors.Value<JObject>().Properties()) {
+                    var name = color.Name;
+                    var value = color.Value;
+
+                    colorDict.Add(name, value.ToString());
+                }
+
+                _cachedColorDict[application] = colorDict;
+            }
+
+            return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : null;
+        }
+
+        public Dictionary<string, string> GetDefaultColorsAsDict() {
+            return _defaultColorDict;
         }
     }
 }

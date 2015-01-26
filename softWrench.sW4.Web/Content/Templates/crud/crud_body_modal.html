@@ -1,12 +1,13 @@
-<div class="modal fade container" id="crudmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade container" id="crudmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
     <div>
         <div class="modal-content">
             <div class="modal-header">
                 <messagesection></messagesection>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="closeModal()">&times;</button>
+                <button type="button" class="close" aria-hidden="true" ng-click="closeModal()">&times;</button>
             </div>
-            <div class="modal-body" ng-if="schema">
-                <crud-body ismodal="true"
+            <div class="modal-body" ng-if="modalshown">
+                <crud-body cancelfn="cancel()"
+                           ismodal="true"
                            schema="schema"
                            datamap="datamap"
                            association-options="associationOptions"
@@ -16,7 +17,7 @@
                            is-list="isList"
                            is-detail="isDetail"
                            previousdata="previousdata"
-                           previousschema="previousschema"/>
+                           previousschema="previousschema" />
             </div>
         </div>
     </div>

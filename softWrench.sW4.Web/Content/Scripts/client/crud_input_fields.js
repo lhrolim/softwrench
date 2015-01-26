@@ -99,7 +99,8 @@ app.directive('crudInputFields', function (contextService) {
             previousschema: '=',
             outerassociationcode: '=',
             outerassociationdescription: '=',
-            issection: '@'
+            issection: '@',
+            ismodal: '@'
         },
 
         link: function (scope, element, attrs) {
@@ -110,6 +111,13 @@ app.directive('crudInputFields', function (contextService) {
             } else {
                 scope.lookupAssociationsCode = {};
                 scope.lookupAssociationsDescription = {};
+
+                if (scope.ismodal =="true") {
+                    scope.$on('sw.modal.show', function (event, modaldata) {
+                        scope.lookupAssociationsCode = {};
+                        scope.lookupAssociationsDescription = {};
+                    });
+                }
             }
 
 
@@ -118,7 +126,7 @@ app.directive('crudInputFields', function (contextService) {
         controller: function ($scope, $http, $element, $injector, $timeout,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
-            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, cmplookup) {
+            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService, cmplookup) {
             $scope.$name = 'crud_input_fields';
             $scope.lookupObj = {};
             $scope.handlerTitleInputFile = function (cssclassaux) {
@@ -160,6 +168,7 @@ app.directive('crudInputFields', function (contextService) {
             });
             //this will get called when the input form is done rendering
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
+                eventService.onload($scope.schema, $scope.datamap);
                 var bodyElement = $('#' + parentElementId);
                 if (bodyElement.length <= 0) {
                     return;
@@ -180,7 +189,9 @@ app.directive('crudInputFields', function (contextService) {
                         }
                     });
                 });
-                if (parentElementId.equalsAny('crudInputMainCompositionFields', 'crudInputMainFields')) {
+                //both ids refers to the main form, but crudInputMainCompositionFields when there are other tabs, or crudInputMainFields when there are no other tabs
+                //
+                if (parentElementId.equalsAny('crudInputMainCompositionFields', 'crudInputMainFields', 'crudInputNewItemCompositionFields')) {
                     //to avoid registering these global listeners multiple times, as the page main contain sections.
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();
@@ -351,10 +362,36 @@ app.directive('crudInputFields', function (contextService) {
                 cmplookup.displayLookupModal($element);
             };
 
+            $scope.showCustomModal = function (fieldMetadata, schema, datamap) {
+                if (fieldMetadata.rendererParameters['schema'] != undefined) {
+                    var service = fieldMetadata.rendererParameters['onsave'];
+                    var savefn = function(){};
+                    if (service != null) {
+                        var servicepart = service.split('.');
+                        savefn = dispatcherService.loadService(servicepart[0], servicepart[1]);
+                    }
+
+                    var modaldatamap = null;
+
+                    var onloadservice = fieldMetadata.rendererParameters['onload'];
+                    var onloadfn = function (){};
+                    if (onloadservice != null) {
+                        var onloadservicepart = onloadservice.split('.');
+                        onloadfn = dispatcherService.loadService(onloadservicepart[0], onloadservicepart[1]);
+                        modaldatamap = onloadfn(datamap, fieldMetadata.rendererParameters['schema'], fieldMetadata);
+                    }
+                    
+                    modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, function (selecteditem) {
+                        savefn(datamap, fieldMetadata.rendererParameters['schema'], selecteditem, fieldMetadata);
+                    },null, datamap, schema);
+
+                    return;
+                };
+
             $scope.lookupCodeChange = function (fieldMetadata) {
-                var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                 var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
                 if (allowFreeText == "true") {
+                    var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                     $scope.datamap[fieldMetadata.target] = code;
                 } 
             };
@@ -472,16 +509,6 @@ app.directive('crudInputFields', function (contextService) {
                         }
                     }
                 }
-            };
-
-            $scope.getFormattedValue = function (value, field, datamap) {
-                var formattedValue = formatService.format(value, field, datamap);
-                if (formattedValue == "-666") {
-                    //this magic number should never be displayed! 
-                    //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
-                    return null;
-                }
-                return formattedValue;
             };
 
             $scope.enabletoopendetails = function (fieldMetadata) {
@@ -678,7 +705,8 @@ app.directive('crudInputFields', function (contextService) {
                 $injector.invoke(BaseController, this, {
                     $scope: $scope,
                     i18NService: i18NService,
-                    fieldService: fieldService
+                    fieldService: fieldService,
+                    formatService: formatService
                 });
             }
             init();

@@ -7,8 +7,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <template path="@attachments.xml"/>
     <template path="@materials.xml"/>
     <template path="@labtrans.xml"/>
+    <template path="@tooltrans.xml"/>
     <template path="@woactivity.xml"/>
     <template path="@asset.xml"/>
+    <template path="@glcomponents.xml"/>
   </templates>
 
   <entities>
@@ -57,6 +59,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="wopriority" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WO PRIORITY" quoteLiteral="true" />
         </relationship>
+        <relationship to ="glcomponents">
+          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+        </relationship>
       </relationships>
     </entity>
   </entities>
@@ -69,6 +74,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </properties>
       <schemas>
         <list title="Work Order Grid" platform="web">
+          
           <field attribute="wonum" label="WO No" >
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
@@ -89,6 +95,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="wonum desc"/>
+            <!--<property key="list.click.mode" value="@status == 'CLOSE' ? 'output' : 'input'"/>-->
           </properties>
         </list>
 
@@ -141,12 +149,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             </optionfield>
             <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
               <renderer type="lookup"/>
-              <event type="afterchange" service="genericTicetService" method="afterchangeowner"/>
+              <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
             </association>
             <!-- Added the Owner Group field-->
             <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
               <renderer type="lookup"/>
-              <event type="afterchange" service="genericTicetService" method="afterchangeownergroup"/>
+              <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
             </association>
             <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
             <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
@@ -163,13 +171,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <renderer type="autocompleteclient"/>
             </optionfield>
             <association label="Location:" target="location" labelfield="location_.description" >
-              <event type="beforechange" service="genericTicetService" method="beforeChangeLocation"/>
+              <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
               <!--renderer type="lookup"/-->
             </association>
             <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
               <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
               <dataprovider prefilterfunction="FilterAssets"/>
-              <event type="afterchange" service="genericTicetService" method="afterChangeAsset"/>
+              <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
             </association>
             <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
               <renderer type="lookup"/>
@@ -183,38 +191,36 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <dataprovider prefilterfunction="FilterProblemCodes"/>
             </association>
             <field label="Job Plan:" attribute="jpnum" readonly="true" />
-            <association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
-              <renderer type="lookup"/>
+            <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >
+              <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;" />
             </association>
 
 
             <!-- Adding target start finish date-->
-            <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
-            <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
-            <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
-            <field attribute="actualfinish" hidden="true" attributeToServer="#notusedattribute"/>
+            <field attribute="targstartdate" hidden="true"/>
+            <field attribute="targcompdate" hidden="true"/>
+            <field attribute="actstart" hidden="true"/>
+            <field attribute="actfinish" hidden="true"/>
 
-            <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
-                           parameters="joinattribute=targetstart;">
+            <section id="targstartdate" resourcepath="/Content/Templates/samelinepickers.html"
+                           parameters="joinattribute=targstartdate;">
               <header label="Target Start Date:" displacement="sameline"/>
             </section>
 
-            <section id="targetFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                           parameters="joinattribute=targetfinish;">
+            <section id="targcompdate" resourcepath="/Content/Templates/samelinepickers.html"
+                           parameters="joinattribute=targcompdate;">
               <header label="Target Finish Date:" displacement="sameline"/>
             </section>
 
-            <section id="actualStart" resourcepath="/Content/Templates/samelinepickers.html"
-                           parameters="joinattribute=actualstart;">
+            <section id="actstart" resourcepath="/Content/Templates/samelinepickers.html"
+                           parameters="joinattribute=actstart;">
               <header label="Actual Start Date:" displacement="sameline"/>
             </section>
 
-            <section id="actualFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                           parameters="joinattribute=actualfinish;">
+            <section id="actfinish" resourcepath="/Content/Templates/samelinepickers.html"
+                           parameters="joinattribute=actfinish;">
               <header label="Actual Finish Date:" displacement="sameline"/>
             </section>
-
-
 
             <field attribute="description" label="Summary:"/>
             <field label="Details:" attribute="longdescription_.ldtext" >
@@ -258,10 +264,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <composition relationship="labtrans" label="Labor">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
+            <composition relationship="tooltrans" label="Tool">
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+            </composition>
             <composition relationship="attachment" label="Attachments" >
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
           </section>
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <event type="beforesubmit.onvalidation" service="workorderservice" method="defaultvalidation" />
         </schema>
 

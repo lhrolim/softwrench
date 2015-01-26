@@ -109,6 +109,25 @@ function isDesktop() {
     return DeviceDetect.catagory == 'Desktop';
 };
 
+function safeCSSselector(name) {
+
+    //if column has an attribute property, else return an empty string
+    if (name) {
+        //make sure name is all lower case
+        var newName = name.toLowerCase();
+
+        //replace invaild characters with underscores
+
+        //TODO: make more robust, add additional invalid characters
+        newName = newName.replace('.', '_');
+        newName = newName.replace('#', '_');
+
+        return newName;
+    } else {
+        return "";
+    }
+}
+
 var spin;
 
 function instantiateIfUndefined(obj, nullcheck) {
@@ -118,12 +137,6 @@ function instantiateIfUndefined(obj, nullcheck) {
     }
     return obj;
 }
-
-
-
-
-
-
 
 function FillRelationship(obj, property, valueToSet) {
     property = property.replace(/_/g, '_\.');
@@ -141,7 +154,6 @@ function RemoveSpecialChars(id) {
     //remove all occurences of special chars (except _) (to remove # mainly)
     return id.replace(/[^\w\s]/gi, '');
 }
-
 
 function JsonProperty(obj, property, valueToSet, forceCreation) {
 
@@ -208,6 +220,13 @@ var nullOrEmpty = function (s) {
 var isArrayNullOrEmpty = function (arr) {
     return nullOrUndef(arr) || arr.length == 0;
 };
+
+var safePush = function(baseObject, propertyName, item) {
+    if (!baseObject[propertyName]) {
+        baseObject[propertyName] = [];
+    }
+    baseObject[propertyName].push(item);
+}
 
 String.format = function () {
     var s = arguments[0];
@@ -440,21 +459,7 @@ function addSchemaDataToJson(json, schema, nextSchemaObj) {
     return json;
 }
 
-function addSchemaDataToParameters(parameters, schema, nextSchema) {
-    parameters["currentSchemaKey"] = schema.schemaId + "." + schema.mode + "." + platform();
-    if (nextSchema != null && nextSchema.schemaId != null) {
-        parameters["nextSchemaKey"] = nextSchema.schemaId + ".";
-        if (nextSchema.mode != null) {
-            parameters["nextSchemaKey"] += nextSchema.mode;
-        }
-        parameters["nextSchemaKey"] += "." + platform();
-    }
-    if (schema.properties != null && schema.properties['nextschema.schemaid'] != null && !parameters["nextSchemaKey"]) {
-        parameters["nextSchemaKey"] = schema.properties['nextschema.schemaid'];
-    }
 
-    return parameters;
-}
 
 function removeEncoding(crudUrl) {
     //this first one indicates an []

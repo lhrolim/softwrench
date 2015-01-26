@@ -25,7 +25,7 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                 if (displayable.requiredExpression != null) {
                     isRequired = expressionService.evaluate(displayable.requiredExpression, datamap);
                 }
-                if (isRequired == false && nullOrEmpty(datamap[displayable.attribute])) {
+                if (isRequired && nullOrEmpty(datamap[displayable.attribute])) {
                     validationArray.push(label);
                 }
                 if (displayable.displayables != undefined) {

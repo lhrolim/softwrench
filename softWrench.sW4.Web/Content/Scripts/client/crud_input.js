@@ -19,7 +19,8 @@
             title: '=',
             elementid: '@',
             isMainTab: '@',
-            tabid: '@'
+            tabid: '@',
+            ismodal: '@'
         },
 
         link: function (scope, element, attrs) {
@@ -28,7 +29,7 @@
                   "<crud-input elementid='crudInputMain' schema='schema' extraparameters='extraparameters'" +
                   "datamap='datamap' association-options='associationOptions' blockedassociations='blockedassociations'" +
                   "association-schemas='associationSchemas'cancelfn='cancel(data,schema)' displayables='displayables'" +
-                  "savefn='save(selecteditem, parameters)' previousschema='previousschema' previousdata='previousdata' />"
+                  "savefn='save(selecteditem, parameters)' previousschema='previousschema' previousdata='previousdata' ismodal='{{ismodal}}'/>"
                );
                 $compile(element.contents())(scope);
                 scope.loaded = true;
@@ -75,11 +76,12 @@ app.directive('crudInput', function (contextService, associationService) {
             previousdata: '=',
             title: '=',
             elementid: '@',
-            composition: '@'
+            composition: '@',
+            ismodal: '@'
         },
 
 
-        controller: function ($scope, $http, $injector, $element, printService, compositionService, commandService, fieldService, i18NService) {
+        controller: function ($scope, $http, $injector, $element, alertService, printService, compositionService, commandService, fieldService, i18NService, formatService) {
 
             $scope.$name = 'crudinput';
 
@@ -110,7 +112,8 @@ app.directive('crudInput', function (contextService, associationService) {
                 $scope: $scope,
                 i18NService: i18NService,
                 fieldService: fieldService,
-                commandService: commandService
+                commandService: commandService,
+                formatService: formatService
             });
 
 

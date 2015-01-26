@@ -12,7 +12,7 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
     public abstract class BaseMaximoCrudConnector : IMaximoCrudConnector {
 
-        private static readonly ILog Log = log4net.LogManager.GetLogger(typeof(BaseMaximoCrudConnector));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(BaseMaximoCrudConnector));
 
         public virtual DynamicObject CreateProxy(EntityMetadata metadata) {
             return DynamicProxyUtil.LookupProxy(metadata);
@@ -36,8 +36,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 }
                 try {
                     w.SetValue(integrationObject, attribute.Key.ToUpper(), attribute.Value);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     var entityName = maximoExecutionContext.Metadata.Name;
                     throw new InvalidOperationException(String.Format("Error setting property {0} of entity {1}. {2}",
                                                                       attribute.Key.ToUpper(), entityName, e.Message), e);
@@ -64,17 +63,22 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         public virtual void DoCreate(MaximoOperationExecutionContext maximoTemplateData) {
             var resultData = maximoTemplateData.InvokeProxy();
             var idProperty = maximoTemplateData.Metadata.Schema.IdAttribute.Name;
+            var userIdProperty = maximoTemplateData.Metadata.Schema.UserIdAttribute.Name;
             var resultOb = (Array)resultData;
             var firstOb = resultOb.GetValue(0);
             var id = WsUtil.GetRealValue(firstOb, idProperty);
-
-            if (id == null) {
-                Log.WarnFormat("Identifier {0} not received after creating object in Maximo.", idProperty);
-                maximoTemplateData.ResultObject = new MaximoResult(null, resultData);
+            var userId = WsUtil.GetRealValue(firstOb, userIdProperty);
+            if (!idProperty.Equals(userIdProperty) && userId == null) {
+                Log.WarnFormat("User Identifier {0} not received after creating object in Maximo.", idProperty);
+                maximoTemplateData.ResultObject = new TargetResult(null, null, resultData);
                 return;
             }
-
-            maximoTemplateData.ResultObject = new MaximoResult(id.ToString(), resultData);
+            if (id == null && userId == null) {
+                Log.WarnFormat("Identifier {0} not received after creating object in Maximo.", idProperty);
+                maximoTemplateData.ResultObject = new TargetResult(null, null, resultData);
+                return;
+            }
+            maximoTemplateData.ResultObject = new TargetResult(id==null ? null : id.ToString(), userId.ToString(), resultData);
         }
         public void AfterCreation(MaximoOperationExecutionContext maximoExecutionContext) {
             //NOOP
@@ -87,7 +91,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
         public virtual void DoFindById(MaximoOperationExecutionContext maximoTemplateData) {
             var resultData = maximoTemplateData.FindById(maximoTemplateData.OperationData.Id);
-            maximoTemplateData.ResultObject = new MaximoResult(maximoTemplateData.OperationData.Id, resultData);
+            maximoTemplateData.ResultObject = new TargetResult(maximoTemplateData.OperationData.Id, maximoTemplateData.OperationData.UserId, resultData);
         }
         public void AfterFindById(MaximoOperationExecutionContext maximoExecutionContext) {
             //NOOP
@@ -100,7 +104,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
         public virtual void DoUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var resultData = maximoTemplateData.InvokeProxy();
-            maximoTemplateData.ResultObject = new MaximoResult(maximoTemplateData.OperationData.Id, resultData);
+            maximoTemplateData.ResultObject = new TargetResult(maximoTemplateData.OperationData.Id, maximoTemplateData.OperationData.UserId, resultData);
         }
         public void AfterUpdate(MaximoOperationExecutionContext maximoExecutionContext) {
             //NOOP
@@ -113,13 +117,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
         public void DoDelete(MaximoOperationExecutionContext maximoTemplateData) {
             var resultData = maximoTemplateData.InvokeProxy();
-            maximoTemplateData.ResultObject = new MaximoResult(maximoTemplateData.OperationData.Id, resultData);
+            maximoTemplateData.ResultObject = new TargetResult(maximoTemplateData.OperationData.Id, maximoTemplateData.OperationData.UserId, resultData);
         }
         public void AfterDeletion(MaximoOperationExecutionContext maximoTemplateData) {
             //NOOP
         }
         #endregion
-        
+
         private void SetUppercase(object integrationObject, CrudOperationData operationData, String attribute) {
             var value = operationData.GetAttribute(attribute);
             if (value != null) {

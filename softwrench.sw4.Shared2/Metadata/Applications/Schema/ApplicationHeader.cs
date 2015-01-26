@@ -12,7 +12,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
         private const string WrongRenderer = "displacement {0} not found. Possible options are ontop,sameline";
 
         public string Label { get; set; }
-        public IDictionary<string, string> Parameters { get; set; }
+        public IDictionary<string, object> Parameters { get; set; }
         public string Displacement { get { return DisplacementEnum.ToString().ToLower(); } }
         public DisplacementType DisplacementEnum { get; set; }
 

@@ -12,6 +12,8 @@ app.directive('columnWidths', function ($log) {
 
                 //convert string column data to object column data
                 var json = angular.fromJson(value);
+                log.debug('Raw Data', json);
+
                 var widths = {}
 
                 //build object for columns and responsive widths
@@ -26,11 +28,7 @@ app.directive('columnWidths', function ($log) {
                     //new row object
                     var row = {};
 
-                    //log.debug('css', id, json[id], json[id].rendererParameters);
-
                     //if the column has rendererParameters, else default to 0 width
-                    //log.debug(json[id]);
-
                     if (!json[id].isHidden) {
                         if (json[id].rendererParameters) {
                             width = removePercent(json[id].rendererParameters.width);
@@ -57,11 +55,17 @@ app.directive('columnWidths', function ($log) {
                             row.widthLG = 0;
                         }
 
+                        if (json[id].attribute) {
+                            row.class = safeCSSselector(json[id].attribute);
+                        } else {
+                            row.class = '';
+                        }
+
                         widths[column] = row;
                     }
                 }
 
-                log.debug('Widths Found', widths);
+                //log.debug('Widths Found', widths);
 
                 //balance remaining width between missing column widths
                 balanceColumns(widths, 'width');
@@ -70,12 +74,16 @@ app.directive('columnWidths', function ($log) {
                 balanceColumns(widths, 'widthMD');
                 balanceColumns(widths, 'widthLG');
 
+                log.debug('Widths Found', widths);
+
                 //build css rules
-                var css = getViewRules(widths, 'width', null, attr);
-                css = css + getViewRules(widths, 'widthXS', '1px', attr);
-                css = css + getViewRules(widths, 'widthSM', '480px', attr);
-                css = css + getViewRules(widths, 'widthMD', '768px', attr);
-                css = css + getViewRules(widths, 'widthLG', '992px', attr);
+                var css = '';
+                css += getViewRules(widths, 'width', null, 'screen', attr);
+                css += getViewRules(widths, 'widthXS', '1px', 'screen', attr);
+                css += getViewRules(widths, 'widthSM', '480px', 'screen', attr);
+                css += getViewRules(widths, 'widthMD', '768px', 'screen', attr);
+                css += getViewRules(widths, 'widthLG', '992px', 'screen', attr);
+                css += getViewRules(widths, 'widthLG', '1px', 'print', attr);
 
                 if (css) {
                     //log.debug(css);
@@ -118,8 +126,6 @@ function balanceColumns(widths, param) {
             balanceWidth = 100 / totalColumns;
         }
 
-        //console.log(param, 'totalWidth', totalWidth, 'remainingWidth', remainingWidth, 'totalColumns', totalColumns, 'without Width', totalColumns - withWidth, 'balanceWidth', balanceWidth);
-
         //update the columns without widths
         for (column in widths) {
             if (remainingWidth > 0) {
@@ -134,8 +140,35 @@ function balanceColumns(widths, param) {
     }
 }
 
-function getCSSrule(column, columnWidth, attr) {
-    //console.log(attr.gridtype);
+function getViewRules(widths, param, viewWidth, media, attr) {
+    var newCSS = '';
+
+    //look for the viewWidth in each column
+    for (column in widths) {
+        if (widths[column][param]) {
+            columnWidth = widths[column][param];
+
+            //get the css rule & add it other rules
+            if (columnWidth) {
+                var temp = getCSSrule(column, widths[column]['class'], columnWidth, attr);
+                if (temp) {
+                    newCSS = newCSS + temp;
+                }
+            }
+        }
+    }
+
+    //if a viewWidth is supplied, create a media query
+    if (viewWidth) {
+        if (newCSS) {
+            newCSS = '@media ' + media + ' and (min-width: ' + viewWidth + ') {' + newCSS + '} ';
+        }
+    }
+
+    return newCSS;
+}
+
+function getCSSrule(columnIndex, columnClass, columnWidth, attr) {
     var properties = '';
 
     if (columnWidth) {
@@ -147,43 +180,21 @@ function getCSSrule(column, columnWidth, attr) {
         }
     }
 
-    return buildCSSrule(attr.gridtype, attr.applicationname, column, properties);
+    return buildCSSrule(columnIndex, columnClass, properties, attr);
 }
 
-function buildCSSrule(gridtype, applicationname, column, properties) {
-    return buildCSSselector(gridtype, applicationname, column, 'th') + ',' + buildCSSselector(gridtype, applicationname, column, 'td') + '{' + properties + '}'
+function buildCSSrule(columnIndex, columnClass, properties, attr) {
+    return buildCSSselector(columnIndex, columnClass, 'th', attr) + ',' + buildCSSselector(columnIndex, columnClass, 'td', attr) + '{' + properties + '}'
 }
 
-function buildCSSselector(gridtype, applicationname, column, element) {
-    return '#' + gridtype + '[data-application="' + applicationname + '"] ' + element + ':nth-child(' + column + ')';
-}
+function buildCSSselector(columnIndex, columnClass, element, attr) {
 
-function getViewRules(widths, param, viewWidth, attr) {
-    var newCSS = '';
-
-    //look for the viewWidth in each column
-    for (column in widths) {
-        if (widths[column][param]) {
-            columnWidth = widths[column][param];
-
-            //get the css rule & add it other rules
-            if (columnWidth) {
-                var temp = getCSSrule(column, columnWidth, attr);
-                if (temp) {
-                    newCSS = newCSS + temp;
-                }
-            }
-        }
+    //if css class found, build selector using class, else use nth-child as a fallback
+    if (columnClass) {
+        return '#' + attr.gridtype + '[data-application="' + attr.applicationname + '"] ' + element + '.' + columnClass;
+    } else {
+        return '#' + attr.gridtype + '[data-application="' + attr.applicationname + '"] ' + element + ':nth-child(' + columnIndex + ')';
     }
-
-    //if a viewWidth is supplied, create a media query
-    if (viewWidth) {
-        if (newCSS) {
-            newCSS = '@media all and (min-width: ' + viewWidth + ') {' + newCSS + '} ';
-        }
-    }
-
-    return newCSS;
 }
 
 function removePercent(value) {

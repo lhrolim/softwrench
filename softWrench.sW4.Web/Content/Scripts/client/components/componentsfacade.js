@@ -40,7 +40,7 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
 
         digestAndrefresh: function (displayable, scope) {
             var rendererType = displayable.rendererType;
-            if (rendererType != 'autocompleteclient' && rendererType != 'autocompleteserver' && rendererType != 'combodropdown' && rendererType != 'lookup') {
+            if (rendererType != 'autocompleteclient' && rendererType != 'autocompleteserver' && rendererType != 'combodropdown' && rendererType != 'lookup' && rendererType != 'modal') {
                 return;
             }
             try {
@@ -53,6 +53,12 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
                 $timeout(
                     function () {
                         fn.refresh(displayable, scope, true);
+                        try {
+                            scope.$digest()
+                        } catch (e) {
+                            $log.getInstance('componentfacade#digestandrefresh').warn('validating this is actually being thrown. if u see this, remove this log' + e);
+                            //nothing
+                        }
                     }, 0, false);
             }
         },
@@ -74,7 +80,7 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
                 cmpAutocompleteServer.refreshFromAttribute(displayable, scope);
             } else if (rendererType == 'combodropdown') {
                 cmpComboDropdown.refreshFromAttribute(attribute);
-            } else if (rendererType == 'lookup') {
+            } else if (rendererType == 'lookup' || rendererType == 'modal') {
                 cmplookup.refreshFromAttribute(displayable, scope);
             }
         },

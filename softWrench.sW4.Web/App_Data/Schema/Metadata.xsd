@@ -91,6 +91,14 @@
     </sequence>
     <attribute name="name" type="string" use="required"></attribute>
     <attribute name="idAttribute" type="string" use="required"></attribute>
+    <attribute name="useridAttribute" type="string" use="optional">
+      <annotation>
+        <documentation>
+          this id is the one which the user uses to refer to the entity, therefore it would be seen on the screens, as opposite to the idattribute which stands only for the database pk
+        </documentation>
+      </annotation>
+
+    </attribute>
     <attribute name="whereclause" type="string"></attribute>
     <attribute name="parententity" type="string"></attribute>
   </complexType>
@@ -528,6 +536,14 @@
           If this attribute is present the list will be
           fetched from this value instead of predefined on the
           metadata
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="extraparameter" type="string" use="optional">
+      <annotation>
+        <documentation>
+          Use this attribute only if providerattribute is used.
+          This will provide addition input parameter if needed.
         </documentation>
       </annotation>
     </attribute>

@@ -67,8 +67,8 @@ app.directive('crudBody', function (contextService) {
             searchOperator: '=',
             searchSort: '=',
             ismodal: '@',
-            checked: '='
-
+            checked: '=',
+            timestamp: '=',
         },
 
         link: function (scope, element, attrs) {
@@ -81,45 +81,15 @@ app.directive('crudBody', function (contextService) {
             fieldService, commandService, i18NService,
             submitService, redirectService,
             associationService, contextService, alertService,
-            validationService, schemaService, $timeout, eventService) {
+            validationService, schemaService, $timeout, eventService, $log,checkpointService) {
 
 
-            $scope.getFormattedValue = function (value, column, datamap) {
-                var formattedValue = formatService.format(value, column, datamap);
-                if (formattedValue == "-666") {
-                    //this magic number should never be displayed! 
-                    //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
-                    return null;
-                }
-                return formattedValue;
-            };
 
-            $scope.setActiveTab = function (tabId) {
-                contextService.setActiveTab(tabId);
-            };
-            $scope.hasTabs = function (schema) {
-                return tabsService.hasTabs(schema);
-            };
-            $scope.isEditDetail = function (datamap, schema) {
-                return datamap.fields[schema.idFieldName] != null;
-            };
-            $scope.request = function (datamap, schema) {
-                return datamap.fields[schema.idFieldName];
-            };
+            // Listeners region
 
-
-            $scope.isCommand = function (schema) {
-                if ($scope.schema.properties['command.select'] == "true") {
-                    return true;
-                }
-            };
-            $scope.isNotHapagTest = function () {
-                if ($rootScope.clientName != 'hapag')
-                    return true;
-            };
-            $scope.tabsDisplayables = function (schema) {
-                return tabsService.tabsDisplayables(schema);
-            };
+            $scope.$on("sw_submitdata", function (event, parameters) {
+                $scope.save(parameters);
+            });
 
             $scope.$on('sw_successmessagetimeout', function (event, data) {
                 if (!$rootScope.showSuccessMessage) {
@@ -157,6 +127,40 @@ app.directive('crudBody', function (contextService) {
                 }
             });
 
+            // Listeners
+
+            $scope.setActiveTab = function (tabId) {
+                contextService.setActiveTab(tabId);
+            };
+            $scope.hasTabs = function (schema) {
+                return tabsService.hasTabs(schema);
+            };
+            $scope.isEditDetail = function (datamap, schema) {
+                return datamap.fields[schema.idFieldName] != null;
+            };
+            $scope.request = function (datamap, schema) {
+                return datamap.fields[schema.idFieldName];
+            };
+
+            $scope.toConfirmBack = function (data, schema) {
+                $scope.$emit('sw_canceldetail', data, schema, "Are you sure you want to go back?");
+            };
+
+            $scope.isCommand = function (schema) {
+                if ($scope.schema.properties['command.select'] == "true") {
+                    return true;
+                }
+            };
+            $scope.isNotHapagTest = function () {
+                if ($rootScope.clientName != 'hapag')
+                    return true;
+            };
+            $scope.tabsDisplayables = function (schema) {
+                return tabsService.tabsDisplayables(schema);
+            };
+
+
+
             function defaultSuccessFunction(data) {
                 $scope.$parent.multipleSchema = false;
                 $scope.$parent.schemas = null;
@@ -169,6 +173,7 @@ app.directive('crudBody', function (contextService) {
                         $scope.$parent.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
                     }
                 }
+
             }
 
             $scope.disableNavigationButtons = function (schema) {
@@ -200,42 +205,7 @@ app.directive('crudBody', function (contextService) {
             $scope.getTabIcon = function (tab) {
                 return tab.schema.schemas.list.properties['icon.composition.tab'];
             };
-            $scope.renderListView = function (parameters) {
-                /// <summary>
-                /// 
-                /// </summary>
-                /// <param name="parameters">
-                ///  application --> overrides the default application which would be the same as current. Useful for cancel clicks that should span different applications (on F5)
-                /// </param>
-                var applicationToGo = $scope.$parent.applicationname;
-                if (parameters && parameters.application) {
-                    applicationToGo = parameters.application;
-                }
-                var schemaToGo = 'list';
-                if (parameters && parameters.schema) {
-                    schemaToGo = parameters.schema;
-                }
 
-                $scope.$parent.multipleSchema = false;
-                $scope.$parent.schemas = null;
-                if ($scope.schema != null && $scope.schema.stereotype.isEqual('list', true)) {
-                    //if we have a list schema already declared, keep it
-                    schemaToGo = $scope.schema.schemaId;
-                }
-                $scope.$parent.renderView(applicationToGo, schemaToGo, 'none', $scope.title, parameters);
-            };
-            $scope.toConfirmCancel = function (data, schema) {
-
-                if (validationService.getDirty()) {
-                    alertService.confirmCancel(null, null, function () {
-                        $scope.toListSchema(data, schema);
-                        $scope.$digest();
-                    }, "Are you sure you want to cancel ?", function () { return; });
-                }
-                else {
-                    $scope.toListSchema(data, schema);
-                }
-            };
             $scope.crawl = function (direction) {
                 var value = contextService.fetchFromContext("crud_context", true);
                 var id = direction == 1 ? value.detail_previous : value.detail_next;
@@ -252,47 +222,12 @@ app.directive('crudBody', function (contextService) {
                 $scope.$emit("sw_renderview", applicationname, schemaid, mode, title, { id: id, popupmode: popupmode });
 
             };
-            $scope.toListSchema = function (data, schema) {
-                /*if (schema instanceof Array) {
-                    $scope.$parent.multipleSchemaHandling($scope.$parent.resultObject);
-                } else {*/
-                $scope.$parent.multipleSchema = false;
-                $scope.$parent.schemas = null;
-                //                $('#crudmodal').modal('hide');
-                $scope.showingModal = false;
-                if (GetPopUpMode() == 'browser') {
-                    open(location, '_self').close();
-                }
-                var parameters = {};
-                if (schema != null && data != null) {
-                    $scope.schema = schema;
-                    $scope.datamap = data;
-                } else {
-                    //if they are both null, it means that the previous data does not exist (F5 on browser). 
-                    //Let´s keep them untouched until the new one comes from server, otherwise after the $http call there will be errors on the $digest evalution
-                    var cancelSchema = $scope.schema.properties['detail.cancel.click'];
-                    if (cancelSchema) {
-                        //if this schema registers another application/schema/mode entry for the cancel click, let´s use it
-                        var result = schemaService.parseAppAndSchema(cancelSchema);
-                        parameters.application = result.app;
-                        parameters.schema = result.schemaId;
-                        parameters.mode = result.mode;
-                    }
 
-                }
-
-                // at this point, usually schema should be a list schema, on cancel call for instance, where we pass the previous schema. same goes for the datamap
-                // this first if is more of an unexpected case
-                if ($scope.schema == null || $scope.datamap == null || $scope.schema.stereotype == 'Detail') {
-                    $scope.renderListView(parameters);
-                } else {
-                    if (schema) { //SM - SWWEB-619 temp fix, at times (before everything is loaded?), this is run without a schema causing an exception, resulting in a UI glich
-                        $scope.$emit('sw_titlechanged', schema.title);
-                    }
-                    $scope.$parent.toList(null);
-                }
-                //}
-            };
+            $scope.disableNavigationButton = function (direction) {
+                var value = contextService.fetchFromContext("crud_context", true);
+                return direction == 1 ? value.detail_previous : value.detail_next;
+            }
+       
 
             $scope.delete = function () {
 
@@ -314,18 +249,26 @@ app.directive('crudBody', function (contextService) {
                     .success(function (data) {
                         defaultSuccessFunction(data);
                     });
-
             };
 
-            $scope.save = function (selecteditem, parameters) {
+            $scope.cancel = function(data, schema) {
+                $scope.cancelfn({ data: data, schema: schema });
+            }
+
+            
+
+            $scope.save = function (parameters) {
+                var log = $log.getInstance('crudbody#save');
+                parameters = instantiateIfUndefined(parameters);
+
                 if ($rootScope.showingModal && $scope.$parent.$parent.$name == "crudbodymodal") {
                     //workaround to invoke the original method that was passed to the modal, instead of the default save.
                     //TODO: use angular's & support
-                    $scope.$parent.$parent.originalsavefn(selecteditem);
+                    $scope.$parent.$parent.originalsavefn($scope.datamap.fields);
                     return;
                 }
-
-                //selectedItem would be passed in the case of a composition with autocommit=true. 
+                var selecteditem = parameters.selecteditem;
+                //selectedItem would be passed in the case of a composition with autocommit=true, in the case the target would accept only the child instance... not yet supported. 
                 //Otherwise, fetching from the $scope.datamap
                 var fromDatamap = selecteditem == null;
                 var itemToSave = fromDatamap ? $scope.datamap : selecteditem;
@@ -334,7 +277,7 @@ app.directive('crudBody', function (contextService) {
                 //need an angular.copy to prevent beforesubmit transformation events from modifying the original datamap.
                 //this preserves the datamap (and therefore the data presented to the user) in case of a submission failure
                 var transformedFields = angular.copy(fields);
-                
+
                 var eventParameters = {};
                 eventParameters.continue = function () {
                     $scope.validateSubmission(selecteditem, parameters, transformedFields);
@@ -342,6 +285,8 @@ app.directive('crudBody', function (contextService) {
 
                 var eventResult = eventService.beforesubmit_prevalidation($scope.schema, transformedFields, eventParameters);
                 if (eventResult == false) {
+                    //this means that the custom service should call the continue method
+                    log.debug('waiting on custom prevalidation to invoke the continue function');
                     return;
                 }
 
@@ -349,6 +294,7 @@ app.directive('crudBody', function (contextService) {
             };
 
             $scope.validateSubmission = function (selecteditem, parameters, transformedFields) {
+                var log = $log.getInstance('crudbody#validateSubmission');
                 //hook for updating doing custom logic before sending the data to the server
                 $rootScope.$broadcast("sw_beforeSave", transformedFields);
 
@@ -360,13 +306,16 @@ app.directive('crudBody', function (contextService) {
                     }
                 }
 
-                var eventParameters = {};
-                eventParameters.continue = function () {
-                    $scope.submitToServer(selecteditem, parameters, transformedFields);
-                };
+                var eventParameters = {
+                    'continue': function () {
+                        $scope.submitToServer(selecteditem, parameters, transformedFields);
+                    }
+                }
 
                 var eventResult = eventService.beforesubmit_postvalidation($scope.schema, transformedFields, eventParameters);
                 if (eventResult == false) {
+                    //this means that the custom postvalidator should call the continue method
+                    log.debug('waiting on custom postvalidator to invoke the continue function');
                     return;
                 }
 
@@ -397,13 +346,7 @@ app.directive('crudBody', function (contextService) {
 
                 var jsonString = angular.toJson(transformedFields);
 
-                parameters = {};
-                if (sessionStorage.mockmaximo == "true") {
-                    //this will cause the maximo layer to be mocked, allowing testing of workflows without actually calling the backend
-                    parameters.mockmaximo = true;
-                }
-                parameters = addSchemaDataToParameters(parameters, $scope.schema, nextSchemaObj);
-                parameters.platform = platform();
+                var submissionParameters = submitService.createSubmissionParameters($scope.schema,nextSchemaObj,id);
 
                 $rootScope.savingMain = !isComposition;
 
@@ -411,17 +354,18 @@ app.directive('crudBody', function (contextService) {
                     var formToSubmitId = submitService.getFormToSubmitIfHasAttachement($scope.schema.displayables, transformedFields);
                     if (formToSubmitId != null) {
                         var form = $(formToSubmitId);
-                        submitService.submitForm(form, parameters, jsonString, applicationName);
+                        submitService.submitForm(form, submissionParameters, jsonString, applicationName);
                         return;
                     }
                 }
 
-                var saveParams = $.param(parameters);
-                var urlToUse = url("/api/data/" + applicationName + "/" + id + "?" + saveParams);
+                var urlToUse = url("/api/data/" + applicationName + "/?" + $.param(submissionParameters));
                 var command = id == null ? $http.post : $http.put;
 
                 command(urlToUse, jsonString)
                     .success(function (data) {
+                        //datamap should always be updated
+                        $scope.datamap = data.resultObject;
                         if (successCbk == null || applyDefaultSuccess) {
                             defaultSuccessFunction(data);
                         }
@@ -442,7 +386,8 @@ app.directive('crudBody', function (contextService) {
                 $scope: $scope,
                 i18NService: i18NService,
                 fieldService: fieldService,
-                commandService: commandService
+                commandService: commandService,
+                formatService: formatService
             });
 
 

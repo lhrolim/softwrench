@@ -19,6 +19,15 @@
         /// </summary>
         public const string ListSelectionStyle = "list.selectionstyle";
 
+        /// <summary>
+        /// property to specify what´s the next schema that should be routed from the current schema
+        /// </summary>
+        public const string RoutingNextSchemaId = "nextschema.schemaid";
+
+        /// <summary>
+        /// property to specify what´s the next schema that should be routed from the current schema
+        /// </summary>
+        public const string RoutingNextApplication = "routing.nextapplication";
 
         /// <summary>
         ///
@@ -38,12 +47,12 @@
         /// <summary>
         /// Use this property to specify a custom controller/action to redirect after the save has been performed.Value should be on the format serviceName.methodName
         /// </summary>
-        public const string OnCrudSaveEventAction = "oncrudsaveevent.action";
+        public const string AfterSubmitAction = "aftersubmit.redirectaction";
 
         /// <summary>
         /// Use this property to specify a custom javascript validation to be called whenever the form is about to be submitted
         /// </summary>
-        public const string OnCrudSaveEventValidationService = "oncrudsaveevent.validationservice";
+        public const string OnCrudSaveEventValidationService = "beforesubmit.onvalidation";
 
         /// <summary>
         /// Set this property to true to allow the framework to pass not only the selected values, but also the labels of it on the json unmapedattributes. 

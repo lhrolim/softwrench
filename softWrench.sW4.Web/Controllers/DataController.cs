@@ -3,9 +3,7 @@ using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
-using softWrench.sW4.Data.Persistence.Relational;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
@@ -16,14 +14,13 @@ using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
-using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
+using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Controllers.Routing;
-using softWrench.sW4.Web.SPF;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -63,7 +60,6 @@ namespace softWrench.sW4.Web.Controllers {
         [NotNull]
         public IApplicationResponse Get(string application, [FromUri] DataRequestAdapter request) {
             var user = SecurityFacade.CurrentUser();
-
             if (null == user) {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
@@ -85,45 +81,16 @@ namespace softWrench.sW4.Web.Controllers {
 
 
 
-        /// <summary>
-        /// API Method to provide updated Association Options, for given application, according the Association Update Request
-        /// This method will provide options for depedant associations, lookup association and autocomplete association.
-        /// </summary>
-        ///
-        [NotNull]
-        [HttpPost]
-        public GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>> UpdateAssociation(string application,
-            [FromUri] AssociationUpdateRequest request, JObject currentData) {
-            var user = SecurityFacade.CurrentUser();
+      
 
-            if (null == user) {
-                throw new HttpResponseException(HttpStatusCode.Unauthorized);
-            }
-            ContextLookuper.FillContext(request.Key);
-            var applicationMetadata = MetadataProvider
-                .Application(application)
-                .ApplyPolicies(request.Key, user, ClientPlatform.Web);
-
-            var baseDataSet = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId);
-
-
-            var response = baseDataSet.UpdateAssociations(applicationMetadata, request, currentData);
-
-            return response;
-        }
-        //TODO: have u considered creating an object, much like DataRequestAdapter, for combining these parameters?
-        // ==> This could be set in shared project and reused by the Ipad App.
-        // ==> On Angular, we could create a .js class also (still lots to do there...)
         /// <summary>
         /// API Method to handle Delete operations
         /// </summary>
-        public IApplicationResponse Delete([NotNull] string application, [NotNull] string id,
-            ClientPlatform platform, [NotNull] string currentSchemaKey, string nextSchemaKey = null, bool mockmaximo = false) {
-
-            var schemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, currentSchemaKey, platform);
-            ContextLookuper.FillContext(schemaKey);
-            var nextschemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, nextSchemaKey, platform);
-            var response = DoExecute(application, new JObject(), id, OperationConstants.CRUD_DELETE, schemaKey, mockmaximo, nextschemaKey, platform);
+        public IApplicationResponse Delete([FromUri]OperationDataRequest operationDataRequest) {
+            operationDataRequest.Operation = OperationConstants.CRUD_DELETE;
+            var response = DoExecute(operationDataRequest, new JObject());
+            var application = operationDataRequest.Application;
+            var id = operationDataRequest.Id;
             var defaultMsg = String.Format("{0} {1} deleted successfully", application, id);
             response.SuccessMessage = _i18NResolver.I18NValue("general.defaultcommands.delete.confirmmsg", defaultMsg, new object[]{
                 application, id});
@@ -134,27 +101,17 @@ namespace softWrench.sW4.Web.Controllers {
         /// API Method to handle Update operations
         /// </summary>
         [HttpPut]
-        public IApplicationResponse Put([FromUri] string application, [FromUri] string id, [NotNull] JObject json,
-             ClientPlatform platform, string currentSchemaKey = null, string nextSchemaKey = null, bool mockmaximo = false) {
-
-            var schemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, currentSchemaKey, platform);
-            ContextLookuper.FillContext(schemaKey);
-            var nextschemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, nextSchemaKey, platform);
-            return DoExecute(application, json, id, OperationConstants.CRUD_UPDATE, schemaKey, mockmaximo, nextschemaKey, platform);
+        public IApplicationResponse Put([FromUri]OperationDataRequest operationDataRequest, [NotNull] JObject json) {
+            operationDataRequest.Operation = OperationConstants.CRUD_UPDATE;
+            return DoExecute(operationDataRequest, json);
         }
 
         /// <summary>
         /// API Method to handle Insert operations
         /// </summary>
-        public IApplicationResponse Post([NotNull] string application, JObject json,
-            ClientPlatform platform, [NotNull] string currentSchemaKey, string nextSchemaKey = null, bool mockmaximo = false) {
-            if (Log.IsDebugEnabled) {
-                Log.DebugFormat("json received: " + json.ToString());
-            }
-            var schemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, currentSchemaKey, platform);
-            ContextLookuper.FillContext(schemaKey);
-            var nextschemaKey = _nextSchemaRouter.GetSchemaKeyFromString(application, nextSchemaKey, platform);
-            return DoExecute(application, json, null, OperationConstants.CRUD_CREATE, schemaKey, mockmaximo, nextschemaKey, platform);
+        public IApplicationResponse Post([FromUri]OperationDataRequest operationDataRequest, [NotNull] JObject json) {
+            operationDataRequest.Operation = OperationConstants.CRUD_CREATE;
+            return DoExecute(operationDataRequest, json);
         }
 
         /// <summary>
@@ -163,18 +120,24 @@ namespace softWrench.sW4.Web.Controllers {
         [HttpPost]
         //TODO: modify here, and on mobile in order to have the same api as the other methods
         public IApplicationResponse Operation(String application, String operation, JObject json, ClientPlatform platform, string id = "") {
-            MockingUtils.EvalMockingErrorModeActive(json, Request);
             var currentschemaKey = _nextSchemaRouter.GetSchemaKeyFromJson(application, json, true);
             var nextSchemaKey = _nextSchemaRouter.GetSchemaKeyFromJson(application, json, false);
             currentschemaKey.Platform = platform;
-            //            nextSchemaKey.Platform = platform;
             var mockMaximo = MockingUtils.IsMockingMaximoModeActive(json);
-            return DoExecute(application, json, id, operation, currentschemaKey, mockMaximo, nextSchemaKey, platform);
+            var operationRequest = new OperationDataRequest {
+                Application = application,
+
+                Id = id,
+                MockMaximo = mockMaximo,
+                Operation = operation,
+                Platform = platform
+            };
+
+            return DoExecute(operationRequest, json, currentschemaKey, nextSchemaKey);
         }
 
 
-        private IApplicationResponse DoExecute(string application, JObject json, string id, string operation,
-            ApplicationMetadataSchemaKey currentschemaKey, bool mockMaximo, ApplicationMetadataSchemaKey nextSchemaKey, ClientPlatform platform) {
+        private IApplicationResponse DoExecute(OperationDataRequest operationDataRequest, JObject json, ApplicationMetadataSchemaKey resolvedSchema = null, ApplicationMetadataSchemaKey resolvedNextSchema = null) {
             MockingUtils.EvalMockingErrorModeActive(json, Request);
             var user = SecurityFacade.CurrentUser();
             if (null == user) {
@@ -182,32 +145,45 @@ namespace softWrench.sW4.Web.Controllers {
             }
 
             if (Log.IsDebugEnabled) {
-                Log.Debug(json.ToString(Newtonsoft.Json.Formatting.Indented,
-                    new JsonConverter[] { new StringEnumConverter() }));
+                Log.Debug(json.ToString(Newtonsoft.Json.Formatting.Indented, new JsonConverter[] { new StringEnumConverter() }));
             }
-            var applicationMetadata = MetadataProvider
-                .Application(application)
-                .ApplyPolicies(currentschemaKey, user, platform);
 
-            var maximoResult = new MaximoResult(null, null);
+
+
+            var platform = operationDataRequest.Platform;
+            var currentschemaKey = resolvedSchema;
+            if (currentschemaKey == null) {
+                //for compatibility reasons, the Operation API receives the schemaKey inside the json
+                currentschemaKey = SchemaUtil.GetSchemaKeyFromString(operationDataRequest.CurrentSchemaKey, platform);
+            }
+
+            ContextLookuper.FillContext(currentschemaKey);
+
+            var application = operationDataRequest.Application;
+
+            var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(currentschemaKey, user, platform);
+            var mockMaximo = operationDataRequest.MockMaximo;
+
+            //mocked instance by default
+            var maximoResult = new TargetResult(null, null,null);
+            var operation = operationDataRequest.Operation;
+
             if (!mockMaximo) {
                 maximoResult = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
-                    .Execute(applicationMetadata, json, id, operation);
+                    .Execute(applicationMetadata, json, operationDataRequest.Id, operation);
             }
             if (currentschemaKey.Platform == ClientPlatform.Mobile) {
                 //mobile requests doesn´t have to handle success messages or redirections
                 return null;
             }
-            if (nextSchemaKey != null) {
-                var response = _nextSchemaRouter.RedirectToNextSchema(applicationMetadata, operation, maximoResult.Id,
-                    platform, currentschemaKey, nextSchemaKey, mockMaximo);
-                response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.Id,
-                    operation);
-                return response;
-            }
-            return new BlankApplicationResponse() {
-                SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.Id, operation)
-            };
+
+            var routerParameters = new RouterParameters(applicationMetadata, platform, operationDataRequest.RouteParametersDTO, operation, mockMaximo, maximoResult, user, resolvedNextSchema);
+
+            var response = _nextSchemaRouter.RedirectToNextSchema(routerParameters);
+            response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.UserId,
+                operation);
+            return response;
+
         }
 
 

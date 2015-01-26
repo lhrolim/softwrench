@@ -116,7 +116,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             location: parameters['fields'][locationFieldName],
             siteid: parameters['fields']['siteid']
         };
-        searchService.searchWithData("invcost", searchData).success(function(data) {
+        searchService.searchWithData("invcost", searchData).success(function (data) {
             var resultObject = data.resultObject;
             var fields = resultObject[0].fields;
             var costtype = parameters['fields']['inventory_.costtype'];
@@ -340,7 +340,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             itemDatamap['storeloc'] = parentdatamap['#storeloc'];
             itemDatamap['gldebitacct'] = parentdatamap['#gldebitacct'];
 
-            modalService.show(compositionschema, itemDatamap, null, parentdatamap, parentschema);
+            modalService.show(compositionschema, itemDatamap, null,null, parentdatamap, parentschema);
         },
 
         hideNewIssueModal: function (parameters) {
@@ -708,99 +708,25 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             });
         },
 
-        submitInvIssue: function(schema, datamap) {
-            // Save transfer
-            if (datamap['binnum'] == null) {
-                datamap['binnum'] = "";
-            }
-
-            var siteid = datamap['siteid'];
-
-            if (nullOrEmpty(siteid)) {
-                alertService.alert("A Site Id is required.");
-                return;
-            }
-
-            var storeloc = datamap['storeloc'];
-
-            if (nullOrEmpty(storeloc)) {
-                alertService.alert("A Storeroom is required.");
-                return;
-            }
-
-            var itemnum = datamap['itemnum'];
-
-            if (nullOrEmpty(itemnum)) {
-                alertService.alert("An item is required.");
-                return;
-            }
-
+        validateInvIssue: function(schema, datamap) {
+            var errors = [];
             var refwo = datamap['refwo'];
             var location = datamap['location'];
             var assetnum = datamap['assetnum'];
             var gldebitacct = datamap['gldebitacct'];
-
-            var itemtype = datamap['inventory_.item_.itemtype'];
-            var issueto = datamap['issueto'];
-            if (itemtype == 'TOOL') {
-                if (nullOrEmpty(issueto)) {
-                    alertService.alert("Issued To is required when issuing a tool.");
-                    return;
-                }
-            } else {
-                if (nullOrEmpty(refwo) &&
-                    nullOrEmpty(location) &&
-                    nullOrEmpty(assetnum) &&
-                    nullOrEmpty(gldebitacct)) {
-                    alertService.alert("Either a Workorder, Location, Asset, or GL Debit Account is required.");
-                    return;
-                }
+            var itemtype = datamap['inventory_.item_.itemtype'];             
+            if (itemtype == 'ITEM' &&
+                nullOrEmpty(refwo) &&
+                nullOrEmpty(location) &&
+                nullOrEmpty(assetnum) &&
+                nullOrEmpty(gldebitacct)) {
+                errors.push("Either a Workorder, Location, Asset, or GL Debit Account is required.");
             }
-
-            var jsonString = angular.toJson(datamap);
-            var httpParameters = {
-                application: "invissue",
-                platform: "web",
-                currentSchemaKey: "newInvIssueDetail.input.web"
-            };
-            restService.invokePost("data", "post", httpParameters, jsonString, function() {
-                redirectService.goToApplicationView("invissue", "invIssueList", null , null, null, null);
-            });
-        },
-
-        submitTransfer: function(schema, datamap) {
-            // Save transfer
-            if (datamap['invuseline_.frombin'] == null) {
-                datamap['invuseline_.frombin'] = "";
-            }
-            if (datamap['invuseline_.tobin'] == null) {
-                datamap['invuseline_.tobin'] = "";
-            }
-
-            var jsonString = angular.toJson(datamap);
-            var httpParameters = {
-                application: "invuse",
-                platform: "web",
-                currentSchemaKey: "newdetail.input.web"
-            };
-            restService.invokePost("data", "post", httpParameters, jsonString, function() {
-                var restParameters = {
-                    key: {
-                        schemaId: "matrectransTransfersList",
-                        mode: "none",
-                        platform: "web"
-                    },
-                    SearchDTO: null
-                };
-                var urlToUse = url("/api/Data/matrectransTransfers?" + $.param(restParameters));
-                $http.get(urlToUse).success(function(data) {
-                    redirectService.goToApplication("matrectransTransfers", "matrectransTransfersList", null, data);
-                });
-            });
+            return errors;
         },
 
         cancelTransfer: function() {
-            redirectService.goToApplication("matrectransTransfers", "list");
+            redirectService.goToApplication("matrectransTransfers", "matrectransTransfersList");
         },
 
         afterChangeTransferQuantity: function(event) {
@@ -825,6 +751,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             if (datamap['#issueqty'] > datamap['invbalances_.curbal']) {
                 alertService.alert("The quantity being issued cannot be greater than the current balance of the From Bin.");
                 return;
+            }
+            // If the bin is null, set to a blank space so the MIF interprets the blank bin value correctly.
+            if (datamap['invbalances_.binnum'] == null) {
+                datamap['invbalances_.binnum'] = "";
             }
             // Create new matusetrans record
             var matusetransDatamap = {
@@ -879,7 +809,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     var urlToUse = url("/api/data/reservedMaterials/" + datamap["requestnum"] + "?" + $.param(httpParameters));
                     $http.put(urlToUse, jsonString).success(function() {
                         // Return to the list of reserved materials
-                        redirectService.goToApplication("reservedMaterials", "list", null, null);
+                        redirectService.goToApplication("reservedMaterials", "reservedMaterialsList", null, null);
                     }).error(function() {
                         // Failed to update the material reservation
                     });
@@ -888,7 +818,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     var deleteUrl = url("/api/data/reservedMaterials/" + datamap["requestnum"] + "?" + $.param(httpParameters));
                     $http.delete(deleteUrl).success(function() {
                         // Return to the list of reserved materials
-                        redirectService.goToApplication("reservedMaterials", "list", null, null);
+                        redirectService.goToApplication("reservedMaterials", "reservedMaterialsList", null, null);
                     });
                 }
             });

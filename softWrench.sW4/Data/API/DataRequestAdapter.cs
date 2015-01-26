@@ -23,6 +23,7 @@ namespace softWrench.sW4.Data.API {
         public JObject InitialData { get; set; }
 
         public string Id { get; set; }
+        public string UserId { get; set; }
 
         //TODO: this is wrong, pick it from custom parameter
         public string Faqid { get; set; }

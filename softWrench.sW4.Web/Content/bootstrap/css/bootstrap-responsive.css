@@ -944,6 +944,10 @@
     padding: 10px;
     margin: -10px;
   }
+  .modal-header .ok {
+      padding: 10px;
+      margin: -20px;
+  }
   .carousel-caption {
     position: static;
   }

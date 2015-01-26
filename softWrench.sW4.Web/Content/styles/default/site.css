@@ -184,6 +184,10 @@ body {
     .listgrid-table {
         margin-top: 0px;
     }
+
+    .listgrid-thead {
+        width: 100%;
+    }
 }
 
 @media all and (min-width: 768px) {
@@ -192,13 +196,12 @@ body {
         width: 100%;
     }
 
-    .affix-pagination {
+    .container.desktop .affix-pagination {
         position: fixed;
     }
 
-    .listgrid-thead {
+    .container.desktop .listgrid-thead {
         position: fixed;
-        width: 100%;
     }
 }
 

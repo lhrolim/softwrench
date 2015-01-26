@@ -83,7 +83,7 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
     var buildSearchSortString = function (searchSort) {
         //            var searchSort = scope.searchSort;
         var resultString = "";
-
+        
         if (searchSort.field != null && searchSort.field != '') {
             resultString = searchSort.field;
         }
@@ -150,7 +150,7 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
                 return this.getSearchOperationById('EQ');
             }
             if (value.startsWith("!=")) {
-                return this.getSearchOperationById('NEQ');
+                return this.getSearchOperationById('NOTEQ');
             }
             if(value === "IS NULL") {
                 return this.getSearchOperationById('BLANK');
@@ -205,9 +205,25 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
             return resultString;
         },
 
-        buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause) {
-            var btwFlag = false;
+        /// <summary>
+        /// 
+        /// Builds the server side PaginatedSearchDTO object gathering data from the screen arrays
+        /// 
+        /// </summary>
+        /// <param name="searchData">the array of filter entries</param>
+        /// <param name="searchSort">a sort property to apply</param>
+        /// <param name="searchOperator">the array of filter operations, in the same order of searchData</param>
+        /// <param name="filterFixedWhereClause">a fallback query applied.it could be null</param>
+        /// <param name="paginationData">an object containing pageNumber and pageSize properties</param>
+        /// <returns type=""></returns>        
+        buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause, paginationData) {
             var searchDto = {};
+            if (!searchSort) {
+                searchSort = {};
+            }
+            if (!searchOperator) {
+                searchOperator = {};
+            }
             searchDto.searchParams = buildSearchParamsString(searchData, searchOperator);
             specialCharactersHandler(searchData, searchOperator);
             searchDto.searchValues = this.buildSearchValuesString(searchData, searchOperator);
@@ -216,6 +232,10 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
             searchDto.filterFixedWhereClause = filterFixedWhereClause;
             searchDto.needsCountUpdate = true;
             searchData.lastSearchedValues = searchDto.searchValues;
+            if (paginationData) {
+                searchDto.pageNumber = paginationData.pageNumber;
+                searchDto.pageSize = paginationData.pageSize;
+            }
             return searchDto;
 
         },
@@ -330,15 +350,18 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
         /// </summary>
         /// <param name="application"></param>
         /// <param name="searchData"></param>
+        /// <param name="searchOperators"> </param>
         /// <param name="schema"></param>
         /// <param name="extraParameters">Accepts an object with the following:
         /// 
         /// pageNumber --> the page in which to perform the search, would be 1 by default
         /// pageSize --> the number of items to display per page, would be 30 by default
         /// mode --> the mode of the schema to use, defaults to none
+        /// searchOperators --> the array of operators to apply to searchdata array, in the same order
+        /// searchSort --> the sorting object
         /// 
         /// </param>
-        searchWithData: function (application, searchData, schema, extraParameters) {
+        searchWithData: function (application, searchData,schema, extraParameters) {
             if (application == null) {
                 throw new Error("application cannot be null");
             }
@@ -352,7 +375,7 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
             }
             var log = $log.getInstance('searchService#searchWithData');
 
-            var searchDTO = this.buildSearchDTO(searchData, {}, {}, null);
+            var searchDTO = this.buildSearchDTO(searchData, extraParameters.searchSort, extraParameters.searchOperators, null);
             searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
             searchDTO.totalCount = 0;
             searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;

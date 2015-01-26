@@ -24,6 +24,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 return null;
             }
             var attribute = optionField.ProviderAttribute;
+            var extraParameter = optionField.ExtraParameter;
             attribute = attribute.Replace("#", "");
             attribute = attribute.Replace("_", "");
 

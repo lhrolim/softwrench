@@ -55,6 +55,7 @@
     <Compile Include="Metadata\Applications\Command\ResourceCommand.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationEvent.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationHeader.cs" />
+    <Compile Include="Metadata\Applications\Schema\ApplicationKey.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationSectionOrientation.cs" />
     <Compile Include="Metadata\Applications\Schema\DisplayableComponent.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationDisplayableContainer.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Metadata\Offline\MobileMetadataDownloadResponseDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\DateUtil.cs" />
+    <Compile Include="Util\DictionaryUtil.cs" />
     <Compile Include="Util\DisplayableUtil.cs" />
     <Compile Include="Util\EntityUtil.cs" />
     <Compile Include="Util\ParsingUtil.cs" />

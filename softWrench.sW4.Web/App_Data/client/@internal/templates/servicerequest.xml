@@ -25,6 +25,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <relationship to ="persongroup">
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
         </relationship>
+        <!--COMSW 24 Reverse Lookup of Service Address (Lazy Fetch)-->
+        <relationship to="serviceaddress" reverselookupattribute="addresscode" >
+          <relationshipAttribute from="ticketid" to="tkserviceaddress_.ticketid" primary="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWSR" />
@@ -99,11 +103,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
 
-          <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualfinish" hidden="true" attributeToServer="#notusedattribute"/>
-
+          <field attribute="targetstart" hidden="true"/>
+          <field attribute="targetfinish" hidden="true"/>
+          <field attribute="actualstart" hidden="true"/>
+          <field attribute="actualfinish" hidden="true"/>
+          
           <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
                          parameters="joinattribute=targetstart;">
             <header label="Target Start Date:" displacement="sameline"/>
@@ -128,8 +132,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
           </field>
+          
           <!-- Code added from gric metadata.xml SWWEB 173-->
           <section id="attachmentsection" />
+          <!--COMSW 24 required field for population purposes-->
+          <field attribute="serviceaddress_.description" attributeToServer="#tkdesc" hidden="true" />
+          <field attribute="serviceaddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
+          <field attribute="serviceaddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
+          <field attribute="serviceaddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
+          <field attribute="serviceaddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
+          <!--COMSW 24 association field used for lazy lookup-->
+          <association label="Service Address" target="saddresscode" labelfield="serviceaddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
+            <renderer type="lookup" />
+          </association>
+          
           <!-- SWWEB 173-->
           <!-- SWWEB 172: Changed the location and asset to make them look similar to gric-->
           <association label="Location:" target="location" labelfield="location_.description" >
@@ -144,7 +160,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <section id="compositions"/>
         </schema>
 
-        <schema parentschema="adetail" title="New Service Request" id="newdetail">
+        <schema parentschema="adetail" id="newdetail" title="New Service Request" >
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" hidden="true"/>
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
@@ -164,7 +180,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </schema>
 
         <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
-
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" readonly="true" requiredexpression="true"/>
             <field label="Site:" attribute="siteid" readonly="true"/>
@@ -194,6 +209,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             </composition>
           </section>
 
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+          
+          
           <commandbars>
             <commandgroup position="detailform">
               <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
