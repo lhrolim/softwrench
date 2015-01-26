@@ -118,7 +118,7 @@ app.directive('crudInputFields', function (contextService) {
         controller: function ($scope, $http, $element, $injector, $timeout,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
-            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService) {
+            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, cmplookup) {
             $scope.$name = 'crud_input_fields';
             $scope.lookupObj = {};
             $scope.handlerTitleInputFile = function (cssclassaux) {
@@ -339,22 +339,16 @@ app.directive('crudInputFields', function (contextService) {
                 }
                 $scope.datamap[datamapKey] = model;
             };
+
             /* LOOKUP functions */
-
-
-            $scope.displayLookupModal = function () {
-                var modals = $('[data-class="lookupModal"]', $element);
-                modals.draggable();
-                modals.modal('show');
-            };
 
             $scope.showLookupModal = function(fieldMetadata) {
                 if (!$scope.isSelectEnabled(fieldMetadata)) {
                     return;
                 }
 
-                $scope.updateLookupObject(fieldMetadata);
-                $scope.displayLookupModal();
+                cmplookup.updateLookupObject($scope, fieldMetadata);
+                cmplookup.displayLookupModal($element);
             };
 
             $scope.lookupCodeChange = function (fieldMetadata) {
@@ -374,48 +368,13 @@ app.directive('crudInputFields', function (contextService) {
 
                 if (code != targetValue) {
                     if (code == null || code == '') {
-                        targetValue = null;
+                        $scope.datamap[fieldMetadata.target] = null;
                     } else if (allowFreeText != "true") {
                         $scope.showLookupModal(fieldMetadata);    
                     }
                 }
             };
 
-            $scope.updateLookupObject = function(fieldMetadata) {
-                if ($scope.lookupObj == null) {
-                    $scope.lookupObj = {};
-                }
-                var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
-                $scope.lookupObj.code = code;
-                $scope.lookupObj.fieldMetadata = fieldMetadata;
-                $scope.lookupObj.application = fieldMetadata.schema.rendererParameters["application"];
-                $scope.lookupObj.schema = fieldMetadata.schema.rendererParameters["schemaId"];
-                associationService.updateDependentAssociationValues($scope, $scope.datamap, $scope.lookupObj, $scope.handleMultipleLookupOptionsFn);
-
-            };
-
-            $scope.handleMultipleLookupOptionsFn = function (result, lookupObj) {
-                var associationResult = result[lookupObj.fieldMetadata.associationKey];
-                lookupObj.schema = associationResult.associationSchemaDefinition;
-                lookupObj.options = associationResult.associationData;
-                if (Object.keys(result).length == 1 &&
-                    result[lookupObj.fieldMetadata.associationKey] &&
-                    result[lookupObj.fieldMetadata.associationKey].associationData.length == 1) {
-                    if (lookupObj.options[0].value == lookupObj.code) {
-                        return true;
-                    }
-                }
-                lookupObj.modalPaginationData = {};
-                lookupObj.modalPaginationData.pageCount = associationResult.pageCount;
-                lookupObj.modalPaginationData.pageNumber = associationResult.pageNumber;
-                lookupObj.modalPaginationData.pageSize = associationResult.pageSize;
-                lookupObj.modalPaginationData.totalCount = associationResult.totalCount;
-                lookupObj.modalPaginationData.selectedPage = associationResult.pageNumber;
-                //TODO: this should come from the server side
-                lookupObj.modalPaginationData.paginationOptions = [10, 30, 100];
-                return false;
-            };
-           
             $scope.configureNumericInput = function () {
                 var displayables = fieldService.getDisplayablesOfRendererTypes($scope.displayables, ['numericinput']);
                 for (i in displayables) {

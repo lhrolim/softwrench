@@ -1,6 +1,6 @@
 var app = angular.module('sw_layout');
 
-app.factory('cmplookup', function ($rootScope, $timeout,$log) {
+app.factory('cmplookup', function ($rootScope, $timeout,$log, associationService) {
 
     return {
 
@@ -41,6 +41,57 @@ app.factory('cmplookup', function ($rootScope, $timeout,$log) {
 
         init: function (bodyElement, scope) {
 
+        },
+
+        
+        updateLookupObject: function (scope, fieldMetadata) {
+            if (scope.lookupObj == null) {
+                scope.lookupObj = {};
+            }
+            var code = scope.lookupAssociationsCode[fieldMetadata.attribute];
+            scope.lookupObj.code = code;
+            scope.lookupObj.fieldMetadata = fieldMetadata;
+            scope.lookupObj.application = fieldMetadata.schema.rendererParameters["application"];
+            scope.lookupObj.schemaId = fieldMetadata.schema.rendererParameters["schemaId"];
+
+            var searchObj = {};
+            var lookupAttribute = fieldMetadata.schema.rendererParameters["attribute"];
+            if (lookupAttribute) {
+                searchObj[lookupAttribute] = code;
+            }
+            associationService.updateDependentAssociationValues(scope, scope.datamap, scope.lookupObj, this.handleMultipleLookupOptionsFn, searchObj);
+
+        },
+
+        handleMultipleLookupOptionsFn: function (result, lookupObj, scope, datamap) {
+            var associationResult = result[lookupObj.fieldMetadata.associationKey];
+            lookupObj.schema = associationResult.associationSchemaDefinition;
+            lookupObj.options = associationResult.associationData;
+            if (Object.keys(result).length == 1 &&
+                result[lookupObj.fieldMetadata.associationKey] &&
+                result[lookupObj.fieldMetadata.associationKey].associationData.length == 1) {
+                if (lookupObj.options[0].value == lookupObj.code &&
+                    datamap[lookupObj.fieldMetadata.attribute] != lookupObj.options[0].value) {
+                    return true;
+                }
+            }
+            lookupObj.modalPaginationData = {};
+            lookupObj.modalPaginationData.pageCount = associationResult.pageCount;
+            lookupObj.modalPaginationData.pageNumber = associationResult.pageNumber;
+            lookupObj.modalPaginationData.pageSize = associationResult.pageSize;
+            lookupObj.modalPaginationData.totalCount = associationResult.totalCount;
+            lookupObj.modalPaginationData.selectedPage = associationResult.pageNumber;
+            //TODO: this should come from the server side
+            lookupObj.modalPaginationData.paginationOptions = [10, 30, 100];
+            return false;
+        },
+
+        displayLookupModal: function (element) {
+            var modals = $('[data-class="lookupModal"]', element);
+            modals.draggable();
+            modals.modal('show');
+            //var lookupBody = $('[id="lookupBody"]', modals.modal);
+            //lookupBody.scrollTop(0);
         }
 
 

@@ -387,7 +387,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 pageNumber = 1;
             }
 
-            if (lookupObj.schema != null) {
+            if (lookupObj.schemaId != null) {
                 var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
                 var searchValues = searchObj;
                 var searchOperators = {};
@@ -420,10 +420,10 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
         
         //Updates dependent association values for all association rendererTypes.
         //This includes the associationOptions, associationDescriptions, etc.
-        updateDependentAssociationValues: function (scope, datamap, lookupObj, postFetchHook) {
+        updateDependentAssociationValues: function (scope, datamap, lookupObj, postFetchHook, searchObj) {
             var getAssociationOptions = this.getAssociationOptions;
             var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
-            getAssociationOptions(scope, lookupObj).success(function(data) {
+            getAssociationOptions(scope, lookupObj, null, searchObj).success(function (data) {
                 var result = data.resultObject;
 
                 if (postFetchHook != null) {
