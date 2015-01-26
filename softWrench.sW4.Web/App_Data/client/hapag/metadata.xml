@@ -877,7 +877,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Ownergroup" attribute="ownergroup">
             <renderer type="default" params="minwidth=84.88888888888889px" />
           </field>
-          <field label="status" attribute="status">
+          <field label="Status" attribute="status">
             <renderer type="default" params="minwidth=84.88888888888889px" />
           </field>
           <reference id="R017RequiredFields"/>
