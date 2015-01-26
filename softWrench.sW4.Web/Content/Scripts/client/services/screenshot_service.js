@@ -120,10 +120,13 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
             pastedImage.onload = function () {
                 var img = new Image();
                 $(img).attr('contenteditable', 'true');
-                $(img).css('max-width', '100%');
+                //                $(img).css('max-width', '100%');
+                //temporary cross-browser solution
+                var jimgHolder = $(imgHolder);
+                $(img).css('max-width', jimgHolder.css('width'));
                 img.src = imgToBase64(this);
-                $(imgHolder).empty();
-                $(imgHolder).attr('hasimage', 'true');
+                jimgHolder.empty();
+                jimgHolder.attr('hasimage', 'true');
                 imgHolder.appendChild(img);
             };
             pastedImage.src = source;
