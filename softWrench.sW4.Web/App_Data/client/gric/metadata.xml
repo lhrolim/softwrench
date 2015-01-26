@@ -219,6 +219,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
       <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
 
+        <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+
         <section id="siteidsection">
           <field attribute="ticketid" label="Request #:" readonly="true" requiredexpression="true"/>
           <field label="Site:" attribute="siteid" readonly="true"/>
@@ -555,7 +557,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="combo"/>
             </association>
           </section>
-          
+
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <section id="compositions">
             <composition relationship="worklog" label="Work Log">
               <collectionproperties allowupdate="false" allowcreation="true" />
