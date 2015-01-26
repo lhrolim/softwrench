@@ -8,6 +8,7 @@ namespace softWrench.sW4.Data.API.Association {
         private Boolean _hasClientSearch = false;
 
         public string Id { get; set; }
+        public string UserId { get; set; }
 
         // For self association updates
         public string AssociationFieldName { get; set; }

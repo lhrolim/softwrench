@@ -133,7 +133,7 @@
         top: initial !important;
     }
 
-    .listgrid-thead {
+    .listgrid-thead, .container.desktop .listgrid-thead {
         position: initial;
         top: initial !important;
     }

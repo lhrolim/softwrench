@@ -140,10 +140,9 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                     html += "<input type='checkbox' ng-model=\"{0}.fields['_#selected']\">".format(rowst);
                     html += "</td>";
 
-
-                    html += "<td class='select-single style\"display:none\"'>";
+                    html += '<td class="select-single" style="display:none">';
                     //TODO: to be implemented
-                    html += "</td>";
+                    html += '</td>';
 
 
                     var dm = datamap[i];
@@ -162,7 +161,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
 
                         var isHidden = hiddencolumnArray[j];
 
-                        html += "<td {2} onclick='griditemclick({0},{1},this)' class=\"xoupscolumns\" ".format(i, j, isHidden ? 'style="display:none"' : '');
+                        html += "<td {2} onclick='griditemclick({0},{1},this)' class=\"{3}\" ".format(i, j, isHidden ? 'style="display:none"' : '', safeCSSselector(column.attribute));
                         html += ">";
                         if (column.rendererType == 'color') {
                             var color = scope.statusColor(dm.fields[column.rendererParameters['column']] || 'null', schema.applicationName);

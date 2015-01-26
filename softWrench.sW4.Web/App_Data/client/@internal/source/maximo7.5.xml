@@ -1096,7 +1096,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
-    <entity name="workorder" idAttribute="wonum">
+    <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" >
       <attributes>
         <attribute name="wonum" type="varchar" required="true" />
         <attribute name="parent" type="varchar" required="false" />
@@ -2606,12 +2606,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <attribute name="transdate" type="datetime" required="true" />
         <attribute name="actualdate" type="datetime" required="true" />
         <attribute name="quantity" type="double" required="true" />
-        <attribute name="curbal" type="decimal" required="true" />
-        <attribute name="physcnt" type="decimal" required="true" />
+        <attribute name="curbal" type="double" required="true" />
+        <attribute name="physcnt" type="double" required="true" />
         <attribute name="unitcost" type="double" required="true" />
         <attribute name="actualcost" type="double" required="true" />
         <attribute name="ponum" type="varchar" required="false" />
-        <attribute name="conversion" type="decimal" required="false" />
+        <attribute name="conversion" type="double" required="false" />
         <attribute name="assetnum" type="varchar" required="false" />
         <attribute name="enterby" type="varchar" required="true" />
         <attribute name="it1" type="varchar" required="false" />
@@ -2636,16 +2636,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <attribute name="linecost" type="double" required="true" />
         <attribute name="financialperiod" type="varchar" required="false" />
         <attribute name="currencycode" type="varchar" required="true" />
-        <attribute name="currencyunitcost" type="decimal" required="false" />
+        <attribute name="currencyunitcost" type="double" required="false" />
         <attribute name="rotassetnum" type="varchar" required="false" />
-        <attribute name="currencylinecost" type="decimal" required="false" />
+        <attribute name="currencylinecost" type="double" required="false" />
         <attribute name="location" type="varchar" required="false" />
         <attribute name="description" type="varchar" required="false" />
-        <attribute name="exchangerate" type="decimal" required="false" />
+        <attribute name="exchangerate" type="double" required="false" />
         <attribute name="sparepartadded" type="smallint" required="true" />
         <attribute name="qtyrequested" type="int" required="false" />
-        <attribute name="exchangerate2" type="decimal" required="false" />
-        <attribute name="linecost2" type="decimal" required="false" />
+        <attribute name="exchangerate2" type="double" required="false" />
+        <attribute name="linecost2" type="double" required="false" />
         <attribute name="mrnum" type="varchar" required="false" />
         <attribute name="mrlinenum" type="int" required="false" />
         <attribute name="matusetransid" type="bigint" required="true" />

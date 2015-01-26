@@ -67,6 +67,9 @@ app.factory('contextService', function ($rootScope) {
         },
 
         isLocal: function () {
+            if (sessionStorage.mocknonlocal) {
+                return false;
+            }
             return this.retrieveFromContext('isLocal');
         },
 

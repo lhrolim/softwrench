@@ -34,7 +34,7 @@ app.factory('i18NService', function ($rootScope, contextService) {
         if (catalogValue != null) {
             return catalogValue;
         }
-        if ($rootScope.isLocal && $rootScope.i18NRequired == true) {
+        if (contextService.isLocal() && $rootScope.i18NRequired == true) {
             if (defaultValue == null) {
                 return null;
             }

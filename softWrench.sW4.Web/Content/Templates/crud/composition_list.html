@@ -26,7 +26,8 @@
                 <th ng-if="compositionlistschema.properties['list.selectionstyle'] == 'single'">
                     <!--Singleselect-->
                 </th>
-                <th ng-repeat="column in compositionlistschema.displayables"
+                <th class="{{safeCSSselector(column.attribute)}}"
+                    ng-repeat="column in compositionlistschema.displayables"
                     ng-show="!isFieldHidden(compositionlistschema,column)">
                     <span class="add-on">{{i18NLabel(column)}}</span>
                 </th>
@@ -46,7 +47,9 @@
                 <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'single'">
                     <!--Singleselect-->
                 </td>
-                <td ng-repeat="column in compositionlistschema.displayables" ng-show="!isFieldHidden(compositionlistschema,column)">
+                <td class="{{safeCSSselector(column.attribute)}}"
+                    ng-repeat="column in compositionlistschema.displayables"
+                    ng-show="!isFieldHidden(compositionlistschema,column)">
                     <ng-switch on="column.type">
                         <div ng-switch-when="ApplicationSection">
                             <div ng-include="contextPath(column.resourcepath)" href="#" style="width: 100%" />
@@ -65,14 +68,12 @@
                                         {{getFormattedValue(compositionitem[column.attribute],column,clonedCompositionData)}}
                                     </a>
                                 </div>
-
                                 <a style="color: black; cursor: pointer; word-break:break-all;"
                                    ng-switch-default
                                    ng-click="toggleDetails(compositionitem,column)">
                                     {{getFormattedValue(compositionitem[column.attribute],column,clonedCompositionData)}}
                                 </a>
                             </ng-switch>
-
                         </div>
                     </ng-switch>
                 </td>

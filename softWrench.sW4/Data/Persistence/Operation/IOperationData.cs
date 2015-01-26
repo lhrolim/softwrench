@@ -6,6 +6,8 @@ namespace softWrench.sW4.Data.Persistence.Operation {
     public interface IOperationData {
         string Id { get; set; }
 
+        string UserId { get; }
+
         string Class { get; }
 
         EntityMetadata EntityMetadata { get; set; }

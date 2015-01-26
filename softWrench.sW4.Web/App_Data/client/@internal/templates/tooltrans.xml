@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
+
+  <templates>
+    <template path="@chartofaccounts.xml"/>
+  </templates>
+
+  <entities>
+    <entity name="tooltrans" idAttribute="tooltransid">
+      <relationships>
+        <relationship to="toolitem" qualifier="tool" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+        </relationship>
+        <relationship to="chartofaccounts" >
+          <relationshipAttribute from="gldebitacct" to="glaccount" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="tooltrans" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="itemorginfo" idAttribute="itemorginfoid">
+      <attributes>
+        <attribute name="itemnum" type="varchar" required="true" />
+        <attribute name="itemsetid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="hazardid" type="varchar" required="false" />
+        <attribute name="toolrate" type="decimal" required="false" />
+        <attribute name="glaccount" type="varchar" required="false" />
+        <attribute name="controlacc" type="varchar" required="false" />
+        <attribute name="tax1code" type="varchar" required="false" />
+        <attribute name="tax2code" type="varchar" required="false" />
+        <attribute name="tax3code" type="varchar" required="false" />
+        <attribute name="tax4code" type="varchar" required="false" />
+        <attribute name="tax5code" type="varchar" required="false" />
+        <attribute name="itemorginfoid" type="bigint" required="true" />
+        <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="statusdate" type="datetime" required="true" />
+        <attribute name="category" type="varchar" required="true" />
+        <attribute name="taxexempt" type="smallint" required="true" />
+        <attribute name="receipttolerance" type="decimal" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="itemorginfo" />
+      </connectorParameters>
+    </entity>
+  </entities>
+
+  <applications>
+    <application entity="itemorginfo" name="itemorginfo" title="itemorginfo">
+      <schemas>
+        <schema id="list" title="Tool Hourly Cost" stereotype="list">
+          <field attribute="itemnum" label="Item"/>
+          <field attribute="itemsetid" label="location"/>
+          <field attribute="orgid" label="Average Cost"/>
+          <field attribute="toolrate" label="Standard Cost"/>
+        </schema>
+      </schemas>
+    </application>
+
+    <application name="tooltrans" entity="tooltrans" title="Tool">
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-wrench"/>
+      </properties>
+        <schemas>
+          <list>
+            <field attribute="tooltransid" hidden="true"/>
+            <field attribute="itemnum" label="Item No." qualifier="title"/>
+            <field attribute="tool_.description" label="Description" qualifier="subtitle"/>
+            <field attribute="toolqty" label="Quantity" qualifier="subtitle"/>
+            <field attribute="toolhrs" label="Hours" qualifier="subtitle"/>
+            <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
+          </list>
+
+          <detail platform="web">
+            <field attribute="tooltransid" hidden="true" />
+            <field attribute="orgid" hidden="true" />
+            <field attribute="siteid" hidden="true" />
+            <field attribute="refwo" hidden="true" />
+            <field attribute="transdate" hidden="true" />
+            <field attribute="toolrate" hidden="true" />
+
+            <association label="Tool:" target="itemnum" labelfield="tool_.description" requiredexpression="true" extraprojectionvalues="itemnum, itemsetid">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="tooltranService" method="aftertoolchange"/>
+            </association>
+            <field label="Quantity:" attribute="toolqty" requiredexpression="true">
+              <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
+            </field>
+            <field label="Hour:" attribute="toolhrs" requiredexpression="true" default="8">
+              <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
+            </field>
+            <field label="Rate:" attribute="toolrate" readonly="true"/>
+            <association label="GL Debit Account:" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
+              <renderer type="lookup"/>
+            </association>
+          </detail>
+        </schemas>
+    </application>
+  </applications>
+</metadata>

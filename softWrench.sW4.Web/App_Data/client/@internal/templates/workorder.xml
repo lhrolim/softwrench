@@ -7,6 +7,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <template path="@attachments.xml"/>
     <template path="@materials.xml"/>
     <template path="@labtrans.xml"/>
+    <template path="@tooltrans.xml"/>
     <template path="@woactivity.xml"/>
     <template path="@asset.xml"/>
     <template path="@glcomponents.xml"/>
@@ -94,6 +95,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="wonum desc"/>
             <!--<property key="list.click.mode" value="@status == 'CLOSE' ? 'output' : 'input'"/>-->
           </properties>
         </list>
@@ -195,32 +197,30 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
 
             <!-- Adding target start finish date-->
-            <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
-            <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
-            <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
-            <field attribute="actualfinish" hidden="true" attributeToServer="#notusedattribute"/>
+            <field attribute="targstartdate" hidden="true"/>
+            <field attribute="targcompdate" hidden="true"/>
+            <field attribute="actstart" hidden="true"/>
+            <field attribute="actfinish" hidden="true"/>
 
-            <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
-                           parameters="joinattribute=targetstart;">
+            <section id="targstartdate" resourcepath="/Content/Templates/samelinepickers.html"
+                           parameters="joinattribute=targstartdate;">
               <header label="Target Start Date:" displacement="sameline"/>
             </section>
 
-            <section id="targetFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                           parameters="joinattribute=targetfinish;">
+            <section id="targcompdate" resourcepath="/Content/Templates/samelinepickers.html"
+                           parameters="joinattribute=targcompdate;">
               <header label="Target Finish Date:" displacement="sameline"/>
             </section>
 
-            <section id="actualStart" resourcepath="/Content/Templates/samelinepickers.html"
-                           parameters="joinattribute=actualstart;">
+            <section id="actstart" resourcepath="/Content/Templates/samelinepickers.html"
+                           parameters="joinattribute=actstart;">
               <header label="Actual Start Date:" displacement="sameline"/>
             </section>
 
-            <section id="actualFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                           parameters="joinattribute=actualfinish;">
+            <section id="actfinish" resourcepath="/Content/Templates/samelinepickers.html"
+                           parameters="joinattribute=actfinish;">
               <header label="Actual Finish Date:" displacement="sameline"/>
             </section>
-
-
 
             <field attribute="description" label="Summary:"/>
             <field label="Details:" attribute="longdescription_.ldtext" >
@@ -262,6 +262,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'"  />
             </composition>
             <composition relationship="labtrans" label="Labor">
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+            </composition>
+            <composition relationship="tooltrans" label="Tool">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="attachment" label="Attachments" >

@@ -16,24 +16,40 @@ namespace softWrench.sW4.Metadata.Applications.DataSet
 {
     class GLComponentDataSet : MaximoApplicationDataSet
     {
-        public IEnumerable<IAssociationOption> GetGLAccountPartN(OptionFieldProviderParameters parameters)
+        public IEnumerable<IAssociationOption> GetGLComponents71(OptionFieldProviderParameters parameters)
         {
+            return GLComponents(parameters, null);
+        }
+
+        public IEnumerable<IAssociationOption> GetGLComponents75(OptionFieldProviderParameters parameters)
+        {
+            var user = SecurityFacade.CurrentUser();
+            var orgid = parameters.OriginalEntity.Attributes.Any() ? parameters.OriginalEntity.Attributes["orgid"] : null;
+
+            if (orgid == null) orgid = user.OrgId;
+
+            return GLComponents(parameters, String.Format("and orgid = '{0}'", orgid)); 
+        }
+
+        private IEnumerable<IAssociationOption> GLComponents(OptionFieldProviderParameters parameters, string additionalFilters) {
             if (parameters.OptionField.ExtraParameter != null)
             {
                 var user = SecurityFacade.CurrentUser();
+
                 var orgid = parameters.OriginalEntity.Attributes.Any() ? parameters.OriginalEntity.Attributes["orgid"] : null;
-                
-                // default orgid if none was found. this is usually the case if it is a new entry.
+
                 if (orgid == null) orgid = user.OrgId;
-                var query = string.Format(@"SELECT compvalue, compvalue + ' - ' + comptext AS comptext FROM glcomponents
+
+                // default orgid if none was found. this is usually the case if it is a new entry.
+                var query = String.Format(@"SELECT compvalue, compvalue + ' - ' + comptext AS comptext FROM glcomponents
                                             where glorder = {0} and active = 1 and orgid = '{1}'", parameters.OptionField.ExtraParameter, orgid);
 
                 var results = MaxDAO.FindByNativeQuery(query, null);
 
                 if (results != null && results.Any())
                 {
-                    var gllengthquery = string.Format(@"SELECT gllength FROM glconfigure
-                                                        where glorder = {0} and orgid = '{1}'", parameters.OptionField.ExtraParameter, orgid);
+                    var gllengthquery = String.Format(@"SELECT gllength FROM glconfigure
+                                                        where glorder = {0} {1}", parameters.OptionField.ExtraParameter, additionalFilters);
 
                     var gllengthresult = MaxDAO.FindSingleByNativeQuery<object>(gllengthquery, null);
 

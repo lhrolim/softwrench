@@ -704,95 +704,21 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             });
         },
 
-        submitInvIssue: function(schema, datamap) {
-            // Save transfer
-            if (datamap['binnum'] == null) {
-                datamap['binnum'] = "";
-            }
-
-            var siteid = datamap['siteid'];
-
-            if (nullOrEmpty(siteid)) {
-                alertService.alert("A Site Id is required.");
-                return;
-            }
-
-            var storeloc = datamap['storeloc'];
-
-            if (nullOrEmpty(storeloc)) {
-                alertService.alert("A Storeroom is required.");
-                return;
-            }
-
-            var itemnum = datamap['itemnum'];
-
-            if (nullOrEmpty(itemnum)) {
-                alertService.alert("An item is required.");
-                return;
-            }
-
+        validateInvIssue: function(schema, datamap) {
+            var errors = [];
             var refwo = datamap['refwo'];
             var location = datamap['location'];
             var assetnum = datamap['assetnum'];
             var gldebitacct = datamap['gldebitacct'];
-
-            var itemtype = datamap['inventory_.item_.itemtype'];
-            var issueto = datamap['issueto'];
-            if (itemtype == 'TOOL') {
-                if (nullOrEmpty(issueto)) {
-                    alertService.alert("Issued To is required when issuing a tool.");
-                    return;
-                }
-            } else {
-                if (nullOrEmpty(refwo) &&
-                    nullOrEmpty(location) &&
-                    nullOrEmpty(assetnum) &&
-                    nullOrEmpty(gldebitacct)) {
-                    alertService.alert("Either a Workorder, Location, Asset, or GL Debit Account is required.");
-                    return;
-                }
+            var itemtype = datamap['inventory_.item_.itemtype'];             
+            if (itemtype == 'ITEM' &&
+                nullOrEmpty(refwo) &&
+                nullOrEmpty(location) &&
+                nullOrEmpty(assetnum) &&
+                nullOrEmpty(gldebitacct)) {
+                errors.push("Either a Workorder, Location, Asset, or GL Debit Account is required.");
             }
-
-            var jsonString = angular.toJson(datamap);
-            var httpParameters = {
-                application: "invissue",
-                platform: "web",
-                currentSchemaKey: "newInvIssueDetail.input.web"
-            };
-            restService.invokePost("data", "post", httpParameters, jsonString, function() {
-                redirectService.goToApplicationView("invissue", "invIssueList", null , null, null, null);
-            });
-        },
-
-        submitTransfer: function(schema, datamap) {
-            // Save transfer
-            if (datamap['invuseline_.frombin'] == null) {
-                datamap['invuseline_.frombin'] = "";
-            }
-            if (datamap['invuseline_.tobin'] == null) {
-                datamap['invuseline_.tobin'] = "";
-            }
-
-            var jsonString = angular.toJson(datamap);
-            var httpParameters = {
-                application: "invuse",
-                platform: "web",
-                currentSchemaKey: "newdetail.input.web"
-            };
-            restService.invokePost("data", "post", httpParameters, jsonString, function() {
-                var restParameters = {
-                    key: {
-                        schemaId: "matrectransTransfersList",
-                        mode: "none",
-                        platform: "web"
-                    },
-                    SearchDTO: null
-                };
-                var urlToUse = url("/api/Data/matrectransTransfers?" + $.param(restParameters));
-                $http.get(urlToUse).success(function(data) {
-                    redirectService.goToApplication("matrectransTransfers", "matrectransTransfersList", null, data);
-                });
-            });
+            return errors;
         },
 
         cancelTransfer: function() {

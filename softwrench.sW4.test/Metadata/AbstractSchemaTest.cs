@@ -32,7 +32,7 @@ namespace softwrench.sW4.test.Metadata {
             Assert.IsTrue(new1.Properties.ContainsKey("prop1"));
             
             var displayables = new1.Displayables;
-            Assert.AreEqual(8, displayables.Count);
+            Assert.AreEqual(9, displayables.Count);
             CheckAttributeName(displayables,0,"siteid");
             CheckAttributeName(displayables,1,"woclass");
             CheckAttributeName(displayables,2,"wonum");
@@ -54,7 +54,7 @@ namespace softwrench.sW4.test.Metadata {
             Assert.IsNotNull(new1.Properties.FirstOrDefault(p => p.Key == ApplicationSchemaPropertiesCatalog.ListClickMode));
 
             var displayables = new1.Displayables;
-            Assert.AreEqual(8, displayables.Count);
+            Assert.AreEqual(9, displayables.Count);
             
             CheckAttributeName(displayables, 1, "wonum");
             CheckAttributeName(displayables, 2, "status");

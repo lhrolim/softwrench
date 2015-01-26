@@ -2,10 +2,12 @@
  
     public class TargetResult {
         public string Id { get; set; }
+        public string UserId { get; set; }
         public object ResultObject { get; set; }
 
-        public TargetResult(string id, object resultObject) {
+        public TargetResult(string id,string userId, object resultObject) {
             Id = id;
+            UserId = userId;
             ResultObject = resultObject;
         }
     }

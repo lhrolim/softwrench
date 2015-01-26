@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using JetBrains.Annotations;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Schema;
@@ -34,6 +35,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 name = "_" + name;
             }
             var idAttributeName = entity.Attribute(XmlMetadataSchema.EntityAttributeIdAttribute).Value;
+            var useridAttributeName = entity.Attribute(XmlMetadataSchema.EntityAttributeUserIdAttribute).ValueOrDefault(idAttributeName);
             var whereClause = entity.Attribute(XmlMetadataSchema.EntityAttributeWhereClause).ValueOrDefault((string)null);
             var parentEntity = entity.Attribute(XmlMetadataSchema.EntityAttributeParentEntity).ValueOrDefault((string)null);
             if (_isSWDDB && parentEntity != null) {
@@ -41,7 +43,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             }
             var associations = XmlAssociationsParser.Parse(name, entity);
             return new EntityMetadata(name,
-                XmlSchemaParser.Parse(name, entity, idAttributeName, associations.Item2, whereClause, parentEntity),
+                XmlSchemaParser.Parse(name, entity, idAttributeName,useridAttributeName, associations.Item2, whereClause, parentEntity),
                 associations.Item1,
                 XmlConnectorParametersParser.Parse(entity)
                 );
@@ -129,18 +131,19 @@ namespace softWrench.sW4.Metadata.Parsing {
             /// <param name="name"></param>
             /// <param name="entity">The `entity` element containing the schema to be deserialized.</param>
             /// <param name="idAttributeName">The name of the attribute that contains the unique identifier of the entity.</param>
+            /// <param name="userIdAttributeName">the id that´s going to be seen by the user</param>
             /// <param name="excludeUndeclaredAssociations"></param>
             /// <param name="whereclause"></param>
             /// <param name="parentEntity"></param>
-            public static EntitySchema Parse(string name, XElement entity, string idAttributeName, bool excludeUndeclaredAssociations, string whereclause, string parentEntity) {
+            public static EntitySchema Parse(string name, XElement entity, string idAttributeName,string userIdAttributeName ,bool excludeUndeclaredAssociations, string whereclause, string parentEntity) {
                 var attributes = entity.Elements().FirstOrDefault(e => e.IsNamed(XmlMetadataSchema.AttributesElement));
                 if (attributes == null) {
-                    return new EntitySchema(name, null, idAttributeName, false, excludeUndeclaredAssociations, whereclause, parentEntity, null);
+                    return new EntitySchema(name, null, idAttributeName,userIdAttributeName, false, excludeUndeclaredAssociations, whereclause, parentEntity, null);
                 }
                 var entityAttributes = attributes.Elements().Where(e => e.IsNamed(XmlMetadataSchema.AttributeElement)).Select(ParseAttribute).ToList();
                 var excludeUndeclared = attributes.Attribute(XmlMetadataSchema.ExcludeUndeclared).ValueOrDefault(false);
                 var tuple = new Tuple<Boolean, ICollection<EntityAttribute>>(excludeUndeclared, entityAttributes);
-                return new EntitySchema(name, tuple.Item2, idAttributeName, tuple.Item1, excludeUndeclaredAssociations, whereclause, parentEntity, null);
+                return new EntitySchema(name, tuple.Item2, idAttributeName,userIdAttributeName, tuple.Item1, excludeUndeclaredAssociations, whereclause, parentEntity, null);
             }
         }
 

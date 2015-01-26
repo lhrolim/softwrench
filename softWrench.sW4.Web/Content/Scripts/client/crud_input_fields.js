@@ -186,7 +186,9 @@ app.directive('crudInputFields', function (contextService) {
                         }
                     });
                 });
-                if (parentElementId.equalsAny('crudInputMainCompositionFields', 'crudInputMainFields')) {
+                //both ids refers to the main form, but crudInputMainCompositionFields when there are other tabs, or crudInputMainFields when there are no other tabs
+                //
+                if (parentElementId.equalsAny('crudInputMainCompositionFields', 'crudInputMainFields', 'crudInputNewItemCompositionFields')) {
                     //to avoid registering these global listeners multiple times, as the page main contain sections.
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();
@@ -514,16 +516,6 @@ app.directive('crudInputFields', function (contextService) {
                 }
             };
 
-            $scope.getFormattedValue = function (value, field, datamap) {
-                var formattedValue = formatService.format(value, field, datamap);
-                if (formattedValue == "-666") {
-                    //this magic number should never be displayed! 
-                    //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
-                    return null;
-                }
-                return formattedValue;
-            };
-
             $scope.enabletoopendetails = function (fieldMetadata) {
                 $scope.fillparamstoopendetails(fieldMetadata);
                 return $scope.paramstopendetails == null ? false : true;
@@ -718,7 +710,8 @@ app.directive('crudInputFields', function (contextService) {
                 $injector.invoke(BaseController, this, {
                     $scope: $scope,
                     i18NService: i18NService,
-                    fieldService: fieldService
+                    fieldService: fieldService,
+                    formatService: formatService
                 });
             }
             init();

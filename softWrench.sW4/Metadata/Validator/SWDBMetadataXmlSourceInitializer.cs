@@ -33,7 +33,7 @@ namespace softWrench.sW4.Metadata.Validator {
             var name = "_" + type.Name;
             Log.DebugFormat("adding swdb internal entity {0}", name);
             var properties = ParseProperties(name, type);
-            var entitySchema = new EntitySchema(name, properties.Item1, "id", true, true, null, null, type, false);
+            var entitySchema = new EntitySchema(name, properties.Item1, "id","id", true, true, null, null, type, false);
             return new EntityMetadata(name, entitySchema, properties.Item2, ConnectorParameters(type));
         }
 

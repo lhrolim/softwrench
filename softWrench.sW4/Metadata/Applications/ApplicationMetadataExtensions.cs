@@ -5,6 +5,8 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using System;
+using System.Linq;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications {
     public static class ApplicationMetadataExtensions {
@@ -12,11 +14,11 @@ namespace softWrench.sW4.Metadata.Applications {
 
         [NotNull]
         public static ApplicationMetadata ApplyPolicies([NotNull] this CompleteApplicationMetadataDefinition application,
-            ApplicationMetadataSchemaKey schemaKey, [NotNull] InMemoryUser user,ClientPlatform platform) {
+            ApplicationMetadataSchemaKey schemaKey, [NotNull] InMemoryUser user, ClientPlatform platform) {
             if (application == null) throw new ArgumentNullException("application");
             if (user == null) throw new ArgumentNullException("user");
 
-            return new ApplicationMetadataPolicyApplier(application, schemaKey, user,platform).Apply();
+            return new ApplicationMetadataPolicyApplier(application, schemaKey, user, platform).Apply();
         }
 
         public static ApplicationMetadata ApplyPoliciesWeb([NotNull] this CompleteApplicationMetadataDefinition application,
@@ -29,9 +31,13 @@ namespace softWrench.sW4.Metadata.Applications {
             if (application == null) throw new ArgumentNullException("application");
             ApplicationSchemaDefinition resultingSchema;
             if (!application.Schemas().TryGetValue(metadataSchemaKey, out resultingSchema)) {
+                if (metadataSchemaKey.SchemaId.EqualsAny("list","detail")) {
+                    //let´s give these default schema names a stereotype search fallback and return them case they are uniquely found
+                    return SearchByStereotype(application, metadataSchemaKey, ref resultingSchema);
+                }
                 throw new InvalidOperationException(String.Format(NoSchemaFound, metadataSchemaKey, application.ApplicationName));
             }
-            return (ApplicationSchemaDefinition)resultingSchema;
+            return resultingSchema;
         }
 
         public static bool IsSupportedOnPlatform([NotNull] this CompleteApplicationMetadataDefinition application, ClientPlatform platform) {
@@ -47,6 +53,16 @@ namespace softWrench.sW4.Metadata.Applications {
                 default:
                     throw new ArgumentOutOfRangeException(platform.ToString());
             }
+        }
+
+        public static ApplicationSchemaDefinition SearchByStereotype(CompleteApplicationMetadataDefinition application, ApplicationMetadataSchemaKey metadataSchemaKey, ref ApplicationSchemaDefinition resultSchema) {
+            try {
+                resultSchema = application.Schemas().Values.Single(schema => schema.Stereotype.ToString().ToUpper() == metadataSchemaKey.SchemaId.ToUpper());
+            } catch (Exception) {
+                // More than one schema found of the specified type
+                throw new InvalidOperationException(String.Format(NoSchemaFound, metadataSchemaKey, application.ApplicationName));
+            }
+            return resultSchema;
         }
     }
 }
