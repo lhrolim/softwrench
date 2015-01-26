@@ -2711,9 +2711,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </properties>
       <schemas>
         <schema id="list" stereotype="compositionlist">
-          <properties>
-            <property key="list.click.popup" value="modal"/>
-          </properties>
+<!--          <properties>-->
+<!--            <property key="list.click.popup" value="modal"/>-->
+<!--          </properties>-->
           <!--<field attribute="#inboundicon">
             <renderer type="icon" params="iconcss=fa fa-mail-forward"/>
           </field>-->
