@@ -178,10 +178,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                                 lookupObj.schemaId = fieldMetadata.rendererParameters.schemaId;
                             }
                             var searchObj = {};
-                            var lookupAttribute = fieldMetadata.schema.rendererParameters["attribute"];
-                            if (lookupAttribute) {
-                                searchObj[lookupAttribute] = data;
-                            }
+                            searchObj[currentAttribute] = data;
                             associationService.updateDependentAssociationValues(scope, datamap, lookupObj, validateAssocationLookupFn, searchObj);
                             // Exit the loop once we have set a value from the scan
                             break;
