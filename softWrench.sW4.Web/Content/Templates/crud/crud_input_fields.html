@@ -220,7 +220,8 @@
                               ng-init="initField(fieldMetadata)" />
                 </div>
                 <div ng-switch-when="richtext">
-                    <div class="richtext" text-angular="text-angular" name="{{fieldMetadata.attribute}}" ng-model="datamap[fieldMetadata.attribute]" ta-disabled="!isSelectEnabled(fieldMetadata)"></div>
+                    <div class="richtext image-holder" 
+                         text-angular="text-angular" name="{{fieldMetadata.attribute}}" ng-model="datamap[fieldMetadata.attribute]" ta-disabled="!isSelectEnabled(fieldMetadata)" ></div>
                 </div>
                 <div ng-switch-when="upload">
                     <div class="input-group" id="{{fieldMetadata.attribute}}">
@@ -249,24 +250,9 @@
                         </div>
                     </div>
                     </div>
-                <div ng-switch-when="image">
-                    <div class="input-group" id="{{fieldMetadata.attribute}}">
-                        <input id="uploadFile" class="form-control" placeholder="No file chosen" disabled="disabled" />
-                        <div class="input-group-addon fileUpload">
-                            <span>Choose File</span>
-                            <input class="form-control uploadimage_tooltip upload" name="{{fieldMetadata.attribute}}"
-                                   id="uploadBtn"
-                                   type="file"
-                                   fileread="datamap[fieldMetadata.attribute]"
-                                   path="datamap.newattachment_path"
-                                   accept="image/*"
-                                   title="{{handlerTitleInputFile('uploadimage_tooltip')}}" />
-                        </div>
-                    </div>
-                </div>
                 <div ng-switch-when="screenshot">
-                    <div ng-show="!isIE()" id="imgHolder_{{fieldMetadata.attribute}}" contenteditable='true' class="form-control image-holder"></div>
-                    <iframe id="richTextBox_{{fieldMetadata.attribute}}" ng-show="isIE()" src="{{contextPath('/UserControls/RichTextBox.aspx')}}"
+                    <div ng-show="!isIE()" id="imgHolder_{{fieldMetadata.attribute}}" name="{{fieldMetadata.attribute}}" contenteditable='true' class="form-control image-holder"></div>
+                    <iframe id="richTextBox_{{fieldMetadata.attribute}}" ng-show="isIE()" ng-src="{{contextPath('/UserControls/RichTextBox.aspx')}}"
                             class="richtextbox" frameborder="0" />
                 </div>
                 <div ng-switch-when="numericinput">

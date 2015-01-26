@@ -170,7 +170,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             }
 
             if (popupMode == "browser") {
-                if ($rootScope.isLocal) {
+                if (contextService.isLocal()) {
                     //easier to debug on chrome like this
                     var w = window.open(redirectURL);
                     //                    w.moveto(0, 0);
@@ -206,7 +206,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
 
         redirectNewWindow: function (newWindowURL, needReload, initialData) {
 
-            if ($rootScope.isLocal) {
+            if (contextService.isLocal()) {
                 //easier to debug on chrome like this
                 var w = window.open(newWindowURL);
                 w.moveTo(0, 0);
@@ -224,7 +224,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
                     x.location.reload();
                 }
                 x.focus();
-                if ($rootScope.isLocal) {
+                if (contextService.isLocal()) {
                     x.moveTo(0, 0);
                 }
             };

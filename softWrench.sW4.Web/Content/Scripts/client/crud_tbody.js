@@ -150,7 +150,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                         var columnst = "columnarray[{0}]".format(j);
                         column = schema.displayables[j];
                         var attribute = column.attribute;
-                        var formattedText = scope.getFormattedValue(datamap[i].fields[attribute], column, datamap);
+                        var formattedText = scope.getFormattedValue(datamap[i].fields[attribute], column, datamap[i]);
 
                         if (!column.rendererParameters) {
                             column.rendererParameters = {};

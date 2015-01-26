@@ -14,7 +14,7 @@ namespace softWrench.sW4.Web.Util {
                 return defaultValue;
             }
 
-            var totalMillis = ApplicationConfiguration.SystemBuildDateInMillis;
+            var totalMillis = ApplicationConfiguration.GetStartTimeInMillis();
 
             return new HtmlString(defaultValue.ToHtmlString().Replace(".js", ".js?" + totalMillis));
         }
@@ -24,7 +24,7 @@ namespace softWrench.sW4.Web.Util {
             if (ApplicationConfiguration.IsLocal()) {
                 return defaultValue;
             }
-            var totalMillis = ApplicationConfiguration.SystemBuildDateInMillis;
+            var totalMillis = ApplicationConfiguration.GetStartTimeInMillis();
 
             return new HtmlString(defaultValue.ToHtmlString().Replace(".css", ".css?" + totalMillis));
         }

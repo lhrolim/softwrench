@@ -139,10 +139,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         redirectService.goToApplicationView(applicationName, schemaId, mode, title, parameters);
     };
 
-    $scope.doAction = function (title, controller, action, parameters, target) {
-        menuService.setActiveLeaf(target);
-        redirectService.redirectToAction(title, controller, action, parameters);
-    };
+
 
     $rootScope.$on('sw_redirectactionsuccess', function (event, result) {
         var log = $log.getInstance('layoutcontroller#onsw_redirectactionsuccess');
@@ -189,10 +186,11 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             }, 100, false);
     };
 
-    $scope.logout = function () {
-        sessionStorage.removeItem("swGlobalRedirectURL");
-        contextService.clearContext();
-    };
+
+
+    $scope.resourceUrl = function(path) {
+        return contextService.getResourceUrl(path);
+    }
 
     function initController() {
         var configsJSON = $(hddn_configs)[0].value;
@@ -207,7 +205,6 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
         $rootScope.clientName = config.clientName;
         $rootScope.environment = config.environment;
-        $rootScope.isLocal = config.isLocal;
         $rootScope.i18NRequired = config.i18NRequired;
         $rootScope.deviceType = DeviceDetect.catagory.toLowerCase();
 

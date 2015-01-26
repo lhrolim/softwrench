@@ -85,7 +85,7 @@ namespace softWrench.sW4.Web.Controllers {
                 IsLocal = ApplicationConfiguration.IsLocal(),
                 ClientSideLogLevel = clientSideLogLevel,
                 SuccessMessageTimeOut = GetSuccessMessageTimeOut(),
-                InitTimeMillis = ApplicationConfiguration.SystemBuildDateInMillis,
+                InitTimeMillis = ApplicationConfiguration.GetStartTimeInMillis(),
                 InvbalancesListScanOrder = invbalancesListScanOrder,
                 NewInvIssueDetailScanOrder = newInvIssueDetailScanOrder,
                 InvIssueListScanOrder = invIssueListScanOrder,

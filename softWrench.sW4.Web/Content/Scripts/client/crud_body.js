@@ -295,7 +295,7 @@ app.directive('crudBody', function (contextService) {
             $scope.validateSubmission = function (selecteditem, parameters, transformedFields) {
                 var log = $log.getInstance('crudbody#validateSubmission');
                 //hook for updating doing custom logic before sending the data to the server
-                $rootScope.$broadcast("sw_beforeSave", transformedFields);
+                $rootScope.$broadcast("sw_beforesubmitprevalidate_internal", transformedFields);
 
                 if (sessionStorage.mockclientvalidation == undefined) {
                     var validationErrors = validationService.validate($scope.schema, $scope.schema.displayables, transformedFields);
@@ -322,6 +322,8 @@ app.directive('crudBody', function (contextService) {
             };
 
             $scope.submitToServer = function (selecteditem, parameters, transformedFields) {
+                $rootScope.$broadcast("sw_beforesubmitpostvalidate_internal", transformedFields);
+
                 //some fields might require special handling
                 submitService.removeNullInvisibleFields($scope.schema.displayables, transformedFields);
                 transformedFields = submitService.removeExtraFields(transformedFields, true, $scope.schema);

@@ -6,6 +6,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             if (datamap[column.attribute] != null) {
                 return Math.abs(datamap[column.attribute]);
             }
+            else {
+                return "0"; 
+            }
         }
         return datamap[column.attribute];
     };
@@ -13,7 +16,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
     var formatQtyReturned = function (datamap, value, column) {
         if (datamap['issuetype'] == 'ISSUE') {
             if (datamap[column.attribute] == null) {
-                return 0;
+                return "0";
             }
             return datamap[column.attribute];
         }

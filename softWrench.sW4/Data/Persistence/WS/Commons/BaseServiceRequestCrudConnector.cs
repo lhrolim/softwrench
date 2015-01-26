@@ -34,6 +34,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             // Update common fields or transactions prior to maximo operation exection
             CommonTransaction(maximoTemplateData);
 
+            // Attempt to get attachment for new SR
+            HandleAttachmentAndScreenshot((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject, maximoTemplateData.ApplicationMetadata);
+
             base.BeforeCreation(maximoTemplateData);
         }
 
