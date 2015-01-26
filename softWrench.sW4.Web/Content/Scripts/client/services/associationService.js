@@ -418,7 +418,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 };
             }
 
-            var urlToUse = url("/api/generic/Data/UpdateAssociation?" + $.param(parameters));
+            var urlToUse = url("/api/generic/ExtendedData/UpdateAssociation?" + $.param(parameters));
             var jsonString = angular.toJson(fields);
             return $http.post(urlToUse, jsonString);
         },

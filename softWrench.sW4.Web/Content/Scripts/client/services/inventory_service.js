@@ -550,16 +550,12 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             });
         },
         afterchangeinvissueitem: function(parameters) {
-            
-            //parameters['fields']['lotnum'] = null;
-            //parameters['fields']['#curbal'] = null;
+            parameters['fields']['lotnum'] = null;
+            parameters['fields']['#curbal'] = null;
 
             var itemnum = parameters['fields']['itemnum'];
             if (nullOrEmpty(itemnum)) {
                 parameters['fields']['binnum'] = null;
-                parameters['fields']['inventory_.binnum'] = null;
-                parameters['fields']['inventory_']['binnum'] = null;
-
                 parameters['fields']['unitcost'] = null;
                 parameters['fields']['inventory_.issueunit'] = null;
                 parameters['fields']['inventory_.itemtype'] = null;

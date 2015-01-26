@@ -365,7 +365,7 @@ app.directive('crudInputFields', function (contextService) {
             $scope.showCustomModal = function (fieldMetadata, schema, datamap) {
                 if (fieldMetadata.rendererParameters['schema'] != undefined) {
                     var service = fieldMetadata.rendererParameters['onsave'];
-                    var savefn = function(){};
+                    var savefn = function() {};
                     if (service != null) {
                         var servicepart = service.split('.');
                         savefn = dispatcherService.loadService(servicepart[0], servicepart[1]);
@@ -374,19 +374,20 @@ app.directive('crudInputFields', function (contextService) {
                     var modaldatamap = null;
 
                     var onloadservice = fieldMetadata.rendererParameters['onload'];
-                    var onloadfn = function (){};
+                    var onloadfn = function() {};
                     if (onloadservice != null) {
                         var onloadservicepart = onloadservice.split('.');
                         onloadfn = dispatcherService.loadService(onloadservicepart[0], onloadservicepart[1]);
                         modaldatamap = onloadfn(datamap, fieldMetadata.rendererParameters['schema'], fieldMetadata);
                     }
-                    
-                    modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, function (selecteditem) {
+
+                    modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, function(selecteditem) {
                         savefn(datamap, fieldMetadata.rendererParameters['schema'], selecteditem, fieldMetadata);
-                    },null, datamap, schema);
+                    }, null, datamap, schema);
 
                     return;
-                };
+                }
+            };
 
             $scope.lookupCodeChange = function (fieldMetadata) {
                 var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];

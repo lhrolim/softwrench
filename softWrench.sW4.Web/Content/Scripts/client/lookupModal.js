@@ -132,7 +132,7 @@ app.directive('lookupModal', function (contextService) {
 
             $element.on('shown.bs.modal', function (e) {
                 $scope.modalCanceled = false;
-                //$scope.selectedOption = null;
+                $scope.selectedOption = null;
                 $scope.searchObj = {};
                 $scope.populateModal($scope.lookupObj.initialResults);
             });
