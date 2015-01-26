@@ -966,7 +966,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Id" hidden="true" attribute="docinfoid"/>
           <field label="Title:" attribute="document" />
           <field label="Attachment:" attribute="newattachment" >
-            <renderer type="image"/>
+            <renderer type="upload"/>
           </field>
           <!--          <field hidden="true" attribute="ownerid"/>-->
           <!--          <field hidden="true" attribute="ownertable"/>-->

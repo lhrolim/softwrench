@@ -1,21 +1,36 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('screenshotService', function ($rootScope, $timeout, i18NService,$log) {
+app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $log) {
 
     return {
 
         init: function (bodyElement, datamap) {
             $log.getInstance('sw4.screenshotservice').debug('init screenshot service');
             var fn = this;
-            // Configure image holders
-            $('.image-holder', bodyElement).bind('paste', function (event) {
-                fn.handleImgHolderPaste(this, event.originalEvent);
-            });
-            $('.image-holder', bodyElement).bind('blur', function (event) {
-                fn.handleImgHolderBlur(this, datamap);
-            });
-            $('.richtextbox', bodyElement).parents('form:first').bind('submit', function (event) {
-                fn.handleRichTextBoxSubmit($(this), event.originalEvent);
+            var imgHolder = $('.image-holder', bodyElement);
+
+            $.each(imgHolder, function (key, v) {
+                //theorically we could have many screenshots inside one single form, although usually we only have one
+                var value = $(v);
+                var attributeName = value.attr('name');
+                var richBoxPlaceHolder = $("div[contenteditable='true']", value);
+                var isRichTextBox = richBoxPlaceHolder != null;
+                if (isRichTextBox) {
+                    //for richtextbox we should put the imgs inside the contenteditable div instead
+                    // we could have been using only the ordinary screenshot renderer instead...
+                    imgHolder = richBoxPlaceHolder;
+                }
+
+                imgHolder.bind('paste', function (event) {
+                    fn.handleImgHolderPaste(this, event.originalEvent);
+                });
+
+                imgHolder.bind('blur', function (event) {
+                    fn.handleImgHolderBlur(this, datamap, attributeName, isRichTextBox);
+                });
+                $('.richtextbox', bodyElement).parents('form:first').bind('submit', function (event) {
+                    fn.handleRichTextBoxSubmit($(this), event.originalEvent);
+                });
             });
         },
 
@@ -34,7 +49,7 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService,$lo
 
                 if (this.contentWindow.asciiData != null && this.contentWindow.asciiData() != undefined && this.contentWindow.asciiData() != "") {
 
-                    
+
 
                     var rtbAttribute = this.id.substring('richTextBox_'.length);
 
@@ -51,48 +66,54 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService,$lo
         },
 
 
-        handleImgHolderBlur: function (imgHolder, datamap) {
-            var imgAttribute = imgHolder.id.substring('imgHolder_'.length);
-
-            datamap[imgAttribute] = Base64.encode(imgHolder.innerHTML);
-
+        handleImgHolderBlur: function (imgHolder, datamap, attributeName, isRichTextBox) {
+            var dataContent = imgHolder.innerHTML;
+            if (isRichTextBox) {
+                $(imgHolder.innerHTML).attr('src');
+            } 
+            datamap[attributeName + "_attachment"] = Base64.encode(dataContent);
             var now = new Date();
             var timestamp = '' + now.getFullYear() + (now.getMonth() + 1) + now.getDate();
-            datamap[imgAttribute + "_path"] = "Screen" + timestamp + ".html";
+            datamap[attributeName + "_path"] = "Screen" + timestamp + ".html";
         },
 
         handleImgHolderPaste: function (imgHolder, e) {
-
-            var imgAttribute = imgHolder.id.substring('imgHolder_'.length);
+            if (isFirefox()) {
+                // Firefox: the pasted object will be automaticaly included on imgHolder, so do nothing
+                return;
+            }
 
             // Chrome: check if clipboardData is available
-            if (e.clipboardData != undefined && e.clipboardData.items != undefined) {
-
-                var items = e.clipboardData.items;
-                for (var i = 0; i < items.length; i++) {
-
-                    // Check if an image was pasted
-                    if (items[i].type.indexOf("image") !== -1) {
-                        var blob = items[i].getAsFile();
-                        var url = window.URL || window.webkitURL;
-                        var source = url.createObjectURL(blob);
-                        this.createImage(imgAttribute, imgHolder, source);
-                        return;
-                    }
-                }
-                imgHolder.innerHTML = '';
-                e.preventDefault();
-            } else {
-                // Firefox: the pasted object will be automaticaly included on imgHolder, so do nothing
+            if (e.clipboardData == undefined || e.clipboardData.items == undefined) {
+                return;
             }
+
+            
+
+            var items = e.clipboardData.items;
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf("image") === -1) {
+                    //just handling images
+                    continue;
+                }
+                var blob = items[i].getAsFile();
+                var url = window.URL || window.webkitURL;
+                var source = url.createObjectURL(blob);
+                this.createImage(imgHolder, source);
+                e.preventDefault();
+                break;
+            }
+            
         },
 
-        createImage: function (imgAttribute, imgHolder, source) {
+        createImage: function (imgHolder, source) {
             var pastedImage = new Image();
 
             pastedImage.onload = function () {
                 var img = new Image();
                 img.src = imgToBase64(this);
+                $(img).attr('contenteditable', 'true');
+                $(imgHolder).empty();
                 imgHolder.appendChild(img);
             };
             pastedImage.src = source;

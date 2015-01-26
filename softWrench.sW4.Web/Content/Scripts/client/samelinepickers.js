@@ -43,7 +43,7 @@ function SamelinePickersController($scope, $rootScope, formatService) {
         $scope.datamap[$scope.fieldMetadata.parameters['joinattribute'] + '_date'] = valueToUse;
         $scope.datamap[$scope.fieldMetadata.parameters['joinattribute'] + '_time'] = valueToUse;
             
-        $scope.$on("sw_beforeSave", function (event, fields) {
+        $scope.$on("sw_beforesubmitprevalidate_internal", function (event, fields) {
             joinDates(fields);
         });
     };
