@@ -106,7 +106,8 @@ app.directive('lookupModal', function (contextService) {
                 }
 
                 var fieldMetadata = $scope.lookupObj.fieldMetadata;
-                if ($scope.selectedOption == null) {
+                if ($scope.selectedOption == null &&
+                    $scope.datamap[fieldMetadata.attribute] != $scope.lookupAssociationsCode[fieldMetadata.attribute]) {
                     if ($scope.modalCanceled == true) {
                         $scope.datamap[fieldMetadata.target] = null;
                         $scope.lookupAssociationsCode[fieldMetadata.attribute] = null;
