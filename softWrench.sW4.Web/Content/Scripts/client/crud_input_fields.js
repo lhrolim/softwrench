@@ -78,7 +78,7 @@ app.directive('sectionElementInput', function ($compile) {
         }
     }
 });
-app.directive('crudInputFields', function (contextService) {
+app.directive('crudInputFields', function (contextService, eventService) {
     return {
         restrict: 'E',
         replace: true,
@@ -120,6 +120,7 @@ app.directive('crudInputFields', function (contextService) {
                 }
             }
 
+            eventService.onload(scope, scope.schema, scope.datamap);
 
         },
 

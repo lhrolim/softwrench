@@ -164,7 +164,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                         // Loop through the scan order, checking the corresponding fields in the datamap
                         // to see if they have a value
                         var currentAttribute = scanOrder[attribute];
-                        if (datamap.fields[currentAttribute] === '' || datamap.fields[currentAttribute] === null) {
+                        if (datamap[currentAttribute] === '' || datamap[currentAttribute] === null) {
                             // Update the associated values
                             var fieldMetadata = fieldService.getDisplayableByKey(schema, currentAttribute);
                             // Update the associated values using the new scanned data
