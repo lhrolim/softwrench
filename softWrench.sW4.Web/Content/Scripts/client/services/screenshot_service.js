@@ -22,7 +22,7 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
                 }
 
                 imgHolder.bind('paste', function (event) {
-                    fn.handleImgHolderPaste(this, event.originalEvent);
+                    fn.handleImgHolderPaste(this,event.originalEvent);
                 });
 
                 imgHolder.bind('blur', function (event) {
@@ -67,10 +67,13 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
 
 
         handleImgHolderBlur: function (imgHolder, datamap, attributeName, isRichTextBox) {
-            var dataContent = imgHolder.innerHTML;
             if (isRichTextBox) {
-                $(imgHolder.innerHTML).attr('src');
-            } 
+                //richtextbox screenshots will be handled as ordinary longdescriptions
+                return;
+            }
+
+            $log.getInstance('sw4.screenshotservice#handleImgHolderBlur').debug('handling screenshot blur');
+            var dataContent = imgHolder.innerHTML;
             datamap[attributeName + "_attachment"] = Base64.encode(dataContent);
             var now = new Date();
             var timestamp = '' + now.getFullYear() + (now.getMonth() + 1) + now.getDate();
@@ -88,7 +91,7 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
                 return;
             }
 
-            
+
 
             var items = e.clipboardData.items;
             for (var i = 0; i < items.length; i++) {
@@ -103,7 +106,7 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
                 e.preventDefault();
                 break;
             }
-            
+
         },
 
         createImage: function (imgHolder, source) {
@@ -114,6 +117,7 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
                 img.src = imgToBase64(this);
                 $(img).attr('contenteditable', 'true');
                 $(imgHolder).empty();
+                $(imgHolder).attr('hasimage', 'true');
                 imgHolder.appendChild(img);
             };
             pastedImage.src = source;
