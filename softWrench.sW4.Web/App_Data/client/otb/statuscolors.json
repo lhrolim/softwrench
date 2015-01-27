@@ -6,6 +6,7 @@
     pending: yellow,
     inprog: blue,
     resolved: blue,
+	histedit: green,
     wmatl: red
 },
 
