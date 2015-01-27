@@ -8,6 +8,10 @@ body {
     clear: both;
 }
 
+input.ng-dirty.ng-invalid {
+    border-color: red
+}
+
 .spinner {
     position: fixed; /*HAP-508 T-EU-044 fix*/
     top: 50%;

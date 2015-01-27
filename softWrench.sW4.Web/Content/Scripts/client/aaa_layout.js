@@ -1,6 +1,9 @@
 ﻿var app = angular.module('sw_layout', ['pasvaz.bindonce', 'angularTreeview', 'ngSanitize', 'textAngular', 'angularFileUpload']);
 
-
+//angular 1.3 migration reference
+//app.config(['$controllerProvider', function ($controllerProvider) {
+//    $controllerProvider.allowGlobals();
+//}]);
 
 
 

@@ -119,6 +119,14 @@ app.directive('crudInputFields', function (contextService) {
                     });
                 }
             }
+
+            scope.getInputType=function(fieldMetadata) {
+                if (fieldMetadata.rendererType == "email") {
+                    return "email";
+                }
+                return "text";
+            }
+
         },
 
         controller: function ($scope, $http, $element, $injector, $timeout,

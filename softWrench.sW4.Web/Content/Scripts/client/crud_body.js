@@ -84,8 +84,6 @@ app.directive('crudBody', function (contextService) {
             associationService, contextService, alertService,
             validationService, schemaService, $timeout, eventService, $log,checkpointService) {
 
-
-
             // Listeners region
 
             $scope.$on("sw_submitdata", function (event, parameters) {
