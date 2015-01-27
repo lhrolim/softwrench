@@ -179,9 +179,9 @@ input.ng-dirty.ng-invalid {
 }
 
 @media all and (min-width: 768px) {
-    messagesection .alerts {
+    .desktop messagesection .alerts {
         position: fixed;
-        width: 100%;
+        /*width: 100%;*/
     }
 
     .container.desktop .affix-pagination {
