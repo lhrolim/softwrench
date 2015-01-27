@@ -757,12 +757,14 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
             // Create new matusetrans record
             var matusetransDatamap = {
+                matusetransid: null,
+                rowstamp: null,
                 refwo: datamap['wonum'],
                 assetnum: datamap['assetnum'],
                 issueto: datamap['issueto'],
                 location: datamap['oplocation'],
                 glaccount: datamap['glaccount'],
-                issuetype: datamap['issuetype'],
+                issuetype: 'ISSUE',
                 itemnum: datamap['itemnum'],
                 storeloc: datamap['location'],
                 binnum: datamap['invbalances_.binnum'],
@@ -771,9 +773,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 unitcost: datamap['unitcost'],
                 issueunit: datamap['issueunit'],
                 enterby: datamap['enterby'],
-                itemtype: datamap['itemtype'],
+                itemtype: datamap['item_.itemtype'],
                 siteid: datamap['siteid'],
-                costtype: datamap['costtype']
+                costtype: datamap['inventory_.costtype']
             };
             // Post the new matusetrans record
             var jsonString = angular.toJson(matusetransDatamap);
@@ -823,15 +825,16 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             });
         },
 
-        onloadReservation: function(schema, datamap) {
+        onloadReservation: function (scope, schema, datamap) {
+            if (datamap.fields) {
+                datamap = datamap.fields;
+            }
             var parameters = {
                 fields: datamap
             };
             updateInventoryCosttype(parameters);
             datamap['#issueqty'] = datamap['reservedqty'];
             datamap['#issuetype'] = "ISSUE";
-            var user = contextService.getUserData();
-            datamap['#enterby'] = user.login.toUpperCase();
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 siteid: parameters['fields']['siteid'],
