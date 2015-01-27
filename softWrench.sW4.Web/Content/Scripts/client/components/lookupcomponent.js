@@ -62,9 +62,12 @@ app.factory('cmplookup', function ($rootScope, $timeout, $log, associationServic
 
             var searchObj = {};
             var lookupAttribute = fieldMetadata.schema.rendererParameters["attribute"];
-            if (lookupAttribute) {
+            if (lookupAttribute != null) {
                 searchObj[lookupAttribute] = code;
+            } else if (fieldMetadata.target != null) {
+                searchObj[fieldMetadata.target] = code;
             }
+
             associationService.updateDependentAssociationValues(scope, scope.datamap, scope.lookupObj, this.handleMultipleLookupOptionsFn, searchObj);
 
         },

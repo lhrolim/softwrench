@@ -665,7 +665,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <renderer type="default" params="formatter=numberToBoolean"/>
             </field>
             <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" dependantfields="itemnum" extraprojectionvalues="curbal,lotnum,binnum">
-              <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;attribute=binnum;"/>
+              <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
               <dataprovider prefilterfunction="FilterBins"/>
             </association>
