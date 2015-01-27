@@ -13,7 +13,7 @@
         width: calc(100% - 40px);
     }
 
-    .affix-pagination, .listgrid-thead {
+    .affix-pagination, .listgrid-thead, messagesection .alerts {
         width: 97.5%;
         width: -moz-calc(100% - 40px);
         width: -webkit-calc(100% - 40px);

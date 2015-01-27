@@ -8,7 +8,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <property key ="icon.composition.tab" value="fa fa-gavel"/>
       </properties>
       <schemas>
-        <list stereotype="compositionlist">
+        <schema id="list" title="woactivity" stereotype="compositionlist">
           <properties>
             <property key="detail.cancel.lbl" value="Close"/>
           </properties>
@@ -21,7 +21,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="status" label="Status"/>
           <field attribute="owner" label="Owner" />
           <field attribute="ownergroup" label="Owner Group" />
-        </list>
+          <commandbars>
+            <commandgroup position="compositionbottom">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
 
         <detail stereotype="compositiondetail">
           <field attribute="description" label="Summary:" requiredexpression="true"/>
