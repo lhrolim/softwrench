@@ -38,7 +38,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
        
         public static void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
-            try {
+            
                 var user = SecurityFacade.CurrentUser();
                 var commlogs = (IEnumerable<CrudOperationData>)entity.GetRelationship(commlog);
                 var newCommLogs = commlogs.Where(r => r.GetAttribute("commloguid") == null);
@@ -66,9 +66,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                         throw new System.ArgumentNullException("To:");
                     }
                 });
-            } catch (Exception ex) {
-                throw ex;
-            }
+             
 
         }
 
