@@ -70,7 +70,7 @@ app.factory('contextService', function ($rootScope) {
             if (localStorage.mocknonlocal || sessionStorage.mocknonlocal) {
                 return false;
             }
-            return this.retrieveFromContext('isLocal');
+            return this.retrieveFromContext('isLocal') =="true";
         },
 
         client: function () {
@@ -174,7 +174,7 @@ app.factory('contextService', function ($rootScope) {
 
         getResourceUrl: function (path) {
             var baseURL = url(path);
-            if (!this.isLocal() || this.isLocal()=="false") {
+            if (!this.isLocal()) {
                 var initTime = this.getFromContext("systeminittime");
                 if (baseURL.indexOf("?") == -1) {
                     return baseURL + "?" + initTime;
