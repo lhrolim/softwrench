@@ -138,15 +138,6 @@ app.factory('submitService', function ($rootScope, fieldService, contextService,
                     datamap[key] = " ";
                 }
             }
-
-            //Calls the handleDatamapForMIF function on each section's displayables
-            var sections = fieldService.getDisplayablesOfTypes(schema.displayables, ['ApplicationSection']);
-            for (var i = 0, len = sections.length; i < len; i++) {
-                if (sections[i].displayables == null || sections[i].displayables.length == 0) {
-                    continue;
-                }
-                this.handleDatamapForMIF(sections[i], originalDatamap, datamap);
-            }
         }
 
     };
