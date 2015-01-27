@@ -875,7 +875,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <field attribute="orgid" hidden="true"/>
             <field attribute="rowstamp" label="Row Stamp" hidden="true"/>
             <field attribute="requestedby" label="Requested By" readonly="true"/>
-            <field attribute="#enterby" label="Entered By" readonly="true"/>
+            <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
             <field attribute="#issuetype" label="Issue Type" readonly="true"/>
             <field attribute="issueto" label="Issue To" readonly="true"/>
           </section>

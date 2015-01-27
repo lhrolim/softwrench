@@ -8,6 +8,10 @@ body {
     clear: both;
 }
 
+input.ng-dirty.ng-invalid {
+    border-color: red
+}
+
 .spinner {
     position: fixed; /*HAP-508 T-EU-044 fix*/
     top: 50%;
@@ -45,26 +49,10 @@ body {
     border-color: #003878;
 }
 
-/*.alignment-logo {
-    display: block;
-    height: 83px;
-    overflow: hidden;
-    text-align: center;
-    vertical-align: middle;
-}
-
-    .alignment-logo img {
-        vertical-align: middle;
-    }*/
-
 .divAuxTable {
     z-index: 990;
     position: relative;
 }
-
-/*.affix-thead {
-    position: fixed;
-}*/
 
 .schemachoosingcombo {
     width: 50%;
@@ -220,7 +208,6 @@ body {
     z-index: 1000;
     margin-left: auto !important;
     margin-right: auto !important;
-    /*max-width: 1139px;*/
     width: 100%;
 }
 /*SUCCESS MESSAGE - END */

@@ -1,6 +1,7 @@
 ﻿.tooltip {
     font-size: 11px;
     z-index: 9999;
+    position: fixed;
 }
 
     .tooltip.in {

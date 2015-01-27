@@ -12,18 +12,20 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
             Vertical, Horizontal,
         }
 
+        private List<MenuBaseDefinition> _cachedExplodedLeafs;
+
         public MenuDefinition() { }
 
-        public MenuDefinition(IEnumerable<MenuBaseDefinition> leafs, MenuDisplacement mainMenuDisplacement, IMenuLeaf indexItem) {
+        public MenuDefinition(IEnumerable<MenuBaseDefinition> leafs, MenuDisplacement mainMenuDisplacement, string indexItemId) {
             MainMenuDisplacement = mainMenuDisplacement;
             Leafs = leafs;
-            IndexItem = indexItem;
+            ItemindexId = indexItemId;
         }
 
-        public MenuDefinition(IEnumerable<MenuBaseDefinition> leafs, String mainMenuDisplacement, IMenuLeaf indexItem) {
-            MainMenuDisplacement = (MenuDisplacement) Enum.Parse(typeof(MenuDisplacement),mainMenuDisplacement,true);
+        public MenuDefinition(IEnumerable<MenuBaseDefinition> leafs, String mainMenuDisplacement, string indexItemId) {
+            MainMenuDisplacement = (MenuDisplacement)Enum.Parse(typeof(MenuDisplacement), mainMenuDisplacement, true);
             Leafs = leafs;
-            IndexItem = indexItem;
+            ItemindexId = indexItemId;
         }
 
         public MenuDisplacement MainMenuDisplacement { get; set; }
@@ -32,13 +34,33 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
                 return MainMenuDisplacement.ToString().ToLower();
             }
         }
-        public IMenuLeaf IndexItem { get; set; }
         public IEnumerable<MenuBaseDefinition> Leafs { get; set; }
 
-        public List<ModuleDefinition> Modules { get; set; }  
+        public IEnumerable<MenuBaseDefinition> ExplodedLeafs {
+            get {
+                if (_cachedExplodedLeafs != null) {
+                    return _cachedExplodedLeafs;
+                }
+                _cachedExplodedLeafs = new List<MenuBaseDefinition>();
+
+                foreach (var menuBaseDefinition in Leafs) {
+                    if (menuBaseDefinition.Leaf) {
+                        _cachedExplodedLeafs.Add(menuBaseDefinition);
+                    } else {
+                        _cachedExplodedLeafs.AddRange(((MenuContainerDefinition)menuBaseDefinition).ExplodedLeafs);
+                    }
+                }
+
+                return _cachedExplodedLeafs;
+            }
+        }
+
+        public List<ModuleDefinition> Modules { get; set; }
+        public string ItemindexId { get; set; }
 
         public override string ToString() {
             return string.Format("Leafs: {0}, MainMenuDisplacement: {1}", Leafs, MainMenuDisplacement);
         }
     }
 }
+

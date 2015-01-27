@@ -4,6 +4,9 @@ using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
 
 namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
     public class MenuContainerDefinition : MenuBaseDefinition {
+
+        private List<MenuBaseDefinition> _cachedExplodedLeafs;
+
         public IEnumerable<MenuBaseDefinition> Leafs { get; set; }
 
         public string Action { get; set; }
@@ -23,6 +26,25 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
             }
             Action = action;
             Controller = controller;
+        }
+
+        public IEnumerable<MenuBaseDefinition> ExplodedLeafs {
+            get {
+                if (_cachedExplodedLeafs != null) {
+                    return _cachedExplodedLeafs;
+                }
+                _cachedExplodedLeafs = new List<MenuBaseDefinition>();
+
+                foreach (var menuBaseDefinition in Leafs) {
+                    if (menuBaseDefinition.Leaf) {
+                        _cachedExplodedLeafs.Add(menuBaseDefinition);
+                    } else {
+                        _cachedExplodedLeafs.AddRange(((MenuContainerDefinition)menuBaseDefinition).ExplodedLeafs);
+                    }
+                }
+
+                return _cachedExplodedLeafs;
+            }
         }
     }
 }
