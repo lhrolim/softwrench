@@ -84,6 +84,10 @@ app.directive('crudBody', function (contextService) {
             associationService, contextService, alertService,
             validationService, schemaService, $timeout, eventService, $log,checkpointService) {
 
+            $scope.setForm = function (form) {
+                $scope.crudform = form;
+            };
+
             // Listeners region
 
             $scope.$on("sw_submitdata", function (event, parameters) {
@@ -292,7 +296,7 @@ app.directive('crudBody', function (contextService) {
                 $rootScope.$broadcast("sw_beforesubmitprevalidate_internal", transformedFields);
 
                 if (sessionStorage.mockclientvalidation == undefined) {
-                    var validationErrors = validationService.validate($scope.schema, $scope.schema.displayables, transformedFields);
+                    var validationErrors = validationService.validate($scope.schema, $scope.schema.displayables, transformedFields,$scope.crudform.$error);
                     if (validationErrors.length > 0) {
                         //interrupting here, can´t be done inside service
                         return;
