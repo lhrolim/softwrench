@@ -78,7 +78,7 @@ app.directive('sectionElementInput', function ($compile) {
         }
     }
 });
-app.directive('crudInputFields', function (contextService) {
+app.directive('crudInputFields', function (contextService, eventService) {
     return {
         restrict: 'E',
         replace: true,
@@ -120,6 +120,8 @@ app.directive('crudInputFields', function (contextService) {
                 }
             }
 
+            eventService.onload(scope, scope.schema, scope.datamap);
+
             scope.getInputType=function(fieldMetadata) {
                 if (fieldMetadata.rendererType == "email") {
                     return "email";
@@ -132,8 +134,9 @@ app.directive('crudInputFields', function (contextService) {
         controller: function ($scope, $http, $element, $injector, $timeout,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
-            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService) {
+            cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService, cmplookup) {
             $scope.$name = 'crud_input_fields';
+            $scope.lookupObj = {};
             $scope.handlerTitleInputFile = function (cssclassaux) {
                 var title = $scope.i18N('attachment.' + cssclassaux, 'No file selected');
                 var fileInput = $('.' + cssclassaux);
@@ -355,31 +358,21 @@ app.directive('crudInputFields', function (contextService) {
                 }
                 $scope.datamap[datamapKey] = model;
             };
+
             /* LOOKUP functions */
 
-
-            $scope.showLookupModal = function (fieldMetadata) {
+            $scope.showLookupModal = function(fieldMetadata) {
                 if (!$scope.isSelectEnabled(fieldMetadata)) {
                     return;
                 }
-                $scope.lookupModalSearch = {};
-                $scope.lookupModalSearch.descripton = '';
-                $scope.lookupModalSearch.fieldMetadata = fieldMetadata;
-                var targetValue = $scope.datamap[fieldMetadata.target];
-                if (targetValue == null || targetValue == " ") {
-                    $scope.lookupModalSearch.code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
-                } else {
-                    $scope.lookupModalSearch.code = '';
-                }
-                var modals = $('[data-class="lookupModal"]', $element);
-                modals.draggable();
-                modals.modal('show');
+                $scope.lookupObj.element = $element;
+                cmplookup.updateLookupObject($scope, fieldMetadata);
             };
 
             $scope.showCustomModal = function (fieldMetadata, schema, datamap) {
                 if (fieldMetadata.rendererParameters['schema'] != undefined) {
                     var service = fieldMetadata.rendererParameters['onsave'];
-                    var savefn = function(){};
+                    var savefn = function() {};
                     if (service != null) {
                         var servicepart = service.split('.');
                         savefn = dispatcherService.loadService(servicepart[0], servicepart[1]);
@@ -388,16 +381,16 @@ app.directive('crudInputFields', function (contextService) {
                     var modaldatamap = null;
 
                     var onloadservice = fieldMetadata.rendererParameters['onload'];
-                    var onloadfn = function (){};
+                    var onloadfn = function() {};
                     if (onloadservice != null) {
                         var onloadservicepart = onloadservice.split('.');
                         onloadfn = dispatcherService.loadService(onloadservicepart[0], onloadservicepart[1]);
                         modaldatamap = onloadfn(datamap, fieldMetadata.rendererParameters['schema'], fieldMetadata);
                     }
-                    
-                    modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, function (selecteditem) {
+
+                    modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, function(selecteditem) {
                         savefn(datamap, fieldMetadata.rendererParameters['schema'], selecteditem, fieldMetadata);
-                    },null, datamap, schema);
+                    }, null, datamap, schema);
 
                     return;
                 }
@@ -408,11 +401,7 @@ app.directive('crudInputFields', function (contextService) {
                 if (allowFreeText == "true") {
                     var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                     $scope.datamap[fieldMetadata.target] = code;
-                } else if ($scope.datamap[fieldMetadata.target] != null) {
-                    $scope.datamap[fieldMetadata.target] = " "; // If the lookup value is changed to a null value, set a white space, so it can be updated on maximo WS.
-                    $scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
-                    associationService.updateUnderlyingAssociationObject(fieldMetadata, null, $scope);
-                }
+                } 
             };
             $scope.getLookUpDescriptionLabel = function (fieldMetadata) {
                 return i18NService.getLookUpDescriptionLabel(fieldMetadata);
@@ -421,10 +410,16 @@ app.directive('crudInputFields', function (contextService) {
                 var code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
                 var targetValue = $scope.datamap[fieldMetadata.target];
                 var allowFreeText = fieldMetadata.rendererParameters['allowFreeText'];
-                if (code != null && code != '' && (targetValue == null || targetValue == " ") && allowFreeText != "true") {
-                    $scope.showLookupModal(fieldMetadata);
+
+                if (code != targetValue) {
+                    if (code == null || code == '') {
+                        $scope.datamap[fieldMetadata.target] = null;
+                    } else if (allowFreeText != "true") {
+                        $scope.showLookupModal(fieldMetadata);    
+                    }
                 }
             };
+
             $scope.configureNumericInput = function () {
                 var displayables = fieldService.getDisplayablesOfRendererTypes($scope.displayables, ['numericinput']);
                 for (i in displayables) {

@@ -45,84 +45,32 @@ app.directive('lookupModal', function (contextService) {
                               formatService, expressionService) {
 
             $scope.lookupModalSearch = function (pageNumber) {
-                var schema = $scope.schema;
-                var fields = $scope.datamap;
-                var lookupObj = $scope.lookupObj;
-
-                var parameters = {};
-                parameters.application = schema.applicationName;
-                parameters.key = {};
-                parameters.key.schemaId = schema.schemaId;
-                parameters.key.mode = schema.mode;
-                parameters.key.platform = platform();
-                parameters.associationFieldName = lookupObj.fieldMetadata.associationKey;
-
-                var lookupApplication = lookupObj.fieldMetadata.schema.rendererParameters["application"];
-                var lookupSchemaId = lookupObj.fieldMetadata.schema.rendererParameters["schemaId"];
-                if (lookupApplication != null && lookupSchemaId != null) {
-                    parameters.associationApplication = lookupApplication;
-                    parameters.associationKey = {};
-                    parameters.associationKey.schemaId = lookupSchemaId;
-                    parameters.associationKey.platform = platform();
-                }
-
-                var totalCount = 0;
-                var pageSize = 30;
-                if ($scope.modalPaginationData != null) {
-                    totalCount = $scope.modalPaginationData.totalCount;
-                    pageSize = $scope.modalPaginationData.pageSize;
-                }
-                if (pageNumber === undefined) {
-                    pageNumber = 1;
-                }
-
-                if (lookupObj.schema != null) {
-                    var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
-                    var searchValues = $scope.searchObj;
-                    var searchOperators = {}
-                    for (var field in searchValues) {
-                        searchOperators[field] = defaultLookupSearchOperator;
-                    }
-                    parameters.hasClientSearch = true;
-                    parameters.SearchDTO = searchService.buildSearchDTO(searchValues, {}, searchOperators);
-                    parameters.SearchDTO.pageNumber = pageNumber;
-                    parameters.SearchDTO.totalCount = totalCount;
-                    parameters.SearchDTO.pageSize = pageSize;
-                } else {
-                    parameters.valueSearchString = lookupObj.code == null ? "" : lookupObj.code;
-                    parameters.labelSearchString = lookupObj.description == null ? "" : lookupObj.description;
-                    parameters.hasClientSearch = true;
-                    parameters.SearchDTO = {
-                        pageNumber: pageNumber,
-                        totalCount: totalCount,
-                        pageSize: pageSize
-                    };
-                }
-
-                var urlToUse = url("/api/generic/ExtendedData/UpdateAssociation?" + $.param(parameters));
-                var jsonString = angular.toJson(fields);
-                $http.post(urlToUse, jsonString).success(function (data) {
+                associationService.getAssociationOptions($scope, $scope.lookupObj, pageNumber, $scope.searchObj).success(function(data) {
                     var result = data.resultObject;
-                    for (var association in result) {
-                        if (lookupObj.fieldMetadata.associationKey == association) {
-                            var associationResult = result[association];
-                            lookupObj.options = associationResult.associationData;
-                            lookupObj.schema = associationResult.associationSchemaDefinition;
-
-                            $scope.modalPaginationData = {};
-                            $scope.modalPaginationData.pageCount = associationResult.pageCount;
-                            $scope.modalPaginationData.pageNumber = associationResult.pageNumber;
-                            $scope.modalPaginationData.pageSize = associationResult.pageSize;
-                            $scope.modalPaginationData.totalCount = associationResult.totalCount;
-                            $scope.modalPaginationData.selectedPage = associationResult.pageNumber;
-                            //TODO: this should come from the server side
-                            $scope.modalPaginationData.paginationOptions = [10, 30, 100];
-                        }
-                    }
-                }).error(function data() {
+                    $scope.populateModal(result);
+                }).error(function (data) {
                 });
             };
 
+            $scope.populateModal = function (resultData) {
+                for (var association in resultData) {
+                    if ($scope.lookupObj.fieldMetadata.associationKey == association) {
+                        var associationResult = resultData[association];
+                        $scope.lookupObj.options = associationResult.associationData;
+                        $scope.lookupObj.schema = associationResult.associationSchemaDefinition;
+                        var modalPaginationData = $scope.lookupObj.modalPaginationData;
+
+                        modalPaginationData.pageCount = associationResult.pageCount;
+                        modalPaginationData.pageNumber = associationResult.pageNumber;
+                        modalPaginationData.pageSize = associationResult.pageSize;
+                        modalPaginationData.totalCount = associationResult.totalCount;
+                        modalPaginationData.selectedPage = associationResult.pageNumber;
+                        //TODO: this should come from the server side
+                        modalPaginationData.paginationOptions = [10, 30, 100];
+                    }
+                }
+            };
+          
             $scope.i18N = function (key, defaultValue, paramArray) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);
             };
@@ -135,15 +83,15 @@ app.directive('lookupModal', function (contextService) {
                 return i18NService.getLookUpDescriptionLabel(fieldMetadata);
             };
             $scope.lookupModalSelect = function (option) {
-
                 var fieldMetadata = $scope.lookupObj.fieldMetadata;
+
+                $scope.selectedOption = option;
 
                 $scope.datamap[fieldMetadata.target] = option.value;
                 $scope.lookupAssociationsCode[fieldMetadata.attribute] = option.value;
                 $scope.lookupAssociationsDescription[fieldMetadata.attribute] = option.label;
 
                 associationService.updateUnderlyingAssociationObject(fieldMetadata, option, $scope);
-
 
                 $element.modal('hide');
             };
@@ -153,38 +101,48 @@ app.directive('lookupModal', function (contextService) {
                 $('body').removeClass('modal-open');
                 $('.modal-backdrop').remove();
 
-                if ($scope.lookupObj == null) {
+                if ($scope.lookupObj.fieldMetadata == null) {
                     return;
                 }
 
                 var fieldMetadata = $scope.lookupObj.fieldMetadata;
-                if ($scope.datamap != null && ($scope.datamap[fieldMetadata.target] == null || $scope.datamap[fieldMetadata.target] == " ")) {
-                    $scope.$apply(function () {
+                if ($scope.selectedOption == null &&
+                    $scope.datamap[fieldMetadata.attribute] != $scope.lookupAssociationsCode[fieldMetadata.attribute]) {
+                    if ($scope.modalCanceled == true) {
+                        $scope.datamap[fieldMetadata.target] = null;
                         $scope.lookupAssociationsCode[fieldMetadata.attribute] = null;
                         $scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
-                    });
+                        associationService.updateUnderlyingAssociationObject(fieldMetadata, null, $scope);
+                    } else {
+                        $scope.$apply(function () {
+                            $scope.datamap[fieldMetadata.target] = null;
+                            $scope.lookupAssociationsCode[fieldMetadata.attribute] = null;
+                            $scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
+                            associationService.updateUnderlyingAssociationObject(fieldMetadata, null, $scope);
+                        });
+                    }
                 }
 
             });
 
-            $scope.hideLookupModal = function() {
+            $scope.hideLookupModal = function () {
+                $scope.modalCanceled = true;
                 var modals = $('[data-class="lookupModal"]');
                 modals.modal('hide');
             };
 
             $element.on('shown.bs.modal', function (e) {
+                $scope.modalCanceled = false;
+                $scope.selectedOption = null;
                 $scope.searchObj = {};
-                if ($scope.lookupObj != undefined) {
-                    $scope.lookupModalSearch();
-                }
+                $scope.populateModal($scope.lookupObj.initialResults);
             });
 
             $injector.invoke(BaseList, this, {
                 $scope: $scope,
                 formatService: formatService,
                 expressionService: expressionService,
-                searchService: searchService,
-                commandService:null
+                searchService: searchService
             });
         }
     };

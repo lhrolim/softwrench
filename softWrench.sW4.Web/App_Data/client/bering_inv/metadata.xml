@@ -472,6 +472,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </commandgroup>
           </commandbars>
           <event type="onload" service="scannerdetectionService" method="initInvIssueDetailListener"/>
+          <event type="beforesubmit.postvalidation" service="checkpointService" method="clearCheckpoints"/>
           <properties>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
           </properties>

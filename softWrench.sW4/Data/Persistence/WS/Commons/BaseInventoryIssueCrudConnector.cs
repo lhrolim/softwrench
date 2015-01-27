@@ -11,8 +11,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var invIssue = maximoTemplateData.IntegrationObject;
 
-            w.SetValueIfNull(invIssue, "ACTUALDATE", DateTime.Now.FromServerToRightKind());
-            w.SetValueIfNull(invIssue, "TRANSDATE", DateTime.Now.FromServerToRightKind());
+            var currentTime = DateTime.Now.FromServerToRightKind();
+            //Seconds are removed to prevent date syncronization error between maximo server / softwrench server
+            var adjustedCurrentTime = currentTime.AddSeconds(-60);
+
+            w.SetValueIfNull(invIssue, "ACTUALDATE", adjustedCurrentTime);
+            w.SetValueIfNull(invIssue, "TRANSDATE", adjustedCurrentTime);
             w.SetValueIfNull(invIssue, "SENDERSYSID", "SW");
             double units = Convert.ToDouble(w.GetRealValue(invIssue, "QUANTITY"));
             double unitCost = Convert.ToDouble(w.GetRealValue(invIssue, "UNITCOST"));
