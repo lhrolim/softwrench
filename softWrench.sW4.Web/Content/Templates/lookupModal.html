@@ -142,7 +142,7 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody id="lookupBody">
+                    <tbody>
                         <tr ng-repeat="option in lookupObj.options" ng-click="lookupModalSelect(option)">
                             <td ng-repeat="column in lookupObj.schema.displayables" ng-hide="column.isHidden">
                                 <span>{{getFormattedValue(option.extrafields[column.attribute], column, option)}}</span>
