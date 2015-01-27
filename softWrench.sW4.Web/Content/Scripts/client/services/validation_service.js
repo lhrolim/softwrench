@@ -39,7 +39,9 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
         },
 
 
-        validate: function (schema, displayables, datamap,angularformerrors, innerValidation) {
+        validate: function (schema, displayables, datamap, angularformerrors, innerValidation) {
+            angularformerrors = instantiateIfUndefined(angularformerrors);
+
             var validationArray = [];
             for (var i = 0; i < displayables.length; i++) {
                 var displayable = displayables[i];
