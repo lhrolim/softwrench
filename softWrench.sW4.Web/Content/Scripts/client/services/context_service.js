@@ -174,7 +174,7 @@ app.factory('contextService', function ($rootScope) {
 
         getResourceUrl: function (path) {
             var baseURL = url(path);
-            if (!this.isLocal()) {
+            if (!this.isLocal() || this.isLocal()=="false") {
                 var initTime = this.getFromContext("systeminittime");
                 if (baseURL.indexOf("?") == -1) {
                     return baseURL + "?" + initTime;

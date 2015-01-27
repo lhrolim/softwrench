@@ -300,7 +300,7 @@ namespace softWrench.sW4.Util {
 
 
         public static long GetStartTimeInMillis() {
-            return StartTimeMillis;
+            return SystemBuildDateInMillis;
         }
 
         public static Boolean IsLocal() {
