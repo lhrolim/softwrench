@@ -3,19 +3,20 @@
 app.factory('expressionService', function ($rootScope, contextService) {
 
 
-    /*       This regex matches variables that start with an @     */
-    /*      Matching Strings:                                      */
-    /*                  @inventory_.item_.itemnum                  */
-    /*                  @assetnum                                  */
-    /*                  @#customfield                              */
-    /*                                                             */
-    /*       The leading @ is then removed from the matches        */
-    /*      Resulting Strings:                                     */
-    /*                  inventory_.item_.itemnum                   */
-    /*                  assetnum                                   */
-    /*                  #customfield                               */
-    /*                                                             */
-    /*         https://www.regex101.com/r/fB6kI9/2                 */
+    /*       This regex matches variables that start with an @     
+          Matching Strings:                                      
+                      @inventory_.item_.itemnum                  
+                      @assetnum                                  
+                      @#customfield                              
+                                                                 
+           The leading @ is then removed from the matches and the
+             variable is placed within the datamap[''] dictionary    
+          Resulting Strings:                                     
+                      datamap['inventory_.item_.itemnum']                  
+                      datamap['assetnum']                                   
+                      datamap['#customfield']                               
+                                                                 
+                https://www.regex101.com/r/fB6kI9/2               */
 
     var preCompiledReplaceRegex = /(@\#*)(\w+(\.?\w?)*)(?!\w)|\$\.(\w+)((\.?\w?)*((\[\'?\w+\'\])|\[?\w+\])(\.\w+)*)*(\.\w+)*/g;
 
