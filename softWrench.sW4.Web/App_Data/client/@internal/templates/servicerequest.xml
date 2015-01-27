@@ -181,8 +181,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
         <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
           <section id="siteidsection">
-            <field attribute="ticketid" label="Request #:" readonly="true" requiredexpression="true"/>
-            <field label="Site:" attribute="siteid" readonly="true"/>
+           <field label="Site:" attribute="siteid" readonly="true"/>
           </section>
           <section id="statussection">
             <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
