@@ -5,8 +5,8 @@
     .affix-pagination .pagination-pager a:hover {
         text-decoration: none;
     }
-    
-    .container .context {
+
+.container .context {
     width: 100%;
     background: #eee;
     border-bottom: #000 1px solid;
@@ -29,6 +29,10 @@
             margin-top: 10px;
         }
 
+    .container .context button {
+        margin-bottom: 5px;
+    }
+
     .container .context label {
         font-weight: normal;
     }
@@ -40,7 +44,7 @@
 
         .container .context .group {
             float: left;
-            height: 34px;
+            min-height: 34px;
         }
 
     #crudbodyform .context {
@@ -79,9 +83,9 @@
             margin-left: 10px;
         }
 
-        #crudbodyform .context .group:first-child {
-            margin-left: 0;
-        }
+    #crudbodyform .context .group:first-child {
+        margin-left: 0;
+    }
 }
 
 @media all and (min-width: 1170px) {

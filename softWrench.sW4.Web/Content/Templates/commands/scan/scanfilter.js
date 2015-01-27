@@ -17,13 +17,13 @@
     };
 
     function getFilterFields(displayables) {
-        for (item in displayables) {
-            if (!displayables[item].isHidden && !displayables[item].isReadOnly) {
-                if (displayables[item].type == "ApplicationSection") {
-                    getFilterFields(displayables[item].displayables);
+        for (var i = 0; i < displayables.length; i++) {
+            if (!displayables[i].isHidden && !displayables[i].isReadOnly) {
+                if (displayables[i].type == "ApplicationSection") {
+                    getFilterFields(displayables[i].displayables);
                 } else {
                     $scope.filterFields.push(
-                        { "label": displayables[item].label, "attribute": displayables[item].attribute });
+                        { "label": displayables[i].label, "attribute": displayables[i].attribute });
                 }
             }
         }

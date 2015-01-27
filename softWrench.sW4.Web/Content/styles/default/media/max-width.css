@@ -20,34 +20,3 @@
         width: calc(100% - 40px);
     }
 }
-
-/*use Bootstrap max-width*/
-/*.container {
-    max-width: 1139px;
-}
-
-.affix-pagination {
-    max-width: 1139px;
-}
-
-.container header {
-    max-width: 1139px;
-}
-
-    .container header .menu-grid {
-        max-width: 1139px;
-    }
-
-.topMessageAux {
-    max-width: 1139px;
-}
-
-@media all and (min-width: 768px) {
-    messagesection .alerts {
-        max-width: 1139px;
-    }
-
-    .listgrid-thead {
-        max-width: 1139px;
-    }
-}*/
