@@ -203,14 +203,12 @@ input.ng-dirty.ng-invalid {
     font: 12px/24px Arial, Helvetica, sans-serif;
 }
 
-/*SUCCESS MESSAGE - BEGIN*/
 .topMessageAux {
     z-index: 1000;
     margin-left: auto !important;
     margin-right: auto !important;
     width: 100%;
 }
-/*SUCCESS MESSAGE - END */
 
 /*JV - ~10/03 - SWWEB-472 - Add green & orange color CSS that can be used for icons*/
 .green {
