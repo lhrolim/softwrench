@@ -361,6 +361,9 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             });
         },
 
+        //This takes the lookupObj, pageNumber, and searchObj (dictionary of attribute (key) 
+        //to its value that will filter the lookup), build a searchDTO, and return the post call to the
+        //UpdateAssociations function in the ExtendedData controller.
         getAssociationOptions: function (scope, lookupObj, pageNumber, searchObj) {
             var schema = scope.schema;
             var fields = scope.datamap;
@@ -392,6 +395,8 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 pageNumber = 1;
             }
 
+            //If a schema is provided for the lookup, then searchvalues/operators can be populated to
+            //filter the search
             if (lookupObj.schemaId != null) {
                 var defaultLookupSearchOperator = searchService.getSearchOperationById("CONTAINS");
                 var searchValues = searchObj;
