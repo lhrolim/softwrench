@@ -14,8 +14,10 @@ app.factory('expressionService', function ($rootScope, contextService) {
     /*                  inventory_.item_.itemnum                   */
     /*                  assetnum                                   */
     /*                  #customfield                               */
+    /*                                                             */
+    /*         https://www.regex101.com/r/fB6kI9/2                 */
 
-    var preCompiledReplaceRegex = /(?:^|\W)@(\#*)(\w+(\.?\w?)*)(?!\w)/g;
+    var preCompiledReplaceRegex = /(@\#*)(\w+(\.?\w?)*)(?!\w)|\$\.(\w+)((\.?\w?)*((\[\'?\w+\'\])|\[?\w+\])(\.\w+)*)*(\.\w+)*/g;
 
     return {
         isPrecompiledReplaceRegexMatch: function (expression) {
@@ -23,43 +25,38 @@ app.factory('expressionService', function ($rootScope, contextService) {
         },
 
         getExpression: function (expression, datamap) {
-            var variables = this.getVariables(expression);
+            var variables = expression.match(preCompiledReplaceRegex);
 
             if (variables == null)
                 return expression;
 
-            for (var i = 0, len = variables.length; i < len; i++) {
-                var datamapPath = 'datamap';
-                if (datamap.fields != undefined) {
-                    datamapPath = 'datamap.fields';
-                }
+            var datamapPath = 'datamap';
+            if (datamap.fields != undefined) {
+                datamapPath = 'datamap.fields';
+            }
 
-                var currentVariable = variables[i];
-                var variableRegex = new RegExp('@' + currentVariable);
-                expression = expression.replace(variableRegex, datamapPath + "['" + currentVariable + "']");
+            for (var i = 0, len = variables.length; i < len; i++) {
+                var variable = variables[i];
+                if (variable.startsWith('@')) {
+                    variable = variable.replace(/[\@\(\)]/g, '').trim();
+                    expression = variable.replace(variable, datamapPath + "['" + variable + "']");
+                } else if (variable.startsWith('$')) {
+                    expression = variable.replace(/[\$\(\)]/g, 'scope').trim();
+                }
             }
 
             expression = expression.replace(/ctx:/g, 'contextService.');
             return expression;
         },
 
-
-
-        getVariables: function (expression) {
-            var variables = expression.match(preCompiledReplaceRegex);
-            if (variables != null) {
-                for (var i = 0; i < variables.length; i++) {
-                    variables[i] = variables[i].replace(/[\@\(\)]/g, '').trim();
-                }
-            }
-            return variables;
-        },
-
         getVariablesForWatch: function (expression) {
-            var variables = this.getVariables(expression);
+            var variables = expression.match(preCompiledReplaceRegex);
             var collWatch = '[';
             for (var i = 0; i < variables.length; i++) {
-                collWatch += 'datamap.' + variables[i];
+                variables[i] = variables[i].replace(/[\@\(\)]/g, 'datamap.').trim();
+                variables[i] = variables[i].replace(/[\$\(\)]/g, 'scope').trim();
+                
+                collWatch += variables[i];
                 if (i != variables.length - 1) {
                     collWatch += ",";
                 }
@@ -70,14 +67,14 @@ app.factory('expressionService', function ($rootScope, contextService) {
         },
 
 
-        evaluate: function (expression, datamap) {
+        evaluate: function (expression, datamap, scope) {
             if (expression == undefined || expression == "true" || expression == true) {
                 return true;
             }
             if (expression == "false" || expression == false) {
                 return false;
             }
-            var expressionToEval = this.getExpression(expression, datamap);
+            var expressionToEval = this.getExpression(expression, datamap, scope);
             try {
                 return eval(expressionToEval);
             } catch (e) {

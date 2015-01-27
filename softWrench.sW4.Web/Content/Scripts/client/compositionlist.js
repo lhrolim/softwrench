@@ -64,13 +64,15 @@ app.directive('newItemInput', function ($compile, fieldService,associationServic
             datamap: '=',
             associationOptions: '=',
             cancelfn: '&',
-            savefn: '&'
+            savefn: '&',
+            previousdata: '=',
+            previousschema: '='
 
         },
         template: "<div></div>",
         link: function (scope, element, attrs) {
             if (angular.isArray(scope.displayables)) {
-                fieldService.fillDefaultValues(scope.displayables, scope.datamap);
+                fieldService.fillDefaultValues(scope.displayables, scope.datamap, scope);
                 element.append(
                     "<crud-input schema='schema'" +
                                 "datamap='datamap'" +

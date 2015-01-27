@@ -51,16 +51,16 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
             return result;
         },
 
-        fillDefaultValues: function (displayables, datamap) {
+        fillDefaultValues: function (displayables, datamap, scope) {
             $.each(displayables, function (key, value) {
                 var target = value.attribute;
                 if (value.defaultValue != undefined && target != undefined) {
                     if (datamap[target] == null) {
                         if (displayables[key].evalExpression != null) {
-                           datamap[target] = expressionService.evaluate(displayables[key].evalExpression, datamap);
+                           datamap[target] = expressionService.evaluate(displayables[key].evalExpression, datamap, scope);
                         } else {
                            //TODO: extract a service here, to be able to use @user, @person, @date, etc...
-                           datamap[target] = value.defaultValue;
+                            datamap[target] = expressionService.evaluate(value.defaultValue, datamap, scope);
                         }
                     }
                 }
