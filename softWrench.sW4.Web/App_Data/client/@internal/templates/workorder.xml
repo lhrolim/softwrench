@@ -95,7 +95,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
-            <property key="list.defaultorderby" value="wonum desc"/>
+            <property key="list.defaultorderby" value="workorder.statusdate desc"/>
             <!--<property key="list.click.mode" value="@status == 'CLOSE' ? 'output' : 'input'"/>-->
           </properties>
         </list>
