@@ -1,7 +1,9 @@
 ﻿using log4net;
+using softWrench.sW4.Data.Persistence.WS.Ism.Base;
 using softwrench.sw4.Hapag.Data;
 using softwrench.sw4.Hapag.Data.Init;
 using softwrench.sw4.Hapag.Data.Sync;
+using softWrench.sW4.Metadata.Applications;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -16,6 +18,7 @@ using softWrench.sW4.SimpleInjector.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.Hapag.Security {
     public class HlagLocationManager : ISWEventListener<ApplicationStartedEvent>, ISWEventListener<UserLoginEvent>, IHlagLocationManager {
@@ -248,14 +251,14 @@ namespace softwrench.sw4.Hapag.Security {
         }
 
 
-        public IEnumerable<HlagGroupedLocation> FindAllLocationsOfCurrentUser() {
+        public IEnumerable<HlagGroupedLocation> FindAllLocationsOfCurrentUser(ApplicationMetadata application) {
             var user = SecurityFacade.CurrentUser();
-            var findAllLocationsOfCurrentUser = DoFindLocationsOfCurrentUser(user);
+            var findAllLocationsOfCurrentUser = DoFindLocationsOfCurrentUser(user, application);
             Log.DebugFormat("locations retrieved for user {0}: {1}", user.Login, findAllLocationsOfCurrentUser);
             return findAllLocationsOfCurrentUser;
         }
 
-        private IEnumerable<HlagGroupedLocation> DoFindLocationsOfCurrentUser(InMemoryUser user) {
+        private IEnumerable<HlagGroupedLocation> DoFindLocationsOfCurrentUser(InMemoryUser user, ApplicationMetadata application) {
 
             var userLocation = user.Genericproperties[HapagPersonGroupConstants.HlagLocationProperty] as UserHlagLocation;
             if (userLocation == null) {
@@ -264,6 +267,10 @@ namespace softwrench.sw4.Hapag.Security {
             var context = _contextLookuper.LookupContext();
             var allLocations = FindAllLocations();
             if (context.IsInModule(FunctionalRole.Tom) || context.IsInModule(FunctionalRole.Itom)) {
+                if (application.Name.Equals("imac") && application.Schema.SchemaId.Equals("decommission")) {
+                    return allLocations.Where(a => a.SubCustomer.EqualsAny(ISMConstants.DefaultCustomerName, ISMConstants.HamburgLocation2));
+                }
+
                 return allLocations;
             }
 

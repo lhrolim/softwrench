@@ -1,5 +1,6 @@
 ﻿using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Security;
+using softWrench.sW4.Metadata.Applications;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational;
@@ -69,7 +70,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         }
 
         public IEnumerable<IAssociationOption> GetHlagUserLocations(OptionFieldProviderParameters parameters) {
-            var currentLocations = LocationManager.FindAllLocationsOfCurrentUser();
+            var currentLocations = LocationManager.FindAllLocationsOfCurrentUser(parameters.ApplicationMetadata);
             var hlagUserlocations = currentLocations as HlagGroupedLocation[] ?? currentLocations.ToArray();
             if (CollectionExtensions.IsNullOrEmpty(hlagUserlocations)) {
                 Log.Warn(HapagErrorCatalog.Err001);
@@ -83,7 +84,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         public IEnumerable<IAssociationOption> GetHlagCustomerCostCenter(OptionFieldProviderParameters parameters) {
             ISet<IAssociationOption> costcenters = new SortedSet<IAssociationOption>();
-            var currentLocations = LocationManager.FindAllLocationsOfCurrentUser();
+            var currentLocations = LocationManager.FindAllLocationsOfCurrentUser(parameters.ApplicationMetadata);
             var hlagUserlocations = currentLocations as HlagGroupedLocation[] ?? currentLocations.ToArray();
             if (CollectionExtensions.IsNullOrEmpty(hlagUserlocations)) {
                 Log.Warn(HapagErrorCatalog.Err001);
@@ -101,7 +102,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         public IEnumerable<IAssociationOption> GetHlagUserLocationAndCostCenter(OptionFieldProviderParameters parameters) {
             ISet<IAssociationOption> costcenters = new SortedSet<IAssociationOption>();
-            var currentLocations = LocationManager.FindAllLocationsOfCurrentUser();
+            var currentLocations = LocationManager.FindAllLocationsOfCurrentUser(parameters.ApplicationMetadata);
             var hlagUserlocations = currentLocations as HlagGroupedLocation[] ?? currentLocations.ToArray();
             if (CollectionExtensions.IsNullOrEmpty(hlagUserlocations)) {
                 Log.Warn(HapagErrorCatalog.Err001);
@@ -139,12 +140,12 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         }
 
 
-        protected SearchRequestDto AssetByLocationCondition(SearchRequestDto searchDTO, string fromLocation) {
+        protected SearchRequestDto AssetByLocationCondition(SearchRequestDto searchDTO, string fromLocation, ApplicationMetadata metadata) {
             if (String.IsNullOrWhiteSpace(fromLocation)) {
                 throw ExceptionUtil.InvalidOperation("from location parameter should not be null");
             }
             searchDTO.IgnoreWhereClause = true;
-            var locations = LocationManager.FindAllLocationsOfCurrentUser();
+            var locations = LocationManager.FindAllLocationsOfCurrentUser(metadata);
             var location = locations.FirstOrDefault(l => l.SubCustomer.Contains(fromLocation));
             if (location == null) {
                 throw ExceptionUtil.InvalidOperation("current user can not access location {0}", fromLocation);

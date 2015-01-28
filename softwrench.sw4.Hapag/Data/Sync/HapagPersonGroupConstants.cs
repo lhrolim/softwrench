@@ -19,6 +19,9 @@ namespace softwrench.sw4.Hapag.Data.Sync {
         //this one gives access to all the region groups
         internal const string HapagWWGroup = "C-HLC-WW-AR-WW";
 
+        internal const string HamburgGroup = "C-HLC-WW-LC-HH1";
+        internal const string Hamburg2Group = "C-HLC-WW-LC-HH2";
+
         #region profiles
         internal const string BaseHapagProfilePrefix = "C-HLC-WW-RO-";
         internal const string HEu = "C-HLC-WW-RO-EU";

@@ -31,7 +31,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
         internal const string RemoveLan = "removelan";
 
 
-        internal const string Decomissioned = "decomission";
+        internal const string Decommissioned = "decommission";
         internal const string Replace = "replace";
         internal const string ReplaceOther = "replaceother";
         internal const string ReplaceStd = "replacestd";

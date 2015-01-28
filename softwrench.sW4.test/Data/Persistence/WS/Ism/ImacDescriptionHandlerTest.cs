@@ -62,6 +62,11 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Ism {
             DoTest("add", "add_subcomponent.json", "add_subcomponent.txt");
         }
 
+        [TestMethod]
+        public void DecomissionAsset() {
+            DoTest("decommission", "decommission.json", "decommission.txt");
+        }
+
         private static void DoTest(string schemaId, string input, string output) {
             var appMetadata = MetadataProvider.Application("imac")
                 .ApplyPolicies(new ApplicationMetadataSchemaKey(schemaId), InMemoryUser.TestInstance("test"),

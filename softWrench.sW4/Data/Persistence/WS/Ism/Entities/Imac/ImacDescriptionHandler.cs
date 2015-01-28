@@ -37,6 +37,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
 
         private static void CreateSection(CrudOperationData jsonObject, StringBuilder sb,
             ApplicationSection section) {
+            if (section.Parameters.ContainsKey("nodescription")) {
+                return;
+            }
+
             var sectionHeader = OpenSection(section);
             var displayables = DisplayableUtil.GetDisplayable<IApplicationAttributeDisplayable>(
                 typeof(IApplicationAttributeDisplayable), section.Displayables);
@@ -63,6 +67,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
                     continue;
                 }
                 if (attributeDisplayable is IApplicationDisplayableContainer) {
+
                     continue;
                 }
 
@@ -76,6 +81,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
                     continue;
                 }
 
+
+
                 if (attributeDisplayable.Attribute == "assetCommodities") {
                     HandleAssetCommodities(sb, (string)jsonObject.GetAttribute(attributeDisplayable.Attribute),
                         attributeDisplayable);
@@ -83,6 +90,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
                 }
 
                 var oldValue = GetValue(jsonObject, attributeDisplayable);
+
                 var newValue = LocateNewValue(attributeDisplayable.Attribute, jsonObject, displayables);
                 sb.AppendLine(AppendField(attributeDisplayable.Label, oldValue, newValue));
             }
@@ -93,6 +101,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
             string labelAttribute = "#" + attributeDisplayable.Attribute + "_label";
             if (jsonObject.ContainsAttribute(labelAttribute)) {
                 return jsonObject.GetAttribute(labelAttribute);
+            }
+            if (attributeDisplayable.RendererType !=null && attributeDisplayable.RendererType.Equals("upload")) {
+                return jsonObject.GetAttribute(attributeDisplayable.Attribute + "_path");
             }
             return jsonObject.GetAttribute(attributeDisplayable.Attribute);
         }

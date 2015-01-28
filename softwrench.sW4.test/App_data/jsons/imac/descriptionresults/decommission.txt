@@ -1,0 +1,16 @@
+﻿
+=====================================================================
+Request Details
+
+Location:   HLAG-HH1
+Asset:   (T2002) 1997 Great Dane 48ft Trailers // GDN21111
+=====================================================================
+Decommission Data
+
+Reason for decommission:   test
+Decommission Date::   15/01/2015 14:50
+Attachment::   ImacExport.xls
+=====================================================================
+Current ITC:   
+Cost Center:   6200/300/000 // Maint+General
+=====================================================================

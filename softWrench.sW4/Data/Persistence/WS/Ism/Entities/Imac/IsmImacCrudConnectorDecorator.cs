@@ -111,6 +111,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
                 imac.Problem.System = "81515400";
             } else if ("replacestd".Contains(schemaid) || "replacelan".Contains(schemaid) || "replaceother".Contains(schemaid)) {
                 imac.Problem.System = "81515500";
+            } else if ("decommission".Equals(schemaid)) {
+                imac.Problem.System = "81515700";
             }
             jsonObject.Attributes["classification"] = imac.Problem.System;
         }

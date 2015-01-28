@@ -140,6 +140,10 @@ namespace softwrench.sw4.Hapag.Data.Connector.Imac {
                 return DoLoadFromFile("HLARPOTHER");
             }
 
+            if ("decommission".Equals(schemaid)) {
+                return DoLoadFromFile("HLADECOMM");
+            }
+
             return null;
         }
 

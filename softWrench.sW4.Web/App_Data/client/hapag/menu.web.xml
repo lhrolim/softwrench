@@ -86,7 +86,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
             filter.stereotype=detail;filter.mode=input;filter.namePattern=replace;popupmode=browser"/>
 
 			<application id="newupdateimac" title="Update" tooltip="Click to create a new Update IMAC Request" schema="update" ref="imac" parameters="popupmode=browser"/>
-      <application id="newdecommisionimac" title="Decommision" tooltip="Click to create a new decommision IMAC Request" schema="decommision" ref="imac" parameters="popupmode=browser"/>
+      <application id="newdecommissionimac" title="decommission" tooltip="Click to create a new decommission IMAC Request" schema="decommission" ref="imac" parameters="popupmode=browser"/>
 
 		</container>
 
@@ -231,7 +231,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 
 			<application id="newupdateimac" title="Update" tooltip="Click to create a new Update IMAC Request" schema="update" ref="imac" parameters="popupmode=browser"/>
 
-      <application id="newdecommisionimac" title="Decommision" tooltip="Click to create a new decommision IMAC Request" schema="decommision" ref="imac" parameters="popupmode=browser"/>
+      <application id="newdecommissionimac" title="decommission" tooltip="Click to create a new decommission IMAC Request" schema="decommission" ref="imac" parameters="popupmode=browser"/>
 
     </container>
 
@@ -281,6 +281,8 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<application id="AssetMenu" title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />
 		<application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
 		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser"/>
+    <application id="newdecommissionimac" title="New decommission Imac Request" tooltip="Click to create a new decommission IMAC Request" schema="decommission" ref="imac" parameters="popupmode=browser"/>
+    
 		<application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
 
 		<container title="Reports" tooltip="Click Here to access your Reports" id="Reports">
@@ -321,6 +323,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<application id="AssetMenu" title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />
 		<application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
 		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser"/>
+    <application id="newdecommissionimac" title="New decommission Imac Request" tooltip="Click to create a new decommission IMAC Request" schema="decommission" ref="imac" parameters="popupmode=browser"/>
 		<application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
 		<application id="ImacGrid" title="IMAC Grid" ref="imac" schema="list" tooltip="Click to view your Imacs" />
 

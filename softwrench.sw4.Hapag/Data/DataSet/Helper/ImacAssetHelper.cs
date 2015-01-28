@@ -21,7 +21,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
                 return childAsset ? new[] { AssetConstants.Idle } : new[] { AssetConstants.Operating, AssetConstants.Active };
             }
 
-            if (schema.Equals(ImacConstants.Decomissioned)) {
+            if (schema.Equals(ImacConstants.Decommissioned)) {
                 return new[] { AssetConstants.Released, AssetConstants.Stolen, AssetConstants.Lost };
             }
 
@@ -52,7 +52,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
             var toFilter = new SortedSet<string>();
 
             if (!assetStatus.EqualsAny(AssetConstants.Released,AssetConstants.Lost,AssetConstants.Stolen)){
-                toFilter.Add(ImacConstants.Decomissioned);
+                toFilter.Add(ImacConstants.Decommissioned);
             }
 
             if (!assetStatus.EqualsAny(AssetConstants.Operating, AssetConstants.Active)) {

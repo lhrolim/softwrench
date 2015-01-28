@@ -2215,7 +2215,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </schema>
 
 
-        <schema id="decommision" stereotype="detail">
+        <schema id="decommission" stereotype="detail">
           <properties>
             <property key="nextschema.schemaid" value="creationSummary"/>
             <property key="showusage" value="false"/>
@@ -2230,17 +2230,24 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <reference id="mainasset"/>
           </section>
 
-          <field attribute="#decommisionreason" label="Reason for Decommision" required="true">
-            <renderer type="textarea"/>
-          </field>
+          <section parameters="detaildescription=Decommission Data">
+            
+            <field attribute="#decommissionreason" label="Reason for decommission" required="true">
+              <renderer type="textarea"/>
+            </field>
 
-          <section id="decommisiondate" resourcepath="/Content/Templates/samelinepickers.html" parameters="joinattribute=#decommissiondate;default=@currentdatetime;dateformat=dd/MM/yyyy;">
-            <header label="Decommission Date:" displacement="sameline"/>
+            <section id="decommissiondate" resourcepath="/Content/Templates/samelinepickers.html"
+                     parameters="joinattribute=#decommissiondate;dateformat=dd/MM/yyyy;">
+              <header label="Decommission Date:" displacement="sameline"/>
+            </section>
+
+            <field attribute="#decommissiondate" hidden="true" label="Decommission Date:"/>
+            
+            <field label="Attachment:" attribute="newattachment" required="true">
+              <renderer type="upload"/>
+            </field>
+
           </section>
-
-          <field label="Attachment:" attribute="newattachment" required="true">
-            <renderer type="upload"/>
-          </field>
           
 
           <section parameters="detaildescription= ">
@@ -2248,7 +2255,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <reference id="readonlycostcenter"/>
           </section>
 
-          <section resourcepath="/Content/Templates/hapag/decomissionaccept.html"/>
+          <section resourcepath="/Content/Templates/hapag/decomissionaccept.html" parameters="nodescription=true"/>
 
         </schema>
 

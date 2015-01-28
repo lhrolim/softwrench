@@ -111,7 +111,7 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
         validatedecommission: function (schema, datamap) {
             var result = [];
             if (!datamap["#accepted"]) {
-                result.push("Confirm that all data for DECOMMISION process has been provided")
+                result.push("Confirm that all data for decommission process has been provided")
             }
             return result;
         }

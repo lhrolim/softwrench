@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Entities;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.SimpleInjector;
@@ -16,7 +17,7 @@ namespace softwrench.sw4.Hapag.Security
         /// This is a cached check (built upon login) not hitting database everytime
         /// </summary>
         /// <returns></returns>
-        IEnumerable<HlagGroupedLocation> FindAllLocationsOfCurrentUser();
+        IEnumerable<HlagGroupedLocation> FindAllLocationsOfCurrentUser(ApplicationMetadata application);
 
         IEnumerable<HlagGroupedLocation> FindAllLocations();
         IEnumerable<IAssociationOption> FindDefaultITCsOfLocation(string subcustomer);

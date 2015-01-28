@@ -243,7 +243,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         public SearchRequestDto FilterAssetsByItcLocation(AssociationPreFilterFunctionParameters parameters) {
             var fromLocation = parameters.OriginalEntity.GetAttribute("itcassetlocation") as String;
-            return AssetByLocationCondition(parameters.BASEDto, fromLocation);
+            return AssetByLocationCondition(parameters.BASEDto, fromLocation,parameters.Metadata);
         }
 
         public SearchRequestDto FilterAffectedPerson(AssociationPreFilterFunctionParameters parameters) {

@@ -116,18 +116,18 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             var childAsset = parameters.Relationship.Target.Contains("child");
             var isNew = target.Contains("new");
 
-            AppendLocationCondition(searchDTO, fromLocation, schema, childAsset, isNew);
+            AppendLocationCondition(searchDTO, fromLocation, schema, childAsset, isNew, parameters.Metadata);
             searchDTO.AppendSearchEntry("status", ImacAssetHelper.GetImacStatusToSearch(schema, childAsset, isNew));
             searchDTO.AppendWhereClause(AppendClassificationCondition(schema, childAsset));
             return searchDTO;
         }
 
-        private void AppendLocationCondition(SearchRequestDto searchDTO, string fromLocation, string schema, bool childAsset, bool isNew) {
+        private void AppendLocationCondition(SearchRequestDto searchDTO, string fromLocation, string schema, bool childAsset, bool isNew, ApplicationMetadata applicationMetadata) {
             if (String.IsNullOrWhiteSpace(fromLocation)) {
                 throw ExceptionUtil.InvalidOperation("from location parameter should not be null");
             }
             //here we should indeed ignore the whereclauses, since the user can select assets which are not currently under his domain
-            var locations = LocationManager.FindAllLocationsOfCurrentUser();
+            var locations = LocationManager.FindAllLocationsOfCurrentUser(applicationMetadata);
             var location = locations.FirstOrDefault(l => l.SubCustomer.Contains(fromLocation));
             if (location == null) {
                 throw ExceptionUtil.InvalidOperation("current user can not access location {0}", fromLocation);
