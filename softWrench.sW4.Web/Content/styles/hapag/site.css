@@ -683,6 +683,7 @@ textarea .readonly {
     #listgrid {
         margin-left: -120px;
         display: block;
+        margin-top: 0 !important;
     }
 
     .listgrid-firefox {
