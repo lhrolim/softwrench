@@ -22,12 +22,13 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
     public static class ApplicationSchemaFactory {
 
 
-        public static ApplicationSchemaDefinition GetSyncInstance(String applicationName, string idFieldName) {
+        public static ApplicationSchemaDefinition GetSyncInstance(String applicationName, string idFieldName,string userIdFieldName) {
 
             var syncDisplayables = new List<IApplicationDisplayable>();
 
-            var definition = new ApplicationSchemaDefinition(applicationName, "", ApplicationMetadataConstants.SyncSchema, SchemaStereotype.None, SchemaMode.None,
-                ClientPlatform.Mobile, false, syncDisplayables, null, null, null, null, idFieldName, null);
+            var definition = new ApplicationSchemaDefinition(applicationName, "", ApplicationMetadataConstants.SyncSchema, 
+                SchemaStereotype.None, SchemaMode.None,
+                ClientPlatform.Mobile, false, syncDisplayables, null, null, null, null, idFieldName,userIdFieldName, null);
             definition.FkLazyFieldsResolver = ApplicationSchemaLazyFkHandler.SyncSchemaLazyFkResolverDelegate;
             definition.ComponentDisplayableResolver = ReferenceHandler.ComponentDisplayableResolver;
             return definition;
@@ -38,10 +39,10 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
           SchemaMode? mode, ClientPlatform? platform, bool @abstract,
           [NotNull] List<IApplicationDisplayable> displayables, [NotNull]IDictionary<string, string> schemaProperties,
           ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, [NotNull] ApplicationCommandSchema commandSchema,
-          string idFieldName, string unionSchema, ISet<ApplicationEvent> events) {
+          string idFieldName,string userIdFieldName, string unionSchema, ISet<ApplicationEvent> events) {
 
             var schema = new ApplicationSchemaDefinition(applicationName, title, schemaId, stereotype, mode, platform,
-                @abstract, displayables, schemaProperties, parentSchema, printSchema, commandSchema, idFieldName, unionSchema, events);
+                @abstract, displayables, schemaProperties, parentSchema, printSchema, commandSchema, idFieldName,userIdFieldName, unionSchema, events);
 
             if (schema.ParentSchema != null) {
                 schema.Displayables = MergeParentSchemaDisplayables(schema);
@@ -188,14 +189,14 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             //pass null on ParentSchema to avoid reMerging the parentSchemaData
             return GetInstance(schema.ApplicationName, schema.Title, schema.SchemaId, schema.Stereotype, schema.Mode, platform,
                  schema.Abstract, displayables,
-                 schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UnionSchema,
+                 schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName,schema.UserIdFieldName, schema.UnionSchema,
                  schema.EventSet);
         }
 
         public static ApplicationSchemaDefinition Clone(ApplicationSchemaDefinition schema) {
             return GetInstance(schema.ApplicationName, schema.Title, schema.SchemaId, schema.Stereotype, schema.Mode, schema.Platform,
                 schema.Abstract, schema.Displayables,
-                schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UnionSchema,
+                schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UserIdFieldName, schema.UnionSchema,
                 schema.EventSet);
         }
 

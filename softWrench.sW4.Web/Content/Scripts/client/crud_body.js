@@ -140,7 +140,7 @@ app.directive('crudBody', function (contextService) {
                 return datamap.fields[schema.idFieldName] != null;
             };
             $scope.request = function (datamap, schema) {
-                return datamap.fields[schema.idFieldName];
+                return datamap.fields[schema.userIdFieldName];
             };
 
             $scope.toConfirmBack = function (data, schema) {

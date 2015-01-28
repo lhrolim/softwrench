@@ -85,6 +85,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public string IdFieldName { get; set; }
 
+        public string UserIdFieldName { get; set; }
+
         public string IdDisplayable { get; set; }
 
         private Boolean lazyFksResolved = false;
@@ -100,7 +102,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             String applicationName, string title, string schemaId, SchemaStereotype stereotype,
             SchemaMode? mode, ClientPlatform? platform, bool @abstract,
             List<IApplicationDisplayable> displayables, IDictionary<string, string> schemaProperties,
-            ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema, string idFieldName, string unionSchema, ISet<ApplicationEvent> events = null) {
+            ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema, 
+            string idFieldName,string userIdFieldName, string unionSchema, ISet<ApplicationEvent> events = null) {
             if (displayables == null) throw new ArgumentNullException("displayables");
 
             ApplicationName = applicationName;
@@ -116,6 +119,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             Title = title;
             _properties = schemaProperties;
             IdFieldName = idFieldName;
+            UserIdFieldName = userIdFieldName;
             UnionSchema = unionSchema;
             for (int i = 0; i < displayables.Count; i++) {
                 if (displayables[i].Role == ApplicationName + "." + IdFieldName) {
