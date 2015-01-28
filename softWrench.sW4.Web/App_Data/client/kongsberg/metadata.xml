@@ -3,8 +3,6 @@
 xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
   <!--kongsberg-->
   <entities>
-
-
     <entity name="SR" idAttribute="ticketid">
       <attributes>
         <attribute name="accumulatedholdtime" type="float" required="false" />
@@ -995,7 +993,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
   </entities>
 
   <applications>
-
     <application entity="SR" name="servicerequest" title="Service Request">
       <properties>
         <property key="mobile.disabled" value="true"/>
@@ -1089,10 +1086,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Feature Request:" attribute="feature_request">
             <renderer type="checkbox"/>
           </field>
-          <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description">
+          <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description">
             <renderer type="lookup"/>
           </association>
-          <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description">
+          <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description">
             <renderer type="lookup"/>
           </association>
           <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
@@ -1147,7 +1144,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <field attribute="ticketid" label="Request #:" hidden="true"/>
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
               <!-- removed default='@usersite' from the above association label-->
-              <renderer type="lookup"/>
+              <renderer type="combo"/>
             </association>
           </section>
           <section id="statussection">
@@ -1164,7 +1161,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" readonly="true" requiredexpression="true"/>
-            <field attribute="siteid" label="Site:"/>
+            <field attribute="siteid" label="Site:" readonly="true"/>
           </section>
           <section id="statussection">
             <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
@@ -1347,7 +1344,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section id="siteidsection">
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
               <!-- removed default='@usersite' from the above association label-->
-              <renderer type="lookup"/>
+              <renderer type="combo"/>
             </association>
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
           </section>
@@ -1670,7 +1667,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema stereotype="detail" id="newdetail" mode="input" title="New Incident">
           <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
             <!-- removed default='@usersite' from the above association label-->
-            <renderer type="lookup"/>
+            <renderer type="combo"/>
           </association>
           <field attribute="actlabcost" default="0" hidden="true"/>
           <field attribute="actlabhrs" default="0" hidden="true" />
