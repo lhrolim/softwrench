@@ -426,6 +426,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <relationships>
         <relationship to="ci">
           <relationshipAttribute from="cinum" to="cinum" primary="true"/>
+          <relationshipAttribute query="!@status not in ('ARCHIVED','DECOMMISSIONED')"/>
         </relationship>
       </relationships>
     </entity>

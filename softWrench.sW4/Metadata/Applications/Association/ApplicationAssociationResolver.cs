@@ -62,7 +62,10 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 if (!String.IsNullOrEmpty(searchValue)) {
                     associationFilter.AppendSearchParam(lookupAttribute.To);
                     associationFilter.AppendSearchValue(searchValue);
+                }  else if (lookupAttribute.Query != null) {
+                    associationFilter.AppendWhereClause(lookupAttribute.GetQueryReplacingMarkers(association.EntityAssociation.To));
                 }
+
             }
 
             // Set projections and pre filter functions
