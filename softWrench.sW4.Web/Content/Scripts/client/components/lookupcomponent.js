@@ -32,6 +32,10 @@ app.factory('cmplookup', function ($rootScope, $timeout, $log, associationServic
             var options = scope.associationOptions[fieldMetadata.associationKey];
             var optionValue = scope.datamap[fieldMetadata.target];
             scope.lookupAssociationsCode[fieldMetadata.attribute] = optionValue;
+            if (optionValue == null) {
+                scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
+            }
+
             if (options == null || options.length <= 0) {
                 //it should always be lazy loaded... why is this code even needed?
                 return;
