@@ -571,7 +571,7 @@ relatedrecord:{
 }
 
 worklog:{
-	_title:Work Log
+	_title:Work Logs
 	recordkey:Registro de clave
 	class:Categoría
 	createby:Creado por

@@ -3,7 +3,7 @@
 xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
 
   <applications>
-    <application name="worklog" title="Work Log"  entity="worklog" id="00000000-0000-0000-0000-000000000008">
+    <application name="worklog" title="Work Logs"  entity="worklog" id="00000000-0000-0000-0000-000000000008">
       <properties>
         <property key="mobile.userInteractionEnabled" value="false"/>
         <property key="mobile.fetchlimit" value="300"/>

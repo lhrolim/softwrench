@@ -117,7 +117,7 @@ xsi:schemaLocation="http://www.example.org/metadata Metadata.xsd ">
           <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
-        </relationship>
+        </relationship>w
         <relationship to="DOCLINKS" qualifier="attachment" collection="true">
           <relationshipAttribute from="workorderid" to="ownerid" primary="true"/>
           <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
@@ -421,7 +421,7 @@ xsi:schemaLocation="http://www.example.org/metadata Metadata.xsd ">
           </field>
           <field attribute="description" label="Description"  />
           <field attribute="longdescription.ldtext" label="Long Description"  />
-          <composition relationship="worklog" label="Work Log" />
+          <composition relationship="worklog" label="Work Logs" />
           <composition relationship="matusetrans" label="Materials" />
           <composition relationship="labtrans" label="Labors" />
         </detail>
@@ -474,7 +474,7 @@ xsi:schemaLocation="http://www.example.org/metadata Metadata.xsd ">
           <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
           <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
           <association label="Status" target="status" labelfield="synstatus_.description" />
-          <composition relationship="worklog" label="Work Log" />
+          <composition relationship="worklog" label="Work Logs" />
           <composition relationship="matusetrans" label="Materials" />
           <composition relationship="labtrans" label="Labors" />
           <composition relationship="attachment" label="Attachments" />
@@ -645,7 +645,7 @@ xsi:schemaLocation="http://www.example.org/metadata Metadata.xsd ">
       </schemas>
     </application>
 
-    <application name="worklog" title="Work Log" entity="worklog" id="00000000-0000-0000-0000-000000000008" >
+    <application name="worklog" title="Work Logs" entity="worklog" id="00000000-0000-0000-0000-000000000008" >
       <properties>
         <property key="mobile.userInteractionEnabled" value="false"/>
         <property key="mobile.fetchlimit" value="300"/>
@@ -813,7 +813,7 @@ xsi:schemaLocation="http://www.example.org/metadata Metadata.xsd ">
       </schemas>
     </application>
 
-    <application name="attachment" title="Attachment" entity="DOCLINKS">
+    <application name="attachment" title="Attachments" entity="DOCLINKS">
     
       <schemas>
         <list stereotype="compositionlist" >

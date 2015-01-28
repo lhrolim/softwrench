@@ -65,10 +65,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <property key="list.click.schema" value="editdetail"/>
           </properties>
         </list>
+        
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <section id ="siteidsection"/>
-          <field attribute="ticketid" label="SR No:" readonly="true"/>
-          <field attribute="ticketuid" label="SR No:" hidden="true"/>
+          <field attribute="ticketid" label="User Reference ID:" hidden="true"/>
+          <field attribute="ticketuid" label="Unique ID:" hidden="true"/>
           <field attribute="class" label="" hidden="true"/>
           <field attribute="actlabcost" hidden="true" />
           <field attribute="actlabhrs" hidden="true"/>
@@ -179,7 +180,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </section>
         </schema>
 
-        <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
+        <schema parentschema="adetail" id="editdetail" title="Service Request Details">
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" readonly="true" requiredexpression="true"/>
             <field label="Site:" attribute="siteid" readonly="true"/>
@@ -195,7 +196,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" />
             </composition>
 
-            <composition relationship="commlog" label="Communication">
+            <composition relationship="commlog" label="Communications">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
               <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
@@ -210,7 +211,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </section>
 
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
-          
           
           <commandbars>
             <commandgroup position="detailform">
