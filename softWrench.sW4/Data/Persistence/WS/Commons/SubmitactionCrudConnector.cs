@@ -27,9 +27,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         }
 
         public Object SubmitAction(UpdateStatusOperationData opData) {
-            opData.CrudData.Attributes["status"] = opData.status;
-            opData.CrudData.Attributes["#submittingaction"] = "true";
-            return Maximoengine.Update(opData.CrudData);
+            var datamap = opData.CrudData;
+            datamap.Attributes["status"] = opData.status;
+            datamap.Attributes["#submittingaction"] = "true";
+
+            var owner = datamap.GetAttribute("owner");
+            var isIbmTicket = HlagTicketUtil.IsIBMTicket(datamap);
+            if (owner != null && isIbmTicket && datamap.Attributes["status"].Equals("QUEUED")) {
+                //HAP-839 review
+                datamap.Attributes["status"] = "INPROG";
+            } else if (owner == null && !isIbmTicket && datamap.GetAttribute("status").Equals("QUEUED")) {
+                datamap.SetAttribute("ownergroup", "I-EUS-DE-CSC-SDK-HLCFRONTDESKI");
+            }
+
+            return Maximoengine.Update(datamap);
         }
     }
 }

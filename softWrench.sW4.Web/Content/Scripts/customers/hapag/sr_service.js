@@ -10,6 +10,7 @@ app.factory('srservice', function ($http, alertService, fieldService, $rootScope
                 alertService.alert("please select either agree or disagree");
 
             } else {
+               
                 var parameters = {
                     ticketid: fieldService.getId(datamap, schema),
                     status: datamap.customAction,

@@ -10,7 +10,7 @@ using System;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
     class IsmSRCrudConnectorDecorator : BaseISMTicketDecorator {
-        
+
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             base.BeforeCreation(maximoTemplateData);
             var jsonObject = (CrudOperationData)maximoTemplateData.OperationData;
@@ -26,7 +26,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
             HandleStatus(jsonObject, webServiceObject);
             ISMAttachmentHandler.HandleAttachmentsForUpdate(jsonObject, webServiceObject);
 
-            HapagChangeHandler.CheckSR4ChangeGroupID(jsonObject, webServiceObject);            
+            HapagChangeHandler.CheckSR4ChangeGroupID(jsonObject, webServiceObject);
         }
 
         protected override Metrics PopulateMetrics(ServiceIncident webServiceObject, CrudOperationData jsonObject) {
@@ -38,8 +38,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
         private static void HandleStatus(CrudOperationData jsonObject, ServiceIncident webServiceObject) {
             var status = (string)jsonObject.GetAttribute("status");
             if ("SLAHOLD".Equals(status, StringComparison.CurrentCultureIgnoreCase)) {
+                var isIbmTicket = HlagTicketUtil.IsIBMTicket(jsonObject);
                 var nullOwner = string.IsNullOrEmpty((string)jsonObject.GetAttribute("owner"));
-                status = nullOwner ? "QUEUED" : "INPROG";
+                if (isIbmTicket) {
+                    status = nullOwner ? "QUEUED" : "INPROG";
+                } else if (nullOwner)
+                {
+                    status = "QUEUED";
+                    webServiceObject.Problem.ProviderAssignedGroup.Group.GroupID = "I-EUS-DE-CSC-SDK-HLCFRONTDESKI";
+                }
+
             }
             webServiceObject.WorkflowStatus = status;
 
@@ -64,7 +72,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
         protected override ISMServiceEntities.Problem PopulateProblem(CrudOperationData jsonObject, ServiceIncident webServiceObject,
             string entityName, Boolean update) {
             var problem = base.PopulateProblem(jsonObject, webServiceObject, entityName, update);
-            
+
             var customer = jsonObject.GetAttribute("asset_.pluspcustomer") as string;
             if (customer == null) {
                 //for general and outlook templates, there might be only an itc asset selected
@@ -75,7 +83,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
                 //if no asset was selected, get the customer attribute from the Affected Person
                 customer = jsonObject.GetAttribute("person_.pluspcustomer") as string;
             }
-            problem.CustomerID = customer;            
+            problem.CustomerID = customer;
 
             return problem;
         }
