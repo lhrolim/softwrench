@@ -30,13 +30,6 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
                     "</form>",
                 title: modalTitle,
                 buttons: {
-                    cancel: {
-                        label: i18NService.get18nValue('_exportotoexcel.cancel', 'Cancel'),
-                        className: "btn btn-default",
-                        callback: function () {
-                            return null;
-                        }
-                    },
                     main: {
                         label: i18NService.get18nValue('_exportotoexcel.export', 'Export'),
                         className: "btn-primary",
@@ -46,7 +39,15 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
                                 fn(schema, searchData, searchSort, searchOperator, paginationData, exportModeSelected);
                             }
                         }
+                    },
+                    cancel: {
+                        label: i18NService.get18nValue('_exportotoexcel.cancel', 'Cancel'),
+                        className: "btn btn-default",
+                        callback: function () {
+                            return null;
+                        }
                     }
+                   
                 },
                 className: "hapag-modal-exporttoexcel"
             });
