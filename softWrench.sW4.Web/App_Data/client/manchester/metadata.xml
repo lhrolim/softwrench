@@ -205,17 +205,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="serviceaddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
           <field attribute="serviceaddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
           <!--COMSW 24 association field used for lazy lookup-->
-          <association label="Service Address" target="saddresscode" labelfield="serviceaddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
+          <association label="Service Address" target="saddresscode" labelfield="serviceaddress_.description" requiredexpression="@location == null" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
             <renderer type="lookup" />
           </association>
 
           <!-- SWWEB 173-->
           <!-- COMSW 35: Please keep location field as lookup, too many records -->
-          <association label="Location:" target="location" labelfield="location_.description" requiredexpression="@assetnum == null">
+          <association label="Location:" target="location" labelfield="location_.description" requiredexpression="@saddresscode == null">
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             <renderer type="lookup"/>
           </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" requiredexpression="@location == null">
+          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
