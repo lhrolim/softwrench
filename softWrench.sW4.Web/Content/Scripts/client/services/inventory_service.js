@@ -854,8 +854,14 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
         invIssue_afterChangeBin: function (parameters) {
             if (parameters['fields']['binbalances_']) {
-                parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
-                parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+                if (nullOrEmpty(parameters['fields']['binnum'])) {
+                    parameters['fields']['binbalances_.binnum'] = null;
+                    parameters['fields']['binbalances_.lotnum'] = null;
+                    parameters['fields']['binbalances_.curbal'] = null;
+                } else {
+                    parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
+                    parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+                }
                 return;
             };
             // If the binbalances_ record is not filled but the binnum is
@@ -877,12 +883,24 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     var curbal = fields['curbal'];
                     parameters['fields']['lotnum'] = lotnum;
                     parameters['fields']['#curbal'] = curbal == null ? 0 : curbal;
+                    parameters['fields']['binbalances_.lotnum'] = lotnum;
+                    parameters['fields']['binbalances_.curbal'] = curbal == null ? 0 : curbal;
                 });
             } else {
                 parameters['fields']['lotnum'] = null;
                 parameters['fields']['#curbal'] = null;
             }
         },
+
+        invIssueAfterChangeCurbal: function (parameters) {
+            parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+            parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
+        },
+
+        invIssueAfterChangeLotnum: function (parameters) {
+            parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+            parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
+        }
 
     };
 });
