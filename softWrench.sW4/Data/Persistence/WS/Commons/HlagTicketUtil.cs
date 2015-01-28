@@ -9,7 +9,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
     public class HlagTicketUtil {
 
         public static bool IsIBMTicket(CrudOperationData datamap) {
-            return datamap.ContainsAttribute("ownergroup") && !datamap.GetAttribute("ownergroup").ToString().StartsWith("C-");
+            return datamap.ContainsAttribute("ownergroup") && 
+                datamap.GetAttribute("ownergroup") !=null &&
+                !datamap.GetAttribute("ownergroup").ToString().StartsWith("C-");
         }
     }
 }
