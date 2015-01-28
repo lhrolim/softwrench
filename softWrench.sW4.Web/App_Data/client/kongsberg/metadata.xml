@@ -1040,8 +1040,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <section id ="siteidsection"/>
-          <field attribute="ticketid" label="SR No:" readonly="true"/>
-          <field attribute="ticketuid" label="SR No:" hidden="true"/>
+          <field attribute="ticketid" label="Reference ID:" readonly="true"/>
+          <field attribute="ticketuid" label="Unique ID:" hidden="true"/>
           <field attribute="class" label="" hidden="true"/>
           <field attribute="actlabcost" hidden="true" />
           <field attribute="actlabhrs" hidden="true"/>
@@ -1161,7 +1161,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" readonly="true" requiredexpression="true"/>
-            <field attribute="siteid" label="Site:" readonly="true"/>
+            <!--KSW-68 Updated field to combo-->
+            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
+              <!-- removed default='@usersite' from the above association label-->
+              <renderer type="combo"/>
+            </association>
           </section>
           <section id="statussection">
             <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
