@@ -67,6 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\AssetControlWhereClauseProvider.cs" />
     <Compile Include="Data\AssetRamControlWhereClauseProvider.cs" />
     <Compile Include="Data\ChangeWhereClauseProvider.cs" />
     <Compile Include="Data\Configuration\HapagConfigurationConstants.cs" />

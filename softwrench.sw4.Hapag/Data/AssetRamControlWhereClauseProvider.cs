@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Data.Sync;
 using softwrench.sw4.Hapag.Security;
 using softWrench.sW4.Security.Entities;
@@ -38,7 +39,8 @@ namespace softwrench.sw4.Hapag.Data {
                 throw new InvalidOperationException(HapagErrorCatalog.Err002);
             }
             var i = 0;
-            sb.Append("asset.pluspcustomer in (");
+            sb.AppendFormat("asset.status != '{0}'", AssetConstants.Decommissioned);
+            sb.Append(" and asset.pluspcustomer in (");
             foreach (var location in locations) {
                 i++;
                 sb.Append("'" + location.SubCustomer + "'");

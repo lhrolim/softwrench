@@ -155,6 +155,10 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
             _wcFacade.Register("asset", "@assetRamControlWhereClauseProvider.AssetWhereClause", ForModule(fr.AssetRamControl));
         }
 
+        private void CreateAssetCtrlWhereClauses() {
+            _wcFacade.Register("asset", "@assetControlWhereClauseProvider.AssetWhereClause", ForModule(fr.AssetControl));
+        }
+
 
         private string R0017Method(String methodName) {
             return "@r0017WhereClauseProvider." + methodName;

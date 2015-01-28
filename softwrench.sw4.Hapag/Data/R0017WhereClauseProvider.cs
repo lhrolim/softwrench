@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using log4net;
 using softwrench.sw4.Hapag.Data.Configuration;
+using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Data.Init;
 using softwrench.sw4.Hapag.Data.Sync;
 using softwrench.sw4.Hapag.Security;
@@ -55,7 +56,11 @@ namespace softwrench.sw4.Hapag.Data {
                 return sb.ToString();
             }
             var i = 0;
-
+            var ctx = _contextLookuper.LookupContext();
+            if (!(ctx.IsInModule(FunctionalRole.XItc) && SecurityFacade.CurrentUser().IsWWUser())) {
+                //HAP-838 item 6, only XITC ww users should see it, or tom itom (who actually see asset)
+                sb.AppendFormat("asset.status != '{0}' and ", AssetConstants.Decommissioned);
+            }
             foreach (var location in locations) {
                 i++;
                 sb.Append(String.Format("(asset.pluspcustomer in ('{0}') and {1})",

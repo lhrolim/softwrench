@@ -14,6 +14,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
         internal const string Stolen = "360 STOLEN";
         internal const string Released = "400 RELEASED";
 
+        internal const string Decommissioned = "DECOMMISSIONED";
+
         internal const string Unexistent = "LANCHILDSTATUS";
 
         internal const string ClassStructureIdColumn = "classstructureid";
