@@ -189,6 +189,7 @@
     <Compile Include="Data\Persistence\WS\Commons\BasePurchaseRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\HapagChangeHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\HapagSRLongDescriptionHandler.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\HlagTicketUtil.cs" />
     <Compile Include="Data\Persistence\WS\Commons\MifFindByIdCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\SaveRemarkCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\ScreenshotHandler.cs" />
