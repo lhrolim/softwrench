@@ -502,7 +502,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
 
           <section id="compositions">
-            <composition relationship="worklog" label="Work Log"/>
+            <composition relationship="worklog" label="Work Logs"/>
             <composition relationship="attachment" label="Attachments"/>
           </section>
 
@@ -564,7 +564,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </application>
 
     <!--    Record Key Class Created By Created Date Log Type Summary-->
-    <application name="worklog" title="Work Log" entity="worklog" id="00000000-0000-0000-0000-000000000008" >
+    <application name="worklog" title="Work Logs" entity="worklog" id="00000000-0000-0000-0000-000000000008" >
       <schemas>
         <schema id="list" stereotype="compositionlist">
           <field  attribute="worklogid" hidden="true"/>
@@ -588,7 +588,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </schemas>
     </application>
 
-    <application name="attachment" title="Attachment" entity="DOCLINKS">
+    <application name="attachment" title="Attachments" entity="DOCLINKS">
       <schemas>
         <schema id="list" stereotype="compositionlist">
           <properties>

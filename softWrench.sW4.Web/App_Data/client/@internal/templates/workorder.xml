@@ -133,7 +133,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
 
 
-        <schema id="adetail" title="Work Order Detail" abstract="true" stereotype="detail" platform="web">
+        <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web">
 
           <field attribute="workorderid" hidden="true"/>
           <section id ="siteidsection"/>
@@ -244,7 +244,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <event type="beforesubmit.onvalidation" service="workorderservice" method="defaultvalidation" />
         </schema>
 
-        <schema parentschema="adetail" id="editdetail" title="Work Order Detail" platform="web">
+        <schema parentschema="adetail" id="editdetail" title="Work Order Details" platform="web">
           <section id="siteidsection">
             <field label="Site:" attribute="siteid" readonly="true"/>
             <association label="Status:" target="status" labelfield="synstatus.description">
@@ -252,7 +252,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             </association>
           </section>
           <section id="compositions">
-            <composition relationship="worklog" label="Work Log">
+            <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="woactivity" label="WO Tasks">
@@ -264,7 +264,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <composition relationship="labtrans" label="Labor">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
-            <composition relationship="tooltrans" label="Tool">
+            <composition relationship="tooltrans" label="Tools">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="attachment" label="Attachments" >

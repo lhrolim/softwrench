@@ -64,7 +64,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </schemas>
     </application>
 
-    <application name="tooltrans" entity="tooltrans" title="Tool">
+    <application name="tooltrans" entity="tooltrans" title="Tools">
       <properties>
         <property key ="icon.composition.tab" value="fa fa-wrench"/>
       </properties>
