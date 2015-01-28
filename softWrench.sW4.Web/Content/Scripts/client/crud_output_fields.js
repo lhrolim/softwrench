@@ -170,7 +170,7 @@ app.directive('crudOutputFields', function (contextService) {
                 if (fieldMetadata.evalExpression == null) {
                     return;
                 }
-                var variables = expressionService.getVariablesForWatch(fieldMetadata.evalExpression);
+                var variables = expressionService.getVariablesForWatch(fieldMetadata.evalExpression, $scope.datamap);
                 $scope.$watchCollection(variables, function (newVal, oldVal) {
                     if (newVal != oldVal) {
                         $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap);

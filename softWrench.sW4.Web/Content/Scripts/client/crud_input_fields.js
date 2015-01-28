@@ -723,7 +723,7 @@ app.directive('crudInputFields', function (contextService) {
             init();
 
             function bindExpression(expression) {
-                var variables = expressionService.getVariablesForWatch(expression);
+                var variables = expressionService.getVariablesForWatch(expression, $scope.datamap);
                 $scope.$watchCollection(variables, function (newVal, oldVal) {
                     if (newVal != oldVal) {
                         $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(expression, $scope.datamap);
