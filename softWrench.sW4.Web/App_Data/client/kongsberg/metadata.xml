@@ -531,9 +531,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="EXCEPTIONREASON" quoteLiteral="true" />
         </relationship>
-
       </relationships>
-
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
@@ -1276,9 +1274,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
             <renderer type="lookup"/>
           </association>
-          <field attribute="wopriority" label="Priority:" requiredexpression="true" default="1">
-            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-          </field>
+          <!--Updated work order priority to display user-defined field-->
+          <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
+            <renderer type="autocompleteclient"/>
+          </optionfield>
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
             <!--renderer type="lookup"/-->
@@ -1306,27 +1305,27 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 
           <!-- Adding target start finish date-->
-          <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualfinish" hidden="true" attributeToServer="#notusedattribute"/>
+          <field attribute="targstartdate" hidden="true"/>
+          <field attribute="targcompdate" hidden="true"/>
+          <field attribute="actstart" hidden="true"/>
+          <field attribute="actualfinish" hidden="true"/>
 
-          <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
+          <section id="targstartdate" resourcepath="/Content/Templates/samelinepickers.html"
                          parameters="joinattribute=targetstart;">
             <header label="Target Start Date:" displacement="sameline"/>
           </section>
 
-          <section id="targetFinish" resourcepath="/Content/Templates/samelinepickers.html"
+          <section id="targcompdate" resourcepath="/Content/Templates/samelinepickers.html"
                          parameters="joinattribute=targetfinish;">
             <header label="Target Finish Date:" displacement="sameline"/>
           </section>
 
-          <section id="actualStart" resourcepath="/Content/Templates/samelinepickers.html"
+          <section id="actstart" resourcepath="/Content/Templates/samelinepickers.html"
                          parameters="joinattribute=actualstart;">
             <header label="Actual Start Date:" displacement="sameline"/>
           </section>
 
-          <section id="actualFinish" resourcepath="/Content/Templates/samelinepickers.html"
+          <section id="actfinish" resourcepath="/Content/Templates/samelinepickers.html"
                          parameters="joinattribute=actualfinish;">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
@@ -1350,31 +1349,33 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <!-- removed default='@usersite' from the above association label-->
               <renderer type="lookup"/>
             </association>
-          </section>
-          <section id="ownerstatussection">
-            <!--field attribute="owner" label="Owner:"/-->
-
-
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
           </section>
+          <!--<section id="ownerstatussection">
+            --><!--field attribute="owner" label="Owner:"/--><!--
+            <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
+          </section>-->
           <section id="attachmentsection">
             <field label="Attachment:" attribute="newattachment" >
               <renderer type="upload"/>
             </field>
           </section>
+          <event type="beforesubmit.onvalidation" service="workorderservice" method="defaultvalidation" />
         </schema>
 
         <schema parentschema="adetail" id="editdetail" title="Work Order Detail" platform="web">
           <section id="siteidsection">
             <field label="Site:" attribute="siteid" readonly="true"/>
-          </section>
-          <section id="ownerstatussection">
-            <!--field attribute="owner" label="Owner:" readonly="true"/-->
             <association label="Status:" target="status" labelfield="synstatus.description">
               <renderer type="combo"/>
             </association>
           </section>
-
+          <!--<section id="ownerstatussection">
+            --><!--field attribute="owner" label="Owner:" readonly="true"/--><!--
+            <association label="Status:" target="status" labelfield="synstatus.description">
+              <renderer type="combo"/>
+            </association>
+          </section>-->
           <section id="compositions">
             <composition relationship="worklog" label="Work Log">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
@@ -1392,6 +1393,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
           </section>
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+          <event type="beforesubmit.onvalidation" service="workorderservice" method="defaultvalidation" />
         </schema>
 
         <list platform="mobile">
