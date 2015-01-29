@@ -52,7 +52,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
 
             //this would be called only for attachments/worklogs, the remaining case
-            return defaultGroup;
+            return groupAlreadyAssociated;
 
         }
     }
