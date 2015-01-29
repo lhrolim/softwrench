@@ -69,6 +69,7 @@ namespace softWrench.sW4.Util {
                 {"by design", "blue"},
                 {"duplicate", "blue"},
                 {"completed", "green"},
+                {"spam", "red"},
                 {"wsch", "orange"}
             };
         }

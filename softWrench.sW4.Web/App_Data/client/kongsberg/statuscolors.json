@@ -24,6 +24,7 @@
     duplicate: blue,
 	slahold: blue,
     completed: green,
+	spam: red,
     wsch: orange
 },
 
