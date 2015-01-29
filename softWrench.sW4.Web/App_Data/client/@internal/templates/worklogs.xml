@@ -34,9 +34,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="longdescription_.ldtext" label="Details:" >
             <renderer type="textarea"/>
           </field>
-          <properties>
-            <property key="compositions.alwaysrefresh" value="true"/>
-          </properties>
         </detail>
       </schemas>
     </application>
