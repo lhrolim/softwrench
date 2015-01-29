@@ -781,7 +781,7 @@ textarea .readonly {
  * 1024px Compatibility BEGIN *
  ******************************/
 body {
-    /*overflow-x: hidden;*/
+    overflow-x: scroll;
 }
 
 body,
