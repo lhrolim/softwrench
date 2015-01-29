@@ -81,15 +81,14 @@ app.factory('expressionService', function ($rootScope, contextService) {
             if (scopeVariables != null) {
                 for (var i = 0; i < scopeVariables.length; i++) {
                     var referenceVariable = scopeVariables[i];
-                    var realVariable = referenceVariable.substring(1);
-                    realVariable = referenceVariable.replace(referenceVariable, 'scope' + referenceVariable).trim();
+                    var realVariable = referenceVariable.replace('$', 'scope');
                     variables[referenceVariable] = realVariable;
 
                     var subDatamapVariable = datamapReferenceRegex.test(realVariable);
                     var subScopeVariable = scopeReferenceRegex.test(realVariable);
 
                     if (subDatamapVariable != null || subScopeVariable != null) {
-                        var subVariables = this.getVariables(referenceVariable, datamap);
+                        var subVariables = this.getVariables(realVariable, datamap);
                         if (subVariables != null) {
                             $.each(subVariables, function (key, value) {
                                 variables[key] = value;
@@ -105,7 +104,7 @@ app.factory('expressionService', function ($rootScope, contextService) {
         getVariablesForWatch: function (expression, datamap) {
             var variables = this.getVariables(expression, datamap);
             var collWatch = '[';
-            for (var i = 0; i < Objecy.keys(variables).length; i++) {
+            for (var i = 0; i < Object.keys(variables).length; i++) {
                 collWatch += variables[i];
                 if (i != variables.length - 1) {
                     collWatch += ",";
@@ -118,10 +117,10 @@ app.factory('expressionService', function ($rootScope, contextService) {
 
 
         evaluate: function (expression, datamap, scope) {
-            if (expression == undefined || expression == "true" || expression == true) {
+            if (expression === undefined || expression === "true" || expression === true) {
                 return true;
             }
-            if (expression == "false" || expression == false) {
+            if (expression === "false" || expression === false) {
                 return false;
             }
             var expressionToEval = this.getExpression(expression, datamap, scope);
@@ -131,7 +130,7 @@ app.factory('expressionService', function ($rootScope, contextService) {
                 if (contextService.isLocal()) {
                     console.log(e);
                 }
-                return true;
+                return expression;
             }
         },
 
