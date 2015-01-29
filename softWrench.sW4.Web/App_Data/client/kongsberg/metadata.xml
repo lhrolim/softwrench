@@ -1139,6 +1139,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           -->
           <section id="compositions"/>
         </schema>
+        
         <schema parentschema="adetail" title="New Service Request" id="newdetail">
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" hidden="true"/>
@@ -1204,12 +1205,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="description" label="Summary">
             <renderer type="default" params="width=25%;excelwidth=50" />
           </field>
-          <field attribute="location" label="Location">
+          <!--<field attribute="location" label="Location">
             <renderer type="default" params="width=19%" />
           </field>
           <field attribute="asset_.description" label="Asset">
             <renderer type="default" params="width=19%" />
-          </field>
+          </field>-->
           <field attribute="status" label="Status" >
             <renderer type="default" params="width=19%" />
           </field>
@@ -1279,15 +1280,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
             <renderer type="autocompleteclient"/>
           </optionfield>
-          <association label="Location:" target="location" labelfield="location_.description" >
+          <!--<association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
+            --><!--renderer type="lookup"/--><!--
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="generalsrService" method="afterChangeAsset"/>
-          </association>
+          </association>-->
           <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
             <renderer type="lookup"/>
           </association>
@@ -1432,9 +1433,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
             <number decimals="0" min="0" max="999" />
           </field>
-          <field attribute="location" hidden="true"/>
+          <!--<field attribute="location" hidden="true"/>
 
-          <field attribute="location_.description" label="Location" >
+          <field attribute="location_.description" label="Location" hidden="true" >
             <lookup sourceApplication="location" sourceField="location" sourceDisplay="description,location" targetField="location" targetQualifier="">
               <lookupFilters>
                 <lookupFilter sourceField="siteid" targetField="siteid" />
@@ -1448,11 +1449,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                 <lookupFilter sourceField="siteid" targetField="siteid" />
               </lookupFilters>
             </lookup>
-          </field>
+          </field>-->
 
-          <association label="Location" target="location" labelfield="location.description" />
+          <!--<association label="Location" target="location" labelfield="location.description" />-->
 
-          <association label="Asset" target="assetnum" labelfield="asset.description" />
+          <!--<association label="Asset" target="assetnum" labelfield="asset.description" />-->
           <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
           <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
           <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
@@ -1924,7 +1925,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
           <field attribute="wonum" label="Change Id:" requiredexpression="true"/>
           <field attribute="ownergroup" label="Owner Group:"/>
-          <field attribute="location" label="Location:"/>
+          <!--<field attribute="location" label="Location:"/>-->
 
           <field attribute="description" label="Summary:"/>
           <field attribute="reportedby" label="Reported By:"/>
@@ -1970,7 +1971,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="newdetail" title="New Change" abstract="true" stereotype="detail" platform="web">
           <field attribute="wonum" label="Change Id:" requiredexpression="true"/>
           <field attribute="ownergroup" label="Owner Group:"/>
-          <field attribute="location" label="Location:"/>
+          <!--<field attribute="location" label="Location:"/>-->
           <field attribute="estdur"            default="0" hidden="true"/>
           <field attribute="estlabhrs"         default="0" hidden="true"/>
           <field attribute="estmatcost"        hidden="true" default="0"/>
