@@ -19,6 +19,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <entity name="pluspcustomer" idAttribute="pluspcustomerid" whereclause="customer like 'HLC-%'">
       <attributes>
         <attribute name="hlagpluspcustomer" type="varchar" required="false" query="CASE WHEN !@CUSTOMER IS NOT NULL AND !@CUSTOMER = 'HLC-00' then 'HLAG'  WHEN !@CUSTOMER IS NOT NULL AND LENGTH(!@CUSTOMER) >= 3 THEN SUBSTR(!@CUSTOMER, LENGTH(!@CUSTOMER) - 2, 3) ELSE '' END"/>
+        <attribute name="hlagpluspcustomerprefixed" type="varchar" required="false" query="CASE WHEN !@CUSTOMER IS NOT NULL AND !@CUSTOMER = 'HLC-00' then 'HLAG'  WHEN !@CUSTOMER IS NOT NULL AND LENGTH(!@CUSTOMER) >= 3 THEN 'HLAG-' ||  SUBSTR(!@CUSTOMER, LENGTH(!@CUSTOMER) - 2, 3) ELSE '' END"/>
       </attributes>
     </entity>
 
@@ -1096,7 +1097,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
           <field hidden="true" attribute="person_.pluspcustomer"/>
 
-          <association label="Affected Location:" target="pluspcustomer" labelfield="pluspcustomer_.hlagpluspcustomer"/>
+          <association label="Affected Location:" target="pluspcustomer" labelfield="pluspcustomer_.hlagpluspcustomerprefixed"/>
 
           <!--used for querying and saving, but wont appear on screen, will be splitted-->
           <field attribute="affecteddate" default="@currentdatetime" hidden="true"/>
