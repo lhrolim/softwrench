@@ -11,6 +11,7 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
         value = replaceAll(value, '=', '');
         value = replaceAll(value, '<', '');
         value = replaceAll(value, '!', '');
+        value = replaceAll(value, '@BLANK', '');
         return value;
     };
 
@@ -152,7 +153,7 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
             if (value.startsWith("!=")) {
                 return this.getSearchOperationById('NOTEQ');
             }
-            if(value === "IS NULL") {
+            if(value === "!@BLANK") {
                 return this.getSearchOperationById('BLANK');
             }
 
@@ -195,7 +196,7 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
                     }
                 }
                 if (searchOperator[data] != null && searchOperator[data].id == 'BLANK') {
-                    value = 'IS NULL';
+                    value = '!@BLANK';
                 }
 
                 resultString += value + ",,,";
