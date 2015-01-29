@@ -938,7 +938,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
           <section showexpression="@isitcortom==true">
             <header label="ITC-Responsible Asset" params="fieldset=true" displacement="ontop"/>
-            <optionfield providerattribute="hlagUserLocations" attribute="itcassetlocation" label="Location" />
+            <optionfield providerattribute="hlagUserLocations" attribute="itcassetlocation" label="Location" >
+              <renderer type="autocompleteclient"/>
+            </optionfield>
             <association label="Asset:" target="itcassetnum" labelfield="2asset_.hlagdescription2"
                          extraprojectionvalues="location, location_.description, pluspcustomer, assetid" dependantfields="itcassetlocation">
               <renderer type="autocompleteclient" params="minLength=3;opendetails=true;idtopendetails=2asset_.assetid"/>
