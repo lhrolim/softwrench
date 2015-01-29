@@ -242,7 +242,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <connectorParameters>
         <connectorParameter key="dbtable" value="sr" />
         <connectorParameter key="integration_interface" value="SWSR" />
-        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseServiceRequestCrudConnector" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.KongsbergServiceRequestCrudConnector" />
       </connectorParameters>
     </entity>
 
@@ -1052,11 +1052,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="changeby" default="@username" hidden="true"/>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname">
             <renderer type="lookup"/>
-            <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
+            <event type="afterchange" service="srService" method="afterchangeowner"/>
           </association>
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description">
             <renderer type="lookup"/>
-            <event type="afterchange" service="generalsrService" method="afterchangeownergroup"/>
+            <event type="afterchange" service="srService" method="afterchangeownergroup"/>
           </association>
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" >
@@ -1098,26 +1098,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
-          <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualfinish" hidden="true" attributeToServer="#notusedattribute"/>
-          <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetstart;">
-            <header label="Target Start Date:" displacement="sameline"/>
-          </section>
-          <section id="targetFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetfinish;">
-            <header label="Target Finish Date:" displacement="sameline"/>
-          </section>
-          <section id="actualStart" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualstart;">
-            <header label="Actual Start Date:" displacement="sameline"/>
-          </section>
-          <section id="actualFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualfinish;">
-            <header label="Actual Finish Date:" displacement="sameline"/>
-          </section>
+
+          <field label="Target Start Date &amp; Time:" attribute="targetstart" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          <field label="Target End Date &amp; Time:" attribute="targetfinish" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          <field label="Actual Start Date &amp; Time:" attribute="actualstart" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          <field label="Actual End Date &amp; Time:" attribute="actualfinish" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          
           <field attribute="description" label="Summary:" requiredexpression="true"/>
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
@@ -1169,9 +1163,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </association>
           </section>
           <section id="statussection">
-            <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
+            <!--<association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
               <renderer type="combo" />
-            </association>
+            </association>-->
+            <!--Request to refine the list-->
+            <optionfield label="Status:" attribute="status">
+              <renderer type="combo"/>
+              <option label="Completed" value="COMPLETED"/>
+              <option label="Edited in History" value="HISTEDIT"/>
+              <option label="In Progress" value="INPROG"/>
+              <option label="New" value="NEW"/>
+              <option label="Pending" value="PENDING"/>
+              <option label="Queued" value="QUEUED"/>
+              <option label="Resolved" value="RESOLVED"/>
+              <option label="SLA Hold" value="SLAHOLD"/>
+              <option label="Spam" value="SPAM"/>
+            </optionfield>
           </section>
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
