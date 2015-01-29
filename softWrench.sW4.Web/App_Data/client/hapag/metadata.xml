@@ -166,7 +166,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute query="(!@classificationid is null or !@classificationid not like '8151%')"/>
         </relationship>
-        
+
         <relationship to="imac" collection="true">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid"/>
@@ -183,7 +183,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="room" type="varchar" required="false" query="CASE WHEN (!@description is not null and LOCATE('RO:',!@description) > 0 ) then SUBSTR(!@description,LOCATE('RO:',!@description)+3,(LOCATE('/',!@description) - LOCATE('RO:',!@description)-3 ))  else '' end" />
       </attributes>
     </entity>
-    
+
     <entity name="assetloccomm" idAttribute="assetloccommid">
       <relationships>
         <relationship to="commodities" qualifier="commoditiesownedby">
@@ -1356,12 +1356,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="wonum" label="Change ID">
             <renderer type="default" params="minwidth=63px;wordwrap=break-word;" />
           </field>
-          <field attribute="hlagchangesummary" label="Summary">
-            <renderer type="default" params="minwidth=94px;excelwidth=50;wordwrap=break-word" />
-          </field>
-          <field attribute="hlagchangeticketid" label="SR ID">
-            <renderer type="default" params="minwidth=84px;wordwrap=break-word" />
-          </field>
+          <section id="srId"/>
           <field attribute="cinum" label="Asset">
             <renderer type="default" params="minwidth=84px;wordwrap=break-word" />
           </field>
@@ -1387,20 +1382,50 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         </schema>
 
-        <!--Used for viewAll click from Dashboard no SR union-->
+        <!--Used for viewAll of change tasks click from Dashboard no SR union-->
         <schema id="gridwithoutsr" stereotype="list" parentschema="parentgrid">
-
+          <section id="srId">
+            <field attribute="hlagchangesummary" label="Summary">
+              <renderer type="default" params="minwidth=94px;excelwidth=50;wordwrap=break-word" />
+            </field>
+            <field attribute="hlagchangeticketid" label="SR ID">
+              <renderer type="default" params="minwidth=84px;wordwrap=break-word" />
+            </field>
+          </section>
         </schema>
 
         <!--used on view all of approvals-->
         <schema id="gridwithoutsrwithapprovals" stereotype="list" parentschema="parentgrid">
+          <section id="srId">
+            <field attribute="hlagchangesummary" label="Summary">
+              <renderer type="default" params="minwidth=120px;excelwidth=50;wordwrap=break-word" />
+            </field>
+            <field attribute="hlagchangeticketid" label="SR ID" hidden="true">
+              <renderer type="default" params="minwidth=84px;wordwrap=break-word" />
+            </field>
+          </section>
           <section id="extrafields">
             <field attribute="dashapprovals_apprwo_.recordkey" hidden="true"/>
           </section>
+
+          <properties>
+            <property key="list.defaultorderby" value="schedstart asc"/>
+
+          </properties>
+          
         </schema>
 
         <!--Used for viewAll click from Dashboard with SR union-->
         <list title="Change Grid" unionschema="srforchange.changeunionschema" parentschema="parentgrid">
+          <section id="srId">
+            <field attribute="hlagchangesummary" label="Summary">
+              <renderer type="default" params="minwidth=94px;excelwidth=50;wordwrap=break-word" />
+            </field>
+            <field attribute="hlagchangeticketid" label="SR ID">
+              <renderer type="default" params="minwidth=84px;wordwrap=break-word" />
+            </field>
+          </section>
+
           <properties>
             <property key="list.click.service" value="changeservice.opendetail"/>
           </properties>
@@ -2231,7 +2256,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="servicename" value="Decommission"/>
             <property key="oncrudsaveevent.validationservice" value="imacservice.validatedecommission"/>
           </properties>
-          
+
           <section id="requestdetails" parameters="detaildescription=Request Details">
             <reference id="servicelabel"/>
             <reference id="fromlocation"/>
@@ -2239,7 +2264,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
 
           <section parameters="detaildescription=Decommission Data">
-            
+
             <field attribute="#decommissionreason" label="Reason for decommission" required="true">
               <renderer type="textarea"/>
             </field>
@@ -2250,13 +2275,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </section>
 
             <field attribute="#decommissiondate" hidden="true" label="Decommission Date:"/>
-            
+
             <field label="Attachment:" attribute="newattachment" required="true">
               <renderer type="upload"/>
             </field>
 
           </section>
-          
+
 
           <section parameters="detaildescription= ">
             <reference id="currentitc"/>

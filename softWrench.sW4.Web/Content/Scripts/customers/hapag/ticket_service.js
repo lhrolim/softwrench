@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('ticketservice', function ($http, redirectService,alertService) {
+app.factory('ticketservice', function ($http, redirectService,alertService,fieldService) {
 
     return {
 
