@@ -22,7 +22,7 @@ app.directive('menu', function (contextService) {
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: contextService.getResourceUrl('/Content/Templates/menu.html'),
+        templateUrl: contextService.getResourceUrl('/Content/Templates/menu/menu.html'),
         scope: {
             menu: '='
         },
@@ -120,7 +120,7 @@ app.directive('menuItem', function (contextService) {
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: contextService.getResourceUrl('Content/Templates/menuitem.html'),
+        templateUrl: contextService.getResourceUrl('Content/Templates/menu/menuitem.html'),
         scope: {
             leaf: '=',
             displacement: '=',

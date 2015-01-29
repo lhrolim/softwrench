@@ -62,7 +62,7 @@ app.directive('crudList', function (contextService) {
             hidebars: '@',
             checked: '=',
             timestamp: '@',
-            associationOptions:"="
+            associationOptions: "="
         },
 
         controller: function ($scope, $http, $rootScope, $filter, $injector, $log, $timeout,
@@ -76,7 +76,9 @@ app.directive('crudList', function (contextService) {
 
             fixHeaderService.activateResizeHandler();
 
-        
+            $scope.loadIcon = function (value, metadata) {
+                return iconService.loadIcon(value, metadata);
+            };
 
             $scope.hasTabs = function (schema) {
                 return tabsService.hasTabs(schema);
@@ -188,9 +190,13 @@ app.directive('crudList', function (contextService) {
                 fixHeaderService.callWindowResize();
                 if (!$scope.advancedfiltermode) {
                     $scope.advancedsearchdata = null;
-                    for (var data in $scope.searchData) {
-                        $scope.searchData[data] = "";
-                    }
+                }
+                for (var data in $scope.searchData) {
+                    $scope.searchData[data] = "";
+                }
+                var operator = searchService.getSearchOperationBySymbol("");
+                for (var key in $scope.searchOperator) {
+                    $scope.searchOperator[key] = operator;
                 }
             });
 
@@ -362,18 +368,18 @@ app.directive('crudList', function (contextService) {
 
             $scope.filterSearch = function (columnName, event) {
 
-                if ($scope.searchOperator[columnName] == null) {
+                if ($scope.searchOperator[columnName] == null || $scope.searchOperator[columnName].symbol == "") {
                     $scope.searchOperator[columnName] = searchService.defaultSearchOperation();
                 }
 
                 var searchString = $scope.searchData[columnName];
-                if (searchString != null && searchString != '') {
-                    $scope.selectPage(1);
+                if (searchString == "" || searchString == null) {
+                    $scope.searchOperator[columnName] = searchService.getSearchOperationById("BLANK");
+                    $scope.searchData[columnName] = " ";
                 }
+                $scope.selectPage(1);
 
             };
-
-          
 
 
 
@@ -406,7 +412,8 @@ app.directive('crudList', function (contextService) {
                 $scope: $scope,
                 i18NService: i18NService,
                 fieldService: fieldService,
-                commandService: commandService
+                commandService: commandService,
+                formatService: formatService
             });
 
             $injector.invoke(BaseList, this, {
@@ -414,7 +421,7 @@ app.directive('crudList', function (contextService) {
                 formatService: formatService,
                 expressionService: expressionService,
                 searchService: searchService,
-                commandService:commandService
+                commandService: commandService
             });
 
         }

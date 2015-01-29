@@ -2693,7 +2693,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
-    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN')">
+    <!-- INVISSUE.ITEMNUM is not NULL in whereclause it to prevent showing materials. -->
+    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN') and INVISSUE.ITEMNUM is not NULL">
       <relationships>
         <relationship to="workorder" >
           <relationshipAttribute from="refwo" to="wonum" primary="true"/>
@@ -2733,7 +2734,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="inventory_.itemsetid" to="itemsetid"/>
           <relationshipAttribute from="storeloc" to="location"/>
           <relationshipAttribute from="binnum" to="binnum" primary="true"/>
-          <relationshipAttribute from="lotnum" to="lotnum" />
         </relationship>
         <relationship to="invbalances" qualifier="lotbalances">
           <relationshipAttribute from="itemnum" to="itemnum"/>

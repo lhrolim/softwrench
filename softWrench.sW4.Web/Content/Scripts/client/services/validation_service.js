@@ -39,7 +39,9 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
         },
 
 
-        validate: function (schema, displayables, datamap, innerValidation) {
+        validate: function (schema, displayables, datamap, angularformerrors, innerValidation) {
+            angularformerrors = instantiateIfUndefined(angularformerrors);
+
             var validationArray = [];
             for (var i = 0; i < displayables.length; i++) {
                 var displayable = displayables[i];
@@ -51,8 +53,16 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                 if (displayable.requiredExpression != null) {
                     isRequired = expressionService.evaluate(displayable.requiredExpression, datamap);
                 }
+
+                var applicationName = i18NService.get18nValue(displayable.applicationName + ".name", displayable.applicationName);
+
+                if (displayable.rendererType == "email" && angularformerrors.email && !angularformerrors.email[0][displayable.attribute].$valid) {
+                    validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Invalid email at field {0} for {1}', [label, applicationName]));
+                    continue;
+                }
+
                 if (isRequired && nullOrEmpty(datamap[displayable.attribute])) {
-                    var applicationName = i18NService.get18nValue(displayable.applicationName + ".name", displayable.applicationName);
+                    
                     if (label.endsWith('s') || label.endsWith('S')) {
                         validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Field {0} for {1} are required', [label, applicationName]));
                     } else {
@@ -61,7 +71,7 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                 }
                 if (displayable.displayables != undefined) {
                     //validating section
-                    var innerArray = this.validate(schema, displayable.displayables, datamap, true);
+                    var innerArray = this.validate(schema, displayable.displayables, datamap,angularformerrors, true);
                     validationArray = validationArray.concat(innerArray);
                 }
             }

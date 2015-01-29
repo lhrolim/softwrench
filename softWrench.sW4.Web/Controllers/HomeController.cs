@@ -41,7 +41,12 @@ namespace softWrench.sW4.Web.Controllers {
 
             var user = SecurityFacade.CurrentUser();
             var securedMenu = user.Menu(ClientPlatform.Web);
-            var indexItem = securedMenu.IndexItem;
+            var indexItemId = securedMenu.ItemindexId;
+            var indexItem = securedMenu.ExplodedLeafs.FirstOrDefault(l => indexItemId.EqualsIc(l.Id));
+            if (indexItem == null) {
+                //first we´ll try to get the item declared, if it´s null (that item is role protected for that user, for instance, let´s pick the first leaf one as a fallback to avoid problems
+                indexItem = securedMenu.ExplodedLeafs.FirstOrDefault(a => a.Leaf);
+            }
 
             HomeModel model = null;
             string url;
@@ -85,7 +90,7 @@ namespace softWrench.sW4.Web.Controllers {
                 IsLocal = ApplicationConfiguration.IsLocal(),
                 ClientSideLogLevel = clientSideLogLevel,
                 SuccessMessageTimeOut = GetSuccessMessageTimeOut(),
-                InitTimeMillis = ApplicationConfiguration.SystemBuildDateInMillis,
+                InitTimeMillis = ApplicationConfiguration.GetStartTimeInMillis(),
                 InvbalancesListScanOrder = invbalancesListScanOrder,
                 NewInvIssueDetailScanOrder = newInvIssueDetailScanOrder,
                 InvIssueListScanOrder = invIssueListScanOrder,

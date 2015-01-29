@@ -364,6 +364,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\Client\%40internal\templates\tooltrans.xml" />
     <Content Include="App_Data\Client\%40internal\templates\workorder.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -548,6 +549,9 @@
     <Content Include="Content\Images\pagination-previous.png" />
     <Content Include="Content\Images\scottsdale\scottsdale.png" />
     <Content Include="Content\Images\signin.jpg" />
+    <Content Include="Content\Images\southern\branding.png" />
+    <Content Include="Content\Images\southern\logo-main.png" />
+    <Content Include="Content\Images\southern\name-softwrench.png" />
     <Content Include="Content\Images\tree-leaf.png" />
     <Content Include="Content\Images\tree-node-collapsed.png" />
     <Content Include="Content\Images\tree-node-expanded.png" />
@@ -556,9 +560,12 @@
     <Content Include="Content\Images\tva\logo-main.png" />
     <Content Include="Content\Images\tva\signin.jpg" />
     <Content Include="Content\Scripts\client\crud_tbody.js" />
+    <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
     <Content Include="Content\Scripts\client\services\glcomponent_service.js" />
     <Content Include="Content\Scripts\client\services\checkpoint_service.js" />
     <Content Include="Content\Scripts\client\services\matusetrans_service.js" />
+    <Content Include="Content\Scripts\client\services\tooltrans_service.js" />
+    <Content Include="Content\Scripts\customers\kongsberg\sr_service.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angulartreeview.js" />
     <Compile Include="Controllers\Application\ApplicationController.cs" />
     <Compile Include="Controllers\AttachmentController.cs" />
@@ -706,7 +713,7 @@
     <Content Include="Content\Scripts\client\error.js" />
     <Content Include="Content\Scripts\client\datetime.js" />
     <Content Include="Content\Scripts\client\directives\fileread.js" />
-    <Content Include="Content\Scripts\client\directives\menuitem.js" />
+    <Content Include="Content\Scripts\client\directives\menu\menuitem.js" />
     <Content Include="Content\Scripts\client\directives\printSection.js" />
     <Content Include="Content\Scripts\client\directives\printModal.js" />
     <Content Include="Content\Scripts\client\download.js" />
@@ -836,6 +843,7 @@
     <Content Include="Content\styles\gric\signin.css" />
     <Content Include="Content\styles\gric\site.css" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
+    <Content Include="Content\styles\southern\branding.css" />
     <Content Include="Content\styles\tva\signin.css" />
     <Content Include="Content\styles\tva\site.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
@@ -864,6 +872,7 @@
     <Content Include="Content\Templates\hapag\assetremarks.html" />
     <Content Include="Content\Templates\crud\update_section.html" />
     <Content Include="Content\Templates\hapag\commaseparatedcomposition.html" />
+    <Content Include="Content\Templates\menu\adminmenu.html" />
     <Content Include="Content\Templates\otb\compositionlistdeleteaction.html" />
     <Content Include="Content\Templates\otb\invissuereturnaction.html" />
     <Content Include="Content\Templates\otb\commlogaction.html" />
@@ -1429,12 +1438,12 @@
     <Content Include="Content\Scripts\vendor\other\multiselect.js" />
     <None Include="Content\Templates\header.cshtml" />
     <Content Include="Content\Templates\crud\crud_body.html" />
-    <Content Include="Content\Templates\menu.html" />
+    <Content Include="Content\Templates\menu\menu.html" />
     <Content Include="Content\Templates\pagination.html" />
     <Content Include="Content\Templates\crud\crud_output.html" />
     <Content Include="Content\Templates\crud\crud_input.html" />
     <Content Include="Content\Templates\hapag\hapagsearch.html" />
-    <Content Include="Content\Templates\menuitem.html" />
+    <Content Include="Content\Templates\menu\menuitem.html" />
     <Content Include="softWrench.sW4.Controls.WebForms.dll" />
     <Content Include="Content\Scripts\client\signin.js" />
     <Content Include="UserControls\Report.ascx" />

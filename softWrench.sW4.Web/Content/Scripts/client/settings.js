@@ -47,7 +47,7 @@
         editor.gotoLine(0);
     }
 
-    loadScript("/Content/Scripts/ace/ace.js", init);
+    loadScript("/Content/Scripts/vendor/ace/ace.js", init);
 
     $scope.$watch('resultObject.timeStamp', function (newValue, oldValue) {
         if (oldValue != newValue && $scope.resultObject.redirectURL.indexOf("EntityMetadataEditor.html") != -1) {

@@ -81,7 +81,7 @@ app.factory('expressionService', function ($rootScope, contextService) {
             try {
                 return eval(expressionToEval);
             } catch (e) {
-                if ($rootScope.isLocal) {
+                if (contextService.isLocal()) {
                     console.log(e);
                 }
                 return true;

@@ -45,7 +45,7 @@ app.directive('dateTime', function ($timeout, formatService) {
             });
 
             if (dateFormat != '' && dateFormat != undefined) {
-                if (istimeOnly) {
+                if (showTime) {
                     var futureOnly = (attrs.futureOnly != undefined && attrs.futureOnly.toLowerCase() == "true");
                     //                attrs.startDate = futureOnly ? '+0d' : -Infinity;
 
@@ -62,9 +62,9 @@ app.directive('dateTime', function ($timeout, formatService) {
                         showMeridian: showMeridian,
                         startDate: attrs.startDate,
                         formatViewType: 'time',
-                        startView: 1,
-                        maxView: 1
-                    });
+                        startView: istimeOnly ? 1 : 2,
+                        maxView: istimeOnly ? 1 : 3
+                });
                 }
                 else {
                     var allowpast = parseBooleanValue(attrs.allowPast);

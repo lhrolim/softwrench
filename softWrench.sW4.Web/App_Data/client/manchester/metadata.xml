@@ -11,7 +11,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <template path="@servicerequest.xml"/>
     <template path="@asset.xml"/>
     <template path="@longdescription.xml"/>
-  
+    <template path="@tooltrans.xml"/>
     <template path="@materials.xml"/>
     <template path="@labtrans.xml"/>
     <template path="@woactivity.xml"/>
@@ -205,17 +205,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="serviceaddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
           <field attribute="serviceaddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
           <!--COMSW 24 association field used for lazy lookup-->
-          <association label="Service Address" target="saddresscode" labelfield="serviceaddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
+          <association label="Service Address" target="saddresscode" labelfield="serviceaddress_.description" requiredexpression="@location == null" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
             <renderer type="lookup" />
           </association>
 
           <!-- SWWEB 173-->
           <!-- COMSW 35: Please keep location field as lookup, too many records -->
-          <association label="Location:" target="location" labelfield="location_.description" requiredexpression="@assetnum == null">
+          <association label="Location:" target="location" labelfield="location_.description" requiredexpression="@saddresscode == null">
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             <renderer type="lookup"/>
           </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" requiredexpression="@location == null">
+          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
@@ -253,12 +253,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </association>
           </section>
 
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+          
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" />
             </composition>
 
-            <composition relationship="commlog" label="Communication">
+            <composition relationship="commlog" label="Communications">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
               <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
@@ -343,7 +345,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section id="realfields"/>
         </schema>
 
-        <schema id="adetail" title="Work Order Detail" abstract="true" stereotype="detail" platform="web">
+        <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web">
           <field attribute="workorderid" hidden="true"/>
           <section id ="siteidsection"/>
           <section id="realfields">
@@ -458,7 +460,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <event type="beforesubmit.onvalidation" service="workorderservice" method="comvalidation" />
         </schema>
 
-        <schema parentschema="adetail" id="editdetail" title="Work Order Detail" platform="web">
+        <schema parentschema="adetail" id="editdetail" title="Work Order Details" platform="web">
           <section id="siteidsection">
             <field label="Site:" attribute="siteid" readonly="true"/>
             <association label="Status:" target="status" labelfield="synstatus.description">
@@ -466,7 +468,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </association>
           </section>
           <section id="compositions">
-            <composition relationship="worklog" label="Work Log">
+            <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="woactivity" label="WO Tasks">
@@ -476,6 +478,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'"  />
             </composition>
             <composition relationship="labtrans" label="Labor">
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+            </composition>
+            <composition relationship="tooltrans" label="Tools">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="attachment" label="Attachments" >
@@ -585,7 +590,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
     <application name="labtrans" entity="labtrans" title="Labor">
       <schemas>
-        <schema id="detail" stereotype="compositiondetail" mode="input">
+        <list>
+          <field attribute="labtransid" hidden="true"/>
+          <field attribute="laborcode" label="Labor" qualifier="title"/>
+          <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
+          <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
+        </list>
+        
+        <detail platform="web">
           <field attribute="labtransid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
@@ -595,30 +607,21 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="enterby" hidden="true" />
           <field attribute="payrate" hidden="true" />
           <field attribute="transtype" default="WORK" hidden="true"/>
-          <association label="Labor:" required="true" target="laborcode" labelfield="labor_.laborcode" default="@personid">
+          <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" default="@personid">
             <renderer type="lookup"/>
             <event type="afterchange" service="labtranService" method="afterlaborchange"/>
           </association>
-          <association label="Craft:" required="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
+          <association label="Craft:" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
             <event type="afterchange" service="labtranService" method="aftercraftchange"/>
           </association>
-          <field label="Start Date:" required="true" attribute="startdate" default="@currentdatetime">
+          <field label="Start Date:" requiredexpression="true" attribute="startdate" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
           </field>
-          <field attribute="regularhrs" label="Regular Hours:" required="true" default="8"/>
-          <association label="GL Debit Account:" required="true" target="gldebitacct" labelfield="glcomponents_.comptext" labelpattern="{0}">
+          <field attribute="regularhrs" label="Regular Hours:" requiredexpression="true" default="8"/>
+          <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext" labelpattern="{0}">
             <renderer type="lookup"/>
           </association>
-          <commandbars>
-            <commandgroup position="detailform">
-              <removecommand id="print"/>
-              <removecommand id="save"/>
-              <removecommand id="cancel"/>
-              <command id="addnewlabor" label="Submit" service="labtranService" method="submitLaborTrans" parameters="schema,datamap" />
-              <command id="cancelnewlabor" label="Cancel" service="labtranService" method="cancelLaborTrans" />
-            </commandgroup>
-          </commandbars>
-        </schema>
+        </detail>
       </schemas>
     </application>
   </applications>

@@ -1,7 +1,29 @@
 ﻿var app = angular.module('sw_layout', ['pasvaz.bindonce', 'angularTreeview', 'ngSanitize', 'textAngular', 'angularFileUpload']);
 
+//angular 1.3 migration reference
+//app.config(['$controllerProvider', function ($controllerProvider) {
+//    $controllerProvider.allowGlobals();
+//}]);
 
 
+app.directive("dynamicName", function ($compile) {
+    /// <summary>
+    /// workaround for having dynamic named forms to work with angular 1.2
+    /// took from http://jsfiddle.net/YAZmz/2/
+    /// </summary>
+    /// <param name="$compile"></param>
+    /// <returns type=""></returns>
+    return {
+        restrict: "A",
+        terminal: true,
+        priority: 1000,
+        link: function (scope, element, attrs) {
+            element.attr('name', scope.$eval(attrs.dynamicName));
+            element.removeAttr("dynamic-name");
+            $compile(element)(scope);
+        }
+    };
+});
 
 
 app.filter('linebreak', function () {
@@ -139,10 +161,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         redirectService.goToApplicationView(applicationName, schemaId, mode, title, parameters);
     };
 
-    $scope.doAction = function (title, controller, action, parameters, target) {
-        menuService.setActiveLeaf(target);
-        redirectService.redirectToAction(title, controller, action, parameters);
-    };
+
 
     $rootScope.$on('sw_redirectactionsuccess', function (event, result) {
         var log = $log.getInstance('layoutcontroller#onsw_redirectactionsuccess');
@@ -189,10 +208,11 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             }, 100, false);
     };
 
-    $scope.logout = function () {
-        sessionStorage.removeItem("swGlobalRedirectURL");
-        contextService.clearContext();
-    };
+
+
+    $scope.resourceUrl = function(path) {
+        return contextService.getResourceUrl(path);
+    }
 
     function initController() {
         var configsJSON = $(hddn_configs)[0].value;
@@ -207,7 +227,6 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
         $rootScope.clientName = config.clientName;
         $rootScope.environment = config.environment;
-        $rootScope.isLocal = config.isLocal;
         $rootScope.i18NRequired = config.i18NRequired;
         $rootScope.deviceType = DeviceDetect.catagory.toLowerCase();
 

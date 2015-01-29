@@ -563,7 +563,7 @@ relatedrecord:{
 }
 
 worklog:{
-	_title:Work Log
+	_title:Work Logs
 	recordkey:Request # 
 	class:Klasse
 	createby:Erstellt von

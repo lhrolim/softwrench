@@ -12,7 +12,10 @@
                    timestamp="{{timestamp}}" />
     </section>
 
-    <form id="crudbodyform" class="form-horizontal" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" method="post" enctype="multipart/form-data" ng-if="isDetail">
+    <form id="crudbodyform"
+          name="crudbodyform"
+          class="form-horizontal" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" method="post" enctype="multipart/form-data" ng-if="isDetail">
+        <div ng-init="setForm(crudbodyform)"/>
         <ng-switch on="hasTabs(schema)">
             <div ng-if="isEditDetail(datamap,schema)">
                 <div class="ticketid_spacer"></div>
@@ -34,7 +37,7 @@
                             </a>
                             <a ng-switch-when="ApplicationTabDefinition"
                                ng-href="#{{tab.tabId}}" ng-show="!composition.hidden" ng-click="setActiveTab(tab.tabId)" data-tabid="{{tab.tabId}}">
-                                <i class=" {{tab.icon}}">
+                                <i class=" {{tab.icon}} ">
                                 </i>
                                 {{i18NTabLabel(tab)}}
                             </a>
@@ -53,7 +56,7 @@
                                     <button type="button" class="btn btn-primary" ng-click="toConfirmCancel(previousdata,previousschema)">Back</button>
                                 </div>-->
                             <div ng-switch-when="input">
-                                <crud-input-wrapper ismodal="{{ismodal}}" 
+                                <crud-input-wrapper ismodal="{{ismodal}}"
                                                     extraparameters="extraparameters"
                                                     elementid="crudInputMainComposition"
                                                     schema="schema" datamap="datamap.fields"

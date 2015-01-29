@@ -123,6 +123,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="matusetransid" hidden="true" />
           <field attribute="itemnum" label="Item No." qualifier="title"/>
           <field attribute="description" label="Description" qualifier="subtitle"/>
+          <field attribute="linetype" label="Type" qualifier="subtitle"/>
+          <field attribute="storeloc" label="Storeroom" qualifier="subtitle"/>
           <field attribute="qtyrequested" label="Quantity" qualifier="subtitle"/>
         </list>
 

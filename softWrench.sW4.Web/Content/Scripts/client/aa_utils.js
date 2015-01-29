@@ -221,6 +221,13 @@ var isArrayNullOrEmpty = function (arr) {
     return nullOrUndef(arr) || arr.length == 0;
 };
 
+var safePush = function(baseObject, propertyName, item) {
+    if (!baseObject[propertyName]) {
+        baseObject[propertyName] = [];
+    }
+    baseObject[propertyName].push(item);
+}
+
 String.format = function () {
     var s = arguments[0];
     for (var i = 0; i < arguments.length - 1; i++) {

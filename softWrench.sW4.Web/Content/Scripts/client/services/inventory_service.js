@@ -6,6 +6,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             if (datamap[column.attribute] != null) {
                 return Math.abs(datamap[column.attribute]);
             }
+            else {
+                return "0"; 
+            }
         }
         return datamap[column.attribute];
     };
@@ -13,7 +16,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
     var formatQtyReturned = function (datamap, value, column) {
         if (datamap['issuetype'] == 'ISSUE') {
             if (datamap[column.attribute] == null) {
-                return 0;
+                return "0";
             }
             return datamap[column.attribute];
         }
@@ -550,19 +553,19 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             });
         },
         afterchangeinvissueitem: function(parameters) {
-            parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
             parameters['fields']['lotnum'] = null;
             parameters['fields']['#curbal'] = null;
 
             var itemnum = parameters['fields']['itemnum'];
             if (nullOrEmpty(itemnum)) {
-                parameters['fields']['itemnum'] = null;
+                parameters['fields']['binnum'] = null;
                 parameters['fields']['unitcost'] = null;
                 parameters['fields']['inventory_.issueunit'] = null;
                 parameters['fields']['inventory_.itemtype'] = null;
+                
                 return;
             }
-            
+            parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
             doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
         },
 
@@ -704,95 +707,21 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             });
         },
 
-        submitInvIssue: function(schema, datamap) {
-            // Save transfer
-            if (datamap['binnum'] == null) {
-                datamap['binnum'] = "";
-            }
-
-            var siteid = datamap['siteid'];
-
-            if (nullOrEmpty(siteid)) {
-                alertService.alert("A Site Id is required.");
-                return;
-            }
-
-            var storeloc = datamap['storeloc'];
-
-            if (nullOrEmpty(storeloc)) {
-                alertService.alert("A Storeroom is required.");
-                return;
-            }
-
-            var itemnum = datamap['itemnum'];
-
-            if (nullOrEmpty(itemnum)) {
-                alertService.alert("An item is required.");
-                return;
-            }
-
+        validateInvIssue: function(schema, datamap) {
+            var errors = [];
             var refwo = datamap['refwo'];
             var location = datamap['location'];
             var assetnum = datamap['assetnum'];
             var gldebitacct = datamap['gldebitacct'];
-
-            var itemtype = datamap['inventory_.item_.itemtype'];
-            var issueto = datamap['issueto'];
-            if (itemtype == 'TOOL') {
-                if (nullOrEmpty(issueto)) {
-                    alertService.alert("Issued To is required when issuing a tool.");
-                    return;
-                }
-            } else {
-                if (nullOrEmpty(refwo) &&
-                    nullOrEmpty(location) &&
-                    nullOrEmpty(assetnum) &&
-                    nullOrEmpty(gldebitacct)) {
-                    alertService.alert("Either a Workorder, Location, Asset, or GL Debit Account is required.");
-                    return;
-                }
+            var itemtype = datamap['inventory_.item_.itemtype'];             
+            if (itemtype == 'ITEM' &&
+                nullOrEmpty(refwo) &&
+                nullOrEmpty(location) &&
+                nullOrEmpty(assetnum) &&
+                nullOrEmpty(gldebitacct)) {
+                errors.push("Either a Workorder, Location, Asset, or GL Debit Account is required.");
             }
-
-            var jsonString = angular.toJson(datamap);
-            var httpParameters = {
-                application: "invissue",
-                platform: "web",
-                currentSchemaKey: "newInvIssueDetail.input.web"
-            };
-            restService.invokePost("data", "post", httpParameters, jsonString, function() {
-                redirectService.goToApplicationView("invissue", "invIssueList", null , null, null, null);
-            });
-        },
-
-        submitTransfer: function(schema, datamap) {
-            // Save transfer
-            if (datamap['invuseline_.frombin'] == null) {
-                datamap['invuseline_.frombin'] = "";
-            }
-            if (datamap['invuseline_.tobin'] == null) {
-                datamap['invuseline_.tobin'] = "";
-            }
-
-            var jsonString = angular.toJson(datamap);
-            var httpParameters = {
-                application: "invuse",
-                platform: "web",
-                currentSchemaKey: "newdetail.input.web"
-            };
-            restService.invokePost("data", "post", httpParameters, jsonString, function() {
-                var restParameters = {
-                    key: {
-                        schemaId: "matrectransTransfersList",
-                        mode: "none",
-                        platform: "web"
-                    },
-                    SearchDTO: null
-                };
-                var urlToUse = url("/api/Data/matrectransTransfers?" + $.param(restParameters));
-                $http.get(urlToUse).success(function(data) {
-                    redirectService.goToApplication("matrectransTransfers", "matrectransTransfersList", null, data);
-                });
-            });
+            return errors;
         },
 
         cancelTransfer: function() {
@@ -828,12 +757,14 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
             // Create new matusetrans record
             var matusetransDatamap = {
+                matusetransid: null,
+                rowstamp: null,
                 refwo: datamap['wonum'],
                 assetnum: datamap['assetnum'],
                 issueto: datamap['issueto'],
                 location: datamap['oplocation'],
                 glaccount: datamap['glaccount'],
-                issuetype: datamap['issuetype'],
+                issuetype: 'ISSUE',
                 itemnum: datamap['itemnum'],
                 storeloc: datamap['location'],
                 binnum: datamap['invbalances_.binnum'],
@@ -842,9 +773,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 unitcost: datamap['unitcost'],
                 issueunit: datamap['issueunit'],
                 enterby: datamap['enterby'],
-                itemtype: datamap['itemtype'],
+                itemtype: datamap['item_.itemtype'],
                 siteid: datamap['siteid'],
-                costtype: datamap['costtype']
+                costtype: datamap['inventory_.costtype']
             };
             // Post the new matusetrans record
             var jsonString = angular.toJson(matusetransDatamap);
@@ -894,15 +825,16 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             });
         },
 
-        onloadReservation: function(schema, datamap) {
+        onloadReservation: function (scope, schema, datamap) {
+            if (datamap.fields) {
+                datamap = datamap.fields;
+            }
             var parameters = {
                 fields: datamap
             };
             updateInventoryCosttype(parameters);
             datamap['#issueqty'] = datamap['reservedqty'];
             datamap['#issuetype'] = "ISSUE";
-            var user = contextService.getUserData();
-            datamap['#enterby'] = user.login.toUpperCase();
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 siteid: parameters['fields']['siteid'],
@@ -922,8 +854,14 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
         invIssue_afterChangeBin: function (parameters) {
             if (parameters['fields']['binbalances_']) {
-                parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
-                parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+                if (nullOrEmpty(parameters['fields']['binnum'])) {
+                    parameters['fields']['binbalances_.binnum'] = null;
+                    parameters['fields']['binbalances_.lotnum'] = null;
+                    parameters['fields']['binbalances_.curbal'] = null;
+                } else {
+                    parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
+                    parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+                }
                 return;
             };
             // If the binbalances_ record is not filled but the binnum is
@@ -945,12 +883,24 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     var curbal = fields['curbal'];
                     parameters['fields']['lotnum'] = lotnum;
                     parameters['fields']['#curbal'] = curbal == null ? 0 : curbal;
+                    parameters['fields']['binbalances_.lotnum'] = lotnum;
+                    parameters['fields']['binbalances_.curbal'] = curbal == null ? 0 : curbal;
                 });
             } else {
                 parameters['fields']['lotnum'] = null;
                 parameters['fields']['#curbal'] = null;
             }
         },
+
+        invIssueAfterChangeCurbal: function (parameters) {
+            parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+            parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
+        },
+
+        invIssueAfterChangeLotnum: function (parameters) {
+            parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+            parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
+        }
 
     };
 });

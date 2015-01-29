@@ -6,7 +6,7 @@
     <title>@ViewBag.Title</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta charset="utf-8" />
-    <link rel="Shortcut Icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="Shortcut Icon" ng-src="favicon.ico" type="image/x-icon" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="icon" sizes="196x196" href="apple-touch-icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +18,6 @@
     <!--[if IE 9]>
     @RowStampScriptHelper.RenderCss("~/Content/themes/base/ie9")
     <![endif]-->
-
     @*<base href="@Request.ApplicationPath" />*@
 </head>
 <body>
@@ -30,84 +29,27 @@
     @RowStampScriptHelper.Render("~/Content/Scripts/client/application")
     @RowStampScriptHelper.Render("~/Content/Scripts/client/client-js")
     @RowStampScriptHelper.Render("~/Content/Scripts/thirdparty")
+
     <input type="hidden" id="hddn_configs" value="@Model.ConfigJSON" />
     <input type="hidden" id="routes_homeurl" value="@Url.Action("RedirectToAction", "Home")" />
     <input type="hidden" id="routes_basecontext" value="@Request.ApplicationPath" />
     <input type="hidden" id="hddn_popupmode" value="@Request.Params.Get("popupmode")" />
     <input type="hidden" id="hiddn_user" value="@Model.UserJSON" />
+
     <div class="spinner" data-class="spinner" id="mainspinner"></div>
     <div ng-controller="LayoutController" class="container {{clientName}} {{deviceType}}">
         <header class="site-header navbar-fixed-top hiddenonprint">
-            <a href="@Url.Action("SignOut", "Signout")" ng-click="logout()" class="logout mobile hidden-sm hidden-md hidden-lg">
-                <button type="button" class="btn btn-default btn-sm">
-                    <i class="fa fa-sign-out"></i>
-                    {{i18N('_headermenu.logout','Logout')}}
-                </button>
-            </a>
-            <div class="menu-expand"><i class="fa fa-bars"></i> Admin</div>
-            <div class="menu-items">
-                <div class="menu menu-admin" ng-if="popupmode == 'none'">
-                    <div class="text"><span class="glyphicon glyphicon-log-out"></span>&ensp;{{i18N('_headermenu.loggedinas','Logged in as')}} @((User as InMemoryUser).FirstName) @((User as InMemoryUser).LastName)</div>
-                    <div class="buttons">
-                        <a href="#" ng-click="doAction(null,'User','MyProfile',null,$event.target)" ng-show="myprofileenabled"
-                           rel="tooltip" data-original-title="{{i18N('_headermenu.myprofile_tooltip','View your profile')}}" data-placement="bottom">
-                            <button type="button" class="btn btn-default btn-sm">
-                                <i class="fa fa-user"></i>
-                                {{i18N('_headermenu.myprofile','My Profile')}}
-                            </button>
-                        </a>
-                        <div class="btn-group" ng-show="isSysAdmin">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-cogs"></i>
-                                {{i18N('_headermenu.utilities','Utilities')}}&ensp;<span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" ng-click="doAction(null,'EntityMetadata','Builder',null,$event.target)">{{i18N('_headermenu.metadatabuilder','Metadata Builder')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'EntityMetadata','Editor',null,$event.target)">{{i18N('_headermenu.metadataeditor','Metadata Editor')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'EntityMetadata','MenuEditor',null,$event.target)">{{i18N('_headermenu.menueditor','Menu Editor')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'EntityMetadata','StatuscolorEditor',null)">{{i18N('_headermenu.statuscoloreditor','StatusColour Editor')}}</a></li>
-                            </ul>
-                        </div>
-                        <div class="btn-group" ng-show="isClientAdmin">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-gear"></i>
-                                Admin&ensp;<span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" ng-click="doAction(null,'User','List',null,$event.target)">{{i18N('_headermenu.usersetup','User Setup')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'UserProfile','Get',null,$event.target)">{{i18N('_headermenu.userprofilesetup','User Profile Setup')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'Role','Get',null,$event.target)">{{i18N('_headermenu.rolesetup','Role Setup')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'Scheduler','Index',null,$event.target)">{{i18N('_headermenu.schedulersetup','Scheduler Setup')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'Configuration','Get',{popup:true},$event.target)">{{i18N('_headermenu.configuration','Configuration')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'Configuration','WhereClauses',{popup:true},$event.target)">{{i18N('_headermenu.whereclauses','Where Clauses')}}</a></li>
-                                <li><a href="#" ng-click="doAction(null,'LogAdmin','Index')">{{i18N('_headermenu.logadmin','Administrate Logs')}}</a></li>
-                            </ul>
-                        </div>
-                        <a href="#" ng-click="doAction(null,'Configuration','About',null,$event.target)" ng-show="isClientAdmin">
-                            <button type="button" class="btn btn-default btn-sm">
-                                <i class="fa fa-info-circle"></i>
-                                {{i18N('_headermenu.about','About')}}
-                            </button>
-                        </a>
-                        <a href="@Url.Action("SignOut", "Signout")" ng-click="logout()" class="logout hidden-xs">
-                            <button type="button" class="btn btn-default btn-sm">
-                                <i class="fa fa-sign-out"></i>
-                                {{i18N('_headermenu.logout','Logout')}}
-                            </button>
-                        </a>
-                    </div>
-                    <div class="clear"></div>
-                </div>
-            </div>
+            <admin-menu is-client-admin="isClientAdmin"
+                        is-sys-admin="isSysAdmin"
+                        popupmode="popupmode"
+                        myprofileenabled="myprofileenabled">
+            </admin-menu>
             <div class="branding">
                 <div class="logo">
-                    @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-main.png")))
-                    {
-                        <img class="logo" src="~/Content/Images/@Model.ClientName/logo-main.png">
-                    }
-                    else
-                    {
-                        <img class="logo" src="~/Content/Images/logo-main.png">
+                    @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-main.png"))) {
+                    <img class="logo" ng-src="{{resourceUrl('/Content/Images/@Model.ClientName/logo-main.png')}}">
+                    } else {
+                    <img class="logo" ng-src="{{resourceUrl('/Content/Images/logo-main.png')}}">
                     }
                 </div>
             </div>

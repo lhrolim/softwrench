@@ -15,6 +15,9 @@ namespace softwrench.sW4.Shared2.Metadata {
         public string Entity { get; set; }
         public string Title { get; set; }
         public string IdFieldName { get; set; }
+
+        public string UserIdFieldName { get; set; }
+
         public string Service { get; set; }
         public IDictionary<string, string> Parameters { get; set; }
         public int? FetchLimit { get; set; }
@@ -28,7 +31,7 @@ namespace softwrench.sW4.Shared2.Metadata {
 
 
         public CompleteApplicationMetadataDefinition(Guid? id, string applicationName, string title, string entity,
-             string idFieldName,
+             string idFieldName,string userIdFieldName,
             IDictionary<string, string> paramters,
             IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> schemas,
             IEnumerable<DisplayableComponent> components,
@@ -44,6 +47,7 @@ namespace softwrench.sW4.Shared2.Metadata {
             Title = title;
             Entity = entity;
             IdFieldName = idFieldName;
+            UserIdFieldName = userIdFieldName;
             Service = service;
             Parameters = paramters;
             foreach (ApplicationSchemaDefinition schema in schemas.Values) {

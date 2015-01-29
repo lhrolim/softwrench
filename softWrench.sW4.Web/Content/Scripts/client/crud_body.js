@@ -22,7 +22,6 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService
                 return;
             }
 
-            eventService.onload(scope, scope.schema, scope.datamap);
             var log = $log.getInstance('tabsrendered');
             log.debug("finished rendering tabs of detail screen");
             $timeout(function () {
@@ -58,7 +57,6 @@ app.directive('crudBody', function (contextService) {
             datamap: '=',
             extraparameters: '=',
             isDirty: '=',
-            originalDatamap: '=',
             savefn: '&',
             cancelfn: '&',
             previousschema: '=',
@@ -84,46 +82,15 @@ app.directive('crudBody', function (contextService) {
             associationService, contextService, alertService,
             validationService, schemaService, $timeout, eventService, $log,checkpointService) {
 
-
-            $scope.getFormattedValue = function (value, column, datamap) {
-                var formattedValue = formatService.format(value, column, datamap);
-                if (formattedValue == "-666") {
-                    //this magic number should never be displayed! 
-                    //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
-                    return null;
-                }
-                return formattedValue;
+            $scope.setForm = function (form) {
+                $scope.crudform = form;
             };
 
-            $scope.setActiveTab = function (tabId) {
-                contextService.setActiveTab(tabId);
-            };
-            $scope.hasTabs = function (schema) {
-                return tabsService.hasTabs(schema);
-            };
-            $scope.isEditDetail = function (datamap, schema) {
-                return datamap.fields[schema.idFieldName] != null;
-            };
-            $scope.request = function (datamap, schema) {
-                return datamap.fields[schema.idFieldName];
-            };
+            // Listeners region
 
-            $scope.toConfirmBack = function (data, schema) {
-                $scope.$emit('sw_canceldetail', data, schema, "Are you sure you want to go back?");
-            };
-
-            $scope.isCommand = function (schema) {
-                if ($scope.schema.properties['command.select'] == "true") {
-                    return true;
-                }
-            };
-            $scope.isNotHapagTest = function () {
-                if ($rootScope.clientName != 'hapag')
-                    return true;
-            };
-            $scope.tabsDisplayables = function (schema) {
-                return tabsService.tabsDisplayables(schema);
-            };
+            $scope.$on("sw_submitdata", function (event, parameters) {
+                $scope.save(parameters);
+            });
 
             $scope.$on('sw_successmessagetimeout', function (event, data) {
                 if (!$rootScope.showSuccessMessage) {
@@ -136,6 +103,10 @@ app.directive('crudBody', function (contextService) {
             });
 
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
+                //Save the originalDatamap after the body finishes rendering. This will be used in the submit service to update
+                //associations that were "removed" with a " ". This is because a null value, when sent to the MIF, is ignored
+                $scope.originalDatamap = angular.copy($scope.datamap);
+                
                 var tab = contextService.getActiveTab();
                 if (tab != null) {
                     redirectService.redirectToTab(tab);
@@ -156,6 +127,40 @@ app.directive('crudBody', function (contextService) {
                     }, contextService.retrieveFromContext('successMessageTimeOut'));
                 }
             });
+
+            // Listeners
+
+            $scope.setActiveTab = function (tabId) {
+                contextService.setActiveTab(tabId);
+            };
+            $scope.hasTabs = function (schema) {
+                return tabsService.hasTabs(schema);
+            };
+            $scope.isEditDetail = function (datamap, schema) {
+                return datamap.fields[schema.idFieldName] != null;
+            };
+            $scope.request = function (datamap, schema) {
+                return datamap.fields[schema.userIdFieldName];
+            };
+
+            $scope.toConfirmBack = function (data, schema) {
+                $scope.$emit('sw_canceldetail', data, schema, "Are you sure you want to go back?");
+            };
+
+            $scope.isCommand = function (schema) {
+                if ($scope.schema.properties['command.select'] == "true") {
+                    return true;
+                }
+            };
+            $scope.isNotHapagTest = function () {
+                if ($rootScope.clientName != 'hapag')
+                    return true;
+            };
+            $scope.tabsDisplayables = function (schema) {
+                return tabsService.tabsDisplayables(schema);
+            };
+
+
 
             function defaultSuccessFunction(data) {
                 $scope.$parent.multipleSchema = false;
@@ -251,8 +256,11 @@ app.directive('crudBody', function (contextService) {
                 $scope.cancelfn({ data: data, schema: schema });
             }
 
-            $scope.save = function (selecteditem, parameters) {
+            
+
+            $scope.save = function (parameters) {
                 var log = $log.getInstance('crudbody#save');
+                parameters = instantiateIfUndefined(parameters);
 
                 if ($rootScope.showingModal && $scope.$parent.$parent.$name == "crudbodymodal") {
                     //workaround to invoke the original method that was passed to the modal, instead of the default save.
@@ -260,13 +268,15 @@ app.directive('crudBody', function (contextService) {
                     $scope.$parent.$parent.originalsavefn($scope.datamap.fields);
                     return;
                 }
-
-                //selectedItem would be passed in the case of a composition with autocommit=true. 
+                var selecteditem = parameters.selecteditem;
+                //selectedItem would be passed in the case of a composition with autocommit=true, in the case the target would accept only the child instance... not yet supported. 
                 //Otherwise, fetching from the $scope.datamap
                 var fromDatamap = selecteditem == null;
                 var itemToSave = fromDatamap ? $scope.datamap : selecteditem;
                 var fields = fromDatamap ? itemToSave.fields : itemToSave;
 
+                //need an angular.copy to prevent beforesubmit transformation events from modifying the original datamap.
+                //this preserves the datamap (and therefore the data presented to the user) in case of a submission failure
                 var transformedFields = angular.copy(fields);
 
                 var eventParameters = {};
@@ -287,10 +297,10 @@ app.directive('crudBody', function (contextService) {
             $scope.validateSubmission = function (selecteditem, parameters, transformedFields) {
                 var log = $log.getInstance('crudbody#validateSubmission');
                 //hook for updating doing custom logic before sending the data to the server
-                $rootScope.$broadcast("sw_beforeSave", transformedFields);
+                $rootScope.$broadcast("sw_beforesubmitprevalidate_internal", transformedFields);
 
                 if (sessionStorage.mockclientvalidation == undefined) {
-                    var validationErrors = validationService.validate($scope.schema, $scope.schema.displayables, transformedFields);
+                    var validationErrors = validationService.validate($scope.schema, $scope.schema.displayables, transformedFields,$scope.crudform.$error);
                     if (validationErrors.length > 0) {
                         //interrupting here, can´t be done inside service
                         return;
@@ -314,11 +324,14 @@ app.directive('crudBody', function (contextService) {
             };
 
             $scope.submitToServer = function (selecteditem, parameters, transformedFields) {
+                $rootScope.$broadcast("sw_beforesubmitpostvalidate_internal", transformedFields);
+
                 //some fields might require special handling
                 submitService.removeNullInvisibleFields($scope.schema.displayables, transformedFields);
                 transformedFields = submitService.removeExtraFields(transformedFields, true, $scope.schema);
                 submitService.translateFields($scope.schema.displayables, transformedFields);
                 associationService.insertAssocationLabelsIfNeeded($scope.schema, transformedFields, $scope.associationOptions);
+                submitService.handleDatamapForMIF($scope.schema, $scope.originalDatamap.fields, transformedFields);
 
                 if (parameters == undefined) {
                     parameters = {};
@@ -333,12 +346,6 @@ app.directive('crudBody', function (contextService) {
                 var applicationName = $scope.schema.applicationName;
                 var idFieldName = $scope.schema.idFieldName;
                 var id = transformedFields[idFieldName];
-
-
-                //var transformedFields = eventService.beforesubmit_transformation($scope.schema, $scope.datamap);
-                //if (transformedFields != null) {
-                //    jsonString = angular.toJson(transformedFields);
-                //}
 
                 var jsonString = angular.toJson(transformedFields);
 
@@ -360,6 +367,8 @@ app.directive('crudBody', function (contextService) {
 
                 command(urlToUse, jsonString)
                     .success(function (data) {
+                        //datamap should always be updated
+                        $scope.datamap = data.resultObject;
                         if (successCbk == null || applyDefaultSuccess) {
                             defaultSuccessFunction(data);
                         }
@@ -380,7 +389,8 @@ app.directive('crudBody', function (contextService) {
                 $scope: $scope,
                 i18NService: i18NService,
                 fieldService: fieldService,
-                commandService: commandService
+                commandService: commandService,
+                formatService: formatService
             });
 
 

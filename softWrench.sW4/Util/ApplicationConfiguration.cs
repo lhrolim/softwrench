@@ -298,6 +298,11 @@ namespace softWrench.sW4.Util {
 
         public static long StartTimeMillis { get; set; }
 
+
+        public static long GetStartTimeInMillis() {
+            return SystemBuildDateInMillis;
+        }
+
         public static Boolean IsLocal() {
             var baseDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\";
             var isLocal = File.Exists(baseDirectory + "local.properties");

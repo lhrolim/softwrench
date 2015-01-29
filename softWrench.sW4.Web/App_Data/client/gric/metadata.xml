@@ -219,6 +219,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
       <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
 
+        <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+
         <section id="siteidsection">
           <field attribute="ticketid" label="Request #:" readonly="true" requiredexpression="true"/>
           <field label="Site:" attribute="siteid" readonly="true"/>
@@ -302,7 +304,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </application>
 
     <!--    Record Key Class Created By Created Date Log Type Summary-->
-    <application name="worklog" title="Work Log" entity="worklog" id="00000000-0000-0000-0000-000000000008" >
+    <application name="worklog" title="Work Logs" entity="worklog" id="00000000-0000-0000-0000-000000000008" >
       <schemas>
         <schema id="list" stereotype="compositionlist">
           <field  attribute="worklogid" hidden="true"/>
@@ -327,7 +329,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </schemas>
     </application>
 
-    <application name="attachment" title="Attachment" entity="DOCLINKS">
+    <application name="attachment" title="Attachments" entity="DOCLINKS">
       <schemas>
         <schema id="list" stereotype="compositionlist">
           <properties>
@@ -407,7 +409,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </properties>
         </list>
 
-        <schema id="adetail" title="Work Order Detail" abstract="true" stereotype="detail" platform="web">
+        <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web">
           <field attribute="estdur"            hidden="true"/>
           <field attribute="estlabhrs"         hidden="true"/>
           <field attribute="estmatcost"        hidden="true"/>
@@ -545,7 +547,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
         </schema>
 
-        <schema parentschema="adetail" id="editdetail" title="Work Order Detail" platform="web">
+        <schema parentschema="adetail" id="editdetail" title="Work Order Details" platform="web">
           <section id="siteidsection">
             <field label="Site:" attribute="siteid" readonly="true"/>
           </section>
@@ -555,9 +557,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="combo"/>
             </association>
           </section>
-          
+
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <section id="compositions">
-            <composition relationship="worklog" label="Work Log">
+            <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowupdate="false" allowcreation="true" />
             </composition>
             <composition relationship="attachment" label="Attachments" >

@@ -39,7 +39,7 @@ namespace softWrench.sW4.Data.Search {
                 searchOperator = rawValue.EndsWith("%") ? SearchOperator.CONTAINS : SearchOperator.ENDWITH;
             } else if (rawValue.EndsWith("%")) {
                 searchOperator = SearchOperator.STARTWITH;
-            } else if (rawValue.Equals("IS NULL", StringComparison.OrdinalIgnoreCase)) {
+            } else if (rawValue.Equals("!@BLANK", StringComparison.OrdinalIgnoreCase)) {
                 searchOperator = SearchOperator.BLANK;
             }
             value = searchOperator.NormalizedValue(rawValue);

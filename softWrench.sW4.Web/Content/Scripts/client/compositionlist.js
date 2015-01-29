@@ -152,7 +152,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
     }
 });
 
-app.directive('compositionList', function (contextService) {
+app.directive('compositionList', function (contextService,formatService) {
 
     return {
         restrict: 'E',
@@ -171,10 +171,13 @@ app.directive('compositionList', function (contextService) {
             mode: '@'
         },
 
-        controller: function ($scope, $log, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService,
+        controller: function ($scope, $log, $filter, $injector, $http,$attrs, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
             expressionService, $timeout, modalService, redirectService, eventService, iconService) {
 
+            $scope.setForm = function (form) {
+                $scope.crudform = form;
+            };
 
             function init() {
                 if (!$scope.compositionschemadefinition.schemas) {
@@ -198,7 +201,7 @@ app.directive('compositionList', function (contextService) {
 
 
                 $scope.clonedCompositionData = [];
-                jQuery.extend($scope.clonedCompositionData, $scope.compositiondata);
+                $scope.clonedCompositionData=JSON.parse(JSON.stringify($scope.compositiondata));
                 $scope.isNoRecords = $scope.clonedCompositionData.length > 0 ? false : true;
                 $scope.detailData = {};
                 $scope.noupdateallowed = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
@@ -211,7 +214,8 @@ app.directive('compositionList', function (contextService) {
                     $scope: $scope,
                     i18NService: i18NService,
                     fieldService: fieldService,
-                    commandService: commandService
+                    commandService: commandService,
+                    formatService:formatService
                 });
 
                 var parameters = {};
@@ -412,56 +416,57 @@ app.directive('compositionList', function (contextService) {
                     return;
                 }
 
-                //todo:update
-                if ($scope.compositiondata == null) {
-                    $scope.compositiondata = [];
+                //parentdata is bound to the datamap --> this is needed so that the sw_submitdata has the updated data
+                safePush($scope.parentdata.fields, $scope.relationship, selecteditem);
+
+                var log = $log.getInstance('compositionlist#save');
+                if (!$scope.collectionproperties.autoCommit) {
+                    log.warn('autocommit=false is yet to be implemented for compositions');
+                    return;
                 }
-                $scope.compositiondata.push(selecteditem);
-                if ($scope.collectionproperties.autoCommit) {
-                    var validationErrors = validationService.validate($scope.compositionschemadefinition.schemas.detail,$scope.compositionschemadefinition.schemas.detail.displayables, selecteditem);
-                    if (validationErrors.length > 0) {
-                        //interrupting here, can´t be done inside service
-                        return;
-                    }
-                    var alwaysrefresh = $scope.compositiondetailschema.properties && "true" == $scope.compositiondetailschema.properties['compositions.alwaysrefresh'];
-                    if (alwaysrefresh) {
-                        //this will disable success message, since we know we´ll need to refresh the screen
-                        contextService.insertIntoContext("refreshscreen", true, true);
-                    }
-
-                    $scope.$parent.$parent.save(null, {
-                        successCbk: function (data) {
-                            var updatedArray = data.resultObject.fields[$scope.relationship];
-
-                            if (alwaysrefresh || updatedArray == null || updatedArray.length == 0) {
-                                window.location.reload();
-                                return;
-                            }
-                            $scope.clonedCompositionData = updatedArray;
-                            $scope.compositiondata = updatedArray;
-                            $scope.newDetail = false;
-                            $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
-                            $scope.selecteditem = {};
-                            $scope.collapseAll();
-                            if ($rootScope.showingModal) {
-                                //hides the modal after submiting it
-                                modalService.hide();
-                            }
-                            $scope.selecteditem = null;
-                        },
-                        failureCbk: function (data) {
-                            var idx = $scope.compositiondata.indexOf(selecteditem);
-                            if (idx != -1) {
-                                $scope.compositiondata.splice(idx, 1);
-                            }
-                            $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
-                        },
-                        isComposition: true,
-                        nextSchemaObj: { schemaId: $scope.$parent.$parent.schema.schemaId },
-                        refresh: alwaysrefresh
-                    });
+                var detailSchema = $scope.compositionschemadefinition.schemas.detail;
+                var validationErrors = validationService.validate(detailSchema, detailSchema.displayables, selecteditem, $scope.crudform.$error);
+                if (validationErrors.length > 0) {
+                    //interrupting here, can´t be done inside service
+                    return;
+                }
+                var alwaysrefresh = $scope.compositiondetailschema.properties && "true" == $scope.compositiondetailschema.properties['compositions.alwaysrefresh'];
+                if (alwaysrefresh) {
+                    //this will disable success message, since we know we´ll need to refresh the screen
+                    contextService.insertIntoContext("refreshscreen", true, true);
                 }
 
+                $scope.$emit("sw_submitdata",{
+                    successCbk: function (data) {
+                        var updatedArray = data.resultObject.fields[$scope.relationship];
+                        if (alwaysrefresh || updatedArray == null || updatedArray.length == 0) {
+                            window.location.reload();
+                            return;
+                        }
+                        //we need to clone it again here, to avoid binding, otherwise the data would be shown in the list before submission confirms on server side
+                        $scope.clonedCompositionData = JSON.parse(JSON.stringify(updatedArray));
+                        $scope.compositiondata = updatedArray;
+                        $scope.newDetail = false;
+                        $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
+                        $scope.selecteditem = {};
+                        $scope.collapseAll();
+                        if ($rootScope.showingModal) {
+                            //hides the modal after submiting it
+                            modalService.hide();
+                        }
+                        $scope.selecteditem = null;
+                    },
+                    failureCbk: function (data) {
+                        var idx = $scope.compositiondata.indexOf(selecteditem);
+                        if (idx != -1) {
+                            $scope.compositiondata.splice(idx, 1);
+                        }
+                        $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
+                    },
+                    isComposition: true,
+                    nextSchemaObj: { schemaId: $scope.$parent.$parent.schema.schemaId },
+                    refresh: alwaysrefresh,
+                });
             };
 
 
@@ -548,9 +553,6 @@ app.directive('compositionList', function (contextService) {
                 });
             };
 
-            $scope.getFormattedValue = function (value, column, datamap) {
-                return formatService.format(value, column, datamap);
-            };
 
             $scope.shouldDisplayCommand = function (commandSchema, id) {
                 return commandService.shouldDisplayCommand(commandSchema, id);

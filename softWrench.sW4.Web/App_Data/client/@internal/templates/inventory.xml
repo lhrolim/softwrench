@@ -21,8 +21,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </relationship>
       </relationships>
     </entity>
-
-    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN')">
+    
+    <!-- INVISSUE.ITEMNUM is not NULL in whereclause it to prevent showing materials. -->
+    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN') and INVISSUE.ITEMNUM is not NULL">
       <relationships>
         <relationship to="asset" qualifier="rotatingasset">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
@@ -637,7 +638,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <field attribute="issuetype" hidden="true" default="ISSUE"/>
             <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
             <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
-              <renderer type="lookup" params="application=person;schemaId=list;"/>
+              <renderer type="lookup"/>
             </association>
           </section>
           <section>
@@ -649,7 +650,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <renderer type="lookup"/>
             </association>
             <association label="Item" target="itemnum" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,binnum,costtype,issueunit,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,storeloc" requiredexpression="true">
-              <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
+              <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;attribute=itemnum;"/>
               <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
             </association>
             <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
@@ -663,13 +664,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <field attribute="inventory_.item_.iskit" label="Kit" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
             </field>
-            <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
+            <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" dependantfields="itemnum" extraprojectionvalues="curbal,lotnum,binnum">
               <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
               <dataprovider prefilterfunction="FilterBins"/>
             </association>
-            <field label="Lot" attribute="lotnum" readonly="true"/>
-            <field attribute="#curbal" label="Current Balance" readonly="true"/>
+            <field label="Lot" attribute="binbalances_.lotnum" readonly="true">
+              <event type="afterchange" service="inventoryService" method="invIssueAfterChangeLotnum"/>
+            </field>
+            <field attribute="binbalances_.curbal" label="Current Balance" readonly="true">
+              <event type="afterchange" service="inventoryService" method="invIssueAfterChangeCurbal"/>
+            </field>
             <field attribute="quantity" label="Issue Quantity" default="1" requiredexpression="true">
               <renderer type="numericinput" params="min=1;"/>
             </field>
@@ -698,9 +703,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </section>
           <commandbars>
             <commandgroup position="detailform">
-              <removecommand id="save"/>
               <removecommand id="cancel"/>
-              <command id="submitinvissue" label="Submit" service="inventoryService" method="submitInvIssue" parameters="schema,datamap" position="&lt;print"/>
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position=">print"/>
               <command id="cancelinvissue" label="Cancel" service="inventoryService" method="navToIssueReturnList" parameters="schema,datamap" position=">print"/>
             </commandgroup>
@@ -709,6 +712,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <properties>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
           </properties>
+          <event type="beforesubmit.onvalidation" service="inventoryService" method="validateInvIssue"/>
+          <event type="beforesubmit.postvalidation" service="checkpointService" method="clearCheckpoints"/>
         </schema>
       </schemas>
     </application>
@@ -874,7 +879,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <field attribute="orgid" hidden="true"/>
             <field attribute="rowstamp" label="Row Stamp" hidden="true"/>
             <field attribute="requestedby" label="Requested By" readonly="true"/>
-            <field attribute="#enterby" label="Entered By" readonly="true"/>
+            <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
             <field attribute="#issuetype" label="Issue Type" readonly="true"/>
             <field attribute="issueto" label="Issue To" readonly="true"/>
           </section>
@@ -1089,6 +1094,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <application entity="invuse" name="invuse" title="Inventory Transfer">
       <schemas>
         <schema id="newdetail" stereotype="detail" mode="input">
+          <properties>
+            <property key="routing.nextapplication" value="matrectransTransfers"/>
+            <property key="nextschema.schemaid" value="matrectransTransfersList"/>
+          </properties>
           <field attribute="usetype" hidden="true"/>
           <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true">
             <renderer type="lookup"/>
@@ -1133,8 +1142,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="inventory_.costtype" label="Cost Type" hidden="true"/>
           <field attribute="lotnum" hidden="true"/>
           <commandbars>
-            <commandgroup position="detailform" removeundeclared="true">
-              <command id="saveTransfer" icon="fa fa-save" label="Submit" service="inventoryService" method="submitTransfer" position="left" parameters="schema,datamap"/>
+            <commandgroup position="detailform" removeundeclared="false">
+              <removecommand id="print"/>
+              <removecommand id="cancel"/>
               <command id="cancelTransfer" icon="fa fa-backward" label="Cancel" service="inventoryService" method="cancelTransfer"/>
             </commandgroup>
           </commandbars>

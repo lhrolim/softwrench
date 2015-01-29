@@ -1,0 +1,7 @@
+﻿.page-signin .form-signin img.logo {
+    max-width: 90%;
+}
+
+.container header .branding {
+    background: url(../../Images/southern/branding.png) no-repeat top left;
+}

@@ -115,7 +115,7 @@ namespace softWrench.sW4.Metadata {
                 var entityMetadata = Entity(entityName);
                 if (app.IsMobileSupported()) {
                     app.Schemas().Add(ApplicationMetadataSchemaKey.GetSyncInstance(),
-                        ApplicationSchemaFactory.GetSyncInstance(app.ApplicationName, app.IdFieldName));
+                        ApplicationSchemaFactory.GetSyncInstance(app.ApplicationName, app.IdFieldName,app.UserIdFieldName));
                 }
                 foreach (var webSchema in app.Schemas()) {
                     var schema = webSchema.Value;

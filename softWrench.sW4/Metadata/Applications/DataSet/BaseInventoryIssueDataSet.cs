@@ -40,11 +40,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             }
 
         private void LookupQuantityReturnedList(IEnumerable<AttributeHolder> datamap ) {
-            var matusetransidlist = new List<int>();
-            foreach (var attributeHolder in datamap) {
-                var matusetransid = attributeHolder.GetAttribute("MATUSETRANSID");
-                matusetransidlist.Add(Convert.ToInt32(matusetransid));
-            }
+            var matusetransidlist = datamap.Select(row => row.Attributes["MATUSETRANSID"]).ToList();
 
             if (!matusetransidlist.Any()) {
                 return;
@@ -52,34 +48,27 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
             var commaSeparatedIds = String.Join(",", matusetransidlist);
             var query = MaxDAO.FindByNativeQuery(
-                String.Format("SELECT issueid, sum(quantity) FROM matusetrans WHERE issueid in ({0}) group by issueid having sum(quantity) > 0",commaSeparatedIds));
+                String.Format("SELECT issueid, sum(quantity) AS returned FROM matusetrans WHERE issueid in ({0}) group by issueid having sum(quantity) > 0", commaSeparatedIds));
 
-            if (query == null) { 
-                return;
-            }
-
-            //For each matusetrans record in the datamap and each result in the above query,
+            //For each matusetrans record in the query result and each result in datamap,
             //checks to see if there was a match between the attribute holder's matusetransid and the query's issueid.
             //If a match is found, the summation is set as the qtyReturned value.
             //This is needed because Maximo itself does not provide a field to sum the quantity field for all
             //items returned to an issue. Instead, they perform this exact query.
             //Quantity returned is set to 0 if no match is found (i.e. no items have been returned to the issue)
-            foreach (var attributeHolder in datamap) {
-                var matusetransid = attributeHolder.GetAttribute("MATUSETRANSID");
 
-                var matusetransRecord = (from record in query
-                    where record["issueid"] == matusetransid.ToString()
-                    select record).SingleOrDefault();
+            // CC: Worst case scenario, it will equal the number of records in the datamap. 
+            // CC: Note: I did not set remaining records to zero because of Luiz changes in the grid.  
+            if (query != null && query.Any()) {
+                foreach (var entry in query) {
+                    // CC: This is now safe because we are guarantee a record before we couldn't determine if we could find a matching record
+                    // CC: matusetransid is case sensitive... maybe change the dictionary to case-insensitive.   
+                    var datamapRecord = (from record in datamap
+                                         where record.Attributes["matusetransid"].ToString() == entry["issueid"].ToString()
+                                         select record).SingleOrDefault();
 
-                var qtyReturned = 0.0;
-                if (matusetransRecord != null) {
-                    var qtyReturnedString = "";
-                    if (matusetransRecord.TryGetValue("", out qtyReturnedString)) { 
-                        qtyReturned = Double.Parse(qtyReturnedString);
-                    }
+                    datamapRecord.SetAttribute("QTYRETURNED", Double.Parse(entry["returned"]));
                 }
-
-                attributeHolder.SetAttribute("QTYRETURNED", qtyReturned);
             }
         }
 
@@ -126,17 +115,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
         public virtual SearchRequestDto FilterBins(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
-            var siteid = parameters.OriginalEntity.GetAttribute("siteid");
-            var location = parameters.OriginalEntity.GetAttribute("storeloc");
-            if (siteid == null || location == null) {
-                return filter;
-            }
-            filter.AppendSearchEntry("invbalances.siteid", siteid.ToString().ToUpper());
-            filter.AppendSearchEntry("invbalances.location", location.ToString().ToUpper());
-            filter.ProjectionFields.Clear();
             filter.ProjectionFields.Add(new ProjectionField("binnum", "ISNULL(invbalances.binnum, '')"));
-            filter.ProjectionFields.Add(new ProjectionField("curbal", "invbalances.curbal"));
-            filter.ProjectionFields.Add(new ProjectionField("lotnum", "invbalances.lotnum"));
             filter.SearchSort = "invbalances.binnum,invbalances.lotnum";
             filter.SearchAscending = true;
             

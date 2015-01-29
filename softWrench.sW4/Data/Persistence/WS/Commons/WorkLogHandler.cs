@@ -16,8 +16,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var user = SecurityFacade.CurrentUser();
             var worklogs = (IEnumerable<CrudOperationData>)entity.GetRelationship("worklog");
             var newWorkLogs = worklogs.Where(r => r.GetAttribute("worklogid") == null);
-//            var association =entity.EntityMetadata.Associations.First(a => a.To == "worklog");
-            var recordKey = entity.Id;
+            var recordKey = entity.UserId;
             w.CloneArray(worklogs, rootObject, "WORKLOG", delegate(object integrationObject, CrudOperationData crudData) {
 
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());

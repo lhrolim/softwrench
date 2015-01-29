@@ -1,5 +1,5 @@
 ﻿//idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-function BaseController($scope, i18NService, fieldService,commandService) {
+function BaseController($scope, i18NService, fieldService, commandService, formatService) {
 
     /* i18N functions */
     $scope.i18NLabelTooltip = function (fieldMetadata) {
@@ -25,6 +25,10 @@ function BaseController($scope, i18NService, fieldService,commandService) {
 
     $scope.i18NTabLabel = function (tab) {
         return i18NService.getTabLabel(tab, $scope.schema);
+    };
+
+    $scope.getFormattedValue = function (value, column, datamap) {
+        return formatService.format(value, column, datamap);
     };
 
     $scope.isIE9 = function () {
