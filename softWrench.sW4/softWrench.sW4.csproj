@@ -208,6 +208,7 @@
     <Compile Include="Data\Persistence\WS\Commons\CommLogHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\HapagChangeHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\HapagSRLongDescriptionHandler.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\KongsbergServiceRequestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\MifFindByIdCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\SaveRemarkCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\ScreenshotHandler.cs" />
