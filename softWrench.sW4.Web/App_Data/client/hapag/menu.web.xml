@@ -86,7 +86,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
             filter.stereotype=detail;filter.mode=input;filter.namePattern=replace;popupmode=browser"/>
 
 			<application id="newupdateimac" title="Update" tooltip="Click to create a new Update IMAC Request" schema="update" ref="imac" parameters="popupmode=browser"/>
-      <application id="newdecommissionimac" title="decommission" tooltip="Click to create a new decommission IMAC Request" schema="decommission" ref="imac" parameters="popupmode=browser"/>
+      <application id="newdecommissionimac" title="Decommission" tooltip="Click to create a new decommission IMAC Request" schema="decommission" ref="imac" parameters="popupmode=browser"/>
 
 		</container>
 
@@ -231,7 +231,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 
 			<application id="newupdateimac" title="Update" tooltip="Click to create a new Update IMAC Request" schema="update" ref="imac" parameters="popupmode=browser"/>
 
-      <application id="newdecommissionimac" title="decommission" tooltip="Click to create a new decommission IMAC Request" schema="decommission" ref="imac" parameters="popupmode=browser"/>
+      <application id="newdecommissionimac" title="Decommission" tooltip="Click to create a new decommission IMAC Request" schema="decommission" ref="imac" parameters="popupmode=browser"/>
 
     </container>
 
