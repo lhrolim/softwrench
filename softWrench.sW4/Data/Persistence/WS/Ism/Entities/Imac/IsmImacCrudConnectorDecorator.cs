@@ -97,6 +97,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
             return (string)entity.GetAttribute("primaryuser_.personid");
         }
 
+        protected override string GetOverridenOwnerGroup(bool isCreation, CrudOperationData jsonObject) {
+            return null;
+        }
 
         private static void SetClassification(CrudOperationData jsonObject, ServiceIncident imac, string schemaid) {
             if ("installlan".Equals(schemaid) || "installother".Equals(schemaid) || "installstd".Equals(schemaid)) {

@@ -1,4 +1,5 @@
 ﻿using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Ism.Base;
 using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
@@ -8,8 +9,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Incident {
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             base.BeforeUpdate(maximoTemplateData);
-            var integrationObject = maximoTemplateData.IntegrationObject;
-            ISMAttachmentHandler.HandleAttachmentsForUpdate((CrudOperationData)maximoTemplateData.OperationData, (ServiceIncident)integrationObject);
+            var jsonObject = (CrudOperationData)maximoTemplateData.OperationData;
+            var webServiceObject = (ServiceIncident)maximoTemplateData.IntegrationObject;
+            HandleStatus(jsonObject, webServiceObject);
+            ISMAttachmentHandler.HandleAttachmentsForUpdate((CrudOperationData)maximoTemplateData.OperationData, webServiceObject);
         }
 
 
@@ -21,6 +24,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Incident {
             return (string)entity.GetAttribute("affectedperson");
         }
 
+        protected override string GetOverridenOwnerGroup(bool isCreation, CrudOperationData jsonObject) {
+            return HlagTicketUtil.HandleSRAndIncidentOwnerGroups(isCreation, jsonObject, ISMConstants.DefaultAssignedGroup);
+        }
 
     }
 }

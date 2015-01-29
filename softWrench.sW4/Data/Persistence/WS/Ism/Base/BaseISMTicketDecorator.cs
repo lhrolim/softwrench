@@ -101,11 +101,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
                 if (problem.Abstract != null && !problem.Abstract.StartsWith("@@")) {
                     if (problem.Abstract.Length > 98) {
                         //https://controltechnologysolutions.atlassian.net/browse/HAP-642
-                        problem.Abstract = "@@" + problem.Abstract.Substring(0,98);
+                        problem.Abstract = "@@" + problem.Abstract.Substring(0, 98);
                     } else {
                         problem.Abstract = "@@" + problem.Abstract;
                     }
                 }
+            }
+
+            var overridenOwnerGroup = GetOverridenOwnerGroup(!update, jsonObject);
+            if (overridenOwnerGroup != null) {
+                problem.ProviderAssignedGroup.Group.GroupID = overridenOwnerGroup;
             }
 
             return problem;
@@ -181,6 +186,25 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
 
         protected abstract string GetAffectedPerson(CrudOperationData entity);
 
+        protected abstract string GetOverridenOwnerGroup(Boolean isCreation, CrudOperationData jsonObject);
+
+        protected void HandleStatus(CrudOperationData jsonObject, ServiceIncident webServiceObject) {
+            var status = (string)jsonObject.GetAttribute("status");
+            if ("SLAHOLD".Equals(status, StringComparison.CurrentCultureIgnoreCase)) {
+                //https://controltechnologysolutions.atlassian.net/browse/HAP-839
+                var isIbmTicket = HlagTicketUtil.IsIBMTicket(jsonObject);
+                var nullOwner = string.IsNullOrEmpty((string)jsonObject.GetAttribute("owner"));
+                if (isIbmTicket) {
+                    status = nullOwner ? "QUEUED" : "INPROG";
+                } else if (nullOwner) {
+                    status = "QUEUED";
+                    webServiceObject.Problem.ProviderAssignedGroup.Group.GroupID = "I-EUS-DE-CSC-SDK-HLCFRONTDESKI";
+                }
+
+            }
+            webServiceObject.WorkflowStatus = status;
+
+        }
 
     }
 }

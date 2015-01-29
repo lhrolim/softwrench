@@ -21,6 +21,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Problem {
             return (string)entity.GetAttribute("affectedperson");
         }
 
-
+        protected override string GetOverridenOwnerGroup(bool isCreation, CrudOperationData jsonObject) {
+            return null;
+        }
     }
 }

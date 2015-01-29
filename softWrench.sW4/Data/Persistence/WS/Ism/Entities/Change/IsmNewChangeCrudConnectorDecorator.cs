@@ -85,5 +85,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
             return ApplicationConfiguration.DefaultChangeTeamplateId[0];
         }
 
+        protected override string GetOverridenOwnerGroup(bool isCreation, CrudOperationData jsonObject) {
+            return null;
+        }
+
     }
 }

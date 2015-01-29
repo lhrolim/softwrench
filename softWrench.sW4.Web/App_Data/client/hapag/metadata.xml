@@ -88,6 +88,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <connectorParameter key="dbtable" value="incident" />
         <connectorParameter key="integration_interface" value="MXISINCIDENT" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseIncidentCrudConnector" />
+        <connectorParameter key="submitaction_customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.SubmitactionCrudConnector" />
         <connectorParameter key="crud_find_by_id_customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.MifFindByIdCrudConnector" />
       </connectorParameters>
     </entity>
@@ -590,6 +591,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Reported By" attribute="hlagreportedby" />
           <field label="Affected Person" attribute="affectedperson_.hlagdisplayname" />
           <field label="Status" attribute="status" />
+          <section id ="Actionentry" resourcepath="/Content/Templates/hapag/Actionentry.html" showexpression="@status=='RESOLVED'">
+            <header label="Action"/>
+          </section>
           <field label="Impact" attribute="impact" />
           <field label="Urgency" attribute="urgency" />
           <field label="Reported Date" attribute="reportdate" >
@@ -624,6 +628,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <composition relationship="attachment" label="Attachments">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
           </composition>
+          <commands>
+            <!--fixing order of commands-->
+            <command id="submitaction" label="Submit Action" method="submitaction" service="ticketservice" parameters="datamap,schema" showexpression="@status=='RESOLVED' &amp;&amp; tabId=='main'" defaultposition="right"/>
+          </commands>
         </detail>
 
         <schema id="dashboardList" stereotype="list">
@@ -1062,7 +1070,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </composition>
           <commands>
             <!--fixing order of commands-->
-            <command id="submitaction" label="Submit Action" method="submitaction" service="srservice" parameters="datamap,schema" showexpression="@status=='RESOLVED' &amp;&amp; tabId=='main'" defaultposition="right"/>
+            <command id="submitaction" label="Submit Action" method="submitaction" service="ticketservice" parameters="datamap,schema" showexpression="@status=='RESOLVED' &amp;&amp; tabId=='main'" defaultposition="right"/>
           </commands>
         </detail>
 

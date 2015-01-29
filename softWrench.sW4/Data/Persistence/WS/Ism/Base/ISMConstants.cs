@@ -2,6 +2,7 @@
     public class ISMConstants {
         public const string GlobalWsdlProperty = "globalwsdlpath";
         public const string DefaultAssignedGroup = "I-EUS-DE-CSC-SDK-HLCFRONTDESK";
+        public const string DefaultAssignedGroupSr = "I-EUS-DE-CSC-SDK-HLCFRONTDESKI";
         public const string ImacAssignedGroup = "I-EUS-DE-CSC-IMC-HLCIMAC";
         public const string ChangeAssignedGroup = "I-SM-DE-SDM-SDM-HLC-SDM";
         public const string DefaultCustomerName = "HLC-DE-HH1";

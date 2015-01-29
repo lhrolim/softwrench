@@ -35,23 +35,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
             return metrics;
         }
 
-        private static void HandleStatus(CrudOperationData jsonObject, ServiceIncident webServiceObject) {
-            var status = (string)jsonObject.GetAttribute("status");
-            if ("SLAHOLD".Equals(status, StringComparison.CurrentCultureIgnoreCase)) {
-                var isIbmTicket = HlagTicketUtil.IsIBMTicket(jsonObject);
-                var nullOwner = string.IsNullOrEmpty((string)jsonObject.GetAttribute("owner"));
-                if (isIbmTicket) {
-                    status = nullOwner ? "QUEUED" : "INPROG";
-                } else if (nullOwner)
-                {
-                    status = "QUEUED";
-                    webServiceObject.Problem.ProviderAssignedGroup.Group.GroupID = "I-EUS-DE-CSC-SDK-HLCFRONTDESKI";
-                }
 
-            }
-            webServiceObject.WorkflowStatus = status;
-
-        }
 
 
         private static void PopulateAssets(CrudOperationData entity, ServiceIncident maximoTicket) {
@@ -112,6 +96,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
         }
         protected override string GetTemplateId(CrudOperationData jsonObject) {
             return null;
+        }
+
+        // https://controltechnologysolutions.atlassian.net/browse/HAP-839
+        protected override string GetOverridenOwnerGroup(bool isCreation, CrudOperationData jsonObject) {
+            return HlagTicketUtil.HandleSRAndIncidentOwnerGroups(isCreation, jsonObject,ISMConstants.DefaultAssignedGroupSr);
         }
     }
 }

@@ -36,9 +36,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (owner != null && isIbmTicket && datamap.Attributes["status"].Equals("QUEUED")) {
                 //HAP-839 review
                 datamap.Attributes["status"] = "INPROG";
-            } else if (owner == null && !isIbmTicket && datamap.GetAttribute("status").Equals("QUEUED")) {
-                datamap.SetAttribute("ownergroup", "I-EUS-DE-CSC-SDK-HLCFRONTDESKI");
-            }
+            } 
 
             return Maximoengine.Update(datamap);
         }
