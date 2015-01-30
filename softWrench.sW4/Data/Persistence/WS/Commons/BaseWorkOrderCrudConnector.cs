@@ -24,6 +24,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
+            if (((CrudOperationData)maximoTemplateData.OperationData).ContainsAttribute("#hasstatuschange")) {
+                //first let´s 'simply change the status
+                WsUtil.SetValue(maximoTemplateData.IntegrationObject, "STATUSIFACE", true);
+                maximoTemplateData.InvokeProxy();
+                WsUtil.SetValue(maximoTemplateData.IntegrationObject, "STATUSIFACE", false);
+            }
             CommonTransaction(maximoTemplateData);
             base.BeforeUpdate(maximoTemplateData);
         }

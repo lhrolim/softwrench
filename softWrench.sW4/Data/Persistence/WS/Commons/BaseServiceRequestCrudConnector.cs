@@ -50,11 +50,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
+            var sr = maximoTemplateData.IntegrationObject;
+            var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
+            if (crudData.ContainsAttribute("#hasstatuschange")){
+                //first let´s 'simply change the status
+                WsUtil.SetValue(sr, "STATUSIFACE", true);
+                maximoTemplateData.InvokeProxy();
+                WsUtil.SetValue(sr, "STATUSIFACE", false);
+            }
+
             // Update common fields or transactions prior to maximo operation exection
             CommonTransaction(maximoTemplateData);
 
-            var sr = maximoTemplateData.IntegrationObject;
-            var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
+            
 
             var mailObject = maximoTemplateData.Properties;
 

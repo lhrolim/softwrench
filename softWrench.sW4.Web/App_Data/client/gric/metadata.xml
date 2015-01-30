@@ -2,7 +2,7 @@
 <metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
-<!--GRIC-->
+  <!--GRIC-->
   <entities>
     <entity name="SR" idAttribute="ticketid">
       <relationships>
@@ -25,12 +25,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWSR" />
-        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Gric.GricServiceRequestCrudConnector" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseServiceRequestCrudConnector" />
       </connectorParameters>
     </entity>
 
     <entity name="workorder" idAttribute="wonum" whereclause="woclass like 'WORKORDER'">
-      <relationships> 
+      <relationships>
         <relationship to="person" qualifier="reportedbyperson">
           <relationshipAttribute from="reportedby" to="personid" primary="true"/>
         </relationship>
@@ -64,7 +64,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
       </connectorParameters>
     </entity>
-    
+
     <entity name ="failurelist" idAttribute="failurecode" >
       <attributes>
         <attribute name="failurelist" type="bigint" required="true" />
@@ -82,12 +82,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <entity name ="failurelistonly" parententity="failurelist" idAttribute="failurelist" whereclause="((failurelistonly.TYPE is null)) " >
 
     </entity>
-    
+
     <entity name ="problemlist" parententity="failurelist" idAttribute="failurelist" whereclause="((problemlist.TYPE like 'PROBLEM')) " >
 
     </entity>
   </entities>
-  
+
   <applications>
     <application entity="SR" name="servicerequest" title="Service Request">
       <properties>
@@ -196,56 +196,56 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 
           <section id="compositions"/>
-      </schema>
+        </schema>
 
-      <schema parentschema="adetail" title="New Service Request" id="newdetail">
-        <section id="siteidsection">
-          <field attribute="ticketid" label="Request #:" hidden="true"/>
-          <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true" default='@usersite' enableexpression="true">
-            <!-- removed default='@usersite' from the above association label-->
-            <renderer type="lookup"/>
-          </association>
-        </section>
-        <section id="statussection">
-          <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
-        </section>
-        <!--SSWEB 173-->
-        <section id="attachmentsection">
-          <field label="Attachment:" attribute="newattachment" >
-            <renderer type="upload"/>
-          </field>
-        </section>
-      </schema>
+        <schema parentschema="adetail" title="New Service Request" id="newdetail">
+          <section id="siteidsection">
+            <field attribute="ticketid" label="Request #:" hidden="true"/>
+            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true" default='@usersite' enableexpression="true">
+              <!-- removed default='@usersite' from the above association label-->
+              <renderer type="lookup"/>
+            </association>
+          </section>
+          <section id="statussection">
+            <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
+          </section>
+          <!--SSWEB 173-->
+          <section id="attachmentsection">
+            <field label="Attachment:" attribute="newattachment" >
+              <renderer type="upload"/>
+            </field>
+          </section>
+        </schema>
 
-      <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
+        <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
 
-        <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
 
-        <section id="siteidsection">
-          <field attribute="ticketid" label="Request #:" readonly="true" requiredexpression="true"/>
-          <field label="Site:" attribute="siteid" readonly="true"/>
-        </section>
-        <section id="statussection">
-          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
-            <renderer type="combo" />
-          </association>
-        </section>
+          <section id="siteidsection">
+            <field attribute="ticketid" label="Request #:" readonly="true" requiredexpression="true"/>
+            <field label="Site:" attribute="siteid" readonly="true"/>
+          </section>
+          <section id="statussection">
+            <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
+              <renderer type="combo" />
+            </association>
+          </section>
 
-        <section id="compositions">
-          <composition relationship="worklog" label="Work Logs">
-            <collectionproperties allowcreation="true" allowupdate="true"/>
-          </composition>
+          <section id="compositions">
+            <composition relationship="worklog" label="Work Logs">
+              <collectionproperties allowcreation="true" allowupdate="true"/>
+            </composition>
 
 
-          <composition relationship="attachment" label="Attachments"/>
-        </section>
+            <composition relationship="attachment" label="Attachments"/>
+          </section>
+          <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
+          <commands>
+            <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                     showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>
+          </commands>
 
-        <commands>
-          <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
-                   showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>
-        </commands>
-
-      </schema>
+        </schema>
       </schemas>
 
     </application>
@@ -375,7 +375,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </detail>
       </schemas>
     </application>
-    
+
     <!-- Adding the Workorder application from the otb -->
     <application name="workorder" title="Work Order" entity="workorder">
       <properties>
@@ -522,6 +522,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <section id="attachmentsection"/>
           <section id="compositions"/>
+          <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
+
           <!--					<section id="matusetranssection"/>-->
           <!--					<section id="labtranssection"/>-->
         </schema>
@@ -567,7 +569,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <collectionproperties allowupdate="false" allowcreation="true" />
             </composition>
           </section>
-        </schema> 
+        </schema>
       </schemas>
     </application>
   </applications>

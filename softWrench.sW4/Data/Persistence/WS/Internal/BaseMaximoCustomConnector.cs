@@ -8,15 +8,13 @@ using softWrench.sW4.SimpleInjector;
 
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
     public abstract class BaseMaximoCustomConnector : IMaximoConnector {
-        internal MaximoConnectorEngine Maximoengine
-        {
-            get
-            {
+        internal MaximoConnectorEngine Maximoengine {
+            get {
                 return
                     SimpleInjectorGenericFactory.Instance.GetObject<MaximoConnectorEngine>(
-                        typeof (MaximoConnectorEngine));
+                        typeof(MaximoConnectorEngine));
             }
-        } 
+        }
 
         protected MaximoOperationExecutionContext GetContext(OperationData operationData) {
             return MaximoOperationExecutionContext.GetInstance(operationData, null);
@@ -36,7 +34,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
             public ApplicationMetadata ApplicationMetadata { get; set; }
 
-            public BaseOperationData(EntityMetadata entityMetadata, ApplicationMetadata applicationMetadata, OperationType operationType, string id = null,string userId = null) {
+            public BaseOperationData(EntityMetadata entityMetadata, ApplicationMetadata applicationMetadata, OperationType operationType, string id = null, string userId = null) {
                 Id = id;
                 UserId = userId;
                 EntityMetadata = entityMetadata;
