@@ -23,7 +23,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     </entity>
     
     <!-- INVISSUE.ITEMNUM is not NULL in whereclause it to prevent showing materials. -->
-    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN') and INVISSUE.ITEMNUM is not NULL">
+    <entity name="invissue" idAttribute="matusetransid" parententity="matusetrans" whereclause="(ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN') and INVISSUE.ITEMNUM is not NULL" >
       <relationships>
         <relationship to="asset" qualifier="rotatingasset">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
@@ -459,6 +459,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </schema>
 
         <schema id="editinvissuedetail" stereotype="detail" mode="input" platform="web">
+          <properties>
+            <property key="detail.titleexpression" value="'Issue: {0} Enter BY: {1}'.format(@matusetransid, @enterby)"/>
+          </properties>
+          
           <section>
             <field attribute="matusetransid" hidden="true"/>
             <field attribute="enterby" label="Entered By" readonly="true"/>
@@ -633,6 +637,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </schema>
       
         <schema id="newInvIssueDetail" mode="input" stereotype="detail">
+          <properties>
+            <property key="detail.titleid" value="Issue:"/>
+          </properties>
           <section>
             <field attribute="matusetransid" hidden="true"/>
             <field attribute="issuetype" hidden="true" default="ISSUE"/>

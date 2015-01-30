@@ -80,7 +80,7 @@ app.directive('crudBody', function (contextService) {
             fieldService, commandService, i18NService,
             submitService, redirectService,
             associationService, contextService, alertService,
-            validationService, schemaService, $timeout, eventService, $log, checkpointService) {
+            validationService, schemaService, $timeout, eventService, $log, expressionService) {
 
             $scope.setForm = function (form) {
                 $scope.crudform = form;
@@ -154,6 +154,18 @@ app.directive('crudBody', function (contextService) {
                     return true;
                 }
             };
+
+            $scope.getTitle = function () {
+                var schema = $scope.schema;
+                var datamap = $scope.datamap;
+                if (schema.properties['detail.titleexpression'] != null) {
+                    return expressionService.evaluate(schema.properties['detail.titleexpression'], $scope.datamap.fields);
+                }
+                var titleId = schema.idDisplayable;
+                var description = datamap.fields.description == null ? "" : datamap.fields.description;
+                return titleId + " " + datamap.fields[schema.userIdFieldName] + " Summary: " + description;
+            }
+
             $scope.isNotHapagTest = function () {
                 if ($rootScope.clientName != 'hapag')
                     return true;

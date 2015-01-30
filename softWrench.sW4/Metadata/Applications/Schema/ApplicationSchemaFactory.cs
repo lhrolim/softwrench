@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata;
@@ -61,7 +62,21 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             schema._fieldWhichHaveDeps = schema.DependantFields().Keys;
             schema.FkLazyFieldsResolver = ApplicationSchemaLazyFkHandler.LazyFkResolverDelegate;
             schema.ComponentDisplayableResolver = ReferenceHandler.ComponentDisplayableResolver;
+            SetTitle(applicationName, displayables, schema);
+
             return schema;
+        }
+
+        private static void SetTitle(string applicationName, List<IApplicationDisplayable> displayables, ApplicationSchemaDefinition schema) {
+            if (schema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.DetailTitleId)) {
+                schema.IdDisplayable = schema.Properties[ApplicationSchemaPropertiesCatalog.DetailTitleId];
+            } else {
+                foreach (var t in displayables) {
+                    if (t.Role == applicationName + "." + schema.UserIdFieldName) {
+                        schema.IdDisplayable = t.Label;
+                    }
+                }
+            }
         }
 
         private static void MergeWithParentProperties(ApplicationSchemaDefinition schema) {
@@ -115,7 +130,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                     if (originalAttribute == null) {
                         resultingDisplayables.Add(parentDisplayable);
                     }
-                    
+
                 }
             }
             return resultingDisplayables;

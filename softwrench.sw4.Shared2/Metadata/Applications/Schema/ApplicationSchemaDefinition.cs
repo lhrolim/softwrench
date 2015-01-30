@@ -121,11 +121,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             IdFieldName = idFieldName;
             UserIdFieldName = userIdFieldName;
             UnionSchema = unionSchema;
-            for (int i = 0; i < displayables.Count; i++) {
-                if (displayables[i].Role == ApplicationName + "." + UserIdFieldName) {
-                    IdDisplayable = displayables[i].Label;
-                }
-            }
+          
 
             _eventsSet = events;
             if (events != null) {
