@@ -130,11 +130,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
         <detail platform="web">
           <field attribute="matusetransid" hidden="true" />
-          <field attribute="#refsiteid" label="Lookup Code" default="linetype" />
+          <field attribute="#refsiteid" label="Lookup Code" default="itemnum" />
           <field attribute="orgid" label="Org" readonly="true" evalexpression="$.previousdata.fields['orgid']"/>
           <field attribute="siteid" label="Site" readonly="true" evalexpression="$.previousdata.fields['siteid']"/>
           <field attribute="refwo" label="Work Order" readonly="true" evalexpression="$.previousdata.fields['wonum']"/>
-          <field attribute="#test" label="Referenced Site" readonly="true" evalexpression="$.testFunction($.datamap[@#refsiteid])"/>
           <field attribute="description"  />
           <field attribute="transdate" hidden="true" />
           <field attribute="unitcost" hidden="true" />
@@ -145,6 +144,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <option label="MATERIAL" value="MATERIAL"/>
             <event type="afterchange" service="matusetranService" method="afterlinetypechange"/>
           </optionfield>
+
+          <field attribute="#test" label="Referenced Site" readonly="true" evalexpression="$.testFunction($.datamap[@#refsiteid])"/>
 
           <association label="Item:" target="itemnum" labelfield="inventory_.item_.description, location" labelpattern="{0}" extraprojectionvalues="item_.description, itemsetid, location, siteid, costtype" showexpression="@linetype == 'ITEM'">
              <!--<dataprovider prefilterfunction="FilterMaterials"/>-->

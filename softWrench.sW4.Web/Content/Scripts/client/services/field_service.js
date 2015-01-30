@@ -59,7 +59,7 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
                 if (target != undefined && datamap[target] == null) {
                     var evalExpressionResult = null;
                     if (displayables[key].evalExpression != null) {
-                        var evalExpressionResult = expressionService.evaluate(displayables[key].evalExpression, datamap, scope);
+                        evalExpressionResult = expressionService.evaluate(displayables[key].evalExpression, datamap, scope);
                         datamap[target] = evalExpressionResult;
                     }
                     if (evalExpressionResult == null && value.defaultValue != null) {

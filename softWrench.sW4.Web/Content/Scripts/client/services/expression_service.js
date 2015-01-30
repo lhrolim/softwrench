@@ -18,22 +18,11 @@ app.factory('expressionService', function ($rootScope, contextService) {
                                                                  
                 https://www.regex101.com/r/fB6kI9/5               */
 
-    var preCompiledReplaceRegex = /(@\#*)(\w+(\.?\w?)*)(?!\w)|\$\.(\w+)((\.\w+)|((\(|\[)\s?\'?((\$\.)|(\@\#*))?\w+\'?(\,?\s?\'?((\$\.)|(\@\#*))?\w+\'?\s?)*(\]|\))?(\]|\))?))*/g;
-
-    var datamapReferenceRegex = /(@\#*)(\w+(\.?\w?)*)(?!\w)/g;
-    var scopeReferenceRegex = /\$\.(\w+)((\.?\w?)*((\[\'?\w+\'\])|\[?\w+\])(\.\w+)*)*(\.\w+)*(\(\s?\'?(\@\#*)?\w+\'?\s?(\,\s?\'?(\@\#*)?\w+\'?\s?)*\))?/g;
+    var preCompiledReplaceRegex = /(\@\#*)(\w+(\.?\w?)*)(?!\w)|\$\.(\w+)((\.\w+)|(\[\s?\'?(\$\.|\@\#*)?\w+((\.\w+)|(\[\s?\'?(\$\.|\@\#*)?\w+\'?\s?\])|(\(\s?\'?(\$\.|\@\#*)?\w+\'?\s?(\,\s?\'?(\$\.|\@\#*)?\w+\'?\s?)*\)))*\'?\s?\])|(\(\s?\'?(\$\.|\@\#*)?\w+((\.\w+)|(\[\s?\'?(\$\.|\@\#*)?\w+\'?\s?\])|(\(\s?\'?(\$\.|\@\#*)?\w+\'?\s?(\,\s?\'?(\$\.|\@\#*)?\w+\'?\s?)*\)))*\'?\s?(\,\s?\'?(\$\.|\@\#*)?\w+((\.\w+)|(\[\s?\'?(\$\.|\@\#*)?\w+\'?\s?\])|(\(\s?\'?(\$\.|\@\#*)?\w+\'?\s?(\,\s?\'?(\$\.|\@\#*)?\w+\'?\s?)*\)))*\'?\s?)*\)))*/g;
 
     return {
         isPrecompiledReplaceRegexMatch: function (expression) {
             return expression.match(preCompiledReplaceRegex);
-        },
-
-        isDatamapReferenceRegex: function (expression) {
-            return expression.match(datamapReferenceRegex);
-        },
-
-        isScopeReferenceRegex: function (expression) {
-            return expression.match(scopeReferenceRegex);
         },
 
         //getVariables: function(expression) {
@@ -77,22 +66,27 @@ app.factory('expressionService', function ($rootScope, contextService) {
 
                     if (variableType == 'DATAMAP') {
                         realVariable = datamapPath + "['" + realVariable + "']";
+                        
+
                     } else {
                         realVariable = 'scope' + realVariable;
+
                         var subVariable = preCompiledReplaceRegex.test(realVariable);
-                        
                         if (subVariable == true) {
                             var subVariables = this.getVariables(realVariable, datamap);
-                            if (subVariables != null) {
-                                $.each(subVariables, function (key, value) {
-                                        realVariable = realVariable.replace(key, value + '.toString()');
-                                });
-                            }
+                            $.each(subVariables, function (key, value) {
+                                realVariable = realVariable.replace(key, value);
+                                variables[key] = value;
+                            });
                         }
                     }
                     variables[referenceVariable] = realVariable;
                 }
             }
+
+            
+            
+
 
             //if (datamapVariables != null) {
             //    var datamapPath = 'datamap';
@@ -155,14 +149,20 @@ app.factory('expressionService', function ($rootScope, contextService) {
 
             var collWatch = '[';
             if (variables != null) {
+                var i = 0;
                 $.each(variables, function (key, value) {
-                    if (!value.toString().in('[') && !value.toString().in('(')) {
-                        collWatch += value;
-                        if (i != variables.length - 1) {
-                            collWatch += ",";
-                        }
+                    if (!key.endsWith(')')) {
+                        $.each(variables, function(key2, value2) {
+                            variables[key2] = variables[key2].replace(key, value);
+                        });
+                        collWatch += value + ',';
                     }
+                    i = i + 1;
                 });
+            }
+
+            if (collWatch.charAt(collWatch.length - 1) == ",") {
+                collWatch = collWatch.slice(0, -1);
             }
 
             collWatch += ']';
