@@ -141,11 +141,13 @@ namespace softwrench.sw4.Hapag.Security {
             var groupedLocations = BuildGroupedLocations(resultLocations);
             var directGroupedLocations = BuildGroupedLocations(resultLocations.Where(f => !f.FromSuperGroup));
             var groupedLocationsFromParent = BuildGroupedLocations(resultLocations.Where(f => f.FromSuperGroup));
+            var directGroupLocationsNoPrefix =directGroupedLocations.Select(hlagGroupedLocation => new HlagGroupedLocationsNoPrefixDecorator(hlagGroupedLocation));
 
             var result1 = new UserHlagLocation {
                 Locations = new HashSet<HlagLocation>(resultLocations),
                 GroupedLocations = groupedLocations,
                 DirectGroupedLocations = directGroupedLocations,
+                DirectGroupedLocationsNoPrefix =new HashSet<HlagGroupedLocationsNoPrefixDecorator>(directGroupLocationsNoPrefix),
                 GroupedLocationsFromParent = groupedLocationsFromParent
             };
             var result = result1;
@@ -251,14 +253,14 @@ namespace softwrench.sw4.Hapag.Security {
         }
 
 
-        public IEnumerable<HlagGroupedLocation> FindAllLocationsOfCurrentUser(ApplicationMetadata application) {
+        public IEnumerable<IHlagLocation> FindAllLocationsOfCurrentUser(ApplicationMetadata application) {
             var user = SecurityFacade.CurrentUser();
             var findAllLocationsOfCurrentUser = DoFindLocationsOfCurrentUser(user, application);
             Log.DebugFormat("locations retrieved for user {0}: {1}", user.Login, findAllLocationsOfCurrentUser);
             return findAllLocationsOfCurrentUser;
         }
 
-        private IEnumerable<HlagGroupedLocation> DoFindLocationsOfCurrentUser(InMemoryUser user, ApplicationMetadata application) {
+        private IEnumerable<IHlagLocation> DoFindLocationsOfCurrentUser(InMemoryUser user, ApplicationMetadata application) {
 
             var userLocation = user.Genericproperties[HapagPersonGroupConstants.HlagLocationProperty] as UserHlagLocation;
             if (userLocation == null) {

@@ -5,10 +5,15 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace softwrench.sw4.Hapag.Security {
-    public class HlagGroupedLocation : IAssociationOption, IComparable<HlagGroupedLocation> {
-        internal String SubCustomer { get; set; }
+    public class HlagGroupedLocation : IComparable<IHlagLocation>, IHlagLocation {
+        public String SubCustomer { get; set; }
 
-        internal ISet<string> CostCenters = new HashSet<string>();
+        private readonly ISet<string> _costCenters = new HashSet<string>();
+
+        public ISet<string> CostCenters {
+            get { return _costCenters; }
+        }
+
 
         public Boolean FromSuperGroup { get; set; }
 
@@ -19,7 +24,7 @@ namespace softwrench.sw4.Hapag.Security {
 
         public HlagGroupedLocation(string key, ISet<string> value, Boolean fromSupergroup) {
             SubCustomer = key;
-            CostCenters = value;
+            _costCenters = value;
             FromSuperGroup = fromSupergroup;
         }
 
@@ -83,11 +88,11 @@ namespace softwrench.sw4.Hapag.Security {
             get { return SubCustomerSuffix; }
         }
 
-        public string Label {
+        public virtual string Label {
             get { return "HLAG-" + SubCustomerSuffix; }
         }
 
-        public int CompareTo(HlagGroupedLocation other) {
+        public int CompareTo(IHlagLocation other) {
             return System.String.Compare(Label, other.Label, StringComparison.Ordinal);
         }
 

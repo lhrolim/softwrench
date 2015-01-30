@@ -17,7 +17,7 @@ namespace softwrench.sw4.Hapag.Security
         /// This is a cached check (built upon login) not hitting database everytime
         /// </summary>
         /// <returns></returns>
-        IEnumerable<HlagGroupedLocation> FindAllLocationsOfCurrentUser(ApplicationMetadata application);
+        IEnumerable<IHlagLocation> FindAllLocationsOfCurrentUser(ApplicationMetadata application);
 
         IEnumerable<HlagGroupedLocation> FindAllLocations();
         IEnumerable<IAssociationOption> FindDefaultITCsOfLocation(string subcustomer);

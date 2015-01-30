@@ -115,9 +115,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ImacConfigs\WoActivityGroup.cs" />
     <Compile Include="Security\HlagGroupedLocation.cs" />
+    <Compile Include="Security\HlagGroupedLocationsNoPrefixDecorator.cs" />
     <Compile Include="Security\HlagLocation.cs" />
     <Compile Include="Security\HlagLocationManager.cs" />
     <Compile Include="Security\HlagLocationUtil.cs" />
+    <Compile Include="Security\IHlagLocation.cs" />
     <Compile Include="Security\IHlagLocationManager.cs" />
     <Compile Include="Security\UserHlagLocation.cs" />
   </ItemGroup>

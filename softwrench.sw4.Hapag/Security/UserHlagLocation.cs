@@ -22,6 +22,12 @@ namespace softwrench.sw4.Hapag.Security {
         public ISet<HlagGroupedLocation> DirectGroupedLocations{ get; set; }
 
         /// <summary>
+        /// This represents only the grouped (i.e costcenters grouped by customer) locations direct linked to the user (XXX-LC groups)
+        /// </summary>
+        [NotNull]
+        public ISet<HlagGroupedLocationsNoPrefixDecorator> DirectGroupedLocationsNoPrefix { get; set; }
+
+        /// <summary>
         /// This represents only the grouped (i.e costcenters grouped by customer) locations provenient by Region/Area groups
         /// </summary>
         [NotNull]

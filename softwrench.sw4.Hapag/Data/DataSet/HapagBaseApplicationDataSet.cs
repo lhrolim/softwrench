@@ -34,7 +34,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             }
         }
 
-     
+
 
         protected MaximoHibernateDAO MaxDAO {
             get {
@@ -69,7 +69,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             return costcenters;
         }
 
-        public IEnumerable<IAssociationOption> GetHlagUserLocations(OptionFieldProviderParameters parameters) {
+        public virtual IEnumerable<IAssociationOption> GetHlagUserLocations(OptionFieldProviderParameters parameters) {
             var currentLocations = LocationManager.FindAllLocationsOfCurrentUser(parameters.ApplicationMetadata);
             var hlagUserlocations = currentLocations as HlagGroupedLocation[] ?? currentLocations.ToArray();
             if (CollectionExtensions.IsNullOrEmpty(hlagUserlocations)) {
@@ -118,8 +118,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             return costcenters;
         }
 
-        protected Boolean IsPrinterAsset(String classtructureId)
-        {
+        protected Boolean IsPrinterAsset(String classtructureId) {
             var results = MaxDAO.FindByNativeQuery(AssetConstants.PrinterClassificationPath);
             var list = results.Cast<IEnumerable<KeyValuePair<string, object>>>()
                 .Select(r => r.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase))
