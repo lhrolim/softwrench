@@ -102,8 +102,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             String applicationName, string title, string schemaId, SchemaStereotype stereotype,
             SchemaMode? mode, ClientPlatform? platform, bool @abstract,
             List<IApplicationDisplayable> displayables, IDictionary<string, string> schemaProperties,
-            ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema, 
-            string idFieldName,string userIdFieldName, string unionSchema, ISet<ApplicationEvent> events = null) {
+            ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema,
+            string idFieldName, string userIdFieldName, string unionSchema, ISet<ApplicationEvent> events = null) {
             if (displayables == null) throw new ArgumentNullException("displayables");
 
             ApplicationName = applicationName;
@@ -122,8 +122,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             UserIdFieldName = userIdFieldName;
             UnionSchema = unionSchema;
             for (int i = 0; i < displayables.Count; i++) {
-                if (displayables[i].Role == ApplicationName + "." + IdFieldName) {
-                    IdDisplayable = displayables[i].ToolTip;
+                if (displayables[i].Role == ApplicationName + "." + UserIdFieldName) {
+                    IdDisplayable = displayables[i].Label;
                 }
             }
 
@@ -216,8 +216,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         [JsonIgnore]
         public IEnumerable<ApplicationFieldDefinition> NonRelationshipFields {
-            get
-            {
+            get {
                 long before = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
                 var applicationFieldDefinitions = Fields.Where(f => !f.Attribute.Contains(".") && (!f.Attribute.Contains("#") || f.Attribute.StartsWith("#null")));
                 long after = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
