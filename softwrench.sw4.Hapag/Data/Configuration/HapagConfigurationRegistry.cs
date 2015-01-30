@@ -115,6 +115,7 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
             //dashsboards
             _wcFacade.Register("servicerequest", qc.SrITCDashboard(), MetadataIdForModules(dc.ActionRequiredForOpenRequests, fr.Tom, fr.Itom));
             _wcFacade.Register("incident", qc.IncidentITCDashboard(), MetadataIdForModules(dc.ActionRequiredForOpenIncidents, fr.Tom, fr.Itom));
+            _wcFacade.Register("imac", qc.ImacsForTomITOM(), ForModules(fr.Tom,fr.Itom));
             
         }
 

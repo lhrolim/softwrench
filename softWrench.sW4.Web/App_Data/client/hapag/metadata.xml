@@ -216,6 +216,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 									when !@classificationid = '81515200' then 'Add Subcomponent'
 									when !@classificationid = '81515400' then 'Remove'
 									when !@classificationid = '81515500' then 'Replace'
+									when !@classificationid = '81515700' then 'Decommission'
 								  end"/>
       </attributes>
       <relationships>

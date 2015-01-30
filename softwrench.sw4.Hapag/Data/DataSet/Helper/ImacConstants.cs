@@ -32,6 +32,9 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
 
 
         internal const string Decommissioned = "decommission";
+        internal const string DecommissionedClassification = "81515700";
+
+
         internal const string Replace = "replace";
         internal const string ReplaceOther = "replaceother";
         internal const string ReplaceStd = "replacestd";

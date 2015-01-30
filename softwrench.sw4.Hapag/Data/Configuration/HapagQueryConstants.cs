@@ -1,4 +1,6 @@
-﻿using softWrench.sW4.Util;
+﻿using softWrench.sW4.Data.Persistence.WS.Ism.Base;
+using softwrench.sw4.Hapag.Data.DataSet.Helper;
+using softWrench.sW4.Util;
 using System;
 
 namespace softwrench.sw4.Hapag.Data.Configuration {
@@ -67,7 +69,7 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
 
 
         internal const string PurchaseSR = DefaultSRGridQuery + @" AND SR.Commoditygroup ='HLC-HWS'";
-        
+
         internal const string DefaultAsset = @" asset.pluspcustomer != 'HLC-00'";
 
         internal const string PurchaseIncident = "Incident.Commoditygroup ='HLC-HWS'";
@@ -119,13 +121,17 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
 
         internal const string DefaultITCReportRegionAndAreaQuery = @"
             locationpersongroup_.persongroup like 'C-HLC-WW-LC%' 
-            ";    
+            ";
 
         internal const string MovedAssets = @"
             asset.assetnum in (select assetnum from SR s where s.CLASSIFICATIONID = '81515100' and s.ITDCLOSEDATE > @past(3 months))";
 
         internal const string DashBoardADOpenIncidents = @"incident.ownergroup IN ({0}) AND incident.status in ('SLAHOLD','RESOLVED')";
-        
+
         internal const string ADOpenIncidents = @"incident.ownergroup IN ({0})";
+
+        public static string ImacsForTomITOM() {
+            return "imac.classificationid = '{0}' and imac.pluspcustomer in ('{1}','{2}')".Fmt(ImacConstants.DecommissionedClassification, ISMConstants.DefaultCustomerName, ISMConstants.HamburgLocation2);
+        }
     }
 }
