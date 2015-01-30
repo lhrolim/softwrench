@@ -3,20 +3,56 @@
 app.factory('expressionService', function ($rootScope, contextService) {
 
 
-    /*       This regex matches variables that start with an @     
-          Matching Strings:                                      
+    /*       This regex matches variables two different patterns:
+    
+        1. Strings that start with an @    -----------------------------
+                  Matching Strings:                                      
                       @inventory_.item_.itemnum                  
                       @assetnum                                  
                       @#customfield                              
                                                                  
            The leading @ is then removed from the matches and the
              variable is placed within the datamap[''] dictionary    
-          Resulting Strings:                                     
-                      datamap['inventory_.item_.itemnum']                  
-                      datamap['assetnum']                                   
-                      datamap['#customfield']                               
-                                                                 
-                https://www.regex101.com/r/fB6kI9/5               */
+                  Resulting Strings:                                     
+                        datamap['inventory_.item_.itemnum']                  
+                        datamap['assetnum']                                   
+                        datamap['#customfield']                               
+
+        2. Strings that start with an $.    ----------------------------
+                  Matching Strings:
+                        $.previousdata.fields['wonum'].list[@assetnum]
+                        $.previousdata.fields[wonum].list[key]
+                        $.previousdata.fields('CAT')
+                        $.previousdata.fields(@#assetnum)
+                        $.previousdata.fields(var)
+                        $.previousdata.fields(var,'CAT',@assetnum)
+                        $.previousdata.fields('CAT', var, @assetnum)
+                        $.previousdata.fields(@assetnum, 'CAT', var)
+                        $.previousdata.fields(var)
+
+                        $.previousdata['@wonum'].fields
+                        $.previousdata[$.test]
+                        $.previousdata[$.testFunctionrefsiteid(@assetnum)]
+                        $.previousdata.fields.test
+                        $.previousdata.fields[@assetnum]
+                        $.lookupAssociationCode[@#lookupCode]
+                        $.fields(@test, datamap['test'])
+                        $.testFunction($.datamap[@#refsiteid], @#test)
+
+            In this case, the $. will be translated to scope. and the
+            @ will still be translated into datamap[' {variable} ']
+
+            NOTE: There can only be 2 inceptions of a scope function.
+            For example, you can use:
+                $.customFunction($.previousdata)
+
+            But you cannot have, for example, have two scope functions with
+            a third scope function/variable reference as a paramter.
+            Example:
+                $.customFunction($.extraMultiplier($.previousdata))
+            
+                     Example Regex Tester W/ Examples URL:
+                      https://www.regex101.com/r/fB6kI9/12               */
 
     var preCompiledReplaceRegex = /(\@\#*)(\w+(\.?\w?)*)(?!\w)|\$\.(\w+)((\.\w+)|(\[\s?\'?(\$\.|\@\#*)?\w+((\.\w+)|(\[\s?\'?(\$\.|\@\#*)?\w+\'?\s?\])|(\(\s?\'?(\$\.|\@\#*)?\w+\'?\s?(\,\s?\'?(\$\.|\@\#*)?\w+\'?\s?)*\)))*\'?\s?\])|(\(\s?\'?(\$\.|\@\#*)?\w+((\.\w+)|(\[\s?\'?(\$\.|\@\#*)?\w+\'?\s?\])|(\(\s?\'?(\$\.|\@\#*)?\w+\'?\s?(\,\s?\'?(\$\.|\@\#*)?\w+\'?\s?)*\)))*\'?\s?(\,\s?\'?(\$\.|\@\#*)?\w+((\.\w+)|(\[\s?\'?(\$\.|\@\#*)?\w+\'?\s?\])|(\(\s?\'?(\$\.|\@\#*)?\w+\'?\s?(\,\s?\'?(\$\.|\@\#*)?\w+\'?\s?)*\)))*\'?\s?)*\)))*/g;
 
