@@ -1264,7 +1264,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="sr_.ticketid" label="SR ID">
             <renderer type="default" params="minwidth=84px;wordwrap=break-word" />
           </field>
-          <field attribute="cinum" label="Asset">
+          <field attribute="ciname" label="Asset">
             <renderer type="default" params="minwidth=84px;wordwrap=break-word" />
           </field>
           <field attribute="wopriority" label="Priority">
@@ -1316,7 +1316,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="description" label="Summary">
             <renderer type="default" params="minwidth=102px;maxwidth=102px;excelwidth=50;wordwrap=break-word" />
           </field>
-          <field attribute="cinum" label="Asset">
+          <field attribute="ciname" label="Asset">
             <renderer type="default" params="minwidth=102px;maxwidth=102px;wordwrap=break-word" />
           </field>
           <field attribute="wopriority" label="Priority">
