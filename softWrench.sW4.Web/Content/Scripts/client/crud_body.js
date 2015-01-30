@@ -162,8 +162,11 @@ app.directive('crudBody', function (contextService) {
                     return expressionService.evaluate(schema.properties['detail.titleexpression'], $scope.datamap.fields);
                 }
                 var titleId = schema.idDisplayable;
-                var description = datamap.fields.description == null ? "" : datamap.fields.description;
-                return titleId + " " + datamap.fields[schema.userIdFieldName] + " Summary: " + description;
+                var result = titleId + " " + datamap.fields[schema.userIdFieldName];
+                if (datamap.fields.description != null) {
+                    result += " Summary: " + datamap.fields.description;
+                }
+                return result;
             }
 
             $scope.isNotHapagTest = function () {
