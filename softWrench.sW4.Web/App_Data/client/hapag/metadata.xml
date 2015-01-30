@@ -1389,10 +1389,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="gridwithoutsr" stereotype="list" parentschema="parentgrid">
           <section id="srId">
             <field attribute="hlagchangesummary" label="Summary">
-              <renderer type="default" params="minwidth=94px;excelwidth=50;wordwrap=break-word" />
+              <renderer type="default" params="minwidth=130px;excelwidth=50;wordwrap=break-word" />
             </field>
             <field attribute="hlagchangeticketid" label="SR ID">
-              <renderer type="default" params="minwidth=84px;wordwrap=break-word" />
+              <renderer type="default" params="width=75px;wordwrap=break-word" />
             </field>
           </section>
         </schema>
