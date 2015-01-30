@@ -26,6 +26,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
             PopulateAssets(jsonObject, webServiceObject);
             SetClassification(jsonObject, webServiceObject, maximoTemplateData.ApplicationMetadata.Schema.SchemaId);
             HandleBusinessMatrix(webServiceObject, jsonObject, maximoTemplateData.ApplicationMetadata.Schema.SchemaId);
+            ISMAttachmentHandler.HandleAttachmentsForCreation(jsonObject, webServiceObject);
             var schemaId = maximoTemplateData.OperationData.ApplicationMetadata.Schema.SchemaId;
         }
 
