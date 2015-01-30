@@ -16,9 +16,9 @@ app.factory('expressionService', function ($rootScope, contextService) {
                       datamap['assetnum']                                   
                       datamap['#customfield']                               
                                                                  
-                https://www.regex101.com/r/fB6kI9/2               */
+                https://www.regex101.com/r/fB6kI9/5               */
 
-    var preCompiledReplaceRegex = /(@\#*)(\w+(\.?\w?)*)(?!\w)|\$\.(\w+)((\.?\w?)*((\[\'?\w+\'\])|\[?\w+\])(\.\w+)*)*(\.\w+)*/g;
+    var preCompiledReplaceRegex = /(@\#*)(\w+(\.?\w?)*)(?!\w)|\$\.(\w+)((\.\w+)|((\(|\[)\s?\'?((\$\.)|(\@\#*))?\w+\'?(\,?\s?\'?((\$\.)|(\@\#*))?\w+\'?\s?)*(\]|\))?(\]|\))?))*/g;
 
     var datamapReferenceRegex = /(@\#*)(\w+(\.?\w?)*)(?!\w)/g;
     var scopeReferenceRegex = /\$\.(\w+)((\.?\w?)*((\[\'?\w+\'\])|\[?\w+\])(\.\w+)*)*(\.\w+)*(\(\s?\'?(\@\#*)?\w+\'?\s?(\,\s?\'?(\@\#*)?\w+\'?\s?)*\))?/g;
@@ -62,56 +62,111 @@ app.factory('expressionService', function ($rootScope, contextService) {
 
         getVariables: function (expression, datamap) {
             var variables = {};
-            var datamapVariables = expression.match(datamapReferenceRegex);
-            var scopeVariables = expression.match(scopeReferenceRegex);
+            var matchingVariables = expression.match(preCompiledReplaceRegex);
 
-            if (datamapVariables != null) {
-                var datamapPath = 'datamap';
-                if (datamap.fields != undefined) {
-                    datamapPath = 'datamap.fields';
-                }
-                for (var i = 0; i < datamapVariables.length; i++) {
-                    var referenceVariable = datamapVariables[i];
-                    var realVariable = referenceVariable.replace(/[\@\(\)]/g, '').trim();
-                    realVariable = referenceVariable.replace(referenceVariable, datamapPath + '[' + realVariable + ']');
-                    variables[referenceVariable] = realVariable;
-                }
+            var datamapPath = 'datamap';
+            if (datamap.fields != undefined) {
+                datamapPath = 'datamap.fields';
             }
 
-            if (scopeVariables != null) {
-                for (var i = 0; i < scopeVariables.length; i++) {
-                    var referenceVariable = scopeVariables[i];
-                    var realVariable = referenceVariable.replace('$', 'scope');
-                    variables[referenceVariable] = realVariable;
+            if (matchingVariables != null) {
+                for (var i = 0; i < matchingVariables.length; i++) {
+                    var referenceVariable = matchingVariables[i];
+                    var variableType = referenceVariable[0] == '@' ? 'DATAMAP' : 'SCOPE';
+                    var realVariable = referenceVariable.substring(1);
 
-                    var subDatamapVariable = datamapReferenceRegex.test(realVariable);
-                    var subScopeVariable = scopeReferenceRegex.test(realVariable);
-
-                    if (subDatamapVariable != null || subScopeVariable != null) {
-                        var subVariables = this.getVariables(realVariable, datamap);
-                        if (subVariables != null) {
-                            $.each(subVariables, function (key, value) {
-                                variables[key] = value;
-                            });
+                    if (variableType == 'DATAMAP') {
+                        realVariable = datamapPath + "['" + realVariable + "']";
+                    } else {
+                        realVariable = 'scope' + realVariable;
+                        var subVariable = preCompiledReplaceRegex.test(realVariable);
+                        
+                        if (subVariable == true) {
+                            var subVariables = this.getVariables(realVariable, datamap);
+                            if (subVariables != null) {
+                                $.each(subVariables, function (key, value) {
+                                        realVariable = realVariable.replace(key, value + '.toString()');
+                                });
+                            }
                         }
                     }
+                    variables[referenceVariable] = realVariable;
                 }
             }
+
+            //if (datamapVariables != null) {
+            //    var datamapPath = 'datamap';
+            //    if (datamap.fields != undefined) {
+            //        datamapPath = 'datamap.fields';
+            //    }
+            //    for (var i = 0; i < datamapVariables.length; i++) {
+            //        var referenceVariable = datamapVariables[i];
+            //        var realVariable = referenceVariable.replace(/[\@\(\)]/g, '').trim();
+            //        realVariable = referenceVariable.replace(referenceVariable, datamapPath + '[' + realVariable + ']');
+            //        variables[referenceVariable] = realVariable;
+            //    }
+            //}
+
+            //var datamapVariables = expression.match(datamapReferenceRegex);
+            //var scopeVariables = expression.match(scopeReferenceRegex);
+
+            //if (scopeVariables != null) {
+            //    for (var i = 0; i < scopeVariables.length; i++) {
+            //        var referenceVariable = scopeVariables[i];
+            //        var realVariable = referenceVariable.substring(1);
+            //        variables[referenceVariable] = realVariable;
+
+            //        var subDatamapVariable = datamapReferenceRegex.test(realVariable);
+            //        var subScopeVariable = scopeReferenceRegex.test(realVariable);
+
+            //        if (subDatamapVariable != null || subScopeVariable != null) {
+            //            var subVariables = this.getVariables(realVariable, datamap);
+            //            if (subVariables != null) {
+            //                $.each(subVariables, function (key, value) {
+            //                    if (extractValFromSubVars == true) {
+            //                        variables[key] = eval(value);
+            //                    } else {
+            //                        variables[key] = value;
+            //                    }
+            //                });
+            //            }
+            //        }
+            //    }
+            //}
+
+            //if (datamapVariables != null) {
+            //    var datamapPath = 'datamap';
+            //    if (datamap.fields != undefined) {
+            //        datamapPath = 'datamap.fields';
+            //    }
+            //    for (var i = 0; i < datamapVariables.length; i++) {
+            //        var referenceVariable = datamapVariables[i];
+            //        var realVariable = referenceVariable.replace(/[\@\(\)]/g, '').trim();
+            //        realVariable = referenceVariable.replace(referenceVariable, datamapPath + '[' + realVariable + ']');
+            //        variables[referenceVariable] = realVariable;
+            //    }
+            //}
 
             return variables;
         },
        
         getVariablesForWatch: function (expression, datamap) {
             var variables = this.getVariables(expression, datamap);
+
             var collWatch = '[';
-            for (var i = 0; i < Object.keys(variables).length; i++) {
-                collWatch += variables[i];
-                if (i != variables.length - 1) {
-                    collWatch += ",";
-                }
+            if (variables != null) {
+                $.each(variables, function (key, value) {
+                    if (!value.toString().in('[') && !value.toString().in('(')) {
+                        collWatch += value;
+                        if (i != variables.length - 1) {
+                            collWatch += ",";
+                        }
+                    }
+                });
             }
 
             collWatch += ']';
+            
             return collWatch;
         },
 
@@ -123,14 +178,14 @@ app.factory('expressionService', function ($rootScope, contextService) {
             if (expression === "false" || expression === false) {
                 return false;
             }
-            var expressionToEval = this.getExpression(expression, datamap, scope);
+            var expressionToEval = this.getExpression(expression, datamap);
             try {
                 return eval(expressionToEval);
             } catch (e) {
                 if (contextService.isLocal()) {
                     console.log(e);
                 }
-                return expression;
+                return true;
             }
         },
 
