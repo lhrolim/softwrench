@@ -600,6 +600,15 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
         },
 
+        invIssue_afterChangeRotAsset: function(parameters) {
+            //Sets the associated GL Debit Account
+            //if a workorder isn't already specified
+            //Updates the location field from the asset's location
+            if (parameters.fields['rotassetnum'].trim() != "") {
+                parameters.fields['binnum'] = parameters.fields['rotatingasset_.binnum'];
+            }
+        },
+
         invIssue_afterChangeLocation: function(parameters) {
             //Sets the gldebitacct and clears the asset 
             //if there is no refwo defined
