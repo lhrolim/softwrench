@@ -44,12 +44,16 @@ app.factory('expressionService', function ($rootScope, contextService) {
 
             NOTE: There can only be 2 inceptions of a scope function.
             For example, you can use:
-                $.customFunction($.previousdata)
+                $.customFunction($.previousdata[@assetnum])
+                $.previousdata[$.customFunction(@assetnum)]
+                $scope
 
             But you cannot have, for example, have two scope functions with
             a third scope function/variable reference as a paramter.
             Example:
                 $.customFunction($.extraMultiplier($.previousdata))
+                $.previousdata[$.customFunction($.lookupAssociationCode[@assetnum])]
+
             
                      Example Regex Tester W/ Examples URL:
                       https://www.regex101.com/r/fB6kI9/12               */
@@ -61,19 +65,12 @@ app.factory('expressionService', function ($rootScope, contextService) {
             return expression.match(preCompiledReplaceRegex);
         },
 
-        //getVariables: function(expression) {
-        //    var variables = expression.match(preCompiledReplaceRegex);
-        //    if (variables != null) {
-        //        for (var i = 0; i < variables.length; i++) {
-        //            variables[i] = variables[i].replace(/[\@\(\)]/g, '').trim();
-        //        }
-        //    }
-        //    return variables;
-        //},
-
         getExpression: function (expression, datamap) {
             var variables = this.getVariables(expression, datamap);
 
+            //Each dictionary key is used to quickly update an expression with its true value.
+            //We loop through each variable, replacing any instance of the key (original reference in metadata) 
+            //with the new value (the true reference upon being evaluated)
             if (variables != null) {
                 $.each(variables, function (key, value) {
                     expression = expression.replace(key, value);
@@ -98,84 +95,41 @@ app.factory('expressionService', function ($rootScope, contextService) {
                 for (var i = 0; i < matchingVariables.length; i++) {
                     var referenceVariable = matchingVariables[i];
                     var variableType = referenceVariable[0] == '@' ? 'DATAMAP' : 'SCOPE';
+
+                    //Removes initial character from matches (@ or $)
                     var realVariable = referenceVariable.substring(1);
 
                     if (variableType == 'DATAMAP') {
+                        //Translates datamap reference to a format that can be evaluated
                         realVariable = datamapPath + "['" + realVariable + "']";
-                        
-
                     } else {
                         realVariable = 'scope' + realVariable;
 
+                        //Tests whether or not the realVariable has a subVariable within it
+                        //For example, the reference variable $.lookupAssociatonCode[@assetnum]
+                        //will translate into a real variable of scope.lookupAssociationCode[@assetnum].
+                        //Because the match has @assetnum as a subvariable, the below function will return true.
                         var subVariable = preCompiledReplaceRegex.test(realVariable);
                         if (subVariable == true) {
                             var subVariables = this.getVariables(realVariable, datamap);
+
+                            //For each sub variable, updated the real variable reference
+                            //(the variable's true reference upon being evaluated) and add
+                            // the variable sub variable to our current variables list.
                             $.each(subVariables, function (key, value) {
                                 realVariable = realVariable.replace(key, value);
                                 variables[key] = value;
                             });
                         }
                     }
+                    //Updates variable dictionary key (the variable's original reference in the metadata)
+                    //with the real variable reference (the variable's true reference upon being evaluated).
+                    //The key can be used to quickly update an expression with its true value. A good example
+                    //of this occurs in getExpression, we loop through each variable, replacing any instance of
+                    //the key (original reference in metadata) with the new value (the true reference upon being evaluated)
                     variables[referenceVariable] = realVariable;
                 }
             }
-
-            
-            
-
-
-            //if (datamapVariables != null) {
-            //    var datamapPath = 'datamap';
-            //    if (datamap.fields != undefined) {
-            //        datamapPath = 'datamap.fields';
-            //    }
-            //    for (var i = 0; i < datamapVariables.length; i++) {
-            //        var referenceVariable = datamapVariables[i];
-            //        var realVariable = referenceVariable.replace(/[\@\(\)]/g, '').trim();
-            //        realVariable = referenceVariable.replace(referenceVariable, datamapPath + '[' + realVariable + ']');
-            //        variables[referenceVariable] = realVariable;
-            //    }
-            //}
-
-            //var datamapVariables = expression.match(datamapReferenceRegex);
-            //var scopeVariables = expression.match(scopeReferenceRegex);
-
-            //if (scopeVariables != null) {
-            //    for (var i = 0; i < scopeVariables.length; i++) {
-            //        var referenceVariable = scopeVariables[i];
-            //        var realVariable = referenceVariable.substring(1);
-            //        variables[referenceVariable] = realVariable;
-
-            //        var subDatamapVariable = datamapReferenceRegex.test(realVariable);
-            //        var subScopeVariable = scopeReferenceRegex.test(realVariable);
-
-            //        if (subDatamapVariable != null || subScopeVariable != null) {
-            //            var subVariables = this.getVariables(realVariable, datamap);
-            //            if (subVariables != null) {
-            //                $.each(subVariables, function (key, value) {
-            //                    if (extractValFromSubVars == true) {
-            //                        variables[key] = eval(value);
-            //                    } else {
-            //                        variables[key] = value;
-            //                    }
-            //                });
-            //            }
-            //        }
-            //    }
-            //}
-
-            //if (datamapVariables != null) {
-            //    var datamapPath = 'datamap';
-            //    if (datamap.fields != undefined) {
-            //        datamapPath = 'datamap.fields';
-            //    }
-            //    for (var i = 0; i < datamapVariables.length; i++) {
-            //        var referenceVariable = datamapVariables[i];
-            //        var realVariable = referenceVariable.replace(/[\@\(\)]/g, '').trim();
-            //        realVariable = referenceVariable.replace(referenceVariable, datamapPath + '[' + realVariable + ']');
-            //        variables[referenceVariable] = realVariable;
-            //    }
-            //}
 
             return variables;
         },
@@ -187,10 +141,11 @@ app.factory('expressionService', function ($rootScope, contextService) {
             if (variables != null) {
                 var i = 0;
                 $.each(variables, function (key, value) {
+                    //Checks whether or not the variable is a function. If it is, it will
+                    //not be included as a variable to watch. Instead, the getVariables function
+                    //will return any parameters that are truely variables so that we can watch
+                    //them and re-evaluate the expression when a variable changes.
                     if (!key.endsWith(')')) {
-                        $.each(variables, function(key2, value2) {
-                            variables[key2] = variables[key2].replace(key, value);
-                        });
                         collWatch += value + ',';
                     }
                     i = i + 1;
