@@ -1364,13 +1364,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=84px;wordwrap=break-word" />
           </field>
           <field attribute="wopriority" label="Priority">
-            <renderer type="default" params="minwidth=55px;wordwrap=break-word;maxwidth=85px" />
+            <renderer type="default" params="width=60px" />
           </field>
           <field attribute="schedstart" label="Scheduled Start">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=84px;wordwrap=break-word;showtime=false" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site ID">
-            <renderer type="default" params="minwidth=84px;wordwrap=break-word" />
+            <renderer type="default" params="width=70px;wordwrap=break-word" />
           </field>
           <field attribute="hlagreportedby" label="Reported By">
             <renderer type="default" params="minwidth=84px;wordwrap=break-word" />
@@ -1401,10 +1401,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="gridwithoutsrwithapprovals" stereotype="list" parentschema="parentgrid">
           <section id="srId">
             <field attribute="hlagchangesummary" label="Summary">
-              <renderer type="default" params="minwidth=120px;excelwidth=50;wordwrap=break-word" />
+              <renderer type="default" params="minwidth=200px;excelwidth=50;wordwrap=break-word" />
             </field>
             <field attribute="hlagchangeticketid" label="SR ID" hidden="true">
-              <renderer type="default" params="minwidth=84px;wordwrap=break-word" />
+              <renderer type="default" params="width=75px;wordwrap=break-word" />
             </field>
           </section>
           <section id="extrafields">
@@ -1422,10 +1422,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <list title="Change Grid" unionschema="srforchange.changeunionschema" parentschema="parentgrid">
           <section id="srId">
             <field attribute="hlagchangesummary" label="Summary">
-              <renderer type="default" params="minwidth=94px;excelwidth=50;wordwrap=break-word" />
+              <renderer type="default" params="minwidth=130px;excelwidth=50;wordwrap=break-word" />
             </field>
             <field attribute="hlagchangeticketid" label="SR ID">
-              <renderer type="default" params="minwidth=84px;wordwrap=break-word" />
+              <renderer type="default" params="width=75px;wordwrap=break-word" />
             </field>
           </section>
 
