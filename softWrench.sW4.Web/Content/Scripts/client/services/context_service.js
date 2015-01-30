@@ -169,7 +169,7 @@ app.factory('contextService', function ($rootScope) {
             this.insertIntoContext('physicaldeviationListScanOrder', config.physicaldeviationListScanOrder);
             this.insertIntoContext('matrectransTransfersListScanOrder', config.matrectransTransfersListScanOrder);
             this.insertIntoContext('reservedMaterialsListScanOrder', config.reservedMaterialsListScanOrder);
-
+            this.insertIntoContext('invIssueListBeringScanOrder', config.invIssueListBeringScanOrder);
         },
 
         getResourceUrl: function (path) {

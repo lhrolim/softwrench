@@ -197,7 +197,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <schema stereotype="list" id="invIssueList" title="Issues and Returns">
           <properties>
-            <property key="list.click.service" value="inventoryService.invissuelistclick"/>
+            <property key="list.click.service" value="inventoryService.invissuelistclick_maximo71"/>
             <property key="config.fullKey" value="/Global/Grids/InvIssue/Scanbar"/>
           </properties>
           <commandbars>
@@ -205,7 +205,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap"
                        successmessage="Issue created" position="&lt;filter"/>
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
-              <!--<command id="batch_issue" label="Batch Issuing" service="inventoryService" method="navToBatchFilter" parameters="" successmessage="New issue(s) created" position="&lt;filter"/>-->
             </commandgroup>
           </commandbars>
           <field attribute="matusetransid" hidden="true"/>
@@ -247,6 +246,70 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <field attribute="qtyreturned" label="Qty Rtn">
             <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=10%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyReturnedList;"/>
+          </field>
+          <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
+            <renderer type="default" params="width=3%"/>
+          </section>
+          <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
+        </schema>
+
+        <schema stereotype="list" id="invIssueListBering" title="Issues and Returns">
+          <properties>
+            <property key="list.click.service" value="inventoryService.invissuelistclick_maximo71"/>
+            <property key="config.fullKey" value="/Global/Grids/InvIssueBering/Scanbar"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap"
+                       successmessage="Issue created" position="&lt;filter"/>
+              <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
+            </commandgroup>
+          </commandbars>
+          <field attribute="matusetransid" hidden="true"/>
+          <field attribute="storeloc" hidden="true"/>
+          <field attribute="binnum" hidden="true"/>
+          <field attribute="item_.itemnum" hidden="true"/>
+          <field attribute="itemnum" label="Item">
+            <renderer type="default" />
+          </field>
+          <field attribute="rotassetnum" label="Rotating Asset">
+            <renderer type="default" params="widthXS=15%;widthSM=15%;widthMD=15%" />
+          </field>
+          <field attribute="issueto" label="Issued To">
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%" />
+          </field>
+          <field attribute="location" label="Location">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="storeloc" label="Store Room">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="item_.itemtype" label="Item Type">
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%;widthLG=8%" />
+          </field>
+          <field attribute="transdate" label="Date">
+            <renderer type="default" params="widthXS=15%;widthSM=15%;widthMD=15%;formatter=datetime;"/>
+          </field>
+          <field attribute="quantity" label="Qty" hidden="true">
+            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=10%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyList;"/>
+          </field>
+          <field attribute="qtyreturned" label="Qty Rtn" hidden="true">
+            <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=10%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyReturnedList;"/>
+          </field>
+          <field attribute="lotnum" label="Lot" hidden="true">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=8%" />
+          </field>
+          <field attribute="refwo" label="Work Order" hidden="true">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%"/>
+          </field>
+          <field attribute="assetnum" label="Asset" hidden="true">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1" />
+          </field>
+          <field attribute="siteid" label="Site" hidden="true">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
+          </field>
+          <field attribute="issuetype" label="Issue Type" hidden="true">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=8%" />
           </field>
           <section resourcepath="/Content/Templates/otb/invissuereturnaction.html">
             <renderer type="default" params="width=3%"/>
