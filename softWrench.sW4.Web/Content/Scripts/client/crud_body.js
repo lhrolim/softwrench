@@ -80,7 +80,7 @@ app.directive('crudBody', function (contextService) {
             fieldService, commandService, i18NService,
             submitService, redirectService,
             associationService, contextService, alertService,
-            validationService, schemaService, $timeout, eventService, $log,checkpointService) {
+            validationService, schemaService, $timeout, eventService, $log, expressionService) {
 
             $scope.setForm = function (form) {
                 $scope.crudform = form;
@@ -106,7 +106,7 @@ app.directive('crudBody', function (contextService) {
                 //Save the originalDatamap after the body finishes rendering. This will be used in the submit service to update
                 //associations that were "removed" with a " ". This is because a null value, when sent to the MIF, is ignored
                 $scope.originalDatamap = angular.copy($scope.datamap);
-                
+
                 var tab = contextService.getActiveTab();
                 if (tab != null) {
                     redirectService.redirectToTab(tab);
@@ -128,8 +128,6 @@ app.directive('crudBody', function (contextService) {
                 }
             });
 
-            // Listeners
-
             $scope.setActiveTab = function (tabId) {
                 contextService.setActiveTab(tabId);
             };
@@ -143,6 +141,10 @@ app.directive('crudBody', function (contextService) {
                 return datamap.fields[schema.userIdFieldName];
             };
 
+            $scope.request = function (datamap, schema) {
+                return datamap.fields[schema.userIdFieldName];
+            };
+
             $scope.toConfirmBack = function (data, schema) {
                 $scope.$emit('sw_canceldetail', data, schema, "Are you sure you want to go back?");
             };
@@ -152,6 +154,21 @@ app.directive('crudBody', function (contextService) {
                     return true;
                 }
             };
+
+            $scope.getTitle = function () {
+                var schema = $scope.schema;
+                var datamap = $scope.datamap;
+                if (schema.properties['detail.titleexpression'] != null) {
+                    return expressionService.evaluate(schema.properties['detail.titleexpression'], $scope.datamap.fields);
+                }
+                var titleId = schema.idDisplayable;
+                var result = titleId + " " + datamap.fields[schema.userIdFieldName];
+                if (datamap.fields.description != null) {
+                    result += " Summary: " + datamap.fields.description;
+                }
+                return result;
+            }
+
             $scope.isNotHapagTest = function () {
                 if ($rootScope.clientName != 'hapag')
                     return true;
@@ -228,7 +245,7 @@ app.directive('crudBody', function (contextService) {
                 var value = contextService.fetchFromContext("crud_context", true);
                 return direction == 1 ? value.detail_previous : value.detail_next;
             }
-       
+
 
             $scope.delete = function () {
 
@@ -252,11 +269,11 @@ app.directive('crudBody', function (contextService) {
                     });
             };
 
-            $scope.cancel = function(data, schema) {
+            $scope.cancel = function (data, schema) {
                 $scope.cancelfn({ data: data, schema: schema });
             }
 
-            
+
 
             $scope.save = function (parameters) {
                 var log = $log.getInstance('crudbody#save');
@@ -300,7 +317,7 @@ app.directive('crudBody', function (contextService) {
                 $rootScope.$broadcast("sw_beforesubmitprevalidate_internal", transformedFields);
 
                 if (sessionStorage.mockclientvalidation == undefined) {
-                    var validationErrors = validationService.validate($scope.schema, $scope.schema.displayables, transformedFields,$scope.crudform.$error);
+                    var validationErrors = validationService.validate($scope.schema, $scope.schema.displayables, transformedFields, $scope.crudform.$error);
                     if (validationErrors.length > 0) {
                         //interrupting here, can´t be done inside service
                         return;
@@ -349,7 +366,7 @@ app.directive('crudBody', function (contextService) {
 
                 var jsonString = angular.toJson(transformedFields);
 
-                var submissionParameters = submitService.createSubmissionParameters($scope.schema,nextSchemaObj,id);
+                var submissionParameters = submitService.createSubmissionParameters($scope.schema, nextSchemaObj, id);
 
                 $rootScope.savingMain = !isComposition;
 

@@ -1710,7 +1710,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
-    <entity name="wochange" idAttribute="workorderid">
+    <entity name="wochange" idAttribute="workorderid" useridAttribute="wonum">
       <attributes>
         <attribute name="actfinish" type="timestamp" required="false" />
         <attribute name="actlabcost" type="double" required="true" />

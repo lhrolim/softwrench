@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata;
@@ -16,19 +17,20 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.Schema {
 
     public static class ApplicationSchemaFactory {
 
 
-        public static ApplicationSchemaDefinition GetSyncInstance(String applicationName, string idFieldName,string userIdFieldName) {
+        public static ApplicationSchemaDefinition GetSyncInstance(String applicationName, string idFieldName, string userIdFieldName) {
 
             var syncDisplayables = new List<IApplicationDisplayable>();
 
-            var definition = new ApplicationSchemaDefinition(applicationName, "", ApplicationMetadataConstants.SyncSchema, 
+            var definition = new ApplicationSchemaDefinition(applicationName, "", ApplicationMetadataConstants.SyncSchema,
                 SchemaStereotype.None, SchemaMode.None,
-                ClientPlatform.Mobile, false, syncDisplayables, null, null, null, null, idFieldName,userIdFieldName, null);
+                ClientPlatform.Mobile, false, syncDisplayables, null, null, null, null, idFieldName, userIdFieldName, null);
             definition.FkLazyFieldsResolver = ApplicationSchemaLazyFkHandler.SyncSchemaLazyFkResolverDelegate;
             definition.ComponentDisplayableResolver = ReferenceHandler.ComponentDisplayableResolver;
             return definition;
@@ -39,10 +41,10 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
           SchemaMode? mode, ClientPlatform? platform, bool @abstract,
           [NotNull] List<IApplicationDisplayable> displayables, [NotNull]IDictionary<string, string> schemaProperties,
           ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, [NotNull] ApplicationCommandSchema commandSchema,
-          string idFieldName,string userIdFieldName, string unionSchema, ISet<ApplicationEvent> events) {
+          string idFieldName, string userIdFieldName, string unionSchema, ISet<ApplicationEvent> events) {
 
             var schema = new ApplicationSchemaDefinition(applicationName, title, schemaId, stereotype, mode, platform,
-                @abstract, displayables, schemaProperties, parentSchema, printSchema, commandSchema, idFieldName,userIdFieldName, unionSchema, events);
+                @abstract, displayables, schemaProperties, parentSchema, printSchema, commandSchema, idFieldName, userIdFieldName, unionSchema, events);
 
             if (schema.ParentSchema != null) {
                 schema.Displayables = MergeParentSchemaDisplayables(schema);
@@ -60,7 +62,21 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             schema._fieldWhichHaveDeps = schema.DependantFields().Keys;
             schema.FkLazyFieldsResolver = ApplicationSchemaLazyFkHandler.LazyFkResolverDelegate;
             schema.ComponentDisplayableResolver = ReferenceHandler.ComponentDisplayableResolver;
+            SetTitle(applicationName, displayables, schema);
+
             return schema;
+        }
+
+        private static void SetTitle(string applicationName, List<IApplicationDisplayable> displayables, ApplicationSchemaDefinition schema) {
+            if (schema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.DetailTitleId)) {
+                schema.IdDisplayable = schema.Properties[ApplicationSchemaPropertiesCatalog.DetailTitleId];
+            } else {
+                foreach (var t in displayables) {
+                    if (t.Role == applicationName + "." + schema.UserIdFieldName) {
+                        schema.IdDisplayable = t.Label;
+                    }
+                }
+            }
         }
 
         private static void MergeWithParentProperties(ApplicationSchemaDefinition schema) {
@@ -85,17 +101,17 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             var resultingDisplayables = new List<IApplicationDisplayable>();
             var parentDisplayables = schema.ParentSchema.Displayables;
             var sections = schema.GetDisplayable<ApplicationSection>(typeof(ApplicationSection));
-            foreach (var dis in parentDisplayables) {
-                var section = dis as ApplicationSection;
+            foreach (var parentDisplayable in parentDisplayables) {
+                var section = parentDisplayable as ApplicationSection;
                 if (section != null) {
                     var concreteSection = sections.FirstOrDefault(s => s.Id == section.Id);
                     if (concreteSection == null) {
                         //put the abstract anyway so that eventual subclasses of this can use it as well
-                        var cloneable = dis as IPCLCloneable;
+                        var cloneable = parentDisplayable as IPCLCloneable;
                         if (cloneable != null) {
                             resultingDisplayables.Add((IApplicationDisplayable)cloneable.Clone());
                         } else {
-                            resultingDisplayables.Add(dis);
+                            resultingDisplayables.Add(parentDisplayable);
                         }
 
 
@@ -110,7 +126,11 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
                     }
                 } else {
-                    resultingDisplayables.Add(dis);
+                    var originalAttribute = resultingDisplayables.FirstOrDefault(a => a.Role == parentDisplayable.Role);
+                    if (originalAttribute == null) {
+                        resultingDisplayables.Add(parentDisplayable);
+                    }
+
                 }
             }
             return resultingDisplayables;
@@ -189,7 +209,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             //pass null on ParentSchema to avoid reMerging the parentSchemaData
             return GetInstance(schema.ApplicationName, schema.Title, schema.SchemaId, schema.Stereotype, schema.Mode, platform,
                  schema.Abstract, displayables,
-                 schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName,schema.UserIdFieldName, schema.UnionSchema,
+                 schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UserIdFieldName, schema.UnionSchema,
                  schema.EventSet);
         }
 
