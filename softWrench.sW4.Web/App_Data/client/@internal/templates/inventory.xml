@@ -957,19 +957,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             </commandgroup>
           </commandbars>
           <field attribute="itemnum" label="Item">
-            <renderer type="default" params="widthXS=35%;widthSM=30%;widthMD=20%;widthLG=10%" />
+            <renderer type="default" params="widthXS=35%;widthSM=30%;widthMD=18%;widthLG=10%" />
           </field>
           <field attribute="item_.description" label="Description">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="location" label="Storeroom">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=18%" />
           </field>
           <field attribute="binnum" label="Bin">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="lotnum" label="Lot">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=20%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <optionfield attribute="item_.rotating" label="Rotating">
             <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
@@ -985,7 +985,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="siteid" label="Site">
-            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=18%" />
           </field>
           <field attribute="invbalancesid" hidden="true"/>
           <event type="onload" service="scannerdetectionService" method="initInventoryGridListener"/>
