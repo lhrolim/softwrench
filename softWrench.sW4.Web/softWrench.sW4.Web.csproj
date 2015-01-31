@@ -533,7 +533,7 @@
     <Content Include="Content\Images\icon-background-select.png" />
     <Content Include="Content\Images\icon-combobox.png" />
     <Content Include="Content\Images\icon-opendetails.png" />
-    <Content Include="Content\Images\kongsberg\header.jpg" />
+    <Content Include="Content\Images\kongsberg\header.png" />
     <Content Include="Content\Images\kongsberg\signin.jpg" />
     <Content Include="Content\Images\logo-main.png" />
     <Content Include="Content\Images\manchester\branding.png" />
