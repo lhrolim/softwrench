@@ -65,7 +65,7 @@ namespace softWrench.sW4.Web {
                 "~/Content/Scripts/vendor/jquery/jquery-ui-1.10.3.js",
                 "~/Content/Scripts/vendor/jquery/jquery-file-style.js",
                 "~/Content/Scripts/vendor/jquery/jquery-filedownload-1.2.0.js",
-                "~/Content/Scripts/vendor/jquery/jquery-fileupload-5.40.1.js",
+                "~/Content/Scripts/vendor/jquery/zjquery-fileupload-5.40.1.js",
                 "~/Content/Scripts/vendor/other/spin-min.js"
                 ));
 

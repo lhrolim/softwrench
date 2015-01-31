@@ -15,8 +15,15 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '\..\softWrench.sW4.Web\Content\Scripts\**.js',
-      'tests\**.js'
+        '..//softWrench.sW4.Web//Content//Scripts//vendor/jquery/**/*.js',
+        '..//softWrench.sW4.Web//Content//Scripts//vendor/bootstrap/**/*.js',
+        '..//softWrench.sW4.Web//Content//Scripts//vendor/angular/angular.js',
+        '..//softWrench.sW4.Web//Content//Scripts//vendor/angular/**/*.js',
+        '..//softWrench.sW4.Web//Content//Scripts//vendor/other/**/*.js',
+        '..//softWrench.sW4.Web//Content//Scripts//vendor/ace/**/*.js',
+        '..//softWrench.sW4.Web//Content//Scripts//client/**/*.js',
+        '..//softWrench.sW4.Web//Content//Scripts//customers/**/*.js',
+      'tests//**.js'
     ],
 
 
