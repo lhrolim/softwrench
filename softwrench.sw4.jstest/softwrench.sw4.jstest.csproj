@@ -5643,7 +5643,9 @@
   <ItemGroup>
     <Content Include="package.json" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="test-results.testxml" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
