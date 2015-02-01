@@ -52,12 +52,16 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
             lotnum: parameters['fields']['lotnum']
         };
 
-        searchService.searchData('invballookup', searchData).success(function (data) {
+        searchService.searchWithData('invbalookup', searchData).success(function (data) {
             var resultObject = data.resultObject;
 
             if (resultObject[0] != undefined && resultObject.length == 1) {
                 parameters.fields['curbal'] = resultObject[0].fields['curbal'];
-                doUpdateItemCost(parameters);
+                parameters.fields['binnum'] = resultObject[0].fields['binnum'];
+                parameters.fields['lotnum'] = resultObject[0].fields['lotnum'];
+            }
+            else {
+                parameters.fields['curbal'] = 0.00;
             }
         })
     }
@@ -81,7 +85,9 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
 
         afterstorelocchange: function (event) {
             event.fields["unitcost"] = 0.00;
+
             doUpdateItemCosttype(event);
+            doUpdateItemBalance(event);
         },
 
         afterchange: function (event) {

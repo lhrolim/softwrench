@@ -150,7 +150,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </schemas>
     </application>
 
-    <application entity="invbalances" name="invballookup" title="invbal">
+    <application entity="invbalances" name="invbalookup" title="invbal">
       <schemas>
         <schema id="list" title="item" stereotype="list">
           <field attribute="itemnum" label="item"/>
@@ -180,7 +180,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <detail platform="web">
           <field attribute="matusetransid" hidden="true" />
           <field attribute="orgid" hidden="true" />
-          <field attribute="siteid" default="BEDFORD" hidden="true" />
+          <field attribute="siteid" hidden="true" />
           <field attribute="refwo" hidden="true" />
           <field attribute="description" hidden="true" />
           <field attribute="transdate" hidden="true" />
