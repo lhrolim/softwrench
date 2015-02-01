@@ -13,6 +13,7 @@ softwrench.sw4.jstest/test-results.testxml
 
 # Build outputs
 bin
+!softwrench.sw4.jstest/node_modules/**/bin
 obj
 /Releases
 /tmp
