@@ -8,6 +8,9 @@ _ReSharper.*
 .DS_Store
 Thumbs.db
 
+softwrench.sw4.jstest/jenkinstest-results.xml
+softwrench.sw4.jstest/test-results.testxml
+
 # Build outputs
 bin
 obj
