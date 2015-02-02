@@ -722,11 +722,11 @@ app.directive('crudInputFields', function (contextService) {
             }
             init();
 
-            function bindExpression(expression) {
-                var variables = expressionService.getVariablesForWatch(expression, $scope.datamap, $scope);
+            function bindExpression(fieldMetadata) {
+                var variables = expressionService.getVariablesForWatch(fieldMetadata.evalExpression, $scope.datamap, $scope);
                 $scope.$watchCollection(variables, function (newVal, oldVal) {
                     if (newVal != oldVal) {
-                        $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(expression, $scope.datamap, $scope);
+                        $scope.datamap[fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope.datamap, $scope);
                     }
                 });
                 return variables;
@@ -734,7 +734,7 @@ app.directive('crudInputFields', function (contextService) {
 
             $scope.initField = function (fieldMetadata) {
                 if (fieldMetadata.evalExpression != null) {
-                    return bindExpression(fieldMetadata.evalExpression);
+                    return bindExpression(fieldMetadata);
                 }
                 return null;
             };

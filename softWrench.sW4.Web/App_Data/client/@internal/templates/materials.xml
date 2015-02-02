@@ -130,7 +130,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
         <detail platform="web">
           <field attribute="matusetransid" hidden="true" />
-          <field attribute="#refsiteid" label="Lookup Code" default="itemnum" />
+          <field attribute="#refsiteid" label="Lookup Code" evalexpression="@linetype" />
           <field attribute="orgid" label="Org" readonly="true" evalexpression="$.previousdata.fields['orgid']"/>
           <field attribute="siteid" label="Site" readonly="true" evalexpression="$.previousdata.fields['siteid']"/>
           <field attribute="refwo" label="Work Order" readonly="true" evalexpression="$.previousdata.fields['wonum']"/>
@@ -140,12 +140,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
           <optionfield attribute="linetype" label="Type:">
             <renderer type="combo"/>
-            <option label="ITEM" value="ITEM"/>
-            <option label="MATERIAL" value="MATERIAL"/>
-            <event type="afterchange" service="matusetranService" method="afterlinetypechange"/>
+            <option label="name" value="name"/>
+            <option label="idFieldName" value="idFieldName"/>
+            <!--<event type="afterchange" service="matusetranService" method="afterlinetypechange"/>-->
           </optionfield>
 
-          <field attribute="#test" label="Referenced Site" readonly="true" evalexpression="$.testFunction($.datamap[@#refsiteid])"/>
+          <field attribute="#test" label="Referenced Site" readonly="true" evalexpression="$.testFunction($.schema[@#refsiteid])"/>
 
           <association label="Item:" target="itemnum" labelfield="inventory_.item_.description, location" labelpattern="{0}" extraprojectionvalues="item_.description, itemsetid, location, siteid, costtype" showexpression="@linetype == 'ITEM'">
              <!--<dataprovider prefilterfunction="FilterMaterials"/>-->

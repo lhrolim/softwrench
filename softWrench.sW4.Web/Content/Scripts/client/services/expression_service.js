@@ -58,11 +58,89 @@ app.factory('expressionService', function ($rootScope, contextService) {
                      Example Regex Tester W/ Examples URL:
                       https://www.regex101.com/r/fB6kI9/12               */
 
-    var preCompiledReplaceRegex = /(\@\#*)(\w+(\.?\w?)*)(?!\w)|\$\.(\w+)((\.\w+)|(\[\s?\'?(\$\.|\@\#*)?\w+((\.\w+)|(\[\s?\'?(\$\.|\@\#*)?\w+\'?\s?\])|(\(\s?\'?(\$\.|\@\#*)?\w+\'?\s?(\,\s?\'?(\$\.|\@\#*)?\w+\'?\s?)*\)))*\'?\s?\])|(\(\s?\'?(\$\.|\@\#*)?\w+((\.\w+)|(\[\s?\'?(\$\.|\@\#*)?\w+\'?\s?\])|(\(\s?\'?(\$\.|\@\#*)?\w+\'?\s?(\,\s?\'?(\$\.|\@\#*)?\w+\'?\s?)*\)))*\'?\s?(\,\s?\'?(\$\.|\@\#*)?\w+((\.\w+)|(\[\s?\'?(\$\.|\@\#*)?\w+\'?\s?\])|(\(\s?\'?(\$\.|\@\#*)?\w+\'?\s?(\,\s?\'?(\$\.|\@\#*)?\w+\'?\s?)*\)))*\'?\s?)*\)))*/g;
+    var compiledDatamapReplaceRegex = /(\@\#?)(\w+(\.?\w?)*)/g;
+
+  //var datamapReplaceRegexString = "(\@\#?)(\w+(\.?\w?)*)";
+    var datamapReplaceRegexString = "(\@\#?)" +
+  //                                Looks leading @ or @#
+                                    "(\w+(\.?\w?)*)";
+  //                                At least one word, followed by unlimited number of .word
+  //    
+  //                        Examples:
+  //                                @inventory_.item_.itemnum                  
+  //                                @assetnum                                  
+  //                                @#customfield   
+
+    var compiledScopeReplaceRegex = /\$\.(\w+)((\.\w+)|(\[.*?(?=\])\])|(\(.*?(?=\))\)))*/g;
+
+  //var scopeReplaceRegexString = "\$\.(\w+)((\.\w+)|(\[.*?(?=\])\])|(\(.*?(?=\))\)))*";
+    var scopeReplaceRegexString = "\$\.(\w+)" +
+  //                              Looks for leading $.word (will translate into scope.word)
+
+  //                              The following three conditions are OR'd together 
+  //                              and can be repeated 0 or more times
+
+                                  "((\.\w+)|" +
+  //                                Condition 1: Looks for .word
+                                   "(\[.*?(?=\])\])|" +
+  //                                Condition 2: Looks for an open bracket [ and will accept
+  //                                any characters until the first closing bracket ] is found
+                                   "(\(.*?(?=\))\)))*";
+  //                                Condition 3: Looks for an open parenthesis ( and will accept
+  //                                any characters until the first closing parenthesis ) is found
+
+  //                          Examples:
+  //                                  $.createFlag
+  //                                  $.selectedValue()
+  //                                  $.previousdata.fields['wonum'].list[@assetnum]
+  //                                  $.previousdata.lookupAssociationCode[@assetnum].[$.previousdata.fields()]
+  //                                  $.previousdata.fields('CAT', var, @assetnum).list[@assetnum]
+  //                                  $.previousdata.fields(@assetnum, 'CAT', var).update(@currentVariable)
+
+    var compiledServiceReplaceRegex = /fn\:\w+\.\w+(\(.*?(?=\))\))((\.\w+)|(\[.*?(?=\])\])|(\(.*?(?=\))\)))*/g;
+
+  //var serviceReplaceRegexString = "fn\:\w+\.\w+(\(.*?(?=\))\))((\.\w+)|(\[.*?(?=\])\])|(\(.*?(?=\))\)))*";
+    var serviceReplaceRegexString = "fn\:\w+\.\w+" +
+  //                                Looks for leading fn:word.word (will translate into service.method call)
+                                    "(\(.*?(?=\))\))" +
+  //                                Looks for an open parenthesis ( and will accept
+  //                                any characters until the first closing parenthesis ) is found
+
+
+  //                                The following three conditions are OR'd together 
+  //                                and can be repeated 0 or more times
+                                    "((\.\w+)|" +
+  //                                Condition 1: Looks for .word
+                                    "(\[.*?(?=\])\])|" +
+  //                                Condition 2: Looks for an open bracket [ and will accept
+  //                                any characters until the first closing bracket ] is found
+                                    "(\(.*?(?=\))\)))*";
+  //                                Condition 3: Looks for an open parenthesis ( and will accept
+  //                                any characters until the first closing parenthesis ) is found
+
+  //                            Examples:
+  //                                    $.createFlag
+  //                                    $.selectedValue()
+  //                                    $.previousdata[@assetnum]
+  //                                    $.saveItem($.datamap, $.schema, @assetnum)
+  //                                    $.previousdata.fields['wonum'].list[@assetnum]
+  //                                    $.previousdata.lookupAssociationCode[@assetnum].[$.previousdata.fields()]
+  //                                    $.previousdata.fields('CAT', var, @assetnum).list[@assetnum]
+  //                                    $.previousdata.fields(@assetnum, 'CAT', var).update(@currentVariable)
+        
+
 
     return {
-        isPrecompiledReplaceRegexMatch: function (expression) {
-            return expression.match(preCompiledReplaceRegex);
+        getDatamapReplaceRegex: function () {
+            return new RegExp("/" + datamapReplaceRegexString + "/g");
+        },
+
+        getScopeReplaceRegex: function (expression) {
+            return new RegExp("/" + scopeReplaceRegexString) + "/g";
+        },
+
+        getServiceReplaceRegex: function (expression) {
+            return new RegExp("/" + serviceReplaceRegexString + "/g");
         },
 
         getExpression: function (expression, datamap) {
@@ -84,7 +162,91 @@ app.factory('expressionService', function ($rootScope, contextService) {
 
         getVariables: function (expression, datamap) {
             var variables = {};
-            var matchingVariables = expression.match(preCompiledReplaceRegex);
+
+            var datamapVariables = expression.match(compiledDatamapReplaceRegex);
+            
+            if (datamapVariables != null) {
+                var datamapPath = 'datamap';
+                if (datamap.fields != undefined) {
+                    datamapPath = 'datamap.fields';
+                }
+                for (var i = 0; i < datamapVariables.length; i++) {
+                    var referenceVariable = datamapVariables[i];
+                    var realVariable = referenceVariable.replace(/\@/, '');
+                    realVariable = datamapPath + "['" + realVariable + "']";
+                    variables[referenceVariable] = realVariable;
+                }
+            }
+
+            var scopeVariables = expression.match(compiledScopeReplaceRegex);
+
+            if (scopeVariables != null) {
+                for (var i = 0; i < scopeVariables.length; i++) {
+                    var referenceVariable = scopeVariables[i];
+                    var realVariable = referenceVariable.replace(/\$\./, 'scope.');
+
+                    //Tests whether or not the realVariable has a subVariable within it
+                    //For example, the reference variable $.lookupAssociatonCode[@assetnum]
+                    //will translate into a real variable of scope.lookupAssociationCode[@assetnum].
+                    //Because the match has @assetnum as a subvariable, the below function will return true.
+                    var subVariable = compiledScopeReplaceRegex.test(realVariable) || compiledServiceReplaceRegex.test(realVariable);
+                    if (subVariable == true) {
+                        var subVariables = this.getVariables(realVariable, datamap);
+
+                        //For each sub variable, updated the real variable reference
+                        //(the variable's true reference upon being evaluated) and add
+                        // the variable sub variable to our current variables list.
+                        $.each(subVariables, function (key, value) {
+                            realVariable = realVariable.replace(key, value);
+                            if (variables[key] === undefined) {
+                                variables[key] = value;
+                            }
+                        });
+                    }
+                    //Updates variable dictionary key (the variable's original reference in the metadata)
+                    //with the real variable reference (the variable's true reference upon being evaluated).
+                    //The key can be used to quickly update an expression with its true value. A good example
+                    //of this occurs in getExpression, we loop through each variable, replacing any instance of
+                    //the key (original reference in metadata) with the new value (the true reference upon being evaluated)
+                    variables[referenceVariable] = realVariable;
+                }
+            }
+
+            var serviceVariables = expression.match(compiledServiceReplaceRegex);
+
+            if (serviceVariables != null) {
+                for (var i = 0; i < serviceVariables.length; i++) {
+                    var referenceVariable = serviceVariables[i];
+                    var realVariable = referenceVariable.replace(/fn\:/, '');
+
+                    //Tests whether or not the realVariable has a subVariable within it
+                    //For example, the reference variable $.lookupAssociatonCode[@assetnum]
+                    //will translate into a real variable of scope.lookupAssociationCode[@assetnum].
+                    //Because the match has @assetnum as a subvariable, the below function will return true.
+                    var subVariable = compiledScopeReplaceRegex.test(realVariable) || compiledServiceReplaceRegex.test(realVariable);
+                    if (subVariable == true) {
+                        var subVariables = this.getVariables(realVariable, datamap);
+
+                        //For each sub variable, updated the real variable reference
+                        //(the variable's true reference upon being evaluated) and add
+                        // the variable sub variable to our current variables list.
+                        $.each(subVariables, function (key, value) {
+                            realVariable = realVariable.replace(key, value);
+                            if (variables[key] === undefined) {
+                                variables[key] = value;
+                            }
+                        });
+                    }
+                    //Updates variable dictionary key (the variable's original reference in the metadata)
+                    //with the real variable reference (the variable's true reference upon being evaluated).
+                    //The key can be used to quickly update an expression with its true value. A good example
+                    //of this occurs in getExpression, we loop through each variable, replacing any instance of
+                    //the key (original reference in metadata) with the new value (the true reference upon being evaluated)
+                    variables[referenceVariable] = realVariable;
+                }
+            }
+
+            /*var matchingVariables = expression.match(preCompiledReplaceRegex);
 
             var datamapPath = 'datamap';
             if (datamap.fields != undefined) {
@@ -129,7 +291,7 @@ app.factory('expressionService', function ($rootScope, contextService) {
                     //the key (original reference in metadata) with the new value (the true reference upon being evaluated)
                     variables[referenceVariable] = realVariable;
                 }
-            }
+            }*/
 
             return variables;
         },
