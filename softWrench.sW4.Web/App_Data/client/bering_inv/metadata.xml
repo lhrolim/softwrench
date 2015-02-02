@@ -150,6 +150,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
       </connectorParameters>
     </entity>
+
   </entities>
 
   <applications>
@@ -544,6 +545,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <properties>
             <property key="detail.titleexpression" value="'Issues and Returns: {0}'.format(@matusetransid)"/>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
+            <property key="nextschema.schemaid" value="invIssueListBering"/>
           </properties>
         </schema>
       </schemas>

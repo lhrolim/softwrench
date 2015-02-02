@@ -719,7 +719,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         invIssue_afterChangeRotAsset: function(parameters) {
             if (parameters.fields['rotassetnum'].trim() != "") {
                 parameters.fields['binbalances_.binnum'] = parameters.fields['rotatingasset_.binnum'];
+                parameters.fields['binnum'] = parameters.fields['rotatingasset_.binnum'];
                 parameters.fields['binbalances_.lotnum'] = "";
+                parameters.fields['lotnum'] = "";
                 parameters.fields['binbalances_.curbal'] = 1;
             }
         },
