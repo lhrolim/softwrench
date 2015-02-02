@@ -51,6 +51,7 @@ app.directive('messagesection', function (contextService) {
             $scope.showErrorList = function () {
                 var isLoggedIn = sessionStorage['ctx_loggedin'];
                 if (isLoggedIn != "true") {
+                    //this is a workaround for the COMSW-40. Couldn´t track down why this was needed at all
                     return false;
                 }
                 return $rootScope.hasErrorList;
