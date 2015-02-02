@@ -217,12 +217,12 @@ app.factory('inventoryService', function ($http, contextService, redirectService
     };
 
     return {
-        createIssue: function() {
-            redirectService.goToApplicationView("invissue", "newInvIssueDetail", "input", null, null, null);
+        createIssue: function(schema, datamap) {
+            redirectService.goToApplicationView(schema.applicationName, "newInvIssueDetail", "input", null, null, null);
         },
 
-        navToBatchFilter: function() {
-            redirectService.goToApplicationView("invissue", "batchInvIssueFilter", "input", null, null, null);
+        navToBatchFilter: function(schema, datamap) {
+            redirectService.goToApplicationView(schema.applicationName, "batchInvIssueFilter", "input", null, null, null);
         },
 
         formatQtyReturnedList: function(parameters) {

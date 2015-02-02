@@ -151,8 +151,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </connectorParameters>
     </entity>
 
-    <entity name="keyInvIssue" idAttribute="matusetransid" parententity="invissue" whereclause=" (ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN') and keyInvIssue.itemnum like 'keyset'">
-      
+    <entity name="keyInvIssue" idAttribute="matusetransid" parententity="invissue" whereclause=" (ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN') and keyInvIssue.itemnum like 'pump100'">
+      <relationships>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true" query="(itemnum = 'PUMP100')"/>
+          <relationshipAttribute from="storeloc" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+      </relationships>
     </entity>
     
   </entities>
@@ -549,7 +555,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <properties>
             <property key="detail.titleexpression" value="'Issues and Returns: {0}'.format(@matusetransid)"/>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
-            <property key="nextschema.schemaid" value="invIssueListBering"/>
+            <property key="nextschema.schemaid" value="invIssueList"/>
           </properties>
         </schema>
       </schemas>
@@ -848,7 +854,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <properties>
             <property key="detail.titleexpression" value="'Issues and Returns: {0}'.format(@matusetransid)"/>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
-            <property key="nextschema.schemaid" value="invIssueListBering"/>
+            <property key="nextschema.schemaid" value="invIssueList"/>
           </properties>
         </schema>
       </schemas>

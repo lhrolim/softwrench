@@ -84,7 +84,7 @@ app.factory('cmplookup', function ($rootScope, $timeout, $log, associationServic
                 result[lookupObj.fieldMetadata.associationKey] != null &&
                 result[lookupObj.fieldMetadata.associationKey].associationData != null &&
                 result[lookupObj.fieldMetadata.associationKey].associationData.length == 1) {
-                if (lookupObj.options[0].value.toUpperCase() == lookupObj.code.toUpperCase() &&
+                if (lookupObj.options[0].value != null && lookupObj.options[0].value.toUpperCase() == lookupObj.code.toUpperCase() &&
                     datamap[lookupObj.fieldMetadata.attribute] != lookupObj.options[0].value) {
                     return true;
                 }
