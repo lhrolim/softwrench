@@ -7,15 +7,23 @@
         link: function (scope, element, attributes) {
             element.bind("change", function (changeEvent) {
                 var validFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html"];
-                var fileName;
-                var flag = -1;
-                if (isIe9()) {
-                    //to bypass required validation --> real file data will be set using form submission
-                    scope.fileread = "xxx";
+                var fileName = "";
+                var hasFiles = changeEvent.target.files.length > 0;
+                if (!hasFiles) {
                     return;
                 }
-                var reader = new FileReader();
-                if (changeEvent.target.files.length > 0) {
+
+                var file = changeEvent.target.files[0];
+                fileName = file.name;
+                changeEvent.currentTarget.parentNode.parentNode.children[0].value = fileName;
+                scope.path = fileName;
+                if (isIe9()) {
+                    //to bypass required validation --> real file data will be set using form submission
+                    //ie9 does not have the FileReaderObject
+                    scope.fileread = "xxx";
+                } else {
+                    var reader = new FileReader();
+
                     //Getting the File extension.
                     var temp = changeEvent.target.files[0].name.split(".").pop().toLowerCase();
                     if (validFileTypes.indexOf(temp) == -1) {
@@ -28,23 +36,15 @@
                         });
                         return;
                     }
-                    flag = 1;
                     reader.onload = function (loadEvent) {
                         scope.$apply(function () {
-                            if (flag == 1) {
-                                scope.fileread = loadEvent.target.result;
-                            }
+                            scope.fileread = loadEvent.target.result;
                         });
                     };
-                    var file = changeEvent.target.files[0];
-                    fileName = file.name;
                     reader.readAsDataURL(file);
                 }
 
-                if (flag == 1) {
-                    changeEvent.currentTarget.parentNode.parentNode.children[0].value = fileName;
-                    scope.path = fileName;
-                }
+
             });
         }
     };
