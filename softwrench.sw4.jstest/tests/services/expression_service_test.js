@@ -7,5 +7,7 @@
     it('should match variables by @', function () {
         var variables = expressionService.getVariables("@status == 'test' and @ticketid!=null");
         expect(variables.length).toBe(2);
+        expect(variables[0]).toBe('status');
+        expect(variables[1]).toBe('ticketid');
     });
 });

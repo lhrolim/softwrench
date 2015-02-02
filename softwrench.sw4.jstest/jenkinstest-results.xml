@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <testsuites>
-  <testsuite name="PhantomJS 1.9.8 (Windows 7)" package="" timestamp="2015-02-02T19:51:06" id="0" hostname="rolim-PC" tests="2" errors="0" failures="0" time="0.009">
+  <testsuite name="PhantomJS 1.9.8 (Windows 7)" package="" timestamp="2015-02-02T19:54:21" id="0" hostname="rolim-PC" tests="2" errors="0" failures="0" time="0.008">
     <properties>
       <property name="browser.fullName" value="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534.34 (KHTML, like Gecko) PhantomJS/1.9.8 Safari/534.34"/>
     </properties>
     <testcase name="passes" time="0.001" classname="PhantomJS 1.9.8 (Windows 7).a test"/>
-    <testcase name="should match variables by @" time="0.008" classname="PhantomJS 1.9.8 (Windows 7).expressionService"/>
+    <testcase name="should match variables by @" time="0.007" classname="PhantomJS 1.9.8 (Windows 7).expressionService"/>
     <system-out><![CDATA[
 ]]></system-out>
     <system-err/>
