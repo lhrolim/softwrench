@@ -745,6 +745,12 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
         },
 
+        invIssue_afterChangeLaborCode: function(parameters){
+            if (parameters.fields['labor_']) {
+                parameters.fields['issueto'] = parameters.fields['labor_']['personid'];
+            }
+        },
+
         createTransfer: function(schema) {
             if (schema === undefined) {
                 return;
