@@ -12,16 +12,17 @@
                 if (!hasFiles) {
                     return;
                 }
-
-                var file = changeEvent.target.files[0];
-                fileName = file.name;
-                changeEvent.currentTarget.parentNode.parentNode.children[0].value = fileName;
-                scope.path = fileName;
                 if (isIe9()) {
                     //to bypass required validation --> real file data will be set using form submission
                     //ie9 does not have the FileReaderObject
                     scope.fileread = "xxx";
                 } else {
+
+                    var file = changeEvent.target.files[0];
+                    fileName = file.name;
+                    changeEvent.currentTarget.parentNode.parentNode.children[0].value = fileName;
+                    scope.path = fileName;
+
                     var reader = new FileReader();
 
                     //Getting the File extension.
