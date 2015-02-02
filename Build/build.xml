@@ -50,6 +50,7 @@
 
     <exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
       <arg line="start" />
+      <arg value="--browsers=PhantomJS"/>
     </exec>
     
     <if propertyexists="MsTestPath">
