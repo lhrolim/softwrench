@@ -190,7 +190,13 @@ app.factory('contextService', function ($rootScope) {
         },
 
         clearContext: function () {
-            sessionStorage.clear();
+            var i = sessionStorage.length;
+            while (i--) {
+                var key = sessionStorage.key(i);
+                if (key.startsWith('ctx_')) {
+                    sessionStorage.removeItem(key);
+                }
+            }
         },
 
         insertReportSearchDTO: function (reportSchemaId, searchDTO) {

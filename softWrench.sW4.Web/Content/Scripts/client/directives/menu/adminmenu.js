@@ -1,4 +1,4 @@
-﻿app.directive('adminMenu', function (contextService,menuService,redirectService,i18NService,$http) {
+﻿app.directive('adminMenu', function (contextService,menuService,redirectService,i18NService) {
     return {
         restrict: 'E',
         replace: true,
