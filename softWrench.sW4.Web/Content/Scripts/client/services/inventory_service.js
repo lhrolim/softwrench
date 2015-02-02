@@ -359,7 +359,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         invissuelistclick_maximo71: function (datamap, schema) {
             var param = {};
             param.id = datamap['matusetransid'];
-            var application = 'invissue';
+            var application = schema.applicationName;
             var detail = 'viewinvreturndetail';
             var mode = 'input';
             //Logic to determine whether the record is an ISSUE
@@ -474,8 +474,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             submitInvIssueRec(datamap, clonedCompositionData, 0);
         },
 
-        navToIssueReturnList: function() {
-            redirectService.goToApplicationView("invissue", "invIssueList", null, null, null, null);
+        navToIssueReturnList: function(schema, datamap) {
+            redirectService.goToApplicationView(schema.applicationName, "invIssueList", null, null, null, null);
         },
 
         displayNewIssueModal: function(parentschema, parentdatamap) {
