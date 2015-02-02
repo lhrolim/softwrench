@@ -17,6 +17,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces {
 
         string ToolTip { get; }
 
+        string Label { get; }
+
         bool? ReadOnly { get; set; }
 
     }

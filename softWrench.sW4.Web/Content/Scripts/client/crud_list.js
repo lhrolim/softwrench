@@ -62,7 +62,7 @@ app.directive('crudList', function (contextService) {
             hidebars: '@',
             checked: '=',
             timestamp: '@',
-            associationOptions:"="
+            associationOptions: "="
         },
 
         controller: function ($scope, $http, $rootScope, $filter, $injector, $log, $timeout,
@@ -86,7 +86,7 @@ app.directive('crudList', function (contextService) {
             $scope.isCommand = function (schema) {
                 return $scope.schema && $scope.schema.properties['command.select'] == "true";
             };
-            $scope.isNotHapagTest = function() {
+            $scope.isNotHapagTest = function () {
                 return $rootScope.clientName != 'hapag';
             };
 
@@ -151,9 +151,9 @@ app.directive('crudList', function (contextService) {
                         $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
                     }, contextService.retrieveFromContext('successMessageTimeOut'));
                 }
-//                if ($rootScope.showSuccessMessage) {
-//                    fixHeaderService.fixSuccessMessageTop(true);
-//                }
+                //                if ($rootScope.showSuccessMessage) {
+                //                    fixHeaderService.fixSuccessMessageTop(true);
+                //                }
 
                 // fix status column height
                 $('.statuscolumncolor').each(function (key, value) {
@@ -246,11 +246,11 @@ app.directive('crudList', function (contextService) {
                 fixHeaderService.topErrorMessageHandler(show, $scope.$parent.isDetail, $scope.schema);
             });
 
-            $scope.doAdvancedSearch = function(filterdata) {
+            $scope.doAdvancedSearch = function (filterdata) {
                 searchService.advancedSearch($scope.datamap, $scope.schema, filterdata);
             };
 
-            $scope.cursortype = function() {
+            $scope.cursortype = function () {
                 var editDisabled = $scope.schema.properties['list.disabledetails'];
                 return "true" != editDisabled ? "pointer" : "default";
             };
@@ -343,8 +343,8 @@ app.directive('crudList', function (contextService) {
                 }
             };
 
-            $scope.toggleSelectAll = function(checked) {
-                $.each($scope.datamap, function(key, value) {
+            $scope.toggleSelectAll = function (checked) {
+                $.each($scope.datamap, function (key, value) {
                     value.fields["_#selected"] = checked;
                 });
             };
@@ -373,9 +373,11 @@ app.directive('crudList', function (contextService) {
                 }
 
                 var searchString = $scope.searchData[columnName];
-                if (searchString != null && searchString != '') {
-                    $scope.selectPage(1);
+                if (searchString == "" || searchString == null) {
+                    $scope.searchOperator[columnName] = searchService.getSearchOperationById("BLANK");
+                    $scope.searchData[columnName] = " ";
                 }
+                $scope.selectPage(1);
 
             };
 
@@ -419,7 +421,7 @@ app.directive('crudList', function (contextService) {
                 formatService: formatService,
                 expressionService: expressionService,
                 searchService: searchService,
-                commandService:commandService
+                commandService: commandService
             });
 
         }

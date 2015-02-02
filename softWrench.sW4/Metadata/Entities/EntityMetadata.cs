@@ -192,6 +192,10 @@ namespace softWrench.sW4.Metadata.Entities {
             get { return Schema.IdAttribute.Name; }
         }
 
+        public string UserIdFieldName {
+            get { return Schema.UserIdAttribute.Name; }
+        }
+
         public string WhereClause {
             get { return _schema.WhereClause; }
             set { _schema.WhereClause = value; }

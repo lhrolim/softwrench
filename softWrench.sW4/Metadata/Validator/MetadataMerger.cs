@@ -82,10 +82,11 @@ namespace softWrench.sW4.Metadata.Validator {
             var title = overridenApplication.Title ?? souceAplication.Title;
             var entity = overridenApplication.Entity ?? souceAplication.Entity;
             var idFieldName = overridenApplication.IdFieldName ?? souceAplication.IdFieldName;
+            var userIdFieldName = overridenApplication.UserIdFieldName ?? souceAplication.UserIdFieldName;
             var service = overridenApplication.Service ?? souceAplication.Service;
 
             return new CompleteApplicationMetadataDefinition(souceAplication.Id, souceAplication.ApplicationName,
-                title, entity, idFieldName,
+                title, entity, idFieldName,userIdFieldName,
                 overridenParameters, resultSchemas, souceAplication.DisplayableComponents.Union(overridenApplication.DisplayableComponents), service);
 
         }

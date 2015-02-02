@@ -1710,7 +1710,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
-    <entity name="wochange" idAttribute="workorderid">
+    <entity name="wochange" idAttribute="workorderid" useridAttribute="wonum">
       <attributes>
         <attribute name="actfinish" type="timestamp" required="false" />
         <attribute name="actlabcost" type="double" required="true" />
@@ -2734,7 +2734,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="inventory_.itemsetid" to="itemsetid"/>
           <relationshipAttribute from="storeloc" to="location"/>
           <relationshipAttribute from="binnum" to="binnum" primary="true"/>
-          <relationshipAttribute from="lotnum" to="lotnum" />
         </relationship>
         <relationship to="invbalances" qualifier="lotbalances">
           <relationshipAttribute from="itemnum" to="itemnum"/>

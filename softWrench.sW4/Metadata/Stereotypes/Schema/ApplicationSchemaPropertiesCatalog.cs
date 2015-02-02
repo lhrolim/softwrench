@@ -131,5 +131,15 @@
         /// By default the cancel click on a detail page will try to locate a list schema for the given application. Use this property when you need to overload it
         /// </summary>
         public static string CancelDetailSchema = "detail.cancel.click";
+
+        /// <summary>
+        /// A title expression to use to display the title on the crud_body.js. this would replace completely the original title. Use the same syntax as other expressions
+        /// </summary>
+        public static string DetailTitleExpression = "detail.titleexpression";
+
+        /// <summary>
+        /// The string to use as the title id (first part of crud_body.html title) 
+        /// </summary>
+        public static string DetailTitleId = "detail.titleid";
     }
 }

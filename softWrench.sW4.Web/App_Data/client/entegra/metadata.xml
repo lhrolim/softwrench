@@ -393,7 +393,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </properties>
         </list>
 
-        <schema id="adetail" title="Work Order Detail" abstract="true" stereotype="detail" platform="web">
+        <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web">
           <field attribute="workorderid"  readonly="true" hidden="true"/>
           <field attribute="wonum" label="#Number" readonly="true" />
           <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
@@ -445,7 +445,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
         </schema>
 
-        <schema parentschema="adetail" id="editdetail" title="Work Order Detail">
+        <schema parentschema="adetail" id="editdetail" title="Work Order Details">
           <section id="ownerstatussection">
             <field attribute="owner" label="Owner" readonly="true"/>
             <association label="Status" target="status" labelfield="synstatus.description">
@@ -454,7 +454,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
 
           <section id="worklogsection">
-            <composition relationship="worklog" label="Work Log"/>
+            <composition relationship="worklog" label="Work Logs"/>
           </section>
 
           <section id="matusetranssection">
@@ -532,7 +532,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
           <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
           <association label="Status" target="status" labelfield="synstatus.description" />
-          <composition relationship="worklog" label="Work Log" />
+          <composition relationship="worklog" label="Work Logs" />
           <composition relationship="matusetrans" label="Materials" />
           <composition relationship="labtrans" label="Labors" />
           <composition relationship="attachment" label="Attachments" detailschema="" />
@@ -695,7 +695,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </schemas>
     </application>
 
-    <application name="worklog" title="Work Log" entity="worklog">
+    <application name="worklog" title="Work Logs" entity="worklog">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
       </properties>
@@ -926,7 +926,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </schemas>
     </application>
 
-    <application name="attachment" title="Attachment" entity="DOCLINKS">
+    <application name="attachment" title="Attachments" entity="DOCLINKS">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
       </properties>

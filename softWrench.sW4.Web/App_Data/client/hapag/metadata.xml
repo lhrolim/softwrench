@@ -548,7 +548,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <composition relationship="relatedrecord" label="Related Records" inline="true">
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey" />
           </composition>
-          <composition relationship="worklog" label="Work Log">
+          <composition relationship="worklog" label="Work Logs">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
           </composition>
           <tab label="Solution" id="solution">
@@ -975,10 +975,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <composition relationship="relatedrecord" label="Related Records" inline="true" >
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey" />
           </composition>
-          <composition relationship="worklog" label="Work Log">
+          <composition relationship="worklog" label="Work Logs">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
           </composition>
-          <composition relationship="attachment" label="Attachment" printschema="detailPrint">
+          <composition relationship="attachment" label="Attachments" printschema="detailPrint">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
           </composition>
           <commands>
@@ -1264,7 +1264,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="sr_.ticketid" label="SR ID">
             <renderer type="default" params="minwidth=84px;wordwrap=break-word" />
           </field>
-          <field attribute="cinum" label="Asset">
+          <field attribute="ciname" label="Asset">
             <renderer type="default" params="minwidth=84px;wordwrap=break-word" />
           </field>
           <field attribute="wopriority" label="Priority">
@@ -1316,7 +1316,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="description" label="Summary">
             <renderer type="default" params="minwidth=102px;maxwidth=102px;excelwidth=50;wordwrap=break-word" />
           </field>
-          <field attribute="cinum" label="Asset">
+          <field attribute="ciname" label="Asset">
             <renderer type="default" params="minwidth=102px;maxwidth=102px;wordwrap=break-word" />
           </field>
           <field attribute="wopriority" label="Priority">
@@ -1379,7 +1379,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="status" label="Status"/>
           <field attribute="longdescription_.ldtext" label="Remarks"/>
           <field attribute="itdclosurecode" label="Implementation Result"/>
-          <composition relationship="worklog" label="Work Log" >
+          <composition relationship="worklog" label="Work Logs" >
             <collectionproperties allowcreation="true"/>
           </composition>
           <composition relationship="woactivity" label="Job Plan" detailschema="">
@@ -1711,7 +1711,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
           <field attribute="classstructure_.description" hidden="true"/>
 
-          <composition relationship="worklog" label="Work Log" >
+          <composition relationship="worklog" label="Work Logs" >
             <collectionproperties allowcreation="true"/>
           </composition>
           <composition relationship="woactivity" label="Job Plan" detailschema="" printschema="list">
@@ -2196,7 +2196,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <composition relationship="relatedrecord" label="Related Records" inline="true" >
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey" />
           </composition>
-          <composition relationship="worklog" label="Work Log">
+          <composition relationship="worklog" label="Work Logs">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
           </composition>
           <tab label="Solution" id="solution">
@@ -2832,7 +2832,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </application>
 
     <!--    Record Key Class Created By Created Date Log Type Summary-->
-    <application name="worklog" title="Work Log" entity="worklog" id="00000000-0000-0000-0000-000000000008" >
+    <application name="worklog" title="Work Logs" entity="worklog" id="00000000-0000-0000-0000-000000000008" >
       <schemas>
         <list stereotype="compositionlist">
           <commands>
@@ -2866,7 +2866,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </schemas>
     </application>
 
-    <application name="attachment" title="Attachment" entity="DOCLINKS">
+    <application name="attachment" title="Attachments" entity="DOCLINKS">
       <schemas>
         <list stereotype="compositionlist">
           <properties>

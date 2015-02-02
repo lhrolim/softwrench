@@ -6,7 +6,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces
     {
         String Attribute { get; set; }
 
-        String Label { get; set; }
+        new String Label { get; set; }
 
         string Qualifier { get;}    
 
