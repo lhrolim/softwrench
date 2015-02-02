@@ -1,4 +1,4 @@
-﻿var app = angular.module('sw_layout');
+var app = angular.module('sw_layout');
 
 app.directive('dateTime', function ($timeout, formatService) {
 
@@ -28,6 +28,7 @@ app.directive('dateTime', function ($timeout, formatService) {
             attrs.language = (userLanguage != '') ? userLanguage : "en-US";
             var showMeridian = attrs.showAmpm == undefined ? undefined : attrs.showAmpm.toLowerCase() == "true";
             var istimeOnly = showTime && !showDate;
+            var isReadOnly = attrs.readonly == undefined ? false : (attrs.readonly);
 
             datetimeclassHandler(istimeOnly);
 
@@ -68,8 +69,9 @@ app.directive('dateTime', function ($timeout, formatService) {
                         startDate: attrs.startDate,
                         formatViewType: 'time',
                         startView: 1,
-                        maxView: 1
-                    });
+                        maxView: 1,
+                        readonly: isReadOnly
+                });
                 }
                 else {
                     var allowpast = parseBooleanValue(attrs.allowPast);
@@ -83,7 +85,8 @@ app.directive('dateTime', function ($timeout, formatService) {
                         autoclose: true,
                         language: attrs.language,
                         maxView: 3,
-                        showMeridian:false
+                        showMeridian: false,
+                        readonly: isReadOnly
                     });
                 }
             }

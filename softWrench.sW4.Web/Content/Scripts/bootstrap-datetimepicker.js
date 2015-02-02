@@ -68,7 +68,10 @@
 		this.showMeridian = options.showMeridian || this.element.data('show-meridian') || false;
 		this.initialDate = options.initialDate || new Date();
 
-		this._attachEvents();
+		if (!options.readonly)
+		    this._attachEvents();
+		else
+		    this._detachEvents();
 
 		this.formatViewType = "datetime";
 		if ('formatViewType' in options) {
