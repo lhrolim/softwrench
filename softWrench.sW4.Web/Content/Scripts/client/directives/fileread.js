@@ -45,7 +45,7 @@
                     };
                     reader.readAsDataURL(file);
                 }
-
+                scope.$digest();
 
             });
         }
