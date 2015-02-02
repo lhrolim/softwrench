@@ -1,4 +1,4 @@
-﻿function AceController($scope, $http, $templateCache, $window, i18NService) {
+﻿function AceController($scope, $http, $templateCache, $window, i18NService, alertService) {
 
     $scope.save = function () {
        
@@ -28,6 +28,14 @@
                 $window.location.href = url("/stub/reset");
             });
 
+    };
+    $scope.restore = function () {
+
+        alertService.confirmMsg("Are you sure you want to restore to default settings ? ", function () {
+            window.location.reload();
+        });
+       
+        
     };
 
     $scope.contextPath = function (path) {
