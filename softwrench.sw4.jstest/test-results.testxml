@@ -1,2 +1,23 @@
 <?xml version="1.0"?>
-<Tests/>
+<Tests>
+  <Test>
+    <Name>a test passes (IE 11.0.0 (Windows 7))</Name>
+    <DisplayName>a test passes (IE 11.0.0 (Windows 7))</DisplayName>
+    <Outcome>Passed</Outcome>
+  </Test>
+  <Test>
+    <Name>a test passes (PhantomJS 1.9.8 (Windows 7))</Name>
+    <DisplayName>a test passes (PhantomJS 1.9.8 (Windows 7))</DisplayName>
+    <Outcome>Passed</Outcome>
+  </Test>
+  <Test>
+    <Name>a test passes (Firefox 35.0.0 (Windows 7))</Name>
+    <DisplayName>a test passes (Firefox 35.0.0 (Windows 7))</DisplayName>
+    <Outcome>Passed</Outcome>
+  </Test>
+  <Test>
+    <Name>a test passes (Chrome 40.0.2214 (Windows 7))</Name>
+    <DisplayName>a test passes (Chrome 40.0.2214 (Windows 7))</DisplayName>
+    <Outcome>Passed</Outcome>
+  </Test>
+</Tests>

@@ -10,10 +10,15 @@ Thumbs.db
 
 softwrench.sw4.jstest/jenkinstest-results.xml
 softwrench.sw4.jstest/test-results.testxml
+Build/jenkinstest-results.xml
+Build/test-results.testxml
+Build/TestResults.trx
+Build/TestResults*
 
 # Build outputs
 bin
 !softwrench.sw4.jstest/node_modules/**/bin
+!Build/node_modules/**/bin
 obj
 /Releases
 /tmp
