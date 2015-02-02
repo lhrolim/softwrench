@@ -136,10 +136,10 @@ app.directive('crudInputFields', function (contextService) {
             //this will get called when the input form is done rendering
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
 
-//                var tab = contextService.getActiveTab();
-//                if (tab != null) {
-//                    redirectService.redirectToTab(tab);
-//                }
+                //                var tab = contextService.getActiveTab();
+                //                if (tab != null) {
+                //                    redirectService.redirectToTab(tab);
+                //                }
 
                 var bodyElement = $('#' + parentElementId);
                 if (bodyElement.length <= 0) {
@@ -175,9 +175,8 @@ app.directive('crudInputFields', function (contextService) {
 
                 // Configure input files
                 $('#uploadBtn').on('change', function (e) {
-                    if (this != null) {
-                        $('#uploadFile').attr("value", this.value);
-                    }
+                    var fileName = this.value.match(/[^\/\\]+$/);
+                    $('#uploadFile').attr("value", fileName);
                 });
             });
 

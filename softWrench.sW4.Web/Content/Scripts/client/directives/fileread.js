@@ -1,4 +1,4 @@
-﻿app.directive("fileread", function (alertService) {
+﻿app.directive("fileread", function (alertService,$log) {
     return {
         scope: {
             fileread: "=",
@@ -7,17 +7,18 @@
         link: function (scope, element, attributes) {
             element.bind("change", function (changeEvent) {
                 var validFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html"];
-                var fileName = "";
-                var hasFiles = changeEvent.target.files.length > 0;
-                if (!hasFiles) {
-                    return;
-                }
+                var log = $log.getInstance('fileread#change');
+                log.debug('file change detected');
                 if (isIe9()) {
                     //to bypass required validation --> real file data will be set using form submission
                     //ie9 does not have the FileReaderObject
                     scope.fileread = "xxx";
                 } else {
-
+                    var fileName;
+                    var hasFiles = changeEvent.target.files.length > 0;
+                    if (!hasFiles) {
+                        return;
+                    }
                     var file = changeEvent.target.files[0];
                     fileName = file.name;
                     changeEvent.currentTarget.parentNode.parentNode.children[0].value = fileName;
