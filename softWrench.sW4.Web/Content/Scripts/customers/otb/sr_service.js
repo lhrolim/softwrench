@@ -82,12 +82,12 @@ app.factory('srService', function (alertService, associationService, fieldServic
             
             
         },
+
         beforechangeownergroup: function (event) {
             if (event.fields['owner'] != null) {
                 alertService.alert("You may select an Owner or an Owner Group; not both");
             }
-        }
-
+        },
     };
 
 });
