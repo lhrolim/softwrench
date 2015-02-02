@@ -67,20 +67,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </list>
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <section id ="siteidsection"/>
-          <field attribute="description" label="Summary:" requiredexpression="true"/>
-          <field label="Details:" attribute="longdescription_.ldtext">
-            <renderer type="richtext"/>
-          </field>
-          <!-- SWWEB 172: Changed the location and asset to make them look similar to gric-->
-          <association label="Location:" target="location" labelfield="location_.description" >
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
-          </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-            <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="srService" method="afterChangeAsset"/>
-          </association>
           <field attribute="ticketid" label="SR No:" readonly="true"/>
           <field attribute="ticketuid" label="SR No:" hidden="true"/>
           <field attribute="class" label="" hidden="true"/>
@@ -142,7 +128,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
 
-          
+          <field attribute="description" label="Summary:" requiredexpression="true"/>
+          <field label="Details:" attribute="longdescription_.ldtext">
+            <renderer type="richtext"/>
+          </field>
           
           <!-- Code added from gric metadata.xml SWWEB 173-->
           <section id="attachmentsection" />
@@ -158,7 +147,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </association>
           
           <!-- SWWEB 173-->
-          
+          <!-- SWWEB 172: Changed the location and asset to make them look similar to gric-->
+          <association label="Location:" target="location" labelfield="location_.description" >
+            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+            <!--renderer type="lookup"/-->
+          </association>
+          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+            <dataprovider prefilterfunction="FilterAssets"/>
+            <event type="afterchange" service="srService" method="afterChangeAsset"/>
+          </association>
           <section id="compositions"/>
         </schema>
 
