@@ -601,11 +601,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         invIssue_afterChangeRotAsset: function(parameters) {
-            //Sets the associated GL Debit Account
-            //if a workorder isn't already specified
-            //Updates the location field from the asset's location
             if (parameters.fields['rotassetnum'].trim() != "") {
-                parameters.fields['binnum'] = parameters.fields['rotatingasset_.binnum'];
+                parameters.fields['binbalances_.binnum'] = parameters.fields['rotatingasset_.binnum'];
+                parameters.fields['binbalances_.lotnum'] = "";
+                parameters.fields['binbalances_.curbal'] = 1;
             }
         },
 
