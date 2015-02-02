@@ -145,10 +145,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var costtype = fields['costtype'];
             parameters['fields']['inventory_.costtype'] = costtype;
             var locationFieldName = "";
-            if (parameters['fields'].location != undefined) {
-                locationFieldName = "location";
-            }
-            doUpdateUnitCostFromInventoryCost(parameters, "unitcost", locationFieldName);
+            doUpdateUnitCostFromInventoryCost(parameters, "unitcost", storelocation);
         });
     };
 
@@ -329,7 +326,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                                 $rootScope.$broadcast('sw_submitdata', {
                                     successCbk: function (data) {
                                         sessionStorage.mockclientvalidation = false;
-                                        $rootScope.$brodcast('sw_refreshgrid');
+                                        $rootScope.$broadcast('sw_refreshgrid');
                                     },
                                     failureCbk: function (data) {
                                         var test = data;

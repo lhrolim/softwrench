@@ -154,7 +154,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <entity name="keyInvIssue" idAttribute="matusetransid" parententity="invissue" whereclause=" (ISSUETYPE = 'ISSUE' or ISSUETYPE = 'RETURN') and keyInvIssue.itemnum like 'pump100'">
       <relationships>
         <relationship to="labor">
-          <relationshipAttribute from="personid" to="issueto" primary="true" />
+          <relationshipAttribute from="issueto" to="personid" primary="true" />
           <relationshipAttribute from="orgid" to="orgid" />
         </relationship>
         <relationship to="inventory">

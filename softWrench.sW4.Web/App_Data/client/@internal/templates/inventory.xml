@@ -291,6 +291,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="storeloc" hidden="true"/>
           <field attribute="binnum" hidden="true"/>
           <field attribute="item_.itemnum" hidden="true"/>
+          <field attribute="rotassetnum" hidden="true"/>
           <field attribute="itemnum" label="Item">
             <renderer type="default" />
           </field>
