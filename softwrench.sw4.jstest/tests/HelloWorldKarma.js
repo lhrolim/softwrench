@@ -1,1 +1,5 @@
-﻿describe("a test", function () { it("passes", function () { expect(true).toBe(true); }); });
+﻿describe("a test", function() {
+     it("passes", function() {
+          expect(true).toBe(true);
+     });
+});

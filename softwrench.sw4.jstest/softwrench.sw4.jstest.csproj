@@ -53,6 +53,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="angular_mock.js" />
     <Content Include="karma.conf.js" />
     <Content Include="node_modules\jasmine-core\.bundle\config" />
     <Content Include="node_modules\jasmine-core\.idea\codeStyleSettings.xml" />
@@ -1436,6 +1437,7 @@
     <Content Include="node_modules\karma\static\debug.html" />
     <Content Include="node_modules\karma\static\karma.js" />
     <Content Include="tests\HelloWorldKarma.js" />
+    <Content Include="tests\services\expression_service_test.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="node_modules\jasmine-core\.gitmodules" />
@@ -5642,9 +5644,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="package.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="test-results.testxml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
