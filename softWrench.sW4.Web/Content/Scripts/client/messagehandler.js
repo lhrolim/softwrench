@@ -48,6 +48,14 @@ app.directive('messagesection', function (contextService) {
                 fixHeaderService.callWindowResize();
             });
 
+            $scope.showErrorList = function () {
+                var isLoggedIn = sessionStorage['ctx_loggedin'];
+                if (isLoggedIn != "true") {
+                    return false;
+                }
+                return $rootScope.hasErrorList;
+            }
+
             function allowSuccessMessageDisplay(data) {
                 log.debug('allowSuccessMessageDisplay#enter');
 

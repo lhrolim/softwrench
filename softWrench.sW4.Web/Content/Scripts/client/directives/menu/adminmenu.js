@@ -1,4 +1,4 @@
-﻿app.directive('adminMenu', function (contextService,menuService,redirectService,i18NService) {
+﻿app.directive('adminMenu', function (contextService,menuService,redirectService,i18NService,$http) {
     return {
         restrict: 'E',
         replace: true,
@@ -32,6 +32,7 @@
             scope.logout = function () {
                 sessionStorage.removeItem("swGlobalRedirectURL");
                 contextService.clearContext();
+                sessionStorage['ctx_loggedin'] = false;
             };
             
         }
