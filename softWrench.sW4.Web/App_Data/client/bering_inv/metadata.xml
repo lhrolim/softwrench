@@ -288,7 +288,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%;widthLG=8%" />
           </field>
           <field attribute="transdate" label="Date">
-            <renderer type="default" params="widthXS=15%;widthSM=15%;widthMD=15%;formatter=datetime;"/>
+            <renderer type="datetime" params="widthXS=15%;widthSM=15%;widthMD=15%;"/>
           </field>
           <field attribute="quantity" label="Qty" hidden="true">
             <renderer type="default" params="hidefilter=true;widthXS=15%;widthSM=10%;widthMD=6%;widthLG=5%;formatter=@inventoryService.formatQtyList;"/>
