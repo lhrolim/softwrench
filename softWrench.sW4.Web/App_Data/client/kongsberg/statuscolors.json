@@ -1,7 +1,31 @@
 ﻿servicerequest:{
-    new: orange,
+    new: green,
     wappr: orange,
-    closed: green
+    closed: green,
+	draft: white,
+    queued: yellow,
+    pending: yellow,
+    inprog: blue,
+    resolved: blue,
+	histedit: green,
+    wmatl: red,
+	active: orange,
+    cantreprod: yellow,
+    waitoninfo: yellow,
+    wont fix: red,
+    wontimplnt: red,
+    wontrespnd: red,
+    postponed: red,
+    fixed: blue,
+    implemented: green,
+    appfm: blue,
+    applm: blue,
+    by design: blue,
+    duplicate: blue,
+	slahold: blue,
+    completed: green,
+	spam: red,
+    wsch: orange
 },
 
 workorder:{
