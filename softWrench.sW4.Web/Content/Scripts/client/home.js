@@ -23,6 +23,9 @@
             cache: $templateCache
         })
         .success(function (result) {
+            //workaround for knowing where the user is already loggedin
+            sessionStorage['ctx_loggedin'] = true;
+
             $scope.$parent.includeURL = contextService.getResourceUrl(result.redirectURL);
             $scope.$parent.resultData = result.resultObject;
             $scope.$parent.resultObject = result;

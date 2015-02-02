@@ -32,6 +32,7 @@
             scope.logout = function () {
                 sessionStorage.removeItem("swGlobalRedirectURL");
                 contextService.clearContext();
+                sessionStorage['ctx_loggedin'] = false;
             };
             
         }

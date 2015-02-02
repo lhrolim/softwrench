@@ -1,5 +1,7 @@
 ﻿$(document).ready(function () {
     $("#userTimezoneOffset").val(new Date().getTimezoneOffset());
+    sessionStorage['ctx_loggedin'] = false;
+
 
 
     $('#btnLogin').click(function () {

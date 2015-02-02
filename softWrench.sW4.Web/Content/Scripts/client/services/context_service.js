@@ -53,7 +53,7 @@ app.factory('contextService', function ($rootScope) {
             }
             var sessionContextValue = sessionStorage['ctx_' + key];
             if (removeentry) {
-                delete sessionStorage['ctx_' + key];
+                sessionStorage.removeItem(['ctx_' + key]);
             }
             if (sessionContextValue == "null") {
                 return null;
@@ -70,7 +70,7 @@ app.factory('contextService', function ($rootScope) {
             if (localStorage.mocknonlocal || sessionStorage.mocknonlocal) {
                 return false;
             }
-            return this.retrieveFromContext('isLocal') =="true";
+            return this.retrieveFromContext('isLocal') == "true";
         },
 
         client: function () {
@@ -190,11 +190,13 @@ app.factory('contextService', function ($rootScope) {
         },
 
         clearContext: function () {
-            $.each(sessionStorage, function (key, value) {
+            var i = sessionStorage.length;
+            while (i--) {
+                var key = sessionStorage.key(i);
                 if (key.startsWith('ctx_')) {
-                    delete sessionStorage[key];
+                    sessionStorage.removeItem(key);
                 }
-            });
+            }
         },
 
         insertReportSearchDTO: function (reportSchemaId, searchDTO) {
