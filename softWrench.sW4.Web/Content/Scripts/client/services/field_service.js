@@ -57,12 +57,15 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
                 
                 //Only continues if datmap for the current attribute is null
                 if (target != undefined && datamap[target] == null) {
-                    var evalExpressionResult = null;
+                    var expressionResult = null;
                     if (displayables[key].evalExpression != null) {
-                        evalExpressionResult = expressionService.evaluate(displayables[key].evalExpression, datamap, scope);
-                        datamap[target] = evalExpressionResult;
+                        expressionResult = expressionService.evaluate(displayables[key].evalExpression, datamap, scope);
+                        datamap[target] = expressionResult;
+                    } else if(displayables[key].defaultExpression != null) {
+                        expressionResult = expressionService.evaluate(displayables[key].defaultExpression, datamap, scope);
+                        datamap[target] = expressionResult;
                     }
-                    if (evalExpressionResult == null && value.defaultValue != null) {
+                    if (expressionResult == null && value.defaultValue != null) {
                         //TODO: extract a service here, to be able to use @user, @person, @date, etc...
                         datamap[target] = value.defaultValue;
                    }

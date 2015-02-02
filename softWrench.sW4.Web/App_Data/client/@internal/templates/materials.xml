@@ -130,13 +130,18 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
         <detail platform="web">
           <field attribute="matusetransid" hidden="true" />
-          <field attribute="#refsiteid" label="Lookup Code" evalexpression="@linetype" />
-          <field attribute="orgid" label="Org" readonly="true" evalexpression="$.previousdata.fields['orgid']"/>
-          <field attribute="siteid" label="Site" readonly="true" evalexpression="$.previousdata.fields['siteid']"/>
-          <field attribute="refwo" label="Work Order" readonly="true" evalexpression="$.previousdata.fields['wonum']"/>
+          <field attribute="#refsiteid" label="Lookup Code" evalexpression="@qtyrequested" />
+          <field attribute="orgid" label="Org" readonly="true" defaultexpression="$.previousdata.fields['orgid']"/>
+          <field attribute="siteid" label="Site" readonly="true" defaultexpression="$.previousdata.fields['siteid']"/>
+          <field attribute="refwo" label="Work Order" readonly="true" defaultexpression="$.previousdata.fields['wonum']"/>
           <field attribute="description"  />
           <field attribute="transdate" hidden="true" />
           <field attribute="unitcost" hidden="true" />
+          
+          <field attribute="#additiontest" label="Addition Test" evalexpression="fn:inventoryService.addition(@#refsiteid, fn:inventoryService.getint('test, test'))"/>
+
+          
+          
 
           <optionfield attribute="linetype" label="Type:">
             <renderer type="combo"/>

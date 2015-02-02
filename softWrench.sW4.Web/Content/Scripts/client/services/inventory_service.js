@@ -215,6 +215,16 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             return;
         },
 
+        addition: function(var1, var2) {
+            return var1 + var2;
+        },
+
+        getint: function (string, ishouldbenull) {
+            
+            return 5;
+        },
+        
+
         submitReturnConfirmation: function (event, datamap, parameters) {
             var returnQty = datamap['#quantityadj'];
             var item = datamap['itemnum'];

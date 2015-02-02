@@ -1,62 +1,9 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('expressionService', function ($rootScope, contextService) {
-
-
-    /*       This regex matches variables two different patterns:
-    
-        1. Strings that start with an @    -----------------------------
-                  Matching Strings:                                      
-                      @inventory_.item_.itemnum                  
-                      @assetnum                                  
-                      @#customfield                              
-                                                                 
-           The leading @ is then removed from the matches and the
-             variable is placed within the datamap[''] dictionary    
-                  Resulting Strings:                                     
-                        datamap['inventory_.item_.itemnum']                  
-                        datamap['assetnum']                                   
-                        datamap['#customfield']                               
-
-        2. Strings that start with an $.    ----------------------------
-                  Matching Strings:
-                        $.previousdata.fields['wonum'].list[@assetnum]
-                        $.previousdata.fields[wonum].list[key]
-                        $.previousdata.fields('CAT')
-                        $.previousdata.fields(@#assetnum)
-                        $.previousdata.fields(var)
-                        $.previousdata.fields(var,'CAT',@assetnum)
-                        $.previousdata.fields('CAT', var, @assetnum)
-                        $.previousdata.fields(@assetnum, 'CAT', var)
-                        $.previousdata.fields(var)
-
-                        $.previousdata['@wonum'].fields
-                        $.previousdata[$.test]
-                        $.previousdata[$.testFunctionrefsiteid(@assetnum)]
-                        $.previousdata.fields.test
-                        $.previousdata.fields[@assetnum]
-                        $.lookupAssociationCode[@#lookupCode]
-                        $.fields(@test, datamap['test'])
-                        $.testFunction($.datamap[@#refsiteid], @#test)
-
-            In this case, the $. will be translated to scope. and the
-            @ will still be translated into datamap[' {variable} ']
-
-            NOTE: There can only be 2 inceptions of a scope function.
-            For example, you can use:
-                $.customFunction($.previousdata[@assetnum])
-                $.previousdata[$.customFunction(@assetnum)]
-                $scope
-
-            But you cannot have, for example, have two scope functions with
-            a third scope function/variable reference as a paramter.
-            Example:
-                $.customFunction($.extraMultiplier($.previousdata))
-                $.previousdata[$.customFunction($.lookupAssociationCode[@assetnum])]
-
-            
-                     Example Regex Tester W/ Examples URL:
-                      https://www.regex101.com/r/fB6kI9/12               */
+app.factory('expressionService', function ($rootScope, contextService, dispatcherServer) {
+        
+//                   Example Regex Tester W/ Examples URL:
+//                    https://www.regex101.com/r/fB6kI9/12               */
 
     var compiledDatamapReplaceRegex = /(\@\#?)(\w+(\.?\w?)*)/g;
 
@@ -151,7 +98,11 @@ app.factory('expressionService', function ($rootScope, contextService) {
             //with the new value (the true reference upon being evaluated)
             if (variables != null) {
                 $.each(variables, function (key, value) {
-                    expression = expression.replace(key, value);
+              //      if (key.toUpperCase().startsWith('FN:')) {
+
+             //       } else {
+                        expression = expression.replace(key, value);
+            //        }
                 });
             }
 
@@ -242,56 +193,22 @@ app.factory('expressionService', function ($rootScope, contextService) {
                     //The key can be used to quickly update an expression with its true value. A good example
                     //of this occurs in getExpression, we loop through each variable, replacing any instance of
                     //the key (original reference in metadata) with the new value (the true reference upon being evaluated)
+
+                    
+                    //var functionCallStr = realVariable.substring(0, realVariable.indexOf('('));
+                    //var functionCall = functionCallStr('.');
+                    //var service = functionCall[0];
+                    //var method = functionCall[1];
+
+                    //var functionParameterRegex = new Regex(/,(?=[^\)]*(?:\(|$))(?=(?:[^']*'[^']*')*[^']*$)/g);
+                    //var declaration = realVariable.substring(realVariable.indexOf('('), realVariable.length - 1);
+                    //var parameters = Regex.Split(declaration);
+
+                    //realVariable = dispatcherService.loadService(service, method, parameters);
+
                     variables[referenceVariable] = realVariable;
                 }
             }
-
-            /*var matchingVariables = expression.match(preCompiledReplaceRegex);
-
-            var datamapPath = 'datamap';
-            if (datamap.fields != undefined) {
-                datamapPath = 'datamap.fields';
-            }
-
-            if (matchingVariables != null) {
-                for (var i = 0; i < matchingVariables.length; i++) {
-                    var referenceVariable = matchingVariables[i];
-                    var variableType = referenceVariable[0] == '@' ? 'DATAMAP' : 'SCOPE';
-
-                    //Removes initial character from matches (@ or $)
-                    var realVariable = referenceVariable.substring(1);
-
-                    if (variableType == 'DATAMAP') {
-                        //Translates datamap reference to a format that can be evaluated
-                        realVariable = datamapPath + "['" + realVariable + "']";
-                    } else {
-                        realVariable = 'scope' + realVariable;
-
-                        //Tests whether or not the realVariable has a subVariable within it
-                        //For example, the reference variable $.lookupAssociatonCode[@assetnum]
-                        //will translate into a real variable of scope.lookupAssociationCode[@assetnum].
-                        //Because the match has @assetnum as a subvariable, the below function will return true.
-                        var subVariable = preCompiledReplaceRegex.test(realVariable);
-                        if (subVariable == true) {
-                            var subVariables = this.getVariables(realVariable, datamap);
-
-                            //For each sub variable, updated the real variable reference
-                            //(the variable's true reference upon being evaluated) and add
-                            // the variable sub variable to our current variables list.
-                            $.each(subVariables, function (key, value) {
-                                realVariable = realVariable.replace(key, value);
-                                variables[key] = value;
-                            });
-                        }
-                    }
-                    //Updates variable dictionary key (the variable's original reference in the metadata)
-                    //with the real variable reference (the variable's true reference upon being evaluated).
-                    //The key can be used to quickly update an expression with its true value. A good example
-                    //of this occurs in getExpression, we loop through each variable, replacing any instance of
-                    //the key (original reference in metadata) with the new value (the true reference upon being evaluated)
-                    variables[referenceVariable] = realVariable;
-                }
-            }*/
 
             return variables;
         },
@@ -307,7 +224,7 @@ app.factory('expressionService', function ($rootScope, contextService) {
                     //not be included as a variable to watch. Instead, the getVariables function
                     //will return any parameters that are truely variables so that we can watch
                     //them and re-evaluate the expression when a variable changes.
-                    if (!key.endsWith(')')) {
+                    if (!key.endsWith(')') && !key.toUpperCase().startsWith('FN:')) {
                         collWatch += value + ',';
                     }
                     i = i + 1;

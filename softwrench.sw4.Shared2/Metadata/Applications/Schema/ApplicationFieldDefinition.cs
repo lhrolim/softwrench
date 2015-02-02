@@ -18,14 +18,15 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private ISet<ApplicationEvent> _eventsSet = new HashSet<ApplicationEvent>();
         public string EvalExpression { get; set; }
         public string EnableDefault { get; set; }
+        public string DefaultExpression { get; set; }
         public ApplicationFieldDefinition() {
 
         }
 
         public ApplicationFieldDefinition(string applicationName, string attribute, string label, string requiredExpression, bool isReadOnly, bool isIsHidden,
              FieldRenderer renderer, FieldFilter filter, IWidgetDefinition widgetDefinition, string defaultValue, string qualifier, string showExpression, string toolTip,
-             string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression, string enableDefault)
-            : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression) {
+             string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression, string enableDefault, string defaultExpression)
+            : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, defaultExpression) {
             if (widgetDefinition == null) throw new ArgumentNullException("widgetDefinition");
             _widgetDefinition = widgetDefinition;
             _renderer = renderer;
@@ -40,6 +41,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             _eventsSet = events;
             EvalExpression = evalExpression;
             EnableDefault = enableDefault;
+            DefaultExpression = defaultExpression;
             }
         //TODO: choose one of the modes?
         private FieldRenderer BuildFromWidget() {
@@ -110,17 +112,17 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public object Clone() {
             return new ApplicationFieldDefinition(ApplicationName, Attribute, Label, RequiredExpression, IsReadOnly, IsHidden,
-                Renderer, Filter, WidgetDefinition, DefaultValue, Qualifier, ShowExpression, ToolTip, AttributeToServer, _eventsSet, EnableExpression,EvalExpression, EnableDefault);
+                Renderer, Filter, WidgetDefinition, DefaultValue, Qualifier, ShowExpression, ToolTip, AttributeToServer, _eventsSet, EnableExpression,EvalExpression, EnableDefault, DefaultExpression);
         }
 
         public static ApplicationFieldDefinition HiddenInstance(string applicationName, string attributeName) {
             return new ApplicationFieldDefinition(applicationName, attributeName, "", "false", false, true,
-                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null,null, null);
+                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null,null, null, null);
         }
 
         public static ApplicationFieldDefinition DefaultColumnInstance(string applicationName, string attributeName,string label) {
             return new ApplicationFieldDefinition(applicationName, attributeName, label, "false", false, false,
-                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null, null, null);
+                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null, null, null, null);
         }
     }
 }
