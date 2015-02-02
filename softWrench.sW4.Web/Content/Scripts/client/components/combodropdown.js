@@ -4,7 +4,7 @@ app.factory('cmpComboDropdown', function ($rootScope, $timeout, i18NService) {
 
     return {
 
-        block:function(attribute) {
+        block: function (attribute) {
             var element = $("select[data-associationkey='" + attribute + "']");
             $(element).multiselect('destroy');
         },
@@ -21,8 +21,9 @@ app.factory('cmpComboDropdown', function ($rootScope, $timeout, i18NService) {
                     nonSelectedText: 'Select One',
                     includeSelectAllOption: true,
                     enableCaseInsensitiveFiltering: true,
-                    disableIfEmpty:true
+                    disableIfEmpty: true
                 });
+                element.multiselect('refresh');
             }
         },
 
@@ -57,6 +58,7 @@ app.factory('cmpComboDropdown', function ($rootScope, $timeout, i18NService) {
 
                     $('.multiselect', bodyElement).each(function (index) {
                         fn.refresh($(this));
+
                     });
 
                 }, 0, false);
