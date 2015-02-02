@@ -3,6 +3,12 @@
 app.factory('srService', function (alertService, associationService, fieldService) {
 
     return {
+        handleStatusChange: function (schema, datamap, parameters) {
+            if (datamap['status'] != parameters.originaldatamap['status']) {
+                datamap['#hasstatuschange'] = true;
+            }
+        },
+
         beforeChangeLocation: function (event) {
             if (event.fields['assetnum'] == null) {
                 //if no asset is selected we can proceed.
@@ -82,9 +88,17 @@ app.factory('srService', function (alertService, associationService, fieldServic
             
             
         },
+
         beforechangeownergroup: function (event) {
             if (event.fields['owner'] != null) {
                 alertService.alert("You may select an Owner or an Owner Group; not both");
+            }
+        },
+
+        validateCloseStatus: function (schema, datamap, parameters) {
+            if (datamap['status'] == 'CLOSE') {
+                alertService.alert("You cannot submit this ticket because it is already closed");
+                return false;
             }
         }
 

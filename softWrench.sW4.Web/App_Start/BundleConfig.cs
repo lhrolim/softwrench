@@ -136,6 +136,8 @@ namespace softWrench.sW4.Web {
             var scriptBundle = new ScriptBundle("~/Content/Scripts/client/client-js");
             bundles.Add(scriptBundle.IncludeDirectory(sharedPath, "*.js"));
             try {
+                // Wanted OTB to load as the base template and then additional js can be applied to overwrite the existing one
+                bundles.Add(scriptBundle.IncludeDirectory("~/Content/Scripts/customers/otb", "*.js"));
                 bundles.Add(scriptBundle.IncludeDirectory(clientPath, "*.js"));
             }
             catch {
