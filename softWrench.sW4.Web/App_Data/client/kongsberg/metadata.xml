@@ -1062,9 +1062,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" >
             <renderer type="lookup" params="columnlabel=Name"/>
           </association>
-          <association label="Project Classification:" target="classificationid" labelfield="classification_.description">
-            <renderer type="lookup"/>
-          </association>
+<!--          <association label="Project Classification:" target="classificationid" labelfield="classification_.description">-->
+<!--            <renderer type="lookup"/>-->
+<!--          </association>-->
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid">
+            <renderer type="autocompleteclient" />
+          </optionfield>
           <!--Adding Area and ProblemType field for Kongsberg-->
           <association label="Area:" target="area" labelfield="area_.description">
             <renderer type="lookup"/>
