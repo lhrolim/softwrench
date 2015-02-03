@@ -630,6 +630,9 @@
 				maxOccurs="1">
       </element>
       <choice minOccurs="0" maxOccurs="unbounded">
+        <element name="renderer" type="tns:Renderer" maxOccurs="1"
+				  minOccurs="0">
+        </element>
         <element minOccurs="0" maxOccurs="unbounded"
 					name="field" type="tns:Field">
         </element>
