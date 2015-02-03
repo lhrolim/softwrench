@@ -3,10 +3,10 @@
 app.factory('expressionService', function ($rootScope, contextService, dispatcherService) {
 
 
-    var compiledDatamapReplaceRegex = /(\@\#?)(\w+(\.?\w?)*)/g;
-    //var datamapReplaceRegexString = "(\@\#?)(\w+(\.?\w?)*)";
+    var compiledDatamapRegex = /(\@\#?)(\w+(\.?\w?)*)/g;
+    //var datamapRegexString = "(\@\#?)(\w+(\.?\w?)*)";
 
-    var datamapReplaceRegexString = "(\@\#?)" +
+    var datamapRegexString = "(\@\#?)" +
   //                                Looks leading @ or @#
                                     "(\w+(\.?\w?)*)";
   //                                At least one word, followed by unlimited number of .word
@@ -16,10 +16,10 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
   //                                @assetnum                                  
   //                                @#customfield   
 
-    var compiledScopeReplaceRegex = /\$\.(\w+)((\.\w+)|(\[.*?\]+)|(\(.*?\)))*/g;
-    //var scopeReplaceRegexString = "\$\.(\w+)((\.\w+)|(\[.*?\]+)|(\(.*?\)))*";
+    var compiledScopeRegex = /\$\.(\w+)((\.\w+)|(\[.*?\]+)|(\(.*?\)))*/g;
+    //var scopeRegexString = "\$\.(\w+)((\.\w+)|(\[.*?\]+)|(\(.*?\)))*";
 
-    var scopeReplaceRegexString = "\$\.(\w+)" +
+    var scopeRegexString = "\$\.(\w+)" +
 
   //                               Looks for leading $.word (will translate into scope.word)
         
@@ -60,10 +60,10 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
                                           $.scope.datamap[@assetnum]                  */
 
 
-    var compiledServiceReplaceRegex = /fn\:\w+\.\w+(\(.*?\)((\s?\,\s?.*?)*\))*)((\.\w+)|(\[.*?\])|\)|(\(.*?\)((\s?\,\s?.*?)*\))*))*/g;
-    //var serviceReplaceRegexString = "fn\:\w+\.\w+(\(.*?\)((\s?\,\s?.*?)*\))*)((\.\w+)|(\[.*?\])|\)|(\(.*?\)((\s?\,\s?.*?)*\))*))*";
+    var compiledServiceRegex = /fn\:\w+\.\w+(\(.*?\)((\s?\,\s?.*?)*\))*)((\.\w+)|(\[.*?\])|\)|(\(.*?\)((\s?\,\s?.*?)*\))*))*/g;
+    //var serviceRegexString = "fn\:\w+\.\w+(\(.*?\)((\s?\,\s?.*?)*\))*)((\.\w+)|(\[.*?\])|\)|(\(.*?\)((\s?\,\s?.*?)*\))*))*";
 
-    var serviceReplaceRegexString = "fn\:\w+\.\w+" + 
+    var serviceRegexString = "fn\:\w+\.\w+" + 
   //                                Looks for leading fn:word.word (will translate into service.method call)
 
                                     "(\(.*?\)" + "((\s?\,\s?.*?)*\))*)" +
@@ -72,7 +72,7 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
   //                                - Next, the above pattern could be followed with an unlimited number of
   //                                  commas that are followed by a word. Finally, this condition would expect
   //                                  a closed parenthesis. This part of the condition can occur 0 to unlimited number of times
-  //                                  This case will allow for identifying variables nested within ( ) i.e. $.test($.test(), $.test())
+  //                                  This case will allow for all variables nested within ( ) i.e. $.test($.test(), $.test())
     
   //                                The following four conditions are OR'd together 
   //                                and can be repeated 0 or more times
@@ -126,16 +126,16 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
 
 
     return {
-        getDatamapReplaceRegex: function () {
-            return new RegExp("/" + datamapReplaceRegexString + "/g");
+        getDatamapRegex: function () {
+            return new RegExp("/" + datamapRegexString + "/g");
         },
 
-        getScopeReplaceRegex: function () {
-            return new RegExp("/" + scopeReplaceRegexString) + "/g";
+        getScopeRegex: function () {
+            return new RegExp("/" + scopeRegexString) + "/g";
         },
 
-        getServiceReplaceRegex: function () {
-            return new RegExp("/" + serviceReplaceRegexString + "/g");
+        getServiceRegex: function () {
+            return new RegExp("/" + serviceRegexString + "/g");
         },
 
         getExpression: function (expression, datamap, scope) {
@@ -169,7 +169,7 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
         getVariables: function (expression, datamap, onlyReturnRootNode, scope) {
             var variables = {};
 
-            var scopeVariables = expression.match(compiledScopeReplaceRegex);
+            var scopeVariables = expression.match(compiledScopeRegex);
 
             if (scopeVariables != null) {
                 for (var i = 0; i < scopeVariables.length; i++) {
@@ -182,7 +182,7 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
                     for (var j = 0; j < declarations.length; j++) {
                         var declaration = declarations[j].trim();
                         //Tests whether or not the realVariable has a subVariable within it
-                        var subVariable = compiledScopeReplaceRegex.test(declaration) || compiledServiceReplaceRegex.test(declaration);
+                        var subVariable = compiledScopeRegex.test(declaration) || compiledServiceRegex.test(declaration);
                         if (subVariable == true) {
                             //Updates the realValue of current with the evaluation of its child nodes
                             var subVariables = this.getVariables(declaration, datamap);
@@ -207,7 +207,7 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
                 }
             }
 
-            var serviceVariables = expression.match(compiledServiceReplaceRegex);
+            var serviceVariables = expression.match(compiledServiceRegex);
 
             if (serviceVariables != null) {
                 for (var i = 0; i < serviceVariables.length; i++) {
@@ -221,7 +221,7 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
                     for (var j = 0; j < declarations.length; j++) {
                         var declaration = declarations[j].trim();
                         //Tests whether or not the realVariable has a $. or fn: subVariable within it
-                        var subVariable = compiledScopeReplaceRegex.test(declaration) || compiledServiceReplaceRegex.test(declaration);
+                        var subVariable = compiledScopeRegex.test(declaration) || compiledServiceRegex.test(declaration);
                         if (subVariable == true) {
                             var subVariables = this.getVariables(declaration, datamap);
 
@@ -267,7 +267,7 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
                 variables[referenceVariable] = realVariable;
             }
 
-            var datamapVariables = expression.match(compiledDatamapReplaceRegex);
+            var datamapVariables = expression.match(compiledDatamapRegex);
 
             if (datamapVariables != null) {
                 var datamapPath = 'datamap';
