@@ -21,6 +21,7 @@
         public const string PhysicaldeviationListScanOrder = "/Global/Grids/PhysicalDeviation/ScanBar";
         public const string MatrectransTransfersListScanOrder = "/Global/Grids/InventoryTransfer/ScanBar";
         public const string ReservedMaterialsListScanOrder = "/Global/Grids/ReservedMaterials/ScanBar";
+        public const string InvIssueListBeringScanOrder = "/Global/Grids/InvIssueBering/ScanBar";
 
         //        public static class Global {
         //            public static class Rowstamps {
