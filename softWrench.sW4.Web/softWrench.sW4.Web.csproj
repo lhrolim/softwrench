@@ -801,6 +801,7 @@
     <Content Include="Content\Images\softwrench-logo-small.gif" />
     <Content Include="Content\Images\start-icon.png" />
     <Content Include="Content\Scripts\vendor\angular\angular.js" />
+    <Content Include="App_Data\Client\manchester\statuscolors.json" />
     <None Include="Content\Scripts\vendor\angular\angular-min.jsa" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-combobox.js" />
     <Content Include="Content\Scripts\client\ajax_interceptor.js" />
