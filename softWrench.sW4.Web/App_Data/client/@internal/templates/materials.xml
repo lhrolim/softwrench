@@ -149,9 +149,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <option label="idFieldName" value="idFieldName"/>
             <!--<event type="afterchange" service="matusetranService" method="afterlinetypechange"/>-->
           </optionfield>
+          
+          <field attribute="#scopetest" label="Scope Reference" readonly="true" evalexpression="@linetype"/>
+          <field attribute="#scopetestresult" label="Scope Test" readonly="true" evalexpression="$.testFunction($.schema[@#scopetest])"/>
 
-          <field attribute="#test" label="Referenced Site" readonly="true" evalexpression="$.testFunction($.schema[@#refsiteid])"/>
-
+          
+          
           <association label="Item:" target="itemnum" labelfield="inventory_.item_.description, location" labelpattern="{0}" extraprojectionvalues="item_.description, itemsetid, location, siteid, costtype" showexpression="@linetype == 'ITEM'">
              <!--<dataprovider prefilterfunction="FilterMaterials"/>-->
             <renderer type="lookup" params="application=inventory;schemaId=materialLookupList;"/>

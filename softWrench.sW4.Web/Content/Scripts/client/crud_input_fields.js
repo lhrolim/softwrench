@@ -350,6 +350,9 @@ app.directive('crudInputFields', function (contextService) {
             /* LOOKUP functions */
 
 
+            $scope.testFunction = function (input) {
+                return input.replace('T', 'J');
+            };
             $scope.showLookupModal = function (fieldMetadata) {
                 if (!$scope.isSelectEnabled(fieldMetadata)) {
                     return;

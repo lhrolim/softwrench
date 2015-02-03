@@ -399,7 +399,6 @@ app.directive('compositionList', function (contextService,formatService) {
                 //                $scope.isReadonly = true;
             };
 
-
             $scope.allowButton = function (value) {
                 return expressionService.evaluate(value, $scope.parentdata) && $scope.inline;
             };

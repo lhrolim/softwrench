@@ -215,8 +215,14 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             return;
         },
 
-        addition: function(var1, var2) {
-            return var1 + var2;
+        addition: function (var1, var2) {
+            if (var1 == "undefined") {
+                var1 = 0;
+            }
+            if (var2 == "undefined") {
+                var2 = 0;
+            }
+            return parseInt(var1) + parseInt(var2);
         },
 
         getint: function (string, ishouldbenull) {
