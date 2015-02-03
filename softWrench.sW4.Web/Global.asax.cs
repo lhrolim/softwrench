@@ -137,7 +137,7 @@ namespace softWrench.sW4.Web {
 
                 if (!isForbidden){
                     //already marked as forbidden, let´s not mess the messages
-                    Context.Response.RedirectLocation += "&timeout=true";    
+//                    Context.Response.RedirectLocation += "&timeout=true";    
                 }
                 
                 
