@@ -19,10 +19,10 @@ app.factory('dispatcherService', function ($injector, $log) {
 
         if (parameters != null) {
             var args = [];
-            for (var i = 0; i < parametrs.length; i++) {
+            for (var i = 0; i < parameters.length; i++) {
                 args.push(parameters[i]);
             }
-            fn = method.apply(this, args);
+            fn = fn.apply(this, args);
         }
 
         if (!fn) {

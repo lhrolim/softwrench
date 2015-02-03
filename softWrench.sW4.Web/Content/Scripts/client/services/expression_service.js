@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('expressionService', function ($rootScope, contextService, dispatcherServer) {
+app.factory('expressionService', function ($rootScope, contextService, dispatcherService) {
         
 //                   Example Regex Tester W/ Examples URL:
 //                    https://www.regex101.com/r/fB6kI9/12               */
@@ -44,7 +44,7 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
   //                                  $.previousdata.fields('CAT', var, @assetnum).list[@assetnum]
   //                                  $.previousdata.fields(@assetnum, 'CAT', var).update(@currentVariable)
 
-    var compiledServiceReplaceRegex = /fn\:\w+\.\w+(\(.*?(?=\))\))((\.\w+)|(\[.*?(?=\])\])|(\(.*?(?=\))\)))*/g;
+    var compiledServiceReplaceRegex = /fn\:\w+\.\w+(\(.*?[^\(]*\))((\.\w+)|(\[.*?[^\]]*\])|(\(.*?[^\(]*\)))*/g;
 
   //var serviceReplaceRegexString = "fn\:\w+\.\w+(\(.*?(?=\))\))((\.\w+)|(\[.*?(?=\])\])|(\(.*?(?=\))\)))*";
     var serviceReplaceRegexString = "fn\:\w+\.\w+" +
@@ -195,16 +195,16 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
                     //the key (original reference in metadata) with the new value (the true reference upon being evaluated)
 
                     
-                    //var functionCallStr = realVariable.substring(0, realVariable.indexOf('('));
-                    //var functionCall = functionCallStr('.');
-                    //var service = functionCall[0];
-                    //var method = functionCall[1];
+                    var functionCallStr = realVariable.substring(0, realVariable.indexOf('('));
+                    var functionCall = functionCallStr.split('.');
+                    var service = functionCall[0];
+                    var method = functionCall[1];
 
-                    //var functionParameterRegex = new Regex(/,(?=[^\)]*(?:\(|$))(?=(?:[^']*'[^']*')*[^']*$)/g);
-                    //var declaration = realVariable.substring(realVariable.indexOf('('), realVariable.length - 1);
-                    //var parameters = Regex.Split(declaration);
+                    var functionParameterRegex = new RegExp(/,(?=[^\)]*(?:\(|$))(?=(?:[^']*'[^']*')*[^']*$)/g);
+                    var declaration = realVariable.substring(realVariable.indexOf('(')+1, realVariable.length - 1);
+                    var parameters = declaration.split(functionParameterRegex);
 
-                    //realVariable = dispatcherService.loadService(service, method, parameters);
+                    realVariable = dispatcherService.loadService(service, method, parameters);
 
                     variables[referenceVariable] = realVariable;
                 }
