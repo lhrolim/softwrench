@@ -11,7 +11,7 @@
         });
         var variables = expressionService.getVariables("@status == 'test'", datamap, false);
         expect(Object.keys(variables).length).toBe(1);
-        expect(variables['@status']).toBe('test');
+        expect(eval(variables['@status'])).toBe('test');
     });
 
     it('should match variables by @ 2', function () {
@@ -21,8 +21,8 @@
         });
         var variables = expressionService.getVariables("@status == 'test' and @ticketid!=null", datamap, false);
         expect(Object.keys(variables).length).toBe(2);
-        expect(variables['@status']).toBe('test');
-        expect(variables['@ticketid']).toBe('1000');
+        expect(eval(variables['@status'])).toBe('test');
+        expect(eval(variables['@ticketid'])).toBe('1000');
     });
 
     
