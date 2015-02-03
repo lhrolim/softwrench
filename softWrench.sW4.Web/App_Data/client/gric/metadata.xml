@@ -563,7 +563,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowupdate="false" allowcreation="true" />
+              <collectionproperties allowupdate="true" allowcreation="true" />
             </composition>
             <composition relationship="attachment" label="Attachments" >
               <collectionproperties allowupdate="false" allowcreation="true" />
