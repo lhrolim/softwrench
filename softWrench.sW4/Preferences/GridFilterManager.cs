@@ -16,7 +16,7 @@ namespace softWrench.sW4.Preferences {
             _dao = dao;
         }
 
-        public GridFilterAssociation CreateNewFilter(InMemoryUser user, String application, string fields, string operators, string values, string alias, string schema = "list") {
+        public GridFilterAssociation CreateNewFilter(InMemoryUser user, String application, string fields, string operators, string values,string template, string alias, string schema = "list") {
             var filter = new GridFilter {
                 Alias = alias,
                 Application = application,
@@ -25,7 +25,8 @@ namespace softWrench.sW4.Preferences {
                 Operators = operators,
                 Values = values,
                 Schema = schema,
-                Creator = user.DBUser
+                Creator = user.DBUser,
+                Template = template
             };
 
             if (user.UserPreferences.ContainsFilter(filter, user)) {
@@ -46,7 +47,7 @@ namespace softWrench.sW4.Preferences {
             return new HashSet<GridFilterAssociation>(_dao.FindByQuery<GridFilterAssociation>(GridFilterAssociation.ByUserId, userId));
         }
 
-        public GridFilter UpdateFilter(InMemoryUser user, string fields, string alias, string operators, string values, int? id) {
+        public GridFilter UpdateFilter(InMemoryUser user, string fields, string alias, string operators, string values, string template, int? id) {
             var filter = _dao.FindByPK<GridFilter>(typeof(GridFilter), id);
             if (filter == null) {
                 throw GridFilterException.FilterNotFound(id);
@@ -55,6 +56,7 @@ namespace softWrench.sW4.Preferences {
             filter.Fields = fields;
             filter.Values = values;
             filter.Alias = alias;
+            filter.Template = template;
             filter.UpdateDate = DateTime.Now;
             var updateFilter = _dao.Save(filter);
             var memoryAssociation = user.UserPreferences.GridFilters.FirstOrDefault(a => a.Filter.Id == id);

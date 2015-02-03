@@ -72,7 +72,7 @@ namespace softWrench.sW4.Data.Search {
             var where = GetWhere(dto, entityName);
             var parameters = GetParameters(dto);
             foreach (var parameter in parameters) {
-                where = where.Replace(":"+parameter.Key, "'"+(string)parameter.Value+"'");
+                where = where.Replace(":" + parameter.Key, "'" + (string)parameter.Value + "'");
             }
             return where;
         }
@@ -106,7 +106,13 @@ namespace softWrench.sW4.Data.Search {
         private static string HandleSearchParams(SearchRequestDto listDto, string entityName) {
             var sb = new StringBuilder();
             var sbReplacingIdx = 0;
-            sb.Append(listDto.SearchParams);
+            var searchTemplate = listDto.SearchTemplate;
+            if (searchTemplate != null) {
+                sb.Append(listDto.SearchTemplate);
+            } else {
+                sb.Append(listDto.SearchParams);
+            }
+
             var parameters = Regex.Split(listDto.SearchParams, SearchParamSpliter).Where(f => !String.IsNullOrWhiteSpace(f));
             var searchParameters = listDto.GetParameters();
 
@@ -150,7 +156,7 @@ namespace softWrench.sW4.Data.Search {
                         statement.Append(GetDefaultParam(operatorPrefix, param));
                     }
 
-                    if ((searchParameter.SearchOperator == SearchOperator.NOTEQ)||(searchParameter.SearchOperator == SearchOperator.NCONTAINS)) {
+                    if ((searchParameter.SearchOperator == SearchOperator.NOTEQ) || (searchParameter.SearchOperator == SearchOperator.NCONTAINS)) {
                         statement.Append(" OR " + parameterData.Item1 + " IS NULL " + " )");
                     } else {
                         statement.Append(" )");
@@ -162,6 +168,7 @@ namespace softWrench.sW4.Data.Search {
             }
             sb.Replace("&&", " AND ");
             sb.Replace("||,", " OR ");
+            sb.Replace("||", " OR ");
             return sb.ToString();
         }
 
@@ -193,8 +200,7 @@ namespace softWrench.sW4.Data.Search {
                         try {
                             var int32 = Convert.ToInt32(parameter.Value);
                             resultDictionary.Add(searchParameter.Key, int32);
-                        }
-                        catch {
+                        } catch {
                             //its declared as a number, but the client passed a string like %10%, for contains, or even SR123 
                             resultDictionary.Add(searchParameter.Key, parameter.Value);
                         }
