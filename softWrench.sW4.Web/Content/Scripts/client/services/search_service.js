@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('searchService', function (i18NService,$log, $rootScope, contextService, fieldService, $http) {
+app.factory('searchService', function (i18NService, $log, $rootScope, contextService, fieldService, $http) {
 
     var objCache = {};
 
@@ -53,7 +53,8 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
 
 
 
-    var buildSearchParamsString = function (searchData, searchOperator) {
+    var buildSearchParamsString = function (searchData, searchOperator, useOrOperator) {
+        var operatorToUse = useOrOperator ? "||" : "&&";
         var resultString = "";
         for (var data in searchData) {
             if (data == "lastSearchedValues") {
@@ -68,23 +69,23 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
                     // this case is only for "BETWEEN" operator
                     data = data.substring(0, data.indexOf('___'));
                     if (resultString.indexOf(data) != -1) {
-                        resultString += data + "&&";
+                        resultString += data + operatorToUse;
                     } else {
                         resultString += data + "___";
                     }
                     continue;
                 }
 
-                resultString += data + "&&";
+                resultString += data + operatorToUse;
             }
         }
-        return resultString.substring(0, resultString.lastIndexOf("&&"));
+        return resultString.substring(0, resultString.lastIndexOf(operatorToUse));
     };
 
     var buildSearchSortString = function (searchSort) {
         //            var searchSort = scope.searchSort;
         var resultString = "";
-        
+
         if (searchSort.field != null && searchSort.field != '') {
             resultString = searchSort.field;
         }
@@ -153,7 +154,7 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
             if (value.startsWith("!=")) {
                 return this.getSearchOperationById('NOTEQ');
             }
-            if(value === "!@BLANK") {
+            if (value === "!@BLANK") {
                 return this.getSearchOperationById('BLANK');
             }
 
@@ -216,8 +217,9 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
         /// <param name="searchOperator">the array of filter operations, in the same order of searchData</param>
         /// <param name="filterFixedWhereClause">a fallback query applied.it could be null</param>
         /// <param name="paginationData">an object containing pageNumber and pageSize properties</param>
+        /// <param name="searchTemplate">a string containing the query, with the parameters delimited by : (ex: :a || :b || :c || :d) </param>
         /// <returns type=""></returns>        
-        buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause, paginationData) {
+        buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause, paginationData, searchTemplate) {
             var searchDto = {};
             if (!searchSort) {
                 searchSort = {};
@@ -232,7 +234,9 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
             searchDto.SearchAscending = searchSort.order == "asc";
             searchDto.filterFixedWhereClause = filterFixedWhereClause;
             searchDto.needsCountUpdate = true;
+            searchDto.searchTemplate = searchTemplate;
             searchData.lastSearchedValues = searchDto.searchValues;
+            
             if (paginationData) {
                 searchDto.pageNumber = paginationData.pageNumber;
                 searchDto.pageSize = paginationData.pageSize;
@@ -335,16 +339,40 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
             /// <summary>
             /// 
             /// </summary>
-            /// <param name="event"></param>
-            /// <param name="searchData">a key value pair for modifying the grid query that is present on the screen</param>
+            /// <param name="searchData">a key value pair for modifying the grid query that is present on the screen (ex: 
+            ///     var searchData = {
+            ///         param1:'value',
+            ///         param2:'value2'
+            ///     }
+            /// </param>
             /// <param name="extraparameters">accepts:
             ///  pageNumber --> the page to go
             ///  pageSize --> a different page size than the scope one
             ///  printMode --> if we need to refresh the grid for printmode
-            ///  avoidsping --> if true, we wont show the busy indicator on the screen
+            ///  avoidspin --> if true, we wont show the busy indicator on the screen
             ///  keepfilterparams --> if true, we should keep the filter parameters on the grid
+            ///  searchTemplate --> the search template string to apply on the seach
             /// </param>
             $rootScope.$broadcast("sw_refreshgrid", searchData, extraparameters);
+        },
+
+        advancedSearch: function (datamap, schema, advancedsearchdata) {
+            if (advancedsearchdata == null || advancedsearchdata == '') {
+                return;
+            }
+            var visibleDisplayables = fieldService.getVisibleDisplayables(datamap, schema);
+            var searchData = {};
+
+            var searchTemplate = "";
+            for (var i = 0; i < visibleDisplayables.length; i++) {
+                var v = visibleDisplayables[i];
+                if (v.rendererType != "color") {
+                    searchData[v.attribute] = '%' + advancedsearchdata + '%';
+                    searchTemplate += v.attribute + "||";
+                }
+            }
+            searchTemplate = searchTemplate.substring(0, searchTemplate.length - 2);
+            this.refreshGrid(searchData,{searchTemplate:searchTemplate});
         },
 
         /// <summary>
@@ -361,23 +389,20 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
         /// mode --> the mode of the schema to use, defaults to none
         /// searchOperators --> the array of operators to apply to searchdata array, in the same order
         /// searchSort --> the sorting object
+        /// searchTemplate --> the searchtemplate to use in the search operation
         /// 
         /// </param>
-        searchWithData: function (application, searchData,schema, extraParameters) {
+        searchWithData: function (application, searchData, schema, extraParameters) {
             if (application == null) {
                 throw new Error("application cannot be null");
             }
-
-            if (!extraParameters) {
-                //to avoid extra checkings all along
-                extraParameters = {};
-            }
-            if (!searchData) {
-                searchData = {};
-            }
+            extraParameters = extraParameters || {};
+            searchData = searchData || {};
+            
             var log = $log.getInstance('searchService#searchWithData');
 
             var searchDTO = this.buildSearchDTO(searchData, extraParameters.searchSort, extraParameters.searchOperators, null);
+            searchDTO.searchTemplate = extraParameters.searchTemplate;
             searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
             searchDTO.totalCount = 0;
             searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;
@@ -395,29 +420,11 @@ app.factory('searchService', function (i18NService,$log, $rootScope, contextServ
             return $http.get(urlToUse);
         },
 
-        toggleAdvancedFilterMode: function () {
-            $rootScope.$broadcast("sw_togglefiltermode");
+        toggleAdvancedFilterMode: function (setToBasicMode) {
+            $rootScope.$broadcast("sw_togglefiltermode", setToBasicMode);
         },
 
-        advancedSearch: function (datamap, schema, advancedsearchdata) {
-            if (advancedsearchdata == null || advancedsearchdata == '') {
-                return;
-            }
-            var visibleDisplayables = fieldService.getVisibleDisplayables(datamap, schema);
-            var searchFields = "";
-            $.each(visibleDisplayables, function (key, v) {
-                if (v.rendererType != "color") {
-                    searchFields += v.attribute + ",";
-                }
-            });
-            advancedsearchdata = '%' + advancedsearchdata + '%';
-            var params = $.param({ 'application': schema.applicationName, 'searchFields': searchFields, 'searchText': advancedsearchdata, 'schema': schema.schemaId });
-            $http.get(url("/api/generic/Data/Search" + "?" + params)).success(
-                function (data) {
-                    $rootScope.$broadcast("sw_redirectactionsuccess", data);
-                }
-            );
-        }
+
 
     };
 

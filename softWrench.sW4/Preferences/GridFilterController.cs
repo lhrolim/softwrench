@@ -20,26 +20,26 @@ namespace softWrench.sW4.Preferences {
             _gridFilterManager = gridFilterManager;
         }
 
-        public IGenericResponseResult CreateNewFilter([NotNull]String application, string schema, string fields, string operators, string values, [NotNull]string alias) {
+        public IGenericResponseResult CreateNewFilter([NotNull]String application, string schema, string fields, string operators, string values,string template, [NotNull]string alias) {
             Validate.NotNull(application, "application");
             Validate.NotNull(fields, "fields");
             Validate.NotNull(operators, "operators");
             Validate.NotNull(values, "values");
             Validate.NotNull(alias, "alias");
 
-            var association = _gridFilterManager.CreateNewFilter(SecurityFacade.CurrentUser(), application, fields, operators, values, alias, schema);
+            var association = _gridFilterManager.CreateNewFilter(SecurityFacade.CurrentUser(), application, fields, operators, values,template, alias, schema);
             return new GenericResponseResult<GridFilterAssociation>(association) {
                 SuccessMessage = "Filter {0} created successfully".Fmt(alias)
             };
         }
 
-        public IGenericResponseResult UpdateFilter(int? id, string alias, string fields, string operators, string values) {
+        public IGenericResponseResult UpdateFilter(int? id, string alias, string fields, string operators, string values,string template) {
             Validate.NotNull(fields, "fields");
             Validate.NotNull(operators, "operators");
             Validate.NotNull(values, "values");
             Validate.NotNull(id, "id");
 
-            var filter = _gridFilterManager.UpdateFilter(SecurityFacade.CurrentUser(), fields, alias, operators, values, id);
+            var filter = _gridFilterManager.UpdateFilter(SecurityFacade.CurrentUser(), fields, alias, operators, values,template, id);
             return new GenericResponseResult<GridFilter>(filter) {
                 SuccessMessage = "Filter {0} updated successfully".Fmt(filter.Alias)
             };

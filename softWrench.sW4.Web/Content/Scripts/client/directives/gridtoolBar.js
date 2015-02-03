@@ -101,8 +101,10 @@ app.directive('gridtoolbar', function (contextService) {
         scope: {
             paginationData: '=',
             searchData: '=',
+            searchTemplate: '=',
             searchOperator: '=',
             searchSort: '=',
+            advancedsearchdata : '=',
             schema: '=',
             mode: '@',
             position: '@',
