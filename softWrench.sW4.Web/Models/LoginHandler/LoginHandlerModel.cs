@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,6 +12,7 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
         private readonly bool _incorrectLogin;
         private readonly bool _isHapagClient;
         private readonly string _clientName;
+        public bool Inactivity { get; set; }
 
         public LoginHandlerModel(bool isLoginEnabled, string loginMessage) {
             _isLoginEnabled = isLoginEnabled;

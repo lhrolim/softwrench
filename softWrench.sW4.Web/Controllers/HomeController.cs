@@ -1,4 +1,5 @@
-﻿using softWrench.sW4.Metadata.Stereotypes.Schema;
+﻿using System.Web.Security;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Menu;
@@ -62,7 +63,8 @@ namespace softWrench.sW4.Web.Controllers {
                 url = GetUrlFromAction(actItem);
                 title = actItem.Title;
             } else {
-                throw ExceptionUtil.InvalidOperation("index item should be either application or action");
+                FormsAuthentication.SignOut();
+                return Redirect("~");
             }
             model = new HomeModel(url, title, FetchConfigs(), user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), ApplicationConfiguration.ClientName);
             return View(model);

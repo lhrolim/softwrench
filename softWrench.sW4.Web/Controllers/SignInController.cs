@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System.Threading;
+using JetBrains.Annotations;
+using Quartz.Util;
 using softWrench.sW4.AUTH;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -28,10 +30,11 @@ namespace softWrench.sW4.Web.Controllers {
             _ldapManager = ldapManager;
         }
 
-        public ActionResult Index() {
+        public ActionResult Index(bool timeout=false) {
             if (User.Identity.IsAuthenticated) {
                 Response.Redirect(FormsAuthentication.GetRedirectUrl(User.Identity.Name, false));
             }
+
             LoginHandlerModel model;
             string loginMessage = null;
             if (!IsLoginEnabled(ref loginMessage)) {
@@ -39,6 +42,7 @@ namespace softWrench.sW4.Web.Controllers {
             } else {
                 model = new LoginHandlerModel(true, IsHapagClient(), ClientName());
             }
+            model.Inactivity = timeout;
             return View(model);
         }
 
@@ -96,7 +100,7 @@ namespace softWrench.sW4.Web.Controllers {
         private ActionResult AuthSucceeded(string userName, string userTimezoneOffset, InMemoryUser user) {
             var syncEveryTime = "true".Equals(MetadataProvider.GlobalProperty("ldap.synceverytime"));
             if (syncEveryTime) {
-                user.DBUser = UserManager.SyncLdapUser(user.DBUser,_ldapManager.IsLdapSetup());
+                user.DBUser = UserManager.SyncLdapUser(user.DBUser, _ldapManager.IsLdapSetup());
             }
             AuthenticationCookie.SetSessionCookie(userName, userTimezoneOffset, Response);
             Response.Redirect(FormsAuthentication.GetRedirectUrl(userName, false));
@@ -203,10 +207,15 @@ namespace softWrench.sW4.Web.Controllers {
                 //FormsAuthentication.SetAuthCookie(userName, false);
 
                 var strb = new StringBuilder();
-                strb.Append("userName=");
-                strb.Append(userName);
-                strb.Append(";userTimezoneOffset=");
-                strb.Append(userTimezoneOffset);
+                strb.AppendFormat("userName={0}", userName);
+                strb.AppendFormat(";userTimezoneOffset={0}", userTimezoneOffset);
+                var dateToUse = ApplicationConfiguration.SystemBuildDateInMillis;
+                if (ApplicationConfiguration.IsLocal()) {
+                    //if local we can safely use the starttime
+                    dateToUse = ApplicationConfiguration.StartTimeMillis;
+                }
+                strb.AppendFormat(";cookiesystemdate={0}", dateToUse);
+
 
                 var cookie = FormsAuthentication.GetAuthCookie(userName, false);
                 var ticket = FormsAuthentication.Decrypt(cookie.Value);

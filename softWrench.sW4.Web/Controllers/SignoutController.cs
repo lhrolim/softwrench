@@ -24,10 +24,10 @@ namespace softWrench.sW4.Web.Controllers {
                     _eventDispatcher.Dispatch(new ClearCacheEvent());
                 }
                 FormsAuthentication.SignOut();
-                return Redirect("~");
+                return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f".Fmt(Request.ApplicationPath.Replace("/", "")));
             } catch {
                 FormsAuthentication.SignOut();
-                return Redirect("~");
+                return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f".Fmt(Request.ApplicationPath.Replace("/", "")));
             }
 
         }

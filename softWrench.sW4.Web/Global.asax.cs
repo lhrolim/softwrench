@@ -1,4 +1,4 @@
-﻿using log4net;
+using log4net;
 using log4net.Config;
 using Microsoft.Web.Mvc;
 using Newtonsoft.Json.Serialization;
@@ -118,8 +118,16 @@ namespace softWrench.sW4.Web {
                 //error handling
             }
         }
-        protected void Application_BeginRequest(
-           object sender, EventArgs e) {
+        protected void Application_EndRequest(object sender, EventArgs e) {
+            var context = new HttpContextWrapper(Context);
+            if (Context.Response.StatusCode == 302 && Context.Response.RedirectLocation.Contains("/SignIn")) {
+                if (Request.AppRelativeCurrentExecutionFilePath != "~/Signout/SignOut") {
+                    if (Request.Params["HTTP_REFERER"] != null) {
+                        Context.Response.RedirectLocation += "&timeout=true";
+                    }
+                }
+
+            }
 
         }
         //
