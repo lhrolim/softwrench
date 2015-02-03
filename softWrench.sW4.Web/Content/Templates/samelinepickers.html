@@ -20,7 +20,11 @@
             </span>
         </div>
         <div ng-if="isMobile()" class="input-group">
-            <input type="date" class="form-control" ng-model="datamap[fieldMetadata.parameters['joinattribute'] + '_date']" />
+            <input type="date" class="form-control" ng-model="datamap[fieldMetadata.parameters['joinattribute'] + '_date']"
+                   data-date-time
+                   data-show-time="false"
+                   data-show-date="true"
+                   data-date-format="yyyy-MM-dd" />
             <span class="input-group-addon">
                 <i class="glyphicon glyphicon-calendar"></i>
             </span>
@@ -46,7 +50,11 @@
             </span>
         </div>
         <div ng-if="isMobile()" class="input-group">
-            <input type="time" class="form-control" ng-model="datamap[fieldMetadata.parameters['joinattribute'] + '_time']" />
+            <input type="time" class="form-control" ng-model="datamap[fieldMetadata.parameters['joinattribute'] + '_time']"
+                   data-date-time
+                   data-show-time="true"
+                   data-show-date="false"
+                   data-date-format="{{fieldMetadata.parameters['timeformat']}}" />
             <span class="input-group-addon">
                 <i class="glyphicon glyphicon-time"></i>
             </span>

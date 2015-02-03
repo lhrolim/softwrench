@@ -287,7 +287,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <application name="workorder" title="Work Order" entity="workorder">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
-        <!--<property key="oncrudsaveevent.validationservice" value="workorderservice.comvalidation"/>-->
       </properties>
 
       <schemas>
@@ -411,28 +410,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 
             <!-- Adding target start finish date-->
-            <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
-            <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
-            <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
-            <field attribute="actualfinish" hidden="true" attributeToServer="#notusedattribute"/>
+            <field attribute="targstartdate" hidden="true"/>
+            <field attribute="targcompdate" hidden="true"/>
+            <field attribute="actstart" hidden="true"/>
+            <field attribute="actfinish" hidden="true"/>
 
-            <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
-                            parameters="joinattribute=targetstart;">
+            <section id="targstartdate" resourcepath="/Content/Templates/samelinepickers.html"
+                            parameters="joinattribute=targstartdate;">
               <header label="Target Start Date:" displacement="sameline"/>
             </section>
 
-            <section id="targetFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                            parameters="joinattribute=targetfinish;">
+            <section id="targcompdate" resourcepath="/Content/Templates/samelinepickers.html"
+                            parameters="joinattribute=targcompdate;">
               <header label="Target Finish Date:" displacement="sameline"/>
             </section>
 
-            <section id="actualStart" resourcepath="/Content/Templates/samelinepickers.html"
-                            parameters="joinattribute=actualstart;">
+            <section id="actstart" resourcepath="/Content/Templates/samelinepickers.html"
+                            parameters="joinattribute=actstart;">
               <header label="Actual Start Date:" displacement="sameline"/>
             </section>
 
-            <section id="actualFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                            parameters="joinattribute=actualfinish;">
+            <section id="actfinish" resourcepath="/Content/Templates/samelinepickers.html"
+                            parameters="joinattribute=actfinish;">
               <header label="Actual Finish Date:" displacement="sameline"/>
             </section>
 
@@ -583,7 +582,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <field attribute="description" label="Description"  />
           <field attribute="longdescription_.ldtext" label="Details" name="description_longdescription" />
-          <event type="beforesubmit.onvalidation" service="workorderservice" method="comvalidation" />
         </detail>
       </schemas>
     </application>
