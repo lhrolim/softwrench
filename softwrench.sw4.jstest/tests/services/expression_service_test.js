@@ -19,7 +19,7 @@
             status: 'test',
             ticketid: '1000'
         });
-        var variables = expressionService.getVariables("@status == 'test' and @ticketid!=null");
+        var variables = expressionService.getVariables("@status == 'test' and @ticketid!=null", datamap, false);
         expect(Object.keys(variables).length).toBe(2);
         expect(variables['@status']).toBe('test');
         expect(variables['@ticketid']).toBe('1000');
