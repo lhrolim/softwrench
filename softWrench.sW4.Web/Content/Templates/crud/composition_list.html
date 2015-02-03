@@ -1,6 +1,6 @@
-<form class="form-horizontal">
+<div>
     <div class="context clearfix" data-class="commandbar" style="background: none; border-bottom: none" ng-show="!inline">
-
+        
         <compositiontoolbar position="compositiontop"
                             schema="compositionlistschema"
                             parentschema="parentschema"
@@ -133,24 +133,24 @@
                                         search-data="searchData"
                                         search-sort="searchSort"
                                         search-operator="searchOperator"
-                                        mode="{{mode}}"
-                                        />
+                                        mode="{{mode}}" />
                 </td>
             </tr>
         </table>
     </div>
 
     <div ng-if="newDetail" style="margin-top: 10px">
-
-        <new-item-input displayables="compositiondetailschema.displayables"
-                        elementid="inputComposition"
-                        schema="compositiondetailschema"
-                        datamap="selecteditem"
-                        association-options="associationOptions"
-                        cancelfn="cancelComposition()"
-                        savefn="save()"
-                        previousdata="parentdata"
-                        previousschema="parentschema" />
+        <form name="compositionform" >
+            <div ng-init="setForm(compositionform)"></div>
+            <new-item-input displayables="compositiondetailschema.displayables"
+                            elementid="inputComposition"
+                            schema="compositiondetailschema"
+                            datamap="selecteditem"
+                            association-options="associationOptions"
+                            cancelfn="cancelComposition()"
+                            savefn="save()"
+                            previousdata="parentdata"
+                            previousschema="parentschema" />
+        </form>
     </div>
-
-</form>
+</div>
