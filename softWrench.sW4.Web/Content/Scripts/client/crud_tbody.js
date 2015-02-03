@@ -59,12 +59,13 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                     }
                 }
 
-                if (propertyName == 'maxwidth') {
-                    if (highResolution) {
-                        return '135px';
-                    }
-                    return '100px';
-                }
+                //HAP-716 - SM - don't force maxwidth here, let th/td control width of column
+                //if (propertyName == 'maxwidth') {
+                //    if (highResolution) {
+                //        return '135px';
+                //    }
+                //    return '100px';
+                //}
                 return null;
             }
 
@@ -156,7 +157,7 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                         }else if (column.type == 'ApplicationFieldDefinition') {
                             html += "<div class='gridcolumnvalue'".format(columnst);
                             if (!isHidden) {
-                                html += buildStyle(minwidthDiv, maxwidthDiv, widthDiv,true);
+                                html += buildStyle(minwidthDiv, maxwidthDiv, widthDiv, true);
                             }
                             html += ">";
                             html += formattedText;

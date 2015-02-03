@@ -738,6 +738,14 @@ textarea .readonly {
         padding-top: 20px;
         padding-bottom: 40px;
     }
+
+    .affix {
+        display: block !important;
+    }
+
+    .col-side-bar {
+        display: none;
+    }
 }
 
 .fieldset-inside-section {
