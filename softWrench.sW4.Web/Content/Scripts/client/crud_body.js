@@ -291,6 +291,11 @@ app.directive('crudBody', function (contextService) {
                 var fromDatamap = selecteditem == null;
                 var fields = fromDatamap ? $scope.datamap.fields : selecteditem;
 
+                var scope = $scope;
+                if (parameters.scope) {
+                    scope = parameters.scope;
+                }
+
                 var schemaToSave = $scope.schema;
                 if (parameters.schema) {
                     schemaToSave = parameters.schema;
@@ -301,7 +306,7 @@ app.directive('crudBody', function (contextService) {
                 var transformedFields = angular.copy(fields);
 
                 var eventParameters = {
-                    originaldatamap: $scope.originalDatamap.fields,
+                    originaldatamap: scope.originalDatamap.fields,
                     'continue':function () {
                         $scope.validateSubmission(selecteditem, parameters, transformedFields, schemaToSave);
                     }
@@ -330,8 +335,13 @@ app.directive('crudBody', function (contextService) {
                     }
                 }
 
+                var scope = $scope;
+                if (parameters.scope) {
+                    scope = parameters.scope;
+                }
+
                 var eventParameters = {
-                    originaldatamap :$scope.originalDatamap.fields,
+                    originaldatamap : scope.originalDatamap.fields,
                     'continue': function () {
                         $scope.submitToServer(selecteditem, parameters, transformedFields,schemaToSave);
                     }
