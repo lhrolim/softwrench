@@ -22,6 +22,7 @@ module.exports = function (config) {
             '..//softWrench.sW4.Web//Content//Scripts//vendor/other/**/*.js',
             '..//softWrench.sW4.Web//Content//Scripts//vendor/ace/**/*.js',
             '..//softWrench.sW4.Web//Content//Scripts//client/**/*.js',
+            '..//softWrench.sW4.Web//Content//Templates/**/*.js',
             '..//softWrench.sW4.Web//Content//Scripts//customers/**/*.js',
             'angular_mock.js',
           'tests//**/*.js'
@@ -70,7 +71,7 @@ module.exports = function (config) {
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
         //    browsers: ['Chrome', 'IE', 'PhantomJS','Firefox'],
-        browsers: ['PhantomJS'],
+        browsers: ['Chrome'],
 
 
         // Continuous Integration mode

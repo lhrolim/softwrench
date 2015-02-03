@@ -136,7 +136,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         private static ISet<ApplicationEvent> ParseEvents(XElement element) {
             ISet<ApplicationEvent> result = new HashSet<ApplicationEvent>();
-            
+
             var events = element.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.EventsElement).ToList();
             foreach (var applicationEvent in events) {
                 result.Add(new ApplicationEvent {
@@ -206,7 +206,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var orientation = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionOrientationAttribute).ValueOrDefault((String)null);
             var renderer = ParseRendererNew(sectionElement.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.RendererElement),
                 attribute, FieldRendererType.SECTION, entityMetadata);
-            
+
             // Removing this code due to "Asset Specification" section in IMAC application, Update Schema
             /*if (displayables != null && displayables.Count > 0 && !String.IsNullOrWhiteSpace(resourcePath)) {
                 throw new InvalidOperationException("<section> cannot contains inner elements AND resourcePath attribute");
@@ -379,7 +379,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var hideExistingData = collectionProperties.Attribute(XmlMetadataSchema.ApplicationCompositionCollectionHideExistingDataAttribute).ValueOrDefault(false);
             var orderbyfield = collectionProperties.Attribute(XmlMetadataSchema.ApplicationCompositionCollectionOrderByField).ValueOrDefault((String)null);
             var prefilterFunction = collectionProperties.Attribute(XmlMetadataSchema.ApplicationCompositionCollectionPreFilterFunctionField).ValueOrDefault((String)null);
-            return new CompositionCollectionProperties(allowRemoval, allowInsertion, allowUpdate, listSchema, autoCommit, hideExistingData, orderbyfield,prefilterFunction);
+            return new CompositionCollectionProperties(allowRemoval, allowInsertion, allowUpdate, listSchema, autoCommit, hideExistingData, orderbyfield, prefilterFunction);
         }
 
 
@@ -394,7 +394,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         /// <param name="application">The `application` element containing the web schema to be deserialized.</param>
         /// <param name="idFieldName"></param>
         private IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> ParseSchemas(string applicationName, string entityName,
-            XElement application, string idFieldName,string userIdFieldName) {
+            XElement application, string idFieldName, string userIdFieldName) {
             var schemasElement = application.Elements().First(f => f.Name.LocalName == XmlMetadataSchema.SchemasElement);
             var xElements = schemasElement.Elements();
             var resultDictionary = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
@@ -438,7 +438,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                     }
                 }
                 var displayables = ParseDisplayables(applicationName, xElement, entityName);
-                var schemaProperties = ParseProperties(xElement);
+                var schemaProperties = ParseProperties(xElement,id);
                 ApplicationSchemaDefinition parentSchema = null;
                 if (parentSchemaValue != null) {
                     parentSchema = LookupParentSchema(id, applicationName, parentSchemaValue, platform, resultDictionary, displayables);
@@ -452,7 +452,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 ApplicationCommandSchema applicationCommandSchema = ParseCommandSchema(xElement);
                 resultDictionary.Add(new ApplicationMetadataSchemaKey(id, modeAttr, platformAttr),
                     ApplicationSchemaFactory.GetInstance(applicationName, title, id, stereotype, mode, platform,
-                    isAbstract, displayables, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName, userIdFieldName,unionSchema, ParseEvents(xElement)));
+                    isAbstract, displayables, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName, userIdFieldName, unionSchema, ParseEvents(xElement)));
             }
             return resultDictionary;
         }
@@ -505,7 +505,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 name = "_" + name;
             }
             var title = application.Attribute(XmlMetadataSchema.ApplicationTitleAttribute).Value;
-            var properties = ParseProperties(application);
+            var properties = ParseProperties(application, name);
             var entity = application.Attribute(XmlMetadataSchema.ApplicationEntityAttribute).Value;
             if (_isSWDB) {
                 entity = "_" + entity;
@@ -521,7 +521,7 @@ namespace softWrench.sW4.Metadata.Parsing {
              .UserIdAttribute
              .Name;
 
-            return new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName,userIdFieldName, properties, ParseSchemas(name, entity, application, idFieldName, userIdFieldName), ParseComponents(name, entity, application, idFieldName), service);
+            return new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, userIdFieldName, properties, ParseSchemas(name, entity, application, idFieldName, userIdFieldName), ParseComponents(name, entity, application, idFieldName), service);
         }
 
         private static IEnumerable<DisplayableComponent> ParseComponents(string name, string entity, XElement application, string idFieldName) {
@@ -571,14 +571,18 @@ namespace softWrench.sW4.Metadata.Parsing {
             return null;
         }
 
-        private static IDictionary<string, string> ParseProperties(XElement xElement) {
+        private static IDictionary<string, string> ParseProperties(XElement xElement,string schemaId) {
             IDictionary<string, string> propertiesDictionary = new Dictionary<string, string>();
             var properties = xElement.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.ApplicationPropertiesElement);
             if (properties == null) {
                 return new Dictionary<string, string>();
             }
             foreach (var property in properties.Elements()) {
-                propertiesDictionary.Add(property.Attribute(XmlMetadataSchema.ApplicationPropertyKeyAttribute).Value, property.Attribute(XmlMetadataSchema.ApplicationPropertyValueAttribute).Value);
+                var key = property.Attribute(XmlMetadataSchema.ApplicationPropertyKeyAttribute).Value;
+                if (propertiesDictionary.ContainsKey(key)) {
+                    throw new InvalidOperationException("property {0} already present for application/schema {1}".Fmt(key,schemaId));
+                }
+                propertiesDictionary.Add(key, property.Attribute(XmlMetadataSchema.ApplicationPropertyValueAttribute).Value);
             }
             return propertiesDictionary;
         }

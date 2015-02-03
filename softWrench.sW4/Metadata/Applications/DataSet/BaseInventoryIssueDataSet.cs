@@ -154,7 +154,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
         public override string ApplicationName() {
-            return "invissue";
+            return "keyinvissue";
         }
 
         public override string ClientFilter() {

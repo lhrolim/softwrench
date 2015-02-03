@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
 
@@ -291,6 +291,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="storeloc" hidden="true"/>
           <field attribute="binnum" hidden="true"/>
           <field attribute="item_.itemnum" hidden="true"/>
+          <field attribute="rotassetnum" hidden="true"/>
           <field attribute="itemnum" label="Item">
             <renderer type="default" />
           </field>
@@ -413,6 +414,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <removecommand id="save"/>
             </commandgroup>
           </commandbars>
+          <properties>
+            <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
+          </properties>
         </schema>
         
         <schema id="viewinvissuedetail" stereotype="detail" mode="input">
@@ -456,13 +460,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <removecommand id="save"/>
             </commandgroup>
           </commandbars>
+          <properties>
+            <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
+          </properties>
         </schema>
 
         <schema id="editinvissuedetail" stereotype="detail" mode="input" platform="web">
-          <properties>
-            <property key="detail.titleexpression" value="'Issue: {0} Enter BY: {1}'.format(@matusetransid, @enterby)"/>
-          </properties>
-          
           <section>
             <field attribute="matusetransid" hidden="true"/>
             <field attribute="enterby" label="Entered By" readonly="true"/>
@@ -520,6 +523,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <event type="beforesubmit.prevalidation" service="inventoryService" method="submitReturnTransformation"/>
           <properties>
             <property key="nextschema.schemaid" value="invIssueList"/>
+            <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
           </properties>
         </schema>
 
@@ -546,7 +550,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <field attribute="inventory_.item_.iskit" label="Kit" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
             </field>
-            <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
+            <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum" enableexpression="@inventory_.item_.rotating==0">
               <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
               <dataprovider prefilterfunction="FilterBins"/>
@@ -637,11 +641,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </schema>
       
         <schema id="newInvIssueDetail" mode="input" stereotype="detail">
-          <properties>
-            <property key="detail.titleid" value="Issue:"/>
-          </properties>
           <section>
-            <field attribute="matusetransid" hidden="true"/>
+            <field attribute="matusetransid" label="Issues and Returns: " hidden="true"/>
             <field attribute="issuetype" hidden="true" default="ISSUE"/>
             <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
             <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
@@ -661,9 +662,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <event type="afterchange" service="inventoryService" method="afterchangeinvissueitem"/>
             </association>
             <field attribute="inventory_.item_.itemtype" readonly="true" label="Item Type"/>
-            <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
+            <association target="rotassetnum" label="Rotating Asset" labelfield="rotatingasset_.description" dependantfields="itemnum,storeloc,siteid" extraprojectionvalues="binnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
               <dataprovider prefilterfunction="FilterAssets"/>
               <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_afterChangeRotAsset"/>
             </association>
             <field attribute="inventory_.item_.rotating" label="Rotating" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
@@ -717,7 +719,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </commandbars>
           <event type="onload" service="scannerdetectionService" method="initInvIssueDetailListener"/>
           <properties>
+        
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
+            <property key="detail.titleexpression" value="'Issues and Returns: {0}'.format(@matusetransid)"/>
           </properties>
           <event type="beforesubmit.onvalidation" service="inventoryService" method="validateInvIssue"/>
           <event type="beforesubmit.postvalidation" service="checkpointService" method="clearCheckpoints"/>
@@ -755,6 +759,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
           <properties>
             <property key="nextschema.schemaid" value="physicalcountList"/>
+            <property key="detail.titleexpression" value="'Inventory Balances ID: {0}'.format(@invbalancesid)"/>
           </properties>
           <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
           <field label="Item" attribute="itemnum" readonly="true"/>
@@ -812,6 +817,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
           <properties>
             <property key="nextschema.schemaid" value="physicaldeviationList"/>
+            <property key="detail.titleexpression" value="'Inventory Balances ID: {0}'.format(@invbalancesid)"/>
           </properties>
           <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
           <field label="Item" attribute="itemnum" readonly="true"/>
@@ -941,6 +947,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <command id="saveIssue" icon="fa fa-save" label="Submit" service="inventoryService" method="submitReservedInventoryIssue" position="left" parameters="schema,datamap"/>
             </commandgroup>
           </commandbars>
+          <properties>
+            <property key="detail.titleexpression" value="'Request: {0} Requested By: {1}'.format(@requestnum, @requestedby)"/>
+          </properties>
         </schema>
       </schemas>
     </application>
