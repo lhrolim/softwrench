@@ -3,7 +3,7 @@
  */
 var app = angular.module('sw_layout');
 
-app.factory('fileService', function ($rootScope, contextService,$timeout, i18NService) {
+app.factory('fileService', function ($rootScope, contextService) {
 
     return {
         download: function (url, successCallback, failCallback) {
