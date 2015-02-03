@@ -74,7 +74,7 @@ app.factory('formatService', function ($filter, i18NService, dispatcherService) 
             }
             
             var dateFormat;
-            if (field.rendererType == "datetime") {
+            if (field.rendererType == "datetime" || field.rendererParameters['formatter'] == "datetime") {
                 if (value != null) {
                     dateFormat = field.rendererParameters['format'];
                     if (dateFormat == null) {

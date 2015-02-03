@@ -350,9 +350,20 @@
 
         place: function () {
             if (this.isInline) return;
-            var zIndex = parseInt(this.element.parents().filter(function () {
-                return $(this).css('z-index') != 'auto';
-            }).first().css('z-index')) + 10;
+
+            //SM - SWWEB-881 - make sure zIndex is on top of everything (copied from bootstrap-datetimepicker.js)
+            //var zIndex = parseInt(this.element.parents().filter(function () {
+            //    return $(this).css('z-index') != 'auto';
+            //}).first().css('z-index')) + 10;
+            var index_highest = 0;
+            $('div').each(function () {
+                var index_current = parseInt($(this).css("zIndex"), 10);
+                if (index_current > index_highest) {
+                    index_highest = index_current;
+                }
+            });
+            var zIndex = index_highest + 10;
+
             var offset = this.component ? this.component.parent().offset() : this.element.offset();
             var height = this.component ? this.component.outerHeight(true) : this.element.outerHeight(true);
             this.picker.css({

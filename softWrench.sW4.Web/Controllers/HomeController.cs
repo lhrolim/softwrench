@@ -82,6 +82,7 @@ namespace softWrench.sW4.Web.Controllers {
             var physicaldeviationListScanOrder = _facade.Lookup<string>(ConfigurationConstants.PhysicaldeviationListScanOrder);
             var reservedMaterialsListScanOrder = _facade.Lookup<string>(ConfigurationConstants.ReservedMaterialsListScanOrder);
             var matrectransTransfersListScanOrder = _facade.Lookup<string>(ConfigurationConstants.MatrectransTransfersListScanOrder);
+            var invIssueListBeringScanOrder = _facade.Lookup<string>(ConfigurationConstants.InvIssueListBeringScanOrder);
 
             return new HomeConfigs() {
                 Logo = logoIcon,
@@ -100,6 +101,7 @@ namespace softWrench.sW4.Web.Controllers {
                 PhysicaldeviationListScanOrder = physicaldeviationListScanOrder,
                 ReservedMaterialsListScanOrder = reservedMaterialsListScanOrder,
                 MatrectransTransfersListScanOrder = matrectransTransfersListScanOrder,
+                InvIssueListBeringScanOrder = invIssueListBeringScanOrder,
             };
         }
 
