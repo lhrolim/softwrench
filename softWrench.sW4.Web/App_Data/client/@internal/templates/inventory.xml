@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
 
@@ -414,6 +414,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <removecommand id="save"/>
             </commandgroup>
           </commandbars>
+          <properties>
+            <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
+          </properties>
         </schema>
         
         <schema id="viewinvissuedetail" stereotype="detail" mode="input">
@@ -457,6 +460,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <removecommand id="save"/>
             </commandgroup>
           </commandbars>
+          <properties>
+            <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
+          </properties>
         </schema>
 
         <schema id="editinvissuedetail" stereotype="detail" mode="input" platform="web">
@@ -517,7 +523,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <event type="beforesubmit.prevalidation" service="inventoryService" method="submitReturnTransformation"/>
           <properties>
             <property key="nextschema.schemaid" value="invIssueList"/>
-            <property key="detail.titleexpression" value="'Issue: {0} Enter By: {1}'.format(@matusetransid, @enterby)"/>
+            <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
           </properties>
         </schema>
 
@@ -636,7 +642,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       
         <schema id="newInvIssueDetail" mode="input" stereotype="detail">
           <section>
-            <field attribute="matusetransid" hidden="true"/>
+            <field attribute="matusetransid" label="Issues and Returns: " hidden="true"/>
             <field attribute="issuetype" hidden="true" default="ISSUE"/>
             <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
             <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
@@ -715,6 +721,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <properties>
             <property key="detail.titleexpression" value="'Issues and Returns: {0}'.format(@matusetransid)"/>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
+            <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
           </properties>
           <event type="beforesubmit.onvalidation" service="inventoryService" method="validateInvIssue"/>
           <event type="beforesubmit.postvalidation" service="checkpointService" method="clearCheckpoints"/>
@@ -752,6 +759,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
           <properties>
             <property key="nextschema.schemaid" value="physicalcountList"/>
+            <property key="detail.titleexpression" value="'Inventory Balances ID: {0}'.format(@invbalancesid)"/>
           </properties>
           <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
           <field label="Item" attribute="itemnum" readonly="true"/>
@@ -809,6 +817,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <schema id="detail" stereotype="detail" title="Physical Count Entry">
           <properties>
             <property key="nextschema.schemaid" value="physicaldeviationList"/>
+            <property key="detail.titleexpression" value="'Inventory Balances ID: {0}'.format(@invbalancesid)"/>
           </properties>
           <field label="Inventory Balances ID" attribute="invbalancesid" requiredexpression="true" readonly="true" hidden="true"/>
           <field label="Item" attribute="itemnum" readonly="true"/>
@@ -938,6 +947,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <command id="saveIssue" icon="fa fa-save" label="Submit" service="inventoryService" method="submitReservedInventoryIssue" position="left" parameters="schema,datamap"/>
             </commandgroup>
           </commandbars>
+          <properties>
+            <property key="detail.titleexpression" value="'Request: {0} Requested By: {1}'.format(@requestnum, @requestedby)"/>
+          </properties>
         </schema>
       </schemas>
     </application>
