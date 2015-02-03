@@ -6,16 +6,23 @@
     }));
 
     it('should match variables by @', function () {
-        var variables = expressionService.getVariables("@status == 'test'");
-        expect(variables.length).toBe(1);
-        expect(variables[0]).toBe('status');
+        var datamap = ({
+            status: 'test'
+        });
+        var variables = expressionService.getVariables("@status == 'test'", datamap, false);
+        expect(Object.keys(variables).length).toBe(1);
+        expect(variables['@status']).toBe('test');
     });
 
     it('should match variables by @ 2', function () {
+        var datamap = ({
+            status: 'test',
+            ticketid: '1000'
+        });
         var variables = expressionService.getVariables("@status == 'test' and @ticketid!=null");
-        expect(variables.length).toBe(2);
-        expect(variables[0]).toBe('status');
-        expect(variables[1]).toBe('ticketid');
+        expect(Object.keys(variables).length).toBe(2);
+        expect(variables['@status']).toBe('test');
+        expect(variables['@ticketid']).toBe('1000');
     });
 
     
