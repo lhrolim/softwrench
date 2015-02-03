@@ -203,9 +203,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
 
             // set the columns width back
             $('tbody tr:eq(0) td', table).each(function (i, v) {
-                var width = thead[i];
-                var column = $(v);
-                column.width(width);
+                $(v).width(thead[i]);
             });
 
             log.debug('updating filter visibility');
