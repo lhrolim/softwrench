@@ -350,12 +350,17 @@ app.directive('crudBody', function (contextService) {
             $scope.submitToServer = function (selecteditem, parameters, transformedFields, schemaToSave) {
                 $rootScope.$broadcast("sw_beforesubmitpostvalidate_internal", transformedFields);
 
+                var scope = $scope;
+                if (parameters.scope) {
+                    scope = parameters.scope;
+                }
+
                 //some fields might require special handling
                 submitService.removeNullInvisibleFields(schemaToSave.displayables, transformedFields);
                 transformedFields = submitService.removeExtraFields(transformedFields, true, schemaToSave);
                 submitService.translateFields(schemaToSave.displayables, transformedFields);
                 associationService.insertAssocationLabelsIfNeeded(schemaToSave, transformedFields, $scope.associationOptions);
-                submitService.handleDatamapForMIF(schemaToSave, $scope.originalDatamap.fields, transformedFields);
+                submitService.handleDatamapForMIF(schemaToSave, scope.originalDatamap.fields, transformedFields);
 
                 if (parameters == undefined) {
                     parameters = {};
