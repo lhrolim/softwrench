@@ -313,13 +313,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                         returnTransformation(event, transformedData);
                         // Get the cost type
                         updateInventoryCosttype({ fields: transformedData }, 'storeloc');
-                        var scope = {
-                            schema: schema,
-                            associationOptions: null,
-                            originalDatamap: {
-                                fields: datamap,
-                            },
-                        }
+                        var originalDatamap = {
+                            fields: datamap,
+                        };
                         sessionStorage.mockclientvalidation = true;
                         returnConfirmation(event, transformedData, {
                             continue: function () {
@@ -335,7 +331,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                                     isComposition: false,
                                     refresh: true,
                                     selecteditem: transformedData,
-                                    scope: scope,
+                                    originalDatamap: originalDatamap,
                                 });
                               },
                         });
@@ -383,13 +379,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                         // Maximo 7.1 store the inventory cost type in a different table than maximo 7.5
                         // Using the afterchange item for maximo 7.1 to get the cost type and unit cost
                         invIssue_maximo71_afterChangeItem({ fields: transformedData });
-                        var scope = {
-                            schema: schema,
-                            associationOptions: null,
-                            originalDatamap: {
-                                fields: datamap,
-                            },
-                        }
+                        var originalDatamap = {
+                            fields: datamap,
+                        };
                         sessionStorage.mockclientvalidation = true;
                         returnConfirmation(event, transformedData, {
                             continue: function () {
@@ -403,7 +395,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                                     },
                                     isComposition: false,
                                     selecteditem: transformedData,
-                                    scope: scope,
+                                    originalDatamap: originalDatamap,
                                 });
                             },
                         });
