@@ -36,7 +36,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         //        private static readonly int? Infinite = null;
 
         internal enum FieldRendererType {
-            ASSOCIATION, COMPOSITION, OPTION, BASE,
+            ASSOCIATION, COMPOSITION, OPTION, BASE, SECTION
         }
 
         private static FieldRenderer ParseRendererNew(XElement renderer, string targetName, FieldRendererType ftype, EntityMetadata entity = null) {
@@ -177,7 +177,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             return new ApplicationTabDefinition(id, applicationName, label, displayables, toolTip, showExpression);
         }
 
-        private static IApplicationDisplayable ParseSection(string applicationName, XElement sectionElement, string entityName) {
+        private static IApplicationDisplayable ParseSection(string applicationName, XElement sectionElement, EntityMetadata entityMetadata) {
             var id = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionIdAttribute).ValueOrDefault((string)null);
             var @abstract = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionAbstractAttribute).ValueOrDefault(false);
             var resourcePath = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionResourcePathAttribute).ValueOrDefault((String)null);
@@ -186,15 +186,17 @@ namespace softWrench.sW4.Metadata.Parsing {
             var attribute = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionAttributeAttribute).ValueOrDefault((String)null);
             var showExpression = sectionElement.Attribute(XmlMetadataSchema.BaseDisplayableShowExpressionAtribute).ValueOrDefault("true");
             var toolTip = sectionElement.Attribute(XmlMetadataSchema.BaseDisplayableToolTipAtribute).ValueOrDefault(label);
-            var displayables = ParseDisplayables(applicationName, sectionElement, entityName);
+            var displayables = ParseDisplayables(applicationName, sectionElement, entityMetadata.Name);
             var header = ParseHeader(sectionElement);
             var orientation = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionOrientationAttribute).ValueOrDefault((String)null);
+            var renderer = ParseRendererNew(sectionElement.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.RendererElement),
+                attribute, FieldRendererType.SECTION, entityMetadata);
             // Removing this code due to "Asset Specification" section in IMAC application, Update Schema
             /*if (displayables != null && displayables.Count > 0 && !String.IsNullOrWhiteSpace(resourcePath)) {
                 throw new InvalidOperationException("<section> cannot contains inner elements AND resourcePath attribute");
             }*/
             return new ApplicationSection(id, applicationName, @abstract, label, attribute, resourcePath, parameters,
-                displayables, showExpression, toolTip, orientation, header);
+                displayables, showExpression, toolTip, orientation, header, renderer);
         }
 
         private static ApplicationHeader ParseHeader(XContainer schema) {
@@ -536,7 +538,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 return ParseField(applicationName, xElement, entityMetadata);
             }
             if (xName == XmlMetadataSchema.ApplicationSectionElement) {
-                return ParseSection(applicationName, xElement, entityName);
+                return ParseSection(applicationName, xElement, entityMetadata);
             }
             if (xName == XmlMetadataSchema.ApplicationTabElement) {
                 return ParseTab(applicationName, xElement, entityName);

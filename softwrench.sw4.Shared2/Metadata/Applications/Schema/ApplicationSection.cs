@@ -7,6 +7,7 @@ using softwrench.sW4.Shared2.Util;
 using System.Xml.Serialization;
 using System;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
+using softwrench.sW4.Shared2.Metadata.Applications.UI;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
     public class ApplicationSection : IApplicationAttributeDisplayable, IApplicationDisplayableContainer, IPCLCloneable {
@@ -36,8 +37,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private Boolean AreComponentsResolved = false;
         private string _parametersString;
+        private FieldRenderer _renderer;
 
         public string Qualifier { get; set; }
+
+        public FieldRenderer Renderer {
+            get { return _renderer; }
+            set { _renderer = value; }
+        }
 
         public ApplicationSection() {
 
@@ -46,7 +53,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public ApplicationSection(string id, string applicationName,
             bool @abstract, string label, string attribute, string resourcepath,
             string parameters, List<IApplicationDisplayable> displayables, string showExpression,
-            string toolTip, string orientation, ApplicationHeader header) {
+            string toolTip, string orientation, ApplicationHeader header, FieldRenderer renderer) {
             Id = id;
             ApplicationName = applicationName;
             Abstract = @abstract;
@@ -60,6 +67,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             ToolTip = toolTip;
             ValidateOrientation(orientation);
             Header = header;
+            _renderer = renderer;
         }
         protected virtual void ValidateOrientation(string orientation) {
 
@@ -96,7 +104,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 }
             }
             return new ApplicationSection(Id, ApplicationName, Abstract, Label, Attribute, Resourcepath, _parametersString,
-            resultDisplayables, ShowExpression, ToolTip, Orientation, Header);
+            resultDisplayables, ShowExpression, ToolTip, Orientation, Header, _renderer);
         }
 
         public List<IApplicationDisplayable> Displayables {
