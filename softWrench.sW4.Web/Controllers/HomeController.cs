@@ -64,7 +64,7 @@ namespace softWrench.sW4.Web.Controllers {
                 title = actItem.Title;
             } else {
                 FormsAuthentication.SignOut();
-                return Redirect("~");
+                return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f&forbidden=true".Fmt(Request.ApplicationPath.Replace("/", "")));
             }
             model = new HomeModel(url, title, FetchConfigs(), user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), ApplicationConfiguration.ClientName);
             return View(model);

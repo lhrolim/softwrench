@@ -1,4 +1,4 @@
-using log4net;
+﻿using log4net;
 using log4net.Config;
 using Microsoft.Web.Mvc;
 using Newtonsoft.Json.Serialization;
@@ -68,12 +68,11 @@ namespace softWrench.sW4.Web {
             if (ApplicationConfiguration.IsLocal()) {
                 //Log4NetUtil.ChangeLevel("DEFAULT_LOG", "DEBUG", null);
                 //Log4NetUtil.ChangeLevel("softwrench", "DEBUG", null);
-            }
-            else if(!ApplicationConfiguration.IsDev()) {
+            } else if (!ApplicationConfiguration.IsDev()) {
                 Log4NetUtil.ChangeLevel("MAXIMO.SQL", "WARN", null);
                 Log4NetUtil.ChangeLevel("SWDB.SQL", "WARN", null);
             }
-            
+
             Log.Info("*****Starting web app****************");
         }
 
@@ -121,32 +120,31 @@ namespace softWrench.sW4.Web {
         protected void Application_EndRequest(object sender, EventArgs e) {
             var context = new HttpContextWrapper(Context);
             if (Context.Response.StatusCode == 302 && Context.Response.RedirectLocation.Contains("/SignIn")) {
-                if (Request.AppRelativeCurrentExecutionFilePath != "~/Signout/SignOut") {
-                    if (Request.Params["HTTP_REFERER"] != null) {
-                        Context.Response.RedirectLocation += "&timeout=true";
-                    }
+                //302 ==> not allowed
+                //Context.Response.RedirectLocation.Contains("/SignIn") --> are we redirecting to login
+
+                //set in HomeController if the user has no permissions on the application
+                var isForbidden = Context.Response.RedirectLocation.Contains("forbidden=true");
+                if ("~/Signout/SignOut".Equals(Request.AppRelativeCurrentExecutionFilePath,
+                    StringComparison.CurrentCultureIgnoreCase)) {
+                    //this means that we´re coming from the logout action --> nothing to do
+                    return;
+                }
+                if (Request.Params["HTTP_REFERER"] == null){
+                    //the HTTP_REFERER is null on the first time the app loads. Removing this check would cause wrong behaviour on first time access
+                    return;
                 }
 
+                if (!isForbidden){
+                    //already marked as forbidden, let´s not mess the messages
+                    Context.Response.RedirectLocation += "&timeout=true";    
+                }
+                
+                
             }
 
         }
-        //
-        //        protected void Application_EndRequest(
-        //            object sender, EventArgs e) {
-        //            var session = ManagedWebSessionContext.Unbind(
-        //                System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory);
-        //            if (session != null && session.IsOpen) {
-        //                //                if (session.Transaction != null && session.Transaction.IsActive)
-        //                //                {
-        //                //                    session.Transaction.Rollback();
-        //                //                }
-        //                //                else
-        //                //                {
-        //                //                    session.Flush();
-        //                //                }
-        //                session.Close();
-        //            }
-        //        }
+
 
         /// <summary>
         /// this is used for allowing to place a user with more data then simply a username on the current request.

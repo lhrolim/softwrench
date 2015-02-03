@@ -30,7 +30,7 @@ namespace softWrench.sW4.Web.Controllers {
             _ldapManager = ldapManager;
         }
 
-        public ActionResult Index(bool timeout=false) {
+        public ActionResult Index(bool timeout=false,bool forbidden=false) {
             if (User.Identity.IsAuthenticated) {
                 Response.Redirect(FormsAuthentication.GetRedirectUrl(User.Identity.Name, false));
             }
@@ -43,6 +43,7 @@ namespace softWrench.sW4.Web.Controllers {
                 model = new LoginHandlerModel(true, IsHapagClient(), ClientName());
             }
             model.Inactivity = timeout;
+            model.Forbidden = forbidden;
             return View(model);
         }
 
