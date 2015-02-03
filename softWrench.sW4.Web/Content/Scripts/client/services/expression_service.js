@@ -191,8 +191,11 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
                             //(the variable's true reference upon being evaluated) and add
                             // the variable sub variable to our current variables list.
                             $.each(subVariables, function (key, value) {
+                                //Updates the realValue of current with the evaluation of its child nodes
                                 realVariable = realVariable.replace(key, value);
                                 
+                                //Deletes subVariable keys from resulting Dictionary if
+                                //onlyReturnRootNode flag is true
                                 if (variables[key] != undefined && variableValueFlag == true) {
                                     delete variables[key];
                                 }
@@ -282,6 +285,10 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
             return variables;
         },
 
+        //Extracts all of the signatures from the expression
+        //into a list. For example, 
+        //fn:service.method(parameter1).delete(parameter1, parameter2)
+        //will return two items, 'parameter1', and 'parameter1,parameter'.
         extractSignaturesFromExpression: function (expression) {
             
             var signatures = [];
