@@ -3,6 +3,13 @@
 app.factory('genericTicketService', function (alertService, associationService, fieldService) {
 
     return {
+
+        handleStatusChange:function(schema, datamap, parameters) {
+            if (datamap['status'] != parameters.originaldatamap['status']) {
+                datamap['#hasstatuschange'] = true;
+            }
+        },
+
         beforeChangeLocation: function (event) {
             if (event.fields['assetnum'] == null) {
                 //if no asset is selected we can proceed.

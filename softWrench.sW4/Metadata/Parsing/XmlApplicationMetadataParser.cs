@@ -393,7 +393,8 @@ namespace softWrench.sW4.Metadata.Parsing {
         /// <param name="entityName"></param>
         /// <param name="application">The `application` element containing the web schema to be deserialized.</param>
         /// <param name="idFieldName"></param>
-        private IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> ParseSchemas(string applicationName, string entityName, XElement application, string idFieldName) {
+        private IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> ParseSchemas(string applicationName, string entityName,
+            XElement application, string idFieldName,string userIdFieldName) {
             var schemasElement = application.Elements().First(f => f.Name.LocalName == XmlMetadataSchema.SchemasElement);
             var xElements = schemasElement.Elements();
             var resultDictionary = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
@@ -451,7 +452,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 ApplicationCommandSchema applicationCommandSchema = ParseCommandSchema(xElement);
                 resultDictionary.Add(new ApplicationMetadataSchemaKey(id, modeAttr, platformAttr),
                     ApplicationSchemaFactory.GetInstance(applicationName, title, id, stereotype, mode, platform,
-                    isAbstract, displayables, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName, unionSchema, ParseEvents(xElement)));
+                    isAbstract, displayables, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName, userIdFieldName,unionSchema, ParseEvents(xElement)));
             }
             return resultDictionary;
         }
@@ -515,8 +516,12 @@ namespace softWrench.sW4.Metadata.Parsing {
                 .Schema
                 .IdAttribute
                 .Name;
+            var userIdFieldName = metadata
+             .Schema
+             .UserIdAttribute
+             .Name;
 
-            return new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, properties, ParseSchemas(name, entity, application, idFieldName), ParseComponents(name, entity, application, idFieldName), service);
+            return new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName,userIdFieldName, properties, ParseSchemas(name, entity, application, idFieldName, userIdFieldName), ParseComponents(name, entity, application, idFieldName), service);
         }
 
         private static IEnumerable<DisplayableComponent> ParseComponents(string name, string entity, XElement application, string idFieldName) {

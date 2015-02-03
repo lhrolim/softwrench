@@ -1,11 +1,13 @@
 ﻿.container header {
-    background: #34a7e0 url(../../Images/kongsberg/header.jpg) no-repeat top left;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    background: #143444 url(../../Images/kongsberg/header.png) no-repeat top left;
 }
 
     .container header .branding {
         background: none;
     }
+
+@media all and (min-width: 1180px) {
+    .container header {
+        background: #143444 url(../../Images/kongsberg/header.png) no-repeat top right;
+    }
+}

@@ -23,6 +23,7 @@ app.factory('cmpComboDropdown', function ($rootScope, $timeout, i18NService) {
                     enableCaseInsensitiveFiltering: true,
                     disableIfEmpty:true
                 });
+                element.multiselect('refresh');
             }
         },
 

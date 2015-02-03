@@ -1,4 +1,4 @@
-﻿using softWrench.sW4.Data.Persistence.WS.Internal;
+using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Parsing;
 using softWrench.sW4.Metadata.Properties;
@@ -71,7 +71,7 @@ namespace softWrench.sW4.Util {
         private static string GetProfile() {
             if (_environment != null) {
                 return _environment;
-            }
+        }
             var declaredProfile = ConfigurationManager.AppSettings["profile"];
             _environment = declaredProfile ?? UnitTestProfile;
             return _environment;
@@ -239,7 +239,7 @@ namespace softWrench.sW4.Util {
                 var ext = MetadataProvider.GlobalProperty("allowedAttachmentExtensions");
                 if (!String.IsNullOrWhiteSpace(ext)) {
                     return ext.Split(',');
-                }
+                }               
                 return new[] { "pdf", "zip", "txt", "jpg", "bmp", "doc", "docx", "dwg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "html", "rtf" };
             }
         }
@@ -293,14 +293,14 @@ namespace softWrench.sW4.Util {
         public static Boolean IsUnitTest {
             get { return GetProfile() == UnitTestProfile; }
         }
-
+        
 
 
         public static long StartTimeMillis { get; set; }
 
 
         public static long GetStartTimeInMillis() {
-            return StartTimeMillis;
+            return SystemBuildDateInMillis;
         }
 
         public static Boolean IsLocal() {

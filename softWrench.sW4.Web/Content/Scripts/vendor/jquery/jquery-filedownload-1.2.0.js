@@ -196,7 +196,7 @@
                     deferred.resolve(url);
                 },
 
-                onFail: function (responseHtml, url) {
+                onFail: function (responseHtml, url,formURL) {
 
                     //remove the perparing message if it was specified
                     if ($preparingDialog) {
@@ -208,7 +208,7 @@
                         $("<div>").html(settings.failMessageHtml).dialog(settings.dialogOptions);
                     }
 
-                    settings.failCallback(responseHtml, url);
+                    settings.failCallback(responseHtml, url, formURL);
 
                     deferred.reject(responseHtml, url);
                 }
@@ -358,7 +358,8 @@
                             }
 
                             if (isFailure) {
-                                internalCallbacks.onFail(formDoc.body.innerHTML, fileUrl);
+                                // CHANGE: the url of the response, useful in case of redirect
+                                internalCallbacks.onFail(formDoc.body.innerHTML, fileUrl,formDoc.URL);
 
                                 cleanUp(true);
 

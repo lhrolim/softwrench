@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,6 +12,9 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
         private readonly bool _incorrectLogin;
         private readonly bool _isHapagClient;
         private readonly string _clientName;
+        public bool Inactivity { get; set; }
+        public bool Forbidden { get; set; }
+
 
         public LoginHandlerModel(bool isLoginEnabled, string loginMessage) {
             _isLoginEnabled = isLoginEnabled;
@@ -88,6 +91,9 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
                 return showRevision;
             }
         }
+
+        
+
         public override string ToString() {
             return string.Format("IsLoginEnabled: {0}, LoginMessage: {1}, IncorrectLogin: {2}, Version: {3}, Revision: {4}, Client Name: {5}", IsLoginEnabled, LoginMessage, IncorrectLogin, Version, Revision, ClientName);
         }

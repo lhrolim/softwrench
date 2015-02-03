@@ -205,17 +205,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="serviceaddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
           <field attribute="serviceaddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
           <!--COMSW 24 association field used for lazy lookup-->
-          <association label="Service Address" target="saddresscode" labelfield="serviceaddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
+          <association label="Service Address" target="saddresscode" labelfield="serviceaddress_.description" requiredexpression="@location == null" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
             <renderer type="lookup" />
           </association>
 
           <!-- SWWEB 173-->
           <!-- COMSW 35: Please keep location field as lookup, too many records -->
-          <association label="Location:" target="location" labelfield="location_.description" requiredexpression="@assetnum == null">
+          <association label="Location:" target="location" labelfield="location_.description" requiredexpression="@saddresscode == null">
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             <renderer type="lookup"/>
           </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" requiredexpression="@location == null">
+          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
@@ -260,7 +260,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" />
             </composition>
 
-            <composition relationship="commlog" label="Communication">
+            <composition relationship="commlog" label="Communications">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
               <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
@@ -345,7 +345,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section id="realfields"/>
         </schema>
 
-        <schema id="adetail" title="Work Order Detail" abstract="true" stereotype="detail" platform="web">
+        <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web">
           <field attribute="workorderid" hidden="true"/>
           <section id ="siteidsection"/>
           <section id="realfields">
@@ -460,7 +460,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <event type="beforesubmit.onvalidation" service="workorderservice" method="comvalidation" />
         </schema>
 
-        <schema parentschema="adetail" id="editdetail" title="Work Order Detail" platform="web">
+        <schema parentschema="adetail" id="editdetail" title="Work Order Details" platform="web">
           <section id="siteidsection">
             <field label="Site:" attribute="siteid" readonly="true"/>
             <association label="Status:" target="status" labelfield="synstatus.description">
@@ -468,7 +468,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </association>
           </section>
           <section id="compositions">
-            <composition relationship="worklog" label="Work Log">
+            <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="woactivity" label="WO Tasks">
@@ -480,7 +480,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <composition relationship="labtrans" label="Labor">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
-            <composition relationship="tooltrans" label="Tool">
+            <composition relationship="tooltrans" label="Tools">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="attachment" label="Attachments" >

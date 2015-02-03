@@ -27,6 +27,7 @@ app.directive('dateTime', function ($timeout, formatService) {
             attrs.language = (userLanguage != '') ? userLanguage : "en-US";
             var showMeridian = attrs.showAmpm == undefined ? undefined : attrs.showAmpm.toLowerCase() == "true";
             var istimeOnly = showTime && !showDate;
+            var isReadOnly = attrs.readonly == undefined ? false : (attrs.readonly);
 
             datetimeclassHandler(istimeOnly);
 
@@ -63,7 +64,8 @@ app.directive('dateTime', function ($timeout, formatService) {
                         startDate: attrs.startDate,
                         formatViewType: 'time',
                         startView: istimeOnly ? 1 : 2,
-                        maxView: istimeOnly ? 1 : 3
+                        maxView: istimeOnly ? 1 : 3,
+                        readonly: isReadOnly
                 });
                 }
                 else {
@@ -78,7 +80,8 @@ app.directive('dateTime', function ($timeout, formatService) {
                         autoclose: true,
                         language: attrs.language,
                         maxView: 3,
-                        showMeridian:false
+                        showMeridian: false,
+                        readonly: isReadOnly
                     });
                 }
             }

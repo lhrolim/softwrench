@@ -65,7 +65,7 @@ namespace softWrench.sW4.Web {
                 "~/Content/Scripts/vendor/jquery/jquery-ui-1.10.3.js",
                 "~/Content/Scripts/vendor/jquery/jquery-file-style.js",
                 "~/Content/Scripts/vendor/jquery/jquery-filedownload-1.2.0.js",
-                "~/Content/Scripts/vendor/jquery/jquery-fileupload-5.40.1.js",
+                "~/Content/Scripts/vendor/jquery/zjquery-fileupload-5.40.1.js",
                 "~/Content/Scripts/vendor/other/spin-min.js"
                 ));
 
@@ -136,6 +136,8 @@ namespace softWrench.sW4.Web {
             var scriptBundle = new ScriptBundle("~/Content/Scripts/client/client-js");
             bundles.Add(scriptBundle.IncludeDirectory(sharedPath, "*.js"));
             try {
+                // Wanted OTB to load as the base template and then additional js can be applied to overwrite the existing one
+                bundles.Add(scriptBundle.IncludeDirectory("~/Content/Scripts/customers/otb", "*.js"));
                 bundles.Add(scriptBundle.IncludeDirectory(clientPath, "*.js"));
             }
             catch {

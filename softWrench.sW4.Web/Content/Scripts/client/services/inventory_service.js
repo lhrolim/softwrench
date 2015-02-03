@@ -553,19 +553,19 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             });
         },
         afterchangeinvissueitem: function(parameters) {
-            parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
             parameters['fields']['lotnum'] = null;
             parameters['fields']['#curbal'] = null;
 
             var itemnum = parameters['fields']['itemnum'];
             if (nullOrEmpty(itemnum)) {
-                parameters['fields']['itemnum'] = null;
+                parameters['fields']['binnum'] = null;
                 parameters['fields']['unitcost'] = null;
                 parameters['fields']['inventory_.issueunit'] = null;
                 parameters['fields']['inventory_.itemtype'] = null;
+                
                 return;
             }
-            
+            parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
             doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
         },
 
@@ -757,12 +757,14 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
             // Create new matusetrans record
             var matusetransDatamap = {
+                matusetransid: null,
+                rowstamp: null,
                 refwo: datamap['wonum'],
                 assetnum: datamap['assetnum'],
                 issueto: datamap['issueto'],
                 location: datamap['oplocation'],
                 glaccount: datamap['glaccount'],
-                issuetype: datamap['issuetype'],
+                issuetype: 'ISSUE',
                 itemnum: datamap['itemnum'],
                 storeloc: datamap['location'],
                 binnum: datamap['invbalances_.binnum'],
@@ -771,9 +773,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 unitcost: datamap['unitcost'],
                 issueunit: datamap['issueunit'],
                 enterby: datamap['enterby'],
-                itemtype: datamap['itemtype'],
+                itemtype: datamap['item_.itemtype'],
                 siteid: datamap['siteid'],
-                costtype: datamap['costtype']
+                costtype: datamap['inventory_.costtype']
             };
             // Post the new matusetrans record
             var jsonString = angular.toJson(matusetransDatamap);
@@ -823,15 +825,16 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             });
         },
 
-        onloadReservation: function(schema, datamap) {
+        onloadReservation: function (scope, schema, datamap) {
+            if (datamap.fields) {
+                datamap = datamap.fields;
+            }
             var parameters = {
                 fields: datamap
             };
             updateInventoryCosttype(parameters);
             datamap['#issueqty'] = datamap['reservedqty'];
             datamap['#issuetype'] = "ISSUE";
-            var user = contextService.getUserData();
-            datamap['#enterby'] = user.login.toUpperCase();
             var searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 siteid: parameters['fields']['siteid'],
@@ -851,8 +854,14 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
         invIssue_afterChangeBin: function (parameters) {
             if (parameters['fields']['binbalances_']) {
-                parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
-                parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+                if (nullOrEmpty(parameters['fields']['binnum'])) {
+                    parameters['fields']['binbalances_.binnum'] = null;
+                    parameters['fields']['binbalances_.lotnum'] = null;
+                    parameters['fields']['binbalances_.curbal'] = null;
+                } else {
+                    parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
+                    parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+                }
                 return;
             };
             // If the binbalances_ record is not filled but the binnum is
@@ -874,12 +883,24 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     var curbal = fields['curbal'];
                     parameters['fields']['lotnum'] = lotnum;
                     parameters['fields']['#curbal'] = curbal == null ? 0 : curbal;
+                    parameters['fields']['binbalances_.lotnum'] = lotnum;
+                    parameters['fields']['binbalances_.curbal'] = curbal == null ? 0 : curbal;
                 });
             } else {
                 parameters['fields']['lotnum'] = null;
                 parameters['fields']['#curbal'] = null;
             }
         },
+
+        invIssueAfterChangeCurbal: function (parameters) {
+            parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+            parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
+        },
+
+        invIssueAfterChangeLotnum: function (parameters) {
+            parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
+            parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
+        }
 
     };
 });

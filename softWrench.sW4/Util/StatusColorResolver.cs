@@ -55,6 +55,21 @@ namespace softWrench.sW4.Util {
                 {"sched", "blue"},
                 {"slahold", "blue"},
                 {"wappr", "orange"},
+                {"active", "orange"},
+                {"cantreprod", "yellow"},
+                {"waitoninfo", "yellow"},
+                {"wont fix", "red"},
+                {"wontimplnt", "red"},
+                {"wontrespnd", "red"},
+                {"postponed", "red"},
+                {"fixed", "blue"},
+                {"implemented", "green"},
+                {"appfm", "blue"},
+                {"applm", "blue"},
+                {"by design", "blue"},
+                {"duplicate", "blue"},
+                {"completed", "green"},
+                {"spam", "red"},
                 {"wsch", "orange"}
             };
         }

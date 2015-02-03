@@ -47,7 +47,7 @@
                        value="{{getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap)}}" />
             </div>
             <!--SM - 09-24 - SWWEB-441 Change column class
-        ng-class="getValueColumnClass(fieldMetadata)"-->
+            ng-class="getValueColumnClass(fieldMetadata)"-->
             <div ng-if="!fieldMetadata.isReadOnly"
                  ng-show="fieldMetadata.attribute!=schema.idFieldName"
                  ng-switch on="fieldMetadata.rendererType"
@@ -187,18 +187,18 @@
                     <div class="col-lg-12">
                         <div class="input-group">
                             <input type="text" placeholder="{{fieldMetadata.label}}" class="form-control"
-                                ng-model="lookupAssociationsCode[fieldMetadata.attribute]"
-                                ng-change="lookupCodeChange(fieldMetadata)"
-                                ng-blur="lookupCodeBlur(fieldMetadata)"
-                                ng-enabled="isSelectEnabled(fieldMetadata)"
-                                ng-enter="showCustomModal(fieldMetadata, schema, datamap)"
-                                rel="tooltip" data-original-title="Enter {{fieldMetadata.label}} id to lookup " />
-                        <span class="input-group-addon last" ng-click="showCustomModal(fieldMetadata, schema, datamap)"
-                                rel="tooltip" data-original-title="Open the lookup popup" ng-enabled="isSelectEnabled(fieldMetadata)">
-                            <i class="glyphicon glyphicon-search" ng-enabled="isSelectEnabled(fieldMetadata)"
-                                ng-style="{cursor: isSelectEnabled(fieldMetadata)?'pointer':'auto' }"></i>
-                        </span>
-                        <div></div><!--stop addon from moving on hover-->
+                                   ng-model="lookupAssociationsCode[fieldMetadata.attribute]"
+                                   ng-change="lookupCodeChange(fieldMetadata)"
+                                   ng-blur="lookupCodeBlur(fieldMetadata)"
+                                   ng-enabled="isSelectEnabled(fieldMetadata)"
+                                   ng-enter="showCustomModal(fieldMetadata, schema, datamap)"
+                                   rel="tooltip" data-original-title="Enter {{fieldMetadata.label}} id to lookup " />
+                            <span class="input-group-addon last" ng-click="showCustomModal(fieldMetadata, schema, datamap)"
+                                  rel="tooltip" data-original-title="Open the lookup popup" ng-enabled="isSelectEnabled(fieldMetadata)">
+                                <i class="glyphicon glyphicon-search" ng-enabled="isSelectEnabled(fieldMetadata)"
+                                   ng-style="{cursor: isSelectEnabled(fieldMetadata)?'pointer':'auto' }"></i>
+                            </span>
+                            <div></div><!--stop addon from moving on hover-->
                         </div>
                     </div>
                     <input type="hidden" ng-model="datamap[fieldMetadata.target]" />
@@ -220,8 +220,8 @@
                               ng-init="initField(fieldMetadata)" />
                 </div>
                 <div ng-switch-when="richtext">
-                    <div class="richtext image-holder" 
-                         text-angular="text-angular" name="{{fieldMetadata.attribute}}" ng-model="datamap[fieldMetadata.attribute]" ta-disabled="!isSelectEnabled(fieldMetadata)" ></div>
+                    <div class="richtext image-holder"
+                         text-angular="text-angular" name="{{fieldMetadata.attribute}}" ng-model="datamap[fieldMetadata.attribute]" ta-disabled="!isSelectEnabled(fieldMetadata)"></div>
                 </div>
                 <div ng-switch-when="upload">
                     <div class="input-group" id="{{fieldMetadata.attribute}}">
@@ -238,7 +238,7 @@
                     </div>
                 </div>
                 <div ng-switch-when="multipleupload">
-                    <div class="input-group" id="{{fieldMetadata.attribute}}" >
+                    <div class="input-group" id="{{fieldMetadata.attribute}}">
                         <div class="input-group-addon fileUpload" data-upload="files">
                             <input name="{{fieldMetadata.attribute}}"
                                    id="uploadBtn"
@@ -249,7 +249,7 @@
                                    multiple="multiple" />
                         </div>
                     </div>
-                    </div>
+                </div>
                 <div ng-switch-when="screenshot">
                     <div ng-show="!isIE()" id="imgHolder_{{fieldMetadata.attribute}}" name="{{fieldMetadata.attribute}}" contenteditable='true' class="form-control image-holder"></div>
                     <iframe id="richTextBox_{{fieldMetadata.attribute}}" ng-show="isIE()" ng-src="{{contextPath('/UserControls/RichTextBox.aspx')}}"
@@ -338,12 +338,13 @@
                                     <input type="hidden" ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control" />
                                 </div>
                                 <div ng-switch-default>
-                                    <input type="text"
+                                    <input type="{{getInputType(fieldMetadata)}}"
                                            ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control"
                                            data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
                                            maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
                                            placeholder="{{fieldMetadata.rendererParameters['placeholder']}}"
-                                           ng-init="initField(fieldMetadata)" />
+                                           ng-init="initField(fieldMetadata)"
+                                           dynamic-name="fieldMetadata.attribute" />
                                 </div>
                             </div>
                         </div>
@@ -353,7 +354,7 @@
         </fieldset>
     </div>
     <div ng-if="haslookupModal(schema)">
-        <lookup-modal-wrapper lookup-obj="lookupModalSearch"
+        <lookup-modal-wrapper lookup-obj="lookupObj"
                               lookup-associations-code="lookupAssociationsCode"
                               lookup-associations-description="lookupAssociationsDescription"
                               association-options="associationOptions"

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using softWrench.sW4.Web.SPF;
 
 namespace softWrench.sW4.Web.Controllers {
     /// <summary>
     /// taken from http://johnculviner.com/jquery-file-download-plugin-for-ajax-like-feature-rich-file-downloads/
     /// </summary>
+    [Authorize]
     public abstract class FileDownloadController : Controller {
 
         private const string FILE_DOWNLOAD_COOKIE_NAME = "fileDownload";

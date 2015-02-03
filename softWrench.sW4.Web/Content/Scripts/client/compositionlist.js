@@ -173,10 +173,13 @@ app.directive('compositionList', function (contextService,formatService) {
             mode: '@'
         },
 
-        controller: function ($scope, $log, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService,
+        controller: function ($scope, $log, $filter, $injector, $http,$attrs, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
             expressionService, $timeout, modalService, redirectService, eventService, iconService) {
 
+            $scope.setForm = function (form) {
+                $scope.crudform = form;
+            };
 
             function init() {
                 if (!$scope.compositionschemadefinition.schemas) {
@@ -422,8 +425,8 @@ app.directive('compositionList', function (contextService,formatService) {
                     log.warn('autocommit=false is yet to be implemented for compositions');
                     return;
                 }
-
-                var validationErrors = validationService.validate($scope.compositionschemadefinition.schemas.detail,$scope.compositionschemadefinition.schemas.detail.displayables, selecteditem);
+                var detailSchema = $scope.compositionschemadefinition.schemas.detail;
+                var validationErrors = validationService.validate(detailSchema, detailSchema.displayables, selecteditem, $scope.crudform.$error);
                 if (validationErrors.length > 0) {
                     //interrupting here, can´t be done inside service
                     return;

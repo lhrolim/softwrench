@@ -84,6 +84,8 @@
           })
           .emulateTransitionEnd(300) :
         that.$element.focus().trigger(e)
+
+      that.$element.find('.modal-body').animate({ scrollTop: 0 }, 0); //SWWEB-883 scroll modal back to the top
     })
   }
 

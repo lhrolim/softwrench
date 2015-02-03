@@ -431,13 +431,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <!--<field attribute="inventory_.item_.iskit" label="Kit" readonly="true">
               <renderer type="default" params="formatter=numberToBoolean"/>
             </field>-->
-            <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
+            <association label="Bin" target="binnum" forcedistinctoptions="false" labelfield="binbalances_.binnum" hideDescription="true" dependantfields="itemnum" extraprojectionvalues="curbal,lotnum,binnum">
               <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
               <event type="afterchange" service="inventoryService" method="invIssue_afterChangeBin"/>
               <dataprovider prefilterfunction="FilterBins"/>
             </association>
-            <field label="Lot" attribute="lotnum" readonly="true"/>
-            <field attribute="#curbal" label="Current Balance" readonly="true"/>
+            <field label="Lot" attribute="binbalances_.lotnum" readonly="true">
+              <event type="afterchange" service="inventoryService" method="invIssueAfterChangeLotnum"/>
+            </field>
+            <field attribute="binbalances_.curbal" label="Current Balance" readonly="true">
+              <event type="afterchange" service="inventoryService" method="invIssueAfterChangeCurbal"/>
+            </field>
             <field attribute="quantity" label="Issue Quantity" default="1" requiredexpression="true">
               <renderer type="numericinput" params="min=1;"/>
             </field>
@@ -472,6 +476,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </commandgroup>
           </commandbars>
           <event type="onload" service="scannerdetectionService" method="initInvIssueDetailListener"/>
+          <event type="beforesubmit.postvalidation" service="checkpointService" method="clearCheckpoints"/>
           <properties>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
           </properties>

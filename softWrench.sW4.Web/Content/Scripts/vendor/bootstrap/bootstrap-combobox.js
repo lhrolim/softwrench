@@ -129,17 +129,41 @@
 
     , updater: function (item) {
         return item;
-    }
+    },
+
+        determineTop: function (position) {
+
+            var maxHeight = this.$menu.css('max-height');
+            var height = this.$menu.height();
+            if (maxHeight) {
+                maxHeight = maxHeight.replace('px', '');
+            }
+            if (maxHeight < height) {
+                height = maxHeight;
+            }
+
+            if (this.$element.offset().top + height > document.body.scrollHeight) {
+                //https://controltechnologysolutions.atlassian.net/browse/HAP-847
+                //if the menu would cause a scrollbar expansion open it on top instead
+                //12 stands for padding, margin, etc
+                return -height - 12;
+            }
+
+            return position.top + position.height;
+        }
+
 
     , show: function () {
         var pos = $.extend({}, this.$element.position(), {
             height: this.$element[0].offsetHeight
         });
+        var top = this.determineTop(pos);
+
 
         this.$menu
           .insertAfter(this.$element)
           .css({
-              top: pos.top + pos.height
+              top: top
           , left: pos.left,
               width: pos.width
           })

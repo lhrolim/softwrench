@@ -47,6 +47,12 @@
   <target name="test">
     <delete dir="${OutputDir}/testresults" failonerror="false"/>
     <delete file="TestResults.trx"/>
+
+    <exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
+      <arg line="start" />
+      <arg value="--browsers=PhantomJS"/>
+    </exec>
+    
     <if propertyexists="MsTestPath">
       <exec program="${MsTestPath}">
         <arg line="/testcontainer:${TestPath}" />
@@ -62,6 +68,7 @@
       </exec>
     </ifnot>
 
+
   </target>
 
   <target name="mkdir">
@@ -73,7 +80,7 @@
 
     <mkdir dir="${OutputDir}/deploy"/>
     <mkdir dir="${OutputDir}/deploy/bin"/>
-   
+
   </target>
 
   <target name="copydlls" depends="mkdir">
@@ -97,7 +104,7 @@
         <include name="**/*" />
       </fileset>
     </copy>
-      
+
     <copy todir="${OutputDir}/deploy/App_Data/Client/@internal">
       <fileset basedir="../softWrench.sW4.Web/App_Data/Client/@internal">
         <include name="*.*" />
@@ -149,7 +156,7 @@
     </attrib>
   </target>
 
-  
+
 
   <target name="setclient">
 
@@ -167,9 +174,9 @@
   </target>
 
   <target name="zip" depends="copydlls,setclient,setenv">
-    
+
     <tstamp property="build.date" pattern="yyyy_MM_dd_hhmm" verbose="true" />
-      
+
     <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/sw4_${build.date}.zip">
       <fileset basedir="${OutputDir}/deploy/">
         <include name="**/*" />

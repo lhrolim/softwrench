@@ -47,7 +47,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
         {
             var prlines = (IEnumerable<CrudOperationData>)crudDataEntity.GetRelationship("prline");
             
-            var recordKey = crudDataEntity.Id;
             var user = SecurityFacade.CurrentUser();
             w.CloneArray((IEnumerable<CrudOperationData>)crudDataEntity.GetRelationship("prline"), sr, "PRLINE",
                 delegate(object integrationObject, CrudOperationData crudData)

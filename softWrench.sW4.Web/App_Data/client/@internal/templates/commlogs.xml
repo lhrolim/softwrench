@@ -111,12 +111,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
           </field>
           <field attribute="orgobject" label="Origination"/>
-          <field attribute="sendto" label="To:" requiredexpression="true"/>
+          <field attribute="sendto" label="To:" requiredexpression="true">
+            <renderer type="email"/>
+          </field>
           <!--<association label="To:" target="sendto" labelfield="email_.emailaddress">
             <renderer type="autocompleteserver"/>
           </association>-->
-          <field attribute="cc" label="Cc:"/>
-          <field attribute="sendfrom" label="From:" requiredexpression="true" />
+          <field attribute="cc" label="Cc:">
+            <renderer type="email"/>
+          </field>
+
+          <field attribute="sendfrom" label="From:" requiredexpression="true" >
+            <renderer type="email"/>
+          </field>
           <field attribute="subject" label="Subject:" requiredexpression="true"/>
           <field attribute="message" label="Message:" >
             <renderer type="richtext"/>

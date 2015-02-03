@@ -533,7 +533,7 @@
     <Content Include="Content\Images\icon-background-select.png" />
     <Content Include="Content\Images\icon-combobox.png" />
     <Content Include="Content\Images\icon-opendetails.png" />
-    <Content Include="Content\Images\kongsberg\header.jpg" />
+    <Content Include="Content\Images\kongsberg\header.png" />
     <Content Include="Content\Images\kongsberg\signin.jpg" />
     <Content Include="Content\Images\logo-main.png" />
     <Content Include="Content\Images\manchester\branding.png" />
@@ -549,6 +549,9 @@
     <Content Include="Content\Images\pagination-previous.png" />
     <Content Include="Content\Images\scottsdale\scottsdale.png" />
     <Content Include="Content\Images\signin.jpg" />
+    <Content Include="Content\Images\southern\branding.png" />
+    <Content Include="Content\Images\southern\logo-main.png" />
+    <Content Include="Content\Images\southern\name-softwrench.png" />
     <Content Include="Content\Images\tree-leaf.png" />
     <Content Include="Content\Images\tree-node-collapsed.png" />
     <Content Include="Content\Images\tree-node-expanded.png" />
@@ -562,6 +565,7 @@
     <Content Include="Content\Scripts\client\services\checkpoint_service.js" />
     <Content Include="Content\Scripts\client\services\matusetrans_service.js" />
     <Content Include="Content\Scripts\client\services\tooltrans_service.js" />
+    <Content Include="Content\Scripts\customers\kongsberg\sr_service.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angulartreeview.js" />
     <Compile Include="Controllers\Application\ApplicationController.cs" />
     <Compile Include="Controllers\AttachmentController.cs" />
@@ -660,6 +664,7 @@
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.js" />
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.min.js" />
     <Content Include="Content\Scripts\vendor\angular\bindonce.js" />
+    <Content Include="Content\Scripts\vendor\jquery\jquery-ui-1.10.3.js" />
     <Content Include="Content\Scripts\vendor\other\bootbox.js" />
     <Content Include="Content\Scripts\vendor\other\bootbox.min.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-multiselect.js" />
@@ -759,8 +764,7 @@
     <Content Include="Content\Scripts\customers\shared\genericticket_service.js" />
     <Content Include="Content\Scripts\customers\shared\wobatch_service.js" />
     <Content Include="Content\Scripts\vendor\jquery\jquery-filedownload-1.2.0.js" />
-    <Content Include="Content\Scripts\vendor\jquery\jquery-fileupload-5.40.1.js" />
-    <Content Include="Content\Scripts\vendor\jquery\jquery.iframe-transport.js" />
+    <Content Include="Content\Scripts\vendor\jquery\z_jquery-fileupload-5.40.1.js" />
     <Content Include="Content\Scripts\client\util\responsive.js" />
     <Content Include="Content\Scripts\vendor\other\angular-fileUpload.js" />
     <Content Include="Content\Scripts\vendor\other\jquery.scannerdetection.js" />
@@ -797,7 +801,7 @@
     <Content Include="Content\Images\softwrench-logo-small.gif" />
     <Content Include="Content\Images\start-icon.png" />
     <Content Include="Content\Scripts\vendor\angular\angular.js" />
-    <Content Include="Content\Scripts\vendor\angular\angular-min.js" />
+    <None Include="Content\Scripts\vendor\angular\angular-min.jsa" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-combobox.js" />
     <Content Include="Content\Scripts\client\ajax_interceptor.js" />
     <Content Include="Content\Scripts\client\crud_output.js" />
@@ -839,6 +843,7 @@
     <Content Include="Content\styles\gric\signin.css" />
     <Content Include="Content\styles\gric\site.css" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
+    <Content Include="Content\styles\southern\branding.css" />
     <Content Include="Content\styles\tva\signin.css" />
     <Content Include="Content\styles\tva\site.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
@@ -1133,8 +1138,6 @@
     <Content Include="Content\Scripts\client\user.js" />
     <Content Include="Content\Scripts\client\userprofile.js" />
     <Content Include="Content\Scripts\client\role.js" />
-    <None Include="Content\Scripts\vendor\jquery\jquery-1.8.2.js.bck" />
-    <None Include="Content\Scripts\vendor\jquery\jquery-1.8.2.intellisense.js" />
     <Content Include="Content\Scripts\vendor\angular\i18n\angular-locale_af-na.js" />
     <Content Include="Content\Scripts\vendor\angular\i18n\angular-locale_af-za.js" />
     <Content Include="Content\Scripts\vendor\angular\i18n\angular-locale_af.js" />
@@ -1411,17 +1414,10 @@
     <Content Include="Content\Scripts\vendor\angular\i18n\angular-locale_zh.js" />
     <Content Include="Content\Scripts\vendor\angular\i18n\angular-locale_zu-za.js" />
     <Content Include="Content\Scripts\vendor\angular\i18n\angular-locale_zu.js" />
-    <Content Include="Content\Scripts\vendor\jquery\jquery-1.8.2.js" />
-    <Content Include="Content\Scripts\vendor\jquery\jquery-1.8.2.min.js" />
-    <None Include="Content\Scripts\vendor\jquery\jquery-2.0.3.intellisense.js" />
+    <None Include="Content\Scripts\vendor\jquery\jquery-2.0.3.intellisense.jsa" />
     <Content Include="Content\Scripts\vendor\jquery\jquery-2.0.3-max.js" />
-    <Content Include="Content\Scripts\vendor\jquery\jquery-2.0.3.min.js" />
-    <Content Include="Content\Scripts\vendor\jquery\jquery.tmpl.min.js" />
-    <Content Include="Content\Scripts\vendor\jquery\jquery.unobtrusive-ajax.js" />
-    <Content Include="Content\Scripts\vendor\jquery\jquery.unobtrusive-ajax.min.js" />
+    <None Include="Content\Scripts\vendor\jquery\jquery-2.0.3.min.jsa" />
     <Content Include="Content\Scripts\vendor\jquery\jquery-file-style.js" />
-    <Content Include="Content\Scripts\vendor\jquery\jquery-2.0.3.js" />
-    <Content Include="Content\Scripts\vendor\jquery\jquery-ui-1.10.3.js" />
     <Content Include="Content\Scripts\vendor\other\knockout-2.2.0.debug.js" />
     <Content Include="Content\Scripts\vendor\other\knockout-2.2.0.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\modal.js" />
@@ -1470,7 +1466,6 @@
     <Content Include="Content\Images\orderedList7.png" />
     <Content Include="Content\Images\orderedList8.png" />
     <Content Include="Content\Images\orderedList9.png" />
-    <Content Include="Content\Scripts\_references.js" />
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
     </Content>

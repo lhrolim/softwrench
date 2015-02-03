@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('columnWidths', function ($log) {
+app.directive('columnWidths', function ($log, $timeout) {
     var log = $log.getInstance('sw4.columnwidthcss');
 
     return {
@@ -10,6 +10,9 @@ app.directive('columnWidths', function ($log) {
             //look for user changing modules
             attr.$observe('columns', function (value) {
 
+                $timeout(function () {
+                   
+           
                 //convert string column data to object column data
                 var json = angular.fromJson(value);
                 log.debug('Raw Data', json);
@@ -86,13 +89,15 @@ app.directive('columnWidths', function ($log) {
                 css += getViewRules(widths, 'widthLG', '1px', 'print', attr);
 
                 if (css) {
-                    //log.debug(css);
+                    log.debug(css);
+                    log.debug(attr.applicationname);
 
                     //output css rules to html
                     element.html(css);
                 } else {
                     log.debug('No CSS Generated');
                 }
+                }, 0, false);
             });
         }
     }
