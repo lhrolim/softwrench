@@ -93,6 +93,13 @@ namespace softWrench.sW4.Data.Configuration {
                 Visible = false,
             });
 
+            facade.Register(ConfigurationConstants.InvIssueListBeringScanOrder, new PropertyDefinition() {
+                Description = "Inv issue grid filter field scan order",
+                DataType = "string",
+                DefaultValue = "assetnum",
+                Visible = false,
+            });
+
             facade.Register(ConfigurationConstants.NewInvIssueDetailScanOrder, new PropertyDefinition() {
                 Description = "Inv issue detail field scan order",
                 DataType = "string",
