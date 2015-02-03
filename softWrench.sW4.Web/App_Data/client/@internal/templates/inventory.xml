@@ -721,7 +721,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <properties>
         
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
-            <property key="detail.titleexpression" value="'Issues and Returns: {0}'.format(@matusetransid)"/>
+              <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
           </properties>
           <event type="beforesubmit.onvalidation" service="inventoryService" method="validateInvIssue"/>
           <event type="beforesubmit.postvalidation" service="checkpointService" method="clearCheckpoints"/>
