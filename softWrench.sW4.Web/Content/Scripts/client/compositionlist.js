@@ -72,9 +72,6 @@ app.directive('newItemInput', function ($compile, fieldService,associationServic
         template: "<div></div>",
         link: function (scope, element, attrs) {
             if (angular.isArray(scope.displayables)) {
-                scope.testFunction = function(input) {
-                    return input.replace('T', 'J');
-                };
                 fieldService.fillDefaultValues(scope.displayables, scope.datamap, scope);
                 element.append(
                     "<crud-input schema='schema'" +

@@ -215,22 +215,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             return;
         },
 
-        addition: function (var1, var2) {
-            if (var1 == "undefined") {
-                var1 = 0;
-            }
-            if (var2 == "undefined") {
-                var2 = 0;
-            }
-            return parseInt(var1) + parseInt(var2);
-        },
-
-        getint: function (string, ishouldbenull) {
-            
-            return 5;
-        },
-        
-
         submitReturnConfirmation: function (event, datamap, parameters) {
             var returnQty = datamap['#quantityadj'];
             var item = datamap['itemnum'];
