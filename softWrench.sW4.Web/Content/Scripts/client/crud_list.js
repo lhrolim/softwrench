@@ -227,6 +227,7 @@ app.directive('crudList', function (contextService) {
                         }
                     } else {
                         $scope.searchData = searchData;
+                        $scope.advancedsearchdata = null;
                     }
                     pagetogo = 1;
                 }
