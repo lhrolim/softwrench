@@ -51,18 +51,24 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
             return result;
         },
 
-        fillDefaultValues: function (displayables, datamap) {
+        fillDefaultValues: function (displayables, datamap, scope) {
             $.each(displayables, function (key, value) {
                 var target = value.attribute;
-                if (value.defaultValue != undefined && target != undefined) {
-                    if (datamap[target] == null) {
-                        if (displayables[key].evalExpression != null) {
-                           datamap[target] = expressionService.evaluate(displayables[key].evalExpression, datamap);
-                        } else {
-                           //TODO: extract a service here, to be able to use @user, @person, @date, etc...
-                           datamap[target] = value.defaultValue;
-                        }
+                
+                //Only continues if datmap for the current attribute is null
+                if (target != undefined && datamap[target] == null) {
+                    var expressionResult = null;
+                    if (displayables[key].evalExpression != null) {
+                        expressionResult = expressionService.evaluate(displayables[key].evalExpression, datamap, scope);
+                        datamap[target] = expressionResult;
+                    } else if(displayables[key].defaultExpression != null) {
+                        expressionResult = expressionService.evaluate(displayables[key].defaultExpression, datamap, scope);
+                        datamap[target] = expressionResult;
                     }
+                    if (expressionResult == null && value.defaultValue != null) {
+                        //TODO: extract a service here, to be able to use @user, @person, @date, etc...
+                        datamap[target] = value.defaultValue;
+                   }
                 }
             });
             return datamap;

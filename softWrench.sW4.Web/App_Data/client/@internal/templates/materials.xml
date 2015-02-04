@@ -130,9 +130,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
         <detail platform="web">
           <field attribute="matusetransid" hidden="true" />
-          <field attribute="orgid" hidden="true" />
-          <field attribute="siteid" hidden="true" />
-          <field attribute="refwo" hidden="true" />
+          <field attribute="orgid" hidden="true" defaultexpression="$.previousdata.fields['orgid']" />
+          <field attribute="siteid" hidden="true" defaultexpression="$.previousdata.fields['siteid']" />
+          <field attribute="refwo" hidden="true" defaultexpression="$.previousdata.fields['wonum']" />
           <field attribute="description" hidden="true" />
           <field attribute="transdate" hidden="true" />
           <field attribute="unitcost" hidden="true" />
@@ -143,7 +143,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <option label="MATERIAL" value="MATERIAL"/>
             <event type="afterchange" service="matusetranService" method="afterlinetypechange"/>
           </optionfield>
-
           <association label="Item:" target="itemnum" labelfield="inventory_.item_.description, location" labelpattern="{0}" extraprojectionvalues="item_.description, itemsetid, location, siteid, costtype" showexpression="@linetype == 'ITEM'">
              <!--<dataprovider prefilterfunction="FilterMaterials"/>-->
             <renderer type="lookup" params="application=inventory;schemaId=materialLookupList;"/>

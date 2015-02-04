@@ -316,6 +316,7 @@
     <attribute name="evalexpression" type="string"></attribute>
     <attribute name="qualifier" type="string"></attribute>
     <attribute name="default" type="string"></attribute>
+    <attribute name="defaultexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
   </complexType>
 
@@ -397,6 +398,7 @@
       </annotation>
     </attribute>
     <attribute name="default" type="string"></attribute>
+    <attribute name="defaultexpression" type="string"></attribute>
     <attribute name="labelpattern" type="string"></attribute>
     <attribute name="placeholder" type="string"></attribute>
     <attribute name="extraprojectionvalues" type="string" use="optional">
@@ -526,6 +528,7 @@
     <attribute name="attribute" type="string" use="required"></attribute>
     <attribute name="requiredexpression" type="string"></attribute>
     <attribute name="default" type="string"></attribute>
+    <attribute name="defaultexpression" type="string"></attribute>
     <attribute name="showexpression" type="string"></attribute>
     <attribute name="evalexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
