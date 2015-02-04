@@ -106,14 +106,6 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
 
                                     ")*";
 
-                                    //"((\.\w+)|" +
-  //                                
-                                    //"(\[.*?(?=\])\])|" +
-  //                                
-                                    //"(\(.*?(?=\))\)))*";
-  //                                Condition 3: Looks for an open parenthesis ( and will accept
-  //                                any characters until the first closing parenthesis ) is found
-
     /*            Examples:                 https://www.regex101.com/r/fB6kI9/21                
                     fn:customService.getTransformation(@assetnum) + fn:customService.getTransformation(@binnum)
                     fn:inventoryService.retrieveCost($.datamap[@assetnum], $.test(@assetnum), $.test()).parseDouble(fn:test.method(@assetnum))
