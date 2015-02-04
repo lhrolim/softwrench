@@ -3,6 +3,8 @@ using softwrench.sw4.Hapag.Data.Sync;
 
 namespace softwrench.sw4.Hapag.Security {
     public class HlagLocation {
+
+
         public String CostCenter { get; set; }
         public String SubCustomer { get; set; }
 

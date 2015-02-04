@@ -1,4 +1,4 @@
-﻿using softWrench.sW4.Configuration.Definitions;
+using softWrench.sW4.Configuration.Definitions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

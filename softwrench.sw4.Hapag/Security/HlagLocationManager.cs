@@ -104,20 +104,20 @@ namespace softwrench.sw4.Hapag.Security {
             }
         }
 
-        private void AddGroupedLocation(ISet<PersonGroup> groups) {
+        private void AddGroupedLocation(IEnumerable<PersonGroup> groups) {
             if (groups == null) {
                 return;
             }
             foreach (var group in groups) {
                 var location = HlagLocationsCache[group].First();
-                var groupedLocation = HlagGroupedLocationsCache.FirstOrDefault(f => f.SubCustomer == location.SubCustomer);
-                if (groupedLocation == null) {
-                    groupedLocation = new HlagGroupedLocation(location.SubCustomer);
-                    groupedLocation.FromSuperGroup = location.FromSuperGroup;
-                    HlagGroupedLocationsCache.Add(groupedLocation);
-                }
-                groupedLocation.CostCenters.Add(location.CostCenter);
+            var groupedLocation = HlagGroupedLocationsCache.FirstOrDefault(f => f.SubCustomer == location.SubCustomer);
+            if (groupedLocation == null) {
+                groupedLocation = new HlagGroupedLocation(location.SubCustomer);
+                groupedLocation.FromSuperGroup = location.FromSuperGroup;
+                HlagGroupedLocationsCache.Add(groupedLocation);
             }
+            groupedLocation.CostCenters.Add(location.CostCenter);
+        }
 
         }
 
