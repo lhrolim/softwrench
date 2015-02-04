@@ -23,7 +23,6 @@ namespace softwrench.sW4.test.Metadata.Entities {
             Assert.AreEqual(result.Problem.System, "21030000");
             Assert.IsNotNull(result.Problem.ProviderAssignedGroup);
             Assert.IsNotNull(result.Problem.ProviderAssignedGroup.Group);
-            Assert.AreEqual(result.Problem.ProviderAssignedGroup.Group.GroupID, "I-EUS-DE-CSC-SDK-HLCFRONTDESKI");
             Assert.IsNotNull(result.Problem.ProviderAssignedGroup.Group.Address);
             Assert.AreEqual(result.Problem.ProviderAssignedGroup.Group.Address.OrganizationID, "ITD-ESS6");
             Assert.AreEqual(result.Problem.ProviderAssignedGroup.Group.Address.LocationID, "ESS6");
