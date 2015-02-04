@@ -44,6 +44,9 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             if (user.MaximoPersonId == null) {
                 return;
             }
+            //this will ensure correct XITC groups
+            _personGroupSyncManager.Sync();
+
             Log.DebugFormat("starting sync for user {0}", user.Login);
             var entityMetadata = MetadataProvider.Entity(EntityName);
             var searchDTO = GetPersonGroupSearchDTO();
@@ -88,7 +91,6 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             if (hasNewAssociation) {
                 Log.DebugFormat("new association found for user {0}", user.Login);
                 //run jobs now to avoid out of synch users
-                _personGroupSyncManager.Sync();
                 var groups = DAO.FindByQuery<PersonGroup>(PersonGroup.PersonGroupByNames, groupsToAdd);
 
                 foreach (var personGroup in groups) {

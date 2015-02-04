@@ -6,11 +6,13 @@ namespace softwrench.sw4.Hapag.Security {
 
     public interface IHlagLocation : IAssociationOption {
 
+        
+
         String SubCustomer { get;}
         String SubCustomerSuffix { get; }
 
         String CostCentersForQuery(string columnName);
 
-        ISet<string> CostCenters { get; }
+        IEnumerable<string> CostCenters { get; }
     }
 }

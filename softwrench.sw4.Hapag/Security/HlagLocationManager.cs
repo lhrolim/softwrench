@@ -1,4 +1,6 @@
-﻿using log4net;
+﻿using System.Collections.Concurrent;
+using DocumentFormat.OpenXml.Bibliography;
+using log4net;
 using softWrench.sW4.Data.Persistence.WS.Ism.Base;
 using softwrench.sw4.Hapag.Data;
 using softwrench.sw4.Hapag.Data.Init;
@@ -14,6 +16,7 @@ using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
+using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.SimpleInjector.Events;
 using System;
 using System.Collections.Generic;
@@ -23,12 +26,12 @@ using softWrench.sW4.Util;
 namespace softwrench.sw4.Hapag.Security {
     public class HlagLocationManager : ISWEventListener<ApplicationStartedEvent>, ISWEventListener<UserLoginEvent>, IHlagLocationManager {
 
-        internal readonly IDictionary<PersonGroup, HashSet<HlagLocation>> HlagLocationsCache = new Dictionary<PersonGroup, HashSet<HlagLocation>>();
+        internal readonly IDictionary<PersonGroup, HashSet<HlagLocation>> HlagLocationsCache = new ConcurrentDictionary<PersonGroup, HashSet<HlagLocation>>();
 
         /// <summary>
         /// Just the child ones, to have a list of all LC locations
         /// </summary>
-        internal readonly ISet<HlagGroupedLocation> HlagGroupedLocationsCache = new HashSet<HlagGroupedLocation>();
+        internal readonly ConcurrentBag<HlagGroupedLocation> HlagGroupedLocationsCache = new ConcurrentBag<HlagGroupedLocation>();
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(HlagLocationManager));
 
@@ -85,15 +88,29 @@ namespace softwrench.sw4.Hapag.Security {
                         HlagLocationsCache.Remove(childGroup);
                     }
                     var location = AddChildGroup(childGroup, false);
-                    AddGroupedLocation(location);
+                    AddGroupedLocation(location,childGroup);
                 }
-                PopulateSuperGroups(HlagLocationsCache.Keys, personGroups.Where(p => p.SuperGroup));
+                //first let´s populate all groups except for the WW one, the reason is that WW should not exactly get all others as parent,
+                // but only the ones which are children of one of the others
+                var superGroupsExceptWW = HlagLocationsCache.Keys.Where(p => p.SuperGroup && !p.Name.Equals(HapagPersonGroupConstants.HapagWWGroup));
+                var validChildGroups = PopulateSuperGroups(HlagLocationsCache.Keys, superGroupsExceptWW);
+                //now the WW ONE
+                PopulateSuperGroups(validChildGroups, HlagLocationsCache.Keys.Where(p => p.Name.Equals(HapagPersonGroupConstants.HapagWWGroup)));
             } finally {
                 _runningJob = false;
             }
         }
 
-        private void AddGroupedLocation(HlagLocation location) {
+        private void AddGroupedLocation(HlagLocation location,PersonGroup originatorGroup) {
+            if (location == null) {
+                //the new persongroup is no longer valid, let´s clean the old costcenter from it
+                var originalItem = 
+
+
+                return;
+
+            }
+
             var groupedLocation = HlagGroupedLocationsCache.FirstOrDefault(f => f.SubCustomer == location.SubCustomer);
             if (groupedLocation == null) {
                 groupedLocation = new HlagGroupedLocation(location.SubCustomer);
@@ -141,13 +158,13 @@ namespace softwrench.sw4.Hapag.Security {
             var groupedLocations = BuildGroupedLocations(resultLocations);
             var directGroupedLocations = BuildGroupedLocations(resultLocations.Where(f => !f.FromSuperGroup));
             var groupedLocationsFromParent = BuildGroupedLocations(resultLocations.Where(f => f.FromSuperGroup));
-            var directGroupLocationsNoPrefix =directGroupedLocations.Select(hlagGroupedLocation => new HlagGroupedLocationsNoPrefixDecorator(hlagGroupedLocation));
+            var directGroupLocationsNoPrefix = directGroupedLocations.Select(hlagGroupedLocation => new HlagGroupedLocationsNoPrefixDecorator(hlagGroupedLocation));
 
             var result1 = new UserHlagLocation {
                 Locations = new HashSet<HlagLocation>(resultLocations),
                 GroupedLocations = groupedLocations,
                 DirectGroupedLocations = directGroupedLocations,
-                DirectGroupedLocationsNoPrefix =new HashSet<HlagGroupedLocationsNoPrefixDecorator>(directGroupLocationsNoPrefix),
+                DirectGroupedLocationsNoPrefix = new HashSet<HlagGroupedLocationsNoPrefixDecorator>(directGroupLocationsNoPrefix),
                 GroupedLocationsFromParent = groupedLocationsFromParent
             };
             var result = result1;
@@ -189,10 +206,17 @@ namespace softwrench.sw4.Hapag.Security {
             _starting = true;
             var allGroups = _dao.FindAll<PersonGroup>(typeof(PersonGroup));
             var locations = PopulateChildGroups(allGroups);
+            //            foreach (var hlagLocation in locations) {
+            //                AddGroupedLocation(hlagLocation);
+            //            }
+            var superGroupsExceptWW = HlagLocationsCache.Keys.Where(p => p.SuperGroup && !p.Name.Equals(HapagPersonGroupConstants.HapagWWGroup));
+            var validChildGroups = PopulateSuperGroups(HlagLocationsCache.Keys, superGroupsExceptWW);
+            //now the WW ONE
+            PopulateSuperGroups(validChildGroups, HlagLocationsCache.Keys.Where(p => p.Name.Equals(HapagPersonGroupConstants.HapagWWGroup)));
             foreach (var hlagLocation in locations) {
                 AddGroupedLocation(hlagLocation);
             }
-            PopulateSuperGroups(allGroups, allGroups.Where(g => g.SuperGroup));
+
             _starting = false;
         }
 
@@ -204,14 +228,23 @@ namespace softwrench.sw4.Hapag.Security {
         private IEnumerable<HlagLocation> PopulateChildGroups(IEnumerable<PersonGroup> allGroups) {
             var result = new List<HlagLocation>();
             foreach (var personGroup in allGroups.Where(g => !g.SuperGroup && HlagLocationUtil.IsALocationGroup(g))) {
-                result.Add(AddChildGroup(personGroup, false));
+                var childGroup = AddChildGroup(personGroup, false);
+                if (childGroup != null) {
+                    //the gropus could be renamed to thing like INACTIVE, making it invalid
+                    result.Add(childGroup);
+                }
             }
             return result;
         }
 
         private HlagLocation AddChildGroup(PersonGroup personGroup, Boolean fromSuperGroup) {
+            var costCenter = HlagLocationUtil.GetCostCenter(personGroup);
+            if (costCenter == null) {
+                return null;
+            }
+
             var hlagLocation = new HlagLocation {
-                CostCenter = HlagLocationUtil.GetCostCenter(personGroup),
+                CostCenter = costCenter,
                 SubCustomer = HlagLocationUtil.GetSubCustomerId(personGroup),
                 FromSuperGroup = fromSuperGroup
             };
@@ -221,16 +254,19 @@ namespace softwrench.sw4.Hapag.Security {
             return hlagLocation;
         }
 
-        private void PopulateSuperGroups(IEnumerable<PersonGroup> allGroups, IEnumerable<PersonGroup> superGroups) {
+        private ISet<PersonGroup> PopulateSuperGroups(IEnumerable<PersonGroup> allGroups, IEnumerable<PersonGroup> superGroups) {
 
+            ISet<PersonGroup> personGroupsAdded = new HashSet<PersonGroup>();
             foreach (var personGroup in superGroups) {
                 HlagLocationsCache[personGroup] = new HashSet<HlagLocation>();
                 var @group = personGroup;
                 foreach (var childGroup in allGroups.Where(g => IsChildLocationGroup(g, @group))) {
                     var hlagLocation = HlagLocationsCache[childGroup].First();
                     HlagLocationsCache[personGroup].Add(hlagLocation.CloneForParent());
+                    personGroupsAdded.Add(childGroup);
                 }
             }
+            return personGroupsAdded;
         }
 
         /// <summary>
@@ -248,7 +284,11 @@ namespace softwrench.sw4.Hapag.Security {
             if (!HlagLocationUtil.IsALocationGroup(possibleChildGroup)) {
                 return false;
             }
-            var descriptionMatches = possibleChildGroup.Description.StartsWith(possibleParentGroup.Description) && !possibleChildGroup.Description.Equals(possibleParentGroup.Description);
+            if (possibleChildGroup.Description.GetNthIndex('-', 3) == -1) {
+                //To disable things like INACTIVE from the list
+                return false;
+            }
+            var descriptionMatches = possibleChildGroup.Description.ToUpper().StartsWith(possibleParentGroup.Description.ToUpper()) && !possibleChildGroup.Description.Equals(possibleParentGroup.Description);
             return (descriptionMatches || possibleParentGroup.Name.Equals(HapagPersonGroupConstants.HapagWWGroup)) && !possibleChildGroup.SuperGroup;
         }
 

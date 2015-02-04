@@ -32,6 +32,6 @@ namespace softwrench.sw4.Hapag.Security {
             return _groupedLocation.CostCentersForQuery(columnName);
         }
 
-        public ISet<string> CostCenters { get { return _groupedLocation.CostCenters; } }
+        public IEnumerable<string> CostCenters { get { return _groupedLocation.CostCenters; } }
     }
 }

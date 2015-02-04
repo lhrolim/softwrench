@@ -1,4 +1,6 @@
-﻿using softwrench.sw4.Hapag.Data.Sync;
+﻿using System.Collections.Concurrent;
+using softwrench.sw4.Hapag.Data.Sync;
+using softWrench.sW4.Security.Entities;
 using softwrench.sw4.Shared2.Data.Association;
 using System;
 using System.Collections.Generic;
@@ -8,9 +10,17 @@ namespace softwrench.sw4.Hapag.Security {
     public class HlagGroupedLocation : IComparable<IHlagLocation>, IHlagLocation {
         public String SubCustomer { get; set; }
 
-        private readonly ISet<string> _costCenters = new HashSet<string>();
+        String OriginatorGroupName { get; set; }
 
-        public ISet<string> CostCenters {
+        private readonly IDictionary<PersonGroup, string> _costCenters = new ConcurrentDictionary<PersonGroup, string>();
+
+//        private readonly ISet<string> _costCenters = new HashSet<string>();
+
+        public IEnumerable<string> CostCenters {
+            get { return _costCenters.Values; }
+        }
+
+        public IDictionary<PersonGroup, string> CostCentersDict {
             get { return _costCenters; }
         }
 
@@ -22,7 +32,7 @@ namespace softwrench.sw4.Hapag.Security {
             SubCustomer = key;
         }
 
-        public HlagGroupedLocation(string key, ISet<string> value, Boolean fromSupergroup) {
+        public HlagGroupedLocation(string key, IDictionary<PersonGroup, string> value, Boolean fromSupergroup) {
             SubCustomer = key;
             _costCenters = value;
             FromSuperGroup = fromSupergroup;
