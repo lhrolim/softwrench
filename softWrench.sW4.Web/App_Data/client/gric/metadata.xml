@@ -503,8 +503,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!-- Adding target start finish date-->
           <field attribute="targstartdate" hidden="true"/>
           <field attribute="targcompdate" hidden="true"/>
-          <field attribute="actstart" hidden="true"/>
-          <field attribute="actfinish" hidden="true"/>
+          
 
           <section id="targstartdate" resourcepath="/Content/Templates/samelinepickers.html"
                           parameters="joinattribute=targstartdate;">
@@ -515,16 +514,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                           parameters="joinattribute=targcompdate;">
             <header label="Target Finish Date:" displacement="sameline"/>
           </section>
-
-          <section id="actstart" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=actstart;">
-            <header label="Actual Start Date:" displacement="sameline"/>
-          </section>
-
-          <section id="actfinish" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=actfinish;">
-            <header label="Actual Finish Date:" displacement="sameline"/>
-          </section>
+          <section id="actualDates"/>
+          
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
           
           
@@ -589,6 +580,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
 
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+          <section id ="actualDates">
+            <field attribute="actstart" hidden="true"/>
+            <field attribute="actfinish" hidden="true"/>
+            <section id="actstart" resourcepath="/Content/Templates/samelinepickers.html"
+                            parameters="joinattribute=actstart;">
+              <header label="Actual Start Date:" displacement="sameline"/>
+            </section>
+
+            <section id="actfinish" resourcepath="/Content/Templates/samelinepickers.html"
+                            parameters="joinattribute=actfinish;">
+              <header label="Actual Finish Date:" displacement="sameline"/>
+            </section>
+          </section>
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowupdate="true" allowcreation="true" />
