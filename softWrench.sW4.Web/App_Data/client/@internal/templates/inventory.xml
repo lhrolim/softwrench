@@ -719,9 +719,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </commandbars>
           <event type="onload" service="scannerdetectionService" method="initInvIssueDetailListener"/>
           <properties>
-        
-            <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
               <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
+            <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
           </properties>
           <event type="beforesubmit.onvalidation" service="inventoryService" method="validateInvIssue"/>
           <event type="beforesubmit.postvalidation" service="checkpointService" method="clearCheckpoints"/>

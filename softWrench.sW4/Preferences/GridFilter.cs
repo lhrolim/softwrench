@@ -33,6 +33,8 @@ namespace softWrench.sW4.Preferences {
         [Property(Column = "values_")]
         public string Values { get; set; }
 
+        [Property]
+        public string Template { get; set; }
 
         [Property]
         public string Application { get; set; }
