@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-function SamelinePickersController($scope, $rootScope, formatService) {
+function SamelinePickersController($scope, $rootScope, formatService, $filter) {
 
     var getCurrentDateString = function() {
         var date = new Date();
@@ -51,6 +51,11 @@ function SamelinePickersController($scope, $rootScope, formatService) {
     doInit();
 
     $scope.isMobile = function () {
+        if (isMobile()) {
+            $scope.datamap[$scope.fieldMetadata.parameters['joinattribute'] + '_date'] = $filter('date')($scope.datamap[$scope.fieldMetadata.parameters['joinattribute'] + '_date'], 'yyyy-MM-dd');
+            $scope.datamap[$scope.fieldMetadata.parameters['joinattribute'] + '_time'] = $filter('date')($scope.datamap[$scope.fieldMetadata.parameters['joinattribute'] + '_time'], 'HH:mm');
+        }
+
         return isMobile();
     };
 

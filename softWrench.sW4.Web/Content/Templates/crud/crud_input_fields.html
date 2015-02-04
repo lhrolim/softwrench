@@ -299,7 +299,7 @@
                             <i class="datetime-class"></i>
                         </span>
                     </div>
-                    <input ng-if="isMobile()" type="date" class="form-control" ng-model="datamap[fieldMetadata.attribute]">
+                    <input ng-if="isMobile()" type="datetime" class="form-control" ng-model="datamap[fieldMetadata.attribute]">
                 </div>
                 <div ng-switch-when="custom">
                     <div ng-include="contextPath(fieldMetadata.rendererParameters.resourcepath)" href="#" style="width: 100%" />
