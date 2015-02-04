@@ -16,12 +16,13 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
   //                                @assetnum                                  
   //                                @#customfield   
 
-    var compiledScopeRegex = /\$\.(\w+)((\.\w+)|(\[.*?\]+)|(\(.*?\)))*/g;
-    //var scopeRegexString = "\$\.(\w+)((\.\w+)|(\[.*?\]+)|(\(.*?\)))*";
+    var compiledScopeRegex = /\$\.(\w+)?((\.\w+)|(\[.*?\]+)|(\(.*?\)))*/g;
+    //var scopeRegexString = "\$\.(\w+)?((\.\w+)|(\[.*?\]+)|(\(.*?\)))*";
 
-    var scopeRegexString = "\$\.(\w+)" +
+    var scopeRegexString = "\$\.(\w+)?" +
 
-  //                               Looks for leading $.word (will translate into scope.word)
+  //                               Looks for leading $. that could be followed by a word 
+  //                               ($. will translate into scope.)
         
   //                               The following three conditions are OR'd together 
   //                               and can be repeated 0 or more times
@@ -42,7 +43,7 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
 
                                     ")*";
 
-    //                          Examples:     https://www.regex101.com/r/fB6kI9/22
+    //                          Examples:     https://www.regex101.com/r/fB6kI9/25
                  /*                       $.previousdata.fields['wonum'].list[@assetnum]
                                           $.previousdata.fields[wonum].list[key]
                                           $.previousdata.fields('CAT')
@@ -116,36 +117,37 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
                     fn:contextService.getCurrentDatamap()[@assetnum]                                    */
         
 
-    function buildScopeVariables(variables,scopeVariables,datamap) {
+    function buildScopeVariables(variables,scopeVariables,datamap,onlyReturnRootNode,scope) {
         for (var i = 0; i < scopeVariables.length; i++) {
             var referenceVariable = scopeVariables[i];
-            var realVariable = referenceVariable.replace(/\$\./, 'scope.');
 
-            var declarations = extractSignaturesFromExpression(realVariable);
+            //If the referenceVariable is simply $. (i.e. is not followed with a word)
+            //replace with 'scope' instead of 'scope.'
+            var scopeReplaceStr = referenceVariable.length == 2 ? 'scope' : 'scope.'
+            var realVariable = referenceVariable.replace(/\$\./, scopeReplaceStr);
 
-            //Handles any extra functions that were picked up by the variableRegex
-            for (var j = 0; j < declarations.length; j++) {
-                var declaration = declarations[j].trim();
-                //Tests whether or not the realVariable has a subVariable within it
-                var subVariable = compiledScopeRegex.test(declaration) || compiledServiceRegex.test(declaration);
-                if (subVariable == true) {
+            //Remove white spaces from expression. This is needed when passing parameters to a function.
+            realVariable = realVariable.replace(/\s/g, '');
+
+            //Tests whether or not the realVariable has a subVariable within it
+            var subVariable = compiledScopeRegex.test(realVariable) || compiledServiceRegex.test(realVariable);
+            if (subVariable == true) {
+                //Updates the realValue of current with the evaluation of its child nodes
+                var subVariables = getVariables(realVariable, datamap, onlyReturnRootNode, scope);
+
+                //For each sub variable, updated the real variable reference
+                //(the variable's true reference upon being evaluated) and add
+                // the variable sub variable to our current variables list.
+                $.each(subVariables, function (key, value) {
                     //Updates the realValue of current with the evaluation of its child nodes
-                    var subVariables = this.getVariables(declaration, datamap);
+                    realVariable = realVariable.replace(key, eval(value));
 
-                    //For each sub variable, updated the real variable reference
-                    //(the variable's true reference upon being evaluated) and add
-                    // the variable sub variable to our current variables list.
-                    $.each(subVariables, function (key, value) {
-                        //Updates the realValue of current with the evaluation of its child nodes
-                        realVariable = realVariable.replace(key, value);
-
-                        //Deletes subVariable keys from resulting Dictionary if
-                        //onlyReturnRootNode flag is true
-                        if (variables[key] != undefined && variableValueFlag == true) {
-                            delete variables[key];
-                        }
-                    });
-                }
+                    //Deletes subVariable keys from resulting Dictionary if
+                    //onlyReturnRootNode flag is true
+                    if (variables[key] != undefined && onlyReturnRootNode == true) {
+                        delete variables[key];
+                    }
+                });
             }
 
             variables[referenceVariable] = realVariable;
@@ -153,41 +155,40 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
     }
 
 
-    function buildServiceVariables(variables, serviceVariables, datamap, onlyReturnRootNode) {
+    function buildServiceVariables(variables, serviceVariables, datamap, onlyReturnRootNode, scope) {
         for (var i = 0; i < serviceVariables.length; i++) {
             var referenceVariable = serviceVariables[i];
             var realVariable = referenceVariable.replace(/fn\:/, '');
 
+            //Remove white spaces from expression. This is needed when passing parameters to a function.
+            realVariable = realVariable.replace(/\s/g, '');
+
             //Extracts all function signatures from the match
-            var declarations = extractSignaturesFromExpression(realVariable);
+            var declaration = extractFnSignatureFromExpression(realVariable);
 
-            //Handles any extra functions that were picked up by the service Regex
-            for (var j = 0; j < declarations.length; j++) {
-                var declaration = declarations[j].trim();
-                //Tests whether or not the realVariable has a $. or fn: subVariable within it
-                var subVariable = compiledScopeRegex.test(declaration) || compiledServiceRegex.test(declaration);
-                if (subVariable == true) {
-                    var subVariables = this.getVariables(declaration, datamap);
+            //Tests whether or not the realVariable has a $. or fn: subVariable within it
+            var subVariable = compiledScopeRegex.test(realVariable) || compiledServiceRegex.test(realVariable);
+            if (subVariable == true) {
+                var subVariables = getVariables(realVariable, datamap, onlyReturnRootNode, scope);
 
-                    //For each sub variable, updated the real variable reference
-                    //(the variable's true reference upon being evaluated) and add
-                    // the variable sub variable to our current variables list.
-                    $.each(subVariables, function (key, value) {
-                        //Updates the realValue of current with the evaluation of its child nodes
-                        realVariable = realVariable.replace(key, value);
+                //For each sub variable, updated the real variable reference
+                //(the variable's true reference upon being evaluated) and add
+                // the variable sub variable to our current variables list.
+                $.each(subVariables, function (key, value) {
+                    //Updates the realValue of current with the evaluation of its child nodes
+                    realVariable = realVariable.replace(key, value);
 
-                        //Updates the current declaration with evaluation of its child nodes.
-                        //This will be used to identify/parse the parameters when injecting
-                        //the custom service
-                        declarations[0] = declarations[0].replace(key, eval(value));
+                    //Updates the current declaration with evaluation of its child nodes.
+                    //This will be used to identify/parse the parameters when injecting
+                    //the custom service
+                    declaration = declaration.replace(key, eval(value));
 
-                        //Deletes subVariable keys from resulting Dictionary if
-                        //onlyReturnRootNode flag is true
-                        if (variables[key] != undefined && onlyReturnRootNode == true) {
-                            delete variables[key];
-                        }
-                    });
-                }
+                    //Deletes subVariable keys from resulting Dictionary if
+                    //onlyReturnRootNode flag is true
+                    if (variables[key] != undefined && onlyReturnRootNode == true) {
+                        delete variables[key];
+                    }
+                });
             }
 
             //Captures character up to the first open parenthises (
@@ -201,12 +202,12 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
             //will be used to extract the parameters from the custom service's function declaration
             var functionParameterRegex = new RegExp(/,(?=[^\)]*(?:\(|$))(?=(?:[^']*'[^']*')*[^']*$)/g);
 
-            var parameters = declarations[0].split(functionParameterRegex);
+            var parameters = declaration.split(functionParameterRegex);
 
             //Calls dispatcherService to load the custom service
-            realVariable = dispatcherService.loadService(service, method, parameters);
-
+            realVariable = dispatcherService.invokeService(service, method, parameters)
         }
+
         //Updates the variables Dictionary with the evaluated value
         variables[referenceVariable] = realVariable;
     }
@@ -224,33 +225,55 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
         }
     }
 
-    //Extracts all of the signatures from the expression
-    //into a list. For example, 
-    //fn:service.method(parameter1).delete(parameter1, parameter2)
-    //will return two items, 'parameter1', and 'parameter1,parameter'.
-    function extractSignaturesFromExpression(expression) {
-            
-        var signatures = [];
-
+    //Extracts the first signature from an expression
+    //fn:service.method(parameter1, parameter2).delete(parameter3)
+    //will return 'parameter1,parameter2'
+    function extractFnSignatureFromExpression(expression) {
         var parenCount = 1;
-
-        while (expression.indexOf('(') != -1) {
-            //remove text prior to first variable in signature
-            expression = expression.substring(expression.indexOf('(') + 1);
-            var i = 0;
-            for (i; i < expression.length && parenCount > 0; i++) {
-                if (expression[i] == '(') {
-                    parenCount ++;
-                } else if (expression[i] == ')') {
-                    parenCount--;
-                }
+        //remove text prior to first variable in signature
+        expression = expression.substring(expression.indexOf('(') + 1);
+        var i = 0;
+        for (i; i < expression.length && parenCount > 0; i++) {
+            if (expression[i] == '(') {
+                parenCount++;
+            } else if (expression[i] == ')') {
+                parenCount--;
             }
-            signatures.push(expression.substring(0, i-1));
-            expression = expression.substring(i + 1);
+        }
+        var signature = expression.substring(0, i - 1);
+        return signature;
+    }
+
+    /*  Returns a dictionary containing variables that are identified within the expression.
+        The dictionary key for the variable is the expression's original value, where the 
+        dictionary value is the evaluated/"mapped" value.
+
+        The onlyReturnRootNode would be set to true when trying to evaluate an expression.
+        When the flag is false, the resulting list will have all variables, including nested
+        variables.                                                                     */
+    function getVariables (expression, datamap, onlyReturnRootNode, scope) {
+        var variables = {};
+
+        var scopeVariables = expression.match(compiledScopeRegex);
+
+        if (scopeVariables != null) {
+            buildScopeVariables(variables, scopeVariables,datamap,onlyReturnRootNode, scope);
         }
 
-        return signatures;
-    };
+        var serviceVariables = expression.match(compiledServiceRegex);
+
+        if (serviceVariables != null) {
+            buildServiceVariables(variables, serviceVariables, datamap, onlyReturnRootNode, scope);
+        }
+
+        var datamapVariables = expression.match(compiledDatamapRegex);
+
+        if (datamapVariables != null) {
+            buildDatamapVariables(variables, datamapVariables, datamap);
+        }
+
+        return variables;
+    }
 
     return {
         getDatamapRegex: function () {
@@ -270,7 +293,7 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
               method to evaluate sub variables and only return a mapping for
               the root nodes. This means that nested variables will not have
               their own key/value pair in the resulting dictionary          */
-            var variables = this.getVariables(expression, datamap, true, scope);
+            var variables = getVariables(expression, datamap, true, scope);
 
         /*  Each dictionary key is used to quickly update an expression with its
             true value. We loop through each variable, replacing any instance of the
@@ -286,38 +309,9 @@ app.factory('expressionService', function ($rootScope, contextService, dispatche
             return expression;
         },
 
-    /*  Returns a dictionary containing variables that are identified within the expression.
-        The dictionary key for the variable is the expression's original value, where the 
-        dictionary value is the evaluated/"mapped" value.
-
-        The onlyReturnRootNode would be set to true when trying to evaluate an expression.
-        When the flag is false, the resulting list will have all variables, including nested
-        variables.                                                                     */
-        getVariables: function (expression, datamap, onlyReturnRootNode) {
-            var variables = {};
-
-            var scopeVariables = expression.match(compiledScopeRegex);
-
-            if (scopeVariables != null) {
-                buildScopeVariables(variables, scopeVariables,datamap);
-            }
-
-            var serviceVariables = expression.match(compiledServiceRegex);
-
-            if (serviceVariables != null) {
-                buildServiceVariables(variables, serviceVariables, datamap, onlyReturnRootNode);
-            }
-
-            var datamapVariables = expression.match(compiledDatamapRegex);
-
-            if (datamapVariables != null) {
-                buildDatamapVariables(variables, datamapVariables, datamap);
-            }
-
-            return variables;
+        getVariables: function (expression, datamap, onlyReturnRootNode, scope) {
+            return getVariables(expression, datamap, onlyReturnRootNode, scope);
         },
-
-      
        
         getVariablesForWatch: function (expression, datamap, scope) {
             var variables = this.getVariables(expression, datamap, false, scope);
