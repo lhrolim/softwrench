@@ -117,6 +117,13 @@ namespace softWrench.sW4.Web {
                 //error handling
             }
         }
+
+        protected void Application_BeginRequest(object sender, EventArgs e){
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+            Response.Cache.SetNoStore();
+        }
+
         protected void Application_EndRequest(object sender, EventArgs e) {
             var context = new HttpContextWrapper(Context);
             if (Context.Response.StatusCode == 302 && Context.Response.RedirectLocation.Contains("/SignIn")) {
@@ -137,7 +144,7 @@ namespace softWrench.sW4.Web {
 
                 if (!isForbidden){
                     //already marked as forbidden, let´s not mess the messages
-//                    Context.Response.RedirectLocation += "&timeout=true";    
+                    Context.Response.RedirectLocation += "&timeout=true";    
                 }
                 
                 
