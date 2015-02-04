@@ -133,15 +133,18 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!--field attribute="owner" label="Owner" readonly="true" hidden="true"/-->
 
           <section id="statussection"/>
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid">
+            <renderer type="autocompleteclient" />
+          </optionfield>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname"  >
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeowner"/>
+            <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
-          <!--association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeownergroup"/>
-          </association-->
+            <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
+          </association>
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" >
             <renderer type="lookup" params="columnlabel=Name"/>
@@ -446,13 +449,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="wonum" label="WO No:" readonly="true"/>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeowner"/>
+            <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
-          <!--association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeownergroup"/>
-          </association-->
+            <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
+          </association>
           <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
           <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
@@ -460,32 +463,38 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
             <renderer type="lookup"/>
           </association>
-          <field attribute="wopriority" label="Priority:" requiredexpression="true" default="1">
-            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-          </field>
+<!--          <field attribute="wopriority" label="Priority:" requiredexpression="true" default="1">-->
+<!--            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>-->
+<!--          </field>-->
+          <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
+            <renderer type="autocompleteclient"/>
+          </optionfield>
           <association label="Location:" target="location" labelfield="location_.description" >
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+            <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
             <!--renderer type="lookup"/-->
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="srService" method="afterChangeAsset"/>
+            <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
           </association>
           <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
             <renderer type="lookup"/>
           </association>
-          <!--association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist">
+          <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist">
           </association>
           <field hidden="true" attribute="failurelist_.failurelist"/>
           <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode">
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterProblemCodes"/>
-          </association-->
+          </association>
           <field label="Job Plan:" attribute="jpnum" readonly="true" />
           <!--association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
             <renderer type="lookup"/>
           </association-->
+<!--          <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >-->
+<!--            <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;" />-->
+<!--          </association>-->
 
 
           <!-- Adding target start finish date-->
