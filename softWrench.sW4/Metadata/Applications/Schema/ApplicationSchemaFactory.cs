@@ -72,8 +72,14 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 schema.IdDisplayable = schema.Properties[ApplicationSchemaPropertiesCatalog.DetailTitleId];
             } else {
                 foreach (var t in displayables) {
-                    if (t.Role == applicationName + "." + schema.UserIdFieldName) {
-                        schema.IdDisplayable = t.Label;
+                    if (typeof(ApplicationSection).IsAssignableFrom(t.GetType())) {
+                        SetTitle(applicationName, ((ApplicationSection)t).Displayables, schema); 
+                    }
+                    else {
+                        if (t.Role == applicationName + "." + schema.UserIdFieldName) {
+                            schema.IdDisplayable = t.Label;
+                            return;
+                        }
                     }
                 }
             }

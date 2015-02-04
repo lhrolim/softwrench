@@ -59,7 +59,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="wopriority" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WO PRIORITY" quoteLiteral="true" />
         </relationship>
-        <relationship to ="glcomponents">
+        <!--Please updated it to use lazy method loading, huge performance impact-->
+        <relationship to ="glcomponents" reverselookupattribute="compvalue">
           <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
       </relationships>
