@@ -102,7 +102,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="siteid" to="siteid" />
           <relationshipAttribute to="status" literal="ACTIVE"/>
         </relationship>
-        <relationship to="item" >
+        <relationship to="item">
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
           <relationshipAttribute from="itemsetid" to="itemsetid"/>
           <relationshipAttribute to="itemtype" literal="ITEM" quoteLiteral="true"/>
@@ -179,8 +179,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
         <detail platform="web">
           <field attribute="matusetransid" hidden="true" />
-          <field attribute="orgid" hidden="true" />
-          <field attribute="siteid" hidden="true" />
+          <field attribute="orgid" defaultexpression="$.previousdata.fields['orgid']" hidden="true" />
+          <field attribute="siteid" defaultexpression="$.previousdata.fields['siteid']" hidden="true" />
           <field attribute="refwo" hidden="true" />
           <field attribute="description" hidden="true" />
           <field attribute="transdate" hidden="true" />

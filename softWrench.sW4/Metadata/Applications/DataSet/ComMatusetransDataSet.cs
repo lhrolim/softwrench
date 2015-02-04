@@ -25,8 +25,25 @@ using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 namespace softWrench.sW4.Metadata.Applications.DataSet
 {
     class ComMatusetransDataSet : MaximoApplicationDataSet
-    {
-        public SearchRequestDto FilterMaterials(AssociationPreFilterFunctionParameters parameters)
+    {        
+        private IEnumerable<IAssociationOption> filterMaterials(AssociationPostFilterFunctionParameters postParams)
+        {
+            // Use to obtain security information from current user
+            var user = SecurityFacade.CurrentUser();
+
+            List<IAssociationOption> Collections = new List<IAssociationOption>();
+            foreach (var item in postParams.Options)
+            {
+                if (item.Label != null && item.Value.Equals(postParams.OriginalEntity.Attributes["itemnum"]))
+                {
+                    Collections.Add(new AssociationOption(item.Label, item.Label));
+                }
+            }
+
+            return Collections;
+        }
+
+        public SearchRequestDto filterPlannedMaterials(AssociationPreFilterFunctionParameters parameters)
         {
             var orgid = parameters.OriginalEntity.GetAttribute("orgid");
             var wonum = parameters.OriginalEntity.GetAttribute("refwo");
@@ -42,6 +59,21 @@ namespace softWrench.sW4.Metadata.Applications.DataSet
             }
 
             return filter;
+        }
+
+        public IEnumerable<IAssociationOption> filterStoreLoc(AssociationPostFilterFunctionParameters postParams)
+        {
+            return filterMaterials(postParams);
+        }
+
+        public IEnumerable<IAssociationOption> filterLotnum(AssociationPostFilterFunctionParameters postParams)
+        {
+            return filterMaterials(postParams);
+        }
+
+        public IEnumerable<IAssociationOption> filterBinnum(AssociationPostFilterFunctionParameters postParams)
+        {
+            return filterMaterials(postParams);
         }
 
         public override string ApplicationName()

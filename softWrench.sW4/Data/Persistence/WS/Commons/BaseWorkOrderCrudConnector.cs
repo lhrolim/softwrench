@@ -144,7 +144,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 }
 
                 WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
-                WsUtil.SetValue(integrationObject, "ACTUALDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(), true);
+                WsUtil.SetValue(integrationObject, "ACTUALDATE", DateTime.Now.FromServerToRightKind(), true);
                 WsUtil.SetValue(integrationObject, "QUANTITY", -1 * quantity);
                 WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0);
                 WsUtil.SetValue(integrationObject, "ENTERBY", user.Login);

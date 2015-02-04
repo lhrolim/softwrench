@@ -15,6 +15,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <template path="@materials.xml"/>
     <template path="@labtrans.xml"/>
     <template path="@woactivity.xml"/>
+    <template path="@materials.xml"/>
   </templates>
   
   <entities>
@@ -117,6 +118,35 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="glcomponents">
           <relationshipAttribute from="gldebitacct" to="compvalue" primary="true"/>
           <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+    <entity name="matusetrans" idAttribute="matusetransid" >
+      <relationships>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="status" literal="ACTIVE"/>
+        </relationship>
+        <relationship to="item">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute to="itemtype" literal="ITEM" quoteLiteral="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="location" qualifier="storeroom">
+          <relationshipAttribute from="siteid" to="siteid" primary="true" />
+          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
+        </relationship>
+        <relationship to="invbalances" qualifier="invbal" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true" />
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="chartofaccounts" >
+          <relationshipAttribute from="gldebitacct" to="glaccount" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
         </relationship>
       </relationships>
     </entity>
@@ -454,7 +484,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </association>
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
           </section>
-          <event type="beforesubmit.onvalidation" service="workorderservice" method="comvalidation" />
         </schema>
 
         <schema parentschema="adetail" id="editdetail" title="Work Order Details" platform="web">
@@ -484,7 +513,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
           </section>
-          <event type="beforesubmit.onvalidation" service="workorderservice" method="comvalidation" />
         </schema>
 
         <list platform="mobile">
@@ -615,6 +643,71 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <field attribute="regularhrs" label="Regular Hours:" requiredexpression="true" default="8"/>
           <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext" labelpattern="{0}">
+            <renderer type="lookup"/>
+          </association>
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-suitcase"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="matusetransid" hidden="true" />
+          <field attribute="itemnum" label="Item No." qualifier="title"/>
+          <field attribute="description" label="Description" qualifier="subtitle"/>
+          <field attribute="linetype" label="Type" qualifier="subtitle"/>
+          <field attribute="storeloc" label="Storeroom" qualifier="subtitle"/>
+          <field attribute="qtyrequested" label="Quantity" qualifier="subtitle"/>
+        </list>
+
+        <detail platform="web">
+          <field attribute="matusetransid" hidden="true" />
+          <field attribute="orgid" defaultexpression="$.previousdata.fields['orgid']" hidden="true" />
+          <field attribute="siteid" defaultexpression="$.previousdata.fields['siteid']" hidden="true" />
+          <field attribute="refwo" hidden="true" />
+          <field attribute="description" hidden="true" />
+          <field attribute="transdate" hidden="true" />
+
+          <field attribute="lotnum" hidden="true" />
+          <field attribute="binnum" hidden="true" />
+          <field attribute="costtype" hidden="true" />
+          <field attribute="unitcost" hidden="true" />
+
+          <optionfield attribute="linetype" label="Type:">
+            <renderer type="combo"/>
+            <option label="ITEM" value="ITEM"/>
+            <option label="MATERIAL" value="MATERIAL"/>
+          </optionfield>
+          <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" showexpression="@linetype == 'ITEM'">
+            <dataprovider prefilterfunction="filterPlannedMaterials"/>
+            <renderer type="lookup"/>
+            <event type="afterchange" service="matusetranService" method="afteritemchange"/>
+          </association>
+          <association label="Storeroom:" target="storeloc" labelfield="inventory_.location" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
+            <dataprovider postfilterfunction="filterStoreLoc"/>
+            <event type="afterchange" service="matusetranService" method="afterstorelocchange"/>
+          </association>
+          <association label="Bin:" target="binnum" labelfield="1invbal_.binnum" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
+            <dataprovider postfilterfunction="filterBinnum"/>
+            <event type="afterchange" service="matusetranService" method="afterchange"/>
+          </association>
+          <association label="Lot:" target="lotnum" labelfield="2invbal_.lotnum" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
+            <dataprovider postfilterfunction="filterLotnum"/>
+            <event type="afterchange" service="matusetranService" method="afterchange"/>
+          </association>
+          <field label="Available Balances:" attribute="curbal" readonly="true" showexpression="@linetype=='ITEM'"/>
+          <field attribute="unitcost" label="Unit Cost:" qualifier="quantity" readonly="true" showexpression="@linetype == 'ITEM'"/>
+
+          <field attribute="description" label="Material Description:" requiredexpression="true" showexpression="@linetype == 'MATERIAL'"/>
+          <field attribute="unitcost" label="Unit Cost:" qualifier="quantity" requiredexpression="@linetype == 'MATERIAL'" showexpression="@linetype == 'MATERIAL'"/>
+
+          <field attribute="qtyrequested" label="Quantity:" requiredexpression="true" qualifier="quantity">
+            <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
+          </field>
+          <association label="GL Debit Account:" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
             <renderer type="lookup"/>
           </association>
         </detail>
