@@ -76,9 +76,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="worktype" to="worktype" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid" />
         </relationship>
-        <relationship to="chartofaccounts" >
-          <relationshipAttribute from="glaccount" to="glaccount" primary="true"/>
+        <relationship to="glcomponents">
+          <relationshipAttribute from="glaccount" to="compvalue" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
         </relationship>
         <relationship to="synonymdomain" qualifier="synstatus">
           <relationshipAttribute from="status" to="value" primary="true"/>
@@ -144,12 +145,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="location" to="location" />
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
-        <relationship to="chartofaccounts" >
-          <relationshipAttribute from="gldebitacct" to="glaccount" primary="true"/>
+        <relationship to="glcomponents">
+          <relationshipAttribute from="gldebitacct" to="compvalue" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
         </relationship>
       </relationships>
     </entity>
+
+    <entity name="tooltrans" idAttribute="tooltransid">
+      <relationships>
+        <relationship to="toolitem" qualifier="tool" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+        </relationship>
+        <relationship to="glcomponents">
+          <relationshipAttribute from="gldebitacct" to="compvalue" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
   </entities>
 
   <applications>
@@ -414,7 +431,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </optionfield>
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
+            <renderer type="lookup"/>
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
@@ -433,7 +450,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <dataprovider prefilterfunction="FilterProblemCodes"/>
           </association>
           <field label="Job Plan:" attribute="jpnum" readonly="true" />
-          <association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
+          <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >
             <renderer type="lookup"/>
           </association>
 
@@ -642,7 +659,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
           </field>
           <field attribute="regularhrs" label="Regular Hours:" requiredexpression="true" default="8"/>
-          <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext" labelpattern="{0}">
+          <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext">
             <renderer type="lookup"/>
           </association>
         </detail>
@@ -707,7 +724,47 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="qtyrequested" label="Quantity:" requiredexpression="true" qualifier="quantity">
             <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
           </field>
-          <association label="GL Debit Account:" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
+          <association label="GL Debit Account:" target="gldebitacct" labelfield="glcomponents_.comptext">
+            <renderer type="lookup"/>
+          </association>
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="tooltrans" entity="tooltrans" title="Tools">
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-wrench"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="tooltransid" hidden="true"/>
+          <field attribute="itemnum" label="Item No." qualifier="title"/>
+          <field attribute="tool_.description" label="Description" qualifier="subtitle"/>
+          <field attribute="toolqty" label="Quantity" qualifier="subtitle"/>
+          <field attribute="toolhrs" label="Hours" qualifier="subtitle"/>
+          <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
+        </list>
+
+        <detail platform="web">
+          <field attribute="tooltransid" hidden="true" />
+          <field attribute="orgid" hidden="true" />
+          <field attribute="siteid" hidden="true" />
+          <field attribute="refwo" hidden="true" />
+          <field attribute="transdate" hidden="true" />
+          <field attribute="toolrate" hidden="true" />
+
+          <association label="Tool:" target="itemnum" labelfield="tool_.description" requiredexpression="true" extraprojectionvalues="itemnum, itemsetid">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="tooltranService" method="aftertoolchange"/>
+          </association>
+          <field label="Quantity:" attribute="toolqty" requiredexpression="true">
+            <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
+          </field>
+          <field label="Hour:" attribute="toolhrs" requiredexpression="true" default="8">
+            <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
+          </field>
+          <field label="Rate:" attribute="toolrate" readonly="true"/>
+          <association label="GL Debit Account:"  target="gldebitacct" labelfield="glcomponents_.comptext">
             <renderer type="lookup"/>
           </association>
         </detail>
