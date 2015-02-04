@@ -1,4 +1,4 @@
-﻿using softWrench.sW4.Configuration.Definitions;
+using softWrench.sW4.Configuration.Definitions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +51,7 @@ namespace softWrench.sW4.Security.Context {
             if (!baseEqual) {
                 return false;
             }
-            var profileEqual = (UserProfiles == null || !UserProfiles.Any()) ? (other.UserProfiles == null || !other.UserProfiles.Any()) : UserProfiles.SequenceEqual(other.UserProfiles);
+            var profileEqual = (UserProfiles == null || !UserProfiles.Any()) ? (other.UserProfiles == null || !other.UserProfiles.Any()) : (other.UserProfiles != null && UserProfiles.SequenceEqual(other.UserProfiles));
             var appContextEqual = ApplicationLookupContext == null ? other.ApplicationLookupContext == null :
                 ApplicationLookupContext.Equals(other.ApplicationLookupContext);
             return profileEqual && appContextEqual;

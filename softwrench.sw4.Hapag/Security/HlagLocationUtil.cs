@@ -38,6 +38,10 @@ namespace softwrench.sw4.Hapag.Security {
         }
 
         public static bool IsALocationGroup(PersonGroup group) {
+            if (group.Description != null && group.Description.ToUpper().StartsWith("ZZZ")) {
+                //https://controltechnologysolutions.atlassian.net/browse/HAP-868
+                return false;
+            }
             return group.SuperGroup || group.Name.StartsWith(HapagPersonGroupConstants.BaseHapagLocationPrefix) || IsSuperGroup(group);
         }
 
@@ -47,10 +51,14 @@ namespace softwrench.sw4.Hapag.Security {
         }
 
         public static string GetCostCenter(PersonGroup group) {
-            if (@group == null) {
+            if (@group == null || group.Description == null) {
                 return null;
             }
             var idxToSearch = @group.Description.GetNthIndex('-', CostCenterIdx);
+            if (idxToSearch == -1) {
+                return null;
+            }
+
             return @group.Description.Substring(idxToSearch + 1);
         }
 
