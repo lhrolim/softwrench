@@ -51,12 +51,15 @@ function SamelinePickersController($scope, $rootScope, formatService, $filter) {
     doInit();
 
     $scope.isMobile = function () {
-        if (isMobile()) {
-            $scope.datamap[$scope.fieldMetadata.parameters['joinattribute'] + '_date'] = $filter('date')($scope.datamap[$scope.fieldMetadata.parameters['joinattribute'] + '_date'], 'yyyy-MM-dd');
-            $scope.datamap[$scope.fieldMetadata.parameters['joinattribute'] + '_time'] = $filter('date')($scope.datamap[$scope.fieldMetadata.parameters['joinattribute'] + '_time'], 'HH:mm');
+        var isMobileVar = isMobile();
+        if (isMobileVar) {
+            var dateField = $scope.fieldMetadata.parameters['joinattribute'] + '_date';
+            var timeField = $scope.fieldMetadata.parameters['joinattribute'] + '_time';
+            $scope.datamap[dateField] = $filter('date')($scope.datamap[dateField], 'yyyy-MM-dd');
+            $scope.datamap[timeField] = $filter('date')($scope.datamap[timeField], 'HH:mm');
         }
 
-        return isMobile();
+        return isMobileVar;
     };
 
     $scope.isDesktop = function () {
