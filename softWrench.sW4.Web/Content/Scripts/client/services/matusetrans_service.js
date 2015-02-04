@@ -83,6 +83,10 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
             event.fields["quantity"] = 1;
         },
 
+        afteritemchange: function (event) {
+            event.fields["#description"] = event.fields["item_.description"]; 
+        },
+
         afterstorelocchange: function (event) {
             event.fields["unitcost"] = 0.00;
 
