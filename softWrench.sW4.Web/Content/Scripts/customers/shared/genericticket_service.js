@@ -96,7 +96,7 @@ app.factory('genericTicketService', function (alertService, associationService, 
         },
 
         validateCloseStatus: function (schema, datamap, parameters) {
-            if (datamap['status'] == 'CLOSE') {
+            if (parameters.originaldatamap['status'] == 'CLOSE') {
                 alertService.alert("You cannot submit this ticket because it is already closed");
                 return false;
             }
