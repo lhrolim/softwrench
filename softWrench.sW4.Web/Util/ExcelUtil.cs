@@ -386,7 +386,9 @@ namespace softWrench.sW4.Web.Util {
             foreach (var applicationField in applicationFields) {
                 double excelWidthAux;
                 string excelwidthAux;
-                if (applicationField.IsHidden) {
+                string exporttoexcel;
+                applicationField.RendererParameters.TryGetValue("exporttoexcel", out exporttoexcel);
+                if ((exporttoexcel != null && !exporttoexcel.Equals("true")) || (applicationField.IsHidden && exporttoexcel == null)) {
                     continue;
                 }
                 applicationField.RendererParameters.TryGetValue("excelwidth", out excelwidthAux);
