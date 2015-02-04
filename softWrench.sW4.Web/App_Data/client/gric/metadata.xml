@@ -45,6 +45,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
         </relationship>
+        <relationship to ="person" qualifier="changebyperson">
+          <relationshipAttribute from="changeby" to="personid" primary="true"/>
+        </relationship>
         <relationship to ="persongroup">
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
         </relationship>
@@ -191,7 +194,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             <!--renderer type="lookup"/-->
           </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" >
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
@@ -230,7 +233,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
           <section id="statussection">
             <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
-              <renderer type="combo" />
+<!--              <renderer type="combo" />-->
             </association>
           </section>
 
@@ -441,43 +444,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="workorderid"  readonly="true" hidden="true"/>
 
           <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
+          
+          <field attribute="description" label="Summary:"/>
+          <field label="Details:" attribute="longdescription_.ldtext" >
+            <renderer type="richtext"/>
+          </field>
           <section id ="siteidsection"/>
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
-          <field attribute="woclass" hidden="true"/>
-          <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-          <section id="statussection"/>
-          <field attribute="wonum" label="WO No:" readonly="true"/>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
-          </association>
-          <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
-          </association>
-          <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
-          <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-          </field>
-          <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
-            <renderer type="lookup"/>
-          </association>
-<!--          <field attribute="wopriority" label="Priority:" requiredexpression="true" default="1">-->
-<!--            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>-->
-<!--          </field>-->
           <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
             <renderer type="autocompleteclient"/>
           </optionfield>
-          <association label="Location:" target="location" labelfield="location_.description" >
-            <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
-          </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-            <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
-          </association>
           <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
             <renderer type="lookup"/>
           </association>
@@ -489,14 +465,41 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <dataprovider prefilterfunction="FilterProblemCodes"/>
           </association>
           <field label="Job Plan:" attribute="jpnum" readonly="true" />
-          <!--association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
+          <association label="Location:" target="location" labelfield="location_.description" >
+            <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
+            <!--renderer type="lookup"/-->
+          </association>
+          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" requiredexpression="@location==null &amp;&amp; @siteid=='LB'">
+            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+            <dataprovider prefilterfunction="FilterAssets"/>
+            <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
+          </association>
+          <section id="attachmentsection"/>
+          <field attribute="woclass" hidden="true"/>
+         
+          <section id="statussection"/>
+          
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" showexpression="@siteid=='VQ'">
             <renderer type="lookup"/>
-          </association-->
-<!--          <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >-->
-<!--            <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;" />-->
-<!--          </association>-->
+            <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
+          </association>
+          <association label="Change By:" target="changeby" labelfield="changebyperson_.displayname" showexpression="@siteid!='VQ'">
+            <renderer type="lookup"/>
+          </association>
+          <!-- Added the Owner Group field-->
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
+          </association>
 
-
+          
+          <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
+          <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
+            <renderer type="lookup"/>
+          </association>
+          <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
           <!-- Adding target start finish date-->
           <field attribute="targstartdate" hidden="true"/>
           <field attribute="targcompdate" hidden="true"/>
@@ -522,14 +525,33 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                           parameters="joinattribute=actfinish;">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
+          <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
+          
+          
+          
+<!--          <field attribute="wopriority" label="Priority:" requiredexpression="true" default="1">-->
+<!--            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>-->
+<!--          </field>-->
+          
+          
+          <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
+            <renderer type="lookup"/>
+          </association>
+          <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist">
+          </association>
+          <field hidden="true" attribute="failurelist_.failurelist"/>
+          <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode">
+            <renderer type="lookup"/>
+            <dataprovider prefilterfunction="FilterProblemCodes"/>
+          </association>
+          <field label="Job Plan:" attribute="jpnum" readonly="true" />
+          <!--association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
+            <renderer type="lookup"/>
+          </association-->
+<!--          <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >-->
+<!--            <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;" />-->
+<!--          </association>-->
 
-
-
-          <field attribute="description" label="Summary:"/>
-          <field label="Details:" attribute="longdescription_.ldtext" >
-            <renderer type="richtext"/>
-          </field>
-          <section id="attachmentsection"/>
           <section id="compositions"/>
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
 
@@ -546,9 +568,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </association>
           </section>
           <section id="statussection">
-            <!--field attribute="owner" label="Owner:"/-->
-
-
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
           </section>
           <section id="attachmentsection">
@@ -563,9 +582,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <field label="Site:" attribute="siteid" readonly="true"/>
           </section>
           <section id="statussection">
-            <field attribute="owner" label="Owner" readonly="true"/>
+            <field attribute="wonum" label="WO#" readonly="true"/>
             <association label="Status" target="status" labelfield="synstatus.description">
-              <renderer type="combo"/>
+              <!--renderer type="combo"/-->
             </association>
           </section>
 
