@@ -3066,6 +3066,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field  attribute="#status" label="Status" />
           <section resourcepath="/Content/Templates/hapag/jobplancompleteaction.html">
             <header label="Action"/>
+            <renderer type="default" params="minwidth=80px"/>
           </section>
         </list>
       </schemas>
@@ -3322,6 +3323,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <section resourcepath="/Content/Templates/hapag/jobplancompleteaction.html">
             <header label="Action"/>
+            <renderer type="default" params="minwidth=80px"/>
           </section>
         </list>
 
