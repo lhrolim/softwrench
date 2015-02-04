@@ -29,7 +29,7 @@
                                 'max-width': column.rendererParameters['maxwidth'],
                                 'width': column.rendererParameters['width']}">
                         <ng-switch on="column.type">
-                            <div ng-switch-when="ApplicationSection">
+                            <div ng-switch-when="ApplicationSection" style="min-width:80px">
                                 <div ng-include="contextPath(column.resourcepath)" href="#" style="width: 100%" />
                             </div>
                             <div ng-switch-when="ApplicationFieldDefinition" class="gridcolumnvalue"
