@@ -473,9 +473,13 @@ app.directive('compositionList', function (contextService,formatService) {
 
 
             /*API Methods*/
-            this.showExpansionCommands = function () {
+            this.showExpansionCommands = function() {
+                var isExpansible = $scope.schema.properties.expansible;
+                if (isExpansible != undefined && !isExpansible) {
+                    return isExpansible;
+                }
                 return $scope.noupdateallowed && $scope.clonedCompositionData.length > 1;
-            }
+            };
 
 
             $scope.collapseAll = function () {

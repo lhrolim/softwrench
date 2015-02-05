@@ -360,6 +360,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </schema>
 
         <detail>
+          <field label="Title:" attribute="document" />
           <field label="Attachment:" attribute="newattachment" requiredexpression="true">
             <renderer type="upload"/>
           </field>
