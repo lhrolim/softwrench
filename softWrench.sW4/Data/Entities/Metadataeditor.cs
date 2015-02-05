@@ -31,6 +31,7 @@ namespace softWrench.sW4.Data.Entities {
         [Property]
         public virtual int DefaultId { get; set; }
 
+
         public virtual string SystemStringValue
         {
             get

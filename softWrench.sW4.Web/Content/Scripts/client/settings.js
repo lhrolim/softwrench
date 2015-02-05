@@ -34,7 +34,7 @@
         var urlToUse = "/api/generic/EntityMetadata/SaveMetadataEditor";
         var jsonString = JSON.stringify(ace.edit("editor").getValue());
         //$http.post(urlToUse,jsonString).success(function () {
-        //     alertService.alert("Metadata changes saved successfully");
+        //     alertSdervice.alert("Metadata changes saved successfully");
         //});
         $http({
             method: "POST",
