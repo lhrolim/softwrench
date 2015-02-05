@@ -64,7 +64,7 @@ app.factory('genericTicketService', function (alertService, associationService, 
                 event.fields['owner'] = null;
                 return;
             }
-            if (event.fields['status'] == 'NEW') {
+            if (event.fields['status'] == 'WAPPR') {
                 event.fields['status'] = 'QUEUED';
                 alertService.alert("Owner Group Field will be disabled if the Owner is selected.");
                 return;
@@ -81,7 +81,7 @@ app.factory('genericTicketService', function (alertService, associationService, 
                 event.fields['ownergroup'] = null;
                 return;
             }
-            if (event.fields['status'] == 'NEW') {
+            if (event.fields['status'] == 'WAPPR') {
                 event.fields['status'] = 'QUEUED';
                 alertService.alert("Owner Field will be disabled if the Owner Group is selected.");
                 return;
