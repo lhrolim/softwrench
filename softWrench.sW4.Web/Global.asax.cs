@@ -54,7 +54,7 @@ namespace softWrench.sW4.Web {
                 WebApiConfig.Register(GlobalConfiguration.Configuration);
                 FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
                 RouteConfig.RegisterRoutes(RouteTable.Routes);
-                ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
+              
             }
             MetadataProvider.DoInit();
             BundleConfig.ClearBundles();
@@ -62,6 +62,7 @@ namespace softWrench.sW4.Web {
             new MigratorExecutor("SWDB").Migrate(runner => runner.MigrateUp());
             SecurityFacade.InitSecurity();
             if (!changeClient) {
+                ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
                 var container = SimpleInjectorScanner.InitDIController();
                 var dispatcher = (IEventDispatcher)container.GetInstance(typeof(IEventDispatcher));
                 dispatcher.Dispatch(new ApplicationStartedEvent());
