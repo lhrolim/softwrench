@@ -24,6 +24,7 @@
         margin-top: 5px;
     }
 
+
 .adminlogs table a {
     cursor: pointer;
 }
@@ -35,3 +36,12 @@
     .adminlogs .appender .btn {
         margin-top: 10px;
     }
+
+.metadataeditor {
+    padding-bottom: 30px;
+}
+
+    .metadataeditor #editor, .metadataeditor .comments {
+        margin-bottom: 30px;
+    }
+

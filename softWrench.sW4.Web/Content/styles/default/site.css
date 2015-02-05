@@ -19,6 +19,7 @@ input.ng-dirty.ng-invalid {
     z-index: 9999;
 }
 
+
 .container {
     padding: 0;
     width: 100%;
@@ -211,6 +212,10 @@ input.ng-dirty.ng-invalid {
 }
 
 /*JV - ~10/03 - SWWEB-472 - Add green & orange color CSS that can be used for icons*/
+.red {
+    color: red;
+}
+
 .green {
     color: green;
 }
@@ -237,3 +242,4 @@ input.ng-dirty.ng-invalid {
     color: rgb(239, 198, 99);
 }
 /*JV - 10/08 - SWWEB-472 - Add yellow color CSS that can be used for icons*/
+
