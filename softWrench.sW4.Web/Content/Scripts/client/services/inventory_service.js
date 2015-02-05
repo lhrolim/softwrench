@@ -657,6 +657,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         invIssue_maximo71_afterChangeItem: function (parameters) {
             invIssue_maximo71_afterChangeItem(parameters)
         },
+
         afterchangeinvissueitem: function(parameters) {
             parameters['fields']['lotnum'] = null;
             parameters['fields']['#curbal'] = null;
