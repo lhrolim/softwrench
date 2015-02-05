@@ -522,7 +522,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <section id="attachmentsection"/>
           <section id="compositions"/>
-          <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
+          
 
           <!--					<section id="matusetranssection"/>-->
           <!--					<section id="labtranssection"/>-->
@@ -559,8 +559,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="combo"/>
             </association>
           </section>
-
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+          <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowupdate="true" allowcreation="true" />

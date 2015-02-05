@@ -74,6 +74,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                     schema.Events.Add(parentEvent);
                 }
             }
+//            schema.EventSet = schema.Events.Values;
         }
 
         private static void SetTitle(string applicationName, List<IApplicationDisplayable> displayables, ApplicationSchemaDefinition schema) {
