@@ -8,12 +8,15 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Web.SPF;
+using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Data.Entities;
+using System.Xml;
 
 namespace softWrench.sW4.Web.Controllers.Utilities {
 
     [Authorize]
     public class EntityMetadataController : ApiController {
-
+        private readonly SWDBHibernateDAO _swdbDao;
         [HttpGet]
         [SPFRedirect("Metadata Builder", "_headermenu.metadatabuilder", "EntityMetadataBuilder")]
         public RedirectResponseResult Builder() {
@@ -58,6 +61,39 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             task.Wait();
             new MetadataProvider().Save(task.Result);
         }
+        public EntityMetadataController(SWDBHibernateDAO dao)
+        {
+            _swdbDao = dao;
+        }
+
+        [HttpPost]
+        public void SaveMetadataEditor(HttpRequestMessage request)
+        {
+            var content = request.Content;
+            String Jsoncontent = content.ReadAsStringAsync().Result;
+           
+            DateTime now = DateTime.Now;
+            var newMetadataEntry = new Metadataeditor()
+            {
+                SystemStringValue = Jsoncontent,
+                CreatedDate = now,
+                DefaultId = 0,
+                
+            };
+            _swdbDao.Save(newMetadataEntry);
+        }
+        //[HttpPut]
+        //public void SaveMetadataEditor(HttpRequestMessage request)
+        //{
+        //    var task = request
+        //    .Content
+        //    .ReadAsStreamAsync();
+
+        //    task.Wait();
+
+
+        //    new MetadataProvider().Save(task.Result);
+        //}
         [HttpPut]
         public void SaveStatuscolor(HttpRequestMessage request)
         {

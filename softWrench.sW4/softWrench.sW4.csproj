@@ -181,6 +181,7 @@
     <Compile Include="Data\Entities\Historical\HistTicket.cs" />
     <Compile Include="Data\Entities\Historical\HistWorkorder.cs" />
     <Compile Include="Data\Entities\LocationCostCenterRestrictionDao.cs" />
+    <Compile Include="Data\Entities\Metadataeditor.cs" />
     <Compile Include="Data\Entities\SyncManagers\AMaximoRowstampManager.cs" />
     <Compile Include="Data\Entities\SyncManagers\IUserSyncManager.cs" />
     <Compile Include="Data\ExtraAttributes.cs" />
