@@ -18,9 +18,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private ISet<ApplicationEvent> _eventsSet = new HashSet<ApplicationEvent>();
         public string EvalExpression { get; set; }
         public string EnableDefault { get; set; }
-        public string DefaultExpression { get; set; }
         public ApplicationFieldDefinition() {
 
+        }
+
+        public ApplicationFieldDefinition(string applicationName,string attributeName,String label,string requiredExpression,Boolean isReadOnly,bool isHidden,FieldRenderer renderer
+            ,IWidgetDefinition widget,string defaultValue, string tooltip):this(applicationName, attributeName, label, requiredExpression, isReadOnly, isHidden, renderer, null, widget, defaultValue, null, null, tooltip, null, null, null, null, null, null){
         }
 
         public ApplicationFieldDefinition(string applicationName, string attribute, string label, string requiredExpression, bool isReadOnly, bool isIsHidden,
