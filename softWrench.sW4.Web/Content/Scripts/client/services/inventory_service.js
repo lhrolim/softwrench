@@ -131,10 +131,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         });
     };
 
-    var updateInventoryCosttype = function(parameters) {
+    var updateInventoryCosttype = function(parameters, storelocation) {
         var searchData = {
             itemnum: parameters['fields']['itemnum'],
-            location: parameters['fields']['location'],
+            location: parameters['fields'][storelocation],
             siteid: parameters['fields']['siteid'],
             orgid: parameters['fields']['orgid'],
             itemsetid: parameters['fields']['itemsetid']
@@ -145,20 +145,81 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var costtype = fields['costtype'];
             parameters['fields']['inventory_.costtype'] = costtype;
             var locationFieldName = "";
-            if (parameters['fields'].location != undefined) {
-                locationFieldName = "location";
+            doUpdateUnitCostFromInventoryCost(parameters, "unitcost", storelocation);
+        });
+    };
+
+    var returnTransformation = function (event, datamap) {
+        datamap['issueid'] = datamap['matusetransid'];
+        datamap['matusetransid'] = null;
+        datamap['rowstamp'] = null;
+        datamap['quantity'] = datamap['#quantityadj'];
+        datamap['issuetype'] = 'RETURN';
+        datamap['qtyreturned'] = null;
+        datamap['qtyrequested'] = datamap['#quantityadj'];
+    };
+
+    var returnConfirmation = function (event, datamap, parameters) {
+        var returnQty = datamap['#quantityadj'];
+        var item = datamap['itemnum'];
+        var storeloc = datamap['storeloc'];
+        var binnum = datamap['binnum'];
+        var message = "Return (" + returnQty + ") " + item + " to " + storeloc + "?";
+        if (binnum != null) {
+            message = message + " (Bin: " + binnum + ")";
+        }
+        return alertService.confirm(null, null, function () {
+            parameters.continue();
+        }, message);
+    };
+
+    invIssue_maximo71_afterChangeItem = function (parameters) {
+        var maxvarsSearchData = {
+            varname: 'DEFISSUECOST',
+            siteid: parameters['fields']['siteid']
+        };
+        searchService.searchWithData("maxvars", maxvarsSearchData).success(function (maxvarsData) {
+            var resultObject = maxvarsData.resultObject;
+            var fields = resultObject[0].fields;
+            var costtype = fields['varvalue'];
+            parameters['fields']['inventory_.costtype'] = costtype;
+
+            var itemnum = parameters['fields']['itemnum'];
+            if (nullOrEmpty(itemnum)) {
+                parameters['fields']['itemnum'] = null;
+                parameters['fields']['unitcost'] = null;
+                parameters['fields']['inventory_.issueunit'] = null;
+                parameters['fields']['inventory_.itemtype'] = null;
+                parameters['fields']['#curbal'] = null;
+                return;
             }
-            doUpdateUnitCostFromInventoryCost(parameters, "unitcost", locationFieldName);
+
+            var searchData = {
+                itemnum: parameters['fields']['itemnum'],
+                location: parameters['fields']['storeloc'],
+                siteid: parameters['fields']['siteid']
+            };
+            searchService.searchWithData("invcost", searchData).success(function (data) {
+                var invcostRo = data.resultObject;
+                var invcostFields = invcostRo[0].fields;
+                if (costtype === 'STDCOST') {
+                    parameters.fields['unitcost'] = invcostFields.stdcost;
+                } else if (costtype === 'AVGCOST') {
+                    parameters.fields['unitcost'] = invcostFields.avgcost;
+                }
+                parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
+                parameters['fields']['lotnum'] = null;
+            });
         });
     };
 
     return {
-        createIssue: function() {
-            redirectService.goToApplicationView("invissue", "newInvIssueDetail", "input", null, null, null);
+        createIssue: function(schema, datamap) {
+            redirectService.goToApplicationView(schema.applicationName, "newInvIssueDetail", "input", null, null, null);
         },
 
-        navToBatchFilter: function() {
-            redirectService.goToApplicationView("invissue", "batchInvIssueFilter", "input", null, null, null);
+        navToBatchFilter: function(schema, datamap) {
+            redirectService.goToApplicationView(schema.applicationName, "batchInvIssueFilter", "input", null, null, null);
         },
 
         formatQtyReturnedList: function(parameters) {
@@ -216,27 +277,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         submitReturnConfirmation: function (event, datamap, parameters) {
-            var returnQty = datamap['#quantityadj'];
-            var item = datamap['itemnum'];
-            var storeloc = datamap['storeloc'];
-            var binnum = datamap['binnum'];
-            var message = "Return (" + returnQty + ") " + item + " to " + storeloc + "?";
-            if (binnum != null) {
-                message = message + " (Bin: " + binnum + ")";
-            }
-            return alertService.confirm(null, null, function () {
-                parameters.continue();
-            }, message);
+            returnConfirmation(event, datamap, parameters);
         },
 
         submitReturnTransformation: function (event, datamap) {
-            datamap['issueid'] = datamap['matusetransid'];
-            datamap['matusetransid'] = null;
-            datamap['rowstamp'] = null;
-            datamap['quantity'] = datamap['#quantityadj'];
-            datamap['issuetype'] = 'RETURN';
-            datamap['qtyreturned'] = null;
-            datamap['qtyrequested'] = datamap['#quantityadj'];
+            returnTransformation(event, datamap);
         },
 
         invissuelistclick: function(datamap, schema) {
@@ -262,7 +307,103 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 //The below if statement will add the positive quantityreturned to the negative quantity.
                 //If the result is negative, then are still items to be returned
                 if (qtyreturned + datamap['quantity'] < 0) {
-                    detail = 'editinvissuedetail';
+                    if (qtyreturned + datamap['quantity'] == -1) {
+                        var transformedData = angular.copy(datamap);
+                        transformedData['#quantityadj'] = 1;
+                        returnTransformation(event, transformedData);
+                        // Get the cost type
+                        updateInventoryCosttype({ fields: transformedData }, 'storeloc');
+                        var originalDatamap = {
+                            fields: datamap,
+                        };
+                        sessionStorage.mockclientvalidation = true;
+                        returnConfirmation(event, transformedData, {
+                            continue: function () {
+                                $rootScope.$broadcast('sw_submitdata', {
+                                    successCbk: function (data) {
+                                        sessionStorage.mockclientvalidation = false;
+                                        $rootScope.$broadcast('sw_refreshgrid');
+                                    },
+                                    failureCbk: function (data) {
+                                        var test = data;
+                                        sessionStorage.mockclientvalidation = false;
+                                    },
+                                    isComposition: false,
+                                    refresh: true,
+                                    selecteditem: transformedData,
+                                    originalDatamap: originalDatamap,
+                                });
+                              },
+                        });
+                        
+                        return;
+                    } else {
+                        detail = 'editinvissuedetail';
+                    }
+                } else {
+                    //If all of the items have been returned, show the viewdetail page for 'ISSUE' records
+                    detail = 'viewinvissuedetail';
+                }
+            }
+
+            redirectService.goToApplicationView(application, detail, mode, null, param, null);
+        },
+
+        invissuelistclick_maximo71: function (datamap, schema) {
+            var param = {};
+            param.id = datamap['matusetransid'];
+            var application = schema.applicationName;
+            var detail = 'viewinvreturndetail';
+            var mode = 'input';
+            //Logic to determine whether the record is an ISSUE
+            //and whether all of the issued items have been returned
+            if (datamap['issuetype'] == 'ISSUE') {
+
+                //Sets qtyreturned to 0 if null
+                //Parses the qtyreturned if its in a strng format
+                var qtyreturned = 0;
+                if (typeof datamap['qtyreturned'] === "string") {
+                    qtyreturned = parseInt(datamap['qtyreturned']);
+                } else if (datamap['qtyreturned'] != null) {
+                    qtyreturned = datamap['qtyreturned'];
+                }
+
+                //For an issue, the quantity will be a negative number, representing the # of items issued
+                //The below if statement will add the positive quantityreturned to the negative quantity.
+                //If the result is negative, then are still items to be returned
+                if (qtyreturned + datamap['quantity'] < 0) {
+                    if (qtyreturned + datamap['quantity'] == -1) {
+                        var transformedData = angular.copy(datamap);
+                        transformedData['#quantityadj'] = 1;
+                        returnTransformation(event, transformedData);
+                        // Maximo 7.1 store the inventory cost type in a different table than maximo 7.5
+                        // Using the afterchange item for maximo 7.1 to get the cost type and unit cost
+                        invIssue_maximo71_afterChangeItem({ fields: transformedData });
+                        var originalDatamap = {
+                            fields: datamap,
+                        };
+                        sessionStorage.mockclientvalidation = true;
+                        returnConfirmation(event, transformedData, {
+                            continue: function () {
+                                $rootScope.$broadcast('sw_submitdata', {
+                                    successCbk: function (data) {
+                                        sessionStorage.mockclientvalidation = false;
+                                        $rootScope.$broadcast('sw_refreshgrid');
+                                    },
+                                    failureCbk: function (data) {
+                                        sessionStorage.mockclientvalidation = false;
+                                    },
+                                    isComposition: false,
+                                    selecteditem: transformedData,
+                                    originalDatamap: originalDatamap,
+                                });
+                            },
+                        });
+
+                        return;
+                    } else {
+                        detail = 'editinvissuedetail';
+                    }
                 } else {
                     //If all of the items have been returned, show the viewdetail page for 'ISSUE' records
                     detail = 'viewinvissuedetail';
@@ -322,8 +463,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             submitInvIssueRec(datamap, clonedCompositionData, 0);
         },
 
-        navToIssueReturnList: function() {
-            redirectService.goToApplicationView("invissue", "invIssueList", null, null, null, null);
+        navToIssueReturnList: function(schema, datamap) {
+            redirectService.goToApplicationView(schema.applicationName, "invIssueList", null, null, null, null);
         },
 
         displayNewIssueModal: function(parentschema, parentdatamap) {
@@ -513,44 +654,8 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 doUpdateUnitCostFromInventoryCost(parameters, "unitcost", locationFieldName);
             });
         },
-        invIssue_maximo71_afterChangeItem: function(parameters) {
-            var maxvarsSearchData = {
-                varname: 'DEFISSUECOST',
-                siteid: parameters['fields']['siteid']
-            };
-            searchService.searchWithData("maxvars", maxvarsSearchData).success(function (maxvarsData) {
-                var resultObject = maxvarsData.resultObject;
-                var fields = resultObject[0].fields;
-                var costtype = fields['varvalue'];
-                parameters['fields']['inventory_.costtype'] = costtype;
-
-                var itemnum = parameters['fields']['itemnum'];
-                if (nullOrEmpty(itemnum)) {
-                    parameters['fields']['itemnum'] = null;
-                    parameters['fields']['unitcost'] = null;
-                    parameters['fields']['inventory_.issueunit'] = null;
-                    parameters['fields']['inventory_.itemtype'] = null;
-                    parameters['fields']['#curbal'] = null;
-                    return;
-                }
-
-                var searchData = {
-                    itemnum: parameters['fields']['itemnum'],
-                    location: parameters['fields']['storeloc'],
-                    siteid: parameters['fields']['siteid']
-                };
-                searchService.searchWithData("invcost", searchData).success(function (data) {
-                    var invcostRo = data.resultObject;
-                    var invcostFields = invcostRo[0].fields;
-                    if (costtype === 'STDCOST') {
-                        parameters.fields['unitcost'] = invcostFields.stdcost;
-                    } else if (costtype === 'AVGCOST') {
-                        parameters.fields['unitcost'] = invcostFields.avgcost;
-                    }
-                    parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
-                    parameters['fields']['lotnum'] = null;
-                });
-            });
+        invIssue_maximo71_afterChangeItem: function (parameters) {
+            invIssue_maximo71_afterChangeItem(parameters)
         },
         afterchangeinvissueitem: function(parameters) {
             parameters['fields']['lotnum'] = null;
@@ -600,6 +705,16 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
         },
 
+        invIssue_afterChangeRotAsset: function(parameters) {
+            if (parameters.fields['rotassetnum'].trim() != "") {
+                parameters.fields['binbalances_.binnum'] = parameters.fields['rotatingasset_.binnum'];
+                parameters.fields['binnum'] = parameters.fields['rotatingasset_.binnum'];
+                parameters.fields['binbalances_.lotnum'] = "";
+                parameters.fields['lotnum'] = "";
+                parameters.fields['binbalances_.curbal'] = 1;
+            }
+        },
+
         invIssue_afterChangeLocation: function(parameters) {
             //Sets the gldebitacct and clears the asset 
             //if there is no refwo defined
@@ -617,6 +732,12 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 parameters.fields['gldebitacct'] = parameters.fields['location_.glaccount'];
             }
 
+        },
+
+        invIssue_afterChangeLaborCode: function(parameters){
+            if (parameters.fields['labor_']) {
+                parameters.fields['issueto'] = parameters.fields['labor_']['personid'];
+            }
         },
 
         createTransfer: function(schema) {
@@ -832,7 +953,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var parameters = {
                 fields: datamap
             };
-            updateInventoryCosttype(parameters);
+            updateInventoryCosttype(parameters, location);
             datamap['#issueqty'] = datamap['reservedqty'];
             datamap['#issuetype'] = "ISSUE";
             var searchData = {

@@ -60,6 +60,7 @@
     }
 
     $scope.executeService = function (command) {
+        $('.no-touch [rel=tooltip]').tooltip('hide');
         if (command.service == "$scope") {
             var fn = $scope.ctrlfns[command.method];
             if (fn != null) {
@@ -101,8 +102,10 @@ app.directive('gridtoolbar', function (contextService) {
         scope: {
             paginationData: '=',
             searchData: '=',
+            searchTemplate: '=',
             searchOperator: '=',
             searchSort: '=',
+            advancedsearchdata : '=',
             schema: '=',
             mode: '@',
             position: '@',

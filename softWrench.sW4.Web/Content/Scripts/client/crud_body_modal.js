@@ -126,7 +126,6 @@ app.directive('crudBodyModal', function ($rootScope, modalService) {
             $scope.showModal = function (modaldata) {
                 var schema = modaldata.schema;
                 var datamap = modaldata.datamap;
-                fieldService.fillDefaultValues(schema.displayables, datamap);
                 $scope.schema = schema;
                 $scope.originalsavefn = modaldata.savefn;
                 $scope.cancelfn = modaldata.cancelfn;
@@ -135,6 +134,7 @@ app.directive('crudBodyModal', function ($rootScope, modalService) {
                 $scope.datamap = {
                     fields: datamap
                 };
+                fieldService.fillDefaultValues(schema.displayables, $scope.datamap);
                 $('#crudmodal').modal('show');
                 $("#crudmodal").draggable();
                 $rootScope.showingModal = true;

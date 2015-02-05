@@ -5,19 +5,42 @@
         expressionService = _expressionService_;
     }));
 
-    it('should match variables by @', function () {
-        var variables = expressionService.getVariables("@status == 'test'");
-        expect(variables.length).toBe(1);
-        expect(variables[0]).toBe('status');
+    it('should match datamap variables by @', function () {
+        var datamap = ({
+            status: 'test'
+        });
+        var variables = expressionService.getVariables("@status == 'test'", datamap, false);
+        expect(Object.keys(variables).length).toBe(1);
+        expect(eval(variables['@status'])).toBe('test');
     });
 
-    it('should match variables by @ 2', function () {
-        var variables = expressionService.getVariables("@status == 'test' and @ticketid!=null");
-        expect(variables.length).toBe(2);
-        expect(variables[0]).toBe('status');
-        expect(variables[1]).toBe('ticketid');
+
+
+    it('should match datamap variables by @ 2', function () {
+        var datamap = ({
+            status: 'test',
+            ticketid: '1000'
+        });
+        var variables = expressionService.getVariables("@status == 'test' and @ticketid!=null", datamap, false);
+        expect(Object.keys(variables).length).toBe(2);
+        expect(eval(variables['@status'])).toBe('test');
+        expect(eval(variables['@ticketid'])).toBe('1000');
     });
 
+    it('should match datamap variables by @ 3', function () {
+        var datamap = {};
+        var variables = expressionService.getVariables("@status == 'test'", datamap, false);
+        expect(Object.keys(variables).length).toBe(1);
+        expect(eval(variables['@status'])).toBeUndefined();
+    });
+
+//    it('should match services by fn:', function () {
+//        var datamap = {};
+//        debugger;
+//        var expression = expressionService.getExpression("fn:service.method($.datamap,$.schema)'", null, false);
+//        expect(expression).toEqual("dispatcherService.invokeService('service','method',[scope.datamap,scope.schema])");
+//    });
+   
     
 
 });

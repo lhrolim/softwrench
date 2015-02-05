@@ -98,8 +98,8 @@ namespace softWrench.Mobile.Metadata.Extensions {
                         .FirstOrDefault(d => d.Attribute == association.ApplicationTo + "." + attributeName);
                 if (field == null) {
                     field = new ApplicationFieldDefinition(applicationName, attributeName,
-                        association.Label, false, false, false, new FieldRenderer(), lookup, association.DefaultValue,
-                        null, null, association.ToolTip,null);
+                        association.Label, "false", false, false, new FieldRenderer(),lookup, association.DefaultValue,
+                        association.ToolTip);
                     idxsToReplace.Add(i, field);
                 } else {
                     field.WidgetDefinition = lookup;

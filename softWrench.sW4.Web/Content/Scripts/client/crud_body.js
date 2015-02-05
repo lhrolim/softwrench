@@ -291,6 +291,11 @@ app.directive('crudBody', function (contextService) {
                 var fromDatamap = selecteditem == null;
                 var fields = fromDatamap ? $scope.datamap.fields : selecteditem;
 
+                var originalDatamap = $scope.originalDatamap;
+                if (parameters.originalDatamap) {
+                    originalDatamap = parameters.originalDatamap;
+                }
+
                 var schemaToSave = $scope.schema;
                 if (parameters.schema) {
                     schemaToSave = parameters.schema;
@@ -301,7 +306,7 @@ app.directive('crudBody', function (contextService) {
                 var transformedFields = angular.copy(fields);
 
                 var eventParameters = {
-                    originaldatamap: $scope.originalDatamap.fields,
+                    originaldatamap: originalDatamap.fields,
                     'continue':function () {
                         $scope.validateSubmission(selecteditem, parameters, transformedFields, schemaToSave);
                     }
@@ -330,8 +335,13 @@ app.directive('crudBody', function (contextService) {
                     }
                 }
 
+                var originalDatamap = $scope.originalDatamap;
+                if (parameters.originalDatamap) {
+                    originalDatamap = parameters.originalDatamap;
+                }
+
                 var eventParameters = {
-                    originaldatamap :$scope.originalDatamap.fields,
+                    originaldatamap : originalDatamap.fields,
                     'continue': function () {
                         $scope.submitToServer(selecteditem, parameters, transformedFields,schemaToSave);
                     }
@@ -350,12 +360,17 @@ app.directive('crudBody', function (contextService) {
             $scope.submitToServer = function (selecteditem, parameters, transformedFields, schemaToSave) {
                 $rootScope.$broadcast("sw_beforesubmitpostvalidate_internal", transformedFields);
 
+                var originalDatamap = $scope.originalDatamap;
+                if (parameters.originalDatamap) {
+                    originalDatamap = parameters.originalDatamap;
+                }
+
                 //some fields might require special handling
                 submitService.removeNullInvisibleFields(schemaToSave.displayables, transformedFields);
                 transformedFields = submitService.removeExtraFields(transformedFields, true, schemaToSave);
                 submitService.translateFields(schemaToSave.displayables, transformedFields);
                 associationService.insertAssocationLabelsIfNeeded(schemaToSave, transformedFields, $scope.associationOptions);
-                submitService.handleDatamapForMIF(schemaToSave, $scope.originalDatamap.fields, transformedFields);
+                submitService.handleDatamapForMIF(schemaToSave, originalDatamap.fields, transformedFields);
 
                 if (parameters == undefined) {
                     parameters = {};

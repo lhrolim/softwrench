@@ -32,7 +32,7 @@ namespace softWrench.Mobile.UI.Binding
             }
 
             // Ensure required fields are provided.
-            if (_metadata.IsRequired && string.IsNullOrWhiteSpace(ValueProvider.Value))
+            if (_metadata.RequiredExpression =="true" && string.IsNullOrWhiteSpace(ValueProvider.Value))
             {
                 error = "This field is required.";
                 return false;

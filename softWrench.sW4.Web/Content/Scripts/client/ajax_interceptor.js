@@ -44,7 +44,6 @@ app.config(['$httpProvider', function ($httpProvider) {
         function successMessageHandler(data) {
             var timeOut = contextService.retrieveFromContext('successMessageTimeOut');
             if (data.successMessage != null) {
-                contextService.insertIntoContext("refreshscreen", true, true);
                 var willRefresh = contextService.fetchFromContext("refreshscreen", false, true);
                 if (!willRefresh) {
                     $rootScope.$broadcast('sw_successmessage', data);

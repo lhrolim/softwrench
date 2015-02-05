@@ -124,9 +124,11 @@ namespace softWrench.iOS.Views {
         }
 
         private void ConfigureLabel() {
-            Label.Text = (Metadata.IsRequired ? "* " : "") + Metadata.Label;
+            var required = Metadata.RequiredExpression == "true";
 
-            Label.Font = Metadata.IsRequired
+            Label.Text = (required ? "* " : "") + Metadata.Label;
+
+            Label.Font = required
                 ? Theme.BoldFontOfSize(Label.Font.PointSize)
                 : Theme.FontOfSize(Label.Font.PointSize);
         }

@@ -135,8 +135,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 WsUtil.SetValueIfNull(integrationObject, "QTYREQUESTED", 0);
                 WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0);
 
+                var itemtype = WsUtil.GetRealValue(integrationObject, "LINETYPE");
                 var quantity = (double)WsUtil.GetRealValue(integrationObject, "QTYREQUESTED");
                 var unitcost = (double)WsUtil.GetRealValue(integrationObject, "UNITCOST");
+
+                if (itemtype.Equals("ITEM")) {
+                    WsUtil.SetValue(integrationObject, "DESCRIPTION", crudData.UnmappedAttributes["#description"]); 
+                }
 
                 WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
                 WsUtil.SetValue(integrationObject, "ACTUALDATE", DateTime.Now.FromServerToRightKind(), true);

@@ -204,6 +204,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
 
         public static XName FieldAttributeDefaultValue = "default";
+        public const string FieldAttributeDefaultExpression = "defaultexpression";
         //        public const string FieldAttributeOptions = "options";
         public const string FieldAttributeType = "type";
 
