@@ -1,4 +1,4 @@
-﻿function AceController($scope, $http, $templateCache, $window, i18NService, alertService) {
+﻿function AceController($scope, $http, $templateCache, $window, i18NService, alertService, restService) {
 
     $scope.save = function () {
        
@@ -29,6 +29,27 @@
             });
 
     };
+    $scope.savechanges = function () {
+
+        var urlToUse = "/api/generic/EntityMetadata/SaveMetadataEditor";
+        var jsonString = JSON.stringify(ace.edit("editor").getValue());
+        //$http.post(urlToUse,jsonString).success(function () {
+        //     alertService.alert("Metadata changes saved successfully");
+        //});
+        $http({
+            method: "POST",
+            dataType: "json",
+            url: url(urlToUse),
+            headers: { "Content-Type": "application/json; charset=utf-8" },
+            data:  jsonString }).
+            success(function () {
+                alertService.alert("saved successfully");
+            });
+         
+        };
+       
+        //restService.invokePost("EntityMetadata", "SaveMetadataEditor", jsonString, null, null,null);
+    
     $scope.restore = function () {
 
         alertService.confirmMsg("Are you sure you want to restore to default settings ? ", function () {

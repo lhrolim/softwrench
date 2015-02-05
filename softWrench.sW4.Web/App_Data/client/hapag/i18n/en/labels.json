@@ -175,6 +175,7 @@ general:{
 	role:Role
 	active:Active
 	save:Submit
+	savechanges: Save Changes
 	restore: Restore Default
 	delete:Delete
 	name:Name

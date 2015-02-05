@@ -1,0 +1,77 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using NHibernate.Mapping.Attributes;
+using System.Xml;
+using Newtonsoft.Json;
+using softWrench.sW4.Util;
+
+namespace softWrench.sW4.Data.Entities {
+    [Class(Table = "SW_METADATAEDITR", Lazy = false)]
+    public class Metadataeditor {
+
+        public const String ByItemIdAndUserId = "from SW_METADATAEDITOR where Id =?";
+
+        public const String ByItemIdAndUserIdAndCommlogId = "from SW_METADATAEDITOR where Default=?";
+
+        [Id(0, Name = "Id")]
+        [Generator(1, Class = "native")]
+        public virtual int? Id { get; set; }
+
+        [Property(Type = "BinaryBlob")]
+        [JsonIgnore]
+        public virtual byte[] Metadata { get; set; }
+
+
+        [Property]
+        public virtual DateTime  CreatedDate{ get; set; }
+
+        [Property]
+        public virtual int DefaultId { get; set; }
+
+        public virtual string SystemStringValue
+        {
+            get
+            {
+                return StringExtensions.GetString(CompressionUtil.Decompress(Metadata)) ;
+            }
+            set
+            {
+                
+                    Metadata = CompressionUtil.Compress(value.GetBytes());
+             }
+        }
+       
+        public override string ToString() {
+            return string.Format("Metadata: {0}, CreatedDate: {1}, DefaultId: {2}", Metadata, CreatedDate, DefaultId);
+        }
+
+        private sealed class IdEqualityComparer : IEqualityComparer<Metadataeditor>
+        {
+            public bool Equals(Metadataeditor x, Metadataeditor y)
+            {
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(x, null)) return false;
+                if (ReferenceEquals(y, null)) return false;
+                if (x.GetType() != y.GetType()) return false;
+                return x.Id == y.Id;
+            }
+
+            public int GetHashCode(Metadataeditor obj)
+            {
+                return obj.Id.GetHashCode();
+            }
+        }
+
+        private static readonly IEqualityComparer<Metadataeditor> IdComparerInstance = new IdEqualityComparer();
+
+        public static IEqualityComparer<Metadataeditor> IdComparer
+        {
+            get { return IdComparerInstance; }
+        }
+
+    }
+}
+
