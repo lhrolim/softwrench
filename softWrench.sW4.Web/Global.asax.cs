@@ -62,7 +62,6 @@ namespace softWrench.sW4.Web {
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             new MigratorExecutor("SWDB").Migrate(runner => runner.MigrateUp());
             SecurityFacade.InitSecurity();
-
             if (!changeClient) {
                 var container = SimpleInjectorScanner.InitDIController();
                 var dispatcher = (IEventDispatcher)container.GetInstance(typeof(IEventDispatcher));

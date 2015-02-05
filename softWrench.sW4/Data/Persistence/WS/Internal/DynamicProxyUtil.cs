@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using log4net;
 using softWrench.sW4.Metadata.Entities.Connectors;
+using softWrench.sW4.Security.Services;
+using softWrench.sW4.SimpleInjector.Events;
 using WcfSamples.DynamicProxy;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;
@@ -11,10 +13,10 @@ using System.Net.Security;
 using System.Net;
 
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
-    internal class DynamicProxyUtil {
+    internal class DynamicProxyUtil : ISWEventListener<ClearCacheEvent> {
 
         private const string MissingKeyMsg = "Please provide integration_interface key for entity {0}";
-        
+
         private const string QueryInterfaceParam = "integration_query_interface";
         private static readonly Dictionary<String, IDynamicProxyFactory> DynamicProxyCache = new Dictionary<string, IDynamicProxyFactory>();
         private readonly static ILog Log = LogManager.GetLogger(typeof(DynamicProxyUtil));
@@ -129,6 +131,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 }
             }
             return arr;
+        }
+
+        public void HandleEvent(ClearCacheEvent eventToDispatch) {
+            ClearCache();
         }
     }
 }
