@@ -3,6 +3,12 @@
 xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
   <!--GRIC-->
+
+<!--  <templates>-->
+<!--    <template path="@workorder.xml"/>-->
+<!--  </templates>-->
+  
+  
   <entities>
     <entity name="SR" idAttribute="ticketid">
       <relationships>
@@ -483,9 +489,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup"/>
             <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
           </association>
-          <association label="Change By:" target="changeby" labelfield="changebyperson_.displayname" showexpression="@siteid!='VQ'">
-            <renderer type="lookup"/>
-          </association>
+<!--          <association label="Change By:" target="changeby" labelfield="changebyperson_.displayname" showexpression="@siteid!='VQ'">-->
+<!--            <renderer type="lookup"/>-->
+<!--          </association>-->
+          <field attribute="changeby" label="Change By:" readonly="true" />
           <!-- Added the Owner Group field-->
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
             <renderer type="lookup"/>
@@ -576,7 +583,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section id="statussection">
             <field attribute="wonum" label="WO#" readonly="true"/>
             <association label="Status" target="status" labelfield="synstatus.description">
-              <!--renderer type="combo"/-->
+              <renderer type="combo"/>
             </association>
           </section>
 
