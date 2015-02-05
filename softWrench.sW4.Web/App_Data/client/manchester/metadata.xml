@@ -81,6 +81,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="orgid" to="orgid" />
           <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
         </relationship>
+        <!--COMSW 51 Reverse Lookup of Service Address (Lazy Fetch)-->
+        <relationship to="woaddress" reverselookupattribute="addresscode" >
+          <relationshipAttribute from="wonum" to="woserviceaddress_.wonum" primary="true"/>
+        </relationship>
         <relationship to="synonymdomain" qualifier="synstatus">
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
@@ -174,6 +178,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <properties>
         <property key="mobile.disabled" value="true"/>
       </properties>
+      
       <schemas>
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <section id ="siteidsection"/>
@@ -246,13 +251,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!-- Code added from gric metadata.xml SWWEB 173-->
           <section id="attachmentsection" />
           <!--COMSW 24 required field for population purposes-->
-          <field attribute="serviceaddress_.description" attributeToServer="#tkdesc" hidden="true" />
-          <field attribute="serviceaddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
-          <field attribute="serviceaddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
-          <field attribute="serviceaddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
-          <field attribute="serviceaddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
+          <field attribute="sraddress_.description" attributeToServer="#tkdesc" hidden="true" />
+          <field attribute="sraddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
+          <field attribute="sraddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
+          <field attribute="sraddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
+          <field attribute="sraddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
           <!--COMSW 24 association field used for lazy lookup-->
-          <association label="Service Address" target="saddresscode" labelfield="serviceaddress_.description" requiredexpression="@location == null" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
+          <association label="Service Address" target="saddresscode" labelfield="sraddress_.description" requiredexpression="@location == null" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
             <renderer type="lookup" />
           </association>
 
@@ -422,13 +427,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
             <renderer type="lookup"/>
           </association>
-          <!--COMSW-2 Fix For Priority Selection-->
-          <!--<field attribute="wopriority" label="Priority:" required="true" default="1">
-          <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-        </field>-->
           <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
             <renderer type="autocompleteclient"/>
           </optionfield>
+          <!--COMSW 24 association field used for lazy lookup-->
+          <association label="Service Address" target="saddresscode" labelfield="woaddress_.description"  extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress">
+            <renderer type="lookup" />
+            
+          </association>
+          <field label="Formatted Address:" attribute="formattedaddress"/>
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
             <renderer type="lookup"/>
