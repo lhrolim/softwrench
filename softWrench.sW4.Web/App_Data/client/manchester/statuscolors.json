@@ -13,6 +13,11 @@
 
 workorder:{
     new: orange,
+    wsch: orange,
     wappr: orange,
+    can: blue,
+    comp: blue,
+    field work comp: blue,
+    appr: green,
     close: green
 }
