@@ -39,7 +39,7 @@ app.factory('userPreferenceService', function (contextService, restService, $log
             return filters.length > 0;
         },
 
-        saveFilter: function (schema, searchData, searchOperators, alias, id, filterowner, successCbk) {
+        saveFilter: function (schema, searchData,template, searchOperators, alias, id, filterowner, successCbk) {
             var fields = "";
             var operators = "";
             var values = "";
@@ -63,6 +63,7 @@ app.factory('userPreferenceService', function (contextService, restService, $log
                 fields: fields.substr(0, fields.length - 1),
                 operators: operators.substr(0, operators.length - 1),
                 values: values.substr(0, values.length - 3),
+                template: template,
                 alias: alias,
                 id: id
             };

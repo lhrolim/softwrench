@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿using System.Configuration;
+using log4net;
 using log4net.Config;
 using Microsoft.Web.Mvc;
 using Newtonsoft.Json.Serialization;
@@ -29,36 +30,43 @@ namespace softWrench.sW4.Web {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
-    public class WebApiApplication : System.Web.HttpApplication {
+    public class WebApiApplication : System.Web.HttpApplication, ISWEventListener<ClientChangeEvent>, ISWEventListener<ClearCacheEvent> {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(WebApiApplication));
 
         protected void Application_Start(object sender, EventArgs args) {
+            DoStartApplication(false);
+        }
+
+        private static void DoStartApplication(bool changeClient) {
 
             var before = Stopwatch.StartNew();
-            ViewEngines.Engines.Clear();
-            ViewEngines.Engines.Add(new ClientAwareRazorViewEngine());
-            ViewEngines.Engines.Add(new FixedWebFormViewEngine()); // to render the reports user controls (.ascx)            
+            if (!changeClient) {
+                ViewEngines.Engines.Clear();
+                ViewEngines.Engines.Add(new ClientAwareRazorViewEngine());
+                ViewEngines.Engines.Add(new FixedWebFormViewEngine());
+                // to render the reports user controls (.ascx)            
+                ConfigureLogging();
+                AreaRegistration.RegisterAllAreas();
+                EnableJsonCamelCasing();
+                RegisterDataMapFormatter();
 
-            ConfigureLogging();
-            AreaRegistration.RegisterAllAreas();
+                WebApiConfig.Register(GlobalConfiguration.Configuration);
+                FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+                RouteConfig.RegisterRoutes(RouteTable.Routes);
+              
+            }
             MetadataProvider.DoInit();
-            EnableJsonCamelCasing();
-            RegisterDataMapFormatter();
-
-            WebApiConfig.Register(GlobalConfiguration.Configuration);
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.ClearBundles();
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             new MigratorExecutor("SWDB").Migrate(runner => runner.MigrateUp());
-            ManagedWebSessionContext.Bind(
-             System.Web.HttpContext.Current,
-             SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
             SecurityFacade.InitSecurity();
-
-            var container = SimpleInjectorScanner.InitDIController();
-            var dispatcher = (IEventDispatcher)container.GetInstance(typeof(IEventDispatcher));
-            dispatcher.Dispatch(new ApplicationStartedEvent());
+            if (!changeClient) {
+                ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
+                var container = SimpleInjectorScanner.InitDIController();
+                var dispatcher = (IEventDispatcher)container.GetInstance(typeof(IEventDispatcher));
+                dispatcher.Dispatch(new ApplicationStartedEvent());
+            }
             Log.Info(LoggingUtil.BaseDurationMessage("**************App started in {0}*************", before));
             ApplicationConfiguration.StartTimeMillis = (long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
         }
@@ -117,6 +125,13 @@ namespace softWrench.sW4.Web {
                 //error handling
             }
         }
+
+        protected void Application_BeginRequest(object sender, EventArgs e) {
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+            Response.Cache.SetNoStore();
+        }
+
         protected void Application_EndRequest(object sender, EventArgs e) {
             var context = new HttpContextWrapper(Context);
             if (Context.Response.StatusCode == 302 && Context.Response.RedirectLocation.Contains("/SignIn")) {
@@ -130,17 +145,17 @@ namespace softWrench.sW4.Web {
                     //this means that we´re coming from the logout action --> nothing to do
                     return;
                 }
-                if (Request.Params["HTTP_REFERER"] == null){
+                if (Request.Params["HTTP_REFERER"] == null) {
                     //the HTTP_REFERER is null on the first time the app loads. Removing this check would cause wrong behaviour on first time access
                     return;
                 }
 
-                if (!isForbidden){
+                if (!isForbidden) {
                     //already marked as forbidden, let´s not mess the messages
-                    Context.Response.RedirectLocation += "&timeout=true";    
+                    Context.Response.RedirectLocation += "&timeout=true";
                 }
-                
-                
+
+
             }
 
         }
@@ -169,6 +184,32 @@ namespace softWrench.sW4.Web {
             jsonFormatter
                 .SerializerSettings
                 .ContractResolver = new CamelCasePropertyNamesContractResolver();
+        }
+
+        public void HandleEvent(ClientChangeEvent eventToDispatch) {
+            var oldKey = ConfigurationManager.AppSettings["clientkey"];
+            if (ConfigurationManager.AppSettings["originalclientkey"] == null) {
+                ConfigurationManager.AppSettings["originalclientkey"] = oldKey;
+            }
+            var newKey = eventToDispatch.ClientKey;
+            if (eventToDispatch.Restore) {
+                newKey = ConfigurationManager.AppSettings["originalclientkey"];
+            }
+            if (oldKey == newKey) {
+                throw new InvalidOperationException("client key not changed");
+            }
+            ConfigurationManager.AppSettings["clientkey"] = newKey;
+            try {
+                DoStartApplication(true);
+            } catch (Exception e) {
+                ConfigurationManager.AppSettings["clientkey"] = oldKey;
+                DoStartApplication(true);
+                throw new Exception("Error: could not modify client restoring to {0}".Fmt(oldKey), e);
+            }
+        }
+
+        public void HandleEvent(ClearCacheEvent eventToDispatch) {
+            
         }
     }
 }

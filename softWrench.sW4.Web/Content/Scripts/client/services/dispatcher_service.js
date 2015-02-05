@@ -25,6 +25,20 @@ app.factory('dispatcherService', function ($injector, $log) {
     return {
         loadService: function(service, method) {
             return loadService(service, method);
+        },
+
+        invokeService: function(service, method, parameters) {
+            var fn = this.loadService(service, method, parameters);
+            if (fn == null) {
+                return null;
+            }
+            if (parameters != null) {
+                var args = [];
+                for (var i = 0; i < parameters.length; i++) {
+                    args.push(parameters[i]);
+                }
+                return fn.apply(this, args);
+            }
         }
     };
 

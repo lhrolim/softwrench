@@ -25,8 +25,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
-        private readonly ISet<ApplicationEvent> _eventsSet;
-
         /// <summary>
         /// This fields can only be resolved once the entire metadata.xml are parsed, so that´s why we are using this Lazy strategy.
         /// 
@@ -121,9 +119,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             IdFieldName = idFieldName;
             UserIdFieldName = userIdFieldName;
             UnionSchema = unionSchema;
-          
 
-            _eventsSet = events;
             if (events != null) {
                 _events = events.ToDictionary(f => f.Type, f => f);
             }
@@ -322,7 +318,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         [JsonIgnore]
         public ISet<ApplicationEvent> EventSet {
-            get { return _eventsSet; }
+            get { return new HashSet<ApplicationEvent>(_events.Values); }
         }
 
         protected bool Equals(ApplicationSchemaDefinition other) {

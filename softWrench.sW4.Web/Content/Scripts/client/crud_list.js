@@ -185,14 +185,29 @@ app.directive('crudList', function (contextService) {
                 log.debug('finish table rendered listener');
             });
 
-            $scope.$on('sw_togglefiltermode', function (event) {
+
+            $scope.$on('sw_togglefiltermode', function (event, setToBasicMode) {
+                if (setToBasicMode) {
+                    $scope.advancedfiltermode = false;
+                    fixHeaderService.callWindowResize();
+                    $scope.advancedsearchdata = null;
+                    return;
+                }
+
                 $scope.advancedfiltermode = !$scope.advancedfiltermode;
                 fixHeaderService.callWindowResize();
                 if (!$scope.advancedfiltermode) {
                     $scope.advancedsearchdata = null;
                 }
+                var first = true;
                 for (var data in $scope.searchData) {
+                    if ($scope.searchTemplate && first) {
+                        //TODO: right now if a template is present, the only possibility is that the advanced filter is present.
+                        //Refactor this in the future
+                        $scope.advancedsearchdata = replaceAll($scope.searchData[data], '%', '');
+                    }
                     $scope.searchData[data] = "";
+                    first = false;
                 }
                 var operator = searchService.getSearchOperationBySymbol("");
                 for (var key in $scope.searchOperator) {
@@ -211,14 +226,12 @@ app.directive('crudList', function (contextService) {
                 /// <summary>
                 ///  implementation of searchService#refreshgrid see there for details
                 /// </summary>
-                if (extraparameters == null) {
-                    extraparameters = {
-                    };
-                }
+                extraparameters = extraparameters || {};
                 var pagetogo = extraparameters.pageNumber ? extraparameters.pageNumber : $scope.paginationData.pageNumber;
                 var pageSize = extraparameters.pageSize ? extraparameters.pageSize : $scope.paginationData.pageSize;
                 var printmode = extraparameters.printMode;
                 var keepfilterparameters = extraparameters.keepfilterparameters;
+                $scope.searchTemplate = extraparameters.searchTemplate;
                 // if search data is present, we should go back to first page, as we wont know exactly the new number of pages available
                 if (searchData) {
                     if (keepfilterparameters) {
@@ -230,6 +243,9 @@ app.directive('crudList', function (contextService) {
                         $scope.advancedsearchdata = null;
                     }
                     pagetogo = 1;
+                } else {
+                    //let´s clean the advanced filter just in case
+                    $scope.advancedsearchdata = null;
                 }
                 if (extraparameters.avoidspin) {
                     contextService.set("avoidspin", true, true);
@@ -320,7 +336,7 @@ app.directive('crudList', function (contextService) {
                 if (reportDto != null) {
                     searchDTO = searchService.buildReportSearchDTO(reportDto, $scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause);
                 } else {
-                    searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause);
+                    searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause, null, $scope.searchTemplate);
                 }
 
                 searchDTO.pageNumber = pageNumber;
@@ -336,12 +352,6 @@ app.directive('crudList', function (contextService) {
                 $scope.renderListView({
                     SearchDTO: searchDTO, printMode: printMode
                 });
-                if ($scope.advancedfiltermode) {
-                    //this workaround is used to clear the data after the advanced search has reached, because the code has lots of comes and goes...
-                    //TODO: refatcor search
-                    $scope.searchData = {
-                    };
-                }
             };
 
             $scope.toggleSelectAll = function (checked) {

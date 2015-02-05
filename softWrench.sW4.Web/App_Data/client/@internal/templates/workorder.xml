@@ -59,7 +59,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="wopriority" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WO PRIORITY" quoteLiteral="true" />
         </relationship>
-        <relationship to ="glcomponents">
+        <!--Please updated it to use lazy method loading, huge performance impact-->
+        <relationship to ="glcomponents" reverselookupattribute="compvalue">
           <relationshipAttribute from="orgid" to="orgid" primary="true"/>
         </relationship>
       </relationships>
@@ -70,7 +71,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <application name="workorder" title="Work Order" entity="workorder">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
-        <!--<property key="oncrudsaveevent.validationservice" value="workorderservice.defaultvalidation"/>-->
       </properties>
       <schemas>
         <list title="Work Order Grid" platform="web">
@@ -239,7 +239,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             </association>
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
           </section>
-          <event type="beforesubmit.onvalidation" service="workorderservice" method="defaultvalidation" />
         </schema>
 
         <schema parentschema="adetail" id="editdetail" title="Work Order Details" platform="web">
@@ -251,7 +250,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </section>
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+              <collectionproperties allowupdate="true" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="woactivity" label="WO Tasks">
               <collectionproperties allowupdate="false" allowcreation="false"  />
@@ -270,7 +269,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             </composition>
           </section>
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
-          <event type="beforesubmit.onvalidation" service="workorderservice" method="defaultvalidation" />
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
         </schema>
 
@@ -367,7 +365,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </field>
           <field attribute="description" label="Description"  />
           <field attribute="longdescription_.ldtext" label="Details" name="description_longdescription" />
-          <event type="beforesubmit.onvalidation" service="workorderservice" method="defaultvalidation" />
         </detail>
       </schemas>
     </application>

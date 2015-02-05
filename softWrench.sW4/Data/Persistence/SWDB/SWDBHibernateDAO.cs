@@ -149,7 +149,7 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
 
 
         public class SessionManager : ISessionManager {
-            private readonly ISessionFactory _sessionFactory;
+            private ISessionFactory _sessionFactory;
 
             public static ISessionFactory SessionFactory {
                 get { return Instance._sessionFactory; }
@@ -169,6 +169,10 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
                 return Instance.GetSessionFactory().OpenSession();
             }
 
+            public void Restart() {
+                NestedSessionManager.SessionManager = new SessionManager();
+            }
+
             public ISession CurrentSession {
                 get {
                     return Instance.GetSessionFactory().GetCurrentSession();
@@ -179,19 +183,22 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
                 var configuration = new NHibernate.Cfg.Configuration();
                 configuration.AddAssembly(Assembly.GetCallingAssembly());
                 IDictionary<string, string> properties = new Dictionary<string, string>();
-                properties[NHibernate.Cfg.Environment.ConnectionString] = ApplicationConfiguration.DBConnectionString(ApplicationConfiguration.DBType.Swdb);
-                properties.Add(NHibernate.Cfg.Environment.ConnectionDriver, HibernateUtil.HibernateDriverName(ApplicationConfiguration.DBType.Swdb));
-                properties.Add(NHibernate.Cfg.Environment.Dialect, HibernateUtil.HibernateDialect(ApplicationConfiguration.DBType.Swdb));
+                properties[NHibernate.Cfg.Environment.ConnectionString] =
+                    ApplicationConfiguration.DBConnectionString(ApplicationConfiguration.DBType.Swdb);
+                properties.Add(NHibernate.Cfg.Environment.ConnectionDriver,
+                    HibernateUtil.HibernateDriverName(ApplicationConfiguration.DBType.Swdb));
+                properties.Add(NHibernate.Cfg.Environment.Dialect,
+                    HibernateUtil.HibernateDialect(ApplicationConfiguration.DBType.Swdb));
                 properties.Add(NHibernate.Cfg.Environment.ShowSql, "false");
                 properties.Add(NHibernate.Cfg.Environment.ConnectionProvider, "NHibernate.Connection.DriverConnectionProvider");
-                properties.Add(NHibernate.Cfg.Environment.ProxyFactoryFactoryClass, "NHibernate.Bytecode.DefaultProxyFactoryFactory, NHibernate");
+                properties.Add(NHibernate.Cfg.Environment.ProxyFactoryFactoryClass,
+                    "NHibernate.Bytecode.DefaultProxyFactoryFactory, NHibernate");
                 properties.Add(NHibernate.Cfg.Environment.CurrentSessionContextClass, "managed_web");
                 configuration.SetProperties(properties);
 
-                var findTypesAnnotattedWith = AttributeUtil.FindTypesAnnotattedWith(typeof(ClassAttribute), typeof(JoinedSubclassAttribute));
-                foreach (var nHibernateType in findTypesAnnotattedWith)
-                {
-                    
+                var findTypesAnnotattedWith = AttributeUtil.FindTypesAnnotattedWith(typeof(ClassAttribute),
+                    typeof(JoinedSubclassAttribute));
+                foreach (var nHibernateType in findTypesAnnotattedWith) {
                     configuration.AddInputStream(HbmSerializer.Default.Serialize(nHibernateType));
                 }
 
@@ -201,7 +208,7 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
 
             [UsedImplicitly]
             class NestedSessionManager {
-                internal static readonly SessionManager SessionManager =
+                internal static SessionManager SessionManager =
                     new SessionManager();
             }
         }

@@ -103,9 +103,9 @@ app.directive('messagesection', function (contextService) {
                 
                 $scope.$broadcast('sw_errormessage', true);
 
-                if (nullOrUndef($rootScope.hasErrorDetail) && nullOrUndef($rootScope.hasErrorList)) {
+//                if (nullOrUndef($rootScope.hasErrorDetail) && nullOrUndef($rootScope.hasErrorList)) {
                     $rootScope.hasErrorDetail = true;
-                }
+//                }
             });
 
             $scope.$on('sw_validationerrors', function (event, validationArray) {

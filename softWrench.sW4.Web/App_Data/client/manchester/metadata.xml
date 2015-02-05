@@ -15,6 +15,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <template path="@materials.xml"/>
     <template path="@labtrans.xml"/>
     <template path="@woactivity.xml"/>
+    <template path="@materials.xml"/>
   </templates>
   
   <entities>
@@ -75,9 +76,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="worktype" to="worktype" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid" />
         </relationship>
-        <relationship to="chartofaccounts" >
-          <relationshipAttribute from="glaccount" to="glaccount" primary="true"/>
+        <relationship to="glcomponents">
+          <relationshipAttribute from="glaccount" to="compvalue" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
         </relationship>
         <relationship to="synonymdomain" qualifier="synstatus">
           <relationshipAttribute from="status" to="value" primary="true"/>
@@ -120,6 +122,51 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
       </relationships>
     </entity>
+
+    <entity name="matusetrans" idAttribute="matusetransid" >
+      <relationships>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="status" literal="ACTIVE"/>
+        </relationship>
+        <relationship to="item">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute to="itemtype" literal="ITEM" quoteLiteral="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="location" qualifier="storeroom">
+          <relationshipAttribute from="siteid" to="siteid" primary="true" />
+          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
+        </relationship>
+        <relationship to="invbalances" qualifier="invbal" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true" />
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="glcomponents">
+          <relationshipAttribute from="gldebitacct" to="compvalue" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+    <entity name="tooltrans" idAttribute="tooltransid">
+      <relationships>
+        <relationship to="toolitem" qualifier="tool" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+        </relationship>
+        <relationship to="glcomponents">
+          <relationshipAttribute from="gldebitacct" to="compvalue" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
   </entities>
 
   <applications>
@@ -287,7 +334,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     <application name="workorder" title="Work Order" entity="workorder">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
-        <!--<property key="oncrudsaveevent.validationservice" value="workorderservice.comvalidation"/>-->
       </properties>
 
       <schemas>
@@ -348,116 +394,113 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web">
           <field attribute="workorderid" hidden="true"/>
           <section id ="siteidsection"/>
-          <section id="realfields">
-            <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
-            <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
-            <field attribute="woclass" hidden="true"/>
-            <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-            <field attribute="wonum" label="WO No:" readonly="true"/>
-            <!--COMSW-2-->
-            <association label="Division:" target="division" labelfield="division_.description" requiredexpression="true">
-              <renderer type="lookup"/>
-            </association>
-            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" default="@classstructureid">
-              <renderer type="autocompleteclient" />
-            </optionfield>
-            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
-              <renderer type="lookup"/>
-              <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
-            </association>
-            <!-- Added the Owner Group field-->
-            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
-              <renderer type="lookup"/>
-              <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
-            </association>
-            <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
-            <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
-              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-            </field>
-            <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
-              <renderer type="lookup"/>
-            </association>
-            <!--COMSW-2 Fix For Priority Selection-->
-            <!--<field attribute="wopriority" label="Priority:" required="true" default="1">
-            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-          </field>-->
-            <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
-              <renderer type="autocompleteclient"/>
-            </optionfield>
-            <association label="Location:" target="location" labelfield="location_.description" >
-              <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
-              <!--renderer type="lookup"/-->
-            </association>
-            <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-              <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-              <dataprovider prefilterfunction="FilterAssets"/>
-              <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
-            </association>
-            <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
-              <renderer type="lookup"/>
-            </association>
-            <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist">
-              <!--renderer type="lookup"/-->
-            </association>
-            <field hidden="true" attribute="failurelist_.failurelist"/>
-            <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode">
-              <renderer type="lookup"/>
-              <dataprovider prefilterfunction="FilterProblemCodes"/>
-            </association>
-            <field label="Job Plan:" attribute="jpnum" readonly="true" />
-            <association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
-              <renderer type="lookup"/>
-            </association>
+          <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
+          <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
+          <field attribute="woclass" hidden="true"/>
+          <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
+          <field attribute="wonum" label="WO No:" readonly="true"/>
+          <!--COMSW-2-->
+          <association label="Division:" target="division" labelfield="division_.description" requiredexpression="true">
+            <renderer type="lookup"/>
+          </association>
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" default="@classstructureid">
+            <renderer type="autocompleteclient" />
+          </optionfield>
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
+          </association>
+          <!-- Added the Owner Group field-->
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
+          </association>
+          <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
+          <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
+            <renderer type="lookup"/>
+          </association>
+          <!--COMSW-2 Fix For Priority Selection-->
+          <!--<field attribute="wopriority" label="Priority:" required="true" default="1">
+          <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
+        </field>-->
+          <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
+            <renderer type="autocompleteclient"/>
+          </optionfield>
+          <association label="Location:" target="location" labelfield="location_.description" >
+            <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
+            <renderer type="lookup"/>
+          </association>
+          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+            <dataprovider prefilterfunction="FilterAssets"/>
+            <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
+          </association>
+          <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
+            <renderer type="lookup"/>
+          </association>
+          <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist">
+            <!--renderer type="lookup"/-->
+          </association>
+          <field hidden="true" attribute="failurelist_.failurelist"/>
+          <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode">
+            <renderer type="lookup"/>
+            <dataprovider prefilterfunction="FilterProblemCodes"/>
+          </association>
+          <field label="Job Plan:" attribute="jpnum" readonly="true" />
+          <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >
+            <renderer type="lookup"/>
+          </association>
 
 
-            <!-- Adding target start finish date-->
-            <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
-            <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
-            <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
-            <field attribute="actualfinish" hidden="true" attributeToServer="#notusedattribute"/>
+          <!-- Adding target start finish date-->
+          <field attribute="targstartdate" hidden="true"/>
+          <field attribute="targcompdate" hidden="true"/>
+          <field attribute="actstart" hidden="true"/>
+          <field attribute="actfinish" hidden="true"/>
 
-            <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
-                            parameters="joinattribute=targetstart;">
-              <header label="Target Start Date:" displacement="sameline"/>
-            </section>
-
-            <section id="targetFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                            parameters="joinattribute=targetfinish;">
-              <header label="Target Finish Date:" displacement="sameline"/>
-            </section>
-
-            <section id="actualStart" resourcepath="/Content/Templates/samelinepickers.html"
-                            parameters="joinattribute=actualstart;">
-              <header label="Actual Start Date:" displacement="sameline"/>
-            </section>
-
-            <section id="actualFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                            parameters="joinattribute=actualfinish;">
-              <header label="Actual Finish Date:" displacement="sameline"/>
-            </section>
-
-
-
-            <field attribute="description" label="Summary:"/>
-            <field label="Details:" attribute="longdescription_.ldtext" >
-              <renderer type="richtext"/>
-            </field>
-
-            <!--					<section id="matusetranssection"/>-->
-            <!--					<section id="labtranssection"/>-->
+          <section id="targstartdate" resourcepath="/Content/Templates/samelinepickers.html"
+                          parameters="joinattribute=targstartdate;">
+            <header label="Target Start Date:" displacement="sameline"/>
           </section>
+
+          <section id="targcompdate" resourcepath="/Content/Templates/samelinepickers.html"
+                          parameters="joinattribute=targcompdate;">
+            <header label="Target Finish Date:" displacement="sameline"/>
+          </section>
+
+          <section id="actstart" resourcepath="/Content/Templates/samelinepickers.html"
+                          parameters="joinattribute=actstart;">
+            <header label="Actual Start Date:" displacement="sameline"/>
+          </section>
+
+          <section id="actfinish" resourcepath="/Content/Templates/samelinepickers.html"
+                          parameters="joinattribute=actfinish;">
+            <header label="Actual Finish Date:" displacement="sameline"/>
+          </section>
+
+
+
+          <field attribute="description" label="Summary:"/>
+          <field label="Details:" attribute="longdescription_.ldtext" >
+            <renderer type="richtext"/>
+          </field>
+
+          <!--					<section id="matusetranssection"/>-->
+          <!--					<section id="labtranssection"/>-->
           <section id="compositions"/>
         </schema>
 
         <schema parentschema="adetail" title="New Work Order" id="newdetail" platform="web">
           <section id="siteidsection">
-            <association label="Site:" target="siteid" labelfield="site_.description" required="true">
+            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
               <!-- removed default='@usersite' from the above association label-->
               <renderer type="lookup"/>
             </association>
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
           </section>
-          <event type="beforesubmit.onvalidation" service="workorderservice" method="comvalidation" />
         </schema>
 
         <schema parentschema="adetail" id="editdetail" title="Work Order Details" platform="web">
@@ -487,7 +530,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
           </section>
-          <event type="beforesubmit.onvalidation" service="workorderservice" method="comvalidation" />
         </schema>
 
         <list platform="mobile">
@@ -583,7 +625,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <field attribute="description" label="Description"  />
           <field attribute="longdescription_.ldtext" label="Details" name="description_longdescription" />
-          <event type="beforesubmit.onvalidation" service="workorderservice" method="comvalidation" />
         </detail>
       </schemas>
     </application>
@@ -618,7 +659,112 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
           </field>
           <field attribute="regularhrs" label="Regular Hours:" requiredexpression="true" default="8"/>
-          <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext" labelpattern="{0}">
+          <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="glcomponents_.comptext">
+            <renderer type="lookup"/>
+          </association>
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-suitcase"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="matusetransid" hidden="true" />
+          <field attribute="itemnum" label="Item No." qualifier="title"/>
+          <field attribute="description" label="Description" qualifier="subtitle"/>
+          <field attribute="linetype" label="Type" qualifier="subtitle"/>
+          <field attribute="storeloc" label="Storeroom" qualifier="subtitle"/>
+          <field attribute="qtyrequested" label="Quantity" qualifier="subtitle"/>
+        </list>
+
+        <detail platform="web">
+          <field attribute="matusetransid" hidden="true" />
+          <field attribute="orgid" defaultexpression="$.previousdata.fields['orgid']" hidden="true" />
+          <field attribute="siteid" defaultexpression="$.previousdata.fields['siteid']" hidden="true" />
+          <field attribute="refwo" defaultexpression="$.previousdata.fields['wonum']" hidden="true" />
+          <field attribute="description" hidden="true" />
+          <field attribute="transdate" hidden="true" />
+
+          <field attribute="lotnum" hidden="true" />
+          <field attribute="binnum" hidden="true" />
+          <field attribute="costtype" hidden="true" />
+          <field attribute="unitcost" hidden="true" />
+
+          <optionfield attribute="linetype" label="Type:">
+            <renderer type="combo"/>
+            <option label="ITEM" value="ITEM"/>
+            <option label="MATERIAL" value="MATERIAL"/>
+          </optionfield>
+          <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" showexpression="@linetype == 'ITEM'">
+            <dataprovider prefilterfunction="filterPlannedMaterials"/>
+            <renderer type="lookup"/>
+            <event type="afterchange" service="matusetranService" method="afteritemchange"/>
+          </association>
+          <association label="Storeroom:" target="storeloc" labelfield="inventory_.location" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
+            <dataprovider postfilterfunction="filterStoreLoc"/>
+            <event type="afterchange" service="matusetranService" method="afterstorelocchange"/>
+          </association>
+          <association label="Bin:" target="binnum" labelfield="1invbal_.binnum" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
+            <dataprovider postfilterfunction="filterBinnum"/>
+            <event type="afterchange" service="matusetranService" method="afterchange"/>
+          </association>
+          <association label="Lot:" target="lotnum" labelfield="2invbal_.lotnum" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
+            <dataprovider postfilterfunction="filterLotnum"/>
+            <event type="afterchange" service="matusetranService" method="afterchange"/>
+          </association>
+          <field label="Available Balances:" attribute="curbal" readonly="true" showexpression="@linetype=='ITEM'"/>
+          <field attribute="unitcost" label="Unit Cost:" qualifier="quantity" readonly="true" showexpression="@linetype == 'ITEM'"/>
+
+          <field attribute="description" label="Material Description:" requiredexpression="true" showexpression="@linetype == 'MATERIAL'"/>
+          <field attribute="unitcost" label="Unit Cost:" qualifier="quantity" requiredexpression="@linetype == 'MATERIAL'" showexpression="@linetype == 'MATERIAL'"/>
+
+          <field attribute="qtyrequested" label="Quantity:" requiredexpression="true" qualifier="quantity">
+            <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
+          </field>
+          <association label="GL Debit Account:" target="gldebitacct" labelfield="glcomponents_.comptext">
+            <renderer type="lookup"/>
+          </association>
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="tooltrans" entity="tooltrans" title="Tools">
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-wrench"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="tooltransid" hidden="true"/>
+          <field attribute="itemnum" label="Item No." qualifier="title"/>
+          <field attribute="tool_.description" label="Description" qualifier="subtitle"/>
+          <field attribute="toolqty" label="Quantity" qualifier="subtitle"/>
+          <field attribute="toolhrs" label="Hours" qualifier="subtitle"/>
+          <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
+        </list>
+
+        <detail platform="web">
+          <field attribute="tooltransid" hidden="true" />
+          <field attribute="orgid" hidden="true" />
+          <field attribute="siteid" hidden="true" />
+          <field attribute="refwo" hidden="true" />
+          <field attribute="transdate" hidden="true" />
+          <field attribute="toolrate" hidden="true" />
+
+          <association label="Tool:" target="itemnum" labelfield="tool_.description" requiredexpression="true" extraprojectionvalues="itemnum, itemsetid">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="tooltranService" method="aftertoolchange"/>
+          </association>
+          <field label="Quantity:" attribute="toolqty" requiredexpression="true">
+            <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
+          </field>
+          <field label="Hour:" attribute="toolhrs" requiredexpression="true" default="8">
+            <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
+          </field>
+          <field label="Rate:" attribute="toolrate" readonly="true"/>
+          <association label="GL Debit Account:"  target="gldebitacct" labelfield="glcomponents_.comptext">
             <renderer type="lookup"/>
           </association>
         </detail>

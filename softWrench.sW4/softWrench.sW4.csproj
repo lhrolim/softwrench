@@ -246,6 +246,7 @@
     <Compile Include="Metadata\Applications\Command\ApplicationCommandExtensions.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseIncidentDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseInvuseDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\ComMatusetransDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\AssociationPostFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\BasePreFilterParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\CompositionPreFilterFunctionParameters.cs" />
@@ -270,6 +271,7 @@
     <Compile Include="Metadata\Entities\Schema\EntityTargetRelationship.cs" />
     <Compile Include="Metadata\Entities\Schema\EntityTargetSchema.cs" />
     <Compile Include="Metadata\Entities\Sliced\SlicedEntityAssociation.cs" />
+    <Compile Include="Metadata\ClientChangeEvent.cs" />
     <Compile Include="Metadata\MetadataProviderInternalCache.cs" />
     <Compile Include="Metadata\Parsing\IXMLMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XElementExtensions.cs" />
@@ -380,6 +382,7 @@
     <Compile Include="Security\Init\RoleExtensions.cs" />
     <Compile Include="Security\Interfaces\AfterLoginRoleEvaluator.cs" />
     <Compile Include="Security\Interfaces\IRoleEvaluator.cs" />
+    <Compile Include="Security\RestartDBEvent.cs" />
     <Compile Include="Security\Services\ClearCacheEvent.cs" />
     <Compile Include="Security\Services\UserLoginEvent.cs" />
     <Compile Include="Security\UserType.cs" />

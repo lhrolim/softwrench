@@ -285,6 +285,7 @@
     <Compile Include="DB_Migration\4.0\20140724_HAP_331.cs" />
     <Compile Include="DB_Migration\4.0\20141002_SWWEB_478.cs" />
     <Compile Include="DB_Migration\4.0\20141215_SWWEB_787.cs" />
+    <Compile Include="DB_Migration\4.2.0\20141215_SWWEB_787.cs" />
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
@@ -706,7 +707,6 @@
     <Content Include="Content\Scripts\client\services\detailService.js" />
     <Content Include="Content\Scripts\client\services\scannerdetection_service.js" />
     <Content Include="Content\Scripts\client\services\statuscolor_service.js" />
-    <Content Include="Content\Scripts\client\services\workorder_service.js" />
     <Content Include="Content\Scripts\client\util\log_enhacer.js" />
     <Content Include="Content\Scripts\client\samelinepickers.js" />
     <Content Include="Content\Scripts\client\crud_output_fields.js" />

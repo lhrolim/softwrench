@@ -1388,7 +1388,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="upload"/>
             </field>
           </section>
-          <event type="beforesubmit.onvalidation" service="workorderservice" method="defaultvalidation" />
         </schema>
 
         <schema parentschema="adetail" id="editdetail" title="Work Order Details" platform="web">
@@ -1422,7 +1421,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </composition>
           </section>
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
-          <event type="beforesubmit.onvalidation" service="workorderservice" method="defaultvalidation" />
         </schema>
 
         <list platform="mobile">
