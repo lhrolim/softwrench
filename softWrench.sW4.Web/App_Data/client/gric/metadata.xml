@@ -551,7 +551,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 <!--          </association>-->
 
           <section id="compositions"/>
-          <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
+          
 
           <!--					<section id="matusetranssection"/>-->
           <!--					<section id="labtranssection"/>-->
@@ -588,6 +588,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
 
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+          <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
           <section id ="actualDates">
             <field attribute="actstart" hidden="true"/>
             <field attribute="actfinish" hidden="true"/>

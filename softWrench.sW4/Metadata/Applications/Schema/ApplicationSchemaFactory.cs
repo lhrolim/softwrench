@@ -52,6 +52,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 schema.Stereotype = schema.Stereotype == SchemaStereotype.None ? schema.ParentSchema.Stereotype : schema.Stereotype;
                 MergeWithParentProperties(schema);
                 MergeWithParentCommands(schema);
+                MergeWithParentEvents(schema);
             }
             schema.Title = title ?? BuildDefaultTitle(schema);
             AddHiddenRequiredFields(schema);
@@ -65,6 +66,14 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             SetTitle(applicationName, displayables, schema);
 
             return schema;
+        }
+
+          private static void MergeWithParentEvents(ApplicationSchemaDefinition schema) {
+            foreach (var parentEvent in schema.ParentSchema.Events) {
+               if (!schema.Events.ContainsKey(parentEvent.Key)) {
+                    schema.Events.Add(parentEvent);
+                }
+            }
         }
 
         private static void SetTitle(string applicationName, List<IApplicationDisplayable> displayables, ApplicationSchemaDefinition schema) {
