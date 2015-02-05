@@ -11,6 +11,7 @@ using softWrench.sW4.Web.SPF;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Entities;
 using System.Xml;
+using Newtonsoft.Json.Linq;
 
 namespace softWrench.sW4.Web.Controllers.Utilities {
 
@@ -70,30 +71,23 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         public void SaveMetadataEditor(HttpRequestMessage request)
         {
             var content = request.Content;
-            String Jsoncontent = content.ReadAsStringAsync().Result;
+            JObject json = JObject.Parse(content.ReadAsStringAsync().Result);
+            var comments = json.First.Last.ToString();
+            var Metadata = json.Last.Last.ToString();
+           
            
             DateTime now = DateTime.Now;
             var newMetadataEntry = new Metadataeditor()
             {
-                SystemStringValue = Jsoncontent,
+                SystemStringValue = Metadata,
+                Comments = comments,
                 CreatedDate = now,
                 DefaultId = 0,
                 
             };
             _swdbDao.Save(newMetadataEntry);
         }
-        //[HttpPut]
-        //public void SaveMetad  ataEditor(HttpRequestMessage request)
-        //{
-        //    var task = request
-        //    .Content
-        //    .ReadAsStreamAsync();
-
-        //    task.Wait();
-
-
-        //    new MetadataProvider().Save(task.Result);
-        //}
+       
         [HttpPut]
         public void SaveStatuscolor(HttpRequestMessage request)
         {

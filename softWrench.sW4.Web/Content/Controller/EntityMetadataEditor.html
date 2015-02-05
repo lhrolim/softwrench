@@ -1,12 +1,15 @@
 ﻿<article ng-controller="AceController" class="container">
-    <div id="editor" style="height: 800px; border: 1px solid rgb(240, 240, 240)">
+    <div class="metadataeditor">
+        <div id="editor" style="height: 800px; border: 1px solid rgb(240, 240, 240)"></div>
+        <div class="comments input-group col-xs-12">
+            <label class="col-xs-12">Comments <span class="red">*</span></label>
+            <div class="col-xs-12 col-sm-6" id ="comment"><input type="text"  class="form-control" ng-model="comments" maxlength="100" /></div>
+        </div>
+        <div class="form-actions col-xs-12">
+            <button ng-click="save()" type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-ok" style="margin-right: 0.5em"></i>{{i18N('general.save','Save')}}</button>
+            <button ng-click="restore()" type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-ok" style="margin-right: 0.5em"></i>{{i18N('general.restore','Restore Default')}}</button>
+            <button ng-click="savechanges()" type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-ok" style="margin-right: 0.5em"></i>{{i18N('general.savechanges','Save Changes')}}</button>
+        </div>
+        <!--    <script type="text/javascript" ng-src="{{contextPath('/Content/Scripts/ace/ace.js')}}"></script>-->
     </div>
-    <div class="form-actions">
-        <button ng-click="save()" type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-ok" style="margin-right: 0.5em"></i>{{i18N('general.save','Save')}}</button>
-        <button ng-click="restore()" type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-ok" style="margin-right: 0.5em"></i>{{i18N('general.restore','Restore Default')}}</button>
-        <button ng-click="savechanges()" type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-ok" style="margin-right: 0.5em"></i>{{i18N('general.savechanges','Save Changes')}}</button>
-    </div>
-    <!--    <script typ e="text/javascript" ng-src="{{contextPath('/Content/Scripts/ace/ace.js')}}"></script>-->
-</article>
-
-
+<article>

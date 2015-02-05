@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Entities {
-    [Class(Table = "SW_METADATAEDITR", Lazy = false)]
+    [Class(Table = "SW_METADATAEDITOR", Lazy = false)]
     public class Metadataeditor {
 
         public const String ByItemIdAndUserId = "from SW_METADATAEDITOR where Id =?";
@@ -23,7 +23,8 @@ namespace softWrench.sW4.Data.Entities {
         [Property(Type = "BinaryBlob")]
         [JsonIgnore]
         public virtual byte[] Metadata { get; set; }
-
+        [Property]
+        public virtual string Comments { get; set; }
 
         [Property]
         public virtual DateTime  CreatedDate{ get; set; }

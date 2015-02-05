@@ -30,26 +30,28 @@
 
     };
     $scope.savechanges = function () {
+        var httpParameters = {
+            Comments: $scope.comments,
+            jsonstring: JSON.stringify(ace.edit("editor").getValue())
+        };
 
         var urlToUse = "/api/generic/EntityMetadata/SaveMetadataEditor";
-        var jsonString = JSON.stringify(ace.edit("editor").getValue());
-        //$http.post(urlToUse,jsonString).success(function () {
-        //     alertSdervice.alert("Metadata changes saved successfully");
-        //});
+       
+        var json = angular.toJson(httpParameters);
         $http({
             method: "POST",
             dataType: "json",
             url: url(urlToUse),
             headers: { "Content-Type": "application/json; charset=utf-8" },
-            data:  jsonString }).
+            data: json
+        }).
             success(function () {
-                alertService.alert("saved successfully");
+                alertService.alert("Metadata saved successfully");
             });
          
         };
        
-        //restService.invokePost("EntityMetadata", "SaveMetadataEditor", jsonString, null, null,null);
-    
+            
     $scope.restore = function () {
 
         alertService.confirmMsg("Are you sure you want to restore to default settings ? ", function () {
