@@ -684,7 +684,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="matusetransid" hidden="true" />
           <field attribute="orgid" defaultexpression="$.previousdata.fields['orgid']" hidden="true" />
           <field attribute="siteid" defaultexpression="$.previousdata.fields['siteid']" hidden="true" />
-          <field attribute="refwo" hidden="true" />
+          <field attribute="refwo" defaultexpression="$.previousdata.fields['wonum']" hidden="true" />
           <field attribute="description" hidden="true" />
           <field attribute="transdate" hidden="true" />
 
