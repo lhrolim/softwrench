@@ -466,11 +466,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
             <renderer type="lookup"/>
           </association>
-          <association label="Failure Class:" target="failurecode" labelfield="failurelist_.description" extraprojectionvalues="failurelist">
+          <association label="Failure Class:" target="failurecode" labelfield="failurelist_.description" hideDescription="true" extraprojectionvalues="failurelist">
             <renderer type="lookup"/>
           </association>
           <field hidden="true" attribute="failurelist_.failurelist"/>
-          <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description">
+          <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" hideDescription="true" labelfield="problemlist_.description">
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterProblemCodes"/>
           </association>
