@@ -31,9 +31,10 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
       <application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
     </container>
     <application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" role="sso" modulealias="sso" modulename="sso" />
+    <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems" role="sso" modulealias="sso" modulename="sso"/>
     <application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes" role="sso" modulealias="sso" modulename="sso"/>
     <application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" role="sso" parameters="popupmode=browser" modulealias="sso" modulename="sso"/>
-    <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems" role="sso" modulealias="sso" modulename="sso"/>
+    
     <!-- Ended SSO Merged declaration-->
 
 
@@ -47,9 +48,10 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
       <application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
     </container>
     <application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" role="tui" modulealias="tui" modulename="tui" />
+    <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems" role="tui" modulealias="tui" modulename="tui"/>
     <application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes" role="tui" modulealias="tui" modulename="tui"/>
     <application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser" role="tui" modulealias="tui" modulename="tui"/>
-    <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems" role="tui" modulealias="tui" modulename="tui"/>
+   
     <!-- Ended TUI Merged declaration-->
 
     <!--ITC Items-->
@@ -132,10 +134,11 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
      params="id=servicerequestmenusearchsso;application=servicerequest;schema=list;label=Service Request Search;searchFields=ticketid,description" modulealias="sso" modulename="sso" role="sso"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Incidents"
 							 params="id=incidentsearchsso;application=incident;label=Incident Search;searchFields=ticketid,description" modulealias="sso" modulename="sso" role="sso" />
-    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchsso;application=change;label=Change Search;
-                 searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search" modulealias="sso" modulename="sso" role="sso"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchsso;application=problem;label=Problem Search;
                  searchFields=ticketid,description" tooltip="Search Problems" modulealias="sso" modulename="sso" role="sso"/>
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchsso;application=change;label=Change Search;
+                 searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search" modulealias="sso" modulename="sso" role="sso"/>
+   
     <!-- Ended SSO Merged declaration-->
 
     <!-- Merged tui declaration-->
@@ -143,10 +146,11 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
      params="id=servicerequestmenusearchtui;application=servicerequest;schema=list;label=Service Request Search;searchFields=ticketid,description" modulealias="tui" modulename="tui" role="tui"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Incidents"
 							 params="id=incidentsearchtui;application=incident;label=Incident Search;searchFields=ticketid,description" modulealias="tui" modulename="tui" role="tui" />
-    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchtui;application=change;label=Change Search;
-                 searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search" role="tui" modulealias="tui" modulename="tui"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchtui;application=problem;label=Problem Search;
                  searchFields=ticketid,description" tooltip="Search Problems" modulealias="tui" modulename="tui" role="tui"/>
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchtui;application=change;label=Change Search;
+                 searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search" role="tui" modulealias="tui" modulename="tui"/>
+    
     <!-- ended tui declaration-->
 
 	</container>
@@ -249,10 +253,10 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 			  tooltip="Search Request ID &amp; Summary" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=incidentsearchxitc;application=incident;label=Incident Search;
                  searchFields=ticketid,description" tooltip="Search Incidents"/>
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchxitc;application=problem;label=Problem Search;
+                 searchFields=ticketid,description" tooltip="Search Problems"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=assetmenusearchxitc;application=asset;label=Asset Search;
                  searchFields=hlagdescription,serialnum,computername" tooltip="Search Assets"/>
-		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchxitc;application=problem;label=Problem Search;
-                 searchFields=ticketid,description" tooltip="Search Problems"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=imacsearch_xitc;application=imac;label=IMAC Search;
                  searchFields=ticketid,hlagsummary" tooltip="Search IMACS"/>
 	</container>
@@ -278,15 +282,17 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 			<application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
 		</container>
 		<application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" />
-		<application id="AssetMenu" title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />
-		<application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
+    <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
+		<application id="AssetMenu" title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />	
     <application id="ImacGrid" title="IMAC Grid" ref="imac" schema="list" tooltip="Click to view your Imacs"/>
-		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser"/>
     <container title="New IMAC Request" tooltip="Click to create a new IMAC Request" id="newimac">
       <application id="newdecommissionimac" title="Decommission" tooltip="Click to create a new decommission IMAC Request" schema="decommission" ref="imac" parameters="popupmode=browser"/>
     </container>
+    <application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
+		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser"/>
     
-		<application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
+    
+	
 
 		<container title="Reports" tooltip="Click Here to access your Reports" id="Reports">
 			<application id="incidentperlocationscimreport" title="Incident Per Location/SCIM Report" tooltip="Click to view Incident Per Location/SCIM Report" schema="incidentperlocationreportfilters" ref="incident" />
@@ -303,14 +309,16 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
                  params="id=servicerequestmenusearchtom;application=servicerequest;label=Service Request Search;searchFields=ticketid,description;schema=list" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Incidents"
 							 params="id=incidentsearchtom;application=incident;label=Incident Search;searchFields=ticketid,description" />
-		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchtom;application=change;label=Change Search;
-                 searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search"/>
-		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchtom;application=problem;label=Problem Search;
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchtom;application=problem;label=Problem Search;
                  searchFields=ticketid,description" tooltip="Search Problems"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=assetmenusearchtom;application=asset;label=Asset Search;
                  searchFields=hlagdescription,serialnum,computername" tooltip="Search Assets"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=imacsearch_tom;application=imac;label=IMAC Search;
                  searchFields=ticketid,hlagsummary" tooltip="Search IMACS"/>
+		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchtom;application=change;label=Change Search;
+                 searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search"/>
+		
+   
 	</container>
 
 	<divider role="itom"/>
@@ -325,14 +333,17 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 			<application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
 		</container>
 		<application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" />
+    <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
 		<application id="AssetMenu" title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />
-		<application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
-		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser"/>
+    <application id="ImacGrid" title="IMAC Grid" ref="imac" schema="list" tooltip="Click to view your Imacs" />
     <container title="New IMAC Request" tooltip="Click to create a new IMAC Request" id="newimac">
       <application id="newdecommissionimac" title="Decommission" tooltip="Click to create a new decommission IMAC Request" schema="decommission" ref="imac" parameters="popupmode=browser"/>
     </container>
-		<application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
-		<application id="ImacGrid" title="IMAC Grid" ref="imac" schema="list" tooltip="Click to view your Imacs" />
+		<application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
+		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser"/>
+    
+		
+		
 
 		<container title="Reports" tooltip="Click Here to access your Reports" id="Reports">
 			<application id="incidentperlocationscimreport" title="Incident Per Location/SCIM Report" tooltip="Click to view Incident Per Location/SCIM Report" schema="incidentperlocationreportfilters" ref="incident" />
@@ -349,16 +360,20 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
                  params="id=servicerequestmenusearchitom;application=servicerequest;label=Service Request Search;searchFields=ticketid,description;schema=list" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Incidents"
 							 params="id=incidentsearchitom;application=incident;label=Incident Search;searchFields=ticketid,description" />
-		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchitom;application=change;label=Change Search;
-                 searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search"/>
-		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchitom;application=problem;label=Problem Search;
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchitom;application=problem;label=Problem Search;
                  searchFields=ticketid,description" tooltip="Search Problems"/>
-		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=imacsearchitom;application=imac;label=IMAC Search;
-                 searchFields=ticketid,hlagsummary" tooltip="Search IMACS"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=assetmenusearchitom;application=asset;label=Asset Search;
                  searchFields=hlagdescription,serialnum,computername" tooltip="Search Assets"/>
+    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=imacsearchitom;application=imac;label=IMAC Search;
+                 searchFields=ticketid,hlagsummary" tooltip="Search IMACS"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=imacsearch_tom;application=imac;label=IMAC Search;
                  searchFields=ticketid,hlagsummary" tooltip="Search IMACS"/>
+		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchitom;application=change;label=Change Search;
+                 searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search"/>
+		
+		
+    
+    
 	</container>
 
 	<divider role="ad"/>
