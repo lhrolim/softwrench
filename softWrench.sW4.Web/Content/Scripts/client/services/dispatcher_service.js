@@ -3,7 +3,7 @@
 var app = angular.module('sw_layout');
 
 app.factory('dispatcherService', function ($injector, $log) {
-    var loadService = function(service, method, parameters) {
+    var loadService = function(service, method) {
         var log = $log.getInstance('dispatcherService#loadService');
 
         if (service === undefined || method === undefined) {
@@ -23,8 +23,8 @@ app.factory('dispatcherService', function ($injector, $log) {
         return fn;
     };
     return {
-        loadService: function(service, method, parameters) {
-            return loadService(service, method, parameters);
+        loadService: function(service, method) {
+            return loadService(service, method);
         },
 
         invokeService: function(service, method, parameters) {
