@@ -15,14 +15,8 @@ namespace softWrench.sW4.Web {
             AddStyles(bundles);
         }
 
-        public static void ClearBundles(BundleCollection bundles) {
-
-            //            BundleTable.EnableOptimizations = true;
-
-            AddScripts(bundles);
-
-
-            AddStyles(bundles);
+        public static void ClearBundles() {
+            BundleTable.Bundles.Clear();
         }
 
         private static void AddStyles(BundleCollection bundles) {

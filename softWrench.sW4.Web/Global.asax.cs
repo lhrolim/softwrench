@@ -210,8 +210,7 @@ namespace softWrench.sW4.Web {
         }
 
         public void HandleEvent(ClearCacheEvent eventToDispatch) {
-            BundleTable.Bundles.Clear();
-
+            BundleConfig.ClearBundles();
         }
     }
 }
