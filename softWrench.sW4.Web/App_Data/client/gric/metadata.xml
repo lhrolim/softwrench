@@ -471,11 +471,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <dataprovider prefilterfunction="FilterProblemCodes"/>
           </association>
           <field label="Job Plan:" attribute="jpnum" readonly="true" />
-          <association label="Location:" target="location" labelfield="location_.description" >
+          <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
             <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
             <!--renderer type="lookup"/-->
           </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" requiredexpression="@location==null &amp;&amp; @siteid=='LB'">
+          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" dependantfields="siteid" requiredexpression="@location==null &amp;&amp; @siteid=='LB'">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
