@@ -138,16 +138,18 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="siteid" hidden="true" />
           <field attribute="orgid" hidden="true"/>
           <field attribute="createby" hidden="true"/>
+          <field attribute="reportedby" label="Reported By:" default="@username" readonly="true" hidden="true"/>
 
           <field attribute="description" label="Summary:" requiredexpression="true"/>
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
           </field>
           <section id ="siteidsection"/>
-          <association label="Location:" target="location" labelfield="location_.description" >
+          <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+            <renderer type="lookup"/>
           </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" >
+          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" dependantfields="siteid" >
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
@@ -227,7 +229,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="lookup"/>
               <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
             </association>
-            <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
+            <field attribute="reportedby" label="Reported By:" readonly="true"/>
           </section>
           <section id ="actualDates">
             <field attribute="actualstart" hidden="true"/>
@@ -473,7 +475,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Job Plan:" attribute="jpnum" readonly="true" />
           <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
             <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
+            <renderer type="lookup"/>
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" dependantfields="siteid" requiredexpression="@location==null &amp;&amp; @siteid=='LB'">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
