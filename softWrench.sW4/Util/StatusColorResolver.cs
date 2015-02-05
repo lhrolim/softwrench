@@ -114,12 +114,15 @@ namespace softWrench.sW4.Util {
 
         public Dictionary<string, string> GetColorsAsDict([NotNull] string applicationId)
         {
-            if (_cacheSet && !ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsUnitTest && _cachedColorDict == null) {
-                return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : null;
+            if (_cacheSet && !ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsUnitTest && _cachedColorDict != null) {
+                return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : _defaultColorDict;
             }
 
             _cachedColorDict = new Dictionary<string, Dictionary<string, string>>();
             JObject catalogs = FetchCatalogs();
+
+            if (catalogs == null) 
+                 return _defaultColorDict;       
 
             foreach (var currentToken in catalogs) {
 
@@ -127,7 +130,7 @@ namespace softWrench.sW4.Util {
                 var colors = currentToken.Value;
 
                 var colorDict = new Dictionary<string, string>();
-            
+
                 foreach (var color in colors.Value<JObject>().Properties()) {
                     var name = color.Name;
                     var value = color.Value;
@@ -137,6 +140,7 @@ namespace softWrench.sW4.Util {
 
                 _cachedColorDict[application] = colorDict;
             }
+            
 
             return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : null;
         }
