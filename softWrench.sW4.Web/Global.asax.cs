@@ -56,9 +56,8 @@ namespace softWrench.sW4.Web {
                 RouteConfig.RegisterRoutes(RouteTable.Routes);
                 ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
             }
-
-
             MetadataProvider.DoInit();
+            BundleConfig.ClearBundles();
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             new MigratorExecutor("SWDB").Migrate(runner => runner.MigrateUp());
             SecurityFacade.InitSecurity();
@@ -209,7 +208,7 @@ namespace softWrench.sW4.Web {
         }
 
         public void HandleEvent(ClearCacheEvent eventToDispatch) {
-            BundleConfig.ClearBundles();
+            
         }
     }
 }

@@ -8,6 +8,7 @@ using softWrench.sW4.Configuration.Util;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
+using softWrench.sW4.Security;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
@@ -131,7 +132,8 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         [HttpPost]
         public void ChangeClient(String clientName) {
             _dispatcher.Dispatch(new ClearCacheEvent());
-            _dispatcher.Dispatch(new ClientChangeEvent(clientName,false));
+            _dispatcher.Dispatch(new ClientChangeEvent(clientName, false));
+            _dispatcher.Dispatch(new RestartDBEvent());
             FormsAuthentication.SignOut();
         }
 
@@ -139,6 +141,7 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         public void Restore() {
             _dispatcher.Dispatch(new ClearCacheEvent());
             _dispatcher.Dispatch(new ClientChangeEvent(null, true));
+            _dispatcher.Dispatch(new RestartDBEvent());
             FormsAuthentication.SignOut();
         }
 

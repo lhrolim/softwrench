@@ -14,6 +14,13 @@
     }
 
     $scope.dochangeClient = function (newclient) {
+        if (contextService.isLocal()) {
+            restService.invokePost("Configuration", "ChangeClient", { clientName: newclient }, null, function (s) {
+                window.location.reload();
+            });
+            return;
+        }
+
         alertService.confirmMsg('Are u sure you want to change client to {0}'.format(newclient), function() {
             restService.invokePost("Configuration", "ChangeClient", { clientName: newclient }, null, function(s) {
                 window.location.reload();
@@ -24,8 +31,17 @@
     }
 
     $scope.restore = function () {
-        restService.invokePost("Configuration", "Restore",null,null,function(s) {
-            window.location.reload();
+        if (contextService.isLocal()) {
+            restService.invokePost("Configuration", "Restore", null, null, function (s) {
+                window.location.reload();
+            });
+            return;
+        }
+
+        alertService.confirmMsg('Are u sure you want to restore to default client', function() {
+            restService.invokePost("Configuration", "Restore", null, null, function(s) {
+                window.location.reload();
+            });
         });
     }
 

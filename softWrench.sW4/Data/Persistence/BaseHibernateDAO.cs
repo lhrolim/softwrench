@@ -2,8 +2,11 @@
 using NHibernate;
 using NHibernate.Transform;
 using NHibernate.Type;
+using softWrench.sW4.Security;
+using softWrench.sW4.Security.Services;
 using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.SimpleInjector;
+using softWrench.sW4.SimpleInjector.Events;
 using softWrench.sW4.Util;
 using System;
 using System.Collections;
@@ -15,7 +18,7 @@ using System.Linq;
 namespace softWrench.sW4.Data.Persistence {
 
 
-    public abstract class BaseHibernateDAO : ISingletonComponent {
+    public abstract class BaseHibernateDAO : ISingletonComponent, ISWEventListener<RestartDBEvent> {
 
         private static ILog HibernateLog = LogManager.GetLogger(typeof(BaseHibernateDAO));
 
@@ -217,13 +220,16 @@ namespace softWrench.sW4.Data.Persistence {
 
         public interface ISessionManager {
             ISession OpenSession();
+
+            void Restart();
+
         }
 
         protected abstract ISessionManager GetSessionManager();
 
 
-
-
-
+        public void HandleEvent(RestartDBEvent eventToDispatch) {
+            GetSessionManager().Restart();
+        }
     }
 }

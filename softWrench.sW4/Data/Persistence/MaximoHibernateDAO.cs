@@ -26,7 +26,7 @@ namespace softWrench.sW4.Data.Persistence {
 
 
         public class SessionManager : ISessionManager {
-            private readonly ISessionFactory _sessionFactory;
+            private ISessionFactory _sessionFactory;
 
             public static ISessionFactory SessionFactory {
                 get { return Instance._sessionFactory; }
@@ -49,10 +49,16 @@ namespace softWrench.sW4.Data.Persistence {
                 return openSession;
             }
 
+         
+
             public ISession CurrentSession {
                 get {
                     return Instance.GetSessionFactory().GetCurrentSession();
                 }
+            }
+
+            public void Restart() {
+                NestedSessionManager.SessionManager = new SessionManager();
             }
 
             private SessionManager() {
@@ -61,8 +67,10 @@ namespace softWrench.sW4.Data.Persistence {
                 IDictionary<string, string> properties = new Dictionary<string, string>();
 
                 //Populate with some default properties
-                properties.Add(NHibernate.Cfg.Environment.ConnectionDriver, HibernateUtil.HibernateDriverName(ApplicationConfiguration.DBType.Maximo));
-                properties.Add(NHibernate.Cfg.Environment.Dialect, HibernateUtil.HibernateDialect(ApplicationConfiguration.DBType.Maximo));
+                properties.Add(NHibernate.Cfg.Environment.ConnectionDriver,
+                    HibernateUtil.HibernateDriverName(ApplicationConfiguration.DBType.Maximo));
+                properties.Add(NHibernate.Cfg.Environment.Dialect,
+                    HibernateUtil.HibernateDialect(ApplicationConfiguration.DBType.Maximo));
                 properties.Add(NHibernate.Cfg.Environment.ShowSql, "true");
                 properties.Add(NHibernate.Cfg.Environment.ConnectionProvider, "NHibernate.Connection.DriverConnectionProvider");
                 //                      <property name="connection.provider">NHibernate.Connection.DriverConnectionProvider</property>
@@ -80,7 +88,7 @@ namespace softWrench.sW4.Data.Persistence {
 
             [UsedImplicitly]
             class NestedSessionManager {
-                internal static readonly SessionManager SessionManager = new SessionManager();
+                internal static SessionManager SessionManager = new SessionManager();
             }
         }
 
