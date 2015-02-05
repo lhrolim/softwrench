@@ -15,6 +15,16 @@ namespace softWrench.sW4.Web {
             AddStyles(bundles);
         }
 
+        public static void ClearBundles(BundleCollection bundles) {
+
+            //            BundleTable.EnableOptimizations = true;
+
+            AddScripts(bundles);
+
+
+            AddStyles(bundles);
+        }
+
         private static void AddStyles(BundleCollection bundles) {
             bundles.Add(new StyleBundle("~/Content/bootstrap/css/twitter-bootstrap").Include(
                 "~/Content/bootstrap/css/bootstrap-min.css",

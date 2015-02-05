@@ -1,4 +1,5 @@
-﻿using softWrench.sW4.Configuration;
+﻿using System.Web.Security;
+using softWrench.sW4.Configuration;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Configuration.Services;
@@ -12,6 +13,7 @@ using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sw4.Shared2.Metadata.Modules;
+using softWrench.sW4.SimpleInjector.Events;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.SPF;
@@ -30,15 +32,19 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         private readonly SWDBHibernateDAO _dao;
         private readonly ConditionService _conditionService;
         private readonly IConfigurationFacade _facade;
+        private readonly SimpleInjectorDomainEventDispatcher _dispatcher;
 
 
-        public ConfigurationController(CategoryTreeCache cache, ConfigurationService configService, I18NResolver resolver, SWDBHibernateDAO dao, ConditionService conditionService, IConfigurationFacade facade) {
+
+        public ConfigurationController(CategoryTreeCache cache, ConfigurationService configService, I18NResolver resolver, SWDBHibernateDAO dao, ConditionService conditionService, IConfigurationFacade facade,
+            SimpleInjectorDomainEventDispatcher dispatcher) {
             _cache = cache;
             _configService = configService;
             _resolver = resolver;
             _dao = dao;
             _conditionService = conditionService;
             _facade = facade;
+            _dispatcher = dispatcher;
         }
 
         [SPFRedirect("Configuration", "_headermenu.configuration")]
@@ -72,7 +78,7 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         public IGenericResponseResult Put(CategoryDTO category) {
             var result = _configService.UpdateDefinitions(category);
             category.Definitions = result;
-            var updatedCategories =_cache.Update(category);
+            var updatedCategories = _cache.Update(category);
             var response = new GenericResponseResult<SortedSet<CategoryDTO>> {
                 ResultObject = updatedCategories,
                 SuccessMessage = "Configuration successfully saved"
@@ -120,6 +126,20 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
             aboutData.Add(new KeyValuePair<String, String>(_resolver.I18NValue("maximodb.version", "SW DB"), String.Format("{0}/{1}", swDB.DataSource, swDB.Catalog)));
 
             return new GenericResponseResult<IList<KeyValuePair<String, String>>>(aboutData);
+        }
+
+        [HttpPost]
+        public void ChangeClient(String clientName) {
+            _dispatcher.Dispatch(new ClearCacheEvent());
+            _dispatcher.Dispatch(new ClientChangeEvent(clientName,false));
+            FormsAuthentication.SignOut();
+        }
+
+        [HttpPost]
+        public void Restore() {
+            _dispatcher.Dispatch(new ClearCacheEvent());
+            _dispatcher.Dispatch(new ClientChangeEvent(null, true));
+            FormsAuthentication.SignOut();
         }
 
         [HttpPost]
