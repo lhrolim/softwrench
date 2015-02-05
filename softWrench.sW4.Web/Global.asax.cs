@@ -189,13 +189,13 @@ namespace softWrench.sW4.Web {
             var oldKey = ConfigurationManager.AppSettings["clientkey"];
             if (ConfigurationManager.AppSettings["originalclientkey"] == null) {
                 ConfigurationManager.AppSettings["originalclientkey"] = oldKey;
-                if (oldKey == eventToDispatch.ClientKey) {
-                    throw new InvalidOperationException("client key not changed");
-                }
             }
             var newKey = eventToDispatch.ClientKey;
             if (eventToDispatch.Restore) {
                 newKey = ConfigurationManager.AppSettings["originalclientkey"];
+            }
+            if (oldKey == newKey) {
+                throw new InvalidOperationException("client key not changed");
             }
             ConfigurationManager.AppSettings["clientkey"] = newKey;
             try {

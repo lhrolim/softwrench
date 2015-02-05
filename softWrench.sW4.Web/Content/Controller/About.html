@@ -1,6 +1,6 @@
 ﻿<article class="container" ng-controller="AboutController" data-page="about">
     
-    <section ng-show="aboutData != undefined">
+    <form ng-show="aboutData != undefined">
         <div class="form-horizontal">
             <br />
             <div class="form-group" ng-repeat="data in aboutData">
@@ -17,16 +17,17 @@
                     
                 </div>
                 <div class="col-sm-2" ng-if="isDev && data.key == 'Client Name'">
-                    <button ng-click="dochangeClient(newclient)" ng-enabled="newclient!='' && newclient!=null" class="btn btn-primary commandButton">
-                        Change!
-                    </button>
-                    <button ng-click="restore()" class="btn btn-primary commandButton">
-                        Restore
-                    </button>
+                    
+                        <button ng-click="dochangeClient(newclient)" ng-enabled="newclient!='' && newclient!=null" class="btn btn-primary commandButton">
+                            Change!
+                        </button>
+                        <button ng-click="restore()" class="btn btn-primary commandButton">
+                            Restore
+                        </button>
                 </div>
             </div>
         </div>
-    </section>
+    </form>
 
 
     <p class="text-center" ng-show="aboutData == undefined">
