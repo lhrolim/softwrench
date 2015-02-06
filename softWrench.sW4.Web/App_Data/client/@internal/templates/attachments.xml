@@ -58,7 +58,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field hidden="true" attribute="ownerid"/>
           <field label="Id" hidden="true" attribute="docinfoid"/>
           <field label="Title:" attribute="document" />
-          <field label="Description:" attribute="docinfo_.description"/>
           <field label="Attachment:" attribute="newattachment" requiredexpression="true">
             <renderer type="upload"/>
           </field>

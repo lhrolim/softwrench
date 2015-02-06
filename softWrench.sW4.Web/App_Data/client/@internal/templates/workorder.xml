@@ -225,9 +225,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field label="Details:" attribute="longdescription_.ldtext" >
             <renderer type="richtext"/>
           </field>
-
-          <!-- Code added from gric metadata.xml SWWEB 173-->
-          <section id="attachmentsection" />
            
           <!--					<section id="matusetranssection"/>-->
           <!--					<section id="labtranssection"/>-->
@@ -241,12 +238,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
               <renderer type="lookup"/>
             </association>
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
-          </section>
-          <!--SSWEB 173-->
-          <section id="attachmentsection">
-            <field label="Attachment:" attribute="newattachment" >
-              <renderer type="upload"/>
-            </field>
           </section>
         </schema>
 

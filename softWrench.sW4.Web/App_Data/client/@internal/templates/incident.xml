@@ -112,9 +112,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="textarea"/>
           </field>
-          <field label="Attachment:" attribute="newattachment" >
-            <renderer type="upload"/>
-          </field>
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
             <renderer type="lookup"/>
@@ -181,8 +178,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="textarea"/>
           </field>
-          <!-- Code added from gric metadata.xml SWWEB 173-->
-          <section id="attachmentsection" />
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
             <renderer type="lookup"/>
