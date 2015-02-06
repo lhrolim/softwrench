@@ -491,7 +491,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" showexpression="@siteid=='VQ'">
             <renderer type="lookup"/>
-            <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
+<!--            <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>-->
           </association>
 <!--          <association label="Change By:" target="changeby" labelfield="changebyperson_.displayname" showexpression="@siteid!='VQ'">-->
 <!--            <renderer type="lookup"/>-->
@@ -500,7 +500,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!-- Added the Owner Group field-->
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
             <renderer type="lookup"/>
-            <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
+            <!-- dont need this in case of WO -->
+<!--            <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>-->
           </association>
 
           
