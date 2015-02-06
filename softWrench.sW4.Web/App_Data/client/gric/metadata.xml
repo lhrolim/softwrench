@@ -220,14 +220,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 <!--            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid">-->
 <!--              <renderer type="autocompleteclient" />-->
 <!--            </optionfield>-->
-            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname"  >
+            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
               <renderer type="lookup"/>
-              <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
+              <event type="afterchange" service="srService" method="afterchangeowner"/>
             </association>
             <!-- Added the Owner Group field-->
             <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
               <renderer type="lookup"/>
-              <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
+              <event type="afterchange" service="srService" method="afterchangeownergroup"/>
             </association>
             <field attribute="reportedby" label="Reported By:" readonly="true"/>
           </section>

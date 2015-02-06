@@ -2,9 +2,18 @@
 
 app.factory('genericTicketService', function (alertService, associationService, fieldService) {
 
+    var updateTicketStatus = function (datamap) {
+        // If the status is new and the user has set the owner/owner group, update the status to queued
+        if (datamap['status'] == 'NEW' && (datamap['owner'] != null || datamap['ownergroup'] != null)) {
+            datamap['status'] = 'QUEUED';
+        }
+        return true;
+    };
+
     return {
 
-        handleStatusChange:function(schema, datamap, parameters) {
+        handleStatusChange: function (schema, datamap, parameters) {
+            updateTicketStatus(datamap);
             if (datamap['status'] != parameters.originaldatamap['status']) {
                 datamap['#hasstatuschange'] = true;
             }
