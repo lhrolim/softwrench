@@ -131,6 +131,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             using (var client = new WebClient()) {
                 try {
                     var fileBytes = client.DownloadData(finalURL);
+                    if (docinfoURL.Contains(".")) {
+                        fileName = String.Format("{0}.{1}", fileName, docinfoURL.Substring(docinfoURL.LastIndexOf(".") + 1)); 
+                    }
                     return Tuple.Create(fileBytes, fileName);
                 } catch (Exception) {
                     return null;
