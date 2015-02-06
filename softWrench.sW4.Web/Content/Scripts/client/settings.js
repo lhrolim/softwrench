@@ -30,25 +30,30 @@
 
     };
     $scope.savechanges = function () {
-        var httpParameters = {
-            Comments: $scope.comments,
-            jsonstring: JSON.stringify(ace.edit("editor").getValue())
-        };
+        if ($scope.comments != undefined) {
+            alertService.confirmMsg("Are you sure you want to Save your changes to the Metadata ? ", function () {
+                var httpParameters = {
+                    Comments: $scope.comments,
+                    jsonstring: JSON.stringify(ace.edit("editor").getValue())
+                };
 
-        var urlToUse = "/api/generic/EntityMetadata/SaveMetadataEditor";
-       
-        var json = angular.toJson(httpParameters);
-        $http({
-            method: "POST",
-            dataType: "json",
-            url: url(urlToUse),
-            headers: { "Content-Type": "application/json; charset=utf-8" },
-            data: json
-        }).
-            success(function () {
-                alertService.alert("Metadata saved successfully");
+                var urlToUse = "/api/generic/EntityMetadata/SaveMetadataEditor";
+
+                var json = angular.toJson(httpParameters);
+                $http({
+                    method: "POST",
+                    dataType: "json",
+                    url: url(urlToUse),
+                    headers: { "Content-Type": "application/json; charset=utf-8" },
+                    data: json
+                }).
+                    success(function () {
+                        alertService.alert("Metadata saved successfully");
+                    });
             });
-         
+            }
+        else
+            alertService.alert("Please describe your changes in the Comments section");
         };
        
             
