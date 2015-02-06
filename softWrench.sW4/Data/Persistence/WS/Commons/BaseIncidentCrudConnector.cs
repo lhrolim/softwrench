@@ -1,9 +1,11 @@
-﻿using softWrench.sW4.Data.Persistence.Operation;
+﻿using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
+using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,10 +15,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
     class BaseIncidentCrudConnector : CrudConnectorDecorator {
 
-        protected AttachmentHandler AttachmentHandler;
+        protected AttachmentHandler _attachmentHandler;
 
         public BaseIncidentCrudConnector() {
-            AttachmentHandler = new AttachmentHandler();
+            _attachmentHandler = new AttachmentHandler();
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
@@ -31,26 +33,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
             LongDescriptionHandler.HandleLongDescription(sr, crudData);
-            var attachments = crudData.GetRelationship("attachment");
-            foreach (var attachment in (IEnumerable<CrudOperationData>)attachments) {
-                var attachmentString = attachment.GetUnMappedAttribute("newattachment");
-                var attachmentPath = attachment.GetUnMappedAttribute("newattachment_path");
-                if (attachmentString != null && attachmentPath != null) {
-                    AttachmentHandler.HandleAttachments(sr, attachmentString, attachmentPath,
-                        maximoTemplateData.ApplicationMetadata);
-                }
-            }
+
+            // Update or create attachments
+            HandleAttachments((CrudOperationData)maximoTemplateData.OperationData, sr, maximoTemplateData.ApplicationMetadata);
+
+            // Update solution 
             HandleSolutions(crudData, sr);
             base.BeforeUpdate(maximoTemplateData);
-        }
-
-        private void HandleSolutions(CrudOperationData crudDataEntity, object sr) {
-            var sympton = crudDataEntity.GetAttribute("symptom_.ldtext");
-            var cause = crudDataEntity.GetAttribute("cause_.ldtext");
-            var resolution = crudDataEntity.GetAttribute("resolution_.ldtext");
-            w.SetValue(sr, "FR1CODE_LONGDESCRIPTION", cause);
-            w.SetValue(sr, "FR2CODE_LONGDESCRIPTION", resolution);
-            w.SetValue(sr, "PROBLEMCODE_LONGDESCRIPTION", sympton);
         }
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
@@ -63,38 +52,77 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var crudData = (CrudOperationData)maximoTemplateData.OperationData;
             LongDescriptionHandler.HandleLongDescription(sr, crudData);
 
-            HandleAttachmentAndScreenshot(crudData, sr, maximoTemplateData.ApplicationMetadata);
-
+            // Update or create attachments
+            HandleAttachments(crudData, sr, maximoTemplateData.ApplicationMetadata);
             base.BeforeCreation(maximoTemplateData);
         }
 
-        private void HandleAttachmentAndScreenshot(CrudOperationData data, object maximoObj, ApplicationMetadata applicationMetadata) {
+        private void HandleSolutions(CrudOperationData crudDataEntity, object sr) {
+            var sympton = crudDataEntity.GetAttribute("symptom_.ldtext");
+            var cause = crudDataEntity.GetAttribute("cause_.ldtext");
+            var resolution = crudDataEntity.GetAttribute("resolution_.ldtext");
+            w.SetValue(sr, "FR1CODE_LONGDESCRIPTION", cause);
+            w.SetValue(sr, "FR2CODE_LONGDESCRIPTION", resolution);
+            w.SetValue(sr, "PROBLEMCODE_LONGDESCRIPTION", sympton);
+        }
 
-            // Check if Attachment is present
-            var attachmentString = data.GetUnMappedAttribute("newattachment");
-            var attachmentPath = data.GetUnMappedAttribute("newattachment_path");
+        protected virtual void HandleAttachments(CrudOperationData entity, object wo, ApplicationMetadata metadata) {
+            var user = SecurityFacade.CurrentUser();
 
-            if (!String.IsNullOrWhiteSpace(attachmentString) && !String.IsNullOrWhiteSpace(attachmentPath)) {
-                AttachmentHandler.HandleAttachments(maximoObj, attachmentString, attachmentPath, applicationMetadata);
-            }
-
-            // Check if Screenshot is present
-            var screenshotString = data.GetUnMappedAttribute("newscreenshot");
-            var screenshotName = data.GetUnMappedAttribute("newscreenshot_path");
-
-            if (!String.IsNullOrWhiteSpace(screenshotString) && !String.IsNullOrWhiteSpace(screenshotName)) {
-
-                if (screenshotName.ToLower().EndsWith("rtf")) {
-                    var bytes = Convert.FromBase64String(screenshotString);
+            var attachmentParam = new AttachmentParameters() {
+                Data = entity.GetUnMappedAttribute("newattachment"),
+                Path = entity.GetUnMappedAttribute("newattachment_path")
+            };
+            if (!String.IsNullOrWhiteSpace(attachmentParam.Data) && !String.IsNullOrWhiteSpace(attachmentParam.Path)) {
+                // Check if file was rich text file - needed to convert it to word document.
+                if (attachmentParam.Path.ToLower().EndsWith("rtf")) {
+                    var bytes = Convert.FromBase64String(attachmentParam.Data);
                     var decodedString = Encoding.UTF8.GetString(bytes);
                     var compressedScreenshot = CompressionUtil.CompressRtf(decodedString);
 
                     bytes = Encoding.UTF8.GetBytes(compressedScreenshot);
-                    screenshotString = Convert.ToBase64String(bytes);
-                    screenshotName = screenshotName.Substring(0, screenshotName.Length - 3) + "doc";
+                    attachmentParam.Data = Convert.ToBase64String(bytes);
+                    attachmentParam.Path = attachmentParam.Path.Substring(0, attachmentParam.Path.Length - 3) + "doc";
                 }
 
-                AttachmentHandler.HandleAttachments(maximoObj, screenshotString, screenshotName, applicationMetadata);
+                _attachmentHandler.HandleAttachments(wo, attachmentParam, metadata);
+            }
+
+            var screenshotParam = new AttachmentParameters() {
+                Data = entity.GetUnMappedAttribute("newscreenshot"),
+                Path = "screen" + DateTime.Now.ToUserTimezone(user).ToString("yyyyMMdd") + ".png"
+            };
+            if (!String.IsNullOrWhiteSpace(screenshotParam.Data) && !String.IsNullOrWhiteSpace(screenshotParam.Path)) {
+                _attachmentHandler.HandleAttachments(wo, attachmentParam, metadata);
+            }
+
+            var attachments = entity.GetRelationship("attachment");
+            if (attachments != null) {
+                // this will only filter new attachments
+                foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.Id == null)) {
+                    var docinfo = attachment.GetRelationship("docinfo");
+                    var content = new AttachmentParameters() {
+                        Title = attachment.GetAttribute("document").ToString(),
+                        Data = attachment.GetUnMappedAttribute("newattachment"),
+                        Path = attachment.GetUnMappedAttribute("newattachment_path"),
+                        Description = ((CrudOperationData)docinfo).Fields["description"].ToString()
+                    };
+
+                    if (content.Data != null) {
+                         // Check if file was rich text file - needed to convert it to word document.
+                        if (attachmentParam.Path.ToLower().EndsWith("rtf")) {
+                            var bytes = Convert.FromBase64String(attachmentParam.Data);
+                            var decodedString = Encoding.UTF8.GetString(bytes);
+                            var compressedScreenshot = CompressionUtil.CompressRtf(decodedString);
+
+                            bytes = Encoding.UTF8.GetBytes(compressedScreenshot);
+                            attachmentParam.Data = Convert.ToBase64String(bytes);
+                            attachmentParam.Path = attachmentParam.Path.Substring(0, attachmentParam.Path.Length - 3) + "doc";
+                        }
+
+                        _attachmentHandler.HandleAttachments(wo, content, metadata);
+                    }
+                }
             }
         }
     }
