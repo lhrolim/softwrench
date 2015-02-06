@@ -212,8 +212,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
           <section id="statussection">
             <field attribute="ticketid" label="SR#:" readonly="true" requiredexpression="true"/>
-            <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
-<!--              <renderer type="combo" />-->
+            <association label="Status:" target="status" hideDescription="true" labelfield="synstatus.description" requiredexpression="true">
+              <renderer type="lookup" />
             </association>
           </section>
           <section id ="ownersection">
@@ -586,8 +586,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
           <section id="statussection">
             <field attribute="wonum" label="WO#" readonly="true"/>
-            <association label="Status" target="status" labelfield="synstatus.description">
-<!--              <renderer type="combo"/>-->
+            <association label="Status" target="status" hideDescription="true" labelfield="synstatus.description">
+              <renderer type="lookup"/>
             </association>
           </section>
 
