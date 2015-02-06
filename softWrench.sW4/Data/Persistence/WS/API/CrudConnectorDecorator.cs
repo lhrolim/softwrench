@@ -4,6 +4,7 @@ using WcfSamples.DynamicProxy;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 
 namespace softWrench.sW4.Data.Persistence.WS.API {
     public abstract class CrudConnectorDecorator : IMaximoCrudConnector {
