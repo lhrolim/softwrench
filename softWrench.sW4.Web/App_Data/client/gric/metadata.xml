@@ -51,7 +51,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
         </relationship>
-        <relationship to ="person" qualifier="changebyperson">
+        <relationship to ="person" qualifier="changeby">
           <relationshipAttribute from="changeby" to="personid" primary="true"/>
         </relationship>
         <relationship to ="persongroup">
@@ -496,7 +496,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 <!--          <association label="Change By:" target="changeby" labelfield="changebyperson_.displayname" showexpression="@siteid!='VQ'">-->
 <!--            <renderer type="lookup"/>-->
 <!--          </association>-->
-          <field attribute="changeby" label="Change By:" readonly="true" />
+          <field attribute="changeby_.displayname" label="Change By:" readonly="true" />
           <!-- Added the Owner Group field-->
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
             <renderer type="lookup"/>
