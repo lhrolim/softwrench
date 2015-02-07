@@ -251,7 +251,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                                         fn.postAssociationHook(value, scope, { phase: 'initial', dispatchedbytheuser: false });
                                     }
                                     try {
-                                        scope.digest();
+                                        $rootScope.$digest();
                                     } catch (e) {
                                         //digest already in progress
                                     }
