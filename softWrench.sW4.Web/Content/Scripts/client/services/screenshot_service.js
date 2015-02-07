@@ -118,7 +118,7 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
                 var img = new Image();
                 $(img).attr('contenteditable', 'true');
                 //$(img).css('max-width', '100%');
-                $(img).attr('style', 'width: 100%');
+                $(img).attr('style', 'width: 75%');
                 var jimgHolder = $(imgHolder);
                 img.src = imgToBase64(this);
                 jimgHolder.attr('hasimage', 'true');
