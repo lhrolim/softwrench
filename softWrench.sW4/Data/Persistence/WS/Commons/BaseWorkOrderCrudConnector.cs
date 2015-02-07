@@ -30,7 +30,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 //first let´s 'simply change the status
                 WsUtil.SetValue(maximoTemplateData.IntegrationObject, "STATUSIFACE", true);
                 WsUtil.SetValue(maximoTemplateData.IntegrationObject, "CHANGEBY", user.Login.ToUpper());
-                if (!WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CLOSE")){
+                if (!WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CLOSE") || !WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CAN"))
+                {
                     maximoTemplateData.InvokeProxy();
                 }
                 WsUtil.SetValue(maximoTemplateData.IntegrationObject, "STATUSIFACE", false);
