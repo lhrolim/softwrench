@@ -599,6 +599,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section id="statussection">
             <field attribute="wonum" label="WO#" readonly="true"/>
             <association label="Status" target="status" hideDescription="true" labelfield="synstatus.description">
+              <dataprovider prefilterfunction="FilterStatusCodes"/>
               <renderer type="lookup"/>
             </association>
           </section>
