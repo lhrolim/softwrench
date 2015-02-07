@@ -228,7 +228,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     }
                     //clear datamap for the association updated -->This is needed due to a IE9 issue
                     var previousValue = datamap[value.target] == null ? null : datamap[value.target].toString();
-                    datamap[value.target] = null;
+                    //datamap[value.target] = null;
 
                     if (array.associationData == null) {
                         //if no options returned from the server, nothing else to do
