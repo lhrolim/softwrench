@@ -56,8 +56,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (crudData.ContainsAttribute("#hasstatuschange")){
                 //first let´s 'simply change the status
                 WsUtil.SetValue(sr, "STATUSIFACE", true);
-                maximoTemplateData.InvokeProxy();
-                WsUtil.SetValue(sr, "STATUSIFACE", false);
+                if (!WsUtil.GetRealValue(sr, "STATUS").Equals("CLOSED")){
+                    maximoTemplateData.InvokeProxy();
+
+                } WsUtil.SetValue(sr, "STATUSIFACE", false);
             }
 
             // Update common fields or transactions prior to maximo operation exection
