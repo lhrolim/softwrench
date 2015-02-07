@@ -372,8 +372,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </schema>
 
         <detail>
-          <field label="Title:" attribute="document" />
-          <field label="Description:" attribute="docinfo_.description"/>
+          <field label="Title:" attribute="document" requiredexpression="true"/>
+          <field label="Description:" attribute="docinfo_.description" requiredexpression="true"/>
           <field label="Attachment:" attribute="newattachment" requiredexpression="true">
             <renderer type="upload"/>
           </field>
