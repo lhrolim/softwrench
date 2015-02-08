@@ -8,6 +8,11 @@ using softwrench.sw4.Shared2.Data.Association;
 namespace softWrench.sW4.Metadata.Applications.DataSet {
     class GricServiceRequestDataSet : MaximoApplicationDataSet {
 
+        public SearchRequestDto FilterStatusCodes(AssociationPreFilterFunctionParameters parameters) {
+            var filter = parameters.BASEDto;
+            filter.AppendWhereClauseFormat("( MAXVALUE != 'HISTEDIT' )");
+            return filter;
+        }
 
         public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
             return AssetFilterBySiteFunction(parameters);

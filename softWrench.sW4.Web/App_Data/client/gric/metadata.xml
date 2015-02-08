@@ -213,6 +213,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section id="statussection">
             <field attribute="ticketid" label="SR#:" readonly="true" requiredexpression="true"/>
             <association label="Status:" target="status" hideDescription="true" labelfield="synstatus.description" requiredexpression="true">
+              <dataprovider prefilterfunction="FilterStatusCodes"/>
               <renderer type="lookup" />
             </association>
           </section>
