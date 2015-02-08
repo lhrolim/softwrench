@@ -36,7 +36,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             CommonTransaction(maximoTemplateData);
 
             // Attempt to get attachment for new SR
-            HandleAttachmentAndScreenshot((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject, maximoTemplateData.ApplicationMetadata);
+            // HandleAttachmentAndScreenshot((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject, maximoTemplateData.ApplicationMetadata);
 
             base.BeforeCreation(maximoTemplateData);
         }
@@ -65,14 +65,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             // Update common fields or transactions prior to maximo operation exection
             CommonTransaction(maximoTemplateData);
 
-            
-
             var mailObject = maximoTemplateData.Properties;
 
             WorkLogHandler.HandleWorkLogs(crudData, sr);
             CommLogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
 
             HandleServiceAddress(maximoTemplateData);
+            HandleAttachmentAndScreenshot((CrudOperationData)maximoTemplateData.OperationData, sr, maximoTemplateData.ApplicationMetadata);
 
             base.BeforeUpdate(maximoTemplateData);
         }
@@ -102,7 +101,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             LongDescriptionHandler.HandleLongDescription(sr, ((CrudOperationData)maximoTemplateData.OperationData));
 
             // Update or create attachments
-            HandleAttachmentAndScreenshot((CrudOperationData)maximoTemplateData.OperationData, sr, maximoTemplateData.ApplicationMetadata);
+            // HandleAttachmentAndScreenshot((CrudOperationData)maximoTemplateData.OperationData, sr, maximoTemplateData.ApplicationMetadata);
         }
 
         private bool HandleServiceAddress(MaximoOperationExecutionContext maximoTemplateData) {
