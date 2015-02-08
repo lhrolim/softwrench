@@ -567,6 +567,7 @@
     <Content Include="Content\Scripts\client\services\checkpoint_service.js" />
     <Content Include="Content\Scripts\client\services\matusetrans_service.js" />
     <Content Include="Content\Scripts\client\services\tooltrans_service.js" />
+    <Content Include="Content\Scripts\client\textAngular.js" />
     <Content Include="Content\Scripts\customers\kongsberg\sr_service.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angulartreeview.js" />
     <Compile Include="Controllers\Application\ApplicationController.cs" />
