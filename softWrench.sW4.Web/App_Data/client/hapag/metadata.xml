@@ -1425,7 +1425,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="default" params="minwidth=130px;excelwidth=50;wordwrap=break-word" />
             </field>
             <field attribute="hlagchangeticketid" label="SR ID">
-              <renderer type="default" params="width=75px;wordwrap=break-word" />
+              <renderer type="default" params="width=80px" />
             </field>
           </section>
 
@@ -1437,29 +1437,29 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="changeApprovalsDashboardList" stereotype="list">
           <field attribute="workorderid" hidden="true" />
           <field attribute="wonum" label="Change ID">
-            <renderer type="default" params="minwidth=95px;maxwidth=95px;wordwrap=break-word" />
+            <renderer type="default" params="width=80px" />
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="minwidth=102px;maxwidth=102px;excelwidth=50;wordwrap=break-word" />
+            <renderer type="default" params="minwidth=100px;excelwidth=50" />
           </field>
           <field attribute="cinum" label="Asset">
-            <renderer type="default" params="minwidth=102px;maxwidth=102px;wordwrap=break-word;excelwidth=30" />
+            <renderer type="default" params="width=150px;excelwidth=30" />
           </field>
           <field attribute="wopriority" label="Priority">
-            <renderer type="default" params="minwidth=60px;maxwidth=60px;wordwrap=break-word" />
+            <renderer type="default" params="width=60px" />
           </field>
           <field attribute="schedstart" label="Scheduled Start">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=95px;maxwidth=95px;wordwrap=break-word;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=80px;showtime=false" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site ID">
-            <renderer type="default" params="minwidth=95px;maxwidth=95px;wordwrap=break-word" />
+            <renderer type="default" params="width=80px" />
           </field>
           <field attribute="dashapprovals_.approvergroup" label="Approver Group">
-            <renderer type="default" params="minwidth=95px;maxwidth=95px;wordwrap=break-word" />
+            <renderer type="default" params="width=80px" />
           </field>
           <field attribute="dashapprovals_apprwo_.recordkey" hidden="true"/>
           <field attribute="status" label="Status">
-            <renderer type="default" params="minwidth=95px;maxwidth=95px;wordwrap=break-word" />
+            <renderer type="default" params="width=80px" />
           </field>
 
           <properties>
