@@ -245,7 +245,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                                     log.debug('restoring {0} to previous value {1}. '.format(value.target, previousValue));
                                     //if still present on the new list, setting back the value which was 
                                     //previous selected, but after angular has updadted the list properly
-                                    datamap[value.target] = String(previousValue);
+                                    datamap[value.target] = String(associationOption.value);
                                     doUpdateExtraFields(value, fullObject, datamap);
                                     if (fn.postAssociationHook) {
                                         fn.postAssociationHook(value, scope, { phase: 'initial', dispatchedbytheuser: false });
