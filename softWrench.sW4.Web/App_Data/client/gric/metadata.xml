@@ -230,7 +230,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="lookup"/>
               <event type="afterchange" service="srService" method="afterchangeownergroup"/>
             </association>
-            <field attribute="reportedby" label="Reported By:" readonly="true"/>
+            <field attribute="reportedbyperson_.displayname" label="Reported By:" readonly="true"/>
           </section>
           <section id ="actualDates">
             <field attribute="actualstart" hidden="true"/>
@@ -518,7 +518,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </association>
 
           
-          <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
+          <field label="Reported By:" attribute="reportedbyperson_.displayname" readonly="true"/>
           <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
             <renderer type="lookup"/>
           </association>
