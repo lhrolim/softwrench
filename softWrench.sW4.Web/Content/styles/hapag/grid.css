@@ -11,6 +11,15 @@
             top: 114px;
         }
 
+    #listgrid th {
+        word-break: break-word;
+    }
+
+    #listgrid td {
+        word-break: break-all;
+        word-break: break-word;
+    }
+
 .gridcolumnvalue {
     color: black;
     padding-left: 8px;

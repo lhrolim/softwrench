@@ -1361,7 +1361,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <section id="srId"/>
           <field attribute="cinum" label="Asset">
-            <renderer type="default" params="minwidth=80px;excelwidth=30" />
+            <renderer type="default" params="minwidth=100px;excelwidth=30" />
           </field>
           <field attribute="wopriority" label="Priority">
             <renderer type="default" params="width=80px" />
@@ -1422,7 +1422,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <list title="Change Grid" unionschema="srforchange.changeunionschema" parentschema="parentgrid">
           <section id="srId">
             <field attribute="hlagchangesummary" label="Summary">
-              <renderer type="default" params="minwidth=130px;excelwidth=50;wordwrap=break-word" />
+              <renderer type="default" params="minwidth=100px;excelwidth=50;wordwrap=break-word" />
             </field>
             <field attribute="hlagchangeticketid" label="SR ID">
               <renderer type="default" params="width=80px" />
@@ -1443,7 +1443,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=100px;excelwidth=50" />
           </field>
           <field attribute="cinum" label="Asset">
-            <renderer type="default" params="width=150px;excelwidth=30" />
+            <renderer type="default" params="minwidth=120px;excelwidth=30" />
           </field>
           <field attribute="wopriority" label="Priority">
             <renderer type="default" params="width=60px" />
