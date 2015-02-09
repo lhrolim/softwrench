@@ -124,8 +124,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="sr.ticketuid desc"/>
           </properties>
-
         </list>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
@@ -149,7 +149,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             <renderer type="lookup"/>
           </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" dependantfields="siteid" >
+          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" dependantfields="siteid" requiredexpression="@siteid == 'LB' &amp;&amp; @location == null" >
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
@@ -433,6 +433,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="workorder.workorderid desc"/>
           </properties>
         </list>
 
