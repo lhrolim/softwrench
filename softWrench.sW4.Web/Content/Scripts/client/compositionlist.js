@@ -409,7 +409,8 @@ app.directive('compositionList', function (contextService,formatService) {
                     //if the function is called inside a modal, then we would receive the item as a parameter, otherwise it would be on the scope of the page itself
                     selecteditem = $scope.selecteditem;
                 }
-                if (selecteditem == undefined) {
+                
+                if (selecteditem == undefined && !$scope.collectionproperties.allowUpdate) {
                     //this is for the call to submit without having any item on composition selected, due to having the submit as the default button
                     $log.getInstance("compositionlist#save").debug("calling save on server without composition selected");
                     //this flag must be true for the spin to work properly... TODO: improve this
@@ -417,20 +418,48 @@ app.directive('compositionList', function (contextService,formatService) {
                     return;
                 }
 
+                // Validation should happen before adding items to the composition list to allow invalid data to pass into the system.
+                var detailSchema = $scope.compositionschemadefinition.schemas.detail;
+                if (selecteditem != undefined) {
+                    var validationErrors = validationService.validate(detailSchema, detailSchema.displayables, selecteditem, $scope.crudform.$error);
+                    if (validationErrors.length > 0) {
+                        //interrupting here, can´t be done inside service
+                        return;
+                    }
+                }
+                if ($scope.collectionproperties.allowUpdate) {
+                    var validationErrors = [];
+                    
+                    $.each($scope.clonedCompositionData, function (key, value) {
+                        validationErrors = validationService.validate(detailSchema, detailSchema.displayables, value);
+                        if (validationErrors.length > 0) {
+                            //interrupting here, can´t be done inside service
+                            return false;
+                        }
+                    });
+
+                    if (validationErrors.length > 0) {
+                        return;
+                    }
+                }
+
                 //parentdata is bound to the datamap --> this is needed so that the sw_submitdata has the updated data
-                safePush($scope.parentdata.fields, $scope.relationship, selecteditem);
+                if ($scope.collectionproperties.allowUpdate) {
+                    //if composition items are editable, then we should pass the entire composition list back.  One or more item could have been changed.
+                    $scope.parentdata.fields[$scope.relationship] = $scope.clonedCompositionData;
+                }
+                
+                if (selecteditem != undefined) {
+                    //ensure new item is captured as well
+                    safePush($scope.parentdata.fields, $scope.relationship, selecteditem);
+                }
 
                 var log = $log.getInstance('compositionlist#save');
                 if (!$scope.collectionproperties.autoCommit) {
                     log.warn('autocommit=false is yet to be implemented for compositions');
                     return;
                 }
-                var detailSchema = $scope.compositionschemadefinition.schemas.detail;
-                var validationErrors = validationService.validate(detailSchema, detailSchema.displayables, selecteditem, $scope.crudform.$error);
-                if (validationErrors.length > 0) {
-                    //interrupting here, can´t be done inside service
-                    return;
-                }
+
                 var alwaysrefresh = $scope.compositiondetailschema.properties && "true" == $scope.compositiondetailschema.properties['compositions.alwaysrefresh'];
                 if (alwaysrefresh) {
                     //this will disable success message, since we know we´ll need to refresh the screen
