@@ -431,11 +431,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="autocompleteclient"/>
           </optionfield>
           <!--COMSW 24 association field used for lazy lookup-->
+          <field attribute="woaddress_.description" attributeToServer="#tkdesc" hidden="true" />
+          <field attribute="woaddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
+          <field attribute="woaddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
+          <field attribute="woaddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
+          <!--<field attribute="woaddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />-->
           <association label="Service Address" target="saddresscode" labelfield="woaddress_.description"  extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress">
+            <event type="beforechange" service="genericTicketService" method="beforeChangeWOServiceAddress" />
             <renderer type="lookup" />
-            
+            <event type="afterchange" service="genericTicketService" method="afterChangeWOServiceAddress" />
           </association>
-          <field label="Formatted Address:" attribute="formattedaddress"/>
+          <field label="Formatted Address:" attribute="formattedaddress" enableexpression="@woaddress_.description != ''"/>
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
             <renderer type="lookup"/>
@@ -554,13 +560,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="hasfollowupwork" hidden="true"/>
           <field attribute="origrecordid" hidden="true"/>
           <field attribute="origrecordclass" hidden="true"/>
-          <field attribute="wonum" label="Number"  required="true" readonly="true" />
+          <field attribute="wonum" label="Number" requiredexpression="true" readonly="true" />
           <field attribute="reportdate" label="Reported On" hidden="true"/>
           <field attribute="changeby" label="Changed By" hidden="true"/>
           <field attribute="owner" label="Owner"  readonly="true"/>
           <field attribute="status"  hidden="true" default="WAPPR"/>
           <field attribute="synstatus_.maxvalue" hidden="true"/>
-          <field attribute="synstatus_.description" label="Status" readonly="true" required="true">
+          <field attribute="synstatus_.description" label="Status" readonly="true" requiredexpression="true">
             <lookup sourceApplication="synonymdomain" sourceField="value" sourceDisplay="description,value" targetField="status" targetQualifier="">
               <lookupFilters>
                 <lookupFilter sourceField="domainid" literal="WOSTATUS" />
@@ -568,7 +574,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </lookup>
           </field>
 
-          <field attribute="wopriority" label="Priority" required="true" default="1" >
+          <field attribute="wopriority" label="Priority" requiredexpression="true" default="1" >
 
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
             <number decimals="0" min="0" max="999" />
