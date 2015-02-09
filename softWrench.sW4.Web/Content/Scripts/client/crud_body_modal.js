@@ -140,7 +140,7 @@ app.directive('crudBodyModal', function ($rootScope, modalService) {
                 $rootScope.showingModal = true;
                 //TODO: review this decision here it might not be suitable for all the scenarios
                 var datamapToUse = $.isEmptyObject(datamap) ? $scope.previousdata : datamap;
-
+                $scope.originalDatamap = angular.copy(datamapToUse);
                 associationService.getEagerAssociations($scope, { datamap: datamapToUse });
             }
 
