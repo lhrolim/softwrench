@@ -292,7 +292,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 return;
             }
 
-            $rootScope.avoidspin = true;
+//            $rootScope.avoidspin = true;
             scope.associationOptions = instantiateIfUndefined(scope.associationOptions);
             scope.blockedassociations = instantiateIfUndefined(scope.blockedassociations);
             scope.associationSchemas = instantiateIfUndefined(scope.associationSchemas);

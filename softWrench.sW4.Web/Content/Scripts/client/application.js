@@ -256,6 +256,11 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
 
         // resultObject can be null only when SW is pointing to a Maximo DB different from Maximo WS DB
         scope.datamap = instantiateIfUndefined(result.resultObject);
+
+        //Save the originalDatamap after the body finishes rendering. This will be used in the submit service to update
+        //associations that were "removed" with a " ". This is because a null value, when sent to the MIF, is ignored
+        scope.originalDatamap = angular.copy(scope.datamap);
+
         scope.extraparameters = instantiateIfUndefined(result.extraParameters);
 
         scope.mode = result.mode;

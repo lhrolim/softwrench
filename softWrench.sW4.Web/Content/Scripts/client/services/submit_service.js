@@ -131,7 +131,7 @@ app.factory('submitService', function ($rootScope, fieldService, contextService,
         //Updates fields that were "removed" from an existing record. If the value was originally not null, but is now null,
         //then we update the datamap to " ". This is because the MIF will ignore nulls, causing no change to that field on the ticket.
         handleDatamapForMIF: function (schema, originalDatamap, datamap) {
-            var displayableFields = fieldService.getDisplayablesOfTypes(schema.displayables, ['OptionField', 'ApplicationAssociationDefinition', 'ApplicationFieldDefinition']);
+            var displayableFields = fieldService.getDisplayablesOfTypes(schema.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
             for (var i = 0, len = displayableFields.length; i < len; i++) {
                 var key = displayableFields[i].target;
                 if ((datamap[key] == null || datamap[key] == undefined) && datamap[key] != originalDatamap[key]) {

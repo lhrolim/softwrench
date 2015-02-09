@@ -55,6 +55,7 @@ app.directive('crudBody', function (contextService) {
             associationSchemas: '=',
             schema: '=',
             datamap: '=',
+            originalDatamap: '=',
             extraparameters: '=',
             isDirty: '=',
             savefn: '&',
@@ -103,9 +104,7 @@ app.directive('crudBody', function (contextService) {
             });
 
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
-                //Save the originalDatamap after the body finishes rendering. This will be used in the submit service to update
-                //associations that were "removed" with a " ". This is because a null value, when sent to the MIF, is ignored
-                $scope.originalDatamap = angular.copy($scope.datamap);
+
 
                 var tab = contextService.getActiveTab();
                 if (tab != null) {
