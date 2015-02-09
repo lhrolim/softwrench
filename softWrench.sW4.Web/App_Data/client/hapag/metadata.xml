@@ -547,13 +547,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=100px;excelwidth=30" />
           </field>
           <field attribute="targetfinish" label="Target Finish Date">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=80px;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=100px;showtime=false" />
           </field>
           <field attribute="internalpriority" label="Severity">
             <renderer type="default" params="width=50px;excelwidth=15" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=80px;showtime=false;exporttoexcel=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=100px;showtime=false;exporttoexcel=false" />
           </field>
           <field attribute="#2reportdate" label="Reported Date" hidden="true">
             <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;exporttoexcel=true" />
@@ -962,11 +962,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </componentdisplayable>
       </components>
 
-
       <schemas>
-
-
-
         <schema title="Service Request Grid" abstract="true" id="baselist" stereotype="list">
           <field attribute="ticketid" label="Request#">
             <renderer type="default" params="width=80px" />
@@ -978,7 +974,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=160px;excelwidth=25" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=80px;showtime=false;exporttoexcel=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=100px;showtime=false;exporttoexcel=false" />
           </field>
           <field attribute="#2reportdate" label="Reported Date" hidden="true">
             <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;exporttoexcel=true;excelwidth=20" />
@@ -986,7 +982,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="#3reportdate" label="Reported Time" hidden="true">
             <renderer type="datetime" params="format=HH:mm;showtime=false;exporttoexcel=true;excelwidth=20" />
           </field>
-
           <field attribute="hlagpluspcustomer" label="Site Id">
             <renderer type="default" params="width=80px;excelwidth=15" />
           </field>
@@ -1367,7 +1362,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=80px" />
           </field>
           <field attribute="schedstart" label="Scheduled Start">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=80px;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=100px;showtime=false" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site ID">
             <renderer type="default" params="width=80px" />
@@ -1415,7 +1410,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="list.defaultorderby" value="schedstart asc"/>
 
           </properties>
-          
+
         </schema>
 
         <!--Used for viewAll click from Dashboard with SR union-->
@@ -1449,7 +1444,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=60px" />
           </field>
           <field attribute="schedstart" label="Scheduled Start">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=80px;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=100px;showtime=false" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site ID">
             <renderer type="default" params="width=80px" />
@@ -1840,7 +1835,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=80px;excelwidth=20" />
           </field>
           <field attribute="reportdate" label="Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=110px;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=100px;showtime=false" />
           </field>
           <field attribute="hlagpluspcustomer" label="Location">
             <renderer type="default" params="width=80px" />
@@ -2378,7 +2373,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=160px;excelwidth=30" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=110px;showtime=false;exporttoexcel=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=100px;showtime=false;exporttoexcel=false" />
           </field>
           <field attribute="#2reportdate" label="Reported Date" hidden="true">
             <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;exporttoexcel=true" />
@@ -2708,7 +2703,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
           <field label="EOS_Date" attribute="assetspeceosdate_.alnvalue">
-            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=100px;excelwidth=15"/>
           </field>
           <field label="Billable" attribute="warrantyasset_warrantyview_.description">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
