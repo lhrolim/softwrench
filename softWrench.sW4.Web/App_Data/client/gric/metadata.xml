@@ -149,7 +149,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             <renderer type="lookup"/>
           </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" dependantfields="siteid" requiredexpression="@siteid == 'LB' &amp;&amp; @location == null" >
+          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" dependantfields="siteid">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
