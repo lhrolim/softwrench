@@ -136,6 +136,12 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
     $scope.$on('sw_titlechanged', function (titlechangedevent, title) {
         $scope.title = title;
+
+        if (title) {
+            window.document.title = title + ' | softWrench';
+        } else {
+            window.document.title = 'softWrench';
+        }
     });
 
     $scope.$on('ngLoadFinished', function (ngLoadFinishedEvent) {

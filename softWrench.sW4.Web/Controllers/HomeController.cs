@@ -51,17 +51,17 @@ namespace softWrench.sW4.Web.Controllers {
 
             HomeModel model = null;
             string url;
-            string title;
+            string title = "softWrench";
             if (indexItem is ApplicationMenuItemDefinition) {
                 var app = (ApplicationMenuItemDefinition)indexItem;
                 var key = new ApplicationMetadataSchemaKey(app.Schema, app.Mode, ClientPlatform.Web);
                 var adapter = new DataRequestAdapter(null, key);
                 url = GetUrlFromApplication(app.Application, adapter);
-                title = app.Title;
+                //title = app.Title;
             } else if (indexItem is ActionMenuItemDefinition) {
                 var actItem = (ActionMenuItemDefinition)indexItem;
                 url = GetUrlFromAction(actItem);
-                title = actItem.Title;
+                //title = actItem.Title;
             } else {
                 FormsAuthentication.SignOut();
                 return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f&forbidden=true".Fmt(Request.ApplicationPath.Replace("/", "")));
