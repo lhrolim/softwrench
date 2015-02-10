@@ -718,7 +718,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="newInvIssueDetail" mode="input" stereotype="detail">
           <section>
             <field attribute="matusetransid" hidden="true"/>
-            <field attribute="orgid" default="BSAKSS"/>
+            <field attribute="orgid" default="BSAKSS" hidden="true"/>
             <field attribute="issuetype" hidden="true" default="ISSUE"/>
             <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
             <association label="Labor Code" target="laborcode" labelfield="labor_.personid" valuefield="laborcode"  extraprojectionvalues="personid">
