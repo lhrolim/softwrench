@@ -26,6 +26,7 @@
     @RowStampScriptHelper.Render("~/Content/Scripts/client/client-js")
     @RowStampScriptHelper.Render("~/Content/Scripts/angulartreeview.js")
     @RowStampScriptHelper.Render("~/Content/Scripts/thirdparty")
+    @RowStampScriptHelper.Render("~/Content/Scripts/thirdparty/jscrollpane")
 
     <input type="hidden" id="hddn_configs" value="@Model.ConfigJSON" />
     <input type="hidden" id="routes_homeurl" value="@Url.Action("RedirectToAction", "Home")" />
@@ -38,11 +39,12 @@
     <div class="container" ng-controller="LayoutController">
         <div class="row">
             <div class="col-side-bar" ng-if="popupmode == 'none'">
-                <div id="sidebar" class="side-bar-container affix menu-affix">
+                <div id="sidebar" class="side-bar-container">
                     <div class="alignment-logo">
                         <img ng-src="{{mainlogo}}" alt="logo" class="img-responsive" />
                     </div>
-                    <menu-wrapper menu="menu" popupmode="{{popupmode}}" />
+                    <menu-wrapper menu="menu" popupmode="{{popupmode}}" class="menu-primary" />
+                    <div class="clear">Scott</div>
                 </div>
             </div>
             <div class="col-main-content">

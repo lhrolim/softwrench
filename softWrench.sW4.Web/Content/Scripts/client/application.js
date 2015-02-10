@@ -248,12 +248,21 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
             log.debug("Crud Sub Template handled");
             $scope.crudsubtemplate = url(result.crudSubTemplate);
         }
+
+        //HAP-698 - init scrollpage
+        //TODO: find event after menu loads to init (remove 1 second timeout)
+        $timeout(function () {
+
+            //HAP-876 - resize the nav, to make sure it is scrollable
+            $('.menu-primary').height($(window).height());
+
+            //set the scrollpane
+            $('.menu-primary').jScrollPane({ maintainPosition: true });
+        }, 1000);
+
         $scope.requestpopup = null;
     };
-
-
-
-
+    
     //called first time a crud is registered
     function initApplication() {
         $scope.$on('sw_renderview', function (event, applicationName, schemaId, mode, title, parameters) {

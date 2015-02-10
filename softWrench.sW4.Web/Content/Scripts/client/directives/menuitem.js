@@ -26,7 +26,7 @@ app.directive('menu', function (contextService) {
         scope: {
             menu: '='
         },
-        controller: function ($scope, $rootScope) {
+        controller: function ($scope, $rootScope, $timeout) {
 
             $scope.level = -1;
 
@@ -44,6 +44,12 @@ app.directive('menu', function (contextService) {
                             if ($(this).children()[0] === event.target) {
                                 $(this).data('closable', true);
                             }
+
+                            //HAP-698 - reinit scrollpane after menu item opens/closes
+                            $timeout(function () {
+                                var api = $('.menu-primary').jScrollPane({ maintainPosition: true }).data('jsp');
+                                api.reinitialise();
+                            }, 250);
                         },
                         "hide.bs.dropdown": function (event) {
                             if ($(this)[0] === event.target) {
@@ -59,36 +65,37 @@ app.directive('menu', function (contextService) {
                         $('.dropdown-container').data('closable', false);
                     }
 
+                    //HAP-698 - replace following with scrollpane.js (changing page height, allowing content to scroll out of window)
                     // To scroll the Sidebar along with the window
-                    if ($rootScope.clientName == 'hapag') {
+                    //if ($rootScope.clientName == 'hapag') {
 
-                        $(window).scroll(function (event) {
-                            var scroll = $(event.target).scrollTop();
-                            $("#sidebar").scrollTop(scroll);
-                        });
+                    //    $(window).scroll(function (event) {
+                    //        var scroll = $(event.target).scrollTop();
+                    //        $("#sidebar").scrollTop(scroll);
+                    //    });
 
-                        $('.dropdown-container').on(
-                        {
-                            "shown.bs.dropdown": function (event) {
-                                var windowHeight = $(window).height();
-                                var sidebarHeigth = $('.alignment-logo').outerHeight() + $('[role=menu]').outerHeight();
+                    //    $('.dropdown-container').on(
+                    //    {
+                    //        "shown.bs.dropdown": function (event) {
+                    //            var windowHeight = $(window).height();
+                    //            var sidebarHeigth = $('.alignment-logo').outerHeight() + $('[role=menu]').outerHeight();
 
-                                if (sidebarHeigth > windowHeight) {
-                                    $('.col-main-content').height(sidebarHeigth);
-                                }
-                            },
-                            "hide.bs.dropdown": function (event) {
-                                var windowHeight = $(window).height();
-                                var sidebarHeigth = $('.alignment-logo').outerHeight() + $('[role=menu]').outerHeight();
+                    //            if (sidebarHeigth > windowHeight) {
+                    //                $('.col-main-content').height(sidebarHeigth);
+                    //            }
+                    //        },
+                    //        "hide.bs.dropdown": function (event) {
+                    //            var windowHeight = $(window).height();
+                    //            var sidebarHeigth = $('.alignment-logo').outerHeight() + $('[role=menu]').outerHeight();
 
-                                if (sidebarHeigth < windowHeight) {
-                                    $('.col-main-content').height(sidebarHeigth);
-                                }
-                            }
+                    //            if (sidebarHeigth < windowHeight) {
+                    //                $('.col-main-content').height(sidebarHeigth);
+                    //            }
+                    //        }
 
-                        });
+                    //    });
 
-                    }
+                    //}
                 }
             });
         }

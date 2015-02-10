@@ -67,10 +67,19 @@
 /***************************** 
     Vertical orientation
  *****************************/
+.menu-primary {
+    background-color: #003878;
+}
+
+    .menu-primary .dropdown-menu {
+         border: none; 
+         -webkit-box-shadow: none; 
+         box-shadow: none; 
+    }
 
 .vertical-menu-container .dropdown-menu {
     background-color: #003878;
-    /*width: 195px;*/
+    width: 195px;
     color: #ffffff;
     margin: 0 0 0 0;
     border-radius: 0;
@@ -80,7 +89,7 @@
         background-color: #003878;
         /*width: 195px;*/
         color: #ffffff;
-        padding: 32px 0 32px 0;
+        padding: 32px 0 88px 0;
         position: relative;
     }
 
