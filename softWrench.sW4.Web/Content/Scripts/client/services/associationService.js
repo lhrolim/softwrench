@@ -264,6 +264,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                                 }, 0, false);
                             } else {
                                 //let´s remove the complexity of non ie9 solutions, calling the code outside of the timeout since it´s not needed
+                                datamap[value.target] = String(datamapTargetValue);
                                 doUpdateExtraFields(value, fullObject, datamap);
                                 if (fn.postAssociationHook) {
                                     fn.postAssociationHook(value, scope, { phase: 'initial', dispatchedbytheuser: false });
