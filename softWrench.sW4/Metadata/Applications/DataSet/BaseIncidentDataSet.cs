@@ -53,7 +53,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet{
                                                                     and objectname= '{2}')",
                                         parameters.OriginalEntity.Attributes["orgid"],
                                         parameters.OriginalEntity.Attributes["siteid"],
-                                        "INCIDENT");
+                                        parameters.OriginalEntity.Attributes["class"] == "" ? parameters.OriginalEntity.Attributes["class"] : "INCIDENT");
 
             var result = MaxDAO.FindByNativeQuery(query, null);
             var list = new List<AssociationOption>();
