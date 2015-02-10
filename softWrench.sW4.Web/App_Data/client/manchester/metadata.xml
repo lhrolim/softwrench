@@ -85,6 +85,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="woaddress" reverselookupattribute="addresscode" >
           <relationshipAttribute from="wonum" to="woserviceaddress_.wonum" primary="true"/>
         </relationship>
+        <relationship to="woserviceaddress">
+          <relationshipAttribute from="wonum" to="wonum" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
         <relationship to="synonymdomain" qualifier="synstatus">
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
@@ -431,17 +436,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="autocompleteclient"/>
           </optionfield>
           <!--COMSW 24 association field used for lazy lookup-->
-          <field attribute="woaddress_.description" attributeToServer="#tkdesc" hidden="true" />
-          <field attribute="woaddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
-          <field attribute="woaddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
-          <field attribute="woaddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
-          <!--<field attribute="woaddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />-->
-          <association label="Service Address" target="addresscode" labelfield="woaddress_.description"  extraprojectionvalues="serviceaddressid, description, staddrnumber, staddrstreet, staddrsttype, formattedaddress">
+          <association label="Service Address" target="addresscode" labelfield="woaddress_.description"  extraprojectionvalues="addresscode, serviceaddressid, orgid, siteid, description, staddrnumber, staddrstreet, staddrsttype, formattedaddress">
             <event type="beforechange" service="genericTicketService" method="beforeChangeWOServiceAddress" />
             <renderer type="lookup" />
             <event type="afterchange" service="genericTicketService" method="afterChangeWOServiceAddress" />
           </association>
-          <field label="Formatted Address:" attribute="formattedaddress" enableexpression="@woaddress_.serviceaddressid == null"/>
+          <field label="Formatted Address:" attribute="woserviceaddress_.formattedaddress" enableexpression="@woaddress_.serviceaddressid == null"/>
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
             <renderer type="lookup"/>

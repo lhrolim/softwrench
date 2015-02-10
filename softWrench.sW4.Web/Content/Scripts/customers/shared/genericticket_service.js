@@ -97,14 +97,16 @@ app.factory('genericTicketService', function (alertService, associationService, 
 
         beforeChangeWOServiceAddress: function (event) {
             if (event.newValue == null) {
+                event.fields["woaddress_"] = null;
                 event.fields["woaddress_.serviceaddressid"] = null;
                 event.fields["woaddress_.formattedaddress"] = "";
-                event.fields["formattedaddress"] = "";
             }
         },
 
-        afterChangeWOServiceAddress: function (event) {
-            event.fields["formattedaddress"] = event.fields["woaddress_.formattedaddress"];
+        afterChangeWOServiceAddress: function (event) { 
+            event.fields["woserviceaddress_.formattedaddress"] = event.fields["woaddress_.formattedaddress"];
+            event.fields["#formattedaddr"] = event.fields["woserviceaddress_.formattedaddress"];
+            event.fields["#woaddress_"] = event.fields["woaddress_"];
         }, 
 
         validateCloseStatus: function (schema, datamap, parameters) {
