@@ -436,12 +436,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="woaddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
           <field attribute="woaddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
           <!--<field attribute="woaddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />-->
-          <association label="Service Address" target="saddresscode" labelfield="woaddress_.description"  extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress">
+          <association label="Service Address" target="addresscode" labelfield="woaddress_.description"  extraprojectionvalues="serviceaddressid, description, staddrnumber, staddrstreet, staddrsttype, formattedaddress">
             <event type="beforechange" service="genericTicketService" method="beforeChangeWOServiceAddress" />
             <renderer type="lookup" />
             <event type="afterchange" service="genericTicketService" method="afterChangeWOServiceAddress" />
           </association>
-          <field label="Formatted Address:" attribute="formattedaddress" enableexpression="@woaddress_.description != ''"/>
+          <field label="Formatted Address:" attribute="formattedaddress" enableexpression="@woaddress_.serviceaddressid == null"/>
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
             <renderer type="lookup"/>

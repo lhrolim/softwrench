@@ -97,7 +97,7 @@ app.factory('genericTicketService', function (alertService, associationService, 
 
         beforeChangeWOServiceAddress: function (event) {
             if (event.newValue == null) {
-                event.fields["woaddress"] = null;
+                event.fields["woaddress_.serviceaddressid"] = null;
                 event.fields["woaddress_.formattedaddress"] = "";
                 event.fields["formattedaddress"] = "";
             }
