@@ -517,6 +517,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
             </commandgroup>
           </commandbars>
+          <field attribute="orgid" hidden="true"/>
           <field attribute="matusetransid" hidden="true"/>
           <field attribute="storeloc" hidden="true"/>
           <field attribute="binnum" hidden="true"/>
@@ -717,6 +718,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="newInvIssueDetail" mode="input" stereotype="detail">
           <section>
             <field attribute="matusetransid" hidden="true"/>
+            <field attribute="orgid" default="BSAKSS"/>
             <field attribute="issuetype" hidden="true" default="ISSUE"/>
             <field attribute="enterby" label="Entered By" readonly="true" default="@username"/>
             <association label="Labor Code" target="laborcode" labelfield="labor_.personid" valuefield="laborcode"  extraprojectionvalues="personid">
@@ -734,6 +736,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </association>
             <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" extraprojectionvalues="description" dependantfields="siteid" requiredexpression="true" >
               <renderer type="lookup"/>
+              <event type="afterchange" service="inventoryService" method="invIssue_maximo71_afterChangeItem"/>
             </association>
             <association label="Item" target="itemnum" labelfield="inventory_.item_.description" default="KEYSET" extraprojectionvalues="itemnum,binnum,issueunit,location,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid" requiredexpression="true">
               <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
@@ -778,7 +781,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <dataprovider prefilterfunction="FilterWorkorders"/>
               <renderer type="lookup"/>
             </association>
-            <association label="Location" target="location" labelfield="location_.location" dependantfields="siteid" default="OFFICE">
+            <association label="Location" target="location" labelfield="location_.location" dependantfields="siteid" default="KEYUSER">
               <renderer type="lookup"/>
             </association>
             <association label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid">
