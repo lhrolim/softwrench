@@ -500,6 +500,7 @@
     <Content Include="Content\Scripts\client\aa_dateutils.js" />
     <Content Include="Content\Scripts\client\aa_stringutils.js" />
     <Content Include="Content\Scripts\client\components\combobox.js" />
+    <Content Include="Content\Scripts\client\responsive.js" />
     <Content Include="Content\Scripts\client\services\dispatcher_service.js" />
     <Content Include="Content\Scripts\client\each.js" />
     <Content Include="Content\Scripts\client\about.js" />
@@ -571,9 +572,11 @@
     <Content Include="Content\Scripts\jquery\jquery-filedownload-1.2.0.js" />
     <Content Include="Content\Scripts\jquery\jquery-fileupload-5.40.1.js" />
     <Content Include="Content\Scripts\jquery\jquery.iframe-transport.js" />
-    <Content Include="Content\Scripts\responsive.js" />
+    <Content Include="Content\Scripts\thirdparty\jscrollpane\jquery.jscrollpane.js" />
+    <Content Include="Content\Scripts\thirdparty\jscrollpane\jquery.mousewheel.js" />
     <Content Include="Content\Scripts\thirdparty\moment.js" />
     <Content Include="Content\styles\default\index.css" />
+    <Content Include="Content\styles\hapag\jquery.jscrollpane.css" />
     <Content Include="Content\styles\default\menu.css" />
     <Content Include="Content\styles\default\print.css" />
     <Content Include="Content\styles\default\search.css" />
