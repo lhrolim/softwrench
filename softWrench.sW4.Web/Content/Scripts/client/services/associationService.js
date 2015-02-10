@@ -202,7 +202,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 log.debug('updating association from server {0} length {1}'.format(dependantFieldName, array.associationData == null ? 0 : array.associationData.length));
 
                 scope.associationOptions[dependantFieldName] = array.associationData;
-                
+
                 scope.blockedassociations[dependantFieldName] = zeroEntriesFound;
                 scope.associationSchemas[dependantFieldName] = array.associationSchemaDefinition;
 
@@ -277,7 +277,14 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     }
                 });
             }
-
+            //let´s force a scope digest if not yet in place
+            if (!isIe9()) {
+                try {
+                    scope.digest();
+                } catch (e) {
+                    //digest already in progress
+                }
+            }
         },
 
         getEagerAssociations: function (scope, options) {
@@ -287,7 +294,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 return;
             }
 
-//            $rootScope.avoidspin = true;
+            //            $rootScope.avoidspin = true;
             scope.associationOptions = instantiateIfUndefined(scope.associationOptions);
             scope.blockedassociations = instantiateIfUndefined(scope.blockedassociations);
             scope.associationSchemas = instantiateIfUndefined(scope.associationSchemas);
