@@ -10,7 +10,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
         }
 
         datamap[key] = {};
-        datamap.extrafields = instantiateIfUndefined(datamap.extrafields);
+        datamap.extrafields = datamap.extrafields || {};
         if (associationFieldMetadata.extraProjectionFields == null) {
             return;
         }
@@ -196,13 +196,13 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             for (var dependantFieldName in serverOptions) {
 
                 //this iterates for list of fields which were dependant of a first one. 
-                var array = instantiateIfUndefined(serverOptions[dependantFieldName]);
+                var array = serverOptions[dependantFieldName] || {};
+                var zeroEntriesFound = (array.associationData == null || array.associationData.length == 0);
 
                 log.debug('updating association from server {0} length {1}'.format(dependantFieldName, array.associationData == null ? 0 : array.associationData.length));
 
                 scope.associationOptions[dependantFieldName] = array.associationData;
-                // scope.blockedassociations[dependantFieldName] = (array.associationData == null || array.associationData.length == 0);
-                var zeroEntriesFound = (array.associationData == null || array.associationData.length == 0);
+                
                 scope.blockedassociations[dependantFieldName] = zeroEntriesFound;
                 scope.associationSchemas[dependantFieldName] = array.associationSchemaDefinition;
 
@@ -226,26 +226,32 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                         //the datamap could be null if this method is called from a list schema
                         return;
                     }
-                    //clear datamap for the association updated -->This is needed due to a IE9 issue
-                    var previousValue = datamap[value.target] == null ? null : datamap[value.target].toString();
-                    datamap[value.target] = null;
 
-                    if (array.associationData == null) {
+                    var datamapTargetValue = datamap[value.target] == null ? null : datamap[value.target].toString();
+
+                    if (isIe9()) {
+                        //clear datamap for the association updated, restoring it later -->This is needed due to a IE9 issue
+                        datamap[value.target] = null;
+                    }
+
+
+                    if (array.associationData == null || datamapTargetValue == null) {
                         //if no options returned from the server, nothing else to do
                         return;
                     }
 
 
-                    if (previousValue != null) {
-                        for (var j = 0; j < array.associationData.length; j++) {
-                            var associationOption = array.associationData[j];
-                            if (associationOption.value.toUpperCase() == previousValue.toUpperCase()) {
-                                var fullObject = associationOption;
+                    for (var j = 0; j < array.associationData.length; j++) {
+                        var associationOption = array.associationData[j];
+                        if (associationOption.value.toUpperCase() == datamapTargetValue.toUpperCase()) {
+                            var fullObject = associationOption;
+
+                            if (isIe9()) {
                                 $timeout(function () {
-                                    log.debug('restoring {0} to previous value {1}. '.format(value.target, previousValue));
+                                    log.debug('restoring {0} to previous value {1}. '.format(value.target, datamapTargetValue));
                                     //if still present on the new list, setting back the value which was 
                                     //previous selected, but after angular has updadted the list properly
-                                    datamap[value.target] = String(previousValue);
+                                    datamap[value.target] = String(datamapTargetValue);
                                     doUpdateExtraFields(value, fullObject, datamap);
                                     if (fn.postAssociationHook) {
                                         fn.postAssociationHook(value, scope, { phase: 'initial', dispatchedbytheuser: false });
@@ -256,28 +262,16 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                                         //digest already in progress
                                     }
                                 }, 0, false);
-                                break;
+                            } else {
+                                //let´s remove the complexity of non ie9 solutions, calling the code outside of the timeout since it´s not needed
+                                doUpdateExtraFields(value, fullObject, datamap);
+                                if (fn.postAssociationHook) {
+                                    fn.postAssociationHook(value, scope, { phase: 'initial', dispatchedbytheuser: false });
+                                }
                             }
-                        }
-                    }
 
-                    //check if options is selected by default
-                    //TODO: this name (isSelected) is a bit dangerous, place a # to avoid collisions with a column called isSelected
-                    var selectedOptions = $.grep(array.associationData, function (option) {
-                        if (option.extrafields != null && option.extrafields['isSelected'] != null) {
-                            return option;
-                        }
-                    });
-
-                    if (selectedOptions.length > 0) {
-                        //TODO: why checkboxes aren´t the same (target)?
-                        var targetString = value.rendererType == 'checkbox' ? value.associationKey : value.target;
-                        // forces to clean previous association selection
-                        datamap[targetString] = [];
-                        for (var i = 0; i < selectedOptions.length; i++) {
-                            if (selectedOptions[i].extrafields['isSelected'] == true) {
-                                datamap[targetString].push(selectedOptions[i].value);
-                            }
+                            //no need to iterate over the rest of the associationData array
+                            break;
                         }
                     }
                 });
@@ -285,7 +279,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
         },
 
-        getEagerAssociations: function (scope,options) {
+        getEagerAssociations: function (scope, options) {
             var associations = fieldService.getDisplayablesOfTypes(scope.schema.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
             if (associations == undefined || associations.length == 0) {
                 //no need to hit server in that case
@@ -324,7 +318,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             if (options && options.datamap) {
                 fields = options.datamap;
             }
-            
+
             var parameters = {
                 application: applicationName,
                 key: {
@@ -427,7 +421,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             var jsonString = angular.toJson(fields);
             return $http.post(urlToUse, jsonString);
         },
-        
+
         //Updates dependent association values for all association rendererTypes.
         //This includes the associationOptions, associationDescriptions, etc.
         updateDependentAssociationValues: function (scope, datamap, lookupObj, postFetchHook, searchObj) {
