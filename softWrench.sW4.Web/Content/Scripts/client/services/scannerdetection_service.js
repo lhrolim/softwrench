@@ -158,6 +158,17 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
             $(document).scannerDetection({
                 avgTimeByChar: timeBetweenCharacters,
                 onComplete: function (data) {
+                    //If the user scan's the string '%SUBMIT%', then the sw_submitdata event
+                    //will be called using the default submit functions/process
+                    if (data == '%SUBMIT%') {
+                        var parameters = {};
+                        
+                       scope.$emit('sw_submitdata', {
+                            isComposition: false,
+                            selecteditem: scope.datamap
+                       });
+                        return
+                    }
                     var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
                     var scanOrder = scanOrderString.split(",");
                     for (var attribute in scanOrder) {
