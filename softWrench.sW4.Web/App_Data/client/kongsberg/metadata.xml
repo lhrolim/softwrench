@@ -1703,6 +1703,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
           <field attribute="ticketid" label="Incident Number:" readonly="true"/>
           <field attribute="description" label="Summary:" requiredexpression="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="class" hidden="true"/>
 
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
@@ -1801,6 +1804,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
           <field attribute="ticketid" label="Incident Number:" readonly="true" requiredexpression="true"/>
           <field attribute="description" label="Summary:" requiredexpression="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="class" hidden="true"/>
 
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
