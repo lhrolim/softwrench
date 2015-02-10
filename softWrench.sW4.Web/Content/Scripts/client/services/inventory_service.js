@@ -174,6 +174,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
     };
 
     invIssue_maximo71_afterChangeItem = function (parameters) {
+        if (nullOrEmpty(parameters['fields']['itemnum']) || nullOrEmpty(parameters['fields']['storeloc'])) {
+            return;
+        }
         var maxvarsSearchData = {
             varname: 'DEFISSUECOST',
             siteid: parameters['fields']['siteid']
