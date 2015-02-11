@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 ﻿using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
@@ -5,6 +6,7 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
+using softWrench.sW4.wsWorkorder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +38,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 }
                 WsUtil.SetValue(maximoTemplateData.IntegrationObject, "STATUSIFACE", false);
             }
+
             CommonTransaction(maximoTemplateData);
+
+            // This will prevent multiple action on these items
+            WorkLogHandler.HandleWorkLogs((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
+            HandleMaterials((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
+            HandleLabors((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
+            HandleTools((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
+            HandleAttachments((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject, maximoTemplateData.ApplicationMetadata);
+            
             base.BeforeUpdate(maximoTemplateData);
         }
 
@@ -45,8 +56,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             base.BeforeCreation(maximoTemplateData);
         }
 
+        public override void AfterCreation(MaximoOperationExecutionContext maximoTemplateData) {
+            base.AfterUpdate(maximoTemplateData);
+
+            ((CrudOperationData)maximoTemplateData.OperationData).Fields["wonum"] = maximoTemplateData.ResultObject.UserId;
+            maximoTemplateData.OperationData.Id = maximoTemplateData.ResultObject.UserId;
+            maximoTemplateData.OperationData.OperationType = Internal.OperationType.AddChange;
+
+            // Resubmitting MIF for ServiceAddress Update
+            ConnectorEngine.Update((CrudOperationData)maximoTemplateData.OperationData);
+        }
+
+
+
         private void CommonTransaction(MaximoOperationExecutionContext maximoTemplateData) {
-            
             var wo = maximoTemplateData.IntegrationObject;
             WsUtil.SetValueIfNull(wo, "ESTDUR", 0);
             WsUtil.SetValueIfNull(wo, "ESTLABHRS", 0);
@@ -80,13 +103,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             WsUtil.SetValueIfNull(wo, "OUTSERVCOST", 0);
 
             LongDescriptionHandler.HandleLongDescription(maximoTemplateData.IntegrationObject, (CrudOperationData)maximoTemplateData.OperationData);
-            
-            WorkLogHandler.HandleWorkLogs((CrudOperationData)maximoTemplateData.OperationData, wo);
-            HandleMaterials((CrudOperationData)maximoTemplateData.OperationData, wo);
-            HandleLabors((CrudOperationData)maximoTemplateData.OperationData, wo);
-            HandleTools((CrudOperationData)maximoTemplateData.OperationData, wo);
-            HandleAttachments((CrudOperationData)maximoTemplateData.OperationData, wo, maximoTemplateData.ApplicationMetadata);
+            HandleServiceAddress((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
         }
+
+
 
         protected virtual void HandleLabors(CrudOperationData entity, object wo) {
             // Use to obtain security information from current user
@@ -197,6 +217,51 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
                 ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
             });
+        }
+
+        protected virtual void HandleServiceAddress(CrudOperationData entity, object wo) {
+            // Use to obtain security information from current user
+            var user = SecurityFacade.CurrentUser();
+
+            // Create a new WOSERVICEADDRESS instance created
+            var woserviceaddress = ReflectionUtil.InstantiateSingleElementFromArray(wo, "WOSERVICEADDRESS");
+            
+            // Extract data from unmapped attribute
+            var json = entity.GetUnMappedAttribute("#woaddress_");
+
+            // If empty, we assume there's no selected data.  
+            if (json != null) {
+                dynamic woaddress = JsonConvert.DeserializeObject(json);
+
+                String addresscode = woaddress.addresscode;
+                String desc = woaddress.description;
+                String straddrnumber = woaddress.staddrnumber;
+                String straddrstreet = woaddress.staddrstreet;
+                String straddrtype = woaddress.staddrtype;
+
+                WsUtil.SetValue(woserviceaddress, "SADDRESSCODE", addresscode);
+                WsUtil.SetValue(woserviceaddress, "DESCRIPTION", desc);
+                WsUtil.SetValue(woserviceaddress, "STADDRNUMBER", straddrnumber);
+                WsUtil.SetValue(woserviceaddress, "STADDRSTREET", straddrstreet);
+                WsUtil.SetValue(woserviceaddress, "STADDRSTTYPE", straddrtype);
+            }
+            else {
+                WsUtil.SetValueIfNull(woserviceaddress, "STADDRNUMBER", "");
+                WsUtil.SetValueIfNull(woserviceaddress, "STADDRSTREET", "");
+                WsUtil.SetValueIfNull(woserviceaddress, "STADDRSTTYPE", "");
+            }
+
+            var prevWOServiceAddress = entity.GetRelationship("woserviceaddress");
+
+            if (prevWOServiceAddress != null) {
+                WsUtil.SetValue(woserviceaddress, "FORMATTEDADDRESS", ((CrudOperationData)prevWOServiceAddress).GetAttribute("formattedaddress") ?? "");
+            }
+
+            //WsUtil.SetValueIfNull(woserviceaddress, "WOSERVICEADDRESSID", -1);          
+            WsUtil.SetValue(woserviceaddress, "ORGID", user.OrgId);
+            WsUtil.SetValue(woserviceaddress, "SITEID", user.SiteId);
+
+            ReflectionUtil.SetProperty(woserviceaddress, "action", OperationType.AddChange.ToString());
         }
 
         protected virtual void HandleAttachments(CrudOperationData entity, object wo, ApplicationMetadata metadata) {

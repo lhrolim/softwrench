@@ -64,7 +64,6 @@ app.factory('genericTicketService', function (alertService, associationService, 
             }
         },
 
-
         afterchangeowner: function (event) {
             if (event.fields['owner'] == null) {
                 return;
@@ -102,11 +101,26 @@ app.factory('genericTicketService', function (alertService, associationService, 
 
 
         },
+
         beforechangeownergroup: function (event) {
             if (event.fields['owner'] != null) {
                 alertService.alert("You may select an Owner or an Owner Group; not both");
             }
         },
+
+        beforeChangeWOServiceAddress: function (event) {
+            if (event.newValue == null) {
+                event.fields["woaddress_"] = null;
+                event.fields["woaddress_.serviceaddressid"] = null;
+                event.fields["woaddress_.formattedaddress"] = "";
+            }
+        },
+
+        afterChangeWOServiceAddress: function (event) { 
+            event.fields["woserviceaddress_.formattedaddress"] = event.fields["woaddress_.formattedaddress"];
+            event.fields["#formattedaddr"] = event.fields["woserviceaddress_.formattedaddress"];
+            event.fields["#woaddress_"] = event.fields["woaddress_"];
+        }, 
 
         validateCloseStatus: function (schema, datamap, originalDatamap,parameters) {
             if (originalDatamap.originaldatamap['synstatus_.description'].equalIc('CLOSED') || originalDatamap.originaldatamap['synstatus_.description'].equalIc('CLOSE')) {
@@ -114,7 +128,6 @@ app.factory('genericTicketService', function (alertService, associationService, 
                 return false;
             }
         }
-
     };
 
 });

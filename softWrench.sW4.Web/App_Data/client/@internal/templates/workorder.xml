@@ -59,6 +59,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="wopriority" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="WO PRIORITY" quoteLiteral="true" />
         </relationship>
+        <!--COMSW 24 Reverse Lookup of Service Address (Lazy Fetch)-->
+        <relationship to="woaddress" reverselookupattribute="addresscode" >
+          <relationshipAttribute from="wonum" to="woserviceaddress_.wonum" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute from="siteid" to="sited"/>
+        </relationship>
         <!--Please updated it to use lazy method loading, huge performance impact-->
         <relationship to ="glcomponents" ignoreprimary="true">
           <relationshipAttribute from="orgid" to="orgid"/>
