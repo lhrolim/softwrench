@@ -1081,14 +1081,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 <!--          <association label="Project Classification:" target="classificationid" labelfield="classification_.description">-->
 <!--            <renderer type="lookup"/>-->
 <!--          </association>-->
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid">
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
           <!--Adding Area and ProblemType field for Kongsberg-->
-          <association label="Area:" target="area" labelfield="area_.description">
+          <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
-          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description">
+          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
           <!--Adding Internal Priority and Reported Priority fields for Kongsberg-->
@@ -1720,10 +1720,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup"/>
           </association>
           <!--Adding Area and ProblemType field for Kongsberg-->
-          <association label="Area:" target="area" labelfield="area_.description">
+          <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
-          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description">
+          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
           <!--Adding Internal Priority and Reported Priority fields for Kongsberg-->
@@ -1750,7 +1750,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 <!--          <association label="Project Classification:" target="classificationid" labelfield="incidentclassstructures_.description">-->
 <!--            <renderer type="lookup"/>-->
 <!--          </association>-->
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid">
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
           <!-- Kongsberg wont require location and asset fields
@@ -1821,10 +1821,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup"/>
           </association>
           <!--Adding Area and ProblemType field for Kongsberg-->
-          <association label="Area:" target="area" labelfield="area_.description">
+          <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true"> 
             <renderer type="lookup"/>
           </association>
-          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description">
+          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
 
@@ -1852,7 +1852,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 <!--          <association label="Project Classification:" target="classificationid" labelfield="classification_.description">-->
 <!--            <renderer type="lookup"/>-->
 <!--          </association>-->
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid">
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
           <!--field attribute="classificationid" label="Project Classification"/-->
