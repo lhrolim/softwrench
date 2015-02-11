@@ -34,6 +34,10 @@ app.controller('GridFilterController', ['$scope', '$http', 'userPreferenceServic
 
             $scope.toggleFilterMode = function (modeToSet) {
                 modeToSet = modeToSet || !$scope.basicMode;
+                if (modeToSet) {
+                    //Clear out the filter of the advanced mode before we go to the basic mode
+                    this.clearFilter();
+                }
                 $scope.basicMode = modeToSet;
                 
                 // Clear the previous filterFixedWhereClause when switching filter modes
