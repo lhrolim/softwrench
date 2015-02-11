@@ -52,7 +52,7 @@ app.directive('expandedItemInput', function ($compile) {
     }
 });
 
-app.directive('newItemInput', function ($compile, fieldService,associationService) {
+app.directive('newItemInput', function ($compile, fieldService, associationService) {
 
     return {
         restrict: "E",
@@ -140,7 +140,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
                 doLoad();
             }
 
-            scope.cancel=function(data, schema) {
+            scope.cancel = function (data, schema) {
                 scope.cancelfn({ data: data, schema: schema });
             }
 
@@ -154,7 +154,7 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
     }
 });
 
-app.directive('compositionList', function (contextService,formatService) {
+app.directive('compositionList', function (contextService, formatService) {
 
     return {
         restrict: 'E',
@@ -173,7 +173,7 @@ app.directive('compositionList', function (contextService,formatService) {
             mode: '@'
         },
 
-        controller: function ($scope, $log, $filter, $injector, $http,$attrs, $element, $rootScope, i18NService, tabsService,
+        controller: function ($scope, $log, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService,
             formatService, fieldService, commandService, compositionService, validationService,
             expressionService, $timeout, modalService, redirectService, eventService, iconService) {
 
@@ -203,7 +203,7 @@ app.directive('compositionList', function (contextService,formatService) {
 
 
                 $scope.clonedCompositionData = [];
-                $scope.clonedCompositionData=JSON.parse(JSON.stringify($scope.compositiondata));
+                $scope.clonedCompositionData = JSON.parse(JSON.stringify($scope.compositiondata));
                 $scope.isNoRecords = $scope.clonedCompositionData.length > 0 ? false : true;
                 $scope.detailData = {};
                 $scope.noupdateallowed = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
@@ -217,7 +217,7 @@ app.directive('compositionList', function (contextService,formatService) {
                     i18NService: i18NService,
                     fieldService: fieldService,
                     commandService: commandService,
-                    formatService:formatService
+                    formatService: formatService
                 });
 
                 var parameters = {};
@@ -409,7 +409,7 @@ app.directive('compositionList', function (contextService,formatService) {
                     //if the function is called inside a modal, then we would receive the item as a parameter, otherwise it would be on the scope of the page itself
                     selecteditem = $scope.selecteditem;
                 }
-                
+
                 if (selecteditem == undefined && !$scope.collectionproperties.allowUpdate) {
                     //this is for the call to submit without having any item on composition selected, due to having the submit as the default button
                     $log.getInstance("compositionlist#save").debug("calling save on server without composition selected");
@@ -429,7 +429,7 @@ app.directive('compositionList', function (contextService,formatService) {
                 }
                 if ($scope.collectionproperties.allowUpdate) {
                     var validationErrors = [];
-                    
+
                     $.each($scope.clonedCompositionData, function (key, value) {
                         validationErrors = validationService.validate(detailSchema, detailSchema.displayables, value);
                         if (validationErrors.length > 0) {
@@ -448,7 +448,7 @@ app.directive('compositionList', function (contextService,formatService) {
                     //if composition items are editable, then we should pass the entire composition list back.  One or more item could have been changed.
                     $scope.parentdata.fields[$scope.relationship] = $scope.clonedCompositionData;
                 }
-                
+
                 if (selecteditem != undefined) {
                     //ensure new item is captured as well
                     safePush($scope.parentdata.fields, $scope.relationship, selecteditem);
@@ -466,7 +466,7 @@ app.directive('compositionList', function (contextService,formatService) {
                     contextService.insertIntoContext("refreshscreen", true, true);
                 }
 
-                $scope.$emit("sw_submitdata",{
+                $scope.$emit("sw_submitdata", {
                     successCbk: function (data) {
                         var updatedArray = data.resultObject.fields[$scope.relationship];
                         if (alwaysrefresh || updatedArray == null || updatedArray.length == 0) {
@@ -503,6 +503,11 @@ app.directive('compositionList', function (contextService,formatService) {
 
             /*API Methods*/
             this.showExpansionCommands = function () {
+                //this is fix for GRIC-98. Don't remove it
+                var isExpansible = $scope.schema.properties.expansible;
+                               if (isExpansible != undefined && !isExpansible) {
+                                       return isExpansible;
+                                   }
                 return $scope.noupdateallowed && $scope.clonedCompositionData.length > 1;
             }
 

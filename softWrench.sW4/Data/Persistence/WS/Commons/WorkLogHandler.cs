@@ -7,10 +7,12 @@ using softWrench.sW4.Util;
 using WsUtil = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using softWrench.sW4.wsWorkorder;
 
-namespace softWrench.sW4.Data.Persistence.WS.Commons {
+namespace softWrench.sW4.Data.Persistence.WS.Commons
+{
 
-    class WorkLogHandler {
-      
+    class WorkLogHandler
+    {
+
         public static void HandleWorkLogs(CrudOperationData entity, object rootObject)
         {
             // Use to obtain security information from current user
@@ -21,9 +23,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             // Filter work order materials for any new entries where matusetransid is null
             var Worklogs = ((IEnumerable<CrudOperationData>)entity.GetRelationship("worklog")).ToArray();
-
             WsUtil.CloneArray(Worklogs, rootObject, "WORKLOG", delegate(object integrationObject, CrudOperationData crudData) {
-
                 WsUtil.SetValueIfNull(integrationObject, "worklogid", -1);
                 WsUtil.SetValue(integrationObject, "recordkey", recordKey);
                 WsUtil.SetValueIfNull(integrationObject, "class", entity.TableName);
@@ -34,12 +34,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "orgid", user.OrgId);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind());
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "modifydate", DateTime.Now.FromServerToRightKind());
-                
+
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
             });
         }
     }
 }
-
 
