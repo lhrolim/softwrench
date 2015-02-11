@@ -35,3 +35,21 @@
     .adminlogs .appender .btn {
         margin-top: 10px;
     }
+
+.about.page input {
+    font-weight: bold;
+}
+
+.about.page label.form-control {
+   background: #eee;
+}
+
+.about.page .key.buttons {
+    margin-top: 10px;
+}
+
+@media all and (min-width: 768px) {
+    .about.page .key.buttons {
+        margin-top: 0;
+    }
+}

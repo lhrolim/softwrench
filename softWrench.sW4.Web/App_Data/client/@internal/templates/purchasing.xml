@@ -198,7 +198,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
             <commandgroup position="detailform" removeundeclared="true">
               <command id="Receive" icon="fa-save" service="poreceivingService" method="submitMatrecTrans" label="Submit" tooltip="Submit" parameters="schema,datamap"/>
-              <command id="cancel" icon="fa-backward" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>
+              <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>
             </commandgroup>
           </commandbars>
         </detail>
