@@ -1,5 +1,4 @@
-﻿<article class="container" ng-controller="AboutController" data-page="about">
-    
+﻿<article class="container about page" ng-controller="AboutController" data-page="about">
     <form ng-show="aboutData != undefined">
         <div class="form-horizontal">
             <br />
@@ -11,25 +10,19 @@
                     <label class="form-control" ng-if="keyDisabled(data.key)">
                         {{data.value}}
                     </label>
-                    
                     <input type="text" class="form-control" ng-show="!keyDisabled(data.key)" ng-init="newclient = data.value" ng-model="newclient" />
-                        
-                    
                 </div>
-                <div class="col-sm-2" ng-if="isDev && data.key == 'Client Name'">
-                    
-                        <button ng-click="dochangeClient(newclient)" ng-enabled="newclient!='' && newclient!=null" class="btn btn-primary commandButton">
-                            Change!
-                        </button>
-                        <button ng-click="restore()" class="btn btn-primary commandButton">
-                            Restore
-                        </button>
+                <div class="key buttons col-sm-5 col-md-4 col-lg-3" ng-if="isDev && data.key == 'Client Name'">
+                    <button ng-click="dochangeClient(newclient)" ng-enabled="newclient!='' && newclient!=null" class="btn btn-primary commandButton">
+                        <i style="margin-right: 0.5em" class="fa fa-floppy-o"></i>Change
+                    </button>
+                    <button ng-click="restore()" class="btn btn-primary commandButton">
+                        <i style="margin-right: 0.5em" class="fa fa-refresh"></i>Restore
+                    </button>
                 </div>
             </div>
         </div>
     </form>
-
-
     <p class="text-center" ng-show="aboutData == undefined">
         <br />
         {{i18N('general.noinformation','No information available')}}
