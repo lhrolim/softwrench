@@ -1066,11 +1066,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="createby" hidden="true"/>
           <section id="statussection"/>
           <field attribute="changeby" default="@username" hidden="true"/>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname">
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeowner"/>
           </association>
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description">
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeownergroup"/>
           </association>
@@ -1711,12 +1711,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
             <renderer type="lookup"/>
           </association>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname">
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description">
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
           <!--Adding Area and ProblemType field for Kongsberg-->
@@ -1813,12 +1813,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
             <renderer type="lookup"/>
           </association>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" >
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" >
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
           <!--Adding Area and ProblemType field for Kongsberg-->
