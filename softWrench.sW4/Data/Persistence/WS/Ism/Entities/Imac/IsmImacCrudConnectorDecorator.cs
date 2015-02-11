@@ -23,7 +23,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
             base.BeforeCreation(maximoTemplateData);
             var jsonObject = (CrudOperationData)maximoTemplateData.OperationData;
             var webServiceObject = (ServiceIncident)maximoTemplateData.IntegrationObject;
-            PopulateAssets(jsonObject, webServiceObject);
+            PopulateAssets(jsonObject, webServiceObject, maximoTemplateData.ApplicationMetadata.Schema.SchemaId);
             SetClassification(jsonObject, webServiceObject, maximoTemplateData.ApplicationMetadata.Schema.SchemaId);
             HandleBusinessMatrix(webServiceObject, jsonObject, maximoTemplateData.ApplicationMetadata.Schema.SchemaId);
             ISMAttachmentHandler.HandleAttachmentsForCreation(jsonObject, webServiceObject);
@@ -53,9 +53,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
         }
 
 
-        private static void PopulateAssets([NotNull] CrudOperationData entity, ServiceIncident maximoTicket) {
+        private static void PopulateAssets([NotNull] CrudOperationData entity, ServiceIncident maximoTicket, string schemaId) {
             var assetId = entity.GetAttribute("asset") as string;
-            if (assetId == null) {
+            if (assetId == null || "decommission".Equals(schemaId)) {
+                //HAP-878 decommission assets cannot be applied here
                 return;
             }
             var assetList = CollectionUtil.SingleElement(new Asset { AssetID = assetId });
