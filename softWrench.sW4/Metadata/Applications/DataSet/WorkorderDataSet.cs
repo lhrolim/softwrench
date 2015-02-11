@@ -6,7 +6,6 @@ using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softwrench.sw4.Shared2.Data.Association;
-using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Search;
 using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.Util;
@@ -41,6 +40,13 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             }
             return new List<AssociationOption> { currentOption };
         }
+
+        public SearchRequestDto FilterStatusCodes(AssociationPreFilterFunctionParameters parameters) {
+            var filter = parameters.BASEDto;
+            filter.AppendWhereClauseFormat("( MAXVALUE != 'HISTEDIT' )");
+            return filter;
+        }
+
         /* Need to add this prefilter function for the problem codes !! */
         public SearchRequestDto FilterProblemCodes(AssociationPreFilterFunctionParameters parameters) {
             return ProblemCodeFilterByFailureClassFunction(parameters);

@@ -133,7 +133,8 @@ app.factory('submitService', function ($rootScope, fieldService, contextService,
         handleDatamapForMIF: function (schema, originalDatamap, datamap) {
             var displayableFields = fieldService.getDisplayablesOfTypes(schema.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
             for (var i = 0, len = displayableFields.length; i < len; i++) {
-                var key = displayableFields[i].target;
+                var key = displayableFields[i].target == null ? displayableFields[i].attribute : displayableFields[i].target;
+                
                 if ((datamap[key] == null || datamap[key] == undefined) && datamap[key] != originalDatamap[key]) {
                     datamap[key] = " ";
                 }

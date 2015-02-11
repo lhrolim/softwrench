@@ -41,6 +41,9 @@ app.factory('printService', function ($rootScope, $http, $timeout, $log, tabsSer
         },
 
         printList: function (paginationData, schema) {
+            $.each($('.tooltip'), function () {
+                $(this).remove();
+            });
             var totalCount = paginationData.totalCount;
             var printPageSize = paginationData.pageSize;
 

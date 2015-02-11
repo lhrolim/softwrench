@@ -81,8 +81,6 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
         },
 
         handleImgHolderPaste: function (imgHolder, e, isRichTextBox) {
-
-
             if (isFirefox()) {
                 // Firefox: the pasted object will be automaticaly included on imgHolder, so do nothing
                 $timeout(function () {
@@ -92,14 +90,11 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
                 }, 150, true);
                 return;
             }
-
             // Chrome: check if clipboardData is available
             if (e.clipboardData == undefined || e.clipboardData.items == undefined) {
                 return;
             }
-
-
-
+            
             var items = e.clipboardData.items;
             for (var i = 0; i < items.length; i++) {
                 if (items[i].type.indexOf("image") === -1) {
@@ -122,13 +117,18 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
             pastedImage.onload = function () {
                 var img = new Image();
                 $(img).attr('contenteditable', 'true');
-                $(img).css('max-width', '100%');
-                $(img).css('width', '100%');
+                //$(img).css('max-width', '100%');
+                $(img).attr('style', 'width: 75%');
                 var jimgHolder = $(imgHolder);
                 img.src = imgToBase64(this);
-                jimgHolder.empty();
                 jimgHolder.attr('hasimage', 'true');
-                imgHolder.appendChild(img);
+                if (window.getSelection().focusNode.nodeName == "#text") {
+                    // If the cursor is in the middle of the text
+                    window.getSelection().focusNode.parentNode.insertAdjacentElement("afterBegin", img);
+                } else {
+                    // Insert the image after the beginning of the currently focused node
+                    window.getSelection().focusNode.insertAdjacentElement("afterBegin", img);
+                }
             };
             pastedImage.src = source;
             $(pastedImage).attr('class', 'pastedimage');

@@ -227,6 +227,10 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                         return;
                     }
 
+                    //clear datamap for the association updated -->This is needed due to a IE9 issue
+                    var previousValue = datamap[value.target] == null ? null : datamap[value.target].toString();
+                    //datamap[value.target] = null;
+
                     var datamapTargetValue = datamap[value.target] == null ? null : datamap[value.target].toString();
 
                     if (isIe9()) {
@@ -251,13 +255,13 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                                     log.debug('restoring {0} to previous value {1}. '.format(value.target, datamapTargetValue));
                                     //if still present on the new list, setting back the value which was 
                                     //previous selected, but after angular has updadted the list properly
-                                    datamap[value.target] = String(datamapTargetValue);
+                                    datamap[value.target] = String(associationOption.value);
                                     doUpdateExtraFields(value, fullObject, datamap);
                                     if (fn.postAssociationHook) {
                                         fn.postAssociationHook(value, scope, { phase: 'initial', dispatchedbytheuser: false });
                                     }
                                     try {
-                                        scope.digest();
+                                        $rootScope.$digest();
                                     } catch (e) {
                                         //digest already in progress
                                     }
