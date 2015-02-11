@@ -60,7 +60,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute to="domainid" literal="WO PRIORITY" quoteLiteral="true" />
         </relationship>
         <!--Please updated it to use lazy method loading, huge performance impact-->
-        <relationship to ="glcomponents">
+        <relationship to ="glcomponents" ignoreprimary="true">
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
       </relationships>

@@ -92,7 +92,7 @@ namespace softWrench.sW4.Metadata.Validator {
             string reverse = null; 
             IList<EntityAssociationAttribute> attributes = new List<EntityAssociationAttribute>();
             attributes.Add(new EntityAssociationAttribute(keyAttr.Column, "id", null, true));
-            return new EntityAssociation("_" + qualifier, to, attributes, true, reverse);
+            return new EntityAssociation("_" + qualifier, to, attributes, true, reverse,false);
         }
 
         private static ConnectorParameters ConnectorParameters(Type type) {

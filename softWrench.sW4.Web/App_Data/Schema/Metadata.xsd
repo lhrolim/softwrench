@@ -142,6 +142,13 @@
         </documentation>  
       </annotation>
     </attribute>
+    <attribute name="ignoreprimary" type="boolean">
+      <annotation>
+        <documentation>
+            If the association doesn´t contain a primary attribute this should be marked explicitely as true. 95% of the relationships contains primary attributes, so it´s good to have a validation
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="RelationshipAttribute">

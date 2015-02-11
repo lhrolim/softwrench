@@ -41,7 +41,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute from="lotnum" to="lotnum"/>
         </relationship>
-        <relationship to ="glcomponents">
+        <relationship to ="glcomponents" ignoreprimary="true">
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
       </relationships>
@@ -123,7 +123,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="item">
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
         </relationship>
-        <relationship to ="glcomponents">
+        <relationship to ="glcomponents" ignoreprimary="true">
           <relationshipAttribute from="orgid" to="orgid" />
         </relationship>
       </relationships>
@@ -143,7 +143,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <relationshipAttribute to="moved" literal="0" quoteLiteral="true"/>
           <!--<relationshipAttribute to="returnedtovendor" literal="0" quoteLiteral="true"/>-->
         </relationship>
-        <relationship to ="glcomponents">
+        <relationship to ="glcomponents" ignoreprimary="true">
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
       </relationships>
