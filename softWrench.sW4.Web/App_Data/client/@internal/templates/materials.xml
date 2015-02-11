@@ -212,11 +212,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <event type="afterchange" service="matusetranService" method="afterchange"/>
           </association>
           <field label="Available Balances:" attribute="curbal" readonly="true" showexpression="@linetype=='ITEM'"/>
-          <field attribute="unitcost" label="Unit Cost:" qualifier="quantity" readonly="true" showexpression="@linetype == 'ITEM'"/>
           
           <field attribute="description" label="Material Description:" requiredexpression="true" showexpression="@linetype == 'MATERIAL'"/>
-          <field attribute="unitcost" label="Unit Cost:" qualifier="quantity" requiredexpression="@linetype == 'MATERIAL'" showexpression="@linetype == 'MATERIAL'"/>
-
+          
+          <field attribute="unitcost" label="Unit Cost:" qualifier="quantity" requiredexpression="true" enableexpression="@linetype == 'MATERIAL'"/>
           <field attribute="qtyrequested" label="Quantity:" requiredexpression="true" qualifier="quantity">
             <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
           </field>

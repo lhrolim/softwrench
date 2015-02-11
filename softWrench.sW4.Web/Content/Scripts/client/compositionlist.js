@@ -427,7 +427,7 @@ app.directive('compositionList', function (contextService, formatService) {
                         return;
                     }
                 }
-                if ($scope.collectionproperties.allowUpdate) {
+                if ($scope.collectionproperties.allowUpdate == "true") {
                     var validationErrors = [];
 
                     $.each($scope.clonedCompositionData, function (key, value) {
@@ -503,11 +503,15 @@ app.directive('compositionList', function (contextService, formatService) {
 
             /*API Methods*/
             this.showExpansionCommands = function () {
-                //this is fix for GRIC-98. Don't remove it
-                var isExpansible = $scope.schema.properties.expansible;
-                               if (isExpansible != undefined && !isExpansible) {
-                                       return isExpansible;
-                                   }
+                // if schema is not present, then it should default back normal expansion commands
+                if ($scope.schema != null) {
+                    //this is fix for GRIC-98. Don't remove it
+                    var isExpansible = $scope.schema.properties.expansible;
+                    if (isExpansible != undefined && !isExpansible) {
+                        return isExpansible;
+                    }
+                }
+
                 return $scope.noupdateallowed && $scope.clonedCompositionData.length > 1;
             }
 
