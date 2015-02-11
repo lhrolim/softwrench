@@ -1738,12 +1738,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Feature Request:" attribute="feature_request">
             <renderer type="checkbox"/>
           </field>
-          <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description">
-            <renderer type="lookup"/>
-          </association>
           <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description">
             <renderer type="lookup"/>
           </association>
+          <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description">
+            <renderer type="lookup"/>
+          </association>
+          
           <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
             <renderer type="lookup"/>
           </association>
@@ -1840,12 +1841,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Feature Request:" attribute="feature_request">
             <renderer type="checkbox"/>
           </field>
-          <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description">
-            <renderer type="lookup"/>
-          </association>
           <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description">
             <renderer type="lookup"/>
           </association>
+          <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description">
+            <renderer type="lookup"/>
+          </association>
+          
           <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
             <renderer type="lookup"/>
           </association>
