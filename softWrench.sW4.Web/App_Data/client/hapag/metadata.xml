@@ -537,7 +537,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Incident Grid">
           <field attribute="ticketid" label="Request#">
-            <renderer type="default" params="width=60px" />
+            <renderer type="default" params="width=80px" />
           </field>
           <reference id="R017RequiredFields"/>
           <field attribute="description" label="Summary">
@@ -1832,7 +1832,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="excelwidth=50;minwidth=80px" />
           </field>
           <field attribute="hlagservice" label="Service">
-            <renderer type="default" params="width=80px;excelwidth=20" />
+            <renderer type="default" params="width=120px;excelwidth=20" />
           </field>
           <field attribute="reportdate" label="Date &amp; Time">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=100px;showtime=false" />
