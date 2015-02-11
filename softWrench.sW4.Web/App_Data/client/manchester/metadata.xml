@@ -497,7 +497,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 
           <field attribute="description" label="Summary:" requiredexpression="true"/>
-          <field label="Details:" attribute="longdescription_.ldtext" >
+          <field label="Details:" attribute="longdescription_.ldtext" requiredexpression="true">
             <renderer type="richtext"/>
           </field>
 
@@ -528,12 +528,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="woactivity" label="WO Tasks">
-              <collectionproperties allowupdate="false" allowcreation="false"  />
+              <collectionproperties allowupdate="false" allowcreation="false" />
             </composition>
             <composition relationship="matusetrans" label="Materials">
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'"  />
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
-            <composition relationship="labtrans" label="Labor">
+            <composition relationship="labtrans" label="Labor" showexpression="false">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="tooltrans" label="Tools">
