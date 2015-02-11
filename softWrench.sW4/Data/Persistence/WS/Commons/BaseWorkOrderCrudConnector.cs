@@ -53,7 +53,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         public override void AfterCreation(MaximoOperationExecutionContext maximoTemplateData) {
             base.AfterUpdate(maximoTemplateData);
 
-            WsUtil.SetValue(maximoTemplateData.IntegrationObject, "WONUM", maximoTemplateData.ResultObject.UserId);
+            ((CrudOperationData)maximoTemplateData.OperationData).Fields["wonum"] = maximoTemplateData.ResultObject.UserId;
             maximoTemplateData.OperationData.Id = maximoTemplateData.ResultObject.UserId;
             maximoTemplateData.OperationData.OperationType = Internal.OperationType.AddChange;
 
@@ -64,7 +64,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
 
         private void CommonTransaction(MaximoOperationExecutionContext maximoTemplateData) {
-            
             var wo = maximoTemplateData.IntegrationObject;
             WsUtil.SetValueIfNull(wo, "ESTDUR", 0);
             WsUtil.SetValueIfNull(wo, "ESTLABHRS", 0);
