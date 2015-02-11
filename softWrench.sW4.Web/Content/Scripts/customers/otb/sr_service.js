@@ -57,8 +57,9 @@ app.factory('srService', function (alertService, associationService, fieldServic
                 event.fields['owner'] = null;
                 return;
             }
-            if (event.fields['status'] == 'NEW') {
+            if (event.fields['status'] == 'NEW' || event.fields['#originalstatus'] == "NEW") {
                 event.fields['status'] = 'QUEUED';
+                event.fields['#originalstatus'] = 'NEW';
                 alertService.alert("Owner Group Field will be disabled if the Owner is selected.");
                 return;
             }

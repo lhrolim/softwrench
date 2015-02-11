@@ -60,9 +60,17 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                     validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Invalid email at field {0} for {1}', [label, applicationName]));
                     continue;
                 }
-
+                
                 if (isRequired && nullOrEmpty(datamap[displayable.attribute])) {
-                    
+                    if (!nullOrEmpty(datamap.docinfoid)) {
+                        //Existing Attachment
+                        continue;
+                    }
+                    if (displayable.rendererType == "upload" && nullOrEmpty(datamap.newattachment_path)) {
+                        validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Field {0} for {1} is required', [label, applicationName]));
+                        continue;
+                    }
+
                     if (label.endsWith('s') || label.endsWith('S')) {
                         validationArray.push(i18NService.get18nValue('messagesection.validation.requiredExpression', 'Field {0} for {1} are required', [label, applicationName]));
                     } else {

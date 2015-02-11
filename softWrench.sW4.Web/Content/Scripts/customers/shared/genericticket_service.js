@@ -2,9 +2,18 @@
 
 app.factory('genericTicketService', function (alertService, associationService, fieldService) {
 
+    var updateTicketStatus = function (datamap) {
+        // If the status is new and the user has set the owner/owner group, update the status to queued
+        if (datamap['status'] == 'NEW' && (datamap['owner'] != null || datamap['ownergroup'] != null)) {
+            datamap['status'] = 'QUEUED';
+        }
+        return true;
+    };
+
     return {
 
-        handleStatusChange:function(schema, datamap, parameters) {
+        handleStatusChange: function (schema, datamap, parameters) {
+            updateTicketStatus(datamap);
             if (datamap['status'] != parameters.originaldatamap['status']) {
                 datamap['#hasstatuschange'] = true;
             }
@@ -63,11 +72,12 @@ app.factory('genericTicketService', function (alertService, associationService, 
                 event.fields['owner'] = null;
                 return;
             }
-            if (event.fields['status'] == 'NEW') {
-                event.fields['status'] = 'QUEUED';
-                alertService.alert("Owner Group Field will be disabled if the Owner is selected.");
+            if (event.fields['status'] == 'WAPPR') {
+                //event.fields['status'] = 'QUEUED';
+                alertService.alert("Owner Field will be disabled if the Owner Group is selected.");
                 return;
             }
+            
 
         },
 
@@ -80,11 +90,14 @@ app.factory('genericTicketService', function (alertService, associationService, 
                 event.fields['ownergroup'] = null;
                 return;
             }
-            if (event.fields['status'] == 'NEW') {
-                event.fields['status'] = 'QUEUED';
+            if (event.fields['status'] == 'WAPPR') {
+                //event.fields['status'] = 'QUEUED';
                 alertService.alert("Owner Field will be disabled if the Owner Group is selected.");
                 return;
+                
             }
+             
+            
 
 
         },
@@ -109,8 +122,8 @@ app.factory('genericTicketService', function (alertService, associationService, 
             event.fields["#woaddress_"] = event.fields["woaddress_"];
         }, 
 
-        validateCloseStatus: function (schema, datamap, parameters) {
-            if (parameters.originaldatamap['status'] == 'CLOSE') {
+        validateCloseStatus: function (schema, datamap, originalDatamap,parameters) {
+            if (originalDatamap.originaldatamap['synstatus_.description'].equalIc('CLOSED') || originalDatamap.originaldatamap['synstatus_.description'].equalIc('CLOSE')) {
                 alertService.alert("You cannot submit this ticket because it is already closed");
                 return false;
             }

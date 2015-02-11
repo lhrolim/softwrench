@@ -5,7 +5,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Deploy_Metadata
 
     <!--MAximo Properties-->
     <environment key="dev">
-      <property key="iispath" value="SW4OTB/SW4OTB" />
+      <property key="iispath" value="softwrench-wk/SW4OTB" />
       <property key="msdeploy_url" value="https://10.50.100.125:8172/msdeploy.axd,username=MAX7506DEV\Administrator,password=$@$Adm1n" />
     </environment>
     <environment key="qa">

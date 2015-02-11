@@ -1160,7 +1160,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <commandgroup position="detailform" removeundeclared="false">
               <removecommand id="print"/>
               <removecommand id="cancel"/>
-              <command id="cancelTransfer" icon="fa fa-backward" label="Cancel" service="inventoryService" method="cancelTransfer"/>
+              <command id="cancelTransfer" icon="fa fa-times" label="Cancel" service="inventoryService" method="cancelTransfer"/>
             </commandgroup>
           </commandbars>
           <event type="onload" service="scannerdetectionService" method="initInvuseTransferDetailListener"/>

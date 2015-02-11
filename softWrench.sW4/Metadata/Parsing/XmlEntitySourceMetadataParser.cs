@@ -189,7 +189,8 @@ namespace softWrench.sW4.Metadata.Parsing {
                 var to = association.Attribute(XmlMetadataSchema.RelationshipAttributeTo).Value;
                 var collection = association.Attribute(XmlMetadataSchema.RelationshipAttributeCollection).ValueOrDefault(false);
                 var reverseLookupAttribute = association.Attribute(XmlMetadataSchema.RelationshipAttributeReverse).ValueOrDefault((string)null);
-                return new EntityAssociation(qualifier, to, ParseAssociationAttributes(association), collection, reverseLookupAttribute);
+                var ignorePrimaryAttribute = association.Attribute(XmlMetadataSchema.IgnorePrimaryAttribute).ValueOrDefault(false);
+                return new EntityAssociation(qualifier, to, ParseAssociationAttributes(association), collection, reverseLookupAttribute, ignorePrimaryAttribute);
             }
 
             /// <summary>

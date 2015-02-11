@@ -13,6 +13,7 @@ using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using softWrench.sW4.wsWorkorder;
+using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class CommLogHandler {
@@ -71,7 +72,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         }
 
         private static void HandleAttachments(CrudOperationData data, [NotNull] object maximoObj,
-            [NotNull] Metadata.Applications.ApplicationMetadata applicationMetadata){
+            [NotNull] Metadata.Applications.ApplicationMetadata applicationMetadata) {
             if (maximoObj == null)
                 throw new ArgumentNullException("maximoObj");
             if (applicationMetadata == null)
@@ -80,12 +81,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var attachmentData = data.GetUnMappedAttribute("attachment");
             var attachmentPath = data.GetUnMappedAttribute("newattachment_path");
 
-            if (!String.IsNullOrWhiteSpace(attachmentData) && !String.IsNullOrWhiteSpace(attachmentPath)){
+            if (!String.IsNullOrWhiteSpace(attachmentData) && !String.IsNullOrWhiteSpace(attachmentPath)) {
                 var attachmentsData = data.GetUnMappedAttribute("attachment").Split(',');
                 var attachmentsPath = attachmentPath.Split(',');
                 AttachmentHandler attachment = new AttachmentHandler();
                 for (int i = 0, j=0; i < attachmentsPath.Length; i++){
-                    attachment.HandleAttachments(maximoObj, attachmentsData[j] +','+ attachmentsData[j+1], attachmentsPath[i], applicationMetadata);
+                    var content = new AttachmentParameters() {
+                        Data = attachmentsData[j] + ',' + attachmentsData[j+1],
+                        Path = attachmentPath[i].ToString()
+                    };
+                    attachment.HandleAttachments(maximoObj, content, applicationMetadata);
                     j = j + 2;
                 }
 

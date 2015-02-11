@@ -20,20 +20,22 @@ app.factory('cmplookup', function ($rootScope, $timeout, $log, associationServic
 
         refreshFromAttribute: function (fieldMetadata, scope) {
             var log = $log.getInstance('cmplookup#refreshFromAttribute');
+            var target = fieldMetadata.attribute;
             if (scope.associationOptions == null) {
                 //this scenario happens when a composition has lookup-associations on its details,
                 //but the option list has not been fetched yet
-                scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
-                scope.lookupAssociationsCode[fieldMetadata.attribute] = null;
+                scope.lookupAssociationsDescription[target] = null;
+                scope.lookupAssociationsCode[target] = null;
                 log.debug('cleaning up association code/description');
                 return;
             }
 
             var options = scope.associationOptions[fieldMetadata.associationKey];
             var optionValue = scope.datamap[fieldMetadata.target];
-            scope.lookupAssociationsCode[fieldMetadata.attribute] = optionValue;
+            scope.lookupAssociationsCode[target] = optionValue;
+            log.debug('setting lookupassociationCode {0} to {1}'.format(target,optionValue));
             if (optionValue == null) {
-                scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
+                scope.lookupAssociationsDescription[target] = null;
             }
 
             if (options == null || options.length <= 0) {
@@ -46,7 +48,8 @@ app.factory('cmplookup', function ($rootScope, $timeout, $log, associationServic
             });
 
             var valueToSet = optionSearch != null && optionSearch.length > 0 ? optionSearch[0].label : null;
-            scope.lookupAssociationsDescription[fieldMetadata.attribute] = valueToSet;
+            scope.lookupAssociationsDescription[target] = valueToSet;
+            log.debug('setting lookupassociationdescription {0} to {1} '.format(target, valueToSet));
         },
 
         init: function (bodyElement, scope) {
@@ -84,7 +87,7 @@ app.factory('cmplookup', function ($rootScope, $timeout, $log, associationServic
                 result[lookupObj.fieldMetadata.associationKey] != null &&
                 result[lookupObj.fieldMetadata.associationKey].associationData != null &&
                 result[lookupObj.fieldMetadata.associationKey].associationData.length == 1) {
-                if (lookupObj.code != null && lookupObj.options[0].value != null && lookupObj.options[0].value.toUpperCase() == lookupObj.code.toUpperCase() &&
+                if (lookupObj.options[0].value != null && lookupObj.code != null && lookupObj.options[0].value.toUpperCase() == lookupObj.code.toUpperCase() &&
                     datamap[lookupObj.fieldMetadata.attribute] != lookupObj.options[0].value) {
                     return true;
                 }

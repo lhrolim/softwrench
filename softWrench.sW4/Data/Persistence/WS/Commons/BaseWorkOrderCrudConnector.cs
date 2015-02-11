@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
+﻿using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
@@ -26,10 +27,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
+            var user = SecurityFacade.CurrentUser();
             if (((CrudOperationData)maximoTemplateData.OperationData).ContainsAttribute("#hasstatuschange")) {
                 //first let´s 'simply change the status
                 WsUtil.SetValue(maximoTemplateData.IntegrationObject, "STATUSIFACE", true);
-                maximoTemplateData.InvokeProxy();
+                WsUtil.SetValue(maximoTemplateData.IntegrationObject, "CHANGEBY", user.Login.ToUpper());
+                if (!WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CLOSE") || !WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CAN"))
+                {
+                    maximoTemplateData.InvokeProxy();
+                }
                 WsUtil.SetValue(maximoTemplateData.IntegrationObject, "STATUSIFACE", false);
             }
 
@@ -261,24 +267,36 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         protected virtual void HandleAttachments(CrudOperationData entity, object wo, ApplicationMetadata metadata) {
             var user = SecurityFacade.CurrentUser();
 
-            var attachmentString = entity.GetUnMappedAttribute("newattachment");
-            var attachmentPath = entity.GetUnMappedAttribute("newattachment_path");
-            if (!String.IsNullOrWhiteSpace(attachmentString) && !String.IsNullOrWhiteSpace(attachmentPath)) {
-                _attachmentHandler.HandleAttachments(wo, attachmentString, attachmentPath, metadata);
+            var attachmentParam = new AttachmentParameters() { 
+                Data = entity.GetUnMappedAttribute("newattachment"),
+                Path = entity.GetUnMappedAttribute("newattachment_path")
+            };
+            if (!String.IsNullOrWhiteSpace(attachmentParam.Data) && !String.IsNullOrWhiteSpace(attachmentParam.Path)) {
+                _attachmentHandler.HandleAttachments(wo, attachmentParam, metadata);
             }
-            var screenshotString = entity.GetUnMappedAttribute("newscreenshot");
-            var screenshotName = "screen" + DateTime.Now.ToUserTimezone(user).ToString("yyyyMMdd") + ".png";
-            if (!String.IsNullOrWhiteSpace(screenshotString) && !String.IsNullOrWhiteSpace(screenshotName)) {
-                _attachmentHandler.HandleAttachments(wo, screenshotString, screenshotName, metadata);
+
+            var screenshotParam = new AttachmentParameters() {
+                Data = entity.GetUnMappedAttribute("newscreenshot"),
+                Path = "screen" + DateTime.Now.ToUserTimezone(user).ToString("yyyyMMdd") + ".png"
+            };
+            if (!String.IsNullOrWhiteSpace(screenshotParam.Data) && !String.IsNullOrWhiteSpace(screenshotParam.Path)) {
+                _attachmentHandler.HandleAttachments(wo, attachmentParam, metadata);
             }
 
             var attachments = entity.GetRelationship("attachment");
             if (attachments != null) {
-                foreach (var attachment in (IEnumerable<CrudOperationData>)attachments) {
-                    attachmentString = attachment.GetUnMappedAttribute("newattachment");
-                    attachmentPath = (string)(attachment.GetUnMappedAttribute("newattachment_path") ?? attachment.GetAttribute("document"));
-                    if (attachmentString != null && attachmentPath != null) {
-                        _attachmentHandler.HandleAttachments(wo, attachmentString, attachmentPath, metadata);
+                // this will only filter new attachments
+                foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.Id == null)) {
+                    var docinfo = attachment.GetRelationship("docinfo");
+                    var content = new AttachmentParameters() {
+                        Title = attachment.GetAttribute("document").ToString(),
+                        Data = attachment.GetUnMappedAttribute("newattachment"),
+                        Path = attachment.GetUnMappedAttribute("newattachment_path"),
+                        Description = ((CrudOperationData)docinfo).Fields["description"].ToString()
+                    };
+
+                    if (content.Data != null) {
+                        _attachmentHandler.HandleAttachments(wo, content, metadata);
                     }
                 }
             }

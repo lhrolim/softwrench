@@ -20,6 +20,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using r = softWrench.sW4.Util.ReflectionUtil;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
+using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
@@ -54,17 +55,17 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         //            return System.Convert.FromBase64String(base64String);
         //        };
 
-        public void HandleAttachments(object maximoObj, String attachmentData, string attachmentPath, ApplicationMetadata applicationMetadata) {
+        public void HandleAttachments(object maximoObj, AttachmentParameters attachment, ApplicationMetadata applicationMetadata) {
             var user = SecurityFacade.CurrentUser();
-            if (String.IsNullOrEmpty(attachmentData)) {
+            if (String.IsNullOrEmpty(attachment.Data)) {
                 return;
             }
             var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
-            CommonCode(maximoObj, docLink, user, attachmentPath, attachmentData);
-            HandleAttachmentDataAndPath(attachmentData, docLink, attachmentPath);
+            CommonCode(maximoObj, docLink, user, attachment);
+            HandleAttachmentDataAndPath(attachment.Data, docLink, attachment.Path);
         }
 
-        private void CommonCode(object maximoObj, object docLink, InMemoryUser user, string attachmentPath, string attachmentData) {
+        private void CommonCode(object maximoObj, object docLink, InMemoryUser user, AttachmentParameters attachment) {
             w.SetValue(docLink, "ADDINFO", true);
             w.CopyFromRootEntity(maximoObj, docLink, "CREATEBY", user.Login, "reportedby");
             w.CopyFromRootEntity(maximoObj, docLink, "CREATEDATE", DateTime.Now.FromServerToRightKind());
@@ -73,13 +74,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.CopyFromRootEntity(maximoObj, docLink, "SITEID", user.SiteId);
             w.CopyFromRootEntity(maximoObj, docLink, "ORGID", user.OrgId);
             w.SetValue(docLink, "URLTYPE", "FILE");
-            w.SetValue(docLink, "URLNAME", attachmentPath);
-            Validate(attachmentPath, attachmentData);
+            w.SetValue(docLink, "URLNAME", attachment.Path);
+            Validate(attachment.Path, attachment.Data);
 
             w.SetValue(docLink, "UPLOAD", true);
             w.SetValue(docLink, "DOCTYPE", "Attachments");
-            w.SetValue(docLink, "DOCUMENT", FileUtils.GetNameFromPath(attachmentPath, GetMaximoLength()));
-            w.SetValue(docLink, "DESCRIPTION", attachmentPath);
+            //w.SetValue(docLink, "DOCUMENT", FileUtils.GetNameFromPath(attachmentPath, GetMaximoLength()));
+            w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength())); 
+            w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? String.Empty);
         }
 
         public static bool Validate(string attachmentPath, string attachmentData) {
@@ -129,6 +131,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             using (var client = new WebClient()) {
                 try {
                     var fileBytes = client.DownloadData(finalURL);
+                    if (docinfoURL.Contains(".")) {
+                        fileName = String.Format("{0}.{1}", fileName, docinfoURL.Substring(docinfoURL.LastIndexOf(".") + 1)); 
+                    }
                     return Tuple.Create(fileBytes, fileName);
                 } catch (Exception) {
                     return null;
@@ -211,7 +216,5 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 _baseMaximoURL = _baseMaximoURL + "/";
             }
         }
-
-     
     }
 }

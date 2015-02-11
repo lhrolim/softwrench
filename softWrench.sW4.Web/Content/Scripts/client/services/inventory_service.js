@@ -174,6 +174,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
     };
 
     invIssue_maximo71_afterChangeItem = function (parameters) {
+        if (nullOrEmpty(parameters['fields']['itemnum']) || nullOrEmpty(parameters['fields']['storeloc'])) {
+            return;
+        }
         var maxvarsSearchData = {
             varname: 'DEFISSUECOST',
             siteid: parameters['fields']['siteid']
@@ -310,14 +313,14 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     if (qtyreturned + datamap['quantity'] == -1) {
                         var transformedData = angular.copy(datamap);
                         transformedData['#quantityadj'] = 1;
-                        returnTransformation(event, transformedData);
+                        returnTransformation(null, transformedData);
                         // Get the cost type
                         updateInventoryCosttype({ fields: transformedData }, 'storeloc');
                         var originalDatamap = {
                             fields: datamap,
                         };
                         sessionStorage.mockclientvalidation = true;
-                        returnConfirmation(event, transformedData, {
+                        returnConfirmation(null, transformedData, {
                             continue: function () {
                                 $rootScope.$broadcast('sw_submitdata', {
                                     successCbk: function (data) {
@@ -375,7 +378,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                     if (qtyreturned + datamap['quantity'] == -1) {
                         var transformedData = angular.copy(datamap);
                         transformedData['#quantityadj'] = 1;
-                        returnTransformation(event, transformedData);
+                        returnTransformation(null, transformedData);
                         // Maximo 7.1 store the inventory cost type in a different table than maximo 7.5
                         // Using the afterchange item for maximo 7.1 to get the cost type and unit cost
                         invIssue_maximo71_afterChangeItem({ fields: transformedData });
@@ -383,7 +386,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                             fields: datamap,
                         };
                         sessionStorage.mockclientvalidation = true;
-                        returnConfirmation(event, transformedData, {
+                        returnConfirmation(null, transformedData, {
                             continue: function () {
                                 $rootScope.$broadcast('sw_submitdata', {
                                     successCbk: function (data) {

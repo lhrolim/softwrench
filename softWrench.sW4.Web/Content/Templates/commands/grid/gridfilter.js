@@ -34,6 +34,10 @@ app.controller('GridFilterController', ['$scope', '$http', 'userPreferenceServic
 
             $scope.toggleFilterMode = function (modeToSet) {
                 modeToSet = modeToSet || !$scope.basicMode;
+                if (modeToSet) {
+                    //Clear out the filter of the advanced mode before we go to the basic mode
+                    this.clearFilter();
+                }
                 $scope.basicMode = modeToSet;
                 
                 // Clear the previous filterFixedWhereClause when switching filter modes
@@ -46,7 +50,8 @@ app.controller('GridFilterController', ['$scope', '$http', 'userPreferenceServic
                 return i18NService.get18nValue(key, defaultValue, paramArray);
             };
 
-            $scope.refreshGrid = function() {
+            $scope.refreshGrid = function () {
+                this.clearFilter();
                 contextService.insertIntoContext("filter_basicmode", $scope.basicMode, true);
                 searchService.refreshGrid();
             };

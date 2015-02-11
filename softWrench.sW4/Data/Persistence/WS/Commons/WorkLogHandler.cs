@@ -4,37 +4,41 @@ using System.Linq;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
-using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
+using WsUtil = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using softWrench.sW4.wsWorkorder;
 
-namespace softWrench.sW4.Data.Persistence.WS.Commons {
+namespace softWrench.sW4.Data.Persistence.WS.Commons
+{
 
-    class WorkLogHandler {
-      
+    class WorkLogHandler
+    {
+
         public static void HandleWorkLogs(CrudOperationData entity, object rootObject)
         {
+            // Use to obtain security information from current user
             var user = SecurityFacade.CurrentUser();
-            var worklogs = (IEnumerable<CrudOperationData>)entity.GetRelationship("worklog");
-            var newWorkLogs = worklogs.Where(r => r.GetAttribute("worklogid") == null);
+
+            // Workorder id used for data association
             var recordKey = entity.UserId;
-            w.CloneArray(worklogs, rootObject, "WORKLOG", delegate(object integrationObject, CrudOperationData crudData) {
+
+            // Filter work order materials for any new entries where matusetransid is null
+            var Worklogs = ((IEnumerable<CrudOperationData>)entity.GetRelationship("worklog")).ToArray();
+            WsUtil.CloneArray(Worklogs, rootObject, "WORKLOG", delegate(object integrationObject, CrudOperationData crudData) {
+                WsUtil.SetValueIfNull(integrationObject, "worklogid", -1);
+                WsUtil.SetValue(integrationObject, "recordkey", recordKey);
+                WsUtil.SetValueIfNull(integrationObject, "class", entity.TableName);
+                WsUtil.SetValueIfNull(integrationObject, "createby", user.Login);
+                WsUtil.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
+
+                WsUtil.CopyFromRootEntity(rootObject, integrationObject, "siteid", user.SiteId);
+                WsUtil.CopyFromRootEntity(rootObject, integrationObject, "orgid", user.OrgId);
+                WsUtil.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind());
+                WsUtil.CopyFromRootEntity(rootObject, integrationObject, "modifydate", DateTime.Now.FromServerToRightKind());
 
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
-                w.SetValueIfNull(integrationObject, "worklogid", -1);
-                w.SetValue(integrationObject,"recordkey",recordKey);
-                w.SetValueIfNull(integrationObject,"class",entity.TableName);
-                w.SetValueIfNull(integrationObject,"createby",user.Login);
-                w.CopyFromRootEntity(rootObject,integrationObject,"siteid",user.SiteId);
-                w.CopyFromRootEntity(rootObject,integrationObject,"orgid",user.OrgId);
-               // w.CopyFromRootEntity(rootObject, integrationObject, "createby", user.Login, "CHANGEBY");
-                w.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind());
-                w.CopyFromRootEntity(rootObject, integrationObject, "modifydate", DateTime.Now.FromServerToRightKind());
-                w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
-
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
             });
         }
     }
 }
-
 

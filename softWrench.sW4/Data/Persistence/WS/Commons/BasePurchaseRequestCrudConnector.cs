@@ -125,7 +125,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
 
             if (!String.IsNullOrWhiteSpace(attachmentString) && !String.IsNullOrWhiteSpace(attachmentPath))
             {
-                _attachmentHandler.HandleAttachments(maximoObj, attachmentString, attachmentPath, applicationMetadata);
+                //CC: _attachmentHandler.HandleAttachments(maximoObj, attachmentString, attachmentPath, applicationMetadata);
             }
 
             // Check if Screenshot is present
@@ -146,7 +146,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
                     screenshotName = screenshotName.Substring(0, screenshotName.Length - 3) + "doc";
                 }
 
-                _attachmentHandler.HandleAttachments(maximoObj, screenshotString, screenshotName, applicationMetadata);
+                //CC: _attachmentHandler.HandleAttachments(maximoObj, screenshotString, screenshotName, applicationMetadata);
             }
         }
     }
