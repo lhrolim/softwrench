@@ -141,8 +141,9 @@
             if (maxHeight < height) {
                 height = maxHeight;
             }
-
-            if (this.$element.offset().top + height > document.body.scrollHeight) {
+            var willOverflowDownawards = this.$element.offset().top + height > document.body.scrollHeight;
+            var willOverFlowUpwards = this.$element.offset().top - height <100;
+            if (willOverflowDownawards && !willOverFlowUpwards) {
                 //https://controltechnologysolutions.atlassian.net/browse/HAP-847
                 //if the menu would cause a scrollbar expansion open it on top instead
                 //12 stands for padding, margin, etc
