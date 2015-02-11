@@ -17,7 +17,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
         <relationship to ="glcomponents">
-          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
       </relationships>
     </entity>
@@ -34,7 +34,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute to="returnedtovendor" literal="0" quoteLiteral="true"/>
         </relationship>
         <relationship to ="glcomponents">
-          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -61,7 +61,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="lotnum" to="lotnum"/>
         </relationship>
         <relationship to ="glcomponents">
-          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -88,7 +88,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="lotnum" to="lotnum"/>
         </relationship>
         <relationship to ="glcomponents">
-          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
       </relationships>
     </entity>
@@ -129,7 +129,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="location" to="location"/>
         </relationship>
         <relationship to ="glcomponents">
-          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
         </relationship>
       </relationships>
     </entity>
@@ -188,7 +188,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
         </relationship>
         <relationship to ="glcomponents">
-          <relationshipAttribute from="orgid" to="orgid" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
         </relationship>
       </relationships>
       <connectorParameters>
