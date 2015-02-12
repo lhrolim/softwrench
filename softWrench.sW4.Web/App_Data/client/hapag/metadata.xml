@@ -986,7 +986,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=80px;excelwidth=15" />
           </field>
           <field attribute="hlagaffectedperson" label="Affected Person">
-            <renderer type="default" params="width=100px;excelwidth=20" />
+            <renderer type="default" params="width=110px;excelwidth=20" />
           </field>
           <field attribute="status" label="Status">
             <renderer type="default" params="width=100px;excelwidth=15" />
