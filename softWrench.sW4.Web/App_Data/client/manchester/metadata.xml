@@ -413,7 +413,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label="Division:" target="division" labelfield="division_.description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" default="@classstructureid" requiredexpression="true">
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
