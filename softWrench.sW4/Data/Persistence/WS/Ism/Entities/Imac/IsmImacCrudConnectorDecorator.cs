@@ -55,7 +55,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
 
         private static void PopulateAssets([NotNull] CrudOperationData entity, ServiceIncident maximoTicket, string schemaId) {
             var assetId = entity.GetAttribute("asset") as string;
-            if (assetId == null || "decommission".Equals(schemaId)) {
+            if (assetId == null || IsDecommissionTemplate(schemaId)) {
                 //HAP-878 decommission assets cannot be applied here
                 return;
             }
@@ -63,9 +63,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
             maximoTicket.Asset = assetList.ToArray();
         }
 
+        private static bool IsDecommissionTemplate(string schemaId) {
+            return "decommission".Equals(schemaId);
+        }
+
         protected override ISMServiceEntities.Problem PopulateProblem(CrudOperationData jsonObject, ServiceIncident webServiceObject,
-            string entityName, Boolean update) {
-            var problem = base.PopulateProblem(jsonObject, webServiceObject, entityName, update);
+            string entityName, Boolean update, string schemaId) {
+            var problem = base.PopulateProblem(jsonObject, webServiceObject, entityName, update, schemaId);
             var attribute = jsonObject.GetAttribute("fromlocation") as string;
             if (attribute != null && !attribute.StartsWith("HLC-DE") && attribute.Length == 3) {
                 attribute = "HLC-DE-" + attribute;
@@ -74,8 +78,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
             return problem;
         }
 
-        protected override void HandleTitle(ServiceIncident webServiceObject, CrudOperationData entity) {
-            webServiceObject.Problem.Abstract = entity.GetAttribute("titleoforder") as string;
+        protected override string HandleTitle(ServiceIncident webServiceObject, CrudOperationData entity, string schemaId) {
+            if (IsDecommissionTemplate(schemaId)) {
+                var assetId = entity.GetAttribute("asset") as string;
+                return "Decommission of {0}".Fmt(assetId);
+            }
+            return entity.GetAttribute("titleoforder") as string;
         }
 
         protected override void HandleLongDescription(ServiceIncident webServiceObject, CrudOperationData entity, ApplicationMetadata metadata, bool update) {

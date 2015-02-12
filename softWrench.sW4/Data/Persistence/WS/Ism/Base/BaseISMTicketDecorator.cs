@@ -24,7 +24,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             PopulateServiceIncident(webServiceObject, jsonObject);
             PopulateServiceProviders(jsonObject, webServiceObject);
             PopulateMetrics(webServiceObject, jsonObject);
-            PopulateProblem(jsonObject, webServiceObject, maximoTemplateData.OperationData.EntityMetadata.Name, false);
+            PopulateProblem(jsonObject, webServiceObject, maximoTemplateData.OperationData.EntityMetadata.Name, false,maximoTemplateData.ApplicationMetadata.Schema.SchemaId);
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
@@ -32,7 +32,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             var webServiceObject = (ServiceIncident)maximoTemplateData.IntegrationObject;
             var jsonObject = (CrudOperationData)maximoTemplateData.OperationData;
             PopulateServiceProviders(jsonObject, webServiceObject);
-            PopulateProblem(jsonObject, webServiceObject, maximoTemplateData.OperationData.EntityMetadata.Name, true);
+            PopulateProblem(jsonObject, webServiceObject, maximoTemplateData.OperationData.EntityMetadata.Name, true, maximoTemplateData.ApplicationMetadata.Schema.SchemaId);
             webServiceObject.RequesterID = (string)jsonObject.GetAttribute("ticketid");
             HandleWorkLog(jsonObject, webServiceObject);
         }
@@ -62,7 +62,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             return jsonObject.GetAttribute("templateid") as string;
         }
 
-        protected virtual Problem PopulateProblem(CrudOperationData jsonObject, ServiceIncident webServiceObject, string entityName, Boolean update) {
+        protected virtual Problem PopulateProblem(CrudOperationData jsonObject, ServiceIncident webServiceObject, string entityName, Boolean update,string schemaId) {
             if (webServiceObject.Problem == null) {
                 webServiceObject.Problem = new Problem();
             }
@@ -71,7 +71,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             problem.ProblemType = GetProblemType();
             problem.CustomerID = ISMConstants.DefaultCustomerName;
 
-            HandleTitle(webServiceObject, jsonObject);
+            webServiceObject.Problem.Abstract = HandleTitle(webServiceObject, jsonObject, schemaId);
             HandleLongDescription(webServiceObject, jsonObject, jsonObject.ApplicationMetadata, update);
 
             problem.System = ISMConstants.System;
@@ -116,8 +116,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
             return problem;
         }
 
-        protected virtual void HandleTitle(ServiceIncident webServiceObject, CrudOperationData jsonObject) {
-            webServiceObject.Problem.Abstract = ((String)jsonObject.GetAttribute("description"));
+        protected virtual string HandleTitle(ServiceIncident webServiceObject, CrudOperationData jsonObject, string schemaId) {
+            return ((String)jsonObject.GetAttribute("description"));
         }
 
 

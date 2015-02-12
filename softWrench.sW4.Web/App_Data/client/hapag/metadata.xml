@@ -2626,7 +2626,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </composition>
             <composition relationship="imac" inline="true" label="" detailschema="">
               <header label="IMAC" displacement="ontop"/>
-              <collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false" prefilterfunction="AppendMultiLocciTicketHistoryQuery"/>
+              <collectionproperties listschema="asset_composition" allowcreation="false" allowremoval="false" allowupdate="false" prefilterfunction="AppendImacMultiLocciTicketHistoryQuery"/>
             </composition>
           </tab>
 

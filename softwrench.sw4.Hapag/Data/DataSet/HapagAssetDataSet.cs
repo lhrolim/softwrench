@@ -149,6 +149,17 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             return dto;
         }
 
+        public SearchRequestDto AppendImacMultiLocciTicketHistoryQuery(CompositionPreFilterFunctionParameters preFilter) {
+            var dto = preFilter.BASEDto;
+            dto.SearchValues = null;
+            dto.SearchParams = null;
+            var assetNum = preFilter.OriginalEntity.GetAttribute("assetnum");
+            //as of HAP-882
+            dto.AppendWhereClauseFormat(@"ticketid in (select recordkey from MULTIASSETLOCCI multi where multi.assetnum = '{0}' and RECORDCLASS in ({1}) ) " +
+                                        "or (imac.classificationid = '81515700' and imac.description like 'Decommission of {0}')", assetNum, "'CHANGE','INCIDENT','PROBLEM','SR'");
+            return dto;
+        }
+
         public override string ApplicationName() {
             return "asset";
         }

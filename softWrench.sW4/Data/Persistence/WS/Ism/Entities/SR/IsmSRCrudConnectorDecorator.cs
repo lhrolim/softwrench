@@ -54,8 +54,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
 
 
         protected override ISMServiceEntities.Problem PopulateProblem(CrudOperationData jsonObject, ServiceIncident webServiceObject,
-            string entityName, Boolean update) {
-            var problem = base.PopulateProblem(jsonObject, webServiceObject, entityName, update);
+            string entityName, Boolean update,string schemaId) {
+            var problem = base.PopulateProblem(jsonObject, webServiceObject, entityName, update,schemaId);
 
             var customer = jsonObject.GetAttribute("asset_.pluspcustomer") as string;
             if (customer == null) {
