@@ -437,6 +437,7 @@
     <attribute name="requiredexpression" type="string"></attribute>
     <attribute name="qualifier" type="string"></attribute>
     <attribute name="hideDescription" type="boolean"></attribute>
+    <attribute name="orderbyfield" type="string" use="optional"/>
   </complexType>
 
   <complexType name="DataProvider">
