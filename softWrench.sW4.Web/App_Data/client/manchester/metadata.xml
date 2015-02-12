@@ -471,8 +471,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <!-- Adding target start finish date-->
           <field attribute="targstartdate" hidden="true"/>
           <field attribute="targcompdate" hidden="true"/>
-          <field attribute="actstart" hidden="true"/>
-          <field attribute="actfinish" hidden="true"/>
 
           <section id="targstartdate" resourcepath="/Content/Templates/samelinepickers.html"
                           parameters="joinattribute=targstartdate;">
@@ -484,17 +482,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <header label="Target Finish Date:" displacement="sameline"/>
           </section>
 
-          <section id="actstart" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=actstart;">
-            <header label="Actual Start Date:" displacement="sameline"/>
-          </section>
-
-          <section id="actfinish" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=actfinish;">
-            <header label="Actual Finish Date:" displacement="sameline"/>
-          </section>
-
-
+          <field label="Actual Start Date:" attribute="actstart" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          <field label="Actual Finish Data:" attribute="actfinish" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
 
           <field attribute="description" label="Summary:" requiredexpression="true"/>
           <field label="Details:" attribute="longdescription_.ldtext" requiredexpression="true">
@@ -543,6 +536,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
           </section>
+          <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
         </schema>
 
         <list platform="mobile">
@@ -575,7 +569,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
 
           <field attribute="wopriority" label="Priority" requiredexpression="true" default="1" >
-
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
             <number decimals="0" min="0" max="999" />
           </field>

@@ -21,9 +21,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         //        private const string _notFoundLog = "{0} {1} not found. Impossible to generate FollowUp Workorder";
 
         protected AttachmentHandler _attachmentHandler;
+        protected MaximoHibernateDAO _maxHibernate; 
 
         public BaseWorkOrderCrudConnector() {
             _attachmentHandler = new AttachmentHandler();
+            _maxHibernate = new MaximoHibernateDAO(); 
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
@@ -32,11 +34,23 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 //first let´s 'simply change the status
                 WsUtil.SetValue(maximoTemplateData.IntegrationObject, "STATUSIFACE", true);
                 WsUtil.SetValue(maximoTemplateData.IntegrationObject, "CHANGEBY", user.Login.ToUpper());
-                if (!WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CLOSE") || !WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CAN"))
-                {
+                if (!WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CLOSE") || !WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CAN")) {
                     maximoTemplateData.InvokeProxy();
                 }
                 WsUtil.SetValue(maximoTemplateData.IntegrationObject, "STATUSIFACE", false);
+            }
+
+            // COMSW-52 Auto-populate the actual start and end time for a workorder depending on status change
+            if (((CrudOperationData)maximoTemplateData.OperationData).ContainsAttribute("#hasstatuschange")) {
+                var maxStatusValue = _maxHibernate.FindSingleByNativeQuery<string>(String.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'WOSTATUS' AND VALUE = '{0}'", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS")), null);
+                if (maxStatusValue.Equals("INPRG")) {
+                    // We might need to update the client database and cycle the server: update MAXVARS set VARVALUE=1 where VARNAME='SUPPRESSACTCHECK';
+                    // More info: http://www-01.ibm.com/support/docview.wss?uid=swg1IZ90431
+                    WsUtil.SetValue(maximoTemplateData.IntegrationObject, "ACTSTART", DateTime.Now.FromServerToRightKind());
+                }
+                else if (maxStatusValue.Equals("COMP")) {
+                    WsUtil.SetValue(maximoTemplateData.IntegrationObject, "ACTFINISH", DateTime.Now.FromServerToRightKind());
+                }
             }
 
             CommonTransaction(maximoTemplateData);
