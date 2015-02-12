@@ -200,7 +200,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
           <section id="statussection"/>
           <!--COMSW-1-->
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid">
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
           <!--SWWEB-342-->
@@ -413,7 +413,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label="Division:" target="division" labelfield="division_.description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" default="@classstructureid">
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" default="@classstructureid" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
@@ -432,7 +432,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
             <renderer type="lookup"/>
           </association>
-          <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
+          <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType" requiredexpression="true">
             <renderer type="autocompleteclient"/>
           </optionfield>
           <!--COMSW 24 association field used for lazy lookup-->
@@ -496,8 +496,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 
 
-          <field attribute="description" label="Summary:"/>
-          <field label="Details:" attribute="longdescription_.ldtext" >
+          <field attribute="description" label="Summary:" requiredexpression="true"/>
+          <field label="Details:" attribute="longdescription_.ldtext" requiredexpression="true">
             <renderer type="richtext"/>
           </field>
 
@@ -528,12 +528,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="woactivity" label="WO Tasks">
-              <collectionproperties allowupdate="false" allowcreation="false"  />
+              <collectionproperties allowupdate="false" allowcreation="false" />
             </composition>
             <composition relationship="matusetrans" label="Materials">
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'"  />
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
-            <composition relationship="labtrans" label="Labor">
+            <composition relationship="labtrans" label="Labor" showexpression="false">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
             <composition relationship="tooltrans" label="Tools">
