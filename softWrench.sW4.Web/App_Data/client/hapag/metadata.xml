@@ -568,7 +568,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=80px" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="width=100px" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="grid=incident;column=status"/>
@@ -986,10 +986,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=80px;excelwidth=15" />
           </field>
           <field attribute="hlagaffectedperson" label="Affected Person">
-            <renderer type="default" params="width=80px;excelwidth=20" />
+            <renderer type="default" params="width=100px;excelwidth=20" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=80px;excelwidth=15" />
+            <renderer type="default" params="width=100px;excelwidth=15" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="grid=servicerequest;column=status"/>
@@ -1371,7 +1371,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=80px" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="width=100px" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="grid=change;column=status"/>
@@ -1454,7 +1454,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <field attribute="dashapprovals_apprwo_.recordkey" hidden="true"/>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="width=100px" />
           </field>
 
           <properties>
@@ -1845,7 +1845,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
           <field attribute="status" hidden="true" />
           <field attribute="hlagimacstatus" label="Status">
-            <renderer type="default" params="width=80px;sortattribute=status" />
+            <renderer type="default" params="width=100px;sortattribute=status" />
           </field>
 
           <field attribute="classstructure_.description" hidden="true"/>
@@ -2388,7 +2388,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=80px" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="width=100px" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="grid=problem;column=status"/>
@@ -2487,7 +2487,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="width=80px;excelwidth=15"/>
           </field>
           <field label="Status" attribute="status">
-            <renderer type="default" params="width=80px;excelwidth=15"/>
+            <renderer type="default" params="width=100px;excelwidth=15"/>
           </field>
         </list>
 
@@ -2715,7 +2715,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
           <field label="Status" attribute="status">
-            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=100px;excelwidth=15"/>
           </field>
           <field label="SWD" attribute="hlagswd">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
@@ -3330,7 +3330,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=102px;maxwidth=102px;excelwidth=50;wordwrap=break-word" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="minwidth=95px;maxwidth=95px;wordwrap=break-word" />
+            <renderer type="default" params="width=100px;wordwrap=break-word" />
           </field>
           <field hidden="true" attribute="wochange_.wonum"/>
           <properties>
