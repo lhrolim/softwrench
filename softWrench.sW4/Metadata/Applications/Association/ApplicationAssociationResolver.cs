@@ -76,6 +76,14 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 }
             }
 
+            //Set the orderbyfield if any
+            var orderByField = association.OrderByField;
+            if (orderByField != null)
+            {
+                associationFilter.SearchSort = orderByField;
+                associationFilter.SearchAscending = !orderByField.EndsWith("desc");
+            }
+
             // Set projections and pre filter functions
             var numberOfLabels = BuildProjections(associationFilter, association);
             var prefilterFunctionName = association.Schema.DataProvider.PreFilterFunctionName;

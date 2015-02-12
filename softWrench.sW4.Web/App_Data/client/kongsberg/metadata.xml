@@ -1066,16 +1066,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="createby" hidden="true"/>
           <section id="statussection"/>
           <field attribute="changeby" default="@username" hidden="true"/>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" orderbyfield="personid asc">
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeowner"/>
           </association>
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" orderbyfield="persongroup asc">
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeownergroup"/>
           </association>
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
-          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" >
+          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc">
             <renderer type="lookup" params="columnlabel=Name"/>
           </association>
 <!--          <association label="Project Classification:" target="classificationid" labelfield="classification_.description">-->
@@ -1085,10 +1085,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="autocompleteclient" />
           </optionfield>
           <!--Adding Area and ProblemType field for Kongsberg-->
-          <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true">
+          <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true" orderbyfield="value asc">
             <renderer type="lookup"/>
           </association>
-          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true">
+          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true" orderbyfield="value asc">
             <renderer type="lookup"/>
           </association>
           <!--Adding Internal Priority and Reported Priority fields for Kongsberg-->
@@ -1708,22 +1708,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="class" hidden="true"/>
 
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
-          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
+          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc">
             <renderer type="lookup"/>
           </association>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" orderbyfield="personid asc">
             <renderer type="lookup"/>
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" orderbyfield="persongroup asc">
             <renderer type="lookup"/>
           </association>
           <!--Adding Area and ProblemType field for Kongsberg-->
-          <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true">
+          <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true" orderbyfield="value asc">
             <renderer type="lookup"/>
           </association>
-          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true">
+          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true" orderbyfield="value asc">
             <renderer type="lookup"/>
           </association>
           <!--Adding Internal Priority and Reported Priority fields for Kongsberg-->
@@ -1810,22 +1810,22 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="class" hidden="true"/>
 
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
-          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
+          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc">
             <renderer type="lookup"/>
           </association>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" orderbyfield="personid asc">
             <renderer type="lookup"/>
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" orderbyfield="persongroup asc">
             <renderer type="lookup"/>
           </association>
           <!--Adding Area and ProblemType field for Kongsberg-->
-          <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true"> 
+          <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true" orderbyfield="value asc"> 
             <renderer type="lookup"/>
           </association>
-          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true">
+          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true" orderbyfield="value asc">
             <renderer type="lookup"/>
           </association>
 
