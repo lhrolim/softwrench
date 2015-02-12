@@ -1,5 +1,6 @@
 ﻿using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Data.Sync;
+using softwrench.sw4.Hapag.Security;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Data;
@@ -387,6 +388,16 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 result["room" + suffix] = new BaseAssociationUpdateResult(GetRoom(fromLocation, building, floor));
             }
             return result;
+        }
+
+        public override IEnumerable<IAssociationOption> GetHlagUserLocations(OptionFieldProviderParameters parameters) {
+            var baseList = base.GetHlagUserLocations(parameters);
+            return baseList.Select(hlagGroupedLocation => new HlagGroupedLocationsNoPrefixDecorator((HlagGroupedLocation)hlagGroupedLocation)).ToList();
+        }
+
+        public override IEnumerable<IAssociationOption> GetHlagAllLocations(OptionFieldProviderParameters parameters) {
+            var baseList = base.GetHlagAllLocations(parameters);
+            return baseList.Select(hlagGroupedLocation => new HlagGroupedLocationsNoPrefixDecorator((HlagGroupedLocation)hlagGroupedLocation)).ToList();
         }
 
 

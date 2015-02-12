@@ -47,7 +47,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             }
         }
 
-        public IEnumerable<IAssociationOption> GetHlagAllLocations(OptionFieldProviderParameters parameters) {
+        public virtual IEnumerable<IAssociationOption> GetHlagAllLocations(OptionFieldProviderParameters parameters) {
             return LocationManager.FindAllLocations();
         }
 
