@@ -497,7 +497,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 
           <field attribute="description" label="Summary:" requiredexpression="true"/>
-          <field label="Details:" attribute="longdescription_.ldtext" requiredexpression="true">
+          <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
           </field>
 
