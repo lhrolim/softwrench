@@ -45,11 +45,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 var maxStatusValue = _maxHibernate.FindSingleByNativeQuery<string>(String.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'WOSTATUS' AND VALUE = '{0}'", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS")), null);
                 if (maxStatusValue.Equals("INPRG")) {
                     // We might need to update the client database and cycle the server: update MAXVARS set VARVALUE=1 where VARNAME='SUPPRESSACTCHECK';
+                    // Actual date must be in the past - thus we made it a minute behind the current time.   
                     // More info: http://www-01.ibm.com/support/docview.wss?uid=swg1IZ90431
-                    WsUtil.SetValue(maximoTemplateData.IntegrationObject, "ACTSTART", DateTime.Now.FromServerToRightKind());
+                    WsUtil.SetValueIfNull(maximoTemplateData.IntegrationObject, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
                 }
                 else if (maxStatusValue.Equals("COMP")) {
-                    WsUtil.SetValue(maximoTemplateData.IntegrationObject, "ACTFINISH", DateTime.Now.FromServerToRightKind());
+                    // Actual date must be in the past - thus we made it a minute behind the current time.   
+                    WsUtil.SetValueIfNull(maximoTemplateData.IntegrationObject, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                    WsUtil.SetValueIfNull(maximoTemplateData.IntegrationObject, "ACTFINISH", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
                 }
             }
 
