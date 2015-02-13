@@ -100,12 +100,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (attachments != null) {
                 // this will only filter new attachments
                 foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.Id == null)) {
-                    var docinfo = attachment.GetRelationship("docinfo");
+                    var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo");
+                    var title = attachment.GetAttribute("document").ToString();
+                    var desc = docinfo != null && docinfo.Fields["description"] != null ? docinfo.Fields["description"].ToString() : "";
                     var content = new AttachmentParameters() {
-                        Title = attachment.GetAttribute("document").ToString(),
+                        Title = title,
                         Data = attachment.GetUnMappedAttribute("newattachment"),
                         Path = attachment.GetUnMappedAttribute("newattachment_path"),
-                        Description = ((CrudOperationData)docinfo).Fields["description"].ToString()
+                        Description = desc
                     };
 
                     if (content.Data != null) {
