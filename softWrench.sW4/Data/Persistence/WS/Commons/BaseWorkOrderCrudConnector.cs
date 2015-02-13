@@ -41,6 +41,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
 
             // COMSW-52 Auto-populate the actual start and end time for a workorder depending on status change
+            // TODO: Caching the status field to prevent multiple SQL update.  
             if (((CrudOperationData)maximoTemplateData.OperationData).ContainsAttribute("#hasstatuschange")) {
                 var maxStatusValue = _maxHibernate.FindSingleByNativeQuery<string>(String.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'WOSTATUS' AND VALUE = '{0}'", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS")), null);
                 if (maxStatusValue.Equals("INPRG")) {
