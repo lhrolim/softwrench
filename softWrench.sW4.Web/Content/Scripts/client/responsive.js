@@ -25,4 +25,12 @@
             }
         }
     );
+
+    //prevent window scrolling after reaching end of navigation pane 
+    $(document).on('mousewheel', '.menu-primary',
+      function (e) {
+          var delta = e.originalEvent.wheelDelta;
+          this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+          e.preventDefault();
+      });
 });
