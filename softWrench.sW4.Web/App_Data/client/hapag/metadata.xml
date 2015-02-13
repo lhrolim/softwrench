@@ -537,23 +537,23 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <list title="Incident Grid">
           <field attribute="ticketid" label="Request#">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <reference id="R017RequiredFields"/>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="minwidth=60px;maxwidth=300px;excelwidth=50" />
+            <renderer type="default" params="minwidth=111px;maxwidth=111px;excelwidth=50" />
           </field>
           <field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="minwidth=100px;excelwidth=30" />
+            <renderer type="default" params="minwidth=100px;maxwidth=100px;excelwidth=30" />
           </field>
           <field attribute="targetfinish" label="Target Finish Date">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=100px;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=false" />
           </field>
           <field attribute="internalpriority" label="Severity">
-            <renderer type="default" params="width=50px;excelwidth=15" />
+            <renderer type="default" params="minwidth=50px;maxwidth=50px;excelwidth=15" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=100px;showtime=false;exporttoexcel=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=false;exporttoexcel=false" />
           </field>
           <field attribute="#2reportdate" label="Reported Date" hidden="true">
             <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;exporttoexcel=true" />
@@ -562,13 +562,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="datetime" params="format=HH:mm;showtime=false;exporttoexcel=true" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site Id">
-            <renderer type="default" params="width=60px" />
+            <renderer type="default" params="minwidth=60px;maxwidth=60px" />
           </field>
           <field attribute="ownergroup" label="Owner Group">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=100px" />
+            <renderer type="default" params="minwidth=100px;maxwidth=100px" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="grid=incident;column=status"/>
@@ -965,16 +965,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <schemas>
         <schema title="Service Request Grid" abstract="true" id="baselist" stereotype="list">
           <field attribute="ticketid" label="Request#">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="minwidth=100px;maxwidth=230px;excelwidth=50" />
+            <renderer type="default" params="minwidth=151px;maxwidth=151px;excelwidth=50" />
           </field>
           <field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="width=160px;excelwidth=25" />
+            <renderer type="default" params="minwidth=160px;maxwidth=160px;excelwidth=25" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=100px;showtime=false;exporttoexcel=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=false;exporttoexcel=false" />
           </field>
           <field attribute="#2reportdate" label="Reported Date" hidden="true">
             <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;exporttoexcel=true;excelwidth=20" />
@@ -983,13 +983,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="datetime" params="format=HH:mm;showtime=false;exporttoexcel=true;excelwidth=20" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site Id">
-            <renderer type="default" params="width=80px;excelwidth=15" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px;excelwidth=15" />
           </field>
           <field attribute="hlagaffectedperson" label="Affected Person">
-            <renderer type="default" params="width=110px;excelwidth=20" />
+            <renderer type="default" params="minwidth=110px;maxwidth=110px;excelwidth=20" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=100px;excelwidth=15" />
+            <renderer type="default" params="minwidth=100px;maxwidth=100px;excelwidth=15" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="grid=servicerequest;column=status"/>
@@ -1417,10 +1417,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <list title="Change Grid" unionschema="srforchange.changeunionschema" parentschema="parentgrid">
           <section id="srId">
             <field attribute="hlagchangesummary" label="Summary">
-              <renderer type="default" params="minwidth=100px;excelwidth=50;wordwrap=break-word" />
+              <renderer type="default" params="minwidth=100px;maxwidth=100px;excelwidth=50;wordwrap=break-word" />
             </field>
             <field attribute="hlagchangeticketid" label="SR ID">
-              <renderer type="default" params="width=80px" />
+              <renderer type="default" params="minwidth=80px;maxwidth=80px" />
             </field>
           </section>
 
@@ -1432,29 +1432,29 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="changeApprovalsDashboardList" stereotype="list">
           <field attribute="workorderid" hidden="true" />
           <field attribute="wonum" label="Change ID">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field attribute="description" label="Summary">
-            <renderer type="default" params="minwidth=100px;excelwidth=50" />
+            <renderer type="default" params="minwidth=100px;maxwidth=100px;excelwidth=50" />
           </field>
           <field attribute="cinum" label="Asset">
-            <renderer type="default" params="minwidth=120px;excelwidth=30" />
+            <renderer type="default" params="minwidth=120px;maxwidth=120px;excelwidth=30" />
           </field>
           <field attribute="wopriority" label="Priority">
-            <renderer type="default" params="width=60px" />
+            <renderer type="default" params="minwidth=60px;maxwidth=60px" />
           </field>
           <field attribute="schedstart" label="Scheduled Start">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=100px;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=false" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site ID">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field attribute="dashapprovals_.approvergroup" label="Approver Group">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field attribute="dashapprovals_apprwo_.recordkey" hidden="true"/>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=100px" />
+            <renderer type="default" params="minwidth=100px;maxwidth=100px" />
           </field>
 
           <properties>
@@ -1824,28 +1824,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <list title="IMAC Grid" id="list">
           <field attribute="ticketid" label="IMAC #">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <!-- for the search to work  -->
           <field attribute="description" hidden="true"/>
           <field attribute="hlagsummary" label="Title">
-            <renderer type="default" params="excelwidth=50;minwidth=80px" />
+            <renderer type="default" params="excelwidth=50;minwidth=237px;maxwidth=237px" />
           </field>
           <field attribute="hlagservice" label="Service">
-            <renderer type="default" params="width=120px;excelwidth=20" />
+            <renderer type="default" params="minwidth=120px;maxwidth=120px;excelwidth=20" />
           </field>
           <field attribute="reportdate" label="Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=100px;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=false" />
           </field>
           <field attribute="hlagpluspcustomer" label="Location">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field attribute="hlagaffectedperson" label="Requester">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field attribute="status" hidden="true" />
           <field attribute="hlagimacstatus" label="Status">
-            <renderer type="default" params="width=100px;sortattribute=status" />
+            <renderer type="default" params="minwidth=100px;maxwidth=100px;sortattribute=status" />
           </field>
 
           <field attribute="classstructure_.description" hidden="true"/>
