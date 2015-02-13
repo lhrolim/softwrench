@@ -11,6 +11,10 @@
             top: 114px;
         }
 
+#listgrid .filter-row th.last {
+    padding-right: 10px;
+}
+
 #listgrid th, #listgrid td {
     word-break: break-word;
 }

@@ -157,8 +157,12 @@ app.directive('crudList', function (contextService) {
 
                     $('[rel=tooltip]').tooltip({ container: 'body' });
                     log.debug('finish table rendered listener');
+
                     //make sure we are seeing the top of the grid 
                     window.scrollTo(0, 0);
+
+                    //add class to last visible th in the filter row
+                    $('#listgrid .filter-row').find('th').filter(':visible:last').addClass('last');
                 }
             });
 
