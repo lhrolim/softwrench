@@ -1368,7 +1368,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field attribute="hlagreportedby" label="Reported By">
-            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
+            <renderer type="default" params="minwidth=100px;maxwidth=100px" />
           </field>
           <field attribute="status" label="Status">
             <renderer type="default" params="minwidth=100px;width=100px" />
@@ -1396,7 +1396,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="gridwithoutsrwithapprovals" stereotype="list" parentschema="parentgrid">
           <section id="srId">
             <field attribute="hlagchangesummary" label="Summary">
-              <renderer type="default" params="minwidth=189px;maxwidth=189px;excelwidth=50" />
+              <renderer type="default" params="minwidth=169px;maxwidth=169px;excelwidth=50" />
             </field>
             <field attribute="hlagchangeticketid" label="SR ID" hidden="true">
               <renderer type="default" params="minwidth=80px;maxwidth=80px" />
@@ -1417,7 +1417,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <list title="Change Grid" unionschema="srforchange.changeunionschema" parentschema="parentgrid">
           <section id="srId">
             <field attribute="hlagchangesummary" label="Summary">
-              <renderer type="default" params="minwidth=101px;maxwidth=101px;excelwidth=50;wordwrap=break-word" />
+              <renderer type="default" params="minwidth=81px;maxwidth=81px;excelwidth=50;wordwrap=break-word" />
             </field>
             <field attribute="hlagchangeticketid" label="SR ID">
               <renderer type="default" params="minwidth=80px;maxwidth=80px" />

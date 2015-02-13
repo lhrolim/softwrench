@@ -11,9 +11,9 @@
             top: 114px;
         }
 
-    #listgrid th, #listgrid td {
-        word-break: break-word;
-    }
+#listgrid th, #listgrid td {
+    word-break: break-word;
+}
 
 .gridcolumnvalue {
     color: black;
@@ -60,6 +60,6 @@
     }
 
     .crudsubtemplate {
-    top: 0;
-}
+        top: 0;
+    }
 }
