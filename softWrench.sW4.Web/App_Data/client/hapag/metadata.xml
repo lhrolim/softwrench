@@ -1352,26 +1352,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="relatedsr_sr_.ticketid" hidden="true" />
 
           <field attribute="wonum" label="Change ID">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <section id="srId"/>
           <field attribute="cinum" label="Asset">
-            <renderer type="default" params="minwidth=100px;excelwidth=30" />
+            <renderer type="default" params="minwidth=100px;maxwidth=100px;excelwidth=30" />
           </field>
           <field attribute="wopriority" label="Priority">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="minwidth=60px;maxwidth=60px" />
           </field>
           <field attribute="schedstart" label="Scheduled Start">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=100px;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=false" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site ID">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field attribute="hlagreportedby" label="Reported By">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=100px" />
+            <renderer type="default" params="minwidth=100px;width=100px" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="grid=change;column=status"/>
@@ -1417,7 +1417,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <list title="Change Grid" unionschema="srforchange.changeunionschema" parentschema="parentgrid">
           <section id="srId">
             <field attribute="hlagchangesummary" label="Summary">
-              <renderer type="default" params="minwidth=100px;maxwidth=100px;excelwidth=50;wordwrap=break-word" />
+              <renderer type="default" params="minwidth=101px;maxwidth=101px;excelwidth=50;wordwrap=break-word" />
             </field>
             <field attribute="hlagchangeticketid" label="SR ID">
               <renderer type="default" params="minwidth=80px;maxwidth=80px" />
