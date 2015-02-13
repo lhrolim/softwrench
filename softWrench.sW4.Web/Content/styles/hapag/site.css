@@ -621,6 +621,7 @@ textarea .readonly {
 
 .expanded-item-composition {
     background-color: white;
+    width: 98%;
 }
 
 .detail-output {
