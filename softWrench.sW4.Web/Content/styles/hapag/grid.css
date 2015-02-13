@@ -11,12 +11,7 @@
             top: 114px;
         }
 
-    #listgrid th {
-        word-break: break-word;
-    }
-
-    #listgrid td {
-        word-break: break-all;
+    #listgrid th, #listgrid td {
         word-break: break-word;
     }
 

@@ -1396,10 +1396,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="gridwithoutsrwithapprovals" stereotype="list" parentschema="parentgrid">
           <section id="srId">
             <field attribute="hlagchangesummary" label="Summary">
-              <renderer type="default" params="minwidth=200px;excelwidth=50;wordwrap=break-word" />
+              <renderer type="default" params="minwidth=189px;maxwidth=189px;excelwidth=50" />
             </field>
             <field attribute="hlagchangeticketid" label="SR ID" hidden="true">
-              <renderer type="default" params="width=75px;wordwrap=break-word" />
+              <renderer type="default" params="minwidth=80px;maxwidth=80px" />
             </field>
           </section>
           <section id="extrafields">
