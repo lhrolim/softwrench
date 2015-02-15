@@ -308,6 +308,12 @@
     <Compile Include="Util\MigrationUtil.cs" />
     <Compile Include="Util\RequestUtil.cs" />
     <Compile Include="Util\RowStampScriptHelper.cs" />
+    <Content Include="..\softwrench.sw4.web.resources\Content\scripts\vendor\angularjs\bindonce2.js">
+      <Link>Content\Scripts\vendor\angular\bindonce2.js</Link>
+    </Content>
+    <Content Include="..\softwrench.sw4.web.resources\Content\scripts\vendor\angularjs\bindonce3.js">
+      <Link>Content\Scripts\vendor\angular\bindonce3.js</Link>
+    </Content>
     <Content Include="App_Data\Client\%40internal\source\maximo7.2.1.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -1585,4 +1591,11 @@
     <PostBuildEvent>$(MSBUILDBINPATH)\msbuild $(ProjectPath) /t:Transform /p:Configuration=Debug;Platform=AnyCPU&lt;BR&gt;xcopy "$(ProjectDir)obj\Debug\Web.Config" $(ProjectDir). /F /R /Y</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="CopyLinkedContentFiles" BeforeTargets="Build">
+    <Copy SourceFiles="%(Content.Identity)" 
+          DestinationFiles="%(Content.Link)" 
+          SkipUnchangedFiles='true' 
+          OverwriteReadOnlyFiles='true' 
+          Condition="'%(Content.Link)' != ''" />
+ </Target>
 </Project>

@@ -97,6 +97,8 @@ namespace softWrench.sW4.Web {
                 "~/Content/Scripts/vendor/angular/angular-strap.js",
                 "~/Content/Scripts/vendor/angular/angular-sanitize.js",
                 "~/Content/Scripts/vendor/angular/bindonce.js",
+                "~/Content/Scripts/vendor/angular/bindonce2.js",
+                "~/Content/Scripts/vendor/angular/bindonce3.js",
                 "~/Content/Scripts/vendor/angular/components/*.js"
 
                 ));

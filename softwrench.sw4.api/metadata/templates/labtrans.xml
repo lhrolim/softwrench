@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <templates>
+    <template path="@chartofaccounts.xml"/>
+    <template path="@labor.xml"/>
+  </templates>
+  
+  <entities>
+    <entity name="labtrans" idAttribute="labtransid">
+      <relationships>
+        <relationship to="labor">
+          <relationshipAttribute from="laborcode" to="laborcode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="laborcraftrate">
+          <relationshipAttribute from="craft" to="craft" primary="true"/>
+          <relationshipAttribute from="laborcode" to="laborcode"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="chartofaccounts" >
+          <relationshipAttribute from="gldebitacct" to="glaccount" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="labtrans" />
+      </connectorParameters>
+    </entity>
+  </entities>
+
+  <applications>
+    <application name="labtrans" entity="labtrans" title="Labor">
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-users"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="labtransid" hidden="true"/>
+          <field attribute="laborcode" label="Labor" qualifier="title"/>
+          <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
+          <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
+        </list>
+
+        <detail platform="web">
+          <field attribute="labtransid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="laborcode" hidden="true" />
+          <field attribute="transtype" hidden="true" />
+          <field attribute="refwo" hidden="true" />
+          <field attribute="enterby" hidden="true" />
+          <field attribute="payrate" hidden="true" />
+          <association label="Labor:" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" >
+            <renderer type="lookup"/>
+            <event type="afterchange" service="labtranService" method="afterlaborchange"/>
+          </association>
+          <association label="Craft:" requiredexpression="true" target="craft" labelfield="laborcraftrate_.craft" dependantfields="laborcode" extraprojectionvalues="defaultcraft, rate">
+            <event type="afterchange" service="labtranService" method="aftercraftchange"/>
+          </association>
+          <field label="Start Date:" requiredexpression="true" attribute="startdate">
+            <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
+          </field>
+          <field label="Start Time:" attribute="starttime" >
+            <renderer type="datetime" params="format=HH:mm;showdate=false" />
+          </field>
+          <field label="End Date:" attribute="finishdate">
+            <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false" />
+          </field>
+          <field label="End Time:" attribute="finishtime" >
+            <renderer type="datetime" params="format=HH:mm;showdate=false" />
+          </field>
+          <field attribute="regularhrs" label="Regular Hours:" requiredexpression="true" default="8"/>
+          <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
+            <renderer type="lookup"/>
+          </association>
+        </detail>
+      </schemas>
+    </application>
+
+  </applications>
+
+
+
+
+</metadata>
