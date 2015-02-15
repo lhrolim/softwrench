@@ -1,0 +1,13 @@
+<ul>
+    <li data-ng-click="selectNodeHead(node, $event)" data-ng-repeat="node in treeModel">
+        <i class="collapsed" data-ng-show="node.children.length && node.collapsed" data-ng-click="selectNodeHead(node, $event)">
+        </i><i class="expanded" data-ng-show="node.children.length && !node.collapsed" data-ng-click="selectNodeHead(node, $event)">
+        </i><i class="normal" data-ng-hide="node.children.length"></i>
+        <span data-ng-class="node.selected" data-ng-click="selectNodeLabel(node, $event);showDefinitions(node)">
+            {{node.label}}
+        </span>
+        <div data-ng-hide="node.collapsed" data-tree-model="node.children" data-node-id='attr.nodeid || "id"' data-node-label="label" data-node-children="children">
+        </div>
+    </li>
+</ul>
+
