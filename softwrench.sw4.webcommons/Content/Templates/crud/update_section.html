@@ -1,0 +1,25 @@
+﻿<table class="table table-hover">
+    <thead>
+        <tr class="header-row">
+            <th>
+            </th>
+            <th>
+                <span>Current Value</span>
+            </th>
+            <th>
+                <span>Changed Value</span>
+            </th>
+        </tr>
+    </thead>
+    <tr ng-repeat="field in fieldMetadata.displayables" config-update-section-datamap>
+        <td>
+            <span>{{i18NLabel(field)}}</span>
+        </td>
+        <td>
+            <span>{{datamap[field.attribute]}}</span>
+        </td>
+        <td>
+            <input type="text" class="hidden-phone form-control" ng-model="datamap[fieldMetadata.id][$index]['#newvalue']"/>
+        </td>
+    </tr>
+</table>

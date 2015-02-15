@@ -8,7 +8,7 @@ using System.Linq;
 namespace softWrench.sW4.Util {
     public static class CollectionExtensions {
 
-        public static bool IsNullOrEmpty(IEnumerable enumerable) {
+        public static bool IsNullOrEmpty<T>(IEnumerable<T> enumerable) {
             return enumerable == null || !enumerable.Any();
         }
 
