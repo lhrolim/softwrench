@@ -80,12 +80,12 @@ namespace softwrench.sw4.Hapag.Security {
                 _runningJob = true;
                 var personGroups = newPersonGroups as PersonGroup[] ?? newPersonGroups.ToArray();
                 foreach (var childGroup in personGroups.Where(p => !p.SuperGroup)) {
+                    if (HlagLocationsCache.ContainsKey(childGroup)) {
+                        HlagLocationsCache.Remove(childGroup);
+                    }
                     if (!HlagLocationUtil.IsALocationGroup(childGroup)) {
                         //we don´t need roles or functional roles here
                         continue;
-                    }
-                    if (HlagLocationsCache.ContainsKey(childGroup)) {
-                        HlagLocationsCache.Remove(childGroup);
                     }
                     var location = AddChildGroup(childGroup, false);
 

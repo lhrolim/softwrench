@@ -168,12 +168,18 @@ namespace softwrench.sw4.Hapag.Data {
             //            var groupedLocations = locations.GroupedLocations;
             if (ctx.IsInModule(FunctionalRole.XItc)) {
                 if (user.IsWWUser()) {
-                    return _locationManager.FindAllLocations().ToArray();
+                    var hlagGroupedLocations = _locationManager.FindAllLocations().ToArray();
+                    Log.DebugFormat("found {0} location entries for R0017", hlagGroupedLocations.Length);
+                    return hlagGroupedLocations;
                 }
                 var supergroups = locations.GroupedLocationsFromParent;
-                return supergroups.ToArray();
+                var groupedLocations = supergroups.ToArray();
+                Log.DebugFormat("found {0} location entries for R0017", groupedLocations.Length);
+                return groupedLocations;
             }
-            return locations.DirectGroupedLocations.ToArray();
+            var result = locations.DirectGroupedLocations.ToArray();
+            Log.DebugFormat("found {0} location entries for R0017", result.Length);
+            return result;
         }
 
     }
