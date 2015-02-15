@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.controltechnologysolutions.com/propertiesmetadata"
+	xmlns:tns="http://www.controltechnologysolutions.com/propertiesmetadata" elementFormDefault="qualified">
+
+  <element name="Properties" type="tns:Property"></element>
+
+  <complexType name="Property">
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="property" type="tns:Parameter"
+        maxOccurs="unbounded" minOccurs="1">
+      </element>
+      <element name="environment" type="tns:Environment"
+        maxOccurs="unbounded" minOccurs="0">
+      </element>
+    </choice>
+  </complexType>
+
+  <complexType name="Environment">
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="property" type="tns:Parameter"></element>
+    </choice>
+    <attribute name="key" type="string" use="required" />
+  </complexType>
+
+  <complexType name="Parameter">
+    <attribute name="key" type="string" use="required"></attribute>
+    <attribute name="value" type="string" use="required"></attribute>
+  </complexType>
+</schema>
