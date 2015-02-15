@@ -35,7 +35,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         }
 
         public bool IsLazyLoaded {
-            get { return EnumRendererType != AssociationRendererType.AUTOCOMPLETECLIENT && EnumRendererType != AssociationRendererType.COMBO && EnumRendererType != AssociationRendererType.COMBODROPDOWN; }
+            get
+            {
+                return EnumRendererType != AssociationRendererType.AUTOCOMPLETECLIENT &&
+                       EnumRendererType != AssociationRendererType.COMBO &&
+                       EnumRendererType != AssociationRendererType.COMBODROPDOWN &&
+                       EnumRendererType != AssociationRendererType.CUSTOM;
+            }
         }
 
         public bool IsPaginated {

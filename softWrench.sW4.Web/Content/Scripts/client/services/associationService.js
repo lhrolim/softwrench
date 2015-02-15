@@ -12,7 +12,11 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
         }
         for (var i = 0; i < associationFieldMetadata.extraProjectionFields.length; i++) {
             var extrafield = associationFieldMetadata.extraProjectionFields[i];
-            var valueToSet = underlyingValue == null ? null : underlyingValue.extrafields[extrafield];
+            var valueToSet = null;
+            if (underlyingValue != null) {
+                underlyingValue.extrafields = underlyingValue.extrafields || {};
+                valueToSet = underlyingValue.extrafields[extrafield];  
+            }
             log.debug('updating extra field {0}.{1} | value={2}'.format(key, extrafield, valueToSet));
             if (extrafield.indexOf(key) > -1) {
                 datamap[extrafield] = valueToSet;
@@ -415,7 +419,9 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                     datamap[labelName] = "";
                     // store result into a string with newline delimitor
                     for (var i = 0; i < realValue.length; i++) {
-                        datamap[labelName] += "\\n" + realValue[i].label;
+                        if (realValue[i] != null) {
+                            datamap[labelName] += "\\n" + realValue[i].label;
+                        }
                     }
                 }
                 else if (realValue != null) {

@@ -10,6 +10,7 @@
             var displayables = scope.associationSchemas[scope.fieldMetadata.associationKey].displayables;
             for (i = 0; i < displayables.length; i++) {
                 var attribute = displayables[i].attribute;
+                scope.option.extrafields = scope.option.extrafields || {};
                 item[attribute] = scope.option.extrafields[attribute];
             }
             scope.datamap[scope.fieldMetadata.attribute].push(item);
