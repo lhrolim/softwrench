@@ -16,7 +16,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
     public class UserSyncManager : AMaximoRowstampManager, IUserSyncManager {
 
         private const string EntityName = "person";
-
+        private const string HlagPrefix = "@HLAG.COM";
 
         public UserSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade)
             : base(dao, facade) {
@@ -117,7 +117,14 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                         user.MergeMaximoWithNewUser(userToIntegrate.user);
                         DAO.Save(user);
                     } else {
-                        DAO.Save(userToIntegrate.user);
+                        user = userToIntegrate.user;
+                        if (IsHapagProd) {
+                            var userName = user.UserName;
+                            if (userName.EndsWith(HlagPrefix)) {
+                                user.UserName = userName.Substring(0, userName.Length - HlagPrefix.Length);
+                            }
+                        }
+                        DAO.Save(user);
                     }
 
                 }
@@ -125,6 +132,10 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                 Log.Error("error integrating maximo users", e);
                 throw;
             }
+        }
+
+        private static bool IsHapagProd {
+            get { return ApplicationConfiguration.ClientName == "hapag" && ApplicationConfiguration.IsProd(); }
         }
 
         private static bool IsValidUser(User.UserNameEqualityUser user) {
