@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build;CopyCustomerDLL" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -1504,6 +1504,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\Build\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
   </Target>
@@ -1526,11 +1527,20 @@
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
+  <!--To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets. -->
   <Target Name="AfterBuild">
+		<XmlRead
+		XPath="/configuration/appSettings/add[@key = 'clientkey']/@value"
+		XmlFileName="web.config">
+			<Output TaskParameter="Value" PropertyName="clientkey" />
+	</XmlRead>
+	<Message Text="client: $(clientkey)"/>
+	
+    <Copy SourceFiles="../softwrench.sw4.$(clientkey)/bin/Debug/softwrench.sw4.$(clientkey).dll" DestinationFolder="bin" ContinueOnError="true"/>
+	<Copy SourceFiles="../softwrench.sw4.$(clientkey)/bin/Debug/softwrench.sw4.$(clientkey).pdb" DestinationFolder="bin" ContinueOnError="true"/>
+  </Target>
+  <!--Target Name="AfterBuild">
    </Target> -->
   <UsingTask TaskName="TransformXml" AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\Web\Microsoft.Web.Publishing.Tasks.dll" />
   <Target Name="Transform">
@@ -1541,7 +1551,10 @@
     <PostBuildEvent>$(MSBUILDBINPATH)\msbuild $(ProjectPath) /t:Transform /p:Configuration=Debug;Platform=AnyCPU&lt;BR&gt;xcopy "$(ProjectDir)obj\Debug\Web.Config" $(ProjectDir). /F /R /Y</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
-  <Target Name="CopyLinkedContentFiles" BeforeTargets="Build">
+  <!--Target Name="CopyLinkedContentFiles" BeforeTargets="Build">
     <Copy SourceFiles="%(Content.Identity)" DestinationFiles="%(Content.Link)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" Condition="'%(Content.Link)' != ''" />
-  </Target>
+  </Target-->
+  <Target Name="CopyCustomerDLL" BeforeTargets="Build">
+
+</Target>
 </Project>

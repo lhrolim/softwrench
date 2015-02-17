@@ -52,7 +52,7 @@
       <arg line="start" />
       <arg value="--browsers=PhantomJS"/>
     </exec>
-    
+
     <if propertyexists="MsTestPath">
       <exec program="${MsTestPath}">
         <arg line="/testcontainer:${TestPath}" />
@@ -115,7 +115,8 @@
         <include name="*.*" />
       </fileset>
     </copy>
-    <copy todir="${OutputDir}/deploy/App_Data/Client/${client}">
+
+    <copy todir="${OutputDir}/deploy/App_Data/Client/${client}" failonerror="false">
       <fileset basedir="../softWrench.sW4.Web/App_Data/Client/${client}">
         <include name="*.*" />
       </fileset>
@@ -193,18 +194,51 @@
   </target>
 
   <target name="deploypeek" depends="setenv,setclient">
-    <xmlpeek property="iispath" file="${OutputDir}/deploy/App_Data/Client/${client}/deploy.xml"
-             xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'iispath']/@value">
-      <namespaces>
-        <namespace prefix="x" uri="http://www.example.org/metadata" />
-      </namespaces>
-    </xmlpeek>
-    <xmlpeek property="msdeploy_url" file="${OutputDir}/deploy/App_Data/Client/${client}/deploy.xml"
-             xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'msdeploy_url']/@value">
-      <namespaces>
-        <namespace prefix="x" uri="http://www.example.org/metadata" />
-      </namespaces>
-    </xmlpeek>
+
+     
+      <property name="clientfile1" value="${OutputDir}/deploy/App_Data/Client/${client}/deploy.xml" />  
+      <property name="clientfile2" value="../softwrench.sW4.${client}/metadata/deploy.xml" />  
+      <echo message="${clientfile1}"/>  
+      <echo message="${clientfile2}"/>  
+    
+    <if test="${file::exists(clientfile1)}">
+
+      <xmlpeek property="iispath" file="${OutputDir}/deploy/App_Data/Client/${client}/deploy.xml"
+               xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'iispath']/@value">
+        <namespaces>
+          <namespace prefix="x" uri="http://www.example.org/metadata" />
+        </namespaces>
+      </xmlpeek>
+
+      <xmlpeek property="msdeploy_url" file="${OutputDir}/deploy/App_Data/Client/${client}/deploy.xml"
+               xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'msdeploy_url']/@value">
+        <namespaces>
+          <namespace prefix="x" uri="http://www.example.org/metadata" />
+        </namespaces>
+      </xmlpeek>
+
+    </if>
+    
+    <if test="${file::exists(clientfile2)}">
+
+      <echo message="searching in dll"/>      
+
+      <xmlpeek property="iispath" file="${clientfile2}"
+               xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'iispath']/@value">
+        <namespaces>
+          <namespace prefix="x" uri="http://www.controltechnologysolutions.com/deploymetadata" />
+        </namespaces>
+      </xmlpeek>
+
+      <xmlpeek property="msdeploy_url" file="${clientfile2}"
+               xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'msdeploy_url']/@value">
+        <namespaces>
+          <namespace prefix="x" uri="http://www.controltechnologysolutions.com/deploymetadata" />
+        </namespaces>
+      </xmlpeek>
+
+    </if>
+
     <echo message="urlPath: + ${msdeploy_url}"/>
     <echo message="iisPath:  + ${iispath}"/>
   </target>
