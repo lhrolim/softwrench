@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -74,8 +74,8 @@
     <Compile Include="Data\Configuration\HapagQueryConstants.cs" />
     <Compile Include="Data\Configuration\HapagQueryUtils.cs" />
     <Compile Include="Data\Connector\Imac\ImacServicePlanHelper.cs" />
-    <Compile Include="Data\DataSet\Helper\ApproverConstants.cs" />
-    <Compile Include="Data\InMemoryUserExtensions.cs" />
+	<Compile Include="Data\DataSet\Helper\ApproverConstants.cs" />
+	<Compile Include="Data\InMemoryUserExtensions.cs" />
     <Compile Include="Data\SsoWhereClauseProvider.cs" />
     <Compile Include="Data\DashboardWhereClauseProvider.cs" />
     <Compile Include="Data\DataSet\Helper\AssetConstants.cs" />
