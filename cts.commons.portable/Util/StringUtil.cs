@@ -12,9 +12,10 @@ namespace cts.commons.portable.Util {
         /// <param name="start">Start string delimiter</param>
         /// <param name="end">End string delimiter</param>
         /// <returns>Enumerator with all string occurrences</returns>
-        public static IEnumerable<string> GetSubStrings(string input, string start, string end) {
+        public static IEnumerable<string> GetSubStrings(string input, string start, string end)
+        {
 
-            Regex r = new Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end));
+            var r = new System.Text.RegularExpressions.Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end));
             MatchCollection matches = r.Matches(input);
             foreach (Match match in matches) {
                 yield return match.Groups[0].Value;
@@ -30,7 +31,7 @@ namespace cts.commons.portable.Util {
         /// <returns>Enumerator with all string occurrences</returns>
         public static IEnumerable<string> GetSubStrings(string input, string start) {
 
-            Regex r = new Regex(Regex.Escape(start) + @"(.*?)(?=\W)");
+            var r = new System.Text.RegularExpressions.Regex(Regex.Escape(start) + @"(.*?)(?=\W)");
             MatchCollection matches = r.Matches(input + " "); // put whitespace in the end to match end delimiter
             foreach (Match match in matches) {
                 yield return match.Groups[0].Value;
