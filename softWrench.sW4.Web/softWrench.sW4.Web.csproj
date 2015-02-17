@@ -851,30 +851,12 @@
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="App_Data\Client\hapag\i18n\es\labels.json" />
     <Content Include="App_Data\Client\otb\statuscolors.json" />
-    <None Include="App_Data\Schema\Commands.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="App_Data\Schema\Deploy_Metadata.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="App_Data\Schema\Menu.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="App_Data\Schema\Metadata.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <Content Include="Content\Controller\Application.html" />
     <Content Include="Content\Controller\Faq.html" />
     <Content Include="Content\Controller\Role.html" />
     <Content Include="Content\Controller\UserProfile.html" />
     <Content Include="Content\Controller\User.html" />
     <Content Include="Content\Controller\Scheduler.html" />
-    <None Include="App_Data\Schema\Properties.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="App_Data\Schema\Target.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <Content Include="Content\Customers\hapag\html\Shared\_Layout.cshtml" />
     <Content Include="Content\Customers\hapag\html\SignIn\Index.cshtml" />
     <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.eot" />

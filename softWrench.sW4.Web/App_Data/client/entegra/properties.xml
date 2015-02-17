@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Properties xmlns="http://www.example.org/Properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<Properties xmlns="http://www.example.org/Properties" ''
             xsi:schemaLocation="http://www.example.org/Properties ../../Schema/Properties.xsd ">
 
   <property key="baseWSPrefix" value="MXSW3"/>

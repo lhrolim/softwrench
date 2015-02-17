@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <applications>
     <application name="longdescription" title="Long Description" entity="longdescription" id="00000000-0000-0000-0000-000000000007">
