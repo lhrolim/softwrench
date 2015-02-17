@@ -67,6 +67,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="customer.placeholder" />
     <Content Include="web_content\kongsberg\styles\signin.css" />
     <Content Include="web_content\kongsberg\styles\site.css" />
     <Content Include="web_content\kongsberg\images\header.png" />

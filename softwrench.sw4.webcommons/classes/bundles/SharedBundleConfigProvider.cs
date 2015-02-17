@@ -26,9 +26,9 @@ namespace softwrench.sw4.webcommons.classes.bundles {
 
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/client/application/shared").Include(
-                "~/Content/Scripts/softwrench/shared/components/*.js",
-                "~/Content/Scripts/softwrench/shared/services/*.js",
-                "~/Content/Scripts/softwrench/shared/util/*.js"
+                "~/Content/Shared/webcommons/Scripts/softwrench/components/*.js",
+                "~/Content/Shared/webcommons/Scripts/softwrench/services/*.js",
+                "~/Content/Shared/webcommons/Scripts/softwrench/util/*.js"
                 ));
 
             var clientName = ApplicationConfiguration.ClientName;

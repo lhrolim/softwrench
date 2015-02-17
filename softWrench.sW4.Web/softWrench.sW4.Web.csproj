@@ -504,6 +504,7 @@
     <Content Include="Content\Controller\LogAdmin.html" />
     <Content Include="Content\Controller\ReportFilter.html" />
     <Content Include="Content\Controller\RoleGroup.html" />
+    <Content Include="Content\Customers\readme.txt" />
     <Content Include="Content\font-awesome-4.1.0\css\font-awesome.css" />
     <Content Include="Content\font-awesome-4.1.0\css\font-awesome.min.css" />
     <Content Include="Content\ie\ie9.css" />
@@ -906,6 +907,7 @@
     <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\font-awesome-4.1.0\fonts\FontAwesome.otf" />
     <Content Include="Content\Images\tva\Thumbs.db" />
+    <Content Include="Content\Shared\readme.txt" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -1504,7 +1506,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\Build\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="$(SolutionDir)\Build\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
   </Target>
@@ -1530,15 +1532,12 @@
   <!--To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->
   <Target Name="AfterBuild">
-		<XmlRead
-		XPath="/configuration/appSettings/add[@key = 'clientkey']/@value"
-		XmlFileName="web.config">
-			<Output TaskParameter="Value" PropertyName="clientkey" />
-	</XmlRead>
-	<Message Text="client: $(clientkey)"/>
-	
-    <Copy SourceFiles="../softwrench.sw4.$(clientkey)/bin/Debug/softwrench.sw4.$(clientkey).dll" DestinationFolder="bin" ContinueOnError="true"/>
-	<Copy SourceFiles="../softwrench.sw4.$(clientkey)/bin/Debug/softwrench.sw4.$(clientkey).pdb" DestinationFolder="bin" ContinueOnError="true"/>
+    <XmlRead XPath="/configuration/appSettings/add[@key = 'clientkey']/@value" XmlFileName="web.config">
+      <Output TaskParameter="Value" PropertyName="clientkey" />
+    </XmlRead>
+    <Message Text="client: $(clientkey)" />
+    <Copy SourceFiles="../softwrench.sw4.$(clientkey)/bin/Debug/softwrench.sw4.$(clientkey).dll" DestinationFolder="bin" ContinueOnError="true" />
+    <Copy SourceFiles="../softwrench.sw4.$(clientkey)/bin/Debug/softwrench.sw4.$(clientkey).pdb" DestinationFolder="bin" ContinueOnError="true" />
   </Target>
   <!--Target Name="AfterBuild">
    </Target> -->
@@ -1555,6 +1554,5 @@
     <Copy SourceFiles="%(Content.Identity)" DestinationFiles="%(Content.Link)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" Condition="'%(Content.Link)' != ''" />
   </Target-->
   <Target Name="CopyCustomerDLL" BeforeTargets="Build">
-
-</Target>
+  </Target>
 </Project>
