@@ -1,0 +1,15 @@
+<metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Deploy_Metadata.xsd ">
+
+  <globalproperties>
+
+    <!--MAximo Properties-->
+    <environment key="uat">
+      <!--http://10.50.100.125:8090/SW4OTB/-->
+      <property key="iispath" value="softwrench/softwrench" />
+      <property key="msdeploy_url" value="https://10.50.100.127:8172/msdeploy.axd,username=COM75DEV\Jenkins,password=N3wPass" />
+    </environment>
+
+  </globalproperties>
+
+</metadata>
