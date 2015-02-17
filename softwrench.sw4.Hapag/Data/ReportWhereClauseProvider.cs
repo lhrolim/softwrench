@@ -1,5 +1,5 @@
 ﻿using softwrench.sw4.Hapag.Data.Configuration;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using System;
 using System.Collections.Generic;
 using System.Linq;

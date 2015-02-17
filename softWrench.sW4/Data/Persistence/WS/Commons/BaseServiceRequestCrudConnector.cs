@@ -12,7 +12,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Net;
 using softWrench.sW4.Configuration.Services.Api;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Email;
 using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;

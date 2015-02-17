@@ -12,7 +12,7 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using System.Collections.Generic;
 using System.Linq;
 

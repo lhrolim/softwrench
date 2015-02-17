@@ -1,7 +1,7 @@
 ﻿using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Persistence.WS.Internal;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 //TODO: move to hapag --> use simpleinjector
 namespace softWrench.sW4.Data.Persistence.WS.Commons {

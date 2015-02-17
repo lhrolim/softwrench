@@ -243,7 +243,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\WebBundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -439,7 +439,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Client\kongsberg\deploy.xml" />
     <Content Include="App_Data\Client\manchester\menu.web.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -449,19 +448,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="App_Data\Client\manchester\properties.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\kongsberg\menu.mobile.xml" />
-    <Content Include="App_Data\Client\kongsberg\menu.web.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\kongsberg\metadata.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\kongsberg\properties.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -537,8 +523,6 @@
     <Content Include="Content\Images\icon-background-select.png" />
     <Content Include="Content\Images\icon-combobox.png" />
     <Content Include="Content\Images\icon-opendetails.png" />
-    <Content Include="Content\Images\kongsberg\header.png" />
-    <Content Include="Content\Images\kongsberg\signin.jpg" />
     <Content Include="Content\Images\logo-main.png" />
     <Content Include="Content\Images\manchester\branding.png" />
     <Content Include="Content\Images\manchester\divider.png" />
@@ -563,14 +547,9 @@
     <Content Include="Content\Images\tva\header.jpg" />
     <Content Include="Content\Images\tva\logo-main.png" />
     <Content Include="Content\Images\tva\signin.jpg" />
-    <Content Include="Content\Scripts\client\crud_tbody.js" />
+    <Content Include="Content\Scripts\client\crud\crud_tbody.js" />
     <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
-    <Content Include="Content\Scripts\client\services\glcomponent_service.js" />
-    <Content Include="Content\Scripts\client\services\checkpoint_service.js" />
-    <Content Include="Content\Scripts\client\services\matusetrans_service.js" />
-    <Content Include="Content\Scripts\client\services\tooltrans_service.js" />
     <Content Include="Content\Scripts\client\textAngular.js" />
-    <Content Include="Content\Scripts\customers\kongsberg\sr_service.js" />
     <Content Include="Content\Scripts\vendor\angular\components\angulartreeview.js" />
     <Compile Include="Controllers\Application\ApplicationController.cs" />
     <Compile Include="Controllers\AttachmentController.cs" />
@@ -673,81 +652,33 @@
     <Content Include="Content\Scripts\vendor\other\bootbox.js" />
     <Content Include="Content\Scripts\vendor\other\bootbox.min.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-multiselect.js" />
-    <Content Include="Content\Scripts\client\aa_dateutils.js" />
-    <Content Include="Content\Scripts\client\aa_stringutils.js" />
-    <Content Include="Content\Scripts\client\crud_base_list.js" />
-    <Content Include="Content\Scripts\client\services\dispatcher_service.js" />
-    <Content Include="Content\Scripts\client\about.js" />
+    <Content Include="Content\Scripts\client\crud\crud_base_list.js" />
+    <Content Include="Content\Scripts\client\adminresources\about.js" />
     <Content Include="Content\Scripts\client\components\lookupcomponent.js" />
     <Content Include="Content\Scripts\client\components\componentsfacade.js" />
     <Content Include="Content\Scripts\client\components\autocompleteserver.js" />
     <Content Include="Content\Scripts\client\components\autocompleteclient.js" />
     <Content Include="Content\Scripts\client\components\combodropdown.js" />
     <Content Include="Content\Scripts\client\components\lookupcomponent.js" />
-    <Content Include="Content\Scripts\client\components\richtext.js" />
-    <Content Include="Content\Scripts\client\crud_body_modal.js" />
+    <Content Include="Content\Scripts\client\crud\crud_body_modal.js" />
     <Content Include="Content\Scripts\client\directives\columnWidth.js" />
     <Content Include="Content\Scripts\client\directives\gridtoolBar.js" />
-    <Content Include="Content\Scripts\client\makeSWAdmin.js" />
-    <Content Include="Content\Scripts\client\crud_base_controller.js" />
-    <Content Include="Content\Scripts\client\crud_list.js" />
-    <Content Include="Content\Scripts\client\logAdmin.js" />
-    <Content Include="Content\Scripts\client\services\dispatcher_service.js" />
-    <Content Include="Content\Scripts\client\services\icon_service.js" />
-    <Content Include="Content\Scripts\client\services\excelservice.js" />
-    <Content Include="Content\Scripts\client\services\date_service.js" />
-    <Content Include="Content\Scripts\client\services\labtrans_service.js" />
-    <Content Include="Content\Scripts\client\services\physicalinventory_service.js" />
-    <Content Include="Content\Scripts\client\services\inventory_service.js" />
-    <Content Include="Content\Scripts\client\services\poreceiving_service.js" />
-    <Content Include="Content\Scripts\client\services\securityService.js" />
-    <Content Include="Content\Scripts\client\services\rest_service.js" />
-    <Content Include="Content\Scripts\client\services\generalsr_service.js" />
-    <Content Include="Content\Scripts\client\services\userpreference_service.js" />
-    <Content Include="Content\Scripts\client\services\event_service.js" />
-    <Content Include="Content\Scripts\client\services\file_service.js" />
-    <Content Include="Content\Scripts\client\services\localstorage_service.js" />
-    <Content Include="Content\Scripts\client\services\modal_service.js" />
-    <Content Include="Content\Scripts\client\services\detailService.js" />
-    <Content Include="Content\Scripts\client\services\scannerdetection_service.js" />
-    <Content Include="Content\Scripts\client\services\statuscolor_service.js" />
-    <Content Include="Content\Scripts\client\util\log_enhacer.js" />
-    <Content Include="Content\Scripts\client\samelinepickers.js" />
-    <Content Include="Content\Scripts\client\crud_output_fields.js" />
+    <Content Include="Content\Scripts\client\adminresources\makeSWAdmin.js" />
+    <Content Include="Content\Scripts\client\crud\crud_base_controller.js" />
+    <Content Include="Content\Scripts\client\crud\crud_list.js" />
+    <Content Include="Content\Scripts\client\adminresources\logAdmin.js" />
+    <Content Include="Content\Scripts\client\components\samelinepickers.js" />
+    <Content Include="Content\Scripts\client\crud\crud_output_fields.js" />
     <Content Include="Content\Scripts\client\directives\commandBar.js" />
     <Content Include="Content\Scripts\client\error.js" />
-    <Content Include="Content\Scripts\client\datetime.js" />
     <Content Include="Content\Scripts\client\directives\fileread.js" />
     <Content Include="Content\Scripts\client\directives\menu\menuitem.js" />
     <Content Include="Content\Scripts\client\directives\printSection.js" />
     <Content Include="Content\Scripts\client\directives\printModal.js" />
     <Content Include="Content\Scripts\client\download.js" />
-    <Content Include="Content\Scripts\client\inlinecompositionlist.js" />
-    <Content Include="Content\Scripts\client\crud_input_fields.js" />
-    <Content Include="Content\Scripts\client\lookupModal.js" />
-    <Content Include="Content\Scripts\client\services\schema_service.js" />
-    <Content Include="Content\Scripts\client\services\mock_service.js" />
-    <Content Include="Content\Scripts\client\services\style_service.js" />
-    <Content Include="Content\Scripts\client\services\screenshot_service.js" />
-    <Content Include="Content\Scripts\client\services\context_service.js" />
-    <Content Include="Content\Scripts\client\services\associationService.js" />
-    <Content Include="Content\Scripts\client\services\crud_extra_service.js" />
-    <Content Include="Content\Scripts\client\services\submit_service.js" />
-    <Content Include="Content\Scripts\client\services\menu_service.js" />
-    <Content Include="Content\Scripts\client\services\applicationFacade.js" />
-    <Content Include="Content\Scripts\client\services\alert_service.js" />
-    <Content Include="Content\Scripts\client\services\expression_service.js" />
-    <Content Include="Content\Scripts\client\services\validation_service.js" />
-    <Content Include="Content\Scripts\client\services\i18n_service.js" />
-    <Content Include="Content\Scripts\client\services\redirect_service.js" />
-    <Content Include="Content\Scripts\client\services\command_service.js" />
-    <Content Include="Content\Scripts\client\services\field_service.js" />
-    <Content Include="Content\Scripts\client\services\compositionService.js" />
-    <Content Include="Content\Scripts\client\services\tabs_service.js" />
-    <Content Include="Content\Scripts\client\services\search_service.js" />
-    <Content Include="Content\Scripts\client\services\fixheader_service.js" />
-    <Content Include="Content\Scripts\client\services\print_service.js" />
-    <Content Include="Content\Scripts\client\services\format_service.js" />
+    <Content Include="Content\Scripts\client\crud\inlinecompositionlist.js" />
+    <Content Include="Content\Scripts\client\crud\crud_input_fields.js" />
+    <Content Include="Content\Scripts\client\components\lookupModal.js" />
     <Content Include="Content\Scripts\customers\gric\sr_service.js" />
     <Content Include="Content\Scripts\customers\hapag\createFromAsset.js" />
     <Content Include="Content\Scripts\customers\hapag\change_service.js" />
@@ -762,14 +693,12 @@
     <Content Include="Content\Scripts\customers\shared\receiving.js" />
     <Content Include="Content\Scripts\customers\shared\solution_service.js" />
     <Content Include="Content\Scripts\customers\shared\commlogactions.js" />
-    <Content Include="Content\Scripts\client\services\commlog_service.js" />
     <Content Include="Content\Scripts\customers\otb\sr_service.js" />
     <Content Include="Content\Scripts\customers\shared\relatedrecord_service.js" />
     <Content Include="Content\Scripts\customers\shared\genericticket_service.js" />
     <Content Include="Content\Scripts\customers\shared\wobatch_service.js" />
     <Content Include="Content\Scripts\vendor\jquery\jquery-filedownload-1.2.0.js" />
     <Content Include="Content\Scripts\vendor\jquery\z_jquery-fileupload-5.40.1.js" />
-    <Content Include="Content\Scripts\client\util\responsive.js" />
     <Content Include="Content\Scripts\vendor\other\angular-fileUpload.js" />
     <Content Include="Content\Scripts\vendor\other\jquery.scannerdetection.js" />
     <Content Include="Content\Scripts\vendor\other\moment.js" />
@@ -806,20 +735,29 @@
     <Content Include="Content\Images\start-icon.png" />
     <Content Include="Content\Scripts\vendor\angular\angular.js" />
     <Content Include="App_Data\Client\manchester\statuscolors.json" />
+    <None Include="Content\Customers\Web.config.bck">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Content\Customers\Web.config.Debug.bck">
+      <DependentUpon>Web.config.bck</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Content\Customers\Web.config.Release.bck">
+      <DependentUpon>Web.config.bck</DependentUpon>
+    </None>
     <None Include="Content\Scripts\vendor\angular\angular-min.jsa" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-combobox.js" />
-    <Content Include="Content\Scripts\client\ajax_interceptor.js" />
-    <Content Include="Content\Scripts\client\crud_output.js" />
-    <Content Include="Content\Scripts\client\configuration.js" />
-    <Content Include="Content\Scripts\client\pagination.js" />
-    <Content Include="Content\Scripts\client\crud_input.js" />
-    <Content Include="Content\Scripts\client\crud_body.js" />
-    <Content Include="Content\Scripts\client\home.js" />
-    <Content Include="Content\Scripts\client\compositionlist.js" />
+    <Content Include="Content\Scripts\client\crud\crud_output.js" />
+    <Content Include="Content\Scripts\client\adminresources\configuration.js" />
+    <Content Include="Content\Scripts\client\crud\pagination.js" />
+    <Content Include="Content\Scripts\client\crud\crud_input.js" />
+    <Content Include="Content\Scripts\client\crud\crud_body.js" />
+    <Content Include="Content\Scripts\client\crud\home.js" />
+    <Content Include="Content\Scripts\client\crud\compositionlist.js" />
     <Content Include="Content\Scripts\client\schedulerSetup.js" />
-    <Content Include="Content\Scripts\client\messagehandler.js" />
-    <Content Include="Content\Scripts\client\myProfile.js" />
-    <Content Include="Content\Scripts\client\faq.js" />
+    <Content Include="Content\Scripts\client\crud\messagehandler.js" />
+    <Content Include="Content\Scripts\client\adminresources\myProfile.js" />
+    <Content Include="Content\Scripts\client\adminresources\faq.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datepicker.de.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datepicker.es.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\locales\bootstrap-datepicker.fr.js" />
@@ -836,17 +774,15 @@
     <Content Include="Content\Scripts\vendor\other\typeahead.js" />
     <Content Include="Content\styles\default\tooltips.css" />
     <Content Include="Content\styles\gric\application\grids.css" />
+    <Content Include="Content\styles\gric\site.css" />
+    <Content Include="Content\styles\gric\signin.css" />
     <Content Include="Content\styles\hapag\grid.css" />
     <Content Include="Content\styles\hapag\signin.css" />
     <Content Include="Content\styles\hapag\site.css" />
-    <Content Include="Content\styles\kongsberg\signin.css" />
-    <Content Include="Content\styles\kongsberg\site.css" />
     <Content Include="Content\styles\manchester\branding.css" />
     <Content Include="Content\styles\otb\application\grids.css" />
     <Content Include="Content\styles\scottsdale\signin.css" />
     <Content Include="Content\styles\scottsdale\site.css" />
-    <Content Include="Content\styles\gric\signin.css" />
-    <Content Include="Content\styles\gric\site.css" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <Content Include="Content\styles\southern\branding.css" />
     <Content Include="Content\styles\tva\signin.css" />
@@ -939,7 +875,6 @@
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="App_Data\Client\hapag\i18n\es\labels.json" />
     <Content Include="App_Data\Client\otb\statuscolors.json" />
-    <Content Include="App_Data\Client\kongsberg\statuscolors.json" />
     <None Include="App_Data\Schema\Commands.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -966,7 +901,6 @@
     </None>
     <Content Include="Content\Customers\hapag\html\Shared\_Layout.cshtml" />
     <Content Include="Content\Customers\hapag\html\SignIn\Index.cshtml" />
-    <Content Include="Content\Customers\Web.config" />
     <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.woff" />
@@ -1137,12 +1071,11 @@
     <Content Include="Content\Scripts\vendor\angular\components\angular-strap-timepicker.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap.max.js" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap.js" />
-    <Content Include="Content\Scripts\client\aaa_layout.js" />
-    <Content Include="Content\Scripts\client\aa_utils.js" />
-    <Content Include="Content\Scripts\client\dashboard.js" />
-    <Content Include="Content\Scripts\client\user.js" />
-    <Content Include="Content\Scripts\client\userprofile.js" />
-    <Content Include="Content\Scripts\client\role.js" />
+    <Content Include="Content\Scripts\client\crud\aaa_layout.js" />
+    <Content Include="Content\Scripts\client\adminresources\dashboard.js" />
+    <Content Include="Content\Scripts\client\adminresources\user.js" />
+    <Content Include="Content\Scripts\client\adminresources\userprofile.js" />
+    <Content Include="Content\Scripts\client\adminresources\role.js" />
     <Content Include="Content\Scripts\vendor\angular\i18n\angular-locale_af-na.js" />
     <Content Include="Content\Scripts\vendor\angular\i18n\angular-locale_af-za.js" />
     <Content Include="Content\Scripts\vendor\angular\i18n\angular-locale_af.js" />
@@ -1428,7 +1361,7 @@
     <Content Include="Content\Scripts\vendor\bootstrap\modal.js" />
     <Content Include="Content\Scripts\vendor\other\modernizr-2.6.2.js" />
     <Content Include="Content\Scripts\client\settings.js" />
-    <Content Include="Content\Scripts\client\application.js" />
+    <Content Include="Content\Scripts\client\crud\application.js" />
     <Content Include="Content\Templates\hapag\statuscolorpicker.html" />
     <Content Include="Content\Templates\crud\composition_list.html" />
     <Content Include="Content\Scripts\vendor\other\multiselect.js" />
@@ -1492,6 +1425,9 @@
     <Folder Include="App_Data\Client\gric\i18n\en\" />
     <Folder Include="App_Data\Client\shared\" />
     <Folder Include="Content\Customers\gric\" />
+    <Folder Include="Content\Scripts\client\services\" />
+    <Folder Include="Content\Scripts\client\util\" />
+    <Folder Include="Content\Scripts\softwrench\" />
     <Folder Include="Views\HapagHome\" />
     <Folder Include="Views\SchedulerSetup\" />
   </ItemGroup>
@@ -1501,6 +1437,22 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
+      <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
+      <Name>cts.commons.simpleinjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.web\cts.commons.web.csproj">
+      <Project>{4c79cfad-0861-432d-b89c-1d237fbfc522}</Project>
+      <Name>cts.commons.web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons\cts.commons.csproj">
+      <Project>{c8007d8e-8340-4a4a-a67b-2199be54ae86}</Project>
+      <Name>cts.commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
+      <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
+      <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sW4.batches\softwrench.sW4.batches.csproj">
       <Project>{653d15fd-96ca-4e5d-b147-39ad01e59006}</Project>
       <Name>softwrench.sW4.batches</Name>
@@ -1512,6 +1464,10 @@
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.webcommons\softwrench.sw4.webcommons.csproj">
+      <Project>{76afe652-82d1-43d4-977b-60546fa9a713}</Project>
+      <Name>softwrench.sw4.webcommons</Name>
     </ProjectReference>
     <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
       <Project>{ce228c26-938d-4d6f-95fa-12cc5241afb5}</Project>

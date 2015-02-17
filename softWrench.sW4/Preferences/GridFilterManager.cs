@@ -4,7 +4,7 @@ using System.Linq;
 using NHibernate.SqlCommand;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Preferences {
 

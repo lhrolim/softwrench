@@ -8,7 +8,7 @@ using log4net;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using LogicalThreadContext = Quartz.Util.LogicalThreadContext;

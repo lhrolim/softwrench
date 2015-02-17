@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector.Events;
 
 namespace softWrench.sW4.Util {
     public class ApplicationConfiguration : ISWEventListener<ClearCacheEvent> {

@@ -5,7 +5,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Text.RegularExpressions;
 using DocumentFormat.OpenXml.Math;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using System.Net.Mail;
 using softWrench.sW4.Metadata;
 using Common.Logging;

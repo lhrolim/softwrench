@@ -43,12 +43,20 @@ namespace softWrench.sW4.Util {
         public static IEnumerable<Assembly> GetSWAssemblies() {
             return
                 GetAssemblies()
-                    .Where(r => r.FullName.StartsWith("softWrench", StringComparison.InvariantCultureIgnoreCase));
+                    .Where(r => r.FullName.StartsWith("softWrench", StringComparison.InvariantCultureIgnoreCase) || r.FullName.StartsWith("cts", StringComparison.InvariantCultureIgnoreCase));
         }
 
         public static ReadOnlyCollection<Assembly> GetBinFolderAssemblies() {
             return BinAssemblies;
         }
 
+        public static bool CustomerAssemblyExists() {
+            return GetAssemblies().Any(r => r.FullName.StartsWith("softwrench.sw4.{0}".Fmt(ApplicationConfiguration.ClientName), StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        public static Assembly GetCustomerAssembly()
+        {
+            return GetAssemblies().FirstOrDefault(r => r.FullName.StartsWith("softwrench.sw4.{0}".Fmt(ApplicationConfiguration.ClientName), StringComparison.CurrentCultureIgnoreCase));
+        }
     }
 }

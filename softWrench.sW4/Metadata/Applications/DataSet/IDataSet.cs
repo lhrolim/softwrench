@@ -12,7 +12,7 @@ using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sW4.Shared2.Data;
-using IComponent = softWrench.sW4.SimpleInjector.IComponent;
+using IComponent = cts.commons.simpleinjector.IComponent;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
     /// <summary>

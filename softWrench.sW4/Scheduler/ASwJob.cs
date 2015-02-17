@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using log4net;
 using Quartz;
 using softWrench.sW4.Scheduler.Interfaces;
-using softWrench.sW4.SimpleInjector.Core.Order;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector.Core.Order;
+using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
 using LogicalThreadContext = Quartz.Util.LogicalThreadContext;
 

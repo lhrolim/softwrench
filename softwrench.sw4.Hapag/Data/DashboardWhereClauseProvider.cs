@@ -1,6 +1,6 @@
 ﻿using softwrench.sw4.Hapag.Data.Configuration;
 using softWrench.sW4.Security.Context;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using System;
 
 namespace softwrench.sw4.Hapag.Data {

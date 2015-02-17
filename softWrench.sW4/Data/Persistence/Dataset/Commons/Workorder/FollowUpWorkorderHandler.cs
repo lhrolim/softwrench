@@ -10,7 +10,7 @@ using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Workorder {

@@ -1,8 +1,8 @@
 ﻿using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.Events;
 using System;
 using System.Collections.Generic;
 using System.IO;

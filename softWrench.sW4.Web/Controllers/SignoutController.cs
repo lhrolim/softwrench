@@ -2,7 +2,7 @@
 using System.Web.Security;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web.Controllers {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using softWrench.sW4.Security.Services;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Util;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder {

@@ -5,7 +5,7 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sw4.Shared2.Data.Association;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using System;
 using System.Collections.Generic;
 using System.Linq;

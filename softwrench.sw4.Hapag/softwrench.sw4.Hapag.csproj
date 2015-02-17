@@ -74,8 +74,8 @@
     <Compile Include="Data\Configuration\HapagQueryConstants.cs" />
     <Compile Include="Data\Configuration\HapagQueryUtils.cs" />
     <Compile Include="Data\Connector\Imac\ImacServicePlanHelper.cs" />
-	<Compile Include="Data\DataSet\Helper\ApproverConstants.cs" />
-	<Compile Include="Data\InMemoryUserExtensions.cs" />
+    <Compile Include="Data\DataSet\Helper\ApproverConstants.cs" />
+    <Compile Include="Data\InMemoryUserExtensions.cs" />
     <Compile Include="Data\SsoWhereClauseProvider.cs" />
     <Compile Include="Data\DashboardWhereClauseProvider.cs" />
     <Compile Include="Data\DataSet\Helper\AssetConstants.cs" />
@@ -119,6 +119,14 @@
     <Compile Include="Security\UserHlagLocation.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
+      <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
+      <Name>cts.commons.simpleinjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons\cts.commons.csproj">
+      <Project>{c8007d8e-8340-4a4a-a67b-2199be54ae86}</Project>
+      <Name>cts.commons</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>

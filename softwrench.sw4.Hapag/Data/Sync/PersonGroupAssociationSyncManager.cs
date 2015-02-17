@@ -10,7 +10,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;

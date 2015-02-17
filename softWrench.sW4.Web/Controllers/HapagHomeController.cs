@@ -13,7 +13,7 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;

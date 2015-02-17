@@ -1,7 +1,7 @@
 ﻿using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Security.Context;
-using softWrench.sW4.SimpleInjector;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder {
