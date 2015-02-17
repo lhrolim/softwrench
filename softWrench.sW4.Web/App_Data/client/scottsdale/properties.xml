@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Properties xmlns="http://www.example.org/Properties" ''
-            xsi:schemaLocation="http://www.example.org/Properties ../../Schema/Properties.xsd ">
+<Properties xmlns="http://www.controltechnologysolutions.com/propertiesmetadata" >
 
   <property key="baseWSPrefix" value="SW"/>
   <property key="externalSystemName" value="SW" />

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Menu xmlns="http://www.example.org/Menu" ''
-xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmenudisplacement="horizontal" indexitem
+<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="horizontal" indexitem
   ="WO">
   <!--  <application title="Workorder Grid" ref="workorder" schema="detail"  tooltip="Workorders" id="workorder"/>-->
 <!--  <container title="Service Requests" tooltip="Click to access your request tasks" icon ="fa fa-ticket" id="servicereq" role="sr">-->
