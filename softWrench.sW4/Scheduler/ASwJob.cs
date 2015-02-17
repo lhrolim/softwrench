@@ -43,7 +43,7 @@ namespace softWrench.sW4.Scheduler {
 
         public abstract bool RunAtStartup();
 
-        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             if (RunAtStartup()) {
                 Task.Factory.StartNew(DoExecute);
             }

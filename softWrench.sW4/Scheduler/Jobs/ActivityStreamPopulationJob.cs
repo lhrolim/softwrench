@@ -5,6 +5,8 @@ using softWrench.sW4.Configuration;
 using softWrench.sW4.Configuration.Services;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Scheduler.Interfaces;
+using softWrench.sW4.SimpleInjector.Events;
+using System.Threading.Tasks;
 
 namespace softWrench.sW4.Scheduler.Jobs {
     public class ActivityStreamPopulationJob : ASwJob {
@@ -29,11 +31,20 @@ namespace softWrench.sW4.Scheduler.Jobs {
         }
 
         public override void ExecuteJob() {
-            
+            //_log = LogManager.GetLogger(typeof(CacheCleanupJob));
+            //_log.Info(string.Format("Executed in : {0}", DateTime.Now));
+
+            //_log.Info(string.Format("Finished in : {0}", DateTime.Now));
+        }
+
+        public override void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+            if (RunAtStartup()) {
+                Task.Factory.StartNew(DoExecute);
+            }
         }
 
         public override bool RunAtStartup() {
-            return false;
+            return true;
         }
     }
 }

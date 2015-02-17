@@ -9,7 +9,6 @@ using softWrench.sW4.Scheduler.Interfaces;
 namespace softWrench.sW4.Scheduler.Jobs {
     public class ActivityStreamPurgeJob : ASwJob {
 
-        //private ILog _log;
         private readonly IConfigurationFacade _facade;
 
         public ActivityStreamPurgeJob(IConfigurationFacade facade) {
