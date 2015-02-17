@@ -48,12 +48,8 @@
     <delete dir="${OutputDir}/testresults" failonerror="false"/>
     <delete file="TestResults.trx"/>
 
-    <exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
-      <arg line="start" />
-      <arg value="--browsers=PhantomJS"/>
-    </exec>
-
     <if propertyexists="MsTestPath">
+      <echo message="MSTestPath found at ${MsTestPath}"></echo>
       <exec program="${MsTestPath}">
         <arg line="/testcontainer:${TestPath}" />
         <arg line="/testsettings:${TestSettingsPath}" />
@@ -61,6 +57,7 @@
       </exec>
     </if>
     <ifnot propertyexists="MsTestPath">
+      <echo message="MSTestPath not found at ${MsTestPath}"></echo>
       <exec program="MsTest.exe">
         <arg line="/testcontainer:${TestPath}" />
         <arg line="/testsettings:${TestSettingsPath}" />
@@ -68,6 +65,10 @@
       </exec>
     </ifnot>
 
+    <exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
+      <arg line="start" />
+      <arg value="--browsers=PhantomJS"/>
+    </exec>
 
   </target>
 
