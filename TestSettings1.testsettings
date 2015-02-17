@@ -2,8 +2,9 @@
 <TestSettings name="SW" id="f0dbb167-77f5-4991-a445-2387d694f5ca" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <Description>These are default test settings for a local test run.</Description>
   <Deployment>
-    <DeploymentItem filename="softWrench.sW4.Web\App_Data\" />
+    <DeploymentItem filename="softwrench.sw4.gric\" />
     <DeploymentItem filename="softwrench.sW4.test\App_data\" />
+    <DeploymentItem filename="softWrench.sW4.Web\App_Data\" />
   </Deployment>
   <NamingScheme baseName="testresults" appendTimeStamp="false" useDefault="false" />
   <Execution hostProcessPlatform="MSIL">
@@ -27,4 +28,5 @@
     <AgentRule name="LocalMachineDefaultRole">
     </AgentRule>
   </Execution>
+  <Properties />
 </TestSettings>

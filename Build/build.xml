@@ -48,12 +48,8 @@
     <delete dir="${OutputDir}/testresults" failonerror="false"/>
     <delete file="TestResults.trx"/>
 
-    <exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
-      <arg line="start" />
-      <arg value="--browsers=PhantomJS"/>
-    </exec>
-    
     <if propertyexists="MsTestPath">
+      <echo message="MSTestPath found at ${MsTestPath}"></echo>
       <exec program="${MsTestPath}">
         <arg line="/testcontainer:${TestPath}" />
         <arg line="/testsettings:${TestSettingsPath}" />
@@ -61,6 +57,7 @@
       </exec>
     </if>
     <ifnot propertyexists="MsTestPath">
+      <echo message="MSTestPath not found at ${MsTestPath}"></echo>
       <exec program="MsTest.exe">
         <arg line="/testcontainer:${TestPath}" />
         <arg line="/testsettings:${TestSettingsPath}" />
@@ -68,6 +65,10 @@
       </exec>
     </ifnot>
 
+    <exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
+      <arg line="start" />
+      <arg value="--browsers=PhantomJS"/>
+    </exec>
 
   </target>
 
@@ -115,11 +116,52 @@
         <include name="*.*" />
       </fileset>
     </copy>
-    <copy todir="${OutputDir}/deploy/App_Data/Client/${client}">
+
+    <copy todir="${OutputDir}/deploy/App_Data/Client/${client}" failonerror="false">
       <fileset basedir="../softWrench.sW4.Web/App_Data/Client/${client}">
         <include name="*.*" />
       </fileset>
     </copy>
+
+    <foreach item="Folder" in="../" property="foldername">
+      <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
+      <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
+
+      <property name="indexof" value="${string::last-index-of(foldername, '.') + 1}" />
+      <property name="length" value="${string::get-length(foldername)}" />
+      <property name="size" value="${string::get-length(foldername) - string::last-index-of(foldername, '.')-1}" />
+
+      <property name="clientname" value="${string::substring(foldername,indexof,size)}" />
+
+
+
+      <if test="${clientname == client}">
+        <echo message="${foldername}" />
+        <echo message="${clientname}"/>
+
+        <copy todir="${OutputDir}/deploy/Content/Customers/${clientname}">
+          <fileset basedir="../softWrench.sW4.${client}/web_content/${clientname}">
+            <include name="*.*" />
+          </fileset>
+        </copy>
+        <echo message="Copied files for ${client}" />
+      </if>
+
+
+      <if test="${file::exists(sharedplaceholder)}">
+        <echo message="${foldername}" />
+        <echo message="${clientname}"/>
+
+        <copy todir="${OutputDir}/deploy/Content/Shared/${clientname}">
+          <fileset basedir="../softWrench.sW4.${clientname}/web_content/${clientname}">
+            <include name="*.*" />
+          </fileset>
+        </copy>
+        <echo message="Copied files for ${client}" />
+      </if>
+    </foreach>
+
+
     <attrib readonly="false">
       <fileset basedir="${OutputDir}/deploy">
         <include name="**"/>
@@ -193,18 +235,51 @@
   </target>
 
   <target name="deploypeek" depends="setenv,setclient">
-    <xmlpeek property="iispath" file="${OutputDir}/deploy/App_Data/Client/${client}/deploy.xml"
-             xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'iispath']/@value">
-      <namespaces>
-        <namespace prefix="x" uri="http://www.example.org/metadata" />
-      </namespaces>
-    </xmlpeek>
-    <xmlpeek property="msdeploy_url" file="${OutputDir}/deploy/App_Data/Client/${client}/deploy.xml"
-             xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'msdeploy_url']/@value">
-      <namespaces>
-        <namespace prefix="x" uri="http://www.example.org/metadata" />
-      </namespaces>
-    </xmlpeek>
+
+
+    <property name="clientfile1" value="${OutputDir}/deploy/App_Data/Client/${client}/deploy.xml" />
+    <property name="clientfile2" value="../softwrench.sW4.${client}/metadata/deploy.xml" />
+    <echo message="${clientfile1}"/>
+    <echo message="${clientfile2}"/>
+
+    <if test="${file::exists(clientfile1)}">
+
+      <xmlpeek property="iispath" file="${OutputDir}/deploy/App_Data/Client/${client}/deploy.xml"
+               xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'iispath']/@value">
+        <namespaces>
+          <namespace prefix="x" uri="http://www.example.org/metadata" />
+        </namespaces>
+      </xmlpeek>
+
+      <xmlpeek property="msdeploy_url" file="${OutputDir}/deploy/App_Data/Client/${client}/deploy.xml"
+               xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'msdeploy_url']/@value">
+        <namespaces>
+          <namespace prefix="x" uri="http://www.example.org/metadata" />
+        </namespaces>
+      </xmlpeek>
+
+    </if>
+
+    <if test="${file::exists(clientfile2)}">
+
+      <echo message="searching in dll"/>
+
+      <xmlpeek property="iispath" file="${clientfile2}"
+               xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'iispath']/@value">
+        <namespaces>
+          <namespace prefix="x" uri="http://www.controltechnologysolutions.com/deploymetadata" />
+        </namespaces>
+      </xmlpeek>
+
+      <xmlpeek property="msdeploy_url" file="${clientfile2}"
+               xpath="//x:metadata/x:globalproperties/x:environment[@key = '${profile}']/x:property[@key = 'msdeploy_url']/@value">
+        <namespaces>
+          <namespace prefix="x" uri="http://www.controltechnologysolutions.com/deploymetadata" />
+        </namespaces>
+      </xmlpeek>
+
+    </if>
+
     <echo message="urlPath: + ${msdeploy_url}"/>
     <echo message="iisPath:  + ${iispath}"/>
   </target>
@@ -218,6 +293,53 @@
       <arg line="-enableRule:AppOffline" />
       <arg line="-verbose" />
     </exec>
+  </target>
+
+  <target name="generatelinks">
+    <foreach item="Folder" in="../" property="foldername">
+      <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
+      <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
+
+      <property name="indexof" value="${string::last-index-of(foldername, '.') + 1}" />
+      <property name="length" value="${string::get-length(foldername)}" />
+      <property name="size" value="${string::get-length(foldername) - string::last-index-of(foldername, '.')-1}" />
+
+      <property name="clientname" value="${string::substring(foldername,indexof,size)}" />
+
+
+
+      <if test="${file::exists(customerplaceholder)}">
+        <echo message="${foldername}" />
+        <echo message="${clientname}"/>
+
+
+
+        <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+          <arg value="/c"/>
+          <arg line="mklink /D ${clientname} ${foldername}\web_content\${clientname}"/>
+        </exec>
+
+        <if test="${customerlinkcreated =='0'}">
+          <echo message="created symbolic link for ${clientname}" />
+        </if>
+      </if>
+
+
+      <if test="${file::exists(sharedplaceholder)}">
+        <echo message="${foldername}" />
+        <echo message="${clientname}"/>
+
+        <exec program="cmd" workingdir="../softwrench.sw4.web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+          <arg value="/c"/>
+          <arg line="mklink /D ${clientname} ${foldername}\web_content\${clientname}"/>
+        </exec>
+
+        <if test="${customerlinkcreated =='0'}">
+          <echo message="created symbolic link for ${clientname}" />
+        </if>
+      </if>
+    </foreach>
+
   </target>
 
 </project>

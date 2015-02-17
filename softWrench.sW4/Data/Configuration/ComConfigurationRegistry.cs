@@ -1,10 +1,10 @@
 ﻿using System;
+using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Init;
 using softWrench.sW4.Security.Init.Com;
-using softWrench.sW4.SimpleInjector;
-using softWrench.sW4.SimpleInjector.Events;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Configuration {

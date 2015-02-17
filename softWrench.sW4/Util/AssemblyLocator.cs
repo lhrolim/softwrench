@@ -6,14 +6,23 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Compilation;
+using cts.commons.portable.Util;
+using cts.commons.Util;
 
 namespace softWrench.sW4.Util {
     public static class AssemblyLocator {
-        private static readonly ReadOnlyCollection<Assembly> AllAssemblies;
-        private static readonly ReadOnlyCollection<Assembly> BinAssemblies;
-        static AssemblyLocator() {
+        private static ReadOnlyCollection<Assembly> AllAssemblies;
+        private static ReadOnlyCollection<Assembly> BinAssemblies;
+    
+
+        public static ReadOnlyCollection<Assembly> GetAssemblies() {
+            if (AllAssemblies != null)
+            {
+                return AllAssemblies;
+            }
+
             AllAssemblies = new ReadOnlyCollection<Assembly>(
-                BuildManager.GetReferencedAssemblies().Cast<Assembly>().ToList());
+              BuildManager.GetReferencedAssemblies().Cast<Assembly>().ToList());
 
             IList<Assembly> binAssemblies = new List<Assembly>();
 
@@ -34,21 +43,26 @@ namespace softWrench.sW4.Util {
             }
 
             BinAssemblies = new ReadOnlyCollection<Assembly>(binAssemblies);
-        }
-
-        public static ReadOnlyCollection<Assembly> GetAssemblies() {
             return AllAssemblies;
         }
 
         public static IEnumerable<Assembly> GetSWAssemblies() {
             return
                 GetAssemblies()
-                    .Where(r => r.FullName.StartsWith("softWrench", StringComparison.InvariantCultureIgnoreCase));
+                    .Where(r => r.FullName.StartsWith("softWrench", StringComparison.InvariantCultureIgnoreCase) || r.FullName.StartsWith("cts", StringComparison.InvariantCultureIgnoreCase));
         }
 
         public static ReadOnlyCollection<Assembly> GetBinFolderAssemblies() {
             return BinAssemblies;
         }
 
+        public static bool CustomerAssemblyExists() {
+            return GetAssemblies().Any(r => r.FullName.StartsWith("softwrench.sw4.{0}".Fmt(ApplicationConfiguration.ClientName), StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        public static Assembly GetCustomerAssembly()
+        {
+            return GetAssemblies().FirstOrDefault(r => r.FullName.StartsWith("softwrench.sw4.{0}".Fmt(ApplicationConfiguration.ClientName), StringComparison.CurrentCultureIgnoreCase));
+        }
     }
 }

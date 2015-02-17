@@ -4,7 +4,7 @@ using Quartz.Spi;
 using Quartz.Util;
 using SimpleInjector;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Scheduler {
     public class SimpleInjectorJobFactory : IJobFactory, ISingletonComponent {

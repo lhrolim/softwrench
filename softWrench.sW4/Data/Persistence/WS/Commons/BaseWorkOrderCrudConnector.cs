@@ -25,7 +25,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         public BaseWorkOrderCrudConnector() {
             _attachmentHandler = new AttachmentHandler();
-            _maxHibernate = new MaximoHibernateDAO(); 
+            _maxHibernate = MaximoHibernateDAO.GetInstance(); 
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {

@@ -1,5 +1,5 @@
 ﻿using softWrench.sW4.Data.Persistence.Engine;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 

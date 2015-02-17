@@ -11,9 +11,17 @@ namespace softWrench.sW4.Web.Controllers.Security {
     public class RoleController : ApiController {
         private static readonly SecurityFacade SecurityFacade = SecurityFacade.GetInstance();
 
+        private readonly SWDBHibernateDAO _dao;
+
+        public RoleController(SWDBHibernateDAO dao)
+        {
+            this._dao = dao;
+        }
+
+
         [SPFRedirect("Role Setup", "_headermenu.rolesetup")]
         public GenericResponseResult<IList<Role>> Get() {
-            var roles = new SWDBHibernateDAO().FindByQuery<Role>("from Role order by name");
+            var roles = _dao.FindByQuery<Role>("from Role order by name");
             return new GenericResponseResult<IList<Role>>(roles);
         }
 

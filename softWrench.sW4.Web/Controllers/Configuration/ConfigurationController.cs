@@ -1,4 +1,6 @@
 ﻿using System.Web.Security;
+using cts.commons.persistence;
+using cts.commons.persistence.Event;
 using softWrench.sW4.Configuration;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
@@ -14,7 +16,7 @@ using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sw4.Shared2.Metadata.Modules;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector.Events;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.SPF;
@@ -114,8 +116,8 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
 
             IList<KeyValuePair<String, String>> aboutData = new List<KeyValuePair<String, String>>();
 
-            var maximoDB = ApplicationConfiguration.DBConnectionStringBuilder(ApplicationConfiguration.DBType.Maximo);
-            var swDB = ApplicationConfiguration.DBConnectionStringBuilder(ApplicationConfiguration.DBType.Swdb);
+            var maximoDB = ApplicationConfiguration.DBConnectionStringBuilder(DBType.Maximo);
+            var swDB = ApplicationConfiguration.DBConnectionStringBuilder(DBType.Swdb);
 
             aboutData.Add(new KeyValuePair<String, String>(_resolver.I18NValue("about.version", "Version"), ApplicationConfiguration.SystemVersion));
             aboutData.Add(new KeyValuePair<String, String>(_resolver.I18NValue("about.revision", "Revision"), ApplicationConfiguration.SystemRevision));

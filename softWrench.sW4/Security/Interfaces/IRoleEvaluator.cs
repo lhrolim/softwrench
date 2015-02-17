@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Entities;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Security.Interfaces {
     public interface IRoleEvaluator : IComponent {

@@ -15,7 +15,7 @@ using softWrench.sW4.Metadata.Security;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Util;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.SPF;
 
 namespace softWrench.sW4.Data.Relationship.Composition {

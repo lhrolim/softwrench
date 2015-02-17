@@ -1,3 +1,6 @@
+using cts.commons.persistence;
+using cts.commons.portable.Util;
+using cts.commons.Util;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Parsing;
@@ -9,7 +12,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector.Events;
 
 namespace softWrench.sW4.Util {
     public class ApplicationConfiguration : ISWEventListener<ClearCacheEvent> {
@@ -327,7 +330,7 @@ namespace softWrench.sW4.Util {
             return !IsMif() && !IsISM();
         }
 
-        public static String DBConnectionString(ApplicationConfiguration.DBType dbType) {
+        public static String DBConnectionString(DBType dbType) {
             var connectionStringSettings = DBConnection(dbType);
             return connectionStringSettings == null ? null : connectionStringSettings.ConnectionString;
         }
@@ -453,13 +456,6 @@ namespace softWrench.sW4.Util {
                     return DBMS.DB2;
             }
             return DBMS.MYSQL;
-        }
-
-        public enum DBMS {
-            MSSQL, DB2, ORACLE, MYSQL
-        }
-        public enum DBType {
-            Maximo, Swdb
         }
 
 

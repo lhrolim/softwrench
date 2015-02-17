@@ -28,14 +28,21 @@ namespace softWrench.sW4.Web.Controllers.Security {
         private readonly SecurityFacade _facade = SecurityFacade;
         private static readonly SecurityFacade SecurityFacade = SecurityFacade.GetInstance();
 
+        private SWDBHibernateDAO dao;
+
+        public UserController(SWDBHibernateDAO dao)
+        {
+            this.dao = dao;
+        }
+
         [SPFRedirect(Title = "User Setup")]
         [HttpGet]
         public GenericResponseResult<UserListDto> List(bool refreshData = true) {
-            var users = new SWDBHibernateDAO().FindByQuery<User>("select new User(id,UserName,FirstName,LastName,IsActive) from User order by UserName");
+            var users = dao.FindByQuery<User>("select new User(id,UserName,FirstName,LastName,IsActive) from User order by UserName");
             ICollection<UserProfile> profiles = new List<UserProfile>();
             IList<Role> roles = new List<Role>();
             if (refreshData) {
-                roles = new SWDBHibernateDAO().FindByQuery<Role>("from Role order by name");
+                roles = dao.FindByQuery<Role>("from Role order by name");
                 profiles = SecurityFacade.FetchAllProfiles(true);
             }
 

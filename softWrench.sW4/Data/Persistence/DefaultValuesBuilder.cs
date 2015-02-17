@@ -1,4 +1,5 @@
-﻿using softwrench.sw4.Shared2.Util;
+﻿using cts.commons.portable.Util;
+using softwrench.sw4.Shared2.Util;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Data.Entities;

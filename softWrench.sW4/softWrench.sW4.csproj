@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -261,7 +261,6 @@
     <Compile Include="Metadata\Applications\DataSet\BaseInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbServiceRequestDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\GricServiceRequestDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OptionFieldProviderParameters.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\SWDBApplicationDataset.cs" />
     <Compile Include="Metadata\Applications\Reference\ReferenceHandler.cs" />
@@ -345,7 +344,6 @@
     <Compile Include="Data\API\ApplicationListResult.cs" />
     <Compile Include="Data\Entities\EntityBuilder.cs" />
     <Compile Include="Data\Pagination\PaginatedSearchRequestDto.cs" />
-    <Compile Include="Data\Persistence\BaseHibernateDAO.cs" />
     <Compile Include="Data\Persistence\WS\Mea\MeaAttachmentHandler.cs" />
     <Compile Include="Data\Persistence\WS\Mea\MeaWorkOrderCrudConnector.cs" />
     <Compile Include="Data\Relationship\Composition\CompositionExpanderHelper.cs" />
@@ -383,18 +381,9 @@
     <Compile Include="Security\Init\RoleExtensions.cs" />
     <Compile Include="Security\Interfaces\AfterLoginRoleEvaluator.cs" />
     <Compile Include="Security\Interfaces\IRoleEvaluator.cs" />
-    <Compile Include="Security\RestartDBEvent.cs" />
     <Compile Include="Security\Services\ClearCacheEvent.cs" />
     <Compile Include="Security\Services\UserLoginEvent.cs" />
     <Compile Include="Security\UserType.cs" />
-    <Compile Include="SimpleInjector\ComponentAttribute.cs" />
-    <Compile Include="SimpleInjector\Events\ApplicationStartedEvent.cs" />
-    <Compile Include="SimpleInjector\Events\ISWEvent.cs" />
-    <Compile Include="SimpleInjector\Events\IEventDispatcher.cs" />
-    <Compile Include="SimpleInjector\Events\ISWEventListener.cs" />
-    <Compile Include="SimpleInjector\Events\SimpleInjectorDomainEventDispatcher.cs" />
-    <Compile Include="SimpleInjector\Core\Order\OrderComparator.cs" />
-    <Compile Include="SimpleInjector\IComponent.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseApplicationDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Workorder\FollowUpWorkorderHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Workorder\UpdateStatusWorkorderHandler.cs" />
@@ -555,16 +544,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="SimpleInjector\Core\Order\IOrdered.cs" />
-    <Compile Include="SimpleInjector\Core\Order\IPriorityOrdered.cs" />
-    <Compile Include="SimpleInjector\ISingletonComponent.cs" />
-    <Compile Include="SimpleInjector\SimpleInjectorGenericFactory.cs" />
-    <Compile Include="SimpleInjector\IClientApplicationAwareComponent.cs" />
     <Compile Include="SPF\IGenericResponseResult.cs" />
     <Compile Include="SPF\RedirectResponseResult.cs" />
     <Compile Include="SPF\RedirectService.cs" />
     <Compile Include="SPF\SPFRedirectAttribute.cs" />
     <Compile Include="SPF\SwHttpContext.cs" />
+    <Compile Include="Util\ApplicationConfigurationAdapter.cs" />
     <Compile Include="Util\AttributeUtil.cs" />
     <Compile Include="Util\ApplicationConfiguration.cs" />
     <Compile Include="Util\ArrayUtil.cs" />
@@ -581,10 +566,8 @@
     <Compile Include="Util\EntityUtil.cs" />
     <Compile Include="Util\ExceptionUtil.cs" />
     <Compile Include="Util\FileUtils.cs" />
-    <Compile Include="Util\HibernateUtil.cs" />
     <Compile Include="Util\I18NResolver.cs" />
     <Compile Include="Util\JSonUtil.cs" />
-    <Compile Include="Util\LoggingUtil.cs" />
     <Compile Include="Util\NhAppender.cs" />
     <Compile Include="Util\ReflectionUtil.cs" />
     <Compile Include="Util\ReportUtil.cs" />
@@ -592,7 +575,6 @@
     <Compile Include="Util\Scripting\ScriptingUtil.cs" />
     <Compile Include="Util\StatusColorResolver.cs" />
     <Compile Include="Util\StreamUtils.cs" />
-    <Compile Include="Util\StringExtensions.cs" />
     <Compile Include="Util\SwConstants.cs" />
     <Compile Include="Util\TaskFactoryExtensions.cs" />
     <Compile Include="Util\Validate.cs" />
@@ -614,7 +596,9 @@
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -849,6 +833,30 @@
     <None Include="Service References\mif_sr\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
+      <Project>{a6a14991-81dd-45b5-b5c8-154e44d84975}</Project>
+      <Name>cts.commons.persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.portable\cts.commons.portable.csproj">
+      <Project>{757C5D7F-9E3C-4509-BAFE-29FFB35EBE46}</Project>
+      <Name>cts.commons.portable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
+      <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
+      <Name>cts.commons.simpleinjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.web\cts.commons.web.csproj">
+      <Project>{4c79cfad-0861-432d-b89c-1d237fbfc522}</Project>
+      <Name>cts.commons.web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons\cts.commons.csproj">
+      <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>
+      <Name>cts.commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
+      <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
+      <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>

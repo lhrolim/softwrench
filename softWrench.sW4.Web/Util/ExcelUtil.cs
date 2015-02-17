@@ -7,7 +7,7 @@ using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Util;
 using softwrench.sw4.Shared2.Metadata.Applications.UI;
 using SpreadsheetLight;

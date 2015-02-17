@@ -1,4 +1,8 @@
-﻿using JetBrains.Annotations;
+﻿using cts.commons.persistence;
+using cts.commons.persistence.Util;
+using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.app;
+using JetBrains.Annotations;
 using log4net;
 using NHibernate;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -12,6 +16,19 @@ namespace softWrench.sW4.Data.Persistence {
     public class MaximoHibernateDAO : BaseHibernateDAO {
 
         private static readonly ILog Log = LogManager.GetLogger(SwConstants.SQL_LOG);
+
+        public MaximoHibernateDAO(IApplicationConfiguration applicationConfiguration)
+            : base(applicationConfiguration) {
+        }
+
+        private static MaximoHibernateDAO _instance;
+        public static MaximoHibernateDAO GetInstance() {
+            if (_instance == null) {
+                _instance =
+                    SimpleInjectorGenericFactory.Instance.GetObject<MaximoHibernateDAO>(typeof(MaximoHibernateDAO));
+            }
+            return _instance;
+        }
 
         public static ISession CurrentSession() {
             if (SWDBHibernateDAO.SessionManager.SessionFactory.IsClosed) {
@@ -49,7 +66,7 @@ namespace softWrench.sW4.Data.Persistence {
                 return openSession;
             }
 
-         
+
 
             public ISession CurrentSession {
                 get {
@@ -68,9 +85,9 @@ namespace softWrench.sW4.Data.Persistence {
 
                 //Populate with some default properties
                 properties.Add(NHibernate.Cfg.Environment.ConnectionDriver,
-                    HibernateUtil.HibernateDriverName(ApplicationConfiguration.DBType.Maximo));
+                    HibernateUtil.GetInstance().HibernateDriverName(DBType.Maximo));
                 properties.Add(NHibernate.Cfg.Environment.Dialect,
-                    HibernateUtil.HibernateDialect(ApplicationConfiguration.DBType.Maximo));
+                    HibernateUtil.GetInstance().HibernateDialect(DBType.Maximo));
                 properties.Add(NHibernate.Cfg.Environment.ShowSql, "true");
                 properties.Add(NHibernate.Cfg.Environment.ConnectionProvider, "NHibernate.Connection.DriverConnectionProvider");
                 //                      <property name="connection.provider">NHibernate.Connection.DriverConnectionProvider</property>
@@ -79,7 +96,7 @@ namespace softWrench.sW4.Data.Persistence {
 
                 //Add the connection and default schema
                 properties[NHibernate.Cfg.Environment.ConnectionString] =
-                    ApplicationConfiguration.DBConnectionString(ApplicationConfiguration.DBType.Maximo);
+                    ApplicationConfiguration.DBConnectionString(DBType.Maximo);
                 //                properties[NHibernate.Cfg.Environment.DefaultSchema] = defaultSchema;
                 configuration.SetProperties(properties);
 

@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using cts.commons.portable.Util;
+using cts.commons.Util;
 using JetBrains.Annotations;
 using log4net;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Validator;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Parsing {

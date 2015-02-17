@@ -2,7 +2,7 @@
 using System.Web.Http;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.SWDB;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Web.Controllers {
 

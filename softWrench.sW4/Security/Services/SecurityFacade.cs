@@ -1,12 +1,14 @@
-﻿using log4net;
+﻿using cts.commons.portable.Util;
+using cts.commons.Util;
+using log4net;
 using softWrench.sW4.Preferences;
 using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.AUTH;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Entities;
-using softWrench.sW4.SimpleInjector;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Concurrent;
@@ -59,7 +61,7 @@ namespace softWrench.sW4.Security.Services {
         public InMemoryUser Login(string userName, string password, string userTimezoneOffset) {
             var shaPassword = AuthUtils.GetSha1HashData(password);
             var md5Password = AuthUtils.GetHashData(password, SHA256.Create());
-            var dbUser = new SWDBHibernateDAO().FindSingleByQuery<User>(LoginQuery, userName);
+            var dbUser = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(LoginQuery, userName);
             if (dbUser == null || !MatchPassword(dbUser, password)) {
                 return null;
             }
@@ -148,7 +150,7 @@ namespace softWrench.sW4.Security.Services {
             }
             //cookie authenticated already 
             //TODO: remove this in prod?
-            var dbUser = new SWDBHibernateDAO().FindSingleByQuery<User>(User.UserByUserName, currLogin);
+            var dbUser = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(User.UserByUserName, currLogin);
             if (dbUser == null) {
                 throw new InvalidOperationException("user should exist at DB");
             }
@@ -196,7 +198,7 @@ namespace softWrench.sW4.Security.Services {
             user.CustomRoles = customRoles;
             user.CustomConstraints = customConstraints;
             user.UserName = user.UserName.ToLower();
-            return new SWDBHibernateDAO().Save(user);
+            return SWDBHibernateDAO.GetInstance().Save(user);
         }
 
         public User SaveUser(User user) {
@@ -207,11 +209,11 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public void DeleteUser(User user) {
-            new SWDBHibernateDAO().Delete(user);
+            SWDBHibernateDAO.GetInstance().Delete(user);
         }
 
         public User FetchUser(int id) {
-            return new SWDBHibernateDAO().FindByPK<User>(typeof(User), id, "Profiles", "CustomRoles", "CustomConstraints");
+            return SWDBHibernateDAO.GetInstance().FindByPK<User>(typeof(User), id, "Profiles", "CustomRoles", "CustomConstraints");
         }
     }
 }

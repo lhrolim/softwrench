@@ -11,7 +11,7 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using cts.commons.portable.Util;
+using cts.commons.Util;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Parsing {

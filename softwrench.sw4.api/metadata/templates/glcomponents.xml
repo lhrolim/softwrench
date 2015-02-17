@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <entities>
+    <entity name="glcomponents" idAttribute="glcomponentsid">
+      <attributes>
+        <attribute name="glorder" type="smallint" required="true" />
+        <attribute name="compvalue" type="varchar" required="true" />
+        <attribute name="comptext" type="varchar" required="true" />
+        <attribute name="userid" type="varchar" required="false" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="active" type="smallint" required="true" />
+        <attribute name="glcomponentsid" type="bigint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="glcomponents" />
+      </connectorParameters>
+    </entity>
+  </entities>
+  <applications>
+    <application name="glcomponents" title="GL-Selector" entity="glcomponents">
+      <schemas>
+        <schema id="detail" title="GL Details" abstract="true" stereotype="detail" mode="input">
+          <optionfield label="Cost Center:" attribute="glpart-0" requiredexpression="true" providerattribute="_0GLComponents75" extraparameter="0">
+            <renderer type="AUTOCOMPLETECLIENT"/>
+          </optionfield>
+          <optionfield label="Activity:" attribute="glpart-1" requiredexpression="true" providerattribute="_1GLComponents75" extraparameter="1">
+            <renderer type="AUTOCOMPLETECLIENT"/>
+          </optionfield>
+          <optionfield label="Resource:" attribute="glpart-2" requiredexpression="true" providerattribute="_2GLComponents75" extraparameter="2">
+            <renderer type="AUTOCOMPLETECLIENT"/>
+          </optionfield>
+          <optionfield label="Element:" attribute="glpart-3" providerattribute="_3GLComponents75" extraparameter="3">
+            <renderer type="AUTOCOMPLETECLIENT"/>
+          </optionfield>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="print"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

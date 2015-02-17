@@ -4,7 +4,7 @@ using System.Linq;
 using log4net;
 using softWrench.sW4.Metadata.Entities.Connectors;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector.Events;
 using WcfSamples.DynamicProxy;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;

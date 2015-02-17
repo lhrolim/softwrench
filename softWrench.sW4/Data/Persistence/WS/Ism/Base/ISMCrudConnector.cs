@@ -12,7 +12,7 @@ using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using WcfSamples.DynamicProxy;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {

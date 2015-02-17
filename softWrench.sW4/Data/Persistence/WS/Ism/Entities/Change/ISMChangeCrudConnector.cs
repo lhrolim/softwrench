@@ -5,7 +5,7 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Ism.Base;
 using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;

@@ -2,21 +2,27 @@
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Entities;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Security.Services {
     public class UserManager : ISingletonComponent {
         private const string HlagPrefix = "@HLAG.COM";
-        private static SWDBHibernateDAO _dao = new SWDBHibernateDAO();
+
+        public static SWDBHibernateDAO DAO {
+            get {
+                return SWDBHibernateDAO.GetInstance();
+
+            }
+        }
 
         public static User SaveUser(User user) {
             if (user.Id != null) {
-                var dbuser = _dao.FindByPK<User>(typeof(User), (int)user.Id);
+                var dbuser = DAO.FindByPK<User>(typeof(User), (int)user.Id);
                 user.MergeFromDBUser(dbuser);
 
             }
-            return _dao.Save(user);
+            return DAO.Save(user);
         }
 
         public static User CreateMissingDBUser(string userName, bool save = true) {
@@ -41,7 +47,7 @@ namespace softWrench.sW4.Security.Services {
             }
 
             user.CustomRoles = new HashedSet<UserCustomRole>();
-            return save ? _dao.Save(user) : user;
+            return save ? DAO.Save(user) : user;
         }
 
         public static User SyncLdapUser(User existingUser, bool isLdapSetup) {
@@ -58,7 +64,7 @@ namespace softWrench.sW4.Security.Services {
                 //let's play safe and clean passwords of users that might have been wrongly stored on swdb database, if we are on ldap auth
                 existingUser.Password = null;
             }
-            return _dao.Save(existingUser);
+            return DAO.Save(existingUser);
         }
 
         private static bool IsHapagProd {

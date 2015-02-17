@@ -12,7 +12,7 @@ using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softwrench.sW4.Shared2.Data;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Data.Entities.SyncManagers {
     public abstract class AMaximoRowstampManager {
