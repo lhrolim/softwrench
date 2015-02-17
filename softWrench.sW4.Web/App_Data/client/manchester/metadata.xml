@@ -309,8 +309,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="combo" />
             </association>
           </section>
-
-          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
           
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
@@ -330,6 +328,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <collectionproperties allowcreation="false" />
             </composition>
           </section>
+
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+          <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
 
           <commandbars>
             <commandgroup position="detailform">
