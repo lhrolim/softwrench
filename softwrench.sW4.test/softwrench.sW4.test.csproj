@@ -177,18 +177,12 @@
     <None Include="App_data\Client\test2\Metadata.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="App_data\Client\test2\Properties.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="App_data\Client\test_only\Metadata.xsd">
       <SubType>Designer</SubType>
     </None>
     <Content Include="App_data\jsons\incident\test1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="App_data\Client\test_only\Properties.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <Content Include="App_data\jsons\sr\creation1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<metadata xmlns="http://www.example.org/metadata" ''
-xsi:schemaLocation="http://www.example.org/metadata Metadata.xsd ">
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata" >
 
 
   <applications>
