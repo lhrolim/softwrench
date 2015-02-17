@@ -723,16 +723,6 @@
     <Content Include="Content\Images\start-icon.png" />
     <Content Include="Content\Scripts\vendor\angular\angular.js" />
     <Content Include="App_Data\Client\manchester\statuscolors.json" />
-    <None Include="Content\Customers\Web.config.bck">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Content\Customers\Web.config.Debug.bck">
-      <DependentUpon>Web.config.bck</DependentUpon>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Content\Customers\Web.config.Release.bck">
-      <DependentUpon>Web.config.bck</DependentUpon>
-    </None>
     <None Include="Content\Scripts\vendor\angular\angular-min.jsa" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-combobox.js" />
     <Content Include="Content\Scripts\client\crud\crud_output.js" />
@@ -1410,7 +1400,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Client\shared\" />
-    <Folder Include="Content\Customers\gric\" />
     <Folder Include="Content\Scripts\client\services\" />
     <Folder Include="Content\Scripts\client\util\" />
     <Folder Include="Content\Scripts\softwrench\" />

@@ -49,23 +49,23 @@
     <Folder Include="web_content\kongsberg\htmls\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="metadata\menu.mobile.xml">
+    <EmbeddedResource Include="metadata\kongsberg\menu.mobile.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="metadata\menu.web.xml">
+    <EmbeddedResource Include="metadata\kongsberg\menu.web.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="metadata\metadata.xml">
+    <EmbeddedResource Include="metadata\kongsberg\metadata.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="metadata\properties.xml">
+    <EmbeddedResource Include="metadata\kongsberg\properties.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Include="customer.placeholder" />
-    <EmbeddedResource Include="metadata\deploy.xml">
+    <EmbeddedResource Include="metadata\kongsberg\deploy.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <Content Include="web_content\kongsberg\styles\signin.css" />
@@ -75,7 +75,7 @@
     <Content Include="web_content\kongsberg\scripts\sr_service.js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="metadata\statuscolors.json">
+    <EmbeddedResource Include="metadata\kongsberg\statuscolors.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

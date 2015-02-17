@@ -46,10 +46,7 @@
     <Folder Include="classes\com\cts\gric\configuration\" />
     <Folder Include="classes\com\cts\gric\connector\" />
     <Folder Include="classes\com\cts\gric\migration\" />
-    <Folder Include="web_content\gric\css\" />
-    <Folder Include="web_content\gric\html\" />
-    <Folder Include="web_content\gric\image\" />
-    <Folder Include="web_content\gric\script\" />
+    <Folder Include="web_content\gric\htmls\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
@@ -100,6 +97,13 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Content Include="web_content\gric\images\branding.png" />
+    <Content Include="web_content\gric\images\logo-main.png" />
+    <Content Include="web_content\gric\images\name-softwrench.png" />
+    <Content Include="web_content\gric\scripts\sr_service.js" />
+    <Content Include="web_content\gric\styles\signin.css" />
+    <Content Include="web_content\gric\styles\site.css" />
+    <Content Include="web_content\gric\styles\application\grids.css" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
