@@ -7,8 +7,8 @@
     <ProjectGuid>{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>softwrench.sw4.newcustomer1</RootNamespace>
-    <AssemblyName>softwrench.sw4.newcustomer1</AssemblyName>
+    <RootNamespace>softwrench.sw4.gric</RootNamespace>
+    <AssemblyName>softwrench.sw4.gric</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -85,21 +85,21 @@
     <None Include="customer.placeholder" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="metadata\gric\deploy.xml">
+    <EmbeddedResource Include="metadata\gric\deploy.xml">
       <SubType>Designer</SubType>
-    </Content>
-    <Content Include="metadata\gric\menu.web.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="metadata\gric\metadata.xml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="metadata\gric\menu.web.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="metadata\gric\properties.xml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="metadata\gric\metadata.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
+    <EmbeddedResource Include="metadata\gric\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
