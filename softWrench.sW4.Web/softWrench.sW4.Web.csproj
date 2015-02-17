@@ -644,12 +644,6 @@
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-multiselect.js" />
     <Content Include="Content\Scripts\client\crud\crud_base_list.js" />
     <Content Include="Content\Scripts\client\adminresources\about.js" />
-    <Content Include="Content\Scripts\client\components\lookupcomponent.js" />
-    <Content Include="Content\Scripts\client\components\componentsfacade.js" />
-    <Content Include="Content\Scripts\client\components\autocompleteserver.js" />
-    <Content Include="Content\Scripts\client\components\autocompleteclient.js" />
-    <Content Include="Content\Scripts\client\components\combodropdown.js" />
-    <Content Include="Content\Scripts\client\components\lookupcomponent.js" />
     <Content Include="Content\Scripts\client\crud\crud_body_modal.js" />
     <Content Include="Content\Scripts\client\directives\columnWidth.js" />
     <Content Include="Content\Scripts\client\directives\gridtoolBar.js" />
@@ -657,7 +651,6 @@
     <Content Include="Content\Scripts\client\crud\crud_base_controller.js" />
     <Content Include="Content\Scripts\client\crud\crud_list.js" />
     <Content Include="Content\Scripts\client\adminresources\logAdmin.js" />
-    <Content Include="Content\Scripts\client\components\samelinepickers.js" />
     <Content Include="Content\Scripts\client\crud\crud_output_fields.js" />
     <Content Include="Content\Scripts\client\directives\commandBar.js" />
     <Content Include="Content\Scripts\client\error.js" />
@@ -668,7 +661,6 @@
     <Content Include="Content\Scripts\client\download.js" />
     <Content Include="Content\Scripts\client\crud\inlinecompositionlist.js" />
     <Content Include="Content\Scripts\client\crud\crud_input_fields.js" />
-    <Content Include="Content\Scripts\client\components\lookupModal.js" />
     <Content Include="Content\Scripts\customers\hapag\createFromAsset.js" />
     <Content Include="Content\Scripts\customers\hapag\change_service.js" />
     <Content Include="Content\Scripts\customers\hapag\jobplan_completeaction.js" />
