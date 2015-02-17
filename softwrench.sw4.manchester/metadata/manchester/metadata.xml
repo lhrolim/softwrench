@@ -198,7 +198,7 @@
 
           <section id="statussection"/>
           <!--COMSW-1-->
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid" requiredexpression="true">
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
           <!--SWWEB-342-->
@@ -654,7 +654,7 @@
           <field attribute="enterby" hidden="true" />
           <field attribute="payrate" hidden="true" />
           <field attribute="transtype" default="WORK" hidden="true"/>
-          <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" default="@personid">
+          <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" defaultexpression="ctx:getUserData().login.toUpperCase()">
             <renderer type="lookup"/>
             <event type="afterchange" service="labtranService" method="afterlaborchange"/>
           </association>
