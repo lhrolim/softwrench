@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace softwrench.sw4.Shared2.Util {
+namespace cts.commons.portable.Util {
 
     public class DateUtil {
 

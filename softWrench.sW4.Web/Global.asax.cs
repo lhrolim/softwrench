@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using cts.commons.portable.Util;
 using cts.commons.Util;
 using log4net;
 using log4net.Config;

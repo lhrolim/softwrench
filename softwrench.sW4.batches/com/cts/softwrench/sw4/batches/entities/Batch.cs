@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using cts.commons.portable.Util;
 using cts.commons.Util;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;

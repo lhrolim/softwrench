@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace cts.commons.Util {
+namespace cts.commons.portable.Util {
     public static class DictionaryUtil {
 
         public static bool TryGetValueAsString(this IDictionary<string, object> dict, string key,out string resultst) {

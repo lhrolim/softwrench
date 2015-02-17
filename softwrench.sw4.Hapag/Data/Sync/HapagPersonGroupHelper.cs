@@ -1,4 +1,5 @@
-﻿using cts.commons.Util;
+﻿using cts.commons.portable.Util;
+using cts.commons.Util;
 using Iesi.Collections.Generic;
 using log4net;
 using softwrench.sw4.Hapag.Data.Init;

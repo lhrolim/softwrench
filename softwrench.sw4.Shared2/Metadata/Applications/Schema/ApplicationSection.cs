@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using cts.commons.Util;
+using cts.commons.portable.Util;
 using Newtonsoft.Json;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace cts.commons.Util {
+namespace cts.commons.portable.Util {
     public static class StringExtensions {
         public static byte[] GetBytes(this string str) {
             byte[] bytes = new byte[str.Length * sizeof(char)];

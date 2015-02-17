@@ -1,4 +1,5 @@
-﻿using cts.commons.Util;
+﻿using cts.commons.portable.Util;
+using cts.commons.Util;
 using DocumentFormat.OpenXml.Spreadsheet;
 using JetBrains.Annotations;
 using softWrench.sW4.Metadata.Entities.Connectors;

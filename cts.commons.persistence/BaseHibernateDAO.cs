@@ -1,8 +1,8 @@
-﻿using log4net;
+﻿using cts.commons.portable.Util;
+using log4net;
 using NHibernate;
 using NHibernate.Transform;
 using NHibernate.Type;
-using softwrench.sw4.Shared2.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
 using System;
@@ -21,7 +21,6 @@ using log4net;
 using NHibernate;
 using NHibernate.Transform;
 using NHibernate.Type;
-using softwrench.sw4.Shared2.Util;
 
 namespace cts.commons.persistence {
 

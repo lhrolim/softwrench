@@ -1,4 +1,5 @@
-﻿using cts.commons.Util;
+﻿using cts.commons.portable.Util;
+using cts.commons.Util;
 using log4net;
 using softWrench.sW4.Preferences;
 using softwrench.sW4.Shared2.Util;

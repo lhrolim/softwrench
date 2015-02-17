@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace cts.commons.Util {
+namespace cts.commons.portable.Util {
     public class ParsingUtil {
 
         public static ISet<String> GetCommaSeparetedParsingResults(string xmlvalue) {

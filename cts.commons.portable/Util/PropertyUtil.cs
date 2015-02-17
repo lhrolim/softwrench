@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace cts.commons.Util {
+namespace cts.commons.portable.Util {
     public class PropertyUtil {
 
         

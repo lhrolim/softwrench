@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
-namespace softwrench.sw4.Shared2.Util {
+namespace cts.commons.portable.Util {
     public static class StringUtil {
 
         /// <summary>
@@ -51,14 +49,6 @@ namespace softwrench.sw4.Shared2.Util {
 
         public static string ReplaceLastOccurrence(this string source, string find, string replace) {
             var place = source.LastIndexOf(find, System.StringComparison.Ordinal);
-            if (place == -1) {
-                return source;
-            }
-            return source.Remove(place, find.Length).Insert(place, replace);
-        }
-
-        public static string ReplaceFirstOccurrence(this string source, string find, string replace) {
-            var place = source.IndexOf(find, System.StringComparison.Ordinal);
             if (place == -1) {
                 return source;
             }
