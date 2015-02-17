@@ -21,9 +21,11 @@ module.exports = function (config) {
             '..//softWrench.sW4.Web//Content//Scripts//vendor/angular/**/*.js',
             '..//softWrench.sW4.Web//Content//Scripts//vendor/other/**/*.js',
             '..//softWrench.sW4.Web//Content//Scripts//vendor/ace/**/*.js',
+            '..//softWrench.sW4.Web//Content//Scripts//client/crud/**/*.js',
             '..//softWrench.sW4.Web//Content//Scripts//client/**/*.js',
             '..//softWrench.sW4.Web//Content//Templates/**/*.js',
             '..//softWrench.sW4.Web//Content//Scripts//customers/**/*.js',
+            '..//softWrench.sW4.Web//Content//Shared//webcommons//scripts//softwrench/**/*.js',
             'angular_mock.js',
           'tests//**/*.js'
         ],
