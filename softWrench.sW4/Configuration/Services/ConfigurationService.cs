@@ -4,7 +4,7 @@ using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Util;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Context;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

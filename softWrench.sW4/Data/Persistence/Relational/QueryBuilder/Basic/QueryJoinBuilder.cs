@@ -1,6 +1,6 @@
 ﻿using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Metadata.Entities;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;

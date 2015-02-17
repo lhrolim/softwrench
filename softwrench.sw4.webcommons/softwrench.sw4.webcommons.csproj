@@ -39,6 +39,13 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="SimpleInjector, Version=2.4.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SimpleInjector.2.4.0\lib\net45\SimpleInjector.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector.Diagnostics">
+      <HintPath>..\packages\SimpleInjector.2.4.0\lib\net45\SimpleInjector.Diagnostics.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web.Optimization">
@@ -59,49 +66,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\scripts\softwrench\shared\crud\aaa_layout.js" />
     <Content Include="Content\scripts\softwrench\shared\util\aa_dateutils.js" />
     <Content Include="Content\scripts\softwrench\shared\util\aa_stringutils.js" />
     <Content Include="Content\scripts\softwrench\shared\util\aa_utils.js" />
     <Content Include="Content\scripts\softwrench\shared\util\ajax_interceptor.js" />
-    <Content Include="Content\scripts\softwrench\shared\application.js" />
     <Content Include="Content\scripts\softwrench\shared\components\autocompleteclient.js" />
     <Content Include="Content\scripts\softwrench\shared\components\autocompleteserver.js" />
     <Content Include="Content\scripts\softwrench\shared\components\combodropdown.js" />
     <Content Include="Content\scripts\softwrench\shared\components\componentsfacade.js" />
     <Content Include="Content\scripts\softwrench\shared\components\lookupcomponent.js" />
-    <Content Include="Content\scripts\softwrench\shared\crud\compositionlist.js" />
-    <Content Include="Content\scripts\softwrench\shared\crud\crud_base_controller.js" />
-    <Content Include="Content\scripts\softwrench\shared\crud\crud_base_list.js" />
-    <Content Include="Content\scripts\softwrench\shared\crud\crud_body.js" />
-    <Content Include="Content\scripts\softwrench\shared\crud\crud_body_modal.js" />
-    <Content Include="Content\scripts\softwrench\shared\crud\crud_input.js" />
-    <Content Include="Content\scripts\softwrench\shared\crud\crud_input_fields.js" />
-    <Content Include="Content\scripts\softwrench\shared\crud\crud_list.js" />
-    <Content Include="Content\scripts\softwrench\shared\crud\crud_output.js" />
-    <Content Include="Content\scripts\softwrench\shared\crud\crud_output_fields.js" />
-    <Content Include="Content\scripts\softwrench\shared\crud\crud_tbody.js" />
     <Content Include="Content\scripts\softwrench\shared\components\datetime.js" />
-    <Content Include="Content\scripts\softwrench\shared\directives\columnWidth.js" />
-    <Content Include="Content\scripts\softwrench\shared\directives\commandBar.js" />
-    <Content Include="Content\scripts\softwrench\shared\directives\fileread.js" />
-    <Content Include="Content\scripts\softwrench\shared\directives\gridtoolBar.js" />
-    <Content Include="Content\scripts\softwrench\shared\directives\menu\adminmenu.js" />
-    <Content Include="Content\scripts\softwrench\shared\directives\menu\menuitem.js" />
-    <Content Include="Content\scripts\softwrench\shared\directives\printModal.js" />
-    <Content Include="Content\scripts\softwrench\shared\directives\printSection.js" />
-    <Content Include="Content\scripts\softwrench\shared\download.js" />
-    <Content Include="Content\scripts\softwrench\shared\error.js" />
-    <Content Include="Content\scripts\softwrench\shared\faq.js" />
-    <Content Include="Content\scripts\softwrench\shared\home.js" />
-    <Content Include="Content\scripts\softwrench\shared\crud\inlinecompositionlist.js" />
-    <Content Include="Content\scripts\softwrench\shared\logAdmin.js" />
     <Content Include="Content\scripts\softwrench\shared\components\lookupModal.js" />
-    <Content Include="Content\scripts\softwrench\shared\messagehandler.js" />
-    <Content Include="Content\scripts\softwrench\shared\pagination.js" />
-    <Content Include="Content\scripts\softwrench\shared\role.js" />
-    <Content Include="Content\scripts\softwrench\shared\samelinepickers.js" />
-    <Content Include="Content\scripts\softwrench\shared\schedulerSetup.js" />
     <Content Include="Content\scripts\softwrench\shared\services\alert_service.js" />
     <Content Include="Content\scripts\softwrench\shared\services\applicationFacade.js" />
     <Content Include="Content\scripts\softwrench\shared\services\associationService.js" />
@@ -149,10 +124,6 @@
     <Content Include="Content\scripts\softwrench\shared\services\tooltrans_service.js" />
     <Content Include="Content\scripts\softwrench\shared\services\userpreference_service.js" />
     <Content Include="Content\scripts\softwrench\shared\services\validation_service.js" />
-    <Content Include="Content\scripts\softwrench\shared\settings.js" />
-    <Content Include="Content\scripts\softwrench\shared\signin.js" />
-    <Content Include="Content\scripts\softwrench\shared\textAngular.js" />
-    <Content Include="Content\scripts\softwrench\shared\user.js" />
     <Content Include="Content\scripts\softwrench\shared\util\log_enhacer.js" />
     <Content Include="Content\scripts\softwrench\shared\util\responsive.js" />
   </ItemGroup>
@@ -177,6 +148,9 @@
       <Project>{ce228c26-938d-4d6f-95fa-12cc5241afb5}</Project>
       <Name>softWrench.sW4</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\scripts\vendor\shared\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

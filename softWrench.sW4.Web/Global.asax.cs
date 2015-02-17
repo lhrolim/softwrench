@@ -8,7 +8,7 @@ using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.log4net;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.App_Start;
 using softWrench.sW4.Web.Common;
@@ -57,8 +57,6 @@ namespace softWrench.sW4.Web {
               
             }
             MetadataProvider.DoInit();
-            BundleConfig.ClearBundles();
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
             new MigratorExecutor("SWDB").Migrate(runner => runner.MigrateUp());
             SecurityFacade.InitSecurity();
             if (!changeClient) {

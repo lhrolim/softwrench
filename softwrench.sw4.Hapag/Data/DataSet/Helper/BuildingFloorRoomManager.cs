@@ -8,7 +8,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Services;
 using System.Collections.Generic;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
     class BuildingFloorRoomManager {

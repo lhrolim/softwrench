@@ -5,7 +5,7 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;

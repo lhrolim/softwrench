@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 using System.Web.Optimization;
 using cts.commons.simpleinjector.Events;
 using cts.commons.web;
+using SimpleInjector;
 using softWrench.sW4.Metadata;
 
 namespace softwrench.sw4.webcommons.classes.bundles {
     public class BundleInitializer : ISWEventListener<ApplicationStartedEvent>, ISWEventListener<ClientChangeEvent> {
 
-        private readonly IList<IBundleConfigProvider> _bundleConfigs;
+        private readonly Container _container;
 
-        public BundleInitializer(IList<IBundleConfigProvider> bundleConfigs) {
-            _bundleConfigs = bundleConfigs;
+        public BundleInitializer(Container container) {
+            _container = container;
         }
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
@@ -27,7 +28,8 @@ namespace softwrench.sw4.webcommons.classes.bundles {
 
         private void InitBundles() {
             BundleTable.Bundles.Clear();
-            foreach (var bundleConfigProvider in _bundleConfigs) {
+            var providers =_container.GetAllInstances<IBundleConfigProvider>();
+            foreach (var bundleConfigProvider in providers) {
                 bundleConfigProvider.PopulateScriptBundles(BundleTable.Bundles);
                 bundleConfigProvider.PopulateStyleBundles(BundleTable.Bundles);
             }

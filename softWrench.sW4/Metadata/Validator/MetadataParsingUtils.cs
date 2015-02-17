@@ -28,6 +28,12 @@ namespace softWrench.sW4.Metadata.Validator {
             return @"" + (baseDirectory + String.Format(pattern, clientName) + resource);
         }
 
+        public static Stream GetStreamFromCustomerDll(string resource) {
+            var assembly = AssemblyLocator.GetCustomerAssembly();
+            var resourceName = String.Format("softwrench.sw4.{0}.metadata.{1}", ApplicationConfiguration.ClientName, resource);
+            return assembly.GetManifestResourceStream(resourceName);
+        }
+
         public static string GetTemplateInternalPath(string resource) {
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             if (resource.StartsWith("@")) {
@@ -83,11 +89,18 @@ namespace softWrench.sW4.Metadata.Validator {
                 var path = GetPath(resource);
                 if (File.Exists(path)) {
                     return new StreamReader(path);
-                } 
+                }
+                if (AssemblyLocator.CustomerAssemblyExists()) {
+                    var stream = GetStreamFromCustomerDll(resource);
+                    if (stream != null) {
+                        return new StreamReader(stream);
+                    }
+                }
+                Log.InfoFormat("getting file {0} from otb default implementation",path);
                 path = GetPath(resource, false, true);
                 if (!File.Exists(path)) {
                     return null;
-                } 
+                }
                 return new StreamReader(path);
             } catch (Exception) {
                 //nothing to do here.

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using softWrench.sW4.Data.Pagination;
 using softwrench.sw4.Shared2.Util;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workorder {
     class WoDataSetBatchHelper :ISingletonComponent {

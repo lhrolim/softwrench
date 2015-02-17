@@ -1,5 +1,5 @@
 ﻿using Quartz;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Scheduler.Interfaces {
     public interface ISwJob : IJob, IComponent {
