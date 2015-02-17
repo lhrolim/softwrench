@@ -22,7 +22,7 @@ namespace cts.commons.Util {
         }
 
         public static bool EqualsAny(this string str, params string[] strings) {
-            return strings.Any(toCompare => str.Equals(toCompare, StringComparison.InvariantCultureIgnoreCase));
+            return strings.Any(toCompare => str.Equals(toCompare, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public static bool EqualsIc(this string str, string other) {
@@ -30,11 +30,11 @@ namespace cts.commons.Util {
         }
 
         public static bool EqualsAny(this string str, IEnumerable<string> strings) {
-            return strings.Any(toCompare => str.Equals(toCompare, StringComparison.InvariantCultureIgnoreCase));
+            return strings.Any(toCompare => str.Equals(toCompare, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public static bool StartsWithAny(this string str, params string[] strings) {
-            return strings.Any(toCompare => str.StartsWith(toCompare, StringComparison.InvariantCultureIgnoreCase));
+            return strings.Any(toCompare => str.StartsWith(toCompare, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public static int GetNumberOfItems(this string str, string toSearch) {

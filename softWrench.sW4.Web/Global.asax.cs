@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using cts.commons.Util;
 using log4net;
 using log4net.Config;
 using Microsoft.Web.Mvc;
@@ -58,13 +59,13 @@ namespace softWrench.sW4.Web {
             }
             MetadataProvider.DoInit();
             new MigratorExecutor("SWDB").Migrate(runner => runner.MigrateUp());
-            SecurityFacade.InitSecurity();
             if (!changeClient) {
-                ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
                 var container = SimpleInjectorScanner.InitDIController();
                 var dispatcher = (IEventDispatcher)container.GetInstance(typeof(IEventDispatcher));
                 dispatcher.Dispatch(new ApplicationStartedEvent());
+                ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
             }
+            SecurityFacade.InitSecurity();
             Log.Info(LoggingUtil.BaseDurationMessage("**************App started in {0}*************", before));
             ApplicationConfiguration.StartTimeMillis = (long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
         }

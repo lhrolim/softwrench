@@ -14,13 +14,21 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         private static readonly SecurityFacade SecurityFacade = SecurityFacade.GetInstance();
 
+        private readonly SWDBHibernateDAO _dao;
+
+        public UserProfileController(SWDBHibernateDAO dao)
+        {
+            _dao = dao;
+        }
+
+
         [SPFRedirect("User Profile Setup", "_headermenu.userprofilesetup")]
         public GenericResponseResult<UserProfileListDto> Get(Boolean refreshRoles = true) {
             //maybe if the number of profiles gets too big, we should lazy-fetch them, in a way to retrieve less data to the list screen
             var profiles = SecurityFacade.FetchAllProfiles(true);
             IList<Role> roles = new List<Role>();
             if (refreshRoles) {
-                roles = new SWDBHibernateDAO().FindByQuery<Role>("from Role order by name");
+                roles = _dao.FindByQuery<Role>("from Role order by name");
             }
             var dto = new UserProfileListDto { Profiles = profiles, Roles = roles };
             return new GenericResponseResult<UserProfileListDto>(dto);

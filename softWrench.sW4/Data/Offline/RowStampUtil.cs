@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using cts.commons.persistence;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Connectors;
@@ -17,7 +18,7 @@ namespace softWrench.sW4.Data.Offline {
 
 
         public static long? Convert(object dbstamp) {
-            if (ApplicationConfiguration.IsMSSQL(ApplicationConfiguration.DBType.Maximo)) {
+            if (ApplicationConfiguration.IsMSSQL(DBType.Maximo)) {
                 if (BitConverter.IsLittleEndian)
                     Array.Reverse((Array)dbstamp);
                 var value = (byte[])dbstamp;
@@ -25,7 +26,7 @@ namespace softWrench.sW4.Data.Offline {
                     return null;
                 }
                 return BitConverter.ToInt64(value, 0);
-            } else if (ApplicationConfiguration.IsDB2(ApplicationConfiguration.DBType.Maximo)) {
+            } else if (ApplicationConfiguration.IsDB2(DBType.Maximo)) {
                 return System.Convert.ToInt64(dbstamp);
             }
             throw new NotImplementedException("not implemented for oracle database yet");
@@ -68,10 +69,10 @@ namespace softWrench.sW4.Data.Offline {
         }
 
         private static string TimestampAttributeType() {
-            if (ApplicationConfiguration.IsMSSQL(ApplicationConfiguration.DBType.Maximo)) {
+            if (ApplicationConfiguration.IsMSSQL(DBType.Maximo)) {
                 return "int";
             }
-            if (ApplicationConfiguration.IsDB2(ApplicationConfiguration.DBType.Maximo)) {
+            if (ApplicationConfiguration.IsDB2(DBType.Maximo)) {
                 return "int";
             }
             throw new NotImplementedException("not implemented for oracle database yet");

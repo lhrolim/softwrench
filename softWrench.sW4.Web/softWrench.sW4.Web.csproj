@@ -683,7 +683,6 @@
     <Content Include="Content\Scripts\client\crud\inlinecompositionlist.js" />
     <Content Include="Content\Scripts\client\crud\crud_input_fields.js" />
     <Content Include="Content\Scripts\client\components\lookupModal.js" />
-    <Content Include="Content\Scripts\customers\gric\sr_service.js" />
     <Content Include="Content\Scripts\customers\hapag\createFromAsset.js" />
     <Content Include="Content\Scripts\customers\hapag\change_service.js" />
     <Content Include="Content\Scripts\customers\hapag\jobplan_completeaction.js" />
@@ -777,9 +776,6 @@
     <Content Include="Content\Scripts\vendor\other\spin-min.js" />
     <Content Include="Content\Scripts\vendor\other\typeahead.js" />
     <Content Include="Content\styles\default\tooltips.css" />
-    <Content Include="Content\styles\gric\application\grids.css" />
-    <Content Include="Content\styles\gric\site.css" />
-    <Content Include="Content\styles\gric\signin.css" />
     <Content Include="Content\styles\hapag\grid.css" />
     <Content Include="Content\styles\hapag\signin.css" />
     <Content Include="Content\styles\hapag\site.css" />
@@ -1443,6 +1439,14 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
+      <Project>{A6A14991-81DD-45B5-B5C8-154E44D84975}</Project>
+      <Name>cts.commons.persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.portable\cts.commons.portable.csproj">
+      <Project>{757C5D7F-9E3C-4509-BAFE-29FFB35EBE46}</Project>
+      <Name>cts.commons.portable</Name>
+    </ProjectReference>
     <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
       <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
       <Name>cts.commons.simpleinjector</Name>
@@ -1452,7 +1456,7 @@
       <Name>cts.commons.web</Name>
     </ProjectReference>
     <ProjectReference Include="..\cts.commons\cts.commons.csproj">
-      <Project>{c8007d8e-8340-4a4a-a67b-2199be54ae86}</Project>
+      <Project>{5FA34361-87B3-4094-BFBE-7DB7B4D16036}</Project>
       <Name>cts.commons</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace softwrench.sw4.Shared2.Util {
+namespace cts.commons.Util {
     public static class DictionaryUtil {
 
         public static bool TryGetValueAsString(this IDictionary<string, object> dict, string key,out string resultst) {

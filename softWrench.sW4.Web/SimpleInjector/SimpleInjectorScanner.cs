@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Mvc;
+using cts.commons.Util;
 using FluentMigrator.Infrastructure.Extensions;
 using log4net;
 using SimpleInjector;
@@ -63,6 +64,7 @@ namespace softWrench.sW4.Web.SimpleInjector {
                     if (attr != null) {
                         RegisterFromAttribute(attr, tempDict, reg);
                     }
+                    var name = registration.Name;
                     RegisterFromInterfaces(registration, tempDict, reg);
                     RegisterClassItSelf(container, registration, reg);
                 }

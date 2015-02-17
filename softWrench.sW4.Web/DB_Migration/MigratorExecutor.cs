@@ -2,6 +2,8 @@
 using System.Configuration;
 using System.Diagnostics;
 using System.Reflection;
+using cts.commons.persistence;
+using cts.commons.Util;
 using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Announcers;
@@ -21,13 +23,13 @@ namespace softWrench.sW4.Web.DB_Migration {
         private readonly string _serverType;
 
         public MigratorExecutor(string connectionKey) {
-            var connectionStringSettings = ApplicationConfiguration.DBConnection(ApplicationConfiguration.DBType.Swdb);
+            var connectionStringSettings = ApplicationConfiguration.DBConnection(DBType.Swdb);
             _connectionString = connectionStringSettings.ConnectionString;
-            var mssqlServer = ApplicationConfiguration.IsMSSQL(ApplicationConfiguration.DBType.Swdb);
+            var mssqlServer = ApplicationConfiguration.IsMSSQL(DBType.Swdb);
             if (mssqlServer) {
                 _serverType = "mssql";
             } else {
-                var db2Server = ApplicationConfiguration.IsDB2(ApplicationConfiguration.DBType.Swdb);
+                var db2Server = ApplicationConfiguration.IsDB2(DBType.Swdb);
                 _serverType = db2Server ? "db2" : "mysql";
             }
         }

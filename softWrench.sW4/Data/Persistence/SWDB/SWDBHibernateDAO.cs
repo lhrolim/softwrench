@@ -1,4 +1,8 @@
-﻿using JetBrains.Annotations;
+﻿using cts.commons.persistence;
+using cts.commons.persistence.Util;
+using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.app;
+using JetBrains.Annotations;
 using log4net;
 using NHibernate;
 using NHibernate.Cfg.MappingSchema;
@@ -14,6 +18,19 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
     public class SWDBHibernateDAO : BaseHibernateDAO {
 
         private static readonly ILog Log = LogManager.GetLogger(SwConstants.SQLDB_LOG);
+
+        public SWDBHibernateDAO(IApplicationConfiguration applicationConfiguration)
+            : base(applicationConfiguration) {
+        }
+
+        private static SWDBHibernateDAO _instance;
+        public static SWDBHibernateDAO GetInstance() {
+            if (_instance == null) {
+                _instance =
+                    SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
+            }
+            return _instance;
+        }
 
         public T Save<T>(T ob) where T : class {
             using (var session = SessionManager.Instance.OpenSession()) {
@@ -184,11 +201,11 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
                 configuration.AddAssembly(Assembly.GetCallingAssembly());
                 IDictionary<string, string> properties = new Dictionary<string, string>();
                 properties[NHibernate.Cfg.Environment.ConnectionString] =
-                    ApplicationConfiguration.DBConnectionString(ApplicationConfiguration.DBType.Swdb);
+                    ApplicationConfiguration.DBConnectionString(DBType.Swdb);
                 properties.Add(NHibernate.Cfg.Environment.ConnectionDriver,
-                    HibernateUtil.HibernateDriverName(ApplicationConfiguration.DBType.Swdb));
+                    HibernateUtil.GetInstance().HibernateDriverName(DBType.Swdb));
                 properties.Add(NHibernate.Cfg.Environment.Dialect,
-                    HibernateUtil.HibernateDialect(ApplicationConfiguration.DBType.Swdb));
+                    HibernateUtil.GetInstance().HibernateDialect(DBType.Swdb));
                 properties.Add(NHibernate.Cfg.Environment.ShowSql, "false");
                 properties.Add(NHibernate.Cfg.Environment.ConnectionProvider, "NHibernate.Connection.DriverConnectionProvider");
                 properties.Add(NHibernate.Cfg.Environment.ProxyFactoryFactoryClass,

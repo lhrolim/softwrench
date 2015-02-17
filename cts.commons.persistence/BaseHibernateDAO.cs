@@ -1,26 +1,35 @@
-﻿using log4net;
-using NHibernate;
-using NHibernate.Transform;
-using NHibernate.Type;
-using softWrench.sW4.Security;
-using softWrench.sW4.Security.Services;
-using softwrench.sw4.Shared2.Util;
-using cts.commons.simpleinjector;
-using cts.commons.simpleinjector.Events;
-using softWrench.sW4.Util;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
+using cts.commons.persistence.Event;
+using cts.commons.persistence.Util;
+using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.app;
+using cts.commons.simpleinjector.Events;
+using cts.commons.Util;
+using log4net;
+using NHibernate;
+using NHibernate.Transform;
+using NHibernate.Type;
+using softwrench.sw4.Shared2.Util;
 
-namespace softWrench.sW4.Data.Persistence {
+namespace cts.commons.persistence {
 
 
     public abstract class BaseHibernateDAO : ISingletonComponent, ISWEventListener<RestartDBEvent> {
 
-        private static ILog HibernateLog = LogManager.GetLogger(typeof(BaseHibernateDAO));
+        private static readonly ILog HibernateLog = LogManager.GetLogger(typeof(BaseHibernateDAO));
+
+        private readonly IApplicationConfiguration _applicationConfiguration;
+
+
+        public BaseHibernateDAO(IApplicationConfiguration applicationConfiguration) {
+            _applicationConfiguration = applicationConfiguration;
+        }
+
 
         public IQuery BuildQuery(string queryst, object[] parameters, ISession session, bool native = false) {
             var result = HibernateUtil.TranslateQueryString(queryst, parameters);
@@ -69,9 +78,9 @@ namespace softWrench.sW4.Data.Persistence {
             return query;
         }
 
-        public IQuery BuildQuery(string queryst, ExpandoObject parameters, ISession session, bool native = false, PaginationData paginationData = null) {
+        public IQuery BuildQuery(string queryst, ExpandoObject parameters, ISession session, bool native = false, IPaginationData paginationData = null) {
             LogQuery(queryst, parameters);
-            if (paginationData != null && ApplicationConfiguration.IsDB2(ApplicationConfiguration.DBType.Maximo)) {
+            if (paginationData != null && _applicationConfiguration.IsDB2(DBType.Maximo)) {
                 //nhibernate pagination breaks in some scenarios, at least in DB2, keeping others intact for now
                 queryst = NHibernatePaginationUtil.ApplyManualPaging(queryst, paginationData);
             }
@@ -79,7 +88,7 @@ namespace softWrench.sW4.Data.Persistence {
 
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
 
-            if (!ApplicationConfiguration.IsDB2(ApplicationConfiguration.DBType.Maximo) && paginationData != null) {
+            if (!_applicationConfiguration.IsDB2(DBType.Maximo) && paginationData != null) {
                 var pageSize = paginationData.PageSize;
                 query.SetMaxResults(pageSize);
                 query.SetFirstResult((paginationData.PageNumber - 1) * pageSize);
@@ -96,7 +105,7 @@ namespace softWrench.sW4.Data.Persistence {
                     }
                 } else {
                     // TODO: This is wrong!!! The start and end date should be 2 diferent parameters. REFACTOR LATER!!!
-                    if (parameter.Key.IndexOf("___") == -1) {
+                    if (parameter.Key.IndexOf("___", StringComparison.Ordinal) == -1) {
 
                         if (query.NamedParameters.Contains(parameter.Key)) {
                             query.SetParameter(parameter.Key, parameter.Value);
@@ -104,8 +113,10 @@ namespace softWrench.sW4.Data.Persistence {
 
                     } else {
 
-                        var startDate = DateUtil.Parse(parameter.Value.ToString().Split(new string[] { "___" }, StringSplitOptions.RemoveEmptyEntries)[0]);
-                        var endDate = DateUtil.Parse(parameter.Value.ToString().Split(new string[] { "___" }, StringSplitOptions.RemoveEmptyEntries)[1]);
+                        var startDate = DateUtil.Parse(parameter.Value.ToString().Split(new[] { "___" },
+                            StringSplitOptions.RemoveEmptyEntries)[0]);
+                        var endDate = DateUtil.Parse(parameter.Value.ToString().Split(new[] { "___" },
+                            StringSplitOptions.RemoveEmptyEntries)[1]);
 
                         query.SetParameter(parameter.Key + "_start", DateUtil.BeginOfDay(startDate.Value));
                         query.SetParameter(parameter.Key + "_end", DateUtil.EndOfDay(endDate.Value));
@@ -134,7 +145,7 @@ namespace softWrench.sW4.Data.Persistence {
         }
 
 
-        public IList<dynamic> FindByNativeQuery(String queryst, ExpandoObject parameters, PaginationData paginationData = null) {
+        public IList<dynamic> FindByNativeQuery(String queryst, ExpandoObject parameters, IPaginationData paginationData = null) {
             var before = Stopwatch.StartNew();
             using (var session = GetSessionManager().OpenSession()) {
                 var query = BuildQuery(queryst, parameters, session, true, paginationData);

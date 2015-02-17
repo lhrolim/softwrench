@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using cts.commons.persistence;
+using cts.commons.Util;
 using softWrench.sW4.Security.Services;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Util;
@@ -23,7 +25,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
         }
 
         public static string WoCountQuery(string context) {
-            if (ApplicationConfiguration.IsMSSQL(ApplicationConfiguration.DBType.Swdb)) {
+            if (ApplicationConfiguration.IsMSSQL(DBType.Swdb)) {
                 return "CASE WHEN itemids = '' then 0 else len(itemids) - len(replace(itemids, ',', ''))+1 end";
             }
             if (ApplicationConfiguration.IsMySql()) {

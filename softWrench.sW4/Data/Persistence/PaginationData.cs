@@ -3,20 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using cts.commons.persistence;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Entities;
 
 namespace softWrench.sW4.Data.Persistence {
-    public class PaginationData {
-        public int PageSize = 0;
-        public int PageNumber = 1;
-        //this is needed because nhibernate builds buggy pagination queries, not appending the the alias on the over query. 
-        //in some scenarios this may lead to ambigous column definition
-        public string QualifiedOrderByColumn { get; set; }
-        public string OrderByColumn { get; set; }
+    public class PaginationData :IPaginationData{
+       
 
-        public PaginationData(int pageSize, int pageNumber, string qualifiedSortColumn) {
+        private PaginationData(int pageSize, int pageNumber, string qualifiedSortColumn) {
             PageSize = pageSize;
             PageNumber = pageNumber;
             QualifiedOrderByColumn = qualifiedSortColumn;
@@ -48,5 +44,9 @@ namespace softWrench.sW4.Data.Persistence {
         }
 
 
+        public int PageSize { get; set; }
+        public int PageNumber { get; set; }
+        public string QualifiedOrderByColumn { get; set; }
+        public string OrderByColumn { get; set; }
     }
 }

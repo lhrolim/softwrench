@@ -26,7 +26,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
         public IGenericResponseResult Submit(string password) {
             var user = SecurityFacade.CurrentUser();
             var authorized = false;
-            var adminUser = new SWDBHibernateDAO().FindSingleByQuery<User>(sW4.Security.Entities.User.UserByUserName, "swadmin");
+            var adminUser = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(sW4.Security.Entities.User.UserByUserName, "swadmin");
             if (adminUser.Password != null) {
                 var authenticatedAdminUser = SecurityFacade.GetInstance().Login(adminUser, password, string.Empty);
                 if (authenticatedAdminUser != null) {

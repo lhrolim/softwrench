@@ -1,4 +1,6 @@
 ﻿using System.Web.Security;
+using cts.commons.persistence;
+using cts.commons.persistence.Event;
 using softWrench.sW4.Configuration;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
@@ -114,8 +116,8 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
 
             IList<KeyValuePair<String, String>> aboutData = new List<KeyValuePair<String, String>>();
 
-            var maximoDB = ApplicationConfiguration.DBConnectionStringBuilder(ApplicationConfiguration.DBType.Maximo);
-            var swDB = ApplicationConfiguration.DBConnectionStringBuilder(ApplicationConfiguration.DBType.Swdb);
+            var maximoDB = ApplicationConfiguration.DBConnectionStringBuilder(DBType.Maximo);
+            var swDB = ApplicationConfiguration.DBConnectionStringBuilder(DBType.Swdb);
 
             aboutData.Add(new KeyValuePair<String, String>(_resolver.I18NValue("about.version", "Version"), ApplicationConfiguration.SystemVersion));
             aboutData.Add(new KeyValuePair<String, String>(_resolver.I18NValue("about.revision", "Revision"), ApplicationConfiguration.SystemRevision));

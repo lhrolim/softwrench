@@ -2,46 +2,63 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.app;
 
-namespace softWrench.sW4.Util {
-
-    class HibernateUtil {
+namespace cts.commons.persistence.Util {
+    public class HibernateUtil : ISingletonComponent {
 
         public const string ParameterPrefix = ":";
         public const string ListParameterPrefixPattern = "(:{0})";
         public const string ParameterPrefixPattern = ":{0}";
 
-        public static string HibernateDriverName(ApplicationConfiguration.DBType dbtype) {
+        private readonly IApplicationConfiguration _applicationConfiguration;
 
-            ApplicationConfiguration.DBMS? dbms = ApplicationConfiguration.ToUse(dbtype);
-            if (dbms == ApplicationConfiguration.DBMS.MSSQL) {
+        private static HibernateUtil _instance;
+
+        public HibernateUtil(IApplicationConfiguration applicationConfiguration) {
+            _applicationConfiguration = applicationConfiguration;
+        }
+
+        public static HibernateUtil GetInstance() {
+            if (_instance == null) {
+                _instance = SimpleInjectorGenericFactory.Instance.GetObject<HibernateUtil>(typeof(HibernateUtil));
+            }
+            return _instance;
+        }
+
+
+        public string HibernateDriverName(DBType dbtype) {
+
+            DBMS? dbms = _applicationConfiguration.LookupDBMS(dbtype);
+            if (dbms == DBMS.MSSQL) {
                 return typeof(NHibernate.Driver.SqlClientDriver).FullName;
             }
-            if (dbms == ApplicationConfiguration.DBMS.DB2) {
+            if (dbms == DBMS.DB2) {
                 return typeof(NHibernate.Driver.DB2Driver).FullName;
             }
-            if (dbms == ApplicationConfiguration.DBMS.ORACLE) {
+            if (dbms == DBMS.ORACLE) {
                 return typeof(NHibernate.Driver.OracleClientDriver).FullName;
             }
-            if (dbms == ApplicationConfiguration.DBMS.MYSQL) {
+            if (dbms == DBMS.MYSQL) {
                 return typeof(NHibernate.Driver.MySqlDataDriver).FullName;
             }
             return typeof(NHibernate.Driver.SqlClientDriver).FullName;
         }
 
 
-        public static string HibernateDialect(ApplicationConfiguration.DBType dbtype) {
-            ApplicationConfiguration.DBMS? dbms = ApplicationConfiguration.ToUse(dbtype);
-            if (dbms == ApplicationConfiguration.DBMS.MSSQL) {
+        public string HibernateDialect(DBType dbtype) {
+            DBMS? dbms = _applicationConfiguration.LookupDBMS(dbtype);
+            if (dbms == DBMS.MSSQL) {
                 return typeof(NHibernate.Dialect.MsSql2008Dialect).FullName;
             }
-            if (dbms == ApplicationConfiguration.DBMS.DB2) {
+            if (dbms == DBMS.DB2) {
                 return typeof(NHibernate.Dialect.DB2Dialect).FullName;
             }
-            if (dbms == ApplicationConfiguration.DBMS.ORACLE) {
+            if (dbms == DBMS.ORACLE) {
                 return typeof(NHibernate.Dialect.Oracle10gDialect).FullName;
             }
-            if (dbms == ApplicationConfiguration.DBMS.MYSQL) {
+            if (dbms == DBMS.MYSQL) {
                 return typeof(NHibernate.Dialect.MySQLDialect).FullName;
             }
             return typeof(NHibernate.Dialect.MsSql2008Dialect).FullName;
@@ -92,11 +109,9 @@ namespace softWrench.sW4.Util {
 
         }
 
-        internal class QueryTranslateResult {
-
-
-            internal String query;
-            internal object[] Parameters;
+        public class QueryTranslateResult {
+            public String query;
+            public object[] Parameters;
 
             public QueryTranslateResult(string query, IEnumerable<object> parameters) {
                 this.query = query;

@@ -3,7 +3,6 @@ using softWrench.sW4.Metadata;
 
 namespace softWrench.sW4.Data.Persistence.Relational.DataConstraint {
     class DataConstraintValidator {
-        readonly MaximoHibernateDAO _dao = new MaximoHibernateDAO();
 
 
         public String ValidateContraint(softWrench.sW4.Security.Entities.DataConstraint constraint) {
@@ -13,7 +12,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.DataConstraint {
                     return String.Format("EntityName {0} not found, unable to apply constraint", constraint.EntityName);
                 }
                 var query = new EntityQueryBuilder().CountRowsFromConstraint(entityMetadata, constraint);
-                _dao.FindByNativeQuery(query.Sql, query.Parameters);
+                MaximoHibernateDAO.GetInstance().FindByNativeQuery(query.Sql, query.Parameters);
                 return null;
             }
             catch (Exception e) {

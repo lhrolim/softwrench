@@ -53,6 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="app\DBMS.cs" />
+    <Compile Include="app\DBType.cs" />
+    <Compile Include="app\IApplicationConfiguration.cs" />
     <Compile Include="ComponentAttribute.cs" />
     <Compile Include="Core\Order\IOrdered.cs" />
     <Compile Include="Core\Order\IPriorityOrdered.cs" />
@@ -72,8 +75,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\cts.commons.portable\cts.commons.portable.csproj">
+      <Project>{757c5d7f-9e3c-4509-bafe-29ffb35ebe46}</Project>
+      <Name>cts.commons.portable</Name>
+    </ProjectReference>
     <ProjectReference Include="..\cts.commons\cts.commons.csproj">
-      <Project>{c8007d8e-8340-4a4a-a67b-2199be54ae86}</Project>
+      <Project>{5FA34361-87B3-4094-BFBE-7DB7B4D16036}</Project>
       <Name>cts.commons</Name>
     </ProjectReference>
   </ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace softwrench.sW4.Shared2.Util {
+namespace cts.commons.Util {
     public class PropertyUtil {
 
         

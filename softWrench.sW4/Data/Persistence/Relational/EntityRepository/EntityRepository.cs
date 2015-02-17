@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
 using JetBrains.Annotations;
 using log4net;
 using softWrench.sW4.Data.Offline;
@@ -29,7 +30,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
 
         private static string InitializeConnectionString() {
-            return ApplicationConfiguration.DBConnectionString(ApplicationConfiguration.DBType.Maximo);
+            return ApplicationConfiguration.DBConnectionString(DBType.Maximo);
         }
 
         public IReadOnlyList<AttributeHolder> Get([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {
