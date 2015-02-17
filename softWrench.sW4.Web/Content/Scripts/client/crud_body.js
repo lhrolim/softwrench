@@ -104,15 +104,13 @@ app.directive('crudBody', function (contextService) {
             });
 
             $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
-
+                var log = $log.getInstance('on#sw_bodyrenderedevent');
+                log.debug('enter');
 
                 var tab = contextService.getActiveTab();
                 if (tab != null) {
                     redirectService.redirectToTab(tab);
                 }
-
-                //make sure we are seeing the top of the detail page 
-                window.scrollTo(0, 0);
 
                 var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
                 if (onLoadMessage) {
@@ -125,6 +123,18 @@ app.directive('crudBody', function (contextService) {
                         $rootScope.$broadcast('sw_successmessagetimeout', { successMessage: null });
                     }, contextService.retrieveFromContext('successMessageTimeOut'));
                 }
+
+                //make sure we are seeing the top of the detail page 
+                log.debug('scroll to top');
+                window.scrollTo(0, 0);
+
+                //SWWEB-960 - set focus to the first input
+                if ($scope.schema.schemaId === 'newdetail') {
+                    log.debug('set input focus');
+                    $('#crudInputMainFields').find('input,textarea,select').filter(':visible:first').focus();
+                }
+
+                log.debug('finish');
             });
 
             $scope.setActiveTab = function (tabId) {
