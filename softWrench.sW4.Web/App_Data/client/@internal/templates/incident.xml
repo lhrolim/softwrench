@@ -63,6 +63,21 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
+    <entity name="classstructure"  idAttribute="classstructureid" >
+      <relationships>
+        <relationship to ="classusewith" qualifier="incidentclassstructures">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+          <relationshipAttribute to="objectvalue" literal="INCIDENT" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+    <entity name="incidentclassifications" parententity="classstructure" idAttribute="classstructureid" >
+      <attributes>
+        <attribute name="classstructureid" type="varchar" query="CASE WHEN (xyz.classstructureid = classusewith.classstructureid) and (classusewith.objectvalue='INCIDENT')) "/>
+      </attributes>
+    </entity>
+
   </entities>
 
   <applications>

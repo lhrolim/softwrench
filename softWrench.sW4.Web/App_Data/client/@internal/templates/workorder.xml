@@ -9,8 +9,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <template path="@labtrans.xml"/>
     <template path="@tooltrans.xml"/>
     <template path="@woactivity.xml"/>
+    <template path="@wochange.xml"/>
     <template path="@asset.xml"/>
     <template path="@glcomponents.xml"/>
+    <template path="@failurecode.xml"/>
   </templates>
 
   <entities>
@@ -70,10 +72,48 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
       </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWWO" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
+      </connectorParameters>
     </entity>
   </entities>
 
   <applications>
+    <application name="worktype" title="Work Type" entity="worktype" id="00000000-0000-0000-0000-000000000004">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+        <property key="mobile.userInteractionEnabled" value="false"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="worktype" label="Work Type" qualifier="title"/>
+          <field attribute="wtypedesc" label="Description" qualifier="excerpt"/>
+        </list>
+        <detail>
+          <field attribute="worktypeid" label="ID:"  requiredexpression="true" />
+          <field attribute="worktype" label="Work Type:"  requiredexpression="true" />
+          <field attribute="wtypedesc" label="Description:"  requiredexpression="true" />
+          <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
+        </detail>
+      </schemas>
+    </application>
+
+    <application name="synonymdomain" title="Synonym Domain" entity="synonymdomain" id="00000000-0000-0000-0000-000000000006">
+      <properties>
+        <property key="mobile.userInteractionEnabled" value="false"/>
+      </properties>
+      <schemas>
+        <detail>
+          <field attribute="domainid"  />
+          <field attribute="maxvalue"  />
+          <field attribute="value"  />
+          <field attribute="description"  />
+          <field attribute="synonymdomainid"  />
+        </detail>
+      </schemas>
+    </application>
+    
     <application name="workorder" title="Work Order" entity="workorder">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
@@ -383,8 +423,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         </detail>
       </schemas>
     </application>
-
-
   </applications>
 
 

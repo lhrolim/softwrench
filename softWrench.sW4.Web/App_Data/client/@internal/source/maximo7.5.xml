@@ -535,6 +535,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
+    <entity name="inboundcomm" idAttribute="inboundcommid">
+      <relationships>
+        <relationship to="commlog" collection="true">
+          <relationshipAttribute from="objectkey" to ="ownerid" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
     <entity name="site" idAttribute="siteid">
       <attributes>
         <attribute name="active" type="integer" required="true" />

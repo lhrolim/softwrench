@@ -6,6 +6,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
     <template path="@worklogs.xml"/>
     <template path="@attachments.xml"/>
     <template path="@relatedrecords.xml"/>
+    <template path="@longdescription.xml"/>
     <template path="@commlogs.xml"/>
   </templates>
 
@@ -32,6 +33,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWSR" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseServiceRequestCrudConnector" />
       </connectorParameters>
     </entity>
   </entities>
