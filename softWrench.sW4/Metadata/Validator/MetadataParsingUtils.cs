@@ -15,6 +15,7 @@ namespace softWrench.sW4.Metadata.Validator {
         private const string InternalMetadataPattern = "\\App_Data\\Client\\@internal\\{0}\\{1}.xml";
         private const string TestInternalMetadataPattern = "\\Client\\@internal\\{0}\\{1}.xml";
         private const string TestMetadataPath = "\\Client\\{0}\\";
+        private const string TestMetadataModulePath = "\\metadata\\{0}\\";
         private const string OtbPath = "\\App_Data\\Client\\otb\\";
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MetadataParsingUtils));
@@ -29,11 +30,22 @@ namespace softWrench.sW4.Metadata.Validator {
             return @"" + (baseDirectory + String.Format(pattern, clientName) + resource);
         }
 
+        public static string GetPathForUnitTestModule(string resource, bool internalFramework = false, bool otbpath = false) {
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            var clientName = otbpath ? "otb" : ApplicationConfiguration.ClientName;
+            if (internalFramework) {
+                clientName = "@internal";
+            }
+            return @"" + (baseDirectory + String.Format(TestMetadataModulePath, clientName) + resource);
+        }
+
         public static Stream GetStreamFromCustomerDll(string resource) {
             var assembly = AssemblyLocator.GetCustomerAssembly();
-            var resourceName = String.Format("softwrench.sw4.{0}.metadata.{1}", ApplicationConfiguration.ClientName, resource);
+            var resourceName = String.Format("softwrench.sw4.{0}.metadata.{0}.{1}", ApplicationConfiguration.ClientName, resource);
             return assembly.GetManifestResourceStream(resourceName);
         }
+
+      
 
         public static string GetTemplateInternalPath(string resource) {
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -91,7 +103,16 @@ namespace softWrench.sW4.Metadata.Validator {
                 if (File.Exists(path)) {
                     return new StreamReader(path);
                 }
-                if (AssemblyLocator.CustomerAssemblyExists()) {
+                if (ApplicationConfiguration.IsUnitTest)
+                {
+                    path = GetPathForUnitTestModule(resource);
+                    if (File.Exists(path)) {
+                        return new StreamReader(path);
+                    }
+                }
+
+                if (!ApplicationConfiguration.IsUnitTest && AssemblyLocator.CustomerAssemblyExists()) {
+                    //we cannot call the assembly locator in unit test context
                     var stream = GetStreamFromCustomerDll(resource);
                     if (stream != null) {
                         return new StreamReader(stream);

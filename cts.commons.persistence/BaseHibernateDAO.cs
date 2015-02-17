@@ -2,12 +2,9 @@
 using NHibernate;
 using NHibernate.Transform;
 using NHibernate.Type;
-using softWrench.sW4.Security;
-using softWrench.sW4.Security.Services;
 using softwrench.sw4.Shared2.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
-using softWrench.sW4.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;

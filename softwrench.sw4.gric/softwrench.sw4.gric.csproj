@@ -46,7 +46,6 @@
     <Folder Include="classes\com\cts\gric\configuration\" />
     <Folder Include="classes\com\cts\gric\connector\" />
     <Folder Include="classes\com\cts\gric\migration\" />
-    <Folder Include="metadata\i18n\en\" />
     <Folder Include="web_content\gric\css\" />
     <Folder Include="web_content\gric\html\" />
     <Folder Include="web_content\gric\image\" />
@@ -86,18 +85,18 @@
     <None Include="customer.placeholder" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="metadata\deploy.xml">
+    <Content Include="metadata\gric\deploy.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="metadata\menu.web.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="metadata\metadata.xml">
+    <Content Include="metadata\gric\menu.web.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="metadata\properties.xml">
+    <Content Include="metadata\gric\metadata.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="metadata\gric\properties.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

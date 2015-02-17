@@ -49,9 +49,6 @@
     <Folder Include="web_content\kongsberg\htmls\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="metadata\deploy.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <EmbeddedResource Include="metadata\menu.mobile.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -68,6 +65,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Include="customer.placeholder" />
+    <EmbeddedResource Include="metadata\deploy.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="web_content\kongsberg\styles\signin.css" />
     <Content Include="web_content\kongsberg\styles\site.css" />
     <Content Include="web_content\kongsberg\images\header.png" />

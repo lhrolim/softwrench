@@ -10,11 +10,18 @@ using cts.commons.Util;
 
 namespace softWrench.sW4.Util {
     public static class AssemblyLocator {
-        private static readonly ReadOnlyCollection<Assembly> AllAssemblies;
-        private static readonly ReadOnlyCollection<Assembly> BinAssemblies;
-        static AssemblyLocator() {
+        private static ReadOnlyCollection<Assembly> AllAssemblies;
+        private static ReadOnlyCollection<Assembly> BinAssemblies;
+    
+
+        public static ReadOnlyCollection<Assembly> GetAssemblies() {
+            if (AllAssemblies != null)
+            {
+                return AllAssemblies;
+            }
+
             AllAssemblies = new ReadOnlyCollection<Assembly>(
-                BuildManager.GetReferencedAssemblies().Cast<Assembly>().ToList());
+              BuildManager.GetReferencedAssemblies().Cast<Assembly>().ToList());
 
             IList<Assembly> binAssemblies = new List<Assembly>();
 
@@ -35,9 +42,6 @@ namespace softWrench.sW4.Util {
             }
 
             BinAssemblies = new ReadOnlyCollection<Assembly>(binAssemblies);
-        }
-
-        public static ReadOnlyCollection<Assembly> GetAssemblies() {
             return AllAssemblies;
         }
 
