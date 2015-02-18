@@ -146,11 +146,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Buffer\BufferFacade.cs" />
     <Compile Include="Audit\AuditTrail.cs" />
     <Compile Include="Audit\ISMAuditTrail.cs" />
     <Compile Include="AUTH\AuthUtils.cs" />
     <Compile Include="AUTH\LdapAuthArgs.cs" />
     <Compile Include="AUTH\LdapManager.cs" />
+    <Compile Include="Buffer\Entities\BuffReadFlag.cs" />
     <Compile Include="Configuration\Definitions\ConditionMatch.cs" />
     <Compile Include="Configuration\Definitions\ConditionMatchResult.cs" />
     <Compile Include="Configuration\Services\Api\WhereClauseRegisterCondition.cs" />
