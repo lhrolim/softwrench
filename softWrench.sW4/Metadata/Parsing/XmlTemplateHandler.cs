@@ -28,12 +28,12 @@ namespace softWrench.sW4.Metadata.Parsing {
             }
             foreach (var template in templates.Elements().Where(e => e.IsNamed(XmlMetadataSchema.TemplateElement))) {
                 var realPath = RealPath(template);
-                if (alreadyParsedTemplates.Contains(realPath)) {
+                if (alreadyParsedTemplates.Contains(realPath.Item2)) {
                     Log.Info("template {0} skipped because it was already added".Fmt(realPath));
                     continue;
                 }
                 Log.Info("parsing template {0}".Fmt(realPath));
-                using (var stream = MetadataParsingUtils.DoGetStream(realPath)) {
+                using (var stream = MetadataParsingUtils.DoGetStreamForTemplate(realPath.Item1, realPath.Item2)) {
                     if (stream != null) {
                         var parsingResult = parser.Parse(stream, alreadyParsedTemplates);
                         if (parsingResult is IEnumerable<TR>) {
@@ -44,7 +44,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                                 result.AddRange(istuple.Item1);
                             }
                         }
-                        alreadyParsedTemplates.Add(realPath);
+                        alreadyParsedTemplates.Add(realPath.Item1);
                     } else {
                         throw new InvalidOperationException("Template {0} not found".Fmt(realPath));
                     }
@@ -67,12 +67,12 @@ namespace softWrench.sW4.Metadata.Parsing {
              new XmlApplicationMetadataParser(entityMetadata, commandBars, isSWDB));
         }
 
-        private static string RealPath(XElement template) {
+        private static Tuple<String, string> RealPath(XElement template) {
             var path = template.Attribute(XmlMetadataSchema.TemplatePathAttribute).Value;
             if (!path.EndsWith(".xml")) {
                 path = path + ".xml";
             }
-            return MetadataParsingUtils.GetTemplateInternalPath(path);
+            return new Tuple<string, string>(path, MetadataParsingUtils.GetTemplateInternalPath(path));
 
         }
 

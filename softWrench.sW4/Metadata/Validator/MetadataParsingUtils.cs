@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Xml.Linq;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using log4net;
@@ -46,7 +47,13 @@ namespace softWrench.sW4.Metadata.Validator {
             return assembly.GetManifestResourceStream(resourceName);
         }
 
-      
+        public static Stream GetTemplateStreamFromAPI(string resource) {
+            var assembly = AssemblyLocator.GetAssembly("softwrench.sw4.api");
+            var resourceName = String.Format("softwrench.sw4.api.metadata.templates.{0}", resource);
+            return assembly.GetManifestResourceStream(resourceName);
+        }
+
+
 
         public static string GetTemplateInternalPath(string resource) {
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -95,6 +102,19 @@ namespace softWrench.sW4.Metadata.Validator {
             }
         }
 
+        public static StreamReader DoGetStreamForTemplate(string templatePath, string realPath) {
+            if (templatePath.StartsWith("@")){
+                var assembly = AssemblyLocator.GetAssembly("softwrench.sw4.api");
+                var resourceName = String.Format("softwrench.sw4.api.metadata.templates.{0}", templatePath.Substring(1));
+                var stream = assembly.GetManifestResourceStream(resourceName);
+                if (stream == null) {
+                    return null;
+                }
+                return new StreamReader(stream);
+            }
+            return DoGetStream(realPath);
+        }
+
         public static StreamReader GetStreamImpl(string resource, Stream streamValidator = null) {
             if (streamValidator != null) {
                 return new StreamReader(StreamUtils.CopyStream(streamValidator));
@@ -104,8 +124,7 @@ namespace softWrench.sW4.Metadata.Validator {
                 if (File.Exists(path)) {
                     return new StreamReader(path);
                 }
-                if (ApplicationConfiguration.IsUnitTest)
-                {
+                if (ApplicationConfiguration.IsUnitTest) {
                     path = GetPathForUnitTestModule(resource);
                     if (File.Exists(path)) {
                         return new StreamReader(path);
@@ -119,7 +138,7 @@ namespace softWrench.sW4.Metadata.Validator {
                         return new StreamReader(stream);
                     }
                 }
-                Log.InfoFormat("getting file {0} from otb default implementation",path);
+                Log.InfoFormat("getting file {0} from otb default implementation", path);
                 path = GetPath(resource, false, true);
                 if (!File.Exists(path)) {
                     return null;
@@ -137,10 +156,6 @@ namespace softWrench.sW4.Metadata.Validator {
             }
             return new StreamReader(GetEntitiesInternalPath(source));
         }
-
-
-
-
 
 
 

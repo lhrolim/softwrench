@@ -64,5 +64,9 @@ namespace softWrench.sW4.Util {
         {
             return GetAssemblies().FirstOrDefault(r => r.FullName.StartsWith("softwrench.sw4.{0}".Fmt(ApplicationConfiguration.ClientName), StringComparison.CurrentCultureIgnoreCase));
         }
+
+        public static Assembly GetAssembly(string assemblyName) {
+            return GetAssemblies().FirstOrDefault(r => r.FullName.StartsWith(assemblyName, StringComparison.CurrentCultureIgnoreCase));
+        }
     }
 }

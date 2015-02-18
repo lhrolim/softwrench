@@ -10,6 +10,7 @@
     <template path="@woactivity.xml"/>
     <template path="@asset.xml"/>
     <template path="@glcomponents.xml"/>
+    <template path="@failurecode.xml"/>
   </templates>
 
   <entities>
