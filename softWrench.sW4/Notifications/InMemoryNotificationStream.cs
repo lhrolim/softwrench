@@ -7,11 +7,15 @@ using NHibernate.Hql.Ast.ANTLR;
 using softWrench.sW4.Notifications.Entities;
 
 namespace softWrench.sW4.Notifications {
-    class InMemoryNotificationStream {
+    public class InMemoryNotificationStream {
         private List<Notification> _notifications;
         
         public InMemoryNotificationStream() {
             _notifications = new List<Notification>();
+        }
+
+        public List<Notification> GetNotifications() {
+            return _notifications;
         }
 
         public void InsertNotificationIntoStream(Notification notification) {

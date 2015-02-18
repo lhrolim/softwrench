@@ -303,8 +303,7 @@
     <Compile Include="Preferences\GridFilterExceptions.cs" />
     <Compile Include="Preferences\GridFilterManager.cs" />
     <Compile Include="Scheduler\ASwJob.cs" />
-    <Compile Include="Scheduler\Jobs\ActivityStreamPurgeJob.cs" />
-    <Compile Include="Scheduler\Jobs\ActivityStreamPopulationJob.cs" />
+    <Compile Include="Scheduler\Jobs\NotificationStreamUpdateJob.cs" />
     <Compile Include="Security\Context\ApplicationLookupContext.cs" />
     <Compile Include="Configuration\Definitions\WhereClause\WhereClauseCondition.cs" />
     <Compile Include="Configuration\Util\ConfigCacheKey.cs" />

@@ -12,7 +12,7 @@ using softWrench.sW4.SimpleInjector;
 
 
 namespace softWrench.sW4.Notifications {
-    class NotificationFacade {
+    public class NotificationFacade {
 
         private static NotificationFacade _instance = null;
 
@@ -114,6 +114,10 @@ namespace softWrench.sW4.Notifications {
         {
             var streamToUpdate = _notificationStreams["allRole"];
             streamToUpdate.PurgeNotificationsFromStream(24);
+        }
+
+        public List<Notification> GetNotificationStream(string role) {
+            return _notificationStreams[role].GetNotifications();
         }
     }
 }
