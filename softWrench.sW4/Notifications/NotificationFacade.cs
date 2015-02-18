@@ -81,16 +81,16 @@ namespace softWrench.sW4.Notifications {
             var hoursToPurge = 24;
             var query = string.Format("select 'CL' + ownertable as application, CONVERT(varchar(10), commlogid) as id, ownerid as parentid, subject as summary, " +
                                       "createby as changeby, createdate as changedate, rowstamp from commlog " +
-                                      "where createdate >  DATEADD(HOUR,-{0},GETDATE()) union " +
+                                      "where createdate >  DATEADD(HOUR,-{0},GETDATE()) and createdate < GETDATE() union " +
                                       "select class as application, ticketid as id, null as parentid, description as summary," +
                                       "changeby, changedate, rowstamp from ticket " +
-                                      "where changedate > DATEADD(HOUR,-{0},GETDATE()) union " +
+                                      "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() union " +
                                       "select 'WO' as application, wonum as id, null as parentid, description as summary, " +
                                       "changeby, changedate, rowstamp from workorder " +
-                                      "where changedate > DATEADD(HOUR,-{0},GETDATE()) union " +
+                                      "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() union " +
                                       "select 'PR' as application, prnum as id, null as parentid, description as summary, " +
                                       "changeby, changedate, rowstamp from pr " +
-                                      "where changedate > DATEADD(HOUR,-{0},GETDATE()) " +
+                                      "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() " +
                                       "order by rowstamp desc", hoursToPurge);
 
             var result = MaxDAO.FindByNativeQuery(query, null);
