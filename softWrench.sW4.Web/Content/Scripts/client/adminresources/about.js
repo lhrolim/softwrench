@@ -54,9 +54,9 @@
     }
 
     $scope.getFormClass = function (key) {
-        if (!$scope.isDev()) {
-            return "col-sm-10";
-        }
+        //if (!$scope.isDev()) {
+        //    return "col-sm-10";
+        //}
         return key == 'Client Name' ? 'col-sm-5 col-md-6 col-lg-7' : 'col-sm-10';
     }
 
