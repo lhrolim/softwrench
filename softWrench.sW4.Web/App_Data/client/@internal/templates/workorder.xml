@@ -189,7 +189,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
           <field attribute="wonum" label="WO No:" readonly="true"/>
           <!--COMSW-2-->
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" default="@classstructureid">
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType">
             <renderer type="autocompleteclient" />
           </optionfield>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
