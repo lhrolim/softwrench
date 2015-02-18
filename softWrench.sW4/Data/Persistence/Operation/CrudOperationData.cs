@@ -24,7 +24,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
 
 
         public string UserId {
-            get { return (string)GetAttribute(_userIdAttributeName); }
+            get { return GetAttribute(_userIdAttributeName).ToString(); }
 
         }
         public string Class { get { return EntityMetadata.GetTableName(); } }
