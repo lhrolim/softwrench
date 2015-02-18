@@ -1,12 +1,14 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softWrench.sW4", "softWrench.sW4\softWrench.sW4.csproj", "{CE228C26-938D-4D6F-95FA-12CC5241AFB5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softWrench.sW4.Web", "softWrench.sW4.Web\softWrench.sW4.Web.csproj", "{8F237B59-E434-4A10-9B53-B982CAC34551}"
 	ProjectSection(ProjectDependencies) = postProject
+		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6} = {3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D} = {6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}
+		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7} = {9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7F0343DC-37A4-41A3-A5E6-773600FA2F1A}"
