@@ -13,7 +13,7 @@ namespace softWrench.sW4.Metadata.Validator {
 
         private const string ClientMetadataPattern = "\\App_Data\\Client\\{0}\\";
         internal const string TemplatesInternalPath = "\\App_Data\\Client\\@internal\\templates\\{0}";
-        internal const string TestTemplatesInternalPath = "\\Client\\@internal\\templates\\{0}";
+        internal const string TestTemplatesInternalPath = "\\templates\\{0}";
         private const string InternalMetadataPattern = "\\App_Data\\Client\\@internal\\{0}\\{1}.xml";
         private const string TestInternalMetadataPattern = "\\Client\\@internal\\{0}\\{1}.xml";
         private const string TestMetadataPath = "\\Client\\{0}\\";
@@ -103,7 +103,11 @@ namespace softWrench.sW4.Metadata.Validator {
         }
 
         public static StreamReader DoGetStreamForTemplate(string templatePath, string realPath) {
-            if (templatePath.StartsWith("@")){
+            if (ApplicationConfiguration.IsUnitTest) {
+                return DoGetStream(realPath);
+            }
+
+            if (templatePath.StartsWith("@")) {
                 var assembly = AssemblyLocator.GetAssembly("softwrench.sw4.api");
                 var resourceName = String.Format("softwrench.sw4.api.metadata.templates.{0}", templatePath.Substring(1));
                 var stream = assembly.GetManifestResourceStream(resourceName);

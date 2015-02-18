@@ -5,6 +5,7 @@
     <DeploymentItem filename="softwrench.sw4.gric\" />
     <DeploymentItem filename="softwrench.sW4.test\App_data\" />
     <DeploymentItem filename="softWrench.sW4.Web\App_Data\" />
+    <DeploymentItem filename="softwrench.sw4.api\metadata\" />
   </Deployment>
   <NamingScheme baseName="testresults" appendTimeStamp="false" useDefault="false" />
   <Execution hostProcessPlatform="MSIL">
