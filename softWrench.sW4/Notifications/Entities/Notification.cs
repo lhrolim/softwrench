@@ -12,7 +12,7 @@ namespace softWrench.sW4.Notifications.Entities {
         private readonly string _summary;
         private readonly string _createBy;
         private readonly DateTime _notificationDate;
-        private readonly int _rowstamp;
+        private readonly long _rowstamp;
         
         private bool _isHidden;
         private bool _isRead;
@@ -23,12 +23,12 @@ namespace softWrench.sW4.Notifications.Entities {
         public string Summary { get { return _summary; } }
         public string CreateBy { get { return _createBy; } }
         public DateTime NotificationDate { get { return _notificationDate; } }
-        public int Rowstamp { get { return _rowstamp; } }
+        public long Rowstamp { get { return _rowstamp; } }
 
         public bool IsHidden { get { return _isHidden; } set { _isHidden = value; }}
         public bool IsRead { get { return _isRead; } set { _isRead = value; }}
 
-        public Notification(string application, string id, string parentid, string summary, string createby, DateTime notificationdate, int rowstamp, bool ishidden = false, bool isread = false) {
+        public Notification(string application, string id, string parentid, string summary, string createby, DateTime notificationdate, long rowstamp, bool ishidden = false, bool isread = false) {
             _application = application;
             _id = id;
             _parentId = parentid;
