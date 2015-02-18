@@ -109,10 +109,10 @@
 
         <schema id="detail" stereotype="compositiondetail">
           <field attribute="commlogid" hidden="true" />
-          <field attribute="createdate" label="Created Date/Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
+          <field attribute="createdate" label="Created Date/Time" default="@currentdatetime" >
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
-          <field attribute="orgobject" label="Origination"/>
+          <field attribute="orgobject" label="Origination" hidden ="true"/>
           <field attribute="sendto" label="To:" requiredexpression="true">
             <renderer type="email"/>
           </field>
