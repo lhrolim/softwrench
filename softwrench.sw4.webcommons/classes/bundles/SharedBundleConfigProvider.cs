@@ -51,7 +51,12 @@ namespace softwrench.sw4.webcommons.classes.bundles {
             const string baseAppPath = basePath + "/application";
             const string baseMediaPath = basePath + "/media";
 
-            var clientPath = String.Format("~/Content/customers/{0}/styles/", clientName);
+            var clientPath = String.Format("~/Content/customers/styles/{0}", clientName); ;
+            if (AssemblyLocator.CustomerAssemblyExists())
+            {
+                clientPath = String.Format("~/Content/customers/{0}/styles/", clientName);
+            }
+
             var clientPathAppCustom = clientPath + "/application";
             var clientPathMediaCustom = clientPath + "/media";
 
