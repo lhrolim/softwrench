@@ -199,6 +199,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         contextService.loadConfigs(config);
 
         contextService.insertIntoContext("isLocal", config.isLocal);
+        contextService.insertIntoContext("allowedfiles", config.allowedFileTypes);
         
         $rootScope.clientName = config.clientName;
         $rootScope.environment = config.environment;

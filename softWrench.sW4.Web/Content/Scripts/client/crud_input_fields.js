@@ -177,6 +177,13 @@ app.directive('crudInputFields', function (contextService) {
                 // Configure input files
                 $('#uploadBtn').on('change', function (e) {
                     var fileName = this.value.match(/[^\/\\]+$/);
+                    var validFileTypes = contextService.fetchFromContext('allowedfiles', true);
+                    var extensionIdx = this.value.lastIndexOf(".");
+                    var extension = this.value.substring(extensionIdx + 1);
+                    if ($.inArray(extension, validFileTypes) == -1) {
+                        $(this).val('');
+                        return;
+                    }
                     $('#uploadFile').attr("value", fileName);
                 });
             });

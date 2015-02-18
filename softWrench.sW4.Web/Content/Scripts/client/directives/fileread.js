@@ -1,4 +1,4 @@
-﻿app.directive("fileread", function (alertService,$log) {
+﻿app.directive("fileread", function (alertService,$log,contextService) {
     return {
         scope: {
             fileread: "=",
@@ -6,10 +6,19 @@
         },
         link: function (scope, element, attributes) {
             element.bind("change", function (changeEvent) {
-                var validFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html"];
+                var validFileTypes = contextService.fetchFromContext('allowedfiles', true);
                 var log = $log.getInstance('fileread#change');
                 log.debug('file change detected');
+                var extensionIdx = this.value.lastIndexOf(".");
+                var extension = this.value.substring(extensionIdx+1);
+                if ($.inArray(extension, validFileTypes) == -1) {
+                    event.stopImmediatePropagation();
+                    alertService.alert("Invalid file. Chose another please");
+                    return;
+                }
+
                 if (isIe9()) {
+                    
                     //to bypass required validation --> real file data will be set using form submission
                     //ie9 does not have the FileReaderObject
                     scope.fileread = "xxx";

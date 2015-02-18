@@ -9,6 +9,9 @@ namespace softWrench.sW4.Web.Models.Home {
         public long InitTimeMillis { get; set; }
 
         public string Logo { get; set; }
+
+        public string[] AllowedFileTypes { get; set; }
+
         public Boolean MyProfileEnabled { get; set; }
 
         public Boolean I18NRequired { get; set; }

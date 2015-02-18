@@ -63,6 +63,7 @@ namespace softWrench.sW4.Web.Controllers {
             var clientSideLogLevel = _facade.Lookup<string>(ConfigurationConstants.ClientSideLogLevel);
             return new HomeConfigs() {
                 Logo = logoIcon,
+                AllowedFileTypes = ApplicationConfiguration.AllowedFilesExtensions,
                 MyProfileEnabled = myProfileEnabled,
                 I18NRequired = MetadataProvider.GlobalProperties.I18NRequired(),
                 ClientName = ApplicationConfiguration.ClientName,
