@@ -55,15 +55,29 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         private static bool CanChangeLanguage(InMemoryUser user) {
             foreach (PersonGroupAssociation f in user.PersonGroups) {
-                if (HlagLocationUtil.IsAProfileGroup(f.PersonGroup) &&!HlagLocationUtil.IsEndUser(f.PersonGroup)) {
+                if (HlagLocationUtil.IsAProfileGroup(f.PersonGroup) && !HlagLocationUtil.IsEndUser(f.PersonGroup)) {
                     return false;
                 }
             }
             return true;
         }
 
+        /// <summary>
+        /// if the user has no person group at all, or if he´s an enduser or external user, he should see the cost centers
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         private static bool CanViewRestrictions(InMemoryUser user) {
-            return user.PersonGroups.All(f => !HlagLocationUtil.IsEndUser(f.PersonGroup) && !HlagLocationUtil.IsExtUser(f.PersonGroup));
+            if (!user.PersonGroups.Any()){
+                return false;
+            }
+
+            foreach (PersonGroupAssociation f in user.PersonGroups) {
+                if (HlagLocationUtil.IsEndUser(f.PersonGroup) || HlagLocationUtil.IsExtUser(f.PersonGroup)) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private static List<LocationCostCenterRestriction> GetRestrictions(InMemoryUser user) {
