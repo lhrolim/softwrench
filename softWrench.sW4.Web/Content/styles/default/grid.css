@@ -43,6 +43,14 @@
     width: 100%;
 }
 
+.filter-row .input-group .dropdown {
+    padding: 0;
+}
+
+.filter-row .input-group .dropdown .dropdown-toggle {
+    padding: 8px;
+}
+
 #listgrid {
     color: #000;
     width: 100%;
