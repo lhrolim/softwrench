@@ -1,0 +1,13 @@
+﻿#activitystream {
+    background: #f2f2f2;
+    padding: 20px;
+}
+
+#activitystream .message {
+    padding: 15px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+#activitystream .message.even {
+    background: #fff;
+}

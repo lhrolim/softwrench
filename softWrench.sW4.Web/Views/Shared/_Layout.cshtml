@@ -37,6 +37,19 @@
     <input type="hidden" id="hiddn_user" value="@Model.UserJSON" />
 
     <div class="spinner" data-class="spinner" id="mainspinner"></div>
+    <div id="activitystream" ng-controller="ActivityStream" >
+        <header>
+            <h2>Recent Activity</h2>
+            <button><i class="fa fa-refresh"></i></button>
+        </header>
+        <div class="messages">
+            <div class="message" ng-repeat="activity in activities" ng-class="$even? 'even' : 'odd'">
+                <div class="icon"><i class="fa fa-plus-square"></i></div>
+                <div class="text">{{activity.createBy}} did some stuff to {{activity.application}} <a href="#">{{activity.id}}</a></div>
+                <div class="date">{{activity.notificationDate}}</div>
+            </div>
+        </div>
+    </div>
     <div ng-controller="LayoutController" class="container {{clientName}} {{deviceType}}">
         <header class="site-header navbar-fixed-top hiddenonprint">
             <admin-menu is-client-admin="isClientAdmin"
