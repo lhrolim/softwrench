@@ -18,8 +18,17 @@ namespace softWrench.sW4.Notifications {
             return _notifications;
         }
 
-        public void InsertNotificationIntoStream(Notification notification) {
-            _notifications.Add(notification);
+        public void InsertNotificationIntoStream(Notification notification)
+        {
+            //Checks if record already exists in stream
+            var existingNotificationCount = (from n in _notifications
+                where n.Application == notification.Application &&
+                      n.Application == notification.Id &&
+                      n.NotificationDate == notification.NotificationDate
+                select n).Count();
+            if (existingNotificationCount == 0) {
+                _notifications.Add(notification);    
+            }
         }
 
         public void PurgeNotificationsFromStream(int hoursToPurge) {
@@ -37,12 +46,12 @@ namespace softWrench.sW4.Notifications {
                 notification.IsHidden = isHidden;
 
                 var childNotificationsToUpdate = (from n in _notifications
-                    where n.ParentId == id &&
-                          n.Application == application
+                    where n.ParentId == notification.UId &&
+                          n.ParentApplication == application
                     select n);
 
                 foreach (var childNotification in childNotificationsToUpdate) {
-                    UpdateNotificationHiddenFlag(application, childNotification.Id, isHidden);
+                    UpdateNotificationHiddenFlag(childNotification.Application, childNotification.Id, isHidden);
                 }
             }
         }
@@ -55,7 +64,7 @@ namespace softWrench.sW4.Notifications {
                                          select n);
 
             foreach (var notification in notificationsToUpdate) {
-                notification.IsHidden = isRead;
+                notification.IsRead = isRead;
             }
         }
     }
