@@ -511,7 +511,6 @@
     <Content Include="Content\Images\file.png" />
     <Content Include="Content\Images\folder-closed.png" />
     <Content Include="Content\Images\folder.png" />
-    <Content Include="Content\Images\gric\login-gric-gilariver.jpg" />
     <Content Include="Content\Images\hapag\login-header.jpg" />
     <Content Include="Content\Images\hapag\login-header2.jpg" />
     <Content Include="Content\Images\hapag\logo_hapag.gif" />

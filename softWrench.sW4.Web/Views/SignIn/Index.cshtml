@@ -36,7 +36,12 @@
                     <div class="col-sm-offset-1 col-sm-10">
                         @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-main.png"))) {
                             <img class="logo" src="~/Content/Images/@Model.ClientName/logo-main.png">
-                        } else {
+                        } else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-main.png")))
+                        {
+                            <img class="logo" src="~/Content/Customers/@Model.ClientName/images/logo-main.png">
+                        }
+
+                        else {
                             <img class="logo" src="~/Content/Images/logo-main.png">
                         }
                     </div>
