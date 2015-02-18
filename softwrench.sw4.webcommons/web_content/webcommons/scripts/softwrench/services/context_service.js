@@ -73,6 +73,10 @@ app.factory('contextService', function ($rootScope) {
             return this.retrieveFromContext('isLocal') == "true";
         },
 
+        isDev: function () {
+            return this.retrieveFromContext('environment') == "dev";
+        },
+
         client: function () {
             return this.retrieveFromContext('clientName');
         },
