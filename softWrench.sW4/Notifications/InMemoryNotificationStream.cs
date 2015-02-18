@@ -19,7 +19,7 @@ namespace softWrench.sW4.Notifications {
         }
 
         public void PurgeNotificationsFromStream(int hoursToPurge) {
-            _notifications.RemoveAll(x => DateTime.Now > x.NotificationDate.AddSeconds(-3600*hoursToPurge));
+            _notifications.RemoveAll(x => DateTime.Now.AddSeconds(-3600 * hoursToPurge) > x.NotificationDate);
         }
 
         public void UpdateNotificationHiddenFlag(string application, string id, bool isHidden)
