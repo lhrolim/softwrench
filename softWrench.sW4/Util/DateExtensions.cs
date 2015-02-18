@@ -56,8 +56,10 @@ namespace softWrench.sW4.Util {
 
         public static DateTime FromServerToRightKind(this DateTime date) {
             var kind = ApplicationConfiguration.IsISM() ? DateTimeKind.Utc : DateTimeKind.Local;
-            if (kind.Equals(DateTimeKind.Utc)) {
-                return FromServerToMaximo(date, 0);
+            if (kind.Equals(DateTimeKind.Utc))
+            {
+                return date.ToUniversalTime();
+//                return FromServerToMaximo(date, 0);
             }
             return FromServerToMaximo(date);
         }
@@ -99,6 +101,7 @@ namespace softWrench.sW4.Util {
                 offset = -1 * offset;
             }
             date = date.AddMinutes(offset);
+            
             return date;
         }
 
