@@ -564,6 +564,7 @@
     <Content Include="Content\Images\tva\header.jpg" />
     <Content Include="Content\Images\tva\logo-main.png" />
     <Content Include="Content\Images\tva\signin.jpg" />
+    <Content Include="Content\Scripts\client\activitystream.js" />
     <Content Include="Content\Scripts\client\crud_tbody.js" />
     <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
     <Content Include="Content\Scripts\client\services\glcomponent_service.js" />
@@ -776,6 +777,7 @@
     <Content Include="Content\Scripts\vendor\other\moment.js" />
     <Content Include="Content\Scripts\vendor\other\textAngular-sanitize-min.js" />
     <Content Include="Content\Scripts\vendor\other\textAngular-min.js" />
+    <Content Include="Content\styles\default\activitystream.css" />
     <Content Include="Content\styles\default\application\forms.css" />
     <Content Include="Content\styles\default\application\pages.css" />
     <Content Include="Content\styles\bering_inv\branding.css" />
