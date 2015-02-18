@@ -1,4 +1,4 @@
-﻿function AboutController($scope, $http, $templateCache, i18NService, restService, contextService,alertService) {
+﻿function AboutController($scope, $http, $templateCache, i18NService, restService, contextService, alertService) {
 
     var data = $scope.resultData;
     if (data != null) {
@@ -13,6 +13,10 @@
         return contextService.isLocal() || contextService.isDev();
     }
 
+    $scope.shouldShowRestore = function (key) {
+        return key == 'Client Name' && $scope.isDev();
+    }
+
     $scope.dochangeClient = function (newclient) {
         if (contextService.isLocal()) {
             restService.invokePost("Configuration", "ChangeClient", { clientName: newclient }, null, function (s) {
@@ -21,8 +25,8 @@
             return;
         }
 
-        alertService.confirmMsg('Are u sure you want to change client to {0}'.format(newclient), function() {
-            restService.invokePost("Configuration", "ChangeClient", { clientName: newclient }, null, function(s) {
+        alertService.confirmMsg('Are you sure you want to change client to {0}'.format(newclient.toUpperCase()), function () {
+            restService.invokePost("Configuration", "ChangeClient", { clientName: newclient }, null, function (s) {
                 window.location.reload();
             });
         });
@@ -38,8 +42,8 @@
             return;
         }
 
-        alertService.confirmMsg('Are u sure you want to restore to default client', function() {
-            restService.invokePost("Configuration", "Restore", null, null, function(s) {
+        alertService.confirmMsg('Are you sure you want to restore to default client', function () {
+            restService.invokePost("Configuration", "Restore", null, null, function (s) {
                 window.location.reload();
             });
         });
@@ -54,9 +58,9 @@
     }
 
     $scope.getFormClass = function (key) {
-        //if (!$scope.isDev()) {
-        //    return "col-sm-10";
-        //}
+        if (!$scope.isDev()) {
+            return "col-sm-10";
+        }
         return key == 'Client Name' ? 'col-sm-5 col-md-6 col-lg-7' : 'col-sm-10';
     }
 
