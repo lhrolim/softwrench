@@ -128,8 +128,8 @@ app.directive('crudBody', function (contextService) {
                 log.debug('scroll to top');
                 window.scrollTo(0, 0);
 
-                //SWWEB-960 - set focus to the first input
-                if ($scope.schema.schemaId === 'newdetail') {
+                //SWWEB-960 - set focus to the first input, on new creations
+                if (!$scope.isEditDetail($scope.datamap,$scope.schema)) {
                     log.debug('set input focus');
                     $('#crudInputMainFields').find('input,textarea,select').filter(':visible:first').focus();
                 }
