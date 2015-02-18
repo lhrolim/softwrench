@@ -90,7 +90,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                         Data = attachmentsData[j] + ',' + attachmentsData[j+1],
                         Path = attachmentPath[i].ToString()
                     };
-                    attachment.HandleAttachments(maximoObj, content, applicationMetadata);
+                    attachment.AddAttachment(maximoObj, content);
                     j = j + 2;
                 }
 

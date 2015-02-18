@@ -40,6 +40,23 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             base.BeforeUpdate(maximoTemplateData);
         }
 
+        public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
+            var user = SecurityFacade.CurrentUser();
+            var sr = maximoTemplateData.IntegrationObject;
+            w.SetValue(sr, "ACTLABHRS", 0);
+            w.SetValue(sr, "ACTLABCOST", 0);
+            w.SetValueIfNull(sr, "REPORTDATE", DateTime.Now.FromServerToRightKind());
+
+            var crudData = (CrudOperationData)maximoTemplateData.OperationData;
+            LongDescriptionHandler.HandleLongDescription(sr, crudData);
+
+            // Update or create attachments
+            _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
+
+            HandlePRLINES(maximoTemplateData, crudData, sr);
+            base.BeforeCreation(maximoTemplateData);
+        }
+
         private void HandlePRLINES(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData crudDataEntity, object sr) {
             var prlines = (IEnumerable<CrudOperationData>)crudDataEntity.GetRelationship("prline");
 
@@ -91,52 +108,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
                     ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
                 });
-
         }
 
-        public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
-            var user = SecurityFacade.CurrentUser();
-            var sr = maximoTemplateData.IntegrationObject;
-            w.SetValue(sr, "ACTLABHRS", 0);
-            w.SetValue(sr, "ACTLABCOST", 0);
-            w.SetValueIfNull(sr, "REPORTDATE", DateTime.Now.FromServerToRightKind());
-
-            var crudData = (CrudOperationData)maximoTemplateData.OperationData;
-            LongDescriptionHandler.HandleLongDescription(sr, crudData);
-
-            HandleAttachmentAndScreenshot(crudData, sr, maximoTemplateData.ApplicationMetadata);
-            HandlePRLINES(maximoTemplateData, crudData, sr);
-            base.BeforeCreation(maximoTemplateData);
-        }
-
-        private void HandleAttachmentAndScreenshot(CrudOperationData data, object maximoObj, ApplicationMetadata applicationMetadata) {
-
-            // Check if Attachment is present
-            var attachmentString = data.GetUnMappedAttribute("newattachment");
-            var attachmentPath = data.GetUnMappedAttribute("newattachment_path");
-
-            if (!String.IsNullOrWhiteSpace(attachmentString) && !String.IsNullOrWhiteSpace(attachmentPath)) {
-                //CC: _attachmentHandler.HandleAttachments(maximoObj, attachmentString, attachmentPath, applicationMetadata);
-            }
-
-            // Check if Screenshot is present
-            var screenshotString = data.GetUnMappedAttribute("newscreenshot");
-            var screenshotName = data.GetUnMappedAttribute("newscreenshot_path");
-
-            if (!String.IsNullOrWhiteSpace(screenshotString) && !String.IsNullOrWhiteSpace(screenshotName)) {
-
-                if (screenshotName.ToLower().EndsWith("rtf")) {
-                    var bytes = Convert.FromBase64String(screenshotString);
-                    var decodedString = Encoding.UTF8.GetString(bytes);
-                    var compressedScreenshot = CompressionUtil.CompressRtf(decodedString);
-
-                    bytes = Encoding.UTF8.GetBytes(compressedScreenshot);
-                    screenshotString = Convert.ToBase64String(bytes);
-                    screenshotName = screenshotName.Substring(0, screenshotName.Length - 3) + "doc";
-                }
-
-                //CC: _attachmentHandler.HandleAttachments(maximoObj, screenshotString, screenshotName, applicationMetadata);
-            }
-        }
     }
 }
