@@ -15,6 +15,7 @@ namespace softWrench.sW4.Notifications {
     public class NotificationFacade {
 
         private static NotificationFacade _instance = null;
+        private const int _hoursToPurge = 24;
 
         public static readonly IDictionary<string, InMemoryNotificationStream> _notificationStreams = new ConcurrentDictionary<string, InMemoryNotificationStream>();
         private MaximoHibernateDAO _maxDAO;
@@ -78,7 +79,6 @@ namespace softWrench.sW4.Notifications {
         }
 
         public void UpdateNotificationStreams() {
-            var hoursToPurge = 24;
             var query = string.Format("select 'CL' + ownertable as application, CONVERT(varchar(10), commlogid) as id, commloguid as uid, " +
                                       "ownerid as parentid, ownertable as parentapplication, subject as summary, " +
                                       "createby as changeby, createdate as changedate, rowstamp from commlog " +
@@ -92,7 +92,7 @@ namespace softWrench.sW4.Notifications {
                                       "select 'PR' as application, prnum as id, prid as uid, null as parentid, null as parentapplication, description as summary, " +
                                       "changeby, changedate, rowstamp from pr " +
                                       "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() " +
-                                      "order by rowstamp desc", hoursToPurge);
+                                      "order by rowstamp desc", _hoursToPurge);
 
             var result = MaxDAO.FindByNativeQuery(query, null);
 
