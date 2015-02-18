@@ -152,7 +152,8 @@
     <Compile Include="AUTH\AuthUtils.cs" />
     <Compile Include="AUTH\LdapAuthArgs.cs" />
     <Compile Include="AUTH\LdapManager.cs" />
-    <Compile Include="Buffer\Entities\BuffReadFlag.cs" />
+    <Compile Include="Buffer\Entities\Notification.cs" />
+    <Compile Include="Buffer\InMemoryNotificationBuffer.cs" />
     <Compile Include="Configuration\Definitions\ConditionMatch.cs" />
     <Compile Include="Configuration\Definitions\ConditionMatchResult.cs" />
     <Compile Include="Configuration\Services\Api\WhereClauseRegisterCondition.cs" />
