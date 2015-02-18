@@ -565,6 +565,7 @@
     <Content Include="Content\Images\tva\logo-main.png" />
     <Content Include="Content\Images\tva\signin.jpg" />
     <Content Include="Content\Scripts\client\crud_tbody.js" />
+    <Content Include="Content\Scripts\client\directives\activityStream.js" />
     <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
     <Content Include="Content\Scripts\client\services\glcomponent_service.js" />
     <Content Include="Content\Scripts\client\services\checkpoint_service.js" />
