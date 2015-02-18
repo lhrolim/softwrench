@@ -21,12 +21,20 @@ namespace softWrench.sW4.Notifications {
         public void InsertNotificationIntoStream(Notification notification)
         {
             //Checks if record already exists in stream
-            var existingNotificationCount = (from n in _notifications
-                where n.Application == notification.Application &&
-                      n.Application == notification.Id &&
-                      n.NotificationDate == notification.NotificationDate
-                select n).Count();
-            if (existingNotificationCount == 0) {
+            var existingNotifications = false;
+
+            //TODO: This needs to be changed to somethind more efficient, such as LINQ. For some reason when trying LINQ I cannot find the existing notifications from the current _notifications list
+            foreach (var n in _notifications)
+            {
+                if (n.Id == notification.Id && 
+                    n.Application == notification.Application && 
+                    n.NotificationDate == notification.NotificationDate) {
+                            existingNotifications = true;
+                            break;
+                   
+                }
+            }
+            if (!existingNotifications) {
                 _notifications.Add(notification);    
             }
         }
