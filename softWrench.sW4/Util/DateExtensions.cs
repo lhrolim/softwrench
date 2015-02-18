@@ -56,10 +56,9 @@ namespace softWrench.sW4.Util {
 
         public static DateTime FromServerToRightKind(this DateTime date) {
             var kind = ApplicationConfiguration.IsISM() ? DateTimeKind.Utc : DateTimeKind.Local;
-            if (kind.Equals(DateTimeKind.Utc))
-            {
-                return date.ToUniversalTime();
-//                return FromServerToMaximo(date, 0);
+//            date = DateTime.SpecifyKind(date, kind);
+            if (kind.Equals(DateTimeKind.Utc)) {
+                return FromServerToMaximo(date, 0);
             }
             return FromServerToMaximo(date);
         }
@@ -74,7 +73,7 @@ namespace softWrench.sW4.Util {
         }
 
         public static DateTime FromMaximoToServer(this DateTime date) {
-            return MaximoConversion(date, TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes*-1, false);
+            return MaximoConversion(date, TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes * -1, false);
         }
 
         private static DateTime UserMaximoConversion(DateTime date, InMemoryUser user, bool fromUserToMaximo, int? maximoOffset = null) {
@@ -101,7 +100,7 @@ namespace softWrench.sW4.Util {
                 offset = -1 * offset;
             }
             date = date.AddMinutes(offset);
-            
+
             return date;
         }
 

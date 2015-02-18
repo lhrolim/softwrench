@@ -54,7 +54,7 @@
                                     <div class="text-danger col-lg-offset-4" style="margin-bottom: 2em">Your <strong>User Name</strong> or <strong>Password</strong> was entered incorrectly.</div>
                                 } else if (Model.IsHapagClient) {
                                     <script>
-                                        $(document).ready(function () {
+                                        $(window).load(function () {
                                             alert(' Ungültiger Username oder falsches Passwort \n Invalid Username or Bad Password \n No válido Nombre de usuario o contraseña incorreta');
                                         });
                                     </script>
@@ -70,7 +70,7 @@
                                 }
                             } else if (Model.Inactivity) {
                                 <script>
-                                    $(document).ready(function () {
+                                    $(window).load(function () {
                                         alert(' Auf Grund zu langer Inaktivität wurden Sie aus Sicherheitsgründen automatisch ausgeloggt \n You have been automatically logged out due to inactivity. \n Usted ha sido cerrada automáticamente debido a la inactividad.');
                                     });
                                 </script>
@@ -113,11 +113,7 @@
                                 </div>
 
                                 <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset" />
-                                <script>
-                                    $(document).ready(function () {
-                                        $("#userTimezoneOffset").val(new Date().getTimezoneOffset());
-                                    });
-                                </script>
+
 
                             </form>
 
