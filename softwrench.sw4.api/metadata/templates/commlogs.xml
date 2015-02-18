@@ -65,6 +65,9 @@
 
       <schemas>
         <schema id="list" stereotype="compositionlist">
+          <properties>
+            <property key="expansible" value="false"/>
+          </properties>
           <!--<properties>
 
             <property key="list.click.popup" value="modal"/>
