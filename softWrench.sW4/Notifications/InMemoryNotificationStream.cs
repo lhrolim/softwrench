@@ -15,6 +15,7 @@ namespace softWrench.sW4.Notifications {
         }
 
         public List<Notification> GetNotifications() {
+            _notifications.Sort((n1, n2) => n2.NotificationDate.CompareTo(n1.NotificationDate));
             return _notifications;
         }
 
