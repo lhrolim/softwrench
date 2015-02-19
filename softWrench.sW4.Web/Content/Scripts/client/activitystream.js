@@ -1,4 +1,4 @@
-function ActivityStream($scope, $http, $log, redirectService) {
+function ActivityStream($scope, $http, $log, $interval, redirectService) {
 
     var log = $log.getInstance('sw4.activityStream');
 
