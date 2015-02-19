@@ -489,6 +489,11 @@ namespace softWrench.sW4.Metadata.Parsing {
             return commandsSchemaEl.Elements().Select(XmlCommandBarMetadataParser.GetCommandDisplayable).ToList();
         }
 
+        private ApplicationNotificationSchema ParseNotificationSchema(XElement xElement) {
+            //var commandsSchemaEl = xElement.Elements().FirstOrDefault(f => f.IsNamed(XmlCommandSchema.CommandToolBarElements));
+            //return new ApplicationCommandSchema(XmlCommandBarMetadataParser.DoParse(commandsSchemaEl), _commandBars);
+        }
+
         /// <summary>
         ///     Deseriliazes the specified XML element to its corresponding
         ///     <seealso>

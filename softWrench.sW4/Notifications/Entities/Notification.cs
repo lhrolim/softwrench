@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace softWrench.sW4.Notifications.Entities {
     public class Notification {
         private readonly string _application;
+        private readonly string _targetSchema;
         private readonly string _id;
         private readonly int _uId;
         private readonly int _parentId;
@@ -20,6 +21,7 @@ namespace softWrench.sW4.Notifications.Entities {
         private bool _isRead;
 
         public string Application { get { return _application; } }
+        public string TargetSchema { get { return _targetSchema; } }
         public string Id { get { return _id; } }
         public int UId { get { return _uId; } }
         public int ParentId { get { return _parentId; } }
@@ -32,8 +34,9 @@ namespace softWrench.sW4.Notifications.Entities {
         public bool IsHidden { get { return _isHidden; } set { _isHidden = value; }}
         public bool IsRead { get { return _isRead; } set { _isRead = value; }}
 
-        public Notification(string application, string id, int uid, int parentid, string parentApplication, string summary, string createby, DateTime notificationdate, long rowstamp, bool ishidden = false, bool isread = false) {
+        public Notification(string application, string targetschema, string id, int uid, int parentid, string parentApplication, string summary, string createby, DateTime notificationdate, long rowstamp, bool ishidden = false, bool isread = false) {
             _application = application;
+            _targetSchema = targetschema;
             _id = id;
             _uId = uid;
             _parentId = parentid;

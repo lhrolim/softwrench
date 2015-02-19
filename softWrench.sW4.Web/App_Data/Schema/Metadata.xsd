@@ -179,6 +179,9 @@
 
         </complexType>
       </element>
+      <element maxOccurs="unbounded" minOccurs="0" ref="tns:notifications">
+
+      </element>
       <element name="properties" maxOccurs="1" minOccurs="0">
         <complexType>
           <sequence>
@@ -991,5 +994,40 @@
   <complexType name="RemoveCommand">
     <attribute name="id" type="string"></attribute>
   </complexType>
+
+
+  <complexType name="NotificationsDeclarationsType">
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="notification" type="tns:Notifications" minOccurs="0"
+				maxOccurs="unbounded"></element>
+    </choice>
+  </complexType>
+
+  <complexType name="Notifications">
+    <annotation>
+      <documentation>
+        Defines the notification configuration for a particular
+        application. 
+        
+        If the role is not defined, a default
+        role will be generated using the pattern application.notifications.
+        
+        If the label is not defined, the application's
+        title will be used in its place.
+        
+        The targetsschema defines the schema that the user will be navigated
+        to upon clicking on the notification link.
+      </documentation>
+    </annotation>
+    <attribute name="role" type="string"></attribute>
+    <attribute name="label" type="string"></attribute>
+    <attribute name="icon" type="string"></attribute>
+    <attribute name="targetschema" type="string" use="required"></attribute>
+    <attribute name="whereclause" type="string"></attribute>
+  </complexType>
+  
+  <element name="notifications" type="tns:NotificationsDeclarationsType">
+
+  </element>
 
 </schema>
