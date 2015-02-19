@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo
+﻿namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo
 {
     public sealed class AttachmentDTO {
 
