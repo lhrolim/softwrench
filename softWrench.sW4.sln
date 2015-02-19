@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softWrench.sW4", "softWrench.sW4\softWrench.sW4.csproj", "{CE228C26-938D-4D6F-95FA-12CC5241AFB5}"
 EndProject

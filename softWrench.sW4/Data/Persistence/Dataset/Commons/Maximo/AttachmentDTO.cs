@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo
 {
-    public sealed class AttachmentParameters {
+    public sealed class AttachmentDTO {
 
         public string Title { get; set; }
 

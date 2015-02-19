@@ -66,7 +66,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var maximoObj = maximoTemplateData.IntegrationObject;
             // Attachment from a newly created ticket or work order
             if (!String.IsNullOrWhiteSpace(entity.GetUnMappedAttribute("newattachment")) && !String.IsNullOrWhiteSpace(entity.GetUnMappedAttribute("newattachment_path"))) {
-                var attachmentParam = new AttachmentParameters() {
+                var attachmentParam = new AttachmentDTO() {
                     Data = entity.GetUnMappedAttribute("newattachment"),
                     Path = entity.GetUnMappedAttribute("newattachment_path")
                 };
@@ -74,7 +74,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
             // Screenshot
             if (!String.IsNullOrWhiteSpace(entity.GetUnMappedAttribute("newscreenshot"))) {
-                var screenshotParam = new AttachmentParameters() {
+                var screenshotParam = new AttachmentDTO() {
                     Data = entity.GetUnMappedAttribute("newscreenshot"),
                     Path = "screen" + DateTime.Now.ToUserTimezone(user).ToString("yyyyMMdd") + ".png"
                 };
@@ -88,7 +88,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo");
                     var title = attachment.GetAttribute("document").ToString();
                     var desc = docinfo != null && docinfo.Fields["description"] != null ? docinfo.Fields["description"].ToString() : "";
-                    var content = new AttachmentParameters() {
+                    var content = new AttachmentDTO() {
                         Title = title,
                         Data = attachment.GetUnMappedAttribute("newattachment"),
                         Path = attachment.GetUnMappedAttribute("newattachment_path"),
@@ -106,7 +106,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         /// </summary>
         /// <param name="maximoObj">maximo integratio object</param>
         /// <param name="attachment">attachment object</param>
-        public void AddAttachment(object maximoObj, AttachmentParameters attachment) {
+        public void AddAttachment(object maximoObj, AttachmentDTO attachment) {
             var user = SecurityFacade.CurrentUser();
             // Exit function - do not add attachment
             if (String.IsNullOrEmpty(attachment.Data)) {
@@ -142,7 +142,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             HandleAttachmentDataAndPath(attachment.Data, docLink, attachment.Path);
         }
 
-        private void CommonCode(object maximoObj, object docLink, InMemoryUser user, AttachmentParameters attachment) {
+        private void CommonCode(object maximoObj, object docLink, InMemoryUser user, AttachmentDTO attachment) {
             w.SetValue(docLink, "ADDINFO", true);
             w.CopyFromRootEntity(maximoObj, docLink, "CREATEBY", user.Login, "reportedby");
             w.CopyFromRootEntity(maximoObj, docLink, "CREATEDATE", DateTime.Now.FromServerToRightKind());

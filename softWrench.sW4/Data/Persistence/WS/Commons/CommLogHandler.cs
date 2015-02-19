@@ -86,7 +86,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 var attachmentsPath = attachmentPath.Split(',');
                 AttachmentHandler attachment = new AttachmentHandler();
                 for (int i = 0, j=0; i < attachmentsPath.Length; i++){
-                    var content = new AttachmentParameters() {
+                    var content = new AttachmentDTO() {
                         Data = attachmentsData[j] + ',' + attachmentsData[j+1],
                         Path = attachmentPath[i].ToString()
                     };

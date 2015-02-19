@@ -188,7 +188,7 @@
     <Compile Include="Data\Persistence\Dataset\Commons\BaseDataSetSearchHelper.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\DataSetConfigurationException.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\MaximoApplicationDataSet.cs" />
-    <Compile Include="Data\Persistence\Dataset\Commons\Maximo\AttachmentDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Maximo\AttachmentDTO.cs" />
     <Compile Include="Data\Persistence\Engine\AConnectorEngine.cs" />
     <Compile Include="Data\Persistence\Engine\SWDBConnectorEngine.cs" />
     <Compile Include="Data\Persistence\PaginationData.cs" />
