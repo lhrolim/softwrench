@@ -900,6 +900,11 @@
           <relationshipAttribute to="ldownertable" literal="WORKLOG" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
         </relationship>
+        <relationship to="synonymdomain" >
+          <relationshipAttribute from="logtype" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="LOGTYPE" quoteLiteral="true"/>
+          <relationshipAttribute to="defaults" literal="1" quoteLiteral="true"/>
+        </relationship>
         <relationship to="person" qualifier="createdbyperson" >
           <relationshipAttribute from="createby" to="personid" primary="true"/>
         </relationship>
