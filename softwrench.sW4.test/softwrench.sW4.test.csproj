@@ -104,6 +104,7 @@
     <Compile Include="Metadata\MissingSchemaFieldsTest.cs" />
     <Compile Include="Metadata\MetadataPropertiesTest.cs" />
     <Compile Include="Metadata\MenuParsingTest.cs" />
+    <Compile Include="Metadata\CustomizationTest.cs" />
     <Compile Include="Resources\MifSRSample.cs" />
     <Compile Include="ToStringELParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

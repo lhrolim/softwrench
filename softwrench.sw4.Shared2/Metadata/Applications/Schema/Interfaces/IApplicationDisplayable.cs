@@ -21,5 +21,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces {
 
         bool? ReadOnly { get; set; }
 
+
+
     }
 }

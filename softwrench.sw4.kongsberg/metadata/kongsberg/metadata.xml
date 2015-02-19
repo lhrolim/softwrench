@@ -1054,6 +1054,7 @@
         </list>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
+
           <section id ="siteidsection"/>
           <field attribute="ticketid" label="Reference ID:" readonly="true"/>
           <field attribute="ticketuid" label="Unique ID:" hidden="true"/>

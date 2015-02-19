@@ -293,6 +293,7 @@
     <Compile Include="Metadata\Validator\MetadataParsingUtils.cs" />
     <Compile Include="Metadata\Validator\MenuXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\PropertiesXmlInitializer.cs" />
+    <Compile Include="Metadata\Validator\SchemaMerger.cs" />
     <Compile Include="Metadata\Validator\SWDBMetadataXmlSourceInitializer.cs" />
     <Compile Include="Preferences\GridFilterAssociation.cs" />
     <Compile Include="Preferences\GridFilter.cs" />

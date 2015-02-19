@@ -137,15 +137,15 @@
     <attribute name="reverselookupattribute" type="string">
       <annotation>
         <documentation>
-        if this attribute is filled specifies that this is a reverse relationship, and that this attribute should be used as the association value, instead of the primary attribute.  
-        the primary relationship would still be used to set the initial value of the main entity
-        </documentation>  
+          if this attribute is filled specifies that this is a reverse relationship, and that this attribute should be used as the association value, instead of the primary attribute.
+          the primary relationship would still be used to set the initial value of the main entity
+        </documentation>
       </annotation>
     </attribute>
     <attribute name="ignoreprimary" type="boolean">
       <annotation>
         <documentation>
-            If the association doesn´t contain a primary attribute this should be marked explicitely as true. 95% of the relationships contains primary attributes, so it´s good to have a validation
+          If the association doesn´t contain a primary attribute this should be marked explicitely as true. 95% of the relationships contains primary attributes, so it´s good to have a validation
         </documentation>
       </annotation>
     </attribute>
@@ -246,7 +246,11 @@
           </element>
           <element name="event" type="tns:schemaEvent" minOccurs="0"
             maxOccurs="unbounded">
-          </element>   
+          </element>
+          <element name="customization" type="tns:CustomizationType" minOccurs="0"
+            maxOccurs="unbounded">
+          </element>
+
         </choice>
         <attribute name="platform" type="string" use="optional">
         </attribute>
@@ -266,9 +270,63 @@
         <attribute name="title" type="string"></attribute>
         <attribute name="abstract" type="boolean"></attribute>
         <attribute name="parentschema" type="string"></attribute>
+        <attribute name="redeclaring" type="string" use="optional" default="false"> 
+          <annotation>
+            <documentation>
+              If true, it means that we should desconsider any schema declared with the same name on the templates file and use only this schema declaration.
+            </documentation>
+          </annotation>
+          
+        </attribute>
       </extension>
     </complexContent>
   </complexType>
+
+  <complexType name="CustomizationType">
+    <annotation>
+      <documentation>
+        Used for modifying the base template on a given position, adding or removing fields for a customer. Ex: customer xxx wants to use workorder template, modifying just a field of a schema. 
+        Then, he would need to redeclare the schema with the same key and a customization on it, with an empty body.
+        
+        One single redeclared schema could contain several customizations in place.
+      </documentation>
+    </annotation>
+
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="field" type="tns:Field" maxOccurs="unbounded"
+       minOccurs="0">
+      </element>
+      <element maxOccurs="unbounded" minOccurs="0" ref="tns:section"/>
+      <element name="association" type="tns:Association"
+        maxOccurs="unbounded" minOccurs="0">
+      </element>
+      <element name="composition" type="tns:Composition"
+        maxOccurs="unbounded" minOccurs="0">
+      </element>
+      <element name="optionfield" type="tns:OptionField"
+        maxOccurs="unbounded" minOccurs="0">
+      </element>
+      <element name="tab" type="tns:TabType" minOccurs="0"/>
+      <element name="reference" minOccurs="0" maxOccurs="unbounded" type="tns:referenceComplexType"/>
+    </choice>
+
+    <attribute name="position" type="string" use="required">
+      <annotation>
+        <documentation>
+          Indicates where to insert a this customization.
+
+          xxx --> replaces element with id xxx (attribute or target) with the customization. If the customization body is empty, then removes the element
+          +xxx --> inserts the customization after the element xxx.
+          -xxx --> inserts the customization before the element xxx
+
+          In any case, if xxx is not found throw an exception
+
+        </documentation>
+      </annotation>
+    </attribute>
+
+  </complexType>
+
 
   <simpleType name="modeType">
     <restriction base="string">
@@ -280,7 +338,7 @@
   <complexType name="Field">
     <choice minOccurs="0" maxOccurs="unbounded">
       <element name="renderer" type="tns:Renderer" maxOccurs="1"
-				minOccurs="0">
+        minOccurs="0">
       </element>
       <element name="filter" type="tns:Filter" maxOccurs="1"
         minOccurs="0">
@@ -293,7 +351,7 @@
         </complexType>
       </element>
       <element name="lookup" type="tns:Lookup" maxOccurs="1"
-				minOccurs="0">
+        minOccurs="0">
       </element>
       <element name="date" maxOccurs="1" minOccurs="0">
         <complexType>
@@ -302,7 +360,7 @@
         </complexType>
       </element>
       <element name="event" type="tns:inputEvent" minOccurs="0"
-				maxOccurs="unbounded"></element>
+        maxOccurs="unbounded"></element>
     </choice>
 
     <attribute name="attribute" type="string"></attribute>
@@ -399,7 +457,7 @@
     <attribute name="valuefield" type="string" use="optional">
       <annotation>
         <documentation>
-          The name of the property (column) that should be used for picking up the value of the association entry. That value would then be inserted into the datamap[target] field. 
+          The name of the property (column) that should be used for picking up the value of the association entry. That value would then be inserted into the datamap[target] field.
           If none provided, then the framework would use the primary key of the entity relationship as the value column
         </documentation>
       </annotation>
@@ -859,10 +917,10 @@
   <complexType name="baseEvent">
     <annotation>
       <documentation>
-        The base event uses a service and method attribute 
-        to define the service.method to call. Extensions of 
-        this event type should be used to define type 
-        attributes containing enumerations of the applicable 
+        The base event uses a service and method attribute
+        to define the service.method to call. Extensions of
+        this event type should be used to define type
+        attributes containing enumerations of the applicable
         event types.
       </documentation>
     </annotation>

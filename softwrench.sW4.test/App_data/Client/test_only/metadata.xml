@@ -1,22 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata" >
-  <globalproperties>
-    
-    <property key="test" value="globalvalue"/>
-    <property key="global" value="globalvalue"/>
-    <property key="config" value="globalvalue"/>
 
-    <environment key="unittest">
-      <property key="test" value="envvalue"/>
-      <property key="config" value="envvalue"/>
-    </environment>
-
-    <environment key="qa">
-      <property key="global" value="qavalue"/>
-    </environment>
-    
-    
-  </globalproperties>
+  <templates>
+    <template path="@worklogs.xml"/>
+  </templates>
   
   <entities>
     <entity name="workorder" idAttribute="wonum" >
@@ -645,25 +632,27 @@
     </application>
 
     <application name="worklog" title="Work Logs" entity="worklog" id="00000000-0000-0000-0000-000000000008" >
-      <properties>
-        <property key="mobile.userInteractionEnabled" value="false"/>
-        <property key="mobile.fetchlimit" value="300"/>
-      </properties>
+      <components>
+        <componentdisplayable id="test4">
+          <field attribute="www"/>
+        </componentdisplayable>
+      </components>
+      
       <schemas>
         <list>
-          <field  attribute="description" label="Description" qualifier="title"/>
-          <field attribute="createdate" label="Date" qualifier="subtitle"/>
+          <customization position="+description">
+            <field attribute="xxx" hidden="true"/>
+          </customization>
+          <customization position="-createdate">
+            <field attribute="yyy" hidden="true"/>
+          </customization>
         </list>
         <detail>
-          <field attribute="worklogid" hidden="true" />
-          <field attribute="orgid" hidden="true" />
-          <field attribute="siteid" hidden="true" />
-          <field attribute="class" hidden="true" />
-          <field attribute="recordkey" hidden="true" />
-          <field attribute="createby" hidden="true" />
-          <field attribute="createdate" label="Date" readonly="true" />
-          <field attribute="description" label="Summary" requiredexpression="true" />
-          <field attribute="longdescription_.ldtext" label="Description" />
+          <customization position="description"/>
+          <customization position="longdescription_.ldtext">
+            <field attribute="zzz" hidden="true"/>
+            <reference id="test4"/>
+          </customization>
         </detail>
       </schemas>
     </application>
