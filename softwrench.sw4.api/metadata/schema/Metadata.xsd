@@ -273,7 +273,7 @@
         <attribute name="redeclaring" type="string" use="optional" default="false"> 
           <annotation>
             <documentation>
-              If true, it means that we should desconsider any schema declared with the same name on the templates file and use only this schema declaration.
+              If true, it means that we should disconsider any schema declared with the same name on the templates file and use only this schema declaration.
             </documentation>
           </annotation>
           
@@ -286,7 +286,7 @@
     <annotation>
       <documentation>
         Used for modifying the base template on a given position, adding or removing fields for a customer. Ex: customer xxx wants to use workorder template, modifying just a field of a schema. 
-        Then, he would need to redeclare the schema with the same key and a customization on it, with an empty body.
+        Then, he would need to redeclare the schema with the same key and a customization on it with the fields (or empty to replace)
         
         One single redeclared schema could contain several customizations in place.
       </documentation>
