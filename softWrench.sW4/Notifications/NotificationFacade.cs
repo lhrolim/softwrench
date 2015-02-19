@@ -79,18 +79,18 @@ namespace softWrench.sW4.Notifications {
         }
 
         public void UpdateNotificationStreams() {
-            var query = string.Format("select 'CL' + ownertable as application, CONVERT(varchar(10), commlogid) as id, commloguid as uid, " +
+            var query = string.Format("select 'commlog' as application, null as targetschema,'communication' as label, 'fa-mail-forward' as icon ,CONVERT(varchar(10), commlogid) as id, commloguid as uid, " +
                                       "ownerid as parentid, ownertable as parentapplication, subject as summary, " +
                                       "createby as changeby, createdate as changedate, rowstamp from commlog " +
                                       "where createdate >  DATEADD(HOUR,-{0},GETDATE()) and createdate < GETDATE() union " +
-                                      "select class as application, ticketid as id, ticketuid as uid, null as parentid, null as parentapplication, description as summary," +
+                                      "select 'servicerequest' as application, 'editdetail' as targetschema, 'service request' as label, 'fa-ticket' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentapplication, description as summary," +
                                       "changeby, changedate, rowstamp from ticket " +
-                                      "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() union " +
-                                      "select 'WO' as application, wonum as id, workorderid as uid, null as parentid, null as parentapplication, description as summary, " +
+                                      "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() and class='SR' union " +
+                                      "select 'incident' as application, 'editdetail' as targetschema, 'incident' as label, 'fa-warning' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentapplication, description as summary," +
+                                      "changeby, changedate, rowstamp from ticket " +
+                                      "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() and class='INCIDENT' union " +
+                                      "select 'workorder' as application, 'editdetail' as targetschema, 'work order' as label, 'fa-wrench' as icon,wonum as id, workorderid as uid, null as parentid, null as parentapplication, description as summary, " +
                                       "changeby, changedate, rowstamp from workorder " +
-                                      "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() union " +
-                                      "select 'PR' as application, prnum as id, prid as uid, null as parentid, null as parentapplication, description as summary, " +
-                                      "changeby, changedate, rowstamp from pr " +
                                       "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() " +
                                       "order by rowstamp desc", _hoursToPurge);
 
@@ -100,7 +100,10 @@ namespace softWrench.sW4.Notifications {
             foreach (var record in result)
             {
                 var application = record["application"];
+                var targetschema = record["targetschema"];
                 var id = record["id"];
+                var label = record["label"];
+                var icon = record["icon"];
                 var uid = Int32.Parse(record["uid"]);
                 int parentid;
                 Int32.TryParse(record["parentid"], out parentid);
@@ -110,10 +113,11 @@ namespace softWrench.sW4.Notifications {
                 var changeby = record["changeby"];
                 var changedate = DateTime.Parse(record["changedate"]);
                 var rowstamp = BitConverter.ToInt64(StringUtil.GetBytes(record["rowstamp"]), 2);
-                var notification = new Notification(application, id, uid, parentid, parentapplication, summary, changeby, changedate, rowstamp);
+                var notification = new Notification(application, targetschema, label, icon, id, uid, parentid, parentapplication, summary, changeby, changedate, rowstamp);
                 streamToUpdate.InsertNotificationIntoStream(notification);
             }
         }
+
 
         //By default this is only purging the allRole notification stream
         //by any record changed more than 24 hours ago
