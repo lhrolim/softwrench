@@ -1,11 +1,9 @@
-﻿function ActivityStream($scope, $http, $log) {
+﻿function ActivityStream($scope, $http, $log, $interval) {
 
     var log = $log.getInstance('sw4.activityStream');
 
 
     $scope.formatDate = function (notificationDate) {
-        //console.log('format date count');
-
         var currentDate = new Date();
         var nowMils = currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000);
         var notificationMils = new Date(notificationDate).getTime();
@@ -16,13 +14,13 @@
         return 'About ' + dateMessage + ' ago.';
     };
 
-    $scope.markAllRead = function (notificationDate) {
+    $scope.markAllRead = function () {
         log.debug('markAllRead');
 
         //TODO: mark all notifications read (confirmation alert?)
     }
 
-    $scope.openLink = function (notificationDate) {
+    $scope.openLink = function () {
         log.debug('openLink');
 
         //TODO: mark current notification as read and open link
@@ -53,5 +51,21 @@
         );
     }
 
+    //automatically refresh the activity stream every five minutes
+    $interval(function () {
+        $scope.refreshStream();
+    }, 60000 * 5);
+
+    //get the current notifications
     $scope.refreshStream();
+
+    //open and close activity pane
+    $('#activitystream .handle').click(function () {
+        $("#activitystream").toggleClass('open');
+    });
+
+    //set the activity pane the same height as the window
+    $(window).resize(function () {
+        $('#activitystream').height($(window).height());
+    });
 }
