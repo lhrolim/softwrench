@@ -78,7 +78,7 @@
                     <div class="read pull-left"><i class="fa fa-circle" ng-class="activity.isRead ? 'isread' : 'notread'"></i></div>
                     <div class="icon pull-left"><i class="fa fa-plus-square"></i></div>
                     <div class="text pull-left">
-                        <div class="info"><span class="by">{{activity.createBy}}</span> changed {{activity.application}} <a href="" ng-click="openLink()">{{activity.id}}</a></div>
+                        <div class="info"><span class="by">{{activity.createBy}}</span> changed {{activity.application}} <a href="" ng-click="openLink(activity)">{{activity.id}}</a></div>
                         <div class="date">{{formatDate(activity.notificationDate)}}</div>
                     </div>
                 </div>
