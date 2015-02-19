@@ -174,6 +174,7 @@ app.factory('contextService', function ($rootScope) {
             this.insertIntoContext('matrectransTransfersListScanOrder', config.matrectransTransfersListScanOrder);
             this.insertIntoContext('reservedMaterialsListScanOrder', config.reservedMaterialsListScanOrder);
             this.insertIntoContext('invIssueListBeringScanOrder', config.invIssueListBeringScanOrder);
+            this.insertIntoContext('newKeyISsueDetailScanOrder', config.newKeyIssueDetailScanOrder);
         },
 
         getResourceUrl: function (path) {

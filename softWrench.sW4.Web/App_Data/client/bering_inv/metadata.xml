@@ -801,7 +801,7 @@
           <event type="beforesubmit.postvalidation" service="checkpointService" method="clearCheckpoints"/>
           <properties>
             <property key="detail.titleexpression" value="'Issues and Returns: {0}'.format(@matusetransid)"/>
-            <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
+            <property key="config.fullKey" value="/Global/Details/KeyIssue/ScanBar"/>
             <property key="nextschema.schemaid" value="invIssueListBering"/>
           </properties>
         </schema>
