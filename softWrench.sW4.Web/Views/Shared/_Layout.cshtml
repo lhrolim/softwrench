@@ -35,21 +35,7 @@
     <input type="hidden" id="routes_basecontext" value="@Request.ApplicationPath" />
     <input type="hidden" id="hddn_popupmode" value="@Request.Params.Get("popupmode")" />
     <input type="hidden" id="hiddn_user" value="@Model.UserJSON" />
-
     <div class="spinner" data-class="spinner" id="mainspinner"></div>
-    <div id="activitystream" ng-controller="ActivityStream" >
-        <header>
-            <h2>Recent Activity</h2>
-            <button><i class="fa fa-refresh"></i></button>
-        </header>
-        <div class="messages">
-            <div class="message" ng-repeat="activity in activities" ng-class="$even? 'even' : 'odd'">
-                <div class="icon"><i class="fa fa-plus-square"></i></div>
-                <div class="text">{{activity.createBy}} did some stuff to {{activity.application}} <a href="#">{{activity.id}}</a></div>
-                <div class="date">{{activity.notificationDate}}</div>
-            </div>
-        </div>
-    </div>
     <div ng-controller="LayoutController" class="container {{clientName}} {{deviceType}}">
         <header class="site-header navbar-fixed-top hiddenonprint">
             <admin-menu is-client-admin="isClientAdmin"
@@ -77,6 +63,48 @@
             @RenderBody()
         </div>
     </div>
+    <div id="activitystream" class="clearfix open" ng-controller="ActivityStream">
+        <div class="handle">Activity Stream</div>
+        <div class="pane">
+            <header>
+                <h2 class="pull-left">Recent Activity</h2>
+                <div class="buttons pull-right">
+                    <div class="button" ng-click="markAllRead()"><i class="fa fa-check-square"></i></div>
+                    <div class="button" ng-click="refreshStream()"><i class="fa fa-refresh"></i></div>
+                </div>
+            </header>
+            <div class="messages">
+                <div class="message clearfix" ng-repeat="activity in activities" ng-class="$even ? 'even' : 'odd'">
+                    <div class="read pull-left"><i class="fa fa-circle" ng-class="activity.isRead ? 'isread' : 'notread'"></i></div>
+                    <div class="icon pull-left"><i class="fa fa-plus-square"></i></div>
+                    <div class="text pull-left">
+                        <div class="info"><span class="by">{{activity.createBy}}</span> changed {{activity.application}} <a href="" ng-click="openLink()">{{activity.id}}</a></div>
+                        <div class="date">{{formatDate(activity.notificationDate)}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        //$(function () {
+        //    $('#activitystream').tabSlideOut({
+        //        tabHandle: '.handle',                     //class of the element that will become your tab
+        //        pathToTabImage: 'images/contact_tab.gif', //path to the image for the tab //Optionally can be set using css
+        //        imageHeight: '122px',                     //height of tab image           //Optionally can be set using css
+        //        imageWidth: '40px',                       //width of tab image            //Optionally can be set using css
+        //        tabLocation: 'left',                      //side of screen where tab lives, top, right, bottom, or left
+        //        speed: 300,                               //speed of animation
+        //        action: 'click',                          //options: 'click' or 'hover', action to trigger animation
+        //        topPos: '200px',                          //position from the top/ use if tabLocation is left or right
+        //        leftPos: '20px',                          //position from left/ use if tabLocation is bottom or top
+        //        fixedPosition: false                      //options: true makes it stick(fixed position) on scroll
+        //    });
+
+        //});
+
+    </script>
+
     <script type="text/javascript">
         $(document).on('touch click', '*[data-calendericon="true"]', function (e) {
             $('input[type="text"]', $(this).parent()).focus();
