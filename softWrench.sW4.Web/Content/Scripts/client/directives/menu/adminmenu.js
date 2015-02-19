@@ -34,7 +34,11 @@
                 contextService.clearContext();
                 sessionStorage['ctx_loggedin'] = false;
             };
-            
+
+            //show or hide the menu when the expand button is clicked
+            $('.menu-expand').click(function () {
+                jQuery(this).toggleClass('menu-open');
+            });
         }
     };
 });
