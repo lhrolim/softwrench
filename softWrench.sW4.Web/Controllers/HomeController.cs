@@ -17,6 +17,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using softWrench.sW4.Web.Controllers.Configuration;
 using softWrench.sW4.Web.Security;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -85,6 +86,7 @@ namespace softWrench.sW4.Web.Controllers {
             var reservedMaterialsListScanOrder = _facade.Lookup<string>(ConfigurationConstants.ReservedMaterialsListScanOrder);
             var matrectransTransfersListScanOrder = _facade.Lookup<string>(ConfigurationConstants.MatrectransTransfersListScanOrder);
             var invIssueListBeringScanOrder = _facade.Lookup<string>(ConfigurationConstants.InvIssueListBeringScanOrder);
+            var newKeyIssueDetailScanOrder = _facade.Lookup<string>(ConfigurationConstants.NewKeyIssueDetailScanOrder);
 
             return new HomeConfigs() {
                 Logo = logoIcon,
@@ -104,6 +106,7 @@ namespace softWrench.sW4.Web.Controllers {
                 ReservedMaterialsListScanOrder = reservedMaterialsListScanOrder,
                 MatrectransTransfersListScanOrder = matrectransTransfersListScanOrder,
                 InvIssueListBeringScanOrder = invIssueListBeringScanOrder,
+                NewKeyIssueDetailScanOrder = newKeyIssueDetailScanOrder,
             };
         }
 
