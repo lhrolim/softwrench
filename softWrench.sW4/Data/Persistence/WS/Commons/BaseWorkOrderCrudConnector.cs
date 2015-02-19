@@ -64,7 +64,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             HandleMaterials((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
             HandleLabors((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
             HandleTools((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
-            HandleAttachments((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject, maximoTemplateData.ApplicationMetadata);
+
+            // Update or create attachments
+            _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
             
             base.BeforeUpdate(maximoTemplateData);
         }
@@ -280,46 +282,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             WsUtil.SetValue(woserviceaddress, "SITEID", user.SiteId);
 
             ReflectionUtil.SetProperty(woserviceaddress, "action", OperationType.AddChange.ToString());
-        }
-
-        protected virtual void HandleAttachments(CrudOperationData entity, object wo, ApplicationMetadata metadata) {
-            var user = SecurityFacade.CurrentUser();
-
-            var attachmentParam = new AttachmentParameters() { 
-                Data = entity.GetUnMappedAttribute("newattachment"),
-                Path = entity.GetUnMappedAttribute("newattachment_path")
-            };
-            if (!String.IsNullOrWhiteSpace(attachmentParam.Data) && !String.IsNullOrWhiteSpace(attachmentParam.Path)) {
-                _attachmentHandler.HandleAttachments(wo, attachmentParam, metadata);
-            }
-
-            var screenshotParam = new AttachmentParameters() {
-                Data = entity.GetUnMappedAttribute("newscreenshot"),
-                Path = "screen" + DateTime.Now.ToUserTimezone(user).ToString("yyyyMMdd") + ".png"
-            };
-            if (!String.IsNullOrWhiteSpace(screenshotParam.Data) && !String.IsNullOrWhiteSpace(screenshotParam.Path)) {
-                _attachmentHandler.HandleAttachments(wo, attachmentParam, metadata);
-            }
-
-            var attachments = entity.GetRelationship("attachment");
-            if (attachments != null) {
-                // this will only filter new attachments
-                foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.Id == null)) {
-                    var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo");
-                    var title = attachment.GetAttribute("document").ToString();
-                    var desc = docinfo != null && docinfo.Fields["description"] != null ? docinfo.Fields["description"].ToString() : ""; 
-                    var content = new AttachmentParameters() {
-                        Title = title,
-                        Data = attachment.GetUnMappedAttribute("newattachment"),
-                        Path = attachment.GetUnMappedAttribute("newattachment_path"),
-                        Description = desc
-                    };
-
-                    if (content.Data != null) {
-                        _attachmentHandler.HandleAttachments(wo, content, metadata);
-                    }
-                }
-            }
         }
     }
 }
