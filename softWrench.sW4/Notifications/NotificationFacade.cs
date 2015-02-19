@@ -109,11 +109,19 @@ namespace softWrench.sW4.Notifications {
                 Int32.TryParse(record["parentid"], out parentid);
                 
                 var parentapplication = record["parentapplication"];
+                string parentlabel =null;
+                if (parentapplication == "SR"){
+                    parentlabel = "service request";
+                } else if (parentapplication == "WORKORDER"){
+                    parentlabel = "work order";
+                } else if (parentapplication == "SR"){
+                    parentlabel = "incident";
+                }
                 var summary = record["summary"];
                 var changeby = record["changeby"];
                 var changedate = DateTime.Parse(record["changedate"]);
                 var rowstamp = BitConverter.ToInt64(StringUtil.GetBytes(record["rowstamp"]), 2);
-                var notification = new Notification(application, targetschema, label, icon, id, uid, parentid, parentapplication, summary, changeby, changedate, rowstamp);
+                var notification = new Notification(application, targetschema, label, icon, id, uid, parentid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp);
                 streamToUpdate.InsertNotificationIntoStream(notification);
             }
         }
