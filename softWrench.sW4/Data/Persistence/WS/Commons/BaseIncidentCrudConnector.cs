@@ -112,14 +112,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
                     if (content.Data != null) {
                          // Check if file was rich text file - needed to convert it to word document.
-                        if (attachmentParam.Path.ToLower().EndsWith("rtf")) {
+                        if (content.Path.ToLower().EndsWith("rtf")) {
                             var bytes = Convert.FromBase64String(attachmentParam.Data);
                             var decodedString = Encoding.UTF8.GetString(bytes);
                             var compressedScreenshot = CompressionUtil.CompressRtf(decodedString);
 
                             bytes = Encoding.UTF8.GetBytes(compressedScreenshot);
-                            attachmentParam.Data = Convert.ToBase64String(bytes);
-                            attachmentParam.Path = attachmentParam.Path.Substring(0, attachmentParam.Path.Length - 3) + "doc";
+                            content.Data = Convert.ToBase64String(bytes);
+                            content.Path = attachmentParam.Path.Substring(0, attachmentParam.Path.Length - 3) + "doc";
                         }
 
                         _attachmentHandler.HandleAttachments(wo, content, metadata);
