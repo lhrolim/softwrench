@@ -16,13 +16,13 @@ namespace softwrench.sw4.webcommons.classes.bundles {
 
         public void PopulateScriptBundles(BundleCollection bundles) {
             // When try
-//         bundles.Add(new ScriptBundle("~/Content/Scripts/angular/angular").Include(
-//                "~/Content/Scripts/vendor/angular/angular.js",
-//                "~/Content/Scripts/vendor/angular/angular-strap.js",
-//                "~/Content/Scripts/vendor/angular/angular-sanitize.js",
-//                "~/Content/Scripts/vendor/angular/bindonce.js",
-//                "~/Content/Scripts/vendor/angular/components/*.js"
-//                ));
+            //         bundles.Add(new ScriptBundle("~/Content/Scripts/angular/angular").Include(
+            //                "~/Content/Scripts/vendor/angular/angular.js",
+            //                "~/Content/Scripts/vendor/angular/angular-strap.js",
+            //                "~/Content/Scripts/vendor/angular/angular-sanitize.js",
+            //                "~/Content/Scripts/vendor/angular/bindonce.js",
+            //                "~/Content/Scripts/vendor/angular/components/*.js"
+            //                ));
 
 
             bundles.Add(new ScriptBundle("~/Content/Scripts/client/application/shared").Include(
@@ -51,9 +51,8 @@ namespace softwrench.sw4.webcommons.classes.bundles {
             const string baseAppPath = basePath + "/application";
             const string baseMediaPath = basePath + "/media";
 
-            var clientPath = String.Format("~/Content/customers/styles/{0}", clientName); ;
-            if (AssemblyLocator.CustomerAssemblyExists())
-            {
+            var clientPath = String.Format("~/Content/styles/{0}", clientName); ;
+            if (AssemblyLocator.CustomerAssemblyExists()) {
                 clientPath = String.Format("~/Content/customers/{0}/styles/", clientName);
             }
 
