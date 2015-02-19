@@ -64,6 +64,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <property key ="icon.composition.tab" value="fa fa-envelope-o"/>
       </properties>
 
+      <!-- Concept example of notification configuration highlighting the ability to configure independent roles on an application -->
+      <!--<notifications>-->
+        
+        <!-- if role is not specified, by default application.notifications will be the role-->
+        <!--<notification role="notification.purchasing.receiving" label="PO" icon="fa fa-dollar" targetschema="editdetail" whereclause="sendtoreceiving = true"/>
+        <notification role="notification.purchasing" label="PO-Receiving" icon="" targetschema="editdetail"/>
+      </notifications>-->
+      
       <schemas>
         <schema id="list" stereotype="compositionlist">
           <!--<properties>
