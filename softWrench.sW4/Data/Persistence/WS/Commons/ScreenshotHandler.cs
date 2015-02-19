@@ -44,7 +44,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     Data = screenshotString
                 };
 
-                _attachmentHandler.HandleAttachments(maximoObj, screenshot, applicationMetadata);
+                _attachmentHandler.AddAttachment(maximoObj, screenshot);
             }
         }
 

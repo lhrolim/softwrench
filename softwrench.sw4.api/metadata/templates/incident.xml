@@ -262,7 +262,6 @@
           <!--composition relationship="solution" label="Solution">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
           </composition-->
-          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
         </detail>
 
         
