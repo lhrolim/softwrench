@@ -44,7 +44,7 @@ namespace softWrench.sW4.Notifications {
                 notification.IsHidden = isHidden;
 
                 var childNotificationsToUpdate = (from n in _notifications
-                    where n.ParentId == notification.UId &&
+                    where n.ParentUid == notification.UId &&
                           n.ParentApplication == application
                     select n);
 
