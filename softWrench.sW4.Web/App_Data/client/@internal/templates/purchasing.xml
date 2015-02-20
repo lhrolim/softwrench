@@ -458,11 +458,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="orderqty" label="Quantity:"/>
           <field attribute="unitcost" label="Unit Cost:"/>
           <field attribute="linecost" label="Line Cost:" evalexpression="@orderqty*@unitcost"/>
-          <!--association label="Tax Code:" target="tax1code" labelfield="tax_.taxcode" >
+          <association label="Tax Code:" target="tax1code" labelfield="tax_.taxcode" extraprojectionvalues="tax_.taxrate" showexpression="1 != 1">
             <renderer type="lookup"/>
-          </association-->
-          <field attribute="taxrate" label="Tax Rate:"/>
-          <field attribute="tax1" label="Total Tax:" evalexpression="@linecost*@taxrate"/>
+          </association>
+          <field attribute="tax_.taxrate" label="Tax Rate:"/>
+          <field attribute="tax1" label="Total Tax:" evalexpression="@linecost*@tax_.taxrate"/>
           <!--field attribute="tax1" label="Tax:" evalexpression="@linecost*@tax_.taxrate"/-->
           <!--field attribute="conversion" label="Conversion Factor:" hidden="true" default="1"/-->
         </detail>
