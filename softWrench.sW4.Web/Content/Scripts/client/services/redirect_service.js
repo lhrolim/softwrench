@@ -191,10 +191,10 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
 
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));
                 $http.get(redirectURL).success(function (data) {
+                    $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
                     if (afterRedirectHook != null) {
                         afterRedirectHook();
                     }
-                    $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
                 });
             } else {
                 var jsonString = angular.toJson(jsonData);
