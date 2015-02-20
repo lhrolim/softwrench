@@ -12,7 +12,7 @@
                 var extensionIdx = this.value.lastIndexOf(".");
                 var extension = this.value.substring(extensionIdx+1);
                 if ($.inArray(extension, validFileTypes) == -1) {
-                    alertService.alert("Invalid file. Please choose another one.");
+                    alert("Invalid file. Please choose another one.");
                     return;
                 }
 
