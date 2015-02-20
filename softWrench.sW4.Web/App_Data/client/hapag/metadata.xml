@@ -2469,25 +2469,25 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default"/>
           </field>
           <field label="Location Code" attribute="hlagpluspcustomer">
-            <renderer type="default" params="width=80px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=80px;maxwidth=80px;excelwidth=15"/>
           </field>
           <field label="User Id" attribute="aucisowner_.hlagdisplayname">
-            <renderer type="default" params="width=100px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=100px;maxwidth=100px;excelwidth=15"/>
           </field>
           <field label="Description" attribute="hlagdescription">
-            <renderer type="default" params="minwidth=100px;excelwidth=25"/>
+            <renderer type="default" params="minwidth=100px;maxwidth=100px;excelwidth=25"/>
           </field>
           <field label="Serial Number"  attribute="serialnum">
-            <renderer type="default" params="width=100px;excelwidth=20"/>
+            <renderer type="default" params="minwidth=100px;maxwidth=100px;excelwidth=20"/>
           </field>
           <field label="Computer Name" attribute="computername">
-            <renderer type="default" params="width=150px;excelwidth=20"/>
+            <renderer type="default" params="minwidth=150px;maxwidth=150px;excelwidth=20"/>
           </field>
           <field label="Usage" attribute="usage">
-            <renderer type="default" params="width=80px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=80px;maxwidth=80px;excelwidth=15"/>
           </field>
           <field label="Status" attribute="status">
-            <renderer type="default" params="width=100px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=100px;maxwidth=100px;excelwidth=15"/>
           </field>
         </list>
 
