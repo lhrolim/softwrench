@@ -106,6 +106,7 @@
           <relationshipAttribute from="itemsetid" to="itemsetid"/>
           <relationshipAttribute to="itemtype" literal="ITEM" quoteLiteral="true"/>
           <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+          <relationshipAttribute to="rotating" literal="0" quoteLiteral="true"/>
         </relationship>
         <relationship to="location" qualifier="storeroom">
           <relationshipAttribute from="siteid" to="siteid" primary="true" />
@@ -142,6 +143,8 @@
           <field attribute="itemnum" label="item"/>
           <field attribute="location" label="location"/>
           <field attribute="siteid" label="siteid"/>
+          <field attribute="conditioncode" label="conditioncode"/>
+          <field attribute="condrate" label="condrate"/>
           <field attribute="stdcost" label="stdcost"/>
           <field attribute="avgcost" label="avgcost"/>
           <field attribute="lastcost" label="lastcost"/>
@@ -155,6 +158,7 @@
           <field attribute="itemnum" label="item"/>
           <field attribute="location" label="location"/>
           <field attribute="siteid" label="siteid"/>
+          <field attribute="conditioncode" label="conditioncode"/>
           <field attribute="binnum" label="binnum"/>
           <field attribute="lotnum" label="lotnum"/>
           <field attribute="curbal" label="balance"/>
@@ -195,10 +199,11 @@
             <option label="MATERIAL" value="MATERIAL"/>
           </optionfield>
           <association label="Item:" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" showexpression="@linetype == 'ITEM'">
+            <dataprovider prefilterfunction="filterItems"/>
             <renderer type="lookup"/>
             <event type="afterchange" service="matusetranService" method="afteritemchange"/>
           </association>
-          <association label="Storeroom:" target="storeloc" labelfield="inventory_.location" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
+          <association label="Storeroom:" target="storeloc" labelfield="0invbal_.location" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
             <dataprovider postfilterfunction="filterStoreLoc"/>
             <event type="afterchange" service="matusetranService" method="afterstorelocchange"/>
           </association>
@@ -219,7 +224,7 @@
           <field attribute="qtyrequested" label="Quantity:" requiredexpression="true" qualifier="quantity">
             <renderer type="numericinput" params="min=1;max=100;decimals=0"/>
           </field>
-          <association label="GL Debit Account:" target="gldebitacct" labelfield="chartofaccounts_.accountname" >
+          <association label="GL Debit Account:" target="gldebitacct" labelfield="chartofaccounts_.accountname" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
         </detail>
@@ -227,8 +232,5 @@
     </application>
 
   </applications>
-
-
-
 
 </metadata>
