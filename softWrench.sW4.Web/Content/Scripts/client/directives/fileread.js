@@ -38,7 +38,7 @@
                     var temp = changeEvent.target.files[0].name.split(".").pop().toLowerCase();
                     if (validFileTypes.indexOf(temp) == -1) {
                         changeEvent.currentTarget.value = "";
-                        alertService.alert("Invalid file. Chose another please");
+                        alert("Invalid file. Choose another please");
                         //Updating the model
                         scope.$apply(function () {
                             scope.fileread = undefined;
