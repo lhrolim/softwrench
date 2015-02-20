@@ -79,17 +79,18 @@ namespace softWrench.sW4.Notifications {
         }
 
         public void UpdateNotificationStreams() {
-            var query = string.Format("select 'commlog' as application, null as targetschema,'communication' as label, 'fa-mail-forward' as icon ,CONVERT(varchar(10), commlogid) as id, commloguid as uid, " +
-                                      "ownerid as parentid, ownertable as parentapplication, subject as summary, " +
-                                      "createby as changeby, createdate as changedate, rowstamp from commlog " +
+            var query = string.Format("select 'commlog' as application, null as targetschema,'communication' as label, 'fa-mail-forward' as icon ,CONVERT(varchar(10), commlogid) as id, c.commloguid as uid, " +
+                                      "t.ticketid as parentid, c.ownerid as parentuid, CASE c.ownertable WHEN 'SR' THEN 'servicerequest' ELSE c.ownertable END as parentapplication, c.subject as summary, " +
+                                      "c.createby as changeby, c.createdate as changedate, c.rowstamp from commlog c " +
+                                      "left join ticket t on t.ticketuid = c.ownerid " +
                                       "where createdate >  DATEADD(HOUR,-{0},GETDATE()) and createdate < GETDATE() union " +
-                                      "select 'servicerequest' as application, 'editdetail' as targetschema, 'service request' as label, 'fa-ticket' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentapplication, description as summary," +
+                                      "select 'servicerequest' as application, 'editdetail' as targetschema, 'service request' as label, 'fa-ticket' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary," +
                                       "changeby, changedate, rowstamp from ticket " +
                                       "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() and class='SR' union " +
-                                      "select 'incident' as application, 'editdetail' as targetschema, 'incident' as label, 'fa-warning' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentapplication, description as summary," +
+                                      "select 'incident' as application, 'editdetail' as targetschema, 'incident' as label, 'fa-warning' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary," +
                                       "changeby, changedate, rowstamp from ticket " +
                                       "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() and class='INCIDENT' union " +
-                                      "select 'workorder' as application, 'editdetail' as targetschema, 'work order' as label, 'fa-wrench' as icon,wonum as id, workorderid as uid, null as parentid, null as parentapplication, description as summary, " +
+                                      "select 'workorder' as application, 'editdetail' as targetschema, 'work order' as label, 'fa-wrench' as icon,wonum as id, workorderid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary, " +
                                       "changeby, changedate, rowstamp from workorder " +
                                       "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() " +
                                       "order by rowstamp desc", _hoursToPurge);
@@ -105,8 +106,9 @@ namespace softWrench.sW4.Notifications {
                 var label = record["label"];
                 var icon = record["icon"];
                 var uid = Int32.Parse(record["uid"]);
-                int parentid;
-                Int32.TryParse(record["parentid"], out parentid);
+                var parentid = record["parentid"];
+                int parentuid;
+                Int32.TryParse(record["parentuid"], out parentuid);
                 
                 var parentapplication = record["parentapplication"];
                 string parentlabel =null;
@@ -121,7 +123,7 @@ namespace softWrench.sW4.Notifications {
                 var changeby = record["changeby"];
                 var changedate = DateTime.Parse(record["changedate"]);
                 var rowstamp = BitConverter.ToInt64(StringUtil.GetBytes(record["rowstamp"]), 2);
-                var notification = new Notification(application, targetschema, label, icon, id, uid, parentid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp);
+                var notification = new Notification(application, targetschema, label, icon, id, uid, parentid, parentuid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp);
                 streamToUpdate.InsertNotificationIntoStream(notification);
             }
         }

@@ -43,14 +43,14 @@ namespace softWrench.sW4.Notifications {
             foreach (var notification in notificationsToUpdate) {
                 notification.IsHidden = isHidden;
 
-                var childNotificationsToUpdate = (from n in _notifications
-                    where n.ParentId == notification.UId &&
+                /*var childNotificationsToUpdate = (from n in _notifications
+                    where n.ParentUId == notification.UId &&
                           n.ParentApplication == application
                     select n);
 
                 foreach (var childNotification in childNotificationsToUpdate) {
                     UpdateNotificationHiddenFlag(childNotification.Application, childNotification.Id, isHidden);
-                }
+                }*/
             }
         }
 

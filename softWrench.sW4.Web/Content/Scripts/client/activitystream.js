@@ -1,4 +1,4 @@
-function ActivityStream($scope, $http, $log, $interval, $timeout, redirectService) {
+function ActivityStream($scope, $http, $log, $interval, $timeout, redirectService, contextService) {
 
     var log = $log.getInstance('sw4.activityStream');
     var jScrollPaneAPI;
@@ -41,8 +41,9 @@ function ActivityStream($scope, $http, $log, $interval, $timeout, redirectServic
                     redirectService.goToApplicationView(activity.application, "editdetail", "input", null, param, null);
                 } else {
                     param.id = activity.parentId;
-                    redirectService.goToApplicationView(activity.parentApplication, "editdetail", "input", null, param, null);
+                    redirectService.goToApplicationView(activity.parentApplication, "editdetail", "input", null, param, null, function() { redirectService.redirectToTab(activity.application + '_'); });
                 }
+                $scope.refreshStream();
             }).error(
             function (data) {
                 var errordata = {

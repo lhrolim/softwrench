@@ -29,7 +29,7 @@ namespace softWrench.sW4.Scheduler.Jobs {
         }
 
         public override string Cron() {
-            return "0 */5 * ? * *";
+            return "0 */2 * ? * *";
         }
 
         public override void ExecuteJob() {
