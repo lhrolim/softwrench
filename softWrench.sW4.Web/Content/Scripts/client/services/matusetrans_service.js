@@ -28,7 +28,7 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
         searchService.searchWithData('invcostlookup', searchData).success(function (data) {
             var resultObject = data.resultObject;
 
-            if (resultObject[0] != undefined && resultObject.length == 1) {
+            if (resultObject.length == 1) {
                 var fields = resultObject[0].fields;
                 var costtype = parameters.fields['costtype'];
 
@@ -38,6 +38,29 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
                     parameters.fields['unitcost'] = fields.avgcost;
                 } else if (costtype === 'FIFO') {
                     parameters.fields['unitcost'] = fields.lastcost;
+                }
+
+                parameters.fields['conditioncode'] = fields.conditioncode;
+                doUpdateItemBalance(parameters);
+            }
+            else {
+                for (index = 0; index < resultObject.length; index++) {
+                    var fields = resultObject[index].fields;
+
+                    if (fields.condrate == 100) {
+                        var costtype = parameters.fields['costtype'];
+
+                        if (costtype === 'STANDARD') {
+                            parameters.fields['unitcost'] = fields.stdcost;
+                        } else if (costtype === 'AVERAGE') {
+                            parameters.fields['unitcost'] = fields.avgcost;
+                        } else if (costtype === 'FIFO') {
+                            parameters.fields['unitcost'] = fields.lastcost;
+                        }
+
+                        parameters.fields['conditioncode'] = fields.conditioncode;
+                        doUpdateItemBalance(parameters);
+                    }
                 }
             }
         });
@@ -49,13 +72,14 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
             location: parameters['fields']['storeloc'],
             siteid: parameters['fields']['siteid'],
             binnum: parameters['fields']['binnum'],
-            lotnum: parameters['fields']['lotnum']
+            lotnum: parameters['fields']['lotnum'],
+            conditioncode: parameters['fields']['conditioncode']
         };
 
         searchService.searchWithData('invbalookup', searchData).success(function (data) {
             var resultObject = data.resultObject;
 
-            if (resultObject[0] != undefined && resultObject.length == 1) {
+            if (resultObject[0] != undefined ) {
                 parameters.fields['curbal'] = resultObject[0].fields['curbal'];
                 parameters.fields['binnum'] = resultObject[0].fields['binnum'];
                 parameters.fields['lotnum'] = resultObject[0].fields['lotnum'];
@@ -63,7 +87,7 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
             else {
                 parameters.fields['curbal'] = 0.00;
             }
-        })
+        });
     }
 
     return {
@@ -84,14 +108,17 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
         },
 
         afteritemchange: function (event) {
-            event.fields["#description"] = event.fields["item_.description"]; 
+            event.fields["#description"] = event.fields["item_.description"];
+
+            event.fields["linecost"] = 0.00;
+            event.fields["unitcost"] = 0.00;
+            event.fields["curbal"] = 0.00;
         },
 
         afterstorelocchange: function (event) {
             event.fields["unitcost"] = 0.00;
 
             doUpdateItemCosttype(event);
-            doUpdateItemBalance(event);
         },
 
         afterchange: function (event) {
