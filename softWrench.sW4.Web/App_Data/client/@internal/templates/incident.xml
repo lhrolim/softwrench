@@ -151,7 +151,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <!--          <association label="Classification:" target="classificationid" labelfield="incidentclassifications_.description">-->
           <!--            <renderer type="lookup"/>-->
           <!--          </association>-->
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid">
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType">
             <renderer type="autocompleteclient" />
           </optionfield>
           <association label="Location:" target="location" labelfield="location_.description" >
