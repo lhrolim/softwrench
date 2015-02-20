@@ -1,7 +1,8 @@
-function ActivityStream($scope, $http, $log, $interval, redirectService) {
+function ActivityStream($scope, $http, $log, $interval, $timeout, redirectService) {
 
     var log = $log.getInstance('sw4.activityStream');
-
+    var jScrollPaneAPI;
+    var throttleTimeout;
 
     $scope.formatDate = function (notificationDate) {
         var currentDate = new Date();
@@ -11,7 +12,7 @@ function ActivityStream($scope, $http, $log, $interval, redirectService) {
         var differenceMils = nowMils - notificationMils;
         var dateMessage = moment.duration(differenceMils, "milliseconds").humanize();
 
-        return 'About ' + dateMessage + ' ago.';
+        return 'About ' + dateMessage + ' ago';
     };
 
     $scope.markAllRead = function () {
@@ -52,7 +53,6 @@ function ActivityStream($scope, $http, $log, $interval, redirectService) {
             }
         );
     }
-    
 
     $scope.refreshStream = function () {
         log.debug('refreshStream');
@@ -67,6 +67,11 @@ function ActivityStream($scope, $http, $log, $interval, redirectService) {
         $http.get(rawUrl).success(
             function (data) {
                 $scope.activities = data;
+
+                if (typeof jScrollPaneAPI !== 'undefined') {
+                    jScrollPaneAPI.reinitialise();
+                }
+              
                 log.debug($scope.activities);
             }).error(
             function (data) {
@@ -79,21 +84,56 @@ function ActivityStream($scope, $http, $log, $interval, redirectService) {
         );
     }
 
+    $scope.setPaneHeight = function () {
+        log.debug('setPaneHeight');
+
+        var headerHeight = $('#activitystream header').height();
+        var panePaddingTop = parseInt($('#activitystream .pane').css('padding-top'));
+        var panePaddingBottom = parseInt($('#activitystream .pane').css('padding-bottom'));
+
+        $('#activitystream .scroll').height($(window).height() - headerHeight - panePaddingTop - panePaddingBottom);
+    }
+
     //automatically refresh the activity stream every five minutes
     $interval(function () {
         $scope.refreshStream();
     }, 60000 * 5);
 
-    //get the current notifications
-    $scope.refreshStream();
-
     //open and close activity pane
     $('#activitystream .handle').click(function () {
         $("#activitystream").toggleClass('open');
+        $scope.setPaneHeight();
+        jScrollPaneAPI = $('#activitystream .scroll').jScrollPane().data('jsp');
     });
 
-    //set the activity pane the same height as the window
-    $(window).resize(function () {
-        $('#activitystream').height($(window).height());
+    //set window height and reinitialize scroll pane if windows is resized
+    $(window).bind('resize', function () {
+        // IE fires multiple resize events while you are dragging the browser window which
+        // causes it to crash if you try to update the scrollpane on every one. So we need
+        // to throttle it to fire a maximum of once every 50 milliseconds...
+        if (typeof jScrollPaneAPI !== 'undefined') {
+            if (!throttleTimeout) {
+                throttleTimeout = setTimeout(
+                    function () {
+                        $scope.setPaneHeight();
+
+                        jScrollPaneAPI.reinitialise();
+                        throttleTimeout = null;
+                    },
+                    50
+                );
+            }
+        }
     });
+
+    //prevent window scrolling after reaching end of navigation pane 
+    $(document).on('mousewheel', '#activitystream .scroll',
+      function (e) {
+          var delta = e.originalEvent.wheelDelta;
+          this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+          e.preventDefault();
+      });
+
+    //get the current notifications
+    $scope.refreshStream();
 }

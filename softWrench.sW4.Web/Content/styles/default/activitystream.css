@@ -1,4 +1,16 @@
-﻿#activitystream {
+﻿.container header .menu-admin {
+    padding: 0 60px 0 20px !important;
+}
+
+.jspVerticalBar {
+    display: none;
+}
+
+.jspHorizontalBar {
+    display: none;
+}
+
+#activitystream {
     background: #f2f2f2;
     position: fixed;
     z-index: 99999;
@@ -39,12 +51,16 @@
     }
 
     #activitystream .pane {
-        padding: 20px;
+        padding: 20px 20px 0 20px;
         display: none;
     }
 
     #activitystream.open .pane {
         display: block;
+    }
+
+    #activitystream .pane .scroll {
+        width: 100%;
     }
 
     #activitystream header h2 {
@@ -79,8 +95,8 @@
         #activitystream .message .read {
             width: 30px;
             color: #fff;
-            font-size: 12px;
-            margin-top: 1px;
+            font-size: 8px;
+            margin-top: 4px;
         }
 
             #activitystream .message .read .notread {

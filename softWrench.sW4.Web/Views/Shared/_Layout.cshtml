@@ -1,4 +1,4 @@
-@using softWrench.sW4.Metadata.Security
+﻿@using softWrench.sW4.Metadata.Security
 @using softWrench.sW4.Web.Util
 <!DOCTYPE html>
 <html ng-app="sw_layout">
@@ -66,26 +66,28 @@
     <div id="activitystream" class="clearfix" ng-controller="ActivityStream">
         <div class="handle"><i class="fa fa-rss-square"></i>&ensp;Activity Stream</div>
         <div class="pane">
-            <header>
+            <header class="clearfix">
                 <h2 class="pull-left">Recent Activity</h2>
                 <div class="buttons pull-right">
                     <div class="button" ng-click="markAllRead()"><i class="fa fa-check-square"></i></div>
                     <div class="button" ng-click="refreshStream()"><i class="fa fa-refresh"></i></div>
                 </div>
             </header>
-            <div class="messages">
-                <div class="message clearfix" ng-repeat="activity in activities" ng-class="$even ? 'even' : 'odd'">
-                    <div class="read pull-left"><i class="fa fa-circle" ng-class="activity.isRead ? 'isread' : 'notread'"></i></div>
-                    <div class="icon pull-left"><i class="fa" ng-class="activity.icon"></i></div>
-                    <div class="text pull-left">
-                        <div class="info">
-                        <div class="info"><span class="by">{{activity.createBy}}</span> changed {{activity.label}} <a href="" ng-click="openLink(activity)">{{activity.id}}</a></div>
-                            <span ng-if="activity.parentApplication"> for {{activity.parentLabel}} <a href="" ng-click="openLink()">{{activity.parentId}}</a></span>
+            <div class="scroll">
+                <div class="messages">
+                    <div class="message clearfix" ng-repeat="activity in activities" ng-class="$even ? 'even' : 'odd'">
+                        <div class="read pull-left"><i class="fa fa-circle" ng-class="activity.isRead ? 'isread' : 'notread'"></i></div>
+                        <div class="icon pull-left"><i class="fa" ng-class="activity.icon"></i></div>
+                        <div class="text pull-left">
+                            <div class="info">
+                                <div class="info"><span class="by">{{activity.createBy}}</span> changed {{activity.label}} <a href="" ng-click="openLink(activity)">{{activity.id}}</a></div>
+                                <span ng-if="activity.parentApplication"> for {{activity.parentLabel}} <a href="" ng-click="openLink()">{{activity.parentId}}</a></span>
+                            </div>
+                            <div class="date">{{formatDate(activity.notificationDate)}}</div>
                         </div>
-                        <div class="date">{{formatDate(activity.notificationDate)}}</div>
                     </div>
+                    <div class="nomessages" ng-if="!activities.length"><i class="fa fa-times-circle"></i>&ensp;No recent activity to display.</div>
                 </div>
-                <div class="nomessages" ng-if="!activities.length"><i class="fa fa-times-circle"></i>&ensp;No recent activity to display.</div>
             </div>
         </div>
     </div>

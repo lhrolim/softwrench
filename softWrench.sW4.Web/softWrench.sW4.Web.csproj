@@ -567,6 +567,8 @@
     <Content Include="Content\Scripts\client\activitystream.js" />
     <Content Include="Content\Scripts\client\crud_tbody.js" />
     <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
+    <Content Include="Content\Scripts\client\jquery-jscrollpane.js" />
+    <Content Include="Content\Scripts\client\jquery-mousewheel.js" />
     <Content Include="Content\Scripts\client\services\glcomponent_service.js" />
     <Content Include="Content\Scripts\client\services\checkpoint_service.js" />
     <Content Include="Content\Scripts\client\services\matusetrans_service.js" />
@@ -786,6 +788,7 @@
     <Content Include="Content\styles\default\crud-fields.css" />
     <Content Include="Content\styles\default\grid.css" />
     <Content Include="Content\styles\default\header.css" />
+    <Content Include="Content\styles\default\jscrollpane.css" />
     <Content Include="Content\styles\default\media\max-width.css" />
     <Content Include="Content\styles\default\media\screen.css" />
     <Content Include="Content\styles\default\modal.css" />
