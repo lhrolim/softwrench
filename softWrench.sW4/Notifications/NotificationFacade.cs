@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Notifications;
 using System.Collections.Concurrent;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using softWrench.sW4.Notifications.Entities;
 using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.SimpleInjector;
+using Newtonsoft.Json.Linq;
+using softWrench.sW4.Util;
 
 
 namespace softWrench.sW4.Notifications {
@@ -78,8 +82,19 @@ namespace softWrench.sW4.Notifications {
             streamToUpdate.UpdateNotificationReadFlag(application, id, isRead);
         }
 
+        //Implementation to update read flag for multiple notifications
+        public void UpdateNotificationReadFlag(string role, JArray notifications, bool isRead) {
+            var streamToUpdate = _notificationStreams[role];
+
+            foreach (var notification in notifications)
+            {
+                streamToUpdate.UpdateNotificationReadFlag(notification["application"].ToString(),
+                    notification["id"].ToString(), true);
+            }
+        }
+
         public void UpdateNotificationStreams() {
-            var query = string.Format("select 'commlog' as application, null as targetschema,'communication' as label, 'fa-mail-forward' as icon ,CONVERT(varchar(10), commlogid) as id, c.commloguid as uid, " +
+            var query = string.Format("select 'commlog' as application, null as targetschema,'communication' as label, 'fa-envelope-o' as icon ,CONVERT(varchar(10), commlogid) as id, c.commloguid as uid, " +
                                       "t.ticketid as parentid, c.ownerid as parentuid, CASE c.ownertable WHEN 'SR' THEN 'servicerequest' ELSE c.ownertable END as parentapplication, c.subject as summary, " +
                                       "c.createby as changeby, c.createdate as changedate, c.rowstamp from commlog c " +
                                       "left join ticket t on t.ticketuid = c.ownerid " +

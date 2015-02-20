@@ -1,4 +1,4 @@
-function ActivityStream($scope, $http, $log, $interval, $timeout, redirectService, contextService, $rootScope) {
+function ActivityStream($scope, $http, $log, $interval, $timeout, redirectService, contextService, $rootScope, alertService) {
 
     var log = $log.getInstance('sw4.activityStream');
     var jScrollPaneAPI;
@@ -18,7 +18,26 @@ function ActivityStream($scope, $http, $log, $interval, $timeout, redirectServic
 
     $scope.markAllRead = function () {
         log.debug('markAllRead');
-
+        var confirmationMessage = "Mark all notifications as read?";
+        return alertService.confirm(null, null, function () {
+            var controllerToUse = "Notification";
+            var actionToUse = "UpdateNotificationReadFlag";
+            var parameters = {};
+            parameters.role = 'allRole';
+        
+            var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
+            $http.post(rawUrl, angular.toJson($scope.activities)).success(function() {
+                    $scope.refreshStream();
+            }).error(
+                function (data) {
+                    var errordata = {
+                        errorMessage: "error opening action {0} of controller {1} ".format(actionToUse, controllerToUse),
+                        errorStack: data.message
+                    }
+                    $rootScope.$broadcast("sw_ajaxerror", errordata);
+                }
+            );
+        }, confirmationMessage);
         //TODO: mark all notifications read (confirmation alert?)
     }
 
@@ -31,23 +50,27 @@ function ActivityStream($scope, $http, $log, $interval, $timeout, redirectServic
         var parameters = {};
         parameters.role = 'allRole';
         parameters.application = activity.application;
-        parameters.id = activity.id;
+        parameters.id = activity.id;        $("#activitystream").toggleClass('open');
+        $scope.setPaneHeight();
+        jScrollPaneAPI = $('#activitystream .scroll').jScrollPane().data('jsp');
 
         var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
         $http.post(rawUrl).success(
             function (data) {
+                $("#activitystream").toggleClass('open');
+
                 var param = {};
                 param.id = activity.id;
                 if (activity.application.isEqual('workorder')) {
                     param.id = activity.uId;
                 }
+
                 if (!activity.parentApplication) {
                     redirectService.goToApplicationView(activity.application, "editdetail", "input", null, param, null);
                 } else {
                     param.id = activity.parentId;
                     redirectService.goToApplicationView(activity.parentApplication, "editdetail", "input", null, param, null, function () { contextService.setActiveTab(activity.application + '_');});
                 }
-
 
                 $scope.refreshStream();
             }).error(

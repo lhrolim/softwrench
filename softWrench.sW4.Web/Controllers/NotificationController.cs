@@ -38,6 +38,13 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         [HttpPost]
+        //Implementation to update read flag for multiple notifications
+        public void UpdateNotificationReadFlag(string role, JArray ids, bool isread = true) {
+            var notificationFacade = NotificationFacade.GetInstance();
+            notificationFacade.UpdateNotificationReadFlag(role, ids, isread);
+        }
+
+        [HttpPost]
         public void UpdateNotificationHiddenFlag(string role, string application, string id, bool ishidden = true) {
             var notificationFacade = NotificationFacade.GetInstance();
             notificationFacade.UpdateNotificationHiddenFlag(role, application, id, ishidden);
