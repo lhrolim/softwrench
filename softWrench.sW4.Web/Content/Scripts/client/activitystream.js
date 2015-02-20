@@ -7,12 +7,13 @@ function ActivityStream($scope, $http, $log, $interval, $timeout, redirectServic
     $scope.formatDate = function (notificationDate) {
         var currentDate = new Date();
         var nowMils = currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000);
-        var notificationMils = new Date(notificationDate).getTime();
 
+        //Add 'Z' to fix Firefox error
+        var notificationMils = new Date(notificationDate + 'Z').getTime();
         var differenceMils = nowMils - notificationMils;
         var dateMessage = moment.duration(differenceMils, "milliseconds").humanize();
 
-        return 'About ' + dateMessage + ' ago';
+        return 'About ' + dateMessage + ' ago'; // (' + notificationDate.replace('T', ' ') + ') [' + notificationMils + ']';
     };
 
     $scope.markAllRead = function () {
@@ -113,15 +114,12 @@ function ActivityStream($scope, $http, $log, $interval, $timeout, redirectServic
         // to throttle it to fire a maximum of once every 50 milliseconds...
         if (typeof jScrollPaneAPI !== 'undefined') {
             if (!throttleTimeout) {
-                throttleTimeout = setTimeout(
-                    function () {
-                        $scope.setPaneHeight();
+                throttleTimeout = setTimeout(function () {
+                    $scope.setPaneHeight();
 
-                        jScrollPaneAPI.reinitialise();
-                        throttleTimeout = null;
-                    },
-                    50
-                );
+                    jScrollPaneAPI.reinitialise();
+                    throttleTimeout = null;
+                }, 50);
             }
         }
     });
@@ -136,4 +134,9 @@ function ActivityStream($scope, $http, $log, $interval, $timeout, redirectServic
 
     //get the current notifications
     $scope.refreshStream();
+
+    //open notification pane by default, TODO: remove for production
+    //$timeout(function () {
+    //    $('#activitystream .handle').trigger('click');
+    //}, 0);
 }
