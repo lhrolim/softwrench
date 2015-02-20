@@ -50,9 +50,7 @@ function ActivityStream($scope, $http, $log, $interval, $timeout, redirectServic
         var parameters = {};
         parameters.role = 'allRole';
         parameters.application = activity.application;
-        parameters.id = activity.id;        $("#activitystream").toggleClass('open');
-        $scope.setPaneHeight();
-        jScrollPaneAPI = $('#activitystream .scroll').jScrollPane().data('jsp');
+        parameters.id = activity.id;
 
         var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
         $http.post(rawUrl).success(
