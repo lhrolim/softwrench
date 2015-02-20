@@ -173,13 +173,20 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
     };
 
     $scope.logout = function () {
+        if (!isIe()) {
+            $window.location.href = url('/SignOut/SignOut');
+            return;
+        }
+
         bootbox.dialog({
-            message: "To completely logout, please close your browser.To log back into ServiceIT, click the button provided below",
+            message: "You have successfully logged out of ServiceIT</br>To completely logout, please close your browser.To log back into ServiceIT, click the button provided below.",
             title: "Logout!",
+            className: 'logoutmodal',
+            closeButton: false,
             buttons: {
                 success: {
                     label: "Close Browser",
-                    className: "hapag-btn",
+                    className: "commandButton btn loginbutton",
                     callback: function () {
                         sessionStorage.removeItem("swGlobalRedirectURL");
                         contextService.clearContext();
@@ -190,7 +197,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
                 },
                 danger: {
                     label: "Login to ServiceIT",
-                    className: "hapag-btn",
+                    className: "commandButton btn loginbutton",
                     callback: function () {
                         sessionStorage.removeItem("swGlobalRedirectURL");
                         contextService.clearContext();

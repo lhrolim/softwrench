@@ -249,6 +249,13 @@ function isIe9() {
     return BrowserDetect.browser == "Explorer" && (BrowserDetect.version == '9' || BrowserDetect.version == '8' || BrowserDetect.version == '7');
 };
 
+function isIe() {
+    if ("true" == sessionStorage.mockie9) {
+        return true;
+    }
+    return BrowserDetect.browser == "Explorer";
+};
+
 function isChrome() {
     return BrowserDetect.browser == "Chrome";
 };

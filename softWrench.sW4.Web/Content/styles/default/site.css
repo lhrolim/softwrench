@@ -21,6 +21,41 @@ input:focus, select:focus, textarea:focus {
     left: 50%;
 }
 
+.logoutmodal {
+    width: 620px;
+    left: 40%;
+}
+
+    .logoutmodal .modal-content {
+        background-color: rgb(225, 235, 247);
+        border-radius: 0;
+        border:3px outset rgb(134, 134,134);
+    }
+
+    .logoutmodal .modal-title {
+        background-color: rgb(0, 56, 120);
+        color: white;
+        font-size: 12px;
+        font-family: Arial;
+    }
+
+    .logoutmodal .modal-footer {
+        border-top: rgb(166, 171, 181) 1px solid;
+        padding: 5px 10px 5px;
+        margin-top: 5px;
+        margin-left: 5px;
+        margin-right: 10px;
+    }
+
+    .logoutmodal .modal-header {
+        padding: 5px;
+    }
+
+    .logoutmodal .modal-body {
+        padding: 0px 0px 0 5px;
+    }
+
+
 .spinner {
     position: absolute;
     top: 50%;
@@ -65,7 +100,7 @@ input:focus, select:focus, textarea:focus {
     }
 
 .printModal {
-    width: 330px;   
+    width: 330px;
     outline: none;
 }
 
@@ -527,8 +562,7 @@ span.combobox-clear {
 
 
 .combobox-container > input {
-    width: 98% !important
-    
+    width: 98% !important;
 }
 
 /********End auto complete*********/
