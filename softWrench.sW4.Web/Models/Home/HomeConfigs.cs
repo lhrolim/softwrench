@@ -27,5 +27,6 @@ namespace softWrench.sW4.Web.Models.Home {
         public string MatrectransTransfersListScanOrder { get; set; }
         public string ReservedMaterialsListScanOrder { get; set; }
         public string InvIssueListBeringScanOrder { get; set; }
+        public string DefaultEmail { get; set; }
     }
 }
