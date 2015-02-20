@@ -89,7 +89,7 @@
                                     </li>
 
                                     <li class="hapag-topbar-btn">
-                                        <a href="@Url.Action("SignOut", "Signout")" ng-click="logout()">
+                                        <a href="@Url.Action("SignOut", "Signout")" ng-click="$event.preventDefault();logout()">
                                             <i class="glyphicon glyphicon-log-out"></i>
                                             {{i18N('_headermenu.logout','Logout')}}
                                         </a>

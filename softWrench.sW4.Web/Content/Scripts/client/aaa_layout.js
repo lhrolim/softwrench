@@ -62,7 +62,7 @@ app.directive("ngEnabled", function () {
 
 
 
-function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService) {
+function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService,$location,$window) {
 
     $scope.$name = 'LayoutController';
 
@@ -173,8 +173,34 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
     };
 
     $scope.logout = function () {
-        sessionStorage.removeItem("swGlobalRedirectURL");
-        contextService.clearContext();
+        bootbox.dialog({
+            message: "To completely logout, please close your browser.To log back into ServiceIT, click the button provided below",
+            title: "Logout!",
+            buttons: {
+                success: {
+                    label: "Close Browser",
+                    className: "hapag-btn",
+                    callback: function () {
+                        sessionStorage.removeItem("swGlobalRedirectURL");
+                        contextService.clearContext();
+                        $window.location.href = url('/SignOut/SignOut');
+                        window.open('', '_self', '');
+                        window.close();
+                    }
+                },
+                danger: {
+                    label: "Login to ServiceIT",
+                    className: "hapag-btn",
+                    callback: function () {
+                        sessionStorage.removeItem("swGlobalRedirectURL");
+                        contextService.clearContext();
+                        $window.location.href = url('/SignOut/SignOut');
+                    }
+                },
+            }
+        });
+
+    
     };
 
     $scope.$on('sw_goToApplicationView', function (event, data) {
