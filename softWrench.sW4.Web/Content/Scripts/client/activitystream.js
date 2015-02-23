@@ -112,6 +112,10 @@ function ActivityStream($scope, $http, $log, $interval, $timeout, redirectServic
         );
     }
 
+    $scope.activityStreamEnabled = function() {
+        return $rootScope.notificationStream;
+    };
+
     $scope.setPaneHeight = function () {
         log.debug('setPaneHeight');
 

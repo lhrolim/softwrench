@@ -51,6 +51,14 @@ namespace softWrench.sW4.Scheduler {
 
         public bool IsScheduled { get; set; }
 
+        public virtual bool IsEnabled 
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         //run at the end
         public int Order { get { return 1000; } }
     }

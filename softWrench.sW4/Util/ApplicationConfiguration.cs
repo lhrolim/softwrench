@@ -234,6 +234,20 @@ namespace softWrench.sW4.Util {
 
         #endregion
 
+        #region Notifications
+
+        public static bool NotificationStreamFlag {
+            get
+            {
+                var flagStr = MetadataProvider.GlobalProperty("notificationStream");
+                var flag = false;
+                Boolean.TryParse(flagStr, out flag);
+                return flag;
+            }
+        }
+
+        #endregion
+
         #region Attachments
 
         public static string[] AllowedFilesExtensions {

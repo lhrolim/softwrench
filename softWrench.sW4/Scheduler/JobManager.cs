@@ -89,20 +89,23 @@ namespace softWrench.sW4.Scheduler {
 
                 foreach (var job in jobs) {
 
-                    _scheduler = _sf.GetScheduler();
+                    if (job.IsEnabled)
+                    {
+                        _scheduler = _sf.GetScheduler();
 
-                    _log.Info("------- Initialization Complete -----------");
+                        _log.Info("------- Initialization Complete -----------");
 
-                    IJobDetail jobDetail = new JobDetailImpl(job.Name(), GroupName, job.GetType());
+                        IJobDetail jobDetail = new JobDetailImpl(job.Name(), GroupName, job.GetType());
 
-                    var trigger =
-                        (ICronTrigger)TriggerBuilder.Create()
-                            .WithIdentity(job.Name() + "Trigger", GroupName)
-                            .WithCronSchedule(job.Cron())
-                            .Build();
+                        var trigger =
+                            (ICronTrigger)TriggerBuilder.Create()
+                                .WithIdentity(job.Name() + "Trigger", GroupName)
+                                .WithCronSchedule(job.Cron())
+                                .Build();
 
-                    _scheduler.ScheduleJob(jobDetail, trigger);
-                    _log.Info(string.Format("{0} will run at: {1}", jobDetail.Key, runTime.ToString("r")));
+                        _scheduler.ScheduleJob(jobDetail, trigger);
+                        _log.Info(string.Format("{0} will run at: {1}", jobDetail.Key, runTime.ToString("r")));
+                    }
                 }
                 _scheduler.JobFactory = _jobFactory;
                 _scheduler.Start();

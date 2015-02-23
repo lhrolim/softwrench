@@ -8,6 +8,7 @@ using softWrench.sW4.Notifications;
 using softWrench.sW4.Scheduler.Interfaces;
 using softWrench.sW4.SimpleInjector.Events;
 using System.Threading.Tasks;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Scheduler.Jobs {
     public class NotificationStreamUpdateJob : ASwJob {
@@ -40,9 +41,13 @@ namespace softWrench.sW4.Scheduler.Jobs {
 
         public override void HandleEvent(ApplicationStartedEvent eventToDispatch) {
              NotificationFacade.InitNotificationStreams();
-            if (RunAtStartup()) {
+             if (RunAtStartup() && IsEnabled) {
                 Task.Factory.StartNew(DoExecute);
             }
+        }
+
+        public override bool IsEnabled {
+            get { return ApplicationConfiguration.NotificationStreamFlag; }
         }
 
         public override bool RunAtStartup() {

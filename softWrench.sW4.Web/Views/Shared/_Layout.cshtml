@@ -63,7 +63,7 @@
             @RenderBody()
         </div>
     </div>
-    <div id="activitystream" class="clearfix" ng-controller="ActivityStream">
+    <div id="activitystream" class="clearfix" ng-controller="ActivityStream" ng-if="$rootScope.notificationStream">
         <div class="handle"><i class="fa fa-rss-square"></i>&ensp;Activity Stream</div>
         <div class="pane">
             <header class="clearfix">
