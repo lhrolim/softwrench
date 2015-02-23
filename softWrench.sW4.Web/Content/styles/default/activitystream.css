@@ -13,7 +13,7 @@
 #activitystream {
     background: #f2f2f2;
     position: fixed;
-    z-index: 99999;
+    z-index: 7999;
     width: 0;
     top: 0;
     right: 0;
@@ -84,31 +84,28 @@
     }
 
     #activitystream .message {
-        padding: 15px;
+        padding: 10px 15px;
         border-bottom: 1px solid #e5e5e5;
+        line-height: normal;
     }
+
+        #activitystream .message:first-child {
+            border-top: 1px solid #e5e5e5;
+        }
 
         #activitystream .message.even {
             background: #fff;
         }
 
         #activitystream .message .read {
-            width: 30px;
-            color: #fff;
-            font-size: 8px;
-            margin-top: 4px;
-        }
-
-        #activitystream .message.odd .read {
-            color: #f2f2f2;
-        }
-
-        #activitystream .message .read .notread {
+            width: 20px;
             color: #428bca;
+            font-size: 8px;
+            margin-top: 3px;
         }
 
         #activitystream .message .icon {
-            width: 30px;
+            width: 25px;
             color: #999;
         }
 
@@ -126,7 +123,7 @@
             #activitystream .message .text .date {
                 color: #999;
                 font-size: 12px;
-                margin-top: 15px;
+                margin-top: 8px;
             }
 
     #activitystream .messages .nomessages {
