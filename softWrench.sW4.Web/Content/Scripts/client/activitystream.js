@@ -8,7 +8,7 @@ function ActivityStream($scope, $http, $log, $interval, $timeout, redirectServic
         var currentDate = new Date();
         var nowMils = currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000);
 
-        //Add 'Z' to fix Firefox error
+        //Add 'Z' to datetime fix Firefox error
         var notificationMils = new Date(notificationDate + 'Z').getTime();
         var differenceMils = nowMils - notificationMils;
         var dateMessage = moment.duration(differenceMils, "milliseconds").humanize();
@@ -18,6 +18,7 @@ function ActivityStream($scope, $http, $log, $interval, $timeout, redirectServic
 
     $scope.markAllRead = function () {
         log.debug('markAllRead');
+
         var confirmationMessage = "Mark all notifications as read?";
         return alertService.confirm(null, null, function () {
             var controllerToUse = "Notification";
@@ -38,13 +39,11 @@ function ActivityStream($scope, $http, $log, $interval, $timeout, redirectServic
                 }
             );
         }, confirmationMessage);
-        //TODO: mark all notifications read (confirmation alert?)
     }
 
     $scope.openLink = function (activity) {
         log.debug('openLink');
 
-        //TODO: mark current notification as read and open link
         var controllerToUse = "Notification";
         var actionToUse = "UpdateNotificationReadFlag";
         var parameters = {};
@@ -96,6 +95,7 @@ function ActivityStream($scope, $http, $log, $interval, $timeout, redirectServic
             function (data) {
                 $scope.activities = data;
 
+                //resize the scroll pane if needed
                 if (typeof jScrollPaneAPI !== 'undefined') {
                     jScrollPaneAPI.reinitialise();
                 }
