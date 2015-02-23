@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('associationService', function ($injector, $http, $timeout, $log, $rootScope, submitService, fieldService, contextService, searchService) {
+app.factory('associationService', function (dispatcherService, $http, $timeout, $log, $rootScope, submitService, fieldService, contextService, searchService) {
 
     var doUpdateExtraFields = function (associationFieldMetadata, underlyingValue, datamap) {
         var log = $log.getInstance('sw4.associationservice#doUpdateExtraFields');
@@ -150,13 +150,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             if (afterChangeEvent == undefined) {
                 return;
             }
-            var service = $injector.get(afterChangeEvent.service);
-            if (service == undefined) {
-                //this should not happen, it indicates a metadata misconfiguration
-                return;
-            }
-            //now let´s invoke the service
-            var fn = service[afterChangeEvent.method];
+            var fn = dispatcherService.loadService(afterChangeEvent.service, afterChangeEvent.method);
             if (fn == undefined) {
                 //this should not happen, it indicates a metadata misconfiguration
                 return;
@@ -473,14 +467,7 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             if (beforeChangeEvent == undefined) {
                 event.continue();
             } else {
-                var service = $injector.get(beforeChangeEvent.service);
-                if (service == undefined) {
-                    //this should not happen, it indicates a metadata misconfiguration
-                    event.continue();
-                    return;
-                }
-                //now let´s invoke the service
-                var fn = service[beforeChangeEvent.method];
+                var fn = dispatcherService.loadService(beforeChangeEvent.service, beforeChangeEvent.method);
                 if (fn == undefined) {
                     //this should not happen, it indicates a metadata misconfiguration
                     event.continue();

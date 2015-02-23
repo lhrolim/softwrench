@@ -70,6 +70,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\util\aa_dateutils.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\aa_stringutils.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\aa_utils.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\util\angular_namespacer.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\ajax_interceptor.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\autocompleteclient.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\components\autocompleteserver.js" />
@@ -125,6 +126,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\tooltrans_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\userpreference_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\validation_service.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\util\clientawareserviceprovider.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\log_enhacer.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\responsive.js" />
   </ItemGroup>

@@ -68,6 +68,7 @@
     <EmbeddedResource Include="metadata\kongsberg\deploy.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Content Include="web_content\kongsberg\scripts\aaa_kongsbergmodule.js" />
     <Content Include="web_content\kongsberg\styles\signin.css" />
     <Content Include="web_content\kongsberg\styles\site.css" />
     <Content Include="web_content\kongsberg\images\header.png" />

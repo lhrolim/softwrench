@@ -9,8 +9,8 @@ app.factory('dispatcherService', function ($injector, $log) {
         if (service === undefined || method === undefined) {
             return null;
         }
-
-        var dispatcher = $injector.get(service);
+        //see clientawareserviceprovider.js
+        var dispatcher = $injector.getInstance(service);
         if (!dispatcher) {
             log.warn('Service {0} missing '.format(service));
             return null;

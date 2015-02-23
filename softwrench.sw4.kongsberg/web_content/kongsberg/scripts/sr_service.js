@@ -1,18 +1,8 @@
-﻿app.factory('srService', function (alertService, associationService, fieldService) {
+﻿kongsbergmod.clientfactory('srService', function (srService) {
 
     return {
         afterchangeowner: function (event) {
-            if (event.fields['owner'] == null) {
-                return;
-            }
-            if (event.fields['owner'] == ' ') {
-                event.fields['owner'] = null;
-                return;
-            }
-            if (event.fields['status'] == 'NEW') {
-                event.fields['status'] = 'QUEUED';
-                return;
-            }
+            srService.afterchangeowner(event);
         },
 
         afterchangeownergroup: function (event) {
