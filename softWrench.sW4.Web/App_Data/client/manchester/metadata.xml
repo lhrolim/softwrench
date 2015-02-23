@@ -464,7 +464,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <dataprovider prefilterfunction="FilterProblemCodes"/>
           </association>
           <field label="Job Plan:" attribute="jpnum" readonly="true" />
-          <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >
+          <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext">
             <renderer type="lookup"/>
           </association>
 
@@ -710,7 +710,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="lookup"/>
             <event type="afterchange" service="matusetranService" method="afteritemchange"/>
           </association>
-          <association label="Storeroom:" target="storeloc" labelfield="inventory_.location" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
+          <association label="Storeroom:" target="storeloc" labelfield="0invbal_.location" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
             <dataprovider postfilterfunction="filterStoreLoc"/>
             <event type="afterchange" service="matusetranService" method="afterstorelocchange"/>
           </association>

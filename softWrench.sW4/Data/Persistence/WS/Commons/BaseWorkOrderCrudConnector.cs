@@ -193,7 +193,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 var unitcost = (double)WsUtil.GetRealValue(integrationObject, "UNITCOST");
 
                 if (itemtype.Equals("ITEM")) {
-                    WsUtil.SetValue(integrationObject, "DESCRIPTION", crudData.UnmappedAttributes["#description"]); 
+                    WsUtil.SetValue(integrationObject, "DESCRIPTION", crudData.UnmappedAttributes["#description"]);
                 }
 
                 WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
@@ -202,8 +202,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0);
                 WsUtil.SetValue(integrationObject, "ENTERBY", user.Login);
                 WsUtil.SetValueIfNull(integrationObject, "DESCRIPTION", "");
-                WsUtil.SetValue(integrationObject, "ORGID", user.OrgId);
-                WsUtil.SetValue(integrationObject, "SITEID", user.SiteId);
+                WsUtil.SetValue(integrationObject, "ORGID", entity.GetAttribute("orgid"));
+                WsUtil.SetValue(integrationObject, "SITEID", entity.GetAttribute("siteid"));
                 WsUtil.SetValue(integrationObject, "REFWO", recordKey);
 
                 WsUtil.SetValueIfNull(integrationObject, "ISSUETYPE", "ISSUE");
