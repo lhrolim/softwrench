@@ -1952,6 +1952,12 @@
           <field attribute="status" label="Status" >
             <renderer type="default" params="width=16%" />
           </field>
+          <field label="Reported Date" attribute="reportdate">
+            <renderer type ="default" params="width=16%"/>
+          </field>
+          <field attribute="schedstart" label="Scheduled Start Date">
+            <renderer type ="default" params="width=16%"/>
+          </field>
           <field attribute="pmchgtype" label="Type" >
             <renderer type="default" params="width=16%" />
           </field>
