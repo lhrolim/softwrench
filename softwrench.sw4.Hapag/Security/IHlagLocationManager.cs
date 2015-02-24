@@ -22,6 +22,6 @@ namespace softwrench.sw4.Hapag.Security
         IEnumerable<HlagGroupedLocation> FindAllLocations();
         IEnumerable<IAssociationOption> FindDefaultITCsOfLocation(string subcustomer);
 
-        IEnumerable<IAssociationOption> FindCostCentersOfITC(string subCustomer, string personId);
+        IEnumerable<IAssociationOption> FindCostCentersOfITC(string subCustomer, string personId=null);
     }
 }

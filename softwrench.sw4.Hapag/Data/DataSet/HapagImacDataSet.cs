@@ -210,8 +210,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         public IEnumerable<IAssociationOption> GetCostCentersByPrimaryUser(OptionFieldProviderParameters parameters) {
 
-            return LocationManager.FindCostCentersOfITC((string)parameters.OriginalEntity.GetAttribute("fromlocation"),
-                SecurityFacade.CurrentUser().MaximoPersonId);
+            return LocationManager.FindCostCentersOfITC((string)parameters.OriginalEntity.GetAttribute("fromlocation"));
         }
 
         public IEnumerable<IAssociationOption> GetBuildingToLocation(OptionFieldProviderParameters parameters) {

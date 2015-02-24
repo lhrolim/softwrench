@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using DocumentFormat.OpenXml.Bibliography;
 using log4net;
+using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.WS.Ism.Base;
 using softwrench.sw4.Hapag.Data;
 using softwrench.sw4.Hapag.Data.Init;
@@ -39,6 +40,8 @@ namespace softwrench.sw4.Hapag.Security {
 
         private readonly SWDBHibernateDAO _dao;
 
+        private readonly MaximoHibernateDAO _maxDAO;
+
         private readonly IContextLookuper _contextLookuper;
 
 
@@ -48,11 +51,12 @@ namespace softwrench.sw4.Hapag.Security {
 
         private readonly EntityMetadata _personEntity;
 
-        public HlagLocationManager(SWDBHibernateDAO dao, EntityRepository repository, IContextLookuper contextLookuper) {
+        public HlagLocationManager(SWDBHibernateDAO dao, MaximoHibernateDAO maxDAO, EntityRepository repository, IContextLookuper contextLookuper) {
             _dao = dao;
             _repository = repository;
             _personEntity = MetadataProvider.Entity("person");
             _contextLookuper = contextLookuper;
+            _maxDAO = maxDAO;
         }
 
         public IEnumerable<HlagGroupedLocation> FindLocationsOfParentLocation(PersonGroup group) {
@@ -110,14 +114,14 @@ namespace softwrench.sw4.Hapag.Security {
             }
             foreach (var group in groups) {
                 var location = HlagLocationsCache[group].First();
-            var groupedLocation = HlagGroupedLocationsCache.FirstOrDefault(f => f.SubCustomer == location.SubCustomer);
-            if (groupedLocation == null) {
-                groupedLocation = new HlagGroupedLocation(location.SubCustomer);
-                groupedLocation.FromSuperGroup = location.FromSuperGroup;
-                HlagGroupedLocationsCache.Add(groupedLocation);
+                var groupedLocation = HlagGroupedLocationsCache.FirstOrDefault(f => f.SubCustomer == location.SubCustomer);
+                if (groupedLocation == null) {
+                    groupedLocation = new HlagGroupedLocation(location.SubCustomer);
+                    groupedLocation.FromSuperGroup = location.FromSuperGroup;
+                    HlagGroupedLocationsCache.Add(groupedLocation);
+                }
+                groupedLocation.CostCenters.Add(location.CostCenter);
             }
-            groupedLocation.CostCenters.Add(location.CostCenter);
-        }
 
         }
 
@@ -355,22 +359,34 @@ namespace softwrench.sw4.Hapag.Security {
         }
 
 
-        public IEnumerable<IAssociationOption> FindCostCentersOfITC(string subCustomer, string personId) {
-            var user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
-            var result = FillUserLocations(new InMemoryUser(user, new List<UserProfile>(), null));
-            var context = _contextLookuper.LookupContext();
-            //if the user is not on XITC context, then we should pick just the costcenters directly bound to him (HAP-799)
-            var locationsToUse = context.IsInModule(FunctionalRole.XItc) ? result.GroupedLocations : result.DirectGroupedLocations;
-            var groupedLocation = locationsToUse.FirstOrDefault(f => f.SubCustomerSuffix == subCustomer);
-            if (groupedLocation == null) {
-                return null;
+        public IEnumerable<IAssociationOption> FindCostCentersOfITC(string subCustomer, string personId = null) {
+            string costCentersToUse = "";
+            if (personId == null) {
+                //we´re interested in the current user, so we can assume its groups are synced fine.
+                //pick the groups from SWDB
+                personId = SecurityFacade.CurrentUser().MaximoPersonId;
+                var user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
+                var result = FillUserLocations(new InMemoryUser(user, new List<UserProfile>(), null));
+                var context = _contextLookuper.LookupContext();
+                //if the user is not on XITC context, then we should pick just the costcenters directly bound to him (HAP-799)
+                var locationsToUse = context.IsInModule(FunctionalRole.XItc)
+                    ? result.GroupedLocations
+                    : result.DirectGroupedLocations;
+                var groupedLocation = locationsToUse.FirstOrDefault(f => f.SubCustomerSuffix == subCustomer);
+                if (groupedLocation == null) {
+                    return null;
+                }
+                costCentersToUse = groupedLocation.CostCentersForQuery("glaccount");
+            } else {
+                costCentersToUse = BuildCostCentersFromMaximo(subCustomer, personId);
             }
+
             var dto = new SearchRequestDto();
             dto.AppendProjectionField(new ProjectionField("accountname", "accountname"));
             dto.AppendProjectionField(new ProjectionField("glaccount", "glaccount"));
             dto.AppendProjectionField(new ProjectionField("displaycostcenter", "displaycostcenter"));
 
-            dto.AppendWhereClause(groupedLocation.CostCentersForQuery("glaccount"));
+            dto.AppendWhereClause(costCentersToUse);
 
             var queryResult = _repository.Get(MetadataProvider.Entity("chartofaccounts"), dto);
             var options = new HashSet<GenericAssociationOption>();
@@ -388,6 +404,31 @@ namespace softwrench.sw4.Hapag.Security {
             //            }
 
             return options;
+        }
+
+        private string BuildCostCentersFromMaximo(string subCustomer, string personId) {
+            var groupNameToQuery = "'" + HapagPersonGroupConstants.BaseHapagLocationPrefix + subCustomer + "%" + "'";
+            var results =
+                _maxDAO.FindByNativeQuery(
+                    "select p.persongroup,description from PERSONGROUP p left join persongroupview v on p.PERSONGROUP = v.PERSONGROUP " +
+                    "where (p.persongroup  like {0} ) and v.PERSONID = {1}"
+                        .Fmt(groupNameToQuery,"'" + personId + "'"));
+            var list = results.Cast<IEnumerable<KeyValuePair<string, object>>>()
+                .Select(r => r.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase)).ToList();
+            ISet<string> costcenters = new HashSet<string>();
+            foreach (var groupsDescription in list) {
+                var pg = new PersonGroup() {
+                    Name = groupsDescription["persongroup"] as string,
+                    Description = groupsDescription["description"] as string,
+                };
+                var supergroup = HlagLocationUtil.IsSuperGroup(pg);
+                if (HlagLocationUtil.IsALocationGroup(pg) && !supergroup) {
+                    costcenters.Add(HlagLocationUtil.GetCostCenter(pg));
+                } 
+            }
+
+            var groupedLocation = new HlagGroupedLocation(subCustomer, costcenters, false);
+            return groupedLocation.CostCentersForQuery("glaccount");
         }
 
         class ItcUser : IAssociationOption {
