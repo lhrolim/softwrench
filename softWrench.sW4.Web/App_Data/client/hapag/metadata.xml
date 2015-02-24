@@ -3125,9 +3125,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 									  parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=ws">
             <header label="Document" displacement="sameline"/>
           </section>
-          <field label="Created Date" attribute="createdate">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
-          </field>
+          <section id="createdate" attribute="createdate" resourcepath="/Content/Templates/downloadattachment.html"
+                  parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=ws;format=dd/MM/yyyy HH:mm">
+            <header label="Created Date" displacement="sameline"/>
+          </section>
+
+
+<!--          <field label="Created Date" attribute="createdate">-->
+<!--            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />-->
+<!--          </field>-->
         </list>
 
         <schema id="faqAttachments" stereotype="compositionlist">

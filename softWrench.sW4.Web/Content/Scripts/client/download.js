@@ -1,4 +1,17 @@
-﻿function DownloadController($scope, i18NService, fieldService, alertService) {
+﻿function DownloadController($scope, i18NService, fieldService, alertService, formatService) {
+
+
+    $scope.getFormattedValue = function (value, format) {
+        var column = {};
+        if (format) {
+            column.rendererType = 'datetime';
+            column.rendererParameters = {
+                format: format
+            };
+        }
+
+        return formatService.format(value, column);
+    };
 
     $scope.download = function (controller, action, id, mode) {
         var controllerToUse = controller == undefined ? "Attachment" : controller;
