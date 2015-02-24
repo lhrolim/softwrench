@@ -1964,14 +1964,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
         </schema>
 
-        <schema id="installlan" parentschema="install" title="Lan Printer">
-          <properties>
-            <property key="servicename" value="Lan Printer"/>
-          </properties>
-          <section id="attributes">
-            <reference id="lanattributessection" showexpression="@fromlocation!=null"/>
-          </section>
-        </schema>
 
         <schema id="installstd" parentschema="install" title="Standard Client">
           <section id="attributes">
@@ -1981,6 +1973,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="servicename" value="Standard Client"/>
             <property key="showinputaccel" value="true"/>
           </properties>
+        </schema>
+
+        <schema id="installlan" parentschema="install" title="Lan Printer">
+          <properties>
+            <property key="servicename" value="Lan Printer"/>
+          </properties>
+          <section id="attributes">
+            <reference id="lanattributessection" showexpression="@fromlocation!=null"/>
+          </section>
         </schema>
 
         <schema id="installother" parentschema="install" title="Other">
@@ -2069,6 +2070,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         </schema>
 
+        <schema id="removestd" title="Standard Client" parentschema="remove">
+          <properties>
+            <property key="servicename" value="Standard Client"/>
+          </properties>
+          <section id="attributes">
+            <reference id="baseattributesection" showexpression="@fromlocation!=null"/>
+          </section>
+
+        </schema>
+
         <schema id="removelan" parentschema="remove" title="Lan Printer">
           <properties>
             <property key="servicename" value="Lan Printer"/>
@@ -2089,15 +2100,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
         </schema>
 
-        <schema id="removestd" title="Standard Client" parentschema="remove">
-          <properties>
-            <property key="servicename" value="Standard Client"/>
-          </properties>
-          <section id="attributes">
-            <reference id="baseattributesection" showexpression="@fromlocation!=null"/>
-          </section>
 
-        </schema>
 
         <schema id="replace" abstract="true" stereotype="detail">
           <properties>
@@ -2150,6 +2153,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         </schema>
 
+        <schema id="replacestd" parentschema="replace" title="Standard Client">
+          <properties>
+            <property key="servicename" value="Standard Client"/>
+          </properties>
+          <section id="attributes" parameters="detaildescription=Service Attributes">
+            <reference id="baseattributesection" showexpression="@fromlocation!=null"/>
+          </section>
+        </schema>
+
         <schema id="replacelan" parentschema="replace" title="Lan Printer">
           <properties>
             <property key="servicename" value="Lan Printer"/>
@@ -2172,14 +2184,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
         </schema>
 
-        <schema id="replacestd" parentschema="replace" title="Standard Client">
-          <properties>
-            <property key="servicename" value="Standard Client"/>
-          </properties>
-          <section id="attributes" parameters="detaildescription=Service Attributes">
-            <reference id="baseattributesection" showexpression="@fromlocation!=null"/>
-          </section>
-        </schema>
+
 
         <schema id="update" title="Update Asset Data" stereotype="detail">
           <properties>
