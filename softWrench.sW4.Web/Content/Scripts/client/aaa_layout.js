@@ -173,12 +173,6 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
     };
 
     $scope.logout = function () {
-        if (!isIe()) {
-            sessionStorage.removeItem("swGlobalRedirectURL");
-            contextService.clearContext();
-            $window.location.href = url('/SignOut/SignOut');
-            return;
-        }
 
         bootbox.dialog({
             message: "You have successfully logged out of ServiceIT</br>To completely logout, please close your browser.To log back into ServiceIT, click the button provided below.",
@@ -192,7 +186,8 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
                     callback: function () {
                         sessionStorage.removeItem("swGlobalRedirectURL");
                         contextService.clearContext();
-                        $window.location.href = url('/SignOut/SignOut');
+
+                        $window.location.href = isIe()? url('/SignOut/SignOut') : url('/SignOut/SignOutClosePage');
                         window.open('', '_self', '');
                         window.close();
                     }

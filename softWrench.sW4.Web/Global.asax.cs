@@ -137,11 +137,16 @@ namespace softWrench.sW4.Web {
         protected void Application_EndRequest(object sender, EventArgs e) {
             var context = new HttpContextWrapper(Context);
             if (Context.Response.StatusCode == 302 && Context.Response.RedirectLocation.Contains("/SignIn")) {
-                if (!"~/Signout/SignOut".Equals(Request.AppRelativeCurrentExecutionFilePath,StringComparison.CurrentCultureIgnoreCase)) {
-                    if (Request.Params["HTTP_REFERER"]!=null) {
+                if ("~/Signout/SignOutClosePage".Equals(Request.AppRelativeCurrentExecutionFilePath, StringComparison.CurrentCultureIgnoreCase)) {
+                    Context.Response.RedirectLocation += "&closepage=true";
+                    return;
+                }
+                if (!"~/Signout/SignOut".Equals(Request.AppRelativeCurrentExecutionFilePath, StringComparison.CurrentCultureIgnoreCase)) {
+                    if (Request.Params["HTTP_REFERER"] != null) {
                         Context.Response.RedirectLocation += "&timeout=true";
                     }
                 }
+
 
             }
 

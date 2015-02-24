@@ -46,8 +46,16 @@
                             </div>
                         </div>
                     }
+                    
+                    @if (Model.ClosePage) {
+                        <div class="row index-form-row">
+                            <div class="serviceItLoginWarning" style="margin-bottom: 2em">
+                                You Can safely close your browser now.
+                            </div>
+                        </div>
+                    }
 
-                    @if (Model.IsLoginEnabled) {
+                    @if (Model.IsLoginEnabled && !Model.ClosePage) {
                         <div class="row index-form-row">
                             @if (Model.IncorrectLogin) {
                                 if (string.IsNullOrEmpty(Model.LoginMessage)) {

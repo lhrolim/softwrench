@@ -12,6 +12,7 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
         private readonly bool _incorrectLogin;
         private readonly bool _isHapagClient;
         public bool Inactivity { get; set; }
+        public bool ClosePage { get; set; }
 
         public LoginHandlerModel(bool isLoginEnabled, string loginMessage) {
             _isLoginEnabled = isLoginEnabled;

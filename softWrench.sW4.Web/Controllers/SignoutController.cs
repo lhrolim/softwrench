@@ -15,5 +15,13 @@ namespace softWrench.sW4.Web.Controllers {
             return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f".Fmt(Request.ApplicationPath.Replace("/","")));
         }
 
+        public ActionResult SignOutClosePage() {
+            if (ApplicationConfiguration.IsDev()) {
+                MetadataProvider.StubReset();
+            }
+            FormsAuthentication.SignOut();
+            return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f".Fmt(Request.ApplicationPath.Replace("/", "")));
+        }
+
     }
 }
