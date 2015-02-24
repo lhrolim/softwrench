@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
-
   <templates>
     <template path="@worklogs.xml"/>
     <template path="@workorder.xml"/>
@@ -16,7 +15,7 @@
     <template path="@woactivity.xml"/>
     <template path="@materials.xml"/>
   </templates>
-  
+
   <entities>
     <entity name ="failurelistonly" parententity="failurelist" idAttribute="failurelist" whereclause="((failurelistonly.TYPE is null)) " >
     </entity>
@@ -182,7 +181,7 @@
       <properties>
         <property key="mobile.disabled" value="true"/>
       </properties>
-      
+
       <schemas>
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           <section id ="siteidsection"/>
@@ -261,7 +260,7 @@
           <field attribute="serviceaddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
           <field attribute="serviceaddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
           <!--COMSW 24 association field used for lazy lookup-->
-          <association label="Service Address" target="saddresscode" labelfield="serviceaddress_.description" requiredexpression="@location == null" 
+          <association label="Service Address" target="saddresscode" labelfield="serviceaddress_.description" requiredexpression="@location == null"
                        extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
             <renderer type="lookup" />
           </association>
@@ -309,7 +308,7 @@
               <renderer type="combo" />
             </association>
           </section>
-          
+
           <section id="compositions">
             <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" />
@@ -341,7 +340,7 @@
         </schema>
       </schemas>
     </application>
-    
+
     <application name="workorder" title="Work Order" entity="workorder">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
@@ -644,7 +643,7 @@
           <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
           <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
         </list>
-        
+
         <detail platform="web">
           <field attribute="labtransid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>

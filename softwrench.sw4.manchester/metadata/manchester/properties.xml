@@ -7,8 +7,10 @@
   <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=COM75MAX;User Id=MAXIMO;password=MAXIMO;" />
   <property key="maximo_DB_provider" value="System.Data.SQL"/>
   <property key="swdb_provider" value="System.Data.SQL"/>
-  <property key="maxAttachmentSize" value="10"/> <!--in MB-->
-  <property key="maxScreenshotSize" value="5"/> <!-- in MB-->
+  <property key="maxAttachmentSize" value="10"/>
+  <!--in MB-->
+  <property key="maxScreenshotSize" value="5"/>
+  <!-- in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
   <property key="defaultOrgId" value="DPWORG"/>
   <property key="defaultSiteId" value="DPW"/>
@@ -28,9 +30,8 @@
   <environment key="qa-wk">
     <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_COM75MAX;User Id=sw;password=softwrench;" />
   </environment>
-
 </Properties>
 
 
-
+  
 
