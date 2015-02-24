@@ -445,12 +445,6 @@
     <Content Include="Content\Images\icon-combobox.png" />
     <Content Include="Content\Images\icon-opendetails.png" />
     <Content Include="Content\Images\logo-main.png" />
-    <Content Include="Content\Images\manchester\branding.png" />
-    <Content Include="Content\Images\manchester\divider.png" />
-    <Content Include="Content\Images\manchester\header.jpg" />
-    <Content Include="Content\Images\manchester\logo-main.png" />
-    <Content Include="Content\Images\manchester\signin-branding.png" />
-    <Content Include="Content\Images\manchester\signin.jpg" />
     <Content Include="Content\Images\name-cts.png" />
     <Content Include="Content\Images\pagination-first.png" />
     <Content Include="Content\Images\pagination-last.png" />
@@ -670,7 +664,6 @@
     <Content Include="Content\styles\hapag\grid.css" />
     <Content Include="Content\styles\hapag\signin.css" />
     <Content Include="Content\styles\hapag\site.css" />
-    <Content Include="Content\styles\manchester\branding.css" />
     <Content Include="Content\styles\otb\application\grids.css" />
     <Content Include="Content\styles\scottsdale\signin.css" />
     <Content Include="Content\styles\scottsdale\site.css" />

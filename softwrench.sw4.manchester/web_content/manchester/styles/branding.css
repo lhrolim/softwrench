@@ -1,6 +1,6 @@
 ﻿
 .page-signin {
-    background: #0061cc url(../../Images/manchester/signin.jpg) no-repeat center top fixed;
+    background: #0061cc url(../Images/signin.jpg) no-repeat center top fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -21,7 +21,7 @@
         }
 
         .page-signin .form-signin .branding {
-            background: url(../../Images/manchester/signin-branding.png) no-repeat center center;
+            background: url(../Images/signin-branding.png) no-repeat center center;
             height: 50px;
             width: 340px;
             margin-top: 40px;
@@ -39,11 +39,11 @@
 
         .page-signin .form-signin .divider.bottom {
             height: 80px;
-            background: url(../../Images/manchester/divider.png) no-repeat center center;
+            background: url(../Images/divider.png) no-repeat center center;
         }
 
 .container header {
-    background: #0061cc url(../../Images/manchester/header.jpg) no-repeat top left;
+    background: #0061cc url(../Images/header.jpg) no-repeat top left;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -55,7 +55,7 @@
     }
 
     .container header .branding {
-        background: url(../../Images/manchester/branding.png) no-repeat center left;
+        background: url(../Images/branding.png) no-repeat center left;
     }
 
         .container header .branding .logo {
