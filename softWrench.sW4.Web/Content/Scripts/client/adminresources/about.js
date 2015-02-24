@@ -30,8 +30,6 @@
                 window.location.reload();
             });
         });
-
-
     }
 
     $scope.restore = function () {
@@ -49,12 +47,15 @@
         });
     }
 
-
     $scope.keyDisabled = function (key) {
         if (!$scope.isDev()) {
             return true;
         }
         return key != 'Client Name';
+    }
+
+    $scope.getLabelClass = function (key) {
+        return "col-sm-2";
     }
 
     $scope.getFormClass = function (key) {
@@ -64,5 +65,16 @@
         return key == 'Client Name' ? 'col-sm-5 col-md-6 col-lg-7' : 'col-sm-10';
     }
 
+    $scope.userAgent = function () {
+        return navigator.userAgent;
+       
+    }
 
+    $scope.browserDetect = function () {
+        return BrowserDetect.browser;
+    }
+
+    $scope.deviceDetect = function () {
+        return DeviceDetect.os + ' (' + DeviceDetect.catagory + ')';
+    }
 }
