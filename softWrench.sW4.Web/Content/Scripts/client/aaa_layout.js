@@ -174,6 +174,8 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
     $scope.logout = function () {
         if (!isIe()) {
+            sessionStorage.removeItem("swGlobalRedirectURL");
+            contextService.clearContext();
             $window.location.href = url('/SignOut/SignOut');
             return;
         }

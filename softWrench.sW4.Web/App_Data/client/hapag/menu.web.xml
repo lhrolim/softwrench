@@ -366,8 +366,6 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
                  searchFields=hlagdescription,serialnum,computername" tooltip="Search Assets"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=imacsearchitom;application=imac;label=IMAC Search;
                  searchFields=ticketid,hlagsummary" tooltip="Search IMACS"/>
-    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=imacsearch_tom;application=imac;label=IMAC Search;
-                 searchFields=ticketid,hlagsummary" tooltip="Search IMACS"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchitom;application=change;label=Change Search;
                  searchFields=wonum,hlagchangeticketid,hlagchangesummary" tooltip="Change Search"/>
 		
