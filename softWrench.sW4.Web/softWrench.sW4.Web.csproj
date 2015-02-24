@@ -360,18 +360,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Client\manchester\menu.web.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\manchester\metadata.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App_Data\Client\manchester\properties.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="App_Data\Client\otb\deploy.xml" />
     <Content Include="App_Data\Client\otb\menu.mobile.xml" />
     <Content Include="App_Data\Client\otb\commands.xml">
@@ -633,7 +621,6 @@
     <Content Include="Content\Images\softwrench-logo-small.gif" />
     <Content Include="Content\Images\start-icon.png" />
     <Content Include="Content\Scripts\vendor\angular\angular.js" />
-    <Content Include="App_Data\Client\manchester\statuscolors.json" />
     <None Include="Content\Scripts\vendor\angular\angular-min.jsa" />
     <Content Include="Content\Scripts\vendor\bootstrap\bootstrap-combobox.js" />
     <Content Include="Content\Scripts\client\crud\crud_output.js" />

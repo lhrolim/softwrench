@@ -73,6 +73,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="customer.placeholder" />
+    <EmbeddedResource Include="metadata\manchester\statuscolors.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\manchester\readme.txt" />
