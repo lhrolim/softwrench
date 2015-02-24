@@ -68,7 +68,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
         /// <param name="user"></param>
         /// <returns></returns>
         private static bool CanViewRestrictions(InMemoryUser user) {
-            if (!user.PersonGroups.Any()){
+            if (!user.PersonGroups.Any(f => f.GroupName.StartsWith(HapagPersonGroupConstants.BaseHapagProfilePrefix))) {
                 return false;
             }
 

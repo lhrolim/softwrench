@@ -23,7 +23,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
         internal const string Hamburg2Group = "C-HLC-WW-LC-HH2";
 
         #region profiles
-        internal const string BaseHapagProfilePrefix = "C-HLC-WW-RO-";
+        public const string BaseHapagProfilePrefix = "C-HLC-WW-RO-";
         internal const string HEu = "C-HLC-WW-RO-EU";
         internal const string HITC = "C-HLC-WW-RO-ITC";
         internal const string HExternalUser = "C-HLC-WW-RO-EXT";
