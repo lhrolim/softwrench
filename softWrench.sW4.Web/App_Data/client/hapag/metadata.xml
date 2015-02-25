@@ -827,12 +827,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="commodities_.description" hidden="true">
             <filter operation="contains"/>
           </field>
+          
           <field label="Start Date" attribute="reportdate___start">
-            <renderer type="datetime" params="format=dd/MM/yyyy"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
             <filter operation="btw" default="@MIN_DATE"/>
           </field>
           <field label="End Date" attribute="reportdate___end">
-            <renderer type="datetime" params="format=dd/MM/yyyy"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
             <filter operation="btw" default="@CURR_DATE" />
           </field>
           <reference id="Location" showexpression="!ctx:InModule(['tui','sso'])"/>
