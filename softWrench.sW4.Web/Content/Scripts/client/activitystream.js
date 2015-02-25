@@ -1,4 +1,3 @@
-//TODO: hide spinner on timed refresh
 var app = angular.module('sw_layout');
 
 app.directive('activitystream', function(contextService) {
