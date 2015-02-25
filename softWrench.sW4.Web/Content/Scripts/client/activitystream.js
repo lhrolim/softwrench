@@ -207,6 +207,26 @@ app.directive('activitystream', function(contextService) {
                 $('#activitystream .scroll').height($(window).height() - headerHeight - panePaddingTop - panePaddingBottom);
             }
 
+            $scope.statusAllRead = function () {
+                log.debug('statusAllRead');
+
+                //if no messages, return false
+                if (typeof $scope.activities !== 'undefined') {
+
+                    //if no messages, return false
+                    if ($scope.activities.length === 0) {
+                        return false;
+                    }
+
+                    //loop through all activity, if all are hidden return true
+                    return $scope.activities.every(function (e) {
+                        return e.isHidden;
+                    });
+                } else {
+                    return false;
+                }
+            }
+
             $scope.toggleHidden = function () {
                 log.debug('toggleHidden');
 
@@ -254,9 +274,9 @@ app.directive('activitystream', function(contextService) {
             $scope.refreshStream();
 
             //open notification pane by default, TODO: remove for production
-            $timeout(function () {
-                $('#activitystream .handle').trigger('click');
-            }, 0);
+            //$timeout(function () {
+            //    $('#activitystream .handle').trigger('click');
+            //}, 0);
         }
     }
 });

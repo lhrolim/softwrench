@@ -90,14 +90,14 @@
         color: #ccc;
     }
 
-            #activitystream .message.is-hidden .hide-toggle .button {
-            color: #999;
-            cursor: default;
-        }
+    #activitystream .message.is-hidden .hide-toggle .button {
+        color: #999;
+        cursor: default;
+    }
 
-        #activitystream .hide-toggle .button:hover {
-            color: #000;
-        }
+    #activitystream .hide-toggle .button:hover {
+        color: #000;
+    }
 
     #activitystream.mobile header .button {
         padding: 10px 14px;

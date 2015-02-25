@@ -24,6 +24,9 @@
                     <div class="hide-toggle"><div class="button" ng-click="hideNotification(activity)"><i class="fa" ng-class="activity.isHidden ? 'fa-eye-slash' : 'fa-times'"></i></div></div>
                 </div>
                 <div class="nomessages" ng-if="!activities.length"><i class="fa fa-times-circle"></i>&ensp;No recent activity to display.</div>
+                <div class="nomessages" ng-if="statusAllRead() && !hiddenToggle">
+                    <i class="fa fa-eye"></i>&ensp;All recent activity has been hidden.
+                </div>
             </div>
         </div>
     </div>
