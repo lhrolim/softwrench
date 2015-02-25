@@ -254,13 +254,13 @@
           <!-- Code added from gric metadata.xml SWWEB 173-->
           <section id="attachmentsection" />
           <!--COMSW 24 required field for population purposes-->
-          <field attribute="serviceaddress_.description" attributeToServer="#tkdesc" hidden="true" />
-          <field attribute="serviceaddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
-          <field attribute="serviceaddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
-          <field attribute="serviceaddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
-          <field attribute="serviceaddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
+          <field attribute="sraddress_.description" attributeToServer="#tkdesc" hidden="true" />
+          <field attribute="sraddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
+          <field attribute="sraddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
+          <field attribute="sraddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
+          <field attribute="sraddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
           <!--COMSW 24 association field used for lazy lookup-->
-          <association label="Service Address" target="saddresscode" labelfield="serviceaddress_.description" requiredexpression="@location == null"
+          <association label="Service Address" target="saddresscode" labelfield="sraddress_.description" requiredexpression="@location == null"
                        extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
             <renderer type="lookup" />
           </association>

@@ -25,8 +25,13 @@
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
         </relationship>
         <!--COMSW 24 Reverse Lookup of Service Address (Lazy Fetch)-->
-        <relationship to="serviceaddress" reverselookupattribute="addresscode" >
+        <relationship to="sraddress" reverselookupattribute="addresscode" >
           <relationshipAttribute from="ticketid" to="tkserviceaddress_.ticketid" primary="true"/>
+        </relationship>
+        <relationship to="tkserviceaddress">
+          <relationshipAttribute from="ticketid" to="ticketid" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
       </relationships>
       <connectorParameters>
@@ -135,13 +140,13 @@
           <!-- Code added from gric metadata.xml SWWEB 173-->
           <section id="attachmentsection" />
           <!--COMSW 24 required field for population purposes-->
-          <field attribute="serviceaddress_.description" attributeToServer="#tkdesc" hidden="true" />
-          <field attribute="serviceaddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
-          <field attribute="serviceaddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
-          <field attribute="serviceaddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
-          <field attribute="serviceaddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
+          <field attribute="sraddress_.description" attributeToServer="#tkdesc" hidden="true" />
+          <field attribute="sraddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
+          <field attribute="sraddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
+          <field attribute="sraddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
+          <field attribute="sraddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
           <!--COMSW 24 association field used for lazy lookup-->
-          <association label="Service Address" target="saddresscode" labelfield="serviceaddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
+          <association label="Service Address" target="saddresscode" labelfield="sraddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
             <renderer type="lookup" />
           </association>
           
