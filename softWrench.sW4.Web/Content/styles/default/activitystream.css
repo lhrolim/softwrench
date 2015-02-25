@@ -25,7 +25,7 @@
 }
 
     #activitystream.open {
-        width: 320px;
+        width: 325px;
     }
 
     #activitystream .handle {
@@ -71,101 +71,110 @@
     }
 
     #activitystream header .buttons {
-        margin-top: -12px;
+        margin-top: -13px;
     }
 
-    #activitystream .button {
-        cursor: pointer;
-        padding: 10px 8px;
-    }
-
-    #activitystream header .button {
-        float: left;
-    }
-
-    #activitystream .hide-toggle .button {
-        padding: 10px 11px;
-        position: absolute;
-        right: 12px;
-        margin-top: -10px;
-        color: #ccc;
-    }
-
-    #activitystream .hide-toggle .button {
-        width: 14px;
-    }
-
-    .no-touch #activitystream .hide-toggle .button:hover {
-        color: #000;
-    }
-
-    #activitystream.mobile header .button {
-        padding: 10px 14px;
-    }
-
-    #activitystream header .button.off {
-        color: #999;
-    }
-
-        .no-touch #activitystream header .button.off:hover {
-            color: #000;
+        #activitystream header .buttons.togglehide {
+            margin-left: -8px;
         }
-
-    #activitystream .messages {
-        clear: both;
-    }
-
-    #activitystream .message {
-        padding: 10px 15px;
-        border-bottom: 1px solid #e5e5e5;
-        line-height: normal;
-    }
-
-    #activitystream .message {
-        background: #fff;
-    }
-
-        #activitystream .message:first-child {
-            border-top: 1px solid #e5e5e5;
-        }
-
-        #activitystream .message .read {
-            width: 20px;
-            color: #428bca;
-            font-size: 8px;
-            margin-top: 3px;
-        }
-
-        #activitystream .message .icon {
-            width: 25px;
-            color: #999;
-        }
-
-        #activitystream .message .text {
-            width: 50%;
-            width: -moz-calc(100% - 60px);
-            width: -webkit-calc(100% - 60px);
-            width: calc(100% - 60px);
-        }
-
-            #activitystream .message .text .info a, #activitystream .message .text .info .by {
-                font-weight: bold;
-            }
-
-            #activitystream .message .text .date {
-                color: #999;
-                font-size: 12px;
-                margin-top: 8px;
-            }
-
-    #activitystream .messages .nomessages {
-        font-weight: bold;
-        color: #999;
-        margin-top: 40px;
-    }
 
 @media all and (min-width: 330px) {
     #activitystream header .buttons.togglehide {
         display: none;
+        margin-left: 0px;
     }
+}
+
+#activitystream header .buttons.controls {
+    margin-right: -12px;
+}
+
+#activitystream .button {
+    cursor: pointer;
+    padding: 10px 8px;
+}
+
+#activitystream header .button {
+    float: left;
+}
+
+#activitystream .hide-toggle .button {
+    padding: 10px 11px;
+    position: absolute;
+    right: 12px;
+    margin-top: -10px;
+    color: #ccc;
+}
+
+#activitystream .hide-toggle .button {
+    width: 14px;
+}
+
+.no-touch #activitystream .hide-toggle .button:hover {
+    color: #000;
+}
+
+#activitystream.mobile header .button {
+    padding: 10px 14px;
+}
+
+#activitystream header .button.off {
+    color: #999;
+}
+
+.no-touch #activitystream header .button.off:hover {
+    color: #000;
+}
+
+#activitystream .messages {
+    clear: both;
+}
+
+#activitystream .message {
+    padding: 10px 15px;
+    border-bottom: 1px solid #e5e5e5;
+    line-height: normal;
+}
+
+#activitystream .message {
+    background: #fff;
+}
+
+    #activitystream .message:first-child {
+        border-top: 1px solid #e5e5e5;
+    }
+
+    #activitystream .message .read {
+        width: 20px;
+        color: #428bca;
+        font-size: 8px;
+        margin-top: 3px;
+    }
+
+    #activitystream .message .icon {
+        width: 25px;
+        color: #999;
+    }
+
+    #activitystream .message .text {
+        width: 50%;
+        width: -moz-calc(100% - 60px);
+        width: -webkit-calc(100% - 60px);
+        width: calc(100% - 60px);
+    }
+
+        #activitystream .message .text .info a, #activitystream .message .text .info .by {
+            font-weight: bold;
+        }
+
+        #activitystream .message .text .date {
+            color: #999;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+#activitystream .messages .nomessages {
+    font-weight: bold;
+    color: #999;
+    margin-top: 40px;
 }
