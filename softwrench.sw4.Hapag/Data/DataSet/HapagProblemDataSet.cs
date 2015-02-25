@@ -6,7 +6,7 @@ using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Security;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
-    public class HapagProblemDataSet : BaseApplicationDataSet {
+    class HapagProblemDataSet : HapagBaseApplicationDataSet{
         protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var dbDetail = base.GetApplicationDetail(application, user, request);
             var resultObject = dbDetail.ResultObject;

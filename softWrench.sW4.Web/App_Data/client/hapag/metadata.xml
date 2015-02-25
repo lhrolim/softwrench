@@ -613,7 +613,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey;onClickService=relatedrecordservice.opendetail;showaslink=true" />
           </composition>
           <composition relationship="worklog" label="Work Log">
-            <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
+            <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
           </composition>
           <tab label="Solution" id="solution">
             <field attribute="problemcode_.ldtext" label="Symptom:" >
@@ -1062,7 +1062,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey;onClickService=relatedrecordservice.opendetail;showaslink=true" />
           </composition>
           <composition relationship="worklog" label="Work Log">
-            <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
+            <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
           </composition>
           <composition relationship="attachment" label="Attachment" printschema="detailPrint">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
@@ -1516,7 +1516,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </composition>
 
           <composition relationship="worklog" label="Work Log" >
-            <collectionproperties allowcreation="true"/>
+            <collectionproperties allowcreation="true" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
           </composition>
           <composition relationship="woactivity" label="Job Plan" detailschema="">
             <collectionproperties allowcreation="false" orderbyfield="wosequence asc, workorderid asc"/>
@@ -1888,7 +1888,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="classstructure_.description" hidden="true"/>
 
           <composition relationship="worklog" label="Work Log" >
-            <collectionproperties allowcreation="true"/>
+            <collectionproperties allowcreation="true" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
           </composition>
           <composition relationship="woactivity" label="Job Plan" detailschema="" printschema="list">
             <collectionproperties allowcreation="false" orderbyfield="wosequence asc, workorderid asc"/>
@@ -2437,7 +2437,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey;onClickService=relatedrecordservice.opendetail;showaslink=true" />
           </composition>
           <composition relationship="worklog" label="Work Log">
-            <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
+            <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
           </composition>
           <tab label="Solution" id="solution">
             <field attribute="problemcode_.ldtext" label="Symptom:" >

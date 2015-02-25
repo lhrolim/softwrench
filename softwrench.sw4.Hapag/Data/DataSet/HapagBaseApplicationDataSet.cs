@@ -1,6 +1,8 @@
-﻿using softwrench.sw4.Hapag.Data.DataSet.Helper;
+﻿using System.Text;
+using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Security;
 using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational;
@@ -21,6 +23,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         protected readonly EntityRepository EntityRepository = new EntityRepository();
 
         private MaximoHibernateDAO maxDAO;
+
+        private readonly ISet<string> _applications = new HashSet<string>() { "ACTIVITY", "CHANGE", "INCIDENT", "PROBLEM", "SR", "WORKORDER" };
 
 
         protected IHlagLocationManager LocationManager {
@@ -153,6 +157,31 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             searchDTO.AppendSearchEntry(ISMConstants.PluspCustomerColumn, "%" + fromLocation);
             searchDTO.AppendWhereClause(location.CostCentersForQuery("asset.glaccount"));
             return searchDTO;
+        }
+
+        public SearchRequestDto AppendRelatedRecordWCToWorklog(CompositionPreFilterFunctionParameters preFilter) {
+            var dto = preFilter.BASEDto;
+            var ticketId = dto.ValuesDictionary["recordkey"].Value;
+            var originalClass = dto.ValuesDictionary["class"].Value as string;
+            dto.SearchValues = null;
+            dto.SearchParams = null;
+            //            var assetNum = preFilter.OriginalEntity.GetAttribute("assetnum");
+            //            //as of HAP-882
+            //            dto.AppendWhereClauseFormat(@"ticketid in (select recordkey from MULTIASSETLOCCI multi where multi.assetnum = '{0}' and RECORDCLASS in ({1}) ) " +
+            //                                        "or (imac.classificationid = '81515700' and imac.description = 'Decommission of {0}')", assetNum, "'CHANGE','INCIDENT','PROBLEM','SR'");
+
+//            var applicationsToIterate = _applications.Where(a => !a.EqualsIc(originalClass));
+            var sb = new StringBuilder();
+
+            sb.AppendFormat("((worklog.recordkey = '{0}' ) AND ( worklog.class = '{1}' )) ",ticketId, originalClass);
+            foreach (var application in _applications) {
+                sb.AppendFormat(@"
+                or (worklog.recordkey in (select relatedrecord.relatedreckey as relatedreckey 
+                from RELATEDRECORD as relatedrecord  where relatedrecord.recordkey = '{0}'  AND  relatedrecord.class = '{1}' AND RELATEDRECCLASS = '{2}' and relatetype in ('FOLLOWUP','ORIGINATOR')) and worklog.class = '{2}')",ticketId, originalClass, application);
+            }
+            dto.WhereClause = sb.ToString();
+
+            return dto;
         }
 
         public override string ClientFilter() {
