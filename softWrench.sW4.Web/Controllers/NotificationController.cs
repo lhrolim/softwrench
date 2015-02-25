@@ -44,10 +44,5 @@ namespace softWrench.sW4.Web.Controllers {
             notificationFacade.UpdateNotificationReadFlag(role, ids, isread);
         }
 
-        [HttpPost]
-        public void UpdateNotificationHiddenFlag(string role, string application, string id, bool ishidden = true) {
-            var notificationFacade = NotificationFacade.GetInstance();
-            notificationFacade.UpdateNotificationHiddenFlag(role, application, id, ishidden);
-        }
     }
 }

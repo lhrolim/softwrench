@@ -67,15 +67,6 @@ namespace softWrench.sW4.Notifications {
         //This would need to be updated in the future to determine which
         //role stream needs to be updated based on which roles have a
         //notificationstream attribute set to true
-        public void UpdateNotificationHiddenFlag(string role, string application, string id, bool isHidden) {
-            var streamToUpdate = _notificationStreams[role];
-            streamToUpdate.UpdateNotificationHiddenFlag(application, id, isHidden);
-        }
-
-        //Currently only updates notifications into the 'allRole' stream.
-        //This would need to be updated in the future to determine which
-        //role stream needs to be updated based on which roles have a
-        //notificationstream attribute set to true
         public void UpdateNotificationReadFlag(string role, string application, string id, bool isRead)
         {
             var streamToUpdate = _notificationStreams[role];
