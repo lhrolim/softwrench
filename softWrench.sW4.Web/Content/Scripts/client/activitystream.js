@@ -1,3 +1,4 @@
+//TODO: hide spinner on timed refresh
 var app = angular.module('sw_layout');
 
 app.directive('activitystream', function(contextService) {
@@ -19,13 +20,15 @@ app.directive('activitystream', function(contextService) {
             var jScrollPaneAPI;
             var throttleTimeout;
             $scope.hiddenToggle = false;
+            var rootAvoidingSpin;
      
             $scope.activityStreamEnabled = function () {
                 return contextService.fetchFromContext("notificationStreamFlag", false, true);
             };
 
             $scope.displayHidden = function (activity) {
-                if (!activity.isHidden) {
+                //always show unhidden
+                if (!activity.isRead) {
                     return true;
                 }
 
@@ -48,32 +51,24 @@ app.directive('activitystream', function(contextService) {
                 return 'About ' + dateMessage + ' ago'; // (' + notificationDate.replace('T', ' ') + ') [' + notificationMils + ']';
             };
 
-            $scope.hideNotification = function (activity) {
-                log.debug('hideNotification', activity);
+            $scope.getAllHidden = function () {
+                log.debug('getAllHidden');
 
-                $scope.readNotification(activity);
+                //if activities is unset, return false
+                if (typeof $scope.activities !== 'undefined') {
 
-                var controllerToUse = "Notification";
-                var actionToUse = "UpdateNotificationHiddenFlag";
+                    //if no messages, return false
+                    if ($scope.activities.length === 0) {
+                        return false;
+                    }
 
-                var parameters = {};
-                parameters.role = 'allRole';
-                parameters.application = activity.application;
-                parameters.id = activity.id;
-
-                var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
-                $http.post(rawUrl).success(
-                   function (data) {
-                       log.debug('Hide Complete');
-                       $scope.refreshStream();
-                   }).error(
-                   function (data) {
-                       var errordata = {
-                           errorMessage: "error opening action {0} of controller {1} ".format(actionToUse, controllerToUse),
-                           errorStack: data.message
-                       }
-                       $rootScope.$broadcast("sw_ajaxerror", errordata);
-                   });
+                    //loop through all activity, if all are hidden return true
+                    return $scope.activities.every(function (e) {
+                        return e.isRead;
+                    });
+                } else {
+                    return false;
+                }
             }
 
             $scope.markAllRead = function() {
@@ -87,7 +82,8 @@ app.directive('activitystream', function(contextService) {
                     parameters.role = 'allRole';
 
                     var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
-                    $http.post(rawUrl, angular.toJson($scope.activities)).success(function() {
+                    $http.post(rawUrl, angular.toJson($scope.activities)).success(function () {
+                        log.debug('Mark All Read Complete');
                         $scope.refreshStream();
                     }).error(
                         function(data) {
@@ -99,6 +95,32 @@ app.directive('activitystream', function(contextService) {
                         }
                     );
                 }, confirmationMessage);
+            }
+
+            $scope.markRead = function (activity) {
+                log.debug('markRead', activity);
+
+                var controllerToUse = "Notification";
+                var actionToUse = "UpdateNotificationReadFlag";
+
+                var parameters = {};
+                parameters.role = 'allRole';
+                parameters.application = activity.application;
+                parameters.id = activity.id;
+
+                var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
+                $http.post(rawUrl).success(
+                    function (data) {
+                        log.debug('Mark Read Complete');
+                        $scope.refreshStream();
+                    }).error(
+                    function (data) {
+                        var errordata = {
+                            errorMessage: "error opening action {0} of controller {1} ".format(actionToUse, controllerToUse),
+                            errorStack: data.message
+                        }
+                        $rootScope.$broadcast("sw_ajaxerror", errordata);
+                    });
             }
 
             $scope.openLink = function(activity) {
@@ -141,32 +163,7 @@ app.directive('activitystream', function(contextService) {
                 );
             }
 
-            $scope.readNotification = function (activity) {
-                log.debug('readNotification', activity);
-
-                var controllerToUse = "Notification";
-                var actionToUse = "UpdateNotificationReadFlag";
-
-                var parameters = {};
-                parameters.role = 'allRole';
-                parameters.application = activity.application;
-                parameters.id = activity.id;
-
-                var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
-                $http.post(rawUrl).success(
-                   function (data) {
-                       $scope.refreshStream();
-                   }).error(
-                   function (data) {
-                       var errordata = {
-                           errorMessage: "error opening action {0} of controller {1} ".format(actionToUse, controllerToUse),
-                           errorStack: data.message
-                       }
-                       $rootScope.$broadcast("sw_ajaxerror", errordata);
-                   });
-            }
-
-            $scope.refreshStream = function() {
+            $scope.refreshStream = function(silent) {
                 log.debug('refreshStream');
 
                 var controllerToUse = "Notification";
@@ -175,16 +172,27 @@ app.directive('activitystream', function(contextService) {
                 var parameters = {};
                 parameters.role = 'allRole';
 
+                //turn off spinner, if not alread off
+                if (!$rootScope.avoidspin) {
+                    rootAvoidingSpin = false;
+                    $rootScope.avoidspin = silent;
+                } else {
+                    rootAvoidingSpin = true;
+                }
+
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.get(rawUrl).success(
                     function(data) {
                         $scope.activities = data;
+                        $scope.statusAllHidden = $scope.getAllHidden();
 
                         //resize the scroll pane if needed
                         if (typeof jScrollPaneAPI !== 'undefined') {
                             jScrollPaneAPI.reinitialise();
                         }
 
+                        //restore spinner to orginal value
+                        $rootScope.avoidspin = rootAvoidingSpin;
                         log.debug($scope.activities);
                     }).error(
                     function(data) {
@@ -192,6 +200,9 @@ app.directive('activitystream', function(contextService) {
                             errorMessage: "error opening action {0} of controller {1} ".format(actionToUse, controllerToUse),
                             errorStack: data.message
                         }
+                        
+                        //restore spinner to orginal value
+                        $rootScope.avoidspin = rootAvoidingSpin;
                         $rootScope.$broadcast("sw_ajaxerror", errordata);
                     }
                 );
@@ -207,42 +218,29 @@ app.directive('activitystream', function(contextService) {
                 $('#activitystream .scroll').height($(window).height() - headerHeight - panePaddingTop - panePaddingBottom);
             }
 
-            $scope.statusAllRead = function () {
-                log.debug('statusAllRead');
-
-                //if no messages, return false
-                if (typeof $scope.activities !== 'undefined') {
-
-                    //if no messages, return false
-                    if ($scope.activities.length === 0) {
-                        return false;
-                    }
-
-                    //loop through all activity, if all are hidden return true
-                    return $scope.activities.every(function (e) {
-                        return e.isHidden;
-                    });
-                } else {
-                    return false;
-                }
-            }
-
             $scope.toggleHidden = function () {
                 log.debug('toggleHidden');
 
                 $scope.hiddenToggle = !$scope.hiddenToggle;
+
+                //resize the scroll pane if needed
+                if (typeof jScrollPaneAPI !== 'undefined') {
+                    $timeout(function () {
+                        jScrollPaneAPI.reinitialise();
+                    }, 0);
+                }
             }
 
             //automatically refresh the activity stream every five minutes
-            $interval(function() {
-                $scope.refreshStream();
-            }, 60000 * 5);
+            $interval(function () {
+                $scope.refreshStream(true);
+            }, 1000 * 60 * 5);
 
             $scope.toggleActivityStream = function() {
                 //open and close activity pane
-                    $("#activitystream").toggleClass('open');
-                    $scope.setPaneHeight();
-                    jScrollPaneAPI = $('#activitystream .scroll').jScrollPane().data('jsp');
+                $("#activitystream").toggleClass('open');
+                $scope.setPaneHeight();
+                jScrollPaneAPI = $('#activitystream .scroll').jScrollPane().data('jsp');
             };
 
             //set window height and reinitialize scroll pane if windows is resized

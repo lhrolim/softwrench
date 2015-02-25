@@ -11,22 +11,22 @@
         </header>
         <div class="scroll">
             <div class="messages">
-                <div class="message clearfix" ng-repeat="activity in activities" ng-class="($even ? 'even' : 'odd') + (activity.isHidden ? ' is-hidden' : ' not-hidden')" ng-show="displayHidden(activity)">
+                <div class="message clearfix" ng-repeat="activity in activities" ng-class="activity.isRead ? ' is-read' : ' not-read'" ng-show="displayHidden(activity)">
                     <div class="read pull-left"><i class="fa" ng-class="activity.isRead ? '' : 'fa-circle'"></i></div>
                     <div class="icon pull-left"><i class="fa" ng-class="activity.icon"></i></div>
                     <div class="text pull-left">
                         <div class="info">
-                            <div class="info"><span class="by">{{activity.createBy}}</span> changed {{activity.label}} <a href="" ng-click="openLink(activity)">{{activity.id}}</a></div>
-                            <span ng-if="activity.parentApplication"> for {{activity.parentLabel}} <a href="" ng-click="openLink(activity)">{{activity.parentId}}</a></span>
+                            <div class="info"><span class="by">{{activity.createBy}}</span> changed {{activity.label | lowercase}} <a href="" ng-click="openLink(activity)">{{activity.id}}</a></div>
+                            <span ng-if="activity.parentApplication"> for {{activity.parentLabel | lowercase}} <a href="" ng-click="openLink(activity)">{{activity.parentId}}</a></span>
                         </div>
                         <div class="date">{{formatDate(activity.notificationDate)}}</div>
                     </div>
-                    <div class="hide-toggle"><div class="button" ng-click="hideNotification(activity)"><i class="fa" ng-class="activity.isHidden ? 'fa-eye-slash' : 'fa-times'"></i></div></div>
+                    <div class="hide-toggle">
+                        <div class="button" ng-click="markRead(activity)" ng-if="!activity.isRead"><i class="fa fa-times"></i></div>
+                    </div>
                 </div>
                 <div class="nomessages" ng-if="!activities.length"><i class="fa fa-times-circle"></i>&ensp;No recent activity to display.</div>
-                <div class="nomessages" ng-if="statusAllRead() && !hiddenToggle">
-                    <i class="fa fa-eye"></i>&ensp;All recent activity has been hidden.
-                </div>
+                <div class="nomessages" ng-if="statusAllHidden && !hiddenToggle"><i class="fa fa-eye"></i>&ensp;All recent activity has been read.</div>
             </div>
         </div>
     </div>

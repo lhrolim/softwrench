@@ -37,9 +37,9 @@
         display: inline-block;
         position: absolute;
         top: 80px;
-        left: -92px;
+        left: -94px;
         min-width: 156px;
-        padding: 10px 15px 6px;
+        padding: 10px 15px 5px;
         text-transform: uppercase;
         border-top: 1px solid #bfbfbf;
         border-left: 1px solid #bfbfbf;
@@ -90,11 +90,6 @@
         color: #ccc;
     }
 
-    #activitystream .message.is-hidden .hide-toggle .button {
-        color: #999;
-        cursor: default;
-    }
-
     #activitystream .hide-toggle .button:hover {
         color: #000;
     }
@@ -121,12 +116,12 @@
         line-height: normal;
     }
 
+    #activitystream .message {
+        background: #fff;
+    }
+
         #activitystream .message:first-child {
             border-top: 1px solid #e5e5e5;
-        }
-
-        #activitystream .message.even {
-            background: #fff;
         }
 
         #activitystream .message .read {
