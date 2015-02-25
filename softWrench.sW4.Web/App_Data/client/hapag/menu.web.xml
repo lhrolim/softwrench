@@ -203,7 +203,6 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
       <application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
     </container>
 		<application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents"/>
-		<application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
 		<application title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />
 		<application id="ImacGrid" title="IMAC Grid" ref="imac" schema="list" tooltip="Click to view your Imacs"/>
 		<container title="New IMAC Request" tooltip="Click to create a new IMAC Request" id="newimac">
@@ -253,8 +252,6 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 			  tooltip="Search Request ID &amp; Summary" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=incidentsearchxitc;application=incident;label=Incident Search;
                  searchFields=ticketid,description" tooltip="Search Incidents"/>
-    <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchxitc;application=problem;label=Problem Search;
-                 searchFields=ticketid,description" tooltip="Search Problems"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=assetmenusearchxitc;application=asset;label=Asset Search;
                  searchFields=hlagdescription,serialnum,computername" tooltip="Search Assets"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=imacsearch_xitc;application=imac;label=IMAC Search;
