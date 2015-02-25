@@ -61,6 +61,7 @@
 
     #activitystream .pane .scroll {
         width: 100%;
+        outline: none;
     }
 
     #activitystream header h2 {
