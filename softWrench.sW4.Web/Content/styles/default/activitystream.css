@@ -95,7 +95,7 @@
         width: 14px;
     }
 
-    #activitystream .hide-toggle .button:hover {
+    .no-touch #activitystream .hide-toggle .button:hover {
         color: #000;
     }
 
@@ -107,7 +107,7 @@
         color: #999;
     }
 
-        #activitystream header .button.off:hover {
+        .no-touch #activitystream header .button.off:hover {
             color: #000;
         }
 
