@@ -8,6 +8,7 @@ using NHibernate;
 using NHibernate.Cfg.MappingSchema;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Interfaces;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
@@ -36,7 +37,16 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
             using (var session = SessionManager.Instance.OpenSession()) {
                 using (var transaction = session.BeginTransaction()) {
                     var b = ob as IBaseEntity;
+                    var aud = ob as IBaseAuditEntity;
+                    if (aud != null) {
+                        aud.UpdateDate = new DateTime();
+                    }
+
                     if (b != null && (b.Id == 0 || b.Id == null)) {
+                        if (aud != null) {
+                            aud.CreationDate = new DateTime();
+                            aud.CreatedBy = SecurityFacade.CurrentUser().UserId;
+                        }
                         b.Id = (int)session.Save(ob);
                     } else {
                         ob = session.Merge(ob);

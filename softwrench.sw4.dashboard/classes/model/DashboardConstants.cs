@@ -12,5 +12,15 @@
         /// </summary>
         public static string RoleManager = "ROLE_DASH_MANAGER";
 
+        /// <summary>
+        /// User generic Property to hold its dashboards
+        /// </summary>
+        public static string DashBoardsProperty = "dash_dashboards";
+
+        /// <summary>
+        /// User generic Property to hold his preferred dashboard
+        /// </summary>
+        public static string DashBoardsPreferredProperty = "dash_preffereddashboard";
+
     }
 }

@@ -21,12 +21,12 @@ namespace softwrench.sw4.dashboard.classes.controller {
         public MenuDefinition ModifyMenu(MenuDefinition securedMenu, ISWUser user) {
             var leafs = new List<MenuBaseDefinition>();
 
-            if (!user.Genericproperties.ContainsKey("dashboards")) {
+            if (!user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty)) {
                 //caching
-                user.Genericproperties["dashboards"] = _userDashboardManager.LoadUserDashboars(user);
+                user.Genericproperties[DashboardConstants.DashBoardsProperty] = _userDashboardManager.LoadUserDashboars(user);
             }
 
-            var dashboards = user.Genericproperties["dashboards"] as IEnumerable<Dashboard>;
+            var dashboards = user.Genericproperties[DashboardConstants.DashBoardsProperty] as IEnumerable<Dashboard>;
 
 
             MenuBaseDefinition dashBoardMenu;
@@ -49,13 +49,13 @@ namespace softwrench.sw4.dashboard.classes.controller {
                     Tooltip = "Click here to go to your dashboard"
                 };
                 dashBoardMenu = action;
-                user.Genericproperties["dashboard_preferred"] = enumerable.First();
+                user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] = enumerable.First().Id;
             } else if (canCreateDashBoards && count == 0) {
                 var action = ManageDashboardAction();
                 dashBoardMenu = action;
             } else {
                 //TODO: make it selectable
-                user.Genericproperties["dashboard_preferred"] = enumerable.First();
+                user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] = enumerable.First().Id;
                 var container = new MenuContainerDefinition {
                     HasMainAction = true,
                     Action = "LoadPreferred",

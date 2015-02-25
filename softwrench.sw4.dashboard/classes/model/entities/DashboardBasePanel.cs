@@ -8,7 +8,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
     /// BAse class for panels that can go inside of dashboards. Implementations can be grids, graphics, etc
     /// </summary>
     [Class(Table = "DASH_BASEPANEL", Lazy = false)]
-    public class DashboardBasePanel : IBaseEntity {
+    public class DashboardBasePanel : IBaseAuditEntity {
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
         public virtual int? Id { get; set; }
@@ -23,6 +23,11 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         [ComponentProperty]
         public virtual DashboardFilter Filter { get; set; }
 
-
+        [Property]
+        public DateTime? CreationDate { get; set; }
+        [Property]
+        public DateTime? UpdateDate { get; set; }
+        [Property]
+        public int? CreatedBy { get; set; }
     }
 }

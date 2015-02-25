@@ -1,11 +1,12 @@
-﻿using cts.commons.persistence;
+﻿using System;
+using cts.commons.persistence;
 using Iesi.Collections.Generic;
 using NHibernate.Mapping.Attributes;
 
 namespace softwrench.sw4.dashboard.classes.model.entities {
 
     [Class(Table = "DASH_DASHBOARD", Lazy = false)]
-    public class Dashboard : IBaseEntity
+    public class Dashboard : IBaseAuditEntity
     {
 
         public static string ByUser = "from Dashboard where (userid is null or userid = ?) or (userprofile is null or userprofiles like ?)";
@@ -17,6 +18,16 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
 
         [Property]
         public string Title { get; set; }
+
+        [Property]
+        public DateTime? CreationDate { get; set; }
+
+        [Property]
+        public DateTime? UpdateDate { get; set; }
+
+        [Property]
+        public int? CreatedBy { get; set; }
+
 
         /// <summary>
         /// comma separated list of columns. (3,1,2 means 3 columns on first row, 1 on the second and 2 on the third).

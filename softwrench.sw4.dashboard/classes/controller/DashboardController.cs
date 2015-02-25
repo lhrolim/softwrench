@@ -1,4 +1,6 @@
-﻿using System.Web.Http;
+﻿using System.Collections.Generic;
+using System.Web.Http;
+using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -25,14 +27,32 @@ namespace softwrench.sw4.dashboard.classes.controller {
         [HttpGet]
         public IGenericResponseResult Manage() {
             //TODO: add id checkings on server side
-            var userId = SecurityFacade.CurrentUser().DBId;
-            return new BlankApplicationResponse();
+            var user = SecurityFacade.CurrentUser();
+            int? preferredDashboardId = null;
+            IEnumerable<Dashboard> dashboards = null;
+            var canCreateShared = user.IsInRole(DashboardConstants.RoleAdmin);
+            var canCreateOwn = user.IsInRole(DashboardConstants.RoleManager);
+
+            if (user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsPreferredProperty)) {
+                preferredDashboardId = user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] as int?;
+            }
+            if (user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty)) {
+                dashboards = (IEnumerable<Dashboard>)user.Genericproperties[DashboardConstants.DashBoardsProperty];
+            }
+            var dto = new ManageDashBoardsDTO() {
+                CanCreateOwn = canCreateOwn,
+                CanCreateShared = canCreateShared,
+                Dashboards = dashboards,
+                PreferredId = preferredDashboardId,
+            };
+
+            return new GenericResponseResult<ManageDashBoardsDTO>(dto);
         }
 
         public IGenericResponseResult LoadPreferred() {
             //TODO: add id checkings on server side
-            var user =SecurityFacade.CurrentUser();
-            var dashboard =user.Genericproperties["dashboard_preferred"];
+            var user = SecurityFacade.CurrentUser();
+            var dashboard = user.Genericproperties["dashboard_preferred"];
             return new GenericResponseResult<Dashboard>(dashboard as Dashboard);
         }
 
@@ -54,7 +74,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             return new BlankApplicationResponse();
         }
 
-    
+
 
     }
 }

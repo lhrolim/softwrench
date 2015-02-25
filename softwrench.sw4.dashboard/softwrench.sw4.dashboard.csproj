@@ -57,15 +57,18 @@
     <Compile Include="classes\controller\UserDashboardManager.cs" />
     <Compile Include="classes\model\DashboardConstants.cs" />
     <Compile Include="classes\controller\bootstrap\DashBoardRolesManager.cs" />
+    <Compile Include="classes\model\entities\UserDashBoardPreferences.cs" />
     <Compile Include="classes\model\entities\DashboardBasePanel.cs" />
     <Compile Include="classes\model\entities\DashboardPanelRelationship.cs" />
     <Compile Include="classes\model\entities\DashboardGridPanel.cs" />
     <Compile Include="classes\model\entities\DashboardFilter.cs" />
     <Compile Include="classes\model\entities\Dashboard.cs" />
+    <Compile Include="classes\model\ManageDashBoardsDTO.cs" />
     <Compile Include="classes\model\migration\Migration20150224Swweb792.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="shared.placeholder" />
   </ItemGroup>
