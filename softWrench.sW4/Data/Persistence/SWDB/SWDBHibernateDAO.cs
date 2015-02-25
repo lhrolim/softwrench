@@ -129,7 +129,7 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
                             query.SetParameter(i, parameters[i]);
                         }
                     }
-                    query.ExecuteUpdate();
+                    var result = query.ExecuteUpdate();
                     transaction.Commit();
                 }
             }

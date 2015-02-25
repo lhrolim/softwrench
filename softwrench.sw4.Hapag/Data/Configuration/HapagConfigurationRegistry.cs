@@ -16,11 +16,13 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
     public class HapagConfigurationRegistry : ISingletonComponent, ISWEventListener<ApplicationStartedEvent> {
         private readonly IWhereClauseFacade _wcFacade;
         private readonly IConfigurationFacade _facade;
+        private readonly SWDBHibernateDAO _dao;
 
 
         public HapagConfigurationRegistry(IConfigurationFacade facade, IWhereClauseFacade wcFacade, SWDBHibernateDAO dao) {
             _wcFacade = wcFacade;
             _facade = facade;
+            _dao = dao;
         }
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
@@ -29,7 +31,7 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
                 //TODO: make build modularized
                 return;
             }
-
+            _dao.ExecuteSql("delete from conf_propertyvalue where definition_id = '/_whereclauses/imac/whereclause' and module = 'tom,itom'");
             CreateBaseWhereClauses();
             CreateEndUserWhereClause();
             CreateLocalITCWhereClauses();
@@ -115,7 +117,7 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
             //dashsboards
             _wcFacade.Register("servicerequest", qc.SrITCDashboard(), MetadataIdForModules(dc.ActionRequiredForOpenRequests, fr.Tom, fr.Itom));
             _wcFacade.Register("incident", qc.IncidentITCDashboard(), MetadataIdForModules(dc.ActionRequiredForOpenIncidents, fr.Tom, fr.Itom));
-            _wcFacade.Register("imac", qc.ImacsForTomITOM(), ForModules(fr.Tom,fr.Itom));
+            _wcFacade.Register("imac", qc.ImacsForTomITOM(), ForModules(fr.Tom));
             
         }
 
