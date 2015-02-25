@@ -11,7 +11,7 @@
         </header>
         <div class="scroll">
             <div class="messages">
-                <div class="message clearfix" ng-repeat="activity in activities" ng-class="activity.isRead ? ' is-read' : ' not-read'" ng-show="displayHidden(activity)">
+                <div class="message clearfix" ng-repeat="activity in activities" ng-class="activity.isRead ? 'is-read' : 'not-read'" ng-show="displayHidden(activity)">
                     <div class="read pull-left"><i class="fa" ng-class="activity.isRead ? '' : 'fa-circle'"></i></div>
                     <div class="icon pull-left"><i class="fa" ng-class="activity.icon"></i></div>
                     <div class="text pull-left">
@@ -22,7 +22,7 @@
                         <div class="date">{{formatDate(activity.notificationDate)}}</div>
                     </div>
                     <div class="hide-toggle">
-                        <div class="button" ng-click="markRead(activity)" ng-if="!activity.isRead"><i class="fa fa-times"></i></div>
+                        <div class="button" ng-click="markRead(activity)"><i class="fa" ng-class="activity.isRead ? 'fa-eye' : 'fa-times'"></i></div>
                     </div>
                 </div>
                 <div class="nomessages" ng-if="!activities.length"><i class="fa fa-times-circle"></i>&ensp;No recent activity to display.</div>

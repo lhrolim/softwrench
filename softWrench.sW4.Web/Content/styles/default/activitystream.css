@@ -85,9 +85,13 @@
     #activitystream .hide-toggle .button {
         padding: 10px 11px;
         position: absolute;
-        right: 0;
+        right: 12px;
         margin-top: -10px;
         color: #ccc;
+    }
+
+    #activitystream .hide-toggle .button {
+        width: 14px;
     }
 
     #activitystream .hide-toggle .button:hover {
