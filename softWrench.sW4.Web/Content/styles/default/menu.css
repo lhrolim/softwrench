@@ -156,7 +156,11 @@
 
 .vertical-menu-container .menusearchinput {
     padding-right: 10px;
-    margin-bottom: 15px;
+}
+
+.vertical-menu-container .menusearchwrapper {
+    margin-top: 10px;
+    margin-bottom: 5px;
 }
 
 .vertical-menu-container .divider {

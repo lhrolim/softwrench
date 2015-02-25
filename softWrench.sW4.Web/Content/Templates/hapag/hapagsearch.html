@@ -1,7 +1,9 @@
-<label rel="tooltip" data-original-title="{{i18N('_menu.' + leaf.params['id'] + '_tooltip',leaf.tooltip)}}">{{i18N('_menu.' + leaf.params['id'] ,leaf.params['label'])}}</label>
-<div class="input-group input-group-sm merged menusearchinput">
-    <input id="{{leaf.params['id']}}" type="text" class="form-control" rel="tooltip" data-original-title="{{leaf.tooltip}}"
-           ng-enter="search(leaf.module,leaf.params['application'], leaf.params['searchFields'] , leaf.params['id'],leaf.params['schema'])" />
-    <span class="input-group-addon" ng-click="search(leaf.module,leaf.params['application'], leaf.params['searchFields'] ,
-          leaf.params['id'],leaf.params['schema'])"><i class="glyphicon glyphicon-search"></i></span>    
+<div class="menusearchwrapper">
+    <label rel="tooltip" data-original-title="{{i18N('_menu.' + leaf.params['id'] + '_tooltip',leaf.tooltip)}}">{{i18N('_menu.' + leaf.params['id'] ,leaf.params['label'])}}</label>
+    <div class="input-group input-group-sm merged menusearchinput">
+        <input id="{{leaf.params['id']}}" type="text" class="form-control" rel="tooltip" data-original-title="{{leaf.tooltip}}"
+               ng-enter="search(leaf.module,leaf.params['application'], leaf.params['searchFields'] , leaf.params['id'],leaf.params['schema'])" />
+        <span class="input-group-addon" ng-click="search(leaf.module,leaf.params['application'], leaf.params['searchFields'] ,
+          leaf.params['id'],leaf.params['schema'])"><i class="glyphicon glyphicon-search"></i></span>
+    </div>
 </div>
