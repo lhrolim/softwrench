@@ -22,8 +22,8 @@ namespace softwrench.sW4.test.Metadata {
             var app = MetadataProvider.Application("worklog");
             var listSchema = app.Schema(new ApplicationMetadataSchemaKey("list"));
             var displayables = listSchema.Fields;
-            //parent fields=9; customizations=2
-            Assert.AreEqual(11, displayables.Count);
+            //parent fields=8; customizations=2
+            Assert.AreEqual(10, displayables.Count);
 
             var description = displayables.FirstOrDefault(f => f.Attribute.Equals("description"));
             var descIndex = displayables.IndexOf(description);
@@ -42,8 +42,8 @@ namespace softwrench.sW4.test.Metadata {
             var app = MetadataProvider.Application("worklog");
             var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("detail"));
             var displayables = detailSchema.Fields;
-            //parent fields=1 (auto-generated); customizations=1
-            Assert.AreEqual(3, displayables.Count);
+            //parent fields=3 (auto-generated); customizations=2
+            Assert.AreEqual(5, displayables.Count);
 
             Assert.IsNull(displayables.FirstOrDefault(f => f.Attribute.Equals("description")));
 
