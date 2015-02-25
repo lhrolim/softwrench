@@ -127,11 +127,11 @@ namespace softWrench.sW4.Notifications {
                 
                 var parentapplication = record["parentapplication"];
                 string parentlabel =null;
-                if (parentapplication == "SR"){
+                if (parentapplication == "servicerequest"){
                     parentlabel = "service request";
                 } else if (parentapplication == "WORKORDER"){
                     parentlabel = "work order";
-                } else if (parentapplication == "SR"){
+                } else if (parentapplication == "INCIDENT"){
                     parentlabel = "incident";
                 }
                 var summary = record["summary"];
