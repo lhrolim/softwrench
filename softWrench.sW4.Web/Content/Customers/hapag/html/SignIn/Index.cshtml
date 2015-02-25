@@ -49,8 +49,10 @@
                     
                     @if (Model.ClosePage) {
                         <div class="row index-form-row">
-                            <div class="serviceItLoginWarning" style="margin-bottom: 2em">
-                                You Can safely close your browser now.
+                            <div class="serviceItExitWarning">
+                                <h2>Logout Successful</h2>
+                                We were unable to automatically close your browser window. You can safely close your browser now or login to ServiceIT.
+                                <a href="@Request.ApplicationPath"><button type="button" class="btn commandButton btn loginbutton">Login to ServiceIT</button></a>
                             </div>
                         </div>
                     }
