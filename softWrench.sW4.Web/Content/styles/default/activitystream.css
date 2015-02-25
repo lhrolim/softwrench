@@ -39,7 +39,7 @@
         top: 80px;
         left: -92px;
         min-width: 156px;
-        padding: 8px 15px 3px;
+        padding: 10px 15px 6px;
         text-transform: uppercase;
         border-top: 1px solid #bfbfbf;
         border-left: 1px solid #bfbfbf;
@@ -70,14 +70,46 @@
     }
 
     #activitystream header .buttons {
-        margin-top: -6px;
+        margin-top: -12px;
+    }
+
+    #activitystream .button {
+        cursor: pointer;
+        padding: 10px 8px;
     }
 
     #activitystream header .button {
-        cursor: pointer;
         float: left;
-        margin-left: 20px;
     }
+
+    #activitystream .hide-toggle .button {
+        padding: 10px 11px;
+        position: absolute;
+        right: 0;
+        margin-top: -10px;
+        color: #ccc;
+    }
+
+            #activitystream .message.is-hidden .hide-toggle .button {
+            color: #999;
+            cursor: default;
+        }
+
+        #activitystream .hide-toggle .button:hover {
+            color: #000;
+        }
+
+    #activitystream.mobile header .button {
+        padding: 10px 14px;
+    }
+
+    #activitystream header .button.off {
+        color: #999;
+    }
+
+        #activitystream header .button.off:hover {
+            color: #000;
+        }
 
     #activitystream .messages {
         clear: both;

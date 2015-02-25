@@ -1,6 +1,5 @@
 var app = angular.module('sw_layout');
 
-
 app.directive('activitystream', function(contextService) {
     return {
         restrict: 'E',
@@ -16,23 +15,66 @@ app.directive('activitystream', function(contextService) {
         controller: function($scope, $http, $log, $interval, $timeout, redirectService,
             contextService, $rootScope, alertService) {
 
-
             var log = $log.getInstance('sw4.activityStream');
             var jScrollPaneAPI;
             var throttleTimeout;
+            $scope.hiddenToggle = false;
+     
+            $scope.activityStreamEnabled = function () {
+                return contextService.fetchFromContext("notificationStreamFlag", false, true);
+            };
 
+            $scope.displayHidden = function (activity) {
+                if (!activity.isHidden) {
+                    return true;
+                }
+
+                return $scope.hiddenToggle;
+            }
+
+            $scope.deciveType = function () {
+                return DeviceDetect.catagory.toLowerCase();
+            }
 
             $scope.formatDate = function(notificationDate) {
                 var currentDate = new Date();
                 var nowMils = currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000);
 
-                //Add 'Z' to datetime fix Firefox error
+                //add 'Z' to datetime fix Firefox error
                 var notificationMils = new Date(notificationDate + 'Z').getTime();
                 var differenceMils = nowMils - notificationMils;
                 var dateMessage = moment.duration(differenceMils, "milliseconds").humanize();
 
                 return 'About ' + dateMessage + ' ago'; // (' + notificationDate.replace('T', ' ') + ') [' + notificationMils + ']';
             };
+
+            $scope.hideNotification = function (activity) {
+                log.debug('hideNotification', activity);
+
+                $scope.readNotification(activity);
+
+                var controllerToUse = "Notification";
+                var actionToUse = "UpdateNotificationHiddenFlag";
+
+                var parameters = {};
+                parameters.role = 'allRole';
+                parameters.application = activity.application;
+                parameters.id = activity.id;
+
+                var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
+                $http.post(rawUrl).success(
+                   function (data) {
+                       log.debug('Hide Complete');
+                       $scope.refreshStream();
+                   }).error(
+                   function (data) {
+                       var errordata = {
+                           errorMessage: "error opening action {0} of controller {1} ".format(actionToUse, controllerToUse),
+                           errorStack: data.message
+                       }
+                       $rootScope.$broadcast("sw_ajaxerror", errordata);
+                   });
+            }
 
             $scope.markAllRead = function() {
                 log.debug('markAllRead');
@@ -99,6 +141,31 @@ app.directive('activitystream', function(contextService) {
                 );
             }
 
+            $scope.readNotification = function (activity) {
+                log.debug('readNotification', activity);
+
+                var controllerToUse = "Notification";
+                var actionToUse = "UpdateNotificationReadFlag";
+
+                var parameters = {};
+                parameters.role = 'allRole';
+                parameters.application = activity.application;
+                parameters.id = activity.id;
+
+                var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
+                $http.post(rawUrl).success(
+                   function (data) {
+                       $scope.refreshStream();
+                   }).error(
+                   function (data) {
+                       var errordata = {
+                           errorMessage: "error opening action {0} of controller {1} ".format(actionToUse, controllerToUse),
+                           errorStack: data.message
+                       }
+                       $rootScope.$broadcast("sw_ajaxerror", errordata);
+                   });
+            }
+
             $scope.refreshStream = function() {
                 log.debug('refreshStream');
 
@@ -130,10 +197,6 @@ app.directive('activitystream', function(contextService) {
                 );
             }
 
-            $scope.activityStreamEnabled = function() {
-                return contextService.fetchFromContext("notificationStreamFlag", false, true);
-            };
-
             $scope.setPaneHeight = function() {
                 log.debug('setPaneHeight');
 
@@ -142,6 +205,12 @@ app.directive('activitystream', function(contextService) {
                 var panePaddingBottom = parseInt($('#activitystream .pane').css('padding-bottom'));
 
                 $('#activitystream .scroll').height($(window).height() - headerHeight - panePaddingTop - panePaddingBottom);
+            }
+
+            $scope.toggleHidden = function () {
+                log.debug('toggleHidden');
+
+                $scope.hiddenToggle = !$scope.hiddenToggle;
             }
 
             //automatically refresh the activity stream every five minutes
@@ -154,7 +223,6 @@ app.directive('activitystream', function(contextService) {
                     $("#activitystream").toggleClass('open');
                     $scope.setPaneHeight();
                     jScrollPaneAPI = $('#activitystream .scroll').jScrollPane().data('jsp');
-                
             };
 
             //set window height and reinitialize scroll pane if windows is resized
@@ -186,10 +254,9 @@ app.directive('activitystream', function(contextService) {
             $scope.refreshStream();
 
             //open notification pane by default, TODO: remove for production
-            //$timeout(function () {
-            //    $('#activitystream .handle').trigger('click');
-            //}, 0);
+            $timeout(function () {
+                $('#activitystream .handle').trigger('click');
+            }, 0);
         }
     }
 });
-
