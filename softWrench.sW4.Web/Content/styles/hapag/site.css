@@ -589,7 +589,6 @@ textarea .readonly {
     vertical-align: middle;
 }
 
-
 .topMessageAux {
     z-index: 1000;
     margin-left: auto !important;
@@ -604,7 +603,6 @@ textarea .readonly {
     height: 20px;
 }
 
-
 .serviceItLoginWarning {
     color: black;
     width: 600px;
@@ -613,6 +611,28 @@ textarea .readonly {
     background-color: #aaddff;
     margin-left: 200px;
     margin-top: 10px;
+}
+
+.serviceItExitWarning {
+    color: black;
+    width: 450px;
+    border: #184c86 1px solid;
+    background-color: #bcd5f7;
+    margin: 2em auto 2em;
+    padding: 0 20px 20px;
+}
+
+.serviceItExitWarning h2 {
+    background: #003878;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.serviceItExitWarning button {
+    display: block;
+    margin: 30px auto 0;
 }
 
 .expanded-item-composition button {
