@@ -124,7 +124,7 @@ app.directive('activitystream', function(contextService) {
                     });
             }
 
-            $scope.openLink = function(activity) {
+            $scope.openLink = function(activity, parent) {
                 log.debug('openLink');
 
                 var controllerToUse = "Notification";
@@ -149,7 +149,10 @@ app.directive('activitystream', function(contextService) {
                             redirectService.goToApplicationView(activity.application, "editdetail", "input", null, param, null);
                         } else {
                             param.id = activity.parentId;
-                            redirectService.goToApplicationView(activity.parentApplication, "editdetail", "input", null, param, null, function() { contextService.setActiveTab(activity.application + '_'); });
+                            if (parent!= null && parent.equalIc('true')) {
+                                redirectService.goToApplicationView(activity.parentApplication, "editdetail", "input", null, param, null);
+                            }else 
+                                redirectService.goToApplicationView(activity.parentApplication, "editdetail", "input", null, param, null, function() { contextService.setActiveTab(activity.application + '_'); });
                         }
 
                         $scope.refreshStream();
