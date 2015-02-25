@@ -46,6 +46,9 @@ namespace softWrench.sW4.Data.Search {
             if (!value.Equals(rawValue)) {
                 searchFilter = true;
             }
+            if (searchOperator.Equals(SearchOperator.CONTAINS)) {
+                searchFilter = true;
+            }
             return searchOperator;
         }
 
