@@ -29,8 +29,14 @@ namespace softWrench.sW4.Notifications {
             }
         }
 
-        public void PurgeNotificationsFromStream(int hoursToPurge) {
+        public void PurgeNotificationsFromStream(int hoursToPurge){
+
+            List<Notification> oldNotifications = _notifications.FindAll(x => DateTime.Now.AddSeconds(-3600*hoursToPurge) > x.NotificationDate).Take(20).ToList(); 
             _notifications.RemoveAll(x => DateTime.Now.AddSeconds(-3600 * hoursToPurge) > x.NotificationDate);
+            //Keep top 20 from the past
+            if (_notifications.Count < 20){
+                _notifications.AddRange(oldNotifications.Take(20-_notifications.Count));
+            }
         }
 
         public void UpdateNotificationHiddenFlag(string application, string id, bool isHidden)
