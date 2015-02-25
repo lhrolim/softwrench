@@ -1174,6 +1174,10 @@
           <field attribute="location" label="location"/>
           <field attribute="avgcost" label="Average Cost"/>
           <field attribute="stdcost" label="Standard Cost"/>
+          <field attribute="lastcost" label="lastcost"/>
+          <field attribute="siteid" label="siteid"/>
+          <field attribute="conditioncode" label="conditioncode"/>
+          <field attribute="condrate" label="condrate"/>
         </schema>
       </schemas>
     </application>

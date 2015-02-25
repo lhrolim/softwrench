@@ -198,7 +198,7 @@
 
           <section id="statussection"/>
           <!--COMSW-1-->
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid" requiredexpression="true">
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
           <!--SWWEB-342-->
@@ -463,7 +463,7 @@
             <dataprovider prefilterfunction="FilterProblemCodes"/>
           </association>
           <field label="Job Plan:" attribute="jpnum" readonly="true" />
-          <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >
+          <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext">
             <renderer type="lookup"/>
           </association>
 
@@ -654,7 +654,7 @@
           <field attribute="enterby" hidden="true" />
           <field attribute="payrate" hidden="true" />
           <field attribute="transtype" default="WORK" hidden="true"/>
-          <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" default="@personid">
+          <association label="Labor:" requiredexpression="true" target="laborcode" labelfield="labor_.laborcode" defaultexpression="ctx:getUserData().login.toUpperCase()">
             <renderer type="lookup"/>
             <event type="afterchange" service="labtranService" method="afterlaborchange"/>
           </association>
@@ -709,7 +709,7 @@
             <renderer type="lookup"/>
             <event type="afterchange" service="matusetranService" method="afteritemchange"/>
           </association>
-          <association label="Storeroom:" target="storeloc" labelfield="inventory_.location" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
+          <association label="Storeroom:" target="storeloc" labelfield="0invbal_.location" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
             <dataprovider postfilterfunction="filterStoreLoc"/>
             <event type="afterchange" service="matusetranService" method="afterstorelocchange"/>
           </association>

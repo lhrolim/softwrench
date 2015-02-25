@@ -1,9 +1,4 @@
 $(function () {
-    //show or hide the menu when the expand button is clicked
-    $('.menu-expand').click(function () {
-        jQuery(this).toggleClass('menu-open');
-    });
-
     $(window).resize(function () {
         //if the header is fixed to the top of the page, set the location of the content, context menu, grid header and filter bar
         if ($('.site-header').css('position') == 'fixed') {
@@ -11,11 +6,6 @@ $(function () {
             var messageHeight = $('messagesection .alerts').height();
             var paginationHeight = $('.affix-pagination').height();
             var theaderHeight = $('.listgrid-thead').height();
-
-            //console.log('headerHeight: ', headerHeight);
-            //console.log('messageHeight: ', messageHeight);
-            //console.log('paginationHeight: ', paginationHeight);
-            //console.log('theaderHeight: ', theaderHeight);
 
             $('.content').css('margin-top', headerHeight + messageHeight);
             $('messagesection .alerts').css('margin-top', 0 - messageHeight);

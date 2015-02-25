@@ -125,7 +125,10 @@ app.controller('GridFilterController', ['$scope', '$http', 'userPreferenceServic
 
             }
 
-            $scope.applyFilter = function(filter) {
+            $scope.applyFilter = function (filter) {
+                if (!$scope.basicMode) {
+                    this.toggleFilterMode(true);
+                }
                 var fieldsArray = filter.fields.split(',');
                 var operatorsArray = filter.operators.split(',');
                 var valuesArray = filter.values.split(',,,');
@@ -142,7 +145,6 @@ app.controller('GridFilterController', ['$scope', '$http', 'userPreferenceServic
                 contextService.insertIntoContext("filter_basicmode", $scope.basicMode, true);
                 $scope.basicMode = true;
                 searchService.refreshGrid(searchData, { searchTemplate: template });
-                this.toggleFilterMode(true);
             }
 
             $scope.clearFilter = function() {
@@ -155,6 +157,10 @@ app.controller('GridFilterController', ['$scope', '$http', 'userPreferenceServic
 
             $scope.$on("sw_redirectapplicationsuccess", function(event) {
                 contextService.insertIntoContext("selectedfilter", null, true);
+                $scope.selectedfilter = null;
+            });
+
+            $scope.$on("sw_clearAdvancedFilter", function(event) {
                 $scope.selectedfilter = null;
             });
 
