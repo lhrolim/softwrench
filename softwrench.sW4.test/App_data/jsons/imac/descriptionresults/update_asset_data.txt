@@ -17,6 +17,8 @@ Building:
 Floor:   
 Room:   
 =====================================================================
+User ID:   (REDDING) Tony Redding --> (WILSON) Mike Wilson2
+=====================================================================
 Services
 
 Asset owened by HLAG

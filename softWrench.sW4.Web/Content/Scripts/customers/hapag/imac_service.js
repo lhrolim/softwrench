@@ -63,6 +63,8 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
             var assetLocation = event.fields['asset_.location_.description'];
             var assetUsage = event.fields['asset_.usage'];
             event.fields['userid'] = userId;
+            event.fields['originaluser'] = userId;
+            event.fields['#originaluser_label'] = event.fields['asset_.aucisowner_.person_.hlagdisplayname'];
             if (userId && !event.scope.associationOptions['person_']) {
                 //https://controltechnologysolutions.atlassian.net/browse/HAP-864
                 event.scope.associationOptions['person_'] = [];

@@ -1773,7 +1773,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </componentdisplayable>
 
         <componentdisplayable id="defaultuserid">
-          <association label="User ID:" target="userid" labelfield="person_.hlagdisplayname" showexpression="@asset!=null">
+          <association label="User ID:" target="userid" labelfield="person_.hlagdisplayname" showexpression="@asset!=null" >
             <dataprovider prefilterfunction="FilterUserId" />
             <renderer type="autocompleteserver"/>
           </association>
@@ -2208,7 +2208,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <reference id="baseattributesection" showexpression="@fromlocation!=null"/>
           <reference id="specifylocationfrom" />
 
-          <reference id="defaultuserid"/>
+          <section id="other" parameters="detaildescription= ">
+            <field attribute="originaluser"  hidden="true" label="User ID"/>
+            <field attribute="#originaluser_label"  hidden="true" label="User ID" qualifier="nodescription"/>
+            <association label="User ID:" target="userid" labelfield="person_.hlagdisplayname" showexpression="@asset!=null" qualifier="originaluser_new">
+              <dataprovider prefilterfunction="FilterUserId" />
+              <renderer type="autocompleteserver"/>
+            </association>
+          </section>
 
           <field label="ITC" attribute="asset_.primaryuser_.personid" readonly="true" showexpression="@asset!=null" />
 
