@@ -13,6 +13,12 @@ namespace softWrench.sW4.SPF {
         string CrudSubTemplate { get; set; }
 
         string SuccessMessage { get; set; }
+
+        /// <summary>
+        /// the time the request was made
+        /// </summary>
+        long RequestTimeStamp { get; set; }
+
         /// <summary>
         /// used for angularjs watch expression on a single value
         /// </summary>

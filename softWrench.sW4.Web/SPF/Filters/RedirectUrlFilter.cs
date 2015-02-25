@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using softWrench.sW4.Web.Util;
 
 namespace softWrench.sW4.Web.SPF.Filters {
     /// <summary>
@@ -40,7 +41,10 @@ namespace softWrench.sW4.Web.SPF.Filters {
             if (value == null) {
                 return;
             }
-
+            var requestTimeSt = RequestUtil.GetValue(actionExecutedContext.Request, "requesttime");
+            if (requestTimeSt != null) {
+                value.RequestTimeStamp = long.Parse(requestTimeSt);
+            }
             if (value.RedirectURL == null) {
                 value.RedirectURL = url;
             }
@@ -67,7 +71,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 value.Title = actionArguments.Title;
             } else if (value.Title == null && redirectAttribute != null) {
                 value.Title = redirectAttribute.Title;
-            } 
+            }
         }
 
         private static IDataRequest LookupArguments(HttpActionContext actionContext) {

@@ -12,6 +12,7 @@ app.config(['$httpProvider', function ($httpProvider) {
             config.headers['currentmodule'] = contextService.retrieveFromContext('currentmodule');
             config.headers['currentmetadata'] = contextService.retrieveFromContext('currentmetadata');
             config.headers['mockerror'] = sessionStorage['mockerror'];
+            config.headers['requesttime'] = new Date().getTime();
             var log = $log.getInstance('sw4.ajaxint#started');
             if (activeRequests == 0 || config.url.indexOf("/Content/")==-1) {
                 if (!log.isLevelEnabled('trace')) {

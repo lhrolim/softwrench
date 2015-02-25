@@ -11,6 +11,7 @@ namespace softWrench.sW4.SPF {
         public string Title { get; set; }
         public string CrudSubTemplate { get; set; }
         public string SuccessMessage { get; set; }
+        public long RequestTimeStamp { get; set; }
         public DateTime TimeStamp { get; set; }
     }
 }

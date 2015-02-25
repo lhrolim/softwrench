@@ -151,6 +151,11 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
 
 
     $scope.AjaxResult = function (result) {
+        if ($scope.resultObject.requestTimeStamp > result.requestTimeStamp) {
+            //ignoring intermediary request
+            return;
+        }
+
         var log = $log.getInstance('layoutcontroller#AjaxResult');
         var newUrl = url(result.redirectURL);
         if ($scope.includeURL != newUrl) {
