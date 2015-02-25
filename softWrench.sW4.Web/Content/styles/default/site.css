@@ -24,6 +24,7 @@ input:focus, select:focus, textarea:focus {
 .logoutmodal {
     width: 620px;
     left: 40%;
+    outline: none;
 }
 
     .logoutmodal .modal-content {

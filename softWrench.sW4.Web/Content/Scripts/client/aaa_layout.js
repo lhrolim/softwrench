@@ -180,7 +180,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
     $scope.logout = function () {
 
         bootbox.dialog({
-            message: "You have successfully logged out of ServiceIT</br>To completely logout, please close your browser.To log back into ServiceIT, click the button provided below.",
+            message: "You have successfully logged out of ServiceIT.</br>To completely logout, please close your browser. To log back into ServiceIT, click the button provided below.",
             title: "Logout!",
             className: 'logoutmodal',
             closeButton: false,
