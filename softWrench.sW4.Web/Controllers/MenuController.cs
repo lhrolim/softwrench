@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using SimpleInjector;
+using softwrench.sw4.api.classes;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
@@ -13,13 +15,23 @@ using System.Web.Security;
 namespace softWrench.sW4.Web.Controllers {
     public class MenuController : ApiController {
 
+        private readonly IEnumerable<IMenuManager> _managers;
+
+        public MenuController(Container container) {
+            _managers = container.GetAllInstances<IMenuManager>();
+        }
+
+
         public SecuredDisplayables Get(ClientPlatform platform) {
             try {
                 var user = SecurityFacade.CurrentUser();
                 var isSysAdmin = user.IsInRole("sysadmin") || ApplicationConfiguration.IsLocal();
                 var isClientAdmin = user.IsInRole("clientadmin") || ApplicationConfiguration.IsLocal();
                 var securedMenu = user.Menu(platform);
-                var securedBars = user.SecuredBars(platform,MetadataProvider.CommandBars());
+                foreach (var menuManager in _managers) {
+                    securedMenu = menuManager.ModifyMenu(securedMenu,user);
+                }
+                var securedBars = user.SecuredBars(platform, MetadataProvider.CommandBars());
                 return new SecuredDisplayables(securedMenu, securedBars, isSysAdmin, isClientAdmin);
             } catch (InvalidOperationException) {
                 FormsAuthentication.SignOut();
@@ -33,7 +45,7 @@ namespace softWrench.sW4.Web.Controllers {
             private readonly bool _isSysAdmin;
             private readonly bool _isClientAdmin;
 
-            public SecuredDisplayables(MenuDefinition menu, IDictionary<string,CommandBarDefinition> commandBars, bool isSysAdmin, bool isClientAdmin) {
+            public SecuredDisplayables(MenuDefinition menu, IDictionary<string, CommandBarDefinition> commandBars, bool isSysAdmin, bool isClientAdmin) {
                 _menu = menu;
                 _isSysAdmin = isSysAdmin;
                 _isClientAdmin = isClientAdmin;

@@ -270,7 +270,8 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             $('.hapag-body').addClass('hapag-body-loaded');
         })
         .error(function (data) {
-            $scope.title = data || i18NService.get18nValue('general.requestfailed', 'Request failed');
+            data.prependMessage = "retrieving menu";
+            $rootScope.$broadcast('sw_ajaxerror', data);
         });
     }
 

@@ -3,13 +3,14 @@
     <a id="{{leaf.type + '_' + leaf.id}}" ng-switch-when="ActionMenuItemDefinition" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
        ng-click="doAction(leaf, $event.target)" href="#"
        class="level{{level}}">
+        <i class="{{isMenuItemIcon(leaf)}}"> </i>
         {{i18NMenuLabel(leaf,false)}}
     </a>
 
     <a id="{{leaf.type + '_' + leaf.id}}" ng-switch-when="ApplicationMenuItemDefinition" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
        ng-click="goToApplication(leaf, $event.target)" href="#"
        class="level{{level}}">
-       
+        <i class="{{isMenuItemIcon(leaf)}}"> </i>
         {{i18NMenuLabel(leaf,false)}}
     </a>
 

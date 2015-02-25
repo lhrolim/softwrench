@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -74,8 +74,8 @@
     <Compile Include="Data\Configuration\HapagQueryConstants.cs" />
     <Compile Include="Data\Configuration\HapagQueryUtils.cs" />
     <Compile Include="Data\Connector\Imac\ImacServicePlanHelper.cs" />
-	<Compile Include="Data\DataSet\Helper\ApproverConstants.cs" />
-	<Compile Include="Data\InMemoryUserExtensions.cs" />
+    <Compile Include="Data\DataSet\Helper\ApproverConstants.cs" />
+    <Compile Include="Data\InMemoryUserExtensions.cs" />
     <Compile Include="Data\SsoWhereClauseProvider.cs" />
     <Compile Include="Data\DashboardWhereClauseProvider.cs" />
     <Compile Include="Data\DataSet\Helper\AssetConstants.cs" />
@@ -134,6 +134,10 @@
     <ProjectReference Include="..\cts.commons\cts.commons.csproj">
       <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>
       <Name>cts.commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
+      <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
+      <Name>softwrench.sw4.api</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>

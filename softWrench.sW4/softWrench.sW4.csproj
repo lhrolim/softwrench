@@ -510,7 +510,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Security\Interfaces\IBaseEntity.cs" />
     <Compile Include="Security\Entities\UserCustomConstraint.cs" />
     <Compile Include="Security\Entities\DataConstraint.cs" />
     <Compile Include="Security\Entities\Role.cs" />

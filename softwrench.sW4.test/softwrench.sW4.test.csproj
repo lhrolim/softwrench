@@ -230,6 +230,10 @@
       <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>
       <Name>cts.commons</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
+      <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
+      <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.gric\softwrench.sw4.gric.csproj">
       <Project>{3b4ed6c6-ba78-45cd-8af9-964f3dc409e6}</Project>
       <Name>softwrench.sw4.gric</Name>

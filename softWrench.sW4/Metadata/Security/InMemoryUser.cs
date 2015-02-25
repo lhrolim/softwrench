@@ -1,8 +1,8 @@
 ﻿using cts.commons.portable.Util;
-using cts.commons.Util;
 using Iesi.Collections.Generic;
 using log4net;
 using Newtonsoft.Json;
+using softwrench.sw4.api.classes.user;
 using softWrench.sW4.Metadata.Applications.Command;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
@@ -18,7 +18,7 @@ using System.Security.Principal;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Security {
-    public class InMemoryUser : IPrincipal {
+    public class InMemoryUser : ISWUser {
         private readonly int? _dbId;
         private String _login;
         private readonly string _firstName;
@@ -229,10 +229,34 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         public bool IsInRole(string role) {
+            if (IsSwAdmin() && ApplicationConfiguration.IsLocal()) {
+                return true;
+            }
+
             return _roles.Any(r => r.Name.EqualsIc(role));
         }
         [JsonIgnore]
         public IIdentity Identity { get; private set; }
+
+        public bool IsInProfile(string profileName) {
+            if (IsSwAdmin() && ApplicationConfiguration.IsLocal()) {
+                return true;
+            }
+            return Profiles != null && Profiles.Any(p => p.Name.EqualsIc(profileName));
+        }
+
+        public IEnumerable<int?> ProfileIds {
+            get {
+                if (Profiles == null) {
+                    return new List<int?>();
+                }
+                return Profiles.Select(p => p.Id);
+            }
+        }
+
+        public int? UserId {
+            get { return DBId; }
+        }
 
         public IDictionary<string, object> Genericproperties {
             get { return _genericproperties; }
