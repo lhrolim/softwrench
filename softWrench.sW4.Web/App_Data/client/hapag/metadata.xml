@@ -1568,7 +1568,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </componentdisplayable>
 
         <componentdisplayable id="ibmtechnician">
-          <optionfield attribute="ibmtechnician" label="IBM technician – Yes/No">
+          <optionfield attribute="ibmtechnician" label="IBM technician – Yes/No" default="no">
             <renderer type="combo" params="length=quarter"/>
             <option label="yes" value="yes"/>
             <option label="no" value="no"/>
