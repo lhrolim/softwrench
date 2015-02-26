@@ -12,9 +12,9 @@ namespace softWrench.sW4.Data.Entities {
     [Class(Table = "SW_METADATAEDITOR", Lazy = false)]
     public class Metadataeditor {
 
-        public const String ByItemIdAndUserId = "from SW_METADATAEDITOR where Id =?";
+        public const String ByDefaultId = "from Metadataeditor where DefaultId = 1";
 
-        public const String ByItemIdAndUserIdAndCommlogId = "from SW_METADATAEDITOR where Default=?";
+        public const String ByItemIdAndUserIdAndCommlogId = "from Metadataeditor where Default= ?";
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]

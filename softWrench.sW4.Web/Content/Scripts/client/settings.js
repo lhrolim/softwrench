@@ -34,7 +34,7 @@
             alertService.confirmMsg("Are you sure you want to Save your changes to the Metadata ? ", function () {
                 var httpParameters = {
                     Comments: $scope.comments,
-                    jsonstring: JSON.stringify(ace.edit("editor").getValue())
+                    Metadata: ace.edit("editor").getValue()
                 };
 
                 var urlToUse = "/api/generic/EntityMetadata/SaveMetadataEditor";
@@ -58,10 +58,20 @@
        
             
     $scope.restore = function () {
-
-        alertService.confirmMsg("Are you sure you want to restore to default settings ? ", function () {
-            window.location.reload();
+        var urlToCall = url("/api/generic/EntityMetadata/RestoreMetadata");
+        $http.get(urlToCall).success(function (result) {
+            var editor = ace.edit("editor");
+            editor.getSession().setMode("ace/mode/xml");
+            var data = $scope.resultData;
+            $scope.type = data.type;
+            editor.setValue(result.resultObject.content);
+            editor.gotoLine(0);
         });
+        //alertService.confirmMsg("Are you sure you want to restore to default settings ? ", function () {
+        //    var urlToUse = url("/api/generic/EntityMetadata/RestoreMetadataEditor");
+        //    $http.get(urlToUse)
+        //    window.location.reload();
+        //});
        
         
     };

@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Xml.Linq;
+using System.Linq;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
@@ -12,12 +13,25 @@ using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Entities;
 using System.Xml;
 using Newtonsoft.Json.Linq;
+using softWrench.sW4.SimpleInjector;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace softWrench.sW4.Web.Controllers.Utilities {
 
     [Authorize]
     public class EntityMetadataController : ApiController {
-        private readonly SWDBHibernateDAO _swdbDao;
+        private static SWDBHibernateDAO _swdbDao;
+       
+        private SWDBHibernateDAO GetSWDBDAO()
+        {
+            if (_swdbDao == null)
+            {
+                _swdbDao = SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
+            }
+            return _swdbDao;
+        }
+
         [HttpGet]
         [SPFRedirect("Metadata Builder", "_headermenu.metadatabuilder", "EntityMetadataBuilder")]
         public RedirectResponseResult Builder() {
@@ -31,6 +45,19 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                 var result = reader.ReadToEnd();
                 return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "metadata"));
             }
+        }
+        [HttpGet]
+        public IGenericResponseResult RestoreMetadata()
+        {
+            var resultData = GetSWDBDAO().FindByQuery<Metadataeditor>(Metadataeditor.ByDefaultId);
+
+
+
+            string Metadata = (from c in resultData
+
+                            select c.SystemStringValue).FirstOrDefault();
+           return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(Metadata, "metadata"));
+            
         }
         [HttpGet]
         [SPFRedirect("StatusColour Editor", "_headermenu.statuscoloreditor", "EntityMetadataEditor")]
