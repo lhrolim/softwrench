@@ -21,9 +21,7 @@
           </field>
           <field attribute="synonymdomain_.description" label="Log Type"/>
           <field attribute="description" label="Summary" qualifier="title"/>
-          <!--<field attribute="longdescription_.ldtext" label="Details" hidden="true"/>-->
-          <!--<field attribute="orgid" hidden="true" />-->
-          <!--<field attribute="siteid" hidden="true" />-->
+          <field attribute="clientviewable" hidden="true"/>
         </schema>
 
         <detail stereotype="compositiondetail">
@@ -31,9 +29,13 @@
           <field attribute="longdescription_.ldtext" label="Details:" >
             <renderer type="textarea"/>
           </field>
-          <association target="logtype" label="Log Type" labelfield="synonymdomain_.description" default="CLIENTNOTE" requiredexpression="true">
-          </association>
-          <optionfield attribute="clientviewable" label="Client Viewable" default="0" requiredexpression="true">
+          <optionfield attribute="logtype" label="Log Type:" default="CLIENTNOTE">
+            <option label="Appointment Note" value="APPTNOTE"/>
+            <option label="Client Note" value="CLIENTNOTE"/>
+            <option label="Update" value="UPDATE"/>
+            <option label="Work" value="WORK"/>
+          </optionfield>
+          <optionfield attribute="clientviewable" label="Client Viewable:" default="0">
             <option label="Yes" value="1"/>
             <option label="No" value="0"/>
           </optionfield>
