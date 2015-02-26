@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Web.Http;
 using cts.commons.web.Attributes;
 using softwrench.sw4.dashboard.classes.model;
@@ -82,8 +83,33 @@ namespace softwrench.sw4.dashboard.classes.controller {
         public IGenericResponseResult LoadPreferred() {
             //TODO: add id checkings on server side
             var user = SecurityFacade.CurrentUser();
-            var dashboard = user.Genericproperties["dashboard_preferred"];
-            return new GenericResponseResult<Dashboard>(dashboard as Dashboard);
+
+            int? preferredDashboardId = null;
+            var dashboard = new Dashboard();
+
+
+            if (user.Genericproperties.ContainsKey((DashboardConstants.DashBoardsPreferredProperty))) {
+                // Get prefer dashboard id
+                preferredDashboardId = user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] as int?;
+            }
+
+            if (user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty))
+            {
+                IEnumerable<Dashboard> dashboards = (IEnumerable<Dashboard>)user.Genericproperties[DashboardConstants.DashBoardsProperty];
+
+                // Return the prefer dashboard content
+                if (preferredDashboardId != null) {
+                    dashboard = dashboards.FirstOrDefault(s => s.Id == preferredDashboardId);
+                }
+                else {
+                    // TODO: Default it to global dashboard??        
+                }
+            }
+            else {
+                // Will it ever occur that we have a dashboard that's not in the Genericproperties? 
+            }
+            
+            return new GenericResponseResult<Dashboard>(dashboard);
         }
 
         public IGenericResponseResult EditDashBoard(DashboardBasePanel dashBoardPanel) {
