@@ -63,14 +63,15 @@ namespace softWrench.sW4.Notifications {
             }
         }
 
+        //TODO: Once we figure out rowstamps, use rowstamps instead of Date
         //Currently only updates notifications into the 'allRole' stream.
         //This would need to be updated in the future to determine which
         //role stream needs to be updated based on which roles have a
         //notificationstream attribute set to true
-        public void UpdateNotificationReadFlag(string role, string application, string id, bool isRead)
+        public void UpdateNotificationReadFlag(string role, string application, string id, string notificationDate, bool isRead)
         {
             var streamToUpdate = _notificationStreams[role];
-            streamToUpdate.UpdateNotificationReadFlag(application, id, isRead);
+            streamToUpdate.UpdateNotificationReadFlag(application, id, notificationDate, isRead);
         }
 
         //Implementation to update read flag for multiple notifications
@@ -80,7 +81,7 @@ namespace softWrench.sW4.Notifications {
             foreach (var notification in notifications)
             {
                 streamToUpdate.UpdateNotificationReadFlag(notification["application"].ToString(),
-                    notification["id"].ToString(), true);
+                    notification["id"].ToString(), notification["notificationDate"].ToString(), true);
             }
         }
 

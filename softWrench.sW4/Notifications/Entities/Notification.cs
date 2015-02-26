@@ -18,7 +18,7 @@ namespace softWrench.sW4.Notifications.Entities {
         private readonly string _parentLabel;
         private readonly string _summary;
         private readonly string _createBy;
-        private readonly DateTime _notificationDate;
+        internal readonly DateTime _notificationDate;
         private readonly long _rowstamp;
         
         
