@@ -21,7 +21,6 @@
           </field>
           <field attribute="synonymdomain_.description" label="Log Type"/>
           <field attribute="description" label="Summary" qualifier="title"/>
-          <field attribute="clientviewable" hidden="true"/>
         </schema>
 
         <detail stereotype="compositiondetail">
