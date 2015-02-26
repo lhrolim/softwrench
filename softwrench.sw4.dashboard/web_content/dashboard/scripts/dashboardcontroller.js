@@ -1,8 +1,8 @@
 ﻿var app = angular.module('sw_layout');
 
 app.controller('DashboardController', [
-    '$scope', 'modalService',
-    function($scope, modalService) {
+    '$scope', 'modalService', 'fieldService',
+    function ($scope, modalService, fieldService) {
 
         $scope.doInit = function () {
 
@@ -15,10 +15,10 @@ app.controller('DashboardController', [
             $scope.dashboards = $scope.resultData.dashboards;
             $scope.preferredId = $scope.resultData.preferredId;
             $scope.newpanelschema = $scope.resultData.newPanelSchema;
-
+            $scope.applications = $scope.resultData.applications;
         };
 
-        $scope.create = function() {
+        $scope.create = function () {
             $scope.creating = true;
             $scope.newtitle = "New Dashboard*";
             $scope.creatingpersonal = true;
@@ -29,7 +29,12 @@ app.controller('DashboardController', [
         }
 
         $scope.addpanel = function () {
-            modalService.show($scope.newpanelschema,null,{title:"Add Panel",cssclass:"dashboardmodal"});
+            modalService.show($scope.newpanelschema, null, {
+                title: "Add Panel", cssclass: "dashboardmodal", onloadfn: function (scope) {
+                    scope.associationOptions['applications'] = $scope.applications;
+                    //                scope.$digest();
+                }
+            });
         }
 
         $scope.doInit();
@@ -39,7 +44,6 @@ app.controller('DashboardController', [
                 $scope.doInit();
             }
         });
-      
+
     }
 ]);
-    

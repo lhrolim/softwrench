@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using cts.commons.web.Attributes;
 using softwrench.sw4.dashboard.classes.model;
@@ -7,13 +8,14 @@ using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
+using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SPF;
 
 namespace softwrench.sw4.dashboard.classes.controller {
 
     [Authorize]
-    [SPFRedirect(URL = "Application",CrudSubTemplate="/Shared/dashboard/templates/Dashboard.html")]
+    [SPFRedirect(URL = "Application", CrudSubTemplate = "/Shared/dashboard/templates/Dashboard.html")]
     [SWControllerConfiguration]
     public class DashBoardController : ApiController {
 
@@ -31,7 +33,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             return new BlankApplicationResponse();
         }
 
-        
+
         [HttpGet]
         public IGenericResponseResult Manage() {
             //TODO: add id checkings on server side
@@ -42,8 +44,10 @@ namespace softwrench.sw4.dashboard.classes.controller {
             var canCreateOwn = user.IsInRole(DashboardConstants.RoleManager);
 
             var app = MetadataProvider.Application("_dashboardgrid");
-            var detailSchema =app.Schema(new ApplicationMetadataSchemaKey("detail"));
+            var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("detail"));
 
+            var names = MetadataProvider.Applications().Select(a => a.ApplicationName);
+            IList<IAssociationOption> applications = names.Select(name => new GenericAssociationOption(name, name)).Cast<IAssociationOption>().ToList();
 
             if (user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsPreferredProperty)) {
                 preferredDashboardId = user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] as int?;
@@ -56,7 +60,8 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 CanCreateShared = canCreateShared,
                 Dashboards = dashboards,
                 PreferredId = preferredDashboardId,
-                NewPanelSchema = detailSchema
+                NewPanelSchema = detailSchema,
+                Applications = applications
             };
 
             return new GenericResponseResult<ManageDashBoardsDTO>(dto);

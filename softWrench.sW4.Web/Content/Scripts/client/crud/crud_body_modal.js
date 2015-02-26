@@ -93,7 +93,7 @@ app.directive('crudBodyModal', function ($rootScope, modalService) {
            searchService, tabsService,
            fieldService, commandService, i18NService,
            submitService, redirectService,
-           associationService, contextService, alertService, validationService, $element) {
+           associationService) {
 
             $scope.$name = "crudbodymodal";
             $scope.save = function (selecteditem) {
@@ -136,14 +136,17 @@ app.directive('crudBodyModal', function ($rootScope, modalService) {
                 $scope.datamap = {
                     fields: datamap
                 };
-                fieldService.fillDefaultValues(schema.displayables, $scope.datamap);
+                var datamapToUse = $.isEmptyObject(datamap) ? $scope.previousdata : datamap;
+                $scope.originalDatamap = angular.copy(datamapToUse);
+                fieldService.fillDefaultValues(schema.displayables, datamap);
                 $('#crudmodal').modal('show');
                 $("#crudmodal").draggable();
                 $rootScope.showingModal = true;
                 //TODO: review this decision here it might not be suitable for all the scenarios
-                var datamapToUse = $.isEmptyObject(datamap) ? $scope.previousdata : datamap;
-                $scope.originalDatamap = angular.copy(datamapToUse);
                 associationService.getEagerAssociations($scope, { datamap: datamapToUse });
+                if (modaldata.onloadfn) {
+                    modaldata.onloadfn($scope);
+                }
             }
 
 

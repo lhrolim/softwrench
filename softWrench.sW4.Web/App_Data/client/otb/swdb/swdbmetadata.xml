@@ -19,7 +19,7 @@
         <detail>
           <field label="Alias" attribute="alias" requiredexpression="true" tooltip="How this panel can be located"/>
           <field label="Title" attribute="title" requiredexpression="true" tooltip="The Panel title"/>
-          <optionfield label="Application" attribute="application" requiredexpression="true">
+          <optionfield label="Application" attribute="application" providerattribute="applications" requiredexpression="true">
             <renderer type="autocompleteclient"/>
           </optionfield>
           <section showexpression="@application!=null">
@@ -39,10 +39,17 @@
           </section>
           <commandbars>
             <commandgroup position="detailform">
+              <removecommand id="save"/>
               <removecommand id="print"/>
+              <command id="save" icon="fa-save" service="$scope" method="save" label="Add Panel" tooltip="Add Panel" position="&lt;cancel" />
             </commandgroup>
           </commandbars>
+          <properties>
+            <property key="associationstoprefetch" value="#none"/>
+          </properties>
         </detail>
+        
+        
 
       </schemas>
     </application>

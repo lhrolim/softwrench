@@ -20,6 +20,7 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
         /// 
         ///     title: the title to display on the modal
         ///     cssclass: an extra class to add to the modal, making it possible to customize it via css later
+        ///     onloadfn: a function to be called when the modal loads, which would receive the modal scope as a parameter (function onload(modalscope))
         /// 
         /// </param>
         /// <param name="datamap">the datamap of the current item being displayed on the modal; it could be null for a "creation" workflow.</param>
@@ -56,6 +57,7 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
                 previousschema: parentschema,
                 title: properties.title,
                 cssclass: properties.cssclass,
+                onloadfn: properties.onloadfn
             };
 
             $rootScope.$broadcast("sw.modal.show", modaldata);
