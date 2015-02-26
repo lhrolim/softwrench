@@ -22,9 +22,9 @@ namespace softWrench.sW4.Notifications {
         private const int _hoursToPurge = 24;
 
         public static readonly IDictionary<string, InMemoryNotificationStream> _notificationStreams = new ConcurrentDictionary<string, InMemoryNotificationStream>();
-        private MaximoHibernateDAO _maxDAO;
-
-        protected MaximoHibernateDAO MaxDAO {
+        private static MaximoHibernateDAO _maxDAO;
+        public static IDictionary<string, int> _counter = new ConcurrentDictionary<string, int>();
+        protected static MaximoHibernateDAO MaxDAO {
             get {
                 if (_maxDAO == null) {
                     _maxDAO =
@@ -38,6 +38,16 @@ namespace softWrench.sW4.Notifications {
         //Sets up the default notification stream.
         public static void InitNotificationStreams() {
             var allRoleNotificationBuffer = new InMemoryNotificationStream();
+            var query =
+                string.Format(
+                    "select max(ticketuid) as max, 'servicerequest' as application from ticket where class ='SR' union " +
+                    "select max(ticketuid) as max, 'incident' as application from ticket where class ='INCIDENT' union " +
+                    "select max(workorderid) as max, 'workoder' as application from workorder union " +
+                    "select max(commloguid) as max, 'commlog' as application from commlog");
+            var result = MaxDAO.FindByNativeQuery(query, null);
+            foreach (var record in result){
+                _counter.Add(record["application"], Int32.Parse(record["max"]));
+            }
             _notificationStreams["allRole"] = allRoleNotificationBuffer;
         }
 
@@ -113,6 +123,11 @@ namespace softWrench.sW4.Notifications {
                 var label = record["label"];
                 var icon = record["icon"];
                 var uid = Int32.Parse(record["uid"]);
+                var flag = "changed";
+                if (_counter[application] < uid){
+                    flag = "created new";
+                    _counter[application] = uid;
+                }
                 var parentid = record["parentid"];
                 int parentuid;
                 Int32.TryParse(record["parentuid"], out parentuid);
@@ -130,7 +145,7 @@ namespace softWrench.sW4.Notifications {
                 var changeby = record["changeby"];
                 var changedate = DateTime.Parse(record["changedate"]);
                 var rowstamp = BitConverter.ToInt64(StringUtil.GetBytes(record["rowstamp"]), 2);
-                var notification = new Notification(application, targetschema, label, icon, id, uid, parentid, parentuid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp);
+                var notification = new Notification(application, targetschema, label, icon, id, uid, parentid, parentuid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp, flag);
                 streamToUpdate.InsertNotificationIntoStream(notification);
             }
         }
