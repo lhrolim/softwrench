@@ -14,7 +14,7 @@ namespace softwrench.sw4.dashboard.classes.model.migration {
                 .WithColumn("createdby").AsInt32().ForeignKey("fk_dashboardlc_user_id", "SW_USER2", "id")
                 .WithColumn("creationdate").AsDateTime().NotNullable()
                 .WithColumn("updatedate").AsDateTime().NotNullable()
-                .WithColumn("userprofiles").AsString(MigrationUtil.StringMedium);
+                .WithColumn("userprofiles").AsString(MigrationUtil.StringMedium).Nullable();
 
 
             Create.Table("DASH_BASEPANEL").
@@ -25,7 +25,7 @@ namespace softwrench.sw4.dashboard.classes.model.migration {
                 .WithColumn("createdby").AsInt32().ForeignKey("fk_dashboardpanelc_user_id", "SW_USER2", "id")
                 .WithColumn("creationdate").AsDateTime().NotNullable()
                 .WithColumn("updatedate").AsDateTime().NotNullable()
-                .WithColumn("userprofiles").AsString(MigrationUtil.StringMedium);
+                .WithColumn("userprofiles").AsString(MigrationUtil.StringMedium).Nullable();
 
             Create.Table("DASH_GRIDPANEL").
                 WithColumn("gpid").AsInt32().PrimaryKey().ForeignKey("dash_gridpanel_parent", "DASH_BASEPANEL", "id")
