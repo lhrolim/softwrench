@@ -64,6 +64,10 @@
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
       </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWWO" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
+      </connectorParameters>
     </entity>
   </entities>
 
