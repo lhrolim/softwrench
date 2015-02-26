@@ -2286,10 +2286,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </section>
 
             <field attribute="#decommissiondate" hidden="true" label="Decommission Date:"/>
-
-            <field label="Attachment:" attribute="newattachment" required="true">
-              <renderer type="upload"/>
-            </field>
+            
+            <section>
+              <header displacement="ontop" params="color=red;" label="Please attach a disposal/resale certificate to prove that the disposal/resale has been performend in terms of HL ITC Guide paragraph &quot;Hardware Sale and Disposal&quot;."/>
+              <field label="Attachment:" attribute="newattachment" required="true">
+                <renderer type="upload"/>
+              </field>
+            </section>
 
           </section>
 
