@@ -16,7 +16,11 @@ namespace softwrench.sw4.dashboard.classes.model {
         public IEnumerable<Dashboard> Dashboards { get; set; }
 
         public int? PreferredId { get; set; }
+        
         public ApplicationSchemaDefinition NewPanelSchema { get; set; }
+
+        public IDictionary<string,ApplicationSchemaDefinition> PanelSchemas{ get; set; }
+
 
         public IEnumerable<IAssociationOption> Applications { get; set; }
     }

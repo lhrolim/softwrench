@@ -12,7 +12,20 @@ app.factory('dashboardAuxService', function ($rootScope, contextService, restSer
                 event.scope.associationOptions['appfields'] = data.resultObject;
 
             });
-        }
+        },
+
+        loadPanels: function (event) {
+            var paneltype = event.fields.paneltype;
+            if (paneltype == null) {
+                return;
+            }
+            restService.invokeGet('Dashboard', 'LoadPanels', { paneltype: paneltype }, function (data) {
+                event.scope.associationOptions['availablepanels'] = data.resultObject;
+
+            });
+        },
+
+
     }
 
 });

@@ -11,6 +11,7 @@ using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
 using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SPF;
 
@@ -23,9 +24,11 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
         private readonly SWDBHibernateDAO _dao;
 
+        private readonly UserDashboardManager _userDashboardManager;
 
-        public DashBoardController(SWDBHibernateDAO dao) {
+        public DashBoardController(SWDBHibernateDAO dao, UserDashboardManager userDashboardManager) {
             _dao = dao;
+            _userDashboardManager = userDashboardManager;
         }
 
         [HttpPost]
@@ -45,8 +48,10 @@ namespace softwrench.sw4.dashboard.classes.controller {
             var canCreateShared = user.IsInRole(DashboardConstants.RoleAdmin);
             var canCreateOwn = user.IsInRole(DashboardConstants.RoleManager);
 
-            var app = MetadataProvider.Application("_dashboardgrid");
-            var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("detail"));
+            var panelSelectionSchema = MetadataProvider.Application("_basedashboard").Schema(new ApplicationMetadataSchemaKey("panelselection"));
+
+            var panelSchemas = new Dictionary<string, ApplicationSchemaDefinition>();
+            panelSchemas.Add("dashboardgrid", MetadataProvider.Application("_dashboardgrid").Schema(new ApplicationMetadataSchemaKey("detail")));
 
             var names = MetadataProvider.Applications().Select(a => a.ApplicationName);
             IList<IAssociationOption> applications = names.Select(name => new GenericAssociationOption(name, name)).Cast<IAssociationOption>().ToList();
@@ -62,7 +67,8 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 CanCreateShared = canCreateShared,
                 Dashboards = dashboards,
                 PreferredId = preferredDashboardId,
-                NewPanelSchema = detailSchema,
+                NewPanelSchema = panelSelectionSchema,
+                PanelSchemas = panelSchemas,
                 Applications = applications
             };
 
@@ -80,6 +86,15 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
         [HttpGet]
+        public IGenericResponseResult LoadPanels([FromUri]String paneltype) {
+            var availablePanels = _userDashboardManager.LoadUserPanels(SecurityFacade.CurrentUser(),paneltype);
+            var options = availablePanels.Select(f => new GenericAssociationOption(f.Id.ToString(), f.Alias))
+           .Cast<IAssociationOption>()
+           .ToList();
+            return new GenericResponseResult<IEnumerable<IAssociationOption>>(options);
+        }
+
+        [HttpGet]
         public IGenericResponseResult LoadPreferred() {
             //TODO: add id checkings on server side
             var user = SecurityFacade.CurrentUser();
@@ -93,22 +108,19 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 preferredDashboardId = user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] as int?;
             }
 
-            if (user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty))
-            {
+            if (user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty)) {
                 IEnumerable<Dashboard> dashboards = (IEnumerable<Dashboard>)user.Genericproperties[DashboardConstants.DashBoardsProperty];
 
                 // Return the prefer dashboard content
                 if (preferredDashboardId != null) {
                     dashboard = dashboards.FirstOrDefault(s => s.Id == preferredDashboardId);
-                }
-                else {
+                } else {
                     // TODO: Default it to global dashboard??        
                 }
-            }
-            else {
+            } else {
                 // Will it ever occur that we have a dashboard that's not in the Genericproperties? 
             }
-            
+
             return new GenericResponseResult<Dashboard>(dashboard);
         }
 

@@ -15,6 +15,7 @@ app.controller('DashboardController', [
             $scope.dashboards = $scope.resultData.dashboards;
             $scope.preferredId = $scope.resultData.preferredId;
             $scope.newpanelschema = $scope.resultData.newPanelSchema;
+            $scope.panelschemas = $scope.resultData.panelSchemas;
             $scope.applications = $scope.resultData.applications;
         };
 
@@ -37,7 +38,29 @@ app.controller('DashboardController', [
             });
         }
 
+        $scope.createNewPanel = function () {
+            var schema = $scope.panelschemas[$scope.paneltype];
+
+            modalService.show(schema, null, {
+                title: "Create Panel", cssclass: "dashboardmodal", onloadfn: function (scope) {
+                    scope.associationOptions['applications'] = $scope.applications;
+                    //                scope.$digest();
+                }
+            });
+        }
+
         $scope.doInit();
+
+        $scope.$on('dash_createpanel', function (event, paneltype) {
+            var schema = $scope.panelschemas[paneltype];
+
+            modalService.show(schema, null, {
+                title: "Create Panel", cssclass: "dashboardmodal", onloadfn: function (scope) {
+                    scope.associationOptions['applications'] = $scope.applications;
+                    //                scope.$digest();
+                }
+            });
+        });
 
         $scope.$watch('resultObject.timeStamp', function (newValue, oldValue) {
             if (oldValue != newValue && $scope.resultObject.crudSubTemplate.indexOf("/Shared/dashboard/templates/Dashboard.html") != -1) {
@@ -47,3 +70,17 @@ app.controller('DashboardController', [
 
     }
 ]);
+
+
+app.controller('DashboardController2', [
+    '$scope', '$rootScope',
+    function ($scope, $rootScope) {
+
+        $scope.createNewPanel = function () {
+            $rootScope.$broadcast("dash_createpanel", $scope.datamap.paneltype);
+
+        }
+
+    }
+]);
+

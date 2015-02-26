@@ -14,8 +14,41 @@
 
   <applications>
 
+
+    <application entity="DashboardBasePanel" name="basedashboard" title="Base Dashboard">
+      <schemas>
+        <schema id="panelselection">
+          <optionfield attribute="paneltype" label="Type" tooltip="The type of Panel to add" default="">
+            <option label="" value=""/>
+            <option label="Grid" value="dashboardgrid"/>
+            <option label="Graphic" value="dashboardgraphic"/>
+            <event type="afterchange" service="dashboardAuxService" method="loadPanels"/>
+          </optionfield>
+          <section orientation="horizontal" showexpression="@paneltype!=null">
+            <header label="Panel" displacement="sameline"/>
+              <optionfield attribute="panel" providerattribute="availablepanels" />
+              <section resourcepath="/Content/Shared/dashboard/templates/createnewpanelbutton.html"/>
+          </section>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <command id="save" icon="fa-save" service="dashboardAuxService" method="selectPanel" label="Select Panel" tooltip="Add Panel" position="&lt;cancel" />
+            </commandgroup>
+          </commandbars>
+          <properties>
+            <property key="associationstoprefetch" value="#none"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
+
+
     <application entity="DashboardGridPanel" name="dashboardgrid" title="DashBoardGrid">
       <schemas>
+
+
+
         <detail>
           <field label="Alias" attribute="alias" requiredexpression="true" tooltip="How this panel can be located"/>
           <field label="Title" attribute="title" requiredexpression="true" tooltip="The Panel title"/>
@@ -49,8 +82,8 @@
             <property key="associationstoprefetch" value="#none"/>
           </properties>
         </detail>
-        
-        
+
+
 
       </schemas>
     </application>

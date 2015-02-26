@@ -55,7 +55,7 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
             var fn = this.fillDefaultValues;
             $.each(displayables, function (key, value) {
                 var target = value.attribute;
-                if (value.displayables) {
+                if (value.displayables && value.displayables.length > 0) {
                     //section
                     fn(value.displayables, datamap, scope);
                 }
