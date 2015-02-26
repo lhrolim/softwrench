@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NHibernate.Hql.Ast.ANTLR;
+using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.Notifications.Entities;
 
 namespace softWrench.sW4.Notifications {
@@ -16,6 +17,25 @@ namespace softWrench.sW4.Notifications {
 
         public List<Notification> GetNotifications() {
             _notifications.Sort((n1, n2) => n2.NotificationDate.CompareTo(n1.NotificationDate));
+            _notifications =HandleChildNotifications(_notifications);
+            return _notifications;
+        }
+
+        private List<Notification> HandleChildNotifications(List<Notification> _notifications){
+            int i,j = 0;
+            
+            for ( i = 0;i < _notifications.Count; i++){
+                for (j = 1; j < _notifications.Count; j++){
+                    if (i != j) { 
+                        if(_notifications.ElementAt(i).NotificationDate.Equals(_notifications.ElementAt(j).NotificationDate) && _notifications.ElementAt(i).NotificationDate.Ticks.Equals(_notifications.ElementAt(j).NotificationDate.Ticks)){
+                            if (_notifications.ElementAt(i).ParentId == null){
+                                _notifications.RemoveAt(i);
+                            }
+                        }
+                    }
+                }
+            }
+
             return _notifications;
         }
 
