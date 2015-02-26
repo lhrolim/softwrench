@@ -16,6 +16,7 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                     "is-dirty='false' " +
                     "is-list='isList' " +
                     "is-detail='true' " +
+                    "original-datamap='OriginalDatamp' " +
                     "association-options='associationOptions' " +
                     "association-schemas='associationSchemas' " +
                     "blockedassociations='blockedassociations' " +

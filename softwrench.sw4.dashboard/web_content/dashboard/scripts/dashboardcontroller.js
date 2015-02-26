@@ -21,8 +21,11 @@ app.controller('DashboardController', [
 
         $scope.create = function () {
             $scope.creating = true;
-            $scope.newtitle = "New Dashboard*";
             $scope.creatingpersonal = true;
+            $scope.dashboard = {
+                title: "New Dashboard *",
+                panels: []
+        };
         }
 
         $scope.cancel = function () {
@@ -30,7 +33,9 @@ app.controller('DashboardController', [
         }
 
         $scope.addpanel = function () {
-            modalService.show($scope.newpanelschema, null, {
+            var dm = {};
+            dm.numberofpanels = $scope.dashboard.panels.length;
+            modalService.show($scope.newpanelschema, dm, {
                 title: "Add Panel", cssclass: "dashboardmodal", onloadfn: function (scope) {
                     scope.associationOptions['applications'] = $scope.applications;
                     //                scope.$digest();
