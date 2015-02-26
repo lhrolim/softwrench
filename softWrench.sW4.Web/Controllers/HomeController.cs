@@ -44,7 +44,8 @@ namespace softWrench.sW4.Web.Controllers {
             _lookuper.RegisterHttpContext(Request);
 
             var user = SecurityFacade.CurrentUser();
-            var securedMenu = user.Menu(ClientPlatform.Web);
+            bool fromCache;
+            var securedMenu = user.Menu(ClientPlatform.Web, out fromCache);
             var indexItemId = securedMenu.ItemindexId;
             var indexItem = securedMenu.ExplodedLeafs.FirstOrDefault(l => indexItemId.EqualsIc(l.Id));
             if (indexItem == null) {

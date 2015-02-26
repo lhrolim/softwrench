@@ -29,6 +29,11 @@
                 return url(path);
             };
 
+
+            scope.isLocal= function (path) {
+                return contextService.isLocal();
+            };
+
             scope.logout = function () {
                 sessionStorage.removeItem("swGlobalRedirectURL");
                 contextService.clearContext();

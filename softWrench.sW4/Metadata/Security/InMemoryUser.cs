@@ -182,10 +182,13 @@ namespace softWrench.sW4.Metadata.Security {
             get { return _dataConstraints; }
         }
 
-        public MenuDefinition Menu(ClientPlatform platform) {
-            if (_cachedMenu.ContainsKey(platform)) {
+        public MenuDefinition Menu(ClientPlatform platform,out Boolean fromCache) {
+            if (_cachedMenu.ContainsKey(platform))
+            {
+                fromCache = true;
                 return _cachedMenu[platform];
             }
+            fromCache = false;
 
             var unsecureMenu = MetadataProvider.Menu(platform);
             if (unsecureMenu == null) {
@@ -276,7 +279,7 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         public bool IsSwAdmin() {
-            return Login.Equals("swadmin") || IsInRole(Role.SysAdmin);
+            return Login.Equals("swadmin");
         }
 
         public IDictionary<string, CommandBarDefinition> SecuredBars(ClientPlatform platform, IDictionary<string, CommandBarDefinition> commandBars) {

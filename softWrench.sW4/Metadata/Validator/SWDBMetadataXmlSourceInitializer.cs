@@ -16,7 +16,7 @@ namespace softWrench.sW4.Metadata.Validator {
 
 
         protected override IEnumerable<EntityMetadata> InitializeEntityInternalMetadata() {
-            var findTypesAnnotattedWith = AttributeUtil.FindTypesAnnotattedWith(typeof(ClassAttribute));
+            var findTypesAnnotattedWith = AttributeUtil.FindTypesAnnotattedWith(typeof(ClassAttribute), typeof(JoinedSubclassAttribute));
             var resultEntities = findTypesAnnotattedWith.Select(Convert).ToList();
 
             //            var subEntities = AttributeUtil.FindTypesAnnotattedWith(typeof(JoinedSubclassAttribute));
@@ -33,7 +33,7 @@ namespace softWrench.sW4.Metadata.Validator {
             var name = "_" + type.Name;
             Log.DebugFormat("adding swdb internal entity {0}", name);
             var properties = ParseProperties(name, type);
-            var entitySchema = new EntitySchema(name, properties.Item1, "id","id", true, true, null, null, type, false);
+            var entitySchema = new EntitySchema(name, properties.Item1, "id", "id", true, true, null, null, type, false);
             return new EntityMetadata(name, entitySchema, properties.Item2, ConnectorParameters(type));
         }
 
@@ -89,16 +89,20 @@ namespace softWrench.sW4.Metadata.Validator {
             var qualifier = memberInfo.Name;
             var to = "_" + oneTomany.ClassType.Name.ToLower();
             //TODO: Add reverse customization
-            string reverse = null; 
+            string reverse = null;
             IList<EntityAssociationAttribute> attributes = new List<EntityAssociationAttribute>();
             attributes.Add(new EntityAssociationAttribute(keyAttr.Column, "id", null, true));
-            return new EntityAssociation("_" + qualifier, to, attributes, true, reverse,false);
+            return new EntityAssociation("_" + qualifier, to, attributes, true, reverse, false);
         }
 
         private static ConnectorParameters ConnectorParameters(Type type) {
             var dictParams = new Dictionary<string, string>();
-            var def = type.ReadAttribute<ClassAttribute>();
-            dictParams.Add("dbtable", def.Table);
+            if (type.ReadAttribute<ClassAttribute>() != null) {
+                dictParams.Add("dbtable", type.ReadAttribute<ClassAttribute>().Table);
+            } else {
+                dictParams.Add("dbtable", type.ReadAttribute<JoinedSubclassAttribute>().Table);
+            }
+
             var parameters = new ConnectorParameters(dictParams, true);
             return parameters;
         }

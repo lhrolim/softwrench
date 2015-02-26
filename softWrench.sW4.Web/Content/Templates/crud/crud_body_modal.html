@@ -1,9 +1,10 @@
-<div class="modal fade container" id="crudmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+<div class="modal fade container {{cssclass}}" id="crudmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div>
         <div class="modal-content">
             <div class="modal-header">
                 <messagesection></messagesection>
                 <button type="button" class="close" aria-hidden="true" ng-click="closeModal()">&times;</button>
+                <h3>{{modaltitle}}</h3>
             </div>
             <div class="modal-body" ng-if="modalshown">
                 <crud-body cancelfn="cancel()"

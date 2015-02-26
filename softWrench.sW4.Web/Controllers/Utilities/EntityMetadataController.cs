@@ -2,23 +2,47 @@
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Security;
 using System.Xml.Linq;
+using cts.commons.portable.Util;
+using cts.commons.simpleinjector.Events;
+using cts.commons.web.Attributes;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Metadata;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using softWrench.sW4.SPF;
+using softWrench.sW4.Web.Controllers.Utilities;
 using softWrench.sW4.Web.SPF;
 
 namespace softWrench.sW4.Web.Controllers.Utilities {
 
     [Authorize]
     public class EntityMetadataController : ApiController {
+        private readonly IEventDispatcher _eventDispatcher;
+
+        public EntityMetadataController(IEventDispatcher eventDispatcher) {
+            _eventDispatcher = eventDispatcher;
+        }
+
 
         [HttpGet]
         [SPFRedirect("Metadata Builder", "_headermenu.metadatabuilder", "EntityMetadataBuilder")]
         public RedirectResponseResult Builder() {
             return new RedirectResponseResult();
         }
+
+
+        [HttpGet]
+        public IGenericResponseResult Refresh() {
+            var user = SecurityFacade.CurrentUser();
+            if (ApplicationConfiguration.IsDev() || user.IsSwAdmin()) {
+                MetadataProvider.StubReset();
+                _eventDispatcher.Dispatch(new ClearCacheEvent());
+            }
+            return new BlankApplicationResponse();
+        }
+
 
         [HttpGet]
         [SPFRedirect("Metadata Editor", "_headermenu.metadataeditor", "EntityMetadataEditor")]
@@ -30,10 +54,8 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         }
         [HttpGet]
         [SPFRedirect("StatusColour Editor", "_headermenu.statuscoloreditor", "EntityMetadataEditor")]
-        public IGenericResponseResult StatuscolorEditor()
-        {
-            using (var reader = new MetadataProvider().GetStream("statuscolors.json"))
-            {
+        public IGenericResponseResult StatuscolorEditor() {
+            using (var reader = new MetadataProvider().GetStream("statuscolors.json")) {
                 var result = reader.ReadToEnd();
                 return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "statuscolors"));
             }
@@ -41,8 +63,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         [HttpGet]
         [SPFRedirect("Menu Editor", "_headermenu.menueditor", "EntityMetadataEditor")]
         public IGenericResponseResult MenuEditor() {
-            using (var reader = new MetadataProvider().GetStream("menu.web.xml"))
-            {
+            using (var reader = new MetadataProvider().GetStream("menu.web.xml")) {
                 var result = reader.ReadToEnd();
                 return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "menu"));
             }
@@ -59,8 +80,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             new MetadataProvider().Save(task.Result);
         }
         [HttpPut]
-        public void SaveStatuscolor(HttpRequestMessage request)
-        {
+        public void SaveStatuscolor(HttpRequestMessage request) {
             var task = request
             .Content
             .ReadAsStreamAsync();

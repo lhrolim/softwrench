@@ -1,10 +1,14 @@
-﻿var app = angular.module('sw_layout', ['pasvaz.bindonce', 'angularTreeview', 'ngSanitize', 'textAngular', 'angularFileUpload']);
+﻿var app = angular.module('sw_layout', ['pasvaz.bindonce', 'angularTreeview', 'ngSanitize', 'textAngular', 'angularFileUpload', "xeditable"]);
 
 //angular 1.3 migration reference
 //app.config(['$controllerProvider', function ($controllerProvider) {
 //    $controllerProvider.allowGlobals();
 //}]);
 
+
+app.run(function (editableOptions) {
+    editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+});
 
 app.directive("dynamicName", function ($compile) {
     /// <summary>

@@ -15,21 +15,8 @@ namespace softwrench.sw4.webcommons.classes.bundles {
         }
 
         public void PopulateScriptBundles(BundleCollection bundles) {
-            // When try
-            //         bundles.Add(new ScriptBundle("~/Content/Scripts/angular/angular").Include(
-            //                "~/Content/Scripts/vendor/angular/angular.js",
-            //                "~/Content/Scripts/vendor/angular/angular-strap.js",
-            //                "~/Content/Scripts/vendor/angular/angular-sanitize.js",
-            //                "~/Content/Scripts/vendor/angular/bindonce.js",
-            //                "~/Content/Scripts/vendor/angular/components/*.js"
-            //                ));
-
-
-            bundles.Add(new ScriptBundle("~/Content/Scripts/client/application/shared").Include(
-                "~/Content/Shared/webcommons/Scripts/softwrench/components/*.js",
-                "~/Content/Shared/webcommons/Scripts/softwrench/services/*.js",
-                "~/Content/Shared/webcommons/Scripts/softwrench/util/*.js"
-                ));
+            bundles.Add(new ScriptBundle("~/Content/Scripts/client/application/shared")
+                .IncludeDirectory("~/Content/Shared/","*.js",true));
 
             var clientName = ApplicationConfiguration.ClientName;
             var clientPath = String.Format("~/Content/customers/{0}/Scripts/", clientName);
@@ -60,6 +47,8 @@ namespace softwrench.sw4.webcommons.classes.bundles {
             var clientPathMediaCustom = clientPath + "/media";
 
             var styleBundle = new StyleBundle("~/Content/styles/client/client-css");
+
+            bundles.Add(new StyleBundle("~/Content/styles/shared").IncludeDirectory("~/Content/Shared/", "*.css", true));
 
             bundles.Add(styleBundle.IncludeDirectory(basePath, "*.css"));
             bundles.Add(styleBundle.IncludeDirectory(baseAppPath, "*.css"));

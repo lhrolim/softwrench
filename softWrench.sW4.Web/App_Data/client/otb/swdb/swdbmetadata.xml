@@ -14,6 +14,39 @@
 
   <applications>
 
+    <application entity="DashboardGridPanel" name="dashboardgrid" title="DashBoardGrid">
+      <schemas>
+        <detail>
+          <field label="Alias" attribute="alias" requiredexpression="true" tooltip="How this panel can be located"/>
+          <field label="Title" attribute="title" requiredexpression="true" tooltip="The Panel title"/>
+          <optionfield label="Application" attribute="application" requiredexpression="true">
+            <renderer type="autocompleteclient"/>
+          </optionfield>
+          <section showexpression="@application!=null">
+
+            <optionfield label="Fields" attribute="fields"  >
+              <renderer type="checkbox"/>
+            </optionfield>
+
+            <optionfield label="Sort By" attribute="sortby">
+              <renderer type="autocompleteclient"/>
+            </optionfield>
+
+            <field attribute="limit" label="Limit" default="30" defaultexpression="30">
+              <renderer type="numericinput"/>
+            </field>
+
+          </section>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="print"/>
+            </commandgroup>
+          </commandbars>
+        </detail>
+
+      </schemas>
+    </application>
+
 
     <application entity="WOBatch" name="wobatch" title="Workorder Batch">
       <schemas>
@@ -59,11 +92,11 @@
           </commandbars>
           <section id="sentbatch" resourcepath="/Content/Templates/batches/dynamiccomposition.html" parameters="schemaref=failedbatchschema;
                    datamapref=failedbatchdatamap;title=Problematic Items">
-<!--            <header label="Problematic Items" displacement="ontop"/>-->
+            <!--            <header label="Problematic Items" displacement="ontop"/>-->
           </section>
           <section id="sentbatch" resourcepath="/Content/Templates/batches/dynamiccomposition.html" parameters="schemaref=sentbatchschema;
                    datamapref=sentbatchdatamap;title=Sent Items">
-<!--            <header label="Sent Items" displacement="ontop"/>-->
+            <!--            <header label="Sent Items" displacement="ontop"/>-->
           </section>
           <properties>
             <property key="detail.cancel.click" value="_wobatch.list"/>

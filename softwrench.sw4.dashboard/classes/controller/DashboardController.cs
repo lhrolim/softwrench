@@ -1,13 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
+using cts.commons.web.Attributes;
 using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SPF;
 
 namespace softwrench.sw4.dashboard.classes.controller {
+
+    [Authorize]
+    [SPFRedirect(URL = "Application",CrudSubTemplate="/Shared/dashboard/templates/Dashboard.html")]
+    [SWControllerConfiguration]
     public class DashBoardController : ApiController {
 
         private readonly SWDBHibernateDAO _dao;
@@ -24,6 +31,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             return new BlankApplicationResponse();
         }
 
+        
         [HttpGet]
         public IGenericResponseResult Manage() {
             //TODO: add id checkings on server side
@@ -32,6 +40,10 @@ namespace softwrench.sw4.dashboard.classes.controller {
             IEnumerable<Dashboard> dashboards = null;
             var canCreateShared = user.IsInRole(DashboardConstants.RoleAdmin);
             var canCreateOwn = user.IsInRole(DashboardConstants.RoleManager);
+
+            var app = MetadataProvider.Application("_dashboardgrid");
+            var detailSchema =app.Schema(new ApplicationMetadataSchemaKey("detail"));
+
 
             if (user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsPreferredProperty)) {
                 preferredDashboardId = user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] as int?;
@@ -44,6 +56,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 CanCreateShared = canCreateShared,
                 Dashboards = dashboards,
                 PreferredId = preferredDashboardId,
+                NewPanelSchema = detailSchema
             };
 
             return new GenericResponseResult<ManageDashBoardsDTO>(dto);

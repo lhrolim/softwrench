@@ -131,6 +131,8 @@ app.directive('crudBodyModal', function ($rootScope, modalService) {
                 $scope.cancelfn = modaldata.cancelfn;
                 $scope.previousschema = modaldata.previousschema;
                 $scope.previousdata = modaldata.previousdata;
+                $scope.modaltitle = modaldata.title;
+                $scope.cssclass = modaldata.cssclass;
                 $scope.datamap = {
                     fields: datamap
                 };

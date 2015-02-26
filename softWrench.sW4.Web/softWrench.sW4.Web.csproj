@@ -259,7 +259,6 @@
     <Compile Include="Common\Log\CaptureResponseFilter.cs" />
     <Compile Include="Common\Log\LogInfo.cs" />
     <Compile Include="Common\Log\MVCLogFilter.cs" />
-    <Compile Include="Common\SWControllerConfiguration.cs" />
     <Compile Include="Common\TestProxy.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\WebAPIUtil.cs" />
@@ -532,6 +531,8 @@
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.js" />
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.min.js" />
     <Content Include="Content\Scripts\vendor\angular\bindonce.js" />
+    <Content Include="Content\styles\default\xeditable.css" />
+    <Content Include="Content\Scripts\vendor\angular\components\xeditable-min.js" />
     <Content Include="Content\Scripts\vendor\jquery\jquery-ui-1.10.3.js" />
     <Content Include="Content\Scripts\vendor\other\bootbox.js" />
     <Content Include="Content\Scripts\vendor\other\bootbox.min.js" />
@@ -1251,7 +1252,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\SignIn\Index.cshtml" />
-    <Content Include="Content\Scripts\vendor\jquery\jquery-2.0.3.min.map" />
     <Content Include="Content\Controller\EntityMetadataBuilder.html" />
     <Content Include="Views\Generic\Index.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />

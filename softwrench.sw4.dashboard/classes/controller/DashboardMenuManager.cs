@@ -8,6 +8,7 @@ using softWrench.sW4.Metadata.Menu;
 using softwrench.sW4.Shared2.Metadata.Menu;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.dashboard.classes.controller {
     public class DashboardMenuManager : IMenuManager {
@@ -19,6 +20,11 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
         public MenuDefinition ModifyMenu(MenuDefinition securedMenu, ISWUser user) {
+            if (!ApplicationConfiguration.IsLocal()) {
+                //TODO: remove this when it´s good for qa
+                return securedMenu;
+            }
+
             var leafs = new List<MenuBaseDefinition>();
 
             if (!user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty)) {
