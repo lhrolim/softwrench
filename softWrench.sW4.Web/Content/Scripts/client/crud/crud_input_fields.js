@@ -489,7 +489,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                     var optionfield = optionsFields[i];
                     if ($scope.datamap[optionfield.target] == null && optionfield.providerAttribute == null && optionfield.rendererType != 'checkbox') {
                         var values = $scope.GetOptionFieldOptions(optionfield);
-                        if (values != null) {
+                        if (values != null && values.length>0) {
                             $scope.datamap[optionfield.target] = values[0].value;
                         }
                     }
