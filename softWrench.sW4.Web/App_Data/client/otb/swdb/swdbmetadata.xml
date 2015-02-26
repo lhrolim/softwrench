@@ -21,14 +21,15 @@
           <field label="Title" attribute="title" requiredexpression="true" tooltip="The Panel title"/>
           <optionfield label="Application" attribute="application" providerattribute="applications" requiredexpression="true">
             <renderer type="autocompleteclient"/>
+            <event type="afterchange" method="lookupFields" service="dashboardAuxService"/>
           </optionfield>
           <section showexpression="@application!=null">
 
-            <optionfield label="Fields" attribute="fields"  >
+            <optionfield label="Fields" attribute="fields" providerattribute="appfields" >
               <renderer type="checkbox"/>
             </optionfield>
 
-            <optionfield label="Sort By" attribute="sortby">
+            <optionfield label="Sort By" attribute="sortby" providerattribute="appfields">
               <renderer type="autocompleteclient"/>
             </optionfield>
 

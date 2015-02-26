@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using cts.commons.web.Attributes;
@@ -67,6 +68,17 @@ namespace softwrench.sw4.dashboard.classes.controller {
             return new GenericResponseResult<ManageDashBoardsDTO>(dto);
         }
 
+        [HttpGet]
+        public IGenericResponseResult LoadFields([FromUri]String applicationName) {
+            var app = MetadataProvider.Application(applicationName);
+            ApplicationSchemaDefinition schema = app.GetListSchema();
+            var options = schema.Fields.Select(f => new GenericAssociationOption(f.Attribute, f.Label)).Where(f => !string.IsNullOrEmpty(f.Label))
+                .Cast<IAssociationOption>()
+                .ToList();
+            return new GenericResponseResult<IEnumerable<IAssociationOption>>(options);
+        }
+
+        [HttpGet]
         public IGenericResponseResult LoadPreferred() {
             //TODO: add id checkings on server side
             var user = SecurityFacade.CurrentUser();

@@ -288,7 +288,6 @@
     <Compile Include="DB_Migration\4.0\20140724_HAP_331.cs" />
     <Compile Include="DB_Migration\4.0\20141002_SWWEB_478.cs" />
     <Compile Include="DB_Migration\4.0\20141215_SWWEB_787.cs" />
-    <Compile Include="DB_Migration\4.2.0\20140226_DASH_DASHBOARD.cs" />
     <Compile Include="DB_Migration\4.2.0\20141215_SWWEB_787.cs" />
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />

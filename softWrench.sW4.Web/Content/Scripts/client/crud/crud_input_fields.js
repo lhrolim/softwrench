@@ -165,7 +165,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 if (fieldMetadata.providerAttribute == null) {
                     return fieldMetadata.options;
                 }
-                return associationOptions[fieldMetadata.associationKey];
+                return $scope.associationOptions[fieldMetadata.associationKey];
             }
             $scope.isPositionLeft = function (fieldMetadata) {
                 return "left".equalIc(fieldMetadata.rendererParameters['position']);
