@@ -125,7 +125,7 @@ namespace softWrench.sW4.Notifications {
                 var uid = Int32.Parse(record["uid"]);
                 var flag = "changed";
                 if (_counter[application] < uid){
-                    flag = "created new";
+                    flag = "created";
                     _counter[application] = uid;
                 }
                 var parentid = record["parentid"];
