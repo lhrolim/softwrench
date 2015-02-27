@@ -36,8 +36,8 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly ICollection<UserProfile> _profiles;
         private readonly Iesi.Collections.Generic.ISet<PersonGroupAssociation> _personGroups;
         private readonly IList<DataConstraint> _dataConstraints;
-        private readonly IDictionary<ClientPlatform, MenuDefinition> _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
-        private readonly IDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>> _cachedBars = new ConcurrentDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>>();
+        private IDictionary<ClientPlatform, MenuDefinition> _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
+        private IDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>> _cachedBars = new ConcurrentDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>>();
         private IDictionary<string, object> _genericproperties = new Dictionary<string, object>();
 
         private const string BlankUser = "menu is blank for user {0} review his security configuration";
@@ -182,9 +182,8 @@ namespace softWrench.sW4.Metadata.Security {
             get { return _dataConstraints; }
         }
 
-        public MenuDefinition Menu(ClientPlatform platform,out Boolean fromCache) {
-            if (_cachedMenu.ContainsKey(platform))
-            {
+        public MenuDefinition Menu(ClientPlatform platform, out Boolean fromCache) {
+            if (_cachedMenu.ContainsKey(platform)) {
                 fromCache = true;
                 return _cachedMenu[platform];
             }
@@ -289,6 +288,11 @@ namespace softWrench.sW4.Metadata.Security {
             var commandBarDefinitions = ApplicationCommandUtils.SecuredBars(this, commandBars);
             _cachedBars[platform] = commandBarDefinitions;
             return commandBarDefinitions;
+        }
+
+        public void ClearMenu() {
+            _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
+            Genericproperties["menumanagerscached"] = null;
         }
     }
 }

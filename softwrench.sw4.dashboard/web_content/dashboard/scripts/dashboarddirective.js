@@ -1,0 +1,41 @@
+﻿var app = angular.module('sw_layout');
+
+app.directive('dashboard', function ($timeout, $log, $rootScope, contextService, dashboardAuxService) {
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: contextService.getResourceUrl('/Content/Shared/dashboard/templates/dashboarddirective.html'),
+        scope: {
+            dashboard: '=',
+        },
+
+        link: function (scope, element, attrs) {
+            scope.$name = 'crudbody';
+
+            scope.getRows = function () {
+                if (!scope.dashboard || !scope.dashboard.layout) {
+                    return 0;
+                }
+                return scope.dashboard.layout.split(',');
+            }
+
+            scope.getColumnsOfRow = function (row) {
+                if (!scope.dashboard || !scope.dashboard.layout) {
+                    return 0;
+                }
+                var colNum = parseInt(scope.dashboard.layout.split(',')[row - 1]);
+                return new Array(colNum);
+            }
+
+            scope.getPanelDataFromMatrix = function (row, column) {
+                return dashboardAuxService.locatePanelFromMatrix(scope.definition, row, column);
+            }
+
+            scope.getPanelPrintDataFromMatrix=function(row, column) {
+                
+            }
+
+        },
+    }
+
+});

@@ -1,14 +1,14 @@
 ﻿<div class="dash-header" ng-controller="DashboardController">
     <span>
-<!--        <h2 style="display: inline">Manage Dashboards</h2>-->
+        <!--        <h2 style="display: inline">Manage Dashboards</h2>-->
         <button class="btn btn-primary" ng-show="canCreteDashboards && !creatingDashboard" ng-click="create()">
             <i class="fa fa-plus"></i>&ensp;Create Dashboard
         </button>
-        
+
         <button class="btn btn-primary" ng-show="canCreteDashboards && !creatingDashboard" ng-click="createPanel()">
             <i class="fa fa-plus"></i>&ensp;Create Panel
         </button>
-        
+
         <span ng-show="creatingDashboard">
             <label editable-text="dashboard.title" class="control-label">{{ dashboard.title || 'empty' }}</label> *
 
@@ -25,8 +25,34 @@
             </button>
 
         </span>
+    </span>
 
-        </span>
+    <div ng-if="!creatingdashboard">
+        <div class="detail-header clearfix">
+            <ul class="nav nav-tabs compositiondetailtab hapag-composition">
+                <!--                <li class="active">-->
+                <!--                    <a href="#main" data-tabid="{{main}}" ng-click="setActiveTab(null)"><i class="fa fa-file-text-o"></i> {{schema.title}}</a>-->
+                <!--                </li>-->
+                <li ng-repeat="tab in dashboards">
+                    <a ng-href="#{{tab.tabId}}" data-tabid="{{tab.id}}" ng-class="{active:$first}">
+                        <!--                        <i class=" {{tab.icon}} ">-->
+                        <!--                        </i>-->
+                        {{tab.title}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane" ng-repeat="dashboard in dashboards" id="{{dashboard.tabId}}" ng-class="{active:$first}">
+                <dashboard dashboard="dashboard">
+
+                </dashboard>
+            </div>
+        </div>
+    </div>
+
+
+
 </div>
 
 

@@ -88,19 +88,7 @@ app.controller('DashboardController', [
             });
         }
 
-        $scope.getRows = function () {
-            if (!$scope.dashboard || !$scope.dashboard.layout) {
-                return 0;
-            }
-            return $scope.dashboard.layout.split(',');
-        }
-
-        $scope.getColumnsOfRow = function (row) {
-            if (!$scope.dashboard || !$scope.dashboard.layout) {
-                return 0;
-            }
-            return parseInt($scope.dashboard.layout.split(',')[row-1]);
-        }
+   
 
         $scope.doInit();
 

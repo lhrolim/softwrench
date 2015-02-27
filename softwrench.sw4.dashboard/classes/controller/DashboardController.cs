@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Web.Http;
+using cts.commons.simpleinjector.Events;
 using cts.commons.web.Attributes;
 using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
@@ -25,20 +26,24 @@ namespace softwrench.sw4.dashboard.classes.controller {
         private readonly SWDBHibernateDAO _dao;
 
         private readonly UserDashboardManager _userDashboardManager;
+        private IEventDispatcher _dispatcher;
 
-        public DashBoardController(SWDBHibernateDAO dao, UserDashboardManager userDashboardManager) {
+        public DashBoardController(SWDBHibernateDAO dao, UserDashboardManager userDashboardManager, IEventDispatcher dispatcher) {
             _dao = dao;
             _userDashboardManager = userDashboardManager;
+            _dispatcher = dispatcher;
         }
 
         [HttpPost]
         public IGenericResponseResult SaveDashboard([FromUri]Dashboard dashboard, [FromUri]string policy) {
             //TODO: update menu, clear caching
+            var user = SecurityFacade.CurrentUser();
             if ("personal".Equals(policy)) {
                 dashboard.Filter = new DashboardFilter();
-                dashboard.Filter.UserId = SecurityFacade.CurrentUser().UserId;
+                dashboard.Filter.UserId = user.UserId;
             }
-
+            user.Genericproperties[DashboardConstants.DashBoardsProperty] = null;
+            _dispatcher.Dispatch(new ClearMenuEvent());
             return new GenericResponseResult<Dashboard>(_dao.Save(dashboard));
         }
 

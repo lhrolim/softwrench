@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using cts.commons.simpleinjector.Events;
+using cts.commons.web.Attributes;
 using NHibernate.Hql.Ast.ANTLR;
 using SimpleInjector;
 using softwrench.sw4.api.classes;
@@ -14,6 +16,7 @@ using System.Web.Http;
 using System.Web.Security;
 
 namespace softWrench.sW4.Web.Controllers {
+    [SWControllerConfiguration]
     public class MenuController : ApiController {
 
         private readonly IEnumerable<IMenuManager> _managers;
@@ -74,5 +77,6 @@ namespace softWrench.sW4.Web.Controllers {
                 get { return _commandBars; }
             }
         }
+       
     }
 }

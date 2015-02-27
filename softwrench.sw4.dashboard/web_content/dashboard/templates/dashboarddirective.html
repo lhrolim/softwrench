@@ -1,0 +1,20 @@
+﻿<div>
+    aaa
+    rows: {{getRows()}}
+    <div ng-repeat="rowlayout in getRows()">
+        {{rowlayout}}
+        <div ng-repeat="column in getColumnsOfRow(rowlayout)">
+            {{column}}
+            <div>
+                {{getPanelPrintFromMatrix(rowlayout,column)}}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+

@@ -186,5 +186,26 @@
 
     });
 
+    it('locate panel from matrix', function() {
+        var dashboard = {
+            panels: [
+                panel1,
+                panel2,
+                panel3,
+                panel4,
+                panel5,
+                panel6
+            ],
+            layout: '1,3,2'
+        };
+        var panel = dashboardAuxService.locatePanelFromMatrix(dashboard, 2, 2);
+        expect(panel).toBe(panel3);
+
+        panel = dashboardAuxService.locatePanelFromMatrix(dashboard, 3, 2);
+        expect(panel).toBe(panel6);
+
+        panel = dashboardAuxService.locatePanelFromMatrix(dashboard, 2, 1);
+        expect(panel).toBe(panel2);
+    });
 
 });
