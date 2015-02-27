@@ -1400,7 +1400,6 @@ select {
     background: #aaa !important;
 }
 
-#crudInputMainFields .dropdown-menu {
+#crudInputMainFields .combobox-container .dropdown-menu {
 	max-height: 242px;
-    overflow-y:scroll;
 }
