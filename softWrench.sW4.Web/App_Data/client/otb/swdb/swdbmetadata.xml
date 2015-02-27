@@ -89,7 +89,9 @@
             <commandgroup position="detailform">
               <removecommand id="save"/>
               <removecommand id="print"/>
-              <command id="save" icon="fa-save" service="$scope" method="save" label="Add Panel" tooltip="Add Panel" position="&lt;cancel" />
+              <command id="save" icon="fa-save" service="dashboardAuxService" method="createAndAssociatePanel" 
+                       parameters="datamap"
+                       label="Add Panel" tooltip="Add Panel" position="&lt;cancel" />
             </commandgroup>
           </commandbars>
           <properties>

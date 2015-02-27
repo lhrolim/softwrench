@@ -39,12 +39,12 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
                     var b = ob as IBaseEntity;
                     var aud = ob as IBaseAuditEntity;
                     if (aud != null) {
-                        aud.UpdateDate = new DateTime();
+                        aud.UpdateDate = DateTime.Now;
                     }
 
                     if (b != null && (b.Id == 0 || b.Id == null)) {
                         if (aud != null) {
-                            aud.CreationDate = new DateTime();
+                            aud.CreationDate = DateTime.Now;
                             aud.CreatedBy = SecurityFacade.CurrentUser().UserId;
                         }
                         b.Id = (int)session.Save(ob);

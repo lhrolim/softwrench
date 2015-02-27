@@ -27,7 +27,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         [Property(Column = "alias_")]
         public virtual String Alias { get; set; }
 
-        [Property(Column = "alias_")]
+        [Property]
         public virtual String Title { get; set; }
 
 

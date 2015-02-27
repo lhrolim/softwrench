@@ -1,8 +1,8 @@
 ﻿var app = angular.module('sw_layout');
 
 app.controller('DashboardController', [
-    '$scope', 'modalService', 'fieldService',
-    function ($scope, modalService, fieldService) {
+    '$scope', 'modalService', 'fieldService', 'dashboardAuxService',
+    function ($scope, modalService, fieldService, dashboardAuxService) {
 
         $scope.doInit = function () {
 
@@ -25,7 +25,7 @@ app.controller('DashboardController', [
             $scope.dashboard = {
                 title: "New Dashboard *",
                 panels: []
-        };
+            };
         }
 
         $scope.cancel = function () {
@@ -54,6 +54,20 @@ app.controller('DashboardController', [
             });
         }
 
+        $scope.getRows = function () {
+            if (!$scope.dashboard || !$scope.dashboard.layout) {
+                return 0;
+            }
+            return $scope.dashboard.layout.split(',');
+        }
+
+        $scope.getColumnsOfRow = function (row) {
+            if (!$scope.dashboard || !$scope.dashboard.layout) {
+                return 0;
+            }
+            return parseInt($scope.dashboard.layout.split(',')[row-1]);
+        }
+
         $scope.doInit();
 
         $scope.$on('dash_createpanel', function (event, paneltype) {
@@ -65,6 +79,12 @@ app.controller('DashboardController', [
                     //                scope.$digest();
                 }
             });
+        });
+
+        $scope.$on('dash_panelassociated', function (event, panel, row, column) {
+            var dashboard = $scope.dashboard;
+            dashboardAuxService.readjustLayout(dashboard, row, column);
+            dashboardAuxService.readjustPositions(dashboard, panel, row, column);
         });
 
         $scope.$watch('resultObject.timeStamp', function (newValue, oldValue) {

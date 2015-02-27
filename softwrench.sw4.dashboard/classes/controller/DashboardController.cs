@@ -87,11 +87,20 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
         [HttpGet]
         public IGenericResponseResult LoadPanels([FromUri]String paneltype) {
-            var availablePanels = _userDashboardManager.LoadUserPanels(SecurityFacade.CurrentUser(),paneltype);
+            var availablePanels = _userDashboardManager.LoadUserPanels(SecurityFacade.CurrentUser(), paneltype);
             var options = availablePanels.Select(f => new GenericAssociationOption(f.Id.ToString(), f.Alias))
            .Cast<IAssociationOption>()
            .ToList();
             return new GenericResponseResult<IEnumerable<IAssociationOption>>(options);
+        }
+
+        [HttpPost]
+        public IGenericResponseResult CreatePanel([FromUri]DashboardGridPanel panel) {
+            panel.Filter = new DashboardFilter();
+            var app = MetadataProvider.Application(panel.Application);
+            ApplicationSchemaDefinition schema = app.GetListSchema();
+            panel.SchemaRef = schema.SchemaId;
+            return new GenericResponseResult<DashboardBasePanel>(_dao.Save(panel));
         }
 
         [HttpGet]

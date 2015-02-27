@@ -29,7 +29,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         public virtual String DefaultSortField { get; set; }
 
 
-        [Property]
+        [Property(Column = "_limit")]
         public virtual int? Limit { get; set; }
 
 
