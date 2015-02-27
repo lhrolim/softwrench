@@ -150,9 +150,15 @@ app.factory('formatService', function ($filter, i18NService, dispatcherService) 
                 }
                 return dateFormat.trim();
             }
+        },
+
+        doContentStringConversion: function(datamap) {
+            for (var record in datamap) {
+                datamap[record] = datamap[record] == null ? null : datamap[record].toString();
+            }
+
+            return datamap;
         }
-
-
     };
 
 });
