@@ -235,8 +235,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             searchDto.filterFixedWhereClause = filterFixedWhereClause;
             searchDto.needsCountUpdate = true;
             //existing template pass too many variable, which some of them did not get translated and caused an SQL error
-            //searchDto.searchTemplate = searchTemplate;
-            searchDto.searchTemplate = searchDto.searchParams.replace("&&", "||");
+            searchDto.searchTemplate = searchTemplate;
             searchData.lastSearchedValues = searchDto.searchValues;
             
             if (paginationData) {
@@ -374,7 +373,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
                 }
             }
             searchTemplate = searchTemplate.substring(0, searchTemplate.length - 2);
-            this.refreshGrid(searchData,{searchTemplate:searchTemplate});
+            this.refreshGrid(searchData,{searchTemplate:searchTemplate,keepfilterparameters:true});
         },
 
         /// <summary>
