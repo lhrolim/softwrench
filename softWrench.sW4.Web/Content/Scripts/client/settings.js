@@ -31,25 +31,30 @@
     };
     $scope.savechanges = function () {
         if ($scope.comments != undefined) {
+            
             alertService.confirmMsg("Are you sure you want to Save your changes to the Metadata ? ", function () {
-                var httpParameters = {
-                    Comments: $scope.comments,
-                    Metadata: ace.edit("editor").getValue()
-                };
+                
+                    var httpParameters = {
+                        Comments: $scope.comments,
+                        Metadata: ace.edit("editor").getValue()
+                    };
 
-                var urlToUse = "/api/generic/EntityMetadata/SaveMetadataEditor";
+                    var urlToUse = "/api/generic/EntityMetadata/SaveMetadataEditor";
 
-                var json = angular.toJson(httpParameters);
-                $http({
-                    method: "POST",
-                    dataType: "json",
-                    url: url(urlToUse),
-                    headers: { "Content-Type": "application/json; charset=utf-8" },
-                    data: json
-                }).
-                    success(function () {
-                        alertService.alert("Metadata saved successfully");
-                    });
+                    var json = angular.toJson(httpParameters);
+                    $http({
+                        method: "POST",
+                        dataType: "json",
+                        url: url(urlToUse),
+                        headers: { "Content-Type": "application/json; charset=utf-8" },
+                        data: json
+                    }).
+                        success(function () {
+                            
+                            alertService.alert("Metadata saved successfully");
+                            $scope.save();
+                        });
+                
             });
             }
         else
@@ -58,22 +63,27 @@
        
             
     $scope.restore = function () {
-        var urlToCall = url("/api/generic/EntityMetadata/RestoreMetadata");
-        $http.get(urlToCall).success(function (result) {
-            var editor = ace.edit("editor");
-            editor.getSession().setMode("ace/mode/xml");
-            var data = $scope.resultData;
-            $scope.type = data.type;
-            editor.setValue(result.resultObject.content);
-            editor.gotoLine(0);
+        alertService.confirmMsg("This will restore your XML to the default XML file, and none of your changes will be saved. Is this what you want to do? ", function () {
+            var urlToCall = url("/api/generic/EntityMetadata/RestoreMetadata");
+            $http.get(urlToCall).success(function (result) {
+                var editor = ace.edit("editor");
+                editor.getSession().setMode("ace/mode/xml");
+                var data = $scope.resultData;
+                $scope.type = data.type;
+                editor.setValue(result.resultObject.content);
+                editor.gotoLine(0);
+                $scope.save();
+                alertService.alert("Your xml file has been successfully restored");
+            }).error(function (result) {
+                alertService.alert("Failed to Load your xml file.Please try again later");
+            });
+            //alertService.confirmMsg("Are you sure you want to restore to default settings ? ", function () {
+            //    var urlToUse = url("/api/generic/EntityMetadata/RestoreMetadataEditor");
+            //    $http.get(urlToUse)
+            //    window.location.reload();
+            //});
+
         });
-        //alertService.confirmMsg("Are you sure you want to restore to default settings ? ", function () {
-        //    var urlToUse = url("/api/generic/EntityMetadata/RestoreMetadataEditor");
-        //    $http.get(urlToUse)
-        //    window.location.reload();
-        //});
-       
-        
     };
 
     $scope.contextPath = function (path) {

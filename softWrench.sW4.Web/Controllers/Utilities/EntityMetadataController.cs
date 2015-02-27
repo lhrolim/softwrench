@@ -56,7 +56,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             string Metadata = (from c in resultData
 
                             select c.SystemStringValue).FirstOrDefault();
-           return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(Metadata, "metadata"));
+            return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(Metadata, "metadata"));
             
         }
         [HttpGet]
