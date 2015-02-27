@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using cts.commons.persistence;
 using Iesi.Collections.Generic;
 using NHibernate.Mapping.Attributes;
@@ -33,17 +34,17 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         /// comma separated list of columns. (3,1,2 means 3 columns on first row, 1 on the second and 2 on the third).
         /// </summary>
         [Property]
-        public virtual string Layout { get; set; }
+        public string Layout { get; set; }
 
-        [Set(0, Table = "DASH_DASHBOARDREL",
-        Lazy = CollectionLazy.False, Cascade = "all")]
-        [Key(1, Column = "dashboard_id")]
-        [OneToMany(2, ClassType = typeof(DashboardPanelRelationship))]
-        public virtual ISet<DashboardPanelRelationship> Panels { get; set; }
+//        [Set(0, Table = "DASH_DASHBOARDREL",
+//        Lazy = CollectionLazy.False, Cascade = "all")]
+        [Key(0, Column = "dashboard_id")]
+        [OneToMany(1, ClassType = typeof(DashboardPanelRelationship))]
+        public List<DashboardPanelRelationship> Panels { get; set; }
 
 
         [ComponentProperty]
-        public virtual DashboardFilter Filter { get; set; }
+        public DashboardFilter Filter { get; set; }
 
 
     }

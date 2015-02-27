@@ -20,11 +20,11 @@
         <schema id="saveDashboardConfirmation" stereotype="detail">
           <field attribute="title" label="Title"/>
           <section showexpression="@canCreateBoth">
-            <optionfield attribute="type" label="Policy">
+            <optionfield attribute="policy" label="Policy">
               <option label="Personal" value="personal"/>
               <option label="Shared" value="shared"/>
             </optionfield>
-            <optionfield attribute="profiles" providerattribute="profiles" showexpression="@type=='shared'">
+            <optionfield attribute="profiles" providerattribute="profiles" showexpression="@policy=='shared'">
               <renderer type="checkbox"/>
             </optionfield>
           </section>

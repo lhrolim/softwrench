@@ -9,7 +9,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
     /// BAse class for panels that can go inside of dashboards. Implementations can be grids, graphics, etc
     /// </summary>
     [Class(Table = "DASH_BASEPANEL", Lazy = false)]
-    public abstract class DashboardBasePanel : IBaseAuditEntity {
+    public class DashboardBasePanel : IBaseAuditEntity {
 
         public static string ByUser(string panelType) {
             return "from {0} where (userid is null or userid = ?) or (userprofile is null or userprofiles like ?)".Fmt(panelType);

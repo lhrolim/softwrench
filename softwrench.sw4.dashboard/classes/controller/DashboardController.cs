@@ -32,8 +32,13 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
         [HttpPost]
-        public IGenericResponseResult SaveDashboard(Dashboard dashboard) {
+        public IGenericResponseResult SaveDashboard([FromUri]Dashboard dashboard, [FromUri]string policy) {
             //TODO: update menu, clear caching
+            if ("personal".Equals(policy)) {
+                dashboard.Filter = new DashboardFilter();
+                dashboard.Filter.UserId = SecurityFacade.CurrentUser().UserId;
+            }
+
             return new GenericResponseResult<Dashboard>(_dao.Save(dashboard));
         }
 
@@ -53,7 +58,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             var panelSchemas = new Dictionary<string, ApplicationSchemaDefinition>();
             panelSchemas.Add("dashboardgrid", MetadataProvider.Application("_dashboardgrid").Schema(new ApplicationMetadataSchemaKey("detail")));
 
-            var profiles =SecurityFacade.GetInstance()
+            var profiles = SecurityFacade.GetInstance()
                 .FetchAllProfiles(false)
                 .Select(p => new GenericAssociationOption(p.Id.ToString(), p.Name))
                 .Cast<IAssociationOption>()
