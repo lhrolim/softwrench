@@ -1402,4 +1402,5 @@ select {
 
 #crudInputMainFields .dropdown-menu {
 	max-height: 242px;
+    overflow-y:scroll;
 }
