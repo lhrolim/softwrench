@@ -137,23 +137,28 @@ namespace softwrench.sw4.dashboard.classes.controller {
             int? preferredDashboardId = null;
             var dashboard = new Dashboard();
 
-
             if (user.Genericproperties.ContainsKey((DashboardConstants.DashBoardsPreferredProperty))) {
                 // Get prefer dashboard id
                 preferredDashboardId = user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] as int?;
             }
 
-            if (user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty)) {
-                IEnumerable<Dashboard> dashboards = (IEnumerable<Dashboard>)user.Genericproperties[DashboardConstants.DashBoardsProperty];
+            if (!user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty)) {
+                // Get dashboard information and store into cache
+                user.Genericproperties[DashboardConstants.DashBoardsProperty] = _userDashboardManager.LoadUserDashboars(user);
+            }
 
-                // Return the prefer dashboard content
-                if (preferredDashboardId != null) {
-                    dashboard = dashboards.FirstOrDefault(s => s.Id == preferredDashboardId);
-                } else {
-                    // TODO: Default it to global dashboard??        
-                }
-            } else {
-                // Will it ever occur that we have a dashboard that's not in the Genericproperties? 
+            IEnumerable<Dashboard> dashboards = (IEnumerable<Dashboard>)user.Genericproperties[DashboardConstants.DashBoardsProperty];
+
+            // Return the prefer dashboard content
+            if (preferredDashboardId != null && dashboards != null && dashboards.Any()) {
+                dashboard = dashboards.FirstOrDefault(s => s.Id == preferredDashboardId);
+            }
+            else if (dashboards != null && dashboards.Any()) {
+                // TODO: Default it to global dashboard? Right now it is set to the first dashboard available.
+                dashboard = dashboards.FirstOrDefault();
+            }
+            else {
+                return null;
             }
 
             return new GenericResponseResult<Dashboard>(dashboard);

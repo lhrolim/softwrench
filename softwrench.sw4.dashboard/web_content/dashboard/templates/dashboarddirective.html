@@ -1,16 +1,14 @@
 ﻿<div class="container">
-    aaa
-    rows: {{getRows()}}
-    <div ng-repeat="rowlayout in getRows()" class="row">
-        row: {{rowlayout}}
-        <div ng-repeat="column in getColumnsOfRow(rowlayout)" class="col-md-6">
-            column: {{column}}
+    <div ng-repeat="row in getRows()" class="row">
+        <div ng-repeat="column in getColumnsOfRow(row)" class="col-md-6 col-sm-4" style="border:1px solid black;">
+            cell: {{row}}, {{column}}
             <div>
-                {{getPanelPrintFromMatrix(rowlayout,column)}}
+                <p><b>Title:</b> {{getPanelDataFromMatrix(rowlayout,column).panel['title']}} </p>
+
+                
             </div>
         </div>
     </div>
-
 </div>
 
 

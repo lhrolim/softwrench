@@ -36,13 +36,12 @@ app.directive('dashboard', function ($timeout, $log, $rootScope, contextService,
             }
 
             scope.getPanelDataFromMatrix = function (row, column) {
-                return dashboardAuxService.locatePanelFromMatrix(scope.definition, row, column);
+                return dashboardAuxService.locatePanelFromMatrix(scope.dashboard, row, column);
             }
 
-            scope.getPanelPrintDataFromMatrix=function(row, column) {
+            scope.getPanelPrintDataFromMatrix = function(row, column) {
                 
             }
-
         },
     }
 

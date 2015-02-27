@@ -17,10 +17,13 @@ app.factory('dashboardAuxService', function ($rootScope, $log, contextService, r
         locatePanelFromMatrix:function(dashboard, row, column) {
             var rows = dashboard.layout.split(',');
             var newPosition = 0;
-            for (var i = 0; i < row - 1; i++) {
+
+            // Convert 2D coordinate to 1D array. 
+            for (var i = 0; i < row; i++) {
                 newPosition += parseInt(rows[i]);
             }
-            newPosition += column - 1;
+            newPosition += column;
+
             return dashboard.panels[newPosition];
         },
 
