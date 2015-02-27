@@ -1,22 +1,26 @@
 ﻿<div class="dash-header" ng-controller="DashboardController">
     <span>
 <!--        <h2 style="display: inline">Manage Dashboards</h2>-->
-        <button class="btn btn-primary" ng-show="canCreteDashboards && !creating" ng-click="create()">
+        <button class="btn btn-primary" ng-show="canCreteDashboards && !creatingDashboard" ng-click="create()">
             <i class="fa fa-plus"></i>&ensp;Create Dashboard
         </button>
         
-        <span ng-show="creating">
-            <label editable-text="dashboard.title" class="control-label">{{ dashboard.title || 'empty' }}</label>
+        <button class="btn btn-primary" ng-show="canCreteDashboards && !creatingDashboard" ng-click="createPanel()">
+            <i class="fa fa-plus"></i>&ensp;Create Panel
+        </button>
+        
+        <span ng-show="creatingDashboard">
+            <label editable-text="dashboard.title" class="control-label">{{ dashboard.title || 'empty' }}</label> *
 
             <button class="btn btn-primary" ng-click="addpanel()">
                 <i class="fa fa-plus"></i>&ensp;Add Panel
             </button>
 
-            <button class="btn btn-primary"  ng-click="create()">
+            <button class="btn btn-primary" ng-click="saveDashboard()" ng-enabled="dashboard.panels.length>0">
                 <i class="fa fa-plus"></i>&ensp;Save
             </button>
-            
-            <button class="btn btn-primary" ng-click="cancel()">
+
+            <button class="btn btn-primary" ng-click="cancelDashboard()">
                 <i class="fa fa-plus"></i>&ensp;Cancel
             </button>
 

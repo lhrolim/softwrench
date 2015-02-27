@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('dashboardAuxService', function ($rootScope,$log, contextService, restService, alertService, modalService) {
+app.factory('dashboardAuxService', function ($rootScope, $log, contextService, restService, alertService, modalService) {
 
     return {
         lookupFields: function (event) {
@@ -15,10 +15,26 @@ app.factory('dashboardAuxService', function ($rootScope,$log, contextService, re
         },
 
         createAndAssociatePanel: function (datamap) {
+            
+            restService.invokePost('Dashboard', 'CreatePanel', datamap, null, function (data) {
+                if (datamap.row && datamap.column) {
+                    $rootScope.$broadcast('dash_panelassociated', data.resultObject, datamap.row, datamap.column);
+                } else {
+                    $rootScope.$broadcast('dash_panelcreated', data.resultObject);
+                }
+            });
+        },
 
-            restService.invokePost('Dashboard', 'CreatePanel', datamap, function (data) {
-                modalService.hide();
-                $rootScope.dispatch('dash_panelassociated', data.resultObject);
+        saveDashboard: function (datamap) {
+            restService.invokePost('Dashboard', 'SaveDashboard', datamap, null, function (data) {
+                $rootScope.$broadcast('dash_dashsaved', data.resultObject);
+            });
+        },
+
+        selectPanel: function (datamap) {
+            restService.invokeGet("Dashboard", "LoadPanel", { panel: datamap.panel }, function (data) {
+
+                $rootScope.$broadcast('dash_panelassociated', data.resultObject, datamap.row, datamap.column);
             });
         },
 
@@ -34,6 +50,8 @@ app.factory('dashboardAuxService', function ($rootScope,$log, contextService, re
             }
         },
 
+
+
         loadPanels: function (event) {
             var paneltype = event.fields.paneltype;
             if (paneltype == null) {
@@ -46,7 +64,7 @@ app.factory('dashboardAuxService', function ($rootScope,$log, contextService, re
             });
         },
 
-        readjustLayout : function(dashboard, row, column) {
+        readjustLayout: function (dashboard, row, column) {
             var log = $log.getInstance("dashboardauxService#adjustLayout");
             if (!dashboard.layout) {
                 //first will be whole line
@@ -74,13 +92,13 @@ app.factory('dashboardAuxService', function ($rootScope,$log, contextService, re
 
             var rows = dashboard.layout.split(',');
             var newPosition = 0;
-            for (var i = 0; i < row-1; i++) {
+            for (var i = 0; i < row - 1; i++) {
                 newPosition += parseInt(rows[i]);
             }
-            newPosition += column -1;
+            newPosition += column - 1;
 
 
-//            var newPosition = (row * column) - 1;
+            //            var newPosition = (row * column) - 1;
 
             var panelAssociation = {
                 position: newPosition,

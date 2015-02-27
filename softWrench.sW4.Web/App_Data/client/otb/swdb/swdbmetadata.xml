@@ -15,6 +15,34 @@
   <applications>
 
 
+    <application entity="Dashboard" name="dashboard" title="Dashboard">
+      <schemas>
+        <schema id="saveDashboardConfirmation" stereotype="detail">
+          <field attribute="title" label="Title"/>
+          <section showexpression="@canCreateBoth">
+            <optionfield attribute="type" label="Policy">
+              <option label="Personal" value="personal"/>
+              <option label="Shared" value="shared"/>
+            </optionfield>
+            <optionfield attribute="profiles" providerattribute="profiles" showexpression="@type=='shared'">
+              <renderer type="checkbox"/>
+            </optionfield>
+          </section>
+
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <command id="save" icon="fa-save" parameters="datamap" service="dashboardAuxService" method="saveDashboard" label="Confirm" tooltip="Confirm" position="&lt;cancel" />
+            </commandgroup>
+          </commandbars>
+          <properties>
+            <property key="associationstoprefetch" value="#none"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
+
     <application entity="DashboardBasePanel" name="basedashboard" title="Base Dashboard">
       <schemas>
         <schema id="panelselection">
@@ -34,20 +62,20 @@
               <renderer type="numericinput" params="minvalue=1"/>
             </field>
           </section>
-          
+
           <section orientation="horizontal" showexpression="@paneltype!=''">
             <header label="Panel" displacement="sameline"/>
-              <optionfield attribute="panel" providerattribute="availablepanels" />
-              <section resourcepath="/Content/Shared/dashboard/templates/createnewpanelbutton.html"/>
+            <optionfield attribute="panel" providerattribute="availablepanels" />
+            <section resourcepath="/Content/Shared/dashboard/templates/createnewpanelbutton.html"/>
           </section>
-          
-          
-          
+
+
+
           <commandbars>
             <commandgroup position="detailform">
               <removecommand id="save"/>
               <removecommand id="print"/>
-              <command id="save" icon="fa-save" enableexpression="@panel!=null" service="dashboardAuxService" method="selectPanel" label="Select Panel" tooltip="Add Panel" position="&lt;cancel" />
+              <command id="save" icon="fa-save" enableexpression="@panel!=null" service="dashboardAuxService" parameters="datamap" method="selectPanel" label="Select Panel" tooltip="Add Panel" position="&lt;cancel" />
             </commandgroup>
           </commandbars>
           <properties>
@@ -60,9 +88,6 @@
 
     <application entity="DashboardGridPanel" name="dashboardgrid" title="DashBoardGrid">
       <schemas>
-
-
-
         <detail>
           <field label="Alias" attribute="alias" requiredexpression="true" tooltip="How this panel can be located"/>
           <field label="Title" attribute="title" requiredexpression="true" tooltip="The Panel title"/>
@@ -89,7 +114,7 @@
             <commandgroup position="detailform">
               <removecommand id="save"/>
               <removecommand id="print"/>
-              <command id="save" icon="fa-save" service="dashboardAuxService" method="createAndAssociatePanel" 
+              <command id="save" icon="fa-save" service="dashboardAuxService" method="createAndAssociatePanel"
                        parameters="datamap"
                        label="Add Panel" tooltip="Add Panel" position="&lt;cancel" />
             </commandgroup>

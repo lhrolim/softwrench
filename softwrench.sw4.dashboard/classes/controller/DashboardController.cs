@@ -32,10 +32,9 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
         [HttpPost]
-        public IGenericResponseResult AddDashBoard(DashboardBasePanel dashBoardPanel) {
-            //TODO: add id checkings on server side
-            var userId = SecurityFacade.CurrentUser().DBId;
-            return new BlankApplicationResponse();
+        public IGenericResponseResult SaveDashboard(Dashboard dashboard) {
+            //TODO: update menu, clear caching
+            return new GenericResponseResult<Dashboard>(_dao.Save(dashboard));
         }
 
 
@@ -49,9 +48,16 @@ namespace softwrench.sw4.dashboard.classes.controller {
             var canCreateOwn = user.IsInRole(DashboardConstants.RoleManager);
 
             var panelSelectionSchema = MetadataProvider.Application("_basedashboard").Schema(new ApplicationMetadataSchemaKey("panelselection"));
+            var saveDashboardSchema = MetadataProvider.Application("_dashboard").Schema(new ApplicationMetadataSchemaKey("saveDashboardConfirmation"));
 
             var panelSchemas = new Dictionary<string, ApplicationSchemaDefinition>();
             panelSchemas.Add("dashboardgrid", MetadataProvider.Application("_dashboardgrid").Schema(new ApplicationMetadataSchemaKey("detail")));
+
+            var profiles =SecurityFacade.GetInstance()
+                .FetchAllProfiles(false)
+                .Select(p => new GenericAssociationOption(p.Id.ToString(), p.Name))
+                .Cast<IAssociationOption>()
+                .ToList();
 
             var names = MetadataProvider.Applications().Select(a => a.ApplicationName);
             IList<IAssociationOption> applications = names.Select(name => new GenericAssociationOption(name, name)).Cast<IAssociationOption>().ToList();
@@ -69,7 +75,9 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 PreferredId = preferredDashboardId,
                 NewPanelSchema = panelSelectionSchema,
                 PanelSchemas = panelSchemas,
-                Applications = applications
+                SaveDashboardSchema = saveDashboardSchema,
+                Applications = applications,
+                Profiles = profiles
             };
 
             return new GenericResponseResult<ManageDashBoardsDTO>(dto);
@@ -85,6 +93,13 @@ namespace softwrench.sw4.dashboard.classes.controller {
             return new GenericResponseResult<IEnumerable<IAssociationOption>>(options);
         }
 
+
+
+        [HttpGet]
+        public IGenericResponseResult LoadPanel([FromUri]String panel) {
+            return new GenericResponseResult<DashboardBasePanel>(_dao.FindByPK<DashboardBasePanel>(typeof(DashboardBasePanel), Int32.Parse(panel)));
+        }
+
         [HttpGet]
         public IGenericResponseResult LoadPanels([FromUri]String paneltype) {
             var availablePanels = _userDashboardManager.LoadUserPanels(SecurityFacade.CurrentUser(), paneltype);
@@ -93,6 +108,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
            .ToList();
             return new GenericResponseResult<IEnumerable<IAssociationOption>>(options);
         }
+
 
         [HttpPost]
         public IGenericResponseResult CreatePanel([FromUri]DashboardGridPanel panel) {
