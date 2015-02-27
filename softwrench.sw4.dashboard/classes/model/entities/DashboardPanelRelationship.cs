@@ -17,12 +17,12 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         public virtual int Position { get; set; }
 
         //actually ONETOONE, but who cares, since NHIB doesnt seem to work fine with it
-        [ManyToOne(Column = "panel_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
+        [ManyToOne(Column = "panel_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
         public virtual DashboardBasePanel Panel { get; set; }
 
-//        //actually ONETOONE, but who cares, since NHIB doesnt seem to work fine with it
-//        [ManyToOne(Column = "panel_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
-//        public virtual DashBoard DashBoard { get; set; }
+        //actually ONETOONE, but who cares, since NHIB doesnt seem to work fine with it
+//        [ManyToOne(Column = "dashboard_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
+//        public virtual Dashboard DashBoard { get; set; }
 
 
 

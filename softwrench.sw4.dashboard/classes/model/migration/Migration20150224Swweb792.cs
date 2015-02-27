@@ -39,8 +39,8 @@ namespace softwrench.sw4.dashboard.classes.model.migration {
             Create.Table("DASH_DASHBOARDREL").
                 WithColumn("id").AsInt32().PrimaryKey().Identity()
                 .WithColumn("position").AsInt32().NotNullable()
-                .WithColumn("panel_id").AsInt32().ForeignKey("dash_rel_base_panel", "DASH_BASEPANEL", "id")
-                .WithColumn("dashboard_id").AsInt32().ForeignKey("fk_dashboardrel_dash_id", "DASH_DASHBOARD", "id");
+                .WithColumn("panel_id").AsInt32().ForeignKey("dash_rel_base_panel", "DASH_BASEPANEL", "id").Nullable()
+                .WithColumn("dashboard_id").AsInt32().ForeignKey("fk_dashboardrel_dash_id", "DASH_DASHBOARD", "id").Nullable();
 
 
             Create.Table("DASH_USERPREFERENCES").

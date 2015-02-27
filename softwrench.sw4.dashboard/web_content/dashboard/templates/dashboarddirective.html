@@ -1,10 +1,10 @@
-﻿<div>
+﻿<div class="container">
     aaa
     rows: {{getRows()}}
-    <div ng-repeat="rowlayout in getRows()">
-        {{rowlayout}}
-        <div ng-repeat="column in getColumnsOfRow(rowlayout)">
-            {{column}}
+    <div ng-repeat="rowlayout in getRows()" class="row">
+        row: {{rowlayout}}
+        <div ng-repeat="column in getColumnsOfRow(rowlayout)" class="col-md-6">
+            column: {{column}}
             <div>
                 {{getPanelPrintFromMatrix(rowlayout,column)}}
             </div>

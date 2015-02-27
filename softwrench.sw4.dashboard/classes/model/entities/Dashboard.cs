@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using cts.commons.persistence;
 using Iesi.Collections.Generic;
+using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 
 namespace softwrench.sw4.dashboard.classes.model.entities {
 
     [Class(Table = "DASH_DASHBOARD", Lazy = false)]
-    public class Dashboard : IBaseAuditEntity
-    {
+    public class Dashboard : IBaseAuditEntity {
 
         public static string ByUser = "from Dashboard where (userid is null or userid = ?) or (userprofile is null or userprofiles like ?)";
         public static string ByUserNoProfile = "from Dashboard where (userid is null or userid = ?) or (userprofiles is null)";
@@ -36,11 +36,28 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         [Property]
         public string Layout { get; set; }
 
-//        [Set(0, Table = "DASH_DASHBOARDREL",
-//        Lazy = CollectionLazy.False, Cascade = "all")]
-        [Key(0, Column = "dashboard_id")]
-        [OneToMany(1, ClassType = typeof(DashboardPanelRelationship))]
-        public List<DashboardPanelRelationship> Panels { get; set; }
+        [Set(0, Table = "DASH_DASHBOARDREL",
+        Lazy = CollectionLazy.False, Cascade = "all")]
+        [Key(1, Column = "dashboard_id")]
+        [OneToMany(2, ClassType = typeof(DashboardPanelRelationship))]
+        [JsonIgnore]
+
+        public Iesi.Collections.Generic.ISet<DashboardPanelRelationship> PanelsSet { get; set; }
+
+
+        //Adapter cause asp.net won´t serialize interfaces
+        public List<DashboardPanelRelationship> Panels {
+            get {
+                if (PanelsSet != null) {
+                    return new List<DashboardPanelRelationship>(PanelsSet);
+                }
+                return null;
+            }
+            set {
+                PanelsSet = new HashedSet<DashboardPanelRelationship>(value);
+            }
+        }
+
 
 
         [ComponentProperty]

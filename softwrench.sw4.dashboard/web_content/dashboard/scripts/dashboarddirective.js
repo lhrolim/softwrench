@@ -16,15 +16,23 @@ app.directive('dashboard', function ($timeout, $log, $rootScope, contextService,
                 if (!scope.dashboard || !scope.dashboard.layout) {
                     return 0;
                 }
-                return scope.dashboard.layout.split(',');
+                var arr = [];
+                for (var i = 0; i < scope.dashboard.layout.split(',').length;i++) {
+                    arr.push(i);
+                }
+                return arr;
             }
 
             scope.getColumnsOfRow = function (row) {
                 if (!scope.dashboard || !scope.dashboard.layout) {
                     return 0;
                 }
-                var colNum = parseInt(scope.dashboard.layout.split(',')[row - 1]);
-                return new Array(colNum);
+                var colNum = parseInt(scope.dashboard.layout.split(',')[row]);
+                var arr = [];
+                for (var i = 0; i < colNum; i++) {
+                    arr.push(i);
+                }
+                return arr;
             }
 
             scope.getPanelDataFromMatrix = function (row, column) {
