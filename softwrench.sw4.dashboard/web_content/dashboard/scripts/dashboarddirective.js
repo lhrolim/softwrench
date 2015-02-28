@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('dashboard', function ($timeout, $log, $rootScope, contextService, dashboardAuxService) {
+app.directive('dashboard', function ($timeout, $log, $rootScope, $http, contextService, dashboardAuxService) {
     return {
         restrict: 'E',
         replace: true,
@@ -37,11 +37,7 @@ app.directive('dashboard', function ($timeout, $log, $rootScope, contextService,
 
             scope.getPanelDataFromMatrix = function (row, column) {
                 return dashboardAuxService.locatePanelFromMatrix(scope.dashboard, row, column);
-            }
-
-            scope.getPanelPrintDataFromMatrix = function(row, column) {
-                
-            }
+            } 
         },
     }
 
