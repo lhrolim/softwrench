@@ -115,7 +115,7 @@
                 margin-bottom: 5px;
             }
 
-        .container header .menu-grid button {
+        .container header .menu-grid button .non-isolate {
             width: 100%;
         }
 }

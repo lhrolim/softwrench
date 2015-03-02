@@ -52,7 +52,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 var action = new ActionMenuItemDefinition {
                     Controller = "Dashboard",
                     Action = "LoadPreferred",
-                    Tooltip = "Click here to go to your dashboard"
+                    Tooltip = "Click here to go to your preferred dashboard"
                 };
                 dashBoardMenu = action;
                 user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] = enumerable.First().Id;
@@ -65,7 +65,8 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 var container = new MenuContainerDefinition {
                     HasMainAction = true,
                     Action = "LoadPreferred",
-                    Controller = "DashBoard"
+                    Controller = "DashBoard",
+                    Tooltip = "Click here to go to your preferred dashboard"
                 };
                 var manageAction = ManageDashboardAction();
                 container.AddLeaf(manageAction);

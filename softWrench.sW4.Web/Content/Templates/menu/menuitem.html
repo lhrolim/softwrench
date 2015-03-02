@@ -18,19 +18,32 @@
         <div ng-include="contextPath(leaf.path)" href="#" class="level{{level}}" />
     </div>
 
-    <div ng-switch-when="MenuContainerDefinition" class="dropdown dropdown-container">
-        
-        <button ng-if="isButtonStyleContainer(level,leaf)" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+    <div ng-switch-when="MenuContainerDefinition" class="dropdown dropdown-container btn-group">
+
+
+        <button ng-if="!leaf.hasMainAction && isButtonStyleContainer(level,leaf)" type="button" class="btn btn-default dropdown-toggle non-isolate" data-toggle="dropdown"
                 rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}" ng-click="handleContainerClick(leaf,$event.target)">
-           <i class="{{isMenuItemIcon(leaf)}}"> </i>
+            <i class="{{isMenuItemIcon(leaf)}}"> </i>
             {{i18NMenuLabel(leaf,false)}}
             <span class="level{{level}}" ng-class="{'right-caret': displacement == 'vertical', 'bottom-caret' : displacement == 'horizontal'}" />
-         </button>
-           
+        </button>
+
+        
+        <button ng-if="leaf.hasMainAction && isButtonStyleContainer(level,leaf)" type="button" class="btn btn-default dropdown-toggle" 
+                rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}" ng-click="handleContainerClick(leaf,$event.target)">
+            <i class="{{isMenuItemIcon(leaf)}}"> </i>
+            {{i18NMenuLabel(leaf,false)}}
+        </button>
+
+        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false" ng-if="leaf.hasMainAction">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+
         <a ng-if="!isButtonStyleContainer(level,leaf)" href="#"
            data-toggle="dropdown" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
            ng-click="handleContainerClick(leaf,$event.target)" class="level{{level}}">
-            
+
             {{i18NMenuLabel(leaf,false)}}
             <span class="right-caret level{{level}}" />
         </a>

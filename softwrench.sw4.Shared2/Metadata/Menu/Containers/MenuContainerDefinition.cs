@@ -12,6 +12,8 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
         public string Action { get; set; }
         public string Controller { get; set; }
 
+
+
         /// <summary>
         /// If true, the menu should render a main button with a drop down to the right, clicking the button should perform an action, 
         /// instead of the default renderer when clicking it would just expand the menu options.
