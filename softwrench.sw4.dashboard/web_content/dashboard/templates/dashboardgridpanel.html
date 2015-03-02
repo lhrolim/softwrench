@@ -1,6 +1,22 @@
-﻿<div onload="getPanelSourceData()">
-    <p>column: {{panelcol}}</p>
+﻿<form>
+    <!--<p>column: {{panelcol}}</p>
     <p>row: {{panelrow}}</p>
     <p>datasource: {{paneldatasource}}</p>
-    <p>data: {{dashboardpanel}}</p>
-</div>
+    <p>data: {{dashboardpanel}}</p>-->
+
+    <div ng-if="isDataAvailable">
+        <crud-list datamap="datamap"
+                   schema="schema"
+                   pagination-data="paginationData"
+                   search-sort="searchSort"
+                   search-data="searchData"
+                   search-operator="searchOperator"
+                   association-options="associationOptions"
+                   is-list="islist"
+                   ismodal="false"
+                   hidebars="true"
+                   timestamp="timestamp"
+                   dashboardpanelid="dashboardpanelid" />
+    </div>
+</form>
+
