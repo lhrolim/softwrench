@@ -33,9 +33,9 @@ namespace softWrench.sW4.Web.Controllers {
 
         //TODO: Once we figure out rowstamps, use rowstamps instead of Date
         [HttpPost]
-        public void UpdateNotificationReadFlag(string role, string application, string id, string notificationDate, bool isread = true) {
+        public void UpdateNotificationReadFlag(string role, string application, string id, long rowstamp, bool isread = true) {
             var notificationFacade = NotificationFacade.GetInstance();
-            notificationFacade.UpdateNotificationReadFlag(role, application, id, notificationDate, isread);
+            notificationFacade.UpdateNotificationReadFlag(role, application, id, rowstamp, isread);
         }
 
         [HttpPost]

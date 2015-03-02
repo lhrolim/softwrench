@@ -60,12 +60,12 @@ namespace softWrench.sW4.Notifications {
         }
 
         //TODO: Once we figure out rowstamps, use rowstamps instead of Date
-        public void UpdateNotificationReadFlag(string application, string id, string notificationDate, bool isRead)
+        public void UpdateNotificationReadFlag(string application, string id, long rowstamp, bool isRead)
         {
             var notificationsToUpdate = (from n in _notifications
                                          where n.Application == application &&
                                                n.Id == id &&
-                                               n._notificationDate.ToString().Equals(notificationDate)
+                                               n.Rowstamp.Equals(rowstamp)
                                          select n);
 
             foreach (var notification in notificationsToUpdate) {

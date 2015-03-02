@@ -106,7 +106,7 @@ app.directive('activitystream', function(contextService) {
                 parameters.role = 'allRole';
                 parameters.application = activity.application;
                 parameters.id = activity.id;
-                parameters.notificationDate = activity.notificationDate;
+                parameters.rowstamp = activity.rowstamp;
                 parameters.isread = !activity.isRead;
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
@@ -133,6 +133,7 @@ app.directive('activitystream', function(contextService) {
                 parameters.role = 'allRole';
                 parameters.application = activity.application;
                 parameters.id = activity.id;
+                parameters.rowstamp = activity.rowstamp;
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.post(rawUrl).success(
