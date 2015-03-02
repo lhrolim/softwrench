@@ -62,7 +62,8 @@ app.directive('crudList', function (contextService) {
             hidebars: '@',
             checked: '=',
             timestamp: '@',
-            associationOptions: "="
+            associationOptions: "=", 
+            dashboardpanelid: "="
         },
 
         controller: function ($scope, $http, $rootScope, $filter, $injector, $log, $timeout,
@@ -305,7 +306,7 @@ app.directive('crudList', function (contextService) {
                     //if we have a list schema already declared, keep it
                     listSchema = $scope.schema.schemaId;
                 }
-                $scope.$emit("sw_renderview", $scope.schema.applicationName, listSchema, 'none', $scope.title, parameters);
+                $scope.$emit("sw_renderview", $scope.schema.applicationName, listSchema, 'none', $scope.title, parameters, $scope.dashboardpanelid);
             };
 
             $scope.selectPage = function (pageNumber, pageSize, printMode) {

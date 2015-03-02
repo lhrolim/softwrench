@@ -116,6 +116,9 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
             $scope.paginationData.hasPrevious = data.hasPrevious;
             $scope.paginationData.hasNext = data.hasNext;
             $scope.paginationData.filterFixedWhereClause = data.filterFixedWhereClause;
+            $scope.searchData = {};
+            $scope.searchOperator = {};
+
             if (data.pageResultDto && data.pageResultDto.searchParams) {
                 var result = searchService.buildSearchDataAndOperations(data.pageResultDto.searchParams, data.pageResultDto.searchValues);
                 $scope.searchData = result.searchData;
@@ -401,8 +404,11 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
 
     //called first time a crud is registered
     function initApplication() {
-        $scope.$on('sw_renderview', function (event, applicationName, schemaId, mode, title, parameters) {
-            $scope.renderView(applicationName, schemaId, mode, title, parameters);
+        $scope.$on('sw_renderview', function (event, applicationName, schemaId, mode, title, parameters, dashboardpanelid) {
+            // this is to prevent application.js from recv'ing dashboard rendering
+            if (dashboardpanelid == null) {
+                $scope.renderView(applicationName, schemaId, mode, title, parameters);
+            }
         });
         $scope.$on('sw.modal.show', function (event, modaldata) {
             if (!$scope.modalincluded) {
