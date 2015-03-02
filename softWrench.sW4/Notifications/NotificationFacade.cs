@@ -98,17 +98,17 @@ namespace softWrench.sW4.Notifications {
         public void UpdateNotificationStreams() {
             var query = string.Format("select 'commlog' as application, null as targetschema,'communication' as label, 'fa-envelope-o' as icon ,CONVERT(varchar(10), commlogid) as id, c.commloguid as uid, " +
                                       "t.ticketid as parentid, c.ownerid as parentuid, CASE c.ownertable WHEN 'SR' THEN 'servicerequest' ELSE c.ownertable END as parentapplication, c.subject as summary, " +
-                                      "c.createby as changeby, c.createdate as changedate, c.rowstamp from commlog c " +
+                                      "c.createby as changeby, c.createdate as changedate, CONVERT(bigint, c.rowstamp) as rowstamp from commlog c " +
                                       "left join ticket t on t.ticketuid = c.ownerid " +
                                       "where createdate >  DATEADD(HOUR,-{0},GETDATE()) and createdate < GETDATE() union " +
                                       "select 'servicerequest' as application, 'editdetail' as targetschema, 'service request' as label, 'fa-ticket' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary," +
-                                      "changeby, changedate, rowstamp from ticket " +
+                                      "changeby, changedate, CONVERT(bigint, rowstamp) as rowstamp from ticket " +
                                       "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() and class='SR' union " +
                                       "select 'incident' as application, 'editdetail' as targetschema, 'incident' as label, 'fa-warning' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary," +
-                                      "changeby, changedate, rowstamp from ticket " +
+                                      "changeby, changedate, CONVERT(bigint, rowstamp) as rowstamp from ticket " +
                                       "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() and class='INCIDENT' union " +
                                       "select 'workorder' as application, 'editdetail' as targetschema, 'work order' as label, 'fa-wrench' as icon,wonum as id, workorderid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary, " +
-                                      "changeby, changedate, rowstamp from workorder " +
+                                      "changeby, changedate, CONVERT(bigint, rowstamp) as rowstamp from workorder " +
                                       "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() " +
                                       "order by rowstamp desc", _hoursToPurge);
 
@@ -144,7 +144,7 @@ namespace softWrench.sW4.Notifications {
                 var summary = record["summary"];
                 var changeby = record["changeby"];
                 var changedate = DateTime.Parse(record["changedate"]);
-                var rowstamp = BitConverter.ToInt64(StringUtil.GetBytes(record["rowstamp"]), 2);
+                var rowstamp = Convert.ToInt64(record["rowstamp"]);
                 var notification = new Notification(application, targetschema, label, icon, id, uid, parentid, parentuid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp, flag);
                 streamToUpdate.InsertNotificationIntoStream(notification);
             }
