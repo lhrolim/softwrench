@@ -174,9 +174,9 @@ body {
     /*background: url('../../Images/icon-background-select.png') right -4px no-repeat;*/
 }
 
-        .sw-combobox-container select::-ms-expand {
-            display: none;
-        }
+    .sw-combobox-container select::-ms-expand {
+        display: none;
+    }
 
     .sw-combobox-container .arrow {
         pointer-events: none;
@@ -187,7 +187,6 @@ body {
         height: 26px;
         width: 26px;
         background: url('../../Images/icon-background-select.png');
-
         /*filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../../Images/icon-background-select.svg', sizingMethod='scale');*/
         /*background:none !important;*/
     }
@@ -622,18 +621,18 @@ textarea .readonly {
     padding: 0 20px 20px;
 }
 
-.serviceItExitWarning h2 {
-    background: #003878;
-    color: #fff;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 5px;
-}
+    .serviceItExitWarning h2 {
+        background: #003878;
+        color: #fff;
+        font-size: 14px;
+        font-weight: bold;
+        padding: 5px;
+    }
 
-.serviceItExitWarning button {
-    display: block;
-    margin: 30px auto 0;
-}
+    .serviceItExitWarning button {
+        display: block;
+        margin: 30px auto 0;
+    }
 
 .expanded-item-composition button {
     display: none;
@@ -690,8 +689,8 @@ textarea .readonly {
     }
 
     .listgrid-table {
-    top: 0;
-}
+        top: 0;
+    }
 
     .col-main-content {
         margin-left: 0px !important;
@@ -892,19 +891,19 @@ body,
         z-index: 3;
     }
 
-    #listgrid thead tr.header-row, #listgrid tfoot tr.footer-row {
-        background-color: #003878;
-        color: #fff;
-    }
-
-        #listgrid thead tr.header-row th {
-            cursor: pointer;
+        #listgrid thead tr.header-row, #listgrid tfoot tr.footer-row {
+            background-color: #003878;
+            color: #fff;
         }
 
-    #listgrid thead tr.filter-row {
-        background-color: #E6E6E6;
-        color: #fff;
-    }
+            #listgrid thead tr.header-row th {
+                cursor: pointer;
+            }
+
+        #listgrid thead tr.filter-row {
+            background-color: #E6E6E6;
+            color: #fff;
+        }
 
     #listgrid tbody > tr:nth-child(odd) > td,
     #listgrid tbody > tr:nth-child(odd) > th,
@@ -1371,8 +1370,8 @@ select {
 
 /*SM - 09/17 - HAP-546 #T-ITC-025*/
 .btn.new-asset {
-   padding: 4px 12px;
-   margin-top: 7px;
+    padding: 4px 12px;
+    margin-top: 7px;
 }
 /*SM - 09/17 - HAP-546 #T-ITC-025*/
 
@@ -1388,11 +1387,18 @@ select {
 }
 /*SM - 09/17 - HAP-549 #T-ITC-012*/
 
-/*SM - 09/17 - HAP-558 #T-ITC-030*/
-.typeahead-long {
+.typeahead-long, .tt-dropdown-menu, .multiselect-div .multiselect-container {
+    max-height: 242px;
+    overflow-y: scroll;
+}
+
+.multiselect-div .multiselect-container {
     max-height: 265px;
 }
-/*SM - 09/17 - HAP-558 #T-ITC-030*/
+
+    .multiselect-div .multiselect-container .filter {
+        width: 90%;
+    }
 
 .btn.disabled, .btn[disabled], fieldset[disabled] .btn {
     opacity: 1;
