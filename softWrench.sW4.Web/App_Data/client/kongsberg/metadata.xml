@@ -2842,7 +2842,7 @@
             <renderer type="autocompleteserver"/>
           </association>-->
           <field attribute="cc" label="Cc:">
-            <renderer type="email"/>
+            <renderer type="default"/>
           </field>
 
           <field attribute="sendfrom" label="From:" requiredexpression="true" default="kogt@controltechnologysolutions.com">
