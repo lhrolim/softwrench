@@ -1,17 +1,12 @@
 ﻿<div class="container">
     <div ng-repeat="row in getRows()" class="row">
-        <div ng-repeat="column in getColumnsOfRow(row)" class="col-md-6 col-sm-4" style="border:1px solid black;">
-            <dashboardgridpanel panelcol="{{column}}"
-                                panelrow="row"
-                                paneldatasource="{{getPanelDataFromMatrix(row,column)}}">
-
-            </dashboardgridpanel>
+        <div ng-repeat="column in getColumnsOfRow(row)" class="column col-sm-6">
+            <div class="wrap">
+                <dashboardgridpanel panelcol="{{column}}"
+                                    panelrow="row"
+                                    paneldatasource="{{getPanelDataFromMatrix(row,column)}}">
+                </dashboardgridpanel>
+            </div>
         </div>
     </div>
 </div>
-
-
-
-
-
-

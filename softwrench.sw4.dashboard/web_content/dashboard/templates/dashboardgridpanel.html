@@ -1,10 +1,11 @@
-﻿<form>
+﻿<form class="panel">
+    <div class="header">{{title}}</div>
     <!--<p>column: {{panelcol}}</p>
     <p>row: {{panelrow}}</p>
     <p>datasource: {{paneldatasource}}</p>
     <p>data: {{dashboardpanel}}</p>-->
 
-    <div ng-if="isDataAvailable">
+    <div class="body" ng-if="isDataAvailable">
         <crud-list datamap="datamap"
                    schema="schema"
                    pagination-data="paginationData"
