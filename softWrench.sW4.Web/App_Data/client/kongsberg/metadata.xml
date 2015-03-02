@@ -1702,7 +1702,7 @@
         </list>
 
         <schema stereotype="detail" id="newdetail" mode="input" title="New Incident">
-          <field attribute="ticketid" label="Incident #:" readonly="true"/>
+          <field attribute="ticketid" label="Incident #:" readonly="true" hidden="true"/>
           <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
             <!-- removed default='@usersite' from the above association label-->
             <renderer type="combo"/>
@@ -1730,7 +1730,7 @@
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
             <renderer type="lookup"/>
           </association>
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid" requiredexpression="true">
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
           <!--Adding Area and ProblemType field for Kongsberg-->
