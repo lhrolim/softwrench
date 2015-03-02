@@ -63,6 +63,21 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </connectorParameters>
     </entity>
 
+    <entity name="classstructure"  idAttribute="classstructureid" >
+      <relationships>
+        <relationship to ="classusewith" qualifier="incidentclassstructures">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+          <relationshipAttribute to="objectvalue" literal="INCIDENT" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+    <entity name="incidentclassifications" parententity="classstructure" idAttribute="classstructureid" >
+      <attributes>
+        <attribute name="classstructureid" type="varchar" query="CASE WHEN (xyz.classstructureid = classusewith.classstructureid) and (classusewith.objectvalue='INCIDENT')) "/>
+      </attributes>
+    </entity>
+
   </entities>
 
   <applications>
@@ -172,7 +187,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           <field attribute="statusdate" hidden="true" />
         </schema>
 
-        <schema stereotype="detail" mode="input" id="editdetail" title="Incident Details">
+        <detail mode="input" title="Incident Details">
           <field attribute="actlabcost" default="0" hidden="true"/>
           <field attribute="actlabhrs" default="0" hidden="true" />
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
@@ -264,7 +279,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
           </composition-->
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
-        </schema>
+        </detail>
 
         
       </schemas>

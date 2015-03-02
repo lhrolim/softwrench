@@ -260,7 +260,6 @@
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\WebAPIUtil.cs" />
     <Compile Include="Controllers\CommLogController.cs" />
-    <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\ExcelController.cs" />
     <Compile Include="Controllers\ExtendedDataController.cs" />
     <Compile Include="Controllers\Log\LogAdminController.cs" />
@@ -324,6 +323,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\Client\%40internal\templates\failurecode.xml" />
     <Content Include="App_Data\Client\%40internal\templates\glcomponents.xml" />
     <Content Include="App_Data\Client\%40internal\templates\incident.xml">
       <SubType>Designer</SubType>
@@ -371,6 +371,7 @@
     <Content Include="App_Data\Client\%40internal\templates\wochange.xml" />
     <Content Include="App_Data\Client\%40internal\templates\workorder.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Client\%40internal\templates\servicerequest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -857,6 +858,7 @@
     <Content Include="Content\styles\southern\branding.css" />
     <Content Include="Content\styles\tva\signin.css" />
     <Content Include="Content\styles\tva\site.css" />
+    <Content Include="Content\styles\yavapai\branding.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
     <Content Include="Content\Templates\commands\batches\batches.html" />

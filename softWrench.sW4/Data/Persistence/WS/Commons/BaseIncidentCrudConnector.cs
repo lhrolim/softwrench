@@ -34,6 +34,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
             LongDescriptionHandler.HandleLongDescription(sr, crudData);
 
+            //Handle Commlogs
+            CommLogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
+
             // Update or create attachments
             HandleAttachments((CrudOperationData)maximoTemplateData.OperationData, sr, maximoTemplateData.ApplicationMetadata);
 
@@ -100,24 +103,26 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (attachments != null) {
                 // this will only filter new attachments
                 foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.Id == null)) {
-                    var docinfo = attachment.GetRelationship("docinfo");
+                    var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo");
+                    var title = attachment.GetAttribute("document").ToString();
+                    var desc = docinfo != null && docinfo.Fields["description"] != null ? docinfo.Fields["description"].ToString() : "";
                     var content = new AttachmentParameters() {
-                        Title = attachment.GetAttribute("document").ToString(),
+                        Title = title,
                         Data = attachment.GetUnMappedAttribute("newattachment"),
                         Path = attachment.GetUnMappedAttribute("newattachment_path"),
-                        Description = ((CrudOperationData)docinfo).Fields["description"].ToString()
+                        Description = desc
                     };
 
                     if (content.Data != null) {
                          // Check if file was rich text file - needed to convert it to word document.
-                        if (attachmentParam.Path.ToLower().EndsWith("rtf")) {
+                        if (content.Path.ToLower().EndsWith("rtf")) {
                             var bytes = Convert.FromBase64String(attachmentParam.Data);
                             var decodedString = Encoding.UTF8.GetString(bytes);
                             var compressedScreenshot = CompressionUtil.CompressRtf(decodedString);
 
                             bytes = Encoding.UTF8.GetBytes(compressedScreenshot);
-                            attachmentParam.Data = Convert.ToBase64String(bytes);
-                            attachmentParam.Path = attachmentParam.Path.Substring(0, attachmentParam.Path.Length - 3) + "doc";
+                            content.Data = Convert.ToBase64String(bytes);
+                            content.Path = attachmentParam.Path.Substring(0, attachmentParam.Path.Length - 3) + "doc";
                         }
 
                         _attachmentHandler.HandleAttachments(wo, content, metadata);

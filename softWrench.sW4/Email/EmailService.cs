@@ -27,8 +27,8 @@ namespace softWrench.sW4.Email {
             }
             objsmtpClient.EnableSsl = "true".EqualsIc(MetadataProvider.GlobalProperty("email.stmp.enableSSL", true));
             // Send the email message
-            var email = new MailMessage(emailData.SendFrom, emailData.SendTo) {
-                Subject = emailData.Subject,
+            var email = new MailMessage(emailData.SendFrom ?? MetadataProvider.GlobalProperty("defaultEmail"), emailData.SendTo) {
+               Subject = emailData.Subject,
                 Body = emailData.Message,
                 IsBodyHtml = true
             };

@@ -187,18 +187,12 @@ app.directive('crudList', function (contextService) {
 
 
             $scope.$on('sw_togglefiltermode', function (event, setToBasicMode) {
-                if (setToBasicMode) {
-                    $scope.advancedfiltermode = false;
-                    fixHeaderService.callWindowResize();
-                    $scope.advancedsearchdata = null;
-                    return;
-                }
-
-                $scope.advancedfiltermode = !$scope.advancedfiltermode;
+                $scope.advancedsearchdata = "";
+                $scope.searchData = {};
+                $scope.$broadcast("sw_clearAdvancedFilter");
+                $scope.advancedfiltermode = !setToBasicMode;
                 fixHeaderService.callWindowResize();
-                if (!$scope.advancedfiltermode) {
-                    $scope.advancedsearchdata = null;
-                }
+
                 var first = true;
                 for (var data in $scope.searchData) {
                     if ($scope.searchTemplate && first) {

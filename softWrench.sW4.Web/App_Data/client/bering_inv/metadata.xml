@@ -505,7 +505,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
     <application name="keyinvissue" title="Issue Inventory" entity="keyInvIssue">
       <schemas>
-        <schema stereotype="list" id="invIssueList" title="Issues and Returns">
+        <schema stereotype="list" id="invIssueListBering" title="Issues and Returns">
           <properties>
             <property key="list.click.service" value="inventoryService.invissuelistclick_maximo71"/>
             <property key="config.fullKey" value="/Global/Grids/InvIssueBering/Scanbar"/>
@@ -711,7 +711,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <event type="beforesubmit.postvalidation" service="inventoryService" method="submitReturnConfirmation"/>
           <event type="beforesubmit.prevalidation" service="inventoryService" method="submitReturnTransformation"/>
           <properties>
-            <property key="nextschema.schemaid" value="invIssueList"/>
+            <property key="nextschema.schemaid" value="invIssueListBering"/>
           </properties>
         </schema>
 
@@ -803,7 +803,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <properties>
             <property key="detail.titleexpression" value="'Issues and Returns: {0}'.format(@matusetransid)"/>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
-            <property key="nextschema.schemaid" value="invIssueList"/>
+            <property key="nextschema.schemaid" value="invIssueListBering"/>
           </properties>
         </schema>
       </schemas>

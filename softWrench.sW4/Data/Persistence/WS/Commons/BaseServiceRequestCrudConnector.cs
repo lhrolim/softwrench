@@ -35,9 +35,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             // Update common fields or transactions prior to maximo operation exection
             CommonTransaction(maximoTemplateData);
 
-            // Attempt to get attachment for new SR
-            // HandleAttachmentAndScreenshot((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject, maximoTemplateData.ApplicationMetadata);
-
             base.BeforeCreation(maximoTemplateData);
         }
 
@@ -96,6 +93,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValueIfNull(sr, "CHANGEDATE", DateTime.Now.FromServerToRightKind(), true);
             w.SetValueIfNull(sr, "CHANGEBY", user.Login);
             w.SetValueIfNull(sr, "REPORTDATE", DateTime.Now.FromServerToRightKind());
+
+            // SWWEB-980 Additional logic to change status to queued if owner is selected
+            if (WsUtil.GetRealValue(sr, "STATUS").Equals("NEW") && (WsUtil.GetRealValue(sr, "OWNER") != null || WsUtil.GetRealValue(sr, "OWNERGROUP") != null))
+                WsUtil.SetValue(sr, "STATUS", "QUEUED"); 
 
             // Update or create new long description 
             LongDescriptionHandler.HandleLongDescription(sr, ((CrudOperationData)maximoTemplateData.OperationData));
@@ -165,12 +166,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (attachments != null) {
                 // this will only filter new attachments
                 foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.Id == null)) {
-                    var docinfo = attachment.GetRelationship("docinfo");
+                    var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo");
+                    var title = attachment.GetAttribute("document").ToString();
+                    var desc = docinfo != null && docinfo.Fields["description"] != null ? docinfo.Fields["description"].ToString() : "";
                     var content = new AttachmentParameters() {
-                        Title = attachment.GetAttribute("document").ToString(),
+                        Title = title,
                         Data = attachment.GetUnMappedAttribute("newattachment"),
                         Path = attachment.GetUnMappedAttribute("newattachment_path"),
-                        Description = ((CrudOperationData)docinfo).Fields["description"].ToString()
+                        Description = desc
                     };
 
                     if (content.Data != null) {
