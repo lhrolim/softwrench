@@ -19,13 +19,15 @@ app.directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contex
                 var dashboardPanelInfo = angular.fromJson($scope.paneldatasource);
 
                 if (dashboardPanelInfo != null) {
-                    var title = dashboardPanelInfo.panel['title'];
+                    $scope.title = dashboardPanelInfo.panel['title'];
+
                     var schemaReference = dashboardPanelInfo.panel['schemaRef'];
                     var application = dashboardPanelInfo.panel['application'];
 
                     var controller = 'data';
+
                     // TODO: Additional changes to allow field grid and sort?? 
-                    var redirectUrl = redirectService.getApplicationUrl(application, schemaReference, null, title);
+                    var redirectUrl = redirectService.getApplicationUrl(application, schemaReference, null, $scope.title);
 
                     // call service and apply data into crud list object.
                     $http.get(redirectUrl)
@@ -92,7 +94,6 @@ app.directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contex
 
             $scope.getPanelSourceData();
 
-            
             //this code will get called when the user is already on a crud page and tries to switch view only.
             $scope.renderView = function (applicationName, schemaId, mode, title, parameters) {
                 if (parameters === undefined || parameters == null) {
@@ -103,28 +104,23 @@ app.directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contex
                     title = $scope.title;
                 }
 
-                //remove it, so its not used on server side
-                var printMode = parameters.printMode;
-                parameters.printMode = null;
-
                 parameters.key = {};
                 parameters.key.schemaId = schemaId;
                 parameters.key.mode = mode;
                 parameters.key.platform = platform();
                 parameters.customParameters = {};
+
                 parameters.title = title;
+                parameters.printMode = null;
 
                 $scope.applicationname = applicationName;
                 $scope.requestmode = mode;
 
                 var urlToCall = url("/api/data/" + applicationName + "?" + $.param(parameters));
 
-                //save the current scroll position to resotre when switching back
-                contextService.insertIntoContext('scrollto', { 'applicationName': applicationName, 'scrollTop': document.body.scrollTop });
-
                 $http.get(urlToCall)
                     .success(function (data) {
-                        $scope.renderData(data, printMode);
+                        $scope.renderData(data);
                     });
             };
 
@@ -143,10 +139,6 @@ app.directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contex
                 // resultObject can be null only when SW is pointing to a Maximo DB different from Maximo WS DB
                 $scope.datamap = instantiateIfUndefined(result.resultObject);
 
-                //Save the originalDatamap after the body finishes rendering. This will be used in the submit service to update
-                //associations that were "removed" with a " ". This is because a null value, when sent to the MIF, is ignored
-                $scope.originalDatamap = angular.copy($scope.datamap);
-
                 $scope.extraparameters = instantiateIfUndefined(result.extraParameters);
 
                 $scope.mode = result.mode;
@@ -163,10 +155,35 @@ app.directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contex
                     associationService.updateAssociationOptionsRetrievedFromServer($scope, result.associationOptions, null);
                     fixHeaderService.FixHeader();
 
-                    // It is broadcast, but no receiver
-                    // $scope.$broadcast('sw_griddatachanged', $scope.datamap, $scope.schema);
+                    $scope.$broadcast('sw_griddatachanged', $scope.datamap, $scope.schema);
                 } 
             };
+
+            function switchMode(mode, scope) {
+                if (scope == null) {
+                    scope = $scope;
+                }
+
+                scope.isDetail = mode;
+                scope.isList = !mode;
+
+                var crud_context;
+
+                if (scope.isList) {
+                    var elements = [];
+                    for (var i = 0; i < $scope.datamap.length; i++) {
+
+                        elements.push($scope.datamap[i].fields[$scope.schema.idFieldName]);
+                    }
+                    crud_context = {
+                        list_elements: elements,
+                        detail_next: "0",
+                        detail_previous: "-1"
+                    };
+
+                    contextService.insertIntoContext("crud_context", crud_context);
+                }
+            }
 
             $scope.toList = function (data, scope) {
                 if (scope == null) {
@@ -175,9 +192,7 @@ app.directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contex
 
                 $scope.$broadcast("sw_gridrefreshed", data, $rootScope.printRequested);
 
-                if (data != null && $rootScope.printRequested !== true) {
-                    //if its a printing operation, then leave the pagination data intact
-                    //this code needs to be here because the crud_list.js might not yet be included in the page while this is running, so the even would be lost... 
+                if (data != null) {
                     //TODO: rethink about it
                     $scope.paginationData = {};
                     $scope.searchValues = data.searchValues;
@@ -201,7 +216,7 @@ app.directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contex
                     }
                 }
 
-                // switchMode(false, scope);
+                switchMode(false, $scope);
             };
 
             $scope.$on('sw_renderview', function (event, applicationName, schemaId, mode, title, parameters, dashboardpanelid) {
