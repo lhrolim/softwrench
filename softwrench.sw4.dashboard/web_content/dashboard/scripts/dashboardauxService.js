@@ -10,11 +10,22 @@ app.factory('dashboardAuxService', function ($rootScope, $log, contextService, r
             }
             restService.invokeGet('Dashboard', 'LoadFields', { applicationName: application }, function (data) {
                 event.scope.associationOptions['appfields'] = data.resultObject;
+                event.scope.datamap['appfields'] = "";
+                $.each(data.resultObject, function (key, value) {
+                    event.scope.datamap['appfields'] += value.value + ",";
+                });
+                var selectedFields = event.scope.datamap['appfields'];
+                if (selectedFields ) {
+                    event.scope.datamap['appfields'] = selectedFields.substring(0, selectedFields.length - 1);
+                }
+
+                //                data.resultObject.unshift({value:"#allfields",label:"All Fields"});
+                //                event.scope.datamap['appfields'] = "#allfields";
 
             });
         },
 
-        locatePanelFromMatrix:function(dashboard, row, column) {
+        locatePanelFromMatrix: function (dashboard, row, column) {
             var rows = dashboard.layout.split(',');
             var newPosition = 0;
 
@@ -28,7 +39,7 @@ app.factory('dashboardAuxService', function ($rootScope, $log, contextService, r
         },
 
         createAndAssociatePanel: function (datamap) {
-            
+
             restService.invokePost('Dashboard', 'CreatePanel', datamap, null, function (data) {
                 if (datamap.row && datamap.column) {
                     $rootScope.$broadcast('dash_panelassociated', data.resultObject, datamap.row, datamap.column);

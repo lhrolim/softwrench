@@ -63,7 +63,7 @@ app.controller('DashboardController', [
         }
 
         $scope.cancelDashboard = function () {
-            $scope.creating = false;
+            $scope.creatingDashboard = false;
         }
 
         $scope.addpanel = function () {

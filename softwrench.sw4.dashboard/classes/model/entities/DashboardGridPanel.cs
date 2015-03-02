@@ -22,8 +22,8 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         /// <summary>
         /// List of semicolon separated list of fields to use, each of them needs to be defined on the schema
         /// </summary>
-        [Property]
-        public virtual String Fields { get; set; }
+        [Property(Column = "fields")]
+        public virtual String AppFields { get; set; }
 
         [Property]
         public virtual String DefaultSortField { get; set; }
