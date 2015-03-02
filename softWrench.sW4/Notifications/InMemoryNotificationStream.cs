@@ -65,7 +65,7 @@ namespace softWrench.sW4.Notifications {
             var notificationsToUpdate = (from n in _notifications
                                          where n.Application == application &&
                                                n.Id == id &&
-                                               n._notificationDate.ToString("yyyy-MM-ddTHH:mm:ss").Equals(notificationDate)
+                                               n._notificationDate.ToString().Equals(notificationDate)
                                          select n);
 
             foreach (var notification in notificationsToUpdate) {
