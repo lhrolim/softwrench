@@ -164,6 +164,26 @@ namespace softwrench.sw4.dashboard.classes.controller {
             return new GenericResponseResult<Dashboard>(dashboard);
         }
 
+        [HttpGet]
+        public IGenericResponseResult LoadDashboard(int dashBoardId) {
+            //TODO: add id checkings on server side
+            var user = SecurityFacade.CurrentUser();
+            var dashboard = new Dashboard();
+
+            if (!user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty)) {
+                // Get dashboard information and store into cache
+                user.Genericproperties[DashboardConstants.DashBoardsProperty] = _userDashboardManager.LoadUserDashboars(user);
+            }
+
+            IEnumerable<Dashboard> dashboards = (IEnumerable<Dashboard>)user.Genericproperties[DashboardConstants.DashBoardsProperty];
+            
+            if (dashboards != null && dashboards.Any()) {
+                dashboard = dashboards.FirstOrDefault(s => s.Id == dashBoardId);
+            }
+
+            return new GenericResponseResult<Dashboard>(dashboard);
+        }
+
         public IGenericResponseResult EditDashBoard(DashboardBasePanel dashBoardPanel) {
             //TODO: add id checkings on server side
             var userId = SecurityFacade.CurrentUser().DBId;
@@ -181,8 +201,5 @@ namespace softwrench.sw4.dashboard.classes.controller {
             var userId = SecurityFacade.CurrentUser().DBId;
             return new BlankApplicationResponse();
         }
-
-
-
     }
 }
