@@ -31,7 +31,6 @@ namespace softWrench.sW4.Web.Controllers {
             return notificationFacade.GetNotificationStream(role);
         }
 
-        //TODO: Once we figure out rowstamps, use rowstamps instead of Date
         [HttpPost]
         public void UpdateNotificationReadFlag(string role, string application, string id, long rowstamp, bool isread = true) {
             var notificationFacade = NotificationFacade.GetInstance();
