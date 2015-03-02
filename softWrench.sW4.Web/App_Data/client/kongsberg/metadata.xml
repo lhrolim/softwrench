@@ -1801,9 +1801,9 @@
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
           <!--field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="true"/-->
-          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" default="NEW">
-            <renderer type="lookup" />
-          </association>
+<!--          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" default="NEW">-->
+<!--            <renderer type="lookup" />-->
+<!--          </association>-->
           <field attribute="statusdate" hidden="true" />
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
