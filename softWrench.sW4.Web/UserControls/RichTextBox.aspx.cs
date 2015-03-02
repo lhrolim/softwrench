@@ -21,7 +21,7 @@ namespace softWrench.sW4.Web.UserControls {
             sb.Append(" <title>Sas Rich TextBox</title>\n");
             sb.Append(" <link href=\"" + ResolveUrl("~/Content/bootstrap/css/bootstrap-min.css") + "\" rel=\"stylesheet\">\n");
             sb.Append(" <style>\n");
-            sb.Append("  .form-control { border: none; min-height: 214px; height: 100%; overflow: hidden; z-index: -1; border-radius: 4px;}\n");
+            sb.Append("  .form-control { border: none; min-height: 214px; height: 100%; overflow: hidden; z-index: -1; border-radius: 4px; padding: 15px 10px;}\n");
             sb.Append(" </style>\n");
             sb.Append(" <script type=\"text/javascript\" language=\"javascript\">\n");
             sb.Append("  function binaryData(){\n");
