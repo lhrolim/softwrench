@@ -1,4 +1,8 @@
-﻿.dash-header .column {
+﻿.tab-pane .tab-header {
+    margin: 0 5px 15px;
+}
+
+.dash-header .column {
     padding: 0;
 }
 

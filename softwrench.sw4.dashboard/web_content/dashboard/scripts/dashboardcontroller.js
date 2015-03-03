@@ -172,6 +172,16 @@ app.controller('DashboardController', [
             dashboardAuxService.readjustPositions(dashboard, panel, row, column);
         });
 
+        $scope.getEditButtonClass = function () {
+            var buttonClass = 'btn-default';
+
+            //TODO: if dashboard has changes
+            //if (haschanges) {
+            //    buttonClass = 'btn-primary';
+            //}
+
+            return buttonClass
+        }
 
         //**************************************************************************************creation***********************************************************
         $scope.viewDashboard = function (event, id) {

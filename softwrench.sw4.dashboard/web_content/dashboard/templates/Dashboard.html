@@ -50,20 +50,22 @@
         <div ng-show="!isNewDashboard()">
             <div class="tab-content">
                 <div class="tab-pane {{getActiveClass(dashboard.id)}}" ng-repeat="dashboard in dashboards" id="{{dashboard.id}}">
-                    <span style="padding-left: 6px">
-                        <button ng-show="canEditDashboard(dashboard) && !isEditingAnyDashboard" ng-click="editDashboard(dashboard)" class="btn btn-primary">
-                            <i class="fa fa-pencil"></i>&ensp;Edit
-                        </button>
-
-                        <button ng-show="isEditing(dashboard.id)" ng-click="finishEditingDashboard(dashboard)" class="btn btn-primary">
-                            <i class="fa fa-save"></i>&ensp;Save
-                        </button>
-
-                        <button class="btn btn-primary" ng-click="addpanel()" ng-show="isEditing(dashboard.id)">
-                            <i class="fa fa-plus"></i>&ensp;Add Panel
-                        </button>
-                    </span>
-
+                    <div class="tab-header clearfix">
+                        <div class="buttons pull-right">
+                            <button class="btn btn-default" ng-show="canEditDashboard(dashboard) && !isEditingAnyDashboard" ng-click="editDashboard(dashboard)">
+                                <i class="fa fa-cog"></i>&ensp;Edit
+                            </button>
+                            <button class="btn" ng-show="isEditing(dashboard.id)" ng-click="finishEditingDashboard(dashboard)" ng-class="getEditButtonClass()">
+                                <i class="fa fa-save"></i>&ensp;Save
+                            </button>
+                            <button class="btn" ng-show="isEditing(dashboard.id)" ng-class="getEditButtonClass()">
+                                <i class="fa fa-times"></i>&ensp;Cancel
+                            </button>
+                            <button class="btn btn-default" ng-show="isEditing(dashboard.id)" ng-click="addpanel()">
+                                <i class="fa fa-plus"></i>&ensp;Add Panel
+                            </button>
+                        </div>
+                    </div>
                     <dashboard dashboard="dashboard" />
                 </div>
             </div>

@@ -29,13 +29,13 @@
         </button>
 
         
-        <button ng-if="leaf.hasMainAction && isButtonStyleContainer(level,leaf)" type="button" class="btn btn-default dropdown-toggle" 
+        <button ng-if="leaf.hasMainAction && isButtonStyleContainer(level,leaf)" type="button" class="btn btn-default btn-split dropdown-toggle" 
                 rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}" ng-click="handleContainerClick(leaf,$event.target)">
             <i class="{{isMenuItemIcon(leaf)}}"> </i>
             {{i18NMenuLabel(leaf,false)}}
         </button>
 
-        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false" ng-if="leaf.hasMainAction">
+        <button type="button" class="btn btn-default btn-split dropdown-toggle" data-toggle="dropdown" aria-expanded="false" ng-if="leaf.hasMainAction">
             <span class="caret"></span>
             <span class="sr-only">Toggle Dropdown</span>
         </button>
