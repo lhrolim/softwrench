@@ -1,11 +1,11 @@
 ﻿<div class="dash-header" ng-controller="DashboardController">
     <!--    <span>-->
     <!--        $1$        <h2 style="display: inline">Manage Dashboards</h2>#1#-->
-    <!--        <button class="btn btn-primary" ng-show="canCreteDashboards && !creatingDashboard" ng-click="create()">-->
+    <!--        <button class="btn btn-primary" ng-show="canCreateDashboards && !creatingDashboard" ng-click="create()">-->
     <!--            <i class="fa fa-plus"></i>&ensp;Create Dashboard-->
     <!--        </button>-->
     <!---->
-    <!--        <button class="btn btn-primary" ng-show="canCreteDashboards && !creatingDashboard" ng-click="createPanel()">-->
+    <!--        <button class="btn btn-primary" ng-show="canCreateDashboards && !creatingDashboard" ng-click="createPanel()">-->
     <!--            <i class="fa fa-plus"></i>&ensp;Create Panel-->
     <!--        </button>-->
     <!---->
@@ -40,7 +40,7 @@
                     </a>
 
                 </li>
-                <li ng-show="canCreteDashboards">
+                <li ng-show="canCreateDashboards">
                     <a ng-href="#add" data-tabid="{{dashboard.id}}">
                         <i class="fa fa-plus"></i>
                     </a>
