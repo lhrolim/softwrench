@@ -156,6 +156,8 @@ app.controller('DashboardController', [
                         var dashid = $(this).data('tabid');
                         $scope.currentdashboardid = dashid;
                         $scope.dashboard = $scope.getCurrentDashboardById(dashid);
+
+                        var log = $log.getInstance('dashboardrendered');
                         log.trace('lazy loading dashboard {0}'.format(dashid));
                     });
                 });
