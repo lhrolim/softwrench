@@ -37,6 +37,16 @@ app.directive('dashboard', function ($timeout, $log, $rootScope, $http, contextS
                     arr.push(i);
                 }
                 return arr;
+            },
+
+            scope.getClassByNumberOfColumns=function(row) {
+                if (!scope.dashboard || !scope.dashboard.layout) {
+                    return null;
+                }
+                var colNum = parseInt(scope.dashboard.layout.split(',')[row]);
+                var suffix = 12 / colNum;
+                return "col-sm-" + suffix;
+
             }
 
             scope.getPanelDataFromMatrix = function (row, column) {
