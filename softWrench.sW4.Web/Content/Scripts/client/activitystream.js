@@ -236,10 +236,10 @@ app.directive('activitystream', function(contextService) {
                 }
             }
 
-            //automatically refresh the activity stream every five minutes
+            //automatically refresh the activity stream every two minutes
             $interval(function () {
                 $scope.refreshStream(true);
-            }, 1000 * 60 * 5);
+            }, 1000 * 60 * 2);
 
             $scope.toggleActivityStream = function() {
                 //open and close activity pane
