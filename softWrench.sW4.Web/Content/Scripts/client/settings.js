@@ -90,7 +90,7 @@
         alertService.confirmMsg("Select a Restore File from the table to restore your xml to selected file. None of your current changes will be saved. Is this what you want to do? ", function () {
             var urlToCall = url("/api/generic/EntityMetadata/RestoreSavedMetadata");
             $http.get(urlToCall).success(function (result) {
-                $scope.value = 1;
+                $scope.value = true;
                 $scope.results = result;
                
                
