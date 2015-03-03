@@ -78,9 +78,10 @@ namespace softwrench.sw4.dashboard.classes.controller {
             if (user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsPreferredProperty)) {
                 preferredDashboardId = user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] as int?;
             }
-            if (user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty)) {
-                dashboards = (IEnumerable<Dashboard>)user.Genericproperties[DashboardConstants.DashBoardsProperty];
-            }
+            if (!user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty)) {
+                user.Genericproperties[DashboardConstants.DashBoardsProperty] = _userDashboardManager.LoadUserDashboars(user);
+            } 
+            dashboards = (IEnumerable<Dashboard>)user.Genericproperties[DashboardConstants.DashBoardsProperty];
             var dto = new ManageDashBoardsDTO() {
                 CanCreateOwn = canCreateOwn,
                 CanCreateShared = canCreateShared,
