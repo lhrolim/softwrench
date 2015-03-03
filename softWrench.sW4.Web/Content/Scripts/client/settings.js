@@ -64,7 +64,7 @@
             
     $scope.restore = function () {
         alertService.confirmMsg("This will restore your XML to the default XML file, and none of your changes will be saved. Is this what you want to do? ", function () {
-            var urlToCall = url("/api/generic/EntityMetadata/RestoreMetadata");
+            var urlToCall = url("/api/generic/EntityMetadata/RestoreDefaultMetadata");
             $http.get(urlToCall).success(function (result) {
                 var editor = ace.edit("editor");
                 editor.getSession().setMode("ace/mode/xml");
@@ -88,7 +88,7 @@
 
     $scope.restorexml = function () {
         alertService.confirmMsg("This will restore your XML to the default XML file, and none of your changes will be saved. Is this what you want to do? ", function () {
-            var urlToCall = url("/api/generic/EntityMetadata/RestoreMetadata");
+            var urlToCall = url("/api/generic/EntityMetadata/RestoreSavedMetadata");
             $http.get(urlToCall).success(function (result) {
                 $scope.value = 1;
                 $scope.results = result;
