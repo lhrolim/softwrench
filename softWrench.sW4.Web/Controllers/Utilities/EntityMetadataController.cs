@@ -16,7 +16,6 @@ using Newtonsoft.Json.Linq;
 using softWrench.sW4.SimpleInjector;
 using Newtonsoft.Json;
 using System.IO;
-using System.Data;
 
 namespace softWrench.sW4.Web.Controllers.Utilities {
 
@@ -48,25 +47,16 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             }
         }
         [HttpGet]
-        public DataTable RestoreMetadata()
+        public IGenericResponseResult RestoreMetadata()
         {
             var resultData = GetSWDBDAO().FindByQuery<Metadataeditor>(Metadataeditor.ByDefaultId);
 
-            DataTable result = new DataTable();
-            result.Columns.Add("Id", typeof(Int32));
-            result.Columns.Add("CreatedDate", typeof(DateTime));
-            result.Columns.Add("Description", typeof(string));
-            result.Columns.Add("Metadata", typeof(string));
-            foreach (Metadataeditor i in resultData)
-            {
-                int Id = (int)i.Id;
-                string Metadata = i.SystemStringValue;
-                string comments = i.Comments;
-                DateTime CreatedDate = i.CreatedDate;
-                result.Rows.Add(Id, CreatedDate, comments, Metadata);
-            }
-            return result;
-             //return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(Metadata, "metadata"));
+
+
+            string Metadata = (from c in resultData
+
+                            select c.SystemStringValue).FirstOrDefault();
+            return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(Metadata, "metadata"));
             
         }
         [HttpGet]
