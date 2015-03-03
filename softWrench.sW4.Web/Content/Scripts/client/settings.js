@@ -73,7 +73,7 @@
                 editor.setValue(result.resultObject.content);
                 editor.gotoLine(0);
                 $scope.save();
-                alertService.alert("Your xml file has been successfully restored");
+                alertService.alert("Default xml file has been successfully restored");
             }).error(function (result) {
                 alertService.alert("Failed to Load your xml file.Please try again later");
             });
@@ -87,34 +87,32 @@
     };
 
     $scope.restorexml = function () {
-        alertService.confirmMsg("This will restore your XML to the default XML file, and none of your changes will be saved. Is this what you want to do? ", function () {
+        alertService.confirmMsg("Select a Restore File from the table to restore your xml to selected file. None of your current changes will be saved. Is this what you want to do? ", function () {
             var urlToCall = url("/api/generic/EntityMetadata/RestoreSavedMetadata");
             $http.get(urlToCall).success(function (result) {
                 $scope.value = 1;
                 $scope.results = result;
-                //editor.setValue(result.resultObject.content);
-                //editor.gotoLine(0);
-                //$scope.save();
-                //alertService.alert("Your xml file has been successfully restored");
+               
+               
             }).error(function (result) {
                 alertService.alert("Failed to Load your xml file.Please try again later");
             });
-            //alertService.confirmMsg("Are you sure you want to restore to default settings ? ", function () {
-            //    var urlToUse = url("/api/generic/EntityMetadata/RestoreMetadataEditor");
-            //    $http.get(urlToUse)
-            //    window.location.reload();
-            //});
+          
 
         });
     };
     $scope.edit = function (Metadata) {
-        var editor = ace.edit("editor");
-        editor.getSession().setMode("ace/mode/xml");
-        var data = $scope.resultData;
-        $scope.type = data.type;
-        editor.setValue(Metadata);
-        editor.gotoLine(0);
+        alertService.confirmMsg("The selected xml file will overwrite the existing xml file.None of your current changes will be saved. Is this what you want to do? ", function () {
 
+            var editor = ace.edit("editor");
+            editor.getSession().setMode("ace/mode/xml");
+            var data = $scope.resultData;
+            $scope.type = data.type;
+            editor.setValue(Metadata);
+            editor.gotoLine(0);
+            $scope.save();
+            alertService.alert("Your xml file has been successfully restored");
+        });
     };
     $scope.contextPath = function (path) {
         return url(path);
