@@ -68,7 +68,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities
         [HttpGet]
         public DataTable RestoreSavedMetadata()
         {
-            var resultData = GetSWDBDAO().FindByQuery<Metadataeditor>(Metadataeditor.ByDefaultId);
+            var resultData = GetSWDBDAO().FindByQuery<Metadataeditor>(Metadataeditor.BySavedId);
 
             DataTable result = new DataTable();
             result.Columns.Add("Id", typeof(Int32));

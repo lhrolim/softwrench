@@ -14,7 +14,7 @@ namespace softWrench.sW4.Data.Entities {
 
         public const String ByDefaultId = "from Metadataeditor where DefaultId = 1";
 
-        public const String BySavedId = "from Metadataeditor where Default= 0";
+        public const String BySavedId = "from Metadataeditor where DefaultId= 0";
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
