@@ -166,15 +166,12 @@ app.controller('DashboardController', [
                         e.preventDefault();
                         if ($scope.isEditingAnyDashboard) {
                             alertService.alert('Please, finish editing the current dashboard.');
-                            return;
+                            return false;
                         }
-
-                        
                         $this.tab('show');
                         var dashid = $(this).data('tabid');
                         $scope.currentdashboardid = dashid;
                         $scope.dashboard = $scope.getCurrentDashboardById(dashid);
-                        $scope.dashboard = 
                         log.trace('lazy loading dashboard {0}'.format(dashid));
                     });
                 });
