@@ -47,15 +47,6 @@ app.controller('DashboardController', [
             $scope.userid = userData.id;
         };
 
-        $scope.create = function () {
-            $scope.creatingDashboard = true;
-            $scope.creatingpersonal = true;
-            $scope.dashboard = {
-                title: "New Dashboard",
-                panels: []
-            };
-        }
-
         $scope.createPanel = function () {
             //TODO make it customizable
             var schema = $scope.panelschemas['dashboardgrid'];
@@ -131,6 +122,12 @@ app.controller('DashboardController', [
 
         $scope.$on('dash_dashsaved', function (event, dashboard) {
             modalService.hide();
+
+            // Lazy load of the dashboards - also set focus to the new dashboard
+            $scope.dashboards.push(dashboard);
+            $scope.currentdashboardid = dashboard.id;
+
+            $scope.newDashboard = false;
             $scope.isEditingAnyDashboard = false;
         });
 
@@ -188,11 +185,17 @@ app.controller('DashboardController', [
 
         $scope.createNewDashboard = function () {
             if (!$scope.isEditingAnyDashboard) {
+                // Update display to show a new dashboard
                 $scope.newDashboard = true;
 
-                $scope.dashboard = {};
+                var schema = $scope.saveDashboardSchema;
 
-
+                modalService.show(schema, null, {   title: "New Dashboard",
+                                                    cssclass: "dashboardmodal",
+                                                    onloadfn: function (scope) {
+                                                        scope.associationOptions['applications'] = $scope.applications;
+                                                    }
+                                                });
             }
         }
 
