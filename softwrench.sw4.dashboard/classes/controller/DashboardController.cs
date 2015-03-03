@@ -50,7 +50,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
 
         [HttpGet]
-        public IGenericResponseResult Manage() {
+        public GenericResponseResult<ManageDashBoardsDTO> Manage() {
             //TODO: add id checkings on server side
             var user = SecurityFacade.CurrentUser();
             int? preferredDashboardId = null;
@@ -132,23 +132,16 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
         [HttpGet]
         public IGenericResponseResult LoadPreferred() {
-            //TODO: add id checkings on server side
-            var user = SecurityFacade.CurrentUser();
-            int? preferredDashboardId = null;
-            if (user.Genericproperties.ContainsKey((DashboardConstants.DashBoardsPreferredProperty))) {
-                // Get prefer dashboard id
-                preferredDashboardId = user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] as int?;
-            }
-            var dashboard = DoLoadDashBoard(preferredDashboardId, user);
-            return new GenericResponseResult<Dashboard>(dashboard);
+            var manageDTO = Manage();
+            return manageDTO;
         }
 
         [HttpGet]
-        public IGenericResponseResult LoadDashboard(int? dashBoardId) {
-            //TODO: add id checkings on server side
-            var user = SecurityFacade.CurrentUser();
-            var dashboard = DoLoadDashBoard(dashBoardId, user);
-            return new GenericResponseResult<Dashboard>(dashboard);
+        public IGenericResponseResult LoadDashboard(int? dashBoardId)
+        {
+            var manageDTO =Manage();
+            manageDTO.ResultObject.PreferredId = dashBoardId;
+            return manageDTO;
         }
 
         private Dashboard DoLoadDashBoard(int? dashBoardId, InMemoryUser user) {
