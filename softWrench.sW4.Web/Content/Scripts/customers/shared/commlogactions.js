@@ -1,4 +1,4 @@
-﻿function CommLogActionsController($rootScope, $scope,contextService) {
+function CommLogActionsController($rootScope, $scope,contextService) {
     var messageHeader = "<br/><br/>________________________________________________________________________________________________________" +
                                 "<br/><b>From:</b> {0}"  +
                                 "<br/><b>To:</b> {1}"  +
@@ -48,12 +48,8 @@
         var origSubject = clonedItem['subject'] == null ? "" : clonedItem['subject'];
         var origMessage = clonedItem['message'];
         clonedItem['commloguid'] = null;
-        if (origCc != "") {
-            clonedItem['sendto'] = clonedItem['sendfrom'] + "," + origCc;
-        } else {
-            clonedItem['sendto'] = clonedItem['sendfrom'];
-        }
-
+        clonedItem['sendto'] = origSendTo + "," + clonedItem['sendfrom'];
+        clonedItem['cc'] =origCc;
         clonedItem['sendfrom'] = contextService.getUserData().email;
         clonedItem['subject'] = "Re: " + clonedItem['subject'];
         clonedItem['message'] = messageHeader.format(origSendFrom, origSendTo, origCc, origSubject, origMessage);
