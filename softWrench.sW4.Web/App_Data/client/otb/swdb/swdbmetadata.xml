@@ -46,14 +46,14 @@
     <application entity="DashboardBasePanel" name="basedashboard" title="Base Dashboard">
       <schemas>
         <schema id="panelselection">
-          <optionfield attribute="paneltype" label="Type" tooltip="The type of Panel to add" default="">
+          <optionfield attribute="paneltype" label="Widget Type" tooltip="The type of widget to add" default="">
             <option label="" value=""/>
             <option label="Grid" value="dashboardgrid"/>
             <option label="Graphic" value="dashboardgraphic"/>
             <event type="afterchange" service="dashboardAuxService" method="loadPanels"/>
             <event type="beforechange" service="dashboardAuxService" method="validatePanels"/>
           </optionfield>
-          <section showexpression="@numberofpanels>0">
+          <!--<section showexpression="@numberofpanels>0">
             <header label="Position" displacement="ontop"/>
             <field attribute="row" label="Row">
               <renderer type="numericinput" params="minvalue=1"/>
@@ -61,10 +61,10 @@
             <field attribute="column" label="Column">
               <renderer type="numericinput" params="minvalue=1"/>
             </field>
-          </section>
+          </section>-->
 
           <section orientation="horizontal" showexpression="@paneltype!=''">
-            <header label="Panel" displacement="sameline"/>
+            <header label="Select Widget" displacement="sameline"/>
             <optionfield attribute="panel" providerattribute="availablepanels" />
             <section resourcepath="/Content/Shared/dashboard/templates/createnewpanelbutton.html"/>
           </section>
@@ -84,7 +84,6 @@
         </schema>
       </schemas>
     </application>
-
 
     <application entity="DashboardGridPanel" name="dashboardgrid" title="DashBoardGrid">
       <schemas>
@@ -116,7 +115,7 @@
               <removecommand id="print"/>
               <command id="save" icon="fa-save" service="dashboardAuxService" method="createAndAssociatePanel"
                        parameters="datamap"
-                       label="Add Panel" tooltip="Add Panel" position="&lt;cancel" />
+                       label="Add Panel" tooltip="Add Widget" position="&lt;cancel" />
             </commandgroup>
           </commandbars>
           <properties>
