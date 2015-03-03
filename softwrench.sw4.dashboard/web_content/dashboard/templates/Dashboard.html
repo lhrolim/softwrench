@@ -43,7 +43,6 @@
                 <li ng-show="canCreteDashboards">
                     <a ng-href="#add" data-tabid="{{dashboard.id}}">
                         <i class="fa fa-plus"></i>
-                        {{dashboard.title}}
                     </a>
                 </li>
             </ul>
@@ -53,11 +52,11 @@
             <div class="tab-pane {{getActiveClass(dashboard.id)}}" ng-repeat="dashboard in dashboards" id="{{dashboard.id}}">
                 <span style="padding-left:6px">
                     <button ng-show="canEditDashboard(dashboard) && !isEditingAnyDashboard" ng-click="editDashboard(dashboard)" class="btn btn-primary">
-                        <i class="fa fa-pencil"></i>Edit
+                        <i class="fa fa-pencil"></i>&ensp;Edit
                     </button>
 
                     <button ng-show="isEditing(dashboard.id)" ng-click="finishEditingDashboard(dashboard)" class="btn btn-primary">
-                        <i class="fa fa-save"></i>Save
+                        <i class="fa fa-save"></i>&ensp;Save
                     </button>
 
                     <button class="btn btn-primary" ng-click="addpanel()" ng-show="isEditing(dashboard.id)">
