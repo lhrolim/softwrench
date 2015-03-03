@@ -1800,6 +1800,7 @@
                          parameters="joinattribute=actualfinish;">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
+          <field attribute="description" label="Summary:" requiredexpression="true"/>
           <!--field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="true"/-->
 <!--          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" default="NEW">-->
 <!--            <renderer type="lookup" />-->
