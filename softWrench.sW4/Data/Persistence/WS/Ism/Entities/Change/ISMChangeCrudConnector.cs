@@ -1,4 +1,5 @@
-﻿using softWrench.sW4.Data.Persistence.Operation;
+﻿using log4net;
+using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
@@ -14,6 +15,7 @@ using System.Linq;
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
     class IsmChangeCrudConnector : BaseISMDecorator {
 
+        private static readonly ILog Log = LogManager.GetLogger(typeof(IsmChangeCrudConnector));
         private readonly SWDBHibernateDAO _dao;
 
         public IsmChangeCrudConnector() {
@@ -31,21 +33,22 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
             maximoTicket.ProviderID = string.Empty;
 
             var description = (String)operationData.GetAttribute("description");
+            Log.Debug("Current description of change request is: " + description);
+
             maximoTicket.Change.Description = description;
 
-            var hasWorkLog = HandleWorkLog(entity, maximoTicket);
-            if (hasWorkLog) {
-                if (!description.StartsWith("@@")) {
-                    if (description.Length > 98) {
-                        //we need to make sure the size is never bigger than 100
-                        //https://controltechnologysolutions.atlassian.net/browse/HAP-642
-                        description = "@@" + description.Substring(0, 98);
-                    } else {
-                        description = "@@" + description;
-                    }
-                    maximoTicket.Change.Description = description;
+            HandleWorkLog(entity, maximoTicket);
+            if (description != null && !description.StartsWith("@@")) {
+                if (description.Length > 98) {
+                    //we need to make sure the size is never bigger than 100
+                    //https://controltechnologysolutions.atlassian.net/browse/HAP-642
+                    description = "@@" + description.Substring(0, 98);
+                } else {
+                    description = "@@" + description;
                 }
+                maximoTicket.Change.Description = description;
             }
+            Log.Debug("Now the description will be: " + maximoTicket.Change.Description);
 
             var integrationObject = maximoTemplateData.IntegrationObject;
             ISMAttachmentHandler.HandleAttachmentsForUpdate((CrudOperationData)maximoTemplateData.OperationData, (ChangeRequest)integrationObject);
