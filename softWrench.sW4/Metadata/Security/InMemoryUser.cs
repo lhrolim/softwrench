@@ -292,7 +292,7 @@ namespace softWrench.sW4.Metadata.Security {
 
         public void ClearMenu() {
             _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
-            Genericproperties["menumanagerscached"] = null;
+            Genericproperties.Remove("menumanagerscached");
         }
     }
 }

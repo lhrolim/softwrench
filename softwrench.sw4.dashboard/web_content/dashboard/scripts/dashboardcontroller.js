@@ -79,24 +79,7 @@ app.controller('DashboardController', [
             return dashboards[0];
         }
 
-        $scope.saveDashboard = function () {
-            var log = $log.getInstance("dashboardController#saveDashboard");
-
-            if (!$scope.canCreateBoth) {
-                //this is personal only
-                log.debug('saving personal dashboard');
-                dashboardAuxService.saveDashboard($scope.dashboard);
-                return;
-            }
-            var datamap = $scope.dashboard;
-            datamap.canCreateBoth = $scope.canCreateBoth;
-            
-            modalService.show($scope.saveDashboardSchema, datamap, {
-                title: "Save Dashboard", cssclass: "dashboardmodal", onloadfn: function (scope) {
-                    scope.associationOptions['profiles'] = $scope.profiles;
-                }
-            });
-        }
+        
 
         $scope.cancelDashboard = function () {
             $scope.creatingDashboard = false;
@@ -148,6 +131,7 @@ app.controller('DashboardController', [
 
         $scope.$on('dash_dashsaved', function (event, dashboard) {
             modalService.hide();
+            $scope.isEditingAnyDashboard = false;
         });
 
         $scope.$on('dash_panelcreated', function (event, dashboard) {
@@ -186,6 +170,30 @@ app.controller('DashboardController', [
             dashboardAuxService.readjustPositions(dashboard, panel, row, column);
         });
 
+
+        //**************************************************************************************creation***********************************************************
+
+        $scope.finishCreatingDashboard = function () {
+            var log = $log.getInstance("dashboardController#saveDashboard");
+
+            if (!$scope.canCreateBoth) {
+                //this is personal only
+                log.debug('saving personal dashboard');
+                dashboardAuxService.saveDashboard($scope.dashboard);
+                return;
+            }
+            var datamap = $scope.dashboard;
+            datamap.canCreateBoth = $scope.canCreateBoth;
+
+            modalService.show($scope.saveDashboardSchema, datamap, {
+                title: "Save Dashboard", cssclass: "dashboardmodal", onloadfn: function (scope) {
+                    scope.associationOptions['profiles'] = $scope.profiles;
+                }
+            });
+        }
+
+        //**************************************************************************************edition***********************************************************
+
         $scope.isEditing = function (dashboardid) {
             return $scope.currentdashboardid == dashboardid && $scope.isEditingAnyDashboard;
         }
@@ -195,7 +203,9 @@ app.controller('DashboardController', [
         }
 
         $scope.finishEditingDashboard = function (dashboardId) {
-            $scope.isEditingAnyDashboard = false;
+            $scope.dashboard.policy = "personal";
+            dashboardAuxService.saveDashboard($scope.dashboard);
+            
         }
 
         $scope.canEditDashboard = function (dashboard) {

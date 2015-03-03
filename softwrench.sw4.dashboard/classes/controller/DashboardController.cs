@@ -40,12 +40,14 @@ namespace softwrench.sw4.dashboard.classes.controller {
             //TODO: update menu, clear caching
             var user = SecurityFacade.CurrentUser();
             if ("personal".Equals(policy)) {
-                dashboard.Filter = new DashboardFilter();
-                dashboard.Filter.UserId = user.UserId;
+                dashboard.Filter = new DashboardFilter {
+                    UserId = user.UserId
+                };
             }
-            user.Genericproperties[DashboardConstants.DashBoardsProperty] = null;
+            var savedDashboard = _dao.Save(dashboard);
+            user.Genericproperties.Remove(DashboardConstants.DashBoardsProperty);
             _dispatcher.Dispatch(new ClearMenuEvent());
-            return new GenericResponseResult<Dashboard>(_dao.Save(dashboard));
+            return new GenericResponseResult<Dashboard>(savedDashboard);
         }
 
 
@@ -137,9 +139,8 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
         [HttpGet]
-        public IGenericResponseResult LoadDashboard(int? dashBoardId)
-        {
-            var manageDTO =Manage();
+        public IGenericResponseResult LoadDashboard(int? dashBoardId) {
+            var manageDTO = Manage();
             manageDTO.ResultObject.PreferredId = dashBoardId;
             return manageDTO;
         }

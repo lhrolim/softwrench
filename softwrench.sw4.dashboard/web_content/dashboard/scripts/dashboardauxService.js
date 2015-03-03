@@ -49,7 +49,7 @@ app.factory('dashboardAuxService', function ($rootScope, $log, contextService, r
             });
         },
 
-        saveDashboard: function (datamap) {
+        saveDashboard: function (datamap,policy) {
             restService.invokePost('Dashboard', 'SaveDashboard', datamap, null, function (data) {
                 $rootScope.$broadcast('dash_dashsaved', data.resultObject);
             });
