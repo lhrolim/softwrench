@@ -228,6 +228,24 @@
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
         </relationship>
+        <relationship to ="solution" qualifier="solution" >
+          <relationshipAttribute from="solution" to ="solution" primary="true"/>
+        </relationship>
+        <relationship to="longdescription" qualifier="symptom">
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="PROBLEMCODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="cause">
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR1CODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="resolution">
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
+        </relationship>
         <relationship to ="persongroup">
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
         </relationship>
@@ -1203,6 +1221,24 @@
             </optionfield>
           </section>
           <section id="compositions">
+            <tab label="Solution" id="solution">
+
+            <field attribute="solution" hidden="true"/>
+            <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="solutionService" method="setsolutiondata"/>
+            </association>
+            <field attribute="solution_.description" label="Description:" readonly="true"/>
+            <field attribute="symptom_.ldtext" label="Symptom:">
+              <renderer type="richtext"/>
+            </field>
+            <field attribute="cause_.ldtext" label="Cause:" >
+              <renderer type="richtext"/>
+            </field>
+            <field attribute="resolution_.ldtext" label="Resolution:" >
+              <renderer type ="richtext"/>
+            </field>
+          </tab>
             <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
             </composition>
