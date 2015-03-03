@@ -49,9 +49,9 @@
         var origMessage = clonedItem['message'];
         clonedItem['commloguid'] = null;
         if (origCc != "") {
-            clonedItem['sendto'] = clonedItem['sendfrom'] + "," + origCc;
+            clonedItem['sendto'] = origSendTo + "," +clonedItem['sendfrom'] + "," + origCc;
         } else {
-            clonedItem['sendto'] = clonedItem['sendfrom'];
+            clonedItem['sendto'] = origSendTo + "," +clonedItem['sendfrom'];
         }
 
         clonedItem['sendfrom'] = contextService.getUserData().email;
