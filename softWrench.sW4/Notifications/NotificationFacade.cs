@@ -43,7 +43,10 @@ namespace softWrench.sW4.Notifications {
                     "select max(ticketuid) as max, 'servicerequest' as application from ticket where class ='SR' union " +
                     "select max(ticketuid) as max, 'incident' as application from ticket where class ='INCIDENT' union " +
                     "select max(workorderid) as max, 'workoder' as application from workorder union " +
-                    "select max(commloguid) as max, 'commlog' as application from commlog");
+                    "select max(commloguid) as max, 'commlog' as application from commlog union " +
+                    "select max(worklogid) as max, 'worklog' as application from worklog")
+            ;
+            ;
             var result = MaxDAO.FindByNativeQuery(query, null);
             foreach (var record in result){
                 _counter.Add(record["application"], Int32.Parse(record["max"]));
@@ -73,7 +76,6 @@ namespace softWrench.sW4.Notifications {
             }
         }
 
-        //TODO: Once we figure out rowstamps, use rowstamps instead of Date
         //Currently only updates notifications into the 'allRole' stream.
         //This would need to be updated in the future to determine which
         //role stream needs to be updated based on which roles have a
@@ -101,6 +103,17 @@ namespace softWrench.sW4.Notifications {
                                       "c.createby as changeby, c.createdate as changedate, CONVERT(bigint, c.rowstamp) as rowstamp from commlog c " +
                                       "left join ticket t on t.ticketuid = c.ownerid " +
                                       "where createdate >  DATEADD(HOUR,-{0},GETDATE()) and createdate < GETDATE() union " +
+                                      "select 'worklog' as application, null as targetschema, 'work log' as label, 'fa fa-wrench' as icon, CONVERT(varchar(10), l.worklogid) as id, CONVERT(varchar(10), l.worklogid) as uid, l.recordkey as parentid, t.ticketuid as parentuid, " +
+                                      "CASE l.class WHEN 'SR' THEN 'servicerequest' ELSE l.class END AS parentapplication, l.description as summary, " +
+                                      "l.createby as changeby, l.modifydate as changedate, CONVERT(bigint, l.rowstamp) as rowstamp from worklog l " +
+                                      "left join ticket t on t.ticketid = l.recordkey " + 
+                                      " where l.class in ('SR','INCIDENT') and logtype = 'clientnote' and " +
+                                      "modifydate >  DATEADD(HOUR,-{0},GETDATE()) and modifydate < GETDATE() union " +
+                                      "select 'worklog' as application, null as targetschema, 'work log' as label, 'fa fa-wrench' as icon, CONVERT(varchar(10), l.worklogid) as id, CONVERT(varchar(10), l.worklogid) as uid, l.recordkey as parentid, w.workorderid as parentuid, " +
+                                      "CASE l.class WHEN 'WORKORDER' THEN 'WORKORDER' ELSE l.class END AS parentapplication, l.description as summary, " +
+                                      "l.createby as changeby, l.modifydate as changedate, CONVERT(bigint, l.rowstamp) as rowstamp from worklog l " +
+                                      "left join workorder w on w.wonum = l.recordkey " +
+                                      "where class in ('WORKORDER') and logtype = 'clientnote' and modifydate >  DATEADD(HOUR,-{0},GETDATE()) and modifydate < GETDATE() union " +
                                       "select 'servicerequest' as application, 'editdetail' as targetschema, 'service request' as label, 'fa-ticket' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary," +
                                       "changeby, changedate, CONVERT(bigint, rowstamp) as rowstamp from ticket " +
                                       "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < GETDATE() and class='SR' union " +
