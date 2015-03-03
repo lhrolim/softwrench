@@ -36,13 +36,13 @@ app.controller('DashboardController', [
             $scope.canCreateBoth = $scope.canCreateShared && $scope.canCreateOwn;
 
             $scope.dashboards = $scope.resultData.dashboards;
-            $scope.preferredId = $scope.resultData.preferredId;
             $scope.newpanelschema = $scope.resultData.newPanelSchema;
             $scope.saveDashboardSchema = $scope.resultData.saveDashboardSchema;
             $scope.profiles = $scope.resultData.profiles;
             $scope.panelschemas = $scope.resultData.panelSchemas;
             $scope.applications = $scope.resultData.applications;
-            $scope.currentdashboardid = $scope.preferredId;
+            $scope.currentdashboardid = $scope.resultData.preferredId;
+            $scope.dashboard = $scope.getCurrentDashboardById($scope.currentdashboardid);
             var userData = contextService.getUserData();
             $scope.userid = userData.id;
         };
@@ -67,6 +67,16 @@ app.controller('DashboardController', [
                     //                scope.$digest();
                 }
             });
+        }
+
+        $scope.getCurrentDashboardById = function(id){
+            var dashboards = $scope.dashboards;
+            for (var i = 0; i < dashboards.length; i++) {
+                if (dashboards[i].id == id) {
+                    return dashboards[i];
+                }
+            }
+            return dashboards[0];
         }
 
         $scope.saveDashboard = function () {
@@ -163,6 +173,8 @@ app.controller('DashboardController', [
                         $this.tab('show');
                         var dashid = $(this).data('tabid');
                         $scope.currentdashboardid = dashid;
+                        $scope.dashboard = $scope.getCurrentDashboardById(dashid);
+                        $scope.dashboard = 
                         log.trace('lazy loading dashboard {0}'.format(dashid));
                     });
                 });
