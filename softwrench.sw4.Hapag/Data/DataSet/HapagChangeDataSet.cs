@@ -44,7 +44,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             foreach (var approval in approvals) {
                 var approvalGroup = (String)approval[c.ApproverGroupColumn];
                 //non customer approvals
-                if (!approvalGroup.StartsWith("C-")) {
+                if (approvalGroup != null && !approvalGroup.StartsWith("C-")) {
                     HandleNonCustomerApprovers(user, wfassignment, approvalGroup, approval, wftransactions, rejectedTransaction);
                 } else {
                     HandleCustomerApprovers(user,result, approvalGroup, worklogs, approval);
@@ -81,11 +81,11 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 && w["logtype"].ToString().Equals(c.WlApprLogType));
 
             var rejWl = worklogs.FirstOrDefault(w =>
-              w["description"].ToString().EqualsIc(rejDescription)
+                w["description"].ToString().EqualsIc(rejDescription)
               && w["logtype"].ToString().Equals(c.WlRejLogType));
 
             var anyrejWl = worklogs.FirstOrDefault(w =>
-              w["description"].ToString().StartsWith(c.RejectedWorklogDescription, StringComparison.CurrentCultureIgnoreCase)
+                 w["description"].ToString().StartsWith(c.RejectedWorklogDescription, StringComparison.CurrentCultureIgnoreCase)
               && w["logtype"].ToString().Equals(c.WlRejLogType));
 
             approval["#shouldshowaction"] = LevelMatches(result, approval) && user.HasPersonGroup(approvalGroup); ;
