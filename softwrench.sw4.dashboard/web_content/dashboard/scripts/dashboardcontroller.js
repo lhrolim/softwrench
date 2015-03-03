@@ -154,6 +154,7 @@ app.controller('DashboardController', [
                         }
                         $this.tab('show');
                         var dashid = $(this).data('tabid');
+
                         $scope.currentdashboardid = dashid;
                         $scope.dashboard = $scope.getCurrentDashboardById(dashid);
 
@@ -173,6 +174,31 @@ app.controller('DashboardController', [
 
 
         //**************************************************************************************creation***********************************************************
+        $scope.viewDashboard = function (event, id) {
+            if (!$scope.isEditingAnyDashboard) {
+                $scope.newDashboard = false;
+
+                $scope.currentdashboardid = id;
+                $scope.dashboard = $scope.getCurrentDashboardById(id);
+
+                var log = $log.getInstance('dashboardrendered');
+                log.trace('lazy loading dashboard {0}'.format(id));
+            }
+        }
+
+        $scope.createNewDashboard = function () {
+            if (!$scope.isEditingAnyDashboard) {
+                $scope.newDashboard = true;
+
+                $scope.dashboard = {};
+
+
+            }
+        }
+
+        $scope.isNewDashboard = function () {
+            return $scope.newDashboard;
+        }
 
         $scope.finishCreatingDashboard = function () {
             var log = $log.getInstance("dashboardController#saveDashboard");
