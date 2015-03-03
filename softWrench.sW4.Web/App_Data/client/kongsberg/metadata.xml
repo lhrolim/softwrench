@@ -1733,7 +1733,7 @@
             <renderer type="color" params="width=4%;grid=incident;column=status"/>
           </field>
           <properties>
-            <property key="list.click.schema" value="detail"/>
+            <property key="list.click.schema" value="editdetail"/>
           </properties>
         </list>
 
@@ -1850,7 +1850,7 @@
           </field>
         </schema>
 
-        <schema stereotype="detail" id="detail" mode="input" title="Incident Details">
+        <schema stereotype="detail" id="editdetail" mode="input" title="Incident Details">
           <field attribute="ticketid" label="Incident #:" readonly="true" requiredexpression="true"/>
           <field attribute="siteid" label="Site:"/>
           <field attribute="actlabcost" default="0" hidden="true"/>
