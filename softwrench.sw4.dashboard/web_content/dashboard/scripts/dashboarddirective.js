@@ -1,5 +1,8 @@
 ﻿var app = angular.module('sw_layout');
 
+
+
+
 app.directive('dashboard', function ($timeout, $log, $rootScope, $http, contextService, dashboardAuxService) {
     return {
         restrict: 'E',
@@ -10,7 +13,8 @@ app.directive('dashboard', function ($timeout, $log, $rootScope, $http, contextS
         },
 
         link: function (scope, element, attrs) {
-            scope.$name = 'crudbody';
+            scope.$name = 'dashboardgridsystem';
+            scope.dashboardid = scope.dashboard.id;
 
             scope.getRows = function () {
                 if (!scope.dashboard || !scope.dashboard.layout) {

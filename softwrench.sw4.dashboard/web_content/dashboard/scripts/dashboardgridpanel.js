@@ -9,14 +9,16 @@ app.directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contex
         scope: {
             panelrow: '=',
             panelcol: '@',
-            paneldatasource: '@'
+            paneldatasource: '=',
+            dashboardid:'='
         },
 
         controller: function ($scope, $http, $rootScope) {
 
             $scope.getPanelSourceData = function () {
-                // TODO: See if we can pass the object as json instead of converting it. 
-                var dashboardPanelInfo = angular.fromJson($scope.paneldatasource);
+                // TODO: See if we can pass the object as json instead of converting it.
+                //Luiz: yes "=" instead of "@" and removing {{ }} on html
+                var dashboardPanelInfo = $scope.paneldatasource;
 
                 if (dashboardPanelInfo != null) {
                     $scope.title = dashboardPanelInfo.panel['title'];
@@ -93,6 +95,12 @@ app.directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contex
             $scope.isDataAvailable = false; 
 
             $scope.getPanelSourceData();
+
+            $scope.$on('sw_lazyloaddashboard', function(event,tabId) {
+                if (tabId == $scope.dashboardid) {
+                    $scope.getPanelSourceData();
+                }
+            });
 
             //this code will get called when the user is already on a crud page and tries to switch view only.
             $scope.renderView = function (applicationName, schemaId, mode, title, parameters) {

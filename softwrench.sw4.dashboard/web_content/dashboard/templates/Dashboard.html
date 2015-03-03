@@ -30,23 +30,18 @@
     <div ng-if="!creatingDashboard">
         <div class="detail-header clearfix">
             <ul class="nav nav-tabs compositiondetailtab hapag-composition">
-                <!--                <li class="active">-->
-                <!--                    <a href="#main" data-tabid="{{main}}" ng-click="setActiveTab(null)"><i class="fa fa-file-text-o"></i> {{schema.title}}</a>-->
-                <!--                </li>-->
-                <li ng-repeat="tab in dashboards">
-                    <a ng-href="#{{tab.tabId}}" data-tabid="{{tab.id}}" ng-class="{active:$first}">
-                        <!--                        <i class=" {{tab.icon}} ">-->
+                <li ng-repeat="dashboard in dashboards" dashboardrendered class="{{getActiveClass(dashboard.id)}}">
+                    <a ng-href="#{{dashboard.id}}" data-tabid="{{dashboard.id}}" data-toggle="tab" >
+                        <!--                        <i class=" {{dashboard.icon}} ">-->
                         <!--                        </i>-->
-                        {{tab.title}}
+                        {{dashboard.title}}
                     </a>
                 </li>
             </ul>
         </div>
         <div class="tab-content">
-            <div class="tab-pane" ng-repeat="dashboard in dashboards" id="{{dashboard.tabId}}" ng-class="{active:$first}">
-                <dashboard dashboard="dashboard">
-
-                </dashboard>
+            <div class="tab-pane {{getActiveClass(dashboard.id)}}" ng-repeat="dashboard in dashboards" id="{{dashboard.id}}">
+                <dashboard dashboard="dashboard" />
             </div>
         </div>
     </div>

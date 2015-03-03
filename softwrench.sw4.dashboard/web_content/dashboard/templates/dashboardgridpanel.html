@@ -6,7 +6,11 @@
     <p>data: {{dashboardpanel}}</p>-->
 
     <div class="body" ng-if="isDataAvailable">
-        <crud-list datamap="datamap"
+        <crud-list 
+                   application="application"
+                   schemaref=""
+                   dashboardpanelid="dashboardpanelid"
+                   datamap="datamap"
                    schema="schema"
                    pagination-data="paginationData"
                    search-sort="searchSort"
@@ -16,8 +20,7 @@
                    is-list="islist"
                    ismodal="false"
                    hidebars="true"
-                   timestamp="timestamp"
-                   dashboardpanelid="dashboardpanelid" />
+                   timestamp="timestamp" />
     </div>
 </form>
 

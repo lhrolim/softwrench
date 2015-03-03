@@ -10,6 +10,7 @@ using softwrench.sw4.dashboard.classes.model.entities;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata;
@@ -133,55 +134,39 @@ namespace softwrench.sw4.dashboard.classes.controller {
         public IGenericResponseResult LoadPreferred() {
             //TODO: add id checkings on server side
             var user = SecurityFacade.CurrentUser();
-
             int? preferredDashboardId = null;
-            var dashboard = new Dashboard();
-
             if (user.Genericproperties.ContainsKey((DashboardConstants.DashBoardsPreferredProperty))) {
                 // Get prefer dashboard id
                 preferredDashboardId = user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] as int?;
             }
-
-            if (!user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty)) {
-                // Get dashboard information and store into cache
-                user.Genericproperties[DashboardConstants.DashBoardsProperty] = _userDashboardManager.LoadUserDashboars(user);
-            }
-
-            IEnumerable<Dashboard> dashboards = (IEnumerable<Dashboard>)user.Genericproperties[DashboardConstants.DashBoardsProperty];
-
-            // Return the prefer dashboard content
-            if (preferredDashboardId != null && dashboards != null && dashboards.Any()) {
-                dashboard = dashboards.FirstOrDefault(s => s.Id == preferredDashboardId);
-            }
-            else if (dashboards != null && dashboards.Any()) {
-                // TODO: Default it to global dashboard? Right now it is set to the first dashboard available.
-                dashboard = dashboards.FirstOrDefault();
-            }
-            else {
-                return null;
-            }
-
+            var dashboard = DoLoadDashBoard(preferredDashboardId, user);
             return new GenericResponseResult<Dashboard>(dashboard);
         }
 
         [HttpGet]
-        public IGenericResponseResult LoadDashboard(int dashBoardId) {
+        public IGenericResponseResult LoadDashboard(int? dashBoardId) {
             //TODO: add id checkings on server side
             var user = SecurityFacade.CurrentUser();
-            var dashboard = new Dashboard();
+            var dashboard = DoLoadDashBoard(dashBoardId, user);
+            return new GenericResponseResult<Dashboard>(dashboard);
+        }
 
+        private Dashboard DoLoadDashBoard(int? dashBoardId, InMemoryUser user) {
             if (!user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty)) {
                 // Get dashboard information and store into cache
                 user.Genericproperties[DashboardConstants.DashBoardsProperty] = _userDashboardManager.LoadUserDashboars(user);
             }
 
-            IEnumerable<Dashboard> dashboards = (IEnumerable<Dashboard>)user.Genericproperties[DashboardConstants.DashBoardsProperty];
-            
-            if (dashboards != null && dashboards.Any()) {
-                dashboard = dashboards.FirstOrDefault(s => s.Id == dashBoardId);
+            var dashboards = (IEnumerable<Dashboard>)user.Genericproperties[DashboardConstants.DashBoardsProperty];
+            var enumerable = dashboards as Dashboard[] ?? dashboards.ToArray();
+            if (dashboards == null || !enumerable.Any()) {
+                return null;
             }
-
-            return new GenericResponseResult<Dashboard>(dashboard);
+            if (dashBoardId == null) {
+                //fallback to first one
+                return enumerable.FirstOrDefault();
+            }
+            return enumerable.FirstOrDefault(s => s.Id == dashBoardId);
         }
 
         public IGenericResponseResult EditDashBoard(DashboardBasePanel dashBoardPanel) {

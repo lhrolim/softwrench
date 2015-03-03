@@ -1,5 +1,37 @@
 ﻿var app = angular.module('sw_layout');
 
+
+app.directive('dashboardrendered', function ($timeout, $log, $rootScope, eventService) {
+
+    return {
+        //TODO: extract directive
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            if (scope.$last === false) {
+                return;
+            }
+
+            var log = $log.getInstance('dashboardrendered');
+            log.debug("finished rendering dashboards");
+            $timeout(function () {
+                $('.compositiondetailtab li>a').each(function () {
+                    var $this = $(this);
+//                    $this.click(function (e) {
+//                        e.preventDefault();
+//                        $this.tab('show');
+//                        var tabId = $(this).data('tabid');
+//                        scope.currenttabid = tabId;
+//                        log.trace('lazy loading dashboard {0}'.format(tabId));
+//                        $rootScope.$broadcast('dash_changeselecteddashboard', tabId);
+//                    });
+                });
+            }, 0, false);
+        }
+    };
+});
+
+
+
 app.controller('DashboardController', [
     '$scope','$log', 'modalService', 'fieldService', 'dashboardAuxService',
     function ($scope,$log, modalService, fieldService, dashboardAuxService) {
@@ -19,6 +51,7 @@ app.controller('DashboardController', [
             $scope.profiles = $scope.resultData.profiles;
             $scope.panelschemas = $scope.resultData.panelSchemas;
             $scope.applications = $scope.resultData.applications;
+            $scope.currentdashboardid = $scope.preferredId;
         };
 
         $scope.create = function () {
@@ -88,6 +121,9 @@ app.controller('DashboardController', [
             });
         }
 
+        $scope.getActiveClass = function(tabid) {
+            return tabid == $scope.currentdashboardid ? "active" : null;
+        }
    
 
         $scope.doInit();
@@ -101,6 +137,10 @@ app.controller('DashboardController', [
                     //                scope.$digest();
                 }
             });
+        });
+
+        $scope.$on('dash_changeselecteddashboard', function (event, dashboardid) {
+            $scope.currentdashboardid = dashboardid;
         });
 
         $scope.$on('dash_dashsaved', function (event, dashboard) {
