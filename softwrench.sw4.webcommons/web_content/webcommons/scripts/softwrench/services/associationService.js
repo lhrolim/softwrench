@@ -350,7 +350,7 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                         contextService.insertIntoContext("associationsresolved", true, true);
                     }, 100, false);
                     $rootScope.avoidspin = false;
-                    $rootScope.$broadcast("sw_associationsupdated", scope.associationOptions);
+                    scope.$broadcast("sw_associationsupdated", scope.associationOptions);
                 }
             }).error(
             function data() {
