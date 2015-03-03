@@ -29,9 +29,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
             HapagChangeHandler.FillDefaultValuesUpadteChange(maximoTicket);
             maximoTicket.RequesterID = (string)entity.GetAttribute("wonum");
             maximoTicket.ProviderID = string.Empty;
+
+            var description = (String)operationData.GetAttribute("description");
+            maximoTicket.Change.Description = description;
+
             var hasWorkLog = HandleWorkLog(entity, maximoTicket);
             if (hasWorkLog) {
-                var description = (String)operationData.GetAttribute("description");
                 if (!description.StartsWith("@@")) {
                     if (description.Length > 98) {
                         //we need to make sure the size is never bigger than 100
