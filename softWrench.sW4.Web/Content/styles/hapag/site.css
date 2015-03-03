@@ -766,6 +766,10 @@ textarea .readonly {
     .col-side-bar {
         display: none;
     }
+
+    .control-label {
+        line-height: 16px;
+    }
 }
 
 .fieldset-inside-section {
