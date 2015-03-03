@@ -32,7 +32,7 @@ app.controller('DashboardController', [
             $scope.canCreateOwn = $scope.resultData.canCreateOwn;
             $scope.canCreateShared = $scope.resultData.canCreateShared;
 
-            $scope.canCreteDashboards = $scope.canCreateShared || $scope.canCreateOwn;
+            $scope.canCreateDashboards = $scope.canCreateShared || $scope.canCreateOwn;
             $scope.canCreateBoth = $scope.canCreateShared && $scope.canCreateOwn;
 
             $scope.dashboards = $scope.resultData.dashboards;
@@ -164,7 +164,6 @@ app.controller('DashboardController', [
             }, 0, false);
         });
 
-
         $scope.$on('dash_panelassociated', function (event, panel, row, column) {
             var dashboard = $scope.dashboard;
             modalService.hide();
@@ -223,7 +222,6 @@ app.controller('DashboardController', [
                 $scope.doInit();
             }
         });
-
     }
 ]);
 
