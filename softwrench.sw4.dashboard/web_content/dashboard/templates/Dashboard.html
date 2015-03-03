@@ -1,46 +1,66 @@
 ﻿<div class="dash-header" ng-controller="DashboardController">
-    <span>
-        <!--        <h2 style="display: inline">Manage Dashboards</h2>-->
-        <button class="btn btn-primary" ng-show="canCreteDashboards && !creatingDashboard" ng-click="create()">
-            <i class="fa fa-plus"></i>&ensp;Create Dashboard
-        </button>
-
-        <button class="btn btn-primary" ng-show="canCreteDashboards && !creatingDashboard" ng-click="createPanel()">
-            <i class="fa fa-plus"></i>&ensp;Create Panel
-        </button>
-
-        <span ng-show="creatingDashboard">
-            <label editable-text="dashboard.title" class="control-label">{{ dashboard.title || 'empty' }}</label> *
-
-            <button class="btn btn-primary" ng-click="addpanel()">
-                <i class="fa fa-plus"></i>&ensp;Add Panel
-            </button>
-
-            <button class="btn btn-primary" ng-click="saveDashboard()" ng-enabled="dashboard.panels.length>0">
-                <i class="fa fa-plus"></i>&ensp;Save
-            </button>
-
-            <button class="btn btn-primary" ng-click="cancelDashboard()">
-                <i class="fa fa-plus"></i>&ensp;Cancel
-            </button>
-
-        </span>
-    </span>
+    <!--    <span>-->
+    <!--        $1$        <h2 style="display: inline">Manage Dashboards</h2>#1#-->
+    <!--        <button class="btn btn-primary" ng-show="canCreteDashboards && !creatingDashboard" ng-click="create()">-->
+    <!--            <i class="fa fa-plus"></i>&ensp;Create Dashboard-->
+    <!--        </button>-->
+    <!---->
+    <!--        <button class="btn btn-primary" ng-show="canCreteDashboards && !creatingDashboard" ng-click="createPanel()">-->
+    <!--            <i class="fa fa-plus"></i>&ensp;Create Panel-->
+    <!--        </button>-->
+    <!---->
+    <!--        <span ng-show="creatingDashboard">-->
+    <!--            <label editable-text="dashboard.title" class="control-label">{{ dashboard.title || 'empty' }}</label> *-->
+    <!---->
+    <!--            <button class="btn btn-primary" ng-click="addpanel()">-->
+    <!--                <i class="fa fa-plus"></i>&ensp;Add Panel-->
+    <!--            </button>-->
+    <!---->
+    <!--            <button class="btn btn-primary" ng-click="saveDashboard()" ng-enabled="dashboard.panels.length>0">-->
+    <!--                <i class="fa fa-plus"></i>&ensp;Save-->
+    <!--            </button>-->
+    <!---->
+    <!--            <button class="btn btn-primary" ng-click="cancelDashboard()">-->
+    <!--                <i class="fa fa-plus"></i>&ensp;Cancel-->
+    <!--            </button>-->
+    <!---->
+    <!--        </span>-->
+    <!--    </span>-->
 
     <div ng-if="!creatingDashboard">
         <div class="detail-header clearfix">
             <ul class="nav nav-tabs compositiondetailtab hapag-composition">
                 <li ng-repeat="dashboard in dashboards" dashboardrendered class="{{getActiveClass(dashboard.id)}}">
-                    <a ng-href="#{{dashboard.id}}" data-tabid="{{dashboard.id}}" data-toggle="tab" >
+                    <a ng-href="#{{dashboard.id}}" data-tabid="{{dashboard.id}}">
                         <!--                        <i class=" {{dashboard.icon}} ">-->
                         <!--                        </i>-->
+                        <!--                        <i class="fa fa-pencil" ng-click="editDashboard(dashboard)" ng-show="canEditDashboard(dashboard) && !isEditingAnyDashboard" style="cursor: pointer"></i>-->
+                        <!--                        <i class="fa fa-save" ng-show="isEditing(dashboard.id)" ng-click="finishEditingDashboard(dashboard.id)" style="cursor: pointer"></i>-->
+                        {{dashboard.title}}
+                    </a>
+
+                </li>
+                <li ng-show="canCreteDashboards">
+                    <a ng-href="#add" data-tabid="{{dashboard.id}}">
+                        <i class="fa fa-plus"></i>
                         {{dashboard.title}}
                     </a>
                 </li>
             </ul>
         </div>
         <div class="tab-content">
+
             <div class="tab-pane {{getActiveClass(dashboard.id)}}" ng-repeat="dashboard in dashboards" id="{{dashboard.id}}">
+                <span style="padding-left:6px">
+                    <button ng-show="canEditDashboard(dashboard) && !isEditingAnyDashboard" ng-click="editDashboard(dashboard)" class="btn btn-primary">
+                        <i class="fa fa-pencil"></i>Edit
+                    </button>
+
+                    <button ng-show="isEditing(dashboard.id)" ng-click="finishEditingDashboard(dashboard)" class="btn btn-primary">
+                        <i class="fa fa-save"></i>Save
+                    </button>
+                </span>
+
                 <dashboard dashboard="dashboard" />
             </div>
         </div>

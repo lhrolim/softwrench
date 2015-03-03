@@ -13,19 +13,10 @@ app.directive('dashboardrendered', function ($timeout, $log, $rootScope, eventSe
 
             var log = $log.getInstance('dashboardrendered');
             log.debug("finished rendering dashboards");
-            $timeout(function () {
-                $('.compositiondetailtab li>a').each(function () {
-                    var $this = $(this);
-//                    $this.click(function (e) {
-//                        e.preventDefault();
-//                        $this.tab('show');
-//                        var tabId = $(this).data('tabid');
-//                        scope.currenttabid = tabId;
-//                        log.trace('lazy loading dashboard {0}'.format(tabId));
-//                        $rootScope.$broadcast('dash_changeselecteddashboard', tabId);
-//                    });
-                });
-            }, 0, false);
+            $rootScope.$broadcast('dash_finishloading');
+
+
+            
         }
     };
 });
@@ -33,8 +24,8 @@ app.directive('dashboardrendered', function ($timeout, $log, $rootScope, eventSe
 
 
 app.controller('DashboardController', [
-    '$scope','$log', 'modalService', 'fieldService', 'dashboardAuxService',
-    function ($scope,$log, modalService, fieldService, dashboardAuxService) {
+    '$scope','$log','$timeout', 'modalService', 'fieldService', 'dashboardAuxService','contextService','alertService',
+    function ($scope,$log,$timeout, modalService, fieldService, dashboardAuxService,contextService,alertService) {
 
         $scope.doInit = function () {
 
@@ -52,6 +43,8 @@ app.controller('DashboardController', [
             $scope.panelschemas = $scope.resultData.panelSchemas;
             $scope.applications = $scope.resultData.applications;
             $scope.currentdashboardid = $scope.preferredId;
+            var userData = contextService.getUserData();
+            $scope.userid = userData.id;
         };
 
         $scope.create = function () {
@@ -151,12 +144,58 @@ app.controller('DashboardController', [
             modalService.hide();
         });
 
+        $scope.$on('dash_changedashboard', function (event, dashboardid) {
+            $scope.currentdashboardid = dashboardid;
+        });
+
+        $scope.$on('dash_finishloading', function (event, dashboardid) {
+            $timeout(function () {
+                $('.compositiondetailtab li>a').each(function () {
+                    var $this = $(this);
+                    $this.click(function (e) {
+                        e.preventDefault();
+                        if ($scope.isEditingAnyDashboard) {
+                            alertService.alert('Please, finish editing the current dashboard.');
+                            return;
+                        }
+
+                        
+                        $this.tab('show');
+                        var dashid = $(this).data('tabid');
+                        $scope.currentdashboardid = dashid;
+                        log.trace('lazy loading dashboard {0}'.format(dashid));
+                    });
+                });
+            }, 0, false);
+        });
+
+
         $scope.$on('dash_panelassociated', function (event, panel, row, column) {
             var dashboard = $scope.dashboard;
             modalService.hide();
             dashboardAuxService.readjustLayout(dashboard, row, column);
             dashboardAuxService.readjustPositions(dashboard, panel, row, column);
         });
+
+        $scope.isEditing = function (dashboardid) {
+            return $scope.currentdashboardid == dashboardid && $scope.isEditingAnyDashboard;
+        }
+
+        $scope.editDashboard = function (dashboardId) {
+            $scope.isEditingAnyDashboard = true;
+        }
+
+        $scope.finishEditingDashboard = function (dashboardId) {
+            $scope.isEditingAnyDashboard = false;
+        }
+
+        $scope.canEditDashboard = function (dashboard) {
+            if ($scope.canCreateBoth) {
+                return true;
+            }
+            return dashboard.createdby == $scope.userid;
+        }
+
 
         $scope.$watch('resultObject.timeStamp', function (newValue, oldValue) {
             if (oldValue != newValue && $scope.resultObject.crudSubTemplate.indexOf("/Shared/dashboard/templates/Dashboard.html") != -1) {
