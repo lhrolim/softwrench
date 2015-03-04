@@ -239,7 +239,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             searchDto.needsCountUpdate = true;
             //existing template pass too many variable, which some of them did not get translated and caused an SQL error
             //searchDto.searchTemplate = searchTemplate;
-            searchDto.searchTemplate = searchDto.searchParams.replace("&&", "||");
+            searchDto.searchTemplate = searchDto.searchParams;
             searchData.lastSearchedValues = searchDto.searchValues;
             
             if (paginationData) {
