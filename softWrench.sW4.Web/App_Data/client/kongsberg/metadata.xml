@@ -1680,7 +1680,7 @@
     <application name="incident" title="Incident" entity="incident">
       <schemas>
         <list title="Incident Grid">
-          <field attribute="ticketid" label="Request#">
+          <field attribute="ticketid" label="Incident#">
             <renderer type="default" params="width=8%"/>
           </field>
           <field attribute="description" label="Summary">
