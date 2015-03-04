@@ -2784,7 +2784,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 				</relationship>
 				<relationship to="worklog" collection="true">
 					<relationshipAttribute from="ticketid" to="recordkey" primary="true" />
-					<relationshipAttribute from="class" to="class" />
+					<relationshipAttribute to="class" literal="PROBLEM" quoteLiteral="true" />
 				</relationship>
 				<relationship to="DOCLINKS" qualifier="attachment" collection="true">
 					<relationshipAttribute from="ticketuid" to="ownerid" primary="true"/>
