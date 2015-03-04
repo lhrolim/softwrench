@@ -652,26 +652,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         <schema id="tapebackupreport" stereotype="list" title="Tape BackUp Report">
           <field label="Incident Number" attribute="ticketid">
-            <renderer type="default" params="minwidth=109.1428571428571px;wordwrap=break-word" />
+            <renderer type="default" params="minwidth=110px;manwidth=110px" />
           </field>
           <field label="Location" attribute="hlagpluspcustomer">
-            <renderer type="default" params="minwidth=109.1428571428571px" />
+            <renderer type="default" params="minwidth=110px;manwidth=110px" />
           </field>
           <field label="Status" attribute="status">
-            <renderer type="default" params="minwidth=109.1428571428571px" />
+            <renderer type="default" params="minwidth=110px;manwidth=110px" />
           </field>
           <field label="Open Date" attribute="affecteddate">
-            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=109.1428571428571px"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=110px;manwidth=110px"/>
           </field>
           <field label="Last-Action Date" attribute="lastworklog_.createdate">
-            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=109.1428571428571px"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=110px;manwidth=110px"/>
           </field>
           <field label="Last-Action Worklog" attribute="lastworklog_.description"/>
           <field label="Owner Group" attribute="ownergroup" hidden="true">
-            <renderer type="default" params="exporttoexcel=true;minwidth=109.1428571428571px"/>
+            <renderer type="default" params="exporttoexcel=true;minwidth=110px;manwidth=110px"/>
           </field>
           <field label="Days Open" attribute="numberdaysopen">
-            <renderer type="default" params="minwidth=109.1428571428571px" />
+            <renderer type="default" params="minwidth=110px;manwidth=110px" />
           </field>
           <field label="CommoditiesDescription" attribute="commodities_.description" hidden="true"/>
           <reference id="R017RequiredFields"/>
@@ -757,33 +757,33 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="hardwarerepair" stereotype="list" title="Hardware Repair Report">
           <field attribute="#currentdatetime" hidden="true" />
           <field label="Incident Number" attribute="ticketid">
-            <renderer type="default" params="minwidth=84.88888888888889px;wordwrap=break-word" />
+            <renderer type="default" params="minwidth=84px" />
           </field>
           <field attribute="asset_.assetnum" hidden="true"/>
           <field attribute="commodities_.description" hidden="true"/>
           <field label="Location" attribute="asset_location_.description">
-            <renderer type="default" params="minwidth=84.88888888888889px;wordwrap=break-word" />
+            <renderer type="default" params="minwidth=84px;maxwidth=84px" />
           </field>
           <field label="Component" attribute="#component">
-            <renderer type="default" params="minwidth=84.88888888888889px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=84px;maxwidth=84px;excelwidth=15"/>
           </field>
           <field label="System" attribute="#system">
-            <renderer type="default" params="minwidth=84.88888888888889px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=84px;maxwidth=84px;excelwidth=15"/>
           </field>
           <field label="Item" attribute="#item">
-            <renderer type="default" params="minwidth=84.88888888888889px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=84px;maxwidth=84px;excelwidth=15"/>
           </field>
           <field label="Module" attribute="#module">
-            <renderer type="default" params="minwidth=84.88888888888889px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=84px;maxwidth=84px;excelwidth=15"/>
           </field>
           <field label="Open Date" attribute="reportdate">
-            <renderer type="datetime" params="format=MM/dd/yyyy;minwidth=84.88888888888889px"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy;minwidth=84p;maxwidth=84pxx"/>
           </field>
           <field label="Last-Action Date" attribute="changedate">
-            <renderer type="datetime" params="format=MM/dd/yyyy;minwidth=84.88888888888889px"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy;minwidth=84px;maxwidth=84px"/>
           </field>
           <field label="Description" attribute="description">
-            <renderer type="default" params="minwidth=84.88888888888889px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=84px;maxwidth=84px;excelwidth=15"/>
           </field>
           <reference id="R017RequiredFields"/>
         </schema>
@@ -791,31 +791,31 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="escalationincident" stereotype="list" title="Escalation HLAG Incident Report">
           <field attribute="#currentdatetime" hidden="true" />
           <field label="Incident Number" attribute="ticketid">
-            <renderer type="default" params="minwidth=84.88888888888889px;wordwrap=break-word" />
+            <renderer type="default" params="minwidth=84px;maxwidth=84px" />
           </field>
           <field label="Severity" attribute="internalpriority">
-            <renderer type="default" params="minwidth=84.88888888888889px;wordwrap=break-word" />
+            <renderer type="default" params="minwidth=84px;maxwidth=84px" />
           </field>
           <field label="Status" attribute="status">
-            <renderer type="default" params="minwidth=84.88888888888889px;wordwrap=break-word" />
+            <renderer type="default" params="minwidth=84px;maxwidth=84px" />
           </field>
           <field label="Open Date/Time" attribute="reportdate">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=84.88888888888889px;"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=84px;maxwidth=84p;"/>
           </field>
           <field label="Owner Group" attribute="ownergroup">
-            <renderer type="default" params="minwidth=84.88888888888889px;wordwrap=break-word" />
+            <renderer type="default" params="minwidth=84px;maxwidth=84px" />
           </field>
           <field label="Last Action Date/Time" attribute="lastworklog_.createdate">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=84.88888888888889px;"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=84px;maxwidth=84px"/>
           </field>
           <field label="Hours Inactive" attribute="#hoursinactive">
-            <renderer type="default" params="minwidth=84.88888888888889px;excelwidth=15"/>
+            <renderer type="default" params="minwidth=84px;maxwidth=84px;excelwidth=15"/>
           </field>
           <field label="Problem Abstract" attribute="description">
-            <renderer type="default" params="minwidth=84.88888888888889px;wordwrap=break-word" />
+            <renderer type="default" params="minwidth=84px;maxwidth=84px;" />
           </field>
           <field label="In Time / Out Time" attribute="#inouttime">
-            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=84.88888888888889px;"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=84px;maxwidth=84px"/>
           </field>
         </schema>
 
@@ -864,32 +864,32 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="list.print.schema" value="detail"/>
           </properties>
           <optionfield attribute ="ticketid">
-            <renderer type="checkbox" params="minwidth=84.88888888888889px" />
+            <renderer type="checkbox" params="minwidth=40px;maxwidth=40px" />
             <option label="" value="checking"/>
           </optionfield>
           <field label="Incident Number" attribute="ticketid">
-            <renderer type="default" params="minwidth=84.88888888888889px;wordwrap=break-word" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field label="Commodity Description" attribute="commodities_.description" hidden="false">
-            <renderer type="default" params="minwidth=84.88888888888889px" />
+            <renderer type="default" params="minwidth=100px;maxwidth=100px" />
           </field>
           <field label="Incident Summary" attribute="description">
-            <renderer type="default" params="minwidth=84.88888888888889px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=230px" />
           </field>
           <field label="Severity" attribute="internalpriority">
-            <renderer type="default" params="minwidth=84.88888888888889px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field label="Site ID" attribute="pluspcustomer">
-            <renderer type="default" params="minwidth=84.88888888888889px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field label="Affected Date and Time" attribute="reportdate">
-            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=84.88888888888889px"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=100px;maxwidth=100px"/>
           </field>
           <field label="Ownergroup" attribute="ownergroup">
-            <renderer type="default" params="minwidth=84.88888888888889px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
           <field label="Status" attribute="status">
-            <renderer type="default" params="minwidth=84.88888888888889px" />
+            <renderer type="default" params="minwidth=100px;maxwidth=100px" />
           </field>
           <reference id="R017RequiredFields"/>
           <commands>
@@ -2386,10 +2386,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=80px;maxwidth=300px;excelwidth=50" />
           </field>
           <field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="width=160px;excelwidth=30" />
+            <renderer type="default" params="minwidth=160px;excelwidth=30" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=100px;showtime=false;exporttoexcel=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;showtime=false;exporttoexcel=false" />
           </field>
           <field attribute="#2reportdate" label="Reported Date" hidden="true">
             <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;exporttoexcel=true" />
@@ -2398,13 +2398,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="datetime" params="format=HH:mm;showtime=false;exporttoexcel=true" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site Id">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="minwidth=80px" />
           </field>
           <field attribute="ownergroup" label="Owner Group">
-            <renderer type="default" params="width=80px" />
+            <renderer type="default" params="minwidth=80px" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=100px" />
+            <renderer type="default" params="minwidth=100px" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="grid=problem;column=status"/>
