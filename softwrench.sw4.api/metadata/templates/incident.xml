@@ -31,7 +31,7 @@
         <relationship to="classification" qualifier="classification">
           <relationshipAttribute from="classificationid" to ="classificationid" primary="true"/>
         </relationship>
-        <relationship to="incidentclassifications" qualifier="incidentclassifications">
+        <relationship to="classification" qualifier="incidentclassifications">
           <relationshipAttribute from="classificationid" to="classificationid" primary="true"/>
         </relationship>
         <relationship to ="solution" qualifier="solution" >
