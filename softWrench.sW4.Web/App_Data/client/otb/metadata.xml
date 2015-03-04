@@ -14,6 +14,9 @@
     
     <!--Inventory-->
     <template path="@inventory.xml"/>
+
+    <!--Changes-->
+    <template path="@wochange.xml"/>
     
     <!--Purchasing-->
     <template path="@receiving.xml"/>
