@@ -20,10 +20,10 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
         public MenuDefinition ModifyMenu(MenuDefinition securedMenu, ISWUser user) {
-            if (!ApplicationConfiguration.IsLocal()) {
-                //TODO: remove this when it´s good for qa
-                return securedMenu;
-            }
+            //if (!ApplicationConfiguration.IsLocal()) {
+            //    //TODO: remove this when it´s good for qa
+            //    return securedMenu;
+            //}
 
             var leafs = new List<MenuBaseDefinition>();
 
