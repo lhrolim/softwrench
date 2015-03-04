@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using NHibernate.Hql.Ast.ANTLR;
 using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.Notifications.Entities;
+using softWrench.sW4.Security.Services;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Notifications {
     public class InMemoryNotificationStream {
@@ -18,6 +20,24 @@ namespace softWrench.sW4.Notifications {
         public List<Notification> GetNotifications() {
             _notifications.Sort((n1, n2) => n2.NotificationDate.CompareTo(n1.NotificationDate));
             _notifications =HandleChildNotifications(_notifications);
+            //List<Notification> Notifications = (from notifications in _notifications
+            //    select new Notification(notifications.Application,
+            //        notifications.TargetSchema,
+            //        notifications.Label,
+            //        notifications.Icon,
+            //        notifications.Id,
+            //        notifications.UId,
+            //        notifications.ParentApplication,
+            //        notifications.ParentUId,
+            //        notifications.ParentApplication,
+            //        notifications.ParentLabel,
+            //        notifications.Summary,
+            //        notifications.CreateBy,
+            //        notifications.NotificationDate.FromMaximoToUser(SecurityFacade.CurrentUser()),
+            //        notifications.Rowstamp,
+            //        notifications.Flag,
+            //        notifications.IsRead)
+            //    ).ToList();
             return _notifications;
         }
 
