@@ -30,6 +30,7 @@
             -webkit-border-bottom-right-radius: 5px;
             border-bottom-left-radius: 5px;
             border-bottom-right-radius: 5px;
+            min-height: 425px;
         }
 
 
