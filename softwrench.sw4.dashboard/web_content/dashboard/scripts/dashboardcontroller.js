@@ -147,6 +147,7 @@ app.controller('DashboardController', [
                         e.preventDefault();
                         if ($scope.isEditingAnyDashboard) {
                             alertService.alert('Please, finish editing the current dashboard.');
+                            e.stopImmediatePropagation();
                             return false;
                         }
                         $this.tab('show');
@@ -236,6 +237,11 @@ app.controller('DashboardController', [
 
         $scope.isEditing = function (dashboardid) {
             return $scope.currentdashboardid == dashboardid && $scope.isEditingAnyDashboard;
+        }
+
+
+        $scope.cancelEditing = function () {
+            return $scope.isEditingAnyDashboard = false;
         }
 
         $scope.editDashboard = function (dashboardId) {
