@@ -241,7 +241,7 @@ app.controller('DashboardController', [
 
 
         $scope.cancelEditing = function () {
-            return $scope.isEditingAnyDashboard = false;
+            $scope.isEditingAnyDashboard = false;
         }
 
         $scope.editDashboard = function (dashboardId) {
