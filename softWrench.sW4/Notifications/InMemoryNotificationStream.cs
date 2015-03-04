@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using NHibernate.Hql.Ast.ANTLR;
 using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.Notifications.Entities;
+using softWrench.sW4.Security.Services;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Notifications {
     public class InMemoryNotificationStream {
