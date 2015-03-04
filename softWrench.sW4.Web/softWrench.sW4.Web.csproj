@@ -575,6 +575,7 @@
     <Content Include="Content\Scripts\thirdparty\jscrollpane\jquery-jscrollpane.js" />
     <Content Include="Content\Scripts\thirdparty\jscrollpane\jquery-mousewheel.js" />
     <Content Include="Content\Scripts\thirdparty\moment.js" />
+    <None Include="Content\Scripts\thirdparty\pdfobject.jsa" />
     <Content Include="Content\styles\default\index.css" />
     <Content Include="Content\styles\hapag\jquery.jscrollpane.css" />
     <Content Include="Content\styles\default\menu.css" />
@@ -721,6 +722,7 @@
     <Content Include="Content\Templates\crud\crud_input_fields.html" />
     <Content Include="Content\Templates\crud\crud_output_fields.html" />
     <Content Include="Content\Templates\directives\printSection.html" />
+    <Content Include="Content\Templates\hapag\embeddedpdf.html" />
     <Content Include="Content\Templates\hapag\Actionentry.html" />
     <Content Include="Content\Templates\hapag\createfromasset.html" />
     <Content Include="Content\Templates\hapag\HapagHome.html" />

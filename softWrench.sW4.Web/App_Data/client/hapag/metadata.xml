@@ -3217,9 +3217,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="resolution_.ldtext" label="Resolution:" >
             <renderer type="textarea"/>
           </field>
-          <composition relationship="attachment" label="Attachments" printschema="faqAttachments">
-            <collectionproperties allowupdate="false" allowcreation="false" listschema="faqAttachments" />
-          </composition>
+          <section resourcepath="/Content/templates/hapag/embeddedpdf.html"/>
         </detail>
       </schemas>
     </application>
