@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using System.IO;
+using softWrench.sW4.Metadata;
 
 namespace softWrench.sW4.Web.Controllers.Faq {
     public class FaqController : Controller {
@@ -27,5 +29,27 @@ namespace softWrench.sW4.Web.Controllers.Faq {
                 throw new IOException(s);
             return data;
         }
+
+        public FileStreamResult Pdf(string faqId) {
+            var workStream = new MemoryStream();
+            var path = MetadataProvider.GlobalProperty("faqfspath", true) + faqId;
+            if (!Directory.Exists(path)) {
+                return null;
+            }
+            var fileEntries = Directory.GetFiles(path);
+            var pdfs =fileEntries.Where(f => f.EndsWith("pdf"));
+            var enumerable = pdfs as string[] ?? pdfs.ToArray();
+            if (!enumerable.Any() || enumerable.Count()> 1) {
+                return null;
+            }
+            var byteInfo = System.IO.File.ReadAllBytes(enumerable.First());
+            workStream.Write(byteInfo, 0, byteInfo.Length);
+            workStream.Position = 0;
+            Response.AppendHeader("content-disposition", "inline; filename=file.pdf");
+            return new FileStreamResult(workStream, "application/pdf");
+        }
+
+
+
     }
 }
