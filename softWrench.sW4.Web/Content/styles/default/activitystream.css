@@ -98,6 +98,10 @@
     float: left;
 }
 
+.no-touch #activitystream header .button:hover {
+    color: #666;
+}
+
 #activitystream .hide-toggle .button {
     padding: 10px 11px;
     position: absolute;
