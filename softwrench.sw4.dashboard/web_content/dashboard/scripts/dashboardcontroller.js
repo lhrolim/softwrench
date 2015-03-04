@@ -147,6 +147,7 @@ app.controller('DashboardController', [
                         e.preventDefault();
                         if ($scope.isEditingAnyDashboard) {
                             alertService.alert('Please, finish editing the current dashboard.');
+                            e.stopImmediatePropagation();
                             return false;
                         }
                         $this.tab('show');
