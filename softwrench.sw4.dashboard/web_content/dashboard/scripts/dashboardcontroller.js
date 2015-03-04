@@ -238,6 +238,11 @@ app.controller('DashboardController', [
             return $scope.currentdashboardid == dashboardid && $scope.isEditingAnyDashboard;
         }
 
+
+        $scope.cancelEditing = function () {
+            return $scope.isEditingAnyDashboard = false;
+        }
+
         $scope.editDashboard = function (dashboardId) {
             $scope.isEditingAnyDashboard = true;
         }
