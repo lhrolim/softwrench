@@ -40,7 +40,7 @@ app.directive('activitystream', function(contextService) {
 
             $scope.formatDate = function(notificationDate) {
                 var currentDate = new Date();
-                var nowMils = currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000);
+                var nowMils = currentDate.getTime();
 
                 //add 'Z' to datetime fix Firefox error
                 var notificationMils = new Date(notificationDate + 'Z').getTime();
