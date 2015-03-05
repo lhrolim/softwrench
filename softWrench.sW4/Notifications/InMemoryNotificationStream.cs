@@ -33,7 +33,7 @@ namespace softWrench.sW4.Notifications {
                                                     notifications.ParentLabel,
                                                     notifications.Summary,
                                                     notifications.CreateBy,
-                                                    notifications.NotificationDate.ToUserTimezone(SecurityFacade.CurrentUser()),
+                                                    notifications.NotificationDate.FromMaximoToUser(SecurityFacade.CurrentUser()),
                                                     notifications.Rowstamp,
                                                     notifications.Flag,
                                                     notifications.IsRead)
