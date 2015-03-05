@@ -92,7 +92,7 @@
             $http.get(urlToCall).success(function (result) {
                 $scope.value = true;
                 $scope.results = result;
-               
+                
                
             }).error(function (result) {
                 alertService.alert("Failed to Load your xml file.Please try again later");
@@ -127,6 +127,11 @@
         editor.getSession().setMode("ace/mode/xml");
         var data = $scope.resultData;
         $scope.type = data.type;
+        if ($scope.type == "metadata") {
+            $scope.value = true;
+        }
+        else
+            $scope.value = false;
         editor.setValue(data.content);
         editor.gotoLine(0);
     }
