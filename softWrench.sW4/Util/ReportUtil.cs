@@ -34,13 +34,10 @@ namespace softWrench.sW4.Util {
 
                     foreach (var key in map.Keys) {
                         if (map[key] is DateTime) {
-                            var fieldMetadata = schema.Fields.Where(f => f.Attribute == key).FirstOrDefault();
-                            if (fieldMetadata != null && fieldMetadata.RendererParameters.ContainsKey("format")) {
-                                var format = fieldMetadata.RendererParameters["format"];
-                                dr[key] = ((DateTime)map[key]).FromMaximoToUser(user).ToString(format);
-                            } else {
-                                dr[key] = ((DateTime)map[key]).FromMaximoToUser(user).ToString();
-                            }
+                           // taking out formatting of date before sending to report as CDate in the report can't handle
+                           // European date format easily. As Hapag wants European Date format in general, we can just do the
+                           // formatting in the report itself
+                           dr[key] = ((DateTime)map[key]).FromMaximoToUser(user).ToString();
                         } else {
                             dr[key] = map[key];
                         }                        
