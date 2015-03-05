@@ -20,6 +20,7 @@ app.directive('activitystream', function(contextService) {
             var throttleTimeout;
             $scope.hiddenToggle = false;
             var rootAvoidingSpin;
+            $scope.enableFilter = false;
      
             $scope.activityStreamEnabled = function () {
                 return contextService.fetchFromContext("notificationStreamFlag", false, true);
@@ -223,6 +224,15 @@ app.directive('activitystream', function(contextService) {
                 $('#activitystream .scroll').height($(window).height() - headerHeight - panePaddingTop - panePaddingBottom);
             }
 
+            $scope.toggleFilter = function () {
+                log.debug('toggleFilter');
+
+                $scope.filterText = '';
+                $scope.enableFilter = !$scope.enableFilter;
+
+                $(window).trigger('resize');
+            }
+
             $scope.toggleHidden = function () {
                 log.debug('toggleHidden');
 
@@ -266,12 +276,15 @@ app.directive('activitystream', function(contextService) {
             });
 
             //prevent window scrolling after reaching end of navigation pane 
-            $(document).on('mousewheel', '#activitystream .scroll',
-                function(e) {
-                    var delta = e.originalEvent.wheelDelta;
-                    this.scrollTop += (delta < 0 ? 1 : -1) * 30;
-                    e.preventDefault();
-                });
+            $(document).on('mousewheel', '#activitystream .scroll', function(e) {
+                var delta = e.originalEvent.wheelDelta;
+                this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+                e.preventDefault();
+            });
+
+            $scope.$watch('filterText', function () {
+                $(window).trigger('resize');
+            });
 
             //get the current notifications
             $scope.refreshStream();

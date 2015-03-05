@@ -11,12 +11,16 @@
             <div class="buttons controls pull-right">
                 <div class="button" ng-click="refreshStream()" rel="tooltip" data-original-title="Refresh" data-placement="bottom"><i class="fa fa-refresh"></i></div>
                 <div class="button off" ng-click="toggleHidden()" ng-class="hiddenToggle ? 'on' : 'off'" rel="tooltip" data-original-title="Toggle Hidden" data-placement="bottom"><i class="fa fa-eye"></i></div>
+                <div class="button off" ng-click="toggleFilter()" ng-class="enableFilter ? 'on' : 'off'" rel="tooltip" data-original-title="Toggle Filter" data-placement="bottom"><i class="fa fa-filter"></i></div>
                 <div class="button" ng-click="markAllRead()" rel="tooltip" data-original-title="Mark All as Read" data-placement="bottom"><i class="fa fa-check-square"></i></div>
+            </div>
+            <div class="filter" ng-show="enableFilter">
+                <input type="text" class="form-control" placeholder="Filter Activity" ng-model="$parent.filterText" />
             </div>
         </header>
         <div class="scroll">
             <div class="messages">
-                <div class="message clearfix" ng-repeat="activity in activities" ng-class="activity.isRead ? 'is-read' : 'not-read'" ng-show="displayHidden(activity)">
+                <div class="message clearfix" ng-repeat="activity in activities | filter:$parent.filterText" ng-class="activity.isRead ? 'is-read' : 'not-read'" ng-show="displayHidden(activity)">
                     <div class="read pull-left"><i class="fa" ng-class="activity.isRead ? '' : 'fa-circle'"></i></div>
                     <div class="icon pull-left"><i class="fa" ng-class="activity.icon"></i></div>
                     <div class="text pull-left">

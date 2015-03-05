@@ -122,6 +122,10 @@
     color: #000;
 }
 
+    #activitystream header .filter {
+        margin-bottom: 5px;
+    }
+
 #activitystream .messages {
     clear: both;
 }
