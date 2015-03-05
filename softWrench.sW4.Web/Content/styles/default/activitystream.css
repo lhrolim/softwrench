@@ -122,8 +122,22 @@
     color: #000;
 }
 
-    #activitystream header .filter {
-        margin-bottom: 5px;
+#activitystream header .filter {
+    margin-bottom: 5px;
+}
+
+    #activitystream header .filter .button {
+        padding: 0;
+    }
+
+    #activitystream header .filter .clearer {
+        position: absolute;
+        top: 47px;
+        right: 18px;
+        width: 34px;
+        height: 34px;
+        line-height: 34px;
+        text-align: center;
     }
 
 #activitystream .messages {

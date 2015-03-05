@@ -26,6 +26,13 @@ app.directive('activitystream', function(contextService) {
                 return contextService.fetchFromContext("notificationStreamFlag", false, true);
             };
 
+            $scope.clearFilter = function () {
+                log.debug('clearFilter');
+
+                $scope.filterText = '';
+                $(window).trigger('resize');
+            }
+
             $scope.displayHidden = function (activity) {
                 //always show unhidden
                 if (!activity.isRead) {
@@ -53,6 +60,8 @@ app.directive('activitystream', function(contextService) {
 
             $scope.getAllHidden = function () {
                 log.debug('getAllHidden');
+
+                //TODO: move to back-end
 
                 //if activities is unset, return false
                 if (typeof $scope.activities !== 'undefined') {
@@ -227,10 +236,8 @@ app.directive('activitystream', function(contextService) {
             $scope.toggleFilter = function () {
                 log.debug('toggleFilter');
 
-                $scope.filterText = '';
                 $scope.enableFilter = !$scope.enableFilter;
-
-                $(window).trigger('resize');
+                $scope.clearFilter();
             }
 
             $scope.toggleHidden = function () {
