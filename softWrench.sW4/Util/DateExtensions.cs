@@ -90,16 +90,16 @@ namespace softWrench.sW4.Util {
                 var maximoUtcProp = MetadataProvider.GlobalProperties.MaximoTimeZone();
                 int maximoUtc;
                 if (!Int32.TryParse(maximoUtcProp, out maximoUtc)) {
-                    return date;
+                    maximoUtc = 0;
                 }
                 maximoOffset = maximoUtc * 60;
             }
             var clientOffset = offSet;
             //ex: -7*60 +(180) ==> client timezone is positive...
             var offset = (maximoOffset + clientOffset);
-            if (!fromUserToMaximo) {
-                offset = -1 * offset;
-            }
+            //if (!fromUserToMaximo) {
+            //    offset = -1 * offset;
+            //}
             date = date.AddMinutes(offset);
             return date;
         }
