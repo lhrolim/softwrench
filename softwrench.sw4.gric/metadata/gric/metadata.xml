@@ -3,9 +3,13 @@
 
   <!--GRIC-->
 
-<!--  <templates>-->
-<!--    <template path="@workorder.xml"/>-->
-<!--  </templates>-->
+  <templates>
+    <!--WorkOrder-->
+    <template path="@workorder.xml"/>
+
+    <!--ServiceRequest-->
+    <template path="@servicerequest.xml"/>
+  </templates>
   
   
   <entities>
@@ -102,30 +106,18 @@
         <property key="mobile.disabled" value="true"/>
       </properties>
       <schemas>
-        <list title="Service Request Grid">
-          <field attribute="ticketid" label="SR No">
-            <renderer type="default" params="width=15%" />
-          </field>
-          <field attribute="description" label="Summary">
-            <renderer type="default" params="excelwidth=50" />
-          </field>
-          <field attribute="reportedbyperson_.displayname" label="Reported By">
-            <renderer type="default" params="width=15%" />
-          </field>
-          <field attribute="status" label="Status">
-            <renderer type="default" params="width=15%" />
-          </field>
+        <list redeclaring="false">
+          <customization position="reportedby">
+            <field attribute="reportedbyperson_.displayname" label="Reported By">
+              <renderer type="default" params="width=15%" />
+            </field>
+          </customization>
+          <customization position="owner">
           <field attribute="ownerperson_.displayname" label="Owner">
             <renderer type="default" params="width=15%" />
           </field>
-          <field attribute="#color" label="">
-            <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
-          </field>
-          <properties>
-            <property key="list.click.schema" value="editdetail"/>
-            <property key="list.defaultorderby" value="sr.ticketuid desc"/>
-          </properties>
-        </list>
+          </customization>
+         </list>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
           
@@ -404,175 +396,32 @@
 
     <!-- Adding the Workorder application from the otb -->
     <application name="workorder" title="Work Order" entity="workorder">
-      <properties>
-        <property key="mobile.fetchlimit" value="300"/>
-      </properties>
+     
       <schemas>
-        <list title="Work Order Grid" platform="web">
-          <field attribute="wonum" label="WO No">
-            <renderer type="default" params="width=10%" />
-          </field>
-          <field attribute="description" label="Summary">
-            <renderer type="default" params="excelwidth=50" />
-          </field>
-          <field attribute="location" label="Location">
-            <renderer type="default" params="width=12%" />
-          </field>
-          <field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="width=25%" />
-          </field>
-          <field attribute="worktype" label="Worktype">
-            <renderer type="default" params="width=12%"/>
-          </field>
-          <field attribute="status" label="Status">
-            <renderer type="default" params="width=12%" />
-          </field>
-          <field attribute="#color" label="">
-            <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
-          </field>
-          <properties>
-            <property key="list.click.schema" value="editdetail"/>
-            <property key="list.defaultorderby" value="workorder.workorderid desc"/>
-          </properties>
-        </list>
+        
+        <schema id="adetail" redeclaring="false">
 
-        <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web">
-          <field attribute="estdur"            hidden="true"/>
-          <field attribute="estlabhrs"         hidden="true"/>
-          <field attribute="estmatcost"        hidden="true"/>
-          <field attribute="estintlabhrs"      hidden="true"/>
-          <field attribute="estintlabcost"     hidden="true"/>
-          <field attribute="estatapprlabhrs"   hidden="true"/>
-          <field attribute="estatapprmatcost"  hidden="true"/>
-          <field attribute="estatapprlabcost"  hidden="true"/>
-          <field attribute="estatapprtoolcost" hidden="true"/>
-          <field attribute="estatapprservcost" hidden="true"/>
-          <field attribute="estapprlabhrs"     hidden="true"/>
-          <field attribute="estapprmatcost"    hidden="true"/>
-          <field attribute="estapprlabcost"    hidden="true"/>
-          <field attribute="estlabcost"        hidden="true"/>
-          <field attribute="esttoolcost"       hidden="true"/>
-          <field attribute="estservcost"       hidden="true"/>
-          <field attribute="actlabhrs"         hidden="true"/>
-          <field attribute="actlabcost"        hidden="true"/>
-          <field attribute="actservcost"       hidden="true"/>
-          <field attribute="actmatcost"        hidden="true"/>
-          <field attribute="acttoolcost"       hidden="true"/>
-          <field attribute="outlabcost"        hidden="true"/>
-          <field attribute="outmatcost"        hidden="true"/>
-          <field attribute="outtoolcost"       hidden="true"/>
-          <field attribute="outservcost"       hidden="true"/>
-          <field attribute="workorderid"  readonly="true" hidden="true"/>
-
-          <field attribute="orgid" readonly="true" hidden="true"/>
-          
-          <field attribute="description" label="Summary:"/>
-          <field label="Details:" attribute="longdescription_.ldtext" >
-            <renderer type="richtext"/>
-          </field>
-          <section id ="siteidsection"/>
-          <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
-          <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
-            <renderer type="autocompleteclient"/>
-          </optionfield>
-          <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
-            <renderer type="lookup"/>
-          </association>
-          <association label="Failure Class:" target="failurecode" labelfield="failurelist_.description" hideDescription="true" extraprojectionvalues="failurelist">
-            <renderer type="lookup"/>
-          </association>
-          <field hidden="true" attribute="failurelist_.failurelist"/>
-          <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" hideDescription="true" labelfield="problemlist_.description">
-            <renderer type="lookup"/>
-            <dataprovider prefilterfunction="FilterProblemCodes"/>
-          </association>
-          <field label="Job Plan:" attribute="jpnum" readonly="true" />
-          <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
-            <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
-            <renderer type="lookup"/>
-          </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" dependantfields="siteid" requiredexpression="@location==null &amp;&amp; @siteid=='LB'">
-            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-            <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
-          </association>
-          <section id="attachmentsection"/>
-          <field attribute="woclass" hidden="true"/>
-         
-          <section id="statussection"/>
-          
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" showexpression="@siteid=='VQ'">
-            <renderer type="lookup"/>
-<!--            <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>-->
-          </association>
-<!--          <association label="Change By:" target="changeby" labelfield="changebyperson_.displayname" showexpression="@siteid!='VQ'">-->
-<!--            <renderer type="lookup"/>-->
-<!--          </association>-->
-          <field attribute="changeby_.displayname" label="Change By:" readonly="true" />
-          <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
-            <renderer type="lookup"/>
-            <!-- dont need this in case of WO -->
-<!--            <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>-->
-          </association>
-
-          
-          <field label="Reported By:" attribute="reportedbyperson_.displayname" readonly="true"/>
-          <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
-            <renderer type="lookup"/>
-          </association>
-          <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-          </field>
-          <!-- Adding target start finish date-->
-          <field attribute="targstartdate" hidden="true"/>
-          <field attribute="targcompdate" hidden="true"/>
-          
-
-          <section id="targstartdate" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=targstartdate;">
-            <header label="Target Start Date:" displacement="sameline"/>
-          </section>
-
-          <section id="targcompdate" resourcepath="/Content/Templates/samelinepickers.html"
-                          parameters="joinattribute=targcompdate;">
-            <header label="Target Finish Date:" displacement="sameline"/>
-          </section>
-          <section id="actualDates"/>
-          
-          <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-          
-          
-          
-<!--          <field attribute="wopriority" label="Priority:" requiredexpression="true" default="1">-->
-<!--            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>-->
-<!--          </field>-->
-          
-          
-          <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
-            <renderer type="lookup"/>
-          </association>
-          <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist">
-          </association>
-          <field hidden="true" attribute="failurelist_.failurelist"/>
-          <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode">
-            <renderer type="lookup"/>
-            <dataprovider prefilterfunction="FilterProblemCodes"/>
-          </association>
-          <field label="Job Plan:" attribute="jpnum" readonly="true" />
-          <!--association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
-            <renderer type="lookup"/>
-          </association-->
-<!--          <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext" >-->
-<!--            <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;" />-->
-<!--          </association>-->
-
-          <section id="compositions"/>
-          
-
-          <!--					<section id="matusetranssection"/>-->
-          <!--					<section id="labtranssection"/>-->
-        </schema>
+          <customization position="owner">
+            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" showexpression="@siteid=='VQ'">
+              <renderer type="lookup"/>
+            </association>
+          </customization>
+          <customization position="+owner">
+            <field attribute="changeby_.displayname" label="Change By:" readonly="true" />
+          </customization>
+          <customization position="ownergroup">
+            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
+              <renderer type="lookup"/>
+            </association>
+            <field label="Reported By:" attribute="reportedbyperson_.displayname" readonly="true"/>
+            <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
+              <renderer type="lookup"/>
+            </association>
+          </customization>
+          <customization position="reportedby"/>
+          <customization position="onbehalfof"/>
+          <customization position="glaccount" />
+         </schema>
 
 
         <schema parentschema="adetail" title="New Work Order" id="newdetail" platform="web">
