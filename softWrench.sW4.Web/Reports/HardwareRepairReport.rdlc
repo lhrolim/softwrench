@@ -6,7 +6,7 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>2cm</Width>
+              <Width>2.13229cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>4cm</Width>
@@ -510,7 +510,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!OpenDate.Value</Value>
+                              <Value>=Convert.ToDatetime(Fields!OpenDate.Value).ToString("dd/MM/yyyy")</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -540,7 +540,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!LastActionDate.Value</Value>
+                              <Value>=Convert.ToDatetime(Fields!LastActionDate.Value).ToString("dd/MM/yyyy")</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -622,7 +622,7 @@
         <Top>3.63564cm</Top>
         <Left>0.47949cm</Left>
         <Height>1.2cm</Height>
-        <Width>26cm</Width>
+        <Width>26.13229cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
