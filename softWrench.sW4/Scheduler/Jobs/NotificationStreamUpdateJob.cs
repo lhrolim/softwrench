@@ -47,7 +47,7 @@ namespace softWrench.sW4.Scheduler.Jobs {
         }
 
         public override bool IsEnabled {
-            get { return ApplicationConfiguration.NotificationStreamFlag; }
+            get { return ApplicationConfiguration.ActivityStreamFlag; }
         }
 
         public override bool RunAtStartup() {

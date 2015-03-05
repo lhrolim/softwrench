@@ -15,7 +15,7 @@ namespace softWrench.sW4.Web.Models.Home {
 
         public string Environment { get; set; }
         public Boolean IsLocal { get; set; }
-        public Boolean NotificationStream { get; set; }
+        public Boolean ActivityStreamFlag { get; set; }
 
         public string ClientName { get; set; }
         public string ClientSideLogLevel { get; set; }

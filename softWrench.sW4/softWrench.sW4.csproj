@@ -146,6 +146,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Metadata\Parsing\XmlNotificationMetadataParser.cs" />
+    <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />
     <Compile Include="Notifications\NotificationFacade.cs" />
     <Compile Include="Audit\AuditTrail.cs" />
     <Compile Include="Audit\ISMAuditTrail.cs" />

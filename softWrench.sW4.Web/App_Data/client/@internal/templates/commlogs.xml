@@ -68,9 +68,23 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       <!--<notifications>-->
         
         <!-- if role is not specified, by default application.notifications will be the role-->
-        <!--<notification role="notification.purchasing.receiving" label="PO" icon="fa fa-dollar" targetschema="editdetail" whereclause="sendtoreceiving = true"/>
-        <notification role="notification.purchasing" label="PO-Receiving" icon="" targetschema="editdetail"/>
-      </notifications>-->
+      <notifications>
+        <notification type="ActivityStream" role="notification.commlog" label="CL" icon="fa fa-envelope-o" navigateToComposition="true"
+                      targetSchema="editdetail" targetApplication="servicerequest" whereClause="ownertable = 'SR'">
+          <attributes>
+            <summary attribute="subject"/>
+            <createddate attribute="createddate"/>
+            <parentAttributes>
+              <application attribute="ownertable"/>
+              <parentuid attribute="ownerid"/>
+            </parentAttributes>
+            <extraAttributes>
+              <extraAttribute attribute="sendtoreceiving"/>
+            </extraAttributes>
+          </attributes>
+        </notification>
+
+      </notifications>
       
       <schemas>
         <schema id="list" stereotype="compositionlist">

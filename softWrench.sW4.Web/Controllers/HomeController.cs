@@ -91,7 +91,7 @@ namespace softWrench.sW4.Web.Controllers {
                 ClientName = ApplicationConfiguration.ClientName,
                 Environment = ApplicationConfiguration.Profile,
                 IsLocal = ApplicationConfiguration.IsLocal(),
-                NotificationStream = ApplicationConfiguration.NotificationStreamFlag,
+                ActivityStreamFlag = ApplicationConfiguration.ActivityStreamFlag,
                 ClientSideLogLevel = clientSideLogLevel,
                 SuccessMessageTimeOut = GetSuccessMessageTimeOut(),
                 InitTimeMillis = ApplicationConfiguration.GetStartTimeInMillis(),

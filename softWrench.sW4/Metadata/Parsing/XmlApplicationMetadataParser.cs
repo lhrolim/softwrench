@@ -489,11 +489,6 @@ namespace softWrench.sW4.Metadata.Parsing {
             return commandsSchemaEl.Elements().Select(XmlCommandBarMetadataParser.GetCommandDisplayable).ToList();
         }
 
-        /*private ApplicationNotificationSchema ParseNotificationSchema(XElement xElement) {
-            var commandsSchemaEl = xElement.Elements().FirstOrDefault(f => f.IsNamed(XmlCommandSchema.CommandToolBarElements));
-            return new ApplicationCommandSchema(XmlCommandBarMetadataParser.DoParse(commandsSchemaEl), _commandBars);
-        }*/
-
         /// <summary>
         ///     Deseriliazes the specified XML element to its corresponding
         ///     <seealso>
@@ -527,7 +522,15 @@ namespace softWrench.sW4.Metadata.Parsing {
              .UserIdAttribute
              .Name;
 
+
             return new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, userIdFieldName, properties, ParseSchemas(name, entity, application, idFieldName, userIdFieldName), ParseComponents(name, entity, application, idFieldName), service);
+        }
+
+
+        private ApplicationNotificationSchema ParseNotificationSchema(XElement xElement)
+        {
+            var commandsSchemaEl = xElement.Elements().FirstOrDefault(f => f.IsNamed(XmlCommandSchema.CommandToolBarElements));
+            return new ApplicationCommandSchema(XmlCommandBarMetadataParser.DoParse(commandsSchemaEl), _commandBars);
         }
 
         private static IEnumerable<DisplayableComponent> ParseComponents(string name, string entity, XElement application, string idFieldName) {

@@ -234,12 +234,12 @@ namespace softWrench.sW4.Util {
 
         #endregion
 
-        #region Notifications
+        #region Notification Functionality
 
-        public static bool NotificationStreamFlag {
+        public static bool ActivityStreamFlag {
             get
             {
-                var flagStr = MetadataProvider.GlobalProperty("notificationStream");
+                var flagStr = MetadataProvider.GlobalProperty("notifications.activityStream.enabled");
                 var flag = false;
                 Boolean.TryParse(flagStr, out flag);
                 return flag;

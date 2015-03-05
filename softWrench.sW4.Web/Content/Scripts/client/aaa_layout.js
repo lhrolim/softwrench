@@ -235,7 +235,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         $rootScope.environment = config.environment;
         $rootScope.i18NRequired = config.i18NRequired;
         $rootScope.deviceType = DeviceDetect.catagory.toLowerCase();
-        contextService.insertIntoContext("notificationStreamFlag",config.notificationStream, true);
+        contextService.insertIntoContext("activityStreamFlag",config.activityStreamFlag, true);
 
         $scope.mainlogo = config.logo;
         $scope.myprofileenabled = config.myProfileEnabled;
