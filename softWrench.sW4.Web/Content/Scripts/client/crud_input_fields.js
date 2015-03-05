@@ -121,6 +121,25 @@ app.directive('crudInputFields', function (contextService) {
                 return title;
             };
 
+            // Configure input files
+            $('#uploadBtn').on('change', function (e) {
+                var fileName = this.value.match(/[^\/\\]+$/);
+                var validFileTypes = contextService.fetchFromContext('allowedfiles', true);
+                var extensionIdx = this.value.lastIndexOf(".");
+                var extension = this.value.substring(extensionIdx + 1);
+                if ($.inArray(extension, validFileTypes) == -1) {
+                    if (isIe9()) {
+                        //hacky around ie9 -- HAP-894
+                        $(this).replaceWith($(this)).clone(true);
+                    } else {
+                        $(this).val('');
+                    }
+                  
+                    return;
+                }
+                $('#uploadFile').attr("value", fileName);
+            });
+
             $scope.$on('sw_block_association', function (event, association) {
                 $scope.blockedassociations[association] = true;
             });
@@ -174,18 +193,7 @@ app.directive('crudInputFields', function (contextService) {
 
                 $('.datetimereadonly').datepicker("remove");
 
-                // Configure input files
-                $('#uploadBtn').on('change', function (e) {
-                    var fileName = this.value.match(/[^\/\\]+$/);
-                    var validFileTypes = contextService.fetchFromContext('allowedfiles', true);
-                    var extensionIdx = this.value.lastIndexOf(".");
-                    var extension = this.value.substring(extensionIdx + 1);
-                    if ($.inArray(extension, validFileTypes) == -1) {
-                        $(this).val('');
-                        return;
-                    }
-                    $('#uploadFile').attr("value", fileName);
-                });
+
             });
 
             /* Association (COMBO, AUTOCOMPLETECLIENT) functions */

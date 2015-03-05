@@ -56,13 +56,28 @@ app.factory('submitService', function ($rootScope, fieldService,contextService) 
                 }
             });
 
+            var isValidfn = this.isValidAttachment;
+
             $('input[type="file"]', form).each(function () {
-                if (this.value != null && this.value!="") {
+                if (this.value != null && this.value != "" && isValidfn(this.value)) {
                     formId = $(this).closest('form');
                 }
             });
             return formId;
         },
+
+        isValidAttachment: function(value){
+            var fileName = value.match(/[^\/\\]+$/);
+            var validFileTypes = contextService.fetchFromContext('allowedfiles', true);
+            var extensionIdx = value.lastIndexOf(".");
+            var extension = value.substring(extensionIdx + 1);
+            if ($.inArray(extension, validFileTypes) == -1) {
+                return false;
+            }
+            return true;
+        },
+
+
 
 
         removeExtraFields: function (datamap, clone, schema) {
