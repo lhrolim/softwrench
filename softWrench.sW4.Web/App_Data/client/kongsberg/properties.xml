@@ -23,7 +23,7 @@
   <property key="targetmapping" value="smartcloud7.5"/>
   <property key ="defaultEmail" value="kogt@controltechnologysolutions.com"/>
   <property key="notificationStream" value="true"/>
-  <property key="maximoutc" value="-6"/>
+  
 
   <environment key="dev">
     <property key="swdb_url" value="Data Source=10.50.100.50;Initial Catalog=SWDB_KONGSDEV;User Id=sw;password=softwrench;" />
