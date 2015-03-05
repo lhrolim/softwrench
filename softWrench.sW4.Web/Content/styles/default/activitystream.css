@@ -2,14 +2,6 @@
     padding: 0 60px 0 20px !important;
 }
 
-.jspVerticalBar {
-    display: none;
-}
-
-.jspHorizontalBar {
-    display: none;
-}
-
 #activitystream {
     background: #f2f2f2;
     position: fixed;
