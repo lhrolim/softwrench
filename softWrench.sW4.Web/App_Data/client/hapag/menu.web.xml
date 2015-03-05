@@ -243,7 +243,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
       <application id="incidentdetailreport" title="Incident Detail Report" tooltip="Click to view Incident Detail Report" schema="incidentdetailreportfilters" ref="incident" />
       <application id="hardwarerepairreport" title="Hardware Repair Report" tooltip="Click to view Hardware Repair Report" schema="hardwarerepairreportfilters" ref="incident" />
       <application id="tapebackupreport" title="Tape BackUp Report" tooltip="Click to view Tape Back Up Report" schema="tapebackupreport" ref="incident" />
-      <action id="categoriesreport" title="Asset Categories" tooltip="Click here to view Asset Categories report" controller="Report" action="Index" parameters="application=asset;reportName=CategoriesReport;key.schemaId=categories" target="new" />
+      <action id="categoriesreport" title="Asset Categories" tooltip="Click here to view Asset Categories report" controller="Report" action="Index" parameters="application=asset;reportName=CategoriesReportXITC;key.schemaId=categories" target="new" />
       <application id="itcreport" title="ITC Report" tooltip="Click to view ITC Report" schema="itcreportfilters" ref="persongroupview" />
 		</container>
     
