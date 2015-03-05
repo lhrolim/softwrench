@@ -22,7 +22,7 @@ app.directive('activitystream', function(contextService) {
             var rootAvoidingSpin;
      
             $scope.activityStreamEnabled = function () {
-                return contextService.fetchFromContext("notificationStreamFlag", false, true);
+                return contextService.fetchFromContext("activityStreamFlag", false, true);
             };
 
             $scope.displayHidden = function (activity) {

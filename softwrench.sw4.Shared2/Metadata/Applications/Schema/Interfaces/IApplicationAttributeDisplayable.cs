@@ -2,7 +2,7 @@
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces
 {
-    public interface IApplicationAttributeDisplayable :IApplicationDisplayable
+    public interface IApplicationAttributeDisplayable : IApplicationDisplayable
     {
         String Attribute { get; set; }
 

@@ -135,6 +135,24 @@ namespace softWrench.sW4.Metadata {
             LoggingUtil.DefaultLog.InfoFormat("Sliced metadata cache built in {0}",LoggingUtil.MsDelta(watch));
         }
 
+        public static IList<SlicedEntityMetadata> GetSlicedMetadataNotificationEntities()
+        {
+            var applicationsWithNotifications = (from a in _applicationMetadata
+                where a.Notifications.Count > 0
+                select a).ToList<CompleteApplicationMetadataDefinition>();
+
+            var resultList = new List<SlicedEntityMetadata>();
+            if (applicationsWithNotifications.Any())
+            {
+                resultList.AddRange(from app in applicationsWithNotifications 
+                                    let entityName = app.Entity 
+                                    let entityMetadata = Entity(entityName) 
+                                    from notification in app.Notifications 
+                                    select SlicedEntityMetadataBuilder.GetInstance(entityMetadata, notification.Value, app.FetchLimit));
+            }
+            return resultList;
+        }
+
 
 
         [NotNull]

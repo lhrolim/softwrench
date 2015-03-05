@@ -12,6 +12,10 @@ using softWrench.sW4.Notifications.Entities;
 using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.SimpleInjector;
 using Newtonsoft.Json.Linq;
+using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
+using softWrench.sW4.Data.Persistence.Relational;
+using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
 
 
@@ -85,7 +89,14 @@ namespace softWrench.sW4.Notifications {
             }
         }
 
-        public void UpdateNotificationStreams() {
+        public void UpdateNotificationStreams()
+        {
+            var slicedMetadataEntities = MetadataProvider.GetSlicedMetadataNotificationEntities();
+            var queryBuilder = new EntityQueryBuilder();
+            var searchRequestDTO = new SearchRequestDto();
+            searchRequestDTO.BuildProjection(slicedMetadataEntities[0].AppSchema);
+            var newquery = queryBuilder.AllRows(slicedMetadataEntities[0], searchRequestDTO);
+
             var query = string.Format("select 'commlog' as application, null as targetschema,'communication' as label, 'fa-envelope-o' as icon ,CONVERT(varchar(10), commlogid) as id, c.commloguid as uid, " +
                                       "t.ticketid as parentid, c.ownerid as parentuid, CASE c.ownertable WHEN 'SR' THEN 'servicerequest' ELSE c.ownertable END as parentapplication, c.subject as summary, " +
                                       "c.createby as changeby, c.createdate as changedate, c.rowstamp from commlog c " +

@@ -69,7 +69,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         
         <!-- if role is not specified, by default application.notifications will be the role-->
       <notifications>
-        <notification type="ActivityStream" role="notification.commlog" label="CL" icon="fa fa-envelope-o" navigateToComposition="true"
+        <notification id="srCommlogActivity" type="ActivityStream" role="notification.commlog" label="CL" icon="fa fa-envelope-o"
                       targetSchema="editdetail" targetApplication="servicerequest" whereClause="ownertable = 'SR'">
           <attributes>
             <summary attribute="subject"/>

@@ -1032,13 +1032,12 @@
         </complexType>
       </element>
     </choice>
-      
-    
+
+    <attribute name="id" type="string"></attribute>
     <attribute name="type" type="string"></attribute>
     <attribute name="role" type="string" use="required"></attribute>
     <attribute name="label" type="string"></attribute>
     <attribute name="icon" type="string"></attribute>
-    <attribute name="navigateToComposition" type="boolean"></attribute>
     <attribute name="targetSchema" type="string" use="required"></attribute>
     <attribute name="targetApplication" type="string"></attribute>
     <attribute name="whereClause" type="string"></attribute>
