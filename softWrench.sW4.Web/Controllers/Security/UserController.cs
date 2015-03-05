@@ -88,6 +88,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
                 return restrictions;
             }
             FillRestrictionsFromHlagLocation(restrictions, ((UserHlagLocation)hlaglocationsAux).Locations);
+            restrictions = restrictions.OrderBy(c => c.Customer).ThenBy(cd => cd.CustomerDescription).ThenBy(cc => cc.CostCenter).ThenBy(ccd => ccd.CostCenterDescription).ToList();
             return restrictions;
         }
 
