@@ -612,7 +612,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <composition relationship="relatedrecord" label="Related Records" inline="true" >
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey;onClickService=relatedrecordservice.opendetail;showaslink=true" />
           </composition>
-          <composition relationship="worklog" label="Work Log">
+          <composition relationship="worklog" label="Work Log" printschema="printschema">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
           </composition>
           <tab label="Solution" id="solution">
@@ -3115,6 +3115,23 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="compositions.alwaysrefresh" value="true"/>
           </properties>
         </detail>
+
+        <schema id="printschema">
+          <field attribute="worklogid" hidden="true"/>
+          <field  attribute="recordkey" label="Record Key" />
+          <field  attribute="class" label="Class" />
+          <field  attribute="hlagcreateby" label="Created By" />
+          <field  attribute="createby" label="Created By" hidden="true"/>
+          <field attribute="createdate" label="Created Date">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
+          </field>
+          <field attribute="itdcreatedate" label="Created Date" hidden="true"/>
+          <field  attribute="logtype" label="Log Type" />
+          <field  attribute="description" label="Summary" />
+          <field  attribute="longdescription_.ldtext" label="Details"/>
+        </schema>
+        
+        
       </schemas>
     </application>
 
@@ -3146,6 +3163,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 <!--            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />-->
 <!--          </field>-->
         </list>
+
+     
 
         <schema id="faqAttachments" stereotype="compositionlist">
           <field hidden="true" attribute="#path"/>

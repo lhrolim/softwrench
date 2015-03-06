@@ -15,6 +15,8 @@ namespace softWrench.sW4.Data.Relationship.Composition {
     //TODO: should clean cache upon metadata saving
     public class CompositionBuilder : ISingletonComponent {
 
+
+
         public static IDictionary<string, ApplicationCompositionSchema> InitializeCompositionSchemas(ApplicationSchemaDefinition schema) {
             if (schema.CachedCompositions != null) {
                 return schema.CachedCompositions;

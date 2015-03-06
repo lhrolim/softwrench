@@ -53,7 +53,8 @@ app.directive('printModal', function ($log, contextService) {
                 for (var i = 0; i < tabs.length ; i++) {
                     var tab = tabs[i];
                     if (tab.type == "ApplicationCompositionDefinition") {
-                        $scope.compositionstoprint[tab.relationship] = { value: false, schema: tab.schema.schemas.list };
+                        var schemaToPrint = tab.schema.schemas.print ? tab.schema.schemas.print : tab.schema.schemas.list;
+                        $scope.compositionstoprint[tab.relationship] = { value: false, schema: schemaToPrint };
                     } else {
                         $scope.compositionstoprint[tab.id] = { value: false, schema: tab };
                     }

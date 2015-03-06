@@ -193,6 +193,8 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
                     compositionsToFetch[key] = obj;
                 }
             });
+
+            parameters.printmode = true;
             
             var getDetailsUrl = redirectService.getApplicationUrl(applicationName, printSchemaId, '', '', parameters);
 
