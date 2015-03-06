@@ -663,6 +663,7 @@
         <detail redeclaring="false">
           <customization position="attachment"/>
           <customization position="location"/>
+          <customization position="classstructureid"/>
         </detail>
       </schemas>
       
