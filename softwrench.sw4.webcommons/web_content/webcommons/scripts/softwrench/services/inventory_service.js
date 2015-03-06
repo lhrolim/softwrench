@@ -487,7 +487,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             itemDatamap['storeloc'] = parentdatamap['#storeloc'];
             itemDatamap['gldebitacct'] = parentdatamap['#gldebitacct'];
 
-            modalService.show(compositionschema, itemDatamap, null,null, parentdatamap, parentschema);
+            modalService.show(compositionschema, itemDatamap, {}, null,null, parentdatamap, parentschema);
         },
 
         hideNewIssueModal: function (parameters) {

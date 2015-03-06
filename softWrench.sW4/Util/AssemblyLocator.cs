@@ -13,11 +13,10 @@ namespace softWrench.sW4.Util {
     public static class AssemblyLocator {
         private static ReadOnlyCollection<Assembly> AllAssemblies;
         private static ReadOnlyCollection<Assembly> BinAssemblies;
-    
+
 
         public static ReadOnlyCollection<Assembly> GetAssemblies() {
-            if (AllAssemblies != null)
-            {
+            if (AllAssemblies != null) {
                 return AllAssemblies;
             }
 
@@ -60,13 +59,16 @@ namespace softWrench.sW4.Util {
             return GetAssemblies().Any(r => r.FullName.StartsWith("softwrench.sw4.{0}".Fmt(ApplicationConfiguration.ClientName), StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public static Assembly GetCustomerAssembly()
-        {
+        public static Assembly GetCustomerAssembly() {
             return GetAssemblies().FirstOrDefault(r => r.FullName.StartsWith("softwrench.sw4.{0}".Fmt(ApplicationConfiguration.ClientName), StringComparison.CurrentCultureIgnoreCase));
         }
 
         public static Assembly GetAssembly(string assemblyName) {
             return GetAssemblies().FirstOrDefault(r => r.FullName.StartsWith(assemblyName, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        public static IEnumerable<Assembly> GetMigratorAssemblies() {
+            return GetSWAssemblies();
         }
     }
 }

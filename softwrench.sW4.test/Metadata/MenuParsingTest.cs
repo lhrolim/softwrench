@@ -18,7 +18,8 @@ namespace softwrench.sW4.test.Metadata {
                 Debug.WriteLine(clientName);
                 ApplicationConfiguration.TestclientName = clientName;
                 MetadataProvider.StubReset();
-                var menu = InMemoryUser.TestInstance("test").Menu(ClientPlatform.Web);
+                bool fromCache;
+                var menu = InMemoryUser.TestInstance("test").Menu(ClientPlatform.Web, out fromCache);
                 Assert.IsNotNull(menu);
             }
             

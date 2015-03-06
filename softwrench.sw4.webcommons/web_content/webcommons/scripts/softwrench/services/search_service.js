@@ -221,6 +221,9 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
         /// <returns type=""></returns>        
         buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause, paginationData, searchTemplate) {
             var searchDto = {};
+            if (!searchData) {
+                searchData = {};
+            }
             if (!searchSort) {
                 searchSort = {};
             }
@@ -236,9 +239,9 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             searchDto.needsCountUpdate = true;
             //existing template pass too many variable, which some of them did not get translated and caused an SQL error
             //searchDto.searchTemplate = searchTemplate;
-            searchDto.searchTemplate = searchDto.searchParams.replace("&&", "||");
+            searchDto.searchTemplate = searchDto.searchParams;
             searchData.lastSearchedValues = searchDto.searchValues;
-            
+
             if (paginationData) {
                 searchDto.pageNumber = paginationData.pageNumber;
                 searchDto.pageSize = paginationData.pageSize;
@@ -337,24 +340,38 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             return this.searchOperations()[1];
         },
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchData">a key value pair for modifying the grid query that is present on the screen (ex: 
+        ///     var searchData = {
+        ///         param1:'value',
+        ///         param2:'value2'
+        ///     }
+        /// </param>
+        /// <param name="extraparameters">accepts:
+        ///  pageNumber --> the page to go
+        ///  pageSize --> a different page size than the scope one
+        ///  printMode --> if we need to refresh the grid for printmode
+        ///  avoidspin --> if true, we wont show the busy indicator on the screen
+        ///  keepfilterparams --> if true, we should keep the filter parameters on the grid
+        ///  searchTemplate --> the search template string to apply on the seach
+        ///  panelid: the panel id to refresh, used to allow multiple data on screen
+        ///  fieldstodisplay: if present, the schema will be sliced for showing only these fields
+        ///  
+        /// </param>
         refreshGrid: function (searchData, extraparameters) {
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="searchData">a key value pair for modifying the grid query that is present on the screen (ex: 
-            ///     var searchData = {
-            ///         param1:'value',
-            ///         param2:'value2'
-            ///     }
-            /// </param>
-            /// <param name="extraparameters">accepts:
-            ///  pageNumber --> the page to go
-            ///  pageSize --> a different page size than the scope one
-            ///  printMode --> if we need to refresh the grid for printmode
-            ///  avoidspin --> if true, we wont show the busy indicator on the screen
-            ///  keepfilterparams --> if true, we should keep the filter parameters on the grid
-            ///  searchTemplate --> the search template string to apply on the seach
-            /// </param>
+            extraparameters = extraparameters || {};
+
+            var key = "poll_refreshgridaction" + (extraparameters.panelid ? extraparameters.panelid : "");
+
+            //this is needed because the crud_list handler may not yet be in place when this method is called, 
+            //we need to make sure that as soon as it gets available it consumes the message
+            contextService.insertIntoContext(key, {
+                searchData: searchData,
+                extraparameters: extraparameters,
+                panelid: extraparameters.panelid
+            }, true);
             $rootScope.$broadcast("sw_refreshgrid", searchData, extraparameters);
         },
 
@@ -374,7 +391,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
                 }
             }
             searchTemplate = searchTemplate.substring(0, searchTemplate.length - 2);
-            this.refreshGrid(searchData,{searchTemplate:searchTemplate});
+            this.refreshGrid(searchData, { searchTemplate: searchTemplate });
         },
 
         /// <summary>
@@ -392,6 +409,8 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
         /// searchOperators --> the array of operators to apply to searchdata array, in the same order
         /// searchSort --> the sorting object
         /// searchTemplate --> the searchtemplate to use in the search operation
+        /// printMode --> if true, means we´re doing a search for a print
+        /// searchDTO --> the built in searchDTO, íf present, won´t be built inside here
         /// 
         /// </param>
         searchWithData: function (application, searchData, schema, extraParameters) {
@@ -400,20 +419,24 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             }
             extraParameters = extraParameters || {};
             searchData = searchData || {};
-            
-            var log = $log.getInstance('searchService#searchWithData');
 
-            var searchDTO = this.buildSearchDTO(searchData, extraParameters.searchSort, extraParameters.searchOperators, null);
-            searchDTO.searchTemplate = extraParameters.searchTemplate;
-            searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
-            searchDTO.totalCount = 0;
-            searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;
+            var log = $log.getInstance('searchService#searchWithData');
+            var searchDTO = extraParameters.searchDTO;
+            if (!searchDTO) {
+                searchDTO = this.buildSearchDTO(searchData, extraParameters.searchSort, extraParameters.searchOperators, null);
+                searchDTO.searchTemplate = extraParameters.searchTemplate;
+                searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
+                searchDTO.totalCount = 0;
+                searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;
+            }
+
             var restParameters = {
                 key: {
                     schemaId: schema ? schema : "list",
                     mode: extraParameters.mode ? extraParameters.mode : 'none',
                     platform: "web"
                 },
+                schemaFieldsToDisplay: extraParameters.schemaFieldsToDisplay,
                 SearchDTO: searchDTO
             };
             var queryString = $.param(restParameters);

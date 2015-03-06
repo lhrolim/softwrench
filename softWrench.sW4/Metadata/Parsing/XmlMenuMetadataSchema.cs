@@ -9,6 +9,7 @@
         public const string ContainerElement = "container";
         public const string ContainerModuleName = "modulename";
         public const string ContainerModuleAlias = "modulealias";
+        public const string ContainerHasMainAction = "hasmainaction";
         public const string ApplicationElement = "application";
         public const string ResourceRefElement = "resourceref";
         public const string ActionElement = "action";
@@ -27,6 +28,7 @@
         
         public const string ActionMenuControllerAttribute = "controller";
         public const string ActionMenuActionAttribute = "action";
+        
         public const string ActionMenuParametersAttribute = "parameters";
         public const string ActionMenuTargetAttribute = "target";
         

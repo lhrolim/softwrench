@@ -273,6 +273,7 @@
     <Compile Include="Metadata\Entities\Schema\EntityTargetSchema.cs" />
     <Compile Include="Metadata\Entities\Sliced\SlicedEntityAssociation.cs" />
     <Compile Include="Metadata\ClientChangeEvent.cs" />
+    <Compile Include="Metadata\Menu\MenuManager.cs" />
     <Compile Include="Metadata\MetadataProviderInternalCache.cs" />
     <Compile Include="Metadata\Parsing\IXMLMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XElementExtensions.cs" />
@@ -383,6 +384,7 @@
     <Compile Include="Security\Init\RoleExtensions.cs" />
     <Compile Include="Security\Interfaces\AfterLoginRoleEvaluator.cs" />
     <Compile Include="Security\Interfaces\IRoleEvaluator.cs" />
+    <Compile Include="Security\Services\ClearMenuEvent.cs" />
     <Compile Include="Security\Services\ClearCacheEvent.cs" />
     <Compile Include="Security\Services\UserLoginEvent.cs" />
     <Compile Include="Security\UserType.cs" />
@@ -510,7 +512,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Security\Interfaces\IBaseEntity.cs" />
     <Compile Include="Security\Entities\UserCustomConstraint.cs" />
     <Compile Include="Security\Entities\DataConstraint.cs" />
     <Compile Include="Security\Entities\Role.cs" />

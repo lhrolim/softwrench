@@ -1,4 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using cts.commons.web;
+using cts.commons.web.Attributes;
+using JetBrains.Annotations;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -67,7 +69,9 @@ namespace softWrench.sW4.Web.Controllers {
 
             var applicationMetadata = MetadataProvider
                 .Application(application)
-                .ApplyPolicies(request.Key, user, ClientPlatform.Web);
+                .ApplyPolicies(request.Key, user, ClientPlatform.Web,request.SchemaFieldsToDisplay);
+
+
             ContextLookuper.FillContext(request.Key);
             var response = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
             response.Title = _i18NResolver.I18NSchemaTitle(response.Schema);

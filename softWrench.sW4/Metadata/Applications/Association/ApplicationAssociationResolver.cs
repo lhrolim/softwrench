@@ -52,7 +52,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             if (!String.IsNullOrWhiteSpace(optionApplication) && !String.IsNullOrWhiteSpace(optionSchemaId)) {
                 return MetadataProvider
                     .Application(optionApplication)
-                    .ApplyPolicies(new ApplicationMetadataSchemaKey(optionSchemaId), SecurityFacade.CurrentUser(), ClientPlatform.Web);
+                    .ApplyPolicies(new ApplicationMetadataSchemaKey(optionSchemaId), SecurityFacade.CurrentUser(), ClientPlatform.Web,null);
             }
             return null;
         }

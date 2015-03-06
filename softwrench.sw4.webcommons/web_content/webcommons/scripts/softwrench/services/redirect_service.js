@@ -75,7 +75,9 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             sessionStorage.swGlobalRedirectURL = redirectUrl;
             $http.get(redirectUrl).success(
                 function (data) {
-                    $rootScope.$broadcast("sw_redirectactionsuccess", data);
+                    if (data.type != "BlankApplicationResponse") {
+                        $rootScope.$broadcast("sw_redirectactionsuccess", data);
+                    }
                 }).error(
                 function (data) {
                     var errordata = {

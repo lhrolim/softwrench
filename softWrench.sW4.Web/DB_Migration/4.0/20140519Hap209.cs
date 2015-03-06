@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using cts.commons.persistence.Util;
 using FluentMigrator;
 using MySql.Data.MySqlClient;
 using softwrench.sw4.Hapag.Data;

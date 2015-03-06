@@ -165,7 +165,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 if (fieldMetadata.providerAttribute == null) {
                     return fieldMetadata.options;
                 }
-                return associationOptions[fieldMetadata.associationKey];
+                return $scope.associationOptions[fieldMetadata.associationKey];
             }
             $scope.isPositionLeft = function (fieldMetadata) {
                 return "left".equalIc(fieldMetadata.rendererParameters['position']);
@@ -388,7 +388,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                         modaldatamap = onloadfn(datamap, fieldMetadata.rendererParameters['schema'], fieldMetadata);
                     }
 
-                    modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, function(selecteditem) {
+                    modalService.show(fieldMetadata.rendererParameters['schema'], modaldatamap, {}, function(selecteditem) {
                         savefn(datamap, fieldMetadata.rendererParameters['schema'], selecteditem, fieldMetadata);
                     }, null, datamap, schema);
 
@@ -489,7 +489,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                     var optionfield = optionsFields[i];
                     if ($scope.datamap[optionfield.target] == null && optionfield.providerAttribute == null && optionfield.rendererType != 'checkbox') {
                         var values = $scope.GetOptionFieldOptions(optionfield);
-                        if (values != null) {
+                        if (values != null && values.length>0) {
                             $scope.datamap[optionfield.target] = values[0].value;
                         }
                     }

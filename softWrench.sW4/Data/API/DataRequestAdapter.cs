@@ -9,6 +9,11 @@ namespace softWrench.sW4.Data.API {
     public class DataRequestAdapter : IDataRequest {
         public ApplicationMetadataSchemaKey Key { get; set; }
 
+        /// <summary>
+        /// If present, this fields will be applied on top of the original schema. Used heavily on dashboards
+        /// </summary>
+        public String SchemaFieldsToDisplay { get; set; }
+
         public String Title { get; set; }
 
         public IDictionary<string, string> CustomParameters { get; set; }

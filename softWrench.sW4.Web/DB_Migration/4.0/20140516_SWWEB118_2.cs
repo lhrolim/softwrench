@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿using cts.commons.persistence.Util;
+using FluentMigrator;
 using softWrench.sW4.Web.Util;
 using System;
 using System.Collections.Generic;
