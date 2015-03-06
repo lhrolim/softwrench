@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Web.Http;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector.Events;
 using cts.commons.web.Attributes;
 using softwrench.sw4.dashboard.classes.model;
@@ -34,9 +35,10 @@ namespace softwrench.sw4.dashboard.classes.controller {
             _userDashboardManager = userDashboardManager;
             _dispatcher = dispatcher;
         }
-
+        //TODO: fix datetime deserialization
         [HttpPost]
-        public IGenericResponseResult SaveDashboard([FromUri]Dashboard dashboard, [FromUri]string policy) {
+        public IGenericResponseResult SaveDashboard([FromUri]Dashboard dashboard, [FromUri]string policy,
+            [FromUri]string creationDateSt) {
             //TODO: update menu, clear caching
             var user = SecurityFacade.CurrentUser();
             var currentdtm = DateTime.Now;
@@ -51,6 +53,9 @@ namespace softwrench.sw4.dashboard.classes.controller {
             if (dashboard.Layout == null) {
                 dashboard.Layout = "0";
             }
+//            if (creationDateSt != null && dashboard.CreationDate==null) {
+//                dashboard.CreationDate = (DateTime)DateUtil.Parse(creationDateSt);
+//            }
 
 
             var savedDashboard = _dao.Save(dashboard);

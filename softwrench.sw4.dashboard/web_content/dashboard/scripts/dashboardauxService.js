@@ -15,7 +15,7 @@ app.factory('dashboardAuxService', function ($rootScope, $log, contextService, r
                     event.scope.datamap['appfields'] += value.value + ",";
                 });
                 var selectedFields = event.scope.datamap['appfields'];
-                if (selectedFields ) {
+                if (selectedFields) {
                     event.scope.datamap['appfields'] = selectedFields.substring(0, selectedFields.length - 1);
                 }
 
@@ -49,7 +49,13 @@ app.factory('dashboardAuxService', function ($rootScope, $log, contextService, r
             });
         },
 
-        saveDashboard: function (datamap,policy) {
+        saveDashboard: function (datamap, policy) {
+            datamap.creationDateSt = datamap.creationDate;
+            if (datamap.panels == null) {
+                //this will avoid wrong serialization
+                delete datamap.panels;
+            }
+
             restService.invokePost('Dashboard', 'SaveDashboard', datamap, null, function (data) {
                 $rootScope.$broadcast('dash_dashsaved', data.resultObject);
             });

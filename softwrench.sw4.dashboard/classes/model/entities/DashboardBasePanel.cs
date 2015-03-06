@@ -35,7 +35,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         public virtual DashboardFilter Filter { get; set; }
 
         [Property]
-        public DateTime? CreationDate { get; set; }
+        public DateTime CreationDate { get; set; }
         [Property]
         public DateTime? UpdateDate { get; set; }
         [Property]

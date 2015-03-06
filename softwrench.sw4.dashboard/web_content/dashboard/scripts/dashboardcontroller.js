@@ -16,7 +16,7 @@ app.directive('dashboardrendered', function ($timeout, $log, $rootScope, eventSe
             $rootScope.$broadcast('dash_finishloading');
 
 
-            
+
         }
     };
 });
@@ -24,8 +24,8 @@ app.directive('dashboardrendered', function ($timeout, $log, $rootScope, eventSe
 
 
 app.controller('DashboardController', [
-    '$scope','$log','$timeout', 'modalService', 'fieldService', 'dashboardAuxService','contextService','alertService',
-    function ($scope,$log,$timeout, modalService, fieldService, dashboardAuxService,contextService,alertService) {
+    '$scope', '$log', '$timeout', 'modalService', 'fieldService', 'dashboardAuxService', 'contextService', 'alertService',
+    function ($scope, $log, $timeout, modalService, fieldService, dashboardAuxService, contextService, alertService) {
 
         $scope.doInit = function () {
 
@@ -60,17 +60,29 @@ app.controller('DashboardController', [
             });
         }
 
-        $scope.getCurrentDashboardById = function(id){
+        $scope.getCurrentDashboardById = function (id) {
             var dashboards = $scope.dashboards;
             for (var i = 0; i < dashboards.length; i++) {
                 if (dashboards[i].id == id) {
                     return dashboards[i];
                 }
             }
+            
             return dashboards[0];
         }
 
-        
+        $scope.getCurrentIndexById = function (id) {
+            var dashboards = $scope.dashboards;
+            for (var i = 0; i < dashboards.length; i++) {
+                if (dashboards[i].id == id) {
+                    return i;
+                }
+            }
+            
+            return -1;
+        }
+
+
 
         $scope.cancelDashboard = function () {
             $scope.creatingDashboard = false;
@@ -78,6 +90,7 @@ app.controller('DashboardController', [
 
         $scope.addpanel = function () {
             var dm = {};
+            $scope.dashboard.panels = $scope.dashboard.panels || [];
             dm.numberofpanels = $scope.dashboard.panels.length;
             modalService.show($scope.newpanelschema, dm, {
                 title: "Add Panel", cssclass: "dashboardmodal", onloadfn: function (scope) {
@@ -98,10 +111,10 @@ app.controller('DashboardController', [
             });
         }
 
-        $scope.getActiveClass = function(tabid) {
+        $scope.getActiveClass = function (tabid) {
             return tabid == $scope.currentdashboardid ? "active" : null;
         }
-   
+
 
         $scope.doInit();
 
@@ -124,7 +137,15 @@ app.controller('DashboardController', [
             modalService.hide();
 
             // Lazy load of the dashboards - also set focus to the new dashboard
-            $scope.dashboards.push(dashboard);
+            var preexistingdashboardIdx = $scope.getCurrentIndexById(dashboard.id, true);
+            
+            if (preexistingdashboardIdx == -1) {
+                $scope.dashboards.push(dashboard);
+            } else {
+                $scope.dashboards[preexistingdashboardIdx] = (dashboard);
+            }
+            
+            $scope.dashboard = dashboard;
             $scope.currentdashboardid = dashboard.id;
 
             $scope.newDashboard = false;
@@ -183,31 +204,36 @@ app.controller('DashboardController', [
 
         //**************************************************************************************creation***********************************************************
         $scope.viewDashboard = function (event, id) {
-            if (!$scope.isEditingAnyDashboard) {
-                $scope.newDashboard = false;
-
-                $scope.currentdashboardid = id;
-                $scope.dashboard = $scope.getCurrentDashboardById(id);
-
-                var log = $log.getInstance('dashboardrendered');
-                log.trace('lazy loading dashboard {0}'.format(id));
+            if ($scope.isEditingAnyDashboard) {
+                return;
             }
+            $scope.newDashboard = false;
+
+            $scope.currentdashboardid = id;
+            $scope.dashboard = $scope.getCurrentDashboardById(id);
+
+            var log = $log.getInstance('dashboardrendered');
+            log.trace('lazy loading dashboard {0}'.format(id));
         }
 
         $scope.createNewDashboard = function () {
-            if (!$scope.isEditingAnyDashboard) {
-                // Update display to show a new dashboard
-                $scope.newDashboard = true;
-
-                var schema = $scope.saveDashboardSchema;
-
-                modalService.show(schema, null, {   title: "New Dashboard",
-                                                    cssclass: "dashboardmodal",
-                                                    onloadfn: function (scope) {
-                                                        scope.associationOptions['applications'] = $scope.applications;
-                                                    }
-                                                });
+            if ($scope.isEditingAnyDashboard) {
+                return;
             }
+
+            // Update display to show a new dashboard
+            $scope.newDashboard = true;
+            $scope.dashboard = {};
+
+            var schema = $scope.saveDashboardSchema;
+
+            modalService.show(schema, null, {
+                title: "New Dashboard",
+                cssclass: "dashboardmodal",
+                onloadfn: function (scope) {
+                    scope.associationOptions['applications'] = $scope.applications;
+                }
+            });
         }
 
         $scope.isNewDashboard = function () {
@@ -251,7 +277,7 @@ app.controller('DashboardController', [
         $scope.finishEditingDashboard = function (dashboardId) {
             $scope.dashboard.policy = "personal";
             dashboardAuxService.saveDashboard($scope.dashboard);
-            
+
         }
 
         $scope.canEditDashboard = function (dashboard) {
