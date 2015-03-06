@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Metadata;
+using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Util;
 
@@ -55,6 +56,21 @@ namespace softwrench.sW4.test.Metadata {
             var idx = displayables.IndexOf(zzzfield);
             Assert.AreEqual("www",displayables[idx+1].Attribute);
 
+        }
+
+        [TestMethod]
+        public void TestReplaceComposition() {
+
+            var app = MetadataProvider.Application("incident");
+            var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("detail"));
+            var compositions = detailSchema.Compositions;
+            var attachmentComposition = compositions.FirstOrDefault(c => c.AssociationKey == "attachment");
+            Assert.IsNull(attachmentComposition);
+
+            var associations = detailSchema.Associations;
+            Assert.IsNull(associations.FirstOrDefault(c => c.Attribute == "location"));
+            //This was not replaced
+            Assert.IsNotNull(associations.FirstOrDefault(c => c.Attribute == "ownergroup"));
         }
 
     }
