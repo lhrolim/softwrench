@@ -123,12 +123,13 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             MatchResults(listOfCollections, matchingResultWrapper, targetCollectionAttribute);
         }
 
-        private static SearchRequestDto BuildSearchRequestDto(ApplicationCompositionCollectionSchema applicationCompositionSchema,
+        private SearchRequestDto BuildSearchRequestDto(ApplicationCompositionCollectionSchema applicationCompositionSchema,
             IEnumerable<EntityAssociationAttribute> lookupattributes, CollectionMatchingResultWrapper matchingResultWrapper,
             AttributeHolder[] attributeHolders, EntityMetadata collectionEntityMetadata) {
 
             var searchRequestDto = new SearchRequestDto();
-            searchRequestDto.BuildProjection(applicationCompositionSchema);
+
+            searchRequestDto.BuildProjection(applicationCompositionSchema, ContextLookuper.LookupContext().PrintMode);
 
             foreach (var lookupAttribute in lookupattributes) {
                 if (lookupAttribute.From != null) {
