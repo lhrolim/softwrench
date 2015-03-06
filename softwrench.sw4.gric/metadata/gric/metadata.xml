@@ -102,9 +102,7 @@
 
   <applications>
     <application entity="SR" name="servicerequest" title="Service Request">
-      <properties>
-        <property key="mobile.disabled" value="true"/>
-      </properties>
+      
       <schemas>
         <list redeclaring="false">
           <customization position="reportedby">
@@ -119,138 +117,24 @@
           </customization>
          </list>
 
-        <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
-          
-          <field attribute="ticketid" label="SR No:" hidden="true"/>
-          <field attribute="ticketuid" label="SR No:" hidden="true"/>
-          <field attribute="class" label="" hidden="true"/>
-          <field attribute="actlabcost" hidden="true" />
-          <field attribute="actlabhrs" hidden="true"/>
-          <field attribute="siteid" hidden="true" />
-          <field attribute="orgid" hidden="true"/>
-          <field attribute="createby" hidden="true"/>
-          <field attribute="reportedby" label="Reported By:" default="@username" readonly="true" hidden="true"/>
-
-          <field attribute="description" label="Summary:" requiredexpression="true"/>
-          <field label="Details:" attribute="longdescription_.ldtext">
-            <renderer type="richtext"/>
-          </field>
-          <section id ="siteidsection"/>
-          <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-            <renderer type="lookup"/>
-          </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" dependantfields="siteid">
-            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-            <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="srService" method="afterChangeAsset"/>
-          </association>
-          <section id="attachmentsection" />
-          <section id="statussection"/>
-          <section id="ownersection"/>
-          
-          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" >
-            <renderer type="lookup" params="columnlabel=Name"/>
-          </association>
-          <!--Added Reported Date just the way it was in gric to otb  Dt: 06/20/2014 -->
-          <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-          </field>
-
-          <field attribute="targetstart" hidden="true"/>
-          <field attribute="targetfinish" hidden="true"/>
-         
-          <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
-                                  parameters="joinattribute=targetstart;">
-            <header label="Target Start Date:" displacement="sameline"/>
-          </section>
-
-          <section id="targetFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetfinish;">
-            <header label="Target Finish Date:" displacement="sameline"/>
-          </section>
-          
-          <section id="actualDates"/>
-          <section id="compositions"/>
+        <schema id ="editdetail" platform="web" redeclaring="false">
+          <customization position="classstructureid"/>
+          <customization position="saddresscode"/>
+          <customization position="reportedby">
+            <field label="Reported By:" attribute="reportedbyperson_.displayname" readonly="true"/>
+          </customization>
+          <customization position="commlog"/>
+          <customization position="relatedrecord"/>
         </schema>
 
-        <schema parentschema="adetail" title="New Service Request" id="newdetail">
-          <section id="siteidsection">
-            <field attribute="ticketid" label="Request #:" hidden="true"/>
-            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true" default='@usersite' enableexpression="true">
-              <!-- removed default='@usersite' from the above association label-->
-              <renderer type="lookup"/>
-            </association>
-          </section>
-          <section id="statussection">
-            <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
-          </section>
-          <!--SSWEB 173-->
-          <section id="attachmentsection">
-            <field label="Attachment:" attribute="newattachment" >
-              <renderer type="upload"/>
-            </field>
-          </section>
-        </schema>
-
-        <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
-
-          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
-
-          <section id="siteidsection">
-            
-            <field label="Site:" attribute="siteid" readonly="true"/>
-          </section>
-          <section id="statussection">
-            <field attribute="ticketid" label="SR#:" readonly="true" requiredexpression="true"/>
-            <association label="Status:" target="status" hideDescription="true" labelfield="synstatus.description" requiredexpression="true">
-              <dataprovider prefilterfunction="FilterStatusCodes"/>
-              <renderer type="lookup" />
-            </association>
-          </section>
-          <section id ="ownersection">
-<!--            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid">-->
-<!--              <renderer type="autocompleteclient" />-->
-<!--            </optionfield>-->
-            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
-              <renderer type="lookup"/>
-              <event type="afterchange" service="srService" method="afterchangeowner"/>
-            </association>
-            <!-- Added the Owner Group field-->
-            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
-              <renderer type="lookup"/>
-              <event type="afterchange" service="srService" method="afterchangeownergroup"/>
-            </association>
-            <field attribute="reportedbyperson_.displayname" label="Reported By:" readonly="true"/>
-          </section>
-          <section id ="actualDates">
-            <field attribute="actualstart" hidden="true"/>
-            <field attribute="actualfinish" hidden="true"/>
-
-            <section id="actualStart" resourcepath="/Content/Templates/samelinepickers.html"
-                           parameters="joinattribute=actualstart;">
-              <header label="Actual Start Date:" displacement="sameline"/>
-            </section>
-
-            <section id="actualFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                           parameters="joinattribute=actualfinish;">
-              <header label="Actual Finish Date:" displacement="sameline"/>
-            </section>
-          </section>
-          <section id="compositions">
-            <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowcreation="true" allowupdate="true"/>
-            </composition>
-
-
-            <composition relationship="attachment" label="Attachments"/>
-          </section>
-          <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
-          <commands>
-            <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
-                     showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>
-          </commands>
-
+        <schema id ="newdetail" platform="web" redeclaring="false">
+          <customization position="classstructureid"/>
+          <customization position="saddresscode"/>
+          <customization position="reportedby"/>
+          <customization position="owner"/>
+          <customization position="ownergroup"/>
+          <customization position="actstart"/>
+          <customization position="actfinish"/>
         </schema>
       </schemas>
 
@@ -260,36 +144,37 @@
      
       <schemas>
         
-        <schema id="adetail" abstract="true" stereotype="detail" platform="web" redeclaring="false">
-          
-          <customization position="classstructureid"></customization>
-          <customization position="reportedby"/>
-          <customization position="onbehalfof"/>
-          <customization position="glaccount" />
+        <schema id="editdetail" platform="web" redeclaring="false">
+         <customization position="classstructureid"></customization>
+         <customization position="glaccount" />
           <customization position="owner">
             <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" showexpression="@siteid=='VQ'">
               <renderer type="lookup"/>
             </association>
-            <field attribute="changeby_.displayname" label="Change By:" readonly="true" />
           </customization>
-          
-          <customization position="ownergroup">
-            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
-              <renderer type="lookup"/>
-            </association>
-<!--            <field label="Reported By:" attribute="reportedbyperson_.displayname" readonly="true"/>-->
-<!--            <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">-->
-<!--              <renderer type="lookup"/>-->
-<!--            </association>-->
+          <customization position="reportedby">
+            <field label="Reported By:" attribute="reportedbyperson_.displayname" readonly="true"/>
           </customization>
-          
-         </schema>
-
-        <schema id="editdetail" platform="web" redeclaring="false">
           <customization position="matusetrans"/>
           <customization position="woactivity"/>
           <customization position="labtrans"/>
           <customization position="tooltrans"/>
+        </schema>
+
+        <schema id = "newdetail" platform="web" redeclaring="false">
+          <customization position="classstructureid"></customization>
+          <customization position="glaccount" />
+          <customization position="wonum"/>
+          <customization position="owner">
+            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" showexpression="@siteid=='VQ'">
+              <renderer type="lookup"/>
+            </association>
+          </customization>
+          <customization position="reportedby">
+            <field label="Reported By:" attribute="reportedbyperson_.displayname" readonly="true"/>
+          </customization>
+          <customization position="actstart"/>
+          <customization position="actfinish"/>
         </schema>
       </schemas>
     </application>
