@@ -337,7 +337,7 @@
                           <Paragraph>
                             <TextRuns>
                               <TextRun>
-                                <Value>Total</Value>
+                                <Value>World Wide</Value>
                                 <Style>
                                   <FontStyle>Italic</FontStyle>
                                 </Style>
@@ -637,7 +637,7 @@
             </TablixMember>
           </TablixMembers>
         </TablixRowHierarchy>
-        <DataSetName>CategoriesReportDataSet</DataSetName>
+        <DataSetName>CategoriesReportXITCDataSet</DataSetName>
         <Top>2.32516cm</Top>
         <Left>0.32787cm</Left>
         <Height>2.4cm</Height>
@@ -792,7 +792,7 @@
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="CategoriesReportDataSet">
+    <DataSet Name="CategoriesReportXITCDataSet">
       <Query>
         <DataSourceName>global</DataSourceName>
         <CommandText>/* Local Query */</CommandText>
