@@ -330,7 +330,8 @@ app.directive('compositionList', function (contextService, formatService) {
                     $scope.detailData[id] = {};
                     $scope.detailData[id].expanded = false;
                 }
-                $scope.detailData[id].data = item;
+                // TODO: Allow comparsion of values with different data type (e.g. int and string).  
+                $scope.detailData[id].data = formatService.doContentStringConversion(item);
                 var newState = forcedState != undefined ? forcedState : !$scope.detailData[id].expanded;
                 $scope.detailData[id].expanded = newState;
 

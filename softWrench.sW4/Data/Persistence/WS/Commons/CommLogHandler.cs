@@ -60,7 +60,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     w.CopyFromRootEntity(rootObject, integrationObject, modifydate, DateTime.Now.FromServerToRightKind());
                     w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
                     LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
-                    HandleAttachments(crudData, integrationObject, maximoTemplateData.ApplicationMetadata);
+                    HandleAttachments(crudData, rootObject, maximoTemplateData.ApplicationMetadata);
                     if (w.GetRealValue(integrationObject, sendto) != null) {
                         maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
                     } else {
@@ -88,7 +88,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 for (int i = 0, j=0; i < attachmentsPath.Length; i++){
                     var content = new AttachmentDTO() {
                         Data = attachmentsData[j] + ',' + attachmentsData[j+1],
-                        Path = attachmentPath[i].ToString()
+                        Path = attachmentPath.ToString()
                     };
                     attachment.AddAttachment(maximoObj, content);
                     j = j + 2;

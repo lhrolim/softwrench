@@ -58,6 +58,7 @@
     <Compile Include="Metadata\Applications\Schema\ApplicationKey.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationSectionOrientation.cs" />
     <Compile Include="Metadata\Applications\Schema\DisplayableComponent.cs" />
+    <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationIndentifiedDisplayable.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationDisplayableContainer.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IDependableField.cs" />
     <Compile Include="Metadata\Applications\Schema\ReferenceDisplayable.cs" />

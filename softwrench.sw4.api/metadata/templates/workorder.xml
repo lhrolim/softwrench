@@ -147,7 +147,7 @@
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
           <field attribute="wonum" label="WO No:" readonly="true"/>
           <!--COMSW-2-->
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" default="@classstructureid">
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType">
             <renderer type="autocompleteclient" />
           </optionfield>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
@@ -346,7 +346,9 @@
           <association label="Status" target="status" labelfield="synstatus.description" />
           <composition relationship="worklog" label="Work Logs" />
           <composition relationship="matusetrans" label="Materials" />
-          <composition relationship="labtrans" label="Labor" />
+          <composition relationship="labtrans" label="Labor">
+            <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+          </composition>
           <composition relationship="attachment" label="Attachments" />
           <!--<field attribute="longdescription_.ldtext" label="Long Description" name="description_longdescription"/>-->
           <!--          <composition attribute="longdescription" >-->

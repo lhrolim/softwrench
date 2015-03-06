@@ -1,4 +1,4 @@
-﻿function CommLogActionsController($scope,contextService) {
+﻿function CommLogActionsController($rootScope, $scope,contextService) {
     var messageHeader = "<br/><br/>________________________________________________________________________________________________________" +
                                 "<br/><b>From:</b> {0}"  +
                                 "<br/><b>To:</b> {1}"  +
@@ -16,7 +16,7 @@
         var origSubject = clonedItem['subject'] == null ? "" : clonedItem['subject'];
         var origMessage = clonedItem['message'];
         clonedItem['sendto'] = clonedItem['cc'] = clonedItem['commloguid']= null;
-        clonedItem['sendfrom'] = contextService.getUserData().email;
+        clonedItem['sendfrom'] = $rootScope.defaultEmail;
         clonedItem['subject'] = "Fw: " + clonedItem['subject'];
         clonedItem['message'] = messageHeader.format(origSendFrom,origSendTo,origCc,origSubject,origMessage);
         $scope.$emit("sw.composition.edit", clonedItem);
@@ -48,7 +48,12 @@
         var origSubject = clonedItem['subject'] == null ? "" : clonedItem['subject'];
         var origMessage = clonedItem['message'];
         clonedItem['commloguid'] = null;
-        clonedItem['sendto'] = clonedItem['sendfrom'];
+        if (origCc != "") {
+            clonedItem['sendto'] = clonedItem['sendfrom'] + "," + origCc;
+        } else {
+            clonedItem['sendto'] = clonedItem['sendfrom'];
+        }
+
         clonedItem['sendfrom'] = contextService.getUserData().email;
         clonedItem['subject'] = "Re: " + clonedItem['subject'];
         clonedItem['message'] = messageHeader.format(origSendFrom, origSendTo, origCc, origSubject, origMessage);

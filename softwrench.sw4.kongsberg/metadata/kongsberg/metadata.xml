@@ -767,7 +767,7 @@
           <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
           <relationshipAttribute to="objectvalue" literal="INCIDENT" quoteLiteral="true"/>
         </relationship>
-        
+
         <relationship to="incidentclassifications" qualifier="incidentclassifications">
           <relationshipAttribute from="classificationid" to="classificationid" primary="true"/>
         </relationship>
@@ -792,7 +792,7 @@
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
         </relationship>
-        
+
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="incident" />
@@ -800,7 +800,7 @@
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseIncidentCrudConnector" />
       </connectorParameters>
     </entity>
-    
+
     <entity name="wochange" idAttribute="workorderid">
       <attributes>
         <attribute name="workorderid" type="integer" required="true" />
@@ -1050,7 +1050,7 @@
           <properties>
             <property key="list.click.schema" value="editdetail"/>
           </properties>
-          
+
         </list>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
@@ -1066,11 +1066,11 @@
           <field attribute="createby" hidden="true"/>
           <section id="statussection"/>
           <field attribute="changeby" default="@username" hidden="true"/>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" orderbyfield="personid asc">
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeowner"/>
           </association>
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" orderbyfield="persongroup asc">
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeownergroup"/>
           </association>
@@ -1078,9 +1078,9 @@
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc">
             <renderer type="lookup" params="columnlabel=Name"/>
           </association>
-<!--          <association label="Project Classification:" target="classificationid" labelfield="classification_.description">-->
-<!--            <renderer type="lookup"/>-->
-<!--          </association>-->
+          <!--          <association label="Project Classification:" target="classificationid" labelfield="classification_.description">-->
+          <!--            <renderer type="lookup"/>-->
+          <!--          </association>-->
           <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid" requiredexpression="true">
             <renderer type="autocompleteclient" />
           </optionfield>
@@ -1114,23 +1114,23 @@
           <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
             <renderer type="lookup"/>
           </association>
-          <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+          <field label="Reported Date:" attribute="reportdate" readonly="true" default="@currentdatetime">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
 
-          <field label="Target Start Date &amp; Time:" attribute="targetstart" readonly="true">
+          <field label="Target Start Date:" attribute="targetstart" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
-          <field label="Target End Date &amp; Time:" attribute="targetfinish" readonly="true">
+          <field label="Target End Date:" attribute="targetfinish" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
-          <field label="Actual Start Date &amp; Time:" attribute="actualstart" readonly="true">
+          <field label="Actual Start Date:" attribute="actualstart" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
-          <field label="Actual End Date &amp; Time:" attribute="actualfinish" readonly="true">
+          <field label="Actual End Date:" attribute="actualfinish" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
-          
+
           <field attribute="description" label="Summary:" requiredexpression="true"/>
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
@@ -1152,7 +1152,7 @@
           -->
           <section id="compositions"/>
         </schema>
-        
+
         <schema parentschema="adetail" title="New Service Request" id="newdetail">
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" hidden="true"/>
@@ -1308,7 +1308,9 @@
           </optionfield>
           <!--<association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
-            --><!--renderer type="lookup"/--><!--
+            -->
+          <!--renderer type="lookup"/-->
+          <!--
           </association>
           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
             <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
@@ -1358,7 +1360,7 @@
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
 
-          
+
 
 
           <field attribute="description" label="Summary:" requiredexpression="true"/>
@@ -1380,7 +1382,9 @@
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
           </section>
           <!--<section id="ownerstatussection">
-            --><!--field attribute="owner" label="Owner:"/--><!--
+            -->
+          <!--field attribute="owner" label="Owner:"/-->
+          <!--
             <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
           </section>-->
           <section id="attachmentsection">
@@ -1398,7 +1402,9 @@
             </association>
           </section>
           <!--<section id="ownerstatussection">
-            --><!--field attribute="owner" label="Owner:" readonly="true"/--><!--
+            -->
+          <!--field attribute="owner" label="Owner:" readonly="true"/-->
+          <!--
             <association label="Status:" target="status" labelfield="synstatus.description">
               <renderer type="combo"/>
             </association>
@@ -1458,7 +1464,6 @@
             <number decimals="0" min="0" max="999" />
           </field>
           <!--<field attribute="location" hidden="true"/>
-
           <field attribute="location_.description" label="Location" hidden="true" >
             <lookup sourceApplication="location" sourceField="location" sourceDisplay="description,location" targetField="location" targetQualifier="">
               <lookupFilters>
@@ -1673,18 +1678,18 @@
           <field attribute="status" label="Status">
             <renderer type="default" params="width=8%" />
           </field>
-<!--          <field attribute="reportdate" label="Reported Date">-->
-<!--            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=8%;showtime=false" />-->
-<!--          </field>-->
+          <!--          <field attribute="reportdate" label="Reported Date">-->
+          <!--            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=8%;showtime=false" />-->
+          <!--          </field>-->
           <field attribute="owner" label="Owner">
             <renderer type="default" params="width=8%" />
           </field>
           <field attribute="ownergroup" label="Owner Group">
             <renderer type="default" params="width=8%" />
           </field>
-<!--          <field attribute="status" label="Status">-->
-<!--            <renderer type="default" params="width=8%" />-->
-<!--          </field>-->
+          <!--          <field attribute="status" label="Status">-->
+          <!--            <renderer type="default" params="width=8%" />-->
+          <!--          </field>-->
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=incident;column=status"/>
           </field>
@@ -1694,6 +1699,7 @@
         </list>
 
         <schema stereotype="detail" id="newdetail" mode="input" title="New Incident">
+          <field attribute="ticketid" label="Incident #:" readonly="true"/>
           <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
             <!-- removed default='@usersite' from the above association label-->
             <renderer type="combo"/>
@@ -1701,29 +1707,34 @@
           <field attribute="actlabcost" default="0" hidden="true"/>
           <field attribute="actlabhrs" default="0" hidden="true" />
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
-          <field attribute="ticketid" label="Incident Number:" readonly="true"/>
-          <field attribute="description" label="Summary:" requiredexpression="true"/>
+
+
           <field attribute="siteid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="class" hidden="true"/>
-
-          <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
-          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc">
-            <renderer type="lookup"/>
+          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" default="NEW">
+            <renderer type="lookup" />
           </association>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" orderbyfield="personid asc">
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" orderbyfield="persongroup asc">
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
+          <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
+          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
+            <renderer type="lookup"/>
+          </association>
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid" requiredexpression="true">
+            <renderer type="autocompleteclient" />
+          </optionfield>
           <!--Adding Area and ProblemType field for Kongsberg-->
-          <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true" orderbyfield="value asc">
+          <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
-          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true" orderbyfield="value asc">
+          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
           <!--Adding Internal Priority and Reported Priority fields for Kongsberg-->
@@ -1744,16 +1755,17 @@
           <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description">
             <renderer type="lookup"/>
           </association>
-          
+
           <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
             <renderer type="lookup"/>
           </association>
-<!--          <association label="Project Classification:" target="classificationid" labelfield="incidentclassstructures_.description">-->
-<!--            <renderer type="lookup"/>-->
-<!--          </association>-->
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid" requiredexpression="true">
-            <renderer type="autocompleteclient" />
-          </optionfield>
+          <!--          <association label="Project Classification:" target="classificationid" labelfield="incidentclassstructures_.description">-->
+          <!--            <renderer type="lookup"/>-->
+          <!--          </association>-->
+          <field label="Reported Date:" attribute="reportdate" readonly="true" default="@currentdatetime">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+
           <!-- Kongsberg wont require location and asset fields
           <association label="Location:" target="location" labelfield="location_.description" >
             <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
@@ -1794,38 +1806,44 @@
             <renderer type="richtext"/>
           </field>
           <field label="Attachment:" attribute="newattachment" >
-              <renderer type="upload"/>
+            <renderer type="upload"/>
           </field>
         </schema>
 
         <schema stereotype="detail" id="detail" mode="input" title="Incident Details">
+          <field attribute="ticketid" label="Incident #:" readonly="true" requiredexpression="true"/>
           <field attribute="siteid" label="Site:"/>
           <field attribute="actlabcost" default="0" hidden="true"/>
           <field attribute="actlabhrs" default="0" hidden="true" />
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
-          <field attribute="ticketid" label="Incident Number:" readonly="true" requiredexpression="true"/>
-          <field attribute="description" label="Summary:" requiredexpression="true"/>
+
+
           <field attribute="siteid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="class" hidden="true"/>
-
-          <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
-          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc">
-            <renderer type="lookup"/>
+          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" >
+            <renderer type="lookup" />
           </association>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" orderbyfield="personid asc">
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" orderbyfield="persongroup asc">
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
+          <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
+          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username">
+            <renderer type="lookup"/>
+          </association>
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid" requiredexpression="true">
+            <renderer type="autocompleteclient" />
+          </optionfield>
           <!--Adding Area and ProblemType field for Kongsberg-->
-          <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true" orderbyfield="value asc"> 
+          <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
-          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true" orderbyfield="value asc">
+          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
 
@@ -1847,16 +1865,16 @@
           <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description">
             <renderer type="lookup"/>
           </association>
-          
+
           <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
             <renderer type="lookup"/>
           </association>
-<!--          <association label="Project Classification:" target="classificationid" labelfield="classification_.description">-->
-<!--            <renderer type="lookup"/>-->
-<!--          </association>-->
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_IncidentClassStructureType" default="@classstructureid" requiredexpression="true">
-            <renderer type="autocompleteclient" />
-          </optionfield>
+          <!--          <association label="Project Classification:" target="classificationid" labelfield="classification_.description">-->
+          <!--            <renderer type="lookup"/>-->
+          <!--          </association>-->
+          <field label="Reported Date:" attribute="reportdate" readonly="true" default="@currentdatetime">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
           <!--field attribute="classificationid" label="Project Classification"/-->
           <!--Kongsberg wont require location and asset values 
           <association label="Location:" target="location" labelfield="location_.description" >
@@ -1889,9 +1907,8 @@
                          parameters="joinattribute=actualfinish;">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
-          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" >
-            <renderer type="lookup" />
-          </association>
+          <field attribute="description" label="Summary:" requiredexpression="true"/>
+
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
           </field>
@@ -2751,14 +2768,13 @@
       </schemas>
     </application>
 
-    <application entity="commlog" name="commlog" title="Communications">
+    <application entity="commlog" name="commlog" title="Communications Tab">
       <properties>
         <property key ="icon.composition.tab" value="fa fa-envelope-o"/>
       </properties>
       <schemas>
         <schema id="list" stereotype="compositionlist">
           <!--<properties>
-
             <property key="list.click.popup" value="modal"/>
           </properties>-->
           <!--<field attribute="#inboundicon">
@@ -2803,7 +2819,7 @@
           </field>
           <field attribute="orgobject" label="Origination" hidden="true"/>
           <field attribute="sendto" label="To:" requiredexpression="true">
-            <renderer type="email"/>
+            <renderer type="default"/>
           </field>
           <!--<association label="To:" target="sendto" labelfield="email_.emailaddress">
             <renderer type="autocompleteserver"/>
@@ -2812,7 +2828,7 @@
             <renderer type="email"/>
           </field>
 
-          <field attribute="sendfrom" label="From:" requiredexpression="true" >
+          <field attribute="sendfrom" label="From:" requiredexpression="true" default="kogt@controltechnologysolutions.com">
             <renderer type="email"/>
           </field>
           <field attribute="subject" label="Subject:" requiredexpression="true"/>

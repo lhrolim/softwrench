@@ -133,7 +133,8 @@
       </relationships>
     </entity>
 
-    <entity name="inventory" idAttribute="inventoryid">
+    <!--SwWEB-1032: Only display active items-->
+    <entity name="inventory" idAttribute="inventoryid" whereclause="inventory.STATUS = 'ACTIVE'">
       <attributes>
         <attribute name="itemnum" type="varchar" required="true" />
         <attribute name="location" type="varchar" required="true" />
@@ -1174,6 +1175,10 @@
           <field attribute="location" label="location"/>
           <field attribute="avgcost" label="Average Cost"/>
           <field attribute="stdcost" label="Standard Cost"/>
+          <field attribute="lastcost" label="lastcost"/>
+          <field attribute="siteid" label="siteid"/>
+          <field attribute="conditioncode" label="conditioncode"/>
+          <field attribute="condrate" label="condrate"/>
         </schema>
       </schemas>
     </application>

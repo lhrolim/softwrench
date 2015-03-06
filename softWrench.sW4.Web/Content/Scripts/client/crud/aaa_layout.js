@@ -234,7 +234,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         contextService.loadConfigs(config);
 
         contextService.insertIntoContext("isLocal", config.isLocal);
-
+        $rootScope.defaultEmail = config.defaultEmail;
         $rootScope.clientName = config.clientName;
         $rootScope.environment = config.environment;
         $rootScope.i18NRequired = config.i18NRequired;

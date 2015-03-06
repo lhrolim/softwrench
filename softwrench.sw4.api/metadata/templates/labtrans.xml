@@ -59,16 +59,16 @@
             <event type="afterchange" service="labtranService" method="aftercraftchange"/>
           </association>
           <field label="Start Date:" requiredexpression="true" attribute="startdate">
-            <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
+            <renderer type="date" params="format=MM/dd/yyyy;showtime=false;allowfuture=false" />
           </field>
           <field label="Start Time:" attribute="starttime" >
-            <renderer type="datetime" params="format=HH:mm;showdate=false" />
+            <renderer type="time" params="format=HH:mm;showdate=false" />
           </field>
           <field label="End Date:" attribute="finishdate">
-            <renderer type="datetime" params="format=MM/dd/yyyy;showtime=false" />
+            <renderer type="date" params="format=MM/dd/yyyy;showtime=false" />
           </field>
           <field label="End Time:" attribute="finishtime" >
-            <renderer type="datetime" params="format=HH:mm;showdate=false" />
+            <renderer type="time" params="format=HH:mm;showdate=false" />
           </field>
           <field attribute="regularhrs" label="Regular Hours:" requiredexpression="true" default="8"/>
           <association label="GL Debit Account:" requiredexpression="true" target="gldebitacct" labelfield="chartofaccounts_.accountname" >

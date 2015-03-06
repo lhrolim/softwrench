@@ -107,7 +107,7 @@ namespace softWrench.sW4.Web.Controllers {
                 ReservedMaterialsListScanOrder = reservedMaterialsListScanOrder,
                 MatrectransTransfersListScanOrder = matrectransTransfersListScanOrder,
                 InvIssueListBeringScanOrder = invIssueListBeringScanOrder,
-                NewKeyIssueDetailScanOrder = newKeyIssueDetailScanOrder,
+                DefaultEmail = MetadataProvider.GlobalProperty("defaultEmail") 
             };
         }
 
