@@ -52,18 +52,14 @@ app.directive('crudList', function (contextService) {
         scope: {
             schema: '=',
             datamap: '=',
+            fieldstodisplay: '=',
             previousschema: '=',
             previousdata: '=',
-            paginationData: '=',
-            searchData: '=',
-            searchOperator: '=',
-            searchSort: '=',
             ismodal: '@',
             hidebars: '@',
             checked: '=',
             timestamp: '@',
-            associationOptions: "=", 
-            dashboardpanelid: "="
+            panelid: "@"
         },
 
         controller: function ($scope, $http, $rootScope, $filter, $injector, $log, $timeout,
@@ -72,6 +68,8 @@ app.directive('crudList', function (contextService) {
             fieldService, commandService, i18NService,
             validationService, submitService, redirectService,
             associationService, statuscolorService, contextService, eventService, iconService, expressionService, checkpointService) {
+
+
 
             $scope.$name = 'crudlist';
 
@@ -118,7 +116,7 @@ app.directive('crudList', function (contextService) {
 
 
             $scope.$on('filterRowRenderedEvent', function (filterRowRenderedEvent) {
-                if ($scope.datamap.length == 0) {
+                if ($scope.datamap && $scope.datamap.length == 0) {
                     // only update filter visibility if there are no results to shown on grid... else the filter visibility will be updated on "listTableRenderedEvent"
                     fixHeaderService.updateFilterZeroOrOneEntries();
                     // update table heigth (for ie9)
@@ -216,18 +214,71 @@ app.directive('crudList', function (contextService) {
                 }
             });
 
-            $scope.$on('sw_gridrefreshed', function (event, data, printmode) {
-                $scope.selectAllChecked = false;
+            $scope.$on('sw_gridrefreshed', function (event, data,panelId) {
+                $scope.gridRefreshed(data, panelId);
             });
-            $scope.refreshGrid = function () {
-                $scope.selectPage($scope.paginationData.pageNumber, $scope.paginationData.pageSize, false);
-            };
 
-            $scope.$on('sw_refreshgrid', function (event, searchData, extraparameters) {
+
+
+            $scope.gridRefreshed = function (data,panelId) {
+                if ($scope.panelid != panelId) {
+                    //none of my business --> another dashboard event
+                    return;
+                }
+
+                $scope.schema = data.schema;
+                $scope.datamap = data.resultObject;
+                $scope.selectAllChecked = false;
+                if ($rootScope.printRequested !== true) {
+                    //if its a printing operation, then leave the pagination data intact
+                    //this code needs to be here because the crud_list.js might not yet be included in the page while this is running, so the even would be lost... 
+                    //TODO: rethink about it
+                    $scope.paginationData = {};
+                    $scope.searchValues = data.searchValues;
+                    $scope.paginationData.pagesToShow = data.pagesToShow;
+                    $scope.paginationData.pageNumber = data.pageNumber;
+                    $scope.paginationData.selectedPage = data.pageNumber;
+                    $scope.paginationData.pageCount = data.pageCount;
+                    $scope.paginationData.pageSize = data.pageSize;
+                    $scope.paginationData.paginationOptions = data.paginationOptions;
+                    $scope.paginationData.totalCount = data.totalCount;
+                    $scope.paginationData.hasPrevious = data.hasPrevious;
+                    $scope.paginationData.hasNext = data.hasNext;
+                    $scope.paginationData.filterFixedWhereClause = data.filterFixedWhereClause;
+                    $scope.searchData = $scope.searchData ||  {};
+                    $scope.searchOperator = $scope.searchOperator || {};
+                    $scope.searchSort = $scope.searchSort || {};
+
+                    if (data.pageResultDto && data.pageResultDto.searchParams) {
+                        var result = searchService.buildSearchDataAndOperations(data.pageResultDto.searchParams, data.pageResultDto.searchValues);
+                        $scope.searchData = result.searchData;
+                        $scope.searchOperator = result.searchOperator;
+                    }
+                }
+                contextService.deleteFromContext('grid_refreshdata');
+                fixHeaderService.FixHeader();
+                //usually this next call won´t do anything, but for lists with optionfields, this is needed
+                associationService.updateAssociationOptionsRetrievedFromServer($scope, data.associationOptions, null);
+                $scope.$broadcast('sw_griddatachanged', $scope.datamap, $scope.schema, $scope.panelid);
+            }
+
+
+            $scope.refreshGridRequested = function (searchData, extraparameters) {
+              
+
                 /// <summary>
                 ///  implementation of searchService#refreshgrid see there for details
                 /// </summary>
                 extraparameters = extraparameters || {};
+                if (extraparameters.panelid && extraparameters.panelid != $scope.panelid) {
+                    //this is none of my business --> another dashboard will handle it
+                    return;
+                }
+
+                contextService.deleteFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid:""));
+                $scope.paginationData = $scope.paginationData || {};
+                $scope.searchData = $scope.searchData || {};
+
                 var pagetogo = extraparameters.pageNumber ? extraparameters.pageNumber : $scope.paginationData.pageNumber;
                 var pageSize = extraparameters.pageSize ? extraparameters.pageSize : $scope.paginationData.pageSize;
                 var printmode = extraparameters.printMode;
@@ -252,6 +303,10 @@ app.directive('crudList', function (contextService) {
                     contextService.set("avoidspin", true, true);
                 }
                 $scope.selectPage(pagetogo, pageSize, printmode);
+            };
+
+            $scope.$on('sw_refreshgrid', function (event, searchData, extraparameters) {
+                $scope.refreshGridRequested(searchData, extraparameters);
             });
 
             $scope.$on('sw_successmessagetimeout', function (event, data) {
@@ -306,7 +361,11 @@ app.directive('crudList', function (contextService) {
                     //if we have a list schema already declared, keep it
                     listSchema = $scope.schema.schemaId;
                 }
-                $scope.$emit("sw_renderview", $scope.schema.applicationName, listSchema, 'none', $scope.title, parameters, $scope.dashboardpanelid);
+
+                searchService.searchWithData($scope.schema.applicationName, $scope.searchData, listSchema, {
+                    searchDTO: parameters.search
+                });
+
             };
 
             $scope.selectPage = function (pageNumber, pageSize, printMode) {
@@ -350,9 +409,25 @@ app.directive('crudList', function (contextService) {
 
                 checkpointService.createGridCheckpoint($scope.schema, searchDTO);
 
-                $scope.renderListView({
-                    SearchDTO: searchDTO, printMode: printMode
+                $scope.$parent.multipleSchema = false;
+                $scope.$parent.schemas = null;
+                var listSchema = 'list';
+                if ($scope.schema != null && $scope.schema.stereotype.isEqual('list', true)) {
+                    //if we have a list schema already declared, keep it
+                    listSchema = $scope.schema.schemaId;
+                }
+
+                var searchPromise = searchService.searchWithData($scope.schema.applicationName, $scope.searchData, listSchema,
+                {
+                    searchDTO: searchDTO,
+                    printMode: printMode,
+                    schemaFieldsToDisplay: $scope.fieldstodisplay
                 });
+
+                searchPromise.success(function (data) {
+                    $scope.gridRefreshed(data,$scope.panelid);
+                });
+
             };
 
             $scope.toggleSelectAll = function (checked) {
@@ -420,21 +495,41 @@ app.directive('crudList', function (contextService) {
                 fixHeaderService.fixTableTop($(".fixedtable"));
             };
 
-            $injector.invoke(BaseController, this, {
-                $scope: $scope,
-                i18NService: i18NService,
-                fieldService: fieldService,
-                commandService: commandService,
-                formatService: formatService
-            });
 
-            $injector.invoke(BaseList, this, {
-                $scope: $scope,
-                formatService: formatService,
-                expressionService: expressionService,
-                searchService: searchService,
-                commandService: commandService
-            });
+            function initController() {
+                $injector.invoke(BaseController, this, {
+                    $scope: $scope,
+                    i18NService: i18NService,
+                    fieldService: fieldService,
+                    commandService: commandService,
+                    formatService: formatService
+                });
+
+                $injector.invoke(BaseList, this, {
+                    $scope: $scope,
+                    formatService: formatService,
+                    expressionService: expressionService,
+                    searchService: searchService,
+                    commandService: commandService
+                });
+
+                var dataRefreshed = contextService.fetchFromContext('grid_refreshdata', true, true, true);
+
+
+
+                if (dataRefreshed) {
+                    $scope.gridRefreshed(dataRefreshed.data, dataRefreshed.panelid);
+                }
+
+                var dataToRefresh = contextService.fetchFromContext('poll_refreshgridaction' + ($scope.panelid ? $scope.panelid : ""), true, true, true);
+                if (dataToRefresh) {
+                    $scope.refreshGridRequested(dataToRefresh.searchData, dataToRefresh.extraparameters);
+                }
+
+            }
+
+            //by the end of the controller, so that all the scope functions are already declared
+            initController();
 
         }
     };

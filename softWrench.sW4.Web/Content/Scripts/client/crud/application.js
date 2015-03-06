@@ -99,32 +99,10 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
             scope = $scope;
         }
         $('#saveBTN').removeAttr('disabled');
-        scope.$broadcast("sw_gridrefreshed", data, $rootScope.printRequested);
-        if (data != null && $rootScope.printRequested !== true) {
-            //if its a printing operation, then leave the pagination data intact
-            //this code needs to be here because the crud_list.js might not yet be included in the page while this is running, so the even would be lost... 
-            //TODO: rethink about it
-            $scope.paginationData = {};
-            $scope.searchValues = data.searchValues;
-            $scope.paginationData.pagesToShow = data.pagesToShow;
-            $scope.paginationData.pageNumber = data.pageNumber;
-            $scope.paginationData.selectedPage = data.pageNumber;
-            $scope.paginationData.pageCount = data.pageCount;
-            $scope.paginationData.pageSize = data.pageSize;
-            $scope.paginationData.paginationOptions = data.paginationOptions;
-            $scope.paginationData.totalCount = data.totalCount;
-            $scope.paginationData.hasPrevious = data.hasPrevious;
-            $scope.paginationData.hasNext = data.hasNext;
-            $scope.paginationData.filterFixedWhereClause = data.filterFixedWhereClause;
-            $scope.searchData = {};
-            $scope.searchOperator = {};
+        //we need this because the crud_list.js may not be rendered it when this event is dispatched, in that case it should from here when it starts
 
-            if (data.pageResultDto && data.pageResultDto.searchParams) {
-                var result = searchService.buildSearchDataAndOperations(data.pageResultDto.searchParams, data.pageResultDto.searchValues);
-                $scope.searchData = result.searchData;
-                $scope.searchOperator = result.searchOperator;
-            }
-        }
+        contextService.insertIntoContext("grid_refreshdata",{ data: data, panelid: null }, true);
+        scope.$broadcast("sw_gridrefreshed", data,null);
         switchMode(false, scope);
     };
 
@@ -297,11 +275,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         } else if (result.type == 'ApplicationListResult') {
             log.debug("Application List Result handled");
             $scope.toList(result, scope);
-            associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, null);
-            fixHeaderService.FixHeader();
-            $scope.$broadcast('sw_griddatachanged', scope.datamap, scope.schema);
         } else if (result.crudSubTemplate != null) {
-
             log.debug("Crud Sub Template handled");
             $scope.crudsubtemplate = url(result.crudSubTemplate);
         }

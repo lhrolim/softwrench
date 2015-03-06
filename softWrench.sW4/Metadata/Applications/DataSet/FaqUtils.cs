@@ -80,7 +80,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
             var applicationMetadata = MetadataProvider
                 .Application(application)
-                .ApplyPolicies(request.Key, user, ClientPlatform.Web);
+                .ApplyPolicies(request.Key, user, ClientPlatform.Web,null);
 
             return _dataSetProvider.LookupDataSet(application,applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
         }

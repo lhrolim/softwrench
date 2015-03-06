@@ -13,9 +13,10 @@ namespace softWrench.sW4.Metadata.Applications {
         private readonly ApplicationMetadataSchemaKey _schemaKey;
         private readonly InMemoryUser _user;
         private readonly ClientPlatform _platform;
+        private readonly string _schemaFieldsToDisplay;
 
 
-        public ApplicationMetadataPolicyApplier([NotNull] CompleteApplicationMetadataDefinition application, ApplicationMetadataSchemaKey schemaKey, [NotNull] InMemoryUser user, ClientPlatform platform) {
+        public ApplicationMetadataPolicyApplier([NotNull] CompleteApplicationMetadataDefinition application, ApplicationMetadataSchemaKey schemaKey, [NotNull] InMemoryUser user, ClientPlatform platform, string schemaFieldsToDisplay) {
             if (application == null) throw new ArgumentNullException("application");
             if (user == null) throw new ArgumentNullException("user");
 
@@ -23,13 +24,14 @@ namespace softWrench.sW4.Metadata.Applications {
             _user = user;
             _schemaKey = schemaKey;
             _platform = platform;
+            _schemaFieldsToDisplay = schemaFieldsToDisplay;
             _result = new Lazy<ApplicationMetadata>(ApplyImpl);
         }
 
         private ApplicationMetadata ApplyImpl() {
             var schema = _application
                 .SchemaForPlatform(_schemaKey);
-            var securedSchema = schema.ApplyPolicy(_user.Roles, _platform);
+            var securedSchema = schema.ApplyPolicy(_user.Roles, _platform,_schemaFieldsToDisplay);
 
             return ApplicationMetadata.CloneSecuring(_application, securedSchema);
 

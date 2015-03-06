@@ -39,19 +39,19 @@ namespace softwrench.sw4.dashboard.classes.controller {
         public IGenericResponseResult SaveDashboard([FromUri]Dashboard dashboard, [FromUri]string policy) {
             //TODO: update menu, clear caching
             var user = SecurityFacade.CurrentUser();
-            var currentdtm = DateTime.Now; 
+            var currentdtm = DateTime.Now;
 
             if ("personal".Equals(policy)) {
                 dashboard.Filter = new DashboardFilter {
                     UserId = user.UserId
                 };
             }
-            
+
             // Populate default values
-            dashboard.Layout = "0";
-            dashboard.CreatedBy = user.UserId;
-            dashboard.CreationDate = currentdtm;
-            dashboard.UpdateDate = currentdtm;
+            if (dashboard.Layout == null) {
+                dashboard.Layout = "0";
+            }
+
 
             var savedDashboard = _dao.Save(dashboard);
             user.Genericproperties.Remove(DashboardConstants.DashBoardsProperty);
@@ -89,7 +89,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             }
             if (!user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty)) {
                 user.Genericproperties[DashboardConstants.DashBoardsProperty] = _userDashboardManager.LoadUserDashboars(user);
-            } 
+            }
             dashboards = (IEnumerable<Dashboard>)user.Genericproperties[DashboardConstants.DashBoardsProperty];
             var dto = new ManageDashBoardsDTO() {
                 CanCreateOwn = canCreateOwn,
