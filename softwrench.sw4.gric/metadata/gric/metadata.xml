@@ -261,7 +261,11 @@
       <schemas>
         
         <schema id="adetail" abstract="true" stereotype="detail" platform="web" redeclaring="false">
-
+          
+          <customization position="classstructureid"></customization>
+          <customization position="reportedby"/>
+          <customization position="onbehalfof"/>
+          <customization position="glaccount" />
           <customization position="owner">
             <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" showexpression="@siteid=='VQ'">
               <renderer type="lookup"/>
@@ -273,23 +277,20 @@
             <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
               <renderer type="lookup"/>
             </association>
-            <field label="Reported By:" attribute="reportedbyperson_.displayname" readonly="true"/>
-            <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
-              <renderer type="lookup"/>
-            </association>
+<!--            <field label="Reported By:" attribute="reportedbyperson_.displayname" readonly="true"/>-->
+<!--            <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">-->
+<!--              <renderer type="lookup"/>-->
+<!--            </association>-->
           </customization>
-          <customization position="classstructureid"></customization>
-          <customization position="reportedby"/>
-          <customization position="onbehalfof"/>
-          <customization position="glaccount" />
+          
          </schema>
 
-<!--        <schema id="editdetail" platform="web" redeclaring="false">-->
-<!--          <customization position="matusetrans"/>-->
-<!--          <customization position="woactivity"/>-->
-<!--          <customization position="labtrans"/>-->
-<!--          <customization position="tooltrans"/>-->
-<!--        </schema>-->
+        <schema id="editdetail" platform="web" redeclaring="false">
+          <customization position="matusetrans"/>
+          <customization position="woactivity"/>
+          <customization position="labtrans"/>
+          <customization position="tooltrans"/>
+        </schema>
       </schemas>
     </application>
   </applications>
