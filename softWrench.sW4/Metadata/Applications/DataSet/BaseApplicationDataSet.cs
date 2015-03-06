@@ -151,10 +151,11 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 Quartz.Util.LogicalThreadContext.SetData("context", c);
                 // Only fetch the compositions schemas if indicated on searchDTO
                 var applicationCompositionSchemata = new Dictionary<string, ApplicationCompositionSchema>();
-                if (searchDto.CompositionsToFetch != null && searchDto.CompositionsToFetch.Count > 0) {
+                var hasInlineComposition =schema.Compositions.Any(comp => comp.Inline);
+                if ((searchDto.CompositionsToFetch != null && searchDto.CompositionsToFetch.Count > 0) || hasInlineComposition) {
                     var allCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(schema);
                     foreach (var compositionSchema in allCompositionSchemas) {
-                        if (searchDto.CompositionsToFetch.Contains(compositionSchema.Key)) {
+                        if (compositionSchema.Value.INLINE || (searchDto.CompositionsToFetch != null && searchDto.CompositionsToFetch.Contains(compositionSchema.Key))) {
                             applicationCompositionSchemata.Add(compositionSchema.Key, compositionSchema.Value);
                         }
                     }
