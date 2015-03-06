@@ -27,7 +27,6 @@ namespace softWrench.sW4.Data.Search {
         /// </summary>
         public String SearchTemplate { get; set; }
 
-
         public String SearchParams { get; set; }
 
         public String SearchValues { get; set; }

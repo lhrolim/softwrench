@@ -38,7 +38,7 @@ namespace softWrench.sW4.Metadata.Validator {
             var customizationsActuallyApplied = new HashSet<int>();
 
             foreach (var displayable in original.Displayables) {
-                var attrDisplayablee = displayable as IApplicationAttributeDisplayable;
+                var attrDisplayablee = displayable as IApplicationIndentifiedDisplayable;
                 if (attrDisplayablee == null) {
                     //can only replace fields that have attributes
                     resultDisplayables.Add(displayable);

@@ -44,7 +44,8 @@ namespace softWrench.sW4.Web.Controllers.Mobile {
             var user = SecurityFacade.CurrentUser();
             var metadatas = MetadataProvider.Applications(ClientPlatform.Mobile);
             var securedMetadatas = metadatas.Select(metadata => metadata.CloneSecuring(user)).ToList();
-            var securedMenu = user.Menu(ClientPlatform.Mobile);
+            bool fromCache;
+            var securedMenu = user.Menu(ClientPlatform.Mobile,out fromCache);
 
             var response = new MobileMetadataDownloadResponseDefinition {
                 MetadatasJSON = JsonConvert.SerializeObject(securedMetadatas, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),

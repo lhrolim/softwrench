@@ -136,7 +136,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
 
 
-        public string Attribute { get { return Target; } set { Target = value; } }
+        public override string Attribute { get { return Target; } set { Target = value; } }
 
         public IList<string> LabelFields {
             get { return _labelFields; }

@@ -1,4 +1,5 @@
-﻿using NHibernate.Mapping.Attributes;
+﻿using cts.commons.persistence;
+using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Interfaces;
 using softWrench.sW4.Util;
 using System;

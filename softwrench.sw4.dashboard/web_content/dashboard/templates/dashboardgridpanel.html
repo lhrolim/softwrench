@@ -1,0 +1,19 @@
+﻿<form class="panel">
+    <div class="header">{{title}}</div>
+    <!--<p>column: {{panelcol}}</p>
+    <p>row: {{panelrow}}</p>
+    <p>datasource: {{paneldatasource}}</p>
+    <p>data: {{dashboardpanel}}</p>-->
+
+    <div class="body">
+        <crud-list application="application"
+                   schema="schema"
+                   datamap="datamap"
+                   fieldstodisplay="fieldstodisplay"
+                   panelid="{{paneldatasource.id}}"
+                   ismodal="false"
+                   hidebars="true"
+                   timestamp="timestamp" />
+    </div>
+</form>
+

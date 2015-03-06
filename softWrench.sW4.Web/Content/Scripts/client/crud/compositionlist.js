@@ -316,7 +316,7 @@ app.directive('compositionList', function (contextService, formatService) {
 
             $scope.edit = function (datamap) {
                 if ($scope.compositionlistschema.properties && "modal" == $scope.compositionlistschema.properties["list.click.popup"]) {
-                    modalService.show($scope.compositiondetailschema, datamap, $scope.save);
+                    modalService.show($scope.compositiondetailschema, datamap,{}, $scope.save);
                 } else {
                     //TODO: switch to edit
                     $scope.newDetail = true;

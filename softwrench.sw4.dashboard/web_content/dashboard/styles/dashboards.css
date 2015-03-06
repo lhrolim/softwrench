@@ -1,0 +1,13 @@
+.dash-header {
+    padding-top: 20px;
+}
+
+.editable-click, a.editable-click {
+    text-decoration: none;
+    color: black;
+    border-bottom: none;
+}
+
+.dashboardmodal {
+    width: 700px;
+}

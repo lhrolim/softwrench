@@ -26,7 +26,26 @@ app.factory('restService', function ($http,$log) {
                         failureCbk(data);
                     }
                 });
+        },
+
+        invokeGet: function (controller, action, queryParameters, successCbk, failureCbk) {
+            var url = this.getActionUrl(controller, action, queryParameters);
+            var log = $log.getInstance("restService#invokeGet");
+            log.info("invoking get on url {0}".format(url));
+            $http.get(url)
+                .success(function (data) {
+                    if (successCbk != null) {
+                        successCbk(data);
+                    }
+                })
+                .error(function (data) {
+                    if (failureCbk != null) {
+                        failureCbk(data);
+                    }
+                });
         }
+
+
 
 
     };

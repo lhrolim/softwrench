@@ -31,7 +31,7 @@
         <relationship to="classification" qualifier="classification">
           <relationshipAttribute from="classificationid" to ="classificationid" primary="true"/>
         </relationship>
-        <relationship to="incidentclassifications" qualifier="incidentclassifications">
+        <relationship to="classification" qualifier="incidentclassifications">
           <relationshipAttribute from="classificationid" to="classificationid" primary="true"/>
         </relationship>
         <relationship to ="solution" qualifier="solution" >
@@ -70,7 +70,7 @@
 
       <schemas>
         <list title="Incident Grid">
-          <field attribute="ticketid" label="Request#">
+          <field attribute="ticketid" label="Incident#">
             <renderer type="default" params="widthXS=35%;widthSM=20%;widthMD=15%;widthLG=10%"/>
           </field>
           <field attribute="description" label="Summary">

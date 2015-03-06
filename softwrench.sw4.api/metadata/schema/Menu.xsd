@@ -251,6 +251,14 @@
         <attribute name="modulealias" type="string"/>
         <attribute name="action" type="string"/>
         <attribute name="controller" type="string"/>
+        <attribute name="hasmainaction" type="boolean">
+          <annotation>
+            <documentation>
+              If true, the menu should render a main button with a drop down to the right, clicking the button should perform an action,
+              instead of the default renderer when clicking it would just expand the menu options.
+            </documentation>
+          </annotation>
+        </attribute>
       </extension>
     </complexContent>
   </complexType>
