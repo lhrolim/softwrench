@@ -26,16 +26,10 @@ namespace softWrench.sW4.Metadata.Applications.DataSet
 {
     class ComMatusetransDataSet : MaximoApplicationDataSet
     {        
-        private IEnumerable<IAssociationOption> filterMaterials(AssociationPostFilterFunctionParameters postParams)
-        {
-            // Use to obtain security information from current user
-            var user = SecurityFacade.CurrentUser();
-
+        private IEnumerable<IAssociationOption> filterMaterials(AssociationPostFilterFunctionParameters postParams) {
             List<IAssociationOption> Collections = new List<IAssociationOption>();
-            foreach (var item in postParams.Options)
-            {
-                if (item.Label != null && item.Value.Equals(postParams.OriginalEntity.Attributes["itemnum"]))
-                {
+            foreach (var item in postParams.Options) {
+                if (item.Label != null && item.Value.Equals(postParams.OriginalEntity.Attributes["itemnum"])) {
                     Collections.Add(new AssociationOption(item.Label, item.Label));
                 }
             }
@@ -57,6 +51,8 @@ namespace softWrench.sW4.Metadata.Applications.DataSet
             {
                 filter.AppendWhereClauseFormat("( itemnum in ({0}) )", query);
             }
+
+            filter.AppendWhereClause(String.Format("(ITEMNUM IN (SELECT ITEMNUM FROM invbalances WHERE siteid =  '{0}') )", parameters.OriginalEntity.GetAttribute("siteid")));
 
             return filter;
         }

@@ -90,6 +90,7 @@ namespace softWrench.sW4.Util {
                 var maximoUtcProp = MetadataProvider.GlobalProperties.MaximoTimeZone();
                 int maximoUtc;
                 if (!Int32.TryParse(maximoUtcProp, out maximoUtc)) {
+                    //maximoUtc = 0;
                     return date;
                 }
                 maximoOffset = maximoUtc * 60;

@@ -2,14 +2,6 @@
     padding: 0 60px 0 20px !important;
 }
 
-.jspVerticalBar {
-    display: none;
-}
-
-.jspHorizontalBar {
-    display: none;
-}
-
 #activitystream {
     background: #f2f2f2;
     position: fixed;
@@ -98,6 +90,10 @@
     float: left;
 }
 
+.no-touch #activitystream header .button:hover {
+    color: #666;
+}
+
 #activitystream .hide-toggle .button {
     padding: 10px 11px;
     position: absolute;
@@ -125,6 +121,24 @@
 .no-touch #activitystream header .button.off:hover {
     color: #000;
 }
+
+#activitystream header .filter {
+    margin-bottom: 5px;
+}
+
+    #activitystream header .filter .button {
+        padding: 0;
+    }
+
+    #activitystream header .filter .clearer {
+        position: absolute;
+        top: 47px;
+        right: 18px;
+        width: 34px;
+        height: 34px;
+        line-height: 34px;
+        text-align: center;
+    }
 
 #activitystream .messages {
     clear: both;

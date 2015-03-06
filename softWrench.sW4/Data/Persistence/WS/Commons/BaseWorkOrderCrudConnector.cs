@@ -21,9 +21,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         //        private const string _notFoundLog = "{0} {1} not found. Impossible to generate FollowUp Workorder";
 
         protected AttachmentHandler _attachmentHandler;
+        protected MaximoHibernateDAO _maxHibernate; 
 
         public BaseWorkOrderCrudConnector() {
             _attachmentHandler = new AttachmentHandler();
+            _maxHibernate = new MaximoHibernateDAO(); 
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
@@ -32,11 +34,27 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 //first let´s 'simply change the status
                 WsUtil.SetValue(maximoTemplateData.IntegrationObject, "STATUSIFACE", true);
                 WsUtil.SetValue(maximoTemplateData.IntegrationObject, "CHANGEBY", user.Login.ToUpper());
-                if (!WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CLOSE") || !WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CAN"))
-                {
+                if (!WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CLOSE") || !WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CAN")) {
                     maximoTemplateData.InvokeProxy();
                 }
                 WsUtil.SetValue(maximoTemplateData.IntegrationObject, "STATUSIFACE", false);
+            }
+
+            // COMSW-52 Auto-populate the actual start and end time for a workorder depending on status change
+            // TODO: Caching the status field to prevent multiple SQL update.  
+            if (((CrudOperationData)maximoTemplateData.OperationData).ContainsAttribute("#hasstatuschange")) {
+                var maxStatusValue = _maxHibernate.FindSingleByNativeQuery<string>(String.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'WOSTATUS' AND VALUE = '{0}'", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS")), null);
+                if (maxStatusValue.Equals("INPRG")) {
+                    // We might need to update the client database and cycle the server: update MAXVARS set VARVALUE=1 where VARNAME='SUPPRESSACTCHECK';
+                    // Actual date must be in the past - thus we made it a minute behind the current time.   
+                    // More info: http://www-01.ibm.com/support/docview.wss?uid=swg1IZ90431
+                    WsUtil.SetValueIfNull(maximoTemplateData.IntegrationObject, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                }
+                else if (maxStatusValue.Equals("COMP")) {
+                    // Actual date must be in the past - thus we made it a minute behind the current time.   
+                    WsUtil.SetValueIfNull(maximoTemplateData.IntegrationObject, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                    WsUtil.SetValueIfNull(maximoTemplateData.IntegrationObject, "ACTFINISH", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                }
             }
 
             CommonTransaction(maximoTemplateData);
@@ -122,6 +140,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             // Convert collection into array, if any are available
             var crudOperationData = newLabors as CrudOperationData[] ?? newLabors.ToArray();
 
+            if (crudOperationData.Length > 1) {
+                crudOperationData = crudOperationData.Skip(crudOperationData.Length - 1).ToArray();
+            }
+            
+
             WsUtil.CloneArray(crudOperationData, wo, "LABTRANS", delegate(object integrationObject, CrudOperationData crudData) {
 
                 if (ReflectionUtil.IsNull(integrationObject, "LABTRANSID")) {
@@ -155,6 +178,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             // Convert collection into array, if any are available
             var crudOperationData = newMaterials as CrudOperationData[] ?? newMaterials.ToArray();
+
+            if (crudOperationData.Length > 1) {
+                crudOperationData = crudOperationData.Skip(crudOperationData.Length - 1).ToArray();
+            }
             
             WsUtil.CloneArray(crudOperationData, wo, "MATUSETRANS", delegate(object integrationObject, CrudOperationData crudData) {
                 
@@ -166,7 +193,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 var unitcost = (double)WsUtil.GetRealValue(integrationObject, "UNITCOST");
 
                 if (itemtype.Equals("ITEM")) {
-                    WsUtil.SetValue(integrationObject, "DESCRIPTION", crudData.UnmappedAttributes["#description"]); 
+                    WsUtil.SetValue(integrationObject, "DESCRIPTION", crudData.UnmappedAttributes["#description"]);
                 }
 
                 WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
@@ -175,8 +202,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0);
                 WsUtil.SetValue(integrationObject, "ENTERBY", user.Login);
                 WsUtil.SetValueIfNull(integrationObject, "DESCRIPTION", "");
-                WsUtil.SetValue(integrationObject, "ORGID", user.OrgId);
-                WsUtil.SetValue(integrationObject, "SITEID", user.SiteId);
+                WsUtil.SetValue(integrationObject, "ORGID", entity.GetAttribute("orgid"));
+                WsUtil.SetValue(integrationObject, "SITEID", entity.GetAttribute("siteid"));
                 WsUtil.SetValue(integrationObject, "REFWO", recordKey);
 
                 WsUtil.SetValueIfNull(integrationObject, "ISSUETYPE", "ISSUE");
@@ -199,6 +226,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             // Convert collection into array, if any are available
             var crudOperationData = newTools as CrudOperationData[] ?? newTools.ToArray();
+
+            if (crudOperationData.Length > 1) {
+                crudOperationData = crudOperationData.Skip(crudOperationData.Length - 1).ToArray();
+            }
+            
 
             WsUtil.CloneArray(crudOperationData, wo, "TOOLTRANS", delegate(object integrationObject, CrudOperationData crudData) {
                 WsUtil.SetValueIfNull(integrationObject, "TOOLRATE", 0.00);
@@ -287,12 +319,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (attachments != null) {
                 // this will only filter new attachments
                 foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.Id == null)) {
-                    var docinfo = attachment.GetRelationship("docinfo");
+                    var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo");
+                    var title = attachment.GetAttribute("document").ToString();
+                    var desc = docinfo != null && docinfo.Fields["description"] != null ? docinfo.Fields["description"].ToString() : ""; 
                     var content = new AttachmentParameters() {
-                        Title = attachment.GetAttribute("document").ToString(),
+                        Title = title,
                         Data = attachment.GetUnMappedAttribute("newattachment"),
                         Path = attachment.GetUnMappedAttribute("newattachment_path"),
-                        Description = ((CrudOperationData)docinfo).Fields["description"].ToString()
+                        Description = desc
                     };
 
                     if (content.Data != null) {

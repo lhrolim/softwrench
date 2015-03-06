@@ -6,6 +6,11 @@
         background: none;
     }
 
+    .container header .logo {
+        width: 115px;
+        margin-left: 5px;
+    }
+
 @media all and (min-width: 1180px) {
     .container header {
         background: #143444 url(../../Images/kongsberg/header.png) no-repeat top right;

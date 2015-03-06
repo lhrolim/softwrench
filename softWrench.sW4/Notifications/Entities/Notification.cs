@@ -20,9 +20,11 @@ namespace softWrench.sW4.Notifications.Entities {
         private readonly string _createBy;
         internal readonly DateTime _notificationDate;
         private readonly long _rowstamp;
+        private readonly string _flag;
         
         
         private bool _isRead;
+        public string Flag { get { return _flag; } }
 
         public string Application { get { return _application; } }
         public string Id { get { return _id; } }
@@ -42,7 +44,7 @@ namespace softWrench.sW4.Notifications.Entities {
         
         public bool IsRead { get { return _isRead; } set { _isRead = value; }}
 
-        public Notification(string application, string targetschema, string label, string icon, string id, int uid, string parentid, int parentuid, string parentApplication, string parentLabel, string summary, string createby, DateTime notificationdate, long rowstamp, bool isread = false) {
+        public Notification(string application, string targetschema, string label, string icon, string id, int uid, string parentid, int parentuid, string parentApplication, string parentLabel, string summary, string createby, DateTime notificationdate, long rowstamp, string flag, bool isread = false) {
             _application = application;
             _id = id;
             _targetSchema = targetschema;
@@ -57,7 +59,7 @@ namespace softWrench.sW4.Notifications.Entities {
             _createBy = createby;
             _notificationDate = notificationdate;
             _rowstamp = rowstamp;
-           
+            _flag = flag;
             _isRead = isread;
         }
     }

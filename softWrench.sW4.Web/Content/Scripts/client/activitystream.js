@@ -20,10 +20,18 @@ app.directive('activitystream', function(contextService) {
             var throttleTimeout;
             $scope.hiddenToggle = false;
             var rootAvoidingSpin;
+            $scope.enableFilter = false;
      
             $scope.activityStreamEnabled = function () {
                 return contextService.fetchFromContext("activityStreamFlag", false, true);
             };
+
+            $scope.clearFilter = function () {
+                log.debug('clearFilter');
+
+                $scope.filterText = '';
+                $(window).trigger('resize');
+            }
 
             $scope.displayHidden = function (activity) {
                 //always show unhidden
@@ -40,7 +48,7 @@ app.directive('activitystream', function(contextService) {
 
             $scope.formatDate = function(notificationDate) {
                 var currentDate = new Date();
-                var nowMils = currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000);
+                var nowMils = currentDate.getTime();
 
                 //add 'Z' to datetime fix Firefox error
                 var notificationMils = new Date(notificationDate + 'Z').getTime();
@@ -52,6 +60,8 @@ app.directive('activitystream', function(contextService) {
 
             $scope.getAllHidden = function () {
                 log.debug('getAllHidden');
+
+                //TODO: move to back-end
 
                 //if activities is unset, return false
                 if (typeof $scope.activities !== 'undefined') {
@@ -106,7 +116,7 @@ app.directive('activitystream', function(contextService) {
                 parameters.role = 'allRole';
                 parameters.application = activity.application;
                 parameters.id = activity.id;
-                parameters.notificationDate = activity.notificationDate;
+                parameters.rowstamp = activity.rowstamp;
                 parameters.isread = !activity.isRead;
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
@@ -133,6 +143,7 @@ app.directive('activitystream', function(contextService) {
                 parameters.role = 'allRole';
                 parameters.application = activity.application;
                 parameters.id = activity.id;
+                parameters.rowstamp = activity.rowstamp;
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.post(rawUrl).success(
@@ -222,6 +233,13 @@ app.directive('activitystream', function(contextService) {
                 $('#activitystream .scroll').height($(window).height() - headerHeight - panePaddingTop - panePaddingBottom);
             }
 
+            $scope.toggleFilter = function () {
+                log.debug('toggleFilter');
+
+                $scope.enableFilter = !$scope.enableFilter;
+                $scope.clearFilter();
+            }
+
             $scope.toggleHidden = function () {
                 log.debug('toggleHidden');
 
@@ -235,10 +253,10 @@ app.directive('activitystream', function(contextService) {
                 }
             }
 
-            //automatically refresh the activity stream every five minutes
+            //automatically refresh the activity stream every two minutes
             $interval(function () {
                 $scope.refreshStream(true);
-            }, 1000 * 60 * 5);
+            }, 1000 * 60 * 2);
 
             $scope.toggleActivityStream = function() {
                 //open and close activity pane
@@ -265,12 +283,15 @@ app.directive('activitystream', function(contextService) {
             });
 
             //prevent window scrolling after reaching end of navigation pane 
-            $(document).on('mousewheel', '#activitystream .scroll',
-                function(e) {
-                    var delta = e.originalEvent.wheelDelta;
-                    this.scrollTop += (delta < 0 ? 1 : -1) * 30;
-                    e.preventDefault();
-                });
+            $(document).on('mousewheel', '#activitystream .scroll', function(e) {
+                var delta = e.originalEvent.wheelDelta;
+                this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+                e.preventDefault();
+            });
+
+            $scope.$watch('filterText', function () {
+                $(window).trigger('resize');
+            });
 
             //get the current notifications
             $scope.refreshStream();

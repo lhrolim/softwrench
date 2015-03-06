@@ -28,7 +28,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly string _language;
         private readonly string _maximoPersonId;
         private readonly string _storeloc;
-        private readonly int? _timezoneOffset;
+        private int? _timezoneOffset;
         private readonly UserPreferences _userPreferences;
         private readonly IList<Role> _roles;
         private readonly ICollection<UserProfile> _profiles;
@@ -44,7 +44,7 @@ namespace softWrench.sW4.Metadata.Security {
         private static readonly ILog Log = LogManager.GetLogger(typeof(InMemoryUserExtensions));
 
         internal static InMemoryUser TestInstance(string login = null) {
-            return new InMemoryUser { _login = login };
+            return new InMemoryUser { _login = login, _timezoneOffset = 420 };
         }
 
         private InMemoryUser() {
