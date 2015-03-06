@@ -528,7 +528,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!AffectedDateTime.Value</Value>
+                              <Value>=Convert.ToDatetime(Fields!AffectedDateTime.Value).ToString("dd/MM/yyyy HH:mm")</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -708,7 +708,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!LastActionDate.Value</Value>
+                              <Value>=Convert.ToDatetime(Fields!LastActionDate.Value).ToString("dd/MM/yyyy HH:mm")</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>

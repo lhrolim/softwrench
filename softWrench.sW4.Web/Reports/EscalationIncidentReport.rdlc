@@ -516,8 +516,8 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=IIf(FormatDateTime(Fields!LastActionDateTime.Value,2)=CDate("1/1/0001"), 
-Fields!OpenDateTime.Value,
-Fields!LastActionDateTime.Value)</Value>
+Convert.ToDatetime(Fields!OpenDateTime.Value).ToString("dd/MM/yyyy HH:mm"),
+Convert.ToDatetime(Fields!LastActionDateTime.Value).ToString("dd/MM/yyyy HH:mm"))</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -628,6 +628,7 @@ DateDiff(DateInterval.Hour, Fields!LastActionDateTime.Value,Globals!ExecutionTim
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
