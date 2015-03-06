@@ -17,6 +17,8 @@ using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
+using softWrench.sW4.Data.Persistence.Engine;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 
 
 namespace softWrench.sW4.Notifications {
@@ -36,6 +38,16 @@ namespace softWrench.sW4.Notifications {
                             typeof(MaximoHibernateDAO));
                 }
                 return _maxDAO;
+            }
+        }
+        private EntityRepository _repository;
+        private EntityRepository EntityRepository {
+            get {
+                if (_repository == null) {
+                    _repository =
+                        SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
+                }
+                return _repository;
             }
         }
 
@@ -88,14 +100,17 @@ namespace softWrench.sW4.Notifications {
                     notification["id"].ToString(), notification["notificationDate"].ToString(), true);
             }
         }
-
+        
         public void UpdateNotificationStreams()
         {
             var slicedMetadataEntities = MetadataProvider.GetSlicedMetadataNotificationEntities();
+            var entity = slicedMetadataEntities[0].ApplicationName;
             var queryBuilder = new EntityQueryBuilder();
             var searchRequestDTO = new SearchRequestDto();
             searchRequestDTO.BuildProjection(slicedMetadataEntities[0].AppSchema);
-            var newquery = queryBuilder.AllRows(slicedMetadataEntities[0], searchRequestDTO);
+            var newQuery = queryBuilder.AllRows(slicedMetadataEntities[0], searchRequestDTO);
+
+            
 
             var query = string.Format("select 'commlog' as application, null as targetschema,'communication' as label, 'fa-envelope-o' as icon ,CONVERT(varchar(10), commlogid) as id, c.commloguid as uid, " +
                                       "t.ticketid as parentid, c.ownerid as parentuid, CASE c.ownertable WHEN 'SR' THEN 'servicerequest' ELSE c.ownertable END as parentapplication, c.subject as summary, " +

@@ -521,13 +521,13 @@ namespace softWrench.sW4.Metadata.Parsing {
                     var xName = xElement.Name.LocalName;
 
                     if (xName == XmlNotificationMetadataSchema.NotificationAttributeSummaryElement) {
-                        displayables.Add(new ApplicationNotificationDisplayable(xName,
+                        displayables.Add(new ApplicationFieldDefinition(applicationName, xName,
                             xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeElementAttribute)
                                 .Value));
                     }
 
                     if (xName == XmlNotificationMetadataSchema.NotificationAttributeCreateDateElement) {
-                        displayables.Add(new ApplicationNotificationDisplayable(xName,
+                        displayables.Add(new ApplicationFieldDefinition(applicationName, xName,
                             xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeElementAttribute)
                                 .Value));
                     }
@@ -535,7 +535,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                     if (xName == XmlNotificationMetadataSchema.NotificationParentAttributesElement)
                     {
                         foreach (var parentXElement in xElement.Elements()) {
-                            displayables.Add(new ApplicationNotificationDisplayable(parentXElement.Name.LocalName,
+                            displayables.Add(new ApplicationFieldDefinition(applicationName, parentXElement.Name.LocalName,
                                 parentXElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeElementAttribute)
                                     .Value));    
                         }
@@ -546,7 +546,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                             var attribute =
                                 extraXElement.Attribute(
                                     XmlNotificationMetadataSchema.NotificationAttributeElementAttribute).Value;
-                            displayables.Add(new ApplicationNotificationDisplayable(attribute, attribute));
+                            displayables.Add(new ApplicationFieldDefinition(applicationName, attribute, attribute));
                         }
                     }
 
