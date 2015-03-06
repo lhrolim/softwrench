@@ -609,7 +609,7 @@ DateDiff(DateInterval.Hour, Fields!LastActionDateTime.Value,Globals!ExecutionTim
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Convert.ToDatetime(Fields!InTimeOutTime.Value).ToString("dd/MM/yyyy")</Value>
+                              <Value>=Fields!InTimeOutTime.Value</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -628,7 +628,6 @@ DateDiff(DateInterval.Hour, Fields!LastActionDateTime.Value,Globals!ExecutionTim
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
