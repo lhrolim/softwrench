@@ -2,9 +2,18 @@
 
 app.factory('genericTicketService', function (alertService, associationService, fieldService) {
 
+    var updateTicketStatus = function (datamap) {
+        // If the status is new and the user has set the owner/owner group, update the status to queued
+        if (datamap['status'] == 'NEW' && (datamap['owner'] != null || datamap['ownergroup'] != null)) {
+            datamap['status'] = 'QUEUED';
+        }
+        return true;
+    };
+
     return {
 
-        handleStatusChange:function(schema, datamap, parameters) {
+        handleStatusChange: function (schema, datamap, parameters) {
+            updateTicketStatus(datamap);
             if (datamap['status'] != parameters.originaldatamap['status']) {
                 datamap['#hasstatuschange'] = true;
             }
@@ -55,7 +64,6 @@ app.factory('genericTicketService', function (alertService, associationService, 
             }
         },
 
-
         afterchangeowner: function (event) {
             if (event.fields['owner'] == null) {
                 return;
@@ -64,11 +72,12 @@ app.factory('genericTicketService', function (alertService, associationService, 
                 event.fields['owner'] = null;
                 return;
             }
-            if (event.fields['status'] == 'NEW') {
-                event.fields['status'] = 'QUEUED';
-                alertService.alert("Owner Group Field will be disabled if the owner is selected");
+            if (event.fields['status'] == 'WAPPR') {
+                //event.fields['status'] = 'QUEUED';
+                alertService.alert("Owner Group Field will be disabled if the Owner is selected.");
                 return;
             }
+            
 
         },
 
@@ -81,27 +90,44 @@ app.factory('genericTicketService', function (alertService, associationService, 
                 event.fields['ownergroup'] = null;
                 return;
             }
-            if (event.fields['status'] == 'NEW') {
-                event.fields['status'] = 'QUEUED';
-                alertService.alert("Owner Field will be disabled if the Owner Group is selected");
+            if (event.fields['status'] == 'WAPPR') {
+                //event.fields['status'] = 'QUEUED';
+                alertService.alert("Owner Field will be disabled if the Owner Group is selected.");
                 return;
+                
             }
+             
+            
 
 
         },
+
         beforechangeownergroup: function (event) {
             if (event.fields['owner'] != null) {
                 alertService.alert("You may select an Owner or an Owner Group; not both");
             }
         },
 
-        validateCloseStatus: function (schema, datamap, parameters) {
-            if (datamap['status'] == 'CLOSE') {
+        beforeChangeWOServiceAddress: function (event) {
+            if (event.newValue == null) {
+                event.fields["woaddress_"] = null;
+                event.fields["woaddress_.serviceaddressid"] = null;
+                event.fields["woaddress_.formattedaddress"] = "";
+            }
+        },
+
+        afterChangeWOServiceAddress: function (event) { 
+            event.fields["woserviceaddress_.formattedaddress"] = event.fields["woaddress_.formattedaddress"];
+            event.fields["#formattedaddr"] = event.fields["woserviceaddress_.formattedaddress"];
+            event.fields["#woaddress_"] = event.fields["woaddress_"];
+        }, 
+
+        validateCloseStatus: function (schema, datamap, originalDatamap,parameters) {
+            if (originalDatamap.originaldatamap['synstatus_.description'].equalIc('CLOSED') || originalDatamap.originaldatamap['synstatus_.description'].equalIc('CLOSE')) {
                 alertService.alert("You cannot submit this ticket because it is already closed");
                 return false;
             }
         }
-
     };
 
 });

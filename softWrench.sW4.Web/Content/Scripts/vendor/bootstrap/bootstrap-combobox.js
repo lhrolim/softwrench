@@ -24,6 +24,7 @@
      * ================================ */
 
     var Combobox = function (element, options) {
+        this.loading = true;
         this.options = $.extend({}, $.fn.combobox.defaults, options);
         this.options.pageSize = this.options.pageSize || 30000;
         this.$source = $(element);
@@ -40,6 +41,7 @@
         this.refresh();
         this.transferAttributes();
         this.listen();
+        this.loading = false;
     };
 
     Combobox.prototype = {
@@ -364,7 +366,12 @@
         },
 
         clearElement: function () {
-            this.$element.val('').focus();
+            //don't autofocus until the combobox loads
+            if (this.loading) {
+                this.$element.val('');
+            } else {
+                this.$element.val('').focus();
+            }
         }
 
     , clearTarget: function () {
@@ -382,7 +389,6 @@
         this.source = this.parse();
         this.options.items = this.source.length;
 
-        //        Stop autofocus on detail page load (update to v1.1.6)
         var val = this.$element.val();
         if (!this.source || ($.inArray(val, this.source) == -1 || val.trim() == "")) {
             this.clearElement();

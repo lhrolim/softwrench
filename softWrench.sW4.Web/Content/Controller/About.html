@@ -1,19 +1,63 @@
-﻿<article class="container" ng-controller="AboutController" data-page="about">
-    <section ng-show="aboutData != undefined">
+﻿<article class="container about page" ng-controller="AboutController" data-page="about">
+    <form ng-show="aboutData != undefined">
         <div class="form-horizontal">
             <br />
             <div class="form-group" ng-repeat="data in aboutData">
-                <label class="control-label col-sm-2">
+                <label class="control-label" ng-class="getLabelClass()">
                     {{data.key}}
                 </label>
-                <div class="col-sm-10">
-                    <label class="form-control">
+                <div ng-class="getFormClass(data.key)">
+                    <label class="form-control" ng-if="keyDisabled(data.key)">
                         {{data.value}}
                     </label>
+                    <input type="text" class="form-control" ng-show="!keyDisabled(data.key)" ng-init="newclient = data.value" ng-model="newclient" />
+                </div>
+                <div class="key buttons col-sm-5 col-md-4 col-lg-3" ng-if="shouldShowRestore(data.key)">
+                    <button ng-click="dochangeClient(newclient)" ng-enabled="newclient!='' && newclient!=null" class="btn btn-primary commandButton">
+                        <i style="margin-right: 0.5em" class="fa fa-floppy-o"></i>Change
+                    </button>
+                    <button ng-click="restore()" class="btn btn-primary commandButton">
+                        <i style="margin-right: 0.5em" class="fa fa-refresh"></i>Restore
+                    </button>
+                </div>
+            </div>
+            <div ng-if="isDev()">
+                <legend class="legend-label">
+                    Device Details
+                </legend>
+                <div class="form-group">
+                    <label class="control-label" ng-class="getLabelClass()">
+                        User Agent
+                    </label>
+                    <div ng-class="getFormClass(data.key)">
+                        <label class="form-control">
+                            {{userAgent()}}
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" ng-class="getLabelClass()">
+                        Detected OS
+                    </label>
+                    <div ng-class="getFormClass(data.key)">
+                        <label class="form-control">
+                            {{deviceDetect()}}
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" ng-class="getLabelClass()">
+                        Detected Browser
+                    </label>
+                    <div ng-class="getFormClass(data.key)">
+                        <label class="form-control">
+                            {{browserDetect()}}
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </form>
     <p class="text-center" ng-show="aboutData == undefined">
         <br />
         {{i18N('general.noinformation','No information available')}}

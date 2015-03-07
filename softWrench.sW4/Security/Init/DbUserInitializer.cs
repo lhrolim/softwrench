@@ -6,7 +6,7 @@ using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Scheduler;
 using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Security.Init {

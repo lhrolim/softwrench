@@ -3,6 +3,7 @@
         <ng-switch on="command.type">
             <button ng-switch-when="ApplicationCommand" type="button" ng-class="buttonClasses()"
                     ng-click="executeService(command)" href="#" ng-if="shouldShowCommand(command)"
+                    ng-enabled="isCommandEnabled(command)"
                     data-original-title="{{commandtooltip(command)}}" rel="tooltip" data-container="body" class="applicationcommand">
                 <i class="fa" ng-class="commandIcon(command)"></i>&ensp;{{commandLabel(command)}}
             </button>

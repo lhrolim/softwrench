@@ -1,4 +1,4 @@
-﻿function AceController($scope, $http, $templateCache, $window, i18NService, alertService, restService) {
+function AceController($scope, $http, $templateCache, $window, i18NService, alertService, restService) {
 
     $scope.save = function () {
        
@@ -85,7 +85,7 @@
 
         });
     };
-
+       
     $scope.restorexml = function () {
         alertService.confirmMsg("Select a Restore File from the table to restore your xml to selected file. None of your current changes will be saved. Is this what you want to do? ", function () {
             var urlToCall = url("/api/generic/EntityMetadata/RestoreSavedMetadata");
@@ -93,7 +93,7 @@
                 $scope.value = true;
                 $scope.results = result;
                 
-               
+        
             }).error(function (result) {
                 alertService.alert("Failed to Load your xml file.Please try again later");
             });

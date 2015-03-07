@@ -1,4 +1,4 @@
-﻿.new-button {
+.new-button {
     margin-top: 20px;
     margin-bottom: 15px;
 }
@@ -45,3 +45,20 @@
         margin-bottom: 30px;
     }
 
+.about.page input {
+    font-weight: bold;
+}
+
+.about.page label.form-control {
+   background: #eee;
+}
+
+.about.page .key.buttons {
+    margin-top: 10px;
+}
+
+@media all and (min-width: 768px) {
+    .about.page .key.buttons {
+        margin-top: 0;
+    }
+}

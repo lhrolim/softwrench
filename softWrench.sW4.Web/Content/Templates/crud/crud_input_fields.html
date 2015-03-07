@@ -299,8 +299,45 @@
                             <i class="datetime-class"></i>
                         </span>
                     </div>
+                    <input ng-if="isMobile()" type="datetime" class="form-control" ng-model="datamap[fieldMetadata.attribute]">
+                </div>
+
+                <div ng-switch-when="date">
+                    <div ng-if="isDesktop()" id="datetimepicker" class="input-group" data-datepicker="true">
+                        <input type="text" ng-model="datamap[fieldMetadata.attribute]"
+                               data-date-time
+                               data-show-time="{{fieldMetadata.rendererParameters['showtime']}}"
+                               data-show-date="{{fieldMetadata.rendererParameters['showdate']}}"
+                               data-date-format="{{fieldMetadata.rendererParameters['format']}}"
+                               data-show-meridian="{{fieldMetadata.rendererParameters['showmeridian']}}"
+                               data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
+                               data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
+                               class="form-control">
+                        <span class="input-group-addon" data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}" style="cursor: pointer;">
+                            <i class="datetime-class"></i>
+                        </span>
+                    </div>
                     <input ng-if="isMobile()" type="date" class="form-control" ng-model="datamap[fieldMetadata.attribute]">
                 </div>
+
+                <div ng-switch-when="time">
+                    <div ng-if="isDesktop()" id="datetimepicker" class="input-group" data-datepicker="true">
+                        <input type="text" ng-model="datamap[fieldMetadata.attribute]"
+                               data-date-time
+                               data-show-time="{{fieldMetadata.rendererParameters['showtime']}}"
+                               data-show-date="{{fieldMetadata.rendererParameters['showdate']}}"
+                               data-date-format="{{fieldMetadata.rendererParameters['format']}}"
+                               data-show-meridian="{{fieldMetadata.rendererParameters['showmeridian']}}"
+                               data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"
+                               data-allow-future="{{fieldMetadata.rendererParameters['allowfuture']}}"
+                               class="form-control">
+                        <span class="input-group-addon" data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}" style="cursor: pointer;">
+                            <i class="datetime-class"></i>
+                        </span>
+                    </div>
+                    <input ng-if="isMobile()" type="time" class="form-control" ng-model="datamap[fieldMetadata.attribute]">
+                </div>
+
                 <div ng-switch-when="custom">
                     <div ng-include="contextPath(fieldMetadata.rendererParameters.resourcepath)" href="#" style="width: 100%" />
                 </div>
@@ -340,6 +377,7 @@
                                 <div ng-switch-default>
                                     <input type="{{getInputType(fieldMetadata)}}"
                                            ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control"
+                                           ng-enabled="isModifiableEnabled(fieldMetadata)"
                                            data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
                                            maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
                                            placeholder="{{fieldMetadata.rendererParameters['placeholder']}}"

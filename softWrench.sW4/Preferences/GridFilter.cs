@@ -1,4 +1,5 @@
 ﻿using System;
+using cts.commons.persistence;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Entities;
@@ -33,6 +34,8 @@ namespace softWrench.sW4.Preferences {
         [Property(Column = "values_")]
         public string Values { get; set; }
 
+        [Property]
+        public string Template { get; set; }
 
         [Property]
         public string Application { get; set; }

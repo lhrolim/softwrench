@@ -1,9 +1,12 @@
-﻿using softWrench.sW4.Data.Persistence.Operation;
+using Newtonsoft.Json;
+﻿using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
+using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
+using softWrench.sW4.wsWorkorder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,19 +21,53 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         //        private const string _notFoundLog = "{0} {1} not found. Impossible to generate FollowUp Workorder";
 
         protected AttachmentHandler _attachmentHandler;
+        protected MaximoHibernateDAO _maxHibernate; 
 
         public BaseWorkOrderCrudConnector() {
             _attachmentHandler = new AttachmentHandler();
+            _maxHibernate = MaximoHibernateDAO.GetInstance(); 
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
+            var user = SecurityFacade.CurrentUser();
             if (((CrudOperationData)maximoTemplateData.OperationData).ContainsAttribute("#hasstatuschange")) {
                 //first let´s 'simply change the status
                 WsUtil.SetValue(maximoTemplateData.IntegrationObject, "STATUSIFACE", true);
-                maximoTemplateData.InvokeProxy();
+                WsUtil.SetValue(maximoTemplateData.IntegrationObject, "CHANGEBY", user.Login.ToUpper());
+                if (!WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CLOSE") || !WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS").Equals("CAN")) {
+                    maximoTemplateData.InvokeProxy();
+                }
                 WsUtil.SetValue(maximoTemplateData.IntegrationObject, "STATUSIFACE", false);
             }
+
+            // COMSW-52 Auto-populate the actual start and end time for a workorder depending on status change
+            // TODO: Caching the status field to prevent multiple SQL update.  
+            if (((CrudOperationData)maximoTemplateData.OperationData).ContainsAttribute("#hasstatuschange")) {
+                var maxStatusValue = _maxHibernate.FindSingleByNativeQuery<string>(String.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'WOSTATUS' AND VALUE = '{0}'", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS")), null);
+                if (maxStatusValue.Equals("INPRG")) {
+                    // We might need to update the client database and cycle the server: update MAXVARS set VARVALUE=1 where VARNAME='SUPPRESSACTCHECK';
+                    // Actual date must be in the past - thus we made it a minute behind the current time.   
+                    // More info: http://www-01.ibm.com/support/docview.wss?uid=swg1IZ90431
+                    WsUtil.SetValueIfNull(maximoTemplateData.IntegrationObject, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                }
+                else if (maxStatusValue.Equals("COMP")) {
+                    // Actual date must be in the past - thus we made it a minute behind the current time.   
+                    WsUtil.SetValueIfNull(maximoTemplateData.IntegrationObject, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                    WsUtil.SetValueIfNull(maximoTemplateData.IntegrationObject, "ACTFINISH", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                }
+            }
+
             CommonTransaction(maximoTemplateData);
+
+            // This will prevent multiple action on these items
+            WorkLogHandler.HandleWorkLogs((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
+            HandleMaterials((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
+            HandleLabors((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
+            HandleTools((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
+
+            // Update or create attachments
+            _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
+            
             base.BeforeUpdate(maximoTemplateData);
         }
 
@@ -39,8 +76,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             base.BeforeCreation(maximoTemplateData);
         }
 
+        public override void AfterCreation(MaximoOperationExecutionContext maximoTemplateData) {
+            base.AfterUpdate(maximoTemplateData);
+
+            ((CrudOperationData)maximoTemplateData.OperationData).Fields["wonum"] = maximoTemplateData.ResultObject.UserId;
+            maximoTemplateData.OperationData.Id = maximoTemplateData.ResultObject.UserId;
+            maximoTemplateData.OperationData.OperationType = Internal.OperationType.AddChange;
+
+            // Resubmitting MIF for ServiceAddress Update
+            ConnectorEngine.Update((CrudOperationData)maximoTemplateData.OperationData);
+        }
+
+
+
         private void CommonTransaction(MaximoOperationExecutionContext maximoTemplateData) {
-            
             var wo = maximoTemplateData.IntegrationObject;
             WsUtil.SetValueIfNull(wo, "ESTDUR", 0);
             WsUtil.SetValueIfNull(wo, "ESTLABHRS", 0);
@@ -74,13 +123,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             WsUtil.SetValueIfNull(wo, "OUTSERVCOST", 0);
 
             LongDescriptionHandler.HandleLongDescription(maximoTemplateData.IntegrationObject, (CrudOperationData)maximoTemplateData.OperationData);
-            
-            WorkLogHandler.HandleWorkLogs((CrudOperationData)maximoTemplateData.OperationData, wo);
-            HandleMaterials((CrudOperationData)maximoTemplateData.OperationData, wo);
-            HandleLabors((CrudOperationData)maximoTemplateData.OperationData, wo);
-            HandleTools((CrudOperationData)maximoTemplateData.OperationData, wo);
-            HandleAttachments((CrudOperationData)maximoTemplateData.OperationData, wo, maximoTemplateData.ApplicationMetadata);
+            HandleServiceAddress((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject);
         }
+
+
 
         protected virtual void HandleLabors(CrudOperationData entity, object wo) {
             // Use to obtain security information from current user
@@ -135,8 +181,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 WsUtil.SetValueIfNull(integrationObject, "QTYREQUESTED", 0);
                 WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0);
 
+                var itemtype = WsUtil.GetRealValue(integrationObject, "LINETYPE");
                 var quantity = (double)WsUtil.GetRealValue(integrationObject, "QTYREQUESTED");
                 var unitcost = (double)WsUtil.GetRealValue(integrationObject, "UNITCOST");
+
+                if (itemtype.Equals("ITEM")) {
+                    WsUtil.SetValue(integrationObject, "DESCRIPTION", crudData.UnmappedAttributes["#description"]);
+                }
 
                 WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
                 WsUtil.SetValue(integrationObject, "ACTUALDATE", DateTime.Now.FromServerToRightKind(), true);
@@ -144,8 +195,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0);
                 WsUtil.SetValue(integrationObject, "ENTERBY", user.Login);
                 WsUtil.SetValueIfNull(integrationObject, "DESCRIPTION", "");
-                WsUtil.SetValue(integrationObject, "ORGID", user.OrgId);
-                WsUtil.SetValue(integrationObject, "SITEID", user.SiteId);
+                WsUtil.SetValue(integrationObject, "ORGID", entity.GetAttribute("orgid"));
+                WsUtil.SetValue(integrationObject, "SITEID", entity.GetAttribute("siteid"));
                 WsUtil.SetValue(integrationObject, "REFWO", recordKey);
 
                 WsUtil.SetValueIfNull(integrationObject, "ISSUETYPE", "ISSUE");
@@ -188,30 +239,49 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             });
         }
 
-        protected virtual void HandleAttachments(CrudOperationData entity, object wo, ApplicationMetadata metadata) {
+        protected virtual void HandleServiceAddress(CrudOperationData entity, object wo) {
+            // Use to obtain security information from current user
             var user = SecurityFacade.CurrentUser();
 
-            var attachmentString = entity.GetUnMappedAttribute("newattachment");
-            var attachmentPath = entity.GetUnMappedAttribute("newattachment_path");
-            if (!String.IsNullOrWhiteSpace(attachmentString) && !String.IsNullOrWhiteSpace(attachmentPath)) {
-                _attachmentHandler.HandleAttachments(wo, attachmentString, attachmentPath, metadata);
+            // Create a new WOSERVICEADDRESS instance created
+            var woserviceaddress = ReflectionUtil.InstantiateSingleElementFromArray(wo, "WOSERVICEADDRESS");
+            
+            // Extract data from unmapped attribute
+            var json = entity.GetUnMappedAttribute("#woaddress_");
+
+            // If empty, we assume there's no selected data.  
+            if (json != null) {
+                dynamic woaddress = JsonConvert.DeserializeObject(json);
+
+                String addresscode = woaddress.addresscode;
+                String desc = woaddress.description;
+                String straddrnumber = woaddress.staddrnumber;
+                String straddrstreet = woaddress.staddrstreet;
+                String straddrtype = woaddress.staddrtype;
+
+                WsUtil.SetValue(woserviceaddress, "SADDRESSCODE", addresscode);
+                WsUtil.SetValue(woserviceaddress, "DESCRIPTION", desc);
+                WsUtil.SetValue(woserviceaddress, "STADDRNUMBER", straddrnumber);
+                WsUtil.SetValue(woserviceaddress, "STADDRSTREET", straddrstreet);
+                WsUtil.SetValue(woserviceaddress, "STADDRSTTYPE", straddrtype);
             }
-            var screenshotString = entity.GetUnMappedAttribute("newscreenshot");
-            var screenshotName = "screen" + DateTime.Now.ToUserTimezone(user).ToString("yyyyMMdd") + ".png";
-            if (!String.IsNullOrWhiteSpace(screenshotString) && !String.IsNullOrWhiteSpace(screenshotName)) {
-                _attachmentHandler.HandleAttachments(wo, screenshotString, screenshotName, metadata);
+            else {
+                WsUtil.SetValueIfNull(woserviceaddress, "STADDRNUMBER", "");
+                WsUtil.SetValueIfNull(woserviceaddress, "STADDRSTREET", "");
+                WsUtil.SetValueIfNull(woserviceaddress, "STADDRSTTYPE", "");
             }
 
-            var attachments = entity.GetRelationship("attachment");
-            if (attachments != null) {
-                foreach (var attachment in (IEnumerable<CrudOperationData>)attachments) {
-                    attachmentString = attachment.GetUnMappedAttribute("newattachment");
-                    attachmentPath = (string)(attachment.GetUnMappedAttribute("newattachment_path") ?? attachment.GetAttribute("document"));
-                    if (attachmentString != null && attachmentPath != null) {
-                        _attachmentHandler.HandleAttachments(wo, attachmentString, attachmentPath, metadata);
-                    }
-                }
+            var prevWOServiceAddress = entity.GetRelationship("woserviceaddress");
+
+            if (prevWOServiceAddress != null) {
+                WsUtil.SetValue(woserviceaddress, "FORMATTEDADDRESS", ((CrudOperationData)prevWOServiceAddress).GetAttribute("formattedaddress") ?? "");
             }
+
+            //WsUtil.SetValueIfNull(woserviceaddress, "WOSERVICEADDRESSID", -1);          
+            WsUtil.SetValue(woserviceaddress, "ORGID", user.OrgId);
+            WsUtil.SetValue(woserviceaddress, "SITEID", user.SiteId);
+
+            ReflectionUtil.SetProperty(woserviceaddress, "action", OperationType.AddChange.ToString());
         }
     }
 }

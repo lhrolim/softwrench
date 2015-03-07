@@ -9,7 +9,7 @@ using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sw4.Shared2.Metadata.Modules;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Configuration.Util {
 

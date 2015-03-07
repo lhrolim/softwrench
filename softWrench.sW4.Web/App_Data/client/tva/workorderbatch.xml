@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
+<metadata xmlns="http://www.controltechnologysolutions.com/swdbmetadata">
 
   <templates>
     <template path="@workorder.xml"/>
@@ -17,7 +16,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <commandbars>
             <commandgroup position="gridtop" removeundeclared="true">
               <command id="refresh" icon="fa-refresh" tooltip="refresh" service="searchService" method="refreshGrid"/>
-              <command label="Cancel" id="cancelbatch" service="wobatchService" method="cancelBatch" icon="fa-backward"/>
+              <command label="Cancel" id="cancelbatch" service="wobatchService" method="cancelBatch" icon="fa-times"/>
               <command label="Save Batch" id="generatebatch" service="wobatchService" method="generatebatch" parameters="datamap" icon="fa-save"/>
               <resourcecommand id="batches" path="/Content/Templates/commands/batches/batches.html" role="allowwobatches" parameters="showbutton=false"/>
             </commandgroup>
@@ -60,7 +59,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <commandgroup position="gridtop" removeundeclared="true">
               <command id="submit" label="Submit" tooltip="Submit Batch to Maximo" service ="wobatchService" method="submitBatch" icon="fa-cloud-upload" parameters="datamap" />
               <command id="save" label="Save Batch" tooltip="Save Batch without Submiting it" service ="wobatchService" method="savebatch" parameters="datamap" icon="fa-save" />
-              <command id="exit" label="Exit" service ="wobatchService" method="exit" icon="fa-backward"/>
+              <command id="exit" label="Exit" service ="wobatchService" method="exit" icon="fa-times"/>
               <resourcecommand id="batches" path="/Content/Templates/commands/batches/batches.html" role="allowwobatches" parameters="showbutton=false"/>
             </commandgroup>
           </commandbars>

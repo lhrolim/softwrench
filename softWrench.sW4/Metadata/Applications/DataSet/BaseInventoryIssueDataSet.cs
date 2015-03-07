@@ -20,7 +20,7 @@ using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
     class BaseInventoryIssueDataSet : MaximoApplicationDataSet {
@@ -154,7 +154,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
         public override string ApplicationName() {
-            return "invissue";
+            return "keyinvissue";
         }
 
         public override string ClientFilter() {

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using cts.commons.portable.Util;
+using cts.commons.Util;
 using JetBrains.Annotations;
 using log4net;
 using Newtonsoft.Json.Linq;
@@ -32,7 +34,7 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
@@ -241,20 +243,26 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 var search = new SearchRequestDto();
                 if (!applicationAssociation.IsLazyLoaded()) {
                     // default branch
-                } else if (dataMap != null && dataMap.GetAttribute(applicationAssociation.Target) != null) {
-                    //if the field has a value, fetch only this single element, for showing eventual extra label fields... ==> lookup with a selected value
-                    var toAttribute = applicationAssociation.EntityAssociation.PrimaryAttribute().To;
-                    var prefilledValue = dataMap.GetAttribute(applicationAssociation.Target).ToString();
-                    search.AppendSearchEntry(toAttribute, prefilledValue);
-                }
-                else if (dataMap != null && applicationAssociation.EntityAssociation.Reverse && dataMap.GetAttribute(applicationAssociation.EntityAssociation.PrimaryAttribute().From) != null)
-                {
-                    var toAttribute = applicationAssociation.EntityAssociation.PrimaryAttribute().To;
-                    var prefilledValue = dataMap.GetAttribute(applicationAssociation.EntityAssociation.PrimaryAttribute().From).ToString();
-                    search.AppendSearchEntry(toAttribute, prefilledValue);
                 } else {
-                    //lazy association with no default value
-                    continue;
+                    var primaryAttribute = applicationAssociation.EntityAssociation.PrimaryAttribute();
+                    if (primaryAttribute == null){
+                        //this is a rare case, but sometimes the relationship doesn´t have a primary attribute, like workorder --> glcomponents
+                        continue;
+                    }
+
+                    if (dataMap != null && dataMap.GetAttribute(applicationAssociation.Target) != null) {
+                        //if the field has a value, fetch only this single element, for showing eventual extra label fields... ==> lookup with a selected value
+                        var toAttribute = primaryAttribute.To;
+                        var prefilledValue = dataMap.GetAttribute(applicationAssociation.Target).ToString();
+                        search.AppendSearchEntry(toAttribute, prefilledValue);
+                    } else if (dataMap != null && applicationAssociation.EntityAssociation.Reverse && dataMap.GetAttribute(primaryAttribute.From) != null) {
+                        var toAttribute = primaryAttribute.To;
+                        var prefilledValue = dataMap.GetAttribute(primaryAttribute.From).ToString();
+                        search.AppendSearchEntry(toAttribute, prefilledValue);
+                    } else {
+                        //lazy association with no default value
+                        continue;
+                    }
                 }
                 var association = applicationAssociation;
 

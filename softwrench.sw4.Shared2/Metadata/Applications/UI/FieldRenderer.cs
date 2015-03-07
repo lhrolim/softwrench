@@ -1,4 +1,5 @@
-﻿using softwrench.sW4.Shared2.Util;
+﻿using cts.commons.portable.Util;
+using softwrench.sW4.Shared2.Util;
 using System;
 using System.Collections.Generic;
 
@@ -6,7 +7,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
 
 
     public class FieldRenderer {
-        private const string WrongRenderer = "renderer {0} not found. Possible options are radio,checkbox,numericinput,datetime,textarea,screenshot,upload,default,image,treeview,label,richtext,fieldwithbuttons,icon,color,yn, multipleupload,email";
+        private const string WrongRenderer = "renderer {0} not found. Possible options are radio,checkbox,numericinput,datetime,date,time,textarea,screenshot,upload,default,image,treeview,label,richtext,fieldwithbuttons,icon,color,yn,multipleupload,email";
 
         public FieldRenderer() { }
 
@@ -36,7 +37,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
 
 
         public enum BaseRendererType {
-            RADIO,NUMERICINPUT, DATETIME, SCREENSHOT, UPLOAD, TEXTAREA, DEFAULT, IMAGE, TREEVIEW, LABEL, CUSTOM,COLOR, RICHTEXT,CHECKBOX,FIELDWITHBUTTONS, ICON, MULTIPLEUPLOAD,EMAIL
+            RADIO, NUMERICINPUT, DATETIME, SCREENSHOT, UPLOAD, TEXTAREA, DEFAULT, IMAGE, TREEVIEW, LABEL, CUSTOM, COLOR, RICHTEXT, CHECKBOX, FIELDWITHBUTTONS, ICON, MULTIPLEUPLOAD, EMAIL, DATE, TIME
         }
 
 

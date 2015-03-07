@@ -1,3 +1,6 @@
+using cts.commons.persistence;
+using cts.commons.portable.Util;
+using cts.commons.Util;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Parsing;
@@ -8,9 +11,11 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
+using softWrench.sW4.Security.Services;
+using cts.commons.simpleinjector.Events;
 
 namespace softWrench.sW4.Util {
-    public class ApplicationConfiguration {
+    public class ApplicationConfiguration : ISWEventListener<ClearCacheEvent> {
         private const string UnitTestProfile = "unittest";
 
         private static string _testclientName;
@@ -71,7 +76,7 @@ namespace softWrench.sW4.Util {
         private static string GetProfile() {
             if (_environment != null) {
                 return _environment;
-        }
+            }
             var declaredProfile = ConfigurationManager.AppSettings["profile"];
             _environment = declaredProfile ?? UnitTestProfile;
             return _environment;
@@ -239,7 +244,7 @@ namespace softWrench.sW4.Util {
                 var ext = MetadataProvider.GlobalProperty("allowedAttachmentExtensions");
                 if (!String.IsNullOrWhiteSpace(ext)) {
                     return ext.Split(',');
-                }               
+                }
                 return new[] { "pdf", "zip", "txt", "jpg", "bmp", "doc", "docx", "dwg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "html", "rtf" };
             }
         }
@@ -293,7 +298,7 @@ namespace softWrench.sW4.Util {
         public static Boolean IsUnitTest {
             get { return GetProfile() == UnitTestProfile; }
         }
-        
+
 
 
         public static long StartTimeMillis { get; set; }
@@ -325,7 +330,7 @@ namespace softWrench.sW4.Util {
             return !IsMif() && !IsISM();
         }
 
-        public static String DBConnectionString(ApplicationConfiguration.DBType dbType) {
+        public static String DBConnectionString(DBType dbType) {
             var connectionStringSettings = DBConnection(dbType);
             return connectionStringSettings == null ? null : connectionStringSettings.ConnectionString;
         }
@@ -453,17 +458,17 @@ namespace softWrench.sW4.Util {
             return DBMS.MYSQL;
         }
 
-        public enum DBMS {
-            MSSQL, DB2, ORACLE, MYSQL
-        }
-        public enum DBType {
-            Maximo, Swdb
-        }
-
 
         public static bool IsLocalHostSWDB() {
             var connString = DBConnectionString(DBType.Swdb);
             return connString.Contains("localhost");
+        }
+
+        public void HandleEvent(ClearCacheEvent eventToDispatch) {
+            _clientName = null;
+            _swdbType = null;
+            _environment = null;
+            _maximodbType = null;
         }
     }
 

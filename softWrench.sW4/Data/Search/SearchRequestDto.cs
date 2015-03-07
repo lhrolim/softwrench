@@ -21,6 +21,12 @@ namespace softWrench.sW4.Data.Search {
         public IDictionary<string, string> CustomParameters { get; set; }
         public string CommandId { get; set; }
 
+        /// <summary>
+        /// Receives the query to apply in the format :a || :b || :c || :d. 
+        /// FWK shall locate corresponding SearchValues to replace it
+        /// </summary>
+        public String SearchTemplate { get; set; }
+
         public String SearchParams { get; set; }
 
         public String SearchValues { get; set; }

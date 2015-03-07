@@ -6,7 +6,7 @@ using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Util;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Data.Search;

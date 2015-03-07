@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<commands xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Commands.xsd ">
+<commands xmlns="http://www.controltechnologysolutions.com/commandmetadata">
 
   <commandgroup position="gridtop">
     <resourcecommand id="filter" path="/Content/Templates/commands/grid/gridfilter.html"/>
@@ -18,14 +17,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Commands.xsd ">
   <commandgroup position="detailform">
     <command id="save" icon="fa-save" service="$scope" method="save" label="Submit" tooltip="Submit" showexpression="$scope:shouldshowsave"/>
     <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="schema,datamap" label="Print" tooltip="Print" showexpression="$scope:shouldshowprint"/>
-    <command id="cancel" icon="fa-backward" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>
+    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>
   </commandgroup>
 
   <commandgroup position="compositionbottom">
     <command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />
     <command id="save" icon="fa-save" service="$scope" method="save" label="Submit" tooltip="Submit" />
     <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="parentschema,parentdatamap" label="Print" tooltip="Print" showexpression="$scope:shouldshowprint"/>
-    <command id="cancel" icon="fa-backward" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>
+    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" tooltip="Cancel"/>
   </commandgroup>
 
 

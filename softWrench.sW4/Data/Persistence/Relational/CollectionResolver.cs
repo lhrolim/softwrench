@@ -1,3 +1,4 @@
+using cts.commons.Util;
 using log4net;
 using log4net;
 ﻿using log4net;
@@ -12,7 +13,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Security.Context;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;

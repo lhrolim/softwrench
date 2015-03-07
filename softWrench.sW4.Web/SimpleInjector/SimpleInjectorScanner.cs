@@ -5,12 +5,13 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Mvc;
+using cts.commons.Util;
 using FluentMigrator.Infrastructure.Extensions;
 using log4net;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
 using softWrench.sW4.Data.Entities.SyncManagers;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.SimpleInjector.WebApi;
 
@@ -63,6 +64,7 @@ namespace softWrench.sW4.Web.SimpleInjector {
                     if (attr != null) {
                         RegisterFromAttribute(attr, tempDict, reg);
                     }
+                    var name = registration.Name;
                     RegisterFromInterfaces(registration, tempDict, reg);
                     RegisterClassItSelf(container, registration, reg);
                 }
@@ -72,7 +74,7 @@ namespace softWrench.sW4.Web.SimpleInjector {
                 var serviceType = entry.Key;
                 if (typeof(ISingletonComponent).IsAssignableFrom(serviceType)) {
                     container.AddRegistration(serviceType, coll.FirstOrDefault());
-                    sW4.SimpleInjector.SimpleInjectorGenericFactory.RegisterNameAndType(serviceType);
+                    SimpleInjectorGenericFactory.RegisterNameAndType(serviceType);
                 } else {
                     container.RegisterAll(serviceType, coll);
                 }
@@ -82,7 +84,7 @@ namespace softWrench.sW4.Web.SimpleInjector {
         private static void RegisterClassItSelf(Container container, Type registration, Registration reg) {
             if (registration.IsPublic) {
                 container.AddRegistration(registration, reg);
-                sW4.SimpleInjector.SimpleInjectorGenericFactory.RegisterNameAndType(registration);
+                SimpleInjectorGenericFactory.RegisterNameAndType(registration);
             }
         }
 

@@ -25,8 +25,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
-        private readonly ISet<ApplicationEvent> _eventsSet;
-
         /// <summary>
         /// This fields can only be resolved once the entire metadata.xml are parsed, so that´s why we are using this Lazy strategy.
         /// 
@@ -39,7 +37,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         ///  public delegate byte[] Base64Delegate(string attachmentData);
         public delegate IList<IApplicationAttributeDisplayable> LazyFkResolverDelegate(ApplicationSchemaDefinition definition);
 
-        public delegate IEnumerable<IApplicationDisplayable> LazyComponentDisplayableResolver(ReferenceDisplayable reference, ApplicationSchemaDefinition schema);
+        public delegate IEnumerable<IApplicationDisplayable> LazyComponentDisplayableResolver(ReferenceDisplayable reference, ApplicationSchemaDefinition schema,IEnumerable<DisplayableComponent> components);
 
         [JsonIgnore]
         public LazyFkResolverDelegate FkLazyFieldsResolver;
@@ -89,17 +87,21 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public string IdDisplayable { get; set; }
 
-        private Boolean lazyFksResolved = false;
+        private Boolean _lazyFksResolved;
 
-        private Boolean referencesResolved = false;
+        private Boolean _referencesResolved;
 
+        private Boolean _redeclaringSchema;
 
+        public bool RedeclaringSchema {
+            get { return _redeclaringSchema; }
+        }
 
         public ApplicationSchemaDefinition() {
         }
 
         public ApplicationSchemaDefinition(
-            String applicationName, string title, string schemaId, SchemaStereotype stereotype,
+            String applicationName, string title, string schemaId, Boolean redeclaringSchema, SchemaStereotype stereotype,
             SchemaMode? mode, ClientPlatform? platform, bool @abstract,
             List<IApplicationDisplayable> displayables, IDictionary<string, string> schemaProperties,
             ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema,
@@ -109,6 +111,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             ApplicationName = applicationName;
             Platform = platform;
             _displayables = displayables;
+            _redeclaringSchema = redeclaringSchema;
             ParentSchema = parentSchema;
             PrintSchema = printSchema;
             SchemaId = schemaId;
@@ -121,9 +124,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             IdFieldName = idFieldName;
             UserIdFieldName = userIdFieldName;
             UnionSchema = unionSchema;
-          
 
-            _eventsSet = events;
             if (events != null) {
                 _events = events.ToDictionary(f => f.Type, f => f);
             }
@@ -158,7 +159,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public List<IApplicationDisplayable> Displayables {
             get {
                 //run this piece of code, just once, in the web app version, before mobile serialization.
-                if (FkLazyFieldsResolver != null && !lazyFksResolved) {
+                if (FkLazyFieldsResolver != null && !_lazyFksResolved) {
                     var resultList = FkLazyFieldsResolver(this);
                     if (resultList != null) {
                         //this will happen only when this method is invoked after the full Metadata serialization
@@ -169,14 +170,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                         }
                     }
 
-                    lazyFksResolved = true;
+                    _lazyFksResolved = true;
                 }
 
-                if (!referencesResolved && ComponentDisplayableResolver != null) {
+                if (!_referencesResolved && ComponentDisplayableResolver != null) {
                     var performReferenceReplacement = DisplayableUtil.PerformReferenceReplacement(_displayables, this, ComponentDisplayableResolver);
                     if (performReferenceReplacement != null) {
                         _displayables = performReferenceReplacement;
-                        referencesResolved = true;
+                        _referencesResolved = true;
                     }
                 }
                 return _displayables;
@@ -322,7 +323,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         [JsonIgnore]
         public ISet<ApplicationEvent> EventSet {
-            get { return _eventsSet; }
+            get { return new HashSet<ApplicationEvent>(_events.Values); }
         }
 
         protected bool Equals(ApplicationSchemaDefinition other) {

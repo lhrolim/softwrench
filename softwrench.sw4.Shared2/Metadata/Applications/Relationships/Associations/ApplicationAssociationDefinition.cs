@@ -21,6 +21,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public string LabelPattern { get; set; }
         public string EnableExpression { get; set; }
         public bool HideDescription { get; set; }
+        public string OrderByField { get; set; }
+        public string DefaultExpression { get; set; }
 
         private string _applicationTo;
         private ISet<string> _extraProjectionFields = new HashSet<string>();
@@ -68,7 +70,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public ApplicationAssociationDefinition() { }
 
         public ApplicationAssociationDefinition(string @from, LabelData labelData, string target, string qualifier, ApplicationAssociationSchemaDefinition applicationAssociationSchema,
-            string showExpression, string toolTip, string requiredExpression, string defaultValue, bool hideDescription, string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true, string valueField = null)
+            string showExpression, string toolTip, string requiredExpression, string defaultValue, bool hideDescription, string orderbyfield,string defaultExpression, string enableExpression = "true", ISet<ApplicationEvent> events = null, bool forceDistinctOptions = true, string valueField = null)
             : base(from, labelData.Label, showExpression, toolTip) {
             _labelData = labelData;
             _label = labelData.Label;
@@ -83,7 +85,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             _forceDistinctOptions = forceDistinctOptions;
             Qualifier = qualifier;
             HideDescription = hideDescription;
+            OrderByField = orderbyfield;
             _valueField = valueField;
+            DefaultExpression = defaultExpression;
 
             if (events != null) {
                 _events = events.ToDictionary(f => f.Type, f => f);
@@ -132,7 +136,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
 
 
-        public string Attribute { get { return Target; } set { Target = value; } }
+        public override string Attribute { get { return Target; } set { Target = value; } }
 
         public IList<string> LabelFields {
             get { return _labelFields; }
@@ -230,7 +234,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public object Clone() {
             var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, ToolTip, RequiredExpression,
-                DefaultValue, HideDescription, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField) {
+                DefaultValue, HideDescription, OrderByField,DefaultExpression, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField)
+                {
                     ExtraProjectionFields = ExtraProjectionFields,
                     LabelFields = LabelFields,
                     ApplicationTo = ApplicationTo,

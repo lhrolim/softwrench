@@ -8,7 +8,7 @@ namespace softWrench.sW4.Data.API {
         public string CrudSubTemplate { get; set; }
         public string SuccessMessage { get; set; }
         public DateTime TimeStamp { get; set; }
-        public string Type { get; private set; }
+        public string Type { get { return typeof (BlankApplicationResponse).Name; } }
         public ApplicationSchemaDefinition Schema { get; private set; }
         public string Mode { get; set; }
         public string ApplicationName { get; private set; }

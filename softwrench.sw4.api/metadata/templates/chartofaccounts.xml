@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+    <entity name="chartofaccounts" idAttribute="chartofaccountsid">
+      <attributes>
+        <attribute name="chartofaccountsid" type="int"  required="true" />
+        <attribute name="glaccount" type="varchar"  required="true" />
+        <attribute name="accountname" type="varchar"  required="true" />
+        <attribute name="orgid"  type="varchar" />
+<!--        <attribute name="displaycostcenter" type="varchar" required="false" query="COALESCE(glcomp02,'') || ' // ' || COALESCE(accountname,'')"/>-->
+      </attributes>
+    </entity>
+  </entities>
+
+  <applications>
+    <application name="chartofaccounts" title="Chart of Accounts" entity="chartofaccounts" id="00000000-0000-0000-0000-000000000005">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+        <property key="mobile.userInteractionEnabled" value="false"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="glaccount" label="Account" qualifier="title"/>
+          <field attribute="accountname" label="Name" qualifier="excerpt"/>
+        </list>
+        <detail>
+          <field attribute="chartofaccountsid" label="ID:"  requiredexpression="true" />
+          <field attribute="glaccount" label="Account:"  requiredexpression="true" />
+          <field attribute="accountname" label="Name:"  requiredexpression="true" />
+          <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
+        </detail>
+      </schemas>
+    </application>
+  </applications>
+
+
+
+
+</metadata>

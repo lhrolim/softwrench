@@ -6,7 +6,7 @@ using softwrench.sW4.Shared2.Metadata.Entity.Association;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations {
 
-    public abstract class ApplicationRelationshipDefinition : BaseDefinition, IApplicationDisplayable {
+    public abstract class ApplicationRelationshipDefinition : BaseDefinition, IApplicationIndentifiedDisplayable {
 
         public string From { get; set; }
         public string Label { get; set; }
@@ -52,5 +52,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         }
 
 
+        public abstract string Attribute { get; set; }
     }
 }

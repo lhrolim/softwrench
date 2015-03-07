@@ -4,8 +4,10 @@ using System.IO;
 using System.Net.Mime;
 using System.Text;
 using System.Text.RegularExpressions;
+using cts.commons.portable.Util;
+using cts.commons.Util;
 using DocumentFormat.OpenXml.Math;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using System.Net.Mail;
 using softWrench.sW4.Metadata;
 using Common.Logging;
@@ -27,8 +29,8 @@ namespace softWrench.sW4.Email {
             }
             objsmtpClient.EnableSsl = "true".EqualsIc(MetadataProvider.GlobalProperty("email.stmp.enableSSL", true));
             // Send the email message
-            var email = new MailMessage(emailData.SendFrom, emailData.SendTo) {
-                Subject = emailData.Subject,
+            var email = new MailMessage(emailData.SendFrom ?? MetadataProvider.GlobalProperty("defaultEmail"), emailData.SendTo) {
+               Subject = emailData.Subject,
                 Body = emailData.Message,
                 IsBodyHtml = true
             };

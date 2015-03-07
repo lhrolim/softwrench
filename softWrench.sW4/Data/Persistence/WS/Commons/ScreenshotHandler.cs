@@ -1,4 +1,5 @@
 ﻿using log4net;
+using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Util;
 using System;
@@ -33,10 +34,17 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     screenshotString = Convert.ToBase64String(bytes);
                     screenshotName = screenshotName.Substring(0, screenshotName.Length - 3) + "html";
                 }
-
+                
+                // TODO: Is this necessary, this is a repeat of the same process in attachment. 
                 Validate(screenshotName, screenshotString);
 
-                _attachmentHandler.HandleAttachments(maximoObj, screenshotString, screenshotName, applicationMetadata);
+                var screenshot = new AttachmentDTO() {
+                    Title = FileUtils.GetNameFromPath(screenshotName),
+                    Path = screenshotName,
+                    Data = screenshotString
+                };
+
+                _attachmentHandler.AddAttachment(maximoObj, screenshot);
             }
         }
 

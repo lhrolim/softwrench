@@ -3,7 +3,7 @@
         <select ng-model="actiontoexecute" ng-init="actiontoexecute = 'Select One'"
                 ng-options="option.value as option.label for option in getAvailableOptions(parentschema,compositionlistschema)" />
         <button ng-click="submitAction(compositionitem,parentschema,parentdata,compositionlistschema)" ng-disabled="submitEnabled()" class="btn commandButton navbar-btn">
-            <i style="margin-right: 0.5em" class="glyphicon glyphicon-ok"></i>{{i18N('general.save','Submit')}}
+            <i style="margin-right: 0.5em" class="fa fa-floppy-o"></i>{{i18N('general.save','Submit')}}
         </button>
     </div>
 </div>

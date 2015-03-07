@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using softWrench.sW4.SimpleInjector;
-using softWrench.sW4.SimpleInjector.Core.Order;
+using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.Core.Order;
 
 namespace softWrench.sW4.Data.Entities.SyncManagers {
     public interface IUserSyncManager :IOrdered,IComponent{

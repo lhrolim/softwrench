@@ -57,9 +57,8 @@ app.factory('srService', function (alertService, associationService, fieldServic
                 event.fields['owner'] = null;
                 return;
             }
-            if (event.fields['status'] == 'NEW') {
-                event.fields['status'] = 'QUEUED';
-                alertService.alert("Owner Group Field will be disabled if the owner is selected");
+            if (event.fields['status'] == 'NEW' || event.fields['#originalstatus'] == "NEW") {
+                alertService.alert("Owner Group Field will be disabled if the Owner is selected.");
                 return;
             }
             
@@ -75,8 +74,7 @@ app.factory('srService', function (alertService, associationService, fieldServic
                 return;
             }
             if (event.fields['status'] == 'NEW') {
-                event.fields['status'] = 'QUEUED';
-                alertService.alert("Owner Field will be disabled if the Owner Group is selected");
+                alertService.alert("Owner Field will be disabled if the Owner Group is selected.");
                 return;
             }
             

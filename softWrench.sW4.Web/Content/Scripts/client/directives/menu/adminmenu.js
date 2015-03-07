@@ -29,12 +29,21 @@
                 return url(path);
             };
 
+
+            scope.isLocal= function (path) {
+                return contextService.isLocal();
+            };
+
             scope.logout = function () {
                 sessionStorage.removeItem("swGlobalRedirectURL");
                 contextService.clearContext();
                 sessionStorage['ctx_loggedin'] = false;
             };
-            
+
+            //show or hide the menu when the expand button is clicked
+            $('.menu-expand').click(function () {
+                jQuery(this).toggleClass('menu-open');
+            });
         }
     };
 });

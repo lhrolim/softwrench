@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission {
     public interface ISubmissionConverter :IComponent{

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Properties xmlns="http://www.example.org/Properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://www.example.org/Properties ../../Schema/Properties.xsd ">
+<Properties xmlns="http://www.controltechnologysolutions.com/propertiesmetadata" >
 
   <property key="baseWSPrefix" value="MXSW3"/>
   <property key="externalSystemName" value="SW" />
@@ -14,8 +13,10 @@
   <property key="sourcemapping" value="maximo7.5"/>
   <property key="swdb_provider" value="System.Data.SQL"/>
   <environment key="dev">
-    <property key="basewsURL" value="http://66.235.236.237/meaweb/services/" />
-    <property key="maximo_DB_url" value="Data Source=192.168.2.58;Initial Catalog=ENT75MAX;User Id=MAXIMO;password=MAXIMO;" />
+    <!--<property key="basewsURL" value="http://66.235.236.237/meaweb/services/" />-->
+    <!--<property key="maximo_DB_url" value="Data Source=192.168.2.58;Initial Catalog=ENT75MAX;User Id=MAXIMO;password=MAXIMO;" />-->
+    <property key="maximo_DB_url" value="Data Source=10.50.100.125;Initial Catalog=SWMAX;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="basewsURL" value="http://10.50.100.125:9080/meaweb/wsdl/" />
     <property key="swdb_url" value="Data Source=66.235.236.3;Initial Catalog=SWDB;User Id=abcdemouser;password=test123!;" />
     <property key="maximodoclinkspath" value="\\66.235.236.237\doclinks"/>
     <property key="maximourldoclinkspath" value="http://66.235.236.237/doclinks/attachments/"/>

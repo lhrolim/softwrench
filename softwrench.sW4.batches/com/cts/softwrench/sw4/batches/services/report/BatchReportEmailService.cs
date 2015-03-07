@@ -5,7 +5,7 @@ using log4net;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
 using softWrench.sW4.Email;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.SPF;
 using Hash = DotLiquid.Hash;
 

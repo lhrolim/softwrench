@@ -1,8 +1,8 @@
 ﻿using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.Events;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,7 +16,7 @@ namespace softWrench.sW4.Util {
 
         private JObject _cachedCatalogs;
 
-        private Boolean _cacheSet =false;
+        private Boolean _cacheSet = false;
 
         private Dictionary<string, Dictionary<string, string>> _cachedColorDict;
         private Dictionary<string, string> _defaultColorDict;
@@ -88,7 +88,8 @@ namespace softWrench.sW4.Util {
             var statusColorJsonPath = String.Format(patternToUse, baseDirectory, currentClient);
             if (File.Exists(statusColorJsonPath)) {
                 _cachedCatalogs = JSonUtil.BuildJSon(statusColorJsonPath);
-            } else {
+            }
+            else {
                 _cachedCatalogs = null;
             }
             _cacheSet = true;
@@ -112,14 +113,16 @@ namespace softWrench.sW4.Util {
             }
         }
 
-        public Dictionary<string, string> GetColorsAsDict([NotNull] string applicationId)
-        {
-            if (_cacheSet && !ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsUnitTest && _cachedColorDict == null) {
-                return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : null;
+        public Dictionary<string, string> GetColorsAsDict([NotNull] string applicationId) {
+            if (_cacheSet && !ApplicationConfiguration.IsDev() && !ApplicationConfiguration.IsUnitTest && _cachedColorDict != null) {
+                return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : _defaultColorDict;
             }
 
             _cachedColorDict = new Dictionary<string, Dictionary<string, string>>();
             JObject catalogs = FetchCatalogs();
+
+            if (catalogs == null)
+                return _defaultColorDict;
 
             foreach (var currentToken in catalogs) {
 
@@ -127,7 +130,7 @@ namespace softWrench.sW4.Util {
                 var colors = currentToken.Value;
 
                 var colorDict = new Dictionary<string, string>();
-            
+
                 foreach (var color in colors.Value<JObject>().Properties()) {
                     var name = color.Name;
                     var value = color.Value;
@@ -137,6 +140,7 @@ namespace softWrench.sW4.Util {
 
                 _cachedColorDict[application] = colorDict;
             }
+
 
             return _cachedColorDict.ContainsKey(applicationId) ? _cachedColorDict[applicationId] : null;
         }

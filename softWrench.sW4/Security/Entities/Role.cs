@@ -6,17 +6,8 @@ namespace softWrench.sW4.Security.Entities {
     [Class(Table = "SW_ROLE")]
     public class Role {
         public const string RoleByName = "from Role where Name =?";
-        public static string RoleByNames(int names = 1) {
-            var defaultCondition = "from Role where Name = ?";
-            if (names <= 1) {
-                return defaultCondition;
-            }
-            while (names > 1) {
-                defaultCondition += " or Name = ?";
-                names--;
-            }
-            return defaultCondition;
-        }
+        public static string RoleByNames = "from Role where Name in (:p0)";
+            
 
         public const string SysAdmin = "sysadmin";
         public const string ClientAdmin = "clientadmin";

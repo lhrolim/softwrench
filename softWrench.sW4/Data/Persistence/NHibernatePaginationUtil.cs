@@ -1,4 +1,6 @@
-﻿using softWrench.sW4.Util;
+﻿using cts.commons.portable.Util;
+using cts.commons.Util;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence {
     class NHibernatePaginationUtil {

@@ -2,13 +2,15 @@
 <form>
     <div id="affixpagination" class="affix-pagination hiddenonprint" ng-hide="hidebars">
         <div class="context clearfix header-menu">
-            <gridtoolbar position="gridtop"
+            <gridtoolbar advancedsearchdata="advancedsearchdata"
+                         position="gridtop"
                          datamap="datamap"
                          schema="schema"
                          pagination-data="paginationData"
                          search-data="searchData"
                          search-sort="searchSort"
                          search-operator="searchOperator"
+                         search-template="searchTemplate"
                          class="gridtop" />
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                         schema="schema" application-name="{{schema.applicationName}}"
@@ -16,7 +18,7 @@
                         search-operator="searchOperator" />
         </div>
         <!--TODO: make this encapsulated inside gridfilter.html... is that possible?-->
-        <div class="context clearfix header-menu" ng-if="advancedfiltermode">
+        <div class="context clearfix header-menu" ng-show="advancedfiltermode">
             <div class="form-horizontal" role="form">
                 <div class="form-group">
                     <label for="advancedSearch" class="col-sm-1 control-label">Search</label>
@@ -167,7 +169,7 @@
                     <th class="clear"><!--SWWEB-841--></th>
                 </tr>
             </thead>
-            <tbody crudtbody schema="schema" datamap="datamap" association-options="associationOptions" timestamp="{{timestamp}}" bindonce />
+            <tbody crudtbody schema="schema" datamap="datamap" panelid="panelid" association-options="associationOptions" timestamp="{{timestamp}}" bindonce />
         </table>
     </div>
     <p class="text-center" ng-show="datamap.length == 0">

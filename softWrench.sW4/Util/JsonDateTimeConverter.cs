@@ -19,5 +19,8 @@ namespace softWrench.sW4.Util {
             writer.WriteValue(datetime);
         }
 
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
+            return base.ReadJson(reader, objectType, existingValue, serializer);
+        }
     }
 }

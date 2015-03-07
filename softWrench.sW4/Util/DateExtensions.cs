@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
+﻿using cts.commons.portable.Util;
+using DocumentFormat.OpenXml.Wordprocessing;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using System;

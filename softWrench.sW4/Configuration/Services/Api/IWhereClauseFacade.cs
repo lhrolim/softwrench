@@ -2,7 +2,7 @@
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Security.Context;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Configuration.Services.Api {
     public interface IWhereClauseFacade : ISingletonComponent {

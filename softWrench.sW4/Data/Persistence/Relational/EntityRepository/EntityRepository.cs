@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
+using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using log4net;
 using softWrench.sW4.Data.Offline;
@@ -11,7 +13,7 @@ using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Util;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
@@ -29,7 +31,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
 
         private static string InitializeConnectionString() {
-            return ApplicationConfiguration.DBConnectionString(ApplicationConfiguration.DBType.Maximo);
+            return ApplicationConfiguration.DBConnectionString(DBType.Maximo);
         }
 
         public IReadOnlyList<AttributeHolder> Get([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {

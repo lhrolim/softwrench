@@ -12,11 +12,12 @@
 
         </div>
     </form>
-    <div ng-show="schema">
+    <div>
         <div ng-if="modalincluded">
             <crud-body-modal-wrapper></crud-body-modal-wrapper>
         </div>
-        <crud-body timestamp="timeStamp"
+        <crud-body original-datamap="originalDatamap"
+                   timestamp="timeStamp"
                    extraparameters="extraparameters"
                    ismodal="false"
                    schema="schema"

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
+using cts.commons.Util;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
@@ -11,7 +13,7 @@ using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sw4.Shared2.Util;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Security.Services;
@@ -50,7 +52,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             if (!String.IsNullOrWhiteSpace(optionApplication) && !String.IsNullOrWhiteSpace(optionSchemaId)) {
                 return MetadataProvider
                     .Application(optionApplication)
-                    .ApplyPolicies(new ApplicationMetadataSchemaKey(optionSchemaId), SecurityFacade.CurrentUser(), ClientPlatform.Web);
+                    .ApplyPolicies(new ApplicationMetadataSchemaKey(optionSchemaId), SecurityFacade.CurrentUser(), ClientPlatform.Web,null);
             }
             return null;
         }
@@ -74,6 +76,14 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                     associationFilter.AppendSearchParam(lookupAttribute.To);
                     associationFilter.AppendSearchValue(searchValue);
                 }
+            }
+
+            //Set the orderbyfield if any
+            var orderByField = association.OrderByField;
+            if (orderByField != null)
+            {
+                associationFilter.SearchSort = orderByField;
+                associationFilter.SearchAscending = !orderByField.EndsWith("desc");
             }
 
             // Set projections and pre filter functions
@@ -159,7 +169,8 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         private static ProjectionResult BuildProjections(SearchRequestDto searchRequestDto, ApplicationAssociationDefinition association) {
 
             var entityAssociation = association.EntityAssociation;
-            var valueField = association.ValueField == null ? entityAssociation.PrimaryAttribute().To : association.ValueField;
+            var primaryAttribute = entityAssociation.PrimaryAttribute();
+            var valueField = association.ValueField == null ? primaryAttribute.To : association.ValueField;
             if (entityAssociation.Reverse) {
                 valueField = entityAssociation.ReverseLookupAttribute;
             }

@@ -23,6 +23,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public bool? ReadOnly { get; set; }
         public string AttributeToServer { get; set; }
 
+        public string DefaultExpression { get; set; }
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
         public abstract string RendererType { get; }
@@ -38,11 +39,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         protected BaseApplicationFieldDefinition(string applicationName, string label,
             string attribute, string requiredExpression, bool isReadOnly,
             string defaultValue, string qualifier, string showExpression, string toolTip,
-            string attributeToServer, ISet<ApplicationEvent> events, string enableExpression) {
+            string attributeToServer, ISet<ApplicationEvent> events, string enableExpression,
+            string defaultExpression) {
             if (attribute == null) {
                 throw new ArgumentNullException("attribute", String.Format("check {0} metadata config", applicationName));
             }
 
+            DefaultExpression = defaultExpression;
             ApplicationName = applicationName;
             Label = label;
             Attribute = attribute;

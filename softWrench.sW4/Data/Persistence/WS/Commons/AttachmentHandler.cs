@@ -20,6 +20,10 @@ using System.Net;
 using System.Text.RegularExpressions;
 using r = softWrench.sW4.Util.ReflectionUtil;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
+using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
+using System.Text;
+using System.Collections.Generic;
+using softWrench.sW4.Data.Persistence.WS.Internal;
 
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
@@ -54,17 +58,74 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         //            return System.Convert.FromBase64String(base64String);
         //        };
 
-        public void HandleAttachments(object maximoObj, String attachmentData, string attachmentPath, ApplicationMetadata applicationMetadata) {
+        public void HandleAttachmentAndScreenshot(MaximoOperationExecutionContext maximoTemplateData) {
+            // Used to get user's current local time for screenshot
             var user = SecurityFacade.CurrentUser();
-            if (String.IsNullOrEmpty(attachmentData)) {
+            // Entity structure contain all the attachment data
+            var entity = (CrudOperationData)maximoTemplateData.OperationData;
+            var maximoObj = maximoTemplateData.IntegrationObject;
+            // Attachment from a newly created ticket or work order
+            if (!String.IsNullOrWhiteSpace(entity.GetUnMappedAttribute("newattachment")) && !String.IsNullOrWhiteSpace(entity.GetUnMappedAttribute("newattachment_path"))) {
+                var attachmentParam = new AttachmentDTO() {
+                    Data = entity.GetUnMappedAttribute("newattachment"),
+                    Path = entity.GetUnMappedAttribute("newattachment_path")
+                };
+                AddAttachment(maximoObj, attachmentParam);
+            }
+            // Screenshot
+            if (!String.IsNullOrWhiteSpace(entity.GetUnMappedAttribute("newscreenshot"))) {
+                var screenshotParam = new AttachmentDTO() {
+                    Data = entity.GetUnMappedAttribute("newscreenshot"),
+                    Path = "screen" + DateTime.Now.ToUserTimezone(user).ToString("yyyyMMdd") + ".png"
+                };
+                AddAttachment(maximoObj, screenshotParam);
+            }
+            // Attachments that are found in the composition list details
+            var attachments = entity.GetRelationship("attachment");
+            if (attachments != null) {
+                // this will only filter new attachments
+                foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.Id == null)) {
+                    var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo");
+                    var title = attachment.GetAttribute("document").ToString();
+                    var desc = docinfo != null && docinfo.Fields["description"] != null ? docinfo.Fields["description"].ToString() : "";
+                    var content = new AttachmentDTO() {
+                        Title = title,
+                        Data = attachment.GetUnMappedAttribute("newattachment"),
+                        Path = attachment.GetUnMappedAttribute("newattachment_path"),
+                        Description = desc
+                    };
+                    if (content.Data != null) {
+                        AddAttachment(maximoObj, content);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add attachment to the MIF object structure
+        /// </summary>
+        /// <param name="maximoObj">maximo integratio object</param>
+        /// <param name="attachment">attachment object</param>
+        public void AddAttachment(object maximoObj, AttachmentDTO attachment) {
+            var user = SecurityFacade.CurrentUser();
+            // Exit function - do not add attachment
+            if (String.IsNullOrEmpty(attachment.Data)) {
+                return;
+            }
+            // Check if file was rich text file - needed to convert it to word document.
+            if (attachment.Path.ToLower().EndsWith("rtf")) {
+                var bytes = Convert.FromBase64String(attachment.Data);
+                var decodedString = Encoding.UTF8.GetString(bytes);
+                var compressedScreenshot = CompressionUtil.CompressRtf(decodedString);
+                bytes = Encoding.UTF8.GetBytes(compressedScreenshot);
+                attachment.Data = Convert.ToBase64String(bytes);
+                attachment.Path = attachment.Path.Substring(0, attachment.Path.Length - 3) + "doc";
+            }
+            // Exit function - if attachment size exceed specification
+            if (!Validate(attachment.Path, attachment.Data)) {
                 return;
             }
             var docLink = ReflectionUtil.InstantiateSingleElementFromArray(maximoObj, "DOCLINKS");
-            CommonCode(maximoObj, docLink, user, attachmentPath, attachmentData);
-            HandleAttachmentDataAndPath(attachmentData, docLink, attachmentPath);
-        }
-
-        private void CommonCode(object maximoObj, object docLink, InMemoryUser user, string attachmentPath, string attachmentData) {
             w.SetValue(docLink, "ADDINFO", true);
             w.CopyFromRootEntity(maximoObj, docLink, "CREATEBY", user.Login, "reportedby");
             w.CopyFromRootEntity(maximoObj, docLink, "CREATEDATE", DateTime.Now.FromServerToRightKind());
@@ -73,13 +134,31 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.CopyFromRootEntity(maximoObj, docLink, "SITEID", user.SiteId);
             w.CopyFromRootEntity(maximoObj, docLink, "ORGID", user.OrgId);
             w.SetValue(docLink, "URLTYPE", "FILE");
-            w.SetValue(docLink, "URLNAME", attachmentPath);
-            Validate(attachmentPath, attachmentData);
+            w.SetValue(docLink, "URLNAME", attachment.Path);
+            w.SetValue(docLink, "UPLOAD", true);
+            w.SetValue(docLink, "DOCTYPE", "Attachments");
+            w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength()));
+            w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? String.Empty);
+            HandleAttachmentDataAndPath(attachment.Data, docLink, attachment.Path);
+        }
+
+        private void CommonCode(object maximoObj, object docLink, InMemoryUser user, AttachmentDTO attachment) {
+            w.SetValue(docLink, "ADDINFO", true);
+            w.CopyFromRootEntity(maximoObj, docLink, "CREATEBY", user.Login, "reportedby");
+            w.CopyFromRootEntity(maximoObj, docLink, "CREATEDATE", DateTime.Now.FromServerToRightKind());
+            w.CopyFromRootEntity(maximoObj, docLink, "CHANGEBY", user.Login, "reportedby");
+            w.CopyFromRootEntity(maximoObj, docLink, "CHANGEDATE", DateTime.Now.FromServerToRightKind());
+            w.CopyFromRootEntity(maximoObj, docLink, "SITEID", user.SiteId);
+            w.CopyFromRootEntity(maximoObj, docLink, "ORGID", user.OrgId);
+            w.SetValue(docLink, "URLTYPE", "FILE");
+            w.SetValue(docLink, "URLNAME", attachment.Path);
+            Validate(attachment.Path, attachment.Data);
 
             w.SetValue(docLink, "UPLOAD", true);
             w.SetValue(docLink, "DOCTYPE", "Attachments");
-            w.SetValue(docLink, "DOCUMENT", FileUtils.GetNameFromPath(attachmentPath, GetMaximoLength()));
-            w.SetValue(docLink, "DESCRIPTION", attachmentPath);
+            //w.SetValue(docLink, "DOCUMENT", FileUtils.GetNameFromPath(attachmentPath, GetMaximoLength()));
+            w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength())); 
+            w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? String.Empty);
         }
 
         public static bool Validate(string attachmentPath, string attachmentData) {
@@ -129,6 +208,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             using (var client = new WebClient()) {
                 try {
                     var fileBytes = client.DownloadData(finalURL);
+                    if (docinfoURL.Contains(".")) {
+                        var extension = docinfoURL.Substring(docinfoURL.LastIndexOf(".") + 1);
+
+                        // Attach extension to the file name for file association; however, if the extension exist, then don't add extension
+                        if (!fileName.ToLower().EndsWith(extension))
+                            fileName = String.Format("{0}.{1}", fileName, extension);
+                    }
                     return Tuple.Create(fileBytes, fileName);
                 } catch (Exception) {
                     return null;
@@ -142,7 +228,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var user = SecurityFacade.CurrentUser();
             var applicationMetadata = MetadataProvider
                 .Application(parentApplication)
-                .ApplyPolicies(new ApplicationMetadataSchemaKey(parentSchemaId), user, ClientPlatform.Web);
+                .ApplyPolicies(new ApplicationMetadataSchemaKey(parentSchemaId), user, ClientPlatform.Web,null);
             var response = _dataSetProvider.LookupDataSet(parentApplication, applicationMetadata.Schema.SchemaId).Execute(applicationMetadata, new JObject(), parentId,  OperationConstants.CRUD_FIND_BY_ID);
 
             var parent = response.ResultObject;
@@ -211,7 +297,5 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 _baseMaximoURL = _baseMaximoURL + "/";
             }
         }
-
-     
     }
 }

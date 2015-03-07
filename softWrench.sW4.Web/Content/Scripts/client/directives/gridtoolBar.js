@@ -1,4 +1,4 @@
-﻿var sharedController = function ($scope, contextService, commandService, $log, i18NService, securityService) {
+﻿var sharedController = function ($scope, contextService,expressionService, commandService, $log, i18NService, securityService) {
 
     $scope.invokeOuterScopeFn = function (expr,throwExceptionIfNotFound) {
         var methodname = expr.substr(7);
@@ -60,6 +60,7 @@
     }
 
     $scope.executeService = function (command) {
+        $('.no-touch [rel=tooltip]').tooltip('hide');
         if (command.service == "$scope") {
             var fn = $scope.ctrlfns[command.method];
             if (fn != null) {
@@ -82,6 +83,20 @@
         return !commandService.isCommandHidden($scope.datamap, $scope.schema, command);
     }
 
+    $scope.isCommandEnabled = function (command) {
+        var enableExpression = command.enableExpression;
+        if (enableExpression && enableExpression.startsWith("$scope:")) {
+            var result = $scope.invokeOuterScopeFn(enableExpression);
+            if (result == null) {
+                return true;
+            }
+            return result;
+        }
+        var datamap = $scope.datamap;
+        var expressionToEval = expressionService.getExpression(enableExpression, datamap);
+        return eval(expressionToEval);
+    }
+
     $scope.buttonClasses = function () {
         if ($scope.position.equalsAny('detailform', 'compositionbottom')) {
             return "btn btn-primary commandButton navbar-btn";
@@ -101,8 +116,10 @@ app.directive('gridtoolbar', function (contextService) {
         scope: {
             paginationData: '=',
             searchData: '=',
+            searchTemplate: '=',
             searchOperator: '=',
             searchSort: '=',
+            advancedsearchdata : '=',
             schema: '=',
             mode: '@',
             position: '@',

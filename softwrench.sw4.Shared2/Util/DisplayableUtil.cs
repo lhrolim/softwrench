@@ -30,14 +30,14 @@ namespace softwrench.sW4.Shared2.Util {
         }
 
         public static List<IApplicationDisplayable> PerformReferenceReplacement(IEnumerable<IApplicationDisplayable> displayables, ApplicationSchemaDefinition schema,
-            ApplicationSchemaDefinition.LazyComponentDisplayableResolver componentDisplayableResolver) {
+            ApplicationSchemaDefinition.LazyComponentDisplayableResolver componentDisplayableResolver,IEnumerable<DisplayableComponent> components=null) {
 
             var realDisplayables = new List<IApplicationDisplayable>();
 
 
             foreach (var displayable in displayables) {
                 if (displayable is ReferenceDisplayable) {
-                    var reference = componentDisplayableResolver((ReferenceDisplayable)displayable, schema);
+                    var reference = componentDisplayableResolver((ReferenceDisplayable)displayable, schema,components);
                     if (reference == null) {
                         //interrupting things here...
                         return null;

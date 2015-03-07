@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.controltechnologysolutions.com/targetmetadata"
+	xmlns:tns="http://www.controltechnologysolutions.com/targetmetadata" elementFormDefault="qualified">
+
+
+  <element name="TargetEntities" type="tns:TargetEntity"></element>
+  <complexType name="Property">
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="property" type="tns:Parameter" maxOccurs="unbounded"
+				minOccurs="1">
+      </element>
+      <element name="environment" type="tns:Environment" maxOccurs="unbounded"
+				minOccurs="0">
+      </element>
+    </choice>
+  </complexType>
+
+  <complexType name="Environment">
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="property" type="tns:Parameter"></element>
+    </choice>
+    <attribute name="key" type="string" use="required" />
+  </complexType>
+
+  <complexType name="Parameter">
+    <attribute name="key" type="string" use="required"></attribute>
+    <attribute name="value" type="string" use="required"></attribute>
+  </complexType>
+
+  <complexType name="TargetEntity">
+    <choice minOccurs="1" maxOccurs="unbounded">
+      <element name="entity" type="tns:Entity" minOccurs="0"
+				maxOccurs="unbounded"></element>
+    </choice>
+  </complexType>
+
+  <complexType name="Entity">
+    <sequence>
+      <element name="attributes" maxOccurs="1" minOccurs="0">
+        <complexType>
+          <choice minOccurs="0" maxOccurs="unbounded">
+            <element name="attribute" type="tns:Attribute"
+							maxOccurs="unbounded" minOccurs="1">
+            </element>
+            <element name="const" type="tns:Constant"></element>
+          </choice>
+          <attribute name="excludeundeclared"
+						type="boolean">
+          </attribute>
+        </complexType>
+      </element>
+      <element name="connectorParameters" maxOccurs="1"
+				minOccurs="0">
+        <complexType>
+          <sequence>
+            <element name="connectorParameter"
+							type="tns:Parameter" maxOccurs="unbounded" minOccurs="1">
+            </element>
+          </sequence>
+          <attribute name="excludeundeclared"
+						type="boolean">
+          </attribute>
+        </complexType>
+      </element>
+      <element name="relationships" type="tns:relationshipsType"
+				minOccurs="0" maxOccurs="1">
+      </element>
+    </sequence>
+    <attribute name="name" type="string" use="required"></attribute>
+    <attribute name="parententity" type="string"></attribute>
+  </complexType>
+
+  <complexType name="Attribute">
+    <attribute name="name" type="string" use="required"></attribute>
+    <attribute name="required" type="string"></attribute>
+    <attribute name="type" type="string" use="required"></attribute>
+    <attribute name="targetpath" type="string"></attribute>
+  </complexType>
+
+
+
+  <complexType name="Constant">
+    <attribute name="targetpath" type="string" use="required"></attribute>
+    <attribute name="value" type="string" use="required"></attribute>
+    <attribute name="type" type="string"></attribute>
+  </complexType>
+
+  <complexType name="relationshipsType">
+
+    <sequence>
+      <element name="relationship" type="tns:relationshipType" minOccurs="1" maxOccurs="unbounded"></element>
+    </sequence>
+  </complexType>
+
+  <complexType name="relationshipType">
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="const" type="tns:Constant" minOccurs="0"
+				maxOccurs="unbounded">
+      </element>
+      <element name="attribute" type="tns:Attribute" minOccurs="0"
+				maxOccurs="unbounded">
+      </element>
+      <element name="relationships" type="tns:relationshipsType" minOccurs="0" maxOccurs="1"></element>
+    </choice>
+    <attribute name="targetpath" type="string"></attribute>
+    <attribute name="attribute" type="string"></attribute>
+  </complexType>
+</schema>

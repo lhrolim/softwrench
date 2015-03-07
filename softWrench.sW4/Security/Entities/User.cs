@@ -1,4 +1,5 @@
-﻿using Iesi.Collections.Generic;
+﻿using cts.commons.persistence;
+using Iesi.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NHibernate.Mapping.Attributes;

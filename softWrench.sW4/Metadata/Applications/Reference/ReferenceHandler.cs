@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
+using cts.commons.Util;
 using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -16,14 +18,21 @@ namespace softWrench.sW4.Metadata.Applications.Reference {
         private const string PropReference = "@prop:";
 
         public static ApplicationSchemaDefinition.LazyComponentDisplayableResolver ComponentDisplayableResolver =
-            (reference, schema) => DoResolveReferences(schema, reference);
+            (reference, schema,components) => DoResolveReferences(schema, reference,components);
 
-        private static IEnumerable<IApplicationDisplayable> DoResolveReferences(ApplicationSchemaDefinition schema, ReferenceDisplayable reference) {
-            if (!MetadataProvider.FinishedParsing || schema.Abstract) {
-                return null;
+        private static IEnumerable<IApplicationDisplayable> DoResolveReferences(ApplicationSchemaDefinition schema, ReferenceDisplayable reference, IEnumerable<DisplayableComponent> components)
+        {
+            var componentsSource = components;
+            if (components == null)
+            {
+                if (!MetadataProvider.FinishedParsing || schema.Abstract)
+                {
+                    return null;
+                }
+                var application = MetadataProvider.Application(schema.ApplicationName);
+                componentsSource = application.DisplayableComponents;
             }
-            var application = MetadataProvider.Application(schema.ApplicationName);
-            var component = application.DisplayableComponents.FirstOrDefault(
+            var component = componentsSource.FirstOrDefault(
                 f =>
                     f.Id.Equals(reference.Id,
                         StringComparison

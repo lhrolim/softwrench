@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.portable.Util;
+using cts.commons.simpleinjector;
+using cts.commons.Util;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {

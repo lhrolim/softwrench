@@ -177,7 +177,6 @@ general:{
 	role:Role
 	active:Active
 	save:Submit
-	savechanges: Save Changes
 	restore: Restore Default
 	restorexml:Restore Saved XML
 	delete:Delete

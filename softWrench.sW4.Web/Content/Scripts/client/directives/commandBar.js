@@ -23,7 +23,7 @@
                         id: "save",
                         method: $scope.save,
                         showExpressionFn: $scope.shouldDisplaySave,
-                        icon: 'glyphicon-ok',
+                        icon: 'fa-floppy-o',
                         label: 'Submit',
                         'default': true
                     },
@@ -31,7 +31,7 @@
                         id: "print",
                         method: $scope.printDetail,
                         showExpressionFn: $scope.shouldDisplayPrint,
-                        icon: 'glyphicon-print',
+                        icon: 'fa-print',
                         label: 'Print',
                         'default': true
                     },
@@ -40,7 +40,7 @@
                         id: "cancel",
                         method: $scope.cancel,
                         showExpressionFn: $scope.shouldDisplayCancel,
-                        icon: 'glyphicon-backward',
+                        icon: 'fa-times',
                         label: GetPopUpMode().equalsAny("browser", "nomenu") ? 'Close Window' : 'Cancel',
                         'default': true
                     },

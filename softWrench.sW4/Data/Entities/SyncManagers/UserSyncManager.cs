@@ -18,8 +18,8 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         private const string EntityName = "person";
 
 
-        public UserSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade,EntityRepository repository)
-            : base(dao, facade,repository) {
+        public UserSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade, EntityRepository repository)
+            : base(dao, facade, repository) {
         }
 
         [CanBeNull]
@@ -126,6 +126,9 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         }
 
         private static bool IsValidUser(User.UserNameEqualityUser user) {
+            if (user.user.UserName == "swadmin") {
+                return false;
+            }
             var userToIntegrate = user.user;
             // todo: remove temporary validation solution
             if (string.IsNullOrEmpty(userToIntegrate.FirstName)) {

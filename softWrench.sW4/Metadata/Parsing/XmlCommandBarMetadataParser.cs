@@ -109,11 +109,12 @@ namespace softWrench.sW4.Metadata.Parsing {
             
             var stereotype = xElement.AttributeValue(XmlBaseSchemaConstants.StereotypeAttribute);
             var showExpression = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute);
+            var enableExpression = xElement.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAttribute);
             var successMessage = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandSuccessMessage);
             var nextSchemaId = xElement.AttributeValue(XmlMetadataSchema.ApplicationCommandNextSchemaId);
             var scopeParameters = xElement.AttributeValue(XmlBaseSchemaConstants.BaseParametersAttribute);
             
-            var applicationCommand = new ApplicationCommand(id, label, service, method, role, stereotype, showExpression,
+            var applicationCommand = new ApplicationCommand(id, label, service, method, role, stereotype, showExpression,enableExpression,
                 successMessage, nextSchemaId, scopeParameters, position, icon, tooltip);
             return applicationCommand;
         }

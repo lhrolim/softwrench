@@ -47,6 +47,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string SchemaElement = "schema";
         public const string SchemasElement = "schemas";
         public const string SchemaIdAttribute = "id";
+        public const string SchemaRedeclaringSchemaAttribute = "redeclaring";
         public const string SchemaPlatformAttribute = "platform";
         public const string SchemaStereotypeAttribute = "stereotype";
         public const string SchemaAbstractAttribute = "abstract";
@@ -78,6 +79,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string RelationshipAttributePrimary = "primary";
         public const string RelationshipAttributeCollection = "collection";
         public const string RelationshipAttributeReverse = "reverselookupattribute";
+        public const string IgnorePrimaryAttribute = "ignoreprimary";
         public const string RelationshipAttributeElement = "relationshipAttribute";
         public const string RelationshipAttributeAttributeTo = "to";
         public const string RelationshipAttributeAttributeFrom = "from";
@@ -96,6 +98,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ApplicationAssociationDefaultValueAttribute = "default";
         public const string ApplicationAssociationAssociationAttributeElement = "associationAttribute";
         public const string ApplicationAssociationHideDescription = "hideDescription";
+        public const string ApplicationAssociationOrderByField = "orderbyfield";
         public const string ApplicationAssociationForceDistinctOptions = "forcedistinctoptions";
         public const string ApplicationAssociationValueField = "valuefield";
 
@@ -190,12 +193,16 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string DetailElement = "detail";
         public const string ListElement = "list";
         public const string FieldElement = "field";
+        
         public const string FieldAttributeAttribute = "attribute";
         public const string FieldAttributeLabel = "label";
         public const string FieldAttributeReadOnly = "readonly";
         public const string FieldAttributeHidden = "hidden";
         public const string FieldAttributeQualifier = "qualifier";
         public const string FieldAttributeAttributeToServer = "attributeToServer";
+
+        public const string CustomizationElement = "customization";
+        public const string CustomizationPositionAttribute = "position";
 
 
         public const string ComponentsElement = "components";
@@ -204,6 +211,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
 
         public static XName FieldAttributeDefaultValue = "default";
+        public const string FieldAttributeDefaultExpression = "defaultexpression";
         //        public const string FieldAttributeOptions = "options";
         public const string FieldAttributeType = "type";
 

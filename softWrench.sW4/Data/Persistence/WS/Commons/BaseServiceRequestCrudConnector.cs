@@ -8,13 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
+using System.Linq;
 using System.Net.Mail;
 using System.Net;
 using softWrench.sW4.Configuration.Services.Api;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Email;
-using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.Engine;
+using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
@@ -34,9 +35,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             // Update common fields or transactions prior to maximo operation exection
             CommonTransaction(maximoTemplateData);
 
-            // Attempt to get attachment for new SR
-            HandleAttachmentAndScreenshot((CrudOperationData)maximoTemplateData.OperationData, maximoTemplateData.IntegrationObject, maximoTemplateData.ApplicationMetadata);
-
             base.BeforeCreation(maximoTemplateData);
         }
 
@@ -55,14 +53,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (crudData.ContainsAttribute("#hasstatuschange")){
                 //first let´s 'simply change the status
                 WsUtil.SetValue(sr, "STATUSIFACE", true);
-                maximoTemplateData.InvokeProxy();
-                WsUtil.SetValue(sr, "STATUSIFACE", false);
+                if (!WsUtil.GetRealValue(sr, "STATUS").Equals("CLOSED")){
+                    maximoTemplateData.InvokeProxy();
+
+                } WsUtil.SetValue(sr, "STATUSIFACE", false);
             }
 
             // Update common fields or transactions prior to maximo operation exection
             CommonTransaction(maximoTemplateData);
-
-            
 
             var mailObject = maximoTemplateData.Properties;
 
@@ -70,6 +68,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             CommLogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
 
             HandleServiceAddress(maximoTemplateData);
+
+            _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
 
             base.BeforeUpdate(maximoTemplateData);
         }
@@ -95,15 +95,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValueIfNull(sr, "CHANGEBY", user.Login);
             w.SetValueIfNull(sr, "REPORTDATE", DateTime.Now.FromServerToRightKind());
 
-            // Update or create new long description 
-            var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
-            LongDescriptionHandler.HandleLongDescription(sr, crudData);
+            // SWWEB-980 Additional logic to change status to queued if owner is selected
+            if (WsUtil.GetRealValue(sr, "STATUS").Equals("NEW") && (WsUtil.GetRealValue(sr, "OWNER") != null || WsUtil.GetRealValue(sr, "OWNERGROUP") != null))
+                WsUtil.SetValue(sr, "STATUS", "QUEUED"); 
 
-            // Update or create attachments
-            var attachments = crudData.GetRelationship("attachment");
-            foreach (var attachment in (IEnumerable<CrudOperationData>)attachments) {
-                HandleAttachmentAndScreenshot(attachment, sr, maximoTemplateData.ApplicationMetadata);
-            }
+            // Update or create new long description 
+            LongDescriptionHandler.HandleLongDescription(sr, ((CrudOperationData)maximoTemplateData.OperationData));
         }
 
         private bool HandleServiceAddress(MaximoOperationExecutionContext maximoTemplateData) {
@@ -130,35 +127,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValue(tkserviceaddress, "STADDRSTTYPE", streettype);
 
             return true;
-        }
-
-        private void HandleAttachmentAndScreenshot(CrudOperationData data, object maximoObj, ApplicationMetadata applicationMetadata) {
-            // Check if Attachment is present
-            var attachmentString = data.GetUnMappedAttribute("newattachment");
-            var attachmentPath = data.GetUnMappedAttribute("newattachment_path");
-
-            if (!String.IsNullOrWhiteSpace(attachmentString) && !String.IsNullOrWhiteSpace(attachmentPath)) {
-                _attachmentHandler.HandleAttachments(maximoObj, attachmentString, attachmentPath, applicationMetadata);
-            }
-
-            // Check if Screenshot is present
-            var screenshotString = data.GetUnMappedAttribute("newscreenshot");
-            var screenshotName = data.GetUnMappedAttribute("newscreenshot_path");
-
-            if (!String.IsNullOrWhiteSpace(screenshotString) && !String.IsNullOrWhiteSpace(screenshotName)) {
-
-                if (screenshotName.ToLower().EndsWith("rtf")) {
-                    var bytes = Convert.FromBase64String(screenshotString);
-                    var decodedString = Encoding.UTF8.GetString(bytes);
-                    var compressedScreenshot = CompressionUtil.CompressRtf(decodedString);
-
-                    bytes = Encoding.UTF8.GetBytes(compressedScreenshot);
-                    screenshotString = Convert.ToBase64String(bytes);
-                    screenshotName = screenshotName.Substring(0, screenshotName.Length - 3) + "doc";
-                }
-
-                _attachmentHandler.HandleAttachments(maximoObj, screenshotString, screenshotName, applicationMetadata);
-            }
         }
     }
 }
