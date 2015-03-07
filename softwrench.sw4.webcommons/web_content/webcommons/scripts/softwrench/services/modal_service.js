@@ -16,6 +16,13 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
         /// could receive as first parameter either the already filled modaldata, or a schema.
         /// </summary>
         /// <param name="schemaorModalData">the already filled modaldata, or a schema</param>
+        /// <param name="properties">an object with the following:
+        /// 
+        ///     title: the title to display on the modal
+        ///     cssclass: an extra class to add to the modal, making it possible to customize it via css later
+        ///     onloadfn: a function to be called when the modal loads, which would receive the modal scope as a parameter (function onload(modalscope))
+        /// 
+        /// </param>
         /// <param name="datamap">the datamap of the current item being displayed on the modal; it could be null for a "creation" workflow.</param>
         /// <param name="savefn">the savefn to execute upon modal submit click. It should have the following signature:
         ///     save(modaldatamap) where:
@@ -26,16 +33,16 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
         /// </param>
         /// <param name="parentdata">holds the parent datamap</param>
         /// <param name="parentschema">holds the parent schema</param>
-        show: function (schemaorModalData, datamap, savefn,cancelfn, parentdata, parentschema) {
-            
+        show: function (schemaorModalData, datamap, properties, savefn, cancelfn, parentdata, parentschema) {
+
             if (schemaorModalData.schema) {
                 $rootScope.$broadcast("sw.modal.show", schemaorModalData);
                 return;
             }
 
-            if (datamap == null) {
-                datamap = {};
-            }
+            datamap = datamap || {};
+            properties = properties || {};
+
 
             if (schemaorModalData.mode.equalIc("none")) {
                 schemaorModalData.mode = "input";
@@ -47,7 +54,10 @@ app.factory('modalService', function ($rootScope, $timeout, i18NService) {
                 savefn: savefn,
                 cancelfn: cancelfn,
                 previousdata: parentdata,
-                previousschema: parentschema
+                previousschema: parentschema,
+                title: properties.title,
+                cssclass: properties.cssclass,
+                onloadfn: properties.onloadfn
             };
 
             $rootScope.$broadcast("sw.modal.show", modaldata);

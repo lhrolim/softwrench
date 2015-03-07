@@ -67,9 +67,14 @@
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="sr.ticketuid desc"/>
           </properties>
         </list>
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
+          <field attribute="description" label="Summary:" requiredexpression="true"/>
+          <field label="Details:" attribute="longdescription_.ldtext">
+            <renderer type="richtext"/>
+          </field>
           <section id ="siteidsection"/>
           <field attribute="ticketid" label="SR No:" readonly="true"/>
           <field attribute="ticketuid" label="SR No:" hidden="true"/>
@@ -80,8 +85,15 @@
           <field attribute="orgid" hidden="true"/>
           <field attribute="createby" hidden="true"/>
 
-          <!--field attribute="owner" label="Owner" readonly="true" hidden="true"/-->
-
+          <association label="Location:" target="location" labelfield="location_.description" >
+            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+            <!--renderer type="lookup"/-->
+          </association>
+          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+            <dataprovider prefilterfunction="FilterAssets"/>
+            <event type="afterchange" service="srService" method="afterChangeAsset"/>
+          </association>
           <section id="statussection"/>
           <!--COMSW-1-->
           <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
@@ -132,10 +144,7 @@
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
 
-          <field attribute="description" label="Summary:" requiredexpression="true"/>
-          <field label="Details:" attribute="longdescription_.ldtext">
-            <renderer type="richtext"/>
-          </field>
+          
           
           <!-- Code added from gric metadata.xml SWWEB 173-->
           <section id="attachmentsection" />
@@ -152,15 +161,7 @@
           
           <!-- SWWEB 173-->
           <!-- SWWEB 172: Changed the location and asset to make them look similar to gric-->
-          <association label="Location:" target="location" labelfield="location_.description" >
-            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
-            <!--renderer type="lookup"/-->
-          </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-            <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="srService" method="afterChangeAsset"/>
-          </association>
+          
           <section id="compositions"/>
         </schema>
 

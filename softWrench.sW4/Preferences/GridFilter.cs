@@ -1,4 +1,5 @@
 ﻿using System;
+using cts.commons.persistence;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Entities;

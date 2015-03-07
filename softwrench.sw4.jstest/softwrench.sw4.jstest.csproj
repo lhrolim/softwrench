@@ -1438,6 +1438,7 @@
     <Content Include="node_modules\karma\static\karma.js" />
     <Content Include="tests\controllers\grid_filter_test.js" />
     <Content Include="tests\HelloWorldKarma.js" />
+    <Content Include="tests\services\dashboardaux_service_test.js" />
     <Content Include="tests\services\expression_service_test.js" />
   </ItemGroup>
   <ItemGroup>

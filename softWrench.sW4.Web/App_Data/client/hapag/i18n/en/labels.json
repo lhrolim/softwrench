@@ -27,6 +27,7 @@
 
 }
 
+
 asset:{
     remarks: Remarks
 }
@@ -141,6 +142,7 @@ _exportotoexcel:{
 }
 
 general:{
+
 	noinformation:No information available
 	add:Add
 	current:Current
@@ -176,9 +178,11 @@ general:{
 	active:Active
 	save:Submit
 	restore: Restore Default
+	restorexml:Restore Saved XML
 	delete:Delete
 	name:Name
 	cron:Cron
+	createdDate:Created Date
 	usersetup:User Setup
 	userprofiles:User Profiles
 	profiledetails:Profile Details
@@ -201,6 +205,7 @@ roles:
 menu:
 selectedroles:
 }
+
 
 
 

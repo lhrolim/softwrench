@@ -57,6 +57,15 @@ app.directive('messagesection', function (contextService) {
                 return $rootScope.hasErrorList;
             }
 
+            $scope.showErrorDetail = function () {
+                var isLoggedIn = sessionStorage['ctx_loggedin'];
+                if (isLoggedIn != "true") {
+                    //this is a workaround for the COMSW-40. Couldn´t track down why this was needed at all
+                    return false;
+                }
+                return $rootScope.hasErrorDetail;
+            }
+
             function allowSuccessMessageDisplay(data) {
                 log.debug('allowSuccessMessageDisplay#enter');
 
@@ -88,6 +97,24 @@ app.directive('messagesection', function (contextService) {
 
             $scope.$on('sw_ajaxerror', function (event, errordata) {
                 log.debug('sw_ajaxerror#enter');
+                var innerException;
+                var limit = 3; // to avoid unwanted infinite recursion
+                var i = 0;
+                var prependMessage = errordata.prependMessage;
+
+                while (errordata.hasOwnProperty("innerException") && i < limit) {
+                    innerException = errordata.innerException;
+                    errordata = errordata.innerException;
+                    i++;
+                }
+                if (innerException != null) {
+                    errordata = {};
+                    errordata.errorStack = innerException.stackTrace;
+                    errordata.errorMessage = innerException.message;
+                }
+                if (prependMessage) {
+                    errordata.errorMessage = prependMessage + " --> " + errordata.errorMessage;
+                }
 
                 $scope.errorMsg = errordata.errorMessage;
                 $scope.errorStack = errordata.errorStack;

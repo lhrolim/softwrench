@@ -1,6 +1,7 @@
 ﻿using System.Web.Security;
 using cts.commons.persistence;
 using cts.commons.persistence.Event;
+using cts.commons.web.Attributes;
 using softWrench.sW4.Configuration;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;

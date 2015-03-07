@@ -269,6 +269,9 @@ namespace softWrench.sW4.Metadata {
 
                 _metadataXmlInitializer.Validate(_commandBars, data);
 
+                _swdbmetadataXmlInitializer = new SWDBMetadataXmlSourceInitializer();
+                _swdbmetadataXmlInitializer.Validate(_commandBars);
+
                 using (var stream = File.Create(MetadataParsingUtils.GetPath(Metadata, internalFramework))) {
                     data.CopyTo(stream);
                     stream.Flush();

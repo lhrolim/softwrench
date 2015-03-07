@@ -183,6 +183,10 @@ app.directive('menuItem', function (contextService) {
                 }
             };
 
+            $scope.getDataToggle = function (container) {
+                return container.hasMainAction ? "dropdown" : "null";
+            };
+
 
             $scope.handleContainerClick = function (container, target) {
                 if (container.controller != null && !$(target).find("span").hasClass('bottom-caret') && !mockService.isMockedContainerDashBoard()) {

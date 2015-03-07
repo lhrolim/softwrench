@@ -133,7 +133,8 @@
       </relationships>
     </entity>
 
-    <entity name="inventory" idAttribute="inventoryid">
+    <!--SwWEB-1032: Only display active items-->
+    <entity name="inventory" idAttribute="inventoryid" whereclause="inventory.STATUS = 'ACTIVE'">
       <attributes>
         <attribute name="itemnum" type="varchar" required="true" />
         <attribute name="location" type="varchar" required="true" />
