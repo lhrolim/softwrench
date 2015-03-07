@@ -68,7 +68,7 @@
     <exec program="karma.cmd" workingdir="../softwrench.sw4.jstest">
       <arg line="start" />
       <arg value="--browsers=PhantomJS"/>
-      <arg value=" --singleRun=true"/>
+      <arg value="--singleRun=true"/>
     </exec>
 
   </target>
