@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Security;
 using System.Xml.Linq;
+using System.Linq;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.Events;
 using cts.commons.web.Attributes;
@@ -14,12 +15,32 @@ using softWrench.sW4.Util;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Web.Controllers.Utilities;
 using softWrench.sW4.Web.SPF;
+using Newtonsoft.Json.Linq;
+using softWrench.sW4.SimpleInjector;
+using Newtonsoft.Json;
+using System.IO;
+using System.Data;
 
-namespace softWrench.sW4.Web.Controllers.Utilities {
+namespace softWrench.sW4.Web.Controllers.Utilities
+{
 
     [Authorize]
     public class EntityMetadataController : ApiController {
+        private readonly SWDBHibernateDAO _swdbDao;
+    public class EntityMetadataController : ApiController
+    {
+        private static SWDBHibernateDAO _swdbDao;
+    public class EntityMetadataController : ApiController {
         private readonly IEventDispatcher _eventDispatcher;
+
+        private SWDBHibernateDAO GetSWDBDAO()
+        {
+            if (_swdbDao == null)
+            {
+                _swdbDao = SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
+            }
+            return _swdbDao;
+        }
 
         public EntityMetadataController(IEventDispatcher eventDispatcher) {
             _eventDispatcher = eventDispatcher;
@@ -28,7 +49,8 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
 
         [HttpGet]
         [SPFRedirect("Metadata Builder", "_headermenu.metadatabuilder", "EntityMetadataBuilder")]
-        public RedirectResponseResult Builder() {
+        public RedirectResponseResult Builder()
+        {
             return new RedirectResponseResult();
         }
 
@@ -46,11 +68,49 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
 
         [HttpGet]
         [SPFRedirect("Metadata Editor", "_headermenu.metadataeditor", "EntityMetadataEditor")]
-        public IGenericResponseResult Editor() {
-            using (var reader = new MetadataProvider().GetStream("metadata.xml")) {
+        public IGenericResponseResult Editor()
+        {
+            using (var reader = new MetadataProvider().GetStream("metadata.xml"))
+            {
                 var result = reader.ReadToEnd();
                 return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "metadata"));
             }
+        }
+        [HttpGet]
+        public IGenericResponseResult RestoreDefaultMetadata()
+        {
+            var resultData = GetSWDBDAO().FindByQuery<Metadataeditor>(Metadataeditor.ByDefaultId);
+
+
+
+            string Metadata = (from c in resultData
+
+                               select c.SystemStringValue).FirstOrDefault();
+            return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(Metadata, "metadata"));
+
+        }
+        [HttpGet]
+        public DataTable RestoreSavedMetadata()
+        {
+            var resultData = GetSWDBDAO().FindByQuery<Metadataeditor>(Metadataeditor.BySavedId);
+
+            DataTable result = new DataTable();
+            result.Columns.Add("Id", typeof(Int32));
+            result.Columns.Add("CreatedDate", typeof(DateTime));
+            result.Columns.Add("Description", typeof(string));
+            result.Columns.Add("Metadata", typeof(string));
+            foreach (Metadataeditor i in resultData)
+            {
+                int Id = (int)i.Id;
+                string Metadata = i.SystemStringValue;
+                string comments = i.Comments;
+                DateTime CreatedDate = i.CreatedDate;
+                result.Rows.Add(Id, CreatedDate, comments, Metadata);
+            }
+            return result;
+
+            //return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(Metadata, "metadata"));
+
         }
         [HttpGet]
         [SPFRedirect("StatusColour Editor", "_headermenu.statuscoloreditor", "EntityMetadataEditor")]
@@ -62,7 +122,8 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         }
         [HttpGet]
         [SPFRedirect("Menu Editor", "_headermenu.menueditor", "EntityMetadataEditor")]
-        public IGenericResponseResult MenuEditor() {
+        public IGenericResponseResult MenuEditor()
+        {
             using (var reader = new MetadataProvider().GetStream("menu.web.xml")) {
                 var result = reader.ReadToEnd();
                 return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, "menu"));
@@ -71,7 +132,8 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         }
 
         [HttpPut]
-        public void SaveMetadata(HttpRequestMessage request) {
+        public void SaveMetadata(HttpRequestMessage request)
+        {
             var task = request
             .Content
             .ReadAsStreamAsync();
@@ -79,6 +141,65 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             task.Wait();
             new MetadataProvider().Save(task.Result);
         }
+        public EntityMetadataController(SWDBHibernateDAO dao)
+        {
+            _swdbDao = dao;
+        }
+
+        [HttpPost]
+        public void SaveMetadataEditor(HttpRequestMessage request)
+        {
+            var content = request.Content;
+            String Jsoncontent = content.ReadAsStringAsync().Result;
+           
+            DateTime now = DateTime.Now;
+            var newMetadataEntry = new Metadataeditor()
+            {
+                SystemStringValue = Jsoncontent,
+                CreatedDate = now,
+                DefaultId = 0,
+                
+            };
+            _swdbDao.Save(newMetadataEntry);
+        }
+        //[HttpPut]
+        //public void SaveMetadataEditor(HttpRequestMessage request)
+        //{
+        //    var task = request
+        //    .Content
+        //    .ReadAsStreamAsync();
+
+        //    task.Wait();
+
+
+        //    new MetadataProvider().Save(task.Result);
+        //}
+        public EntityMetadataController(SWDBHibernateDAO dao)
+        {
+            _swdbDao = dao;
+        }
+
+        [HttpPost]
+        public void SaveMetadataEditor(HttpRequestMessage request)
+        {
+            var content = request.Content;
+            JObject json = JObject.Parse(content.ReadAsStringAsync().Result);
+            var comments = json.First.Last.ToString();
+            var Metadata = json.Last.Last.ToString();
+
+
+            DateTime now = DateTime.Now;
+            var newMetadataEntry = new Metadataeditor()
+            {
+                SystemStringValue = Metadata,
+                Comments = comments,
+                CreatedDate = now,
+                DefaultId = 0,
+
+            };
+            _swdbDao.Save(newMetadataEntry);
+        }
+
         [HttpPut]
         public void SaveStatuscolor(HttpRequestMessage request) {
             var task = request
@@ -91,7 +212,8 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         }
 
         [HttpPut]
-        public void SaveMenu(HttpRequestMessage request) {
+        public void SaveMenu(HttpRequestMessage request)
+        {
             var task = request
             .Content
             .ReadAsStreamAsync();
@@ -100,35 +222,45 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         }
 
         [HttpGet]
-        public MetadataResult Build(string tablename) {
-            if (tablename == null) {
+        public MetadataResult Build(string tablename)
+        {
+            if (tablename == null)
+            {
                 throw new InvalidOperationException("table Name should be informed");
             }
             var xml = new MetadataBuilderUtil().GenerateEntityMetadata(tablename);
-            if (xml == null) {
+            if (xml == null)
+            {
                 throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.InternalServerError));
 
             }
             return new MetadataResult(FormatXml(xml), null);
         }
 
-        string FormatXml(String xml) {
-            try {
+        string FormatXml(String xml)
+        {
+            try
+            {
                 var doc = XDocument.Parse(xml);
                 return doc.ToString();
-            } catch (Exception) {
+            }
+            catch (Exception)
+            {
                 return xml;
             }
         }
 
-        public class MetadataResult {
+        public class MetadataResult
+        {
             private readonly string _metadata;
 
-            public MetadataResult(string metadata, string error) {
+            public MetadataResult(string metadata, string error)
+            {
                 _metadata = metadata;
             }
 
-            public string Metadata {
+            public string Metadata
+            {
                 get { return _metadata; }
             }
         }

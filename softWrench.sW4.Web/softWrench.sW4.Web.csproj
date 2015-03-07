@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build;CopyCustomerDLL" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -288,6 +288,8 @@
     <Compile Include="DB_Migration\4.0\20140724_HAP_331.cs" />
     <Compile Include="DB_Migration\4.0\20141002_SWWEB_478.cs" />
     <Compile Include="DB_Migration\4.0\20141215_SWWEB_787.cs" />
+    <Compile Include="DB_Migration\4.0\20150203_SWWEB_890.cs" />
+    <Compile Include="DB_Migration\4.0\20150205_SWWEB_889.cs" />
     <Compile Include="DB_Migration\4.2.0\20141215_SWWEB_787.cs" />
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
