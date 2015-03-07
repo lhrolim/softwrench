@@ -171,7 +171,6 @@
         var addingpanel = { a: 'a' };
 
 
-        debugger;
         dashboard = dashboardAuxService.readjustPositions(dashboard, addingpanel, 2, 2);
         expect(layout).toBe("2,3,2");
         expect(dashboard.panels.length).toBe(7);
@@ -198,13 +197,14 @@
             ],
             layout: '1,3,2'
         };
-        var panel = dashboardAuxService.locatePanelFromMatrix(dashboard, 2, 2);
+        debugger;
+        var panel = dashboardAuxService.locatePanelFromMatrix(dashboard, 1, 1);
         expect(panel).toBe(panel3);
 
-        panel = dashboardAuxService.locatePanelFromMatrix(dashboard, 3, 2);
+        panel = dashboardAuxService.locatePanelFromMatrix(dashboard, 2, 1);
         expect(panel).toBe(panel6);
 
-        panel = dashboardAuxService.locatePanelFromMatrix(dashboard, 2, 1);
+        panel = dashboardAuxService.locatePanelFromMatrix(dashboard, 1, 0);
         expect(panel).toBe(panel2);
     });
 
