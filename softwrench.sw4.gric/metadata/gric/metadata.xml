@@ -133,8 +133,6 @@
           <customization position="reportedby"/>
           <customization position="owner"/>
           <customization position="ownergroup"/>
-          <customization position="actstart"/>
-          <customization position="actfinish"/>
         </schema>
       </schemas>
 
