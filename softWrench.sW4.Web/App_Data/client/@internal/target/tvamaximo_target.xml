@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<TargetEntities xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-                xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Target.xsd ">
+<TargetEntities xmlns="http://www.controltechnologysolutions.com/targetmetadata" >
 
   <entity name="workorder">
     <attributes>

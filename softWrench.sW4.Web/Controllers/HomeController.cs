@@ -1,4 +1,6 @@
 ﻿using System.Web.Security;
+using cts.commons.portable.Util;
+using cts.commons.Util;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -15,6 +17,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using softWrench.sW4.Web.Controllers.Configuration;
 using softWrench.sW4.Web.Security;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -41,7 +44,8 @@ namespace softWrench.sW4.Web.Controllers {
             _lookuper.RegisterHttpContext(Request);
 
             var user = SecurityFacade.CurrentUser();
-            var securedMenu = user.Menu(ClientPlatform.Web);
+            bool fromCache;
+            var securedMenu = user.Menu(ClientPlatform.Web, out fromCache);
             var indexItemId = securedMenu.ItemindexId;
             var indexItem = securedMenu.ExplodedLeafs.FirstOrDefault(l => indexItemId.EqualsIc(l.Id));
             if (indexItem == null) {
@@ -83,6 +87,7 @@ namespace softWrench.sW4.Web.Controllers {
             var reservedMaterialsListScanOrder = _facade.Lookup<string>(ConfigurationConstants.ReservedMaterialsListScanOrder);
             var matrectransTransfersListScanOrder = _facade.Lookup<string>(ConfigurationConstants.MatrectransTransfersListScanOrder);
             var invIssueListBeringScanOrder = _facade.Lookup<string>(ConfigurationConstants.InvIssueListBeringScanOrder);
+            var newKeyIssueDetailScanOrder = _facade.Lookup<string>(ConfigurationConstants.NewKeyIssueDetailScanOrder);
 
             return new HomeConfigs() {
                 Logo = logoIcon,

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
+using cts.commons.portable.Util;
+using cts.commons.Util;
 using JetBrains.Annotations;
 using softWrench.sW4.Metadata.Parsing;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -129,6 +131,7 @@ namespace softWrench.sW4.Metadata.Menu {
             var moduleAlias = containerElement.Attribute(XmlMenuMetadataSchema.ContainerModuleAlias).ValueOrDefault((string)null);
             var controller = containerElement.Attribute(XmlMenuMetadataSchema.ActionMenuControllerAttribute).ValueOrDefault((string)null);
             var action = containerElement.Attribute(XmlMenuMetadataSchema.ActionMenuActionAttribute).ValueOrDefault((string)null);
+            var hasMainAction = containerElement.Attribute(XmlMenuMetadataSchema.ContainerHasMainAction).ValueOrDefault(false);
             if (moduleName != null) {
                 modules.Add(new ModuleDefinition(moduleName, moduleAlias));
             }
@@ -147,7 +150,7 @@ namespace softWrench.sW4.Metadata.Menu {
                 }
                 leafs.Add(leaf);
             }
-            return new MenuContainerDefinition(id, title, role, tooltip, icon, moduleName, controller, action, leafs);
+            return new MenuContainerDefinition(id, title, role, tooltip, icon, moduleName, controller, action,hasMainAction, leafs);
         }
 
         [CanBeNull]

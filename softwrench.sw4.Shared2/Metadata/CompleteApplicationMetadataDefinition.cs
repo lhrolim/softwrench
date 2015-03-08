@@ -35,7 +35,7 @@ namespace softwrench.sW4.Shared2.Metadata {
 
 
         public CompleteApplicationMetadataDefinition(Guid? id, string applicationName, string title, string entity,
-             string idFieldName,string userIdFieldName,
+             string idFieldName, string userIdFieldName,
             IDictionary<string, string> paramters,
             IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> schemas,
             IEnumerable<DisplayableComponent> components,
@@ -77,8 +77,7 @@ namespace softwrench.sW4.Shared2.Metadata {
                 //if the schema already contains a definition, keep it. this way just the non overriden properties would be set
                 if (!schema.Properties.ContainsKey(parameterKey)) {
                     schema.Properties.Add(parameterKey, parameters[parameterKey]);
-                }
-                else {
+                } else {
                     schema.Properties[parameterKey] = parameters[parameterKey];
                 }
             }
@@ -136,5 +135,21 @@ namespace softwrench.sW4.Shared2.Metadata {
             return string.Format("Name: {0}", ApplicationName);
         }
 
+        public ApplicationSchemaDefinition GetListSchema() {
+            var listSchema = SchemasList.FirstOrDefault(a => a.SchemaId.Equals("list"));
+            if (listSchema != null) {
+                return listSchema;
+            }
+
+            listSchema = SchemasList.FirstOrDefault(a => SchemaStereotype.List.Equals(a.Stereotype));
+            if (listSchema != null) {
+                return listSchema;
+            }
+            listSchema = SchemasList.FirstOrDefault(a => SchemaStereotype.CompositionList.Equals(a.Stereotype));
+            if (listSchema != null) {
+                return listSchema;
+            }
+            return null;
+        }
     }
 }

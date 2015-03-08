@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿using cts.commons.Util;
+using log4net;
 using NHibernate;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Entities;
@@ -13,13 +14,12 @@ namespace softWrench.sW4.Security.Services {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(RoleManager));
 
-        private static readonly SWDBHibernateDAO DAO = new SWDBHibernateDAO();
 
         private static ISet<Role> _activeRoles = new HashSet<Role>();
 
         public static void LoadActiveRoles() {
             var before = Stopwatch.StartNew();
-            var activeRoles = new SWDBHibernateDAO().FindByQuery<Role>("from Role where Active = 1");
+            var activeRoles = SWDBHibernateDAO.GetInstance().FindByQuery<Role>("from Role where Active = 1");
             _activeRoles = new HashSet<Role>(activeRoles);
             Log.Info(LoggingUtil.BaseDurationMessage( "Active Roles Loaded in {0}", before));
         }
@@ -34,7 +34,7 @@ namespace softWrench.sW4.Security.Services {
 
         public static Role SaveUpdateRole(Role role) {
             bool updatingRole = role.Id != null;
-            role = new SWDBHibernateDAO().Save(role);
+            role = SWDBHibernateDAO.GetInstance().Save(role);
             if (updatingRole) {
                 Role oldRole = _activeRoles.FirstOrDefault(r => r.Id == role.Id);
                 if (oldRole != null) {
@@ -48,12 +48,14 @@ namespace softWrench.sW4.Security.Services {
             return role;
         }
 
-        public static void DeleteRole(Role role) {
+        public static void DeleteRole(Role role)
+        {
+            var dao = SWDBHibernateDAO.GetInstance();
             using (ISession session = SWDBHibernateDAO.CurrentSession()) {
                 using (ITransaction transaction = session.BeginTransaction()) {
-                    DAO.ExecuteSql("delete from sw_userprofile_role");
-                    DAO.ExecuteSql("delete from sw_user_customrole");
-                    DAO.Delete(role);
+                    dao.ExecuteSql("delete from sw_userprofile_role");
+                    dao.ExecuteSql("delete from sw_user_customrole");
+                    dao.Delete(role);
                     Role oldRole = _activeRoles.FirstOrDefault(r => r.Id == role.Id);
                     if (oldRole != null) {
                         _activeRoles.Remove(oldRole);

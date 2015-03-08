@@ -45,6 +45,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dependencies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
@@ -104,6 +108,7 @@
     <Compile Include="Metadata\MissingSchemaFieldsTest.cs" />
     <Compile Include="Metadata\MetadataPropertiesTest.cs" />
     <Compile Include="Metadata\MenuParsingTest.cs" />
+    <Compile Include="Metadata\CustomizationTest.cs" />
     <Compile Include="Resources\MifSRSample.cs" />
     <Compile Include="ToStringELParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -178,18 +183,12 @@
     <None Include="App_data\Client\test2\Metadata.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="App_data\Client\test2\Properties.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="App_data\Client\test_only\Metadata.xsd">
       <SubType>Designer</SubType>
     </None>
     <Content Include="App_data\jsons\incident\test1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="App_data\Client\test_only\Properties.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <Content Include="App_data\jsons\sr\creation1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -220,6 +219,30 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
+      <Project>{A6A14991-81DD-45B5-B5C8-154E44D84975}</Project>
+      <Name>cts.commons.persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.portable\cts.commons.portable.csproj">
+      <Project>{757c5d7f-9e3c-4509-bafe-29ffb35ebe46}</Project>
+      <Name>cts.commons.portable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
+      <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
+      <Name>cts.commons.simpleinjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons\cts.commons.csproj">
+      <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>
+      <Name>cts.commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
+      <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
+      <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.gric\softwrench.sw4.gric.csproj">
+      <Project>{3b4ed6c6-ba78-45cd-8af9-964f3dc409e6}</Project>
+      <Name>softwrench.sw4.gric</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Hapag\softwrench.sw4.Hapag.csproj">
       <Project>{22d901fc-310e-4f14-9506-d9433cf192cf}</Project>
       <Name>softwrench.sw4.Hapag</Name>

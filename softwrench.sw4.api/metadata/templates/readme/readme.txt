@@ -1,0 +1,1 @@
+﻿Don´t forget to mark new templates as Embbedded Resources

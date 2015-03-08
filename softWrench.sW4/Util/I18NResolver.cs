@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using System;
 using System.IO;
 using System.Linq;

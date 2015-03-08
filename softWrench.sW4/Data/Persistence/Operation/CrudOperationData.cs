@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
@@ -25,7 +25,6 @@ namespace softWrench.sW4.Data.Persistence.Operation {
 
         public string UserId {
             get { return GetAttribute(_userIdAttributeName) == null ? null : GetAttribute(_userIdAttributeName).ToString(); }
-
         }
         public string Class { get { return EntityMetadata.GetTableName(); } }
         public EntityMetadata EntityMetadata { get; set; }

@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+    <entity name="failurecode" idAttribute="failurecodeid">
+      <attributes>
+        <attribute name="failurecodeid" type="int"  required="true" />
+        <attribute name="failurecode" type="varchar"  required="true" />
+        <attribute name="description" type="varchar"  required="true" />
+        <attribute name="orgid"  type="varchar" />
+      </attributes>
+    </entity>
+
+    <entity name ="failurelistonly" parententity="failurelist" idAttribute="failurelist" whereclause="((failurelistonly.TYPE is null)) " >
+
+    </entity>
+
+    <entity name ="problemlist" parententity="failurelist" idAttribute="failurelist" whereclause="((problemlist.TYPE like 'PROBLEM')) " >
+
+    </entity>
+  </entities>
+
+  <applications>
+    <application name="failurecode" title="Failure Class" entity="failurecode" id="00000000-0000-0000-0000-000000000003">
+      <properties>
+        <property key="mobile.fetchlimit" value="300"/>
+        <property key="mobile.userInteractionEnabled" value="false"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="failurecode" label="Failure Class" qualifier="title"/>
+          <field attribute="description" label="Description" qualifier="excerpt"/>
+
+        </list>
+        <detail>
+          <field attribute="failurecodeid" label="ID:"  requiredexpression="true" />
+          <field attribute="failurecode" label="Failure Class:"  requiredexpression="true" />
+          <field attribute="description" label="Description:"  requiredexpression="true" />
+          <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
+        </detail>
+      </schemas>
+    </application>
+  </applications>
+
+</metadata>

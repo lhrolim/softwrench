@@ -11,7 +11,7 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using System.Net.Mail;
 using System.Net;
 using softWrench.sW4.Configuration.Services.Api;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Email;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {

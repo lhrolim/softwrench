@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+    <entity name="solution" idAttribute="solution">
+      <relationships>
+        <relationship to="classstructure" qualifier="classstructure">
+          <relationshipAttribute from="classstructureid" to ="classstructureid" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+  </entities>
+
+  <applications>
+
+    <application name="solution" title="solution" entity="solution">
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-book"/>
+      </properties>
+      <schemas>
+        <schema id="list" stereotype="compositionlist" >
+          <field attribute="solution" label="Solution No"/>
+          <field attribute="description" label="Description"/>
+
+        </schema>
+        <detail stereotype="compositiondetail">
+          <field attribute="solution" label="Solution No" readonly="true"/>
+          <field attribute="problemcode" label="Symptom:" />
+          <field attribute="fr1code" label="Cause:" />
+          <field attribute="fr2code" label="Resolution:" />
+
+        </detail>
+      </schemas>
+    </application>
+
+
+  </applications>
+
+
+
+
+</metadata>

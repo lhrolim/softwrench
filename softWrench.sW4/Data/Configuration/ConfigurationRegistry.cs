@@ -1,6 +1,6 @@
 ﻿using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Services.Api;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Data.Configuration {
     class ConfigurationRegistry : ISingletonComponent {
@@ -104,6 +104,13 @@ namespace softWrench.sW4.Data.Configuration {
                 Description = "Inv issue detail field scan order",
                 DataType = "string",
                 DefaultValue = "itemnum",
+                Visible = false,
+            });
+
+            facade.Register(ConfigurationConstants.NewKeyIssueDetailScanOrder, new PropertyDefinition() {
+                Description = "Inv issue detail field scan order",
+                DataType = "string",
+                DefaultValue = "laborcode,storeroom,itemnum,rotassetnum",
                 Visible = false,
             });
 

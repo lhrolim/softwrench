@@ -74,7 +74,7 @@ app.factory('genericTicketService', function (alertService, associationService, 
             }
             if (event.fields['status'] == 'WAPPR') {
                 //event.fields['status'] = 'QUEUED';
-                alertService.alert("Owner Field will be disabled if the Owner Group is selected.");
+                alertService.alert("Owner Group Field will be disabled if the Owner is selected.");
                 return;
             }
             

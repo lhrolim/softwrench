@@ -1,3 +1,5 @@
+using cts.commons.portable.Util;
+using cts.commons.Util;
 using JetBrains.Annotations;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -13,17 +15,17 @@ namespace softWrench.sW4.Metadata.Applications {
         private const string NoSchemaFound = "could not find schema {0} in application {1}. Please review your metadata";
 
         [NotNull]
-        public static ApplicationMetadata ApplyPolicies([NotNull] this CompleteApplicationMetadataDefinition application,
-            ApplicationMetadataSchemaKey schemaKey, [NotNull] InMemoryUser user, ClientPlatform platform) {
+        public static ApplicationMetadata ApplyPolicies([NotNull] this CompleteApplicationMetadataDefinition application, ApplicationMetadataSchemaKey schemaKey, [NotNull] InMemoryUser user,
+            ClientPlatform platform, string schemaFieldsToDisplay=null) {
             if (application == null) throw new ArgumentNullException("application");
             if (user == null) throw new ArgumentNullException("user");
 
-            return new ApplicationMetadataPolicyApplier(application, schemaKey, user, platform).Apply();
+            return new ApplicationMetadataPolicyApplier(application, schemaKey, user, platform, schemaFieldsToDisplay).Apply();
         }
 
         public static ApplicationMetadata ApplyPoliciesWeb([NotNull] this CompleteApplicationMetadataDefinition application,
             ApplicationMetadataSchemaKey schemaKey) {
-            return new ApplicationMetadataPolicyApplier(application, schemaKey, SecurityFacade.CurrentUser(), ClientPlatform.Web).Apply();
+            return new ApplicationMetadataPolicyApplier(application, schemaKey, SecurityFacade.CurrentUser(), ClientPlatform.Web,null).Apply();
         }
 
         [NotNull]

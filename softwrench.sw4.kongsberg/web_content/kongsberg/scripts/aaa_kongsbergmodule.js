@@ -1,0 +1,1 @@
+﻿var kongsbergmod = angular.module('kongsberg', ['sw_layout']);

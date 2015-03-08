@@ -22,6 +22,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public string ToolTip { get; set; }
         public bool? ReadOnly { get; set; }
         public string AttributeToServer { get; set; }
+
         public string DefaultExpression { get; set; }
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 

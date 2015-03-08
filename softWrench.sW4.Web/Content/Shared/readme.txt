@@ -1,0 +1,1 @@
+﻿Do not delete this folder, it´s used to create simbolic links on the fly, see build.xml

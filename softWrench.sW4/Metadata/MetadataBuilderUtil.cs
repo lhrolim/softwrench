@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using cts.commons.persistence;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Util;
 
@@ -11,10 +12,10 @@ namespace softWrench.sW4.Metadata {
     public class MetadataBuilderUtil {
         public const string DB2Query = "SELECT colname as name,typename as type,nulls FROM SYSCAT.COLUMNS where TABNAME  = ?";
         public const string MSSQLQuery = "select COLUMN_NAME as name ,DATA_TYPE as type,IS_NULLABLE from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME= ?";
-        private readonly MaximoHibernateDAO _dao = new MaximoHibernateDAO();
+//        private readonly MaximoHibernateDAO _dao = MaximoHibernateDAO.GetInstance();
 
         public string GenerateEntityMetadata(string tableName) {
-            const ApplicationConfiguration.DBType dbType = ApplicationConfiguration.DBType.Maximo;
+            const DBType dbType = DBType.Maximo;
 
 
             if (ApplicationConfiguration.IsDB2(dbType)) {
@@ -53,7 +54,7 @@ namespace softWrench.sW4.Metadata {
         }
 
         private string HandleGeneric(string query, string tableName, Action<XmlElement, Dictionary<string, string>> rowDelegate) {
-            var result = _dao.FindByNativeQuery(query, tableName.ToUpper());
+            var result = MaximoHibernateDAO.GetInstance().FindByNativeQuery(query, tableName.ToUpper());
             if (result == null) {
                 return null;
             }

@@ -1,0 +1,38 @@
+﻿//base idea: http://blog.projectnibble.org/2013/12/23/enhance-logging-in-angularjs-the-simple-way/
+
+var app = angular.module('sw_layout');
+app.run(['$injector', 'contextService', enhanceInjector]);
+
+
+function enhanceInjector($injector, contextService) {
+
+    this.clientfactory = function(serviceName) {
+        var client = contextService.client();
+        return this.factory(client + "." + serviceName);
+    }
+
+    $injector.getInstance = function(serviceName) {
+        return doGet(serviceName);
+    };
+
+
+    function doGet(serviceName) {
+        var client = contextService.client();
+//        angular.
+
+        try {
+            var clientService = $injector.get(client + "." + serviceName);
+            var baseService = $injector.get(serviceName);
+            if (clientService != null) {
+                return clientService;
+            }
+            return baseService;
+        } catch (e) {
+            try {
+                return $injector.get(serviceName);
+            } catch (e) {
+                return null;
+            }
+        }
+    }
+};

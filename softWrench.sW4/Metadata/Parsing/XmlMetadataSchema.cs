@@ -47,6 +47,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string SchemaElement = "schema";
         public const string SchemasElement = "schemas";
         public const string SchemaIdAttribute = "id";
+        public const string SchemaRedeclaringSchemaAttribute = "redeclaring";
         public const string SchemaPlatformAttribute = "platform";
         public const string SchemaStereotypeAttribute = "stereotype";
         public const string SchemaAbstractAttribute = "abstract";
@@ -192,12 +193,16 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string DetailElement = "detail";
         public const string ListElement = "list";
         public const string FieldElement = "field";
+        
         public const string FieldAttributeAttribute = "attribute";
         public const string FieldAttributeLabel = "label";
         public const string FieldAttributeReadOnly = "readonly";
         public const string FieldAttributeHidden = "hidden";
         public const string FieldAttributeQualifier = "qualifier";
         public const string FieldAttributeAttributeToServer = "attributeToServer";
+
+        public const string CustomizationElement = "customization";
+        public const string CustomizationPositionAttribute = "position";
 
 
         public const string ComponentsElement = "components";

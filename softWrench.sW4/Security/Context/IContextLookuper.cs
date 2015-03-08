@@ -1,6 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Security.Context {
     public interface IContextLookuper : ISingletonComponent {

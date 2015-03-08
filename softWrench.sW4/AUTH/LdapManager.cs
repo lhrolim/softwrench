@@ -1,5 +1,6 @@
 ﻿using System;
 using System.DirectoryServices;
+using cts.commons.simpleinjector;
 using Iesi.Collections.Generic;
 using softWrench.sW4.Configuration;
 using softWrench.sW4.Configuration.Services;
@@ -7,7 +8,7 @@ using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Util;
-using IComponent = softWrench.sW4.SimpleInjector.IComponent;
+
 
 namespace softWrench.sW4.AUTH {
     public class LdapManager : IComponent {

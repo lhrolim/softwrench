@@ -15,7 +15,7 @@ using softWrench.sW4.Metadata.Security;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Util;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using softWrench.sW4.SPF;
 
 namespace softWrench.sW4.Data.Relationship.Composition {
@@ -38,7 +38,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
                 var compositionSchema = compositionSchemas[name];
                 var printSchema = compositionSchema.Schemas.Print;
                 var applicationMetadata = MetadataProvider.Application(EntityUtil.GetApplicationName(name))
-                    .ApplyPolicies(printSchema.GetSchemaKey(), user, ClientPlatform.Web);
+                    .ApplyPolicies(printSchema.GetSchemaKey(), user, ClientPlatform.Web,null);
                 var slicedEntityMetadata = MetadataProvider.SlicedEntityMetadata(applicationMetadata);
                 var searchDTO = new SearchRequestDto();
                 searchDTO.AppendSearchParam(printSchema.IdFieldName);

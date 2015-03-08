@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="horizontal" indexitem="SR" >
+  <container title="Service Requests" tooltip="Click to access your request tasks" icon ="fa fa-ticket" id="servicereq"  role="sr">
+    <application id="SR" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid"/>
+    <application id="NSR" title="New Service Request" ref="servicerequest" schema="newdetail" tooltip="Click to Create a New Service Request"/>
+  </container>
+
+  <container title="Work Orders" tooltip="Click to access your work order tasks" icon="fa fa-wrench" id="workorder" role="workorder">
+    <application id="WO" title="Work Order Grid" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid"/>
+    <application id="NWO" title="New Work Order" ref="workorder" schema="newdetail" tooltip="Click to Create a New Work Order"/>
+  </container>
+</Menu>

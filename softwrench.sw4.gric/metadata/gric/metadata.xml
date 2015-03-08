@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <!--GRIC-->
+
+  <templates>
+    <!--WorkOrder-->
+    <template path="@workorder.xml"/>
+
+    <!--ServiceRequest-->
+    <template path="@servicerequest.xml"/>
+  </templates>
+  
+  
+  <entities>
+    <entity name="SR" idAttribute="ticketid">
+      <relationships>
+        <relationship to="person" >
+          <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="person" qualifier="reportedbyperson">
+          <relationshipAttribute from="reportedby" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="person" qualifier="createdbyperson">
+          <relationshipAttribute from="createby" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="person" qualifier="ownerperson">
+          <relationshipAttribute from="owner" to="personid" primary="true"/>
+        </relationship>
+        <relationship to ="persongroup">
+          <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWSR" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseServiceRequestCrudConnector" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="workorder" idAttribute="wonum" whereclause="woclass like 'WORKORDER'">
+      <relationships>
+        <relationship to="person" qualifier="reportedbyperson">
+          <relationshipAttribute from="reportedby" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="failurelistonly" qualifier="failurelist">
+          <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="problemlist" qualifier="problemlist">
+          <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="person" qualifier="ownerperson">
+          <relationshipAttribute from="owner" to="personid" primary="true"/>
+        </relationship>
+        <relationship to ="person" qualifier="changeby">
+          <relationshipAttribute from="changeby" to="personid" primary="true"/>
+        </relationship>
+        <relationship to ="persongroup">
+          <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
+        </relationship>
+        <relationship to ="person" qualifier="onbehalfofperson">
+          <relationshipAttribute from="onbehalfof" to ="personid" primary="true"/>
+        </relationship>
+        <relationship to="woactivity" collection="true">
+          <relationshipAttribute from="wonum" to="parent" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to="siteid" primary="true"/>
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWWO" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
+      </connectorParameters>
+    </entity>
+
+    <entity name ="failurelist" idAttribute="failurecode" >
+      <attributes>
+        <attribute name="failurelist" type="bigint" required="true" />
+        <attribute name="failurecode" type="varchar" required="true" />
+        <attribute name="parent" type="bigint" required="false" />
+        <attribute name="type" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="failurelist" />
+      </connectorParameters>
+    </entity>
+
+    <entity name ="failurelistonly" parententity="failurelist" idAttribute="failurelist" whereclause="((failurelistonly.TYPE is null)) " >
+
+    </entity>
+
+    <entity name ="problemlist" parententity="failurelist" idAttribute="failurelist" whereclause="((problemlist.TYPE like 'PROBLEM')) " >
+
+    </entity>
+  </entities>
+
+  <applications>
+    <application entity="SR" name="servicerequest" title="Service Request">
+      
+      <schemas>
+        <list redeclaring="false">
+          <customization position="reportedby">
+            <field attribute="reportedbyperson_.displayname" label="Reported By">
+              <renderer type="default" params="width=15%" />
+            </field>
+          </customization>
+          <customization position="owner">
+          <field attribute="ownerperson_.displayname" label="Owner">
+            <renderer type="default" params="width=15%" />
+          </field>
+          </customization>
+         </list>
+
+        <schema id ="editdetail" platform="web" redeclaring="false">
+          <customization position="classstructureid"/>
+          <customization position="saddresscode"/>
+          <customization position="reportedby">
+            <field label="Reported By:" attribute="reportedbyperson_.displayname" readonly="true"/>
+          </customization>
+          <customization position="commlog"/>
+          <customization position="relatedrecord"/>
+        </schema>
+
+        <schema id ="newdetail" platform="web" redeclaring="false">
+          <customization position="classstructureid"/>
+          <customization position="saddresscode"/>
+          <customization position="reportedby"/>
+          <customization position="owner"/>
+          <customization position="ownergroup"/>
+        </schema>
+      </schemas>
+
+    </application>
+
+    <application name="workorder" title="Work Order" entity="workorder">
+     
+      <schemas>
+        
+        <schema id="editdetail" platform="web" redeclaring="false">
+         <customization position="classstructureid"></customization>
+         <customization position="glaccount" />
+          <customization position="owner">
+            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" showexpression="@siteid=='VQ'">
+              <renderer type="lookup"/>
+            </association>
+          </customization>
+          <customization position="reportedby">
+            <field label="Reported By:" attribute="reportedbyperson_.displayname" readonly="true"/>
+          </customization>
+          <customization position="matusetrans"/>
+          <customization position="woactivity"/>
+          <customization position="labtrans"/>
+          <customization position="tooltrans"/>
+        </schema>
+
+        <schema id = "newdetail" platform="web" redeclaring="false">
+          <customization position="classstructureid"></customization>
+          <customization position="glaccount" />
+          <customization position="wonum"/>
+          <customization position="owner">
+            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" showexpression="@siteid=='VQ'">
+              <renderer type="lookup"/>
+            </association>
+          </customization>
+          <customization position="reportedby">
+            <field label="Reported By:" attribute="reportedbyperson_.displayname" readonly="true"/>
+          </customization>
+          <customization position="actstart"/>
+          <customization position="actfinish"/>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

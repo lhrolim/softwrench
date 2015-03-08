@@ -1,9 +1,14 @@
-﻿using JetBrains.Annotations;
+﻿using cts.commons.persistence;
+using cts.commons.persistence.Util;
+using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.app;
+using JetBrains.Annotations;
 using log4net;
 using NHibernate;
 using NHibernate.Cfg.MappingSchema;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Interfaces;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
@@ -15,11 +20,33 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
 
         private static readonly ILog Log = LogManager.GetLogger(SwConstants.SQLDB_LOG);
 
+        public SWDBHibernateDAO(IApplicationConfiguration applicationConfiguration)
+            : base(applicationConfiguration) {
+        }
+
+        private static SWDBHibernateDAO _instance;
+        public static SWDBHibernateDAO GetInstance() {
+            if (_instance == null) {
+                _instance =
+                    SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
+            }
+            return _instance;
+        }
+
         public T Save<T>(T ob) where T : class {
             using (var session = SessionManager.Instance.OpenSession()) {
                 using (var transaction = session.BeginTransaction()) {
                     var b = ob as IBaseEntity;
+                    var aud = ob as IBaseAuditEntity;
+                    if (aud != null) {
+                        aud.UpdateDate = DateTime.Now;
+                    }
+
                     if (b != null && (b.Id == 0 || b.Id == null)) {
+                        if (aud != null) {
+                            aud.CreationDate = DateTime.Now;
+                            aud.CreatedBy = SecurityFacade.CurrentUser().UserId;
+                        }
                         b.Id = (int)session.Save(ob);
                     } else {
                         ob = session.Merge(ob);
@@ -184,11 +211,11 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
                 configuration.AddAssembly(Assembly.GetCallingAssembly());
                 IDictionary<string, string> properties = new Dictionary<string, string>();
                 properties[NHibernate.Cfg.Environment.ConnectionString] =
-                    ApplicationConfiguration.DBConnectionString(ApplicationConfiguration.DBType.Swdb);
+                    ApplicationConfiguration.DBConnectionString(DBType.Swdb);
                 properties.Add(NHibernate.Cfg.Environment.ConnectionDriver,
-                    HibernateUtil.HibernateDriverName(ApplicationConfiguration.DBType.Swdb));
+                    HibernateUtil.GetInstance().HibernateDriverName(DBType.Swdb));
                 properties.Add(NHibernate.Cfg.Environment.Dialect,
-                    HibernateUtil.HibernateDialect(ApplicationConfiguration.DBType.Swdb));
+                    HibernateUtil.GetInstance().HibernateDialect(DBType.Swdb));
                 properties.Add(NHibernate.Cfg.Environment.ShowSql, "false");
                 properties.Add(NHibernate.Cfg.Environment.ConnectionProvider, "NHibernate.Connection.DriverConnectionProvider");
                 properties.Add(NHibernate.Cfg.Environment.ProxyFactoryFactoryClass,

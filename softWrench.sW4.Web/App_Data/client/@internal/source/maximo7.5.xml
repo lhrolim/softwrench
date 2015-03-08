@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata" >
 
   <entities>
     <entity name="maxpropvalue" idAttribute="maxpropvalueid">
@@ -878,21 +877,33 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
     <entity name="worklog" idAttribute="worklogid" >
       <attributes>
-        <attribute name="worklogid"  type="bigint" required="true" />
-        <attribute name="siteid"  type="varchar" required="true" />
-        <attribute name="orgid"  type="varchar" required="true" />
-        <attribute name="recordkey"  type="varchar" required="true" />
-        <attribute name="description"  type="varchar" required="true" />
-        <attribute name="createby"  type="varchar" required="true" />
-        <attribute name="createdate"  type="datetime" required="true" />
-        <attribute name="class"  type="varchar" required="true" />
-        <attribute name="logtype"  type="varchar" required="true" />
+        <attribute name="worklogid" type="bigint" required="true" />
+        <attribute name="logtype" type="varchar" required="true" />
+        <attribute name="createby" type="varchar" required="true" />
+        <attribute name="createdate" type="datetime" required="true" />
+        <attribute name="clientviewable" type="smallint" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="modifyby" type="varchar" required="true" />
+        <attribute name="modifydate" type="datetime" required="true" />
+        <attribute name="recordkey" type="varchar" required="true" />
+        <attribute name="class" type="varchar" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="assignmentid" type="bigint" required="false" />
       </attributes>
       <relationships>
         <relationship to="longdescription" >
           <relationshipAttribute from="worklogid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKLOG" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+        <relationship to="synonymdomain" >
+          <relationshipAttribute from="logtype" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="LOGTYPE" quoteLiteral="true"/>
+          <relationshipAttribute to="defaults" literal="1" quoteLiteral="true"/>
         </relationship>
         <relationship to="person" qualifier="createdbyperson" >
           <relationshipAttribute from="createby" to="personid" primary="true"/>

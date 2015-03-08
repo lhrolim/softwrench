@@ -4,7 +4,7 @@ using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
     public abstract class BaseMaximoCustomConnector : IMaximoConnector {

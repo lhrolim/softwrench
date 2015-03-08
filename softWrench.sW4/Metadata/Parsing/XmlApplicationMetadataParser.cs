@@ -1,3 +1,5 @@
+using cts.commons.portable.Util;
+using cts.commons.Util;
 using JetBrains.Annotations;
 using softWrench.sW4.Metadata.Validator;
 using softwrench.sw4.Shared2.Data.Association;
@@ -217,6 +219,12 @@ namespace softWrench.sW4.Metadata.Parsing {
                 displayables, showExpression, toolTip, orientation, header, renderer);
         }
 
+        private static IApplicationDisplayable ParseCustomization(string applicationName, XElement customizationElement, EntityMetadata entityMetadata) {
+            var position = customizationElement.Attribute(XmlMetadataSchema.CustomizationPositionAttribute).ValueOrDefault((string)null);
+            var displayables = ParseDisplayables(applicationName, customizationElement, entityMetadata.Name);
+            return new ApplicationSchemaCustomization(position,displayables);
+        }
+
         private static ApplicationHeader ParseHeader(XContainer schema) {
             foreach (var xElement in schema.Elements()) {
                 var xName = xElement.Name.LocalName;
@@ -404,6 +412,8 @@ namespace softWrench.sW4.Metadata.Parsing {
             foreach (var xElement in xElements) {
                 var localName = xElement.Name.LocalName;
                 var id = xElement.Attribute(XmlMetadataSchema.SchemaIdAttribute).ValueOrDefault((string)null);
+                //TODO: switch default redeclaring behaviour to false and fix all metadatas
+                var redeclaring = xElement.Attribute(XmlMetadataSchema.SchemaRedeclaringSchemaAttribute).ValueOrDefault(true);
                 var modeAttr = xElement.Attribute(XmlMetadataSchema.SchemaModeAttribute).ValueOrDefault((string)null);
                 var platformAttr = xElement.Attribute(XmlMetadataSchema.SchemaPlatformAttribute).ValueOrDefault((string)null);
                 var title = xElement.Attribute(XmlMetadataSchema.SchemaTitleAttribute).ValueOrDefault((string)null);
@@ -454,7 +464,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 }
                 ApplicationCommandSchema applicationCommandSchema = ParseCommandSchema(xElement);
                 resultDictionary.Add(new ApplicationMetadataSchemaKey(id, modeAttr, platformAttr),
-                    ApplicationSchemaFactory.GetInstance(applicationName, title, id, stereotype, mode, platform,
+                    ApplicationSchemaFactory.GetInstance(applicationName, title, id,redeclaring, stereotype, mode, platform,
                     isAbstract, displayables, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName, userIdFieldName, unionSchema, ParseEvents(xElement)));
             }
             return resultDictionary;
@@ -676,6 +686,10 @@ namespace softWrench.sW4.Metadata.Parsing {
         private static IApplicationDisplayable FindDisplayable(string applicationName, string entityName, XElement xElement, EntityMetadata entityMetadata) {
             var xName = xElement.Name.LocalName;
 
+            if (xName == XmlMetadataSchema.CustomizationElement) {
+                return ParseCustomization(applicationName, xElement, entityMetadata);
+            }
+
             if (xName == XmlMetadataSchema.FieldElement) {
                 return ParseField(applicationName, xElement, entityMetadata);
             }
@@ -698,6 +712,8 @@ namespace softWrench.sW4.Metadata.Parsing {
             }
             return null;
         }
+
+     
 
         private static IDictionary<string, string> ParseProperties(XElement xElement,string schemaId) {
             IDictionary<string, string> propertiesDictionary = new Dictionary<string, string>();

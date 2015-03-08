@@ -48,8 +48,12 @@
         var origSubject = clonedItem['subject'] == null ? "" : clonedItem['subject'];
         var origMessage = clonedItem['message'];
         clonedItem['commloguid'] = null;
-        clonedItem['sendto'] = origSendTo + "," + clonedItem['sendfrom'];
-        clonedItem['cc'] =origCc;
+        if (origCc != "") {
+            clonedItem['sendto'] = clonedItem['sendfrom'] + "," + origCc;
+        } else {
+            clonedItem['sendto'] = clonedItem['sendfrom'];
+        }
+
         clonedItem['sendfrom'] = contextService.getUserData().email;
         clonedItem['subject'] = "Re: " + clonedItem['subject'];
         clonedItem['message'] = messageHeader.format(origSendFrom, origSendTo, origCc, origSubject, origMessage);

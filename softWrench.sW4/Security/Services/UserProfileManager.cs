@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using cts.commons.Util;
 using NHibernate;
 using log4net;
 using softWrench.sW4.Data.Persistence;
@@ -20,7 +21,12 @@ namespace softWrench.sW4.Security.Services {
 
         private static readonly IDictionary<int?, UserProfile> ProfileCache = new Dictionary<int?, UserProfile>();
         private static readonly DataConstraintValidator ConstraintValidator = new DataConstraintValidator();
-        private static readonly SWDBHibernateDAO DAO = new SWDBHibernateDAO();
+
+        private static SWDBHibernateDAO DAO
+        {
+            get { return SWDBHibernateDAO.GetInstance(); }
+        }
+
 
         public static UserProfile FindByName(String name) {
             if (ProfileCache.Count == 0) {

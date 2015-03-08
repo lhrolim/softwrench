@@ -24,7 +24,7 @@ namespace softWrench.sW4.Metadata.Applications {
                 if (applicationSchema.Value.IsWebPlatform()) {
                     continue;
                 }
-                var securedMetadata = originalMetadata.ApplyPolicies(applicationSchema.Key, user, ClientPlatform.Mobile);
+                var securedMetadata = originalMetadata.ApplyPolicies(applicationSchema.Key, user, ClientPlatform.Mobile,null);
                 securedSchemas.Add(securedMetadata.Schema.GetSchemaKey(), securedMetadata.Schema);
             }
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
     public interface IImacServicePlanHelper : ISingletonComponent {

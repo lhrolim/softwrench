@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using log4net;
 using softWrench.sW4.Data.Persistence.WS.Internal;
@@ -21,6 +22,7 @@ using softwrench.sw4.Shared2.Metadata.Exception;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
 using softwrench.sw4.Shared2.Metadata.Modules;
 using softWrench.sW4.Util;
+using cts.commons.Util;
 using System.Net;
 
 namespace softWrench.sW4.Metadata {
@@ -284,6 +286,9 @@ namespace softWrench.sW4.Metadata {
                 _metadataXmlInitializer = new MetadataXmlSourceInitializer();
 
                 _metadataXmlInitializer.Validate(_commandBars, data);
+
+                _swdbmetadataXmlInitializer = new SWDBMetadataXmlSourceInitializer();
+                _swdbmetadataXmlInitializer.Validate(_commandBars);
 
                 using (var stream = File.Create(MetadataParsingUtils.GetPath(Metadata, internalFramework))) {
                     data.CopyTo(stream);

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<TargetEntities xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Target.xsd ">
+<TargetEntities xmlns="http://www.controltechnologysolutions.com/targetmetadata" >
 
-	<!-- The following items still need to be mapped for all ticket entities. Looking at the JSON being submitted by softwrench, 
+  <!-- The following items still need to be mapped for all ticket entities. Looking at the JSON being submitted by softwrench, 
   it is not yet clear which softwrench fields map to the below ISM fields
   
     -ProviderPriority
@@ -20,19 +19,19 @@
   
   -->
 
-	
+
   <entity name="workorder">
 
-		<attributes>
+    <attributes>
       <const targetpath="actliccost" type="double" value="0"/>
       <const targetpath="estatapprliccost" type="double" value="0"/>
       <const targetpath="estliccost" type="double" value="0"/>
-		</attributes>
+    </attributes>
 
-		<connectorParameters>
-			<connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
-		</connectorParameters>
-	</entity>
+    <connectorParameters>
+      <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
+    </connectorParameters>
+  </entity>
   <entity name="SR">
     <attributes>
       <const targetpath="ACTLABHRS" value="0.0" type="double"/>
@@ -40,6 +39,6 @@
       <attribute name="ACTLABCOST" targetpath="ACTLABCOST" type="double"/>
     </attributes>
   </entity>
-  
+
 
 </TargetEntities>

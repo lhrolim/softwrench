@@ -1,6 +1,6 @@
 ﻿using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Entities;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
 using System.Collections.Generic;
 

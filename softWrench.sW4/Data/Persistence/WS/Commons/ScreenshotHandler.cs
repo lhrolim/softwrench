@@ -38,13 +38,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 // TODO: Is this necessary, this is a repeat of the same process in attachment. 
                 Validate(screenshotName, screenshotString);
 
-                var screenshot = new AttachmentParameters() {
+                var screenshot = new AttachmentDTO() {
                     Title = FileUtils.GetNameFromPath(screenshotName),
                     Path = screenshotName,
                     Data = screenshotString
                 };
 
-                _attachmentHandler.HandleAttachments(maximoObj, screenshot, applicationMetadata);
+                _attachmentHandler.AddAttachment(maximoObj, screenshot);
             }
         }
 

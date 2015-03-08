@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd ">
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <entities>
     <!--This is a batch only for workorders-->
@@ -14,6 +13,120 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 
 
   <applications>
+
+
+    <application entity="Dashboard" name="dashboard" title="Dashboard">
+      <schemas>
+        <schema id="saveDashboardConfirmation" stereotype="detail">
+          <field attribute="title" label="Title"/>
+          <section showexpression="@canCreateBoth">
+            <optionfield attribute="policy" label="Policy">
+              <option label="Personal" value="personal"/>
+              <option label="Shared" value="shared"/>
+            </optionfield>
+            <optionfield attribute="profiles" providerattribute="profiles" showexpression="@policy=='shared'">
+              <renderer type="checkbox"/>
+            </optionfield>
+          </section>
+
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <command id="save" icon="fa-save" parameters="datamap" service="dashboardAuxService" method="saveDashboard" label="Confirm" tooltip="Confirm" position="&lt;cancel" />
+            </commandgroup>
+          </commandbars>
+          <properties>
+            <property key="associationstoprefetch" value="#none"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
+
+    <application entity="DashboardBasePanel" name="basedashboard" title="Base Dashboard">
+      <schemas>
+        <schema id="panelselection">
+          <optionfield attribute="paneltype" label="Widget Type" tooltip="The type of widget to add" default="">
+            <option label="" value=""/>
+            <option label="Grid" value="dashboardgrid"/>
+            <option label="Graphic" value="dashboardgraphic"/>
+            <event type="afterchange" service="dashboardAuxService" method="loadPanels"/>
+            <event type="beforechange" service="dashboardAuxService" method="validatePanels"/>
+          </optionfield>
+          <section showexpression="@numberofpanels>0">
+            <header label="Position" displacement="ontop"/>
+            <field attribute="row" label="Row">
+              <renderer type="numericinput" params="minvalue=1"/>
+            </field>
+            <field attribute="column" label="Column">
+              <renderer type="numericinput" params="minvalue=1"/>
+            </field>
+          </section>
+
+          <section orientation="horizontal" showexpression="@paneltype!=''">
+            <header label="Select Widget" displacement="sameline"/>
+            <optionfield attribute="panel" providerattribute="availablepanels" />
+            <section resourcepath="/Content/Shared/dashboard/templates/createnewpanelbutton.html"/>
+          </section>
+
+
+
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <command id="save" icon="fa-save" enableexpression="@panel!=null" service="dashboardAuxService" parameters="datamap" method="selectPanel" label="Select Panel" tooltip="Add Panel" position="&lt;cancel" />
+            </commandgroup>
+          </commandbars>
+          <properties>
+            <property key="associationstoprefetch" value="#none"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
+
+    <application entity="DashboardGridPanel" name="dashboardgrid" title="DashBoardGrid">
+      <schemas>
+        <detail>
+          <field label="Alias" attribute="alias" requiredexpression="true" tooltip="How this panel can be located"/>
+          <field label="Title" attribute="title" requiredexpression="true" tooltip="The Panel title"/>
+          <optionfield label="Application" attribute="application" providerattribute="applications" requiredexpression="true">
+            <renderer type="autocompleteclient"/>
+            <event type="afterchange" method="lookupFields" service="dashboardAuxService"/>
+          </optionfield>
+          <section showexpression="@application!=null">
+
+            <optionfield label="Fields" attribute="fields" providerattribute="appfields" >
+              <renderer type="checkbox"/>
+            </optionfield>
+
+            <optionfield label="Sort By" attribute="sortby" providerattribute="appfields">
+              <renderer type="autocompleteclient"/>
+            </optionfield>
+
+            <field attribute="limit" label="Limit" default="30" defaultexpression="30">
+              <renderer type="numericinput"/>
+            </field>
+
+          </section>
+          <commandbars>
+            <commandgroup position="detailform">
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <command id="save" icon="fa-save" service="dashboardAuxService" method="createAndAssociatePanel"
+                       parameters="datamap"
+                       label="Add Panel" tooltip="Add Widget" position="&lt;cancel" />
+            </commandgroup>
+          </commandbars>
+          <properties>
+            <property key="associationstoprefetch" value="#none"/>
+          </properties>
+        </detail>
+
+
+
+      </schemas>
+    </application>
 
 
     <application entity="WOBatch" name="wobatch" title="Workorder Batch">
@@ -60,11 +173,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
           </commandbars>
           <section id="sentbatch" resourcepath="/Content/Templates/batches/dynamiccomposition.html" parameters="schemaref=failedbatchschema;
                    datamapref=failedbatchdatamap;title=Problematic Items">
-<!--            <header label="Problematic Items" displacement="ontop"/>-->
+            <!--            <header label="Problematic Items" displacement="ontop"/>-->
           </section>
           <section id="sentbatch" resourcepath="/Content/Templates/batches/dynamiccomposition.html" parameters="schemaref=sentbatchschema;
                    datamapref=sentbatchdatamap;title=Sent Items">
-<!--            <header label="Sent Items" displacement="ontop"/>-->
+            <!--            <header label="Sent Items" displacement="ontop"/>-->
           </section>
           <properties>
             <property key="detail.cancel.click" value="_wobatch.list"/>

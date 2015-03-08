@@ -21,9 +21,12 @@ module.exports = function (config) {
             '..//softWrench.sW4.Web//Content//Scripts//vendor/angular/**/*.js',
             '..//softWrench.sW4.Web//Content//Scripts//vendor/other/**/*.js',
             '..//softWrench.sW4.Web//Content//Scripts//vendor/ace/**/*.js',
+            '..//softWrench.sW4.Web//Content//Scripts//client/crud/**/*.js',
             '..//softWrench.sW4.Web//Content//Scripts//client/**/*.js',
             '..//softWrench.sW4.Web//Content//Templates/**/*.js',
             '..//softWrench.sW4.Web//Content//Scripts//customers/**/*.js',
+            '..//softWrench.sW4.Webcommons//web_content//webcommons//scripts//softwrench/**/*.js',
+            '..//softWrench.sW4.dashboard//web_content//dashboard//scripts//**/*.js',
             'angular_mock.js',
           'tests//**/*.js'
         ],
@@ -57,7 +60,7 @@ module.exports = function (config) {
         // enable / disable colors in the output (reporters and logs)
         colors: true,
 
-        browserNoActivityTimeout: 40000,
+        browserNoActivityTimeout: 140000,
 
         // level of logging
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
@@ -76,6 +79,6 @@ module.exports = function (config) {
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: true
+        singleRun: false
     });
 };

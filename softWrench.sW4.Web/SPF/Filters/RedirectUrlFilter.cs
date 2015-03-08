@@ -1,4 +1,5 @@
-﻿using softWrench.sW4.Data.API;
+﻿using cts.commons.web.Attributes;
+using softWrench.sW4.Data.API;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Web.Common;
 using System;
@@ -36,7 +37,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 return;
             }
             var value = objectContent.Value as IGenericResponseResult;
-            if (value == null) {
+            if (value == null || value is BlankApplicationResponse) {
                 return;
             }
 

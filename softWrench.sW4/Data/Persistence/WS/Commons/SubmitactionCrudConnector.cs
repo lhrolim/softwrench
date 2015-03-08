@@ -9,7 +9,7 @@ using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Util;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Data.Persistence.SWDB;
-using softWrench.sW4.SimpleInjector;
+using cts.commons.simpleinjector;
 using System.Windows.Controls;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {

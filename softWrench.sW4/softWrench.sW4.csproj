@@ -76,6 +76,7 @@
   <ItemGroup>
     <Reference Include="Common.Logging">
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -186,13 +187,14 @@
     <Compile Include="Data\Entities\Historical\HistTicket.cs" />
     <Compile Include="Data\Entities\Historical\HistWorkorder.cs" />
     <Compile Include="Data\Entities\LocationCostCenterRestrictionDao.cs" />
+    <Compile Include="Data\Entities\Metadataeditor.cs" />
     <Compile Include="Data\Entities\SyncManagers\AMaximoRowstampManager.cs" />
     <Compile Include="Data\Entities\SyncManagers\IUserSyncManager.cs" />
     <Compile Include="Data\ExtraAttributes.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseDataSetSearchHelper.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\DataSetConfigurationException.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\MaximoApplicationDataSet.cs" />
-    <Compile Include="Data\Persistence\Dataset\Commons\Maximo\AttachmentDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Maximo\AttachmentDTO.cs" />
     <Compile Include="Data\Persistence\Engine\AConnectorEngine.cs" />
     <Compile Include="Data\Persistence\Engine\SWDBConnectorEngine.cs" />
     <Compile Include="Data\Persistence\PaginationData.cs" />
@@ -266,7 +268,6 @@
     <Compile Include="Metadata\Applications\DataSet\BaseInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OtbServiceRequestDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\GricServiceRequestDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\OptionFieldProviderParameters.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\SWDBApplicationDataset.cs" />
     <Compile Include="Metadata\Applications\Reference\ReferenceHandler.cs" />
@@ -278,6 +279,7 @@
     <Compile Include="Metadata\Entities\Schema\EntityTargetSchema.cs" />
     <Compile Include="Metadata\Entities\Sliced\SlicedEntityAssociation.cs" />
     <Compile Include="Metadata\ClientChangeEvent.cs" />
+    <Compile Include="Metadata\Menu\MenuManager.cs" />
     <Compile Include="Metadata\MetadataProviderInternalCache.cs" />
     <Compile Include="Metadata\Parsing\IXMLMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XElementExtensions.cs" />
@@ -298,6 +300,7 @@
     <Compile Include="Metadata\Validator\MetadataParsingUtils.cs" />
     <Compile Include="Metadata\Validator\MenuXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\PropertiesXmlInitializer.cs" />
+    <Compile Include="Metadata\Validator\SchemaMerger.cs" />
     <Compile Include="Metadata\Validator\SWDBMetadataXmlSourceInitializer.cs" />
     <Compile Include="Preferences\GridFilterAssociation.cs" />
     <Compile Include="Preferences\GridFilter.cs" />
@@ -351,7 +354,6 @@
     <Compile Include="Data\API\ApplicationListResult.cs" />
     <Compile Include="Data\Entities\EntityBuilder.cs" />
     <Compile Include="Data\Pagination\PaginatedSearchRequestDto.cs" />
-    <Compile Include="Data\Persistence\BaseHibernateDAO.cs" />
     <Compile Include="Data\Persistence\WS\Mea\MeaAttachmentHandler.cs" />
     <Compile Include="Data\Persistence\WS\Mea\MeaWorkOrderCrudConnector.cs" />
     <Compile Include="Data\Relationship\Composition\CompositionExpanderHelper.cs" />
@@ -389,18 +391,10 @@
     <Compile Include="Security\Init\RoleExtensions.cs" />
     <Compile Include="Security\Interfaces\AfterLoginRoleEvaluator.cs" />
     <Compile Include="Security\Interfaces\IRoleEvaluator.cs" />
-    <Compile Include="Security\RestartDBEvent.cs" />
+    <Compile Include="Security\Services\ClearMenuEvent.cs" />
     <Compile Include="Security\Services\ClearCacheEvent.cs" />
     <Compile Include="Security\Services\UserLoginEvent.cs" />
     <Compile Include="Security\UserType.cs" />
-    <Compile Include="SimpleInjector\ComponentAttribute.cs" />
-    <Compile Include="SimpleInjector\Events\ApplicationStartedEvent.cs" />
-    <Compile Include="SimpleInjector\Events\ISWEvent.cs" />
-    <Compile Include="SimpleInjector\Events\IEventDispatcher.cs" />
-    <Compile Include="SimpleInjector\Events\ISWEventListener.cs" />
-    <Compile Include="SimpleInjector\Events\SimpleInjectorDomainEventDispatcher.cs" />
-    <Compile Include="SimpleInjector\Core\Order\OrderComparator.cs" />
-    <Compile Include="SimpleInjector\IComponent.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseApplicationDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Workorder\FollowUpWorkorderHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Workorder\UpdateStatusWorkorderHandler.cs" />
@@ -525,7 +519,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Security\Interfaces\IBaseEntity.cs" />
     <Compile Include="Security\Entities\UserCustomConstraint.cs" />
     <Compile Include="Security\Entities\DataConstraint.cs" />
     <Compile Include="Security\Entities\Role.cs" />
@@ -561,16 +554,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="SimpleInjector\Core\Order\IOrdered.cs" />
-    <Compile Include="SimpleInjector\Core\Order\IPriorityOrdered.cs" />
-    <Compile Include="SimpleInjector\ISingletonComponent.cs" />
-    <Compile Include="SimpleInjector\SimpleInjectorGenericFactory.cs" />
-    <Compile Include="SimpleInjector\IClientApplicationAwareComponent.cs" />
     <Compile Include="SPF\IGenericResponseResult.cs" />
     <Compile Include="SPF\RedirectResponseResult.cs" />
     <Compile Include="SPF\RedirectService.cs" />
     <Compile Include="SPF\SPFRedirectAttribute.cs" />
     <Compile Include="SPF\SwHttpContext.cs" />
+    <Compile Include="Util\ApplicationConfigurationAdapter.cs" />
     <Compile Include="Util\AttributeUtil.cs" />
     <Compile Include="Util\ApplicationConfiguration.cs" />
     <Compile Include="Util\ArrayUtil.cs" />
@@ -587,10 +576,8 @@
     <Compile Include="Util\EntityUtil.cs" />
     <Compile Include="Util\ExceptionUtil.cs" />
     <Compile Include="Util\FileUtils.cs" />
-    <Compile Include="Util\HibernateUtil.cs" />
     <Compile Include="Util\I18NResolver.cs" />
     <Compile Include="Util\JSonUtil.cs" />
-    <Compile Include="Util\LoggingUtil.cs" />
     <Compile Include="Util\NhAppender.cs" />
     <Compile Include="Util\ReflectionUtil.cs" />
     <Compile Include="Util\ReportUtil.cs" />
@@ -598,7 +585,6 @@
     <Compile Include="Util\Scripting\ScriptingUtil.cs" />
     <Compile Include="Util\StatusColorResolver.cs" />
     <Compile Include="Util\StreamUtils.cs" />
-    <Compile Include="Util\StringExtensions.cs" />
     <Compile Include="Util\SwConstants.cs" />
     <Compile Include="Util\TaskFactoryExtensions.cs" />
     <Compile Include="Util\Validate.cs" />
@@ -620,7 +606,9 @@
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -855,6 +843,31 @@
     <None Include="Service References\mif_sr\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
+      <Project>{a6a14991-81dd-45b5-b5c8-154e44d84975}</Project>
+      <Name>cts.commons.persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.portable\cts.commons.portable.csproj">
+      <Project>{757C5D7F-9E3C-4509-BAFE-29FFB35EBE46}</Project>
+      <Name>cts.commons.portable</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
+      <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
+      <Name>cts.commons.simpleinjector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons.web\cts.commons.web.csproj">
+      <Project>{4c79cfad-0861-432d-b89c-1d237fbfc522}</Project>
+      <Name>cts.commons.web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cts.commons\cts.commons.csproj">
+      <Project>{5fa34361-87b3-4094-bfbe-7db7b4d16036}</Project>
+      <Name>cts.commons</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
+      <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
+      <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>

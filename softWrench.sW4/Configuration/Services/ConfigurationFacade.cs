@@ -6,8 +6,8 @@ using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Configuration.Util;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Context;
-using softWrench.sW4.SimpleInjector.Core.Order;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector.Core.Order;
+using cts.commons.simpleinjector.Events;
 
 namespace softWrench.sW4.Configuration.Services {
 

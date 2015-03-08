@@ -1,5 +1,4 @@
-<metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Deploy_Metadata.xsd ">
+<metadata xmlns="http://www.controltechnologysolutions.com/deploymetadata">
 
   <globalproperties>
 

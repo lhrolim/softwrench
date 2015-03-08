@@ -10,10 +10,15 @@ Thumbs.db
 
 softwrench.sw4.jstest/jenkinstest-results.xml
 softwrench.sw4.jstest/test-results.testxml
+softWrench.sW4.Web/Content/Customers/
+softWrench.sW4.Web/Content/Shared/
+softWrench.sW4.Web/Content/Scripts/softwrench/shared
+
 Build/jenkinstest-results.xml
 Build/test-results.testxml
 Build/TestResults.trx
 Build/TestResults*
+
 
 # Build outputs
 bin

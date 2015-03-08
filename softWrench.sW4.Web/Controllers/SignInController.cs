@@ -23,11 +23,13 @@ namespace softWrench.sW4.Web.Controllers {
     public class SignInController : Controller {
         private readonly IConfigurationFacade _facade;
         private readonly LdapManager _ldapManager;
+        private readonly SWDBHibernateDAO _dao;
 
 
-        public SignInController(IConfigurationFacade facade, LdapManager ldapManager) {
+        public SignInController(IConfigurationFacade facade, LdapManager ldapManager, SWDBHibernateDAO dao) {
             _facade = facade;
             _ldapManager = ldapManager;
+            _dao = dao;
         }
 
         public ActionResult Index(bool timeout=false,bool forbidden=false) {
@@ -135,7 +137,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         private InMemoryUser GetUser(string userName, string password, string userTimezoneOffset) {
-            var userAux = new SWDBHibernateDAO().FindSingleByQuery<User>(sW4.Security.Entities.User.UserByUserName, userName);
+            var userAux = _dao.FindSingleByQuery<User>(sW4.Security.Entities.User.UserByUserName, userName);
             var allowNonUsersToLogin = "true".Equals(MetadataProvider.GlobalProperty("ldap.allownonmaximousers"));
             if (userAux == null) {
                 if (!allowNonUsersToLogin) {

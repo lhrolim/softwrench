@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using cts.commons.persistence;
 using JetBrains.Annotations;
 using Microsoft.CSharp;
 using softWrench.sW4.Data.Persistence.Operation;
@@ -18,7 +19,6 @@ using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class CommLogHandler {
 
-        private static BaseHibernateDAO _dao = new MaximoHibernateDAO();
         private const string ticketuid = "ticketuid";
         private const string commloguid = "commloguid";
         private const string commlog = "commlog";
@@ -46,7 +46,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 var ownerid = w.GetRealValue(rootObject, ticketuid);
                 w.CloneArray(newCommLogs, rootObject, "COMMLOG", delegate(object integrationObject, CrudOperationData crudData) {
                     ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.Add.ToString());
-                    var id = _dao.FindSingleByNativeQuery<object>("Select MAX(commlog.commlogid) from commlog", null);
+                    var id = MaximoHibernateDAO.GetInstance().FindSingleByNativeQuery<object>("Select MAX(commlog.commlogid) from commlog", null);
                     var rnd = new Random();
                     var commlogid = Convert.ToInt32(id) + rnd.Next(1, 10);
                     w.SetValue(integrationObject, Commlogid, commlogid);
@@ -60,7 +60,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     w.CopyFromRootEntity(rootObject, integrationObject, modifydate, DateTime.Now.FromServerToRightKind());
                     w.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
                     LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
-                    HandleAttachments(crudData, integrationObject, maximoTemplateData.ApplicationMetadata);
+                    HandleAttachments(crudData, rootObject, maximoTemplateData.ApplicationMetadata);
                     if (w.GetRealValue(integrationObject, sendto) != null) {
                         maximoTemplateData.Properties.Add("mailObject", GenerateEmailObject(integrationObject, crudData));
                     } else {
@@ -86,11 +86,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 var attachmentsPath = attachmentPath.Split(',');
                 AttachmentHandler attachment = new AttachmentHandler();
                 for (int i = 0, j=0; i < attachmentsPath.Length; i++){
-                    var content = new AttachmentParameters() {
+                    var content = new AttachmentDTO() {
                         Data = attachmentsData[j] + ',' + attachmentsData[j+1],
                         Path = attachmentPath.ToString()
                     };
-                    attachment.HandleAttachments(maximoObj, content, applicationMetadata);
+                    attachment.AddAttachment(maximoObj, content);
                     j = j + 2;
                 }
 

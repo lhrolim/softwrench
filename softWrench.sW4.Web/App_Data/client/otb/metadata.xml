@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<metadata xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <templates>
     <!--WorkOrder-->
@@ -15,6 +14,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     
     <!--Inventory-->
     <template path="@inventory.xml"/>
+
+    <!--Changes-->
+    <template path="@wochange.xml"/>
     
     <!--Purchasing-->
     <template path="@receiving.xml"/>

@@ -6,7 +6,7 @@ using Quartz;
 using Quartz.Impl;
 using Quartz.Impl.Matchers;
 using softWrench.sW4.Scheduler.Interfaces;
-using softWrench.sW4.SimpleInjector.Events;
+using cts.commons.simpleinjector.Events;
 
 namespace softWrench.sW4.Scheduler {
     public class JobManager : ISWEventListener<ApplicationStartedEvent> {
