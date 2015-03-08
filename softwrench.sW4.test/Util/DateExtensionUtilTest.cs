@@ -1,4 +1,5 @@
 ﻿using System;
+using cts.commons.portable.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
@@ -8,62 +9,61 @@ using softWrench.sW4.Metadata.Security;
 namespace softwrench.sW4.test.Util {
     [TestClass]
     public class DateExtensionUtilTest {
+
+        private DateTime zeroHour = DateUtil.BeginOfToday();
+
+        [ClassInitialize]
+        public static void Init(TestContext testContext) {
+            //test_only has no maximoutc configured
+            ApplicationConfiguration.TestclientName = "test_only";
+            MetadataProvider.StubReset();
+        }
+
+
         [TestMethod]
         public void TestFromUserToUtc() {
             var utcTime = DateTime.UtcNow;
-            var userUtcTime = DateTime.Now.FromUserToUtc(SecurityFacade.CurrentUser());
+            var userUtcTime = DateTime.Now.FromUserToUtc();
             Assert.AreEqual(utcTime, userUtcTime);
         }
 
         [TestMethod]
         public void TestFromMaximoToServer() {
-            const string midnight = "12:00 am";
-            MetadataProvider.InitializeMetadata();
-            // Get maximo offset
-            var maximoUtcProp = MetadataProvider.GlobalProperties.MaximoTimeZone();
-            int maximoUtc;
-            if (!Int32.TryParse(maximoUtcProp, out maximoUtc)) {
-                maximoUtc = 0;
-            }
-            var maximoOffset = maximoUtc * 60;
-            // Set maximo time as midnight
-            var midnightMaximo = DateTime.Parse(midnight);
-            // Get server offset
-            double serverOffset = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes;
-
-            // Set server time to maximo midnight as server
-            var serverTime = midnightMaximo.FromMaximoToServer();
-
-            // Get difference in minutes between maximo time and server time
-            var difference = (midnightMaximo - serverTime).TotalMinutes;
-            // Difference should be the same as the difference between offset's
-            Assert.AreEqual(difference, maximoOffset - serverOffset);
+            Assert.AreEqual(zeroHour.Hour, 0);
+            //this simulates Maximo at AZ central and server at local AZ machine --> so something at 0h in maximo was actually saved 23:00 in the server
+            const int azCentralOffSet = -6;
+            const int azOffSet = 420;//in minutes
+            var userTime = DateExtensions.MaximoConversion(zeroHour, azOffSet, DateExtensions.ConversionKind.MaximoToServer, azCentralOffSet);
+            Assert.AreEqual(23, userTime.Hour);
         }
 
         [TestMethod]
-        public void TestFromMaximoToUser()
-        {
-            const string midnight = "12:00 am";
-            MetadataProvider.InitializeMetadata();
-            // Get maximo offset
-            var maximoUtcProp = MetadataProvider.GlobalProperties.MaximoTimeZone();
-            int maximoUtc;
-            if (!Int32.TryParse(maximoUtcProp, out maximoUtc)) {
-                maximoUtc = 0;
-            }
-            double maximoOffset = maximoUtc * 60;
-            // Set maximo time as midnight
-            var midnightMaximo = DateTime.Parse(midnight);
-            // Get user offset
-            int? userOffset = SecurityFacade.CurrentUser().TimezoneOffset;
-            
-            // Set user time from maximo midnight utc
-            var userTime = midnightMaximo.FromMaximoToUser(SecurityFacade.CurrentUser());
+        public void TestFromServerToMaximo() {
+            Assert.AreEqual(zeroHour.Hour, 0);
+            //this simulates Maximo at AZ central and server at local AZ machine --> so something saved 0h in AZ should go to maximo as 1AM
+            const int azCentralOffSet = -6;
+            const int azOffSet = 420;//in minutes
+            var userTime = DateExtensions.MaximoConversion(zeroHour, azOffSet, DateExtensions.ConversionKind.ServerToMaximo, azCentralOffSet);
+            Assert.AreEqual(1, userTime.Hour);
+        }
 
-            // Get difference between user and maximo
-            double difference = (midnightMaximo - userTime).TotalMinutes;
-            // Difference should be the same as the difference between the two offset's
-            Assert.AreEqual(difference, maximoOffset - userOffset);
+        [TestMethod]
+        public void TestFromMaximoToUserMockingProperty() {
+            Assert.AreEqual(zeroHour.Hour, 0);
+            //this simulates user in BRAZIL and MAXIMO in AZ ==> 4h ahead ==> 12:00AM in arizona means 4AM in BRASIL
+            const int brazilOffset = 180;
+            var userTime = DateExtensions.MaximoConversion(zeroHour, brazilOffset, DateExtensions.ConversionKind.MaximoToUser, -7);
+            Assert.AreEqual(4, userTime.Hour);
+        }
+
+        [TestMethod]
+        public void TestFromMaximoToUserReadingFromNullProperty() {
+            Assert.AreEqual(zeroHour.Hour, 0);
+            //now, we should considered that maximo is deployed on same timezone as server
+            //luiz: need to get server timezone to pass as user timezone, or test would fail in my machine (or on any AZ)
+            var serverTimezone = -1 * TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes;
+            var userTime = DateExtensions.MaximoConversion(zeroHour, serverTimezone, DateExtensions.ConversionKind.MaximoToUser);
+            Assert.AreEqual(0, userTime.Hour);
         }
     }
 }

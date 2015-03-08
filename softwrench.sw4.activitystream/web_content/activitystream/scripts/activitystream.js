@@ -51,7 +51,10 @@ app.directive('activitystream', function(contextService) {
                 var nowMils = currentDate.getTime();
 
                 //add 'Z' to datetime fix Firefox error
-                var notificationMils = new Date(notificationDate + 'Z').getTime();
+                //                var notificationMils = new Date(notificationDate + 'Z').getTime();
+
+                //luiz: after inserting [SWControllerConfiguration] this 'Z' didn´t seem required anymore, and was, actually , breaking the date.
+                var notificationMils = new Date(notificationDate).getTime();
                 var differenceMils = nowMils - notificationMils;
                 var dateMessage = moment.duration(differenceMils, "milliseconds").humanize();
 

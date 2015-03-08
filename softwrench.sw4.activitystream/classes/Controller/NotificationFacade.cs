@@ -8,6 +8,7 @@ using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.activitystream.classes.Controller {
@@ -81,7 +82,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             var entity = slicedMetadataEntities[0].ApplicationName;
             var queryBuilder = new EntityQueryBuilder();
             var searchRequestDTO = new SearchRequestDto();
-            searchRequestDTO.BuildProjection(slicedMetadataEntities[0].AppSchema);
+            searchRequestDTO.BuildProjection((ApplicationSchemaDefinition) slicedMetadataEntities[0].AppSchema);
             var newQuery = queryBuilder.AllRows(slicedMetadataEntities[0], searchRequestDTO);
 
             var time = DateTime.Now.FromServerToRightKind();
