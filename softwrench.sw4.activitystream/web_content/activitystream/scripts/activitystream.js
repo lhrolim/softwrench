@@ -4,7 +4,7 @@ app.directive('activitystream', function(contextService) {
     return {
         restrict: 'E',
         replace: true,
-        templateUrl: contextService.getResourceUrl('/Content/Templates/notifications/activitystream.html'),
+        templateUrl: contextService.getResourceUrl('/Content/Shared/activitystream/templates/activitystream.html'),
         scope: {
             activities: '='
         },

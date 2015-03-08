@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NHibernate.Hql.Ast.ANTLR;
-using softwrench.sw4.Shared2.Util;
-using softWrench.sW4.Notifications.Entities;
-using softWrench.sW4.Security.Services;
-using softWrench.sW4.Util;
 
-namespace softWrench.sW4.Notifications {
+namespace softwrench.sw4.activitystream.classes.Model {
     public class InMemoryNotificationStream {
         private List<Notification> _notifications;
         
@@ -41,22 +34,24 @@ namespace softWrench.sW4.Notifications {
             return _notifications;
         }
 
-        private List<Notification> HandleChildNotifications(List<Notification> _notifications){
-            int i,j = 0;
-            
-            for ( i = 0;i < _notifications.Count; i++){
-                for (j = 1; j < _notifications.Count; j++){
+        private List<Notification> HandleChildNotifications(List<Notification> notifications){
+            int i;
+
+            for ( i = 0;i < notifications.Count; i++)
+            {
+                int j;
+                for (j = 1; j < notifications.Count; j++){
                     if (i != j) { 
-                        if(_notifications.ElementAt(i).NotificationDate.Equals(_notifications.ElementAt(j).NotificationDate) && _notifications.ElementAt(i).NotificationDate.Ticks.Equals(_notifications.ElementAt(j).NotificationDate.Ticks)){
-                            if (_notifications.ElementAt(i).ParentId == null){
-                                _notifications.RemoveAt(i);
+                        if(notifications.ElementAt(i).NotificationDate.Equals(notifications.ElementAt(j).NotificationDate) && notifications.ElementAt(i).NotificationDate.Ticks.Equals(notifications.ElementAt(j).NotificationDate.Ticks)){
+                            if (notifications.ElementAt(i).ParentId == null){
+                                notifications.RemoveAt(i);
                             }
                         }
                     }
                 }
             }
 
-            return _notifications;
+            return notifications;
         }
 
         public void InsertNotificationIntoStream(Notification notification)

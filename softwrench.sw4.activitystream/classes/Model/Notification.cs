@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace softWrench.sW4.Notifications.Entities {
+namespace softwrench.sw4.activitystream.classes.Model {
     public class Notification {
         private readonly string _application;
         private readonly string _targetSchema;
@@ -21,9 +17,8 @@ namespace softWrench.sW4.Notifications.Entities {
         internal readonly DateTime _notificationDate;
         private readonly long _rowstamp;
         private readonly string _flag;
-        
-        
-        private bool _isRead;
+
+
         public string Flag { get { return _flag; } }
 
         public string Application { get { return _application; } }
@@ -33,7 +28,7 @@ namespace softWrench.sW4.Notifications.Entities {
         public string Icon { get { return _icon; } }
         public int UId { get { return _uId; } }
         public string ParentId { get { return _parentId; } }
-        public int ParentUId { get { return _parentUId; }}
+        public int ParentUId { get { return _parentUId; } }
         public string ParentApplication { get { return _parentApplication; } }
         public string ParentLabel { get { return _parentLabel; } }
         public string Summary { get { return _summary; } }
@@ -41,8 +36,7 @@ namespace softWrench.sW4.Notifications.Entities {
         public DateTime NotificationDate { get { return _notificationDate; } }
         public long Rowstamp { get { return _rowstamp; } }
 
-        
-        public bool IsRead { get { return _isRead; } set { _isRead = value; }}
+        public bool IsRead { get; set; }
 
         public Notification(string application, string targetschema, string label, string icon, string id, int uid, string parentid, int parentuid, string parentApplication, string parentLabel, string summary, string createby, DateTime notificationdate, long rowstamp, string flag, bool isread = false) {
             _application = application;
@@ -60,7 +54,7 @@ namespace softWrench.sW4.Notifications.Entities {
             _notificationDate = notificationdate;
             _rowstamp = rowstamp;
             _flag = flag;
-            _isRead = isread;
+            IsRead = isread;
         }
     }
 }

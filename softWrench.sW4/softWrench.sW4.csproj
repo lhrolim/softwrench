@@ -149,14 +149,11 @@
   <ItemGroup>
     <Compile Include="Metadata\Applications\Notification\ApplicationNotificationFactory.cs" />
     <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />
-    <Compile Include="Notifications\NotificationFacade.cs" />
     <Compile Include="Audit\AuditTrail.cs" />
     <Compile Include="Audit\ISMAuditTrail.cs" />
     <Compile Include="AUTH\AuthUtils.cs" />
     <Compile Include="AUTH\LdapAuthArgs.cs" />
     <Compile Include="AUTH\LdapManager.cs" />
-    <Compile Include="Notifications\Entities\Notification.cs" />
-    <Compile Include="Notifications\InMemoryNotificationStream.cs" />
     <Compile Include="Configuration\Definitions\ConditionMatch.cs" />
     <Compile Include="Configuration\Definitions\ConditionMatchResult.cs" />
     <Compile Include="Configuration\Services\Api\WhereClauseRegisterCondition.cs" />
@@ -308,7 +305,6 @@
     <Compile Include="Preferences\GridFilterExceptions.cs" />
     <Compile Include="Preferences\GridFilterManager.cs" />
     <Compile Include="Scheduler\ASwJob.cs" />
-    <Compile Include="Scheduler\Jobs\NotificationStreamUpdateJob.cs" />
     <Compile Include="Security\Context\ApplicationLookupContext.cs" />
     <Compile Include="Configuration\Definitions\WhereClause\WhereClauseCondition.cs" />
     <Compile Include="Configuration\Util\ConfigCacheKey.cs" />
