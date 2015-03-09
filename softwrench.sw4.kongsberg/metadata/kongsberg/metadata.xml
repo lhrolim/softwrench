@@ -1009,6 +1009,9 @@
         <relationship to="commlogdocs" >
           <relationshipAttribute from="commlogid" to="commlogid" primary="true"/>
         </relationship>
+        <relationship to="sr">
+          <relationshipAttribute from="ownerid" to="ticketuid" primary="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="commlog" />
@@ -2828,10 +2831,8 @@
         <property key ="icon.composition.tab" value="fa fa-envelope-o"/>
       </properties>
 
-      <!-- if role is not specified, by default application.notifications will be the role-->
       <notifications>
-        <notification id="srCommlogActivity" type="ActivityStream" role="notification.commlog" label="CL" icon="fa fa-envelope-o"
-                      targetSchema="editdetail" targetApplication="servicerequest" whereClause="ownertable = 'SR'">
+        <notification label="CL" targetSchema="editdetail" targetApplication="servicerequest">
           <attributes>
             <uid attribute="commloguid"/>
             <summary attribute="subject"/>
@@ -2847,6 +2848,7 @@
             </extraAttributes>-->
           </attributes>
         </notification>
+        
 
       </notifications>
       <schemas>
