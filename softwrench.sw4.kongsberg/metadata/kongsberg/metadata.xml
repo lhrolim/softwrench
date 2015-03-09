@@ -2827,6 +2827,28 @@
       <properties>
         <property key ="icon.composition.tab" value="fa fa-envelope-o"/>
       </properties>
+
+      <!-- if role is not specified, by default application.notifications will be the role-->
+      <notifications>
+        <notification id="srCommlogActivity" type="ActivityStream" role="notification.commlog" label="CL" icon="fa fa-envelope-o"
+                      targetSchema="editdetail" targetApplication="servicerequest" whereClause="ownertable = 'SR'">
+          <attributes>
+            <uid attribute="commloguid"/>
+            <summary attribute="subject"/>
+            <createddate attribute="createdate"/>
+            <changeby attribute="createby"/>
+            <parentAttributes>
+              <application attribute="ownertable"/>
+              <parentuid attribute="ownerid"/>
+              <parentid attribute="sr_.ticketid"/>
+            </parentAttributes>
+            <!--<extraAttributes>
+              <extraAttribute attribute="sendtoreceiving"/>
+            </extraAttributes>-->
+          </attributes>
+        </notification>
+
+      </notifications>
       <schemas>
         <schema id="list" stereotype="compositionlist">
           <!--<properties>

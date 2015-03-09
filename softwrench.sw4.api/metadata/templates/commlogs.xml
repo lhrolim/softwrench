@@ -37,6 +37,9 @@
         <relationship to="commlogdocs" >
           <relationshipAttribute from="commlogid" to="commlogid" primary="true"/>
         </relationship>
+        <relationship to="sr">
+          <relationshipAttribute from="ownerid" to="ticketuid" primary="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="commlog" />
@@ -71,15 +74,18 @@
         <notification id="srCommlogActivity" type="ActivityStream" role="notification.commlog" label="CL" icon="fa fa-envelope-o"
                       targetSchema="editdetail" targetApplication="servicerequest" whereClause="ownertable = 'SR'">
           <attributes>
+            <uid attribute="commloguid"/>
             <summary attribute="subject"/>
-            <createddate attribute="createddate"/>
+            <createddate attribute="createdate"/>
+            <changeby attribute="createby"/>
             <parentAttributes>
               <application attribute="ownertable"/>
               <parentuid attribute="ownerid"/>
+              <parentid attribute="sr_.ticketid"/>
             </parentAttributes>
-            <extraAttributes>
+            <!--<extraAttributes>
               <extraAttribute attribute="sendtoreceiving"/>
-            </extraAttributes>
+            </extraAttributes>-->
           </attributes>
         </notification>
 
