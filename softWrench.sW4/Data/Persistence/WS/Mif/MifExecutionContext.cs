@@ -43,7 +43,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
             }
 
             r.SetProperty(integrationObject, "actionSpecified", true);
-            r.InstantiateProperty(integrationObject, "CHANGEDATE", new { Value = DateTime.Now.FromServerToRightKind() });
+            r.InstantiateProperty(integrationObject, "CHANGEDATE", new { Value = DateExtensions.NowUnspecified().FromServerToRightKind() });
             //TODO: get current user, in the mobile case below code may be wrong
             r.InstantiateProperty(integrationObject, "CHANGEBY", new { Value = curUser.Login });
             //TODO: get from user

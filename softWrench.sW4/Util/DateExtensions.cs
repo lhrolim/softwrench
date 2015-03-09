@@ -37,6 +37,12 @@ namespace softWrench.sW4.Util {
             return UserMaximoConversion(date, user, ConversionKind.MaximoToUser);
         }
 
+        public static DateTime NowUnspecified() {
+            var date = DateTime.Now;
+            var newdate = DateTime.SpecifyKind(date, DateTimeKind.Unspecified);
+            return newdate;
+        }
+
         /// <summary>
         /// Converts a client DateTime to a server DateTime
         /// </summary>
@@ -94,6 +100,9 @@ namespace softWrench.sW4.Util {
                 if (!Int32.TryParse(maximoUtcProp, out maximoUtc)) {
                     //if no property is present, let´s assume that both maximo and server are located under the same timezone
                     maximoOffset = Convert.ToInt32(TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes);
+                } else {
+                    //for testing purposes, making it easier to mock the value that would be present on properties.xml
+                    maximoOffset = maximoUtc * 60;
                 }
             } else {
                 //for testing purposes, making it easier to mock the value that would be present on properties.xml

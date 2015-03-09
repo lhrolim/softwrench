@@ -13,6 +13,7 @@
   <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="true"/>
+  <property key="maximoutc" value="-5"/>
   <property key="maxAttachmentSize" value="10"/>
   <!--in MB-->
   <property key="maxScreenshotSize" value="5"/>
