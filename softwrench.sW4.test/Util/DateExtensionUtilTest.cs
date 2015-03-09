@@ -2,9 +2,7 @@
 using cts.commons.portable.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Metadata;
-using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
-using softWrench.sW4.Metadata.Security;
 
 namespace softwrench.sW4.test.Util {
     [TestClass]
