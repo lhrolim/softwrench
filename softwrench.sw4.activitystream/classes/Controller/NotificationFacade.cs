@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using cts.commons.simpleinjector;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.activitystream.classes.Model;
+using softwrench.sw4.Shared2.Metadata.Applications.Notification;
 using softWrench.sW4.Data.Persistence;
-using softWrench.sW4.Notifications;
-using System.Collections.Concurrent;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using softWrench.sW4.Notifications.Entities;
-using softwrench.sw4.Shared2.Util;
-using softWrench.sW4.SimpleInjector;
-using Newtonsoft.Json.Linq;
-using softWrench.sW4.Security.Services;
+using softWrench.sW4.Data.Persistence.Relational;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
+using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.activitystream.classes.Controller {
@@ -22,12 +19,12 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         private const int HoursToPurge = 24;
 
         public static readonly IDictionary<string, InMemoryNotificationStream> NotificationStreams = new ConcurrentDictionary<string, InMemoryNotificationStream>();
-        public static IDictionary<string, int> Counter = new ConcurrentDictionary<string, int>();
+        public static IDictionary<string, long> Counter = new ConcurrentDictionary<string, long>();
 
-        private readonly MaximoHibernateDAO _maxDAO;
+        private readonly MaximoHibernateDAO MaxDAO;
 
         public NotificationFacade(MaximoHibernateDAO maxDAO) {
-            _maxDAO = maxDAO;
+            MaxDAO = maxDAO;
         }
 
         //Sets up the default notification stream.
@@ -40,7 +37,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                     "select max(workorderid) as max, 'workoder' as application from workorder union " +
                     "select max(commloguid) as max, 'commlog' as application from commlog union " +
                     "select max(worklogid) as max, 'worklog' as application from worklog");
-            var result = _maxDAO.FindByNativeQuery(query, null);
+            var result = MaxDAO.FindByNativeQuery(query, null);
             foreach (var record in result) {
                 Counter.Add(record["application"], Int32.Parse(record["max"]));
             }
@@ -49,13 +46,6 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 
         public static InMemoryNotificationStream CurrentNotificationStream() {
             return NotificationStreams["allRole"];
-        }
-
-        public static NotificationFacade GetInstance() {
-            if (_instance == null) {
-                _instance = new NotificationFacade();
-            }
-            return _instance;
         }
 
         //Currently only inserts notifications into the 'allRole' stream.
@@ -93,7 +83,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 	        var slicedMetadataEntities = MetadataProvider.GetSlicedMetadataNotificationEntities();
             var currentTime = DateTime.Now.FromServerToRightKind();
 
-            var streamToUpdate = _notificationStreams["allRole"];
+            var streamToUpdate = NotificationStreams["allRole"];
             foreach (var slicedEntity in slicedMetadataEntities) {
                 
                 var queryBuilder = new EntityQueryBuilder();
@@ -108,10 +98,11 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                     select p.Name).Single();
 
                 var createddateWhereClauseStr = String.Format("{0} > DATEADD(HOUR,-{1}, GETDATE())", createddateFieldAlias,
-                    _hoursToPurge);
+                    HoursToPurge);
                 searchRequestDTO.AppendWhereClause(createddateWhereClauseStr);
                 var newQuery = queryBuilder.AllRows(slicedEntity, searchRequestDTO);
-                var resultList = EntityRepository.Get(slicedEntity, searchRequestDTO);
+                EntityRepository entityRepo = new EntityRepository(null, MaxDAO);
+                var resultList = entityRepo.Get(slicedEntity, searchRequestDTO);
 
                 foreach (var result in resultList) {
                     var notificationSchema = (ApplicationNotificationDefinition)slicedEntity.AppSchema;
@@ -125,9 +116,9 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                     var isInt = Int64.TryParse(result.Attributes["uid"].ToString(), out uId);
 
                     var flag = "changed";
-                    if (_counter[application] < uId) {
+                    if (Counter[application] < uId) {
                         flag = "created";
-                        _counter[application] = uId;
+                        Counter[application] = uId;
                     }
                     var parentid = result.Attributes["parentid"].ToString();
                     long parentuid;
@@ -174,7 +165,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                                       "select 'workorder' as application, 'editdetail' as targetschema, 'work order' as label, 'fa-wrench' as icon,wonum as id, workorderid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary, " +
                                       "changeby, changedate, CONVERT(bigint, rowstamp) as rowstamp from workorder " +
                                       "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < '{1}' " +
-                                      "order by rowstamp desc", HoursToPurge, time);
+                                      "order by rowstamp desc", HoursToPurge, currentTime);
 
             var hardcodedQueryResult = MaxDAO.FindByNativeQuery(hardcodedQuery, null);
 
