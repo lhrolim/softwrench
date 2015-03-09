@@ -11,7 +11,7 @@ namespace softwrench.sw4.activitystream.classes.Model {
         }
 
         public List<Notification> GetNotifications() {
-            _notifications.Sort((n1, n2) => n2.NotificationDate.CompareTo(n1.NotificationDate));
+            _notifications.Sort((n1, n2) => n1.NotificationDate.CompareTo(n2.NotificationDate));
             _notifications =HandleChildNotifications(_notifications);
             //List<Notification> Notifications = (from notifications in _notifications
             //                                    select new Notification(notifications.Application,

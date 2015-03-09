@@ -1076,6 +1076,10 @@
             <element name="summary" maxOccurs="1" minOccurs="1" type="tns:NotificationAttributeType"/>
 
             <element name="createddate" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"/>
+            
+            <element name="uid" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"/>
+            
+            <element name="changeby" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"/>
 
             <element name="extraAttributes" minOccurs="0" maxOccurs="1">
               <complexType>
@@ -1112,6 +1116,7 @@
     <all>
       <element name="application" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"></element>
       <element name="parentuid" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"></element>
+      <element name="parentid" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"></element>
     </all> 
   </complexType>
 

@@ -21,8 +21,10 @@ namespace softWrench.sW4.Metadata.Parsing
         public const string NotificationAttributeWhereClause = "whereClause";
 
         public const string NotificationAttributesElement = "attributes";
+        public const string NotificationAttributeUIdElement = "uid";
         public const string NotificationAttributeSummaryElement = "summary";
         public const string NotificationAttributeCreateDateElement = "createddate";
+        public const string NotificationAttributeChangeByElement = "changeby";
 
         public const string NotificationParentAttributesElement = "parentAttributes";
         public const string NotificationParentAttributeApplicationElement = "application";
