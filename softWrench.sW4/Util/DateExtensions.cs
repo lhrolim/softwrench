@@ -102,18 +102,12 @@ namespace softWrench.sW4.Util {
         }
 
         internal static DateTime MaximoConversion(DateTime date, double offSet, ConversionKind kind, int? overridenMaximoOffSet = null) {
-            var maximoOffset = 0;
+            var maximoOffset = 0.0;
 
             if (overridenMaximoOffSet == null) {
-                int maximoUtc = 0;
-                var maximoUtcProp = MetadataProvider.GlobalProperties.MaximoTimeZone();
-                if (!Int32.TryParse(maximoUtcProp, out maximoUtc)) {
-                    //if no property is present, let´s assume that both maximo and server are located under the same timezone
-                    maximoOffset = Convert.ToInt32(TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes);
-                } else {
-                    //for testing purposes, making it easier to mock the value that would be present on properties.xml
-                    maximoOffset = maximoUtc * 60;
-                }
+                var maximoTimezone = MetadataProvider.GlobalProperties.MaximoTimeZone();
+                TimeZoneInfo maximoTimezoneinfo = TimeZoneInfo.FindSystemTimeZoneById(maximoTimezone);
+                maximoOffset = maximoTimezoneinfo.GetUtcOffset(DateTime.UtcNow).TotalMinutes;
             } else {
                 //for testing purposes, making it easier to mock the value that would be present on properties.xml
                 maximoOffset = overridenMaximoOffSet.Value * 60;
