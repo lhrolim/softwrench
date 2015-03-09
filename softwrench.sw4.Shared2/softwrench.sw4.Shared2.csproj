@@ -53,6 +53,10 @@
     <Compile Include="Metadata\Applications\Command\ICommandDisplayable.cs" />
     <Compile Include="Metadata\Applications\Command\RemoveCommandDefinition.cs" />
     <Compile Include="Metadata\Applications\Command\ResourceCommand.cs" />
+    <Compile Include="Metadata\Applications\Notification\ApplicationNotificationKey.cs" />
+    <Compile Include="Metadata\Applications\Notification\ApplicationNotificationDisplayable.cs" />
+    <Compile Include="Metadata\Applications\Notification\ApplicationNotificationDefinition.cs" />
+    <Compile Include="Metadata\Applications\Notification\SchemaStereotype.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationEvent.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationHeader.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationKey.cs" />
@@ -60,6 +64,7 @@
     <Compile Include="Metadata\Applications\Schema\DisplayableComponent.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationIndentifiedDisplayable.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationDisplayableContainer.cs" />
+    <Compile Include="Metadata\Applications\Schema\Interfaces\IApplicationFieldContainer.cs" />
     <Compile Include="Metadata\Applications\Schema\Interfaces\IDependableField.cs" />
     <Compile Include="Metadata\Applications\Schema\ReferenceDisplayable.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationSchemaCustomization.cs" />

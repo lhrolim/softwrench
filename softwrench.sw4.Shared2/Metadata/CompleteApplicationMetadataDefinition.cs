@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using softwrench.sw4.Shared2.Metadata;
+using softwrench.sw4.Shared2.Metadata.Applications.Notification;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
+using softwrench.sW4.Shared2.Metadata.Applications.Notification;
 
 namespace softwrench.sW4.Shared2.Metadata {
 
@@ -29,13 +31,16 @@ namespace softwrench.sW4.Shared2.Metadata {
 
         public IEnumerable<DisplayableComponent> DisplayableComponents = new List<DisplayableComponent>();
 
+        public IDictionary<ApplicationNotificationKey, ApplicationNotificationDefinition> Notifications { get; set; }
+
 
         public CompleteApplicationMetadataDefinition(Guid? id, string applicationName, string title, string entity,
              string idFieldName, string userIdFieldName,
             IDictionary<string, string> paramters,
             IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> schemas,
             IEnumerable<DisplayableComponent> components,
-            string service
+            string service,
+            IDictionary<ApplicationNotificationKey, ApplicationNotificationDefinition> notifications
             ) {
             if (applicationName == null) throw new ArgumentNullException("name");
             if (title == null) throw new ArgumentNullException("title");
@@ -60,8 +65,9 @@ namespace softwrench.sW4.Shared2.Metadata {
             }
             _schemasList = _schemas.Values;
             DisplayableComponents = components;
+            Notifications = notifications;
             //            _mobileSchema = BuildMobileSchema();
-        }
+            }
 
         private void MergeSchemaPropertiesWithApplicationProperties(ApplicationSchemaDefinition schema, IDictionary<string, string> parameters) {
             if (parameters == null || !parameters.Any()) {

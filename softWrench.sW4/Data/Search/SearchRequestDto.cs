@@ -59,7 +59,7 @@ namespace softWrench.sW4.Data.Search {
 
 
 
-        internal void BuildProjection(ApplicationSchemaDefinition schema) {
+        public void BuildProjection(ApplicationSchemaDefinition schema) {
             var columns = schema.Fields;
             foreach (var column in columns) {
                 AppendProjectionField(new ProjectionField { Name = column.Attribute, Alias = column.Attribute });

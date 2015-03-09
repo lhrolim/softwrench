@@ -1,4 +1,4 @@
-﻿var app = angular.module('sw_layout');
+var app = angular.module('sw_layout');
 
 app.factory('matusetranService', function ($http, contextService, redirectService, modalService, restService, searchService, alertService, validationService) {
     var doUpdateItemCosttype = function (parameters) {
@@ -13,7 +13,7 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
 
             if (resultObject[0] != undefined && resultObject.length == 1) {
                 parameters.fields['costtype'] = resultObject[0].fields['costtype'];
-                doUpdateItemCost(parameters);
+                doUpdateItemCost(parameters); 
             }
         });
     };
@@ -103,12 +103,12 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
 
             event.fields["linecost"] = 0.00;
             event.fields["unitcost"] = 0.00;
-            event.fields["curbal"] = 0.00;
+            event.fields["curbal"] = 0.00; 
             event.fields["quantity"] = 1;
         },
 
         afteritemchange: function (event) {
-            event.fields["#description"] = event.fields["item_.description"];
+            event.fields["#description"] = event.fields["item_.description"]; 
 
             event.fields["linecost"] = 0.00;
             event.fields["unitcost"] = 0.00;

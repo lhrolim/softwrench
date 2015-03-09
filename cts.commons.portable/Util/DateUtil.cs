@@ -22,6 +22,11 @@ namespace cts.commons.portable.Util {
             return new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0);
         }
 
+        public static DateTime BeginOfToday() {
+            var date = DateTime.Now;
+            return BeginOfDay(date);
+        }
+
         public static DateTime EndOfDay(DateTime date) {
             return new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, 999);
         }
@@ -30,6 +35,8 @@ namespace cts.commons.portable.Util {
             var date = DateTime.Now;
             return new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, 999);
         }
+
+     
 
 
         /// <summary>

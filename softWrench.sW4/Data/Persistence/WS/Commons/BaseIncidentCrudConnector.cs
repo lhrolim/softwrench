@@ -1,4 +1,4 @@
-﻿using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
+using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
@@ -33,6 +33,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
             LongDescriptionHandler.HandleLongDescription(sr, crudData);
+
+            //Handle Commlogs
+            CommLogHandler.HandleCommLogs(maximoTemplateData, crudData, sr);
 
             // Update or create attachments
             _attachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);

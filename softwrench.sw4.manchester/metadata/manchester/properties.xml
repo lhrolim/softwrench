@@ -27,7 +27,7 @@
     <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_COM75MAX;User Id=sw;password=softwrench;" />
   </environment>
 
-  <environment key="qa-wk">
+  <environment key="uat">
     <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_COM75MAX;User Id=sw;password=softwrench;" />
   </environment>
 </Properties>

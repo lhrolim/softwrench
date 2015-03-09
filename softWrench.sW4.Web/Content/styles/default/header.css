@@ -34,7 +34,7 @@
     .container header .menu-admin {
         background-color: rgba(52, 167, 224, 0.5);
         border-bottom: rgba(0, 0, 0, 0.3) 3px solid;
-        padding: 0 20px;
+        padding: 20px;
     }
 
         .container header .menu-admin .text {
