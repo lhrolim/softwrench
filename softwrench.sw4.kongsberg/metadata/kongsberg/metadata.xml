@@ -228,6 +228,24 @@
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
         </relationship>
+        <relationship to ="solution" qualifier="solution" >
+          <relationshipAttribute from="solution" to ="solution" primary="true"/>
+        </relationship>
+        <relationship to="longdescription" qualifier="symptom">
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="PROBLEMCODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="cause">
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR1CODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="resolution">
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
+        </relationship>
         <relationship to ="persongroup">
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
         </relationship>
@@ -732,6 +750,10 @@
           <relationshipAttribute from="siteid" to="siteid" />
           <relationshipAttribute to="class" literal="INCIDENT" quoteLiteral="true" />
         </relationship>
+        <relationship to ="commlog" collection="true">
+          <relationshipAttribute from="ticketuid" to="ownerid" primary="true" />
+          <relationshipAttribute to="ownertable" literal="INCIDENT" quoteLiteral="true"/>
+        </relationship>
         <relationship to="DOCLINKS" qualifier="attachment" collection="true">
           <relationshipAttribute from="ticketuid" to="ownerid" primary="true"/>
           <relationshipAttribute to="ownertable" literal="INCIDENT" quoteLiteral="true"/>
@@ -767,7 +789,7 @@
           <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
           <relationshipAttribute to="objectvalue" literal="INCIDENT" quoteLiteral="true"/>
         </relationship>
-
+        
         <relationship to="incidentclassifications" qualifier="incidentclassifications">
           <relationshipAttribute from="classificationid" to="classificationid" primary="true"/>
         </relationship>
@@ -792,7 +814,7 @@
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
         </relationship>
-
+        
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="incident" />
@@ -800,7 +822,7 @@
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseIncidentCrudConnector" />
       </connectorParameters>
     </entity>
-
+    
     <entity name="wochange" idAttribute="workorderid">
       <attributes>
         <attribute name="workorderid" type="integer" required="true" />
@@ -1050,7 +1072,7 @@
           <properties>
             <property key="list.click.schema" value="editdetail"/>
           </properties>
-
+          
         </list>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
@@ -1130,7 +1152,7 @@
           <field label="Actual End Date:" attribute="actualfinish" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
-
+          
           <field attribute="description" label="Summary:" requiredexpression="true"/>
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
@@ -1152,7 +1174,7 @@
           -->
           <section id="compositions"/>
         </schema>
-
+        
         <schema parentschema="adetail" title="New Service Request" id="newdetail">
           <section id="siteidsection">
             <field attribute="ticketid" label="Request #:" hidden="true"/>
@@ -1200,6 +1222,24 @@
             </optionfield>
           </section>
           <section id="compositions">
+            <tab label="Solution" id="solution">
+
+            <field attribute="solution" hidden="true"/>
+            <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="solutionService" method="setsolutiondata"/>
+            </association>
+            <field attribute="solution_.description" label="Description:" readonly="true"/>
+            <field attribute="symptom_.ldtext" label="Symptom:">
+              <renderer type="richtext"/>
+            </field>
+            <field attribute="cause_.ldtext" label="Cause:" >
+              <renderer type="richtext"/>
+            </field>
+            <field attribute="resolution_.ldtext" label="Resolution:" >
+              <renderer type ="richtext"/>
+            </field>
+          </tab>
             <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
             </composition>
@@ -1360,7 +1400,7 @@
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
 
-
+          
 
 
           <field attribute="description" label="Summary:" requiredexpression="true"/>
@@ -1641,7 +1681,7 @@
     <application name="incident" title="Incident" entity="incident">
       <schemas>
         <list title="Incident Grid">
-          <field attribute="ticketid" label="Request#">
+          <field attribute="ticketid" label="Incident#">
             <renderer type="default" params="width=8%"/>
           </field>
           <field attribute="description" label="Summary">
@@ -1694,7 +1734,7 @@
             <renderer type="color" params="width=4%;grid=incident;column=status"/>
           </field>
           <properties>
-            <property key="list.click.schema" value="detail"/>
+            <property key="list.click.schema" value="editdetail"/>
           </properties>
         </list>
 
@@ -1755,7 +1795,7 @@
           <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description">
             <renderer type="lookup"/>
           </association>
-
+          
           <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
             <renderer type="lookup"/>
           </association>
@@ -1797,20 +1837,21 @@
                          parameters="joinattribute=actualfinish;">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
+          <field attribute="description" label="Summary:" requiredexpression="true"/>
           <!--field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="true"/-->
-          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" default="NEW">
-            <renderer type="lookup" />
-          </association>
+<!--          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" default="NEW">-->
+<!--            <renderer type="lookup" />-->
+<!--          </association>-->
           <field attribute="statusdate" hidden="true" />
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
           </field>
           <field label="Attachment:" attribute="newattachment" >
-            <renderer type="upload"/>
+              <renderer type="upload"/>
           </field>
         </schema>
 
-        <schema stereotype="detail" id="detail" mode="input" title="Incident Details">
+        <schema stereotype="detail" id="editdetail" mode="input" title="Incident Details">
           <field attribute="ticketid" label="Incident #:" readonly="true" requiredexpression="true"/>
           <field attribute="siteid" label="Site:"/>
           <field attribute="actlabcost" default="0" hidden="true"/>
@@ -1865,7 +1906,7 @@
           <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description">
             <renderer type="lookup"/>
           </association>
-
+          
           <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
             <renderer type="lookup"/>
           </association>
@@ -1930,9 +1971,17 @@
               <renderer type ="richtext"/>
             </field>
           </tab>
+          <composition relationship="worklog" label="Work Logs">
+            <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'" allowupdate="true" />
+          </composition>
+          <composition relationship="commlog" label="Communications">
+            <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
+            <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
+          </composition>
           <composition relationship="attachment" label="Attachments">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
           </composition>
+          
         </schema>
 
       </schemas>
@@ -1952,6 +2001,12 @@
           </field>
           <field attribute="status" label="Status" >
             <renderer type="default" params="width=16%" />
+          </field>
+          <field label="Reported Date" attribute="reportdate">
+            <renderer type ="default" params="width=16%"/>
+          </field>
+          <field attribute="schedstart" label="Scheduled Start Date">
+            <renderer type ="default" params="width=16%"/>
           </field>
           <field attribute="pmchgtype" label="Type" >
             <renderer type="default" params="width=16%" />
@@ -2825,7 +2880,7 @@
             <renderer type="autocompleteserver"/>
           </association>-->
           <field attribute="cc" label="Cc:">
-            <renderer type="email"/>
+            <renderer type="default"/>
           </field>
 
           <field attribute="sendfrom" label="From:" requiredexpression="true" default="kogt@controltechnologysolutions.com">

@@ -32,6 +32,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             ,IWidgetDefinition widget,string defaultValue, string tooltip):this(applicationName, attributeName, label, requiredExpression, isReadOnly, isHidden, renderer, null, widget, defaultValue, null, null, tooltip, null, null, null, null, null, null){
         }
 
+        public ApplicationFieldDefinition(string applicationName,string attributeName,String label) {
+            ApplicationName = applicationName;
+            Attribute = attributeName;
+            Label = label;
+        }
+
         public ApplicationFieldDefinition(string applicationName, string attribute, string label, string requiredExpression, bool isReadOnly, bool isIsHidden,
              FieldRenderer renderer, FieldFilter filter, IWidgetDefinition widgetDefinition, string defaultValue, string qualifier, string showExpression, string toolTip,
              string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression, string enableDefault, string defaultExpression)

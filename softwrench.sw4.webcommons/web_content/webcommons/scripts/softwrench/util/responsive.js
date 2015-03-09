@@ -17,7 +17,7 @@
             $('.listgrid-thead').css('top', headerHeight + messageHeight + paginationHeight - adjustment);
             $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight - 1);
         }
-            //reset the lcoation of the content, context menu, grid header and filter bar
+        //reset the lcoation of the content, context menu, grid header and filter bar
         else {
             $('.content').css('margin-top', 'auto');
             $('messagesection .alerts').css('margin-top', 'auto');

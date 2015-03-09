@@ -119,6 +119,7 @@
     <Compile Include="Util\I18NResolverTest.cs" />
     <Compile Include="Util\HibernateUtilTest.cs" />
     <Compile Include="Util\LoggingUtilTest.cs" />
+    <Compile Include="Util\DateExtensionUtilTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

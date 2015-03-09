@@ -63,6 +63,28 @@
         <property key ="icon.composition.tab" value="fa fa-envelope-o"/>
       </properties>
 
+      <!-- Concept example of notification configuration highlighting the ability to configure independent roles on an application -->
+      <!--<notifications>-->
+        
+        <!-- if role is not specified, by default application.notifications will be the role-->
+      <notifications>
+        <notification id="srCommlogActivity" type="ActivityStream" role="notification.commlog" label="CL" icon="fa fa-envelope-o"
+                      targetSchema="editdetail" targetApplication="servicerequest" whereClause="ownertable = 'SR'">
+          <attributes>
+            <summary attribute="subject"/>
+            <createddate attribute="createddate"/>
+            <parentAttributes>
+              <application attribute="ownertable"/>
+              <parentuid attribute="ownerid"/>
+            </parentAttributes>
+            <extraAttributes>
+              <extraAttribute attribute="sendtoreceiving"/>
+            </extraAttributes>
+          </attributes>
+        </notification>
+
+      </notifications>
+      
       <schemas>
         <schema id="list" stereotype="compositionlist">
           <properties>

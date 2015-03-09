@@ -37,7 +37,6 @@
     <input type="hidden" id="routes_basecontext" value="@Request.ApplicationPath" />
     <input type="hidden" id="hddn_popupmode" value="@Request.Params.Get("popupmode")" />
     <input type="hidden" id="hiddn_user" value="@Model.UserJSON" />
-
     <div class="spinner" data-class="spinner" id="mainspinner"></div>
     <div ng-controller="LayoutController" class="container {{clientName}} {{deviceType}}">
         <header class="site-header navbar-fixed-top hiddenonprint">
@@ -56,7 +55,7 @@
                         <img class="logo" ng-src="{{resourceUrl('/Content/Images/logo-main.png')}}">
                     }
                 </div>
-            </div>
+            </div> 
             <div class="menu menu-grid">
                 <div class="menu-expand"><i class="fa fa-bars"></i> Menu</div>
                 <div class="menu-items">
@@ -68,6 +67,7 @@
             @RenderBody()
         </div>
     </div>
+    <activitystream activities="activities"/>
     <script type="text/javascript">
         $(document).on('touch click', '*[data-calendericon="true"]', function (e) {
             $('input[type="text"]', $(this).parent()).focus();

@@ -142,6 +142,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             // Convert collection into array, if any are available
             var crudOperationData = newLabors as CrudOperationData[] ?? newLabors.ToArray();
 
+            if (crudOperationData.Length > 1) {
+                crudOperationData = crudOperationData.Skip(crudOperationData.Length - 1).ToArray();
+            }
+            
+
             WsUtil.CloneArray(crudOperationData, wo, "LABTRANS", delegate(object integrationObject, CrudOperationData crudData) {
 
                 if (ReflectionUtil.IsNull(integrationObject, "LABTRANSID")) {
@@ -175,6 +180,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             // Convert collection into array, if any are available
             var crudOperationData = newMaterials as CrudOperationData[] ?? newMaterials.ToArray();
+
+            if (crudOperationData.Length > 1) {
+                crudOperationData = crudOperationData.Skip(crudOperationData.Length - 1).ToArray();
+            }
             
             WsUtil.CloneArray(crudOperationData, wo, "MATUSETRANS", delegate(object integrationObject, CrudOperationData crudData) {
                 
@@ -219,6 +228,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             // Convert collection into array, if any are available
             var crudOperationData = newTools as CrudOperationData[] ?? newTools.ToArray();
+
+            if (crudOperationData.Length > 1) {
+                crudOperationData = crudOperationData.Skip(crudOperationData.Length - 1).ToArray();
+            }
+            
 
             WsUtil.CloneArray(crudOperationData, wo, "TOOLTRANS", delegate(object integrationObject, CrudOperationData crudData) {
                 WsUtil.SetValueIfNull(integrationObject, "TOOLRATE", 0.00);

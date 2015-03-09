@@ -237,6 +237,20 @@ namespace softWrench.sW4.Util {
 
         #endregion
 
+        #region Notification Functionality
+
+        public static bool ActivityStreamFlag {
+            get
+            {
+                var flagStr = MetadataProvider.GlobalProperty("notifications.activityStream.enabled");
+                var flag = false;
+                Boolean.TryParse(flagStr, out flag);
+                return flag;
+            }
+        }
+
+        #endregion
+
         #region Attachments
 
         public static string[] AllowedFilesExtensions {

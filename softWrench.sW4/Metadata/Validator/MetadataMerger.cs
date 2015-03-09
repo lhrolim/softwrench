@@ -58,7 +58,7 @@ namespace softWrench.sW4.Metadata.Validator {
                 } else {
                     if (!overridenSchema.RedeclaringSchema) {
                         //if we´re not redeclaring, then we need to first add the original one and merge the customizations on top of it
-                        resultSchemas.Add(schema.Key, schema.Value);
+                    resultSchemas.Add(schema.Key, schema.Value);
                         SchemaMerger.MergeSchemas(schema.Value, overridenSchema, resultComponents);
                     } else {
                         //if redeclaring though, we need to ignore the old one and just insert the new one
@@ -91,10 +91,11 @@ namespace softWrench.sW4.Metadata.Validator {
             var idFieldName = overridenApplication.IdFieldName ?? souceAplication.IdFieldName;
             var userIdFieldName = overridenApplication.UserIdFieldName ?? souceAplication.UserIdFieldName;
             var service = overridenApplication.Service ?? souceAplication.Service;
+            var notifications = overridenApplication.Notifications ?? souceAplication.Notifications;
 
             return new CompleteApplicationMetadataDefinition(souceAplication.Id, souceAplication.ApplicationName,
                 title, entity, idFieldName, userIdFieldName,
-                overridenParameters, resultSchemas, souceAplication.DisplayableComponents.Union(overridenApplication.DisplayableComponents), service);
+                overridenParameters, resultSchemas, souceAplication.DisplayableComponents.Union(overridenApplication.DisplayableComponents), service, notifications);
 
         }
 

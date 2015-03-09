@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces
 {
@@ -7,7 +7,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces
 
         new String Label { get; set; }
 
-        string Qualifier { get;}
+        string Qualifier { get;}    
 
 
      
