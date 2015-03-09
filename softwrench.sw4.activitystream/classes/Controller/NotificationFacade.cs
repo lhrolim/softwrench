@@ -78,12 +78,13 @@ namespace softwrench.sw4.activitystream.classes.Controller {
         }
 
         public void UpdateNotificationStreams() {
-            var slicedMetadataEntities = MetadataProvider.GetSlicedMetadataNotificationEntities();
+            //Will be used in Phase 2 to dynamically generate the queries for the notification stream
+            /*var slicedMetadataEntities = MetadataProvider.GetSlicedMetadataNotificationEntities();
             var entity = slicedMetadataEntities[0].ApplicationName;
             var queryBuilder = new EntityQueryBuilder();
             var searchRequestDTO = new SearchRequestDto();
             searchRequestDTO.BuildProjection((ApplicationSchemaDefinition) slicedMetadataEntities[0].AppSchema);
-            var newQuery = queryBuilder.AllRows(slicedMetadataEntities[0], searchRequestDTO);
+            var newQuery = queryBuilder.AllRows(slicedMetadataEntities[0], searchRequestDTO);*/
 
             var time = DateTime.Now.FromServerToRightKind();
             var query = string.Format("select 'commlog' as application, null as targetschema,'communication' as label, 'fa-envelope-o' as icon ,CONVERT(varchar(10), commlogid) as id, c.commloguid as uid, " +
