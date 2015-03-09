@@ -97,8 +97,8 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                     where p.Alias == "createddate"
                     select p.Name).Single();
 
-                var createddateWhereClauseStr = String.Format("{0} > DATEADD(HOUR,-{1}, GETDATE())", createddateFieldAlias,
-                    HoursToPurge);
+                var createddateWhereClauseStr = String.Format("{0} > DATEADD(HOUR,-{1}, GETDATE()) and {0} <= '{2}'", createddateFieldAlias,
+                    HoursToPurge, currentTime);
                 searchRequestDTO.AppendWhereClause(createddateWhereClauseStr);
                 var newQuery = queryBuilder.AllRows(slicedEntity, searchRequestDTO);
                 EntityRepository entityRepo = new EntityRepository(null, MaxDAO);
