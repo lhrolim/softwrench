@@ -1,4 +1,5 @@
 ﻿using cts.commons.portable.Util;
+using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using System;
@@ -55,6 +56,10 @@ namespace softWrench.sW4.Util {
 
         public static DateTime FromUserToRightKind(this DateTime date, InMemoryUser user) {
             var kind = ApplicationConfiguration.IsISM() ? DateTimeKind.Utc : DateTimeKind.Local;
+            if (WsUtil.Is75()) {
+                kind = DateTimeKind.Unspecified;
+            }
+            date = DateTime.SpecifyKind(date, kind);
             if (kind.Equals(DateTimeKind.Utc)) {
                 return date.FromUserToUtc();
             }
@@ -62,7 +67,12 @@ namespace softWrench.sW4.Util {
         }
 
         public static DateTime FromServerToRightKind(this DateTime date) {
+
             var kind = ApplicationConfiguration.IsISM() ? DateTimeKind.Utc : DateTimeKind.Local;
+            if (WsUtil.Is75()) {
+                kind = DateTimeKind.Unspecified;
+            }
+            date = DateTime.SpecifyKind(date, kind);
             if (kind.Equals(DateTimeKind.Utc)) {
                 return FromServerToMaximo(date, 0);
             }
@@ -141,6 +151,8 @@ namespace softWrench.sW4.Util {
 
             // ClientTime + (ServerTime - ClientTime) == ServerTime
             date = date.AddMinutes(offset);
+
+
             return date;
         }
 
