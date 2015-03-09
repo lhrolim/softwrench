@@ -64,6 +64,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="hlagpluspcustomer" type="varchar" required="false" query="ref:pluspcustomer"/>
         <attribute name="numberdaysopen" type="varchar" required="false" query="ref:numberofdaysopen"/>
         <attribute name="hlagreportedby" type="varchar" required="false" query="ref:reportedbycustom"/>
+        <attribute name="inouttime" type="varchar" required="false" query="CASE WHEN !@internalpriority=1 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) &lt;=2 THEN 'INTIME' WHEN !@internalpriority=1 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) >2 THEN 'OUTTIME' WHEN !@internalpriority=2 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) &lt;=4  THEN 'INTIME' WHEN !@internalpriority=2 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) >4 THEN 'OUTTIME' WHEN !@internalpriority=3 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) &lt;=6  THEN 'INTIME' WHEN !@internalpriority=3 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) >6 THEN 'OUTTIME' WHEN !@internalpriority=4 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) &lt;=8  THEN 'INTIME' WHEN !@internalpriority=4 AND INT((CURRENT TIMESTAMP-!@REPORTDATE)/10000) >8 THEN 'OUTTIME' END" />
       </attributes>
       <relationships>
         <relationship to="worklog" qualifier="lastworklog">
@@ -814,7 +815,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Problem Abstract" attribute="description">
             <renderer type="default" params="minwidth=84px;maxwidth=84px;" />
           </field>
-          <field label="In Time / Out Time" attribute="#inouttime">
+          <field label="In Time / Out Time" attribute="inouttime">
             <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=84px;maxwidth=84px"/>
           </field>
         </schema>

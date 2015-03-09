@@ -628,6 +628,7 @@ DateDiff(DateInterval.Hour, Fields!LastActionDateTime.Value,Globals!ExecutionTim
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
@@ -853,7 +854,7 @@ DateDiff(DateInterval.Hour, Fields!LastActionDateTime.Value,Globals!ExecutionTim
           <rd:TypeName>System.Object</rd:TypeName>
         </Field>
         <Field Name="InTimeOutTime">
-          <DataField>#inouttime</DataField>
+          <DataField>inouttime</DataField>
           <rd:TypeName>System.Object</rd:TypeName>
         </Field>
         <Field Name="CurrentDateTime">
