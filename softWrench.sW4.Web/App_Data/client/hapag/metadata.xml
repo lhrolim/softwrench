@@ -626,7 +626,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="textarea"/>
             </field>
           </tab>
-          <composition relationship="attachment" label="Attachments">
+          <composition relationship="attachment" label="Attachments" printschema="detailPrint">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
           </composition>
           <commands>
@@ -1531,7 +1531,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </composition>
           <composition relationship="wfassignment" label="Approvals" hidden="true"/>
 
-          <composition relationship="attachment" label="Attachments">
+          <composition relationship="attachment" label="Attachments" printschema="detailPrint">
             <collectionproperties allowcreation="true"/>
           </composition>
 
@@ -2453,7 +2453,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="textarea"/>
             </field>
           </tab>
-          <composition relationship="attachment" label="Attachments">
+          <composition relationship="attachment" label="Attachments" printschema="detailPrint">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
           </composition>
 
