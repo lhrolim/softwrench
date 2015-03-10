@@ -36,8 +36,7 @@ namespace softwrench.sw4.activitystream.classes.Model {
             return new NotificationResponse(orderedNotifications, readCount);
         }
 
-        private List<Notification> HandleChildNotifications(List<Notification> notifications)
-        {
+        private List<Notification> HandleChildNotifications(List<Notification> notifications){
             notifications.RemoveAll(parent => notifications.Any(child => child.ParentUId == parent.UId && child.NotificationDate.Ticks.Equals(parent.NotificationDate.Ticks)));
 
             return notifications;
