@@ -875,6 +875,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="deps\XDesigner.RTF.dll" />
+    <Content Include="Util\timezonelist.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

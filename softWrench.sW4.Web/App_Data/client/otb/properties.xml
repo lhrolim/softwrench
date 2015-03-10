@@ -14,7 +14,7 @@
   <property key="defaultSiteId" value="BEDFORD"/>
   <property key="defaultStoreloc" value="CENTRAL"/>
   <property key="sourcemapping" value="maximo7.5"/>
-  <property key="maximoutc" value="-7"/>
+  <property key="maximoutc" value="US Mountain Standard Time"/>
   <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="false"/>

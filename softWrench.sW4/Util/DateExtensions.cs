@@ -1,5 +1,6 @@
 ﻿using cts.commons.portable.Util;
 using softWrench.sW4.Data.Persistence.WS.Internal;
+using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using System;
@@ -107,8 +108,12 @@ namespace softWrench.sW4.Util {
             if (overridenMaximoOffSet == null) {
                 var maximoTimezone = MetadataProvider.GlobalProperties.MaximoTimeZone();
                 if (maximoTimezone != null) {
-                    var maximoTimezoneinfo = TimeZoneInfo.FindSystemTimeZoneById(maximoTimezone);
-                    maximoOffset = maximoTimezoneinfo.GetUtcOffset(DateTime.UtcNow).TotalMinutes;
+                    try {
+                        var maximoTimezoneinfo = TimeZoneInfo.FindSystemTimeZoneById(maximoTimezone);
+                        maximoOffset = maximoTimezoneinfo.GetUtcOffset(DateTime.UtcNow).TotalMinutes;
+                    } catch (Exception e) {
+                        throw new MetadataException("wrong maximo utc property was set, review your properties.xml file");
+                    }
                 } else {
                     //if no property is present, let´s assume that both maximo and server are located under the same timezone
                     maximoOffset = Convert.ToInt32(TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes);
