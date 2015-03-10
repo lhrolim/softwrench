@@ -31,7 +31,7 @@ namespace softWrench.sW4.Metadata.Applications.Notification {
             [NotNull]List<IApplicationDisplayable> displayables)
         {
 
-            var notificationLabel = title ?? label;
+            var notificationLabel = label ?? title;
             var notification = new ApplicationNotificationDefinition(applicationName, notificationId, type, role, notificationLabel, icon, targetSchema, targetApplication, whereClause,
             displayables);
 
