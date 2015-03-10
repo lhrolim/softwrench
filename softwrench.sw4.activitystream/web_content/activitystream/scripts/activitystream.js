@@ -203,6 +203,7 @@ app.directive('activitystream', function(contextService) {
                     function (data) {
                         $scope.readCount = data.readCount;
                         $scope.activities = data.notifications;
+                        $scope.refreshRate = data.refreshRate;
                         $scope.statusAllHidden = $scope.getAllHidden();
 
                         //resize the scroll pane if needed

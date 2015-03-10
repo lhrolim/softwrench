@@ -22,8 +22,10 @@ namespace softwrench.sw4.activitystream.classes.Controller.Jobs {
             return "Job to populate the activity stream";
         }
 
-        public override string Cron() {
-            return "0 */2 * ? * *";
+        public override string Cron()
+        {
+            var refreshRate = ApplicationConfiguration.NotificationRefreshRate;
+            return string.Format("0 */{0} * ? * *", refreshRate);
         }
 
         public override void ExecuteJob() {
