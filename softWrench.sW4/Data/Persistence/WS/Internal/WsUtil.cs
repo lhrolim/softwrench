@@ -35,6 +35,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             return val;
         }
 
+        public static Boolean Is75() {
+            var target = MetadataProvider.TargetMapping();
+            return target.Contains("7.5");
+        }
+
         public static object GetRealValue(Object integrationObject, string propertyName) {
             object property = r.GetProperty(integrationObject, propertyName);
             if (property == null) {

@@ -530,24 +530,22 @@ namespace softWrench.sW4.Metadata.Parsing {
                 {
                     var xName = xElement.Name.LocalName;
 
-                    if (xName == XmlNotificationMetadataSchema.NotificationAttributeSummaryElement) {
-                        displayables.Add(new ApplicationFieldDefinition(applicationName, xName,
-                            xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeElementAttribute)
-                                .Value));
-                    }
-
-                    if (xName == XmlNotificationMetadataSchema.NotificationAttributeCreateDateElement) {
-                        displayables.Add(new ApplicationFieldDefinition(applicationName, xName,
-                            xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeElementAttribute)
-                                .Value));
+                    if (xName == XmlNotificationMetadataSchema.NotificationAttributeSummaryElement || 
+                        xName ==  XmlNotificationMetadataSchema.NotificationAttributeCreateDateElement || 
+                        xName == XmlNotificationMetadataSchema.NotificationAttributeUIdElement ||
+                        xName == XmlNotificationMetadataSchema.NotificationAttributeChangeByElement) {
+                        displayables.Add(new ApplicationFieldDefinition(applicationName, xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeElementAttribute)
+                                .Value,
+                                xName
+                            ));
                     }
 
                     if (xName == XmlNotificationMetadataSchema.NotificationParentAttributesElement)
                     {
                         foreach (var parentXElement in xElement.Elements()) {
-                            displayables.Add(new ApplicationFieldDefinition(applicationName, parentXElement.Name.LocalName,
+                            displayables.Add(new ApplicationFieldDefinition(applicationName,
                                 parentXElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeElementAttribute)
-                                    .Value));    
+                                    .Value, parentXElement.Name.LocalName));    
                         }
                     }
 

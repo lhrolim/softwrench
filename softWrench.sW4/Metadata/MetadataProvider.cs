@@ -144,8 +144,7 @@ namespace softWrench.sW4.Metadata {
                 select a).ToList<CompleteApplicationMetadataDefinition>();
 
             var resultList = new List<SlicedEntityMetadata>();
-            if (applicationsWithNotifications.Any())
-            {
+            if (applicationsWithNotifications.Any()) {
                 resultList.AddRange(from app in applicationsWithNotifications 
                                     let entityName = app.Entity 
                                     let entityMetadata = Entity(entityName) 

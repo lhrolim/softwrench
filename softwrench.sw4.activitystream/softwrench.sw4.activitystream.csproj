@@ -72,6 +72,7 @@
     <Compile Include="classes\Model\InMemoryNotificationStream.cs" />
     <Compile Include="classes\Controller\Jobs\NotificationStreamUpdateJob.cs" />
     <Compile Include="classes\Controller\NotificationFacade.cs" />
+    <Compile Include="classes\Util\ActivityStreamConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

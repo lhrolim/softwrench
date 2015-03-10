@@ -99,6 +99,8 @@ namespace softWrench.sW4.Util {
             get { return WsUtil.WsProvider().ToString().ToLower(); }
         }
 
+
+
         public static string WsUrl {
             get { return MetadataProvider.GlobalProperty("basewsURL", true); }
         }
@@ -302,6 +304,10 @@ namespace softWrench.sW4.Util {
         public static DBMS? _maximodbType = null;
 
         public static Boolean IsMif() {
+            return WsProvider.Equals("mif", StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        public static Boolean Is75Maximo() {
             return WsProvider.Equals("mif", StringComparison.CurrentCultureIgnoreCase);
         }
 
