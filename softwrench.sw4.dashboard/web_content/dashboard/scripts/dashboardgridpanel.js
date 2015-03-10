@@ -7,12 +7,12 @@ app.directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contex
     function doInit(scope) {
         scope.schema = {
             applicationName: scope.paneldatasource.panel.application,
-            schemaid: scope.paneldatasource.panel.schemaRef,
+            schemaId: scope.paneldatasource.panel.schemaRef,
             stereotype: 'list',
             properties: {},
             commandSchema:{}
         };
-        scope.application = scope.paneldatasource.application;
+        scope.application = scope.paneldatasource.panel.application;
         scope.fieldstodisplay = scope.paneldatasource.panel['appFields'];
         scope.datamap = {};
     }
