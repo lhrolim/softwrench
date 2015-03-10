@@ -2949,7 +2949,7 @@
 
         <schema id="detail" stereotype="compositiondetail">
           <field attribute="commlogid" hidden="true" />
-          <field attribute="createdate" label="Created Date/Time" default="@currentdatetime" hidden="true">
+          <field attribute="createdate" label="Created Date/Time" hidden="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
           <field attribute="orgobject" label="Origination" hidden="true"/>
