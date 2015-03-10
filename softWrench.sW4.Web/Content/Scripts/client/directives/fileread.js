@@ -9,6 +9,14 @@
                 var log = $log.getInstance('fileread#change');
                 log.debug('file change detected');
                 if (!submitService.isValidAttachment(this.value)) {
+                    if (!isIe9()) {
+                        changeEvent.currentTarget.value = "";
+                        scope.$apply(function () {
+                            scope.fileread = undefined;
+                            scope.path = undefined;
+                        });
+                    }
+
                     alert("Invalid file. Please choose another one.");
                     return;
                 }
@@ -30,20 +38,6 @@
                     scope.path = fileName;
 
                     var reader = new FileReader();
-
-                    //Getting the File extension.
-                    var temp = changeEvent.target.files[0].name.split(".").pop().toLowerCase();
-                    var validFileTypes = contextService.fetchFromContext('allowedfiles', true);
-                    if (validFileTypes.indexOf(temp) == -1) {
-                        changeEvent.currentTarget.value = "";
-                        alert("Invalid file. Choose another please");
-                        //Updating the model
-                        scope.$apply(function () {
-                            scope.fileread = undefined;
-                            scope.path = undefined;
-                        });
-                        return;
-                    }
                     reader.onload = function (loadEvent) {
                         scope.$apply(function () {
                             scope.fileread = loadEvent.target.result;
