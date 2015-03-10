@@ -64,7 +64,7 @@ namespace softWrench.sW4.Util {
             if (kind.Equals(DateTimeKind.Utc)) {
                 return date.FromUserToUtc();
             }
-            return date.ToServerTimezone(user);
+            return FromUserToMaximo(date, user);
         }
 
         public static DateTime FromServerToRightKind(this DateTime date) {
