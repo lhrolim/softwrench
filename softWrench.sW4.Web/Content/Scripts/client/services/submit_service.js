@@ -70,7 +70,7 @@ app.factory('submitService', function ($rootScope, fieldService,contextService) 
             var fileName = value.match(/[^\/\\]+$/);
             var validFileTypes = contextService.fetchFromContext('allowedfiles', true);
             var extensionIdx = value.lastIndexOf(".");
-            var extension = value.substring(extensionIdx + 1);
+            var extension = value.substring(extensionIdx + 1).toLowerCase();
             if ($.inArray(extension, validFileTypes) == -1) {
                 return false;
             }

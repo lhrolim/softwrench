@@ -144,16 +144,16 @@ app.directive('crudInputFields', function (contextService) {
                     var fileName = this.value.match(/[^\/\\]+$/);
                     var validFileTypes = contextService.fetchFromContext('allowedfiles', true);
                     var extensionIdx = this.value.lastIndexOf(".");
-                    var extension = this.value.substring(extensionIdx + 1);
-                    if ($.inArray(extension, validFileTypes) == -1) {
+                    var extension = this.value.substring(extensionIdx +1).toLowerCase();
+                    if($.inArray(extension, validFileTypes) == -1) {
+                        $('#uploadFile').attr("value", "");
                         if (isIe9()) {
                             //hacky around ie9 -- HAP-894
-                            $('#uploadFile').attr("value", "");
                             $(this).replaceWith($(this).clone(true));
                         } else {
                             $(this).val('');
                         }
-
+                       
                         return;
                     }
                     $('#uploadFile').attr("value", fileName);
