@@ -3186,6 +3186,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Created Date" attribute="createdate">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
           </field>
+          <field attribute="ownerid" hidden="true"/>
         </schema>
 
         <detail>
@@ -3226,8 +3227,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <list>
           <field attribute="description" />
           <field attribute="solutionid" />
+          <field attribute="solution" hidden="true" />
         </list>
         <detail title="FAQ" mode="output">
+          <field attribute="solution" hidden="true" />
           <field attribute="symptom_.ldtext" label="Symptom:"  >
             <renderer type="textarea"/>
           </field>
