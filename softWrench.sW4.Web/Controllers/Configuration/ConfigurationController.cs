@@ -1,4 +1,5 @@
-﻿using System.Web.Security;
+﻿using System.Linq;
+using System.Web.Security;
 using cts.commons.persistence;
 using cts.commons.persistence.Event;
 using cts.commons.web.Attributes;
@@ -15,6 +16,7 @@ using softWrench.sW4.Security;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Entities;
 using softWrench.sW4.Security.Services;
+using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sw4.Shared2.Metadata.Modules;
 using cts.commons.simpleinjector.Events;
@@ -68,11 +70,16 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         [HttpGet]
         public IGenericResponseResult WhereClauses() {
             var rootEntities = _cache.GetCache(ConfigTypes.WhereClauses);
+            var names = MetadataProvider.Applications().Select(a => a.ApplicationName);
+            var applications = names.Select(name => new GenericAssociationOption(name, name)).Cast<IAssociationOption>().ToList().OrderBy(a=> a.Label);
+//            applications.s
+
             var result = new ConfigurationScreenResult() {
                 Categories = rootEntities,
                 Modules = _cache.GetConfigModules(),
                 Profiles = SecurityFacade.GetInstance().FetchAllProfiles(false),
                 Type = ConfigTypes.WhereClauses,
+                Applications = applications,
                 Conditions = _dao.FindAll<Condition>(typeof(Condition))
             };
             return new GenericResponseResult<ConfigurationScreenResult>(result);
@@ -162,6 +169,8 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         class ConfigurationScreenResult {
             public IEnumerable<ModuleDefinition> Modules { get; set; }
             public ICollection<UserProfile> Profiles { get; set; }
+
+            public IOrderedEnumerable<IAssociationOption> Applications { get; set; }
 
             public SortedSet<CategoryDTO> Categories { get; set; }
 

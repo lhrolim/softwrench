@@ -162,7 +162,7 @@ app.factory('i18NService', function ($rootScope, contextService) {
         },
 
         get18nValue: function (key, defaultValue, paramArray) {
-            var isHeaderMenu = (key.indexOf("_headermenu") > -1) ? true : false;
+            var isHeaderMenu = (key!=null && key.indexOf("_headermenu") > -1) ? true : false;
             var unformatted = doGetValue(key, defaultValue, isHeaderMenu);
             if (paramArray == undefined) {
                 return unformatted;

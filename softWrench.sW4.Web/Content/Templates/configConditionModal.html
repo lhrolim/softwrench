@@ -2,80 +2,90 @@
      data-class="conditionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" class="close" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">{{title()}}</h4>
+            </div>
             <div class="modal-body">
                 <form class="form-horizontal">
 
-                    <div class="row">
-                        <label class="control-label col-md-5">
-                            <span class="requiredfieldmark">* </span>
-                            {{i18N('configuration.condition.alias','Alias')}}
-                        </label>
+                    <div class="form-group">
+                        <swlabel text="Alias" i18nkey="configuration.condition.alias" required="true" classes="col-md-5" helptext="Defines an user identifier to this condition" />
                         <div class="col-md-7">
                             <input class="form-control" ng-model="condition.alias" />
                         </div>
                     </div>
 
-                    <div class="row">
-                        <label class="control-label col-md-5">{{i18N('configuration.condition.global','Global')}}</label>
+                    <div class="form-group">
+                        <swlabel text="Global?" i18nkey="configuration.condition.global" classes="col-md-5" helptext="
+                                 If True this condition could be applied to any where clauses, regardless of the application.
+                                 Only certain fields are available under this mode." />
                         <div class="col-md-7">
                             <input type="checkbox" ng-model="condition.global" ng-change="changeGlobal()" />
                         </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <swlabel text="Metadata Id" i18nkey="configuration.condition.appContext.metadataid" classes="col-md-5" helptext="This is an optional identifier of the condition that could be used to refer to it later anywhere in the code" />
+                        <div class="col-md-7">
+                            <input class="form-control" ng-model="condition.appContext.metadataId" />
+                        </div>
+                    </div>
 
-
-                    <div class="row">
-                        <label class="control-label col-md-5">{{i18N('configuration.condition.siteId','SiteId')}}</label>
+                    <div class="form-group">
+                        <swlabel text="Site Id" i18nkey="configuration.condition.siteid" classes="col-md-5" helptext="Only users that have this siteid would have this whereclause applied" />
                         <div class="col-md-7">
                             <input class="form-control" ng-model="condition.siteId" />
                         </div>
                     </div>
-                    <div class="row">
-                        <label class="control-label col-md-5">{{i18N('configuration.condition.metadataId','Metadata Id')}}</label>
-                        <div class="col-md-7">
-                            <input class="form-control" ng-model="condition.metadataId" />
-                        </div>
-                    </div>
-                    
+                   
+
 
                     <div ng-show="!condition.global && type=='1'">
 
-                        <div class="row">
-                            <label class="control-label col-md-5">{{i18N('configuration.condition.mode','Schema')}}</label>
+                        <div class="form-group">
+                            <swlabel text="Schema" i18nkey="configuration.condition.schema" classes="col-md-5" helptext="Apply this whereclause only if the application is under a certain schema" />
                             <div class="col-md-7">
                                 <input class="form-control" ng-model="condition.appContext.schema" />
                             </div>
                         </div>
 
-                        <div class="row">
-                            <label class="control-label col-md-5">{{i18N('configuration.condition.mode','Mode')}}</label>
+<!--                        <div class="form-group">-->
+<!--                            <label class="control-label col-md-5">{{i18N('configuration.condition.mode','Mode')}}</label>-->
+<!--                            <div class="col-md-7">-->
+<!--                                <input class="form-control" ng-model="condition.appContext.mode" />-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <div class="form-group">
+                            <swlabel text="Parent Application" i18nkey="configuration.condition.parentapp" classes="col-md-5" 
+                                     helptext="Apply this whereclause only if this application is being used as a child relationship of the referred parrent application" />
                             <div class="col-md-7">
-                                <input class="form-control" ng-model="condition.appContext.mode" />
+                                <select ng-model="condition.appContext.currentapplication" ng-options="app.label for app in applications" id="applicationsautocmpmodal" class="form-control"
+                                        ng-change="gotocategory(app)"></select>
+
+<!--                                <input class="form-control" ng-model="condition.appContext.parentApplication" />-->
                             </div>
                         </div>
 
-                        <div class="row">
-                            <label class="control-label col-md-5">{{i18N('configuration.condition.parentApp','Parent Application')}}</label>
+                        <div class="form-group">
+                            <swlabel text="Parent Schema" i18nkey="configuration.condition.parentschema" classes="col-md-5"
+                                     helptext="Apply this whereclause only if this application is being used as a child relationship of the referred parrent application, with the given parent schema" />
                             <div class="col-md-7">
-                                <input class="form-control" ng-model="condition.appContext.parentApplication" />
+                                <input class="form-control" ng-model="condition.appContext.parentschema" ng-enabled="condition.appContext.parentApplication!=null" />
                             </div>
                         </div>
 
-                        <div class="row">
-                            <label class="control-label col-md-5">{{i18N('configuration.condition.parentschema','Parent Schema')}}</label>
-                            <div class="col-md-7">
-                                <input class="form-control" ng-model="condition.appContext.parentschema" />
-                            </div>
-                        </div>
+<!--                        <div class="form-group">-->
+<!--                            <label class="control-label col-md-5">{{i18N('configuration.condition.parentmode','Parent Mode')}}</label>-->
+<!--                            <div class="col-md-7">-->
+<!--                                <input class="form-control" ng-model="condition.appContext.parentmode" />-->
+<!--                            </div>-->
+<!--                        </div>-->
 
-                        <div class="row">
-                            <label class="control-label col-md-5">{{i18N('configuration.condition.parentmode','Parent Mode')}}</label>
-                            <div class="col-md-7">
-                                <input class="form-control" ng-model="condition.appContext.parentmode" />
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <label class="control-label col-md-5">{{i18N('configuration.condition.attribute','Attribute')}}</label>
+                        <div class="form-group">
+                            <swlabel text="Attribute" i18nkey="configuration.condition.attribute" classes="col-md-5"
+                                     helptext="Apply this whereclause only if the query relates to a given attribute on screen. EX: 2 different associations to assets, apply whereclause only in one of them" />
                             <div class="col-md-7">
                                 <input class="form-control" ng-model="condition.appContext.attribute" />
                             </div>
@@ -91,10 +101,10 @@
                     <table style="width: 100%;">
                         <tr>
                             <td style="text-align: center; vertical-align: middle;">
-                                <button type="button" class="btn pull-left commandButton" ng-click="saveCondition()">
+                                <button type="button" class="btn btn-primary pull-left commandButton" ng-click="saveCondition()">
                                     <i style="margin-right: 0.5em" class="fa fa-floppy-o"></i>{{i18N('general.save','Save')}}
                                 </button>
-                                <button type="button" class="btn pull-left commandButton" data-dismiss="modal">{{i18N('general.cancel','Cancel')}}</button>
+                                <button type="button" class="btn btn-primary pull-left commandButton" data-dismiss="modal">{{i18N('general.cancel','Cancel')}}</button>
                             </td>
                         </tr>
 
