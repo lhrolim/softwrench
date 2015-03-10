@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="web_content\webcommons\scripts\softwrench\components\samelinepickers.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\aa_dateutils.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\aa_stringutils.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\aa_utils.js" />
@@ -138,6 +139,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\util\clientawareserviceprovider.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\log_enhacer.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\responsive.js" />
+    <Content Include="web_content\webcommons\templates\swlabel.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

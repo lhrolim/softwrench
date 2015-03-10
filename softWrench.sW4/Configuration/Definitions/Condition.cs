@@ -32,6 +32,9 @@ namespace softWrench.sW4.Configuration.Definitions {
         [Property(TypeType = typeof(BooleanToIntUserType))]
         public Boolean Global { get; set; }
 
+        /// <summary>
+        /// this points to the category fullkey
+        /// </summary>
         [Property]
         public string FullKey { get; set; }
 

@@ -25,6 +25,10 @@
             padding-top: 3px;
         }
 
+        .container.mobile .context .group.pagination a {
+            padding: 8px 6px;
+        }
+
         .container .context .group.total {
             margin-top: 10px;
         }

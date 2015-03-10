@@ -241,5 +241,9 @@ input.ng-dirty.ng-invalid {
 .envelopeYellow {
     color: rgb(239, 198, 99);
 }
+
+.fa-question-circle {
+  color: #3276b1;
+}
 /*JV - 10/08 - SWWEB-472 - Add yellow color CSS that can be used for icons*/
 

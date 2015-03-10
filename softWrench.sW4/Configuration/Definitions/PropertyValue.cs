@@ -68,6 +68,9 @@ namespace softWrench.sW4.Configuration.Definitions {
             }
         }
 
+        public virtual int? ConditionId {
+            get { return Condition == null ? null : Condition.Id; }
+        }
 
         public virtual string StringValue {
             get {
@@ -83,9 +86,9 @@ namespace softWrench.sW4.Configuration.Definitions {
         }
 
         public virtual ConditionMatchResult MatchesConditions(ContextHolder context) {
-            var result = new ConditionMatchResult(Module,UserProfile);
+            var result = new ConditionMatchResult(Module, UserProfile);
             result.AppendModule(Module, context.Module);
-            result.AppendProfile(UserProfile,context.UserProfiles);
+            result.AppendProfile(UserProfile, context.UserProfiles);
             context.MatchesCondition(Condition, result);
             return result;
         }
