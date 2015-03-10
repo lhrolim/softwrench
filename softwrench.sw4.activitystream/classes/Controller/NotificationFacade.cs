@@ -216,8 +216,8 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             var streamToUpdate = NotificationStreams["allRole"];
             streamToUpdate.PurgeNotificationsFromStream(24);
         }
-
-        public List<Notification> GetNotificationStream(string role) {
+        
+        public NotificationResponse GetNotificationStream(string role) {
             return NotificationStreams[role].GetNotifications();
         }
     }

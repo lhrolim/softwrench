@@ -19,7 +19,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 
 
         [HttpGet]
-        public List<Notification> GetNotifications(string role) {
+        public NotificationResponse GetNotifications(string role) {
             return _notificationFacade.GetNotificationStream(role);
         }
 

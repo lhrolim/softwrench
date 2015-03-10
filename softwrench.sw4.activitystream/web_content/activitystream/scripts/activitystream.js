@@ -200,8 +200,9 @@ app.directive('activitystream', function(contextService) {
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.get(rawUrl).success(
-                    function(data) {
-                        $scope.activities = data;
+                    function (data) {
+                        $scope.readCount = data.readCount;
+                        $scope.activities = data.notifications;
                         $scope.statusAllHidden = $scope.getAllHidden();
 
                         //resize the scroll pane if needed
