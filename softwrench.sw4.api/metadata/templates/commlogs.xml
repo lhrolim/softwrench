@@ -72,7 +72,7 @@
         
         <!-- if role is not specified, by default application.notifications will be the role-->
       <notifications>
-        <notification label="CL" targetSchema="editdetail" targetApplication="servicerequest">
+        <notification label="communication" targetSchema="editdetail" targetApplication="servicerequest">
           <attributes>
             <uid attribute="commloguid"/>
             <summary attribute="subject"/>

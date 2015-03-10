@@ -2832,7 +2832,7 @@
       </properties>
 
       <notifications>
-        <notification label="CL" targetSchema="editdetail" targetApplication="servicerequest">
+        <notification label="communication" targetSchema="editdetail" targetApplication="servicerequest">
           <attributes>
             <uid attribute="commloguid"/>
             <summary attribute="subject"/>
@@ -2848,8 +2848,6 @@
             </extraAttributes>-->
           </attributes>
         </notification>
-        
-
       </notifications>
       <schemas>
         <schema id="list" stereotype="compositionlist">
