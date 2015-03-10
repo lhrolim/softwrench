@@ -179,22 +179,12 @@ function ConfigController($scope, $http,$timeout, i18NService, alertService) {
 
     };
 
-    $scope.$on("sw_conditionsaved", function(event, data) {
-        var conditions = $scope.getConditions($scope.currentCategory).values;
-        var idx = -1;
-        for (var i = 0; i < conditions.length; i++) {
-            if (conditions[i].id == data.id) {
-                idx = i;
-            }
-        }
-        if (idx == -1) {
-            conditions.push(data);
-        } else {
-            conditions[idx] = data;
-        }
+    $scope.$on("sw_conditionsaved", function (event, data) {
+        var currentcategory = $scope.currentCategory;
+        currentcategory.conditionsToShow = null;
+        insertOrUpdateArray($scope.getConditions(currentcategory).values, data);
+        insertOrUpdateArray($scope.allConditions, data);
         $scope.currentcondition = data;
-
-        
     });
 
     $scope.restoreDefault = function (definition) {
@@ -383,8 +373,11 @@ function ConfigController($scope, $http,$timeout, i18NService, alertService) {
         $http.put(url("/api/generic/Configuration/Put"), jsonString)
             .success(function (data) {
                 $scope.categoryData = data.resultObject;
+//                $scope.categoryData[0].condition = currentCategory.condition;
                 $scope.currentCategory = navigateToCategory($scope.categoryData, currentCategory.fullKey);
-            });
+                $scope.currentCategory.condition = currentCategory.condition;
+                $scope.currentCategory.conditionsToShow = null;
+        });
     };
 
     $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent) {
