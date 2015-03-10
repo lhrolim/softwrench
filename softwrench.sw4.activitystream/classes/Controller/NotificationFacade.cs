@@ -84,67 +84,72 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             var currentTime = DateTime.Now.FromServerToRightKind();
 
             var streamToUpdate = NotificationStreams["allRole"];
-            foreach (var slicedEntity in slicedMetadataEntities) {
+            //foreach (var slicedEntity in slicedMetadataEntities) {
                 
-                var queryBuilder = new EntityQueryBuilder();
-                var searchRequestDTO = new SearchRequestDto();
-                foreach (var field in slicedEntity.AppSchema.Fields) {
-                    searchRequestDTO.AppendProjectionField(new ProjectionField(field.Label, field.Attribute));
-                }
-                searchRequestDTO.AppendProjectionField(new ProjectionField(slicedEntity.IdFieldName, slicedEntity.IdFieldName));
-                searchRequestDTO.AppendProjectionField(new ProjectionField("rowstamp", "rowstamp"));
-                var createddateFieldAlias = (from p in searchRequestDTO.ProjectionFields
-                    where p.Alias == "createddate"
-                    select p.Name).Single();
+            //    var queryBuilder = new EntityQueryBuilder();
+            //    var searchRequestDTO = new SearchRequestDto();
+            //    foreach (var field in slicedEntity.AppSchema.Fields) {
+            //        searchRequestDTO.AppendProjectionField(new ProjectionField(field.Label, field.Attribute));
+            //    }
+            //    searchRequestDTO.AppendProjectionField(new ProjectionField(slicedEntity.IdFieldName, slicedEntity.IdFieldName));
+            //    searchRequestDTO.AppendProjectionField(new ProjectionField("rowstamp", "rowstamp"));
+            //    var createddateFieldAlias = (from p in searchRequestDTO.ProjectionFields
+            //        where p.Alias == "createddate"
+            //        select p.Name).Single();
 
-                var createddateWhereClauseStr = String.Format("{0} > DATEADD(HOUR,-{1}, GETDATE()) and {0} <= '{2}'", createddateFieldAlias,
-                    HoursToPurge, currentTime);
-                searchRequestDTO.AppendWhereClause(createddateWhereClauseStr);
-                var newQuery = queryBuilder.AllRows(slicedEntity, searchRequestDTO);
-                EntityRepository entityRepo = new EntityRepository(null, MaxDAO);
-                var resultList = entityRepo.Get(slicedEntity, searchRequestDTO);
+            //    var createddateWhereClauseStr = String.Format("{0} > DATEADD(HOUR,-{1}, GETDATE()) and {0} <= '{2}'", createddateFieldAlias,
+            //        HoursToPurge, currentTime);
+            //    searchRequestDTO.AppendWhereClause(createddateWhereClauseStr);
+            //    var newQuery = queryBuilder.AllRows(slicedEntity, searchRequestDTO);
+            //    EntityRepository entityRepo = new EntityRepository(null, MaxDAO);
+            //    var resultList = entityRepo.Get(slicedEntity, searchRequestDTO);
 
-                foreach (var result in resultList) {
-                    var notificationSchema = (ApplicationNotificationDefinition)slicedEntity.AppSchema;
-                    var application = notificationSchema.TargetApplication;
-                    var targetschema = notificationSchema.TargetSchema;
-                    var id = result.Attributes[slicedEntity.IdFieldName].ToString();
-                    var label = notificationSchema.Label;
-                    var icon = notificationSchema.Icon;
+            //    foreach (var result in resultList) {
+            //        var notificationSchema = (ApplicationNotificationDefinition)slicedEntity.AppSchema;
+            //        var application = notificationSchema.TargetApplication;
+            //        var targetschema = notificationSchema.TargetSchema;
+            //        var id = result.Attributes[slicedEntity.IdFieldName].ToString();
+            //        var label = notificationSchema.Label;
+            //        var icon = notificationSchema.Icon;
 
-                    long uId;
-                    var isInt = Int64.TryParse(result.Attributes["uid"].ToString(), out uId);
+            //        long uId;
+            //        var isInt = Int64.TryParse(result.Attributes["uid"].ToString(), out uId);
 
-                    var flag = "changed";
-                    if (Counter[application] < uId) {
-                        flag = "created";
-                        Counter[application] = uId;
-                    }
-                    var parentid = result.Attributes["parentid"].ToString();
-                    long parentuid;
-                    Int64.TryParse(result.Attributes["parentuid"].ToString(), out parentuid);
+            //        var flag = "changed";
+            //        if (Counter[application] < uId) {
+            //            flag = "created";
+            //            Counter[application] = uId;
+            //        }
+            //        var parentid = result.Attributes["parentid"].ToString();
+            //        long parentuid;
+            //        Int64.TryParse(result.Attributes["parentuid"].ToString(), out parentuid);
 
-                    var parentapplication = result.Attributes["application"].ToString();
-                    string parentlabel = null;
-                    if (parentapplication == "servicerequest") {
-                        parentlabel = "service request";
-                    } else if (parentapplication == "WORKORDER") {
-                        parentlabel = "work order";
-                    } else if (parentapplication == "INCIDENT") {
-                        parentlabel = "incident";
-                    }
-                    var summary = result.Attributes["summary"].ToString();
-                    var changeby = result.Attributes["changeby"].ToString();
+            //        var parentapplication = result.Attributes["application"].ToString();
+            //        string parentlabel = null;
+            //        if (parentapplication == "servicerequest") {
+            //            parentlabel = "service request";
+            //        } else if (parentapplication == "WORKORDER") {
+            //            parentlabel = "work order";
+            //        } else if (parentapplication == "INCIDENT") {
+            //            parentlabel = "incident";
+            //        }
+            //        var summary = result.Attributes["summary"].ToString();
+            //        var changeby = result.Attributes["changeby"].ToString();
 
-                    var changedate = DateTime.Parse(result.Attributes["createddate"].ToString());
-                    var rowstamp = Convert.ToInt64(result.Attributes["rowstamp"]);
-                    var notification = new Notification(application, targetschema, label, icon, id, uId, parentid, parentuid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp, flag);
-                    streamToUpdate.InsertNotificationIntoStream(notification);
-                }
-            }
+            //        var changedate = DateTime.Parse(result.Attributes["createddate"].ToString());
+            //        var rowstamp = Convert.ToInt64(result.Attributes["rowstamp"]);
+            //        var notification = new Notification(application, targetschema, label, icon, id, uId, parentid, parentuid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp, flag);
+            //        streamToUpdate.InsertNotificationIntoStream(notification);
+            //    }
+            //}
 
             
             var hardcodedQuery = string.Format(
+                                      "select 'commlog' as application, null as targetschema,'communication' as label, 'fa-envelope-o' as icon ,CONVERT(varchar(10), commlogid) as id, c.commloguid as uid, " +
+                                      "t.ticketid as parentid, c.ownerid as parentuid, CASE c.ownertable WHEN 'SR' THEN 'servicerequest' ELSE c.ownertable END as parentapplication, c.subject as summary, " +
+                                      "c.createby as changeby, c.createdate as changedate, CONVERT(bigint, c.rowstamp) as rowstamp from commlog c " +
+                                      "left join ticket t on t.ticketuid = c.ownerid " +
+                                      "where createdate >  DATEADD(HOUR,-{0},GETDATE()) and createdate < '{1}' union " + 
                                       "select 'worklog' as application, null as targetschema, 'work log' as label, 'fa fa-wrench' as icon, CONVERT(varchar(10), l.worklogid) as id, CONVERT(varchar(10), l.worklogid) as uid, l.recordkey as parentid, t.ticketuid as parentuid, " +
                                       "CASE l.class WHEN 'SR' THEN 'servicerequest' ELSE l.class END AS parentapplication, l.description as summary, " +
                                       "l.createby as changeby, l.modifydate as changedate, CONVERT(bigint, l.rowstamp) as rowstamp from worklog l " +
