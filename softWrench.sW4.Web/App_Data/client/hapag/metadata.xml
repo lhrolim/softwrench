@@ -3247,10 +3247,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <list stereotype="compositionlist">
           <field  attribute="relatedreckey" label="Related Record Key" />
           <field  attribute="relatedrecclass" label="Related Record Class" />
+          <field  attribute="recordkey" label="" hidden="true" />
         </list>
         <detail stereotype="compositiondetail">
           <field  attribute="relatedreckey" label="Related Record Key" />
           <field  attribute="relatedrecclass" label="Related Record Class" />
+          <field  attribute="recordkey" label="" hidden="true" />
         </detail>
       </schemas>
     </application>
