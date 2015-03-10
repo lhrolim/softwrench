@@ -130,7 +130,8 @@ app.directive('crudInputFields', function (contextService) {
                 if ($.inArray(extension, validFileTypes) == -1) {
                     if (isIe9()) {
                         //hacky around ie9 -- HAP-894
-                        $(this).replaceWith($(this)).clone(true);
+                        $('#uploadFile').attr("value", "");
+                        $(this).replaceWith($(this).clone(true));
                     } else {
                         $(this).val('');
                     }
