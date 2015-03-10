@@ -13,6 +13,8 @@ app.directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contex
             commandSchema:{}
         };
         scope.application = scope.paneldatasource.panel.application;
+        // TODO: We'll need to define an unique name for it. 
+        scope.metadataid = scope.paneldatasource.panel.alias || null;
         scope.fieldstodisplay = scope.paneldatasource.panel['appFields'];
         scope.datamap = {};
     }
@@ -34,6 +36,7 @@ app.directive('dashboardgridpanel', function ($timeout, $log, $rootScope, contex
             doInit($scope);
             searchService.refreshGrid({}, {
                 panelid: $scope.paneldatasource.id,
+                metadataid: $scope.metadataid,
                 pageSize: $scope.paneldatasource.panel['limit'],
                 searchSort: $scope.paneldatasource.panel['defaultSortField'],
                 fieldstodisplay: $scope.paneldatasource.panel['appFields'],

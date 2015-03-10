@@ -370,7 +370,8 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             contextService.insertIntoContext(key, {
                 searchData: searchData,
                 extraparameters: extraparameters,
-                panelid: extraparameters.panelid
+                panelid: extraparameters.panelid,
+                metadataid: extraparameters.metadataid
             }, true);
             $rootScope.$broadcast("sw_refreshgrid", searchData, extraparameters);
         },
@@ -442,7 +443,16 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             var queryString = $.param(restParameters);
             var urlToUse = url("/api/Data/{0}?{1}".format(application, queryString));
             log.info("invoking url {0}".format(urlToUse));
-            return $http.get(urlToUse);
+
+            if (extraParameters.metadataid != null) {
+                return $http.get(urlToUse, {
+                    headers: {
+                        currentmetadata: extraParameters.metadataid
+                    }
+                });
+            } else {
+                return $http.get(urlToUse); 
+            }
         },
 
         toggleAdvancedFilterMode: function (setToBasicMode) {

@@ -272,6 +272,7 @@ app.directive('crudList', function (contextService) {
                 contextService.deleteFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid:""));
                 $scope.paginationData = $scope.paginationData || {};
                 $scope.searchData = $scope.searchData || {};
+                $scope.metadataid = extraparameters.metadataid;
 
                 var pagetogo = extraparameters.pageNumber ? extraparameters.pageNumber : $scope.paginationData.pageNumber;
                 var pageSize = extraparameters.pageSize ? extraparameters.pageSize : $scope.paginationData.pageSize;
@@ -357,7 +358,8 @@ app.directive('crudList', function (contextService) {
                 }
 
                 searchService.searchWithData($scope.schema.applicationName, $scope.searchData, listSchema, {
-                    searchDTO: parameters.search
+                    searchDTO: parameters.search,
+                    metadataid: $scope.metadataid
                 });
 
             };
@@ -415,7 +417,8 @@ app.directive('crudList', function (contextService) {
                 {
                     searchDTO: searchDTO,
                     printMode: printMode,
-                    schemaFieldsToDisplay: $scope.fieldstodisplay
+                    schemaFieldsToDisplay: $scope.fieldstodisplay,
+                    metadataid: $scope.metadataid
                 });
 
                 searchPromise.success(function (data) {

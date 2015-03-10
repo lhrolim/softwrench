@@ -6,8 +6,8 @@ app.config(['$httpProvider', function ($httpProvider) {
         var started = function (config) {
             lockCommandBars();
             lockTabs();
-            config.headers['currentmodule'] = contextService.retrieveFromContext('currentmodule');
-            config.headers['currentmetadata'] = contextService.retrieveFromContext('currentmetadata');
+            config.headers['currentmodule'] = config.headers['currentmodule'] || contextService.retrieveFromContext('currentmodule');
+            config.headers['currentmetadata'] = config.headers['currentmetadata'] || contextService.retrieveFromContext('currentmetadata');
             config.headers['mockerror'] = sessionStorage['mockerror'];
             var log = $log.getInstance('sw4.ajaxint#started');
             if (config.url.indexOf("/Content/") == -1) {
