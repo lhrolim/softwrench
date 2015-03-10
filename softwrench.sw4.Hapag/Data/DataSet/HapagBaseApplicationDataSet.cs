@@ -12,8 +12,10 @@ using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NHibernate.Linq;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagBaseApplicationDataSet : BaseApplicationDataSet {
@@ -172,12 +174,25 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
 //            var applicationsToIterate = _applications.Where(a => !a.EqualsIc(originalClass));
             var sb = new StringBuilder();
-
-            sb.AppendFormat("((worklog.recordkey = '{0}' ) AND ( worklog.class = '{1}' )) ",ticketId, originalClass);
-            foreach (var application in _applications) {
-                sb.AppendFormat(@"
+            if (ticketId is ICollection){
+                ticketId = String.Join("','", ticketId.As<List<String>>());
+                sb.AppendFormat("((worklog.recordkey in ('{0}') ) AND ( worklog.class = '{1}' )) ", ticketId,
+                    originalClass);
+                foreach (var application in _applications){
+                    sb.AppendFormat(@"
                 or (worklog.recordkey in (select relatedrecord.relatedreckey as relatedreckey 
-                from RELATEDRECORD as relatedrecord  where relatedrecord.recordkey = '{0}'  AND  relatedrecord.class = '{1}' AND RELATEDRECCLASS = '{2}' and relatetype in ('FOLLOWUP','ORIGINATOR')) and worklog.class = '{2}')",ticketId, originalClass, application);
+                from RELATEDRECORD as relatedrecord  where relatedrecord.recordkey in ('{0}')  AND  relatedrecord.class = '{1}' AND RELATEDRECCLASS = '{2}' and relatetype in ('FOLLOWUP','ORIGINATOR')) and worklog.class = '{2}')",
+                        ticketId, originalClass, application);
+                }
+            } else{
+                sb.AppendFormat("((worklog.recordkey = '{0}' ) AND ( worklog.class = '{1}' )) ", ticketId,
+                    originalClass);
+                foreach (var application in _applications){
+                    sb.AppendFormat(@"
+                or (worklog.recordkey in (select relatedrecord.relatedreckey as relatedreckey 
+                from RELATEDRECORD as relatedrecord  where relatedrecord.recordkey = '{0}'  AND  relatedrecord.class = '{1}' AND RELATEDRECCLASS = '{2}' and relatetype in ('FOLLOWUP','ORIGINATOR')) and worklog.class = '{2}')",
+                        ticketId, originalClass, application);
+                }
             }
             dto.WhereClause = sb.ToString();
 
