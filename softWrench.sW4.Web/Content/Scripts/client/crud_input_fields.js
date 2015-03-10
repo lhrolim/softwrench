@@ -151,7 +151,7 @@ app.directive('crudInputFields', function (contextService) {
                             //hacky around ie9 -- HAP-894
                             $(this).replaceWith($(this).clone(true));
                         } else {
-                            $(this).val('');
+                            $('#uploadFile').val('');
                         }
                        
                         return;

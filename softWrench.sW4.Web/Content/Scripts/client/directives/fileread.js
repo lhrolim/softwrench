@@ -33,6 +33,7 @@
 
                     //Getting the File extension.
                     var temp = changeEvent.target.files[0].name.split(".").pop().toLowerCase();
+                    var validFileTypes = contextService.fetchFromContext('allowedfiles', true);
                     if (validFileTypes.indexOf(temp) == -1) {
                         changeEvent.currentTarget.value = "";
                         alert("Invalid file. Choose another please");
