@@ -106,8 +106,13 @@ namespace softWrench.sW4.Util {
 
             if (overridenMaximoOffSet == null) {
                 var maximoTimezone = MetadataProvider.GlobalProperties.MaximoTimeZone();
-                TimeZoneInfo maximoTimezoneinfo = TimeZoneInfo.FindSystemTimeZoneById(maximoTimezone);
-                maximoOffset = maximoTimezoneinfo.GetUtcOffset(DateTime.UtcNow).TotalMinutes;
+                if (maximoTimezone != null) {
+                    var maximoTimezoneinfo = TimeZoneInfo.FindSystemTimeZoneById(maximoTimezone);
+                    maximoOffset = maximoTimezoneinfo.GetUtcOffset(DateTime.UtcNow).TotalMinutes;
+                } else {
+                    //if no property is present, let´s assume that both maximo and server are located under the same timezone
+                    maximoOffset = Convert.ToInt32(TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes);
+                }
             } else {
                 //for testing purposes, making it easier to mock the value that would be present on properties.xml
                 maximoOffset = overridenMaximoOffSet.Value * 60;
