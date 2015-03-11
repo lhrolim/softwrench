@@ -5,9 +5,14 @@ app.directive('printsectionrendered', function ($timeout, $log) {
         restrict: 'A',
         link: function (scope, element, attr) {
             if (scope.$last === true) {
-                $timeout(function () {
-                    scope.$emit('sw_printsectionrendered');
+                $log.getInstance("printrendered#event").debug("Print Rendered event call");
+                var eventref =scope.$on("sw_bodyrenderedevent", function(key, value) {
+                    $timeout(function() {
+                        scope.$emit('sw_printsectionrendered');
+                        scope.$$listeners['sw_printsectionrendered'] = null;
+                    }, 0, false);
                 });
+
             }
         }
     };
