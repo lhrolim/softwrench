@@ -100,6 +100,11 @@ namespace softWrench.sW4.Util {
         internal static DateTime UserMaximoConversion(DateTime date, InMemoryUser user, ConversionKind fromUserToMaximo, int? maximoOffset = null) {
             if (user == null || !user.TimezoneOffset.HasValue) {
                 //if the user has no timezone there´s really nothing that we can do --> just return the date
+                if (user != null)
+                {
+                    //If the user is present but is missing their time zone
+                    Log.Debug(string.Format("Missing user time zone for user {0}", user.MaximoPersonId));
+                }
                 return date;
             }
             return MaximoConversion(date, user.TimezoneOffset.Value, fromUserToMaximo, maximoOffset);
