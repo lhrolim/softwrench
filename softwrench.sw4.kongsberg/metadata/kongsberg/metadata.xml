@@ -1508,9 +1508,16 @@
           <field attribute="siteid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="class" hidden="true"/>
-          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" default="NEW">
-            <renderer type="lookup" />
-          </association>
+          <optionfield attribute="status" label="Status" requiredexpression="true" default="NEW">
+            <renderer type="combo"/>
+            <option label="Closed" value="CLOSE"/>
+            <option label="In Progress" value="INPROG"/>
+            <option label="New" value="NEW"/>
+            <option label="Pending" value="PENDING"/>
+            <option label="Queued" value="QUEUED"/>
+            <option label="Resolved" value="RESOLVED"/>
+            <option label="SLA Hold" value="SLAHOLD"/>
+          </optionfield>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
@@ -1618,9 +1625,16 @@
           <field attribute="siteid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="class" hidden="true"/>
-          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" >
-            <renderer type="lookup" />
-          </association>
+          <optionfield attribute="status" label="Status" requiredexpression="true" default="NEW">
+            <renderer type="combo"/>
+            <option label="Closed" value="CLOSE"/>
+            <option label="In Progress" value="INPROG"/>
+            <option label="New" value="NEW"/>
+            <option label="Pending" value="PENDING"/>
+            <option label="Queued" value="QUEUED"/>
+            <option label="Resolved" value="RESOLVED"/>
+            <option label="SLA Hold" value="SLAHOLD"/>
+          </optionfield>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
