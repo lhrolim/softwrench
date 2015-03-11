@@ -84,84 +84,84 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             var currentTime = DateTime.Now.FromServerToRightKind();
 
             var streamToUpdate = NotificationStreams["allRole"];
-            foreach (var slicedEntity in slicedMetadataEntities) {
+            //foreach (var slicedEntity in slicedMetadataEntities) {
 
-                var searchRequestDTO = new SearchRequestDto();
-                foreach (var field in slicedEntity.AppSchema.Fields) {
-                    searchRequestDTO.AppendProjectionField(new ProjectionField(field.Label, field.Attribute));
-                }
-                searchRequestDTO.AppendProjectionField(new ProjectionField(slicedEntity.IdFieldName, slicedEntity.IdFieldName));
+            //    var searchRequestDTO = new SearchRequestDto();
+            //    foreach (var field in slicedEntity.AppSchema.Fields) {
+            //        searchRequestDTO.AppendProjectionField(new ProjectionField(field.Label, field.Attribute));
+            //    }
+            //    searchRequestDTO.AppendProjectionField(new ProjectionField(slicedEntity.IdFieldName, slicedEntity.IdFieldName));
                 
-                searchRequestDTO.AppendProjectionField(new ProjectionField("rowstamp", "rowstamp"));
-                var createddateFieldAlias = (from p in searchRequestDTO.ProjectionFields
-                                             where p.Alias == "createddate"
-                                             select p.Name).Single();
-                var createddateField = slicedEntity.Name + "." + createddateFieldAlias;
+            //    searchRequestDTO.AppendProjectionField(new ProjectionField("rowstamp", "rowstamp"));
+            //    var createddateFieldAlias = (from p in searchRequestDTO.ProjectionFields
+            //                                 where p.Alias == "createddate"
+            //                                 select p.Name).Single();
+            //    var createddateField = slicedEntity.Name + "." + createddateFieldAlias;
 
-                var createddateWhereClauseStr = String.Format("{0} > DATEADD(HOUR,-{1}, GETDATE()) and {0} <= '{2}'", createddateField,
-                    HoursToPurge, currentTime);
-                searchRequestDTO.AppendWhereClause(createddateWhereClauseStr);
-                EntityRepository entityRepo = new EntityRepository(null, MaxDAO);
-                var resultList = entityRepo.Get(slicedEntity, searchRequestDTO);
+            //    var createddateWhereClauseStr = String.Format("{0} > DATEADD(HOUR,-{1}, GETDATE()) and {0} <= '{2}'", createddateField,
+            //        HoursToPurge, currentTime);
+            //    searchRequestDTO.AppendWhereClause(createddateWhereClauseStr);
+            //    EntityRepository entityRepo = new EntityRepository(null, MaxDAO);
+            //    var resultList = entityRepo.Get(slicedEntity, searchRequestDTO);
 
-                foreach (var result in resultList) {
-                    var notificationSchema = (ApplicationNotificationDefinition)slicedEntity.AppSchema;
-                    var application = notificationSchema.TargetApplication;
-                    var targetschema = notificationSchema.TargetSchema;
-                    var id = result.Attributes[slicedEntity.IdFieldName].ToString();
-                    var label = notificationSchema.Label;
-                    var icon = notificationSchema.Icon;
+            //    foreach (var result in resultList) {
+            //        var notificationSchema = (ApplicationNotificationDefinition)slicedEntity.AppSchema;
+            //        var application = notificationSchema.TargetApplication;
+            //        var targetschema = notificationSchema.TargetSchema;
+            //        var id = result.Attributes[slicedEntity.IdFieldName].ToString();
+            //        var label = notificationSchema.Label;
+            //        var icon = notificationSchema.Icon;
 
-                    long uId;
-                    Int64.TryParse(result.Attributes["uid"].ToString(), out uId);
+            //        long uId;
+            //        Int64.TryParse(result.Attributes["uid"].ToString(), out uId);
 
-                    var flag = "changed";
-                    if (Counter[application] < uId) {
-                        flag = "created";
-                        Counter[application] = uId;
-                    }
+            //        var flag = "changed";
+            //        if (Counter[application] < uId) {
+            //            flag = "created";
+            //            Counter[application] = uId;
+            //        }
 
-                    string parentid = null;
-                    if (result.Attributes.ContainsKey("parentid")) {
-                        parentid = result.Attributes["parentid"].ToString();    
-                    }
+            //        string parentid = null;
+            //        if (result.Attributes.ContainsKey("parentid")) {
+            //            parentid = result.Attributes["parentid"].ToString();    
+            //        }
                     
-                    long parentuid = -1;
-                    if (result.Attributes.ContainsKey("parentuid")) {
-                        Int64.TryParse(result.Attributes["parentuid"].ToString(), out parentuid);    
-                    }
+            //        long parentuid = -1;
+            //        if (result.Attributes.ContainsKey("parentuid")) {
+            //            Int64.TryParse(result.Attributes["parentuid"].ToString(), out parentuid);    
+            //        }
 
 
-                    string parentapplication = null;
-                    string parentlabel = null;
-                    if (result.Attributes.ContainsKey("parentid") || result.Attributes.ContainsKey("parentuid")) {
-                        parentapplication = result.Attributes["targetapplication"].ToString();
+            //        string parentapplication = null;
+            //        string parentlabel = null;
+            //        if (result.Attributes.ContainsKey("parentid") || result.Attributes.ContainsKey("parentuid")) {
+            //            parentapplication = result.Attributes["targetapplication"].ToString();
 
 
-                        if (parentapplication == "servicerequest") {
-                            parentlabel = "service request";
-                        } else if (parentapplication == "WORKORDER") {
-                            parentlabel = "work order";
-                        } else if (parentapplication == "INCIDENT") {
-                            parentlabel = "incident";
-                        }
-                    }
-                    var summary = result.Attributes["summary"].ToString();
-                    var changeby = result.Attributes["changeby"].ToString();
-                    var changedate = DateTime.Parse(result.Attributes["createddate"].ToString());
-                    var rowstamp = Convert.ToInt64(result.Attributes["rowstamp"]);
-                    var notification = new Notification(application, targetschema, label, icon, id, uId, parentid, parentuid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp, flag);
-                    streamToUpdate.InsertNotificationIntoStream(notification);
-                }
-            }
+            //            if (parentapplication == "servicerequest") {
+            //                parentlabel = "service request";
+            //            } else if (parentapplication == "WORKORDER") {
+            //                parentlabel = "work order";
+            //            } else if (parentapplication == "INCIDENT") {
+            //                parentlabel = "incident";
+            //            }
+            //        }
+            //        var summary = result.Attributes["summary"].ToString();
+            //        var changeby = result.Attributes["changeby"].ToString();
+            //        var changedate = DateTime.Parse(result.Attributes["createddate"].ToString());
+            //        var rowstamp = Convert.ToInt64(result.Attributes["rowstamp"]);
+            //        var notification = new Notification(application, targetschema, label, icon, id, uId, parentid, parentuid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp, flag);
+            //        streamToUpdate.InsertNotificationIntoStream(notification);
+            //    }
+            //}
 
             
             var hardcodedQuery = string.Format(
-                                      //"select 'commlog' as application, null as targetschema,'communication' as label, 'fa-envelope-o' as icon ,CONVERT(varchar(10), commlogid) as id, c.commloguid as uid, " +
-                                      //"t.ticketid as parentid, c.ownerid as parentuid, CASE c.ownertable WHEN 'SR' THEN 'servicerequest' ELSE c.ownertable END as parentapplication, c.subject as summary, " +
-                                      //"c.createby as changeby, c.createdate as changedate, CONVERT(bigint, c.rowstamp) as rowstamp from commlog c " +
-                                      //"left join ticket t on t.ticketuid = c.ownerid " +
-                                      //"where createdate >  DATEADD(HOUR,-{0},GETDATE()) and createdate < '{1}' union " + 
+                                      "select 'commlog' as application, null as targetschema,'communication' as label, 'fa-envelope-o' as icon ,CONVERT(varchar(10), commlogid) as id, c.commloguid as uid, " +
+                                      "t.ticketid as parentid, c.ownerid as parentuid, CASE c.ownertable WHEN 'SR' THEN 'servicerequest' ELSE c.ownertable END as parentapplication, c.subject as summary, " +
+                                      "c.createby as changeby, c.createdate as changedate, CONVERT(bigint, c.rowstamp) as rowstamp from commlog c " +
+                                      "left join ticket t on t.ticketuid = c.ownerid " +
+                                      "where createdate >  DATEADD(HOUR,-{0},GETDATE()) and createdate < '{1}' union " + 
                                       "select 'worklog' as application, null as targetschema, 'work log' as label, 'fa fa-wrench' as icon, CONVERT(varchar(10), l.worklogid) as id, CONVERT(varchar(10), l.worklogid) as uid, l.recordkey as parentid, t.ticketuid as parentuid, " +
                                       "CASE l.class WHEN 'SR' THEN 'servicerequest' ELSE l.class END AS parentapplication, l.description as summary, " +
                                       "l.createby as changeby, l.modifydate as changedate, CONVERT(bigint, l.rowstamp) as rowstamp from worklog l " +
@@ -173,10 +173,10 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                                       "l.createby as changeby, l.modifydate as changedate, CONVERT(bigint, l.rowstamp) as rowstamp from worklog l " +
                                       "left join workorder w on w.wonum = l.recordkey " +
                                       "where class in ('WORKORDER') and logtype = 'clientnote' and modifydate >  DATEADD(HOUR,-{0},GETDATE()) and modifydate < '{1}' union " +
-                                      //"select 'servicerequest' as application, 'editdetail' as targetschema, 'service request' as label, 'fa-ticket' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary," +
-                                      //"changeby, changedate, CONVERT(bigint, rowstamp) as rowstamp from ticket " +
-                                      //"where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < '{1}' and class='SR' union " +
-                                      //"select 'incident' as application, 'editdetail' as targetschema, 'incident' as label, 'fa-warning' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary," +
+                                      "select 'servicerequest' as application, 'editdetail' as targetschema, 'service request' as label, 'fa-ticket' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary," +
+                                      "changeby, changedate, CONVERT(bigint, rowstamp) as rowstamp from ticket " +
+                                      "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < '{1}' and class='SR' union " +
+                                      "select 'incident' as application, 'editdetail' as targetschema, 'incident' as label, 'fa-warning' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary," +
                                       "changeby, changedate, CONVERT(bigint, rowstamp) as rowstamp from ticket " +
                                       "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < '{1}' and class='INCIDENT' union " +
                                       "select 'workorder' as application, 'editdetail' as targetschema, 'work order' as label, 'fa-wrench' as icon,wonum as id, workorderid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary, " +
@@ -193,16 +193,17 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                 var id = record["id"];
                 var label = record["label"];
                 var icon = record["icon"];
-                var uid = Int32.Parse(record["uid"]);
+                var uid = Int64.Parse(record["uid"]);
                 var flag = "changed";
                 if (Counter[application] < uid) {
                     flag = "created";
                     Counter[application] = uid;
                 }
                 var parentid = record["parentid"];
-                int parentuid;
-                Int32.TryParse(record["parentuid"], out parentuid);
-
+                long parentuid = -1;
+                if (record["parentuid"] != null) { 
+                    Int64.TryParse(record["parentuid"], out parentuid);
+                }
                 var parentapplication = record["parentapplication"];
                 string parentlabel = null;
                 if (parentapplication == "servicerequest") {
