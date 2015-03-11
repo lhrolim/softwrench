@@ -251,22 +251,20 @@ namespace softWrench.sW4.Util {
             }
         }
 
-        public static double NotificationRefreshRate
+        public static string NotificationRefreshRate
         {
             get
             {
                 var flagValue = MetadataProvider.GlobalProperty("notifications.updateJob.refreshRate");
-                var flag = 2.0;
-                Double.TryParse(flagValue, out flag);
+                var flag = flagValue ?? "2";
                 return flag;
             }
         }
 
-        public static double ActivityStreamRefreshRate{
+        public static string ActivityStreamRefreshRate{
             get {
                 var flagValue = MetadataProvider.GlobalProperty("notifications.activityStream.refreshRate");
-                var flag = 2.0;
-                Double.TryParse(flagValue, out flag);
+                var flag = flagValue ?? "2";
                 return flag;
             }
         }

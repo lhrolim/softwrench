@@ -6,12 +6,12 @@ namespace softwrench.sw4.activitystream.classes.Model
     public class NotificationResponse
     {
         private readonly int _readCount;
-        private readonly double _refreshRate;
+        private readonly string _refreshRate;
         private readonly List<Notification> _notifications;
 
         public int ReadCount { get { return _readCount; } }
         public List<Notification> Notifications { get { return _notifications; } }
-        public double RefreshRate { get { return _refreshRate; } }
+        public string RefreshRate { get { return _refreshRate; } }
 
         public NotificationResponse(List<Notification> notifications, int readCount)
         {
