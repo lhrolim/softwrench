@@ -61,19 +61,6 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         scope.isDetail = mode;
         scope.isList = !mode;
         var crud_context;
-        if (scope.isList) {
-            var elements = [];
-            for (var i = 0; i < $scope.datamap.length; i++) {
-
-                elements.push($scope.datamap[i].fields[$scope.schema.idFieldName]);
-            }
-            crud_context = {
-                list_elements: elements,
-                detail_next: "0",
-                detail_previous: "-1"
-            };
-            contextService.insertIntoContext("crud_context", crud_context);
-        }
         if (scope.isDetail) {
             crud_context = contextService.fetchFromContext("crud_context", true);
             if (!crud_context) {

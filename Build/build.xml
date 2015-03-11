@@ -216,7 +216,7 @@
                value="${profile}" failonerror="true"/>
   </target>
 
-  <target name="zip" depends="copydlls,setclient,setenv">
+  <target name="zip" depends="copydlls,setclient,setenv,explodexmlfiles">
 
     <tstamp property="build.date" pattern="yyyy_MM_dd_hhmm" verbose="true" />
 
@@ -235,11 +235,23 @@
     </zip>
   </target>
 
+  <target name="explodexmlfiles" depends="setenv,setclient">
+    <property name="clientpropertyfile" value="../softwrench.sW4.${client}/metadata/${client}/properties.xml" />
+    <if test="${file::exists(clientpropertyfile)}">
+      <copy todir="${OutputDir}/deploy/App_Data/Client/${client}/">
+        <fileset basedir="../softwrench.sW4.${client}/metadata/${client}/">
+          <include name="*.*" />
+        </fileset>
+      </copy>
+    </if>
+  </target>
+  
   <target name="deploypeek" depends="setenv,setclient">
 
 
     <property name="clientfile1" value="${OutputDir}/deploy/App_Data/Client/${client}/deploy.xml" />
     <property name="clientfile2" value="../softwrench.sW4.${client}/metadata/${client}/deploy.xml" />
+    
     <echo message="${clientfile1}"/>
     <echo message="${clientfile2}"/>
 
