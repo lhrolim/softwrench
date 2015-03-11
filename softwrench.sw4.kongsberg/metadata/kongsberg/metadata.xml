@@ -1079,10 +1079,10 @@
         </list>
 
         <schema id="supportlist" stereotype="list">
-          <field attribute="ticketid" label="SR No">
+          <field attribute="ticketid" label="Service Request">
             <renderer type="default"  params="width=9%" />
           </field>
-          <field attribute="classificationid" label="Project Description">
+          <field attribute="classificationid" label="Project">
             <renderer type="default" params="width=9%;excelwidth=50"/>
           </field>
           <field attribute="description" label="Summary">
@@ -1108,10 +1108,10 @@
         </schema>
 
         <schema id="ledaflowlist" stereotype="list">
-          <field attribute="classificationid" label="Project Description">
+          <field attribute="classificationid" label="Project">
             <renderer type="default" params="width=9%;excelwidth=50"/>
           </field>
-          <field attribute="ticketid" label="SR No">
+          <field attribute="ticketid" label="Service Request">
             <renderer type="default"  params="width=9%" />
           </field>
           <field attribute="description" label="Summary">
