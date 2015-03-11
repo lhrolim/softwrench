@@ -1726,8 +1726,8 @@
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
           </field>
+          
           <tab label="Solution" id="solution">
-
             <field attribute="solution" hidden="true"/>
             <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
               <renderer type="lookup"/>
@@ -1757,8 +1757,9 @@
           <composition relationship="relatedrecord" label="Related Records">
               <collectionproperties allowcreation="false" />
           </composition>
-        </schema>
 
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+        </schema>
       </schemas>
     </application>
 

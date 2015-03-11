@@ -122,8 +122,13 @@ app.factory('genericTicketService', function (alertService, associationService, 
             event.fields["#woaddress_"] = event.fields["woaddress_"];
         }, 
 
-        validateCloseStatus: function (schema, datamap, originalDatamap,parameters) {
-            if (originalDatamap.originaldatamap['synstatus_.description'].equalIc('CLOSED') || originalDatamap.originaldatamap['synstatus_.description'].equalIc('CLOSE')) {
+        validateCloseStatus: function (schema, datamap, originalDatamap, parameters) {
+            var status = originalDatamap.originaldatamap['status'];
+
+            if (originalDatamap.originaldatamap['synstatus_.description'] != null)
+                status = originalDatamap.originaldatamap['synstatus_.description']; 
+            
+            if (status.equalIc('CLOSED') || originalDatamap.originaldatamap['synstatus_.description'].equalIc('CLOSE')) {
                 alertService.alert("You cannot submit this ticket because it is already closed");
                 return false;
             }
