@@ -40,7 +40,7 @@
                 </div>
                 <div class="nomessages" ng-if="!activities.length"><i class="fa fa-info-circle"></i>&ensp;No recent activity to display.</div>
                 <div class="nomessages" ng-if="statusAllHidden && !hiddenToggle"><i class="fa fa-info-circle"></i>&ensp;All recent activity has been read.</div>
-                <div class="nomessages" ng-if="!(activities | filter:$parent.filterText).length"><i class="fa fa-info-circle"></i>&ensp;No activity matches your filter.</div>
+                <div class="nomessages" ng-if="activities.length && !(activities | filter:$parent.filterText).length"><i class="fa fa-info-circle"></i>&ensp;No activity matches your filter.</div>
             </div>
         </div>
     </div>

@@ -50,34 +50,20 @@ app.directive('activitystream', function(contextService) {
                 var currentDate = new Date();
                 var nowMils = currentDate.getTime();
 
-                //add 'Z' to datetime fix Firefox error
-                //                var notificationMils = new Date(notificationDate + 'Z').getTime();
-
-                //luiz: after inserting [SWControllerConfiguration] this 'Z' didn´t seem required anymore, and was, actually , breaking the date.
                 var notificationMils = new Date(notificationDate).getTime();
                 var differenceMils = nowMils - notificationMils;
                 var dateMessage = moment.duration(differenceMils, "milliseconds").humanize();
 
-                return 'About ' + dateMessage + ' ago'; // (' + notificationDate.replace('T', ' ') + ') [' + notificationMils + ']';
+                return 'About ' + dateMessage + ' ago'; // + ' (' + notificationMils + ')';
             };
 
             $scope.getAllHidden = function () {
                 log.debug('getAllHidden');
 
-                //TODO: move to back-end
-
-                //if activities is unset, return false
-                if (typeof $scope.activities !== 'undefined') {
-
-                    //if no messages, return false
-                    if ($scope.activities.length === 0) {
-                        return false;
+                if ($scope.activities.length > 0) {
+                    if ($scope.activities.length === $scope.readCount) {
+                        return true;
                     }
-
-                    //loop through all activity, if all are hidden return true
-                    return $scope.activities.every(function (e) {
-                        return e.isRead;
-                    });
                 } else {
                     return false;
                 }
@@ -257,6 +243,7 @@ app.directive('activitystream', function(contextService) {
             }
 
             //automatically refresh the activity stream every two minutes
+            //TODO: get refresh rate from backend
             $interval(function () {
                 $scope.refreshStream(true);
             }, 1000 * 60 * 2);
