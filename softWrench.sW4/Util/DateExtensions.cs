@@ -4,9 +4,12 @@ using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using System;
+using log4net;
 
 namespace softWrench.sW4.Util {
     public static class DateExtensions {
+
+        private static readonly ILog Log = LogManager.GetLogger(SwConstants.DATETIME_LOG);
 
         public static double ToTimeInMillis(this DateTime time) {
             return time.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
@@ -129,7 +132,9 @@ namespace softWrench.sW4.Util {
             if (ConversionKind.MaximoToUser == kind || ConversionKind.MaximoToServer == kind) {
                 offset = -1 * offset;
             }
+            Log.Debug(string.Format("Input date: {0}  Input kind: {1}  Input offset: {2}  Output offset: {3}", date, kind, clientOffset, maximoOffset));
             date = date.AddMinutes(offset);
+            Log.Debug(string.Format("Output date: {0}", date));
             return date;
         }
 
