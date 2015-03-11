@@ -181,7 +181,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 foreach (var application in _applications){
                     sb.AppendFormat(@"
                 or (worklog.recordkey in (select relatedrecord.relatedreckey as relatedreckey 
-                from RELATEDRECORD as relatedrecord  where relatedrecord.recordkey in ('{0}')  AND  relatedrecord.class = '{1}' AND RELATEDRECCLASS = '{2}' and relatetype in ('FOLLOWUP','ORIGINATOR')) and worklog.class = '{2}')",
+                from RELATEDRECORD as relatedrecord  where relatedrecord.recordkey in ('{0}')  AND  relatedrecord.class = '{1}' AND RELATEDRECCLASS = '{2}' ) and worklog.class = '{2}')",
                         ticketId, originalClass, application);
                 }
                 dto.ExtraLeftJoinSection =
@@ -193,7 +193,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 foreach (var application in _applications){
                     sb.AppendFormat(@"
                 or (worklog.recordkey in (select relatedrecord.relatedreckey as relatedreckey 
-                from RELATEDRECORD as relatedrecord  where relatedrecord.recordkey = '{0}'  AND  relatedrecord.class = '{1}' AND RELATEDRECCLASS = '{2}' and relatetype in ('FOLLOWUP','ORIGINATOR')) and worklog.class = '{2}')",
+                from RELATEDRECORD as relatedrecord  where relatedrecord.recordkey = '{0}'  AND  relatedrecord.class = '{1}' AND RELATEDRECCLASS = '{2}' ) and worklog.class = '{2}')",
                         ticketId, originalClass, application);
                 }
             }
