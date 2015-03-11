@@ -160,7 +160,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
                 IDictionary<string, object> attributes;
 
-                if (resultCollection.ContainsKey("relatedrecordkey") && resultCollection["relatedrecordkey"]!=null) {
+                if (targetCollectionAttribute == "worklog_" && resultCollection.ContainsKey("relatedrecordkey") && resultCollection["relatedrecordkey"] != null) {
                     //let´s see if this was provenient from a related record, workaround for //HAP-968
                     // see also HapagBaseApplicationDataSet#AppendRelatedRecordWCToWorklog
                     resultkey = new CollectionMatchingResultKey();
