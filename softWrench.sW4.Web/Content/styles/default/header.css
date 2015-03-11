@@ -97,6 +97,10 @@
             width: 100%;
         }
 
+            .container header .menu-admin .buttons .btn {
+                margin-bottom: 5px;
+            }
+
             .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
                 width: 100%;
             }
@@ -155,33 +159,37 @@
         position: fixed;
     }
 
-        .container header .menu-expand {
-            display: none;
+    .container header .menu-expand {
+        display: none;
+    }
+
+    .container header .menu-items {
+        display: block;
+    }
+
+    .container header .menu-admin .buttons {
+        width: auto;
+    }
+
+        .container header .menu-admin .buttons .btn {
+            margin-bottom: 0;
         }
 
-        .container header .menu-items {
-            display: block;
-        }
-
-        .container header .menu-admin .buttons {
+        .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
             width: auto;
         }
 
-            .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
-                width: auto;
-            }
-
-            .container header .menu-admin .buttons .logout {
-                display: inline-block !important;
-            }
-
-        .container header .menu-grid li {
-            width: auto;
+        .container header .menu-admin .buttons .logout {
+            display: inline-block !important;
         }
 
-            .container header .menu-grid li:last-child .dropdown, .container header .menu-grid li:last-child a {
-                margin-bottom: 0px;
-            }
+    .container header .menu-grid li {
+        width: auto;
+    }
+
+        .container header .menu-grid li:last-child .dropdown, .container header .menu-grid li:last-child a {
+            margin-bottom: 0px;
+        }
 }
 
 .container header .menu-grid .submenu li {
