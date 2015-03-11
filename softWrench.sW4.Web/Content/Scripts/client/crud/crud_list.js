@@ -254,6 +254,17 @@ app.directive('crudList', function (contextService) {
                 //usually this next call won´t do anything, but for lists with optionfields, this is needed
                 associationService.updateAssociationOptionsRetrievedFromServer($scope, data.associationOptions, null);
                 $scope.$broadcast('sw_griddatachanged', $scope.datamap, $scope.schema, $scope.panelid);
+
+                var elements = [];
+                for (var i = 0; i < $scope.datamap.length; i++) {
+                    elements.push($scope.datamap[i].fields[$scope.schema.idFieldName]);
+                }
+                var crudContext = {
+                    list_elements: elements,
+                    detail_next: "0",
+                    detail_previous: "-1"
+                };
+                contextService.insertIntoContext("crud_context", crudContext);
             }
 
 
