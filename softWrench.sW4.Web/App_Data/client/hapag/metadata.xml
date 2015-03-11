@@ -3117,7 +3117,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </properties>
         </detail>
 
-        <schema id="printschema">
+        <schema id="printschema" stereotype="compositiondetail">
           <field attribute="worklogid" hidden="true"/>
           <field  attribute="recordkey" label="Record Key" />
           <field  attribute="class" label="Class" />

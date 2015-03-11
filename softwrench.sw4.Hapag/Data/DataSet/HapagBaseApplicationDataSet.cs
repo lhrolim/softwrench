@@ -184,6 +184,9 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 from RELATEDRECORD as relatedrecord  where relatedrecord.recordkey in ('{0}')  AND  relatedrecord.class = '{1}' AND RELATEDRECCLASS = '{2}' and relatetype in ('FOLLOWUP','ORIGINATOR')) and worklog.class = '{2}')",
                         ticketId, originalClass, application);
                 }
+                dto.ExtraLeftJoinSection =
+                    "left join relatedrecord rr on (rr.RECORDKEY = worklog.RECORDKEY and worklog.CLASS = rr.CLASS and rr.RELATEDRECKEY in ('{0}'))".Fmt(ticketId);
+                dto.AppendProjectionField(new ProjectionField("relatedrecordkey", "rr.RELATEDRECKEY"));
             } else{
                 sb.AppendFormat("((worklog.recordkey = '{0}' ) AND ( worklog.class = '{1}' )) ", ticketId,
                     originalClass);

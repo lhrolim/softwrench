@@ -34,7 +34,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 return null;
             }
             if (definition.Stereotype != SchemaStereotype.List &&
-                definition.Stereotype != SchemaStereotype.CompositionList) {
+                definition.Stereotype != SchemaStereotype.CompositionList && definition.Stereotype!=SchemaStereotype.CompositionDetail) {
                 //blank list in order to consider it done
                 return new List<IApplicationAttributeDisplayable>();
             }

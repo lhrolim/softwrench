@@ -92,7 +92,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                 var dataSet = DataSetProvider.GetInstance().LookupAsBaseDataSet(entityMetadata.ApplicationName);
                 //we will call the function passing the first entry, altough this method could have been invoked for a list of items (printing)
                 //TODO: think about it
-                var preFilterParam = new CompositionPreFilterFunctionParameters(entityMetadata.AppSchema,searchRequestDto, firstAttributeHolder, applicationCompositionSchema);
+                var preFilterParam = new CompositionPreFilterFunctionParameters(entityMetadata.AppSchema, searchRequestDto, firstAttributeHolder, applicationCompositionSchema);
                 searchRequestDto = PrefilterInvoker.ApplyPreFilterFunction(dataSet, preFilterParam, applicationCompositionSchema.PrefilterFunction);
             }
 
@@ -149,12 +149,33 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             foreach (var resultCollection in resultCollections) {
                 var resultkey = new CollectionMatchingResultKey();
                 foreach (var key in matchingResultWrapper.Keys) {
-                    var result = resultCollection[key];
+                    object result;
+                    if (!resultCollection.TryGetValue(key, out result)) {
+                        throw new Exception("key {0} was not present on the dictionary".Fmt(key));
+                    }
                     if (result != null) {
                         resultkey.AppendEntry(key, result.ToString());
                     }
                 }
-                var attributes = matchingResultWrapper.FetchEntity(resultkey).Attributes;
+
+                IDictionary<string, object> attributes;
+
+                if (resultCollection.ContainsKey("relatedrecordkey") && resultCollection["relatedrecordkey"]!=null) {
+                    //let´s see if this was provenient from a related record, workaround for //HAP-968
+                    // see also HapagBaseApplicationDataSet#AppendRelatedRecordWCToWorklog
+                    resultkey = new CollectionMatchingResultKey();
+                    resultkey.AppendEntry("recordkey", resultCollection["relatedrecordkey"] as string);
+                    attributes = matchingResultWrapper.FetchEntity(resultkey);
+                    if (attributes == null) {
+                        throw new Exception("could not locate entry");
+                    }
+                } else {
+                    attributes = matchingResultWrapper.FetchEntity(resultkey);
+                }
+
+
+
+
                 if (!attributes.ContainsKey(targetCollectionAttribute)) {
                     attributes.Add(targetCollectionAttribute, new List<IDictionary<string, object>>());
                 }
@@ -190,8 +211,12 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                 return key;
             }
 
-            internal AttributeHolder FetchEntity(CollectionMatchingResultKey key) {
-                return _matchingDict[key];
+            internal IDictionary<string, object> FetchEntity(CollectionMatchingResultKey key) {
+                AttributeHolder result;
+                if (!_matchingDict.TryGetValue(key, out result)) {
+                    return null;
+                }
+                return result.Attributes;
             }
         }
 

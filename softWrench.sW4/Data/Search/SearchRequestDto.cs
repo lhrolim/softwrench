@@ -35,6 +35,9 @@ namespace softWrench.sW4.Data.Search {
 
         private ISet<ProjectionField> _projectionFields = new HashSet<ProjectionField>();
 
+
+        public string ExtraLeftJoinSection { get; set; }
+
         public String WhereClause { get; set; }
 
         public Boolean IgnoreWhereClause { get; set; }

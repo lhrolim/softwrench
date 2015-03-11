@@ -31,6 +31,11 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             foreach (var association in usedAssociations) {
                 buffer.Append(QueryJoinBuilder.Build(entityMetadata, association));
             }
+
+            if (dto != null && dto.ExtraLeftJoinSection!=null){
+                buffer.Append(dto.ExtraLeftJoinSection);
+            }
+
             return buffer.ToString();
         }
 
