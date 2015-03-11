@@ -1151,11 +1151,11 @@
           <field attribute="changeby" default="@username" hidden="true"/>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeowner"/>
+            <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
           </association>
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+            <event type="afterchange" service="generalsrService" method="afterchangeownergroup"/>
           </association>
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc">
