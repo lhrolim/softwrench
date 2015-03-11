@@ -25,10 +25,10 @@
                     <div class="read pull-left"><i class="fa" ng-class="activity.isRead ? '' : 'fa-circle'"></i></div>
                     <div class="icon pull-left"><i class="fa" ng-class="activity.icon"></i></div>
                     <div class="text pull-left">
-                        <div class="info" ng-if="!activity.parentUId">
+                        <div class="info" ng-if="activity.parentUId < 0">
                             <span class="by">{{activity.createBy}}</span> {{activity.flag | lowercase}} {{activity.label | lowercase}} <a href="" ng-click="openLink(activity)">{{activity.id}}</a>
                         </div>
-                        <div class="info" ng-if="activity.parentUId">
+                        <div class="info" ng-if="activity.parentUId > 0">
                             <span class="by">{{activity.createBy}}</span> {{activity.flag | lowercase}} <a href="" ng-click="openLink(activity)">{{activity.label | lowercase}}</a>
                             for {{activity.parentLabel | lowercase}} <a href="" ng-click="openLink(activity, 'true')">{{activity.parentId}}</a>
                         </div>
