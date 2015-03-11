@@ -139,6 +139,7 @@ namespace softWrench.sW4.Util {
             }
             Log.Debug(string.Format("Input date: {0}  Input kind: {1}  Input offset: {2}  Output offset: {3}", date, kind, clientOffset, maximoOffset));
             date = date.AddMinutes(offset);
+            date = DateTime.SpecifyKind(date, DateTimeKind.Unspecified);
             Log.Debug(string.Format("Output date: {0}", date));
             return date;
         }
