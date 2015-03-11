@@ -80,10 +80,7 @@ app.factory('generalsrService', function (alertService, contextService,associati
             }
             if (event.fields['status'] == 'NEW') {
                 event.fields['status'] = 'QUEUED';
-                //Removing the alert for Kongsberg because Kongsberg uses generalsr_service and they can select both owner and ownergroup
-                if (!contextService.isClient('kongsberg')) {
-                    alertService.alert("Owner Field will be disabled if the Owner Group is selected.");
-                }
+                alertService.alert("Owner Field will be disabled if the Owner Group is selected.");
                 return;
             }
             
