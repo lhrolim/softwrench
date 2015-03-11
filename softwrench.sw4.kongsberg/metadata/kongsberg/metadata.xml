@@ -1040,34 +1040,34 @@
       <schemas>
         <list title="Service Request Grid">
           <field attribute="ticketid" label="SR No">
-            <renderer type="default"  params="width=9%" />
+            <renderer type="default"  params="widthXS=25%;widthSM=15%;widthMD=12%;widthLG=8%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="classificationid" label="Project Description">
-            <renderer type="default" params="width=9%;excelwidth=50"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=15%;widthLG=12%;excelwidth=50"/>
           </field>
           <field attribute="area" label="Area">
-            <renderer type="default" params="width=9%;excelwidth=50"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%;excelwidth=50"/>
           </field>
           <field attribute="problemtype" label="Problem Type">
-            <renderer type="default" params="width=9%;excelwidth=50"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;excelwidth=50"/>
           </field>
           <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="width=9%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="internalpriority" label="Internal Priority">
-            <renderer type="default" params="width=9%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=10%" />
           </field>
           <field attribute="owner" label="Owner">
-            <renderer type="default" params="width=9%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="changedate" label="Changed Date">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=9%;showtime=false"/>
+            <renderer type="datetime" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=10%;format=MM/dd/yyyy HH:mm;showtime=false"/>
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=9%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
@@ -1438,50 +1438,31 @@
       <schemas>
         <list title="Incident Grid">
           <field attribute="ticketid" label="Incident No">
-            <renderer type="default" params="width=8%"/>
+            <renderer type="default" params="widthXS=25%;widthSM=20%;widthMD=12%;widthLG=8%"/>
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          <!--field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="minwidth=90px;maxwidth=1600px" />
-          </field-->
           <field attribute="classificationid" label="Project Description">
-            <renderer type="default" params="width=8%;excelwidth=50" />
+            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=15%;widthLG=15%;excelwidth=50" />
           </field>
-          <!-- KSW-50
-          <field attribute="area" label="Area">
-            <renderer type="default" params="width=8%;excelwidth=50" />
-          </field>
-          <field attribute="problemtype" label="Problem Type">
-            <renderer type="default" params="width=8%;excelwidth=50" />
-          </field>
-            -->
           <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="width=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%" />
           </field>
           <field attribute="internalpriority" label="Internal Priority">
-            <renderer type="default" params="width=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=10%" />
           </field>
           <field attribute="reportedpriority" label="Reported Priority">
-            <renderer type="default" params="width=8%"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%"/>
           </field>
-          <!-- KSW-50
-          <field attribute="reportdate" label="Reported Date">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=8%;showtime=false" />
-          </field>
-          -->
-          <!--          <field attribute="reportdate" label="Reported Date">-->
-          <!--            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=8%;showtime=false" />-->
-          <!--          </field>-->
           <field attribute="owner" label="Owner">
-            <renderer type="default" params="width=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="ownergroup" label="Owner Group">
-            <renderer type="default" params="width=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=incident;column=status"/>
