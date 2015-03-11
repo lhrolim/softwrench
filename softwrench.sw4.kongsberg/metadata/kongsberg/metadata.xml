@@ -1040,34 +1040,34 @@
       <schemas>
         <list title="Service Request Grid">
           <field attribute="ticketid" label="SR No">
-            <renderer type="default"  params="width=9%" />
+            <renderer type="default"  params="widthXS=25%;widthSM=15%;widthMD=12%;widthLG=8%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="classificationid" label="Project Description">
-            <renderer type="default" params="width=9%;excelwidth=50"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=15%;widthLG=12%;excelwidth=50"/>
           </field>
           <field attribute="area" label="Area">
-            <renderer type="default" params="width=9%;excelwidth=50"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%;excelwidth=50"/>
           </field>
           <field attribute="problemtype" label="Problem Type">
-            <renderer type="default" params="width=9%;excelwidth=50"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;excelwidth=50"/>
           </field>
           <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="width=9%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="internalpriority" label="Internal Priority">
-            <renderer type="default" params="width=9%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=10%" />
           </field>
           <field attribute="owner" label="Owner">
-            <renderer type="default" params="width=9%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="changedate" label="Changed Date">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=9%;showtime=false"/>
+            <renderer type="datetime" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=10%;format=MM/dd/yyyy HH:mm;showtime=false"/>
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=9%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
@@ -1312,7 +1312,13 @@
             <composition relationship="attachment" label="Attachments">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
             </composition>
+            <composition relationship="relatedrecord" label="Related Records">
+              <collectionproperties allowcreation="false" />
+            </composition>
           </section>
+
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+          
           <commands>
             <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
                      showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>
@@ -1438,50 +1444,31 @@
       <schemas>
         <list title="Incident Grid">
           <field attribute="ticketid" label="Incident No">
-            <renderer type="default" params="width=8%"/>
+            <renderer type="default" params="widthXS=25%;widthSM=20%;widthMD=12%;widthLG=8%"/>
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          <!--field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="minwidth=90px;maxwidth=1600px" />
-          </field-->
           <field attribute="classificationid" label="Project Description">
-            <renderer type="default" params="width=8%;excelwidth=50" />
+            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=15%;widthLG=15%;excelwidth=50" />
           </field>
-          <!-- KSW-50
-          <field attribute="area" label="Area">
-            <renderer type="default" params="width=8%;excelwidth=50" />
-          </field>
-          <field attribute="problemtype" label="Problem Type">
-            <renderer type="default" params="width=8%;excelwidth=50" />
-          </field>
-            -->
           <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="width=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%" />
           </field>
           <field attribute="internalpriority" label="Internal Priority">
-            <renderer type="default" params="width=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=10%" />
           </field>
           <field attribute="reportedpriority" label="Reported Priority">
-            <renderer type="default" params="width=8%"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%"/>
           </field>
-          <!-- KSW-50
-          <field attribute="reportdate" label="Reported Date">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=8%;showtime=false" />
-          </field>
-          -->
-          <!--          <field attribute="reportdate" label="Reported Date">-->
-          <!--            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=8%;showtime=false" />-->
-          <!--          </field>-->
           <field attribute="owner" label="Owner">
-            <renderer type="default" params="width=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="ownergroup" label="Owner Group">
-            <renderer type="default" params="width=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="status" label="Status">
-            <renderer type="default" params="width=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=incident;column=status"/>
@@ -1720,8 +1707,8 @@
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
           </field>
+          
           <tab label="Solution" id="solution">
-
             <field attribute="solution" hidden="true"/>
             <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
               <renderer type="lookup"/>
@@ -1748,9 +1735,12 @@
           <composition relationship="attachment" label="Attachments">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
           </composition>
-          
-        </schema>
+          <composition relationship="relatedrecord" label="Related Records">
+              <collectionproperties allowcreation="false" />
+          </composition>
 
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+        </schema>
       </schemas>
     </application>
 
@@ -2351,14 +2341,31 @@
     </application>
 
     <application name="relatedrecord" title="Related Records" entity="relatedrecord" id="00000000-0000-0000-0000-000000000008" >
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-tags"/>
+      </properties>
       <schemas>
         <list stereotype="compositionlist">
-          <field  attribute="relatedreckey" label="Related Record Key" />
-          <field  attribute="relatedrecclass" label="Related Record Class" />
+          <properties>
+            <property key="list.click.service" value="relatedrecordService.open"/>
+          </properties>
+          <!--          <commandbars>-->
+          <!--            <commandgroup position="compositiontop" >-->
+          <!--              <container id="addrelated" label="Add Related Record" position=">refresh" icon="fa-plus" tooltip="Add related record entry">-->
+          <!--                <command id="addrelatedch" label="Change" icon="fa-random" service="relatedrecordService" method="create" parameters="'change',parentdatamap"/>-->
+          <!--                <command id="addrelatedin" label="Incident" icon="fa-warning" service="relatedrecordService" method="create" parameters="'incident',parentdatamap"/>-->
+          <!--                <command id="addrelatedsr" label="Service Request" icon="fa-ticket" service="relatedrecordService" method="create" parameters="'servicerequest',parentdatamap"/>-->
+          <!--              </container>-->
+          <!--            </commandgroup>-->
+          <!--          </commandbars>-->
+          <field attribute="relatedreckey" label="Related Record Key" />
+          <field attribute="relatedrecclass" label="Related Record Class" />
+          <field attribute="siteid" hidden="true" />
         </list>
         <detail stereotype="compositiondetail">
-          <field  attribute="relatedreckey" label="Related Record Key:" />
-          <field  attribute="relatedrecclass" label="Related Record Class:" />
+          <field attribute="relatedreckey" label="Related Record Key:" />
+          <field attribute="relatedrecclass" label="Related Record Class:" />
+          <field attribute="siteid" hidden="true" />
         </detail>
       </schemas>
     </application>
