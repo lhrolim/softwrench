@@ -134,8 +134,9 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 
                     string parentapplication = null;
                     string parentlabel = null;
-                    if (result.Attributes.ContainsKey("parentapplication")) {
-                        parentapplication = result.Attributes["application"].ToString();
+                    if (result.Attributes.ContainsKey("parentid") || result.Attributes.ContainsKey("parentuid")) {
+                        parentapplication = result.Attributes["targetapplication"].ToString();
+
 
                         if (parentapplication == "servicerequest") {
                             parentlabel = "service request";
