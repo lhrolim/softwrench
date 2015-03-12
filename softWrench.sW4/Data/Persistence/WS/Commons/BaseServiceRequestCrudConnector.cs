@@ -49,12 +49,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var sr = maximoTemplateData.IntegrationObject;
+            var user = SecurityFacade.CurrentUser();
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
             if (crudData.ContainsAttribute("#hasstatuschange")){
                 //first let´s 'simply change the status
                 WsUtil.SetValue(sr, "STATUSIFACE", true);
                 if (!WsUtil.GetRealValue(sr, "STATUS").Equals("CLOSED")){
                     maximoTemplateData.InvokeProxy();
+                    WsUtil.SetValue(sr, "CHANGEBY", user.Login);
 
                 } WsUtil.SetValue(sr, "STATUSIFACE", false);
             }
