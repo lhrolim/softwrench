@@ -94,7 +94,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValueIfNull(sr, "ACTLABHRS", 0.0);
             w.SetValueIfNull(sr, "ACTLABCOST", 0.0);
             w.SetValue(sr, "CHANGEDATE", DateTime.Now.FromServerToRightKind(), true);
-            w.SetValueIfNull(sr, "CHANGEBY", user.Login);
+            w.SetValue(sr, "CHANGEBY", user.Login);
             w.SetValueIfNull(sr, "REPORTDATE", DateTime.Now.FromServerToRightKind());
 
             // SWWEB-980 Additional logic to change status to queued if owner is selected
