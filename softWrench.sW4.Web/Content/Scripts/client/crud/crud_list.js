@@ -239,6 +239,7 @@ app.directive('crudList', function (contextService) {
                         $scope.paginationData.hasNext = data.hasNext;
                         $scope.paginationData.filterFixedWhereClause = data.filterFixedWhereClause;
                     } else {
+                        //if the data is not coming from the server, let´s restore the latest, this is due to a cancel click
                         $scope.paginationData = contextService.fetchFromContext("crud_context",true).paginationData;
                     }
 
