@@ -168,7 +168,9 @@ function ConfigController($scope, $http,$timeout, i18NService, alertService) {
         $scope.modules = $scope.resultData.modules;
         $scope.allConditions = $scope.resultData.conditions;
 
-        $scope.currentapplication = $scope.applications[0];
+        if ($scope.applications != null) {
+            $scope.currentapplication = $scope.applications[0];
+        }
 
         $timeout(function() {
             $("#applicationsautocmp").combobox({
@@ -353,9 +355,11 @@ function ConfigController($scope, $http,$timeout, i18NService, alertService) {
         }
     });
 
-    $scope.$watch("currentapplication", function(newvalue, oldvalue) {
-        $scope.currentCategory = navigateToCategory($scope.categoryData, "/_whereclauses/{0}/".format(newvalue.value));
-        $scope.showDefinitions($scope.currentCategory);
+    $scope.$watch("currentapplication", function (newvalue, oldvalue) {
+        if (newvalue != undefined) {
+            $scope.currentCategory = navigateToCategory($scope.categoryData, "/_whereclauses/{0}/".format(newvalue.value));
+            $scope.showDefinitions($scope.currentCategory);
+        }
     });
 
 //    $scope.gotocategory=function (value){
