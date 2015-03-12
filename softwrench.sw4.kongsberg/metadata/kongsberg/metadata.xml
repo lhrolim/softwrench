@@ -1238,7 +1238,7 @@
         
         <schema parentschema="adetail" title="New Service Request" id="newdetail">
           <section id="siteidsection">
-            <field attribute="ticketid" label="Request #:" hidden="true"/>
+            <field attribute="ticketid" label="SR No:" hidden="true"/>
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
               <!-- removed default='@usersite' from the above association label-->
               <renderer type="combo"/>
@@ -1257,7 +1257,7 @@
 
         <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
           <section id="siteidsection">
-            <field attribute="ticketid" label="Request #:" readonly="true" requiredexpression="true"/>
+            <field attribute="ticketid" label="SR No:" readonly="true" requiredexpression="true"/>
             <!--KSW-68 Updated field to combo-->
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
               <!-- removed default='@usersite' from the above association label-->
