@@ -1185,7 +1185,7 @@
             <renderer type="lookup"/>
           </association>
           <field label="TFS#:" attribute="tfsnumber"/>
-          <field label="Feature Request:" attribute="feature_request">
+          <field label="Feature Request:" attribute="feature_request"  >
             <renderer type="checkbox"/>
           </field>
           <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description" requiredexpression="@feature_request == 1">
@@ -1291,7 +1291,7 @@
               <renderer type="lookup"/>
               <event type="afterchange" service="solutionService" method="setsolutiondata"/>
             </association>
-            <field attribute="solution_.description" label="Description:" readonly="true"/>
+            <field attribute="solution_.description" label="Description:" readonly="true" hidden="true"/>
             <field attribute="symptom_.ldtext" label="Symptom:">
               <renderer type="richtext"/>
             </field>
@@ -1508,9 +1508,16 @@
           <field attribute="siteid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="class" hidden="true"/>
-          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" default="NEW">
-            <renderer type="lookup" />
-          </association>
+          <optionfield attribute="status" label="Status" requiredexpression="true" default="NEW">
+            <renderer type="combo"/>
+            <option label="Closed" value="CLOSED"/>
+            <option label="In Progress" value="INPROG"/>
+            <option label="New" value="NEW"/>
+            <option label="Pending" value="PENDING"/>
+            <option label="Queued" value="QUEUED"/>
+            <option label="Resolved" value="RESOLVED"/>
+            <option label="SLA Hold" value="SLAHOLD"/>
+          </optionfield>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
@@ -1618,9 +1625,16 @@
           <field attribute="siteid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="class" hidden="true"/>
-          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" >
-            <renderer type="lookup" />
-          </association>
+          <optionfield attribute="status" label="Status" requiredexpression="true" default="NEW">
+            <renderer type="combo"/>
+            <option label="Closed" value="CLOSED"/>
+            <option label="In Progress" value="INPROG"/>
+            <option label="New" value="NEW"/>
+            <option label="Pending" value="PENDING"/>
+            <option label="Queued" value="QUEUED"/>
+            <option label="Resolved" value="RESOLVED"/>
+            <option label="SLA Hold" value="SLAHOLD"/>
+          </optionfield>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
@@ -1716,7 +1730,7 @@
               <renderer type="lookup"/>
               <event type="afterchange" service="solutionService" method="setsolutiondata"/>
             </association>
-            <field attribute="solution_.description" label="Description:" readonly="true"/>
+            <field attribute="solution_.description" label="Description:" readonly="true" hidden="true"/>
             <field attribute="symptom_.ldtext" label="Symptom:">
               <renderer type="richtext"/>
             </field>
