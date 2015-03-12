@@ -126,7 +126,7 @@ app.directive('menuItem', function (contextService) {
             displacement: '=',
             level: '='
         },
-        controller: function ($scope, $http, $rootScope, menuService, i18NService, mockService) {
+        controller: function ($scope, $http, $rootScope, menuService, i18NService, mockService, alertService, validationService) {
 
             $scope.level = $scope.level + 1;
 
@@ -155,7 +155,16 @@ app.directive('menuItem', function (contextService) {
 
 
             $scope.goToApplication = function (leaf, target) {
-                menuService.goToApplication(leaf, target);
+                var msg = "Are you sure you want to leave the page?";
+                if (validationService.getDirty()) {
+                    alertService.confirmCancel(null, null, function () {
+                        menuService.goToApplication(leaf, target);
+                        $scope.$digest();
+                    }, msg, function () { return; });
+                }
+                else {
+                    menuService.goToApplication(leaf, target);
+                }
             };
 
             $scope.doAction = function (leaf, target) {

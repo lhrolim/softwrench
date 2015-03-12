@@ -288,7 +288,6 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
 
     $scope.toConfirmCancel = function (data, schema) {
         $scope.doConfirmCancel(data, schema, "Are you sure you want to cancel ?");
-
     };
 
 
