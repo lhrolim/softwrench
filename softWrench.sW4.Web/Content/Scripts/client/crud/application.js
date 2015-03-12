@@ -1,4 +1,4 @@
-﻿//var app = angular.module('sw_layout');
+//var app = angular.module('sw_layout');
 
 var app = angular.module('sw_layout');
 
