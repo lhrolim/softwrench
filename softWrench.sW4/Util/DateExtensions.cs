@@ -103,7 +103,7 @@ namespace softWrench.sW4.Util {
                 if (user != null)
                 {
                     //If the user is present but is missing their time zone
-                    Log.Debug(string.Format("Missing user time zone for user {0}", user.MaximoPersonId));
+                    Log.WarnFormat("Missing user time zone for user {0}", user.MaximoPersonId);
                 }
                 return date;
             }
@@ -137,9 +137,9 @@ namespace softWrench.sW4.Util {
             if (ConversionKind.MaximoToUser == kind || ConversionKind.MaximoToServer == kind) {
                 offset = -1 * offset;
             }
-            Log.Debug(string.Format("Input date: {0}  Input kind: {1}  Input offset: {2}  Output offset: {3}", date, kind, clientOffset, maximoOffset));
+            Log.DebugFormat("Input date: {0}  Input kind: {1}  Input offset: {2}  Output offset: {3}", date, kind, clientOffset, maximoOffset);
             date = date.AddMinutes(offset);
-            Log.Debug(string.Format("Output date: {0}", date));
+            Log.DebugFormat("Output date: {0}", date);
             return date;
         }
 
