@@ -413,6 +413,12 @@ app.directive('crudBody', function (contextService) {
                 var urlToUse = url("/api/data/" + applicationName + "/?" + $.param(submissionParameters));
                 var command = id == null ? $http.post : $http.put;
 
+                if ("true"==sessionStorage.logJSON) {
+                    $log.info(jsonString);
+                }
+
+                $log.getInstance("crud_body#submit").debug(jsonString);
+
                 command(urlToUse, jsonString)
                     .success(function (data) {
                         //datamap should always be updated
