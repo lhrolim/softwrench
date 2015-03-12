@@ -54,13 +54,11 @@ namespace softWrench.sW4.Web.Controllers {
                 SearchDTO = searchDTO
             });
             Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "finished gathering export excel data"));
-            var excelFile = _excelUtil.ConvertGridToExcel(user, applicationMetadata.Schema, ((ApplicationListResult)dataResponse).ResultObject);
-            var stream = new MemoryStream();
-            excelFile.SaveAs(stream);
-            stream.Close();
+            var excelBytes = _excelUtil.ConvertGridToExcel(user, applicationMetadata.Schema, ((ApplicationListResult)dataResponse).ResultObject);
+         
             Log.Info(LoggingUtil.BaseDurationMessageFormat(before2, "finished export excel data"));
             var fileName = GetFileName(application, key.SchemaId) + ".xls";
-            var result = new FileContentResult(stream.ToArray(), System.Net.Mime.MediaTypeNames.Application.Octet) {
+            var result = new FileContentResult(excelBytes, System.Net.Mime.MediaTypeNames.Application.Octet) {
                 FileDownloadName = (string)StringUtil.FirstLetterToUpper(fileName)
             };
             return result;

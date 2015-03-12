@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using DocumentFormat.OpenXml.Spreadsheet;
 using softWrench.sW4.Metadata.Security;
@@ -76,46 +77,20 @@ namespace softWrench.sW4.Web.Util {
              };
         }
 
-        public SLDocument ConvertGridToExcel(InMemoryUser user, ApplicationSchemaDefinition schema, IEnumerable<AttributeHolder> rows) {
+        public byte[] ConvertGridToExcel(InMemoryUser user, ApplicationSchemaDefinition schema, IEnumerable<AttributeHolder> rows) {
             IEnumerable<ApplicationFieldDefinition> applicationFields = schema.Fields;
-            using (var ms = new System.IO.MemoryStream())
+
+            using (var resultStream = new MemoryStream())
+            using (var ms = new MemoryStream())
             using (var xl = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook)) {
+                //                var ms = new MemoryStream();
+
                 // attributes of elements
                 // the xml writer
 
-                xl.AddWorkbookPart();
-                var worksheetpart = xl.WorkbookPart.AddNewPart<WorksheetPart>();
-
-                var writer = OpenXmlWriter.Create(worksheetpart);
-
-                var worksheet = new Worksheet();
-                writer.WriteStartElement(worksheet);
-
-                // create sheetdata element
-                writer.WriteStartElement(new SheetData());
-
-                var stylesPart = xl.WorkbookPart.AddNewPart<WorkbookStylesPart>();
-                stylesPart.Stylesheet = new Stylesheet();
-
-                // create 2 fonts (one normal, one header)
-                createFonts(stylesPart);
-
-
-                // create fills
-                BuildFills(stylesPart);
-
-                // blank border list
-                stylesPart.Stylesheet.Borders = new Borders { Count = 1 };
-                stylesPart.Stylesheet.Borders.AppendChild(new Border());
-
-                // blank cell format list
-                stylesPart.Stylesheet.CellStyleFormats = new CellStyleFormats { Count = 1 };
-                stylesPart.Stylesheet.CellStyleFormats.AppendChild(new CellFormat());
-
-                // cell format list
-                CreateCellFormats(stylesPart);
-
-                var rowIdx = 1;
+                OpenXmlWriter writer;
+                int rowIdx;
+                var worksheetpart = Setup(xl, out writer, out rowIdx);
 
                 // create header row
                 CreateHeaderRow(applicationFields, writer, rowIdx, schema.Name);
@@ -123,121 +98,170 @@ namespace softWrench.sW4.Web.Util {
                 rowIdx++;
 
                 // write data rows
-                foreach (var item in rows) {
-                    var attributes = item.Attributes;
-
-                    // create new row
-                    var xmlAttributes = new List<OpenXmlAttribute> { new OpenXmlAttribute("r", null, rowIdx.ToString(CultureInfo.InvariantCulture)) };
-                    writer.WriteStartElement(new Row(), xmlAttributes);
-
-                    var nonHiddenFields = applicationFields.Where(ShouldShowField());
-                    foreach (var applicationField in nonHiddenFields) {
-                        object dataAux;
-                        attributes.TryGetValue(applicationField.Attribute, out dataAux);
-                        if (dataAux == null && applicationField.Attribute.StartsWith("#") && Char.IsNumber(applicationField.Attribute[1])) {
-                            attributes.TryGetValue(applicationField.Attribute.Substring(2), out dataAux);
-                        }
-
-                        var data = dataAux == null ? string.Empty : dataAux.ToString();
-
-                        xmlAttributes = new List<OpenXmlAttribute> { new OpenXmlAttribute("t", null, "str") };
-                        // this is the data type ("t"), with CellValues.String ("str")
-
-                        // that's the default style
-                        var styleId = "1";
-                        if (applicationField.Attribute.Contains("status") && ApplicationConfiguration.ClientName == "hapag") {
-                            var success = getColor(data.Trim(), schema.Name, ref styleId);
-                           
-                            if (!success) {
-                                // check if status is something like NEW 1/4 (and make sure it doesn't match e.g. NEW REQUEST).
-                                var match = Regex.Match(data.Trim(), "(([A-Z]+ )+)[1-9]+/[1-9]+");
-                                if (match.Success) {
-                                    var status = match.Groups[2].Value.Trim();
-                                    var compundStatus = getColor(status, schema.Name, ref styleId);
-                                    if (!compundStatus) {
-                                        styleId = "1";
-                                    }
-                                } else {
-                                    styleId = "1";
-                                }
-                            }
-                        }
-                        xmlAttributes.Add(new OpenXmlAttribute("s", null, styleId));
-
-                        // start a cell
-                        writer.WriteStartElement(new Cell(), xmlAttributes);
-                        // write cell content
-                        DateTime dtTimeAux;
-                        var formatToUse = "dd/MM/yyyy HH:mm";
-                        if (applicationField.RendererParameters.ContainsKey("format")) {
-                            formatToUse = applicationField.RendererParameters["format"];
-                        }
-                        var dateParsed = DateTime.TryParse(data, out dtTimeAux);
-                        var dataToCell = data;
-                        if (dateParsed) {
-                            dataToCell = dtTimeAux.FromMaximoToUser(user).ToString(formatToUse);
-                        }
-                        if (dataToCell == "-666") {
-                            //this magic number should never be displayed! 
-                            //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
-                            dataToCell = "";
-                        }
-                        writer.WriteElement(new CellValue(dataToCell));
-                        // end cell
-                        writer.WriteEndElement();
-                    }
-
-                    // next row
-                    rowIdx++;
-                    // end row
-                    writer.WriteEndElement();
-                }
+                DoWriteRows(user, schema, rows, rowIdx, writer, applicationFields);
 
 
-                // end worksheet
-                writer.WriteEndElement();
-                writer.Close();
-
-
-                // write root element
-                writer = OpenXmlWriter.Create(xl.WorkbookPart);
-                writer.WriteStartElement(new Workbook());
-                writer.WriteStartElement(new Sheets());
-
-                writer.WriteElement(new Sheet {
-                    Name = "Sheet1",
-                    SheetId = 1,
-                    Id = xl.WorkbookPart.GetIdOfPart(worksheetpart)
-                });
-
-
-                // end Sheets
-                writer.WriteEndElement();
-                // end Workbook
-                writer.WriteEndElement();
-                writer.Close();
-
-                xl.Close();
-
+                Finish(writer, xl, worksheetpart);
 
                 var excelFile = new SLDocument(ms);
                 SetColumnWidth(excelFile, applicationFields);
-                return excelFile;
+
+                excelFile.SaveAs(resultStream);
+                return resultStream.ToArray();
+            }
+        }
+
+        private static void Finish(OpenXmlWriter writer, SpreadsheetDocument xl, WorksheetPart worksheetpart) {
+            // end worksheet
+            writer.WriteEndElement();
+            writer.Close();
+
+
+            // write root element
+            writer = OpenXmlWriter.Create(xl.WorkbookPart);
+            writer.WriteStartElement(new Workbook());
+            writer.WriteStartElement(new Sheets());
+
+            writer.WriteElement(new Sheet {
+                Name = "Sheet1",
+                SheetId = 1,
+                Id = xl.WorkbookPart.GetIdOfPart(worksheetpart)
+            });
+
+
+            // end Sheets
+            writer.WriteEndElement();
+            // end Workbook
+            writer.WriteEndElement();
+            writer.Close();
+
+            xl.Close();
+        }
+
+        private WorksheetPart Setup(SpreadsheetDocument xl, out OpenXmlWriter writer, out int rowIdx) {
+            xl.AddWorkbookPart();
+            var worksheetpart = xl.WorkbookPart.AddNewPart<WorksheetPart>();
+
+            writer = OpenXmlWriter.Create(worksheetpart);
+
+            var worksheet = new Worksheet();
+            writer.WriteStartElement(worksheet);
+
+            // create sheetdata element
+            writer.WriteStartElement(new SheetData());
+
+            var stylesPart = xl.WorkbookPart.AddNewPart<WorkbookStylesPart>();
+            stylesPart.Stylesheet = new Stylesheet();
+
+            // create 2 fonts (one normal, one header)
+            createFonts(stylesPart);
+
+
+            // create fills
+            BuildFills(stylesPart);
+
+            // blank border list
+            stylesPart.Stylesheet.Borders = new Borders { Count = 1 };
+            stylesPart.Stylesheet.Borders.AppendChild(new Border());
+
+            // blank cell format list
+            stylesPart.Stylesheet.CellStyleFormats = new CellStyleFormats { Count = 1 };
+            stylesPart.Stylesheet.CellStyleFormats.AppendChild(new CellFormat());
+
+            // cell format list
+            CreateCellFormats(stylesPart);
+
+            rowIdx = 1;
+            return worksheetpart;
+        }
+
+        private void DoWriteRows(InMemoryUser user, ApplicationSchemaDefinition schema, IEnumerable<AttributeHolder> rows, int rowIdx,
+            OpenXmlWriter writer, IEnumerable<ApplicationFieldDefinition> applicationFields) {
+            foreach (var item in rows) {
+                var attributes = item.Attributes;
+
+                // create new row
+                var xmlAttributes = new List<OpenXmlAttribute>
+                {
+                    new OpenXmlAttribute("r", null, rowIdx.ToString(CultureInfo.InvariantCulture))
+                };
+                writer.WriteStartElement(new Row(), xmlAttributes);
+
+                var nonHiddenFields = applicationFields.Where(ShouldShowField());
+                foreach (var applicationField in nonHiddenFields) {
+                    object dataAux;
+                    attributes.TryGetValue(applicationField.Attribute, out dataAux);
+                    if (dataAux == null && applicationField.Attribute.StartsWith("#") &&
+                        Char.IsNumber(applicationField.Attribute[1])) {
+                        attributes.TryGetValue(applicationField.Attribute.Substring(2), out dataAux);
+                    }
+
+                    var data = dataAux == null ? string.Empty : dataAux.ToString();
+
+                    xmlAttributes = new List<OpenXmlAttribute> { new OpenXmlAttribute("t", null, "str") };
+                    // this is the data type ("t"), with CellValues.String ("str")
+
+                    // that's the default style
+                    var styleId = "1";
+                    if (applicationField.Attribute.Contains("status") && ApplicationConfiguration.ClientName == "hapag") {
+                        var success = getColor(data.Trim(), schema.Name, ref styleId);
+
+                        if (!success) {
+                            // check if status is something like NEW 1/4 (and make sure it doesn't match e.g. NEW REQUEST).
+                            var match = Regex.Match(data.Trim(), "(([A-Z]+ )+)[1-9]+/[1-9]+");
+                            if (match.Success) {
+                                var status = match.Groups[2].Value.Trim();
+                                var compundStatus = getColor(status, schema.Name, ref styleId);
+                                if (!compundStatus) {
+                                    styleId = "1";
+                                }
+                            } else {
+                                styleId = "1";
+                            }
+                        }
+                    }
+                    xmlAttributes.Add(new OpenXmlAttribute("s", null, styleId));
+
+                    // start a cell
+                    writer.WriteStartElement(new Cell(), xmlAttributes);
+                    // write cell content
+                    DateTime dtTimeAux;
+                    var formatToUse = "dd/MM/yyyy HH:mm";
+                    if (applicationField.RendererParameters.ContainsKey("format")) {
+                        formatToUse = applicationField.RendererParameters["format"];
+                    }
+                    var dateParsed = DateTime.TryParse(data, out dtTimeAux);
+                    var dataToCell = data;
+                    if (dateParsed) {
+                        dataToCell = dtTimeAux.FromMaximoToUser(user).ToString(formatToUse);
+                    }
+                    if (dataToCell == "-666") {
+                        //this magic number should never be displayed! 
+                        //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
+                        dataToCell = "";
+                    }
+                    writer.WriteElement(new CellValue(dataToCell));
+                    // end cell
+                    writer.WriteEndElement();
+                }
+
+                // next row
+                rowIdx++;
+                // end row
+                writer.WriteEndElement();
             }
         }
 
         private bool getColor(string status, string schemaName, ref string styleId) {
             var success = false;
             //var styleId2 = "1";
-            if (schemaName != null && schemaName.Equals("change"))
-            {
+            if (schemaName != null && schemaName.Equals("change")) {
                 success = _changeCellStyleDictionary.TryGetValue(status, out styleId);
             }
-            if (!success)
-            {
+            if (!success) {
                 success = _cellStyleDictionary.TryGetValue(status, out styleId);
             }
-           // styleId = styleId2;
+            // styleId = styleId2;
             return success;
         }
 
@@ -265,8 +289,8 @@ namespace softWrench.sW4.Web.Util {
                     // add header style
                     new OpenXmlAttribute("s", null, "8")
                 };
-                
-               
+
+
                 writer.WriteStartElement(new Cell(), xmlAttributes);
                 writer.WriteElement(new CellValue(GetI18NLabel(applicationField, schemaId)));
 
