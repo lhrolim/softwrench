@@ -14,7 +14,7 @@ namespace softWrench.sW4.Util {
             var datetime = String.Empty;
             if (value is DateTime) {
                 var user = SecurityFacade.CurrentUser();
-                datetime = ((DateTime)value).FromMaximoToUser(user).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFKzzz");
+                datetime = ((DateTime)value).FromMaximoToUser(user).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK");
             }
             writer.WriteValue(datetime);
         }
