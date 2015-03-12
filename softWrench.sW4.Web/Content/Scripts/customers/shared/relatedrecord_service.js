@@ -26,7 +26,7 @@ app.factory('relatedrecordService', function (redirectService, searchService) {
                 redirectService.goToApplicationView("servicerequest", "editdetail", "input", null, { id: id });
             }
             else {
-                redirectService.goToApplicationView(app, "editdetail", "input", null, { id: id });
+                redirectService.goToApplicationView(app, "detail", "input", null, { id: id });
             }
         },
 
