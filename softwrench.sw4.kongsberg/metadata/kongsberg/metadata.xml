@@ -819,7 +819,7 @@
       <connectorParameters>
         <connectorParameter key="dbtable" value="incident" />
         <connectorParameter key="integration_interface" value="SWINCIDENT" />
-        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseIncidentCrudConnector" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.KongsbergIncidentCrudConnector" />
       </connectorParameters>
     </entity>
     
@@ -1682,26 +1682,19 @@
             <event type="afterchange" service="generalsrService" method="afterChangeAsset"/>
           </association>
           -->
-          <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualfinish" hidden="true" attributeToServer="#notusedattribute"/>
-          <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetstart;">
-            <header label="Target Start Date:" displacement="sameline"/>
-          </section>
-          <section id="targetFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetfinish;">
-            <header label="Target Finish Date:" displacement="sameline"/>
-          </section>
-          <section id="actualStart" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualstart;">
-            <header label="Actual Start Date:" displacement="sameline"/>
-          </section>
-          <section id="actualFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualfinish;">
-            <header label="Actual Finish Date:" displacement="sameline"/>
-          </section>
+          <field label="Target Start Date:" attribute="targetstart" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          <field label="Target End Date:" attribute="targetfinish" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          <field label="Actual Start Date:" attribute="actualstart" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          <field label="Actual End Date:" attribute="actualfinish" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          
           <field attribute="description" label="Summary:" requiredexpression="true"/>
 
           <field label="Details:" attribute="longdescription_.ldtext">
