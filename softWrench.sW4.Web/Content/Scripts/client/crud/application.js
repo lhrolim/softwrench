@@ -332,8 +332,10 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
             }
             log.debug('rendering list view with previous data');
             data = {
+                //here we have to reproduce that the request is coming from the server, so use resultObject as the name.
+                //check crud_list#gridRefreshed
                 resultObject: $scope.datamap,
-                schema: schema
+                schema: schema,
             }
             $scope.toList(data);
         }
