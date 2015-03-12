@@ -244,13 +244,7 @@ app.directive('activitystream', function(contextService) {
                 }
             }
 
-            //automatically refresh the activity stream every two minutes
-            //TODO: get refresh rate from backend
-            $interval(function () {
-                $scope.refreshStream(true);
-            }, 1000 * 60 * 2);
-
-            $scope.toggleActivityStream = function() {
+            $scope.toggleActivityStream = function () {
                 //open and close activity pane
                 $("#activitystream").toggleClass('open');
                 $scope.setPaneHeight();
@@ -285,8 +279,25 @@ app.directive('activitystream', function(contextService) {
                 $(window).trigger('resize');
             });
 
-            //get the current notifications
-            $scope.refreshStream();
+            //get the current notifications, then automatically refresh
+            var refreshLoop = function () {
+                log.debug('refreshLoop', $scope.refreshRate);
+
+                var refreshTimeout;
+
+                if (typeof $scope.refreshRate == 'undefined' || $scope.refreshRate == 0) {
+                    //refresh every five minutes if the refreshRate is not set
+                    refreshTimeout = 5;
+                } else {
+                    //use the refreshRate from the backend
+                    refreshTimeout = $scope.refreshRate;
+                }
+
+                $scope.refreshStream(true);
+                $timeout(refreshLoop, 1000 * 60 * refreshTimeout);
+                log.debug('refreshTimeout', refreshTimeout);
+            };
+            refreshLoop();
 
             //open notification pane by default, TODO: remove for production
             //$timeout(function () {
