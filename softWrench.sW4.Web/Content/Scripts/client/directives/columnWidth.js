@@ -14,10 +14,12 @@ app.directive('columnWidths', function ($log, $timeout) {
                 //scope.counter = scope.counter + 1;
                 log.debug('schema', scope.schema);
 
-                $timeout(function () {
+                //log.debug(scope.schema.displayables);
 
-                    if (!scope.schema) {
+                $timeout(function () {
+                    if (typeof scope.schema.displayables == 'undefined') {
                         //for dashboards the data is lazy-loaded
+                        log.debug('return');
                         return;
                     }
 
