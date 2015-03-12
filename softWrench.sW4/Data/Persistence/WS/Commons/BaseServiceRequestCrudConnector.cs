@@ -91,7 +91,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var sr = maximoTemplateData.IntegrationObject;
             w.SetValueIfNull(sr, "ACTLABHRS", 0.0);
             w.SetValueIfNull(sr, "ACTLABCOST", 0.0);
-            w.SetValueIfNull(sr, "CHANGEDATE", DateTime.Now.FromServerToRightKind(), true);
+            w.SetValue(sr, "CHANGEDATE", DateTime.Now.FromServerToRightKind(), true);
             w.SetValueIfNull(sr, "CHANGEBY", user.Login);
             w.SetValueIfNull(sr, "REPORTDATE", DateTime.Now.FromServerToRightKind());
 
