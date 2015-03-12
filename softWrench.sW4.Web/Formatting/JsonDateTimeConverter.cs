@@ -11,7 +11,10 @@ namespace softWrench.sW4.Web.Formatting {
             var datetime = String.Empty;
             if (value is DateTime) {
                 var user = SecurityFacade.CurrentUser();
-                datetime = ((DateTime)value).FromMaximoToUser(user).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK");
+                // Chrome converts times without offsets as if they are UTC. Instead of sending the time 
+                // without an offset, send the time with the users current off set so no conversion occurs.
+                var userOffset = TimeSpan.FromMinutes(user.TimezoneOffset.Value * -1);
+                datetime = new DateTimeOffset(((DateTime)value).FromMaximoToUser(user), userOffset).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK");
             }
             writer.WriteValue(datetime);
         }
