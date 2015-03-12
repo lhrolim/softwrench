@@ -11,7 +11,7 @@
             <div class="text"><span class="glyphicon glyphicon-log-out"></span>&ensp;{{i18N('_headermenu.loggedinas','Logged in as')}} {{userInfo()}}</div>
             <div class="buttons">
 
-                <a href="#" ng-click="doAction(null,'EntityMetadata','Refresh',null,$event.target)" ng-show="isLocal"
+                <a href="#" ng-click="doAction(null,'EntityMetadata','Refresh',null,$event.target)" ng-show="isSysAdmin"
                    rel="tooltip" data-original-title="Refresh Metadata" data-placement="bottom">
 
                     <button type="button" class="btn btn-default btn-sm">
