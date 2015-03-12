@@ -545,6 +545,16 @@ app.directive('crudList', function (contextService) {
             //by the end of the controller, so that all the scope functions are already declared
             initController();
 
+        },
+
+        link: function (scope, element, attrs) {
+            scope.isDashboard = function(element, panelid) {
+                if (panelid != null) {
+                    return "width: 100%;";
+                } else {
+                    return "width: 97.5%; width: -moz-calc(100% - 40px); width: -webkit-calc(100% - 40px); width: calc(100% - 40px);";
+                }
+            }
         }
     };
 });
