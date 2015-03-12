@@ -865,7 +865,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="list.print.schema" value="detail"/>
           </properties>
           <optionfield attribute ="ticketid">
-            <renderer type="checkbox" params="minwidth=40px;maxwidth=40px" />
+            <renderer type="checkbox" params="minwidth=20px;maxwidth=20px" />
             <option label="" value="checking"/>
           </optionfield>
           <field label="Incident Number" attribute="ticketid">
@@ -875,16 +875,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=100px;maxwidth=100px" />
           </field>
           <field label="Incident Summary" attribute="description">
-            <renderer type="default" params="minwidth=214px;maxwidth=214px" />
+            <renderer type="default" params="minwidth=80px;maxwidth=220px" />
           </field>
           <field label="Severity" attribute="internalpriority">
-            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
+            <renderer type="default" params="minwidth=55px;maxwidth=55px" />
           </field>
           <field label="Site ID" attribute="pluspcustomer">
-            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
+            <renderer type="default" params="minwidth=70px;maxwidth=70px" />
           </field>
           <field label="Affected Date and Time" attribute="reportdate">
-            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=100px;maxwidth=100px"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=90px;maxwidth=90px"/>
           </field>
           <field label="Ownergroup" attribute="ownergroup">
             <renderer type="default" params="minwidth=80px;maxwidth=80px" />
