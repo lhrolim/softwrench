@@ -32,7 +32,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
 
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "siteid", user.SiteId);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "orgid", user.OrgId);
-                WsUtil.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind(), "CHANGEDATE", false);
+                WsUtil.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind());
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "modifydate", DateTime.Now.FromServerToRightKind());
 
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());

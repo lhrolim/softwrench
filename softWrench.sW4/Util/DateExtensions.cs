@@ -4,12 +4,9 @@ using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using System;
-using log4net;
 
 namespace softWrench.sW4.Util {
     public static class DateExtensions {
-
-        private static readonly ILog Log = LogManager.GetLogger(SwConstants.DATETIME_LOG);
 
         public static double ToTimeInMillis(this DateTime time) {
             return time.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
@@ -100,11 +97,6 @@ namespace softWrench.sW4.Util {
         internal static DateTime UserMaximoConversion(DateTime date, InMemoryUser user, ConversionKind fromUserToMaximo, int? maximoOffset = null) {
             if (user == null || !user.TimezoneOffset.HasValue) {
                 //if the user has no timezone there´s really nothing that we can do --> just return the date
-                if (user != null)
-                {
-                    //If the user is present but is missing their time zone
-                    Log.WarnFormat("Missing user time zone for user {0}", user.MaximoPersonId);
-                }
                 return date;
             }
             return MaximoConversion(date, user.TimezoneOffset.Value, fromUserToMaximo, maximoOffset);
