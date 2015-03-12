@@ -9,6 +9,8 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using cts.commons.simpleinjector;
+using softWrench.sW4.Email;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
@@ -16,9 +18,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class BaseIncidentCrudConnector : CrudConnectorDecorator {
 
         protected AttachmentHandler _attachmentHandler;
+        protected EmailService _emailService;
+
 
         public BaseIncidentCrudConnector() {
             _attachmentHandler = new AttachmentHandler();
+            _emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
@@ -44,7 +49,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             HandleSolutions(crudData, sr);
             base.BeforeUpdate(maximoTemplateData);
         }
+        public override void AfterUpdate(MaximoOperationExecutionContext maximoTemplateData) {
+            if (maximoTemplateData.Properties.ContainsKey("mailObject")) {
+                _emailService.SendEmail((EmailService.EmailData)maximoTemplateData.Properties["mailObject"]);
+            }
 
+            //TODO: Delete the failed commlog entry or marked as failed : Input from JB needed 
+            base.AfterUpdate(maximoTemplateData);
+        }
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var user = SecurityFacade.CurrentUser();
             var sr = maximoTemplateData.IntegrationObject;
