@@ -8,7 +8,7 @@
 
             <div class="form-group">
 
-                <div class="form-group" ng-show="profiles.length >0">
+                <div class="form-group" ng-if="applications.length >0">
                     <label>{{i18N('configuration.application','Application')}}</label>
                     <select ng-model="currentapplication" ng-options="app.label for app in applications" id="applicationsautocmp" class="form-control"
                             ng-change="gotocategory(app)"></select>
@@ -28,13 +28,14 @@
                 </div>
             </div>
             <!---->
-<!--            <div data-angular-treeview="true"-->
-<!--                 data-tree-model="categoryData"-->
-<!--                 data-node-id="id"-->
-<!--                 data-node-label="key"-->
-<!--                 data-node-children="children"-->
-<!--                 style="width: 300px;">-->
-<!--            </div>-->
+            <div ng-show="type == '0'"
+                 data-angular-treeview="true"
+                 data-tree-model="categoryData"
+                 data-node-id="id"
+                 data-node-label="key"
+                 data-node-children="children"
+                 style="width: 300px;">
+            </div>
         </div>
         <div class="col-lg-10">
             <form class="form-horizontal">

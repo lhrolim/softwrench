@@ -61,7 +61,7 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
                 //                Modules = MetadataProvider.Modules(ClientPlatform.Web),
                 //                Profiles = SecurityFacade.GetInstance().FetchAllProfiles(false),
                 Type = ConfigTypes.Global,
-                Conditions = _dao.FindByQuery<Condition>(Condition.GlobalConditions)
+                Conditions = _dao.FindByQuery<Condition>(Condition.GlobalConditions),
             };
             return new GenericResponseResult<ConfigurationScreenResult>(result);
         }
@@ -80,7 +80,7 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
                 Profiles = SecurityFacade.GetInstance().FetchAllProfiles(false),
                 Type = ConfigTypes.WhereClauses,
                 Applications = applications,
-                Conditions = _dao.FindAll<Condition>(typeof(Condition))
+                Conditions = _dao.FindAll<Condition>(typeof(Condition)),
             };
             return new GenericResponseResult<ConfigurationScreenResult>(result);
         }
@@ -167,6 +167,7 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         }
 
         class ConfigurationScreenResult {
+
             public IEnumerable<ModuleDefinition> Modules { get; set; }
             public ICollection<UserProfile> Profiles { get; set; }
 
