@@ -875,7 +875,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=100px;maxwidth=100px" />
           </field>
           <field label="Incident Summary" attribute="description">
-            <renderer type="default" params="minwidth=80px;maxwidth=230px" />
+            <renderer type="default" params="minwidth=214px;maxwidth=214px" />
           </field>
           <field label="Severity" attribute="internalpriority">
             <renderer type="default" params="minwidth=80px;maxwidth=80px" />
