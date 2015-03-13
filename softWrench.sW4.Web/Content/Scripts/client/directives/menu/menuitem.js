@@ -168,7 +168,16 @@ app.directive('menuItem', function (contextService) {
             };
 
             $scope.doAction = function (leaf, target) {
-                menuService.doAction(leaf, target);
+                var msg = "Are you sure you want to leave the page?";
+                if (validationService.getDirty()) {
+                    alertService.confirmCancel(null, null, function () {
+                        menuService.doAction(leaf, target);
+                        $scope.$digest();
+                    }, msg, function () { return; });
+                }
+                else {
+                    menuService.doAction(leaf, target);
+                }
             };
 
             $scope.contextPath = function (path) {
