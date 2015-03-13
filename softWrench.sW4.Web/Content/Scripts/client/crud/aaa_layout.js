@@ -256,28 +256,43 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             return;
         }
 
-        $http({
-            method: "GET",
-            url: url("/api/menu?" + platformQS()),
-            cache: $templateCache
-        })
-        .success(function (menuAndNav) {
-            $scope.$on('sw_indexPageLoaded', function (event, url) {
+        $scope.$on("sw_loadmenu", function(event, menuModel) {
+            $scope.$on('sw_indexPageLoaded', function(event, url) {
                 if (url != null) {
-                    menuService.setActiveLeafByUrl(menuAndNav.menu, url);
+                    menuService.setActiveLeafByUrl(menuModel.menu, url);
                 }
             });
-            contextService.insertIntoContext("commandbars", menuAndNav.commandBars);
-            $rootScope.menu = menuAndNav.menu;
-            $scope.menu = menuAndNav.menu;
-            $scope.isSysAdmin = menuAndNav.isSysAdmin;
-            $scope.isClientAdmin = menuAndNav.isClientAdmin;
+            contextService.insertIntoContext("commandbars", menuModel.commandBars);
+            $rootScope.menu = menuModel.menu;
+            $scope.menu = menuModel.menu;
+            $scope.isSysAdmin = menuModel.isSysAdmin;
+            $scope.isClientAdmin = menuModel.isClientAdmin;
             $('.hapag-body').addClass('hapag-body-loaded');
-        })
-        .error(function (data) {
-            data.prependMessage = "retrieving menu";
-            $rootScope.$broadcast('sw_ajaxerror', data);
         });
+
+
+//        $http({
+//            method: "GET",
+//            url: url("/api/menu?" + platformQS()),
+//            cache: $templateCache
+//        })
+//        .success(function (menuAndNav) {
+//            $scope.$on('sw_indexPageLoaded', function (event, url) {
+//                if (url != null) {
+//                    menuService.setActiveLeafByUrl(menuAndNav.menu, url);
+//                }
+//            });
+//            contextService.insertIntoContext("commandbars", menuAndNav.commandBars);
+//            $rootScope.menu = menuAndNav.menu;
+//            $scope.menu = menuAndNav.menu;
+//            $scope.isSysAdmin = menuAndNav.isSysAdmin;
+//            $scope.isClientAdmin = menuAndNav.isClientAdmin;
+//            $('.hapag-body').addClass('hapag-body-loaded');
+//        })
+//        .error(function (data) {
+//            data.prependMessage = "retrieving menu";
+//            $rootScope.$broadcast('sw_ajaxerror', data);
+//        });
     }
 
     $scope.i18N = function (key, defaultValue, paramArray) {
