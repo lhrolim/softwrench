@@ -51,15 +51,17 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var sr = maximoTemplateData.IntegrationObject;
             var user = SecurityFacade.CurrentUser();
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
-            if (crudData.ContainsAttribute("#hasstatuschange")){
-                //first let´s 'simply change the status
-                WsUtil.SetValue(sr, "STATUSIFACE", true);
-                if (!WsUtil.GetRealValue(sr, "STATUS").Equals("CLOSED")){
-                    maximoTemplateData.InvokeProxy();
-                    WsUtil.SetValue(sr, "CHANGEBY", user.Login);
+            //if (crudData.ContainsAttribute("#hasstatuschange")){
+            //    //first let´s 'simply change the status
+            //    WsUtil.SetValue(sr, "STATUSIFACE", true);
+            //    if (!WsUtil.GetRealValue(sr, "STATUS").Equals("CLOSED")){
+            //        maximoTemplateData.InvokeProxy();
 
-                } WsUtil.SetValue(sr, "STATUSIFACE", false);
-            }
+            //     //Duplication of code in CommonTransaction()
+            //        WsUtil.SetValue(sr, "CHANGEBY", user.Login);
+
+            //    } WsUtil.SetValue(sr, "STATUSIFACE", false);
+            //}
 
             // Update common fields or transactions prior to maximo operation exection
             CommonTransaction(maximoTemplateData);
