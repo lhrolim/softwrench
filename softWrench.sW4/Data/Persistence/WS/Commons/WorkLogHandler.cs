@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -24,17 +25,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
             // Filter work order materials for any new entries where matusetransid is null
             var Worklogs = ((IEnumerable<CrudOperationData>)entity.GetRelationship("worklog")).ToArray();
             WsUtil.CloneArray(Worklogs, rootObject, "WORKLOG", delegate(object integrationObject, CrudOperationData crudData) {
+                
                 WsUtil.SetValueIfNull(integrationObject, "worklogid", -1);
                 WsUtil.SetValue(integrationObject, "recordkey", recordKey);
                 WsUtil.SetValueIfNull(integrationObject, "class", entity.TableName);
                 WsUtil.SetValueIfNull(integrationObject, "createby", user.Login);
                 WsUtil.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
-
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "siteid", user.SiteId);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "orgid", user.OrgId);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind(), "CHANGEDATE");
-                WsUtil.CopyFromRootEntity(rootObject, integrationObject, "modifydate", DateTime.Now.FromServerToRightKind());
-
+                
+                var hasChanged = crudData.GetUnMappedAttribute("#hasChanged");
+                if (hasChanged == "1") {
+                    WsUtil.SetValue(integrationObject, "modifydate", DateTime.Now.FromServerToRightKind(), true);
+                }
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
             });
