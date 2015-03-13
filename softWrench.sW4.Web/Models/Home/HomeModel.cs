@@ -29,7 +29,10 @@ namespace softWrench.sW4.Web.Models.Home {
 
         public long InitTimeMillis { get; set; }
 
-        public HomeModel(string url, string title, HomeConfigs configs, InMemoryUser user, bool hasLogoPopup,
+        public String MenuJSON { get; set; }
+
+
+        public HomeModel(string url, string title, HomeConfigs configs, MenuModel MenuModel, InMemoryUser user, bool hasLogoPopup,
             JObject i18NJsons, JObject statusColorJson, string clientName, string windowTitle = null, string message = null) {
             Url = url;
             InitTimeMillis = configs.InitTimeMillis;
@@ -37,14 +40,22 @@ namespace softWrench.sW4.Web.Models.Home {
             ClientName = clientName;
 
             ConfigJSON = JsonConvert.SerializeObject(configs, Newtonsoft.Json.Formatting.None,
-          new JsonSerializerSettings() {
-              ContractResolver = new CamelCasePropertyNamesContractResolver()
-          });
+            new JsonSerializerSettings() {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
 
             UserJSON = JsonConvert.SerializeObject(user, Newtonsoft.Json.Formatting.None,
-       new JsonSerializerSettings() {
-           ContractResolver = new CamelCasePropertyNamesContractResolver()
-       });
+            new JsonSerializerSettings() {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+
+            if (MenuModel != null) {
+                MenuJSON = JsonConvert.SerializeObject(MenuModel, Newtonsoft.Json.Formatting.None,
+                    new JsonSerializerSettings() {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    });
+            }
+
             HasPopupLogo = hasLogoPopup;
             I18NJsons = i18NJsons.ToString(Newtonsoft.Json.Formatting.Indented);
             if (statusColorJson != null) {

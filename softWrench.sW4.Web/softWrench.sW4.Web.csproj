@@ -266,6 +266,7 @@
     <Compile Include="Controllers\ExcelController.cs" />
     <Compile Include="Controllers\ExtendedDataController.cs" />
     <Compile Include="Controllers\Log\LogAdminController.cs" />
+    <Compile Include="Controllers\MenuHelper\MenuHelper.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ReportFilterController.cs" />
     <Compile Include="Controllers\Routing\RouterParameters.cs" />
@@ -294,6 +295,7 @@
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
     <Compile Include="Formatting\JsonDateTimeConverter.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
+    <Compile Include="Models\Home\MenuModel.cs" />
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
     <Compile Include="Models\MyProfile\MyProfileModel.cs" />
     <Compile Include="Models\Report\ReportModel.cs" />
@@ -466,7 +468,6 @@
     <Compile Include="Controllers\SchedulerSetup\SchedulerController.cs" />
     <Compile Include="Controllers\DataController.cs" />
     <Compile Include="Controllers\DataRequestValueProviderFactory.cs" />
-    <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\Security\UserController.cs" />
     <Compile Include="Controllers\Security\UserProfileController.cs" />
     <Compile Include="Controllers\Security\RoleController.cs" />
