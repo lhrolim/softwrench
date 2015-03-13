@@ -208,7 +208,16 @@ app.directive('menuItem', function (contextService) {
 
             $scope.handleContainerClick = function (container, target) {
                 if (container.controller != null && !$(target).find("span").hasClass('bottom-caret') && !mockService.isMockedContainerDashBoard()) {
-                    menuService.doAction(container, target);
+                    var msg = "Are you sure you want to leave the page?";
+                    if (validationService.getDirty()) {
+                        alertService.confirmCancel(null, null, function () {
+                            menuService.doAction(container, target);
+                            $scope.$digest();
+                        }, msg, function () { return; });
+                    }
+                    else {
+                        menuService.doAction(container, target);
+                    }
                 }
                 if ($scope.displacement == 'vertical') {
                     $(target).find("span").toggleClass("right-caret bottom-caret");
