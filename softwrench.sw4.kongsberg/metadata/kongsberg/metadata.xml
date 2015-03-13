@@ -1318,7 +1318,7 @@
           </section>
 
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
-          <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
+          <event type="beforesubmit.postvalidation" service="genericTicketService" method="checkWorklogsForChange"/>
           
           <commands>
             <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
@@ -1947,6 +1947,7 @@
       <schemas>
         <schema id="list"  stereotype="compositionlist">
           <field attribute="worklogid" hidden="true" />
+          <field attribute="modifydate" hidden="true"/>
           <field  attribute="recordkey" label="Record Key" hidden="true" />
           <field  attribute="class" label="Class" hidden="true" />
           <field  attribute="createby" label="Created By" hidden="true" />
@@ -1957,13 +1958,15 @@
           <field  attribute="logtype" label="Log Type" hidden="true" />
           <field  attribute="description" label="Summary" qualifier="title"/>
           <field attribute="longdescription_.ldtext" label="Details" hidden="true"/>
+          <field attribute="#hasChanged" hidden="true"/>
           <!--<field attribute="orgid" hidden="true" />
           <field attribute="siteid" hidden="true" />-->
 
         </schema>
 
         <detail stereotype="compositiondetail">
-
+          <field attribute="#hasChanged" hidden="true"/>
+          <field attribute="modifydate" label="Modify Date" hidden="true"/>
           <field attribute="description" label="Summary:" requiredexpression="true" />
           <field attribute="longdescription_.ldtext" label="Details:" >
             <renderer type="textarea"/>
