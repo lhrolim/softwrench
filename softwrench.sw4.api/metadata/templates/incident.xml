@@ -98,7 +98,7 @@
             <renderer type="color" params="width=4%;grid=incident;column=status"/>
           </field>
           <properties>
-            <property key="list.click.schema" value="detail"/>
+            <property key="list.click.schema" value="editdetail"/>
           </properties>
         </list>
 
@@ -171,7 +171,7 @@
           <field attribute="statusdate" hidden="true" />
         </schema>
 
-        <detail mode="input" title="Incident Details">
+        <schema stereotype="detail" id="editdetail" mode="input" title="Incident Details">
           <field attribute="actlabcost" default="0" hidden="true"/>
           <field attribute="actlabhrs" default="0" hidden="true" />
           <field attribute="ticketuid" label="Incident Id:" hidden="true"/>
@@ -262,7 +262,7 @@
           <!--composition relationship="solution" label="Solution">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
           </composition-->
-        </detail>
+        </schema>
 
         
       </schemas>

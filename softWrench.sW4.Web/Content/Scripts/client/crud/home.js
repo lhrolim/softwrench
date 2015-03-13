@@ -1,4 +1,4 @@
-﻿function HomeController($scope, $http, $templateCache, $rootScope, $timeout, contextService, menuService, i18NService, alertService, statuscolorService,redirectService) {
+﻿function HomeController($scope, $http, $templateCache, $rootScope, $timeout, contextService, menuService, i18NService, alertService, statuscolorService, redirectService) {
 
     $scope.$name = 'HomeController';
 
@@ -6,8 +6,16 @@
 
 
         var redirectUrl = url(homeModel.Url);
+
+        var menuModel =JSON.parse(homeModel.MenuJSON);
+
         i18NService.load(homeModel.I18NJsons, userLanguage);
         statuscolorService.load(homeModel.StatusColorJson);
+
+
+        $scope.$emit("sw_loadmenu", menuModel);
+
+        
 
         var sessionRedirectURL = sessionStorage.swGlobalRedirectURL;
         if (sessionRedirectURL != null && ((redirectUrl.indexOf("popupmode=browser") == -1) && (redirectUrl.indexOf("MakeSWAdmin") == -1))) {

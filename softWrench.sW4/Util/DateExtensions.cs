@@ -1,4 +1,4 @@
-﻿using cts.commons.portable.Util;
+using cts.commons.portable.Util;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata;
@@ -103,7 +103,7 @@ namespace softWrench.sW4.Util {
                 if (user != null)
                 {
                     //If the user is present but is missing their time zone
-                    Log.Debug(string.Format("Missing user time zone for user {0}", user.MaximoPersonId));
+                    Log.WarnFormat("Missing user time zone for user {0}", user.MaximoPersonId);
                 }
                 return date;
             }

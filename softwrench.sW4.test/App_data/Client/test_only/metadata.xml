@@ -660,11 +660,11 @@
 
     <application name="incident" entity="incident" title="Incident">
       <schemas>
-        <detail redeclaring="false">
+        <schema id="editdetail" redeclaring="false">
           <customization position="attachment"/>
           <customization position="location"/>
           <customization position="classstructureid"/>
-        </detail>
+        </schema>
       </schemas>
       
     </application>
