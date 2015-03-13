@@ -1,4 +1,4 @@
-﻿using cts.commons.portable.Util;
+using cts.commons.portable.Util;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata;
@@ -137,7 +137,9 @@ namespace softWrench.sW4.Util {
             if (ConversionKind.MaximoToUser == kind || ConversionKind.MaximoToServer == kind) {
                 offset = -1 * offset;
             }
+            Log.Debug(string.Format("Input date: {0}  Input kind: {1}  Input offset: {2}  Output offset: {3}", date, kind, clientOffset, maximoOffset));
             date = date.AddMinutes(offset);
+            Log.Debug(string.Format("Output date: {0}", date));
             return date;
         }
 
