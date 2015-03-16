@@ -8,10 +8,9 @@
 
             <div class="form-group">
 
-                <div class="form-group" ng-if="applications.length >0">
+                <div class="form-group" ng-show="applications.length >0">
                     <label>{{i18N('configuration.application','Application')}}</label>
-                    <select ng-model="currentapplication" ng-options="app.label for app in applications" id="applicationsautocmp" class="form-control"
-                            ng-change="gotocategory(app)"></select>
+                    <select ng-model="currentapplication" ng-options="app.label for app in applications" id="applicationsautocmp" class="form-control"></select>
                 </div>
 
                 <div class="form-group" ng-show="modules.length >1">
