@@ -6,18 +6,28 @@
             var messageHeight = $('messagesection .alerts').height();
             var paginationHeight = $('.affix-pagination').height();
             var theaderHeight = $('.listgrid-thead').height();
+
             $('.content').css('margin-top', headerHeight + messageHeight);
             $('messagesection .alerts').css('margin-top', 0 - messageHeight);
-            $('.affix-pagination').css('top', headerHeight + messageHeight);
-            //move fixed listgrid header up in IE9
-            var adjustment = 0;
-            if (isIe9()) {
-                adjustment = 135;
+
+            //only adjust if table header is fixed 
+            if ($('.affix-pagination').css('position') == 'fixed') {
+                $('.affix-pagination').css('top', headerHeight + messageHeight);
             }
-            $('.listgrid-thead').css('top', headerHeight + messageHeight + paginationHeight - adjustment);
-            $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight - 1);
+
+            //only adjust if table header is fixed
+            if ($('.listgrid-thead').css('position') == 'fixed') {
+                //move fixed listgrid header up in IE9
+                var adjustment = 0;
+                if (isIe9()) {
+                    adjustment = 135;
+                }
+
+                $('.listgrid-thead').css('top', headerHeight + messageHeight + paginationHeight - adjustment);
+                $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight - 1);
+            }
         }
-        //reset the lcoation of the content, context menu, grid header and filter bar
+            //reset the lcoation of the content, context menu, grid header and filter bar
         else {
             $('.content').css('margin-top', 'auto');
             $('messagesection .alerts').css('margin-top', 'auto');
