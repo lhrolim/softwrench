@@ -25,9 +25,11 @@ namespace softWrench.sW4.Data.Persistence {
             var result = HibernateUtil.TranslateQueryString(queryst, parameters);
             queryst = result.query;
             parameters = result.Parameters;
-            
+
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
-            query.SetFlushMode(FlushMode.Never);
+            if (!native) {
+                query.SetFlushMode(FlushMode.Never);
+            }
             query.SetTimeout(MetadataProvider.GlobalProperties.QueryTimeout());
             LogQuery(queryst, parameters);
             if (result.Parameters == null) {

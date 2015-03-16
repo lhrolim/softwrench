@@ -860,7 +860,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
         <relationship to="ci">
           <relationshipAttribute from="cinum" to="cinum" primary="true"/>
         </relationship>
+        <relationship to="wostatus" collection="true">
+          <relationshipAttribute from="wonum" to="wonum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+
       </relationships>
+      
 			<connectorParameters>
 				<connectorParameter key="dbtable" value="wochange" />
 			</connectorParameters>
@@ -2633,6 +2639,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 				<connectorParameter key="dbtable" value="WOACTIVITY" />
 			</connectorParameters>
 		</entity>
+
+    <entity name="wostatus" idAttribute="wostatusid">
+      <attributes>
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="timestamp" required="true" />
+        <attribute name="fincntrlid" type="varchar" required="false" />
+        <attribute name="glaccount" type="varchar" required="false" />
+        <attribute name="memo" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="parent" type="varchar" required="false" />
+        <attribute name="rowstamp" type="integer" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="wonum" type="varchar" required="true" />
+        <attribute name="wostatusid" type="integer" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="wostatus" />
+      </connectorParameters>
+    </entity>
 
 		<entity name="problem" idAttribute="ticketid">
 			<attributes>

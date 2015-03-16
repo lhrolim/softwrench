@@ -5,6 +5,7 @@ using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
+using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
@@ -36,7 +37,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             var worklogs = (IEnumerable<Dictionary<string, object>>)result.GetAttribute("worklog_");
             var wftransactions = (IEnumerable<Dictionary<string, object>>)result.GetAttribute("apprwftransaction_");
             var wfassignment = (IEnumerable<Dictionary<string, object>>)result.GetAttribute("wfassignment_");
-
+            var wostatus = (IEnumerable<Dictionary<string, object>>)result.GetAttribute("wostatus_");
             //let´s locate the first one which is marked as reject. 
             //it should always be the latest txlog, since no further operation is allowed after rejecting the workflow
             var rejectedTransaction = wftransactions.FirstOrDefault(w => w[ApproverConstants.TransTypeColumn].ToString().Equals("Reject"));
@@ -47,7 +48,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 if (approvalGroup != null && !approvalGroup.StartsWith("C-")) {
                     HandleNonCustomerApprovers(user, wfassignment, approvalGroup, approval, wftransactions, rejectedTransaction);
                 } else {
-                    HandleCustomerApprovers(user,result, approvalGroup, worklogs, approval);
+                    HandleCustomerApprovers(user, result, approvalGroup, worklogs, approval, wostatus);
                 }
             }
         }
@@ -72,7 +73,16 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             Log.DebugFormat("non customer approval handled " + string.Join(", ", approval.Select(m => m.Key + ":" + m.Value).ToArray()));
         }
 
-        private void HandleCustomerApprovers(InMemoryUser user, DataMap result, string approvalGroup, IEnumerable<Dictionary<string, object>> worklogs, IDictionary<string, object> approval) {
+        private void HandleCustomerApprovers(InMemoryUser user, DataMap result, string approvalGroup, IEnumerable<Dictionary<string, object>> worklogs, IDictionary<string, object> approval,
+            IEnumerable<Dictionary<string, object>> wostatus) {
+
+            var latestAuthStatusDate = FetchLatestWOStatusDate(wostatus);
+            if (latestAuthStatusDate != null) {
+                //https://controltechnologysolutions.atlassian.net/browse/HAP-976
+                worklogs = FilterWorkLogsOlderThanLatestAuth(worklogs, latestAuthStatusDate);
+            }
+
+
             var apprDescription = c.GetWorkLogDescriptions(approvalGroup, true);
             var rejDescription = c.GetWorkLogDescriptions(approvalGroup, false);
 
@@ -97,11 +107,30 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 approval["#shouldshowaction"] = false;
             } else if (anyrejWl != null) {
                 //if there´s a rejected worklog on the level, then all groups should be rejected, except the ones that might have approved it already...
-                approval[c.StatusColumn] =  c.RejectedStatus;
+                approval[c.StatusColumn] = c.RejectedStatus;
             }
 
 
             Log.DebugFormat("customer approval handled " + string.Join(", ", approval.Select(m => m.Key + ":" + m.Value).ToArray()));
+        }
+
+        private IEnumerable<Dictionary<string, object>> FilterWorkLogsOlderThanLatestAuth(IEnumerable<Dictionary<string, object>> worklogs, DateTime? latestAuthStatusDate) {
+            //remove any worklogs older than the last date that the change has been marked as AUTH
+            var resultList = new List<Dictionary<string, object>>();
+            foreach (var worklog in worklogs) {
+                var wlDate = worklog["itdcreatedate"] as DateTime?;
+                if (wlDate > latestAuthStatusDate) {
+                    resultList.Add(worklog);
+                }
+            }
+            return resultList;
+        }
+
+        private DateTime? FetchLatestWOStatusDate(IEnumerable<Dictionary<string, object>> wostatuses) {
+            foreach (var wostatus in wostatuses.Where(wostatus => wostatus["status"].EqualsIc("AUTH"))) {
+                return wostatus["changedate"] as DateTime?;
+            }
+            return null;
         }
 
         /// <summary>

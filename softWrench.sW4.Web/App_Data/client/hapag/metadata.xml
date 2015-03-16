@@ -1531,6 +1531,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <collectionproperties allowcreation="false" orderbyfield="transdate desc"/>
           </composition>
           <composition relationship="wfassignment" label="Approvals" hidden="true"/>
+          <composition relationship="wostatus" label="WoStatus" hidden="true">
+            <collectionproperties orderbyfield="changedate desc"/>
+          </composition>
 
           <composition relationship="attachment" label="Attachments" printschema="detailPrint">
             <collectionproperties allowcreation="true"/>
@@ -3427,6 +3430,16 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <list stereotype="compositionlist">
           <field attribute="wfid" hidden="true"/>
           <field attribute="roleid" hidden="true"/>
+        </list>
+      </schemas>
+    </application>
+
+    <application name="wostatus" entity="wostatus" title="WoStatus">
+      <schemas>
+        <list stereotype="compositionlist">
+          <field attribute="wonum" hidden="true"/>
+          <field attribute="status" hidden="true"/>
+          <field attribute="changedate" hidden="true"/>
         </list>
       </schemas>
     </application>
