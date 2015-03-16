@@ -77,15 +77,15 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             var rejDescription = c.GetWorkLogDescriptions(approvalGroup, false);
 
             var apprWl = worklogs.FirstOrDefault(w =>
-                w["description"].ToString().EqualsIc(apprDescription)
-                && w["logtype"].ToString().Equals(c.WlApprLogType));
+                w["description"].EqualsIc(apprDescription)
+                && w["logtype"].Equals(c.WlApprLogType));
 
             var rejWl = worklogs.FirstOrDefault(w =>
-                w["description"].ToString().EqualsIc(rejDescription)
-              && w["logtype"].ToString().Equals(c.WlRejLogType));
+                w["description"].EqualsIc(rejDescription)
+              && w["logtype"].Equals(c.WlRejLogType));
 
             var anyrejWl = worklogs.FirstOrDefault(w =>
-                 w["description"].ToString().StartsWith(c.RejectedWorklogDescription, StringComparison.CurrentCultureIgnoreCase)
+                 w["description"].StartsWithIc(c.RejectedWorklogDescription)
               && w["logtype"].ToString().Equals(c.WlRejLogType));
 
             approval["#shouldshowaction"] = LevelMatches(result, approval) && user.HasPersonGroup(approvalGroup); ;

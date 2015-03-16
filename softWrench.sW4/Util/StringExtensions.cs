@@ -28,6 +28,22 @@ namespace softWrench.sW4.Util {
             return str.Equals(other, StringComparison.CurrentCultureIgnoreCase);
         }
 
+        public static bool EqualsIc(this object obj, string other) {
+            if (obj == null) {
+                return other == null;
+            }
+
+            return obj.ToString().EqualsIc(other);
+        }
+
+        public static bool StartsWithIc(this object obj, string other) {
+            if (obj == null) {
+                return other == null;
+            }
+
+            return obj.ToString().StartsWith(other, StringComparison.CurrentCultureIgnoreCase);
+        }
+
         public static bool EqualsAny(this string str, IEnumerable<string> strings) {
             return strings.Any(toCompare => str.Equals(toCompare, StringComparison.InvariantCultureIgnoreCase));
         }
