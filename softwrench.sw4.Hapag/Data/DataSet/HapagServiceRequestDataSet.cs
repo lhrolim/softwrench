@@ -194,8 +194,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             resultObject.SetAttribute("#closeddate", "CLOSED".Equals(status) ? statusDate : "");
         }
 
-        private static void HandleUsefulFaqLinks(DataMap resultObject, List<UsefulFaqLinksUtils> usefulFaqLinksUtils) {
-            var usefulFaqLinks = FaqUtils.GetUsefulFaqLinks(usefulFaqLinksUtils);
+        private static void HandleUsefulFaqLinks(DataMap resultObject, List<UsefulFaqLinksUtils> templateFaQs) {
+            var usefulFaqLinks = FaqUtils.GetUsefulFaqLinks(templateFaQs);
 
             if (CollectionExtensions.IsNullOrEmpty(usefulFaqLinks)) {
                 return;

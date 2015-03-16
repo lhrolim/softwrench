@@ -7,6 +7,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         private readonly string _language;
         private readonly IList<string> _categories;
         private readonly string _realDescription;
+        private FaqUtils.FaqData _originalData;
 
 
         public FaqDescription(string dbDescription) {
@@ -17,6 +18,11 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             var categoryDescArray = lidAndRestArray[1].Split('|');
             _realDescription = categoryDescArray[1];
             _categories = new List<string>(categoryDescArray[0].Split('/'));
+        }
+
+        public FaqUtils.FaqData OriginalData {
+            get { return _originalData; }
+            set { _originalData = value; }
         }
 
         public string Id {

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
     public class FaqUtils {
@@ -18,42 +19,73 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
         private EntityRepository _entityRepository = new EntityRepository();
 
-        private static IEnumerable<FaqData> GetBuiltList(IEnumerable<FaqData> list, IEnumerable<UsefulFaqLinksUtils> usefulFaqLinksUtils) {
+        private static IEnumerable<FaqData> GetBuiltList(IEnumerable<FaqData> databaseFaqList, IEnumerable<UsefulFaqLinksUtils> faqsOfTemplate) {
             try {
-                var buildedList = new List<FaqData>();
-                var usefulFaqLinksUtilAux = usefulFaqLinksUtils as IList<UsefulFaqLinksUtils> ?? usefulFaqLinksUtils.ToList();
-                var firstUsefulFaqLink = usefulFaqLinksUtilAux.FirstOrDefault();
-                if (firstUsefulFaqLink != null) {
+                var faqsOfTemplateAux = faqsOfTemplate as IList<UsefulFaqLinksUtils> ?? faqsOfTemplate.ToList();
+                var firstUsefulFaqLink = faqsOfTemplateAux.FirstOrDefault();
+                if (firstUsefulFaqLink == null) {
+                    //template has no FAQs registered
+                    return null;
+                }
+                var language = firstUsefulFaqLink.Language;
 
-                    foreach (var item in list) {
-                        FaqDescription descriptor;
-                        try {
-                            Log.DebugFormat("faq description: {0}", item.Description);
-                            descriptor = new FaqDescription(item.Description);
-                        } catch (Exception e) {
-                            Log.Error(e);
-                            continue;
-                        }
+                var databaseFaqListConverted = new List<FaqDescription>();
+                foreach (var item in databaseFaqList) {
+                    try {
+                        Log.DebugFormat("faq description: {0}", item.Description);
+                        var descriptor = new FaqDescription(item.Description);
+                        descriptor.OriginalData = item;
                         if (!descriptor.IsValid()) {
                             Log.WarnFormat("faq description not valid for {0}", descriptor.Id);
                             continue;
                         }
+                        databaseFaqListConverted.Add(descriptor);
+                    } catch (Exception e) {
+                        Log.Error(e);
+                        continue;
+                    }
+                }
 
-                        if (descriptor.Language != firstUsefulFaqLink.Language ||
-                            usefulFaqLinksUtilAux.All(x => x.Id != descriptor.Id)) {
-                            Log.DebugFormat("faq description {0} not appliable for schema ", descriptor.Id);
+                var resultList = new List<FaqData>();
+
+                foreach (var requestedFaq in faqsOfTemplateAux) {
+                    var faq = requestedFaq;
+                    var matchingFaQs = databaseFaqListConverted.Where(d => d.Id == faq.Id);
+                    var matchingFaQsArray = matchingFaQs as FaqDescription[] ?? matchingFaQs.ToArray();
+
+                    if (!matchingFaQsArray.Any()) {
+                        //not found in db
+                        Log.WarnFormat("faq description {0} not appliable for schema ", requestedFaq.Id);
+                        continue;
+                    }
+
+                    var exactLanguageMatching = matchingFaQsArray.FirstOrDefault(f => f.Language.EqualsIc(language));
+
+                    var faqDescriptionToUse = exactLanguageMatching;
+
+                    if (exactLanguageMatching == null) {
+                        var englishFallBack = matchingFaQsArray.FirstOrDefault(f => f.Language.EqualsIc("E"));
+                        if (englishFallBack != null) {
+                            Log.DebugFormat("applying default english fallback FAQ for id {0}", requestedFaq.Id);
+                            faqDescriptionToUse = englishFallBack;
+                        } else {
+                            Log.WarnFormat("No FAQ {0} found for language {1}, neither an english one", requestedFaq.Id, language);
                             continue;
                         }
-                        buildedList.Add(new FaqData(item.SolutionId, descriptor.Id, descriptor.RealDescription,
-                            firstUsefulFaqLink.Language));
                     }
-                    return buildedList;
+                    var data = new FaqData(faqDescriptionToUse.OriginalData.SolutionId, faqDescriptionToUse.Id,
+                           faqDescriptionToUse.RealDescription,
+                           faqDescriptionToUse.Language);
+                    resultList.Add(data);
                 }
-            } catch (Exception e) {
-                Log.Error(e);
+
+                return resultList;
+
+
+
+            } catch {
                 return null;
             }
-            return null;
         }
 
         private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
@@ -109,9 +141,9 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
 
-        public static IEnumerable<FaqData> GetUsefulFaqLinks(List<UsefulFaqLinksUtils> usefulFaqLinksUtils) {
+        public static IEnumerable<FaqData> GetUsefulFaqLinks(List<UsefulFaqLinksUtils> faqTemplates) {
             var listToUse = new FaqUtils().GetList();
-            var builtList = GetBuiltList(listToUse, usefulFaqLinksUtils);
+            var builtList = GetBuiltList(listToUse, faqTemplates);
             return builtList;
         }
 
