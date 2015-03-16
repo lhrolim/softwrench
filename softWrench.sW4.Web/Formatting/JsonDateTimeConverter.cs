@@ -19,7 +19,6 @@ namespace softWrench.sW4.Web.Formatting {
                 }
                 var userOffset = TimeSpan.FromMinutes(userOffsetVal * -1);
                 datetime = new DateTimeOffset(((DateTime)value).FromMaximoToUser(user), userOffset).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK");
-                //datetime = ((DateTime)value).FromMaximoToUser(user).ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK");
             }
             writer.WriteValue(datetime);
         }
