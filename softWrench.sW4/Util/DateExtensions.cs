@@ -4,9 +4,12 @@ using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using System;
+using log4net;
 
 namespace softWrench.sW4.Util {
     public static class DateExtensions {
+
+        private static readonly ILog Log = LogManager.GetLogger(SwConstants.DATETIME_LOG);
 
         public static double ToTimeInMillis(this DateTime time) {
             return time.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
