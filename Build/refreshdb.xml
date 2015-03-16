@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<project name="drop-database" default="exec">
+  <property name="sqlconnection" value="Provider=SQLOLEDB;Data Source=.;Initial Catalog=swdb;User Id=sw;Password=sw" />
+  <property name="droptables" value="../Build/rmtables.sql" />
+  
+  <target name="exec">
+    <loadtasks assembly="../Build/NAntContribTask/NAnt.Contrib.Tasks.dll" />
+    <echo message="* Connecting to ${sqlconnection}"/>
+    <sql  connstring="${sqlconnection}"
+          delimiter="go"
+          delimstyle="Line"
+          batch="false"
+          source="${droptables}"
+         >
+    </sql>
+  </target>
+
+</project>
