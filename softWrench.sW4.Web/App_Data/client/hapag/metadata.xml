@@ -828,7 +828,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="commodities_.description" hidden="true">
             <filter operation="contains"/>
           </field>
-          
+
           <field label="Start Date" attribute="reportdate___start">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
             <filter operation="btw" default="@MIN_DATE"/>
@@ -1300,6 +1300,31 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </optionfield>
           </section>
         </schema>
+
+        <schema id="network" stereotype="detail" title="New Service Request - Phone" parentschema="AnewSR">
+          <section id="abstractSection">
+            <reference id="generaloutlookassetsection"/>
+            <field attribute="#crosstestresult" label="Crosstest result (if applicable)">
+              <renderer type="textarea"/>
+            </field>
+
+            <field attribute="#slowresponse" label="Do you face slow response?If yes,please define which applications">
+              <renderer type="textarea"/>
+            </field>
+
+            <section>
+              <header displacement="ontop" label="WAN issue"/>
+              <field label="In case of Internet Issue answer the following" attribute="" readonly="true">
+                <renderer type="label"/>
+              </field>
+              <field label="Is the internet Access slow or down? (time loading special URL)" attribute="#internetslowdown">
+                <renderer type="textarea"/>
+              </field>
+            </section>
+            
+          </section>
+        </schema>
+
 
         <schema id="creationSummary" mode="output" stereotype="detail" title="Service Request Detail">
           <field attribute="ticketuid" hidden="true"/>
@@ -2287,7 +2312,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </section>
 
             <field attribute="#decommissiondate" hidden="true" label="Decommission Date:"/>
-            
+
             <section>
               <header displacement="ontop" params="color=red;" label="Please attach a disposal/resale certificate to prove that the disposal/resale has been performend in terms of HL ITC Guide paragraph &quot;Hardware Sale and Disposal&quot;."/>
               <field label="Attachment:" attribute="newattachment" required="true">
@@ -3131,8 +3156,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field  attribute="description" label="Summary" />
           <field  attribute="longdescription_.ldtext" label="Details"/>
         </schema>
-        
-        
+
+
       </schemas>
     </application>
 
@@ -3160,12 +3185,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
 
 
-<!--          <field label="Created Date" attribute="createdate">-->
-<!--            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />-->
-<!--          </field>-->
+          <!--          <field label="Created Date" attribute="createdate">-->
+          <!--            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />-->
+          <!--          </field>-->
         </list>
 
-     
+
 
         <schema id="faqAttachments" stereotype="compositionlist">
           <field hidden="true" attribute="#path"/>

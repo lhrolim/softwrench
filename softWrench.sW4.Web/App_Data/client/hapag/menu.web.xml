@@ -18,6 +18,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 			<application id="printersr" title="Printer" tooltip="Click to create a new Printer Service Request" schema="printer" ref="servicerequest" parameters="popupmode=browser"/>
 			<application id="Outlooksr" title="Outlook" tooltip="Click to create a new Outlook Service Request" schema="outlook" ref="servicerequest" parameters="popupmode=browser"/>
 			<application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
+      <application id="networksr" title="Network" tooltip="Click to create a new Network Service Request" schema="network" ref="servicerequest" parameters="popupmode=browser"/>
 		</container>
     <!--Finish Endser Items-->
 
@@ -29,6 +30,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
       <application id="printersr" title="Printer" tooltip="Click to create a new Printer Service Request" schema="printer" ref="servicerequest" parameters="popupmode=browser"/>
       <application id="Outlooksr" title="Outlook" tooltip="Click to create a new Outlook Service Request" schema="outlook" ref="servicerequest" parameters="popupmode=browser"/>
       <application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
+      <application id="networksr" title="Network" tooltip="Click to create a new Network Service Request" schema="network" ref="servicerequest" parameters="popupmode=browser"/>
     </container>
     <application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" role="sso" modulealias="sso" modulename="sso" />
     <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems" role="sso" modulealias="sso" modulename="sso"/>
@@ -46,6 +48,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
       <application id="printersr" title="Printer" tooltip="Click to create a new Printer Service Request" schema="printer" ref="servicerequest" parameters="popupmode=browser"/>
       <application id="Outlooksr" title="Outlook" tooltip="Click to create a new Outlook Service Request" schema="outlook" ref="servicerequest" parameters="popupmode=browser"/>
       <application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
+      <application id="networksr" title="Network" tooltip="Click to create a new Network Service Request" schema="network" ref="servicerequest" parameters="popupmode=browser"/>
     </container>
     <application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" role="tui" modulealias="tui" modulename="tui" />
     <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems" role="tui" modulealias="tui" modulename="tui"/>
@@ -277,6 +280,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 			<application id="printersr" title="Printer" tooltip="Click to create a new Printer Service Request" schema="printer" ref="servicerequest" parameters="popupmode=browser"/>
 			<application id="Outlooksr" title="Outlook" tooltip="Click to create a new Outlook Service Request" schema="outlook" ref="servicerequest" parameters="popupmode=browser"/>
 			<application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
+      <application id="networksr" title="Network" tooltip="Click to create a new Network Service Request" schema="network" ref="servicerequest" parameters="popupmode=browser"/>
 		</container>
 		<application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" />
     <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
@@ -328,6 +332,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 			<application id="printersr" title="Printer" tooltip="Click to create a new Printer Service Request" schema="printer" ref="servicerequest" parameters="popupmode=browser"/>
 			<application id="Outlooksr" title="Outlook" tooltip="Click to create a new Outlook Service Request" schema="outlook" ref="servicerequest" parameters="popupmode=browser"/>
 			<application id="phonesr" title="Phone" tooltip="Click to create a new Phone Service Request" schema="phone" ref="servicerequest" parameters="popupmode=browser"/>
+      <application id="networksr" title="Network" tooltip="Click to create a new Network Service Request" schema="network" ref="servicerequest" parameters="popupmode=browser"/>
 		</container>
 		<application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" />
     <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
