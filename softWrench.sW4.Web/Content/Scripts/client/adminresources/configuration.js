@@ -362,11 +362,6 @@ function ConfigController($scope, $http,$timeout, i18NService, alertService) {
         }
     });
 
-//    $scope.gotocategory=function (value){
-//        $scope.currentCategory = navigateToCategory($scope.categoryData, "/_whereclauses/{0}/".format($scope.currentapplication.value));
-//        $scope.showDefinitions($scope.currentCategory);
-//    }
-
     $scope.save = function () {
         var currentCategory = $scope.currentCategory;
         currentCategory.valuesToSave = $scope.currentValues;
