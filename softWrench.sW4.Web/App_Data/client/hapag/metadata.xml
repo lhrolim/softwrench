@@ -1519,7 +1519,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <composition relationship="worklog" label="Work Log" >
             <collectionproperties allowcreation="true" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
           </composition>
-          <composition relationship="woactivity" label="Job Plan" detailschema="">
+          <composition relationship="woactivity" label="Job Plan" detailschema="detail">
             <collectionproperties allowcreation="false" orderbyfield="wosequence asc, workorderid asc"/>
           </composition>
           <composition relationship="approvals" label="Approvals" detailschema="">
@@ -1891,7 +1891,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <composition relationship="worklog" label="Work Log" >
             <collectionproperties allowcreation="true" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
           </composition>
-          <composition relationship="woactivity" label="Job Plan" detailschema="" printschema="list">
+          <composition relationship="woactivity" label="Job Plan" detailschema="detail" printschema="list">
             <collectionproperties allowcreation="false" orderbyfield="wosequence asc, workorderid asc"/>
           </composition>
 
@@ -3384,6 +3384,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </properties>
         </schema>
 
+        <schema id="detail" stereotype="compositiondetail">
+          <field label="Description" attribute="longdescription_.ldtext"/>
+        </schema>
+        
       </schemas>
     </application>
 
