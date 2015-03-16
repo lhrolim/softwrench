@@ -16,24 +16,23 @@ using softWrench.sW4.Email;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons
 {
-    class KongsbergServiceRequestCrudConnector: BaseServiceRequestCrudConnector {
+    class KongsbergIncidentCrudConnector: BaseServiceRequestCrudConnector {
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
-            var sr = maximoTemplateData.IntegrationObject;
+            var incident = maximoTemplateData.IntegrationObject;
 
             var user = SecurityFacade.CurrentUser();
 
-            if (w.GetRealValue(sr, "STATUS").Equals("INPROG")) {
-                w.SetValue(sr, "ACTUALSTART", DateTime.Now.FromServerToRightKind());
-            }
-            else if (w.GetRealValue(sr, "STATUS").Equals("RESOLVED")) {
-                w.SetValue(sr, "ACTUALFINISH", DateTime.Now.FromServerToRightKind());
+            if (w.GetRealValue(incident, "STATUS").Equals("INPROG")) {
+                w.SetValue(incident, "ACTUALSTART", DateTime.Now.FromServerToRightKind());
+            } else if (w.GetRealValue(incident, "STATUS").Equals("RESOLVED")) {
+                w.SetValue(incident, "ACTUALFINISH", DateTime.Now.FromServerToRightKind());
             }
 
             // TODO: Temp fix for getting change by to update with the userid. 
             // This workaround required trigger in the Maximo DB and custom attribute "SWCHANGEBY" in ticket
-            w.SetValue(sr, "SWCHANGEBY", user.Login); 
-            
+            w.SetValue(incident, "SWCHANGEBY", user.Login); 
+
             base.BeforeUpdate(maximoTemplateData);
         }
     }

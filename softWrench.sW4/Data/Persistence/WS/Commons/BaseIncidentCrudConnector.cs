@@ -27,11 +27,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             WorkLogHandler.HandleWorkLogs((CrudOperationData)maximoTemplateData.OperationData, sr);
             w.SetValueIfNull(sr, "ACTLABHRS", 0.0);
             w.SetValueIfNull(sr, "ACTLABCOST", 0.0);
-            w.SetValueIfNull(sr, "CHANGEDATE", DateTime.Now.FromServerToRightKind(), true);
+            w.SetValue(sr, "CHANGEDATE", DateTime.Now.FromServerToRightKind(), true);
             w.SetValueIfNull(sr, "CHANGEBY", user.Login);
             w.SetValueIfNull(sr, "REPORTDATE", DateTime.Now.FromServerToRightKind());
 
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
+            //if (crudData.ContainsAttribute("#hasstatuschange")) {
+            //    //first let´s 'simply change the status
+            //    WsUtil.SetValue(sr, "STATUSIFACE", true);
+            //    if (!WsUtil.GetRealValue(sr, "STATUS").Equals("CLOSED")) {
+            //        maximoTemplateData.InvokeProxy();
+            //        WsUtil.SetValue(sr, "CHANGEBY", user.Login);
+
+            //    } WsUtil.SetValue(sr, "STATUSIFACE", false);
+            //}
             LongDescriptionHandler.HandleLongDescription(sr, crudData);
 
             //Handle Commlogs

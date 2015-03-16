@@ -52,7 +52,7 @@
                 <div class="tab-pane {{getActiveClass(dashboard.id)}}" ng-repeat="dashboard in dashboards" id="{{dashboard.id}}">
                     <div class="tab-header clearfix">
                         <div class="buttons pull-right">
-                            <button class="btn btn-default" ng-show="canEditDashboard(dashboard) && !isEditingAnyDashboard" ng-click="editDashboard(dashboard)">
+                            <button class="btn btn-default" ng-show="false" ng-click="editDashboard(dashboard)">
                                 <i class="fa fa-cog"></i>&ensp;Edit
                             </button>
                             <button class="btn" ng-show="isEditing(dashboard.id)" ng-click="finishEditingDashboard(dashboard)" ng-class="getEditButtonClass()">

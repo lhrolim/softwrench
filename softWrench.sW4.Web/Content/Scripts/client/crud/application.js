@@ -1,4 +1,4 @@
-﻿//var app = angular.module('sw_layout');
+//var app = angular.module('sw_layout');
 
 var app = angular.module('sw_layout');
 
@@ -288,7 +288,6 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
 
     $scope.toConfirmCancel = function (data, schema) {
         $scope.doConfirmCancel(data, schema, "Are you sure you want to cancel ?");
-
     };
 
 
@@ -365,6 +364,20 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
 
     //called first time a crud is registered
     function initApplication() {
+        
+        $scope.$on('sw_navigaterequest', function (event, applicationName, schemaId, mode, title, parameters) {
+            var msg = "Are you sure you want to leave the page?";
+            if (validationService.getDirty()) {
+                alertService.confirmCancel(null, null, function () {
+                    $scope.renderView(applicationName, schemaId, mode, title, parameters);
+                    $scope.$digest();
+                }, msg, function () { return; });
+            }
+            else {
+                $scope.renderView(applicationName, schemaId, mode, title, parameters);
+            }
+        });
+
         $scope.$on('sw_renderview', function (event, applicationName, schemaId, mode, title, parameters, dashboardpanelid) {
             // this is to prevent application.js from recv'ing dashboard rendering
             if (dashboardpanelid == null) {

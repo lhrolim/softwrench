@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -32,9 +33,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
 
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "siteid", user.SiteId);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "orgid", user.OrgId);
-                WsUtil.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind());
-                WsUtil.CopyFromRootEntity(rootObject, integrationObject, "modifydate", DateTime.Now.FromServerToRightKind());
-
+                WsUtil.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind(), "CHANGEDATE");
+                
+                var hasChanged = crudData.GetUnMappedAttribute("#hasChanged");
+                if (hasChanged == "1") {
+                    WsUtil.SetValue(integrationObject, "modifydate", DateTime.Now.FromServerToRightKind(), true);
+                }
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
             });
