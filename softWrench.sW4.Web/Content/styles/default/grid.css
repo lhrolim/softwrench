@@ -43,13 +43,13 @@
     width: 100%;
 }
 
-.filter-row .input-group .dropdown {
-    padding: 0;
-}
+    .filter-row .input-group .dropdown {
+        padding: 0;
+    }
 
-.filter-row .input-group .dropdown .dropdown-toggle {
-    padding: 8px;
-}
+        .filter-row .input-group .dropdown .dropdown-toggle {
+            padding: 8px;
+        }
 
 #listgrid {
     color: #000;
@@ -70,46 +70,50 @@
             border: none;
         }
 
-        #listgrid thead tr.header-row:after, #listgrid thead tr.filter-row:after {
+            #listgrid thead tr.header-row:after, #listgrid thead tr.filter-row:after {
                 content: " ";
             }
 
-            /*SWWEB-841 ~ fix header width for Firefox*/
-            @-moz-document url-prefix() {            
-                #listgrid thead tr.filter-row .input-group-sm > .form-control {
-                    font-size: 14px;
-                }
-            }
+/*SWWEB-841 ~ fix header width for Firefox*/
+@-moz-document url-prefix() {
+    #listgrid thead tr.filter-row .input-group-sm > .form-control {
+        font-size: 14px;
+    }
+}
 
-        #listgrid thead tr.header-row th {
-            cursor: pointer;
-        }
+#listgrid thead tr.header-row th {
+    cursor: pointer;
+}
 
-        #listgrid thead tr.filter-row {
-            background-color: #fff;
-            color: #000;
-        }
+#listgrid thead tr.filter-row {
+    background-color: #fff;
+    color: #000;
+}
 
-    #listgrid tbody tr {
-        cursor: pointer;
+#listgrid tbody tr {
+    cursor: pointer;
+}
+
+/*#listgrid th, #listgrid td, #compositionlistgrid th, #compositionlistgrid td {
+    font-size: 13px;
+}*/
+
+#listgrid th {
+    word-break: break-word;
+}
+
+#listgrid td, #compositionlistgrid td {
+    word-break: break-all;
+    word-break: break-word;
+}
+
+    #listgrid td .input-group, #listgrid td .input-group .glyphicon {
+        position: initial;
     }
 
-    #listgrid th {
-        word-break: break-word;
+    #listgrid td.select-multiple {
+        text-align: center;
     }
-
-    #listgrid td, #compositionlistgrid td {
-        word-break: break-all;
-        word-break: break-word;
-    }
-
-        #listgrid td .input-group, #listgrid td .input-group .glyphicon {
-            position: initial;
-        }
-
-        #listgrid td.select-multiple {
-            text-align: center;
-        }
 
 .gridcolumnvalue {
     color: black;
