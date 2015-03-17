@@ -52,8 +52,8 @@
         display: none;
     }
 
-    #activitystream .unread .badge {
-        background: #f00;
+    #activitystream .badge {
+        background: #b81f25;
     }
 
     #activitystream .pane {
