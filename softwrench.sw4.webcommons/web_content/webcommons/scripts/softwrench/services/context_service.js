@@ -74,7 +74,10 @@ app.factory('contextService', function ($rootScope) {
         },
 
         isDev: function () {
-            return this.retrieveFromContext('environment') == "dev";
+            //return this.retrieveFromContext('environment') == "dev";
+
+            //return true if the environment begins with dev
+            return this.retrieveFromContext('environment').indexOf('dev') == 0
         },
 
         client: function () {
