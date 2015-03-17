@@ -75,7 +75,9 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             sessionStorage.swGlobalRedirectURL = redirectUrl;
             $http.get(redirectUrl).success(
                 function (data) {
-                    $rootScope.$broadcast("sw_redirectactionsuccess", data);
+                    if (data.type != "BlankApplicationResponse") {
+                        $rootScope.$broadcast("sw_redirectactionsuccess", data);
+                    }
                 }).error(
                 function (data) {
                     var errordata = {
@@ -153,7 +155,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
                 });
         },
 
-        goToApplicationView: function (applicationName, schemaId, mode, title, parameters, jsonData) {
+        goToApplicationView: function (applicationName, schemaId, mode, title, parameters, jsonData, afterRedirectHook) {
             var log = $log.getInstance('redirectService#goToApplication');
 
             if (parameters === undefined || parameters == null) {
@@ -192,6 +194,9 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));
                 $http.get(redirectURL).success(function (data) {
                     $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
+                    if (afterRedirectHook != null) {
+                        afterRedirectHook();
+                    }
                 });
             } else {
                 var jsonString = angular.toJson(jsonData);

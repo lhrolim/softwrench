@@ -1,12 +1,15 @@
-﻿using cts.commons.portable.Util;
-using DocumentFormat.OpenXml.Wordprocessing;
+using cts.commons.portable.Util;
+using softWrench.sW4.Data.Persistence.WS.Internal;
+using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using System;
-using softwrench.sw4.Shared2.Util;
+using log4net;
 
 namespace softWrench.sW4.Util {
     public static class DateExtensions {
+
+        private static readonly ILog Log = LogManager.GetLogger(SwConstants.DATETIME_LOG);
 
         public static double ToTimeInMillis(this DateTime time) {
             return time.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
@@ -36,7 +39,13 @@ namespace softWrench.sW4.Util {
         }
 
         public static DateTime FromMaximoToUser(this DateTime date, InMemoryUser user) {
-            return UserMaximoConversion(date, user, false);
+            return UserMaximoConversion(date, user, ConversionKind.MaximoToUser);
+        }
+
+        public static DateTime NowUnspecified() {
+            var date = DateTime.Now;
+            var newdate = DateTime.SpecifyKind(date, DateTimeKind.Unspecified);
+            return newdate;
         }
 
         /// <summary>
@@ -46,62 +55,87 @@ namespace softWrench.sW4.Util {
         /// <param name="user">current user</param>
         /// <returns>Server DateTime</returns>     
         public static DateTime FromUserToMaximo(this DateTime date, InMemoryUser user) {
-            return UserMaximoConversion(date, user, true);
+            return UserMaximoConversion(date, user, ConversionKind.UserToMaximo);
         }
 
         public static DateTime FromUserToRightKind(this DateTime date, InMemoryUser user) {
             var kind = ApplicationConfiguration.IsISM() ? DateTimeKind.Utc : DateTimeKind.Local;
-            if (kind.Equals(DateTimeKind.Utc)) {
-                return date.FromUserToUtc(user);
+            if (WsUtil.Is75()) {
+                kind = DateTimeKind.Unspecified;
             }
-            return date.ToServerTimezone(user);
+            date = DateTime.SpecifyKind(date, kind);
+            if (kind.Equals(DateTimeKind.Utc)) {
+                return date.FromUserToUtc();
+            }
+            return FromUserToMaximo(date, user);
         }
 
         public static DateTime FromServerToRightKind(this DateTime date) {
+
             var kind = ApplicationConfiguration.IsISM() ? DateTimeKind.Utc : DateTimeKind.Local;
+            if (WsUtil.Is75()) {
+                kind = DateTimeKind.Unspecified;
+            }
+            date = DateTime.SpecifyKind(date, kind);
             if (kind.Equals(DateTimeKind.Utc)) {
                 return FromServerToMaximo(date, 0);
             }
             return FromServerToMaximo(date);
         }
 
-        public static DateTime FromUserToUtc(this DateTime date, InMemoryUser user) {
-            return UserMaximoConversion(date, user, true, 0);
+        public static DateTime FromUserToUtc(this DateTime date) {
+            return date.ToUniversalTime();
         }
 
         public static DateTime FromServerToMaximo(this DateTime date, int? maximoOverridenOffset = null) {
             //just needed to inver the timezone so that it is consistent witht the client signal
-            return MaximoConversion(date, TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes * -1, true, maximoOverridenOffset);
+            return MaximoConversion(date, TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes * -1, ConversionKind.ServerToMaximo, maximoOverridenOffset);
         }
 
         public static DateTime FromMaximoToServer(this DateTime date) {
-            return MaximoConversion(date, TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes * -1, false);
+            return MaximoConversion(date, TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes * -1, ConversionKind.MaximoToServer);
         }
 
-        private static DateTime UserMaximoConversion(DateTime date, InMemoryUser user, bool fromUserToMaximo, int? maximoOffset = null) {
+        //to allow testing
+        internal static DateTime UserMaximoConversion(DateTime date, InMemoryUser user, ConversionKind fromUserToMaximo, int? maximoOffset = null) {
             if (user == null || !user.TimezoneOffset.HasValue) {
+                //if the user has no timezone there´s really nothing that we can do --> just return the date
                 return date;
             }
             return MaximoConversion(date, user.TimezoneOffset.Value, fromUserToMaximo, maximoOffset);
         }
 
-        private static DateTime MaximoConversion(DateTime date, double offSet, bool fromUserToMaximo, int? overridenMaximoOffSet = null) {
-            int maximoOffset = 0;
+        internal static DateTime MaximoConversion(DateTime date, double offSet, ConversionKind kind, int? overridenMaximoOffSet = null) {
+            var maximoOffset = 0.0;
+
             if (overridenMaximoOffSet == null) {
-                var maximoUtcProp = MetadataProvider.GlobalProperties.MaximoTimeZone();
-                int maximoUtc;
-                if (!Int32.TryParse(maximoUtcProp, out maximoUtc)) {
-                    return date;
+                var maximoTimezone = MetadataProvider.GlobalProperties.MaximoTimeZone();
+                if (maximoTimezone != null) {
+                    try {
+                        var maximoTimezoneinfo = TimeZoneInfo.FindSystemTimeZoneById(maximoTimezone);
+                        maximoOffset = maximoTimezoneinfo.GetUtcOffset(DateTime.UtcNow).TotalMinutes;
+                    } catch (Exception e) {
+                        throw new MetadataException("wrong maximo utc property was set, review your properties.xml file");
+                    }
+                } else {
+                    //if no property is present, let´s assume that both maximo and server are located under the same timezone
+                    maximoOffset = Convert.ToInt32(TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes);
                 }
-                maximoOffset = maximoUtc * 60;
+            } else {
+                //for testing purposes, making it easier to mock the value that would be present on properties.xml
+                maximoOffset = overridenMaximoOffSet.Value * 60;
             }
+
             var clientOffset = offSet;
             //ex: -7*60 +(180) ==> client timezone is positive...
             var offset = (maximoOffset + clientOffset);
-            if (!fromUserToMaximo) {
+            if (ConversionKind.MaximoToUser == kind || ConversionKind.MaximoToServer == kind) {
                 offset = -1 * offset;
             }
+            Log.Debug(string.Format("Input date: {0}  Input kind: {1}  Input offset: {2}  Output offset: {3}", date, kind, clientOffset, maximoOffset));
             date = date.AddMinutes(offset);
+            date = DateTime.SpecifyKind(date, DateTimeKind.Unspecified);
+            Log.Debug(string.Format("Output date: {0}", date));
             return date;
         }
 
@@ -127,6 +161,8 @@ namespace softWrench.sW4.Util {
 
             // ClientTime + (ServerTime - ClientTime) == ServerTime
             date = date.AddMinutes(offset);
+
+
             return date;
         }
 
@@ -139,6 +175,10 @@ namespace softWrench.sW4.Util {
             }
 
             return new DateComparisonExpression(date.Value, number, true, toCompare.Value);
+        }
+
+        internal enum ConversionKind {
+            MaximoToUser, UserToMaximo, ServerToMaximo, MaximoToServer
         }
 
         public class DateComparisonExpression {

@@ -35,7 +35,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
                 return new ApplicationMetadataSchemaKey(SchemaStereotype.Detail.ToString().ToLower(), SchemaMode.input, ClientPlatform.Mobile);
             }
             if (schema == null) {
-                return null;
+                return null;    
             }
             var key = schema.Value.ToObject(typeof(ApplicationMetadataSchemaKey));
             json.Remove(keytouse);

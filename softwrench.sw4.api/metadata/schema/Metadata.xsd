@@ -179,6 +179,9 @@
 
         </complexType>
       </element>
+      <element name="notifications" maxOccurs="1" minOccurs="0" type="tns:NotificationsDeclarationsType">
+        
+      </element>
       <element name="properties" maxOccurs="1" minOccurs="0">
         <complexType>
           <sequence>
@@ -681,6 +684,7 @@
     </attribute>
 
     <attribute name="showexpression" type="string"></attribute>
+    <attribute name="enableexpression" type="string"></attribute>
     <attribute name="role" type="string" use="optional"></attribute>
     <attribute name="stereotype">
       <simpleType>
@@ -1048,5 +1052,79 @@
   <complexType name="RemoveCommand">
     <attribute name="id" type="string"></attribute>
   </complexType>
+
+  <complexType name="Notification">
+    <annotation>
+      <documentation>
+        Defines the notification configuration for a particular
+        application.
+
+        If the role is not defined, a default
+        role will be generated using the pattern application.notifications.
+
+        If the label is not defined, the application's
+        title will be used in its place.
+
+        The targetsschema defines the schema that the user will be navigated
+        to upon clicking on the notification link.
+      </documentation>
+    </annotation>
+    <choice minOccurs="0" maxOccurs="1">
+      <element name="attributes" minOccurs="1" maxOccurs="1">
+        <complexType>
+          <choice minOccurs="1" maxOccurs="unbounded">
+            <element name="summary" maxOccurs="1" minOccurs="1" type="tns:NotificationAttributeType"/>
+
+            <element name="createddate" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"/>
+            
+            <element name="uid" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"/>
+            
+            <element name="changeby" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"/>
+
+            <element name="extraAttributes" minOccurs="0" maxOccurs="1">
+              <complexType>
+                <choice minOccurs="0" maxOccurs="1">
+                  <element name="extraAttribute" minOccurs="1" maxOccurs="unbounded" type="tns:NotificationAttributeType"></element>
+                </choice>
+              </complexType>
+            </element>
+
+            <element name="parentAttributes" maxOccurs="1" minOccurs="0" type="tns:NotificationParentApplicationType"/>
+          </choice>
+        </complexType>
+      </element>
+    </choice>
+
+    <attribute name="id" type="string"></attribute>
+    <attribute name="type" type="string"></attribute>
+    <attribute name="role" type="string" use="required"></attribute>
+    <attribute name="label" type="string"></attribute>
+    <attribute name="icon" type="string"></attribute>
+    <attribute name="targetSchema" type="string" use="required"></attribute>
+    <attribute name="targetApplication" type="string"></attribute>
+    <attribute name="whereClause" type="string"></attribute>
+  </complexType>
+  
+  <complexType name="NotificationsDeclarationsType">
+    <choice minOccurs="1" maxOccurs="1">
+      <element name="notification" type="tns:Notification" minOccurs="0"
+               maxOccurs="unbounded"></element>
+    </choice>
+  </complexType>
+
+  <complexType name="NotificationParentApplicationType">
+    <all>
+      <element name="application" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"></element>
+      <element name="parentuid" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"></element>
+      <element name="parentid" minOccurs="1" maxOccurs="1" type="tns:NotificationAttributeType"></element>
+    </all> 
+  </complexType>
+
+  <complexType name="NotificationAttributeType">
+    <attribute name="attribute" type="string" use="required"></attribute>
+    <!--<attribute name="value" type="string" use="optional"></attribute>-->
+  </complexType>
+
+
 
 </schema>

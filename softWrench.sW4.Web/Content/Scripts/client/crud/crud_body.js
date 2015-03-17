@@ -244,9 +244,9 @@ app.directive('crudBody', function (contextService) {
                 var popupmode = $scope.$parent.popupmode;
                 var schemaid = $scope.$parent.schema.schemaId;
                 var applicationname = $scope.$parent.schema.applicationName;
-                var title = $scope.$parent.title;
+                var title = $scope.$parent.title
 
-                $scope.$emit("sw_renderview", applicationname, schemaid, mode, title, { id: id, popupmode: popupmode });
+                $scope.$emit("sw_navigaterequest", applicationname, schemaid, mode, title, { id: id, popupmode: popupmode });
 
             };
 

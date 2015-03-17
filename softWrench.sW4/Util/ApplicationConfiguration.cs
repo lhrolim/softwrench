@@ -99,6 +99,8 @@ namespace softWrench.sW4.Util {
             get { return WsUtil.WsProvider().ToString().ToLower(); }
         }
 
+
+
         public static string WsUrl {
             get { return MetadataProvider.GlobalProperty("basewsURL", true); }
         }
@@ -237,6 +239,20 @@ namespace softWrench.sW4.Util {
 
         #endregion
 
+        #region Notification Functionality
+
+        public static bool ActivityStreamFlag {
+            get
+            {
+                var flagStr = MetadataProvider.GlobalProperty("notifications.activityStream.enabled");
+                var flag = false;
+                Boolean.TryParse(flagStr, out flag);
+                return flag;
+            }
+        }
+
+        #endregion
+
         #region Attachments
 
         public static string[] AllowedFilesExtensions {
@@ -288,6 +304,10 @@ namespace softWrench.sW4.Util {
         public static DBMS? _maximodbType = null;
 
         public static Boolean IsMif() {
+            return WsProvider.Equals("mif", StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        public static Boolean Is75Maximo() {
             return WsProvider.Equals("mif", StringComparison.CurrentCultureIgnoreCase);
         }
 

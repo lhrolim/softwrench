@@ -41,6 +41,8 @@ namespace softWrench.sW4.Scheduler.Jobs {
 
         public bool IsScheduled { get; set; }
 
+        public bool IsEnabled { get { return true; } }
+
         public ILog JobLog() {
             return _log;
         }

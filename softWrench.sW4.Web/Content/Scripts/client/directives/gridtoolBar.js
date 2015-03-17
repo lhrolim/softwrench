@@ -1,4 +1,4 @@
-﻿var sharedController = function ($scope, contextService, commandService, $log, i18NService, securityService) {
+﻿var sharedController = function ($scope, contextService,expressionService, commandService, $log, i18NService, securityService) {
 
     $scope.invokeOuterScopeFn = function (expr,throwExceptionIfNotFound) {
         var methodname = expr.substr(7);
@@ -81,6 +81,20 @@
             return result;
         } 
         return !commandService.isCommandHidden($scope.datamap, $scope.schema, command);
+    }
+
+    $scope.isCommandEnabled = function (command) {
+        var enableExpression = command.enableExpression;
+        if (enableExpression && enableExpression.startsWith("$scope:")) {
+            var result = $scope.invokeOuterScopeFn(enableExpression);
+            if (result == null) {
+                return true;
+            }
+            return result;
+        }
+        var datamap = $scope.datamap;
+        var expressionToEval = expressionService.getExpression(enableExpression, datamap);
+        return eval(expressionToEval);
     }
 
     $scope.buttonClasses = function () {

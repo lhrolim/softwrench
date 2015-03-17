@@ -77,6 +77,7 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
 
 
         executeById: function (menuId) {
+
             var leafs = $rootScope.menu.leafs;
             var leaf = locateLeafById(leafs, menuId);
             if (leaf.type == "ApplicationMenuItemDefinition") {

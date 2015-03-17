@@ -55,7 +55,8 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
         scope: {
             datamap: '=',
             schema: '=',
-            associationOptions: '='
+            associationOptions: '=',
+            panelid: '='
         },
         template: "",
         link: function (scope, element, attrs) {
@@ -238,8 +239,10 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
 
 
 
-            scope.$on('sw_griddatachanged', function (event, datamap, schema) {
-                scope.refreshGrid(datamap, schema);
+            scope.$on('sw_griddatachanged', function (event, datamap, schema, panelid) {
+                if (panelid == scope.panelid) {
+                    scope.refreshGrid(datamap, schema);
+                }
             });
 
 
@@ -255,7 +258,9 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
             });
 
             //first call when the directive is linked (listener was not yet in place)
-            scope.refreshGrid(scope.datamap, scope.schema);
+            if (scope.schema.displayables) {
+                scope.refreshGrid(scope.datamap, scope.schema);
+            }
 
         }
     }

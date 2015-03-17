@@ -1,4 +1,4 @@
-﻿//var app = angular.module('sw_layout');
+//var app = angular.module('sw_layout');
 
 var app = angular.module('sw_layout');
 
@@ -61,19 +61,6 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         scope.isDetail = mode;
         scope.isList = !mode;
         var crud_context;
-        if (scope.isList) {
-            var elements = [];
-            for (var i = 0; i < $scope.datamap.length; i++) {
-
-                elements.push($scope.datamap[i].fields[$scope.schema.idFieldName]);
-            }
-            crud_context = {
-                list_elements: elements,
-                detail_next: "0",
-                detail_previous: "-1"
-            };
-            contextService.insertIntoContext("crud_context", crud_context);
-        }
         if (scope.isDetail) {
             crud_context = contextService.fetchFromContext("crud_context", true);
             if (!crud_context) {
@@ -99,29 +86,10 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
             scope = $scope;
         }
         $('#saveBTN').removeAttr('disabled');
-        scope.$broadcast("sw_gridrefreshed", data, $rootScope.printRequested);
-        if (data != null && $rootScope.printRequested !== true) {
-            //if its a printing operation, then leave the pagination data intact
-            //this code needs to be here because the crud_list.js might not yet be included in the page while this is running, so the even would be lost... 
-            //TODO: rethink about it
-            $scope.paginationData = {};
-            $scope.searchValues = data.searchValues;
-            $scope.paginationData.pagesToShow = data.pagesToShow;
-            $scope.paginationData.pageNumber = data.pageNumber;
-            $scope.paginationData.selectedPage = data.pageNumber;
-            $scope.paginationData.pageCount = data.pageCount;
-            $scope.paginationData.pageSize = data.pageSize;
-            $scope.paginationData.paginationOptions = data.paginationOptions;
-            $scope.paginationData.totalCount = data.totalCount;
-            $scope.paginationData.hasPrevious = data.hasPrevious;
-            $scope.paginationData.hasNext = data.hasNext;
-            $scope.paginationData.filterFixedWhereClause = data.filterFixedWhereClause;
-            if (data.pageResultDto && data.pageResultDto.searchParams) {
-                var result = searchService.buildSearchDataAndOperations(data.pageResultDto.searchParams, data.pageResultDto.searchValues);
-                $scope.searchData = result.searchData;
-                $scope.searchOperator = result.searchOperator;
-            }
-        }
+        //we need this because the crud_list.js may not be rendered it when this event is dispatched, in that case it should from here when it starts
+
+        contextService.insertIntoContext("grid_refreshdata",{ data: data, panelid: null }, true);
+        scope.$broadcast("sw_gridrefreshed", data,null);
         switchMode(false, scope);
     };
 
@@ -294,11 +262,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         } else if (result.type == 'ApplicationListResult') {
             log.debug("Application List Result handled");
             $scope.toList(result, scope);
-            associationService.updateAssociationOptionsRetrievedFromServer(scope, result.associationOptions, null);
-            fixHeaderService.FixHeader();
-            $scope.$broadcast('sw_griddatachanged', scope.datamap, scope.schema);
         } else if (result.crudSubTemplate != null) {
-
             log.debug("Crud Sub Template handled");
             $scope.crudsubtemplate = url(result.crudSubTemplate);
         }
@@ -324,7 +288,6 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
 
     $scope.toConfirmCancel = function (data, schema) {
         $scope.doConfirmCancel(data, schema, "Are you sure you want to cancel ?");
-
     };
 
 
@@ -401,8 +364,25 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
 
     //called first time a crud is registered
     function initApplication() {
-        $scope.$on('sw_renderview', function (event, applicationName, schemaId, mode, title, parameters) {
-            $scope.renderView(applicationName, schemaId, mode, title, parameters);
+        
+        $scope.$on('sw_navigaterequest', function (event, applicationName, schemaId, mode, title, parameters) {
+            var msg = "Are you sure you want to leave the page?";
+            if (validationService.getDirty()) {
+                alertService.confirmCancel(null, null, function () {
+                    $scope.renderView(applicationName, schemaId, mode, title, parameters);
+                    $scope.$digest();
+                }, msg, function () { return; });
+            }
+            else {
+                $scope.renderView(applicationName, schemaId, mode, title, parameters);
+            }
+        });
+
+        $scope.$on('sw_renderview', function (event, applicationName, schemaId, mode, title, parameters, dashboardpanelid) {
+            // this is to prevent application.js from recv'ing dashboard rendering
+            if (dashboardpanelid == null) {
+                $scope.renderView(applicationName, schemaId, mode, title, parameters);
+            }
         });
         $scope.$on('sw.modal.show', function (event, modaldata) {
             if (!$scope.modalincluded) {

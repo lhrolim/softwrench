@@ -1,6 +1,6 @@
 
 <form>
-    <div id="affixpagination" class="affix-pagination hiddenonprint" ng-hide="hidebars">
+    <div id="affixpagination" class="affix-pagination hiddenonprint" ng-hide="hidebars" ng-if="!panelid">
         <div class="context clearfix header-menu">
             <gridtoolbar advancedsearchdata="advancedsearchdata"
                          position="gridtop"
@@ -39,9 +39,38 @@
         </div>
     </div>
 
+    <div id="affixpagination" class="affix-pagination-panel hiddenonprint" ng-hide="hidebars" ng-if="panelid">
+        <div class="context clearfix header-menu">
+            <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
+                        schema="schema" application-name="{{schema.applicationName}}"
+                        search-data="searchData"
+                        search-operator="searchOperator" />
+        </div>
+        <!--TODO: make this encapsulated inside gridfilter.html... is that possible?-->
+        <div class="context clearfix header-menu" ng-show="advancedfiltermode">
+            <div class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="advancedSearch" class="col-sm-1 control-label">Search</label>
+                    <div class="col-sm-11">
+                        <div class="input-group">
+                            <input class="form-control" id="advancedSearch" ng-model="advancedsearchdata" ng-enter="doAdvancedSearch(advancedsearchdata)">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-enabled="advancedsearchdata && advancedsearchdata != ''"
+                                        ng-click="doAdvancedSearch(advancedsearchdata)">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="divAuxTable">
         <!--build responsive css rules based on metadata-->
-        <style column-widths applicationname="{{schema.applicationName}}"  columns="{{schema.displayables}}" gridtype="listgrid"></style>
+        <style column-widths schema="schema"></style>
 
         <table class="table table-hover hidden-phone fixedtable listgrid-table" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" id="listgrid">
             <thead id="listgridthread" class="listgrid-thead">
@@ -169,7 +198,7 @@
                     <th class="clear"><!--SWWEB-841--></th>
                 </tr>
             </thead>
-            <tbody crudtbody schema="schema" datamap="datamap" association-options="associationOptions" timestamp="{{timestamp}}" bindonce />
+            <tbody crudtbody schema="schema" datamap="datamap" panelid="panelid" association-options="associationOptions" timestamp="{{timestamp}}" bindonce />
         </table>
     </div>
     <p class="text-center" ng-show="datamap.length == 0">
@@ -192,7 +221,6 @@
                         search-operator="searchOperator" />
         </div>
     </div>
-
     <!--    <div ng-if="isCommand(schema)">-->
     <!--        <commandbar schema="schema" mode="schema.mode" datamap="datamap" />-->
     <!--    </div>-->

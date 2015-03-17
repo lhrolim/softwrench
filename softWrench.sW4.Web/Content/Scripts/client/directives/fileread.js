@@ -10,7 +10,7 @@
 
         link: function (scope, element, attributes) {
 
-            var validFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html", "png"];
+            var validFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "bmp", "html", "png", "lic"];
 
             var readFiles = function (changeEvent,fileRead,reader,current) {
                 var fileNew = changeEvent.target.files[current]; // get the first from queue and store in file

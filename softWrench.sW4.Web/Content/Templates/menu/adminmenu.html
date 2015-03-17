@@ -10,8 +10,20 @@
         <div class="menu menu-admin" ng-if="popupmode == 'none'">
             <div class="text"><span class="glyphicon glyphicon-log-out"></span>&ensp;{{i18N('_headermenu.loggedinas','Logged in as')}} {{userInfo()}}</div>
             <div class="buttons">
+
+                <a href="#" ng-click="doAction(null,'EntityMetadata','Refresh',null,$event.target)" ng-show="isSysAdmin"
+                   rel="tooltip" data-original-title="Refresh Metadata" data-placement="bottom">
+
+                    <button type="button" class="btn btn-default btn-sm">
+                        <i class="fa fa-refresh"></i>
+                        Refresh Metadata
+                    </button>
+                </a>
+
                 <a href="#" ng-click="doAction(null,'User','MyProfile',null,$event.target)" ng-show="myprofileenabled"
                    rel="tooltip" data-original-title="{{i18N('_headermenu.myprofile_tooltip','View your profile')}}" data-placement="bottom">
+
+
                     <button type="button" class="btn btn-default btn-sm">
                         <i class="fa fa-user"></i>
                         {{i18N('_headermenu.myprofile','My Profile')}}

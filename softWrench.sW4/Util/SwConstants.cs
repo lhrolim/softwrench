@@ -11,6 +11,7 @@ namespace softWrench.sW4.Util
         public const string NHIBERNATE_LOG = "NHIBERNATE.SQL";
         public const string SQLDB_LOG = "SWDB.SQL";
         public const string JOB_LOG = "JOB.LOG";
+        public const string DATETIME_LOG = "DATETIME.LOG";
 
         public static Boolean IsMif()
         {

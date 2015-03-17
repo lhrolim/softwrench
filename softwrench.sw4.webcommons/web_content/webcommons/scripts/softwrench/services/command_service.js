@@ -40,6 +40,15 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
             return !eval(expressionToEval);
         },
 
+        isCommandEnabled: function (datamap, schema, command, tabId) {
+            var expression = command.showExpression;
+            if (expression == undefined || expression == "") {
+                return false;
+            }
+            var expressionToEval = expressionService.getExpression(expression, datamap);
+            return !eval(expressionToEval);
+        },
+
         doCommand: function (scope, command) {
             var clientFunction = command.method;
             if (typeof (clientFunction) === 'function') {
@@ -117,9 +126,16 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
             var commandKey = hasPossibilityOfbeingOverriden ? "{0}_{1}_{2}.#{3}".format(schema.applicationName, schema.schemaId, schema.mode.toLowerCase(), position) : fallbackKey;
             var commandbar = bar[commandKey];
             if (commandbar == null) {
-                commandbar = bar[fallbackKey];
+                if (hasPossibilityOfbeingOverriden && schema.mode.toLocaleLowerCase()!="none") {
+                    //let´s give the none schema a shot
+                    commandKey = "{0}_{1}_{2}.#{3}".format(schema.applicationName, schema.schemaId, "none", position);
+                    commandbar = bar[commandKey];
+                }
                 if (commandbar == null) {
-                    log.warn("command bar {0}, and fallback {1} not found".format(commandKey, fallbackKey));
+                    commandbar = bar[fallbackKey];
+                    if (commandbar == null) {
+                        log.warn("command bar {0}, and fallback {1} not found".format(commandKey, fallbackKey));
+                    }
                 }
             }
             var commands = commandbar != null ? commandbar.commands : null;

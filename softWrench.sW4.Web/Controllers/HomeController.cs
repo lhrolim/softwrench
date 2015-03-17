@@ -1,6 +1,9 @@
-﻿using System.Web.Security;
+﻿using System.Collections.Generic;
+using System.Web.Security;
 using cts.commons.portable.Util;
 using cts.commons.Util;
+using SimpleInjector;
+using softwrench.sw4.api.classes;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -29,27 +32,35 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly IConfigurationFacade _facade;
         private readonly I18NResolver _i18NResolver;
         private readonly StatusColorResolver _statusColorResolver;
-        private ContextLookuper _lookuper;
+        private readonly ContextLookuper _lookuper;
+        private MenuHelper.MenuHelper _menuHelper;
 
-        public HomeController(IConfigurationFacade facade, I18NResolver i18NResolver, StatusColorResolver statusColorResolver, ContextLookuper lookuper) {
+       
+
+
+
+
+        public HomeController(IConfigurationFacade facade, I18NResolver i18NResolver, StatusColorResolver statusColorResolver, ContextLookuper lookuper, MenuHelper.MenuHelper menuHelper) {
             //            _controllerFactory = (IAPIControllerFactory)GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IAPIControllerFactory));
             _facade = facade;
             _i18NResolver = i18NResolver;
             _statusColorResolver = statusColorResolver;
             _lookuper = lookuper;
+            _menuHelper = menuHelper;
         }
 
-        public ActionResult Index()
-        {
+        public ActionResult Index() {
             _lookuper.RegisterHttpContext(Request);
 
             var user = SecurityFacade.CurrentUser();
-            var securedMenu = user.Menu(ClientPlatform.Web);
-            var indexItemId = securedMenu.ItemindexId;
-            var indexItem = securedMenu.ExplodedLeafs.FirstOrDefault(l => indexItemId.EqualsIc(l.Id));
+            bool fromCache;
+            //TODO: allow mobile
+            var menuModel =_menuHelper.BuildMenu(ClientPlatform.Web);
+            var indexItemId = menuModel.Menu.ItemindexId;
+            var indexItem = menuModel.Menu.ExplodedLeafs.FirstOrDefault(l => indexItemId.EqualsIc(l.Id));
             if (indexItem == null) {
                 //first we´ll try to get the item declared, if it´s null (that item is role protected for that user, for instance, let´s pick the first leaf one as a fallback to avoid problems
-                indexItem = securedMenu.ExplodedLeafs.FirstOrDefault(a => a.Leaf);
+                indexItem = menuModel.Menu.ExplodedLeafs.FirstOrDefault(a => a.Leaf);
             }
 
             HomeModel model = null;
@@ -63,15 +74,17 @@ namespace softWrench.sW4.Web.Controllers {
                 //title = app.Title;
             } else if (indexItem is ActionMenuItemDefinition) {
                 var actItem = (ActionMenuItemDefinition)indexItem;
-                url = GetUrlFromAction(actItem);
+                url = _menuHelper.GetUrlFromAction(actItem);
                 //title = actItem.Title;
             } else {
                 FormsAuthentication.SignOut();
                 return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f&forbidden=true".Fmt(Request.ApplicationPath.Replace("/", "")));
             }
-            model = new HomeModel(url, title, FetchConfigs(), user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), ApplicationConfiguration.ClientName);
+            model = new HomeModel(url, title, FetchConfigs(),menuModel, user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), ApplicationConfiguration.ClientName);
             return View(model);
         }
+
+       
 
         private HomeConfigs FetchConfigs() {
             var logoIcon = _facade.Lookup<string>(ConfigurationConstants.MainIconKey);
@@ -95,6 +108,7 @@ namespace softWrench.sW4.Web.Controllers {
                 ClientName = ApplicationConfiguration.ClientName,
                 Environment = ApplicationConfiguration.Profile,
                 IsLocal = ApplicationConfiguration.IsLocal(),
+                ActivityStreamFlag = ApplicationConfiguration.ActivityStreamFlag,
                 ClientSideLogLevel = clientSideLogLevel,
                 SuccessMessageTimeOut = GetSuccessMessageTimeOut(),
                 InitTimeMillis = ApplicationConfiguration.GetStartTimeInMillis(),
@@ -106,7 +120,7 @@ namespace softWrench.sW4.Web.Controllers {
                 ReservedMaterialsListScanOrder = reservedMaterialsListScanOrder,
                 MatrectransTransfersListScanOrder = matrectransTransfersListScanOrder,
                 InvIssueListBeringScanOrder = invIssueListBeringScanOrder,
-                DefaultEmail = MetadataProvider.GlobalProperty("defaultEmail") 
+                DefaultEmail = MetadataProvider.GlobalProperty("defaultEmail")
             };
         }
 
@@ -132,7 +146,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             var windowTitle = GetWindowTitle(redirectURL);
             var hasPopupLogo = HasPopupLogo(application, popupmode);
-            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(), user, hasPopupLogo, _i18NResolver.FetchCatalogs(),_statusColorResolver.FetchCatalogs(), ApplicationConfiguration.ClientName, windowTitle, message));
+            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(),null, user, hasPopupLogo, _i18NResolver.FetchCatalogs(), _statusColorResolver.FetchCatalogs(), ApplicationConfiguration.ClientName, windowTitle, message));
         }
 
         public ActionResult MakeSWAdmin() {
@@ -173,16 +187,7 @@ namespace softWrench.sW4.Web.Controllers {
             return WebAPIUtil.GetRelativeRedirectURL(actionURL, queryString);
         }
 
-        private string GetUrlFromAction(ActionMenuItemDefinition item) {
-            var action = item.Action;
-            if (String.IsNullOrWhiteSpace(action)) {
-                action = "Get";
-            }
-            string controller = item.Controller;
-            var queryString = String.Join("&", item.Parameters.ToArray());
-            var actionURL = String.Format("api/generic/{0}/{1}", controller, action);
-            return WebAPIUtil.GetRelativeRedirectURL(actionURL, queryString);
-        }
+     
 
 
 

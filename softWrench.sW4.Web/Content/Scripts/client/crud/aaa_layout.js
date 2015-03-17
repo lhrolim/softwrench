@@ -1,10 +1,14 @@
-﻿var app = angular.module('sw_layout', ['pasvaz.bindonce', 'angularTreeview', 'ngSanitize', 'textAngular', 'angularFileUpload']);
+﻿var app = angular.module('sw_layout', ['pasvaz.bindonce', 'angularTreeview', 'ngSanitize', 'textAngular', 'angularFileUpload', "xeditable"]);
 
 //angular 1.3 migration reference
 //app.config(['$controllerProvider', function ($controllerProvider) {
 //    $controllerProvider.allowGlobals();
 //}]);
 
+
+app.run(function (editableOptions) {
+    editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+});
 
 app.directive("dynamicName", function ($compile) {
     /// <summary>
@@ -235,6 +239,7 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
         $rootScope.environment = config.environment;
         $rootScope.i18NRequired = config.i18NRequired;
         $rootScope.deviceType = DeviceDetect.catagory.toLowerCase();
+        contextService.insertIntoContext("activityStreamFlag",config.activityStreamFlag, true);
 
         $scope.mainlogo = config.logo;
         $scope.myprofileenabled = config.myProfileEnabled;
@@ -251,27 +256,43 @@ function LayoutController($scope, $http, $log, $templateCache, $rootScope, $time
             return;
         }
 
-        $http({
-            method: "GET",
-            url: url("/api/menu?" + platformQS()),
-            cache: $templateCache
-        })
-        .success(function (menuAndNav) {
-            $scope.$on('sw_indexPageLoaded', function (event, url) {
+        $scope.$on("sw_loadmenu", function(event, menuModel) {
+            $scope.$on('sw_indexPageLoaded', function(event, url) {
                 if (url != null) {
-                    menuService.setActiveLeafByUrl(menuAndNav.menu, url);
+                    menuService.setActiveLeafByUrl(menuModel.menu, url);
                 }
             });
-            contextService.insertIntoContext("commandbars", menuAndNav.commandBars);
-            $rootScope.menu = menuAndNav.menu;
-            $scope.menu = menuAndNav.menu;
-            $scope.isSysAdmin = menuAndNav.isSysAdmin;
-            $scope.isClientAdmin = menuAndNav.isClientAdmin;
+            contextService.insertIntoContext("commandbars", menuModel.commandBars);
+            $rootScope.menu = menuModel.menu;
+            $scope.menu = menuModel.menu;
+            $scope.isSysAdmin = menuModel.isSysAdmin;
+            $scope.isClientAdmin = menuModel.isClientAdmin;
             $('.hapag-body').addClass('hapag-body-loaded');
-        })
-        .error(function (data) {
-            $scope.title = data || i18NService.get18nValue('general.requestfailed', 'Request failed');
         });
+
+
+//        $http({
+//            method: "GET",
+//            url: url("/api/menu?" + platformQS()),
+//            cache: $templateCache
+//        })
+//        .success(function (menuAndNav) {
+//            $scope.$on('sw_indexPageLoaded', function (event, url) {
+//                if (url != null) {
+//                    menuService.setActiveLeafByUrl(menuAndNav.menu, url);
+//                }
+//            });
+//            contextService.insertIntoContext("commandbars", menuAndNav.commandBars);
+//            $rootScope.menu = menuAndNav.menu;
+//            $scope.menu = menuAndNav.menu;
+//            $scope.isSysAdmin = menuAndNav.isSysAdmin;
+//            $scope.isClientAdmin = menuAndNav.isClientAdmin;
+//            $('.hapag-body').addClass('hapag-body-loaded');
+//        })
+//        .error(function (data) {
+//            data.prependMessage = "retrieving menu";
+//            $rootScope.$broadcast('sw_ajaxerror', data);
+//        });
     }
 
     $scope.i18N = function (key, defaultValue, paramArray) {

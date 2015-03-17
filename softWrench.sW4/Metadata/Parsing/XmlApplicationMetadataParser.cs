@@ -26,7 +26,9 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
-
+using softwrench.sw4.Shared2.Metadata.Applications.Notification;
+using softwrench.sW4.Shared2.Metadata.Applications.Notification;
+using softWrench.sW4.Metadata.Applications.Notification;
 
 
 namespace softWrench.sW4.Metadata.Parsing {
@@ -468,6 +470,126 @@ namespace softWrench.sW4.Metadata.Parsing {
             return resultDictionary;
         }
 
+        private IDictionary<ApplicationNotificationKey, ApplicationNotificationDefinition> ParseNotifications(string applicationName, string applicationTitle, string entityName,
+        XElement application) {
+            var notificationsElement = application.Elements().FirstOrDefault(f => f.Name.LocalName == XmlNotificationMetadataSchema.NotificationsElement);
+            var resultDictionary = new Dictionary<ApplicationNotificationKey, ApplicationNotificationDefinition>();
+            if (notificationsElement != null)
+            {
+                var xElements = notificationsElement.Elements();
+                foreach (var xElement in xElements)
+                {
+                    var notificationId =
+                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeId)
+                            .ValueOrDefault((string) null);
+                    var label =
+                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeLabel)
+                            .ValueOrDefault((string) null);
+                    var type =
+                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeType)
+                            .ValueOrDefault((string) null);
+                    var role =
+                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeRole)
+                            .ValueOrDefault((string) null);
+                    var icon =
+                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeIcon)
+                            .ValueOrDefault((string) null);
+                    var targetSchema =
+                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeTargetSchema)
+                            .ValueOrDefault((string) null);
+                    var targetApplication =
+                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeTargetApplication)
+                            .ValueOrDefault((string) null);
+                    var whereClause =
+                        xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeWhereClause)
+                            .ValueOrDefault((string) null);
+
+                    var stereotype = SchemaStereotype.Notification;
+                    var notificationType = type == "ActivityStream"
+                        ? NotificationType.ActivityStream
+                        : NotificationType.None;
+                    var displayables = ParseNotificationDisplayables(applicationName, xElement, entityName);
+
+                    resultDictionary.Add(new ApplicationNotificationKey(notificationId, notificationType, role),
+                        ApplicationNotificationFactory.GetInstance(applicationName, applicationTitle, notificationId,
+                            stereotype, notificationType,
+                            role, label, icon, targetSchema, targetApplication, whereClause, displayables));
+                }
+            }
+            return resultDictionary;
+        }
+
+        private static List<IApplicationDisplayable> ParseNotificationDisplayables(string applicationName, XContainer notification, string entityName) {
+            var displayables = new List<IApplicationDisplayable>();
+            var entityMetadata = MetadataProvider.Entity(entityName);
+
+            var attributesElement = notification.Elements().First();
+
+            if (attributesElement.Name.LocalName == XmlNotificationMetadataSchema.NotificationAttributesElement) {
+                foreach (var xElement in attributesElement.Elements())
+                {
+                    var xName = xElement.Name.LocalName;
+
+                    if (xName == XmlNotificationMetadataSchema.NotificationAttributeSummaryElement || 
+                        xName ==  XmlNotificationMetadataSchema.NotificationAttributeCreateDateElement || 
+                        xName == XmlNotificationMetadataSchema.NotificationAttributeUIdElement ||
+                        xName == XmlNotificationMetadataSchema.NotificationAttributeChangeByElement) {
+                        displayables.Add(new ApplicationFieldDefinition(applicationName, xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeElementAttribute)
+                                .Value,
+                                xName
+                            ));
+                    }
+
+                    if (xName == XmlNotificationMetadataSchema.NotificationParentAttributesElement)
+                    {
+                        foreach (var parentXElement in xElement.Elements()) {
+                            displayables.Add(new ApplicationFieldDefinition(applicationName,
+                                parentXElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeElementAttribute)
+                                    .Value, parentXElement.Name.LocalName));    
+                        }
+                    }
+
+                    if (xName == XmlNotificationMetadataSchema.NotificationExtraAttributesElement) {
+                        foreach (var extraXElement in xElement.Elements()) {
+                            var attribute =
+                                extraXElement.Attribute(
+                                    XmlNotificationMetadataSchema.NotificationAttributeElementAttribute).Value;
+                            displayables.Add(new ApplicationFieldDefinition(applicationName, attribute, attribute));
+                        }
+                    }
+
+                }    
+            }
+            
+            return displayables;
+        }
+
+        //private static IApplicationDisplayable FindNotificationDisplayable(string applicationName, string entityName, XElement xElement, EntityMetadata entityMetadata) {
+        //    var xName = xElement.Name.LocalName;
+
+        //    if (xName == XmlNotificationMetadataSchema.NotificationAttributeSummaryElement) {
+        //        return ParseNotificationAttribute(applicationName, xElement, entityMetadata);
+        //    }
+        //    if (xName == XmlMetadataSchema.ApplicationSectionElement) {
+        //        return ParseSection(applicationName, xElement, entityMetadata);
+        //    }
+        //    if (xName == XmlMetadataSchema.ApplicationTabElement) {
+        //        return ParseTab(applicationName, xElement, entityName);
+        //    }
+        //    if (xName == XmlMetadataSchema.ApplicationCompositionElement) {
+        //        return ParseComposition(xElement, applicationName, entityName);
+        //    }
+        //    if (xName == XmlMetadataSchema.ApplicationAssociationElement) {
+        //        return ParseAssociation(xElement, applicationName);
+        //    }
+        //    if (xName == XmlMetadataSchema.OptionFieldElement) {
+        //        return ParseOptions(xElement, applicationName);
+        //    } if (xName == XmlMetadataSchema.ReferenceElement) {
+        //        return ParseReference(xElement);
+        //    }
+        //    return null;
+        //}
+
         private static ApplicationSchemaDefinition LookupParentSchema(string id, string applicationName, string parentSchemaValue, ClientPlatform? platform,
             Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> resultDictionary, IList<IApplicationDisplayable> displayables) {
 
@@ -532,8 +654,11 @@ namespace softWrench.sW4.Metadata.Parsing {
              .UserIdAttribute
              .Name;
 
-            return new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, userIdFieldName, properties, ParseSchemas(name, entity, application, idFieldName, userIdFieldName), ParseComponents(name, entity, application, idFieldName), service);
+
+            return new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, userIdFieldName, properties, ParseSchemas(name, entity, application, idFieldName, userIdFieldName), ParseComponents(name, entity, application, idFieldName), service, ParseNotifications(name, title, entity, application));
         }
+
+        
 
         private static IEnumerable<DisplayableComponent> ParseComponents(string name, string entity, XElement application, string idFieldName) {
             IList<DisplayableComponent> resultList = new List<DisplayableComponent>();
@@ -614,7 +739,6 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         private readonly IEnumerable<EntityMetadata> _entityMetadata;
         private readonly IDictionary<string, CommandBarDefinition> _commandBars;
-
 
         /// <summary>
         ///     Parses the XML document provided by the specified

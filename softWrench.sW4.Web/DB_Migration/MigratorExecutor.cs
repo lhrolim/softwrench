@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Reflection;
 using cts.commons.persistence;
+using cts.commons.persistence.Util;
 using cts.commons.Util;
 using FluentMigrator;
 using FluentMigrator.Runner;
@@ -66,6 +67,10 @@ namespace softWrench.sW4.Web.DB_Migration {
             };
             var processor = factory.Create(_connectionString, announcer, options);
             var runner = new MigrationRunner(assembly, migrationContext, processor);
+            var migratorAssemblies =AssemblyLocator.GetMigratorAssemblies();
+            runner.MigrationLoader = new MultiAssemblyMigrationLoader(runner.Conventions, migratorAssemblies, migrationContext.Namespace, migrationContext.NestedNamespaces, migrationContext.Tags);
+            runner.MigrateUp(true);
+
             runnerAction(runner);
             Log.Info(String.Format("Migration execution finished in {0}", LoggingUtil.MsDelta(before)));
         }

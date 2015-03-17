@@ -19,4 +19,8 @@
         width: -webkit-calc(100% - 40px);
         width: calc(100% - 40px);
     }
+
+    .affix-pagination-panel, .listgrid-thread {
+        width: 100%;
+    }
 }

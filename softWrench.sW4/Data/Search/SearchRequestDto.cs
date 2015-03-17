@@ -27,7 +27,6 @@ namespace softWrench.sW4.Data.Search {
         /// </summary>
         public String SearchTemplate { get; set; }
 
-
         public String SearchParams { get; set; }
 
         public String SearchValues { get; set; }
@@ -60,7 +59,7 @@ namespace softWrench.sW4.Data.Search {
 
 
 
-        internal void BuildProjection(ApplicationSchemaDefinition schema) {
+        public void BuildProjection(ApplicationSchemaDefinition schema) {
             var columns = schema.Fields;
             foreach (var column in columns) {
                 AppendProjectionField(new ProjectionField { Name = column.Attribute, Alias = column.Attribute });

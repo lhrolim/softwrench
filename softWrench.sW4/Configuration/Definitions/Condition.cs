@@ -1,4 +1,5 @@
-﻿using NHibernate.Mapping.Attributes;
+﻿using cts.commons.persistence;
+using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Interfaces;
 using softWrench.sW4.Util;
@@ -31,6 +32,9 @@ namespace softWrench.sW4.Configuration.Definitions {
         [Property(TypeType = typeof(BooleanToIntUserType))]
         public Boolean Global { get; set; }
 
+        /// <summary>
+        /// this points to the category fullkey
+        /// </summary>
         [Property]
         public string FullKey { get; set; }
 

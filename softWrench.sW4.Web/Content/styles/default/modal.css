@@ -36,11 +36,12 @@
 
 .conditionModal {
     position: absolute;
-    top: 65%;
-    left: 12%;
+    top: 25%;
+    margin-right: auto;
+    margin-left: auto;
     padding: 20px;
-    width: 450px;
-    height: 650px;
+    width: 650px;
+    height: 850px;
     outline: none;
 }
 

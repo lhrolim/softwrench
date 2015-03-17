@@ -1,4 +1,4 @@
-﻿var app = angular.module('sw_layout');
+var app = angular.module('sw_layout');
 
 app.factory('searchService', function (i18NService, $log, $rootScope, contextService, fieldService, $http) {
 
@@ -221,6 +221,9 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
         /// <returns type=""></returns>        
         buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause, paginationData, searchTemplate) {
             var searchDto = {};
+            if (!searchData) {
+                searchData = {};
+            }
             if (!searchSort) {
                 searchSort = {};
             }
@@ -236,7 +239,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             searchDto.needsCountUpdate = true;
             //existing template pass too many variable, which some of them did not get translated and caused an SQL error
             //searchDto.searchTemplate = searchTemplate;
-            searchDto.searchTemplate = searchDto.searchParams.replace("&&", "||");
+            searchDto.searchTemplate = searchTemplate;
             searchData.lastSearchedValues = searchDto.searchValues;
             
             if (paginationData) {
@@ -337,7 +340,6 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             return this.searchOperations()[1];
         },
 
-        refreshGrid: function (searchData, extraparameters) {
             /// <summary>
             /// 
             /// </summary>
@@ -354,7 +356,23 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             ///  avoidspin --> if true, we wont show the busy indicator on the screen
             ///  keepfilterparams --> if true, we should keep the filter parameters on the grid
             ///  searchTemplate --> the search template string to apply on the seach
+        ///  panelid: the panel id to refresh, used to allow multiple data on screen
+        ///  fieldstodisplay: if present, the schema will be sliced for showing only these fields
+        ///  
             /// </param>
+        refreshGrid: function (searchData, extraparameters) {
+            extraparameters = extraparameters || {};
+
+            var key = "poll_refreshgridaction" + (extraparameters.panelid ? extraparameters.panelid : "");
+
+            //this is needed because the crud_list handler may not yet be in place when this method is called, 
+            //we need to make sure that as soon as it gets available it consumes the message
+            contextService.insertIntoContext(key, {
+                searchData: searchData,
+                extraparameters: extraparameters,
+                panelid: extraparameters.panelid,
+                metadataid: extraparameters.metadataid
+            }, true);
             $rootScope.$broadcast("sw_refreshgrid", searchData, extraparameters);
         },
 
@@ -374,7 +392,7 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
                 }
             }
             searchTemplate = searchTemplate.substring(0, searchTemplate.length - 2);
-            this.refreshGrid(searchData,{searchTemplate:searchTemplate});
+            this.refreshGrid(searchData,{searchTemplate:searchTemplate,keepfilterparameters:true});
         },
 
         /// <summary>
@@ -392,6 +410,8 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
         /// searchOperators --> the array of operators to apply to searchdata array, in the same order
         /// searchSort --> the sorting object
         /// searchTemplate --> the searchtemplate to use in the search operation
+        /// printMode --> if true, means we´re doing a search for a print
+        /// searchDTO --> the built in searchDTO, íf present, won´t be built inside here
         /// 
         /// </param>
         searchWithData: function (application, searchData, schema, extraParameters) {
@@ -402,24 +422,37 @@ app.factory('searchService', function (i18NService, $log, $rootScope, contextSer
             searchData = searchData || {};
             
             var log = $log.getInstance('searchService#searchWithData');
-
-            var searchDTO = this.buildSearchDTO(searchData, extraParameters.searchSort, extraParameters.searchOperators, null);
+            var searchDTO = extraParameters.searchDTO;
+            if (!searchDTO) {
+                searchDTO = this.buildSearchDTO(searchData, extraParameters.searchSort, extraParameters.searchOperators, null);
             searchDTO.searchTemplate = extraParameters.searchTemplate;
             searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
             searchDTO.totalCount = 0;
             searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;
+            }
+
             var restParameters = {
                 key: {
                     schemaId: schema ? schema : "list",
                     mode: extraParameters.mode ? extraParameters.mode : 'none',
                     platform: "web"
                 },
+                schemaFieldsToDisplay: extraParameters.schemaFieldsToDisplay,
                 SearchDTO: searchDTO
             };
             var queryString = $.param(restParameters);
             var urlToUse = url("/api/Data/{0}?{1}".format(application, queryString));
             log.info("invoking url {0}".format(urlToUse));
-            return $http.get(urlToUse);
+
+            if (extraParameters.metadataid != null) {
+                return $http.get(urlToUse, {
+                    headers: {
+                        currentmetadata: extraParameters.metadataid
+                    }
+                });
+            } else {
+                return $http.get(urlToUse); 
+            }
         },
 
         toggleAdvancedFilterMode: function (setToBasicMode) {

@@ -37,8 +37,6 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services {
             }
         }
 
-
-
         public override bool RunAtStartup() {
             return true;
         }

@@ -126,7 +126,7 @@ app.directive('menuItem', function (contextService) {
             displacement: '=',
             level: '='
         },
-        controller: function ($scope, $http, $rootScope, menuService, i18NService, mockService) {
+        controller: function ($scope, $http, $rootScope, menuService, i18NService, mockService, alertService, validationService) {
 
             $scope.level = $scope.level + 1;
 
@@ -155,11 +155,29 @@ app.directive('menuItem', function (contextService) {
 
 
             $scope.goToApplication = function (leaf, target) {
-                menuService.goToApplication(leaf, target);
+                var msg = "Are you sure you want to leave the page?";
+                if (validationService.getDirty()) {
+                    alertService.confirmCancel(null, null, function () {
+                        menuService.goToApplication(leaf, target);
+                        $scope.$digest();
+                    }, msg, function () { return; });
+                }
+                else {
+                    menuService.goToApplication(leaf, target);
+                }
             };
 
             $scope.doAction = function (leaf, target) {
-                menuService.doAction(leaf, target);
+                var msg = "Are you sure you want to leave the page?";
+                if (validationService.getDirty()) {
+                    alertService.confirmCancel(null, null, function () {
+                        menuService.doAction(leaf, target);
+                        $scope.$digest();
+                    }, msg, function () { return; });
+                }
+                else {
+                    menuService.doAction(leaf, target);
+                }
             };
 
             $scope.contextPath = function (path) {
@@ -183,10 +201,23 @@ app.directive('menuItem', function (contextService) {
                 }
             };
 
+            $scope.getDataToggle = function (container) {
+                return container.hasMainAction ? "dropdown" : "null";
+            };
+
 
             $scope.handleContainerClick = function (container, target) {
                 if (container.controller != null && !$(target).find("span").hasClass('bottom-caret') && !mockService.isMockedContainerDashBoard()) {
-                    menuService.doAction(container, target);
+                    var msg = "Are you sure you want to leave the page?";
+                    if (validationService.getDirty()) {
+                        alertService.confirmCancel(null, null, function () {
+                            menuService.doAction(container, target);
+                            $scope.$digest();
+                        }, msg, function () { return; });
+                    }
+                    else {
+                        menuService.doAction(container, target);
+                    }
                 }
                 if ($scope.displacement == 'vertical') {
                     $(target).find("span").toggleClass("right-caret bottom-caret");

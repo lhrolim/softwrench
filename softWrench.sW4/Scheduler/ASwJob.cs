@@ -44,13 +44,21 @@ namespace softWrench.sW4.Scheduler {
 
         public abstract bool RunAtStartup();
 
-        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             if (RunAtStartup()) {
                 Task.Factory.StartNew(DoExecute);
             }
         }
 
         public bool IsScheduled { get; set; }
+
+        public virtual bool IsEnabled 
+        {
+            get
+            {
+                return true;
+            }
+        }
 
         //run at the end
         public int Order { get { return 1000; } }

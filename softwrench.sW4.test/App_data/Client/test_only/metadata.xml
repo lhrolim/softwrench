@@ -3,6 +3,7 @@
 
   <templates>
     <template path="@worklogs.xml"/>
+    <template path="@incident.xml"/>
   </templates>
   
   <entities>
@@ -407,7 +408,7 @@
           </field>
           <field attribute="description" label="Description"  />
           <field attribute="longdescription.ldtext" label="Long Description"  />
-          <composition relationship="worklog" label="Work Logs" />
+          <customization position="worklog"></customization>
           <composition relationship="matusetrans" label="Materials" />
           <composition relationship="labtrans" label="Labors" />
         </detail>
@@ -655,6 +656,17 @@
           </customization>
         </detail>
       </schemas>
+    </application>
+
+    <application name="incident" entity="incident" title="Incident">
+      <schemas>
+        <detail redeclaring="false">
+          <customization position="attachment"/>
+          <customization position="location"/>
+          <customization position="classstructureid"/>
+        </detail>
+      </schemas>
+      
     </application>
     
     <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009" >

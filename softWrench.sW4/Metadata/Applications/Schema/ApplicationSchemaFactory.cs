@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using cts.commons.portable.Util;
+using JetBrains.Annotations;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
@@ -37,13 +38,13 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
         }
 
         public static ApplicationSchemaDefinition GetInstance(
-          String applicationName, string title, string schemaId,Boolean redeclaringSchema, SchemaStereotype stereotype,
+          String applicationName, string title, string schemaId, Boolean redeclaringSchema, SchemaStereotype stereotype,
           SchemaMode? mode, ClientPlatform? platform, bool @abstract,
           [NotNull] List<IApplicationDisplayable> displayables, [NotNull]IDictionary<string, string> schemaProperties,
           ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, [NotNull] ApplicationCommandSchema commandSchema,
           string idFieldName, string userIdFieldName, string unionSchema, ISet<ApplicationEvent> events) {
 
-            var schema = new ApplicationSchemaDefinition(applicationName, title, schemaId,redeclaringSchema, stereotype, mode, platform,
+            var schema = new ApplicationSchemaDefinition(applicationName, title, schemaId, redeclaringSchema, stereotype, mode, platform,
                 @abstract, displayables, schemaProperties, parentSchema, printSchema, commandSchema, idFieldName, userIdFieldName, unionSchema, events);
 
             if (schema.ParentSchema != null) {
@@ -199,19 +200,31 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             }
         }
 
-        private static List<IApplicationDisplayable> OnApplySecurityPolicy(ApplicationSchemaDefinition schema, IEnumerable<Role> userRoles) {
+        private static List<IApplicationDisplayable> OnApplySecurityPolicy(ApplicationSchemaDefinition schema, IEnumerable<Role> userRoles, string schemaFieldsToDisplay) {
             var activeFieldRoles = RoleManager.ActiveFieldRoles();
-            if (activeFieldRoles == null || activeFieldRoles.Count == 0) {
+            if ((activeFieldRoles == null || activeFieldRoles.Count == 0) && schemaFieldsToDisplay == null) {
                 return schema.Displayables;
             }
+            var fieldsToRetain = new HashSet<string>();
+            if (schemaFieldsToDisplay != null) {
+                fieldsToRetain.AddAll(schemaFieldsToDisplay.Split(','));
+            }
+
             var resultingFields = new List<IApplicationDisplayable>();
             foreach (var field in schema.Displayables) {
+                var appDisplayable = field as IApplicationAttributeDisplayable;
+                var isNotRetained = !fieldsToRetain.Any() || ((appDisplayable != null && fieldsToRetain.Any(f => appDisplayable.Attribute.EqualsIc(f))));
                 if (!activeFieldRoles.Contains(field.Role)) {
-                    resultingFields.Add(field);
+                    if (isNotRetained) {
+                        resultingFields.Add(field);
+                    }
+
                 } else {
                     var enumerable = userRoles as IList<Role> ?? userRoles.ToList();
                     if (enumerable.Any(r => r.Name == field.Role)) {
-                        resultingFields.Add(field);
+                        if (isNotRetained) {
+                            resultingFields.Add(field);
+                        }
                     }
                 }
             }
@@ -223,14 +236,14 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
         private static ApplicationSchemaDefinition OnApplyPlatformPolicy(ApplicationSchemaDefinition schema, ClientPlatform platform, List<IApplicationDisplayable> displayables) {
             //pass null on ParentSchema to avoid reMerging the parentSchemaData
-            return GetInstance(schema.ApplicationName, schema.Title, schema.SchemaId,schema.RedeclaringSchema, schema.Stereotype, schema.Mode, platform,
+            return GetInstance(schema.ApplicationName, schema.Title, schema.SchemaId, schema.RedeclaringSchema, schema.Stereotype, schema.Mode, platform,
                  schema.Abstract, displayables,
                  schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UserIdFieldName, schema.UnionSchema,
                  schema.EventSet);
         }
 
         public static ApplicationSchemaDefinition Clone(ApplicationSchemaDefinition schema) {
-            return GetInstance(schema.ApplicationName, schema.Title, schema.SchemaId,schema.RedeclaringSchema, schema.Stereotype, schema.Mode, schema.Platform,
+            return GetInstance(schema.ApplicationName, schema.Title, schema.SchemaId, schema.RedeclaringSchema, schema.Stereotype, schema.Mode, schema.Platform,
                 schema.Abstract, schema.Displayables,
                 schema.Properties, null, schema.PrintSchema, schema.CommandSchema, schema.IdFieldName, schema.UserIdFieldName, schema.UnionSchema,
                 schema.EventSet);
@@ -239,10 +252,10 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
         //        protected abstract ApplicationSchema OnApplyPlatformPolicy(ClientPlatform platform, IList<IApplicationDisplayable> fields);
 
         [NotNull]
-        public static ApplicationSchemaDefinition ApplyPolicy(this ApplicationSchemaDefinition schema, [NotNull] IEnumerable<Role> userRoles, ClientPlatform platform) {
+        public static ApplicationSchemaDefinition ApplyPolicy(this ApplicationSchemaDefinition schema, [NotNull] IEnumerable<Role> userRoles, ClientPlatform platform, string schemaFieldsToDisplay) {
             if (userRoles == null) throw new ArgumentNullException("userRoles");
 
-            return OnApplyPlatformPolicy(schema, platform, OnApplySecurityPolicy(schema, userRoles));
+            return OnApplyPlatformPolicy(schema, platform, OnApplySecurityPolicy(schema, userRoles, schemaFieldsToDisplay));
         }
 
         [NotNull]

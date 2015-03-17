@@ -259,6 +259,22 @@ function nullOrUndef(obj) {
     return obj === undefined || obj == null;
 }
 
+function insertOrUpdateArray(arr, item, property) {
+    property = property || "id";
+    var idx = -1;
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i][property] == item[property]) {
+            idx = i;
+            break;
+        }
+    }
+    if (idx == -1) {
+        arr.push(item);
+    } else {
+        arr[idx] = item;
+    }
+}
+
 function lockCommandBars() {
     var bars = $('[data-class=commandbar]');
     bars.each(function (index, element) {

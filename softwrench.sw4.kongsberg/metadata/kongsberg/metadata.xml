@@ -228,6 +228,24 @@
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
         </relationship>
+        <relationship to ="solution" qualifier="solution" >
+          <relationshipAttribute from="solution" to ="solution" primary="true"/>
+        </relationship>
+        <relationship to="longdescription" qualifier="symptom">
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="PROBLEMCODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="cause">
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR1CODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="resolution">
+          <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
+        </relationship>
         <relationship to ="persongroup">
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
         </relationship>
@@ -732,6 +750,10 @@
           <relationshipAttribute from="siteid" to="siteid" />
           <relationshipAttribute to="class" literal="INCIDENT" quoteLiteral="true" />
         </relationship>
+        <relationship to ="commlog" collection="true">
+          <relationshipAttribute from="ticketuid" to="ownerid" primary="true" />
+          <relationshipAttribute to="ownertable" literal="INCIDENT" quoteLiteral="true"/>
+        </relationship>
         <relationship to="DOCLINKS" qualifier="attachment" collection="true">
           <relationshipAttribute from="ticketuid" to="ownerid" primary="true"/>
           <relationshipAttribute to="ownertable" literal="INCIDENT" quoteLiteral="true"/>
@@ -767,7 +789,7 @@
           <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
           <relationshipAttribute to="objectvalue" literal="INCIDENT" quoteLiteral="true"/>
         </relationship>
-
+        
         <relationship to="incidentclassifications" qualifier="incidentclassifications">
           <relationshipAttribute from="classificationid" to="classificationid" primary="true"/>
         </relationship>
@@ -792,15 +814,15 @@
           <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
         </relationship>
-
+        
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="incident" />
         <connectorParameter key="integration_interface" value="SWINCIDENT" />
-        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseIncidentCrudConnector" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.KongsbergIncidentCrudConnector" />
       </connectorParameters>
     </entity>
-
+    
     <entity name="wochange" idAttribute="workorderid">
       <attributes>
         <attribute name="workorderid" type="integer" required="true" />
@@ -987,6 +1009,9 @@
         <relationship to="commlogdocs" >
           <relationshipAttribute from="commlogid" to="commlogid" primary="true"/>
         </relationship>
+        <relationship to="sr">
+          <relationshipAttribute from="ownerid" to="ticketuid" primary="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="commlog" />
@@ -1015,24 +1040,56 @@
       <schemas>
         <list title="Service Request Grid">
           <field attribute="ticketid" label="SR No">
-            <renderer type="default"  params="width=9%" />
+            <renderer type="default"  params="widthXS=25%;widthSM=15%;widthMD=12%;widthLG=6%" />
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
           <field attribute="classificationid" label="Project Description">
-            <renderer type="default" params="width=9%;excelwidth=50"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=15%;widthLG=12%;excelwidth=50"/>
           </field>
           <field attribute="area" label="Area">
-            <renderer type="default" params="width=9%;excelwidth=50"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=20%;widthMD=15%;excelwidth=50"/>
           </field>
           <field attribute="problemtype" label="Problem Type">
-            <renderer type="default" params="width=9%;excelwidth=50"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=8%;excelwidth=50"/>
           </field>
           <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="width=9%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="internalpriority" label="Internal Priority">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=8%" />
+          </field>
+          <field attribute="owner" label="Owner">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
+          </field>
+          <field attribute="changedate" label="Changed Date">
+            <renderer type="datetime" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=10%;format=MM/dd/yyyy HH:mm;showtime=false"/>
+          </field>
+          <field attribute="status" label="Status">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=10%" />
+          </field>
+          <field attribute="#color" label="">
+            <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
+          </field>
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+          </properties>
+          
+        </list>
+
+        <schema id="supportlist" stereotype="list">
+          <field attribute="ticketid" label="Service Request">
+            <renderer type="default"  params="width=9%" />
+          </field>
+          <field attribute="classificationid" label="Project">
+            <renderer type="default" params="width=9%;excelwidth=50"/>
+          </field>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="excelwidth=50" />
+          </field>
+          <field attribute="reportdate" label="Report Date"></field>
+          <field attribute="reportedby" label="Reported By">
             <renderer type="default" params="width=9%" />
           </field>
           <field attribute="status" label="Status">
@@ -1041,17 +1098,43 @@
           <field attribute="owner" label="Owner">
             <renderer type="default" params="width=9%" />
           </field>
+          <field attribute="ownergroup" label="Assigned Owner Group"></field>
           <field attribute="changedate" label="Changed Date">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=9%;showtime=false"/>
-          </field>
-          <field attribute="#color" label="">
-            <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
           </properties>
+        </schema>
 
-        </list>
+        <schema id="ledaflowlist" stereotype="list">
+          <field attribute="classificationid" label="Project">
+            <renderer type="default" params="width=9%;excelwidth=50"/>
+          </field>
+          <field attribute="ticketid" label="Service Request">
+            <renderer type="default"  params="width=9%" />
+          </field>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="excelwidth=50" />
+          </field>
+          <field attribute="reportdate" label="Report Date"></field>
+          <field attribute="reportedby" label="Reported By">
+            <renderer type="default" params="width=9%" />
+          </field>
+          <field attribute="status" label="Status">
+            <renderer type="default" params="width=9%" />
+          </field>
+          <field attribute="problemtype_.description" label="Problem Type"></field>
+          <field attribute="area" label="Area">
+            <renderer type="default" params="width=9%;excelwidth=50"/>
+          </field>
+          <field attribute="owner" label="Owner">
+            <renderer type="default" params="width=9%" />
+          </field>
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+          </properties>
+        </schema>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
 
@@ -1068,11 +1151,11 @@
           <field attribute="changeby" default="@username" hidden="true"/>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeowner"/>
+            <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
           </association>
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+            <event type="afterchange" service="generalsrService" method="afterchangeownergroup"/>
           </association>
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
           <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc">
@@ -1102,7 +1185,7 @@
             <renderer type="lookup"/>
           </association>
           <field label="TFS#:" attribute="tfsnumber"/>
-          <field label="Feature Request:" attribute="feature_request">
+          <field label="Feature Request:" attribute="feature_request"  >
             <renderer type="checkbox"/>
           </field>
           <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description" requiredexpression="@feature_request == 1">
@@ -1130,7 +1213,7 @@
           <field label="Actual End Date:" attribute="actualfinish" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
-
+          
           <field attribute="description" label="Summary:" requiredexpression="true"/>
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
@@ -1152,10 +1235,10 @@
           -->
           <section id="compositions"/>
         </schema>
-
+        
         <schema parentschema="adetail" title="New Service Request" id="newdetail">
           <section id="siteidsection">
-            <field attribute="ticketid" label="Request #:" hidden="true"/>
+            <field attribute="ticketid" label="SR No:" hidden="true"/>
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
               <!-- removed default='@usersite' from the above association label-->
               <renderer type="combo"/>
@@ -1174,7 +1257,7 @@
 
         <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
           <section id="siteidsection">
-            <field attribute="ticketid" label="Request #:" readonly="true" requiredexpression="true"/>
+            <field attribute="ticketid" label="SR No:" readonly="true" requiredexpression="true"/>
             <!--KSW-68 Updated field to combo-->
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
               <!-- removed default='@usersite' from the above association label-->
@@ -1188,7 +1271,8 @@
             <!--Request to refine the list-->
             <optionfield label="Status:" attribute="status">
               <renderer type="combo"/>
-              <option label="Completed" value="COMPLETED"/>
+              <option label="Duplicate" value="DUPLICATE"/>
+              <option label="Closed" value="CLOSED"/>
               <option label="Edited in History" value="HISTEDIT"/>
               <option label="In Progress" value="INPROG"/>
               <option label="New" value="NEW"/>
@@ -1200,6 +1284,24 @@
             </optionfield>
           </section>
           <section id="compositions">
+            <tab label="Solution" id="solution">
+
+            <field attribute="solution" hidden="true"/>
+            <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
+              <renderer type="lookup"/>
+              <event type="afterchange" service="solutionService" method="setsolutiondata"/>
+            </association>
+            <field attribute="solution_.description" label="Description:" readonly="true" hidden="true"/>
+            <field attribute="symptom_.ldtext" label="Symptom:">
+              <renderer type="richtext"/>
+            </field>
+            <field attribute="cause_.ldtext" label="Cause:" >
+              <renderer type="richtext"/>
+            </field>
+            <field attribute="resolution_.ldtext" label="Resolution:" >
+              <renderer type ="richtext"/>
+            </field>
+          </tab>
             <composition relationship="worklog" label="Work Logs">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
             </composition>
@@ -1210,318 +1312,19 @@
             <composition relationship="attachment" label="Attachments">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
             </composition>
+            <composition relationship="relatedrecord" label="Related Records">
+              <collectionproperties allowcreation="false" />
+            </composition>
           </section>
+
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+          <event type="beforesubmit.postvalidation" service="genericTicketService" method="checkWorklogsForChange"/>
+          
           <commands>
             <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
                      showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted"/>
           </commands>
         </schema>
-      </schemas>
-    </application>
-
-    <application name="workorder" title="Work Order" entity="workorder">
-      <properties>
-        <property key="mobile.fetchlimit" value="300"/>
-      </properties>
-      <schemas>
-        <list title="Work Order Grid" platform="web">
-          <field attribute="wonum" label="WO No" >
-            <renderer type="default" params="width=19%" />
-          </field>
-          <field attribute="description" label="Summary">
-            <renderer type="default" params="width=25%;excelwidth=50" />
-          </field>
-          <!--<field attribute="location" label="Location">
-            <renderer type="default" params="width=19%" />
-          </field>
-          <field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="width=19%" />
-          </field>-->
-          <field attribute="status" label="Status" >
-            <renderer type="default" params="width=19%" />
-          </field>
-          <field attribute="#color" label="">
-            <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
-          </field>
-
-          <properties>
-            <property key="list.click.schema" value="editdetail"/>
-          </properties>
-        </list>
-
-        <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web">
-          <field attribute="estdur"            hidden="true"/>
-          <field attribute="estlabhrs"         hidden="true"/>
-          <field attribute="estmatcost"        hidden="true"/>
-          <field attribute="estintlabhrs"      hidden="true"/>
-          <field attribute="estintlabcost"     hidden="true"/>
-          <field attribute="estatapprlabhrs"   hidden="true"/>
-          <field attribute="estatapprmatcost"  hidden="true"/>
-          <field attribute="estatapprlabcost"  hidden="true"/>
-          <field attribute="estatapprtoolcost" hidden="true"/>
-          <field attribute="estatapprservcost" hidden="true"/>
-          <field attribute="estapprlabhrs"     hidden="true"/>
-          <field attribute="estapprmatcost"    hidden="true"/>
-          <field attribute="estapprlabcost"    hidden="true"/>
-          <field attribute="estlabcost"        hidden="true"/>
-          <field attribute="esttoolcost"       hidden="true"/>
-          <field attribute="estservcost"       hidden="true"/>
-          <field attribute="actlabhrs"         hidden="true"/>
-          <field attribute="actlabcost"        hidden="true"/>
-          <field attribute="actservcost"       hidden="true"/>
-          <field attribute="actmatcost"        hidden="true"/>
-          <field attribute="acttoolcost"       hidden="true"/>
-          <field attribute="outlabcost"        hidden="true"/>
-          <field attribute="outmatcost"        hidden="true"/>
-          <field attribute="outtoolcost"       hidden="true"/>
-          <field attribute="outservcost"       hidden="true"/>
-          <field attribute="workorderid"  readonly="true" hidden="true"/>
-          <field attribute="actliccost"        hidden="true"/>
-          <field attribute="estatapprliccost"  hidden="true"/>
-          <field attribute="estliccost"        hidden="true"/>
-          <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
-          <section id ="siteidsection"/>
-          <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
-          <field attribute="woclass" hidden="true"/>
-          <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
-          <!--section id="ownerstatussection"/-->
-          <field attribute="wonum" label="WO No:" readonly="true"/>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
-          </association>
-          <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
-            <renderer type="lookup"/>
-            <event type="afterchange" service="generalsrService" method="afterchangeownergroup"/>
-          </association>
-          <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
-          <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-          </field>
-          <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
-            <renderer type="lookup"/>
-          </association>
-          <!--Updated work order priority to display user-defined field-->
-          <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
-            <renderer type="autocompleteclient"/>
-          </optionfield>
-          <!--<association label="Location:" target="location" labelfield="location_.description" >
-            <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
-            -->
-          <!--renderer type="lookup"/-->
-          <!--
-          </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-            <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="generalsrService" method="afterChangeAsset"/>
-          </association>-->
-          <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
-            <renderer type="lookup"/>
-          </association>
-          <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist">
-            <!--renderer type="lookup"/-->
-          </association>
-          <field hidden="true" attribute="failurelist_.failurelist"/>
-          <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode">
-            <renderer type="lookup"/>
-            <dataprovider prefilterfunction="FilterProblemCodes"/>
-          </association>
-          <field label="Job Plan:" attribute="jpnum" readonly="true" />
-          <association label="GL Account:" target="glaccount" labelfield="chartofaccounts_.accountname" >
-            <renderer type="lookup"/>
-          </association>
-
-
-          <!-- Adding target start finish date-->
-          <field attribute="targstartdate" hidden="true"/>
-          <field attribute="targcompdate" hidden="true"/>
-          <field attribute="actstart" hidden="true"/>
-          <field attribute="actualfinish" hidden="true"/>
-
-          <section id="targstartdate" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetstart;">
-            <header label="Target Start Date:" displacement="sameline"/>
-          </section>
-
-          <section id="targcompdate" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetfinish;">
-            <header label="Target Finish Date:" displacement="sameline"/>
-          </section>
-
-          <section id="actstart" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualstart;">
-            <header label="Actual Start Date:" displacement="sameline"/>
-          </section>
-
-          <section id="actfinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualfinish;">
-            <header label="Actual Finish Date:" displacement="sameline"/>
-          </section>
-
-
-
-
-          <field attribute="description" label="Summary:" requiredexpression="true"/>
-          <field label="Details:" attribute="longdescription_.ldtext" >
-            <renderer type="richtext"/>
-          </field>
-          <section id="attachmentsection"/>
-          <section id="compositions"/>
-          <!--					<section id="matusetranssection"/>-->
-          <!--					<section id="labtranssection"/>-->
-        </schema>
-
-        <schema parentschema="adetail" title="New Work Order" id="newdetail" platform="web">
-          <section id="siteidsection">
-            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
-              <!-- removed default='@usersite' from the above association label-->
-              <renderer type="combo"/>
-            </association>
-            <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
-          </section>
-          <!--<section id="ownerstatussection">
-            -->
-          <!--field attribute="owner" label="Owner:"/-->
-          <!--
-            <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
-          </section>-->
-          <section id="attachmentsection">
-            <field label="Attachment:" attribute="newattachment" >
-              <renderer type="upload"/>
-            </field>
-          </section>
-        </schema>
-
-        <schema parentschema="adetail" id="editdetail" title="Work Order Details" platform="web">
-          <section id="siteidsection">
-            <field label="Site:" attribute="siteid" readonly="true"/>
-            <association label="Status:" target="status" labelfield="synstatus.description">
-              <renderer type="combo"/>
-            </association>
-          </section>
-          <!--<section id="ownerstatussection">
-            -->
-          <!--field attribute="owner" label="Owner:" readonly="true"/-->
-          <!--
-            <association label="Status:" target="status" labelfield="synstatus.description">
-              <renderer type="combo"/>
-            </association>
-          </section>-->
-          <section id="compositions">
-            <composition relationship="worklog" label="Work Logs">
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
-            </composition>
-            <composition relationship="woactivity" label="WO Tasks">
-              <collectionproperties allowupdate="false" allowcreation="false"  />
-            </composition>
-            <composition relationship="matusetrans" label="Materials">
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'"  />
-            </composition>
-            <composition relationship="labtrans" label="Labor">
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
-            </composition>
-            <composition relationship="attachment" label="Attachments" >
-              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
-            </composition>
-          </section>
-          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
-        </schema>
-
-        <list platform="mobile">
-          <field attribute="wonum" label="Number" qualifier="title"/>
-          <field attribute="asset_.description" label="Asset" qualifier="subtitle"/>
-          <field attribute="status" label="Status" qualifier="featured"/>
-          <field attribute="description" label="Description" qualifier="excerpt"/>
-        </list>
-
-        <detail platform="mobile" title="Work Orders">
-          <field attribute="workorderid" hidden="true"/>
-          <field attribute="orgid" hidden="true" />
-          <field attribute="siteid" hidden="true"/>
-          <field attribute="woclass" hidden="true"/>
-          <field attribute="hasfollowupwork" hidden="true"/>
-          <field attribute="origrecordid" hidden="true"/>
-          <field attribute="origrecordclass" hidden="true"/>
-          <field attribute="wonum" label="Number"  requiredexpression="true" readonly="true" />
-          <field attribute="reportdate" label="Reported On" hidden="true"/>
-          <field attribute="changeby" label="Changed By" hidden="true"/>
-          <field attribute="owner" label="Owner"  readonly="true"/>
-          <field attribute="status"  hidden="true" default="WAPPR"/>
-          <field attribute="synstatus_.maxvalue" hidden="true"/>
-          <field attribute="synstatus_.description" label="Status" readonly="true" requiredexpression="true">
-            <lookup sourceApplication="synonymdomain" sourceField="value" sourceDisplay="description,value" targetField="status" targetQualifier="">
-              <lookupFilters>
-                <lookupFilter sourceField="domainid" literal="WOSTATUS" />
-              </lookupFilters>
-            </lookup>
-          </field>
-
-          <field attribute="wopriority" label="Priority" requiredexpression="true" default="1" >
-
-            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-            <number decimals="0" min="0" max="999" />
-          </field>
-          <!--<field attribute="location" hidden="true"/>
-          <field attribute="location_.description" label="Location" hidden="true" >
-            <lookup sourceApplication="location" sourceField="location" sourceDisplay="description,location" targetField="location" targetQualifier="">
-              <lookupFilters>
-                <lookupFilter sourceField="siteid" targetField="siteid" />
-              </lookupFilters>
-            </lookup>
-          </field>
-          <field attribute="assetnum" hidden="true"/>
-          <field attribute="asset_.description" label="Asset" >
-            <lookup sourceApplication="asset" sourceField="assetnum" sourceDisplay="description,assetnum" targetField="assetnum" targetQualifier="">
-              <lookupFilters>
-                <lookupFilter sourceField="siteid" targetField="siteid" />
-              </lookupFilters>
-            </lookup>
-          </field>-->
-
-          <!--<association label="Location" target="location" labelfield="location.description" />-->
-
-          <!--<association label="Asset" target="assetnum" labelfield="asset.description" />-->
-          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
-          <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
-          <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
-          <association label="Status" target="status" labelfield="synstatus.description" />
-          <composition relationship="worklog" label="Work Logs" />
-          <composition relationship="matusetrans" label="Materials" />
-          <composition relationship="labtrans" label="Labor" />
-          <composition relationship="attachment" label="Attachments" />
-          <!--<field attribute="longdescription_.ldtext" label="Long Description" name="description_longdescription"/>-->
-          <!--          <composition attribute="longdescription" >-->
-          <!--            <field attribute="longdescription.ldtext" label="Long Description" name="description_longdescription"/>-->
-          <!--          </composition>-->
-          <field attribute="failurecode" hidden="true"/>
-          <field attribute="failurecode_.description" label="Failure Class" >
-            <lookup sourceApplication="failurecode" sourceField="failurecode" sourceDisplay="description,failurecode" targetField="failurecode" targetQualifier="">
-              <lookupFilters>
-                <lookupFilter sourceField="orgid" targetField="orgid" />
-              </lookupFilters>
-            </lookup>
-          </field>
-          <field attribute="worktype" hidden="true"/>
-          <field attribute="worktype_.wtypedesc" label="Work Type" >
-            <lookup sourceApplication="worktype" sourceField="worktype" sourceDisplay="wtypedesc,worktype" targetField="worktype" targetQualifier="">
-              <lookupFilters>
-                <lookupFilter sourceField="orgid" targetField="orgid" />
-              </lookupFilters>
-            </lookup>
-          </field>
-          <field attribute="glaccount" hidden="true"/>
-          <field attribute="chartofaccounts_.accountname" label="GL Account" >
-            <lookup sourceApplication="chartofaccounts" sourceField="glaccount" sourceDisplay="accountname,glaccount" targetField="glaccount" targetQualifier="">
-              <lookupFilters>
-                <lookupFilter sourceField="orgid" targetField="orgid" />
-              </lookupFilters>
-            </lookup>
-          </field>
-          <field attribute="description" label="Description"  />
-          <field attribute="longdescription_.ldtext" label="Details" name="description_longdescription" />
-        </detail>
       </schemas>
     </application>
 
@@ -1641,65 +1444,43 @@
     <application name="incident" title="Incident" entity="incident">
       <schemas>
         <list title="Incident Grid">
-          <field attribute="ticketid" label="Request#">
-            <renderer type="default" params="width=8%"/>
+          <field attribute="ticketid" label="Incident No">
+            <renderer type="default" params="widthXS=25%;widthSM=20%;widthMD=12%;widthLG=8%"/>
           </field>
           <field attribute="description" label="Summary">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          <!--field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="minwidth=90px;maxwidth=1600px" />
-          </field-->
           <field attribute="classificationid" label="Project Description">
-            <renderer type="default" params="width=8%;excelwidth=50" />
+            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=15%;widthLG=12%;excelwidth=50" />
           </field>
-          <!-- KSW-50
-          <field attribute="area" label="Area">
-            <renderer type="default" params="width=8%;excelwidth=50" />
-          </field>
-          <field attribute="problemtype" label="Problem Type">
-            <renderer type="default" params="width=8%;excelwidth=50" />
-          </field>
-            -->
           <field attribute="reportedby" label="Reported By">
-            <renderer type="default" params="width=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=10%" />
           </field>
           <field attribute="internalpriority" label="Internal Priority">
-            <renderer type="default" params="width=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=10%;widthLG=9%" />
           </field>
           <field attribute="reportedpriority" label="Reported Priority">
-            <renderer type="default" params="width=8%"/>
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=9%"/>
           </field>
-          <!-- KSW-50
-          <field attribute="reportdate" label="Reported Date">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;width=8%;showtime=false" />
-          </field>
-          -->
-          <field attribute="status" label="Status">
-            <renderer type="default" params="width=8%" />
-          </field>
-          <!--          <field attribute="reportdate" label="Reported Date">-->
-          <!--            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;width=8%;showtime=false" />-->
-          <!--          </field>-->
           <field attribute="owner" label="Owner">
-            <renderer type="default" params="width=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
           <field attribute="ownergroup" label="Owner Group">
-            <renderer type="default" params="width=8%" />
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%" />
           </field>
-          <!--          <field attribute="status" label="Status">-->
-          <!--            <renderer type="default" params="width=8%" />-->
-          <!--          </field>-->
+          <field attribute="status" label="Status">
+            <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=10%" />
+          </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=incident;column=status"/>
           </field>
           <properties>
-            <property key="list.click.schema" value="detail"/>
+            <property key="list.click.schema" value="editdetail"/>
           </properties>
         </list>
 
         <schema stereotype="detail" id="newdetail" mode="input" title="New Incident">
-          <field attribute="ticketid" label="Incident #:" readonly="true"/>
+          <field attribute="ticketid" label="Incident No:" readonly="true"/>
           <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
             <!-- removed default='@usersite' from the above association label-->
             <renderer type="combo"/>
@@ -1712,9 +1493,16 @@
           <field attribute="siteid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="class" hidden="true"/>
-          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" default="NEW">
-            <renderer type="lookup" />
-          </association>
+          <optionfield attribute="status" label="Status" requiredexpression="true" default="NEW">
+            <renderer type="combo"/>
+            <option label="Closed" value="CLOSED"/>
+            <option label="In Progress" value="INPROG"/>
+            <option label="New" value="NEW"/>
+            <option label="Pending" value="PENDING"/>
+            <option label="Queued" value="QUEUED"/>
+            <option label="Resolved" value="RESOLVED"/>
+            <option label="SLA Hold" value="SLAHOLD"/>
+          </optionfield>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
@@ -1749,13 +1537,13 @@
           <field label="Feature Request:" attribute="feature_request">
             <renderer type="checkbox"/>
           </field>
-          <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description">
+          <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description" requiredexpression="@feature_request == 1">
             <renderer type="lookup"/>
           </association>
           <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description">
             <renderer type="lookup"/>
           </association>
-
+          
           <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
             <renderer type="lookup"/>
           </association>
@@ -1797,21 +1585,22 @@
                          parameters="joinattribute=actualfinish;">
             <header label="Actual Finish Date:" displacement="sameline"/>
           </section>
+          <field attribute="description" label="Summary:" requiredexpression="true"/>
           <!--field label="Status:" attribute="status" readonly="true" default="NEW" requiredexpression="true"/-->
-          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" default="NEW">
-            <renderer type="lookup" />
-          </association>
+<!--          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" default="NEW">-->
+<!--            <renderer type="lookup" />-->
+<!--          </association>-->
           <field attribute="statusdate" hidden="true" />
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
           </field>
           <field label="Attachment:" attribute="newattachment" >
-            <renderer type="upload"/>
+              <renderer type="upload"/>
           </field>
         </schema>
 
-        <schema stereotype="detail" id="detail" mode="input" title="Incident Details">
-          <field attribute="ticketid" label="Incident #:" readonly="true" requiredexpression="true"/>
+        <schema stereotype="detail" id="editdetail" mode="input" title="Incident Details">
+          <field attribute="ticketid" label="Incident No:" readonly="true" requiredexpression="true"/>
           <field attribute="siteid" label="Site:"/>
           <field attribute="actlabcost" default="0" hidden="true"/>
           <field attribute="actlabhrs" default="0" hidden="true" />
@@ -1821,9 +1610,16 @@
           <field attribute="siteid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="class" hidden="true"/>
-          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true" >
-            <renderer type="lookup" />
-          </association>
+          <optionfield attribute="status" label="Status" requiredexpression="true" default="NEW">
+            <renderer type="combo"/>
+            <option label="Closed" value="CLOSED"/>
+            <option label="In Progress" value="INPROG"/>
+            <option label="New" value="NEW"/>
+            <option label="Pending" value="PENDING"/>
+            <option label="Queued" value="QUEUED"/>
+            <option label="Resolved" value="RESOLVED"/>
+            <option label="SLA Hold" value="SLAHOLD"/>
+          </optionfield>
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
             <renderer type="lookup"/>
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
@@ -1859,13 +1655,13 @@
           <field label="Feature Request:" attribute="feature_request">
             <renderer type="checkbox"/>
           </field>
-          <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description">
+          <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description" requiredexpression="@feature_request == 1">
             <renderer type="lookup"/>
           </association>
           <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description">
             <renderer type="lookup"/>
           </association>
-
+          
           <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
             <renderer type="lookup"/>
           </association>
@@ -1887,39 +1683,32 @@
             <event type="afterchange" service="generalsrService" method="afterChangeAsset"/>
           </association>
           -->
-          <field attribute="targetstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="targetfinish" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualstart" hidden="true" attributeToServer="#notusedattribute"/>
-          <field attribute="actualfinish" hidden="true" attributeToServer="#notusedattribute"/>
-          <section id="targetStart" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetstart;">
-            <header label="Target Start Date:" displacement="sameline"/>
-          </section>
-          <section id="targetFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=targetfinish;">
-            <header label="Target Finish Date:" displacement="sameline"/>
-          </section>
-          <section id="actualStart" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualstart;">
-            <header label="Actual Start Date:" displacement="sameline"/>
-          </section>
-          <section id="actualFinish" resourcepath="/Content/Templates/samelinepickers.html"
-                         parameters="joinattribute=actualfinish;">
-            <header label="Actual Finish Date:" displacement="sameline"/>
-          </section>
+          <field label="Target Start Date:" attribute="targetstart" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          <field label="Target End Date:" attribute="targetfinish" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          <field label="Actual Start Date:" attribute="actualstart" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          <field label="Actual End Date:" attribute="actualfinish" readonly="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+          
           <field attribute="description" label="Summary:" requiredexpression="true"/>
 
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
           </field>
+          
           <tab label="Solution" id="solution">
-
             <field attribute="solution" hidden="true"/>
             <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
               <renderer type="lookup"/>
               <event type="afterchange" service="solutionService" method="setsolutiondata"/>
             </association>
-            <field attribute="solution_.description" label="Description:" readonly="true"/>
+            <field attribute="solution_.description" label="Description:" readonly="true" hidden="true"/>
             <field attribute="symptom_.ldtext" label="Symptom:">
               <renderer type="richtext"/>
             </field>
@@ -1930,11 +1719,23 @@
               <renderer type ="richtext"/>
             </field>
           </tab>
+          <composition relationship="worklog" label="Work Logs">
+            <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'" allowupdate="true" />
+          </composition>
+          <composition relationship="commlog" label="Communications">
+            <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
+            <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
+          </composition>
           <composition relationship="attachment" label="Attachments">
             <collectionproperties allowcreation="@status!='CLOSED' &amp;&amp; @status!='CAN'"/>
           </composition>
-        </schema>
+          <composition relationship="relatedrecord" label="Related Records">
+              <collectionproperties allowcreation="false" />
+          </composition>
 
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+          <event type="beforesubmit.postvalidation" service="genericTicketService" method="checkWorklogsForChange"/>
+        </schema>
       </schemas>
     </application>
 
@@ -1952,6 +1753,12 @@
           </field>
           <field attribute="status" label="Status" >
             <renderer type="default" params="width=16%" />
+          </field>
+          <field label="Reported Date" attribute="reportdate">
+            <renderer type ="default" params="width=16%"/>
+          </field>
+          <field attribute="schedstart" label="Scheduled Start Date">
+            <renderer type ="default" params="width=16%"/>
           </field>
           <field attribute="pmchgtype" label="Type" >
             <renderer type="default" params="width=16%" />
@@ -2140,6 +1947,7 @@
       <schemas>
         <schema id="list"  stereotype="compositionlist">
           <field attribute="worklogid" hidden="true" />
+          <field attribute="modifydate" hidden="true"/>
           <field  attribute="recordkey" label="Record Key" hidden="true" />
           <field  attribute="class" label="Class" hidden="true" />
           <field  attribute="createby" label="Created By" hidden="true" />
@@ -2150,13 +1958,15 @@
           <field  attribute="logtype" label="Log Type" hidden="true" />
           <field  attribute="description" label="Summary" qualifier="title"/>
           <field attribute="longdescription_.ldtext" label="Details" hidden="true"/>
+          <field attribute="#hasChanged" hidden="true"/>
           <!--<field attribute="orgid" hidden="true" />
           <field attribute="siteid" hidden="true" />-->
 
         </schema>
 
         <detail stereotype="compositiondetail">
-
+          <field attribute="#hasChanged" hidden="true"/>
+          <field attribute="modifydate" label="Modify Date" hidden="true"/>
           <field attribute="description" label="Summary:" requiredexpression="true" />
           <field attribute="longdescription_.ldtext" label="Details:" >
             <renderer type="textarea"/>
@@ -2423,7 +2233,9 @@
           <field label="Id" hidden="true" attribute="docinfoid"/>
           <field hidden="true" attribute="doclinksid"/>
           <field label="Document" attribute="document" qualifier="title"/>
-          <field label="Created Date" attribute="createdate" qualifier="subtitle"/>
+          <field label="Created Date" attribute="createdate" qualifier="subtitle">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=false"/>
+          </field>
           <field hidden="true" attribute="docinfo_.urlname"/>
           <field hidden="true" attribute="maximoURL"/>
         </list>
@@ -2443,7 +2255,9 @@
           </field>
           <section label="Document" attribute="document"
 									   resourcepath="/Content/Templates/downloadattachment.html" parameters="controller=Attachment;action=Download;idcolumn=docinfoid;mode=http"/>
-          <field label="Created Date" attribute="createdate"/>
+          <field label="Created Date" attribute="createdate">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=false"/>
+          </field>
         </list>
 
         <schema id="faqAttachments" stereotype="compositionlist" platform="web">
@@ -2525,14 +2339,31 @@
     </application>
 
     <application name="relatedrecord" title="Related Records" entity="relatedrecord" id="00000000-0000-0000-0000-000000000008" >
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-tags"/>
+      </properties>
       <schemas>
         <list stereotype="compositionlist">
-          <field  attribute="relatedreckey" label="Related Record Key" />
-          <field  attribute="relatedrecclass" label="Related Record Class" />
+          <properties>
+            <property key="list.click.service" value="relatedrecordService.open"/>
+          </properties>
+          <!--          <commandbars>-->
+          <!--            <commandgroup position="compositiontop" >-->
+          <!--              <container id="addrelated" label="Add Related Record" position=">refresh" icon="fa-plus" tooltip="Add related record entry">-->
+          <!--                <command id="addrelatedch" label="Change" icon="fa-random" service="relatedrecordService" method="create" parameters="'change',parentdatamap"/>-->
+          <!--                <command id="addrelatedin" label="Incident" icon="fa-warning" service="relatedrecordService" method="create" parameters="'incident',parentdatamap"/>-->
+          <!--                <command id="addrelatedsr" label="Service Request" icon="fa-ticket" service="relatedrecordService" method="create" parameters="'servicerequest',parentdatamap"/>-->
+          <!--              </container>-->
+          <!--            </commandgroup>-->
+          <!--          </commandbars>-->
+          <field attribute="relatedreckey" label="Related Record Key" />
+          <field attribute="relatedrecclass" label="Related Record Class" />
+          <field attribute="siteid" hidden="true" />
         </list>
         <detail stereotype="compositiondetail">
-          <field  attribute="relatedreckey" label="Related Record Key:" />
-          <field  attribute="relatedrecclass" label="Related Record Class:" />
+          <field attribute="relatedreckey" label="Related Record Key:" />
+          <field attribute="relatedrecclass" label="Related Record Class:" />
+          <field attribute="siteid" hidden="true" />
         </detail>
       </schemas>
     </application>
@@ -2772,6 +2603,25 @@
       <properties>
         <property key ="icon.composition.tab" value="fa fa-envelope-o"/>
       </properties>
+
+      <notifications>
+        <notification label="communication" targetSchema="editdetail" targetApplication="servicerequest">
+          <attributes>
+            <uid attribute="commloguid"/>
+            <summary attribute="subject"/>
+            <createddate attribute="createdate"/>
+            <changeby attribute="createby"/>
+            <parentAttributes>
+              <application attribute="ownertable"/>
+              <parentuid attribute="ownerid"/>
+              <parentid attribute="sr_.ticketid"/>
+            </parentAttributes>
+            <!--<extraAttributes>
+              <extraAttribute attribute="sendtoreceiving"/>
+            </extraAttributes>-->
+          </attributes>
+        </notification>
+      </notifications>
       <schemas>
         <schema id="list" stereotype="compositionlist">
           <!--<properties>
@@ -2814,7 +2664,7 @@
 
         <schema id="detail" stereotype="compositiondetail">
           <field attribute="commlogid" hidden="true" />
-          <field attribute="createdate" label="Created Date/Time" default="@currentdatetime" hidden="true">
+          <field attribute="createdate" label="Created Date/Time" hidden="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
           <field attribute="orgobject" label="Origination" hidden="true"/>
@@ -2825,7 +2675,7 @@
             <renderer type="autocompleteserver"/>
           </association>-->
           <field attribute="cc" label="Cc:">
-            <renderer type="email"/>
+            <renderer type="default"/>
           </field>
 
           <field attribute="sendfrom" label="From:" requiredexpression="true" default="kogt@controltechnologysolutions.com">

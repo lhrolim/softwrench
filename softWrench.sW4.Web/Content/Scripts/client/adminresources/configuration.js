@@ -9,6 +9,7 @@ app.directive('configrendered', function ($timeout) {
                 $timeout(function () {
                     $('.no-touch [rel=tooltip]').tooltip({ container: 'body' });
                     scope.$emit('sw_bodyrenderedevent');
+                
                 });
             }
         }
@@ -25,29 +26,45 @@ app.directive('conditionmodal', function (contextService) {
             module: '=',
             type: '=',
             condition: '=',
-            fullkey: '='
+            fullkey: '=',
+            applications:"="
         },
-        controller: function ($scope, $http, i18NService) {
+        controller: function ($scope, $http,$timeout, i18NService) {
 
             $scope.i18N = function (key, defaultValue, paramArray) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);
             };
+
+            $scope.title = function() {
+                var creating = $scope.condition.id == null;
+                return creating ? "Crete Condition" :"Edit Condition";
+            }
 
             $scope.init = function () {
                 if ($scope.condition == null) {
                     $scope.condition = {};
                     $scope.condition.appContext = {};
                 }
+
+                $timeout(function () {
+                    $("#applicationsautocmpmodal").combobox({
+                        minLength: 2,
+                        pageSize: 50
+                    });
+                }, 0, false);
+
             };
 
             $scope.saveCondition = function () {
                 $scope.condition.fullKey = $scope.fullkey;
+                var iscreating = $scope.condition.id == null;
                 var jsonString = angular.toJson($scope.condition);
                 $http.put(url("/api/generic/Configuration/CreateCondition"), jsonString)
                     .success(function (data) {
                         var modal = $(CONDITIONMODAL_$_KEY);
                         modal.modal('hide');
-                    });
+                        $scope.$emit("sw_conditionsaved", data.resultObject);
+                });
             };
 
             $scope.init();
@@ -57,7 +74,7 @@ app.directive('conditionmodal', function (contextService) {
     };
 });
 
-function ConfigController($scope, $http, i18NService, alertService) {
+function ConfigController($scope, $http,$timeout, i18NService, alertService) {
 
 
 
@@ -108,7 +125,7 @@ function ConfigController($scope, $http, i18NService, alertService) {
         if (defValue == null) {
             return scopeValue[property] == null;
         }
-        return defValue.isEqual(scopeValue[property],true);
+        return (""+defValue).isEqual(""+scopeValue[property],true);
     }
 
     
@@ -132,6 +149,7 @@ function ConfigController($scope, $http, i18NService, alertService) {
         $scope.currentmodule = noneModule;
         $scope.currentprofile = noneProfile;
         $scope.currentcondition = noneCondition;
+        $scope.applications = $scope.resultData.applications;
 
         $scope.currentValues = {};
         $scope.currentDefaultValues = {};
@@ -149,7 +167,27 @@ function ConfigController($scope, $http, i18NService, alertService) {
         $scope.profiles = $scope.resultData.profiles;
         $scope.modules = $scope.resultData.modules;
         $scope.allConditions = $scope.resultData.conditions;
+
+        if ($scope.applications != null) {
+            $scope.currentapplication = $scope.applications[0];
+        }
+
+        $timeout(function() {
+            $("#applicationsautocmp").combobox({
+                minLength: 2,
+                pageSize: 50
+            });
+        },0,false);
+
     };
+
+    $scope.$on("sw_conditionsaved", function (event, data) {
+        var currentcategory = $scope.currentCategory;
+        currentcategory.conditionsToShow = null;
+        insertOrUpdateArray($scope.getConditions(currentcategory).values, data);
+        insertOrUpdateArray($scope.allConditions, data);
+        $scope.currentcondition = data;
+    });
 
     $scope.restoreDefault = function (definition) {
         alertService.confirm("", "", function (result) {
@@ -160,14 +198,14 @@ function ConfigController($scope, $http, i18NService, alertService) {
 
     $scope.getCurrentCondition = function () {
         if ($scope.currentCondition == null || $scope.currentCondition.id == null) {
-            return null;
+            return {};
         }
         return $scope.currentcondition;
     };
 
     $scope.removeCondition = function (condition) {
         if (condition.id == null) {
-            alertService.alert('This condition cannot be deleted');
+            alertService.alert('Please, select a condition to remove');
             return;
         }
 
@@ -196,9 +234,17 @@ function ConfigController($scope, $http, i18NService, alertService) {
         modal.modal('show');
     };
 
+    $scope.numberofrowsofValueArea=function(key) {
+        return $scope.hasDefaultValue(key) ? 20:27;
+    }
+
+    $scope.hasDefaultValue = function(key) {
+        return !nullOrEmpty($scope.currentDefaultValues[key]);
+    }
+
     $scope.editCondition = function (condition) {
         if (condition.id == null) {
-            alertService.alert('This condition cannot be edited');
+            alertService.alert('Please, select a condition to edit');
             return;
         }
 
@@ -274,7 +320,7 @@ function ConfigController($scope, $http, i18NService, alertService) {
 
                 if ((moduleMatches.mode == null || moduleMatches.mode == true) &&
                     (profileMatches.mode == null || profileMatches.mode == true) &&
-                    nullOrEqualBothNulls(propertyValue.condition, $scope.currentcondition, 'id')) {
+                    nullOrEqualBothNulls(propertyValue.conditionId, $scope.currentcondition, 'id')) {
                     if (exactMatch) {
                         exactMatchSet = true;
                     }
@@ -309,6 +355,13 @@ function ConfigController($scope, $http, i18NService, alertService) {
         }
     });
 
+    $scope.$watch("currentapplication", function (newvalue, oldvalue) {
+        if (newvalue != undefined) {
+            $scope.currentCategory = navigateToCategory($scope.categoryData, "/_whereclauses/{0}/".format(newvalue.value));
+            $scope.showDefinitions($scope.currentCategory);
+        }
+    });
+
     $scope.save = function () {
         var currentCategory = $scope.currentCategory;
         currentCategory.valuesToSave = $scope.currentValues;
@@ -319,8 +372,11 @@ function ConfigController($scope, $http, i18NService, alertService) {
         $http.put(url("/api/generic/Configuration/Put"), jsonString)
             .success(function (data) {
                 $scope.categoryData = data.resultObject;
+//                $scope.categoryData[0].condition = currentCategory.condition;
                 $scope.currentCategory = navigateToCategory($scope.categoryData, currentCategory.fullKey);
-            });
+                $scope.currentCategory.condition = currentCategory.condition;
+                $scope.currentCategory.conditionsToShow = null;
+        });
     };
 
     $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="horizontal" indexitem
-  ="SR">
+  ="loadpreferred">
   <!--  <application title="Workorder Grid" ref="workorder" schema="detail"  tooltip="Workorders" id="workorder"/>-->
   <container title="Service Requests" tooltip="Click to access your request tasks" icon ="fa fa-ticket" id="servicereq" role="sr">
     <application id="SR" title="Service Request Grid" ref="servicerequest" schema="list" tooltip="Click to view your Service Request Grid"/>
@@ -15,10 +15,10 @@
     <application id="ING" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents"/>
     <application id="INNEW" title="New Incident" ref="incident" schema="newdetail" tooltip="Click to create new Incidents" />
   </container>
-  <container title="Changes" role="changes" id="change" icon="fa fa-random" >
-    <application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
-    <application id="CHNEW" title="New Change" ref="change" schema="newdetail" tooltip="Click to Create a New Changes"/>
-  </container>
+<!--  <container title="Changes" role="changes" id="change" icon="fa fa-random" >-->
+<!--    <application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>-->
+<!--    <application id="CHNEW" title="New Change" ref="change" schema="newdetail" tooltip="Click to Create a New Changes"/>-->
+<!--  </container>-->
   <!--Remove per Tina's Request on 1/28-->
   <!--<container title="Purchasing" id="purchase" tooltip="Click to access your purchases" icon="fa fa-dollar" role="purchasing">
     <application id ="PGRID" title="Purchase Request Grid" ref="pr" schema="list" tooltip="Click to view your Purchase Request Grid"/>

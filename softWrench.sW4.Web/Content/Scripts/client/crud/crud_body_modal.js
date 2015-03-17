@@ -16,6 +16,7 @@ app.directive('crudBodyModalWrapper', function ($compile) {
                     "is-dirty='false' " +
                     "is-list='isList' " +
                     "is-detail='true' " +
+                    "original-datamap='OriginalDatamp' " +
                     "association-options='associationOptions' " +
                     "association-schemas='associationSchemas' " +
                     "blockedassociations='blockedassociations' " +
@@ -93,7 +94,7 @@ app.directive('crudBodyModal', function ($rootScope, modalService) {
            searchService, tabsService,
            fieldService, commandService, i18NService,
            submitService, redirectService,
-           associationService, contextService, alertService, validationService, $element) {
+           associationService) {
 
             $scope.$name = "crudbodymodal";
             $scope.save = function (selecteditem) {
@@ -131,17 +132,22 @@ app.directive('crudBodyModal', function ($rootScope, modalService) {
                 $scope.cancelfn = modaldata.cancelfn;
                 $scope.previousschema = modaldata.previousschema;
                 $scope.previousdata = modaldata.previousdata;
+                $scope.modaltitle = modaldata.title;
+                $scope.cssclass = modaldata.cssclass;
                 $scope.datamap = {
                     fields: datamap
                 };
-                fieldService.fillDefaultValues(schema.displayables, $scope.datamap);
+                var datamapToUse = $.isEmptyObject(datamap) ? $scope.previousdata : datamap;
+                $scope.originalDatamap = angular.copy(datamapToUse);
+                fieldService.fillDefaultValues(schema.displayables, datamap);
                 $('#crudmodal').modal('show');
                 $("#crudmodal").draggable();
                 $rootScope.showingModal = true;
                 //TODO: review this decision here it might not be suitable for all the scenarios
-                var datamapToUse = $.isEmptyObject(datamap) ? $scope.previousdata : datamap;
-                $scope.originalDatamap = angular.copy(datamapToUse);
                 associationService.getEagerAssociations($scope, { datamap: datamapToUse });
+                if (modaldata.onloadfn) {
+                    modaldata.onloadfn($scope);
+                }
             }
 
 

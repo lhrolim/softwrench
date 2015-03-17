@@ -147,6 +147,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Persistence\WS\Commons\KongsbergIncidentCrudConnector.cs" />
+    <Compile Include="Metadata\Applications\Notification\ApplicationNotificationFactory.cs" />
+    <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />
     <Compile Include="Audit\AuditTrail.cs" />
     <Compile Include="Audit\ISMAuditTrail.cs" />
     <Compile Include="AUTH\AuthUtils.cs" />
@@ -182,6 +185,7 @@
     <Compile Include="Data\Entities\Historical\HistTicket.cs" />
     <Compile Include="Data\Entities\Historical\HistWorkorder.cs" />
     <Compile Include="Data\Entities\LocationCostCenterRestrictionDao.cs" />
+    <Compile Include="Data\Entities\Metadataeditor.cs" />
     <Compile Include="Data\Entities\SyncManagers\AMaximoRowstampManager.cs" />
     <Compile Include="Data\Entities\SyncManagers\IUserSyncManager.cs" />
     <Compile Include="Data\ExtraAttributes.cs" />
@@ -273,6 +277,7 @@
     <Compile Include="Metadata\Entities\Schema\EntityTargetSchema.cs" />
     <Compile Include="Metadata\Entities\Sliced\SlicedEntityAssociation.cs" />
     <Compile Include="Metadata\ClientChangeEvent.cs" />
+    <Compile Include="Metadata\Menu\MenuManager.cs" />
     <Compile Include="Metadata\MetadataProviderInternalCache.cs" />
     <Compile Include="Metadata\Parsing\IXMLMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XElementExtensions.cs" />
@@ -383,6 +388,7 @@
     <Compile Include="Security\Init\RoleExtensions.cs" />
     <Compile Include="Security\Interfaces\AfterLoginRoleEvaluator.cs" />
     <Compile Include="Security\Interfaces\IRoleEvaluator.cs" />
+    <Compile Include="Security\Services\ClearMenuEvent.cs" />
     <Compile Include="Security\Services\ClearCacheEvent.cs" />
     <Compile Include="Security\Services\UserLoginEvent.cs" />
     <Compile Include="Security\UserType.cs" />
@@ -510,7 +516,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Security\Interfaces\IBaseEntity.cs" />
     <Compile Include="Security\Entities\UserCustomConstraint.cs" />
     <Compile Include="Security\Entities\DataConstraint.cs" />
     <Compile Include="Security\Entities\Role.cs" />
@@ -871,6 +876,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="deps\XDesigner.RTF.dll" />
+    <Content Include="Util\timezonelist.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

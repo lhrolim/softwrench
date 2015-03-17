@@ -23,7 +23,7 @@
           <field attribute="priority" label="Priority:"  />
           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
         </detail>
-        <schema id="assetLookupList" stereotype="list">
+        <schema id="assetLookupList" stereotype="list" >
           <field attribute="assetnum" label="Asset"/>
           <field attribute="description" label="Description">
             <renderer type="default" params="minwidth=300px" />

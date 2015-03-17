@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using cts.commons.persistence;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Interfaces;
 

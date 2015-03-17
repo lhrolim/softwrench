@@ -56,15 +56,7 @@ body {
     outline: none;
 }
 
-.conditionModal {
-    position: absolute;
-    top: 65%;
-    left: 12%;
-    padding: 20px;
-    width: 450px;
-    height: 650px;
-    outline: none;
-}
+
 
 .modal {
     overflow-y: auto !important;

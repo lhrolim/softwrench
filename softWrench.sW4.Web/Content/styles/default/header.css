@@ -34,7 +34,7 @@
     .container header .menu-admin {
         background-color: rgba(52, 167, 224, 0.5);
         border-bottom: rgba(0, 0, 0, 0.3) 3px solid;
-        padding: 0 20px;
+        padding: 20px;
     }
 
         .container header .menu-admin .text {
@@ -97,6 +97,10 @@
             width: 100%;
         }
 
+            .container header .menu-admin .buttons .btn {
+                margin-bottom: 5px;
+            }
+
             .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
                 width: 100%;
             }
@@ -115,7 +119,7 @@
                 margin-bottom: 5px;
             }
 
-        .container header .menu-grid button {
+        .container header .menu-grid button .non-isolate {
             width: 100%;
         }
 }
@@ -155,33 +159,37 @@
         position: fixed;
     }
 
-        .container header .menu-expand {
-            display: none;
+    .container header .menu-expand {
+        display: none;
+    }
+
+    .container header .menu-items {
+        display: block;
+    }
+
+    .container header .menu-admin .buttons {
+        width: auto;
+    }
+
+        .container header .menu-admin .buttons .btn {
+            margin-bottom: 0;
         }
 
-        .container header .menu-items {
-            display: block;
-        }
-
-        .container header .menu-admin .buttons {
+        .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
             width: auto;
         }
 
-            .container header .menu-admin .buttons .btn, .container header .menu-admin .buttons .btn-group {
-                width: auto;
-            }
-
-            .container header .menu-admin .buttons .logout {
-                display: inline-block !important;
-            }
-
-        .container header .menu-grid li {
-            width: auto;
+        .container header .menu-admin .buttons .logout {
+            display: inline-block !important;
         }
 
-            .container header .menu-grid li:last-child .dropdown, .container header .menu-grid li:last-child a {
-                margin-bottom: 0px;
-            }
+    .container header .menu-grid li {
+        width: auto;
+    }
+
+        .container header .menu-grid li:last-child .dropdown, .container header .menu-grid li:last-child a {
+            margin-bottom: 0px;
+        }
 }
 
 .container header .menu-grid .submenu li {

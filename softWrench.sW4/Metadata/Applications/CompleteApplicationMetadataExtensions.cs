@@ -24,7 +24,7 @@ namespace softWrench.sW4.Metadata.Applications {
                 if (applicationSchema.Value.IsWebPlatform()) {
                     continue;
                 }
-                var securedMetadata = originalMetadata.ApplyPolicies(applicationSchema.Key, user, ClientPlatform.Mobile);
+                var securedMetadata = originalMetadata.ApplyPolicies(applicationSchema.Key, user, ClientPlatform.Mobile,null);
                 securedSchemas.Add(securedMetadata.Schema.GetSchemaKey(), securedMetadata.Schema);
             }
 
@@ -36,7 +36,8 @@ namespace softWrench.sW4.Metadata.Applications {
                 originalMetadata.IdFieldName,
                 originalMetadata.UserIdFieldName,
                 originalMetadata.Parameters, securedSchemas,originalMetadata.DisplayableComponents,
-                originalMetadata.Service);
+                originalMetadata.Service,
+                originalMetadata.Notifications);
         }
 
         public static bool IsWebSupported(this CompleteApplicationMetadataDefinition metadata) {
