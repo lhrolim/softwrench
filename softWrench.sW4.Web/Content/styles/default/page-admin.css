@@ -42,7 +42,7 @@
 }
 
     .metadataeditor #editor, .metadataeditor .comments {
-        margin-bottom: 30px;
+        margin: 30px 0;
     }
 
 .about.page input {
