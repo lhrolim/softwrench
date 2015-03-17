@@ -53,6 +53,7 @@
                             
                             alertService.alert("Metadata saved successfully");
                             $scope.save();
+                            
                         });
                 
             });
@@ -90,8 +91,7 @@
         alertService.confirmMsg("Select a Restore File from the table to restore your xml to selected file. None of your current changes will be saved. Is this what you want to do? ", function () {
             var urlToCall = url("/api/generic/EntityMetadata/RestoreSavedMetadata");
             $http.get(urlToCall).success(function (result) {
-                $scope.value = true;
-                $scope.results = result;
+                                $scope.results = result;
                 
                
             }).error(function (result) {
@@ -127,11 +127,7 @@
         editor.getSession().setMode("ace/mode/xml");
         var data = $scope.resultData;
         $scope.type = data.type;
-        if ($scope.type == "metadata") {
-            $scope.value = true;
-        }
-        else
-            $scope.value = false;
+       
         editor.setValue(data.content);
         editor.gotoLine(0);
     }
