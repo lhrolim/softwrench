@@ -41,6 +41,10 @@
     <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=swdb_SWMAX_ActStr;User Id=sw;password=softwrench;" />
   </environment>
 
+  <environment key="dev-sm">
+    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=swdb_SWMAX_sm;User Id=sw;password=softwrench;" />
+  </environment>
+
 </Properties>
   
  
