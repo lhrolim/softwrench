@@ -10,7 +10,7 @@
     };
 
     $scope.isDev = function () {
-        return contextService.isLocal() || $scope.isDev();
+        return contextService.isLocal() || contextService.isDev();
     }
 
     $scope.shouldShowRestore = function (key) {
