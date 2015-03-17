@@ -1,10 +1,21 @@
 ﻿<article ng-controller="AceController" class="container">
     <div class="metadataeditor">
         <div id="editor" style="height: 800px; border: 1px solid rgb(240, 240, 240)" ></div>
-        
+        <div class="input-group col-xs-12">
+            <label class="col-xs-12">Title</label>
+            <div class="col-xs-12 col-sm-6" >
+                <select class="form-control">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                </select>
+            </div>
+        </div>
         <div class="comments input-group col-xs-12" >
             <label class="col-xs-12">Comments <span class="red">*</span></label>
-            <div class="col-xs-12 col-sm-6" id ="comment"><input type="text" placeholder ="Changes made to the Metadata should be described here"  class="form-control" ng-model="comments" maxlength="100" /></div>
+            <div class="col-xs-12 col-sm-6" id ="comment">
+                <input type="text" placeholder ="Changes made to the Metadata should be described here"  class="form-control" ng-model="comments" maxlength="100" />
+            </div>
         </div>
         <div id="dvUserList">
             <form id="roleForm">
