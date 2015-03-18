@@ -51,6 +51,7 @@ namespace softWrench.sW4.Web.Util {
                 {"HOLDINPRG", "6"},
                 {"IMPL", "3"},
                 {"IMPLEMENTED", "3"},
+                {"INFOPEND", "6"},
                 {"INPRG", "4"},
                 {"INPROG", "4"},
                 {"NEW", "5"},
