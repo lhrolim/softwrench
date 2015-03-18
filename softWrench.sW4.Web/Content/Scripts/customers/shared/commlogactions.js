@@ -36,6 +36,7 @@ function CommLogActionsController($rootScope, $scope,contextService) {
         clonedItem['commloguid'] = null;
         clonedItem['subject'] = "Re: " + clonedItem['subject'];
         clonedItem['message'] = messageHeader.format(origSendFrom, origSendTo, origCc, origSubject, origMessage);
+        clonedItem['createdate'] = null;
         $scope.$emit("sw.composition.edit", clonedItem);
     };
 
