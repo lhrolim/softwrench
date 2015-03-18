@@ -137,7 +137,7 @@ app.directive('activitystream', function(contextService) {
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.post(rawUrl).success(
                     function(data) {
-                        $scope.toggleActivityStream();
+                        //$scope.toggleActivityStream();
 
                         var param = {};
                         param.id = activity.id;
@@ -246,7 +246,12 @@ app.directive('activitystream', function(contextService) {
 
             $scope.toggleActivityStream = function () {
                 //open and close activity pane
-                $("#activitystream").toggleClass('open');
+                $('#activitystream').toggleClass('open');
+
+                //resize/position elements
+                $(window).trigger('resize');
+
+                //reclac the activity pane height
                 $scope.setPaneHeight();
                 jScrollPaneAPI = $('#activitystream .scroll').jScrollPane().data('jsp');
             };
@@ -269,7 +274,7 @@ app.directive('activitystream', function(contextService) {
             });
 
             //prevent window scrolling after reaching end of navigation pane 
-            $(document).on('mousewheel', '#activitystream .scroll', function(e) {
+            $(document).on('mousewheel', '#activitystream .scroll', function (e) {
                 var delta = e.originalEvent.wheelDelta;
                 this.scrollTop += (delta < 0 ? 1 : -1) * 30;
                 e.preventDefault();
@@ -305,4 +310,21 @@ app.directive('activitystream', function(contextService) {
             //}, 0);
         }
     }
+});
+
+$(window).resize(function () {
+    var activityWidth;
+    if ($('#activitystream').hasClass('open')) {
+        activityWidth = $('#activitystream').width();
+    } else {
+        activityWidth = 0;
+    }
+
+    var gridOffset = activityWidth + 40;
+    var headerOffset = activityWidth;
+
+    $('.site-header').width($('.site-header').css('width', 'calc(100% - ' + headerOffset + 'px)'));
+    $('#affixpagination').width($('#affixpagination').css('width', 'calc(100% - ' + gridOffset + 'px)'));
+    $('.listgrid-thead').width($('.listgrid-thead').css('width', 'calc(100% - ' + gridOffset + 'px)'));
+    $('.content').width($('.content').css('width', 'calc(100% - ' + gridOffset + 'px)'));
 });
