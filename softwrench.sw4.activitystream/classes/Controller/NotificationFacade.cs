@@ -39,7 +39,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                     "select max(worklogid) as max, 'worklog' as application from worklog");
             var result = MaxDAO.FindByNativeQuery(query, null);
             foreach (var record in result) {
-                Counter.Add(record["application"], Int32.Parse(record["max"]));
+                Counter.Add(record["application"], Int32.Parse((record["max"] ?? "0")));
             }
             NotificationStreams["allRole"] = allRoleNotificationBuffer;
         }
