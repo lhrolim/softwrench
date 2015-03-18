@@ -136,8 +136,12 @@ app.directive('activitystream', function(contextService) {
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.post(rawUrl).success(
-                    function(data) {
-                        //$scope.toggleActivityStream();
+                    function (data) {
+
+                        //if the header is not fixed (mobile), hide the actity pane
+                        if ($('.site-header').css('position') != 'fixed') {
+                            $scope.toggleActivityStream();
+                        }
 
                         var param = {};
                         param.id = activity.id;
@@ -313,18 +317,31 @@ app.directive('activitystream', function(contextService) {
 });
 
 $(window).resize(function () {
-    var activityWidth;
+    var activityWidth = 0;
+    var gridPadding = 0;
+
+    //if pane is open get width
     if ($('#activitystream').hasClass('open')) {
         activityWidth = $('#activitystream').width();
-    } else {
-        activityWidth = 0;
     }
 
-    var gridOffset = activityWidth + 40;
+    //if the header is fixed (desktop), add additional offset
+    if ($('.site-header').css('position') == 'fixed') {
+        gridPadding = 40;
+    }
+
+    var gridOffset = activityWidth + gridPadding;
     var headerOffset = activityWidth;
 
+    //update widths
     $('.site-header').width($('.site-header').css('width', 'calc(100% - ' + headerOffset + 'px)'));
-    $('#affixpagination').width($('#affixpagination').css('width', 'calc(100% - ' + gridOffset + 'px)'));
+
+    if ($('.site-header').css('position') == 'fixed') {
+        $('#affixpagination').width($('#affixpagination').css('width', 'calc(100% - ' + gridOffset + 'px)'));
+    } else {
+        $('#affixpagination').width($('#affixpagination').css('width', '100%'));
+    }
+
     $('.listgrid-thead').width($('.listgrid-thead').css('width', 'calc(100% - ' + gridOffset + 'px)'));
     $('.content').width($('.content').css('width', 'calc(100% - ' + gridOffset + 'px)'));
 });
