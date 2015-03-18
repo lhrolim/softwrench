@@ -742,6 +742,21 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 return null;
             };
 
+            $scope.initRichtextField = function(fieldMetadata) {
+                var content = $scope.datamap[fieldMetadata.attribute];
+                var decodedHtml = content;
+
+                //Matches any encoded html tag e.g. &quot; &amp; &lt; &gt;
+                var regex = new RegExp("&[A-Za-z]*;");
+
+                if (regex.test(content)) {
+                    decodedHtml = $('<div/>').html(content).text();
+                }
+
+
+                $scope.datamap[fieldMetadata.attribute] = decodedHtml;
+            }
+
             $scope.isMobile = function () {
                 return isMobile();
             };
