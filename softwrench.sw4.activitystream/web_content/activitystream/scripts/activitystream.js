@@ -136,8 +136,12 @@ app.directive('activitystream', function(contextService) {
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.post(rawUrl).success(
-                    function(data) {
-                        $scope.toggleActivityStream();
+                    function (data) {
+
+                        //if the header is not fixed (mobile), hide the actity pane
+                        if ($('.site-header').css('position') != 'fixed') {
+                            $scope.toggleActivityStream();
+                        }
 
                         var param = {};
                         param.id = activity.id;
@@ -186,8 +190,10 @@ app.directive('activitystream', function(contextService) {
 
                 var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                 $http.get(rawUrl).success(
-                    function(data) {
-                        $scope.activities = data;
+                    function (data) {
+                        $scope.readCount = data.readCount;
+                        $scope.activities = data.notifications;
+                        $scope.refreshRate = data.refreshRate;
                         $scope.statusAllHidden = $scope.getAllHidden();
 
                         //resize the scroll pane if needed
@@ -242,15 +248,14 @@ app.directive('activitystream', function(contextService) {
                 }
             }
 
-            //automatically refresh the activity stream every two minutes
-            //TODO: get refresh rate from backend
-            $interval(function () {
-                $scope.refreshStream(true);
-            }, 1000 * 60 * 2);
-
-            $scope.toggleActivityStream = function() {
+            $scope.toggleActivityStream = function () {
                 //open and close activity pane
-                $("#activitystream").toggleClass('open');
+                $('#activitystream').toggleClass('open');
+
+                //resize/position elements
+                $(window).trigger('resize');
+
+                //reclac the activity pane height
                 $scope.setPaneHeight();
                 jScrollPaneAPI = $('#activitystream .scroll').jScrollPane().data('jsp');
             };
@@ -273,7 +278,7 @@ app.directive('activitystream', function(contextService) {
             });
 
             //prevent window scrolling after reaching end of navigation pane 
-            $(document).on('mousewheel', '#activitystream .scroll', function(e) {
+            $(document).on('mousewheel', '#activitystream .scroll', function (e) {
                 var delta = e.originalEvent.wheelDelta;
                 this.scrollTop += (delta < 0 ? 1 : -1) * 30;
                 e.preventDefault();
@@ -283,8 +288,25 @@ app.directive('activitystream', function(contextService) {
                 $(window).trigger('resize');
             });
 
-            //get the current notifications
-            $scope.refreshStream();
+            //get the current notifications, then automatically refresh
+            var refreshLoop = function () {
+                log.debug('refreshLoop', $scope.refreshRate);
+
+                var refreshTimeout;
+
+                if (typeof $scope.refreshRate == 'undefined' || $scope.refreshRate == 0) {
+                    //refresh every five minutes if the refreshRate is not set
+                    refreshTimeout = 5;
+                } else {
+                    //use the refreshRate from the backend
+                    refreshTimeout = $scope.refreshRate;
+                }
+
+                $scope.refreshStream(true);
+                $timeout(refreshLoop, 1000 * 60 * refreshTimeout);
+                log.debug('refreshTimeout', refreshTimeout);
+            };
+            refreshLoop();
 
             //open notification pane by default, TODO: remove for production
             //$timeout(function () {
@@ -292,4 +314,34 @@ app.directive('activitystream', function(contextService) {
             //}, 0);
         }
     }
+});
+
+$(window).resize(function () {
+    var activityWidth = 0;
+    var gridPadding = 0;
+
+    //if pane is open get width
+    if ($('#activitystream').hasClass('open')) {
+        activityWidth = $('#activitystream').width();
+    }
+
+    //if the header is fixed (desktop), add additional offset
+    if ($('.site-header').css('position') == 'fixed') {
+        gridPadding = 40;
+    }
+
+    var gridOffset = activityWidth + gridPadding;
+    var headerOffset = activityWidth;
+
+    //update widths
+    $('.site-header').width($('.site-header').css('width', 'calc(100% - ' + headerOffset + 'px)'));
+
+    if ($('.site-header').css('position') == 'fixed') {
+        $('#affixpagination').width($('#affixpagination').css('width', 'calc(100% - ' + gridOffset + 'px)'));
+    } else {
+        $('#affixpagination').width($('#affixpagination').css('width', '100%'));
+    }
+
+    $('.listgrid-thead').width($('.listgrid-thead').css('width', 'calc(100% - ' + gridOffset + 'px)'));
+    $('.content').width($('.content').css('width', 'calc(100% - ' + gridOffset + 'px)'));
 });

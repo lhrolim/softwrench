@@ -20,6 +20,10 @@
       <property key="iispath" value="softwrench-activity/SW4OTB" />
       <property key="msdeploy_url" value="https://10.50.100.125:8172/msdeploy.axd,username=MAX7506DEV\Administrator,password=$@$Adm1n" />
     </environment>
+    <environment key="dev-sm">
+      <property key="iispath" value="softwrench-sm/softwrench" />
+      <property key="msdeploy_url" value="https://10.50.100.125:8172/msdeploy.axd,username=MAX7506DEV\Administrator,password=$@$Adm1n" />
+    </environment>
 
   </globalproperties>
 

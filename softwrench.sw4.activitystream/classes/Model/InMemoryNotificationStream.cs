@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
 namespace softwrench.sw4.activitystream.classes.Model {
     public class InMemoryNotificationStream {
@@ -11,7 +10,7 @@ namespace softwrench.sw4.activitystream.classes.Model {
             _notifications = new List<Notification>();
         }
 
-        public List<Notification> GetNotifications() {
+        public NotificationResponse GetNotifications() {
             _notifications = HandleChildNotifications(_notifications);
             List<Notification> orderedNotifications = _notifications.OrderBy(n => n.IsRead).ThenByDescending(n => n.NotificationDate).ToList();
             
@@ -33,11 +32,11 @@ namespace softwrench.sw4.activitystream.classes.Model {
             //                                        notifications.Flag,
             //                                        notifications.IsRead)
             //    ).ToList();
-            return orderedNotifications;
+            var readCount = orderedNotifications.Count(n => n.IsRead);
+            return new NotificationResponse(orderedNotifications, readCount);
         }
 
-        private List<Notification> HandleChildNotifications(List<Notification> notifications)
-        {
+        private List<Notification> HandleChildNotifications(List<Notification> notifications){
             notifications.RemoveAll(parent => notifications.Any(child => child.ParentUId == parent.UId && child.NotificationDate.Ticks.Equals(parent.NotificationDate.Ticks)));
 
             return notifications;

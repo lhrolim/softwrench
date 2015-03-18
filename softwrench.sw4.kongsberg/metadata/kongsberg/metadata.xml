@@ -1037,6 +1037,16 @@
       <properties>
         <property key="mobile.disabled" value="true"/>
       </properties>
+       <notifications>
+        <notification label="service request" targetSchema="editdetail" targetApplication="servicerequest">
+          <attributes>
+            <uid attribute="ticketuid"/>
+            <summary attribute="description"/>
+            <createddate attribute="changedate"/>
+            <changeby attribute="changeby"/>
+          </attributes>
+        </notification>
+      </notifications>
       <schemas>
         <list title="Service Request Grid">
           <field attribute="ticketid" label="SR No">

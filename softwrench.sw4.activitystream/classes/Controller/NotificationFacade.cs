@@ -85,22 +85,22 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 
             var streamToUpdate = NotificationStreams["allRole"];
             //foreach (var slicedEntity in slicedMetadataEntities) {
-                
-            //    var queryBuilder = new EntityQueryBuilder();
+
             //    var searchRequestDTO = new SearchRequestDto();
             //    foreach (var field in slicedEntity.AppSchema.Fields) {
             //        searchRequestDTO.AppendProjectionField(new ProjectionField(field.Label, field.Attribute));
             //    }
             //    searchRequestDTO.AppendProjectionField(new ProjectionField(slicedEntity.IdFieldName, slicedEntity.IdFieldName));
+                
             //    searchRequestDTO.AppendProjectionField(new ProjectionField("rowstamp", "rowstamp"));
             //    var createddateFieldAlias = (from p in searchRequestDTO.ProjectionFields
-            //        where p.Alias == "createddate"
-            //        select p.Name).Single();
+            //                                 where p.Alias == "createddate"
+            //                                 select p.Name).Single();
+            //    var createddateField = slicedEntity.Name + "." + createddateFieldAlias;
 
-            //    var createddateWhereClauseStr = String.Format("{0} > DATEADD(HOUR,-{1}, GETDATE()) and {0} <= '{2}'", createddateFieldAlias,
+            //    var createddateWhereClauseStr = String.Format("{0} > DATEADD(HOUR,-{1}, GETDATE()) and {0} <= '{2}'", createddateField,
             //        HoursToPurge, currentTime);
             //    searchRequestDTO.AppendWhereClause(createddateWhereClauseStr);
-            //    var newQuery = queryBuilder.AllRows(slicedEntity, searchRequestDTO);
             //    EntityRepository entityRepo = new EntityRepository(null, MaxDAO);
             //    var resultList = entityRepo.Get(slicedEntity, searchRequestDTO);
 
@@ -113,29 +113,41 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             //        var icon = notificationSchema.Icon;
 
             //        long uId;
-            //        var isInt = Int64.TryParse(result.Attributes["uid"].ToString(), out uId);
+            //        Int64.TryParse(result.Attributes["uid"].ToString(), out uId);
 
             //        var flag = "changed";
             //        if (Counter[application] < uId) {
             //            flag = "created";
             //            Counter[application] = uId;
             //        }
-            //        var parentid = result.Attributes["parentid"].ToString();
-            //        long parentuid;
-            //        Int64.TryParse(result.Attributes["parentuid"].ToString(), out parentuid);
 
-            //        var parentapplication = result.Attributes["application"].ToString();
+            //        string parentid = null;
+            //        if (result.Attributes.ContainsKey("parentid")) {
+            //            parentid = result.Attributes["parentid"].ToString();    
+            //        }
+                    
+            //        long parentuid = -1;
+            //        if (result.Attributes.ContainsKey("parentuid")) {
+            //            Int64.TryParse(result.Attributes["parentuid"].ToString(), out parentuid);    
+            //        }
+
+
+            //        string parentapplication = null;
             //        string parentlabel = null;
-            //        if (parentapplication == "servicerequest") {
-            //            parentlabel = "service request";
-            //        } else if (parentapplication == "WORKORDER") {
-            //            parentlabel = "work order";
-            //        } else if (parentapplication == "INCIDENT") {
-            //            parentlabel = "incident";
+            //        if (result.Attributes.ContainsKey("parentid") || result.Attributes.ContainsKey("parentuid")) {
+            //            parentapplication = result.Attributes["targetapplication"].ToString();
+
+
+            //            if (parentapplication == "servicerequest") {
+            //                parentlabel = "service request";
+            //            } else if (parentapplication == "WORKORDER") {
+            //                parentlabel = "work order";
+            //            } else if (parentapplication == "INCIDENT") {
+            //                parentlabel = "incident";
+            //            }
             //        }
             //        var summary = result.Attributes["summary"].ToString();
             //        var changeby = result.Attributes["changeby"].ToString();
-
             //        var changedate = DateTime.Parse(result.Attributes["createddate"].ToString());
             //        var rowstamp = Convert.ToInt64(result.Attributes["rowstamp"]);
             //        var notification = new Notification(application, targetschema, label, icon, id, uId, parentid, parentuid, parentapplication, parentlabel, summary, changeby, changedate, rowstamp, flag);
@@ -181,16 +193,17 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                 var id = record["id"];
                 var label = record["label"];
                 var icon = record["icon"];
-                var uid = Int32.Parse(record["uid"]);
+                var uid = Int64.Parse(record["uid"]);
                 var flag = "changed";
                 if (Counter[application] < uid) {
                     flag = "created";
                     Counter[application] = uid;
                 }
                 var parentid = record["parentid"];
-                int parentuid;
-                Int32.TryParse(record["parentuid"], out parentuid);
-
+                long parentuid = -1;
+                if (record["parentuid"] != null) { 
+                    Int64.TryParse(record["parentuid"], out parentuid);
+                }
                 var parentapplication = record["parentapplication"];
                 string parentlabel = null;
                 if (parentapplication == "servicerequest") {
@@ -216,8 +229,8 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             var streamToUpdate = NotificationStreams["allRole"];
             streamToUpdate.PurgeNotificationsFromStream(24);
         }
-
-        public List<Notification> GetNotificationStream(string role) {
+        
+        public NotificationResponse GetNotificationStream(string role) {
             return NotificationStreams[role].GetNotifications();
         }
     }
