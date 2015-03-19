@@ -175,8 +175,7 @@
               <renderer type="lookup"/>
             </association>
           </customization>
-          <customization position="glaccount"/>
-          <customization position="+reportdate">
+          <customization position="glaccount">
             <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext">
               <renderer type="lookup"/>
             </association>
@@ -189,8 +188,7 @@
               <renderer type="lookup"/>
             </association>
           </customization>
-          <customization position="glaccount"/>
-          <customization position="+reportdate">
+          <customization position="glaccount">
             <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext">
               <renderer type="lookup"/>
             </association>
