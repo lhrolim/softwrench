@@ -80,7 +80,9 @@
                     <div ng-if="fieldMetadata.type != 'OptionField'" style="min-width: 200px;">
                         <input type="checkbox"
                                id="checkbox"
-                               ng-model="datamap[fieldMetadata.attribute]" />
+                               ng-model="datamap[fieldMetadata.attribute]"
+                               ng-init="initCheckbox(fieldMetadata)"
+                               ng-true-value="1" ng-false-value="0" />
                     </div>
                 </div>
                 <div ng-switch-when="autocompleteclient">

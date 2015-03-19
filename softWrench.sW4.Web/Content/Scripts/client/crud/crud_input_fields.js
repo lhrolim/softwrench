@@ -358,6 +358,10 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 }
                 $scope.datamap[datamapKey] = model;
             };
+            $scope.initCheckbox = function(fieldMetadata) {
+                var content = $scope.datamap[fieldMetadata.attribute];
+                $scope.datamap[fieldMetadata.attribute] = $scope.datamap[fieldMetadata.attribute] != null ? $scope.datamap[fieldMetadata.attribute].toString() : "0";
+            }
 
             /* LOOKUP functions */
 
