@@ -803,6 +803,7 @@ _headermenu:{
 	serviceit:ServiceIT
 	whereclauses:Where Clauses
     logadmin:administrar los registros
+    refreshmetadata:metadatos de actualización
 }
 
 configuration:{
