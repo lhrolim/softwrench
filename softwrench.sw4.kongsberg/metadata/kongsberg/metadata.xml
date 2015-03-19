@@ -2000,8 +2000,16 @@
           <field attribute="longdescription_.ldtext" label="Details:" >
             <renderer type="textarea"/>
           </field>
-
-
+          <optionfield attribute="logtype" label="Log Type:" default="CLIENTNOTE">
+            <option label="Appointment Note" value="APPTNOTE"/>
+            <option label="Client Note" value="CLIENTNOTE"/>
+            <option label="Update" value="UPDATE"/>
+            <option label="Work" value="WORK"/>
+          </optionfield>
+          <optionfield attribute="clientviewable" label="Client Viewable:" default="0">
+            <option label="Yes" value="1"/>
+            <option label="No" value="0"/>
+          </optionfield>
         </detail>
       </schemas>
     </application>
