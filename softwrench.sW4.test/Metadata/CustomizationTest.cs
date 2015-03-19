@@ -72,6 +72,8 @@ namespace softwrench.sW4.test.Metadata {
             //This was not replaced
             Assert.IsNotNull(associations.FirstOrDefault(c => c.Attribute == "ownergroup"));
 
+            Assert.AreEqual(1,associations.Count(c => c.Attribute == "owner"));
+
             var optionFields =detailSchema.OptionFields;
             Assert.IsNull(optionFields.FirstOrDefault(c => c.Attribute == "classstructureid"));
         }
