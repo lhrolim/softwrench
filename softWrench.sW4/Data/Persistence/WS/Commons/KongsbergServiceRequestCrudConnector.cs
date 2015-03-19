@@ -24,7 +24,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
             var user = SecurityFacade.CurrentUser();
 
             if (w.GetRealValue(sr, "STATUS").Equals("INPROG")) {
-                w.SetValue(sr, "ACTUALSTART", DateTime.Now.FromServerToRightKind());
+                w.SetValueIfNull(sr, "ACTUALSTART", DateTime.Now.FromServerToRightKind());
             }
             else if (w.GetRealValue(sr, "STATUS").Equals("RESOLVED")) {
                 w.SetValue(sr, "ACTUALFINISH", DateTime.Now.FromServerToRightKind());

@@ -158,7 +158,7 @@ namespace softWrench.sW4.Data.Search {
                         statement.Append(GetDefaultParam(operatorPrefix, param));
                     }
 
-                    if ((searchParameter.SearchOperator == SearchOperator.NOTEQ) || (searchParameter.SearchOperator == SearchOperator.NCONTAINS)) {
+                    if ((searchParameter.SearchOperator == SearchOperator.NOTEQ) || (searchParameter.SearchOperator == SearchOperator.NCONTAINS) || (searchParameter.SearchOperator == SearchOperator.BLANK)) {
                         statement.Append(" OR " + parameterData.Item1 + " IS NULL " + " )");
                     } else {
                         statement.Append(" )");

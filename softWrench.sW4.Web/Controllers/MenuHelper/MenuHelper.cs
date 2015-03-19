@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Security;
 using cts.commons.simpleinjector;
+using DocumentFormat.OpenXml.Spreadsheet;
 using SimpleInjector;
 using softwrench.sw4.api.classes;
 using softWrench.sW4.Metadata;
@@ -56,9 +57,14 @@ namespace softWrench.sW4.Web.Controllers.MenuHelper {
             var actionURL = String.Format("api/generic/{0}/{1}", controller, action);
             string queryString = null;
             if (item.Parameters != null) {
-                queryString = String.Join("&", item.Parameters.ToArray());
+                queryString = String.Join("&", GetParameter(item.Parameters));
             }
             return WebAPIUtil.GetRelativeRedirectURL(actionURL, queryString);
+        }
+
+        // Allow for multiple parameters and also make use of the id.  
+        public List<String> GetParameter(IDictionary<string, object> parameters) {
+            return parameters.Select(param => String.Format("{0}={1}", param.Key, param.Value)).ToList();
         }
     }
 }

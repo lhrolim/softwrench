@@ -100,15 +100,17 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
         //_ used in db2
         private string FixKey(string key) {
-            if (key.Contains("_") && !key.Contains(".")) {
-                if (key.IndexOf("_", System.StringComparison.Ordinal) !=
-                    key.LastIndexOf("_", System.StringComparison.Ordinal)) {
-                    //more then one _ ==> replace only last
-                    return key.ReplaceLastOccurrence("_", "_.").ToLower();
-                }
+            // TODO: This needs to be revisited when we integrate any DB2 customer. 
+            // TODO: Not working for current customer because they could have attributes that are with underscore like feature_request - KSW-104
+            //if (key.Contains("_") && !key.Contains(".")) {
+            //    if (key.IndexOf("_", System.StringComparison.Ordinal) !=
+            //        key.LastIndexOf("_", System.StringComparison.Ordinal)) {
+            //        //more then one _ ==> replace only last
+            //        return key.ReplaceLastOccurrence("_", "_.").ToLower();
+            //    }
 
-                return key.Replace("_", "_.").ToLower();
-            }
+            //    return key.Replace("_", "_.").ToLower();
+            //}
             return key.ToLower();
         }
 

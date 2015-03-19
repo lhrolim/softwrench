@@ -18,7 +18,8 @@
         clonedItem['sendto'] = clonedItem['cc'] = clonedItem['commloguid']= null;
         clonedItem['sendfrom'] = $rootScope.defaultEmail;
         clonedItem['subject'] = "Fw: " + clonedItem['subject'];
-        clonedItem['message'] = messageHeader.format(origSendFrom,origSendTo,origCc,origSubject,origMessage);
+        clonedItem['message'] = messageHeader.format(origSendFrom, origSendTo, origCc, origSubject, origMessage);
+        clonedItem['createdate'] = null;
         $scope.$emit("sw.composition.edit", clonedItem);
     };
 
@@ -36,6 +37,7 @@
         clonedItem['commloguid'] = null;
         clonedItem['subject'] = "Re: " + clonedItem['subject'];
         clonedItem['message'] = messageHeader.format(origSendFrom, origSendTo, origCc, origSubject, origMessage);
+        clonedItem['createdate'] = null;
         $scope.$emit("sw.composition.edit", clonedItem);
     };
 
@@ -57,6 +59,7 @@
         clonedItem['sendfrom'] = contextService.getUserData().email;
         clonedItem['subject'] = "Re: " + clonedItem['subject'];
         clonedItem['message'] = messageHeader.format(origSendFrom, origSendTo, origCc, origSubject, origMessage);
+        clonedItem['createdate'] = null;
         $scope.$emit("sw.composition.edit", clonedItem);
     };
 }    

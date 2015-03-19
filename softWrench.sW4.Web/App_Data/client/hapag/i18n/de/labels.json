@@ -786,6 +786,7 @@ _headermenu:{
 	serviceit:ServiceIT
 	whereclauses:Where Clauses
     logadmin:Verwalten Logs
+    refreshmetadata:Aktualisieren Metadaten
 }
 
 configuration:{

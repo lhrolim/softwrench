@@ -1,7 +1,12 @@
 body {
     font-family: "Arial";
+    font-size: 13px;
     overflow-y: scroll;
     -webkit-transition: all 0.5s;
+}
+
+.btn {
+    font-size: 13px;
 }
 
 .clear {

@@ -167,6 +167,8 @@
   </entities>
 
   <applications>
+    
+    
     <application name="workorder" title="Work Order" entity="workorder">      
       <schemas>
         <schema id="editdetail" platform="web" redeclaring="false">
@@ -175,8 +177,12 @@
               <renderer type="lookup"/>
             </association>
           </customization>
-          <customization position="glaccount"/>
-          <customization position="+reportdate">
+          <customization position="classstructureid">
+            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" requiredexpression="true">
+              <renderer type="autocompleteclient" />
+            </optionfield>
+          </customization>
+          <customization position="glaccount">
             <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext">
               <renderer type="lookup"/>
             </association>
@@ -189,8 +195,12 @@
               <renderer type="lookup"/>
             </association>
           </customization>
-          <customization position="glaccount"/>
-          <customization position="+reportdate">
+          <customization position="classstructureid">
+            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" requiredexpression="true">
+              <renderer type="autocompleteclient" />
+            </optionfield>
+          </customization>
+          <customization position="glaccount">
             <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext">
               <renderer type="lookup"/>
             </association>
@@ -239,8 +249,7 @@
     <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
       <schemas>
         <detail platform="web" redeclaring="false">
-          <customization position="gldebitacct"/>
-          <customization position="+qtyrequested">
+          <customization position="gldebitacct">
             <association label="GL Debit Account:" target="gldebitacct" labelfield="glcomponents_.comptext">
               <renderer type="lookup"/>
             </association>
@@ -252,8 +261,7 @@
     <application name="tooltrans" entity="tooltrans" title="Tools">
       <schemas>
         <detail platform="web" redeclaring="false">
-          <customization position="gldebitacct"/>
-          <customization position="+toolrate">
+          <customization position="gldebitacct">
             <association label="GL Debit Account:"  target="gldebitacct" labelfield="glcomponents_.comptext">
               <renderer type="lookup"/>
             </association>
@@ -265,16 +273,20 @@
     <application name="worklog" title="Work Logs"  entity="worklog" id="00000000-0000-0000-0000-000000000008">
       <schemas>
         <detail platform="web" redeclaring="false">
-          <!--<optionfield attribute="logtype" label="Log Type:" default="CLIENTNOTE" requiredexpression="true">
-            <option label="Appointment Note" value="APPTNOTE"/>
-            <option label="Client Note" value="CLIENTNOTE"/>
-            <option label="Update" value="UPDATE"/>
-            <option label="Work" value="WORK"/>
-          </optionfield>
-          <optionfield attribute="clientviewable" label="Client Viewable:" default="0" requiredexpression="true">
-            <option label="Yes" value="1"/>
-            <option label="No" value="0"/>
-          </optionfield>-->
+          <customization position="logtype">
+            <optionfield attribute="logtype" label="Log Type:" default="CLIENTNOTE" requiredexpression="true">
+              <option label="Appointment Note" value="APPTNOTE"/>
+              <option label="Client Note" value="CLIENTNOTE"/>
+              <option label="Update" value="UPDATE"/>
+              <option label="Work" value="WORK"/>
+            </optionfield>
+          </customization>
+          <customization position="clientviewable">
+            <optionfield attribute="clientviewable" label="Client Viewable:" default="0" requiredexpression="true">
+              <option label="Yes" value="1"/>
+              <option label="No" value="0"/>
+            </optionfield>
+          </customization>
         </detail>
       </schemas>
     </application>

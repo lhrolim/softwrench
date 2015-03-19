@@ -19,22 +19,26 @@ namespace softwrench.sw4.dashboard.classes.controller {
         public IEnumerable<Dashboard> LoadUserDashboars(ISWUser currentUser) {
 
             var profiles = currentUser.ProfileIds;
+            var query = string.Format(Dashboard.ByUser, currentUser.UserId, "");
+
             var enumerable = profiles as int?[] ?? profiles.ToArray();
             if (enumerable.Any()) {
                 var sb = BuildUserProfileColumn(enumerable);
-                return _dao.FindByQuery<Dashboard>(Dashboard.ByUser, currentUser.UserId, sb.ToString());
+                query = string.Format(Dashboard.ByUser, currentUser.UserId, sb);
             }
-            return _dao.FindByQuery<Dashboard>(Dashboard.ByUserNoProfile, currentUser.UserId);
-
-
+            
+            return _dao.FindByQuery<Dashboard>(query, null);
         }
 
         private static StringBuilder BuildUserProfileColumn(int?[] enumerable) {
-            var sb = new StringBuilder("%");
+            var sb = new StringBuilder("");
             foreach (var profile in enumerable) {
-                sb.Append(";").Append(profile).Append(";");
+                //sb.Append(";").Append(profile).Append(";");
+                sb.Append("or (userprofiles like '%");
+                sb.Append(profile); 
+                sb.Append("%') ");
             }
-            sb.Append("%");
+
             return sb;
         }
 

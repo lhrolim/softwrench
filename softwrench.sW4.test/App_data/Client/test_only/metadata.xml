@@ -664,9 +664,14 @@
           <customization position="attachment"/>
           <customization position="location"/>
           <customization position="classstructureid"/>
+          <customization position="owner">
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="srService" method="afterchangeowner"/>
+          </association>
+          </customization>
         </detail>
       </schemas>
-      
     </application>
     
     <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009" >
