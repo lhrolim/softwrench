@@ -1334,15 +1334,17 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <field label="One or more clients do not have connection to the network: " attribute="" readonly="true">
                 <renderer type="label"/>
               </field>
-              <field label="How many Clients are affected?" attribute="#clientsaffected"/>
+              <field label="How many Clients are affected?" attribute="#clientsaffected">
+                <renderer type="numericinput"/>
+                </field>
               <optionfield label="Connection of the Client" attribute="clientconnection">
                  <option label="LAN" value="lan"/>
                  <option label="WLAN" value="wlan"/>
                  <option label="LAN/WLAN" value="lan/wlan"/>
               </optionfield>
               <optionfield label="Do the clients have actual IP address" attribute="isaddressavailable">
-                <option label="YES" value="1"/>
-                <option label="NO" value="0"/>
+                <option label="YES" value="YES"/>
+                <option label="NO" value="NO"/>
               </optionfield>
               <field label="Please give some examples" attribute="#clientipaddress" showexpression="@isaddressavailable == 1"/>
             </section>
@@ -1354,14 +1356,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                 <renderer type="label"/>
               </field>
             <optionfield label="Are you getting the authorisation page?" attribute="authpageseen">
-              <option label="YES" value="1"/>
-              <option label="NO" value="0"/>
+              <option label="YES" value="YES"/>
+              <option label="NO" value="NO"/>
             </optionfield>
             <optionfield label="Is the login successful?" attribute="loginsuccess">
-              <option label="YES" value="1"/>
-              <option label="NO" value="0"/>
+              <option label="YES" value="YES"/>
+              <option label="NO" value="NO"/>
             </optionfield>
-            <field label="Do you receive any error messages? If so please provide an example:" attribute="#errormessage"/>
+            <field label="Do you receive any error messages? If so please provide an example:" attribute="#vpnerrormessage"/>
           </section>
             </section>
         </schema>
