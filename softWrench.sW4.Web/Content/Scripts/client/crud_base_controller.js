@@ -80,7 +80,7 @@ function BaseController($scope, i18NService, fieldService,commandService) {
         if (!$scope.isVerticalOrientation()) {
             return false;
         }
-        if (fieldMetadata.rendererType == "TABLE") {
+        if (fieldMetadata.rendererType == "TABLE" || fieldMetadata.rendererType == "label") {
             //workaround because compositions are appending "" as default label values, but we dont want it!
             return false;
         }

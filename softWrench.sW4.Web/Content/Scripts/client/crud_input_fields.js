@@ -637,6 +637,20 @@ app.directive('crudInputFields', function (contextService) {
                 return isVisible && (isFieldSet == legendEvaluationMode);
             }
 
+            $scope.isFieldSet = function (fieldMetadata) {
+                if (!$scope.isVerticalOrientation()) {
+                    return false;
+                }
+                var header = fieldMetadata.header;
+                if (!header) {
+                    return false;
+                }
+                var isVisible = expressionService.evaluate(header.showExpression, $scope.datamap);
+                var isFieldSet = header.parameters != null && "true" == header.parameters['fieldset'];
+                //if header is declared as fieldset return true only for the legendEvaluation
+                return isVisible && (isFieldSet);
+            }
+
 
             $scope.isSectionWithoutLabel = function (fieldMetadata) {
                 return fieldMetadata.type == 'ApplicationSection' && fieldMetadata.resourcepath == null && fieldMetadata.header == null;

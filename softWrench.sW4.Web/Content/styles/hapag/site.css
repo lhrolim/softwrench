@@ -777,6 +777,11 @@ textarea .readonly {
     margin-left: 0px !important;
 }
 
+.bordered-fieldset {
+    border: 1px;
+    border-style: solid;
+}
+
 .col-sectionsamelineheader {
     margin-top: -1px !important;
     margin-left: 0;
@@ -1388,6 +1393,8 @@ select {
 /*SM - 09/17 - HAP-549 #T-ITC-012*/
 .legend-label {
     padding-left: 15px;
+    border-bottom: 0;
+    width: initial !important;
 }
 /*SM - 09/17 - HAP-549 #T-ITC-012*/
 

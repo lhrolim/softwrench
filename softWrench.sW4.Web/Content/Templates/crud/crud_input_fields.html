@@ -6,7 +6,7 @@
                   ng-show="!isFieldHidden(schema,fieldMetadata)"
                   rel="input-form-repeat"
                   bodyrendered
-                  ng-class="{'col-horizontal-orientation' : !isVerticalOrientation(), 'fieldset-inside-section' : insidelabellesssection=='true' }"
+                  ng-class="{'col-horizontal-orientation' : !isVerticalOrientation(), 'fieldset-inside-section' : insidelabellesssection=='true','bordered-fieldset' : isFieldSet(fieldMetadata) }"
                   ng-style="horizontalWidth">
 
             <label class="control-label"
@@ -28,7 +28,7 @@
             </legend>
 
 
-            <div ng-class="getFieldClass(fieldMetadata)" ng-if="fieldMetadata.isReadOnly" ng-switch on="fieldMetadata.rendererType">
+            <div ng-class="getFieldClass(fieldMetadata)" ng-if="fieldMetadata.isReadOnly && fieldMetadata.rendererType !='label'" ng-switch on="fieldMetadata.rendererType">
 
                 <input type="text" ng-switch-when="datetime"
                        ng-model="datamap[fieldMetadata.attribute]"
@@ -59,7 +59,7 @@
                             ng-model="datamap[fieldMetadata.target]"
                             ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                             ng-enabled="isSelectEnabled(fieldMetadata)"
-                            data-comboassociationkey="{{fieldMetadata.associationKey}}"/>
+                            data-comboassociationkey="{{fieldMetadata.associationKey}}" />
                     <!--<div class="arrow"></div>-->
                 </div>
 
@@ -104,8 +104,7 @@
                                             ng-model="datamap[fieldMetadata.target]"
                                             ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                                             ng-enabled="isSelectEnabled(fieldMetadata)"
-                                            data-associationkey="{{fieldMetadata.associationKey}}"
-                                             />
+                                            data-associationkey="{{fieldMetadata.associationKey}}" />
                                 </div>
                             </div>
                             <div class="col-xs-6 autocompleteclientopendetails">
@@ -115,13 +114,12 @@
                                             ng-model="datamap[fieldMetadata.target]"
                                             ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
                                             ng-enabled="isSelectEnabled(fieldMetadata)"
-                                            data-associationkey="{{fieldMetadata.associationKey}}"
-                                             />
+                                            data-associationkey="{{fieldMetadata.associationKey}}" />
 
                                 </div>
                             </div>
                             <div>
-                                <div id="opendetails" class="input-group" >
+                                <div id="opendetails" class="input-group">
                                     <button ng-click="opendetails(fieldMetadata)" ng-enabled="datamap[fieldMetadata.target]" />
                                 </div>
                             </div>
@@ -134,8 +132,7 @@
                                         ng-model="datamap[fieldMetadata.target]"
                                         ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
-                                        data-associationkey="{{fieldMetadata.associationKey}}"
-                                         />
+                                        data-associationkey="{{fieldMetadata.associationKey}}" />
                             </div>
                             <div ng-switch-default>
                                 <select id="{{formatId(fieldMetadata.target)}}"
@@ -143,8 +140,7 @@
                                         ng-model="datamap[fieldMetadata.target]"
                                         ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
-                                        data-associationkey="{{fieldMetadata.associationKey}}"
-                                         />
+                                        data-associationkey="{{fieldMetadata.associationKey}}" />
 
                             </div>
                         </div>
@@ -211,8 +207,7 @@
                                    type="file" accept=".jpg,.bmp,.pdf,.zip,text/plain,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,application/xml,.xsl,text/html"
                                    fileread="datamap[fieldMetadata.attribute]"
                                    path="datamap.newattachment_path"
-                                   title="{{handlerTitleInputFile('uploadfile_tooltip')}}"
-                                   />
+                                   title="{{handlerTitleInputFile('uploadfile_tooltip')}}" />
                         </div>
                     </div>
                 </div>
@@ -250,8 +245,7 @@
                                 ng-model="datamap[fieldMetadata.target]"
                                 ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                                 ng-enabled="isSelectEnabled(fieldMetadata)"
-                                custombuttontext=""
-                                 />
+                                custombuttontext="" />
                         <div ng-if="fieldMetadata.rendererParameters['showvaluesbelow'] == 'true'">
                             <table>
                                 <tbody>

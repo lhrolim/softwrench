@@ -828,7 +828,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="commodities_.description" hidden="true">
             <filter operation="contains"/>
           </field>
-          
+
           <field label="Start Date" attribute="reportdate___start">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
             <filter operation="btw" default="@MIN_DATE"/>
@@ -1286,7 +1286,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </optionfield>
             <optionfield label="Problem Behavior:" attribute="problembehavior">
               <option label="Select One" value="" />
-              <option label="Constant" value="Constant"/>c
+              <option label="Constant" value="Constant"/>
               <option label="Sporadic" value="Sporadic"/>
               <option label="One time" value="One Time"/>
             </optionfield>
@@ -1300,6 +1300,74 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </optionfield>
           </section>
         </schema>
+
+        <schema id="network" stereotype="detail" title="New Service Request - Network" parentschema="AnewSR">
+          <section id="abstractSection">
+            <reference id="generaloutlookassetsection"/>
+            <field attribute="#crosstestresult" label="Crosstest result (if applicable)">
+              <renderer type="textarea"/>
+            </field>
+
+            <field attribute="#slowresponse" label="Do you face slow response?If yes,please define which applications">
+              <renderer type="textarea"/>
+            </field>
+
+            <section>
+              <header displacement="ontop" params="fieldset=true" label="WAN issue"/>
+              <field label="In case of Internet Issue answer the following" attribute="" readonly="true">
+                <renderer type="label"/>
+              </field>
+              <field label="Is the internet Access slow or down? (time loading special URL)" attribute="#internetslowdown">
+                <renderer type="textarea"/>
+              </field>
+              <optionfield label="Does the problem affect a single internet page or all pages?" attribute="affectedpages">
+                <option label="Single" value="single"/>
+                <option label="All" value="all"/>
+              </optionfield>
+              <field label="Target address (URL)" attribute="#targeturl"/>
+              <field label="Used proxy ('ping proxy' on the users PC will show this)" attribute="#usedproxy"/>
+              <field label="Do you receive any error messages? If so please provide an example:" attribute="#errormessages"/>
+            </section>
+            
+            <section>
+              <header displacement="ontop" label="LAN issue" params="fieldset=true"/>
+              <field label="One or more clients do not have connection to the network: " attribute="" readonly="true">
+                <renderer type="label"/>
+              </field>
+              <field label="How many Clients are affected?" attribute="#clientsaffected">
+                <renderer type="numericinput"/>
+                </field>
+              <optionfield label="Connection of the Client" attribute="clientconnection">
+                 <option label="LAN" value="lan"/>
+                 <option label="WLAN" value="wlan"/>
+                 <option label="LAN/WLAN" value="lan/wlan"/>
+              </optionfield>
+              <optionfield label="Do the clients have actual IP address" attribute="isaddressavailable">
+                <option label="YES" value="YES"/>
+                <option label="NO" value="NO"/>
+              </optionfield>
+              <field label="Please give some examples" attribute="#clientipaddress" showexpression="@isaddressavailable == 1"/>
+            </section>
+          
+        
+          <section>
+            <header displacement="ontop" label="VPN issue" params="fieldset=true"/>
+            <field label="Did the user try to connect via VPN: " attribute="" readonly="true">
+                <renderer type="label"/>
+              </field>
+            <optionfield label="Are you getting the authorisation page?" attribute="authpageseen">
+              <option label="YES" value="YES"/>
+              <option label="NO" value="NO"/>
+            </optionfield>
+            <optionfield label="Is the login successful?" attribute="loginsuccess">
+              <option label="YES" value="YES"/>
+              <option label="NO" value="NO"/>
+            </optionfield>
+            <field label="Do you receive any error messages? If so please provide an example:" attribute="#vpnerrormessage"/>
+          </section>
+            </section>
+        </schema>
+
 
         <schema id="creationSummary" mode="output" stereotype="detail" title="Service Request Detail">
           <field attribute="ticketuid" hidden="true"/>
@@ -2290,7 +2358,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </section>
 
             <field attribute="#decommissiondate" hidden="true" label="Decommission Date:"/>
-            
+
             <section>
               <header displacement="ontop" params="color=red;" label="Please attach a disposal/resale certificate to prove that the disposal/resale has been performend in terms of HL ITC Guide paragraph &quot;Hardware Sale and Disposal&quot;."/>
               <field label="Attachment:" attribute="newattachment" required="true">
@@ -3134,8 +3202,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field  attribute="description" label="Summary" />
           <field  attribute="longdescription_.ldtext" label="Details"/>
         </schema>
-        
-        
+
+
       </schemas>
     </application>
 
@@ -3163,12 +3231,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </section>
 
 
-<!--          <field label="Created Date" attribute="createdate">-->
-<!--            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />-->
-<!--          </field>-->
+          <!--          <field label="Created Date" attribute="createdate">-->
+          <!--            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />-->
+          <!--          </field>-->
         </list>
 
-     
+
 
         <schema id="faqAttachments" stereotype="compositionlist">
           <field hidden="true" attribute="#path"/>

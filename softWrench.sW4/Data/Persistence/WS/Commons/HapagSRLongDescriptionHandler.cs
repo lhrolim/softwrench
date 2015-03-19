@@ -48,6 +48,30 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 sb.AppendFormat("Problem Behavior: {0}\n", entity.GetAttribute("problembehavior"));
                 sb.AppendFormat("Problem Details: {0}\n", entity.GetAttribute("example"));
                 sb.AppendFormat("Call Routing: {0}\n", entity.GetAttribute("callrouting"));
+            } else if (schemaId == "network") {
+
+                sb.AppendFormat("Crosstest result {0}\n", entity.GetAttribute("#crosstestresult"));
+                //sb.AppendFormat("Location of selected phone: {0}\n", entity.GetUnMappedAttribute("phonelocation"));
+                sb.AppendFormat("Slow response applications: {0}\n", entity.GetAttribute("#slowresponse"));
+                sb.AppendFormat("(WAN)Internet Acess Slow: {0}\n", entity.GetAttribute("#internetslowdown"));
+                sb.AppendFormat("(WAN)Problem Affect All Pages?: {0}\n", entity.GetAttribute("affectedpages"));
+                sb.AppendFormat("(WAN)Target address (URL): {0}\n", entity.GetAttribute("#targeturl"));
+                sb.AppendFormat("(WAN)Used proxy: {0}\n", entity.GetAttribute("#usedproxy"));
+                sb.AppendFormat("(WAN)Any Error Messages? {0}\n", entity.GetAttribute("#errormessages"));
+
+                sb.AppendFormat("(LAN)Number of clients Affected: {0}\n", entity.GetAttribute("#clientsaffected"));
+                sb.AppendFormat("(LAN)Client Connection: {0}\n", entity.GetAttribute("clientconnection"));
+                sb.AppendFormat("(LAN)Do clients have IP: {0}\n", entity.GetAttribute("isaddressavailable"));
+                sb.AppendFormat("(LAN)Examples: {0}\n", entity.GetAttribute("clientipaddress"));
+
+
+                sb.AppendFormat("(VPN)Authorisation Page Seen? {0}\n", entity.GetAttribute("authpageseen"));
+                sb.AppendFormat("(VPN)Is the Login successful {0}\n", entity.GetAttribute("loginsuccess"));
+                sb.AppendFormat("(VPN)Error message: {0}\n", entity.GetAttribute("#vpnerrormessage"));
+
+
+
+
             }
 
             sb.AppendFormat("\n\n{0}", originalLd);
