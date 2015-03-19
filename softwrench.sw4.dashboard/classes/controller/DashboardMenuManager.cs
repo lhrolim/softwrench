@@ -72,9 +72,14 @@ namespace softwrench.sw4.dashboard.classes.controller {
                     Id = "loadpreferred"
                     
                 };
-                var manageAction = ManageDashboardAction();
-                container.AddLeaf(manageAction);
-                container.AddLeaf(new DividerMenuItem());
+
+                // Only display manage dashboard option if user has access to do so
+                if (canCreateDashBoards) {
+                    var manageAction = ManageDashboardAction();
+                    container.AddLeaf(manageAction);
+                    container.AddLeaf(new DividerMenuItem());
+                }
+
                 foreach (var dashboard in enumerable) {
                     var action = new ActionMenuItemDefinition {
                         Controller = "Dashboard",
