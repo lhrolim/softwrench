@@ -295,7 +295,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             searchDto.AppendSearchEntry("commodity", new[] { "HLC-0003", "HLC-0005", "HLC-0006", "HLC-0007", "HLC-0008", "HLC-0786" });
 
             // This value is added due to a inserted parameter in a relatioship clause (from 'commodities' to 'assetloccomm') 
-            searchDto.ValuesDictionary.Add("commodityassetnum", new SearchParameter(assetnum));
+            searchDto.ValuesDictionary.TryAdd("commodityassetnum", new SearchParameter(assetnum));
 
             var entities = _maximoConnectorEngine.Find(entityMetadata, searchDto);
 
