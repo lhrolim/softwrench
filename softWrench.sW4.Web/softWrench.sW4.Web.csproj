@@ -1336,6 +1336,10 @@
       <Project>{9b568df3-6a78-4a01-b080-8e88c8dab0f7}</Project>
       <Name>softwrench.sw4.kongsberg</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.manchester\softwrench.sw4.manchester.csproj">
+      <Project>{75C4B153-E741-4D16-9F10-96B2F6335331}</Project>
+      <Name>softwrench.sw4.manchester</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
