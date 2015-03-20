@@ -448,7 +448,7 @@ app.directive('compositionList', function (contextService, formatService) {
                 if ($scope.collectionproperties.allowUpdate) {
                     //if composition items are editable, then we should pass the entire composition list back.  One or more item could have been changed.
                     //$scope.parentdata.fields[$scope.relationship] = $scope.clonedCompositionData;
-                    $scope.parentdata.fields[$scope.relatioship] = editedCompositionData;
+                    $scope.parentdata.fields[$scope.relationship] = editedCompositionData;
                 }
 
                 if (selecteditem != undefined) {
