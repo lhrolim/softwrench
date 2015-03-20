@@ -214,7 +214,6 @@
           </section>
 
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
-          <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
           
           
           <commandbars>
