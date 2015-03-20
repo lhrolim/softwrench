@@ -24,7 +24,7 @@ namespace softwrench.sW4.test.Metadata {
             var listSchema = app.Schema(new ApplicationMetadataSchemaKey("list"));
             var displayables = listSchema.Fields;
             //parent fields=8; customizations=2
-            Assert.AreEqual(10, displayables.Count);
+            Assert.AreEqual(11, displayables.Count);
 
             var description = displayables.FirstOrDefault(f => f.Attribute.Equals("description"));
             var descIndex = displayables.IndexOf(description);
@@ -44,7 +44,7 @@ namespace softwrench.sW4.test.Metadata {
             var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("detail"));
             var displayables = detailSchema.Fields;
             //parent fields=3 (auto-generated); customizations=2
-            Assert.AreEqual(5, displayables.Count);
+            Assert.AreEqual(6, displayables.Count);
 
             Assert.IsNull(displayables.FirstOrDefault(f => f.Attribute.Equals("description")));
 
