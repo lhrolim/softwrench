@@ -205,7 +205,10 @@ app.directive('compositionList', function (contextService, formatService) {
                 $scope.clonedCompositionData = [];
                 $scope.clonedCompositionData = JSON.parse(JSON.stringify($scope.compositiondata));
                 $scope.isNoRecords = $scope.clonedCompositionData.length > 0 ? false : true;
+
                 $scope.detailData = {};
+                $scope.origData = {};
+                
                 $scope.noupdateallowed = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
                 $scope.expanded = false;
                 $scope.wasExpandedBefore = false;
@@ -330,8 +333,15 @@ app.directive('compositionList', function (contextService, formatService) {
                     $scope.detailData[id] = {};
                     $scope.detailData[id].expanded = false;
                 }
+
+                if ($scope.origData[id] == undefined) {
+                    $scope.origData[id] = {};
+                }
+
                 // TODO: Allow comparsion of values with different data type (e.g. int and string).  
                 $scope.detailData[id].data = formatService.doContentStringConversion(item);
+                $scope.origData[id].data = formatService.doContentStringConversion(jQuery.extend({}, item));
+
                 var newState = forcedState != undefined ? forcedState : !$scope.detailData[id].expanded;
                 $scope.detailData[id].expanded = newState;
 
@@ -404,6 +414,16 @@ app.directive('compositionList', function (contextService, formatService) {
                 return expressionService.evaluate(value, $scope.parentdata) && $scope.inline;
             };
 
+            $scope.hasModified = function (key, displayables) {
+                for (var index = 0; index < displayables.length; index++) {
+                    var attribute = displayables[index].attribute;
+                    if ($scope.origData[key].data[attribute] != $scope.detailData[key].data[attribute]) {
+                        return true;
+                    }
+                }
+
+                return false;
+            };
 
             $scope.save = function (selecteditem) {
                 if (!selecteditem) {
@@ -432,7 +452,7 @@ app.directive('compositionList', function (contextService, formatService) {
                 var editedCompositionData = [];
                 if ($scope.collectionproperties.allowUpdate == "true") {
                     for (var key in $scope.detailData) {
-                        if ($scope.detailData.hasOwnProperty(key)) {
+                        if ($scope.detailData.hasOwnProperty(key) && $scope.hasModified(key, detailSchema.displayables)) {
                             editedCompositionData.push($scope.detailData[key].data);
 
                             validationErrors = validationService.validate(detailSchema, detailSchema.displayables, $scope.detailData[key].data);
@@ -608,12 +628,11 @@ app.directive('compositionList', function (contextService, formatService) {
                     ($scope.compositionlistschema.properties.expansible == undefined ||
                     $scope.compositionlistschema.properties.expansible == 'true');
             };
+
             //overriden function
             $scope.i18NLabel = function (fieldMetadata) {
                 return i18NService.getI18nLabel(fieldMetadata, $scope.compositionlistschema);
             };
-
-
         }
     };
 });

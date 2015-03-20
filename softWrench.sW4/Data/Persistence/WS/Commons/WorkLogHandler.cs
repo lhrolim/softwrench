@@ -37,7 +37,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
                 
                 //var hasChanged = crudData.GetUnMappedAttribute("#hasChanged");
                 //if (hasChanged == "1") {
-                //    WsUtil.SetValue(integrationObject, "modifydate", DateTime.Now.FromServerToRightKind(), true);
+                WsUtil.SetValue(integrationObject, "modifydate", DateTime.Now.FromServerToRightKind(), true);
                 //}
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
