@@ -47,7 +47,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
         private DataMap BuildDataMap(EntityMetadata entityMetadata, IEnumerable<KeyValuePair<string, object>> r) {
 
-            return new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key), pair => pair.Value, StringComparer.OrdinalIgnoreCase), entityMetadata.Schema.MappingType);
+            return new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key, entityMetadata), pair => pair.Value, StringComparer.OrdinalIgnoreCase), entityMetadata.Schema.MappingType);
         }
 
         public IEnumerable<dynamic> RawGet([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {
@@ -81,7 +81,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             var rows = Query(entityMetadata, query, searchDto);
             Log.DebugFormat("returning {0} rows", rows.Count());
             return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
-               .Select(r => r.ToDictionary(pair => FixKey(pair.Key), pair => pair.Value)).ToList();
+               .Select(r => r.ToDictionary(pair => FixKey(pair.Key,entityMetadata), pair => pair.Value)).ToList();
 
         }
 
@@ -99,7 +99,12 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         }
 
         //_ used in db2
-        private string FixKey(string key) {
+        private string FixKey(string key, EntityMetadata entityMetadata) {
+            if (entityMetadata.Attributes(EntityMetadata.AttributesMode.NoCollections).Any(a => a.Name.EqualsIc(key))) {
+                //IF the entity has a non collection attribute declared containing _, let´s keep it, cause it could be the name of the column actually
+                return key.ToLower();
+            }
+
             // TODO: This needs to be revisited when we integrate any DB2 customer. 
             // TODO: Not working for current customer because they could have attributes that are with underscore like feature_request - KSW-104
             //if (key.Contains("_") && !key.Contains(".")) {
