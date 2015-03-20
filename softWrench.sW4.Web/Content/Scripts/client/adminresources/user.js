@@ -1,6 +1,6 @@
 ﻿
 
-function UserController($scope, $http, $templateCache, i18NService) {
+function UserController($scope, $http, $templateCache, alertService, i18NService) {
 
     var app = angular.module('plunker', ['ui.multiselect']);
 
@@ -112,6 +112,20 @@ function UserController($scope, $http, $templateCache, i18NService) {
     };
 
     $scope.save = function () {
+        // Enforce password restriction
+        if ($scope.user.password != null || $scope.user.password2 != null) {
+            if ($scope.user.password.length < 6) {
+                alertService.alert("Your password is too short. It must be at least 6 characters long.");
+                return; 
+            }
+
+            if ($scope.user.password !== $scope.user.password2) {
+                alertService.alert("Your password does not match, please try again.");
+                return;
+            }
+        }
+
+        // Apply disable on the save button when all the fields are completed successfully
         $('#saveBTN').prop('disabled', 'disabled');
         $http.post(url("api/security/User"), JSON.stringify($scope.user))
             .success(function (data) {
