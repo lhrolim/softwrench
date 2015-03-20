@@ -18,6 +18,10 @@
     <property name="OutputDir" value="c:\" />
   </ifnot>
 
+  <tstamp property="build.date" pattern="yyyy_MM_dd_hhmm" verbose="true" />
+  
+  <property name="deploypath" value="${OutputDir}/deploy/${build.date}"></property>
+
 
   <!--These will come from jenkins-->
   <if test="${environment::variable-exists('clientsw4')}">
@@ -80,13 +84,13 @@
       </fileset>
     </delete>
 
-    <mkdir dir="${OutputDir}/deploy"/>
-    <mkdir dir="${OutputDir}/deploy/bin"/>
+    <mkdir dir="${deploypath}"/>
+    <mkdir dir="${deploypath}/bin"/>
 
   </target>
 
   <target name="copydlls" depends="mkdir">
-    <copy todir="${OutputDir}/deploy/" includeemptydirs="false">
+    <copy todir="${deploypath}" includeemptydirs="false">
       <fileset basedir="../softWrench.sW4.Web/">
         <include name="**/*" />
         <exclude name="**/*.cs"/>
@@ -101,24 +105,24 @@
         <exclude name="obj/**"/>
       </fileset>
     </copy>
-    <copy todir="${OutputDir}/deploy/bin">
+    <copy todir="${deploypath}/bin">
       <fileset basedir="../softWrench.sW4.Web/Dependencies">
         <include name="**/*" />
       </fileset>
     </copy>
 
-    <copy todir="${OutputDir}/deploy/App_Data/Client/@internal">
+    <copy todir="${deploypath}/App_Data/Client/@internal">
       <fileset basedir="../softWrench.sW4.Web/App_Data/Client/@internal">
         <include name="*.*" />
       </fileset>
     </copy>
-    <copy todir="${OutputDir}/deploy/App_Data/Client/otb">
+    <copy todir="${deploypath}/App_Data/Client/otb">
       <fileset basedir="../softWrench.sW4.Web/App_Data/Client/otb">
         <include name="*.*" />
       </fileset>
     </copy>
 
-    <copy todir="${OutputDir}/deploy/App_Data/Client/${client}" failonerror="false">
+    <copy todir="${deploypath}/App_Data/Client/${client}" failonerror="false">
       <fileset basedir="../softWrench.sW4.Web/App_Data/Client/${client}">
         <include name="*.*" />
       </fileset>
@@ -140,7 +144,7 @@
         <echo message="${foldername}" />
         <echo message="${clientname}"/>
 
-        <copy todir="${OutputDir}/deploy/Content/Customers/${clientname}">
+        <copy todir="${deploypath}/Content/Customers/${clientname}">
           <fileset basedir="../softWrench.sW4.${client}/web_content/${clientname}">
             <include name="*.*" />
           </fileset>
@@ -153,7 +157,7 @@
         <echo message="${foldername}" />
         <echo message="${clientname}"/>
 
-        <copy todir="${OutputDir}/deploy/Content/Shared/${clientname}">
+        <copy todir="${deploypath}/Content/Shared/${clientname}">
           <fileset basedir="../softWrench.sW4.${clientname}/web_content/${clientname}">
             <include name="*.*" />
           </fileset>
@@ -164,14 +168,14 @@
 
 
     <attrib readonly="false">
-      <fileset basedir="${OutputDir}/deploy">
+      <fileset basedir="${deploypath}">
         <include name="**"/>
       </fileset>
     </attrib>
   </target>
 
   <target name="copydllssw" depends="mkdir">
-    <copy todir="${OutputDir}/deploy/">
+    <copy todir="${deploypath}">
       <fileset basedir="../softWrench.sW4.Web/">
         <include name="**/*" />
         <exclude name="App_Data/client/**"/>
@@ -182,18 +186,18 @@
         <exclude name="obj/**"/>
       </fileset>
     </copy>
-    <copy todir="${OutputDir}/deploy/App_Data/Client/@internal">
+    <copy todir="${deploypath}/App_Data/Client/@internal">
       <fileset basedir="../softWrench.sW4.Web/App_Data/Client/@internal">
         <include name="*.*" />
       </fileset>
     </copy>
-    <copy todir="${OutputDir}/deploy/App_Data/Client/${client}">
+    <copy todir="${deploypath}/App_Data/Client/${client}">
       <fileset basedir="../softWrench.sW4.Web/App_Data/Client/${client}">
         <include name="*.*" />
       </fileset>
     </copy>
     <attrib readonly="false">
-      <fileset basedir="${OutputDir}/deploy">
+      <fileset basedir="${deploypath}">
         <include name="**"/>
       </fileset>
     </attrib>
@@ -203,7 +207,7 @@
 
   <target name="setclient">
 
-    <xmlpoke file="${OutputDir}/deploy/Web.config"
+    <xmlpoke file="${deploypath}/Web.config"
                xpath="/configuration/appSettings/add[@key = 'clientkey']/@value"
                value="${client}" failonerror="true"/>
 
@@ -211,16 +215,16 @@
 
   <target name="setenv">
 
-    <xmlpoke file="${OutputDir}/deploy/Web.config"
+    <xmlpoke file="${deploypath}/Web.config"
                xpath="/configuration/appSettings/add[@key = 'profile']/@value"
                value="${profile}" failonerror="true"/>
   </target>
 
   <target name="zip" depends="copydlls,setclient,setenv,explodexmlfiles">
 
-    <tstamp property="build.date" pattern="yyyy_MM_dd_hhmm" verbose="true" />
 
-    <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/sw4_${build.date}.zip">
+
+    <zip includeemptydirs="true" zipfile="${deploypath}/sw4_${build.date}.zip">
       <fileset basedir="${OutputDir}/deploy/">
         <include name="**/*" />
       </fileset>
@@ -228,8 +232,8 @@
   </target>
 
   <target name="zipsw" depends="copydllssw,setclient,setenv">
-    <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/sw4.zip">
-      <fileset basedir="${OutputDir}/deploy/">
+    <zip includeemptydirs="true" zipfile="${deploypath}/sw4.zip">
+      <fileset basedir="${deploypath}">
         <include name="**/*" />
       </fileset>
     </zip>
@@ -238,7 +242,7 @@
   <target name="explodexmlfiles" depends="setenv,setclient">
     <property name="clientpropertyfile" value="../softwrench.sW4.${client}/metadata/${client}/properties.xml" />
     <if test="${file::exists(clientpropertyfile)}">
-      <copy todir="${OutputDir}/deploy/App_Data/Client/${client}/">
+      <copy todir="${deploypath}/App_Data/Client/${client}/">
         <fileset basedir="../softwrench.sW4.${client}/metadata/${client}/">
           <include name="*.*" />
         </fileset>
@@ -249,7 +253,7 @@
   <target name="deploypeek" depends="setenv,setclient">
 
 
-    <property name="clientfile1" value="${OutputDir}/deploy/App_Data/Client/${client}/deploy.xml" />
+    <property name="clientfile1" value="${deploypath}/App_Data/Client/${client}/deploy.xml" />
     <property name="clientfile2" value="../softwrench.sW4.${client}/metadata/${client}/deploy.xml" />
     
     <echo message="${clientfile1}"/>
