@@ -276,9 +276,28 @@
 	affectedDate:{
 		_header:Datum & Zeit:
 	},
-	affectedphone:Affected Phone:
-		
-	_commands:{
+    affectedphone: Affected Phone:
+        
+    /* network */
+    #crosstestresult:Ggf. Crosstest-Ergebnis,
+    #slowresponse:Haben Sie Probleme mit langen Antwortzeiten? Falls ja, bitte geben Sie an mit welchen Anwendungen.
+
+    network_wan: {
+        _header: WAN Problem,
+        _:Falls Sie ein Problem mit dem Internetzugang haben, beantworten Sie die folgenden Fragen.
+    }
+           
+    #internetslowdown:Ist der Zugang zum Internet langsam oder nicht verfügbar? (Ladezeit für bestimmte URL)
+    affectedpages: {
+        _label:Haben Sie das Problem mit einer bestimmten Webseite oder allen?,
+        single: Einzelne Webseite,
+        all: Alle Webseiten
+    },
+    #targeturl:Zieladdresse (URL)
+    #usedproxy:Verwendeter Proxy (Ausführen von \'ping proxy\' auf Benutzer-PC zeigt dies an)
+    #errormessages:Erhalten Sie Fehlermeldungen? Falls ja, bitte geben Sie ein Beispiel an:
+
+    _commands:{
 		save:Übertragen	
         print:Drucken
 		cancel:Abbrechen

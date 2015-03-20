@@ -1312,7 +1312,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="textarea"/>
             </field>
 
-            <section>
+            <section id="network_wan">
               <header displacement="ontop" params="fieldset=true" label="WAN issue"/>
               <field label="In case of Internet Issue answer the following" attribute="" readonly="true">
                 <renderer type="label"/>
