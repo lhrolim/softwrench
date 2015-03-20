@@ -78,11 +78,11 @@
   </target>
 
   <target name="mkdir">
-    <delete includeemptydirs="true">
-      <fileset basedir="${OutputDir}/deploy">
-        <include name="**\*" />
-      </fileset>
-    </delete>
+<!--    <delete includeemptydirs="true">-->
+<!--      <fileset basedir="${OutputDir}/deploy">-->
+<!--        <include name="**\*" />-->
+<!--      </fileset>-->
+<!--    </delete>-->
 
     <mkdir dir="${deploypath}"/>
     <mkdir dir="${deploypath}/bin"/>
