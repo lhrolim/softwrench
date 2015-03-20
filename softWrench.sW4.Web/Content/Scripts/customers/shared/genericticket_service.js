@@ -134,22 +134,6 @@ app.factory('genericTicketService', function (alertService, associationService, 
             }
         },
 
-        checkWorklogsForChange: function(schema, datamap, parameters) {
-            var worklogs = datamap.worklog_;
-            var worklogsOriginal = parameters.originaldatamap.worklog_;
-            for(var worklog in worklogs) {
-                var hasChanged = 0;
-                if (worklog < worklogsOriginal.length) {
-                    if (worklogs[worklog].description != worklogsOriginal[worklog].description
-                        || worklogs[worklog]["longdescription_.ldtext"] != worklogsOriginal[worklog]["longdescription_.ldtext"]) {
-                        hasChanged = 1;
-                    }
-                } else {
-                    hasChanged = 1;
-                }
-                datamap.worklog_[worklog]['#hasChanged'] = hasChanged;
-            }
-        }
     };
 
 });

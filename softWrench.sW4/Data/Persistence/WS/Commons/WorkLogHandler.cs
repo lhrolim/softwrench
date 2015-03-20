@@ -34,11 +34,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "siteid", user.SiteId);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "orgid", user.OrgId);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind(), "CHANGEDATE");
-                
-                //var hasChanged = crudData.GetUnMappedAttribute("#hasChanged");
-                //if (hasChanged == "1") {
+
                 WsUtil.SetValue(integrationObject, "modifydate", DateTime.Now.FromServerToRightKind(), true);
-                //}
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
             });
