@@ -428,26 +428,27 @@ app.directive('compositionList', function (contextService, formatService) {
                         return;
                     }
                 }
+
+                var editedCompositionData = [];
                 if ($scope.collectionproperties.allowUpdate == "true") {
-                    var validationErrors = [];
+                    for (var key in $scope.detailData) {
+                        if ($scope.detailData.hasOwnProperty(key)) {
+                            editedCompositionData.push($scope.detailData[key].data);
 
-                    $.each($scope.clonedCompositionData, function (key, value) {
-                        validationErrors = validationService.validate(detailSchema, detailSchema.displayables, value);
-                        if (validationErrors.length > 0) {
-                            //interrupting here, can´t be done inside service
-                            return false;
+                            validationErrors = validationService.validate(detailSchema, detailSchema.displayables, $scope.detailData[key].data);
+                            if (validationErrors.length > 0) {
+                                //interrupting here, can´t be done inside service
+                                return false;
+                            }
                         }
-                    });
-
-                    if (validationErrors.length > 0) {
-                        return;
                     }
                 }
 
                 //parentdata is bound to the datamap --> this is needed so that the sw_submitdata has the updated data
                 if ($scope.collectionproperties.allowUpdate) {
                     //if composition items are editable, then we should pass the entire composition list back.  One or more item could have been changed.
-                    $scope.parentdata.fields[$scope.relationship] = $scope.clonedCompositionData;
+                    //$scope.parentdata.fields[$scope.relationship] = $scope.clonedCompositionData;
+                    $scope.parentdata.fields[$scope.relatioship] = editedCompositionData;
                 }
 
                 if (selecteditem != undefined) {
