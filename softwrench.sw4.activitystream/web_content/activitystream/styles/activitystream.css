@@ -53,11 +53,7 @@
     }
 
     #activitystream .badge {
-        background: #cf4044;
-    }
-
-    #activitystream.mobile .pane .unread {
-        display: none;
+        background: #b81f25;
     }
 
     #activitystream .pane {
