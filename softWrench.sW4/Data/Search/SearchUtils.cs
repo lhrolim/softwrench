@@ -188,7 +188,7 @@ namespace softWrench.sW4.Data.Search {
             if (searchParameters != null) {
                 foreach (var searchParameter in searchParameters) {
                     var parameter = searchParameter.Value;
-                    if (parameter.IsDate && !parameter.HasHour) {
+                    if (parameter.IsDate) {
                         var dt = parameter.GetAsDate;
                         if (parameter.IsEqualOrNotEqual()) {
                             resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, DateUtil.BeginOfDay(dt));
