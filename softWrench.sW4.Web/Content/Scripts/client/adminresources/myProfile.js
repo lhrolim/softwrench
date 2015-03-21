@@ -1,4 +1,4 @@
-﻿function MyProfileController($scope, $http, $templateCache, i18NService, $rootScope, redirectService) {
+﻿function MyProfileController($scope, $http, $templateCache, i18NService, $rootScope, redirectService, pwdenforceService) {
 
     init($scope.resultData);
 
@@ -41,6 +41,9 @@
     };
 
     $scope.saveMyProfile = function () {
+        if (!pwdenforceService.checker($scope.currentUser.password, $scope.currentUser.password2))
+            return;
+
         $http({
             method: "GET",
             url: url("api/security/User/" + $scope.currentUser.dbId)
