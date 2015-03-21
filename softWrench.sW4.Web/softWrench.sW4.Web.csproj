@@ -442,6 +442,7 @@
     <Content Include="Content\Images\tva\logo-main.png" />
     <Content Include="Content\Images\tva\signin.jpg" />
     <Content Include="Content\Images\yavapai\logo-main.png" />
+    <Content Include="Content\Scripts\client\adminresources\password.js" />
     <Content Include="Content\Scripts\client\crud\compositionlist.js" />
     <Content Include="Content\Scripts\client\crud\crud_tbody.js" />
     <Content Include="Content\Scripts\client\directives\menu\adminmenu.js" />
