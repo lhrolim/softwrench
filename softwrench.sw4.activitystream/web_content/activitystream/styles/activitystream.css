@@ -45,19 +45,11 @@
     #activitystream .unread {
         position: absolute;
         top: 4px;
-        left: -48px;
-    }
-
-    #activitystream.open .unread {
-        display: none;
+        left: -46px;
     }
 
     #activitystream .badge {
         background: #cf4044;
-    }
-
-    #activitystream.mobile .pane .unread {
-        display: none;
     }
 
     #activitystream .pane {
