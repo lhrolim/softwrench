@@ -199,7 +199,6 @@ app.directive('compositionList', function (contextService, formatService) {
                 $scope.fetchfromserver = $scope.compositionschemadefinition.fetchFromServer;
                 $scope.collectionproperties = $scope.compositionschemadefinition.collectionProperties;
                 $scope.inline = $scope.compositionschemadefinition.inline;
-                //
 
 
                 $scope.clonedCompositionData = [];
@@ -207,7 +206,6 @@ app.directive('compositionList', function (contextService, formatService) {
                 $scope.isNoRecords = $scope.clonedCompositionData.length > 0 ? false : true;
 
                 $scope.detailData = {};
-                $scope.origData = {};
                 
                 $scope.noupdateallowed = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
                 $scope.expanded = false;
@@ -301,8 +299,6 @@ app.directive('compositionList', function (contextService, formatService) {
                 return $scope.save();
             }
 
-
-
             this.cancel = function () {
                 $('#crudmodal').modal('hide');
                 if (GetPopUpMode() == 'browser') {
@@ -312,10 +308,11 @@ app.directive('compositionList', function (contextService, formatService) {
                 $scope.$emit('sw_cancelclicked');
             };
 
+
+
             $scope.$on("sw.composition.edit", function (event, datamap) {
                 $scope.edit(datamap);
             });
-
 
             $scope.edit = function (datamap) {
                 if ($scope.compositionlistschema.properties && "modal" == $scope.compositionlistschema.properties["list.click.popup"]) {
@@ -334,13 +331,8 @@ app.directive('compositionList', function (contextService, formatService) {
                     $scope.detailData[id].expanded = false;
                 }
 
-                if ($scope.origData[id] == undefined) {
-                    $scope.origData[id] = {};
-                }
-
                 // TODO: Allow comparsion of values with different data type (e.g. int and string).  
                 $scope.detailData[id].data = formatService.doContentStringConversion(item);
-                $scope.origData[id].data = formatService.doContentStringConversion(jQuery.extend({}, item));
 
                 var newState = forcedState != undefined ? forcedState : !$scope.detailData[id].expanded;
                 $scope.detailData[id].expanded = newState;
@@ -356,6 +348,7 @@ app.directive('compositionList', function (contextService, formatService) {
                     eventService.onviewdetail(compositionSchema, parameters);
                 }
             };
+
             /// <summary>
             ///  Method called when an entry of the composition is clicked
             /// </summary>
@@ -414,10 +407,10 @@ app.directive('compositionList', function (contextService, formatService) {
                 return expressionService.evaluate(value, $scope.parentdata) && $scope.inline;
             };
 
-            $scope.hasModified = function (key, displayables) {
+            $scope.hasModified = function (key, dictionary, displayables) {
                 for (var index = 0; index < displayables.length; index++) {
                     var attribute = displayables[index].attribute;
-                    if ($scope.origData[key].data[attribute] != $scope.detailData[key].data[attribute]) {
+                    if (dictionary[key].data[attribute] != $scope.detailData[key].data[attribute]) {
                         return true;
                     }
                 }
@@ -449,11 +442,19 @@ app.directive('compositionList', function (contextService, formatService) {
                     }
                 }
 
-                var editedCompositionData = [];
+                var updatedCompositionData = [];
                 if ($scope.collectionproperties.allowUpdate == "true") {
+                    // create a dictionary to start the comparison process
+                    var idFieldName = $scope.compositiondetailschema.idFieldName;
+                    var compositionDictionary = {};
+                    for (var index = 0; index < $scope.compositiondata.length; index++) {
+                        compositionDictionary[$scope.compositiondata[index][idFieldName]] = {};
+                        compositionDictionary[$scope.compositiondata[index][idFieldName]].data = $scope.compositiondata[index];
+                    }
+
                     for (var key in $scope.detailData) {
-                        if ($scope.detailData.hasOwnProperty(key) && $scope.hasModified(key, detailSchema.displayables)) {
-                            editedCompositionData.push($scope.detailData[key].data);
+                        if ($scope.detailData.hasOwnProperty(key) && $scope.hasModified(key, compositionDictionary, detailSchema.displayables)) {
+                            updatedCompositionData.push($scope.detailData[key].data);
 
                             validationErrors = validationService.validate(detailSchema, detailSchema.displayables, $scope.detailData[key].data);
                             if (validationErrors.length > 0) {
@@ -468,7 +469,7 @@ app.directive('compositionList', function (contextService, formatService) {
                 if ($scope.collectionproperties.allowUpdate) {
                     //if composition items are editable, then we should pass the entire composition list back.  One or more item could have been changed.
                     //$scope.parentdata.fields[$scope.relationship] = $scope.clonedCompositionData;
-                    $scope.parentdata.fields[$scope.relationship] = editedCompositionData;
+                    $scope.parentdata.fields[$scope.relationship] = updatedCompositionData;
                 }
 
                 if (selecteditem != undefined) {
