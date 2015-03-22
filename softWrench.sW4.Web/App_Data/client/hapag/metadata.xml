@@ -1346,7 +1346,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                 <option label="YES" value="YES"/>
                 <option label="NO" value="NO"/>
               </optionfield>
-              <field label="Please give some examples" attribute="#clientipaddress" showexpression="@isaddressavailable == 1"/>
+              <field label="Please give some examples" attribute="#clientipaddress" showexpression="@isaddressavailable == YES"/>
             </section>
           
         
