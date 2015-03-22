@@ -49,7 +49,7 @@ namespace softWrench.sW4.Util {
                             //                            sb.Append(item.Key + "=" + result + ";");
                             queryst = queryst.Replace(":" + item.Key, result);
                         } else {
-                            if (item.Value is string) {
+                            if (item.Value is string || item.Value is DateTime) {
                                 queryst = queryst.Replace(":" + item.Key, "'" + item.Value + "'");
                             }
                         }

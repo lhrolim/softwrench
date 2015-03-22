@@ -185,44 +185,63 @@ namespace softWrench.sW4.Data.Search {
         public static IDictionary<String, object> GetParameters(SearchRequestDto listDto) {
             IDictionary<String, object> resultDictionary = new Dictionary<string, object>();
             var searchParameters = listDto.GetParameters();
-            if (searchParameters != null) {
-                foreach (var searchParameter in searchParameters) {
-                    var parameter = searchParameter.Value;
-                    if (parameter.IsDate && !parameter.HasHour) {
-                        var dt = parameter.GetAsDate;
-                        if (parameter.IsEqualOrNotEqual()) {
-                            resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, DateUtil.BeginOfDay(dt));
-                            resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, DateUtil.EndOfDay(dt));
-                        } else if (parameter.IsGtOrGte()) {
-                            //Adding one day in case of Greater Than
-                            if (parameter.SearchOperator == SearchOperator.GT) {
-                                dt = dt.AddDays(1);
-                            }
-                            resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, DateUtil.BeginOfDay(dt));
-                        } else if (parameter.IsLtOrLte()) {
-                            //Removing one day in case of Less than
-                            if (parameter.SearchOperator == SearchOperator.LT) {
-                                dt = dt.AddDays(-1);
-                            }
-                            resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, DateUtil.EndOfDay(dt));
-                        }
-                    } else if (parameter.IsNumber && (parameter.Value is string)) {
-                        try {
-                            var int32 = Convert.ToInt32(parameter.Value);
-                            resultDictionary.Add(searchParameter.Key, int32);
-                        } catch {
-                            //its declared as a number, but the client passed a string like %10%, for contains, or even SR123 
-                            resultDictionary.Add(searchParameter.Key, parameter.Value);
-                        }
-                    } else if (parameter.Value != null && parameter.Value.ToString().StartsWith("@")) {
-                        resultDictionary.Add(searchParameter.Key,
-                            DefaultValuesBuilder.GetDefaultValue(parameter.Value.ToString(), null, DefaultValuesBuilder.DBDateTimeFormat));
-                    } else {
+            if (searchParameters == null) {
+                return resultDictionary;
+            }
+            foreach (var searchParameter in searchParameters) {
+                var parameter = searchParameter.Value;
+                if (parameter.IsDate) {
+                    var dt = parameter.GetAsDate;
+                    HandleDateParameter(parameter, resultDictionary, searchParameter, dt);
+                } else if (parameter.IsNumber && (parameter.Value is string)) {
+                    try {
+                        var int32 = Convert.ToInt32(parameter.Value);
+                        resultDictionary.Add(searchParameter.Key, int32);
+                    } catch {
+                        //its declared as a number, but the client passed a string like %10%, for contains, or even SR123 
                         resultDictionary.Add(searchParameter.Key, parameter.Value);
                     }
+                } else if (parameter.Value != null && parameter.Value.ToString().StartsWith("@")) {
+                    resultDictionary.Add(searchParameter.Key,
+                        DefaultValuesBuilder.GetDefaultValue(parameter.Value.ToString(), null, DefaultValuesBuilder.DBDateTimeFormat));
+                } else {
+                    resultDictionary.Add(searchParameter.Key, parameter.Value);
                 }
             }
             return resultDictionary;
+        }
+
+        private static void HandleDateParameter(SearchParameter parameter, IDictionary<string, object> resultDictionary,
+            KeyValuePair<string, SearchParameter> searchParameter, DateTime dt) {
+            if (parameter.IsEqualOrNotEqual()) {
+                if (!parameter.HasHour) {
+                    //this shall create a between interval
+                    resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, DateUtil.BeginOfDay(dt));
+                    resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, DateUtil.EndOfDay(dt));
+                } else {
+                    resultDictionary.Add(searchParameter.Key, dt);
+                }
+            } else if (parameter.IsGtOrGte()) {
+                if (!parameter.HasHour) {
+                    if (parameter.SearchOperator == SearchOperator.GT) {
+                        //if GT, then we need to exclude the current day from the search
+                        dt = dt.AddDays(1);
+                    }
+                    resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, DateUtil.BeginOfDay(dt));
+                } else {
+                    resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, dt);
+                }
+            } else if (parameter.IsLtOrLte()) {
+                if (!parameter.HasHour) {
+                    if (parameter.SearchOperator == SearchOperator.LT) {
+                        //if GT, then we need to exclude the current day from the search, making the beggining of yesterday instead
+                        dt = dt.AddDays(-1);
+                    }
+                    resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, DateUtil.EndOfDay(dt));
+                } else {
+                    resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, dt);
+                }
+            }
         }
 
         private static Tuple<string, ParameterType> GetParameterData(string entityName, SearchParameter searchParameter, string paramName) {
