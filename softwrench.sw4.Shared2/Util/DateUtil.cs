@@ -6,7 +6,7 @@ namespace softwrench.sw4.Shared2.Util {
 
     public class DateUtil {
 
-        public static readonly string[] FormatOptions = { "dd/MM/yyyy HH:mm", "MM/dd/yyyy HH:mm", "dd/MM/yyyy", "MM/dd/yyyy", "yyyy-MM-dd" };
+        public static readonly string[] FormatOptions = { "dd/MM/yyyy HH:mm", "MM/dd/yyyy HH:mm", "dd/MM/yyyy", "MM/dd/yyyy", "yyyy-MM-dd", "yyyy-MM-dd HH:mm" };
 
         public static DateTime? Parse(string date) {
             DateTime temp;

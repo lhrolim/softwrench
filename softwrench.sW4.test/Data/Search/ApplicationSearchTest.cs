@@ -84,7 +84,60 @@ namespace softwrench.sW4.test.Data.Search {
             Assert.IsTrue(parametersMap["reportdate_begin"].Equals(DateUtil.BeginOfDay(DateTime.Parse("2013-01-01"))));
         }
 
+        [TestMethod]
+        public void DateSearchDtoGtTest() {
+            var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
+            searchRequestDto.SetFromSearchString(_schema, "reportdate".Split(','), ">2013-01-03");
+            Assert.IsTrue(SearchUtils.GetWhere(searchRequestDto, "SR").Equals("( SR.reportdate > :reportdate_begin )"));
+            var parametersMap = SearchUtils.GetParameters(searchRequestDto);
+            Assert.IsTrue(parametersMap.Count == 1);
+            Assert.IsTrue(parametersMap["reportdate_begin"].Equals(DateUtil.BeginOfDay(DateTime.Parse("2013-01-04"))));
+        }
 
+
+        [TestMethod]
+        public void DateTimeSearchDtoGteTest() {
+            var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
+            searchRequestDto.SetFromSearchString(_schema, "reportdate".Split(','), ">=2013-01-01 15:45");
+            Assert.IsTrue(SearchUtils.GetWhere(searchRequestDto, "SR").Equals("( SR.reportdate >= :reportdate_begin )"));
+            var parametersMap = SearchUtils.GetParameters(searchRequestDto);
+            Assert.IsTrue(parametersMap.Count == 1);
+            Assert.IsTrue(parametersMap["reportdate_begin"].Equals(DateTime.Parse("2013-01-01 15:45")));
+        }
+
+        [TestMethod]
+        public void DateTimeSearchDtoLteTest() {
+            var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
+            searchRequestDto.SetFromSearchString(_schema, "reportdate".Split(','), "<=2013-01-01 15:45");
+            Assert.IsTrue(SearchUtils.GetWhere(searchRequestDto, "SR").Equals("( SR.reportdate <= :reportdate_end )"));
+            var parametersMap = SearchUtils.GetParameters(searchRequestDto);
+            Assert.IsTrue(parametersMap.Count == 1);
+            Assert.IsTrue(parametersMap["reportdate_end"].Equals(DateTime.Parse("2013-01-01 15:45")));
+        }
+
+
+        [TestMethod]
+        public void DateTimeSearchDtoeqTest() {
+            var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
+            searchRequestDto.SetFromSearchString(_schema, "reportdate".Split(','), "=2013-01-01 15:45");
+            Assert.IsTrue(SearchUtils.GetWhere(searchRequestDto, "SR").Equals("( SR.reportdate = :reportdate )"));
+            var parametersMap = SearchUtils.GetParameters(searchRequestDto);
+            Assert.IsTrue(parametersMap.Count == 1);
+            Assert.IsTrue(parametersMap["reportdate"].Equals(DateTime.Parse("2013-01-01 15:45")));
+        }
+
+
+        [TestMethod]
+        public void DateTimeSearchDtoNeqTest() {
+            var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
+            searchRequestDto.SetFromSearchString(_schema, "reportdate".Split(','), "!=2013-01-04");
+            var @where = SearchUtils.GetWhere(searchRequestDto, "SR");
+            Assert.AreEqual("( SR.reportdate NOT BETWEEN :reportdate_begin AND :reportdate_end OR SR.reportdate IS NULL  )", @where);
+            var parametersMap = SearchUtils.GetParameters(searchRequestDto);
+            Assert.IsTrue(parametersMap.Count == 2);
+            Assert.AreEqual(DateUtil.BeginOfDay(DateTime.Parse("2013-01-04")),parametersMap["reportdate_begin"]);
+            Assert.AreEqual(DateUtil.EndOfDay(DateTime.Parse("2013-01-04")),parametersMap["reportdate_end"]);
+        }
 
 
         [TestMethod]

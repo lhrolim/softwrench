@@ -213,7 +213,7 @@ namespace softWrench.sW4.Data.Search {
             get {
                 var dict = _valuesDictionary ?? (_valuesDictionary = GetParameters());
                 if (dict == null) {
-                    return null;
+                    return new ConcurrentDictionary<string, SearchParameter>();
                 }
                 return new ConcurrentDictionary<string, SearchParameter>(dict);
             }
