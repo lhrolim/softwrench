@@ -750,10 +750,12 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 var content = $scope.datamap[fieldMetadata.attribute];
                 var decodedHtml = content;
 
-                //Matches any encoded html tag e.g. &quot; &amp; &lt; &gt;
-                var regex = new RegExp("&[A-Za-z]*;");
+                // Matches any encoded html tag - &lt; &gt;
+                var regexEncode = new RegExp("&(lt|gt);");
+                // Also make sure non of these tags are present to truly confirm this is encoded HTML
+                var regexHTML = new RegExp("(<|>)");
 
-                if (regex.test(content)) {
+                if (regexEncode.test(content) && !regexHTML.test(content)) {
                     decodedHtml = $('<div/>').html(content).text();
                 }
 
