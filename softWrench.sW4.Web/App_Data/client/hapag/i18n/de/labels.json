@@ -280,22 +280,53 @@
         
     /* network */
     #crosstestresult:Ggf. Crosstest-Ergebnis,
-    #slowresponse:Haben Sie Probleme mit langen Antwortzeiten? Falls ja, bitte geben Sie an mit welchen Anwendungen.
+    #slowresponse:Haben Sie Probleme mit langen Antwortzeiten? Falls ja, bitte geben Sie an mit welchen Anwendungen.,
 
     network_wan: {
-        _header: WAN Problem,
-        _:Falls Sie ein Problem mit dem Internetzugang haben, beantworten Sie die folgenden Fragen.
-    }
-           
-    #internetslowdown:Ist der Zugang zum Internet langsam oder nicht verfügbar? (Ladezeit für bestimmte URL)
+        _header: WAN Problem
+    },
+    
+    #network_wan_label:Falls Sie ein Problem mit dem Internetzugang haben, beantworten Sie bitte die folgenden Fragen.,
+                      
+    #internetslowdown:Ist der Zugang zum Internet langsam oder nicht verfügbar? (Ladezeit für bestimmte URL),
     affectedpages: {
         _label:Haben Sie das Problem mit einer bestimmten Webseite oder allen?,
         single: Einzelne Webseite,
         all: Alle Webseiten
     },
-    #targeturl:Zieladdresse (URL)
-    #usedproxy:Verwendeter Proxy (Ausführen von \'ping proxy\' auf Benutzer-PC zeigt dies an)
-    #errormessages:Erhalten Sie Fehlermeldungen? Falls ja, bitte geben Sie ein Beispiel an:
+    #targeturl:Zieladdresse (URL),
+    #usedproxy:Verwendeter Proxy (Ausführen von \'ping proxy\' auf Benutzer-PC zeigt dies an),
+    #errormessages:Erhalten Sie Fehlermeldungen? Falls ja, bitte geben Sie ein Beispiel an:,
+
+    network_lan: {
+        _header: LAN Problem
+    },
+    #network_lan_label:Ein oder mehrere Geräte haben keinen Zugang zum Internet:,
+    #clientsaffected:Wie viele Geräte sind betroffen?,
+    clientconnection:  {
+        _label: Geräteanschluss:
+    },
+    isaddressavailable:  {
+        _label:Haben die Geräte eine IP Adresse?,
+        YES:Ja,
+        NO:Nein
+    },
+    #clientipaddress:Bitte beschreiben Sie einige Beispiele:,
+    network_vpn: {
+        _header: VPN Problem
+    }
+    #network_vpn_label:Hat der Benutzer versucht sich mit VPN zu verbinden?
+    authpageseen: {
+        _label: Sehen Sie die Seite zum Einloggen?,
+        YES: Ja,
+        NO: Nein
+    },
+    loginsuccess: {
+        _label: Können Sie sich erfolgreich einloggen?,
+        YES: Ja,
+        NO: Nein
+    },
+    #vpnerrormessage: Werden Fehlermeldungen angezeigt? Falls ja, bitte geben Sie ein Beispiel an:,
 
     _commands:{
 		save:Übertragen	
