@@ -564,6 +564,7 @@
     <Content Include="Content\Scripts\customers\hapag\imac_service.js" />
     <Content Include="Content\Scripts\customers\hapag\relatedrecord_service.js" />
     <Content Include="Content\Scripts\customers\hapag\report_service.js" />
+    <Content Include="Content\Scripts\customers\hapag\sr_networkservice.js" />
     <Content Include="Content\Scripts\customers\hapag\sr_service.js" />
     <Content Include="Content\Scripts\customers\hapag\sr_summary_service.js" />
     <Content Include="Content\Scripts\customers\hapag\ticket_service.js" />

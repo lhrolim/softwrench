@@ -1308,8 +1308,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           
           <section id="abstractSection">
             <reference id="generaloutlookassetsection"/>
-            <field attribute="#crosstestresult" label="Crosstest result (if applicable)" default="try same user at different PC
-              &lt;br&gt;try other user at same PC">
+            <field attribute="#crosstestresult" label="Crosstest result (if applicable)">
               <renderer type="textarea"/>
             </field>
 

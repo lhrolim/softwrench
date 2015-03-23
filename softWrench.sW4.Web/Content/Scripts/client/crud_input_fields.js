@@ -192,6 +192,12 @@ app.directive('crudInputFields', function (contextService) {
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();
                     $scope.configureAssociationChangeEvents();
+                    if ($scope.schema.properties["oncrudloadevent.detail"]) {
+                        var serviceSt = $scope.schema.properties["oncrudloadevent.detail"];
+                        var fn =dispatcherService.loadService(serviceSt.split(".")[0], serviceSt.split(".")[1]);
+                        fn($scope.datamap, $scope.schema);
+                    }
+                    
                 }
 
                 $('.datetimereadonly').datepicker("remove");
