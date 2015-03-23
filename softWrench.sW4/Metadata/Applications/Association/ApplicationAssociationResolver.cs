@@ -106,7 +106,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 }
             }
 
-            var options = BuildOptions(queryResponse, association, numberOfLabels);
+            var options = BuildOptions(queryResponse, association, numberOfLabels, associationFilter.SearchSort == null);
             string filterFunctionName = association.Schema.DataProvider.PostFilterFunctionName;
             return filterFunctionName != null ? ApplyFilters(applicationMetadata, originalEntity, filterFunctionName, options, association) : options;
         }
@@ -115,8 +115,12 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
 
         private ISet<IAssociationOption> BuildOptions(IEnumerable<AttributeHolder> queryResponse,
-            ApplicationAssociationDefinition association, ProjectionResult projectionResult) {
-            ISet<IAssociationOption> options = new SortedSet<IAssociationOption>();
+            ApplicationAssociationDefinition association, ProjectionResult projectionResult, bool useInMemorySort) {
+            ISet<IAssociationOption> options = new HashSet<IAssociationOption>();
+            if (useInMemorySort) {
+                //legacy code to avoid any wrong scenarios where no sort has been specified on the query itself
+                options = new SortedSet<IAssociationOption>();
+            }
             foreach (var attributeHolder1 in queryResponse) {
                 var attributeHolder = (DataMap)attributeHolder1;
                 var value = attributeHolder.GetAttribute(projectionResult.ValueKey);
