@@ -2713,7 +2713,7 @@
             <renderer type="default"/>
           </field>
 
-          <field attribute="sendfrom" label="From:" requiredexpression="true" default="kogt@controltechnologysolutions.com">
+          <field attribute="sendfrom" label="From:" requiredexpression="true" default="support@kogtsupport24.com">
             <renderer type="email"/>
           </field>
           <field attribute="subject" label="Subject:" requiredexpression="true"/>
