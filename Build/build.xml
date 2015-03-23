@@ -61,7 +61,7 @@
       </exec>
     </if>
     <ifnot propertyexists="MsTestPath">
-      <echo message="MSTestPath not found at ${MsTestPath}"></echo>
+      <echo message="MSTestPath not found at"></echo>
       <exec program="MsTest.exe">
         <arg line="/testcontainer:${TestPath}" />
         <arg line="/testsettings:${TestSettingsPath}" />
