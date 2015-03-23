@@ -38,6 +38,7 @@ namespace softWrench.sW4.Data.Entities.Historical
         {
             Dictionary<string, object> attributeHolder = new Dictionary<string, object>();
             attributeHolder["wonum"] = Wonum;
+            attributeHolder["ticketid"] = Wonum;
             //TO DO: handle woclass
             attributeHolder["description"] = Description;
             attributeHolder["location"] = Location;

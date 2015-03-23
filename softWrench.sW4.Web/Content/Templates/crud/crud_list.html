@@ -33,7 +33,7 @@
                                 <div ng-switch-when="datetime" data-datepicker="true" class="input-group input-group-sm">
                                     <input type="text" ng-model="searchData[column.attribute]" class="form-control"
                                            data-date-time
-                                           data-show-time="false"
+                                           data-show-time="{{column.rendererParameters['showtime']}}"
                                            data-show-date="{{column.rendererParameters['showdate']}}"
                                            data-date-format="{{column.rendererParameters['format']}}"
                                            data-allow-past="{{fieldMetadata.rendererParameters['allowpast']}}"

@@ -548,13 +548,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=100px;maxwidth=100px;excelwidth=30" />
           </field>
           <field attribute="targetfinish" label="Target Finish Date">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=true" />
           </field>
           <field attribute="internalpriority" label="Severity">
             <renderer type="default" params="minwidth=50px;maxwidth=50px;excelwidth=15" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=false;exporttoexcel=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=true;exporttoexcel=false" />
           </field>
           <field attribute="#2reportdate" label="Reported Date" hidden="true">
             <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;exporttoexcel=true" />
@@ -976,7 +976,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=160px;maxwidth=160px;excelwidth=25" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=false;exporttoexcel=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=true;exporttoexcel=false" />
           </field>
           <field attribute="#2reportdate" label="Reported Date" hidden="true">
             <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;exporttoexcel=true;excelwidth=20" />
@@ -1346,7 +1346,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                 <option label="YES" value="YES"/>
                 <option label="NO" value="NO"/>
               </optionfield>
-              <field label="Please give some examples:" attribute="#clientipaddress" showexpression="@isaddressavailable == 1"/>
+              <field label="Please give some examples" attribute="#clientipaddress" showexpression="@isaddressavailable == 'YES'"/>
             </section>
           
         
@@ -1432,7 +1432,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=60px;maxwidth=60px" />
           </field>
           <field attribute="schedstart" label="Scheduled Start">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=true" />
           </field>
           <field attribute="hlagpluspcustomer" label="Site ID">
             <renderer type="default" params="minwidth=80px;maxwidth=80px" />
@@ -2461,7 +2461,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=160px;excelwidth=30" />
           </field>
           <field attribute="reportdate" label="Reported Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;showtime=false;exporttoexcel=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;showtime=true;exporttoexcel=false" />
           </field>
           <field attribute="#2reportdate" label="Reported Date" hidden="true">
             <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;exporttoexcel=true" />

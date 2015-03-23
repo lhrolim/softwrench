@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Concurrent;
+using Newtonsoft.Json;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
@@ -208,8 +209,14 @@ namespace softWrench.sW4.Data.Search {
         }
 
         [JsonIgnore]
-        public IDictionary<string, SearchParameter> ValuesDictionary {
-            get { return _valuesDictionary ?? (_valuesDictionary = GetParameters()); }
+        public ConcurrentDictionary<string, SearchParameter> ValuesDictionary {
+            get {
+                var dict = _valuesDictionary ?? (_valuesDictionary = GetParameters());
+                if (dict == null) {
+                    return new ConcurrentDictionary<string, SearchParameter>();
+                }
+                return new ConcurrentDictionary<string, SearchParameter>(dict);
+            }
         }
 
         public IDictionary<String, SearchParameter> GetParameters() {

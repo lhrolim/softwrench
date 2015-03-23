@@ -175,6 +175,7 @@ app.directive('menuItem', function (contextService) {
                     schema = "list";
                 }
                 contextService.insertIntoContext('currentmodule', module);
+                contextService.deleteFromContext('currentmetadata');
                 if (searchText != null && searchText != '') {
                     searchText = '%' + searchText + '%';
                     var params = $.param({ 'application': application, 'searchFields': searchFields, 'searchText': searchText, 'schema': schema });
