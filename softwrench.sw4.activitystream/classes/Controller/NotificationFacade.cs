@@ -162,7 +162,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                                       "left join workorder w on w.wonum = l.recordkey " +
                                       "where class in ('WORKORDER') and logtype = 'clientnote' and modifydate >  DATEADD(HOUR,-{0},GETDATE()) and modifydate < '{1}' union " +
                                       "select 'servicerequest' as application, 'editdetail' as targetschema, 'service request' as label, 'fa-ticket' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary," +
-                                      "changeby, changedate, CONVERT(bigint, rowstamp) as rowstamp from ticket " +
+                                      "CASE WHEN {2} < ticketuid THEN changeby ELSE reportedby END changeby, changedate, CONVERT(bigint, rowstamp) as rowstamp from ticket " +
                                       "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < '{1}' and class='SR' union " +
                                       "select 'incident' as application, 'editdetail' as targetschema, 'incident' as label, 'fa-warning' as icon,ticketid as id, ticketuid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary," +
                                       "changeby, changedate, CONVERT(bigint, rowstamp) as rowstamp from ticket " +
@@ -170,7 +170,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
                                       "select 'workorder' as application, 'editdetail' as targetschema, 'work order' as label, 'fa-wrench' as icon,wonum as id, workorderid as uid, null as parentid, null as parentuid, null as parentapplication, description as summary, " +
                                       "changeby, changedate, CONVERT(bigint, rowstamp) as rowstamp from workorder " +
                                       "where changedate > DATEADD(HOUR,-{0},GETDATE()) and changedate < '{1}' " +
-                                      "order by rowstamp desc", HoursToPurge, currentTime);
+                                      "order by rowstamp desc", HoursToPurge, currentTime, Counter["servicerequest"]);
 
             var hardcodedQueryResult = MaxDAO.FindByNativeQuery(hardcodedQuery, null);
 
