@@ -44,7 +44,14 @@ namespace softWrench.sW4.Email {
                 HandleAttachments(emailData.Attachments, email);
             }
 
-            try {
+            try
+            {
+                // Increase timeout value if needed - depended on site 
+                var timeout = MetadataProvider.GlobalProperty("email.smtp.timeout");
+                if (timeout != null) {
+                    objsmtpClient.Timeout = Int32.Parse(timeout);
+                }
+
                 objsmtpClient.Send(email);
             } catch (Exception ex) {
                 Log.Error(ex);
