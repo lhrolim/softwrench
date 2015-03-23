@@ -1302,9 +1302,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </schema>
 
         <schema id="network" stereotype="detail" title="New Service Request - Network" parentschema="AnewSR">
+          <properties>
+            <property key="oncrudloadevent.detail" value="srnetworkservice.onload"/>
+          </properties>
+          
           <section id="abstractSection">
             <reference id="generaloutlookassetsection"/>
-            <field attribute="#crosstestresult" label="Crosstest result (if applicable)">
+            <field attribute="#crosstestresult" label="Crosstest result (if applicable)" default="try same user at different PC
+              &lt;br&gt;try other user at same PC">
               <renderer type="textarea"/>
             </field>
 
@@ -1328,7 +1333,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <field label="Used proxy ('ping proxy' on the users PC will show this)" attribute="#usedproxy"/>
               <field label="Do you receive any error messages? If so please provide an example:" attribute="#errormessages"/>
             </section>
-            
+
             <section id="network_lan">
               <header displacement="ontop" label="LAN issue" params="fieldset=true"/>
               <field label="One or more clients do not have connection to the network: " attribute="#network_lan_label" readonly="true">
@@ -1336,36 +1341,38 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               </field>
               <field label="How many Clients are affected?" attribute="#clientsaffected">
                 <renderer type="numericinput"/>
-                </field>
+              </field>
               <optionfield label="Connection of the Client:" attribute="clientconnection">
-                 <option label="LAN" value="lan"/>
-                 <option label="WLAN" value="wlan"/>
-                 <option label="LAN/WLAN" value="lan/wlan"/>
+                <option label="LAN" value="lan"/>
+                <option label="WLAN" value="wlan"/>
+                <option label="LAN/WLAN" value="lan/wlan"/>
               </optionfield>
               <optionfield label="Do the clients have actual IP address?" attribute="isaddressavailable">
+                <renderer type="COMBO" params="setdefaultvalue=false"/>
                 <option label="YES" value="YES"/>
                 <option label="NO" value="NO"/>
               </optionfield>
-              <field label="Please give some examples" attribute="#clientipaddress" showexpression="@isaddressavailable == 'YES'"/>
+              <field label="Please give some examples" attribute="#clientipaddress" enableexpression="@isaddressavailable == 'YES'"/>
             </section>
-          
-        
-          <section id="network_vpn">
-            <header displacement="ontop" label="VPN issue" params="fieldset=true"/>
-            <field label="Did the user try to connect via VPN: " attribute="#network_vpn_label" readonly="true">
+
+
+            <section id="network_vpn">
+              <header displacement="ontop" label="VPN issue" params="fieldset=true"/>
+              <field label="Did the user try to connect via VPN: " attribute="#network_vpn_label" readonly="true">
                 <renderer type="label"/>
               </field>
-            <optionfield label="Are you getting the authorisation page?" attribute="authpageseen">
-              <option label="YES" value="YES"/>
-              <option label="NO" value="NO"/>
-            </optionfield>
-            <optionfield label="Is the login successful?" attribute="loginsuccess">
-              <option label="YES" value="YES"/>
-              <option label="NO" value="NO"/>
-            </optionfield>
-            <field label="Do you receive any error messages? If so please provide an example:" attribute="#vpnerrormessage"/>
-          </section>
+              <optionfield label="Are you getting the authorisation page?" attribute="authpageseen">
+                <option label="YES" value="YES"/>
+                <option label="NO" value="NO"/>
+              </optionfield>
+              <optionfield label="Is the login successful?" attribute="loginsuccess">
+                <renderer type="COMBO" params="setdefaultvalue=false"/>
+                <option label="YES" value="YES"/>
+                <option label="NO" value="NO"/>
+              </optionfield>
+              <field label="Do you receive any error messages? If so please provide an example:" enableexpression="@loginsuccess == 'YES'" attribute="#vpnerrormessage"/>
             </section>
+          </section>
         </schema>
 
 
@@ -3458,7 +3465,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="detail" stereotype="compositiondetail">
           <field label="Description" attribute="longdescription_.ldtext"/>
         </schema>
-        
+
       </schemas>
     </application>
 
