@@ -304,7 +304,7 @@
   <target name="deploy" depends="setenv,setclient,deploypeek">
     <exec program="${MSDeployPath}">
       <arg line="-verb:sync" />
-      <arg line="-source:iisApp=${OutputDir}/deploy,includeAcls=true" />
+      <arg line="-source:iisApp=${deploypath},includeAcls=true" />
       <arg line="-dest:iisApp=${iispath},wmsvc=${msdeploy_url}" />
       <arg line="-allowUntrusted=true" />
       <arg line="-enableRule:AppOffline" />
