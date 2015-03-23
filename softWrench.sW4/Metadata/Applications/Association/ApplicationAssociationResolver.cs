@@ -52,7 +52,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             if (!String.IsNullOrWhiteSpace(optionApplication) && !String.IsNullOrWhiteSpace(optionSchemaId)) {
                 return MetadataProvider
                     .Application(optionApplication)
-                    .ApplyPolicies(new ApplicationMetadataSchemaKey(optionSchemaId), SecurityFacade.CurrentUser(), ClientPlatform.Web,null);
+                    .ApplyPolicies(new ApplicationMetadataSchemaKey(optionSchemaId), SecurityFacade.CurrentUser(), ClientPlatform.Web, null);
             }
             return null;
         }
@@ -80,10 +80,12 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
             //Set the orderbyfield if any
             var orderByField = association.OrderByField;
-            if (orderByField != null)
-            {
+            if (orderByField != null) {
                 associationFilter.SearchSort = orderByField;
                 associationFilter.SearchAscending = !orderByField.EndsWith("desc");
+            } else {
+                associationFilter.SearchSort = "value";
+                associationFilter.SearchAscending = true;
             }
 
             // Set projections and pre filter functions
@@ -91,7 +93,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             var prefilterFunctionName = association.Schema.DataProvider.PreFilterFunctionName;
             if (prefilterFunctionName != null) {
                 var preFilterParam = new AssociationPreFilterFunctionParameters(applicationMetadata, associationFilter, association, originalEntity);
-                associationFilter = PrefilterInvoker.ApplyPreFilterFunction(DataSetProvider.GetInstance().LookupDataSet(applicationMetadata.Name,applicationMetadata.Schema.SchemaId),preFilterParam, prefilterFunctionName);
+                associationFilter = PrefilterInvoker.ApplyPreFilterFunction(DataSetProvider.GetInstance().LookupDataSet(applicationMetadata.Name, applicationMetadata.Schema.SchemaId), preFilterParam, prefilterFunctionName);
             }
 
             var entityMetadata = MetadataProvider.Entity(association.EntityAssociation.To);
@@ -185,7 +187,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 var entityMetatada = MetadataProvider.SlicedEntityMetadata(associationMetadata);
                 fields = entityMetatada.Attributes(EntityMetadata.AttributesMode.NoCollections).Select(a => a.Name).ToList();
 
-                
+
             }
 
             foreach (var field in fields) {
