@@ -1308,13 +1308,13 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="textarea"/>
             </field>
 
-            <field attribute="#slowresponse" label="Do you face slow response?If yes,please define which applications">
+            <field attribute="#slowresponse" label="Do you face slow response? If yes, please define which applications">
               <renderer type="textarea"/>
             </field>
 
-            <section>
+            <section id="network_wan">
               <header displacement="ontop" params="fieldset=true" label="WAN issue"/>
-              <field label="In case of Internet Issue answer the following" attribute="" readonly="true">
+              <field label="In case of Internet Issue answer the following" attribute="#network_wan_label" readonly="true">
                 <renderer type="label"/>
               </field>
               <field label="Is the internet Access slow or down? (time loading special URL)" attribute="#internetslowdown">
@@ -1329,20 +1329,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <field label="Do you receive any error messages? If so please provide an example:" attribute="#errormessages"/>
             </section>
             
-            <section>
+            <section id="network_lan">
               <header displacement="ontop" label="LAN issue" params="fieldset=true"/>
-              <field label="One or more clients do not have connection to the network: " attribute="" readonly="true">
+              <field label="One or more clients do not have connection to the network: " attribute="#network_lan_label" readonly="true">
                 <renderer type="label"/>
               </field>
               <field label="How many Clients are affected?" attribute="#clientsaffected">
                 <renderer type="numericinput"/>
                 </field>
-              <optionfield label="Connection of the Client" attribute="clientconnection">
+              <optionfield label="Connection of the Client:" attribute="clientconnection">
                  <option label="LAN" value="lan"/>
                  <option label="WLAN" value="wlan"/>
                  <option label="LAN/WLAN" value="lan/wlan"/>
               </optionfield>
-              <optionfield label="Do the clients have actual IP address" attribute="isaddressavailable">
+              <optionfield label="Do the clients have actual IP address?" attribute="isaddressavailable">
                 <option label="YES" value="YES"/>
                 <option label="NO" value="NO"/>
               </optionfield>
@@ -1350,9 +1350,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </section>
           
         
-          <section>
+          <section id="network_vpn">
             <header displacement="ontop" label="VPN issue" params="fieldset=true"/>
-            <field label="Did the user try to connect via VPN: " attribute="" readonly="true">
+            <field label="Did the user try to connect via VPN: " attribute="#network_vpn_label" readonly="true">
                 <renderer type="label"/>
               </field>
             <optionfield label="Are you getting the authorisation page?" attribute="authpageseen">
