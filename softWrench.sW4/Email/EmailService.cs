@@ -20,14 +20,31 @@ namespace softWrench.sW4.Email {
         private static readonly Regex HtmlImgRegex = new Regex("<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>");
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(EmailService));
-        public void SendEmail(EmailData emailData) {
+
+        private SmtpClient ConfiguredSmtpClient() {
             var objsmtpClient = new SmtpClient();
+
             objsmtpClient.Host = MetadataProvider.GlobalProperty("email.smtp.host", true);
+
             var overriddenPort = MetadataProvider.GlobalProperty("email.smtp.port");
             if (overriddenPort != null) {
                 objsmtpClient.Port = Int32.Parse(overriddenPort);
             }
+
             objsmtpClient.EnableSsl = "true".EqualsIc(MetadataProvider.GlobalProperty("email.stmp.enableSSL", true));
+
+            // Increase timeout value if needed - depended on site 
+            var timeout = MetadataProvider.GlobalProperty("email.smtp.timeout");
+            if (timeout != null) {
+                objsmtpClient.Timeout = Int32.Parse(timeout);
+            }
+
+            return objsmtpClient;
+        }
+
+        public void SendEmail(EmailData emailData) {
+            var objsmtpClient = ConfiguredSmtpClient();
+           
             // Send the email message
             var email = new MailMessage(emailData.SendFrom ?? MetadataProvider.GlobalProperty("defaultEmail"), emailData.SendTo) {
                Subject = emailData.Subject,
@@ -46,12 +63,6 @@ namespace softWrench.sW4.Email {
 
             try
             {
-                // Increase timeout value if needed - depended on site 
-                var timeout = MetadataProvider.GlobalProperty("email.smtp.timeout");
-                if (timeout != null) {
-                    objsmtpClient.Timeout = Int32.Parse(timeout);
-                }
-
                 objsmtpClient.Send(email);
             } catch (Exception ex) {
                 Log.Error(ex);
