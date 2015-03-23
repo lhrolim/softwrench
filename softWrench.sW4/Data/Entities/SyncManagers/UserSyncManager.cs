@@ -11,6 +11,7 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Entities;
 using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Entities.SyncManagers {
     public class UserSyncManager : AMaximoRowstampManager, IUserSyncManager {
@@ -94,7 +95,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                 FirstName = (string)maximoUser.GetAttribute("firstname"),
                 LastName = (string)maximoUser.GetAttribute("lastname"),
                 IsActive = (string)maximoUser.GetAttribute("status") == "ACTIVE",
-                OrgId = (string)maximoUser.GetAttribute("locationorg"),
+                OrgId = (string)maximoUser.GetAttribute("locationorg") ?? ApplicationConfiguration.DefaultOrgId,
                 SiteId = (string)maximoUser.GetAttribute("maxuser_.defsite"),
                 Email = (string)maximoUser.GetAttribute("email_.emailaddress"),
                 Department = (string)maximoUser.GetAttribute("department"),
