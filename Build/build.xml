@@ -18,7 +18,7 @@
     <property name="OutputDir" value="c:\" />
   </ifnot>
 
-  <tstamp property="build.date" pattern="yyyy_MM_dd_hhmm" verbose="true" />
+  <tstamp property="build.date" pattern="yyyy_MM_dd_hhmmss.SSS" verbose="true" />
   
   <property name="deploypath" value="${OutputDir}/deploy/${build.date}"></property>
 
