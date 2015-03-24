@@ -1145,8 +1145,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <field hidden="true" attribute="asset_.pluspcustomer"></field>
 
             <optionfield label="Printer Connection:" attribute="printerconnection" >
-              <option label="Local" value="Local"/>
               <option label="Network" value="Network"/>
+              <option label="Local" value="Local"/>
               <option label="HOD" value="Hod"/>
             </optionfield>
             <optionfield label="Application:" attribute="application">
