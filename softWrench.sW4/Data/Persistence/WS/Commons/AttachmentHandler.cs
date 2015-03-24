@@ -255,14 +255,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
 
             Log.DebugFormat("Setting _baseMaximoPath to {0}", _baseMaximoPath);
-            Log.DebugFormat("Setting _baseMaximoURL to {0}", _baseMaximoURL); 
-
-            // Remove the dependency on C: drive - this will take the either the UNC path or local path (C:, D:, or E:)
-            if (docInfoURL.StartsWith("\\")) {
-                docInfoURL = String.Format("{0}{1}", _baseMaximoPath.Substring(0, _baseMaximoPath.LastIndexOf("\\")), docInfoURL);
-            }
+            Log.DebugFormat("Setting _baseMaximoURL to {0}", _baseMaximoURL);
 
             Log.DebugFormat("Setting docInfoURL to {0}", docInfoURL);
+            
+            // Remove the dependency on C: drive - this will take the either the UNC path or local path (C:, D:, or E:)
+            // if (docInfoURL.StartsWith("\\")) {
+            docInfoURL = String.Format("{0}{1}", _baseMaximoPath.Substring(0, _baseMaximoPath.LastIndexOf("\\")), docInfoURL);
+            //}
+
+            Log.DebugFormat("Setting docInfoURL to {0} after replacement", docInfoURL);
 
             String pattern = "^[A-Z]\\:.*";
             bool check = Regex.IsMatch(docInfoURL, pattern);
