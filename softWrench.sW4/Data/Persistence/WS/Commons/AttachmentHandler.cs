@@ -253,16 +253,17 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (_baseMaximoURL == null) {
                 BuildMaximoURL();
             }
+
+            // Remove the dependency on C: drive - this will take the either the UNC path or local path (C:, D:, or E:)
             if (docInfoURL.StartsWith("\\")) {
-                docInfoURL = "C:" + docInfoURL;
+                docInfoURL = String.Format("{0}{1}", _baseMaximoPath.Substring(0, _baseMaximoPath.LastIndexOf("\\")), docInfoURL);
             }
+
             String pattern = "^[A-Z]\\:.*";
             bool check = Regex.IsMatch(docInfoURL, pattern);
             if (check && _baseMaximoPath.Contains("<PATH>")) {
-                //docInfoURL = docInfoURL.Substring(1);
                 docInfoURL = docInfoURL.Replace(":", "<PATH>");
             }
-
 
             if (!docInfoURL.StartsWith(_baseMaximoPath)) {
                 return null;
@@ -289,10 +290,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 var valueArr = rawValue.Split('=');
                 _baseMaximoPath = valueArr[0].Trim();
                 _baseMaximoURL = valueArr[1].Trim();
+
+                // override existing path if file is located on a different server - reusing exisitng property field name
+                _baseMaximoPath = MetadataProvider.GlobalProperty("MaximoDocLinksPath") ?? _baseMaximoPath;
             } else {
                 _baseMaximoPath = MetadataProvider.GlobalProperty(ApplicationMetadataConstants.MaximoDocLinksPath);
                 _baseMaximoURL = MetadataProvider.GlobalProperty(ApplicationMetadataConstants.MaximoDocLinksURLPath);
             }
+
             if (!_baseMaximoURL.EndsWith("/")) {
                 _baseMaximoURL = _baseMaximoURL + "/";
             }
