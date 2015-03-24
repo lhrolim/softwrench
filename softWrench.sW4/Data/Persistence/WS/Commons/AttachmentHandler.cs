@@ -254,31 +254,34 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 BuildMaximoURL();
             }
 
-            Log.DebugFormat("Setting _baseMaximoPath to {0}", _baseMaximoPath);
-            Log.DebugFormat("Setting _baseMaximoURL to {0}", _baseMaximoURL);
+            Log.DebugFormat("Setting _baseMaximoPath to {0}", _baseMaximoPath);     // E<PATH>DOCLINKS
+            Log.DebugFormat("Setting _baseMaximoURL to {0}", _baseMaximoURL);       // http://www.kogtsupport24.com/
 
-            Log.DebugFormat("Setting docInfoURL to {0}", docInfoURL);
+            Log.DebugFormat("Setting docInfoURL to {0}", docInfoURL);   // E:\DOCLINKS\attachments\softWrench doclinks Activity Stream1427130121151.docx
             
             // Remove the dependency on C: drive - this will take the either the UNC path or local path (C:, D:, or E:)
             // if (docInfoURL.StartsWith("\\")) {
-            docInfoURL = String.Format("{0}{1}", _baseMaximoPath.Substring(0, _baseMaximoPath.LastIndexOf("\\")), docInfoURL);
+            var index = docInfoURL.IndexOf("DOCLINKS", StringComparison.CurrentCultureIgnoreCase) + 9; 
+
+            if (index > 0) {
+                docInfoURL = docInfoURL.Substring(index);
+            }
+           
+            //String pattern = "^[A-Z]\\:.*";
+            //bool check = Regex.IsMatch(docInfoURL, pattern);
+            //if (check && _baseMaximoPath.Contains("<PATH>")) {
+            //    docInfoURL = docInfoURL.Replace(":", "<PATH>");
             //}
 
-            Log.DebugFormat("Setting docInfoURL to {0} after replacement", docInfoURL);
+            //docInfoURL = String.Format("{0}{1}", )
 
-            String pattern = "^[A-Z]\\:.*";
-            bool check = Regex.IsMatch(docInfoURL, pattern);
-            if (check && _baseMaximoPath.Contains("<PATH>")) {
-                docInfoURL = docInfoURL.Replace(":", "<PATH>");
-            }
+            //Log.DebugFormat("Setting docInfoURL to {0} after <PATH> replace", docInfoURL);
 
-            Log.DebugFormat("Setting docInfoURL to {0} after <PATH> replace", docInfoURL);
+            //if (!docInfoURL.StartsWith(_baseMaximoPath)) {
+            //    return null;
+            //}
 
-            if (!docInfoURL.StartsWith(_baseMaximoPath)) {
-                return null;
-            }
-
-            docInfoURL = docInfoURL.Remove(0, _baseMaximoPath.Length);
+            //docInfoURL = docInfoURL.Remove(0, _baseMaximoPath.Length);
             docInfoURL = docInfoURL.Replace("\\", "/");
             if (docInfoURL.StartsWith("/")) {
                 docInfoURL = docInfoURL.Substring(1);
@@ -304,7 +307,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 _baseMaximoURL = valueArr[1].Trim();
 
                 // override existing path if file is located on a different server - reusing exisitng property field name
-                _baseMaximoPath = MetadataProvider.GlobalProperty("MaximoDocLinksPath") ?? _baseMaximoPath;
+                //_baseMaximoPath = MetadataProvider.GlobalProperty("MaximoDocLinksPath") ?? _baseMaximoPath;
             } else {
                 _baseMaximoPath = MetadataProvider.GlobalProperty(ApplicationMetadataConstants.MaximoDocLinksPath);
                 _baseMaximoURL = MetadataProvider.GlobalProperty(ApplicationMetadataConstants.MaximoDocLinksURLPath);
