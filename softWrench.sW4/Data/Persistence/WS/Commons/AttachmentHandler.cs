@@ -254,16 +254,23 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 BuildMaximoURL();
             }
 
+            Log.DebugFormat("Setting _baseMaximoPath to {0}", _baseMaximoPath);
+            Log.DebugFormat("Setting _baseMaximoURL to {0}", _baseMaximoURL); 
+
             // Remove the dependency on C: drive - this will take the either the UNC path or local path (C:, D:, or E:)
             if (docInfoURL.StartsWith("\\")) {
                 docInfoURL = String.Format("{0}{1}", _baseMaximoPath.Substring(0, _baseMaximoPath.LastIndexOf("\\")), docInfoURL);
             }
+
+            Log.DebugFormat("Setting docInfoURL to {0}", docInfoURL);
 
             String pattern = "^[A-Z]\\:.*";
             bool check = Regex.IsMatch(docInfoURL, pattern);
             if (check && _baseMaximoPath.Contains("<PATH>")) {
                 docInfoURL = docInfoURL.Replace(":", "<PATH>");
             }
+
+            Log.DebugFormat("Setting docInfoURL to {0} after <PATH> replace", docInfoURL);
 
             if (!docInfoURL.StartsWith(_baseMaximoPath)) {
                 return null;
@@ -275,6 +282,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 docInfoURL = docInfoURL.Substring(1);
             }
             var finalURL = String.Format("{0}{1}", _baseMaximoURL, docInfoURL);
+
+            Log.DebugFormat("Final URL attachment: {0}", finalURL);
+
             return finalURL;
         }
 
