@@ -202,7 +202,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var fileName = (string)file.GetAttribute("document");
             var docinfoURL = (string)file.GetAttribute("urlname");
             var finalURL = GetFileUrl(docinfoURL);
-
             if (finalURL == null) {
                 return null;
             }
@@ -254,8 +253,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             if (_baseMaximoURL == null) {
                 BuildMaximoURL();
             }
-
-
             if (docInfoURL.StartsWith("\\")) {
                 docInfoURL = "C:" + docInfoURL;
             }
