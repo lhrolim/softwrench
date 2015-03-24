@@ -41,12 +41,5 @@
         </schema>
       </schemas>
     </application>
-    <application name="labtrans" entity="labtrans" title="Labor">
-      <schemas>
-        <detail platform="web" redeclaring="false">
-          <customization position="gldebitacct"></customization>
-        </detail>
-      </schemas>
-    </application>
   </applications>
 </metadata>
