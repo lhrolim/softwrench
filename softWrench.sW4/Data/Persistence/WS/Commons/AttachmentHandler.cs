@@ -207,6 +207,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
             using (var client = new WebClient()) {
                 try {
+                    ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
                     var fileBytes = client.DownloadData(finalURL);
                     if (docinfoURL.Contains(".")) {
                         var extension = docinfoURL.Substring(docinfoURL.LastIndexOf(".") + 1);
@@ -216,7 +217,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                             fileName = String.Format("{0}.{1}", fileName, extension);
                     }
                     return Tuple.Create(fileBytes, fileName);
-                } catch (Exception) {
+                } catch (Exception exception) {
                     return null;
                 }
             }
