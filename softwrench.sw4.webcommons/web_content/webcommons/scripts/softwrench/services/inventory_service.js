@@ -674,7 +674,13 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 
                 return;
             }
-            parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
+            
+            if (parameters['fields']['inventory_.binnum'] == null) {
+                parameters['fields']['binnum'] = "";
+            } else {
+                parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
+            }
+
             doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
         },
 
