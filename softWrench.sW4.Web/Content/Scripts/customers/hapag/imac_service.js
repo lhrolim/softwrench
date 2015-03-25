@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('imacservice', function ($http, alertService, fieldService, redirectService, i18NService) {
+app.factory('imacservice', function ($http, $rootScope, alertService, fieldService, redirectService, i18NService, associationService) {
     /*
     * The location could point either to a building only, or to the entire building+floor+room, but never straight 
     * to the floor alone as it does not exist as an entry on hapag database.
@@ -30,7 +30,17 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
             datamap['floor'] = parts[1].substring(parts[1].indexOf(':') + 1) + (shouldIgnoreWatch ? '$ignorewatch' : '');
             datamap['room'] = location;
         }
+
+
     };
+
+    var setOriginalDataFromAttribute = function (schema, datamap, associationOptions, attributeName) {
+        if (datamap[attributeName] != null && datamap[attributeName] != "$null$ignorewatch") {
+            datamap['#' + attributeName + 'Original_label'] = associationService.getFullObjectByAttribute(attributeName, schema, datamap, associationOptions).label;
+        } else {
+            datamap['#' + attributeName + 'Original_label'] = null;
+        }
+    }
 
     var checkCostCenterAvailability = function (availablecostcenters, costCenter, field) {
         if (!availablecostcenters) {
@@ -45,15 +55,32 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
         return false;
     }
 
+
+    var setOriginalData = function (schema, datamap, associationOptions) {
+        setOriginalDataFromAttribute(schema, datamap, associationOptions, 'building');
+        setOriginalDataFromAttribute(schema, datamap, associationOptions, 'floor');
+        setOriginalDataFromAttribute(schema, datamap, associationOptions, 'room');
+
+        //for child assets
+        setOriginalDataFromAttribute(schema, datamap, associationOptions, 'building2');
+        setOriginalDataFromAttribute(schema, datamap, associationOptions, 'floor2');
+        setOriginalDataFromAttribute(schema, datamap, associationOptions, 'room2');
+
+    }
+
     return {
 
+
+
         beforeChangeAsset: function (event) {
-            var datamap =event.fields;
+            var datamap = event.fields;
             datamap['building'] = "$null$ignorewatch";
             datamap['floor'] = "$null$ignorewatch";
             datamap['room'] = "$null$ignorewatch";
             datamap['costcenter'] = null;
         },
+
+
 
         afterChangeAsset: function (event) {
             var userId = event.fields['asset_.aucisowner_.person_.personid'];
@@ -93,7 +120,10 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
             }
             event.fields['currentitc'] = currentITC;
             parseLocations(event.fields, event.fields['asset_.location'], event.triggerparams);
+            setOriginalData(event.scope.schema, event.fields, event.scope.associationOptions);
         },
+
+
 
         goToImacGrid: function () {
             if (GetPopUpMode().equalsAny("browser", "nomenu")) {
@@ -126,6 +156,25 @@ app.factory('imacservice', function ($http, alertService, fieldService, redirect
                 result.push("Confirm that all data for decommission process has been provided")
             }
             return result;
+        },
+
+        setcommodities: function (event) {
+            var datamap = event.datamap;
+            var selectedCommodities = datamap['assetCommodities'];
+            var associationOptions = event.associationOptions;
+            var commodities = associationOptions["assetCommodities"];
+            datamap["#assetCommodities_label"] = [];
+            for (var i = 0; i < commodities.length; i++) {
+                var commodity = commodities[i];
+                var selected = false;
+                for (var j = 0; j < selectedCommodities.length; j++) {
+                    if (selectedCommodities[j] == commodity.value) {
+                        selected = true;
+                        break;
+                    }
+                }
+                datamap["#assetCommodities_label"].push(commodity.label + " : " + (selected ? "Y" : "N"));
+            }
         }
     };
 });

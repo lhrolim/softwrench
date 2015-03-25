@@ -19,9 +19,9 @@ Usage:   TEST
 Old Asset Data
 
 Status of Old Asset:   150 Idle
-Building:   Miami Customer Service Center
-Floor:   0001
-Room:   0006
+Building:    --> Miami Customer Service Center
+Floor:    --> 0001
+Room:    --> 0006
 =====================================================================
 Old Child Asset Data
 

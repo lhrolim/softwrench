@@ -13,7 +13,11 @@
 "building":null,
 "floor":null,
 "room":null,
-"ticketid":null,
+    "ticketid": null,
+        "#buildingOriginal_label": null,
+    "#floorOriginal_label": null,
+    "#roomOriginal_label": null,
+
 "asset_":{"primaryuser_":{"personid":"MILLER",
 "person_":{"displayname":"Steve Miller"}},
 "primaryuser_.personid":"MILLER",

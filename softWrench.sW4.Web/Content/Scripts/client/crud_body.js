@@ -55,7 +55,7 @@ app.directive('crudBody', function (contextService) {
             searchService, tabsService,
             fieldService, commandService, i18NService,
             validationService, submitService, redirectService,
-            associationService, $timeout) {
+            associationService, $timeout, dispatcherService) {
 
             $scope.$name = 'crudbody' + ($scope.ismodal == "false" ? 'modal' : '');
 
@@ -100,7 +100,7 @@ app.directive('crudBody', function (contextService) {
                 }
                 //make sure we are seeing the top of the grid 
                 window.scrollTo(0, 0);
-                var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false,true);
+                var onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
                 if (onLoadMessage) {
                     var data = {
                         successMessage: onLoadMessage
@@ -256,7 +256,17 @@ app.directive('crudBody', function (contextService) {
                 associationService.insertAssocationLabelsIfNeeded($scope.schema, fields, $scope.associationOptions);
 
 
-
+                if ($scope.schema.properties["oncrudsaveevent.transformservice"]) {
+                    var serviceSt = $scope.schema.properties["oncrudsaveevent.transformservice"];
+                    var fn = dispatcherService.loadService(serviceSt.split(".")[0], serviceSt.split(".")[1]);
+                    fn(
+                        {
+                            "datamap": $scope.datamap.fields,
+                            "schema": $scope.schema,
+                            "associationOptions": $scope.associationOptions,
+                        })
+                    ;
+                }
 
                 var jsonString = angular.toJson(fields);
 

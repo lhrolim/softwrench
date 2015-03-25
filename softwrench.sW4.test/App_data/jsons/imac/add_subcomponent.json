@@ -20,7 +20,11 @@
 "asset_.aucisowner_.person_.hlagdisplayname":null,
 "room":null,
 "floor":null,
-"building":null,
+    "building": null,
+        "#buildingOriginal_label": null,
+    "#floorOriginal_label": null,
+    "#roomOriginal_label": null,
+
 "#fromlocation_label":"HLAG-MT4",
 "#asset_label":"(7115) Standard Laptop Computer // JL7YK0J",
 "#childasset_label":"(13150) Top Breaker System // 32R5G",

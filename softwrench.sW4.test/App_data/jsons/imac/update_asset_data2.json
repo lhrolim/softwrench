@@ -5,6 +5,15 @@
     "updatechildasset": [
         "update"
     ],
+
+    "#buildingOriginal_label": "RO:21/FL:1/HAPAG-LLOYD GERMANY/ROSENSTRASSE 17/HAMBURG/HAMBURG/20095",
+    "#floorOriginal_label": "0002",
+    "#roomOriginal_label": "0010",
+
+    "#building_label": "RO:21/FL:1/HAPAG-LLOYD GERMANY/ROSENSTRASSE 17/HAMBURG/HAMBURG/20095",
+    "#floor_label": "0001",
+    "#room_label": "0002",
+
     "#attributeSubtitle": "Value",
     "titleoforder": "Title Test",
     "remarks": "Remark Test",
@@ -12,9 +21,6 @@
     "building": null,
     "floor": null,
     "room": null,
-     "#buildingOriginal_label": null,
-    "#floorOriginal_label": null,
-    "#roomOriginal_label": null,
     "userid": "WILSON",
     "originaluser": "STORM",
     "#originaluser_label": "(REDDING) Tony Redding",
@@ -172,4 +178,6 @@
         "": null
     },
     "assetspec_.": null
+
+
 }

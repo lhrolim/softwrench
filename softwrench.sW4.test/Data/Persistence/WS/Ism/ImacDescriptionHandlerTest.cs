@@ -52,6 +52,23 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Ism {
         public void UpdateAsset() {
             DoTest("update", "update_asset_data.json", "update_asset_data.txt");
         }
+
+        [TestMethod]
+        public void UpdateAsset2() {
+            DoTest("update", "update_asset_data2.json", "update_asset_data2.txt");
+        }
+
+        [TestMethod]
+        public void UpdateAsset3() {
+            DoTest("update", "update_asset_data3.json", "update_asset_data3.txt");
+        }
+//
+//        [TestMethod]
+//        public void UpdateAsset4() {
+//            DoTest("update", "update_asset_data4.json", "update_asset_data3.txt");
+//        }
+
+
         [TestMethod]
         public void RemoveAsset() {
             DoTest("removeother", "removeother.json", "removeother.txt");
@@ -76,8 +93,8 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Ism {
             var imac = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), metadata, null, imacjson, null);
             var resultDescription = ImacDescriptionHandler.BuildDescription(imac, appMetadata);
             Debug.Write(resultDescription);
-            var result = new StreamReader("jsons\\imac\\descriptionresults\\" + output).ReadToEnd();
-            Assert.AreEqual(result, resultDescription);
+            var expectedResult = new StreamReader("jsons\\imac\\descriptionresults\\" + output).ReadToEnd();
+            Assert.AreEqual(expectedResult, resultDescription);
         }
 
 

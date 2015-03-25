@@ -5,6 +5,15 @@
     "updatechildasset": [
         "update"
     ],
+
+    "#buildingOriginal_label": null,
+    "#floorOriginal_label": null,
+    "#roomOriginal_label": null,
+
+    "#building2Original_label": null,
+    "#floor2Original_label": null,
+    "#room2Original_label": null,
+   
     "#attributeSubtitle": "Value",
     "titleoforder": "Title Test",
     "remarks": "Remark Test",
@@ -12,9 +21,6 @@
     "building": null,
     "floor": null,
     "room": null,
-     "#buildingOriginal_label": null,
-    "#floorOriginal_label": null,
-    "#roomOriginal_label": null,
     "userid": "WILSON",
     "originaluser": "STORM",
     "#originaluser_label": "(REDDING) Tony Redding",
@@ -172,4 +178,6 @@
         "": null
     },
     "assetspec_.": null
+
+
 }

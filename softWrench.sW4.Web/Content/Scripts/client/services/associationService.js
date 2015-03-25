@@ -115,6 +115,11 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
         },
 
 
+        getFullObjectByAttribute: function (attribute, schema, datamap, associationOptions) {
+            var associationFieldMetadata = fieldService.getDisplayableByKey(schema, attribute);
+            return this.getFullObject(associationFieldMetadata, datamap, associationOptions);
+        },
+
         getFullObject: function (associationFieldMetadata, datamap, associationOptions) {
             //we need to locate the value from the list of association options
             // we only have the "value" on the datamap 
@@ -124,6 +129,10 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
                 return null;
             }
             //TODO: Return full object.
+            if (typeof selectedValue == "string") {
+                selectedValue = selectedValue.replace("$ignorewatch", "");
+            }
+
             var resultValue = doGetFullObject(associationFieldMetadata, associationOptions, selectedValue);
             if (resultValue == null) {
                 $log.getInstance('associationService#getFullObject').warn('value not found in association options for {0} '.format(associationFieldMetadata.associationKey));
@@ -414,6 +423,10 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
             $.each(associations, function (key, value) {
                 var targetName = value.target;
                 var labelName = "#" + targetName + "_label";
+                if (datamap[labelName] && datamap[labelName]!="") {
+                    //already filled, let´s not override it
+                    return;
+                }
                 var realValue = fn.getFullObject(value, datamap, associationoptions);
                 if (realValue != null && Array.isArray(realValue)) {
                     datamap[labelName] = "";

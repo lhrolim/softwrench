@@ -24,6 +24,11 @@
         public const string OnCrudSaveEventValidationService = "oncrudsaveevent.validationservice";
 
         /// <summary>
+        /// Use this property to specify a custom javascript validation to be called whenever the form is about to be submitted
+        /// </summary>
+        public const string OnCrudSaveEventTransformService = "oncrudsaveevent.transformservice";
+
+        /// <summary>
         /// Use to declare an event that need to be called upon the load of a detail page
         /// </summary>
         public const string OnCrudLoadDetail = "oncrudloadevent.detail";

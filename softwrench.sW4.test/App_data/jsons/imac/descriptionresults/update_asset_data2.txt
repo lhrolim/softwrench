@@ -13,9 +13,9 @@ Usage:   TEST
 =====================================================================
 Location
 
-Building:   
-Floor:   
-Room:   
+Building:   RO:21/FL:1/HAPAG-LLOYD GERMANY/ROSENSTRASSE 17/HAMBURG/HAMBURG/20095 --> RO:21/FL:1/HAPAG-LLOYD GERMANY/ROSENSTRASSE 17/HAMBURG/HAMBURG/20095
+Floor:   0002 --> 0001
+Room:   0010 --> 0002
 =====================================================================
 User ID:   (REDDING) Tony Redding --> (WILSON) Mike Wilson2
 =====================================================================

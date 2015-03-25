@@ -1629,7 +1629,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </properties>
       <components>
         <componentdisplayable id="usage">
-          <optionfield attribute="usage" label="Usage" default="STANDARD">
+          <optionfield attribute="usage" label="Usage" default="STANDARD" >
             <renderer type="combo" params="length=half"/>
             <option label="EDUCATION" value="EDUCATION"/>
             <option label="POOL" value="POOL"/>
@@ -1868,27 +1868,44 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <componentdisplayable id="specifylocationfrom">
           <section id="specifylocationfrom" showexpression="@asset!=null" parameters="detaildescription=Location">
             <header label="@prop:fromlocationlabel=Location" displacement="sameline"/>
-            <optionfield label="Building" attribute="building" providerattribute="buildingFromLocation" dependantfields="fromlocation"/>
-            <optionfield label="Floor" attribute="floor" providerattribute="floorFromLocation" dependantfields="building"/>
-            <optionfield label="Room" attribute="room" providerattribute="roomFromLocation" dependantfields="floor"/>
+
+            <field hidden="true" attribute="buildingOriginal" label="Building"/>
+            <field hidden="true" attribute="floorOriginal" label="Floor"/>
+            <field hidden="true" attribute="roomOriginal" label="Room"/>
+            
+            
+            <optionfield label="Building" attribute="building" providerattribute="buildingFromLocation" dependantfields="fromlocation" qualifier="buildingOriginal_new"/>
+            <optionfield label="Floor" attribute="floor" providerattribute="floorFromLocation" dependantfields="building" qualifier="floorOriginal_new"/>
+            <optionfield label="Room" attribute="room" providerattribute="roomFromLocation" dependantfields="floor" qualifier="roomOriginal_new"/>
           </section>
         </componentdisplayable>
 
         <componentdisplayable id="specifylocationfrom2">
           <section id="specifylocationfrom2" showexpression="@asset!=null" parameters="detaildescription=Location">
             <header label="@prop:fromlocationlabel=Location" displacement="sameline"/>
-            <optionfield label="Building" attribute="building2" providerattribute="2buildingFromLocation" dependantfields="fromlocation"/>
-            <optionfield label="Floor" attribute="floor2" providerattribute="2floorFromLocation" dependantfields="building2"/>
-            <optionfield label="Room" attribute="room2" providerattribute="2roomFromLocation" dependantfields="floor2"/>
+
+            <field hidden="true" attribute="building2Original" label="Building"/>
+            <field hidden="true" attribute="floor2Original" label="Floor"/>
+            <field hidden="true" attribute="room2Original" label="Room"/>
+
+
+            <optionfield label="Building" attribute="building2" providerattribute="2buildingFromLocation" dependantfields="fromlocation" qualifier="building2Original_new"/>
+            <optionfield label="Floor" attribute="floor2" providerattribute="2floorFromLocation" dependantfields="building2" qualifier="floor2Original_new"/>
+            <optionfield label="Room" attribute="room2" providerattribute="2roomFromLocation" dependantfields="floor2" qualifier="room2Original_new"/>
           </section>
         </componentdisplayable>
 
         <componentdisplayable id="specifylocationto">
           <section id="specifylocationto" showexpression="@asset!=null" parameters="detaildescription=Location">
             <header label="@prop:tolocationlabel=specify location" displacement="sameline"/>
-            <optionfield label="Building" attribute="building" providerattribute="buildingToLocation" dependantfields="toitc"/>
-            <optionfield label="Floor" attribute="floor" providerattribute="floorToLocation" dependantfields="building"/>
-            <optionfield label="Room" attribute="room" providerattribute="roomToLocation" dependantfields="floor"/>
+
+            <field hidden="true" attribute="buildingOriginal" label="Building"/>
+            <field hidden="true" attribute="floorOriginal" label="Floor"/>
+            <field hidden="true" attribute="roomOriginal" label="Room"/>
+            
+            <optionfield label="Building" attribute="building" providerattribute="buildingToLocation" dependantfields="toitc" qualifier="buildingOriginal_new"/>
+            <optionfield label="Floor" attribute="floor" providerattribute="floorToLocation" dependantfields="building" qualifier="floorOriginal_new"/>
+            <optionfield label="Room" attribute="room" providerattribute="roomToLocation" dependantfields="floor" qualifier="roomOriginal_new"/>
           </section>
         </componentdisplayable>
 
@@ -2271,6 +2288,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="showibmtechnician" value="false"/>
             <property key="nextschema.schemaid" value="creationSummary"/>
             <property key="popup.window.headertitle" value="New IMAC Request - Update Asset Data"/>
+            <property key="oncrudsaveevent.transformservice" value="imacservice.setcommodities"/>
           </properties>
 
           <section id="requestdetails" parameters="detaildescription=Request Details">

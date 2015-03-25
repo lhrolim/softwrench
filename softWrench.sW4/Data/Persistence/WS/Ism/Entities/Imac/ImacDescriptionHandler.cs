@@ -9,6 +9,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Util;
+using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
@@ -60,18 +61,17 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
         private static string DoHandleDisplayables(CrudOperationData jsonObject, IList<IApplicationAttributeDisplayable> displayables) {
             var sb = new StringBuilder();
             foreach (var attributeDisplayable in displayables) {
-                if (attributeDisplayable.Qualifier != null &&
-                    (attributeDisplayable.Qualifier.Contains(NoDescriptionQualifier) ||
-                     attributeDisplayable.Qualifier.EndsWith(NewDescriptionQualifier))) {
-                    //these fields should not go into the description
+                if (attributeDisplayable.Qualifier != null && attributeDisplayable.Qualifier.Contains(NoDescriptionQualifier)) {
                     continue;
                 }
+
+
                 if (attributeDisplayable is IApplicationDisplayableContainer) {
 
                     continue;
                 }
 
-                if (!jsonObject.ContainsAttribute(attributeDisplayable.Attribute)) {
+                if (!jsonObject.ContainsAttribute(attributeDisplayable.Attribute) && !jsonObject.ContainsAttribute("#" +attributeDisplayable.Attribute + "_label")) {
                     continue;
                 }
 
@@ -84,7 +84,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
 
 
                 if (attributeDisplayable.Attribute == "assetCommodities") {
-                    HandleAssetCommodities(sb, (string)jsonObject.GetAttribute(attributeDisplayable.Attribute),
+                    HandleAssetCommodities(sb, (string)jsonObject.GetAttribute("#"+attributeDisplayable.Attribute+"_label"),
                         attributeDisplayable);
                     continue;
                 }
@@ -92,6 +92,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
                 var oldValue = GetValue(jsonObject, attributeDisplayable);
 
                 var newValue = LocateNewValue(attributeDisplayable.Attribute, jsonObject, displayables);
+
+                if (attributeDisplayable.Qualifier != null &&
+                    attributeDisplayable.Qualifier.EndsWith(NewDescriptionQualifier)) {
+                    // we should ignore the old value label, if there´s a newValue present, since they will be combined
+                    continue;
+                }
+
+
                 sb.AppendLine(AppendField(attributeDisplayable.Label, oldValue, newValue));
             }
             return sb.ToString();
@@ -102,7 +110,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
             if (jsonObject.ContainsAttribute(labelAttribute)) {
                 return jsonObject.GetAttribute(labelAttribute);
             }
-            if (attributeDisplayable.RendererType !=null && attributeDisplayable.RendererType.Equals("upload")) {
+            if (attributeDisplayable.RendererType != null && attributeDisplayable.RendererType.Equals("upload")) {
                 return jsonObject.GetAttribute(attributeDisplayable.Attribute + "_path");
             }
             return jsonObject.GetAttribute(attributeDisplayable.Attribute);
@@ -179,7 +187,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
         }
 
         public static string AppendField(string label, object oldValue, object newValue) {
-            if (label.Equals("from Location")) {
+            if ("from Location".Equals(label)) {
                 label = "Location";
             }
             if (newValue == null) {
