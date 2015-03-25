@@ -113,9 +113,12 @@ namespace softWrench.sW4.Data.Search {
             var searchParameters = listDto.GetParameters();
             var parameters = Regex.Split(listDto.SearchParams, SearchParamSpliter).Where(f => !String.IsNullOrWhiteSpace(f));
             var j = 0;
-            foreach (var searchParameterEntry in searchParameters) {
-                var searchParameter = searchParameterEntry.Value;
-                var param = searchParameterEntry.Key;
+
+            foreach (var parameter in parameters) {
+                //need to fetch from here to keep order correct
+                var searchParameter = searchParameters[parameter];
+
+                var param = parameter;
                 var statement = new StringBuilder();
 
                 var parameterData = GetParameterData(entityName, searchParameter, param);
@@ -177,6 +180,8 @@ namespace softWrench.sW4.Data.Search {
                 }
                 j++;
             }
+
+
             sb.Replace("&&", " AND ");
             sb.Replace("||,", " OR ");
             return sb.ToString();

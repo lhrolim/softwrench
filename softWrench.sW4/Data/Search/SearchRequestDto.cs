@@ -209,13 +209,9 @@ namespace softWrench.sW4.Data.Search {
         }
 
         [JsonIgnore]
-        public ConcurrentDictionary<string, SearchParameter> ValuesDictionary {
+        public IDictionary<string, SearchParameter> ValuesDictionary {
             get {
-                var dict = _valuesDictionary ?? (_valuesDictionary = GetParameters());
-                if (dict == null) {
-                    return new ConcurrentDictionary<string, SearchParameter>();
-                }
-                return new ConcurrentDictionary<string, SearchParameter>(dict);
+                return _valuesDictionary ?? (_valuesDictionary = GetParameters());
             }
         }
 
@@ -228,7 +224,7 @@ namespace softWrench.sW4.Data.Search {
             if (String.IsNullOrEmpty(SearchParams)) {
                 return null;
             }
-            _valuesDictionary = new Dictionary<string, SearchParameter>();
+            _valuesDictionary = new ConcurrentDictionary<string, SearchParameter>();
 
             var parameters = Regex.Split(SearchParams, SearchUtils.SearchParamSpliter).Where(f => !String.IsNullOrWhiteSpace(f)).ToList();
             SearchUtils.ValidateString(SearchValues);

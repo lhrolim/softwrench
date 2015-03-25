@@ -1145,8 +1145,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <field hidden="true" attribute="asset_.pluspcustomer"></field>
 
             <optionfield label="Printer Connection:" attribute="printerconnection" >
-              <option label="Local" value="Local"/>
               <option label="Network" value="Network"/>
+              <option label="Local" value="Local"/>
               <option label="HOD" value="Hod"/>
             </optionfield>
             <optionfield label="Application:" attribute="application">
@@ -1302,6 +1302,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </schema>
 
         <schema id="network" stereotype="detail" title="New Service Request - Network" parentschema="AnewSR">
+          <properties>
+            <property key="oncrudloadevent.detail" value="srnetworkservice.onload"/>
+          </properties>
+          
           <section id="abstractSection">
             <reference id="generaloutlookassetsection"/>
             <field attribute="#crosstestresult" label="Crosstest result (if applicable):">
@@ -1343,6 +1347,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                  <option label="LAN/WLAN" value="lan/wlan"/>
               </optionfield>
               <optionfield label="Do the clients have an IP address?" attribute="isaddressavailable">
+                <renderer type="COMBO" params="setdefaultvalue=false"/>
                 <option label="YES" value="YES"/>
                 <option label="NO" value="NO"/>
               </optionfield>
@@ -1360,10 +1365,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <option label="NO" value="NO"/>
             </optionfield>
             <optionfield label="Is the login successful?" attribute="loginsuccess">
+                <renderer type="COMBO" params="setdefaultvalue=false"/>
               <option label="YES" value="YES"/>
               <option label="NO" value="NO"/>
             </optionfield>
-            <field label="Do you receive any error messages? If so please provide an example:" attribute="#vpnerrormessage"/>
+              <field label="Do you receive any error messages? If so please provide an example:" enableexpression="@loginsuccess == 'YES'" attribute="#vpnerrormessage"/>
           </section>
             </section>
         </schema>

@@ -194,7 +194,8 @@
                               data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
                               maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
                               ng-enabled="isModifiableEnabled(fieldMetadata)"
-                              ng-init="bindEvalExpression(fieldMetadata)" />
+                              ng-init="bindEvalExpression(fieldMetadata)"
+                              data-id="{{fieldMetadata.attribute}}" />
                 </div>
 
                 <div ng-switch-when="upload">
@@ -310,6 +311,7 @@
                                 <div ng-switch-default>
                                     <input type="text"
                                            ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control"
+                                           ng-enabled="isModifiableEnabled(fieldMetadata)"
                                            data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
                                            maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
                                            ng-init="bindEvalExpression(fieldMetadata)" />

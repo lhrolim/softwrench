@@ -101,7 +101,7 @@ app.directive('crudInputFields', function (contextService) {
         controller: function ($scope, $http, $element, $injector, $timeout,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
-            cmpfacade, cmpComboDropdown, redirectService) {
+            cmpfacade, cmpComboDropdown, redirectService,dispatcherService) {
 
             $scope.$name = 'crud_input_fields';
 
@@ -192,6 +192,12 @@ app.directive('crudInputFields', function (contextService) {
                     $scope.configureNumericInput();
                     $scope.configureOptionFields();
                     $scope.configureAssociationChangeEvents();
+                    if ($scope.schema.properties["oncrudloadevent.detail"]) {
+                        var serviceSt = $scope.schema.properties["oncrudloadevent.detail"];
+                        var fn =dispatcherService.loadService(serviceSt.split(".")[0], serviceSt.split(".")[1]);
+                        fn($scope.datamap, $scope.schema);
+                    }
+                    
                 }
 
                 $('.datetimereadonly').datepicker("remove");
@@ -501,6 +507,10 @@ app.directive('crudInputFields', function (contextService) {
                     var optionsFields = fieldService.getDisplayablesOfTypes($scope.displayables, ['OptionField']);
                     for (var i = 0; i < optionsFields.length; i++) {
                         var optionfield = optionsFields[i];
+                        if ("false" == optionfield.rendererParameters["setdefaultvalue"]) {
+                            continue;
+                        }
+
                         if ($scope.datamap[optionfield.target] == null && optionfield.providerAttribute == null && optionfield.rendererType != 'checkbox') {
                             var values = $scope.GetOptionFieldOptions(optionfield);
                             if (values != null) {

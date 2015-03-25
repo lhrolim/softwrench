@@ -24,6 +24,11 @@
         public const string OnCrudSaveEventValidationService = "oncrudsaveevent.validationservice";
 
         /// <summary>
+        /// Use to declare an event that need to be called upon the load of a detail page
+        /// </summary>
+        public const string OnCrudLoadDetail = "oncrudloadevent.detail";
+
+        /// <summary>
         /// Set this property to true to allow the framework to pass not only the selected values, but also the labels of it on the json unmapedattributes. 
         /// These can be fetched using (#+attributename + "_label") ==> xxx becomes "#xxx_label"
         /// </summary>

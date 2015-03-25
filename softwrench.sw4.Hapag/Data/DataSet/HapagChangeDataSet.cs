@@ -98,7 +98,9 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                  w["description"].StartsWithIc(c.RejectedWorklogDescription)
               && w["logtype"].ToString().Equals(c.WlRejLogType));
 
-            approval["#shouldshowaction"] = LevelMatches(result, approval) && user.HasPersonGroup(approvalGroup); ;
+            //approval["#shouldshowaction"] = LevelMatches(result, approval) && user.HasPersonGroup(approvalGroup); ;
+            //removed due to thomas comments, on HAP-976
+            approval["#shouldshowaction"] = user.HasPersonGroup(approvalGroup); ;
 
             if (apprWl != null || rejWl != null) {
                 approval[c.ChangeByColumn] = apprWl != null ? apprWl[c.CreateByColumn] : rejWl[c.CreateByColumn];
