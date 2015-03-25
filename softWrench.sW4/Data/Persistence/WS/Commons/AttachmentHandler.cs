@@ -254,40 +254,25 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 BuildMaximoURL();
             }
 
-            Log.DebugFormat("Setting _baseMaximoPath to {0}", _baseMaximoPath);     // E<PATH>DOCLINKS
-            Log.DebugFormat("Setting _baseMaximoURL to {0}", _baseMaximoURL);       // http://www.kogtsupport24.com/
+            Log.DebugFormat("Setting _baseMaximoPath to {0}", _baseMaximoPath); 
+            Log.DebugFormat("Setting _baseMaximoURL to {0}", _baseMaximoURL); 
 
-            Log.DebugFormat("Setting docInfoURL to {0}", docInfoURL);   // E:\DOCLINKS\attachments\softWrench doclinks Activity Stream1427130121151.docx
-            
-            // Remove the dependency on C: drive - this will take the either the UNC path or local path (C:, D:, or E:)
-            // if (docInfoURL.StartsWith("\\")) {
-            var index = docInfoURL.IndexOf("DOCLINKS", StringComparison.CurrentCultureIgnoreCase) + 9; 
+            Log.DebugFormat("Setting docInfoURL to {0}", docInfoURL);   
 
-            if (index > 0) {
-                docInfoURL = docInfoURL.Substring(index);
+            if (_baseMaximoPath.Contains("<PATH>")) {
+                // Use regular expression to replace remove the starting string - ? prevents it from going greedy and getting all words matching symbol and ^ requires the expression to be at the beginning
+                var regExpression = "^" + _baseMaximoPath.Replace("<PATH>", ".*?"); 
+                Regex strRegex = new Regex(regExpression, RegexOptions.None);
+
+                docInfoURL = strRegex.Replace(docInfoURL, ""); 
             }
-           
-            //String pattern = "^[A-Z]\\:.*";
-            //bool check = Regex.IsMatch(docInfoURL, pattern);
-            //if (check && _baseMaximoPath.Contains("<PATH>")) {
-            //    docInfoURL = docInfoURL.Replace(":", "<PATH>");
-            //}
 
-            //docInfoURL = String.Format("{0}{1}", )
+            Log.DebugFormat("Updated docInfoURL to {0}", docInfoURL);   
 
-            //Log.DebugFormat("Setting docInfoURL to {0} after <PATH> replace", docInfoURL);
-
-            //if (!docInfoURL.StartsWith(_baseMaximoPath)) {
-            //    return null;
-            //}
-
-            //docInfoURL = docInfoURL.Remove(0, _baseMaximoPath.Length);
             docInfoURL = docInfoURL.Replace("\\", "/");
-            if (docInfoURL.StartsWith("/")) {
-                docInfoURL = docInfoURL.Substring(1);
-            }
-            var finalURL = String.Format("{0}{1}", _baseMaximoURL, docInfoURL);
 
+            var finalURL = _baseMaximoURL != null && _baseMaximoURL.EndsWith("/") ? String.Format("{0}{1}", _baseMaximoURL.Remove(_baseMaximoURL.Length - 1), docInfoURL) : String.Format("{0}{1}", _baseMaximoURL, docInfoURL);
+ 
             Log.DebugFormat("Final URL attachment: {0}", finalURL);
 
             return finalURL;
@@ -295,27 +280,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         /// <summary>
         /// On Mea environment there´s no maxpropvalue table, and the path is stored in a doclink.properties file, 
-        /// under C:\Maximo\applications\maximo\properties\doclink.properties.
+        /// under C:\Maximo\applications\maximo\properties\doclink.properties. - Please provide 'maximodoclinkspath' and 'maximourldoclinkspath'
         /// 
         /// On Mif, its stored in  maxpropvalue with propname mxe.doclink.path01.
         /// </summary>
         private void BuildMaximoURL() {
-            if (ApplicationConfiguration.IsMif()) {
-                var rawValue = _maxPropValueDao.GetValue("mxe.doclink.path01");
-                var valueArr = rawValue.Split('=');
-                _baseMaximoPath = valueArr[0].Trim();
-                _baseMaximoURL = valueArr[1].Trim();
+            var rawValue = _maxPropValueDao.GetValue("mxe.doclink.path01");
+            var valueArr = rawValue.Split('=');
+            _baseMaximoPath = valueArr[0].Trim();
+            _baseMaximoURL = valueArr[1].Trim();
 
-                // override existing path if file is located on a different server - reusing exisitng property field name
-                //_baseMaximoPath = MetadataProvider.GlobalProperty("MaximoDocLinksPath") ?? _baseMaximoPath;
-            } else {
-                _baseMaximoPath = MetadataProvider.GlobalProperty(ApplicationMetadataConstants.MaximoDocLinksPath);
-                _baseMaximoURL = MetadataProvider.GlobalProperty(ApplicationMetadataConstants.MaximoDocLinksURLPath);
-            }
-
-            if (!_baseMaximoURL.EndsWith("/")) {
-                _baseMaximoURL = _baseMaximoURL + "/";
-            }
+            // override existing value file is located on a different server - reusing exisitng property field name
+            _baseMaximoPath = MetadataProvider.GlobalProperty(ApplicationMetadataConstants.MaximoDocLinksPath) ?? _baseMaximoPath;
+            _baseMaximoURL = MetadataProvider.GlobalProperty(ApplicationMetadataConstants.MaximoDocLinksURLPath) ?? _baseMaximoURL;
         }
     }
 }

@@ -14,8 +14,10 @@
   <property key="email.smtp.timeout" value="10000"/>
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="true"/>
+  
   <!--Sample UNC Doclink Path-->
-  <property key="MaximoDocLinksPath" value="\\10.10.10.10\DOCLINKS"/>
+  <!--<property key="maximourldoclinkspath" value="https://10.10.10.10"/>-->
+  
   <!--
       maximoutc property set to the full name of the timezone the maximo 
       server is set to, refer to the maximoutc.txt in the doc folder for 
