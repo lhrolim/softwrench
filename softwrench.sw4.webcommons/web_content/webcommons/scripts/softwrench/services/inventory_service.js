@@ -978,15 +978,16 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         invIssue_afterChangeBin: function (parameters) {
-            if (parameters['fields']['binbalances_']) {
-                if (nullOrEmpty(parameters['fields']['binnum'])) {
-                    parameters['fields']['binbalances_.binnum'] = null;
-                    parameters['fields']['binbalances_.lotnum'] = null;
-                    parameters['fields']['binbalances_.curbal'] = null;
-                } else {
-                    parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
-                    parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
-                }
+            if (parameters['fields']['binnum'] == null) {
+                parameters['fields']['binbalances_.binnum'] = null;
+                parameters['fields']['binbalances_.lotnum'] = null;
+                parameters['fields']['binbalances_.curbal'] = null;
+                return;
+            }
+            if (parameters['fields']['binbalances_'] && parameters['fields']['binnum'] != null) {
+                //Check if null rather than nullOrEmpty since the binnum for an association option can be an empty string
+                parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
+                parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
                 return;
             };
             // If the binbalances_ record is not filled but the binnum is
