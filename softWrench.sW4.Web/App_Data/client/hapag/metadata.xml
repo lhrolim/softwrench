@@ -1304,28 +1304,28 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="network" stereotype="detail" title="New Service Request - Network" parentschema="AnewSR">
           <section id="abstractSection">
             <reference id="generaloutlookassetsection"/>
-            <field attribute="#crosstestresult" label="Crosstest result (if applicable)">
+            <field attribute="#crosstestresult" label="Crosstest result (if applicable):">
               <renderer type="textarea"/>
             </field>
 
-            <field attribute="#slowresponse" label="Do you face slow response? If yes, please define which applications">
+            <field attribute="#slowresponse" label="Do you face slow response? If yes, please define which applications:">
               <renderer type="textarea"/>
             </field>
 
             <section id="network_wan">
               <header displacement="ontop" params="fieldset=true" label="WAN issue"/>
-              <field label="In case of Internet Issue answer the following" attribute="#network_wan_label" readonly="true">
+              <field label="In case of Internet issues answer the following:" attribute="#network_wan_label" readonly="true">
                 <renderer type="label"/>
               </field>
-              <field label="Is the internet Access slow or down? (time loading special URL)" attribute="#internetslowdown">
+              <field label="Is the internet access slow or down? (time loading specific URL)" attribute="#internetslowdown">
                 <renderer type="textarea"/>
               </field>
               <optionfield label="Does the problem affect a single internet page or all pages?" attribute="affectedpages">
                 <option label="Single" value="single"/>
                 <option label="All" value="all"/>
               </optionfield>
-              <field label="Target address (URL)" attribute="#targeturl"/>
-              <field label="Used proxy ('ping proxy' on the users PC will show this)" attribute="#usedproxy"/>
+              <field label="Target address (URL):" attribute="#targeturl"/>
+              <field label="Used proxy ('ping proxy' on the user\'s PC will show this):" attribute="#usedproxy"/>
               <field label="Do you receive any error messages? If so please provide an example:" attribute="#errormessages"/>
             </section>
             
@@ -1334,19 +1334,19 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <field label="One or more clients do not have connection to the network: " attribute="#network_lan_label" readonly="true">
                 <renderer type="label"/>
               </field>
-              <field label="How many Clients are affected?" attribute="#clientsaffected">
+              <field label="How many clients are affected?" attribute="#clientsaffected">
                 <renderer type="numericinput"/>
                 </field>
-              <optionfield label="Connection of the Client:" attribute="clientconnection">
+              <optionfield label="Connection of the client:" attribute="clientconnection">
                  <option label="LAN" value="lan"/>
                  <option label="WLAN" value="wlan"/>
                  <option label="LAN/WLAN" value="lan/wlan"/>
               </optionfield>
-              <optionfield label="Do the clients have actual IP address?" attribute="isaddressavailable">
+              <optionfield label="Do the clients have an IP address?" attribute="isaddressavailable">
                 <option label="YES" value="YES"/>
                 <option label="NO" value="NO"/>
               </optionfield>
-              <field label="Please give some examples" attribute="#clientipaddress" showexpression="@isaddressavailable == 'YES'"/>
+              <field label="Please give some examples:" attribute="#clientipaddress" showexpression="@isaddressavailable == 'YES'"/>
             </section>
           
         

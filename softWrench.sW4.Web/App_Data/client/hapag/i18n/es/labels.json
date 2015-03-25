@@ -280,7 +280,57 @@
 		general:General
 		printer:Printer
 		phone:Phone
-	}
+	},
+
+    /* network */
+    #crosstestresult:Crosstest resultado (si es aplicable):,
+    #slowresponse:¿Se le está presentando un tiempo alto de espera? Si la respuesta es Sí, por favor define en cuales aplicaciones:,
+
+    network_wan: {
+        _header: Problema de WAN
+    },
+    
+    #network_wan_label:En caso de problema de internet contesta lo siguiente.,
+                      
+    #internetslowdown:¿El acceso de internet es lento ó no funciona? (tiempo de carga URL especifico),
+    affectedpages: {
+        _label:¿El problema está afectando solo una página web o todas las páginas?,
+        single:Página sola,
+        all:Todas las páginas
+    },
+    #targeturl:Dirección URL propiedad:,
+    #usedproxy:Proxy usado (\'ping proxy\' la computadora del usuario lo demostrará):,
+    #errormessages:¿Has recibido un mensaje de error? Si la respuesta es Sí, por favor ingrese un ejemplo:,
+
+    network_lan: {
+        _header: Problema de LAN
+    },
+    #network_lan_label:Un cliente o más no tiene una conexión a la red:,
+    #clientsaffected:¿Cuantos clientes han sido afectados?,
+    clientconnection:  {
+        _label: Conexión del cliente:
+    },
+    isaddressavailable:  {
+        _label:¿Los clientes tienen una dirección de IP?,
+        YES:Sí,
+        NO:Nó
+    },
+    #clientipaddress:Por favor ingrese unos ejemplos:,
+    network_vpn: {
+        _header: Problema de VPN
+    }
+    #network_vpn_label:El usuario ha probado conectarse via VPN:,
+    authpageseen: {
+        _label:¿La página de autorización te esta funcionando?,
+        YES: Sí,
+        NO: Nó
+    },
+    loginsuccess: {
+        _label:¿El inicio de la sesión fue éxitoso?,
+        YES: Sí,
+        NO: Nó
+    },
+    #vpnerrormessage: ¿Has recibido mensajes de error? Si la respuesta es Sí, por favor ingrese un ejemplo:,
 
 	_commands:{
 		save:Enviar

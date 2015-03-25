@@ -279,7 +279,7 @@
     affectedphone: Affected Phone:
         
     /* network */
-    #crosstestresult:Ggf. Crosstest-Ergebnis,
+    #crosstestresult:Ggf. Crosstest-Ergebnis: ,
     #slowresponse:Haben Sie Probleme mit langen Antwortzeiten? Falls ja, bitte geben Sie an mit welchen Anwendungen.,
 
     network_wan: {
@@ -294,8 +294,8 @@
         single: Einzelne Webseite,
         all: Alle Webseiten
     },
-    #targeturl:Zieladdresse (URL),
-    #usedproxy:Verwendeter Proxy (Ausführen von \'ping proxy\' auf Benutzer-PC zeigt dies an),
+    #targeturl:Zieladdresse (URL): ,
+    #usedproxy:Verwendeter Proxy (Ausführen von \'ping proxy\' auf Benutzer-PC zeigt dies an):,
     #errormessages:Erhalten Sie Fehlermeldungen? Falls ja, bitte geben Sie ein Beispiel an:,
 
     network_lan: {
@@ -315,7 +315,7 @@
     network_vpn: {
         _header: VPN Problem
     }
-    #network_vpn_label:Hat der Benutzer versucht sich mit VPN zu verbinden?
+    #network_vpn_label:Hat der Benutzer versucht sich mit VPN zu verbinden?,
     authpageseen: {
         _label: Sehen Sie die Seite zum Einloggen?,
         YES: Ja,
