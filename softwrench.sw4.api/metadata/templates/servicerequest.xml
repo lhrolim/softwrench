@@ -214,7 +214,10 @@
           </section>
 
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+<<<<<<< HEAD
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="checkWorklogsForChange"/>
+=======
+>>>>>>> origin/release/Kongsberg-v4.02
           
           
           <commandbars>
