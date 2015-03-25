@@ -793,7 +793,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
             if (parameters['fields']['invuseline_.siteid'] == null ||
                 parameters['fields']['invuseline_.siteid'].trim() == "") {
-                parameters['fields']['invuseline_.itemnum'] = null;
+                parameters['fields']['itemnum'] = null;
                 parameters['fields']['fromstoreloc'] = null;
                 parameters['fields']['invuseline_.frombin'] = null;
                 parameters['fields']['invuseline_.tostoreloc'] = null;
@@ -804,13 +804,13 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         invUseAfterChangeItem: function (parameters) {
-            var itemnum = parameters['fields']['invuseline_.itemnum'];
-            parameters['fields']['itemnum'] = itemnum;
+            var itemnum = parameters['fields']['itemnum'];
+            parameters['fields']['invuseline_.itemnum'] = itemnum;
             parameters['fields']['binnum'] = null;
             parameters['fields']['lotnum'] = null;
             parameters['fields']['binbalances_.curbal'] = null;
             if (nullOrEmpty(itemnum)) {
-                parameters['fields']['itemnum'] = null;
+                parameters['fields']['invuseline_.itemnum'] = null;
                 parameters['fields']['unitcost'] = null;
                 parameters['fields']['invuseline_.issueunit'] = null;
                 parameters['fields']['invuseline_.itemtype'] = null;
