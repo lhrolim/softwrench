@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Properties xmlns="http://www.controltechnologysolutions.com/propertiesmetadata">
-    <property key="baseWSPrefix" value="SW"/>
-    <property key="externalSystemName" value="SW" />
-    <property key="wsprovider" value="mif" />
-  <property key="basewsURL" value="http://66.235.236.131/meaweb/wsdl/" />
+  <property key="baseWSPrefix" value="SW"/>
+  <property key="externalSystemName" value="SW" />
+  <property key="wsprovider" value="mif" />
+  <property key="basewsURL" value="http://10.50.100.190:9080/meaweb/wsdl/" />
   <property key="maximo_DB_url" value="Data Source=10.50.100.40;Initial Catalog=YGA76MAX;User Id=MAXIMO;password=Max7506;" />
   <property key="maximo_DB_provider" value="System.Data.SQL"/>
   <property key="swdb_provider" value="System.Data.SQL"/>
-  <property key="maxAttachmentSize" value="10"/> <!--in MB-->
-  <property key="maxScreenshotSize" value="5"/> <!-- in MB-->
+  <property key="maxAttachmentSize" value="10"/>
+  <!--in MB-->
+  <property key="maxScreenshotSize" value="5"/>
+  <!-- in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
   <property key="defaultOrgId" value="YGA"/>
   <property key="defaultSiteId" value="YAVAPAI"/>
@@ -17,19 +19,21 @@
   <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="false"/>
-  
+  <!--Sample UNC Doclink Path-->
+  <!--<property key="MaximoDocLinksPath" value="\\10.10.10.13\e$\DOCLINKS"/>-->
+
 
   <environment key="dev">
-      <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX_Cmt;User Id=sw;password=softwrench;" />
-    </environment>
+    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX_Cmt;User Id=sw;password=softwrench;" />
+  </environment>
 
-    <environment key="qa">
-      <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX;User Id=sw;password=softwrench;" />
-    </environment>
+  <environment key="qa">
+    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX;User Id=sw;password=softwrench;" />
+  </environment>
 
-    <environment key="qa-wk">
-      <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX_Wk;User Id=sw;password=softwrench;" />
-    </environment>
+  <environment key="qa-wk">
+    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX_Wk;User Id=sw;password=softwrench;" />
+  </environment>
 
   <environment key="prod">
     <property key="swdb_url" value="Data Source=10.50.100.40;Initial Catalog=SWDB_YGA76MAX;User Id=sw;password=$0ftWr3nch;" />
@@ -39,5 +43,5 @@
 </Properties>
 
 
-  
+
 
