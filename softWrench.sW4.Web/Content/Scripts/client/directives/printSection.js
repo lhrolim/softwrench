@@ -41,6 +41,13 @@ app.directive('printSection', function (contextService) {
             $scope.showPrintSection = false;
             $scope.showPrintSectionCompostions = false;
 
+            $scope.shouldPageBreakComposition=function(first) {
+                if (first) {
+                    return $scope.shouldPageBreak && $scope.shouldPrintMain;
+                }
+                return $scope.shouldPageBreak;
+            }
+
             $scope.$on('sw_readytoprintevent', function (event, compositionData, shouldPageBreak, shouldPrintMain) {
                 
                 var compositionstoprint = [];
@@ -67,6 +74,8 @@ app.directive('printSection', function (contextService) {
                 $scope.printDatamap = Array.isArray($scope.datamap) ? $scope.datamap : new Array($scope.datamap);
                 $scope.showPrintSection = true;
                 $scope.showPrintSectionCompostions = compositionstoprint.length > 0;
+                $scope.shouldPageBreakMain = $scope.shouldPageBreak && $scope.datamap.length > 1;
+
             });
 
             $scope.$on('sw_readytoprintdetailedlistevent', function (event, detailedListData, compositionsToExpand, shouldPageBreak, shouldPrintMain) {
@@ -91,6 +100,7 @@ app.directive('printSection', function (contextService) {
                 $scope.printDatamap = detailedListData;
                 $scope.showPrintSection = true;
                 $scope.showPrintSectionCompostions = compositionstoprint.length > 0;
+                $scope.shouldPageBreakMain = $scope.shouldPageBreak && $scope.datamap.length > 1;
             });
 
             $scope.i18nValue = function (key, defaultValue, paramArray) {
