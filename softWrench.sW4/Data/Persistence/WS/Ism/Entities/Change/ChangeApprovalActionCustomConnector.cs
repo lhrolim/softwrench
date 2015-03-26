@@ -19,6 +19,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
             base.BeforeUpdate(maximoTemplateData);
         }
 
+        protected override void HandleDescription(CrudOperationData operationData, string description, ChangeRequest maximoTicket) {
+            //https://controltechnologysolutions.atlassian.net/browse/HAP-993
+            var selectedaction = operationData.GetAttribute("#selectedAction") as string;
+            var prefix = selectedaction == "Approved" ? "@APR@" : "@REJ@";
+            if (description.Length > 98) {
+                //we need to make sure the size is never bigger than 100
+                description = prefix + description.Substring(0, 95);
+            } else {
+                description = prefix + description;
+            }
+            maximoTicket.Change.Description = description;
+        }
+
         private static void ChangeApprovalsHandler(ChangeRequest changeRequest, string selectedaction, string groupName) {
             string log;
             string actionid;

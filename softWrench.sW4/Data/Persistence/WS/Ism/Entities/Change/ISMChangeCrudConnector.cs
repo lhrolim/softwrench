@@ -38,6 +38,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
             maximoTicket.Change.Description = description;
 
             HandleWorkLog(entity, maximoTicket);
+            HandleDescription(operationData,description, maximoTicket);
+            Log.Debug("Now the description will be: " + maximoTicket.Change.Description);
+
+            var integrationObject = maximoTemplateData.IntegrationObject;
+            ISMAttachmentHandler.HandleAttachmentsForUpdate((CrudOperationData)maximoTemplateData.OperationData, (ChangeRequest)integrationObject);
+        }
+
+        protected virtual void HandleDescription(CrudOperationData operationData, string description, ChangeRequest maximoTicket) {
             if (description != null && !description.StartsWith("@@")) {
                 if (description.Length > 98) {
                     //we need to make sure the size is never bigger than 100
@@ -48,10 +56,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
                 }
                 maximoTicket.Change.Description = description;
             }
-            Log.Debug("Now the description will be: " + maximoTicket.Change.Description);
-
-            var integrationObject = maximoTemplateData.IntegrationObject;
-            ISMAttachmentHandler.HandleAttachmentsForUpdate((CrudOperationData)maximoTemplateData.OperationData, (ChangeRequest)integrationObject);
         }
 
         private static Boolean HandleWorkLog(CrudOperationData entity, ChangeRequest maximoTicket) {
