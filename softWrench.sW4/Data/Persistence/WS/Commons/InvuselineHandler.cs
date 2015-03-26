@@ -21,9 +21,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     w.SetValueIfNull(integrationObject, "USETYPE", "TRANSFER");
                     w.SetValueIfNull(integrationObject, "LINETYPE", "ITEM");
                     w.SetValueIfNull(integrationObject, "CONVERSION", 1);
-                    var dateEntered = DateTime.Now.FromServerToRightKind();
-                    w.SetValueIfNull(integrationObject, "ACTUALDATE", dateEntered);
-                    w.SetValueIfNull(integrationObject, "PHYSCNTDATE", dateEntered);
                     var unitcost = w.GetRealValue(integrationObject, "unitcost");
                     var quantity = w.GetRealValue(integrationObject, "quantity");
                     var linecost = Convert.ToDouble(unitcost) * Convert.ToDouble(quantity);
