@@ -1339,7 +1339,7 @@
               <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
             <composition relationship="attachment" label="Attachments">
-              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="AppendCommlogDoclinks"/>
             </composition>
             <composition relationship="relatedrecord" label="Related Records">
               <collectionproperties allowcreation="false" />
