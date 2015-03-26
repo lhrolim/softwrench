@@ -196,10 +196,12 @@ namespace softWrench.sW4.Web.Util {
                 
                 column.Min = Convert.ToUInt32(columnIndex);
                 column.Max = Convert.ToUInt32(columnIndex);
-                cs.Append(column);
+                writer.WriteStartElement(column);
+                writer.WriteEndElement();
 
                 columnIndex++;
             }
+            // end columns
             writer.WriteEndElement();
 
             // done
