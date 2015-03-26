@@ -104,10 +104,6 @@ namespace softWrench.sW4.Web.Util {
 
                 Finish(writer, xl, worksheetpart);
 
-               // var excelFile = new SLDocument(ms);
-               // SetColumnWidth(excelFile, applicationFields);
-                
-                //excelFile.SaveAs(resultStream);
                 return ms.ToArray();
             }
         }
@@ -149,6 +145,9 @@ namespace softWrench.sW4.Web.Util {
             //worksheetpart.Worksheet = worksheet;
             writer.WriteStartElement(worksheet);
 
+            //changes
+            SetColumnWidth(writer, schema);
+
             // create sheetdata element
             writer.WriteStartElement(new SheetData());
           
@@ -172,39 +171,7 @@ namespace softWrench.sW4.Web.Util {
 
             // cell format list
             CreateCellFormats(stylesPart);
-
-            //changes
-            Columns cs = new Columns();
-            writer.WriteStartElement(cs);
-      
-            var columnIndex = 1;
-            IEnumerable<ApplicationFieldDefinition> applicationFields = schema.Fields;
-            foreach (var applicationField in applicationFields) {
-                double excelWidthAux;
-                string excelwidthAux;
-                string exporttoexcel;
-                applicationField.RendererParameters.TryGetValue("exporttoexcel", out exporttoexcel);
-                if ((exporttoexcel != null && !exporttoexcel.Equals("true")) || (applicationField.IsHidden && exporttoexcel == null)) {
-                    continue;
-                }
-                applicationField.RendererParameters.TryGetValue("excelwidth", out excelwidthAux);
-                double.TryParse(excelwidthAux, out excelWidthAux);
-                var excelWidth = excelWidthAux > 0 ? excelWidthAux : (applicationField.Label.Length * 1.5);
-
-                Column column = new Column();
-                column.Width = excelWidth;
-                
-                column.Min = Convert.ToUInt32(columnIndex);
-                column.Max = Convert.ToUInt32(columnIndex);
-                writer.WriteStartElement(column);
-                writer.WriteEndElement();
-
-                columnIndex++;
-            }
-            // end columns
-            writer.WriteEndElement();
-
-            // done
+            
             rowIdx = 1;
             return worksheetpart;
         }
@@ -439,8 +406,12 @@ namespace softWrench.sW4.Web.Util {
         }
 
 
-        private void SetColumnWidth(SLDocument excelFile, IEnumerable<ApplicationFieldDefinition> applicationFields) {
+        private void SetColumnWidth(OpenXmlWriter writer, ApplicationSchemaDefinition schema) {
+            Columns cs = new Columns();
+            writer.WriteStartElement(cs);
+
             var columnIndex = 1;
+            IEnumerable<ApplicationFieldDefinition> applicationFields = schema.Fields;
             foreach (var applicationField in applicationFields) {
                 double excelWidthAux;
                 string excelwidthAux;
@@ -452,9 +423,20 @@ namespace softWrench.sW4.Web.Util {
                 applicationField.RendererParameters.TryGetValue("excelwidth", out excelwidthAux);
                 double.TryParse(excelwidthAux, out excelWidthAux);
                 var excelWidth = excelWidthAux > 0 ? excelWidthAux : (applicationField.Label.Length * 1.5);
-                excelFile.SetColumnWidth(columnIndex, excelWidth);
+
+                Column column = new Column();
+                column.Width = excelWidth;
+
+                column.Min = Convert.ToUInt32(columnIndex);
+                column.Max = Convert.ToUInt32(columnIndex);
+                // write column
+                writer.WriteStartElement(column);
+                writer.WriteEndElement();
+
                 columnIndex++;
             }
+            // end columns
+            writer.WriteEndElement();
         }
 
 
