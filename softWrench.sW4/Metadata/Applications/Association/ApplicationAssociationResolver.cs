@@ -84,9 +84,9 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 associationFilter.SearchSort = orderByField;
                 associationFilter.SearchAscending = !orderByField.EndsWith("desc");
             }
-            //Added criteria to make sure this is not a custom lookup
-            else if (!association.RendererParameters.Any()) {
-                associationFilter.SearchSort = "value";
+            else {
+                // Applying 1 will cause the query to order by the first column
+                associationFilter.SearchSort = "1";
                 associationFilter.SearchAscending = true;
             }
 
