@@ -110,6 +110,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             } else if (anyrejWl != null) {
                 //if there´s a rejected worklog on the level, then all groups should be rejected, except the ones that might have approved it already...
                 approval[c.StatusColumn] = c.RejectedStatus;
+                //HAP-993 if any of the groups rejected it, we should no longer display the actions
+                approval["#shouldshowaction"] = false;
             }
 
 
