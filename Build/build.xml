@@ -225,7 +225,7 @@
 
 
     <zip includeemptydirs="true" zipfile="${deploypath}/sw4_${build.date}.zip">
-      <fileset basedir="${OutputDir}/deploy/">
+      <fileset basedir="${deploypath}">
         <include name="**/*" />
       </fileset>
     </zip>
