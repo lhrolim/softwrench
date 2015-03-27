@@ -42,24 +42,32 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             //it should always be the latest txlog, since no further operation is allowed after rejecting the workflow
             var rejectedTransaction = wftransactions.FirstOrDefault(w => w[ApproverConstants.TransTypeColumn].ToString().Equals("Reject"));
 
+            int numberOfActions = 0;
             foreach (var approval in approvals) {
                 var approvalGroup = (String)approval[c.ApproverGroupColumn];
                 //non customer approvals
                 if (approvalGroup != null && !approvalGroup.StartsWith("C-")) {
-                    HandleNonCustomerApprovers(user, wfassignment, approvalGroup, approval, wftransactions, rejectedTransaction);
+                    var hasAction = HandleNonCustomerApprovers(user, wfassignment, approvalGroup, approval, wftransactions, rejectedTransaction);
+                    if (hasAction) {
+                        numberOfActions++;
+                    }
                 } else {
-                    HandleCustomerApprovers(user, result, approvalGroup, worklogs, approval, wostatus);
+                    var hasAction = HandleCustomerApprovers(user, result, approvalGroup, worklogs, approval,wostatus);
+                    if (hasAction) {
+                        numberOfActions++;
+                    }
                 }
             }
+            result.SetAttribute("#numberofapprovalactions", numberOfActions);
         }
 
-        private void HandleNonCustomerApprovers(InMemoryUser user, IEnumerable<Dictionary<string, object>> wfassignment, string approvalGroup,
+        private Boolean HandleNonCustomerApprovers(InMemoryUser user, IEnumerable<Dictionary<string, object>> wfassignment, string approvalGroup,
             IDictionary<string, object> approval, IEnumerable<Dictionary<string, object>> wftransactions, Dictionary<string, object> rejectedTransaction) {
             //locate assignment
             var assignment = wfassignment.FirstOrDefault(f => f[c.RoleIdColumn].ToString().EqualsIc(approvalGroup));
             approval["#shouldshowaction"] = user.HasPersonGroup(approvalGroup);
             if (assignment == null) {
-                return;
+                return (Boolean)approval["#shouldshowaction"];
             }
             var wfid = assignment[c.WfIdColumn];
             var txs = wftransactions.Where(tx => tx[c.WfIdColumn].ToString().Equals(wfid));
@@ -71,9 +79,10 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 approval[c.StatusColumn] = GetStatusForPart1(rejectedTransaction, txToUse);
             }
             Log.DebugFormat("non customer approval handled " + string.Join(", ", approval.Select(m => m.Key + ":" + m.Value).ToArray()));
+            return (Boolean)approval["#shouldshowaction"];
         }
 
-        private void HandleCustomerApprovers(InMemoryUser user, DataMap result, string approvalGroup, IEnumerable<Dictionary<string, object>> worklogs, IDictionary<string, object> approval,
+        private Boolean HandleCustomerApprovers(InMemoryUser user, DataMap result, string approvalGroup, IEnumerable<Dictionary<string, object>> worklogs, IDictionary<string, object> approval,
             IEnumerable<Dictionary<string, object>> wostatus) {
 
             var latestAuthStatusDate = FetchLatestWOStatusDate(wostatus);
@@ -83,20 +92,27 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             }
 
 
+        
             var apprDescription = c.GetWorkLogDescriptions(approvalGroup, true);
             var rejDescription = c.GetWorkLogDescriptions(approvalGroup, false);
 
             var apprWl = worklogs.FirstOrDefault(w =>
-                w["description"].EqualsIc(apprDescription)
-                && w["logtype"].Equals(c.WlApprLogType));
+                apprDescription.EqualsIc(w["description"] as string)
+                && c.WlApprLogType.EqualsIc(w["logtype"] as string)
+                && w["recordkey"].Equals(result.GetAttribute("wonum"))
+                );
 
             var rejWl = worklogs.FirstOrDefault(w =>
-                w["description"].EqualsIc(rejDescription)
-              && w["logtype"].Equals(c.WlRejLogType));
+                rejDescription.EqualsIc(w["description"] as string)
+                && c.WlRejLogType.EqualsIc(w["logtype"] as string)
+                && w["recordkey"].Equals(result.GetAttribute("wonum"))
+                );
 
             var anyrejWl = worklogs.FirstOrDefault(w =>
-                 w["description"].StartsWithIc(c.RejectedWorklogDescription)
-              && w["logtype"].ToString().Equals(c.WlRejLogType));
+                 (w["description"] != null && w["description"].ToString().StartsWith(c.RejectedWorklogDescription, StringComparison.CurrentCultureIgnoreCase))
+              && w["logtype"].ToString().Equals(c.WlRejLogType)
+              && w["recordkey"].Equals(result.GetAttribute("wonum"))
+              );
 
             //approval["#shouldshowaction"] = LevelMatches(result, approval) && user.HasPersonGroup(approvalGroup); ;
             //removed due to thomas comments, on HAP-976
@@ -113,9 +129,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 //HAP-993 if any of the groups rejected it, we should no longer display the actions
                 approval["#shouldshowaction"] = false;
             }
-
-
             Log.DebugFormat("customer approval handled " + string.Join(", ", approval.Select(m => m.Key + ":" + m.Value).ToArray()));
+            return (bool)approval["#shouldshowaction"];
         }
 
         private IEnumerable<Dictionary<string, object>> FilterWorkLogsOlderThanLatestAuth(IEnumerable<Dictionary<string, object>> worklogs, DateTime? latestAuthStatusDate) {

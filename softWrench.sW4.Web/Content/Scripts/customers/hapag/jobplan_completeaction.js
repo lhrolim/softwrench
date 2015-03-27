@@ -65,7 +65,11 @@
         datamap.fields['#tasksummary'] = compositionitem.description;
         datamap.fields['#selectedAction'] = $scope.actiontoexecute;
         datamap.fields['#groupAction'] = getgroup(compositionitem, isJobPlan);
-        
+        var numberOfActions = datamap.fields["#numberofapprovalactions"];
+        if (!isJobPlan) {
+            datamap.fields['#lastaction'] = numberOfActions == 1;
+        }
+
         var parameters = datamap.fields;        
         var actionname = isJobPlan ? "completeaction" : "approvalaction";
         var urlToUse = url("api/data/operation/{0}/{1}?platform=web&id=".format(applicationName, actionname) + parameters.ticketid);

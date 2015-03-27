@@ -22,8 +22,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
         protected override void HandleDescription(CrudOperationData operationData, string description, ChangeRequest maximoTicket) {
             //https://controltechnologysolutions.atlassian.net/browse/HAP-993
             var selectedaction = operationData.GetAttribute("#selectedAction") as string;
-            var prefix = selectedaction == "Approved" ? "@APR@" : "@REJ@";
-            if (description.Length > 98) {
+            var lastApproval = Boolean.Parse(operationData.GetAttribute("#lastaction") as string);
+            var isApproved = "Approved".Equals(selectedaction);
+            if (isApproved && !lastApproval) {
+                return;
+            }
+            var prefix = isApproved ? "@APR@" : "@REJ@";
+            if (description.Length > 95) {
                 //we need to make sure the size is never bigger than 100
                 description = prefix + description.Substring(0, 95);
             } else {
