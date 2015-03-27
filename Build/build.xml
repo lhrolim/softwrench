@@ -359,4 +359,53 @@
 
   </target>
 
+
+  <target name="generatelinksMobile">
+    <foreach item="Folder" in="../" property="foldername">
+      <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
+      <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
+
+      <property name="indexof" value="${string::last-index-of(foldername, '.') + 1}" />
+      <property name="length" value="${string::get-length(foldername)}" />
+      <property name="size" value="${string::get-length(foldername) - string::last-index-of(foldername, '.')-1}" />
+
+      <property name="clientname" value="${string::substring(foldername,indexof,size)}" />
+
+
+
+      <if test="${file::exists(customerplaceholder)}">
+        <echo message="${foldername}" />
+        <echo message="${clientname}"/>
+
+
+
+        <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/Content/Customers" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+          <arg value="/c"/>
+          <arg line="mklink /D ${clientname} ${foldername}\web_content\${clientname}"/>
+        </exec>
+
+        <if test="${customerlinkcreated =='0'}">
+          <echo message="created symbolic link for ${clientname}" />
+        </if>
+      </if>
+
+
+      <if test="${file::exists(sharedplaceholder)}">
+        <echo message="${foldername}" />
+        <echo message="${clientname}"/>
+
+        <exec program="cmd" workingdir="../softwrench.sw4.WebMobile/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+          <arg value="/c"/>
+          <arg line="mklink /D ${clientname} ${foldername}\web_content\${clientname}"/>
+        </exec>
+
+        <if test="${customerlinkcreated =='0'}">
+          <echo message="created symbolic link for ${clientname}" />
+        </if>
+      </if>
+    </foreach>
+
+  </target>
+
+
 </project>
