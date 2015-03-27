@@ -162,6 +162,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 WsUtil.SetValueIfNull(integrationObject, "ENTERDATE", DateTime.Now.FromServerToRightKind(), true);
                 WsUtil.SetValueIfNull(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
                 WsUtil.SetValueIfNull(integrationObject, "PAYRATE", 0.0); 
+                
+                // Maximo 7.6 Changes
+                WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", crudData.GetUnMappedAttribute("startdate"), true);
 
                 ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
             });

@@ -41,5 +41,17 @@
         </schema>
       </schemas>
     </application>
+    <application name="labtrans" entity="labtrans" title="Labor">
+      <schemas>
+        <detail platform="web" redeclaring="false" >
+          <customization position="starttime"></customization>
+          <customization position="finishdate"></customization>
+          <customization position="finishtime"></customization>
+          <customization position="gldebitacct">
+            <field label="GL Debit Account:" attribute="gldebitacct" default="0000-000-000-00000" hidden="true" />
+          </customization>
+        </detail>
+      </schemas>
+    </application>
   </applications>
 </metadata>
