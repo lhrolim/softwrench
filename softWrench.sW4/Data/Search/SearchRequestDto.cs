@@ -18,7 +18,6 @@ using System.Text.RegularExpressions;
 namespace softWrench.sW4.Data.Search {
     public class SearchRequestDto : IDataRequest {
 
-
         private ApplicationLookupContext _context;
 
         public IDictionary<string, string> CustomParameters { get; set; }
@@ -116,9 +115,15 @@ namespace softWrench.sW4.Data.Search {
             var sbReplacingIdx = 0;
             var nullParamCounter = 0;
 
-            foreach (var parameter in GetParameters()) {
+            var searchParameters = GetParameters();
+            var parameters = Regex.Split(SearchParams, SearchUtils.SearchParamSpliter).Where(f => !String.IsNullOrWhiteSpace(f));
 
-                var key = parameter.Key.Split('.').Last();
+            foreach (var parameterSt in parameters)
+            {
+
+                var parameter = searchParameters[parameterSt];
+
+                var key = parameterSt.Split('.').Last();
 
                 var fields = originalSchema.Fields;
                 var idx = 0;
@@ -141,8 +146,8 @@ namespace softWrench.sW4.Data.Search {
                     newSearchParam = "null" + nullParamCounter++;
                 }
 
-                var idxToReplace = sb.ToString().IndexOf(parameter.Key, sbReplacingIdx, StringComparison.Ordinal);
-                sb.Replace(parameter.Key, newSearchParam, idxToReplace, parameter.Key.Length);
+                var idxToReplace = sb.ToString().IndexOf(parameterSt, sbReplacingIdx, StringComparison.Ordinal);
+                sb.Replace(parameterSt, newSearchParam, idxToReplace, parameterSt.Length);
                 sbReplacingIdx += newSearchParam.Length;
             }
 
