@@ -498,6 +498,13 @@
     <attribute name="requiredexpression" type="string"></attribute>
     <attribute name="qualifier" type="string"></attribute>
     <attribute name="hideDescription" type="boolean"></attribute>
+    <attribute name="orderbyfield" type="string" use="optional">
+      <annotation>
+        <documentation>
+          Specify the attribute to sort the search result by.
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="DataProvider">

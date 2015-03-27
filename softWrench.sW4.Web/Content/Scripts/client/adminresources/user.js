@@ -1,6 +1,6 @@
 ﻿
 
-function UserController($scope, $http, $templateCache, i18NService) {
+function UserController($scope, $http, $templateCache, pwdenforceService, i18NService) {
 
     var app = angular.module('plunker', ['ui.multiselect']);
 
@@ -112,6 +112,10 @@ function UserController($scope, $http, $templateCache, i18NService) {
     };
 
     $scope.save = function () {
+        if (!pwdenforceService.checker($scope.user.password, $scope.user.password2))
+            return;
+
+        // Apply disable on the save button when all the fields are completed successfully
         $('#saveBTN').prop('disabled', 'disabled');
         $http.post(url("api/security/User"), JSON.stringify($scope.user))
             .success(function (data) {

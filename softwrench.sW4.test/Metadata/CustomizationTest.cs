@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Metadata;
@@ -10,11 +11,22 @@ namespace softwrench.sW4.test.Metadata {
     [TestClass]
     public class CustomizationTest {
 
+        private static IList<ApplicationFieldDefinition> _baseWorklogDisplayables;
 
         [ClassInitialize]
         public static void Init(TestContext testContext) {
+            ApplicationConfiguration.TestclientName = "otb";
+            MetadataProvider.StubReset();
+
+            /* Temporarily used in TestAfterAndBefore1() Method */
+            var app = MetadataProvider.Application("worklog");
+            var listSchema = app.Schema(new ApplicationMetadataSchemaKey("list"));
+            _baseWorklogDisplayables = listSchema.Fields;
+            //TODO: Add the ability to access the base schema so that we can count the base displayables directly from a test method
+
             ApplicationConfiguration.TestclientName = "test_only";
             MetadataProvider.StubReset();
+
         }
 
 
@@ -23,8 +35,13 @@ namespace softwrench.sW4.test.Metadata {
             var app = MetadataProvider.Application("worklog");
             var listSchema = app.Schema(new ApplicationMetadataSchemaKey("list"));
             var displayables = listSchema.Fields;
-            //parent fields=8; customizations=2
-            Assert.AreEqual(11, displayables.Count);
+
+            //Add 2 for customized fields that were added on top of the base worklog (xxx and yyy)
+            //Subtract 1 field that will be automatically added to OTB's base worklog from having a relationship from SR -> Worklog
+            //(test_only does not include servicerequests, and therefore does not have a relationship from SR -> Worklog)
+            //TODO: Identify and calculate the number of displayables that will automatically get added from the sr -> worklog relationship
+            Assert.AreEqual(displayables.Count, _baseWorklogDisplayables.Count + 2 - 1);
+
 
             var description = displayables.FirstOrDefault(f => f.Attribute.Equals("description"));
             var descIndex = displayables.IndexOf(description);

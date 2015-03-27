@@ -827,6 +827,7 @@
         <attribute name="createdate"  type="datetime" required="true" />
         <attribute name="class"  type="varchar" required="true" />
         <attribute name="logtype"  type="varchar" required="true" />
+        <attribute name="clientviewable" type="smallint" required="true" />
         <attribute name="modifydate" type="datetime" required="true"/>
       </attributes>
       <relationships>

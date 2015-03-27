@@ -157,10 +157,10 @@
           <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
             <renderer type="autocompleteclient"/>
           </optionfield>
-          <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" >
+          <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc">
             <renderer type="lookup"/>
           </association>
-          <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist">
+          <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
             <!--renderer type="lookup"/-->
           </association>
           <field hidden="true" attribute="failurelist_.failurelist"/>
@@ -178,12 +178,12 @@
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
           </association>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
             <renderer type="lookup"/>
             <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
             <renderer type="lookup"/>
             <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
           </association>

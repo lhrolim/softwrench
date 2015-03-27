@@ -202,9 +202,17 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public User SaveUser(User user) {
+            var loginUser = CurrentUser();
+
             user.UserName = user.UserName.ToLower();
             var saveUser = UserManager.SaveUser(user);
             ClearUserFromCache(user.UserName);
+
+            if (saveUser.UserName.Equals(loginUser.Login)) {
+                var timezone = loginUser.TimezoneOffset.ToString(); 
+                UserFound(user, timezone);
+            }
+
             return saveUser;
         }
 
