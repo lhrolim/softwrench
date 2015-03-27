@@ -6,7 +6,7 @@
 
   <property name="MSBuildPath" value="c:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe" />
   <property name="MSDeployPath" value="C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe" />
-<!--   <property name="MSTestPath" value="c:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSTest.exe" />-->
+  <!--   <property name="MSTestPath" value="c:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSTest.exe" />-->
   <property name="SolutionFile" value="../softWrench.sW4.sln" />
   <property name="TestSettingsPath" value="../TestSettings1.testsettings" />
   <property name="TestPath" value="../softwrench.sW4.test/bin/Debug/softwrench.sW4.test.dll" />
@@ -19,9 +19,14 @@
   </ifnot>
 
   <tstamp property="build.date" pattern="yyyy_MM_dd_hh_mm_ss" verbose="true" />
-  
-  <property name="deploypath" value="${OutputDir}/deploy/${build.date}"></property>
 
+  <property name="deploypath" value="${OutputDir}/deploy/${build.date}"/>
+
+  <if test="${ignoretstamp == 'true'}">
+    <!--makes development easier-->
+    <property name="deploypath" value="${OutputDir}/deploy/local"></property>
+    <delete dir="${OutputDir}/deploy/local" failonerror="false"/>
+  </if>
 
   <!--These will come from jenkins-->
   <if test="${environment::variable-exists('clientsw4')}">
@@ -32,6 +37,14 @@
   </if>
   <if test="${environment::variable-exists('tag')}">
     <property name="version" value="${environment::get-variable('tag')}" />
+  </if>
+
+  <if test="${platform == 'web'}">
+    <property name="platformtoexclude" value="mobile" />
+  </if>
+
+  <if test="${platform == 'mobile'}">
+    <property name="platformtoexclude" value="web" />
   </if>
 
   <target name="fulldeploy" depends="compile,copydlls,deploy"/>
@@ -128,6 +141,21 @@
       </fileset>
     </copy>
 
+
+
+
+    <attrib readonly="false">
+      <fileset basedir="${deploypath}">
+        <include name="**"/>
+      </fileset>
+    </attrib>
+  </target>
+
+  <target name="copylinkedfolders" depends="mkdir">
+
+    <echo message="Excluding ${platformtoexclude} files" />
+
+
     <foreach item="Folder" in="../" property="foldername">
       <property name="customerplaceholder" value="${foldername}/customer.placeholder" />
       <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
@@ -136,17 +164,17 @@
       <property name="length" value="${string::get-length(foldername)}" />
       <property name="size" value="${string::get-length(foldername) - string::last-index-of(foldername, '.')-1}" />
 
-      <property name="clientname" value="${string::substring(foldername,indexof,size)}" />
+      <property name="projectname" value="${string::substring(foldername,indexof,size)}" />
 
 
 
-      <if test="${clientname == client}">
-        <echo message="${foldername}" />
-        <echo message="${clientname}"/>
+      <if test="${projectname == client}">
+        
+        <copy todir="${deploypath}/Content/Customers/${projectname}">
 
-        <copy todir="${deploypath}/Content/Customers/${clientname}">
-          <fileset basedir="../softWrench.sW4.${client}/web_content/${clientname}">
-            <include name="*.*" />
+          <fileset basedir="../softWrench.sW4.${client}/web_content/${projectname}">
+            <include name="**/*" />
+            <exclude name="**/*.${platformtoexclude}.*"/>
           </fileset>
         </copy>
         <echo message="Copied files for ${client}" />
@@ -154,54 +182,17 @@
 
 
       <if test="${file::exists(sharedplaceholder)}">
-        <echo message="${foldername}" />
-        <echo message="${clientname}"/>
-
-        <copy todir="${deploypath}/Content/Shared/${clientname}">
-          <fileset basedir="../softWrench.sW4.${clientname}/web_content/${clientname}">
-            <include name="*.*" />
+        <copy todir="${deploypath}/Content/Shared/${projectname}">
+          <fileset basedir="../softWrench.sW4.${projectname}/web_content/${projectname}">
+            <include name="**/*" />
+            <exclude name="**/*.${platformtoexclude}.*"/>
           </fileset>
         </copy>
-        <echo message="Copied files for ${client}" />
+        <echo message="Copied files for ${projectname}" />
       </if>
     </foreach>
-
-
-    <attrib readonly="false">
-      <fileset basedir="${deploypath}">
-        <include name="**"/>
-      </fileset>
-    </attrib>
   </target>
 
-  <target name="copydllssw" depends="mkdir">
-    <copy todir="${deploypath}">
-      <fileset basedir="../softWrench.sW4.Web/">
-        <include name="**/*" />
-        <exclude name="App_Data/client/**"/>
-        <exclude name="**.csproj"/>
-        <exclude name=".nuget/**"/>
-        <exclude name="Dependencies/**"/>
-        <exclude name="bin/Dependencies/**"/>
-        <exclude name="obj/**"/>
-      </fileset>
-    </copy>
-    <copy todir="${deploypath}/App_Data/Client/@internal">
-      <fileset basedir="../softWrench.sW4.Web/App_Data/Client/@internal">
-        <include name="*.*" />
-      </fileset>
-    </copy>
-    <copy todir="${deploypath}/App_Data/Client/${client}">
-      <fileset basedir="../softWrench.sW4.Web/App_Data/Client/${client}">
-        <include name="*.*" />
-      </fileset>
-    </copy>
-    <attrib readonly="false">
-      <fileset basedir="${deploypath}">
-        <include name="**"/>
-      </fileset>
-    </attrib>
-  </target>
 
 
 
@@ -220,7 +211,7 @@
                value="${profile}" failonerror="true"/>
   </target>
 
-  <target name="zip" depends="copydlls,setclient,setenv,explodexmlfiles">
+  <target name="zip" depends="copydlls,copylinkedfolders,setclient,setenv,explodexmlfiles">
 
 
 
@@ -230,7 +221,7 @@
       </fileset>
     </zip>
   </target>
-  
+
 
   <target name="explodexmlfiles" depends="setenv,setclient">
     <property name="clientpropertyfile" value="../softwrench.sW4.${client}/metadata/${client}/properties.xml" />
@@ -242,13 +233,13 @@
       </copy>
     </if>
   </target>
-  
+
   <target name="deploypeek" depends="setenv,setclient">
 
 
     <property name="clientfile1" value="${deploypath}/App_Data/Client/${client}/deploy.xml" />
     <property name="clientfile2" value="../softwrench.sW4.${client}/metadata/${client}/deploy.xml" />
-    
+
     <echo message="${clientfile1}"/>
     <echo message="${clientfile2}"/>
 
