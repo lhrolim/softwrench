@@ -39,6 +39,10 @@
     <property name="version" value="${environment::get-variable('tag')}" />
   </if>
 
+  <if test="${property::exists('platform')==false}">
+    <property name="platform" value="web" />
+  </if>
+
   <if test="${platform == 'web'}">
     <property name="platformtoexclude" value="mobile" />
   </if>
@@ -46,6 +50,8 @@
   <if test="${platform == 'mobile'}">
     <property name="platformtoexclude" value="web" />
   </if>
+
+  
 
   <target name="fulldeploy" depends="compile,copydlls,deploy"/>
 
@@ -215,7 +221,7 @@
 
 
 
-    <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/sw4_${client}_${profile}_${build.date}.zip">
+    <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/sw4_${platform}_${client}_${profile}_${build.date}.zip">
       <fileset basedir="${deploypath}">
         <include name="**/*" />
       </fileset>
