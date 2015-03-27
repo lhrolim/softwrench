@@ -224,20 +224,13 @@
 
 
 
-    <zip includeemptydirs="true" zipfile="${deploypath}/sw4_${build.date}.zip">
+    <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/sw4_${build.date}.zip">
       <fileset basedir="${deploypath}">
         <include name="**/*" />
       </fileset>
     </zip>
   </target>
-
-  <target name="zipsw" depends="copydllssw,setclient,setenv">
-    <zip includeemptydirs="true" zipfile="${deploypath}/sw4.zip">
-      <fileset basedir="${deploypath}">
-        <include name="**/*" />
-      </fileset>
-    </zip>
-  </target>
+  
 
   <target name="explodexmlfiles" depends="setenv,setclient">
     <property name="clientpropertyfile" value="../softwrench.sW4.${client}/metadata/${client}/properties.xml" />
