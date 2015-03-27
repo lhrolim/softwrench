@@ -10,6 +10,16 @@
         background-color: rgba(1, 45, 68, 0.50);
     }
 
+        .page-signin .form-signin .logo {
+            content: url(../images/logo-main-mobile.png);
+        }
+
+@media all and (min-width: 768px) {
+    .page-signin .form-signin .logo {
+        content: url(../images/logo-main.png);
+    }
+}
+
 .container header {
     background: #143444 url(../images/header.png) no-repeat top left;
     /*background: none;*/

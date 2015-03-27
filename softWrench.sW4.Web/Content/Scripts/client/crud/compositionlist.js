@@ -199,13 +199,14 @@ app.directive('compositionList', function (contextService, formatService) {
                 $scope.fetchfromserver = $scope.compositionschemadefinition.fetchFromServer;
                 $scope.collectionproperties = $scope.compositionschemadefinition.collectionProperties;
                 $scope.inline = $scope.compositionschemadefinition.inline;
-                //
 
 
                 $scope.clonedCompositionData = [];
                 $scope.clonedCompositionData = JSON.parse(JSON.stringify($scope.compositiondata));
                 $scope.isNoRecords = $scope.clonedCompositionData.length > 0 ? false : true;
+
                 $scope.detailData = {};
+                
                 $scope.noupdateallowed = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
                 $scope.expanded = false;
                 $scope.wasExpandedBefore = false;
@@ -298,8 +299,6 @@ app.directive('compositionList', function (contextService, formatService) {
                 return $scope.save();
             }
 
-
-
             this.cancel = function () {
                 $('#crudmodal').modal('hide');
                 if (GetPopUpMode() == 'browser') {
@@ -309,10 +308,11 @@ app.directive('compositionList', function (contextService, formatService) {
                 $scope.$emit('sw_cancelclicked');
             };
 
+
+
             $scope.$on("sw.composition.edit", function (event, datamap) {
                 $scope.edit(datamap);
             });
-
 
             $scope.edit = function (datamap) {
                 if ($scope.compositionlistschema.properties && "modal" == $scope.compositionlistschema.properties["list.click.popup"]) {
@@ -330,8 +330,10 @@ app.directive('compositionList', function (contextService, formatService) {
                     $scope.detailData[id] = {};
                     $scope.detailData[id].expanded = false;
                 }
+
                 // TODO: Allow comparsion of values with different data type (e.g. int and string).  
                 $scope.detailData[id].data = formatService.doContentStringConversion(item);
+
                 var newState = forcedState != undefined ? forcedState : !$scope.detailData[id].expanded;
                 $scope.detailData[id].expanded = newState;
 
@@ -346,6 +348,7 @@ app.directive('compositionList', function (contextService, formatService) {
                     eventService.onviewdetail(compositionSchema, parameters);
                 }
             };
+
             /// <summary>
             ///  Method called when an entry of the composition is clicked
             /// </summary>
@@ -404,6 +407,16 @@ app.directive('compositionList', function (contextService, formatService) {
                 return expressionService.evaluate(value, $scope.parentdata) && $scope.inline;
             };
 
+            $scope.hasModified = function (key, dictionary, displayables) {
+                for (var index = 0; index < displayables.length; index++) {
+                    var attribute = displayables[index].attribute;
+                    if (dictionary[key].data[attribute] != $scope.detailData[key].data[attribute]) {
+                        return true;
+                    }
+                }
+
+                return false;
+            };
 
             $scope.save = function (selecteditem) {
                 if (!selecteditem) {
@@ -428,26 +441,35 @@ app.directive('compositionList', function (contextService, formatService) {
                         return;
                     }
                 }
+
+                var updatedCompositionData = [];
                 if ($scope.collectionproperties.allowUpdate == "true") {
-                    var validationErrors = [];
+                    // create a dictionary to start the comparison process
+                    var idFieldName = $scope.compositiondetailschema.idFieldName;
+                    var compositionDictionary = {};
+                    for (var index = 0; index < $scope.compositiondata.length; index++) {
+                        compositionDictionary[$scope.compositiondata[index][idFieldName]] = {};
+                        compositionDictionary[$scope.compositiondata[index][idFieldName]].data = $scope.compositiondata[index];
+                    }
 
-                    $.each($scope.clonedCompositionData, function (key, value) {
-                        validationErrors = validationService.validate(detailSchema, detailSchema.displayables, value);
-                        if (validationErrors.length > 0) {
-                            //interrupting here, can´t be done inside service
-                            return false;
+                    for (var key in $scope.detailData) {
+                        if ($scope.detailData.hasOwnProperty(key) && $scope.hasModified(key, compositionDictionary, detailSchema.displayables)) {
+                            updatedCompositionData.push($scope.detailData[key].data);
+
+                            validationErrors = validationService.validate(detailSchema, detailSchema.displayables, $scope.detailData[key].data);
+                            if (validationErrors.length > 0) {
+                                //interrupting here, can´t be done inside service
+                                return false;
+                            }
                         }
-                    });
-
-                    if (validationErrors.length > 0) {
-                        return;
                     }
                 }
 
                 //parentdata is bound to the datamap --> this is needed so that the sw_submitdata has the updated data
                 if ($scope.collectionproperties.allowUpdate) {
                     //if composition items are editable, then we should pass the entire composition list back.  One or more item could have been changed.
-                    $scope.parentdata.fields[$scope.relationship] = $scope.clonedCompositionData;
+                    //$scope.parentdata.fields[$scope.relationship] = $scope.clonedCompositionData;
+                    $scope.parentdata.fields[$scope.relationship] = updatedCompositionData;
                 }
 
                 if (selecteditem != undefined) {
@@ -607,12 +629,11 @@ app.directive('compositionList', function (contextService, formatService) {
                     ($scope.compositionlistschema.properties.expansible == undefined ||
                     $scope.compositionlistschema.properties.expansible == 'true');
             };
+
             //overriden function
             $scope.i18NLabel = function (fieldMetadata) {
                 return i18NService.getI18nLabel(fieldMetadata, $scope.compositionlistschema);
             };
-
-
         }
     };
 });

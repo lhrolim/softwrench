@@ -463,7 +463,7 @@
       <attributes>
         <attribute name="itemnum" type="varchar" required="true" />
         <attribute name="location" type="varchar" required="true" />
-        <attribute name="binnum" type="varchar" required="false" />
+        <attribute name="binnum" type="varchar" required="false" query="ISNULL(invbalances.binnum, '')"/>
         <attribute name="lotnum" type="varchar" required="false" />
         <attribute name="curbal" type="double" required="true" />
         <attribute name="physcnt" type="double" required="true" />

@@ -101,17 +101,17 @@
           </optionfield>
           <!--SWWEB-342-->
           <field attribute="changeby" default="@username" hidden="true"/>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname"  enableexpression="@ownergroup==null">
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeowner"/>
           </association>
           <!-- Added the Owner Group field-->
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
             <renderer type="lookup"/>
             <event type="afterchange" service="srService" method="afterchangeownergroup"/>
           </association>
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
-          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" >
+          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
             <renderer type="lookup" params="columnlabel=Name"/>
           </association>
           <!--Added Reported Date just the way it was in gric to otb  Dt: 06/20/2014 -->
@@ -212,11 +212,7 @@
               <collectionproperties allowcreation="false" />
             </composition>
           </section>
-
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
-          <event type="beforesubmit.postvalidation" service="genericTicketService" method="checkWorklogsForChange"/>
-          
-          
           <commandbars>
             <commandgroup position="detailform">
               <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"

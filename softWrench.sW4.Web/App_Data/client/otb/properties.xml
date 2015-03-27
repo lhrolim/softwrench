@@ -45,6 +45,12 @@
     <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=swdb_SWMAX_sm;User Id=sw;password=softwrench;" />
   </environment>
 
+  <environment key="dev-76">
+    <property key="basewsURL" value="http://10.50.100.147:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=MAX76DEV;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_MAX76DEV;User Id=sw;password=softwrench;" />
+  </environment>
+  
 </Properties>
   
  

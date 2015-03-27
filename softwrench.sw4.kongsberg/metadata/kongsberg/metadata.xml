@@ -1987,31 +1987,37 @@
         <schema id="list"  stereotype="compositionlist">
           <field attribute="worklogid" hidden="true" />
           <field attribute="modifydate" hidden="true"/>
-          <field  attribute="recordkey" label="Record Key" hidden="true" />
-          <field  attribute="class" label="Class" hidden="true" />
-          <field  attribute="createby" label="Created By" hidden="true" />
-          <field attribute="createdbyperson_.displayname" label="Created By"/>
+          <field attribute="recordkey" label="Record Key" hidden="true" />
+          <field attribute="class" label="Class" hidden="true" />
+          <field attribute="createby" label="Created By" />
           <field attribute="createdate" label="Date" qualifier="subtitle">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
           <field  attribute="logtype" label="Log Type" hidden="true" />
           <field  attribute="description" label="Summary" qualifier="title"/>
           <field attribute="longdescription_.ldtext" label="Details" hidden="true"/>
-          <field attribute="#hasChanged" hidden="true"/>
+          <field attribute="clientviewable" hidden="true"/>
           <!--<field attribute="orgid" hidden="true" />
           <field attribute="siteid" hidden="true" />-->
 
         </schema>
 
         <detail stereotype="compositiondetail">
-          <field attribute="#hasChanged" hidden="true"/>
           <field attribute="modifydate" label="Modify Date" hidden="true"/>
           <field attribute="description" label="Summary:" requiredexpression="true" />
           <field attribute="longdescription_.ldtext" label="Details:" >
             <renderer type="textarea"/>
           </field>
-
-
+          <optionfield attribute="logtype" label="Log Type:" default="CLIENTNOTE">
+            <option label="Appointment Note" value="APPTNOTE"/>
+            <option label="Client Note" value="CLIENTNOTE"/>
+            <option label="Update" value="UPDATE"/>
+            <option label="Work" value="WORK"/>
+          </optionfield>
+          <optionfield attribute="clientviewable" label="Client Viewable:" default="0">
+            <option label="Yes" value="1"/>
+            <option label="No" value="0"/>
+          </optionfield>
         </detail>
       </schemas>
     </application>
@@ -2717,7 +2723,7 @@
             <renderer type="default"/>
           </field>
 
-          <field attribute="sendfrom" label="From:" requiredexpression="true" default="kogt@controltechnologysolutions.com">
+          <field attribute="sendfrom" label="From:" requiredexpression="true" default="support@kogtsupport24.com">
             <renderer type="email"/>
           </field>
           <field attribute="subject" label="Subject:" requiredexpression="true"/>

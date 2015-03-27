@@ -283,7 +283,7 @@
             <commandgroup position="gridtop">
               <command id="create_issue" label="New Issue" service="inventoryService" method="createIssue" parameters="schema,datamap"
                        successmessage="Issue created" position="&lt;filter"/>
-              <command id="batch_issue" label="Batch Issuing" service="inventoryService" method="navToBatchFilter" parameters="" successmessage="New issue(s) created" position="&lt;filter"/>
+              <!--<command id="batch_issue" label="Batch Issuing" service="inventoryService" method="navToBatchFilter" parameters="" successmessage="New issue(s) created" position="&lt;filter"/>-->
               <resourcecommand id="scanfilter" path="/Content/Templates/commands/scan/scanfilter.html" position="&lt;filter"/>
             </commandgroup>
           </commandbars>
@@ -1122,7 +1122,7 @@
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterFromStoreLoc"/>
           </association>
-          <association label="Item" target="invuseline_.itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,costtype,issueunit,unitcost,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,fromstoreloc" requiredexpression="true">
+          <association label="Item" target="itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,costtype,issueunit,unitcost,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,fromstoreloc" requiredexpression="true">
             <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
             <event type="afterchange" service="inventoryService" method="invUseAfterChangeItem"/>
           </association>

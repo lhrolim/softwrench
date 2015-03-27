@@ -674,7 +674,13 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 
                 return;
             }
-            parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
+            
+            if (parameters['fields']['inventory_.binnum'] == null) {
+                parameters['fields']['binnum'] = "";
+            } else {
+                parameters['fields']['binnum'] = parameters['fields']['inventory_.binnum'];
+            }
+
             doUpdateUnitCostFromInventoryCost(parameters, 'unitcost', 'storeloc');
         },
 
@@ -787,7 +793,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
             if (parameters['fields']['invuseline_.siteid'] == null ||
                 parameters['fields']['invuseline_.siteid'].trim() == "") {
-                parameters['fields']['invuseline_.itemnum'] = null;
+                parameters['fields']['itemnum'] = null;
                 parameters['fields']['fromstoreloc'] = null;
                 parameters['fields']['invuseline_.frombin'] = null;
                 parameters['fields']['invuseline_.tostoreloc'] = null;
@@ -798,13 +804,13 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         invUseAfterChangeItem: function (parameters) {
-            var itemnum = parameters['fields']['invuseline_.itemnum'];
-            parameters['fields']['itemnum'] = itemnum;
+            var itemnum = parameters['fields']['itemnum'];
+            parameters['fields']['invuseline_.itemnum'] = itemnum;
             parameters['fields']['binnum'] = null;
             parameters['fields']['lotnum'] = null;
             parameters['fields']['binbalances_.curbal'] = null;
             if (nullOrEmpty(itemnum)) {
-                parameters['fields']['itemnum'] = null;
+                parameters['fields']['invuseline_.itemnum'] = null;
                 parameters['fields']['unitcost'] = null;
                 parameters['fields']['invuseline_.issueunit'] = null;
                 parameters['fields']['invuseline_.itemtype'] = null;
@@ -978,15 +984,16 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         invIssue_afterChangeBin: function (parameters) {
-            if (parameters['fields']['binbalances_']) {
-                if (nullOrEmpty(parameters['fields']['binnum'])) {
-                    parameters['fields']['binbalances_.binnum'] = null;
-                    parameters['fields']['binbalances_.lotnum'] = null;
-                    parameters['fields']['binbalances_.curbal'] = null;
-                } else {
-                    parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
-                    parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
-                }
+            if (parameters['fields']['binnum'] == null) {
+                parameters['fields']['binbalances_.binnum'] = null;
+                parameters['fields']['binbalances_.lotnum'] = null;
+                parameters['fields']['binbalances_.curbal'] = null;
+                return;
+            }
+            if (parameters['fields']['binbalances_'] && parameters['fields']['binnum'] != null) {
+                //Check if null rather than nullOrEmpty since the binnum for an association option can be an empty string
+                parameters['fields']['lotnum'] = parameters['fields']['binbalances_.lotnum'];
+                parameters['fields']['#curbal'] = parameters['fields']['binbalances_.curbal'];
                 return;
             };
             // If the binbalances_ record is not filled but the binnum is
