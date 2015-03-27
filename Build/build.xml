@@ -6,7 +6,7 @@
 
   <property name="MSBuildPath" value="c:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe" />
   <property name="MSDeployPath" value="C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe" />
-  <!--   <property name="MSTestPath" value="c:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSTest.exe" />-->
+<!--   <property name="MSTestPath" value="c:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSTest.exe" />-->
   <property name="SolutionFile" value="../softWrench.sW4.sln" />
   <property name="TestSettingsPath" value="../TestSettings1.testsettings" />
   <property name="TestPath" value="../softwrench.sW4.test/bin/Debug/softwrench.sW4.test.dll" />
@@ -18,7 +18,7 @@
     <property name="OutputDir" value="c:\" />
   </ifnot>
 
-  <tstamp property="build.date" pattern="yyyy_MM_dd_hhmmss" verbose="true" />
+  <tstamp property="build.date" pattern="yyyy_MM_dd_hh_mm_ss" verbose="true" />
   
   <property name="deploypath" value="${OutputDir}/deploy/${build.date}"></property>
 
@@ -224,20 +224,13 @@
 
 
 
-    <zip includeemptydirs="true" zipfile="${deploypath}/sw4_${build.date}.zip">
+    <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/sw4_${client}_${profile}_${build.date}.zip">
       <fileset basedir="${deploypath}">
         <include name="**/*" />
       </fileset>
     </zip>
   </target>
-
-  <target name="zipsw" depends="copydllssw,setclient,setenv">
-    <zip includeemptydirs="true" zipfile="${deploypath}/sw4.zip">
-      <fileset basedir="${deploypath}">
-        <include name="**/*" />
-      </fileset>
-    </zip>
-  </target>
+  
 
   <target name="explodexmlfiles" depends="setenv,setclient">
     <property name="clientpropertyfile" value="../softwrench.sW4.${client}/metadata/${client}/properties.xml" />
