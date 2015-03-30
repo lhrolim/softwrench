@@ -40,6 +40,9 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
                 
                 parameters.fields['curbal'] = resultObject[0].fields['curbal'];
                 parameters.fields['physcnt'] = resultObject[0].fields['physcnt'];
+            } else if (resultObject.length <= 0) {
+                // no inventory item found, display error message
+                alertService.alert('This material is not available for use; please make another selection.');
             }
         });
     }
@@ -96,7 +99,7 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
                 doItemAssociation(parameters);
             } else {
                 // no inventory item found, display error message
-                alertService.alert('No inventory item found.');
+                alertService.alert('This material is not available for use; please make another selection.');
             }
         });
     };

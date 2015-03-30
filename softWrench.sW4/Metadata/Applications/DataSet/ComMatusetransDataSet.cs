@@ -50,19 +50,20 @@ namespace softWrench.sW4.Metadata.Applications.DataSet
             return filter;
         }
 
-        public IEnumerable<IAssociationOption> filterStoreLoc(AssociationPostFilterFunctionParameters postParams)
-        {
-            return filterMaterials(postParams);
+        public IEnumerable<IAssociationOption> filterStoreLoc(AssociationPostFilterFunctionParameters postParams) {
+            return filterMaterials(postParams).Distinct(new ValueComparer());
         }
 
-        public IEnumerable<IAssociationOption> filterLotnum(AssociationPostFilterFunctionParameters postParams)
-        {
-            return filterMaterials(postParams);
+        public IEnumerable<IAssociationOption> filterLotnum(AssociationPostFilterFunctionParameters postParams) {
+            return filterMaterials(postParams).Distinct(new ValueComparer());
         }
 
-        public IEnumerable<IAssociationOption> filterBinnum(AssociationPostFilterFunctionParameters postParams)
-        {
-            return filterMaterials(postParams);
+        public IEnumerable<IAssociationOption> filterBinnum(AssociationPostFilterFunctionParameters postParams) {
+            return filterMaterials(postParams).Distinct(new ValueComparer());
+        }
+
+        public IEnumerable<IAssociationOption> filterCond(AssociationPostFilterFunctionParameters postParams) {
+            return filterMaterials(postParams).Distinct(new ValueComparer());
         }
 
         public override string ApplicationName()
