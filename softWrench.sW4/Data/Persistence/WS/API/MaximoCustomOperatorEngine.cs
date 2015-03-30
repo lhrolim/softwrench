@@ -46,7 +46,7 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
                 if (ob is TargetResult) {
                     return (TargetResult)ob;
                 }
-                return new TargetResult(param.Id,param.UserId, ob);
+                return new TargetResult(param.UserId, ob);
             } catch (AmbiguousMatchException e) {
                 throw new InvalidOperationException(
                     String.Format("multiples methods found for operation {0} on entity {1}. Unable to decide", operationName,

@@ -25,6 +25,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
 
         public string UserId {
             get { return GetAttribute(_userIdAttributeName) == null ? null : GetAttribute(_userIdAttributeName).ToString(); }
+            set { SetAttribute(_userIdAttributeName, value); }
         }
         public string Class { get { return EntityMetadata.GetTableName(); } }
         public EntityMetadata EntityMetadata { get; set; }

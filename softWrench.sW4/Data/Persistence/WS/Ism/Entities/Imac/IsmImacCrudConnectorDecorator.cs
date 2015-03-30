@@ -31,7 +31,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
 
         public override void AfterCreation(MaximoOperationExecutionContext maximoTemplateData) {
             base.AfterCreation(maximoTemplateData);
-            var id = maximoTemplateData.ResultObject.Id;
             var schemaId = maximoTemplateData.OperationData.ApplicationMetadata.Schema.SchemaId;
         }
 
