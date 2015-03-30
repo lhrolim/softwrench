@@ -111,8 +111,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Content\Customers\" />
+    <Folder Include="Content\Vendor\" />
     <Folder Include="Content\Shared\" />
     <Folder Include="images\" />
+    <Content Include="bower.json" />
     <Content Include="bower_components\angular\.bower.json" />
     <Content Include="bower_components\angular\angular-csp.css" />
     <Content Include="bower_components\angular\angular.js" />
@@ -123,6 +125,9 @@
     <Content Include="bower_components\angular\index.js" />
     <Content Include="bower_components\angular\package.json" />
     <Content Include="bower_components\angular\README.md" />
+    <Content Include="Gruntfile.js" />
+    <Content Include="login.html" />
+    <Content Include="application.html" />
     <Content Include="merges\android\scripts\android2.3-jscompat.js" />
     <Content Include="merges\android\scripts\platformOverrides.js" />
     <Folder Include="merges\ios\" />
@@ -145,6 +150,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="index.html" />
+    <Content Include="package.json" />
     <Content Include="scripts\index.js" />
     <Content Include="scripts\platformOverrides.js" />
     <Content Include="css\index.css" />
