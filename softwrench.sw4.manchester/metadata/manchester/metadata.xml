@@ -167,6 +167,7 @@
   </entities>
 
   <applications>
+    <!--Request complete custom layout for service request.  Please review before making customization-->
     <application entity="SR" name="servicerequest" title="Service Request">
       <schemas>
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
