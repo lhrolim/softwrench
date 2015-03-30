@@ -280,11 +280,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         submitReturnConfirmation: function (event, datamap, parameters) {
-            returnConfirmation(event, datamap, parameters);
+            return returnConfirmation(event, datamap, parameters);
         },
 
         submitReturnTransformation: function (event, datamap) {
-            returnTransformation(event, datamap);
+            return returnTransformation(event, datamap);
         },
 
         invissuelistclick: function(datamap, schema) {
