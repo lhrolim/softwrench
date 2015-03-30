@@ -330,7 +330,13 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
                 $scope.$emit('sw_titlechanged', schema.title);
             }
             log.debug('rendering list view with previous data');
-            $scope.toList(null);
+            data = {
+                //here we have to reproduce that the request is coming from the server, so use resultObject as the name.
+                //check crud_list#gridRefreshed
+                resultObject: $scope.datamap,
+                schema: schema,
+            }
+            $scope.toList(data);
         }
         //}
     };
