@@ -337,7 +337,7 @@ app.directive('crudBody', function (contextService) {
                 $rootScope.$broadcast("sw_beforesubmitprevalidate_internal", transformedFields);
 
                 if (sessionStorage.mockclientvalidation == undefined) {
-                    var validationErrors = validationService.validate(schemaToSave, schemaToSave.displayables, transformedFields, $scope.crudform.$error);
+                    var validationErrors = validationService.validate(schemaToSave, schemaToSave.displayables, transformedFields, $scope.crudform.$error, false);
                     if (validationErrors.length > 0) {
                         //interrupting here, can´t be done inside service
                         return;

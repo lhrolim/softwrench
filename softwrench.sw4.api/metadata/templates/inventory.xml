@@ -518,9 +518,9 @@
             </commandgroup>
           </commandbars>
           <!--<event type="onvalidation" service="inventoryService" method="validateReturn"/>-->
+          <!--<event type="beforesubmit.prevalidation" service="inventoryService" method="submitReturnTransformation"/>-->
+          <event type="beforesubmit.onvalidation" service="inventoryService" method="validateReturn"/>
           <event type="beforesubmit.postvalidation" service="inventoryService" method="submitReturnConfirmation"/>
-          <!--<event type="beforesubmit.onvalidation" service="inventoryService" method="validateReturn"/>-->
-          <event type="beforesubmit.prevalidation" service="inventoryService" method="submitReturnTransformation"/>
           <properties>
             <property key="nextschema.schemaid" value="invIssueList"/>
             <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>

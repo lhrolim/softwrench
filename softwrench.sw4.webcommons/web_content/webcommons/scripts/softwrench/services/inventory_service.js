@@ -169,6 +169,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             message = message + " (Bin: " + binnum + ")";
         }
         return alertService.confirm(null, null, function () {
+            returnTransformation(event, datamap);
             parameters.continue();
         }, message);
     };
@@ -283,10 +284,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             return returnConfirmation(event, datamap, parameters);
         },
 
-        submitReturnTransformation: function (event, datamap) {
-            return returnTransformation(event, datamap);
-        },
-
         invissuelistclick: function(datamap, schema) {
             var param = {};
             param.id = datamap['matusetransid'];
@@ -319,7 +316,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                         var originalDatamap = {
                             fields: datamap,
                         };
-                        sessionStorage.mockclientvalidation = true;
                         returnConfirmation(null, transformedData, {
                             continue: function () {
                                 $rootScope.$broadcast('sw_submitdata', {
@@ -385,7 +381,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                         var originalDatamap = {
                             fields: datamap,
                         };
-                        sessionStorage.mockclientvalidation = true;
                         returnConfirmation(null, transformedData, {
                             continue: function () {
                                 $rootScope.$broadcast('sw_submitdata', {
@@ -851,6 +846,17 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 nullOrEmpty(assetnum) &&
                 nullOrEmpty(gldebitacct)) {
                 errors.push("Either a Workorder, Location, Asset, or GL Debit Account is required.");
+            }
+            return errors;
+        },
+
+        validateReturn: function (schema, datamap) {
+            var errors = [];
+            var quantityAdj = parseInt(datamap['#quantityadj']);
+            var quantity = datamap['quantity'];
+            var qtyReturned = datamap['qtyreturned'];
+            if (quantity - (quantityAdj + qtyReturned) < 0) {
+                errors.push("The quantity being returned cannot be greater than the quantity that was issued.");
             }
             return errors;
         },
