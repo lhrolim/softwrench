@@ -27,14 +27,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet
     class ComMatusetransDataSet : MaximoApplicationDataSet
     {        
         private IEnumerable<IAssociationOption> filterMaterials(AssociationPostFilterFunctionParameters postParams) {
-            List<IAssociationOption> Collections = new List<IAssociationOption>();
-            foreach (var item in postParams.Options) {
-                if (item.Label != null && item.Value.Equals(postParams.OriginalEntity.Attributes["itemnum"])) {
-                    Collections.Add(new AssociationOption(item.Label, item.Label));
-                }
-            }
-
-            return Collections;
+            return (from item in postParams.Options where item.Label != null && item.Value.Equals(postParams.OriginalEntity.Attributes["itemnum"]) select new AssociationOption(item.Label, item.Label)).Cast<IAssociationOption>().ToList();
         }
 
         public SearchRequestDto filterPlannedMaterials(AssociationPreFilterFunctionParameters parameters)

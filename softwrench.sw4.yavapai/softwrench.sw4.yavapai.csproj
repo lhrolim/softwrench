@@ -42,10 +42,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\com\cts\%24changecustomername%24\configuration\" />
-    <Folder Include="classes\com\cts\%24changecustomername%24\connector\" />
-    <Folder Include="classes\com\cts\%24changecustomername%24\dataset\" />
-    <Folder Include="classes\com\cts\%24changecustomername%24\migration\" />
+    <Folder Include="classes\com\cts\yavapai\configuration\" />
+    <Folder Include="classes\com\cts\yavapai\connector\" />
+    <Folder Include="classes\com\cts\yavapai\dataset\" />
+    <Folder Include="classes\com\cts\yavapai\migration\" />
     <Folder Include="web_content\yavapai\htmls\" />
     <Folder Include="web_content\yavapai\scripts\" />
   </ItemGroup>
