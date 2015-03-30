@@ -83,7 +83,7 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
                     validationArray = validationArray.concat(innerArray);
                 }
             }
-            if (!innerValidation) {
+            if (innerValidation == undefined || !innerValidation) {
                 var customErrorArray = eventService.beforesubmit_onvalidation(schema, datamap);
                 if (customErrorArray != null && Array.isArray(customErrorArray)) {
                     validationArray = validationArray.concat(customErrorArray);

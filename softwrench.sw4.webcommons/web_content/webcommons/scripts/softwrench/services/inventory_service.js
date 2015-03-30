@@ -854,7 +854,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var errors = [];
             var quantityAdj = parseInt(datamap['#quantityadj']);
             var quantity = datamap['quantity'];
-            var qtyReturned = datamap['qtyreturned'];
+            var qtyReturned = parseInt(datamap['qtyreturned']);
             if (quantity - (quantityAdj + qtyReturned) < 0) {
                 errors.push("The quantity being returned cannot be greater than the quantity that was issued.");
             }
