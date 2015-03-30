@@ -164,7 +164,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 WsUtil.SetValueIfNull(integrationObject, "PAYRATE", 0.0); 
                 
                 // Maximo 7.6 Changes
-                WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", crudData.GetUnMappedAttribute("startdate"), true);
+                var STARTDATEENTERED = new DateTime();
+                if (crudData.GetAttribute("startdate") != null && DateTime.TryParse(crudData.GetAttribute("startdate").ToString(), out STARTDATEENTERED)) {
+                    WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", STARTDATEENTERED.FromServerToRightKind(), true);
+                }
 
                 ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
             });
@@ -201,14 +204,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     WsUtil.SetValue(integrationObject, "DESCRIPTION", crudData.UnmappedAttributes["#description"]);
                 }
 
+                WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0.0);                
+                WsUtil.SetValueIfNull(integrationObject, "DESCRIPTION", "");  
+                WsUtil.SetValueIfNull(integrationObject, "CONVERSION", 1.0);
                 WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
                 WsUtil.SetValue(integrationObject, "ACTUALDATE", DateTime.Now.FromServerToRightKind(), true);
+                WsUtil.SetValue(integrationObject, "ACTUALCOST", unitcost);
                 WsUtil.SetValue(integrationObject, "QUANTITY", -1 * quantity);
-                WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0);
+                WsUtil.SetValue(integrationObject, "LINECOST", quantity * unitcost);
                 WsUtil.SetValue(integrationObject, "ENTERBY", user.Login);
-                WsUtil.SetValueIfNull(integrationObject, "DESCRIPTION", "");
+
                 WsUtil.SetValue(integrationObject, "ORGID", entity.GetAttribute("orgid"));
                 WsUtil.SetValue(integrationObject, "SITEID", entity.GetAttribute("siteid"));
+                WsUtil.SetValue(integrationObject, "TOSITEID", entity.GetAttribute("siteid"));
                 WsUtil.SetValue(integrationObject, "REFWO", recordKey);
 
                 WsUtil.SetValueIfNull(integrationObject, "ISSUETYPE", "ISSUE");
