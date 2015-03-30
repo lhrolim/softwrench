@@ -48,7 +48,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
         public IApplicationResponse RedirectToNextSchema(RouterParameters routerParameter) {
             var nextMetadata = routerParameter.NextApplication;
             var targetMocked = routerParameter.TargetMocked;
-            var id = routerParameter.TargetResult.Id;
+            var id = routerParameter.TargetResult.UserId;
 
             var applicationName = nextMetadata.Name;
             if (routerParameter.NoApplicationRedirectDetected) {

@@ -40,7 +40,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
         public override void AfterCreation(MaximoOperationExecutionContext maximoTemplateData) {
             base.AfterUpdate(maximoTemplateData);
-            maximoTemplateData.OperationData.Id = maximoTemplateData.ResultObject.Id;
+            maximoTemplateData.OperationData.UserId = maximoTemplateData.ResultObject.UserId;
             maximoTemplateData.OperationData.OperationType = Internal.OperationType.AddChange;
 
             // Resubmitting MIF for ServiceAddress Update
