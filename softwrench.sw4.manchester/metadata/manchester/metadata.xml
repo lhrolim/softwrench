@@ -167,7 +167,142 @@
   </entities>
 
   <applications>
+    <application entity="SR" name="servicerequest" title="Service Request">
+      <schemas>
+        <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
+          <section id ="siteidsection"/>
+          <field attribute="ticketid" label="SR No:" readonly="true"/>
+          <field attribute="ticketuid" label="SR No:" hidden="true"/>
+          <field attribute="class" label="" hidden="true"/>
+          <field attribute="actlabcost" hidden="true" />
+          <field attribute="actlabhrs" hidden="true"/>
+          <field attribute="siteid" hidden="true" />
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="createby" hidden="true"/>
+          
+          <section id="statussection"/>
+
+          <!--COMSW 24 required field for population purposes-->
+          <field attribute="sraddress_.description" attributeToServer="#tkdesc" hidden="true" />
+          <field attribute="sraddress_.staddrnumber" attributeToServer="#tkstaddrnumber" hidden="true" />
+          <field attribute="sraddress_.staddrstreet" attributeToServer="#tkstaddrstreet" hidden="true" />
+          <field attribute="sraddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
+          <field attribute="sraddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
+          <!--COMSW 24 association field used for lazy lookup-->
+          <association label="Service Address" target="saddresscode" labelfield="sraddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
+            <renderer type="lookup" />
+          </association>
+          <!-- SWWEB 173-->
+
+          <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
+          <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+
+          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" >
+            <renderer type="lookup" params="columnlabel=Name"/>
+          </association>
+
+          <!--COMSW-1-->
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType">
+            <renderer type="autocompleteclient" />
+          </optionfield>
+
+          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+            <dataprovider prefilterfunction="FilterAssets"/>
+            <event type="afterchange" service="srService" method="afterChangeAsset"/>
+          </association>
+
+          <association label="Location:" target="location" labelfield="location_.description" >
+            <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+            <renderer type="lookup"/>
+          </association>
+
+          <field attribute="description" label="Summary:" requiredexpression="true"/>
+          
+          <field label="Details:" attribute="longdescription_.ldtext">
+            <renderer type="richtext"/>
+          </field>
+
+          <!--SWWEB-342-->
+          <field attribute="changeby" default="@username" hidden="true"/>
+          
+            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="srService" method="afterchangeowner"/>
+          </association>
+
+          <!-- Added the Owner Group field-->
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+          </association>
+
+          <section id="attachmentsection" />
+
+          <field attribute="targetstart" hidden="true"/>
+          <field attribute="targetfinish" hidden="true"/>
+          <field attribute="actualstart" hidden="true"/>
+          <field attribute="actualfinish" hidden="true"/>
     
+          <section id="compositions"/>
+        </schema>
+      
+        <schema parentschema="adetail" id="newdetail" title="New Service Request" >
+          <section id="siteidsection">
+            <field attribute="ticketid" label="Request #:" hidden="true"/>
+            <field attribute="siteid" label="Site:" default="DPW" readonly="true"/>
+          </section>
+          <section id="statussection">
+            <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
+          </section>
+          <!--SSWEB 173-->
+          <section id="attachmentsection">
+            <field label="Attachment:" attribute="newattachment" >
+              <renderer type="upload"/>
+            </field>
+          </section>
+        </schema>
+
+        <schema parentschema="adetail" id="editdetail" title="Service Request Details">
+          <section id="siteidsection">
+           <field label="Site:" attribute="siteid" default="DPW" readonly="true"/>
+          </section>
+          <section id="statussection">
+          <association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
+              <renderer type="combo" />
+            </association>
+          </section>
+
+          <section id="compositions">
+            <composition relationship="worklog" label="Work Logs">
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="true" />
+            </composition>
+
+            <composition relationship="commlog" label="Communications">
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false"/>
+              <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
+            </composition>
+
+            <composition relationship="attachment" label="Attachments">
+              <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="AppendCommlogDoclinks"/>
+              
+            </composition>
+            <composition relationship="relatedrecord" label="Related Records">
+              <collectionproperties allowcreation="false" />
+            </composition>
+          </section>
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+          <commandbars>
+            <commandgroup position="detailform">
+              <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                       showexpression="@status=='NEW' &amp;&amp; @reportedby==@username" successmessage="SR deleted" position="left"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
     
     <application name="workorder" title="Work Order" entity="workorder">      
       <schemas>
