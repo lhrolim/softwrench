@@ -42,9 +42,6 @@
     </entity>
 
     <entity name="physicalCount" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 1 and DATEDIFF(day, physcntdate, GETDATE()) > inventory_.ccf and inventory_.ccf != 0">
-      <attributes>
-        <attribute name="binnum" type="varchar" required="true" query="ISNULL(physicalCount.binnum, '')" />
-      </attributes>
       <relationships>
         <relationship to="item" >
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
@@ -72,9 +69,6 @@
     </entity>
 
     <entity name="physicalDeviation" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 0 and curbal != physcnt">
-      <attributes>
-        <attribute name="binnum" type="varchar" required="true" query="ISNULL(physicalDeviation.binnum, '')" />
-      </attributes>
       <relationships>
         <relationship to="item" >
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
