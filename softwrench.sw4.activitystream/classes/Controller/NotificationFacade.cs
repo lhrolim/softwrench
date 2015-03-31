@@ -80,7 +80,7 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 
         public void UpdateNotificationStreams()
         {
-	        var slicedMetadataEntities = MetadataProvider.GetSlicedMetadataNotificationEntities();
+            var slicedMetadataEntities = MetadataProvider.GetSlicedMetadataNotificationEntities();
             var currentTime = DateTime.Now.FromServerToRightKind();
 
             var streamToUpdate = NotificationStreams["allRole"];
