@@ -1,7 +1,7 @@
 function AceController($scope, $http, $templateCache, $window, i18NService, alertService, restService) {
 
     $scope.save = function () {
-       
+
         switch ($scope.type) {
             case 'menu':
                 var urlToUse = "/api/generic/EntityMetadata/SaveMenu";
@@ -15,19 +15,20 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
             default:
                 var urlToUse = $scope.type;
                 break;
-                
-        }
-       
-        $http({
-            method: "PUT",
-            url: url(urlToUse),
-            headers: { "Content-Type": "application/xml" },
-            data: ace.edit("editor").getValue()
-        })
-            .success(function () {
-                $window.location.href = url("/stub/reset");
-            });
 
+        }
+        alertService.confirmMsg("You will be logged out in order to implement this change.Do you want to continue? ", function () {
+            $http({
+                method: "PUT",
+                url: url(urlToUse),
+                headers: { "Content-Type": "application/xml" },
+                data: ace.edit("editor").getValue()
+            })
+                .success(function () {
+                    $window.location.href = url("/stub/reset");
+                });
+
+        });
     };
     $scope.savechanges = function () {
         if ($scope.comments != undefined) {
@@ -51,8 +52,9 @@ function AceController($scope, $http, $templateCache, $window, i18NService, aler
                     }).
                         success(function () {
                             
-                            alertService.alert("Metadata saved successfully");
                             $scope.save();
+                            alertService.alert("Metadata saved successfully");
+                           
                             
                         });
                 

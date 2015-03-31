@@ -74,13 +74,9 @@
                                         i++;
                                     }
                                 }
-                            } else if (Model.Inactivity) {
-                                <script>
-                                    $(document).ready(function () {
-                                        alert('You have been automatically logged out due to inactivity. \n');
-                                    });
-                                </script>
-                            } else if (Model.Forbidden) {
+                            }
+                            
+                            else if (Model.Forbidden) {
                                 <script>
                                     $(document).ready(function () {
                                         alert("You do not have permission to use this application. Please contact your System Administrator.");
