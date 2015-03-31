@@ -14,8 +14,7 @@
           <field attribute="worklogid" hidden="true" />
           <field  attribute="recordkey" label="Record Key" hidden="true" />
           <field  attribute="class" label="Class" hidden="true" />
-          <field  attribute="createby" label="Created By" hidden="true" />
-          <field attribute="createdbyperson_.displayname" label="Created By"/>
+          <field  attribute="createby" label="Created By" />
           <field attribute="createdate" label="Date" qualifier="subtitle">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
