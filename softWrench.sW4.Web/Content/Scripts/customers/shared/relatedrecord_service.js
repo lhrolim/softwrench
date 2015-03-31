@@ -6,7 +6,7 @@ app.factory('relatedrecordService', function (redirectService, searchService) {
             wonum: wonum,
             siteid: siteid
         };
-        searchService.searchWithData("wonumlookup", searchData).success(function (data) {
+        searchService.searchWithData("workorder", searchData, "wonumlookup").success(function (data) {
             var resultObject = data.resultObject;
             var workorderid = resultObject[0]['fields']['workorderid'];
             redirectService.goToApplicationView(app, "editdetail", "input", null, { id: workorderid });
