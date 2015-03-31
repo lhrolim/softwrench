@@ -40,7 +40,7 @@
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
       </connectorParameters>
     </entity>
-    
+
     <entity name="physicalCount" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 1 and DATEDIFF(day, physcntdate, GETDATE()) > inventory_.ccf and inventory_.ccf != 0">
       <relationships>
         <relationship to="item" >
@@ -67,7 +67,7 @@
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BasePhysicalCountCrudConnector"/>
       </connectorParameters>
     </entity>
-    
+
     <entity name="physicalDeviation" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 0 and curbal != physcnt">
       <relationships>
         <relationship to="item" >
