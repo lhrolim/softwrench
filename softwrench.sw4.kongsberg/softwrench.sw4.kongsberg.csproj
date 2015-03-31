@@ -68,9 +68,12 @@
     <EmbeddedResource Include="metadata\kongsberg\deploy.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Content Include="web_content\kongsberg\images\header.jpg" />
+    <Content Include="web_content\kongsberg\images\logo-main-mobile.png" />
+    <Content Include="web_content\kongsberg\images\logo-main.png" />
+    <Content Include="web_content\kongsberg\images\name-softwrench.png" />
     <Content Include="web_content\kongsberg\scripts\aaa_kongsbergmodule.js" />
     <Content Include="web_content\kongsberg\styles\branding.css" />
-    <Content Include="web_content\kongsberg\images\header.png" />
     <Content Include="web_content\kongsberg\images\signin.jpg" />
     <Content Include="web_content\kongsberg\scripts\sr_service.js" />
   </ItemGroup>

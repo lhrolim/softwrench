@@ -5,6 +5,6 @@
 
 @media all and (min-width: 480px) {
     .page-signin .form-signin img.logo {
-        max-width: 80%;
+        max-width: 70%;
     }
 }

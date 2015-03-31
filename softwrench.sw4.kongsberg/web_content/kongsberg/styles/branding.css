@@ -12,6 +12,8 @@
 
         .page-signin .form-signin .logo {
             content: url(../images/logo-main-mobile.png);
+            /*width: 240px;*/
+            padding: 0 80px;
         }
 
 @media all and (min-width: 768px) {
@@ -21,23 +23,17 @@
 }
 
 .container header {
-    background: #143444 url(../images/header.png) no-repeat top left;
-    /*background: none;*/
+    background: #143444 url(../images/header.jpg) no-repeat top left;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
-
-    .container header .menu-admin {
-        /*background: #246d92;*/
-    }
 
     .container header .branding {
         background: none;
         display: none;
     }
-
-/*.container header .logo {
-        width: 115px;
-        margin-left: 5px;
-    }*/
 
 .horizontal-menu-container {
     background-color: rgba(135, 135, 135, 0.50);
@@ -45,10 +41,4 @@
 
 .container header .menu-grid .menu-expand {
     background-color: rgba(135, 135, 135, 0.50);
-}
-
-@media all and (min-width: 1180px) {
-    .container header {
-        background: #143444 url(../images/header.png) no-repeat top right;
-    }
 }
