@@ -93,6 +93,9 @@
     </entity>
     
     <entity name="invreserve" idAttribute="requestnum" whereclause="reservedqty > 0">
+      <attributes>
+        <attribute name="availablequantity" type="bigint" query="(select CAST(SUM(COALESCE(curbal, 0)) AS INT) from invbalances where itemnum = !@itemnum and siteid = !@siteid and location = !@location)"/>
+      </attributes>
       <relationships>
         <relationship to="item">
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
@@ -856,7 +859,7 @@
           <field attribute="wonum" label="Work Order">
             <renderer type="default" params="widthXS=40%;widthSM=30%;widthMD=20%;widthLG=10%" />
           </field>
-          <field attribute="asset" label="Asset">
+          <field attribute="assetnum" label="Asset">
             <renderer type="default" />
           </field>
           <field attribute="location" label="Storeroom">

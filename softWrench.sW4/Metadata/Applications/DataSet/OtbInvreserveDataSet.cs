@@ -93,47 +93,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         public override ApplicationListResult GetList(ApplicationMetadata application,
             PaginatedSearchRequestDto searchDto) {
             var result = base.GetList(application, searchDto);
-            LookupQuantityAvailableList(result.ResultObject);
             return result;
-        }
-
-        private void LookupQuantityAvailableList(IEnumerable<AttributeHolder> datamap) {
-            var itemnumList = datamap.Select(attributeHolder => attributeHolder.GetAttribute("ITEMNUM")).ToList();
-            // If the list is empty return
-            if (!itemnumList.Any()) {
-                return;
-            }
-            var commaSeparatedItemnums = String.Join(",", itemnumList);
-            commaSeparatedItemnums = "'" + commaSeparatedItemnums.Replace(",", "','") + "'";
-            var query = String.Format("SELECT itemnum, siteid, location, CAST(sum(curbal) AS INT) as curbal " +
-                                      "FROM invbalances " +
-                                      "WHERE itemnum in ({0}) " +
-                                      "GROUP BY itemnum, siteid, location " +
-                                      "HAVING sum(curbal) > 0",
-                                      commaSeparatedItemnums);
-            var resultSet = MaxDAO.FindByNativeQuery(query);
-            // If no items were found return
-            if (resultSet == null) {
-                return;
-            }
-
-            // For each invreserve record in the datamap,
-            // find the corresponding inventory quantity from
-            // the query above and set the available quantity.
-            foreach (var attributeHolder in datamap) {
-                var itemnum = attributeHolder.GetAttribute("ITEMNUM");
-                var siteid = attributeHolder.GetAttribute("SITEID");
-                var location = attributeHolder.GetAttribute("LOCATION") ?? "";
-                var result = resultSet.FirstOrDefault(res => res["ITEMNUM"] == itemnum.ToString() &&
-                                                             res["SITEID"] == siteid.ToString() &&
-                                                             res["LOCATION"] == location.ToString());
-                // Set a default of zero in case there are no invbalace records
-                var qtyAvailable = "0";
-                if (result != null) {
-                    qtyAvailable = result["curbal"];
-                }
-                attributeHolder.SetAttribute("AVAILABLEQUANTITY", qtyAvailable);
-            }
         }
 
         public SearchRequestDto FilterBins(AssociationPreFilterFunctionParameters parameters) {
