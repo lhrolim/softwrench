@@ -872,6 +872,18 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             }
         },
 
+        afterChangeTransferFromLocation: function(event) {
+            event.fields['itemnum'] = "";
+            event.fields['inventory_.item_.itemtype'] = "";
+            event.fields['invuseline_.frombin'] = "";
+            event.fields['invuseline_.fromblot'] = "";
+            event.fields['lotnum'] = "";
+            event.fields['inventory_.issueunit'] = "";
+            event.fields['#curbal'] = "";
+            event.fields['invuseline_.unitcost'] = "";
+            event.fields['invuseline_.costtype'] = "";
+        },
+
         overrideGlAccount: function(event) {
             event.fields['gldebitacct'] = event.fields['#gldebitacct'];
         },

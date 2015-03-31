@@ -1121,6 +1121,7 @@
           <association target="fromstoreloc" label="Storeroom" labelfield="fromlocation_.description" requiredexpression="true" dependantfields="siteid">
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterFromStoreLoc"/>
+            <event type="afterchange" service="inventoryService" method="afterChangeTransferFromLocation"/>
           </association>
           <association label="Item" target="itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,costtype,issueunit,unitcost,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,fromstoreloc" requiredexpression="true">
             <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
