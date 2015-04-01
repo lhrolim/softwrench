@@ -12,8 +12,6 @@
 
         .page-signin .form-signin .logo {
             content: url(../images/logo-main-mobile.png);
-            /*width: 240px;*/
-            padding: 0 80px;
         }
 
 @media all and (min-width: 768px) {
