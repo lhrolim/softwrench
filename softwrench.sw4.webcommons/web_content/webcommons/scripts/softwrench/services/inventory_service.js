@@ -777,6 +777,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
         },
 
+        invUseAfterChangeFromStoreLoc: function(parameters) {
+            parameters['fields']['invuseline_.fromstoreloc'] = parameters['fields']['fromstoreloc'];
+        },
+
         invUseAfterChangeFromBin: function(parameters) {
             parameters['fields']['invuseline_.fromlot'] = parameters['fields']['frominvbalance_.lotnum'];
             parameters['fields']['invuseline_.tolot'] = parameters['fields']['frominvbalance_.lotnum'];
@@ -786,16 +790,17 @@ app.factory('inventoryService', function ($http, contextService, redirectService
 
         invUseAfterChangeSite: function(parameters) {
 
-            if (parameters['fields']['invuseline_.siteid'] == null ||
-                parameters['fields']['invuseline_.siteid'].trim() == "") {
+            if (parameters['fields']['siteid'] == null ||
+                parameters['fields']['siteid'].trim() == "") {
                 parameters['fields']['itemnum'] = null;
                 parameters['fields']['fromstoreloc'] = null;
+                parameters['fields']['invuseline_.siteid'] = null;
                 parameters['fields']['invuseline_.frombin'] = null;
                 parameters['fields']['invuseline_.tostoreloc'] = null;
                 parameters['fields']['invuseline_.tobin'] = null;
                 return;
             }
-
+            parameters['fields']['invuseline_.siteid'] = parameters['fields']['siteid'];
         },
 
         invUseAfterChangeItem: function (parameters) {
