@@ -28,12 +28,27 @@ module.exports = function(grunt) {
   		 angular: {
   		     files: {
   		         'angular.min.js': 'angular/angular.min.js',
+  		         'angular.min.js.map': 'angular/angular.min.js.map',
+  		         'angular-sanitize.min.js': 'angular-sanitize/angular-sanitize.min.js',
+  		         'angular-sanitize.min.js.map': 'angular-sanitize/angular-sanitize.min.js.map',
+  		         'angular-ui-router.min.js': 'angular-ui-router/release/angular-ui-router.min.js',
+  		         'angular-animate.min.js': 'angular-animate/angular-animate.min.js',
+  		         'angular-animate.min.js.map': 'angular-animate/angular-animate.min.js.map',
+  		          'angular.js': 'angular/angular.js',
+  		     }
+  		 },
+
+  		 ngCordova: {
+  		     files: {
+  		         'ng-cordova.min.js': 'ngCordova/dist/ng-cordova.min.js',
   		     }
   		 },
 
   		 ionic: {
   		     files: {
-  		         'ionin.min.js': 'ionic/release/js/ionic.bundle.min.js',
+  		         'ionic.min.js': 'ionic/release/js/ionic.min.js',
+  		         'ionic-angular.min.js': 'ionic/release/js/ionic-angular.min.js',
+//  		         'ionic.bundle.min.js': 'ionic/release/js/ionic.bundle.min.js',
   		     }
   		 },
 
@@ -44,7 +59,7 @@ module.exports = function(grunt) {
   		     },
 
   		     files: {
-  		         'ionin.min.css': 'ionic/release/css/ionic.min.css',
+  		         'ionic.min.css': 'ionic/release/css/ionic.min.css',
   		     }
   		 },
          
