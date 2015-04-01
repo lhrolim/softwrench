@@ -38,6 +38,7 @@
       <HintPath>..\packages\FluentMigrator.1.1.1.0\tools\FluentMigrator.Runner.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -104,6 +105,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="web_content\manchester\scripts\com_dataimport_com74.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="metadata\manchester\readme.txt" />
     <Content Include="web_content\manchester\images\branding.png" />
     <Content Include="web_content\manchester\images\divider.png" />
@@ -111,7 +115,6 @@
     <Content Include="web_content\manchester\images\logo-main.png" />
     <Content Include="web_content\manchester\images\signin-branding.png" />
     <Content Include="web_content\manchester\images\signin.jpg" />
-    <Content Include="web_content\manchester\scripts\com_migration.sql" />
     <Content Include="web_content\manchester\styles\branding.css" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
