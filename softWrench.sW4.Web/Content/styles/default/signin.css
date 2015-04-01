@@ -48,7 +48,7 @@
             color: #fff;
         }
 
-    .page-signin .form-signin .logo {
+    .page-signin .form-signin .logo, .page-signin .form-signin .byline {
         padding: 0 20px;
     }
 
@@ -56,11 +56,7 @@
         margin: 0 auto;
     }
 
-    .page-signin .form-signin .cts-name {
-        padding: 0 5px;
-    }
-
-    .page-signin .form-signin img.logo, .page-signin .form-signin img.cts-name {
+    .page-signin .form-signin .logo img, .page-signin .form-signin .byline img {
         max-width: 100%;
         height: auto;
         width: auto;

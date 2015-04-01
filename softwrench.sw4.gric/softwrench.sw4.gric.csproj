@@ -100,10 +100,8 @@
     </EmbeddedResource>
     <Content Include="web_content\gric\images\branding.png" />
     <Content Include="web_content\gric\images\logo-main.png" />
-    <Content Include="web_content\gric\images\name-softwrench.png" />
     <Content Include="web_content\gric\scripts\sr_service.js" />
-    <Content Include="web_content\gric\styles\signin.css" />
-    <Content Include="web_content\gric\styles\site.css" />
+    <Content Include="web_content\gric\styles\branding.css" />
     <Content Include="web_content\gric\styles\application\grids.css" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

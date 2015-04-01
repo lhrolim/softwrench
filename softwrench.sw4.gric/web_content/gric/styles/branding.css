@@ -1,0 +1,23 @@
+﻿.page-signin .form-signin .logo img {
+    content: url(../images/logo-main.png);
+    max-width: 100%;
+    margin-bottom: 40px;
+}
+
+﻿.container header .branding {
+    background: url(../images/branding.png) no-repeat top left;
+}
+
+.container header .branding .logo img {
+    content: url(../images/logo-main.png);
+}
+
+.page-signin .form-signin .byline img {
+    content: url(../../../images/byline-softwrench.png);
+}
+
+@media all and (min-width: 480px) {
+    .page-signin .form-signin .logo img {
+        max-width: 70%;
+    }
+}

@@ -1,5 +1,5 @@
 ﻿.page-signin {
-    background: #0780c9 url(../images/signin.jpg) no-repeat center top fixed;
+    background: #b0dae9 url(../../images/tva/signin.jpg) no-repeat center top fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -7,33 +7,30 @@
 }
 
     .page-signin .form-signin {
-        background-color: rgba(1, 62, 91, 0.6);
+        background-color: rgba(1, 26, 45, 0.5);
     }
 
         .page-signin .form-signin .logo img {
-            content: url(../images/logo-main.png);
+            content: url(../../images/tva/logo-main.png);
         }
 
 .container header {
-    background: #34a7e0 url(../images/header.jpg) no-repeat top left;
+    background: #34a7e0 url(../../images/tva/header.jpg) no-repeat top left;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
 }
 
-    .container header .logo {
-        width: 160px;
-    }
-
     .container header .branding {
-        background: url(../images/branding.png) no-repeat top left;
+        background: url(../../images/tva/branding.png) no-repeat top left;
     }
 
         .container header .branding .logo img {
-            content: url(../images/logo-main.png);
+            content: url(../../images/tva/logo-main.png);
+            width: 420px;
         }
 
 .page-signin .form-signin .byline img {
-    content: url(../../../images/byline-softwrench.png);
+    content: url(../../images/byline-softwrench.png);
 }
