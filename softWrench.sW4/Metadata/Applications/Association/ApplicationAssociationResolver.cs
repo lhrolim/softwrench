@@ -14,6 +14,7 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sw4.Shared2.Util;
 using cts.commons.simpleinjector;
+using NHibernate.Util;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Security.Services;
@@ -78,6 +79,14 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 }
             }
 
+            // Set projections and pre filter functions
+            var numberOfLabels = BuildProjections(associationFilter, association);
+            var prefilterFunctionName = association.Schema.DataProvider.PreFilterFunctionName;
+            if (prefilterFunctionName != null) {
+                var preFilterParam = new AssociationPreFilterFunctionParameters(applicationMetadata, associationFilter, association, originalEntity);
+                associationFilter = PrefilterInvoker.ApplyPreFilterFunction(DataSetProvider.GetInstance().LookupDataSet(applicationMetadata.Name, applicationMetadata.Schema.SchemaId), preFilterParam, prefilterFunctionName);
+            }
+
             //Set the orderbyfield if any
             var orderByField = association.OrderByField;
             if (orderByField != null) {
@@ -86,16 +95,8 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             }
             else {
                 // Applying 1 will cause the query to order by the first column
-                associationFilter.SearchSort = "1";
+                associationFilter.SearchSort = associationFilter.ProjectionFields.Any() ? associationFilter.ProjectionFields.FirstOrDefault().Alias: "1";
                 associationFilter.SearchAscending = true;
-            }
-
-            // Set projections and pre filter functions
-            var numberOfLabels = BuildProjections(associationFilter, association);
-            var prefilterFunctionName = association.Schema.DataProvider.PreFilterFunctionName;
-            if (prefilterFunctionName != null) {
-                var preFilterParam = new AssociationPreFilterFunctionParameters(applicationMetadata, associationFilter, association, originalEntity);
-                associationFilter = PrefilterInvoker.ApplyPreFilterFunction(DataSetProvider.GetInstance().LookupDataSet(applicationMetadata.Name, applicationMetadata.Schema.SchemaId), preFilterParam, prefilterFunctionName);
             }
 
             var entityMetadata = MetadataProvider.Entity(association.EntityAssociation.To);
