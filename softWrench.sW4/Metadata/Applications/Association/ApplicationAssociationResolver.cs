@@ -79,6 +79,20 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 }
             }
 
+            // Sorting Precedence 
+            // 1. Sort by orderbyfield - if defined
+            // 2. Sort by prefilter function - if defined
+            // 3. Sort by value - if defined
+            // 4. Sort by the first projection field - if defined
+            // 5. Sort by the first column in the SQL query
+
+            //Set the orderbyfield if any
+            var orderByField = association.OrderByField;
+            if (orderByField != null) {
+                associationFilter.SearchSort = orderByField;
+                associationFilter.SearchAscending = !orderByField.EndsWith("desc");
+            }
+
             // Set projections and pre filter functions
             var numberOfLabels = BuildProjections(associationFilter, association);
             var prefilterFunctionName = association.Schema.DataProvider.PreFilterFunctionName;
@@ -87,15 +101,14 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 associationFilter = PrefilterInvoker.ApplyPreFilterFunction(DataSetProvider.GetInstance().LookupDataSet(applicationMetadata.Name, applicationMetadata.Schema.SchemaId), preFilterParam, prefilterFunctionName);
             }
 
-            //Set the orderbyfield if any
-            var orderByField = association.OrderByField;
-            if (orderByField != null) {
-                associationFilter.SearchSort = orderByField;
-                associationFilter.SearchAscending = !orderByField.EndsWith("desc");
-            }
-            else {
-                // Applying 1 will cause the query to order by the first column
-                associationFilter.SearchSort = associationFilter.ProjectionFields.Any() ? associationFilter.ProjectionFields.FirstOrDefault().Alias: "1";
+            if (associationFilter.SearchSort == null) {
+                if (associationFilter.ProjectionFields.Any(f => f.Alias == "value")) {
+                    associationFilter.SearchSort = "value";
+                }
+                else {
+                    // Applying 1 will cause the query to order by the first column
+                    associationFilter.SearchSort = associationFilter.ProjectionFields.Any() ? associationFilter.ProjectionFields.FirstOrDefault().Alias : "1";
+                }
                 associationFilter.SearchAscending = true;
             }
 
