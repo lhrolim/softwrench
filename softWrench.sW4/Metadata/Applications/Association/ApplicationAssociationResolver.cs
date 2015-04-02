@@ -81,10 +81,13 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
             // Sorting Precedence 
             // 1. Sort by orderbyfield - if defined
-            // 2. Sort by prefilter function - if defined
-            // 3. Sort by value - if defined
-            // 4. Sort by the first projection field - if defined
-            // 5. Sort by the first column in the SQL query
+            // 2. Sort by value - if defined
+            // 3. Sort by the first projection field - if defined
+            // 4. Sort by the first column in the SQL query
+            // 5. Sort by prefilter function - if defined
+
+            // Set projections
+            var numberOfLabels = BuildProjections(associationFilter, association);
 
             //Set the orderbyfield if any
             var orderByField = association.OrderByField;
@@ -92,16 +95,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 associationFilter.SearchSort = orderByField;
                 associationFilter.SearchAscending = !orderByField.EndsWith("desc");
             }
-
-            // Set projections and pre filter functions
-            var numberOfLabels = BuildProjections(associationFilter, association);
-            var prefilterFunctionName = association.Schema.DataProvider.PreFilterFunctionName;
-            if (prefilterFunctionName != null) {
-                var preFilterParam = new AssociationPreFilterFunctionParameters(applicationMetadata, associationFilter, association, originalEntity);
-                associationFilter = PrefilterInvoker.ApplyPreFilterFunction(DataSetProvider.GetInstance().LookupDataSet(applicationMetadata.Name, applicationMetadata.Schema.SchemaId), preFilterParam, prefilterFunctionName);
-            }
-
-            if (associationFilter.SearchSort == null) {
+            else {
                 if (associationFilter.ProjectionFields.Any(f => f.Alias == "value")) {
                     associationFilter.SearchSort = "value";
                 }
@@ -110,6 +104,13 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                     associationFilter.SearchSort = associationFilter.ProjectionFields.Any() ? associationFilter.ProjectionFields.FirstOrDefault().Alias : "1";
                 }
                 associationFilter.SearchAscending = true;
+            }
+
+            // Set pre-filter functions
+            var prefilterFunctionName = association.Schema.DataProvider.PreFilterFunctionName;
+            if (prefilterFunctionName != null) {
+                var preFilterParam = new AssociationPreFilterFunctionParameters(applicationMetadata, associationFilter, association, originalEntity);
+                associationFilter = PrefilterInvoker.ApplyPreFilterFunction(DataSetProvider.GetInstance().LookupDataSet(applicationMetadata.Name, applicationMetadata.Schema.SchemaId), preFilterParam, prefilterFunctionName);
             }
 
             var entityMetadata = MetadataProvider.Entity(association.EntityAssociation.To);
