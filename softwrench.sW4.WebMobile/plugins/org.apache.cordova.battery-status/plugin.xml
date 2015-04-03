@@ -29,7 +29,7 @@
     <issue>https://issues.apache.org/jira/browse/CB/component/12320643</issue>
 
     <js-module src="www/battery.js" name="battery">
-        <clobbers target="navigator.battery" />
+        <clobbers target="cordova.plugins.battery" />
     </js-module>
     
     <!-- android -->

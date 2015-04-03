@@ -9,6 +9,8 @@ module.exports = function(grunt) {
 	    folder2: "Content/Vendor/styles/"
     },
     
+
+    
     
   	bowercopy:{
   		
@@ -40,7 +42,8 @@ module.exports = function(grunt) {
 
   		 ngCordova: {
   		     files: {
-  		         'ng-cordova.min.js': 'ngCordova/dist/ng-cordova.min.js',
+  		         //  		         'ng-cordova.min.js': 'ngCordova/dist/ng-cordova.min.js',
+  		         'ng-cordova.min.js': 'ngCordova/dist/ng-cordova.js',
   		     }
   		 },
 
@@ -60,6 +63,18 @@ module.exports = function(grunt) {
 
   		     files: {
   		         'ionic.min.css': 'ionic/release/css/ionic.min.css',
+  		     }
+  		 },
+
+  		 ionic_fonts: {
+
+  		     options: {
+  		         destPrefix: 'Content/Vendor/fonts'
+  		     },
+
+  		     files: {
+  		         'ionicons.ttf': 'ionic/release/fonts/ionicons.ttf',
+  		         'ionicons.woff': 'ionic/release/fonts/ionicons.woff',
   		     }
   		 },
          
@@ -91,18 +106,36 @@ module.exports = function(grunt) {
 //                 'fonts': 'components-font-awesome/fonts/',
 //             }
 //         },
-      
-         
+  	},
+
+
+  	tags: {
+        options: {
+            openTag: '<!-- start auto template tags, grunt will generate it for dev environment, do not remove this -->'
+        },
+
+  	    build: {
+  	        src: ["Content/Mobile/scripts/controllers/**/*.js","Content/Mobile/scripts/services/**/*.js", "Content/Mobile/scripts/utils/**/*.js"],
+  	        dest: 'layout.html'
+  	    }
+  	},
+
+  	concat: {
+  	    mobileScripts: {
+  	        src: ["Content/Mobile/scripts/services/**/*.js","Content/Mobile/scripts/utils/**/*.js"],            
+  	        dest: "scripts/dist/mobile_angular.js"
+  	    },
   	}
   
   
   });
 
-  
-  // Load the plugin that provides the "uglify" task.
+
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-bowercopy');grunt
+  grunt.loadNpmTasks('grunt-bowercopy');
+  grunt.loadNpmTasks('grunt-script-link-tags');
 
   // Default task(s).
   grunt.registerTask('defaultdev', ['clean','bowercopy']);

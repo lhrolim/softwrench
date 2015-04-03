@@ -31,3 +31,5 @@ util.getDefaultFileNameEndingExclusions = function () {
  3) Debug USB on development mode on the phone
 
  4) Be careful, cause on the device the case is sensitive!
+
+ 5) On Ripple, open a second tab before hitting Chrome´s F12 or it will kill the application. 
