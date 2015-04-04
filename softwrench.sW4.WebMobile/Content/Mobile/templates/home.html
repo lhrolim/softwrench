@@ -1,12 +1,17 @@
-﻿<!-- Dashboard Tab -->
-<ion-tabs class="tabs-icon-top tabs-color-active-positive">
-    <ion-tab title="Home" icon="ion-home" href="#/tab/home">
-        <ion-nav-view name="home-tab"></ion-nav-view>
-    </ion-tab>
-    <ion-tab title="About" icon="ion-information" href="#/tab/about">
-        <ion-nav-view name="about-tab"></ion-nav-view>
-    </ion-tab>
-</ion-tabs>
+﻿<ion-view title="Home" left-buttons="leftButtons">
+
+    <ion-content class="padding">
+        <div class="list list-inset">
+            <label class="item item-input">
+                <input type="text" placeholder="Username" ng-model="data.username">
+            </label>
+            <label class="item item-input">
+                <input type="password" placeholder="Password" ng-model="data.password">
+            </label>
+        </div>
+        <button class="button button-block button-calm" ng-click="login()">Login</button>
+    </ion-content>
 
 
+</ion-view>
 

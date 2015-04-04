@@ -1,7 +1,9 @@
-﻿softwrench.controller('LoginCtrl', function($scope, $ionicPopup, $state) {
+﻿softwrench.controller('HomeController', function($scope, $ionicPopup, $state) {
     $scope.data = {};
 
     $scope.login = function () {
+
+
         $state.go('tab.dash');
 //        LoginService.loginUser($scope.data.username, $scope.data.password).success(function(data) {
 //            

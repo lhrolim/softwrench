@@ -1,0 +1,49 @@
+﻿<ion-side-menus>
+
+    <ion-side-menu-content>
+
+        <ion-nav-bar type="bar-positive"
+                     back-button-type="button-icon"
+                     back-button-icon="ion-ios7-arrow-back"
+                     animation="nav-title-slide-ios7">
+            <ion-nav-back-button class="button-icon ion-arrow-left-c">
+            </ion-nav-back-button>
+        </ion-nav-bar>
+        <ion-nav-buttons side="left">
+            <button class="button button-icon button-clear ion-navicon" ng-click="toggleLeft()"></button>
+        </ion-nav-buttons>
+        <ion-nav-view name="main"></ion-nav-view>
+
+        <ion-tabs tabs-type="tabs-icon-only">
+            <ion-tab title="Home" icon-off="ion-ios7-home-outline" icon-on="ion-home" href="#/tab/account">
+                <ion-nav-view name="tab-home"></ion-nav-view>
+            </ion-tab>
+
+            <ion-tab title="Settings" icon-off="ion-ios7-gear-outline" icon-on="ion-ios7-gear" href="#/tab/account">
+                <ion-nav-view name="tab-settings"></ion-nav-view>
+            </ion-tab>
+
+            <ion-tab title="Info" icon-off="ion-information" icon-on="ion-information" href="#/tab/account">
+                <ion-nav-view name="tab-settings"></ion-nav-view>
+            </ion-tab>
+
+        </ion-tabs>
+    </ion-side-menu-content>
+
+    <ion-side-menu side="left">
+        <header class="bar bar-header bar-assertive">
+            <div class="title">Side Menu</div>
+        </header>
+        <ion-content has-header="true">
+            <ul class="list">
+                <a ui-sref="entry" class="item">Back To Entry Page</a>
+                <a ui-sref="main.home" class="item" ng-click="toggleMenu()">Home</a>
+                <a ui-sref="main.tabs" class="item" ng-click="toggleMenu()">Tabs</a>
+            </ul>
+        </ion-content>
+    </ion-side-menu>
+
+</ion-side-menus>
+
+
+

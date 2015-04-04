@@ -28,7 +28,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
 
         var isCookieAuthenticated = loginService.checkCookieCredentials();
         if (isCookieAuthenticated) {
-            $state.go('home');
+            $state.go('main.home');
             return;
         }
         $state.go('login');
@@ -45,26 +45,32 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
         .state('login', {
             url: '/login',
             templateUrl: 'Content/Mobile/templates/login.html',
-            controller: 'LoginCtrl'
+            controller: 'LoginController'
         })
 
         // setup an abstract state for the tabs directive
-          .state('home', {
-              url: "/home",
-              templateUrl: "Content/Mobile/templates/home.html"
+          .state('main', {
+              url: "/main",
+              templateUrl: "Content/Mobile/templates/main.html",
+              abstract: true,
+              controller: 'MainController'
           })
+
+
+        .state('main.home', {
+            url: '/home',
+            views: {
+                'main': {
+                    templateUrl: 'Content/Mobile/templates/home.html',
+                    controller: 'HomeController'
+                }
+            }
+        })
+
     //
     //    // Each tab has its own nav history stack:
     //
-    //    .state('tab.dash', {
-    //        url: '/dash',
-    //        views: {
-    //            'tab-dash': {
-    //                templateUrl: 'templates/tab-dash.html',
-    //                controller: 'DashCtrl'
-    //            }
-    //        }
-    //    })
+    
     //
     //    .state('tab.chats', {
     //        url: '/chats',

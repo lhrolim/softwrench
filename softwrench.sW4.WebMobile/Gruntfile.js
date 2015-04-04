@@ -138,7 +138,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-script-link-tags');
 
   // Default task(s).
-  grunt.registerTask('defaultdev', ['clean','bowercopy']);
+  grunt.registerTask('defaultdev', ['clean','bowercopy','tags']);
   grunt.registerTask('default', ['clean','bowercopy','uglify']);
 
 };
