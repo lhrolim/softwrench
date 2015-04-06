@@ -67,13 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\swgas\readme.txt" />
-    <Content Include="web_content\manchester\images\branding.png" />
-    <Content Include="web_content\manchester\images\divider.png" />
-    <Content Include="web_content\manchester\images\header.jpg" />
-    <Content Include="web_content\manchester\images\logo-main.png" />
-    <Content Include="web_content\manchester\images\signin-branding.png" />
-    <Content Include="web_content\manchester\images\signin.jpg" />
-    <Content Include="web_content\manchester\styles\branding.css" />
+    <Content Include="web_content\swgas\images\logo-client.png" />
+    <Content Include="web_content\swgas\styles\branding.css" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="metadata\swgas\statuscolors.json">
@@ -85,8 +80,8 @@
     <Folder Include="classes\com\cts\%24changecustomername%24\connector\" />
     <Folder Include="classes\com\cts\%24changecustomername%24\dataset\" />
     <Folder Include="classes\com\cts\%24changecustomername%24\migration\" />
-    <Folder Include="web_content\manchester\htmls\" />
-    <Folder Include="web_content\manchester\scripts\" />
+    <Folder Include="web_content\swgas\htmls\" />
+    <Folder Include="web_content\swgas\scripts\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
