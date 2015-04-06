@@ -40,7 +40,7 @@
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseInventoryIssueCrudConnector" />
       </connectorParameters>
     </entity>
-
+    
     <entity name="physicalCount" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 1 and DATEDIFF(day, physcntdate, GETDATE()) > inventory_.ccf and inventory_.ccf != 0">
       <relationships>
         <relationship to="item" >
@@ -67,7 +67,7 @@
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BasePhysicalCountCrudConnector"/>
       </connectorParameters>
     </entity>
-
+    
     <entity name="physicalDeviation" idAttribute="invbalancesid" parententity="invbalances" whereclause="RECONCILED = 0 and curbal != physcnt">
       <relationships>
         <relationship to="item" >
@@ -137,7 +137,7 @@
     </entity>
 
     <!--SwWEB-1032: Only display active items-->
-    <entity name="inventory" idAttribute="inventoryid" whereclause="inventory.STATUS = 'ACTIVE'">
+    <entity name="inventory" idAttribute="inventoryid" whereclause="inventory.STATUS = 'ACTIVE' and (select CAST(SUM(COALESCE(curbal, 0)) AS INT) from invbalances where invbalances.itemnum = inventory.itemnum and invbalances.siteid = inventory.siteid and invbalances.location = inventory.location) > 0">
       <attributes>
         <attribute name="itemnum" type="varchar" required="true" />
         <attribute name="location" type="varchar" required="true" />
@@ -179,6 +179,7 @@
         <attribute name="storeloc" type="varchar" required="false" />
         <attribute name="storelocsiteid" type="varchar" required="false" />
         <attribute name="rowstamp" type="timestamp" required="false" />
+        <attribute name="quantity" type="bigint" query="(select CAST(SUM(COALESCE(curbal, 0)) AS INT) from invbalances where invbalances.itemnum = !@itemnum and invbalances.siteid = !@siteid and invbalances.location = !@location)"/>
       </attributes>
       <relationships>
         <relationship to="invcost" >
@@ -189,6 +190,11 @@
         </relationship>
         <relationship to="item">
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+        </relationship>
+        <relationship to="invbalances">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="location" to="location"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
         <relationship to ="glcomponents">
           <relationshipAttribute from="orgid" to="orgid" primary="true"/>
@@ -271,6 +277,7 @@
             <option value="1" label="Yes"/>
             <option value="0" label="No"/>
           </optionfield>
+          <field label="Quantity" attribute="quantity"/>
         </schema>
       </schemas>
     </application>
@@ -1119,12 +1126,15 @@
           <field attribute="usetype" hidden="true"/>
           <association label="Site" target="siteid" labelfield="site_.description" extraprojectionvalues="description" requiredexpression="true">
             <renderer type="lookup"/>
-            <!--<event type="afterchange" service="inventoryService" method="invUseAfterChangeSite"/>-->
+            <event type="afterchange" service="inventoryService" method="invUseAfterChangeSite"/>
           </association>
+          <field attribute="invuseline_.siteid" default="@usersite" hidden="true"/>
           <association target="fromstoreloc" label="Storeroom" labelfield="fromlocation_.description" requiredexpression="true" dependantfields="siteid">
             <renderer type="lookup"/>
             <dataprovider prefilterfunction="FilterFromStoreLoc"/>
+            <event type="afterchange" service="inventoryService" method="invUseAfterChangeFromStoreLoc"/>
           </association>
+          <field attribute="invuseline_.fromstoreloc" default="@storeloc" hidden="true"/>
           <association label="Item" target="itemnum" forcedistinctoptions="true" labelfield="inventory_.item_.description" extraprojectionvalues="itemnum,costtype,issueunit,unitcost,item_.description,item_.itemtype,item_.iskit,item_.rotating" dependantfields="siteid,fromstoreloc" requiredexpression="true">
             <renderer type="lookup" params="application=inventory;schemaId=inventoryLookupList;"/>
             <event type="afterchange" service="inventoryService" method="invUseAfterChangeItem"/>

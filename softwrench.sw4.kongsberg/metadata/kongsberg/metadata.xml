@@ -1357,7 +1357,6 @@
           </section>
 
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
-          <event type="beforesubmit.postvalidation" service="genericTicketService" method="checkWorklogsForChange"/>
           
           <commands>
             <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
@@ -1773,7 +1772,6 @@
           </composition>
 
           <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
-          <event type="beforesubmit.postvalidation" service="genericTicketService" method="checkWorklogsForChange"/>
         </schema>
       </schemas>
     </application>
