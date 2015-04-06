@@ -243,9 +243,9 @@ app.directive('crudList', function (contextService) {
                         $scope.paginationData = contextService.fetchFromContext("crud_context", true).paginationData;
                     }
 
-                    $scope.searchData = $scope.searchData || {};
-                    $scope.searchOperator = $scope.searchOperator || {};
-                    $scope.searchSort = $scope.searchSort || {};
+                    $scope.searchData = {};
+                    $scope.searchOperator = {};
+                    $scope.searchSort = {};
 
                     if (data.pageResultDto && data.pageResultDto.searchParams) {
                         var result = searchService.buildSearchDataAndOperations(data.pageResultDto.searchParams, data.pageResultDto.searchValues);
