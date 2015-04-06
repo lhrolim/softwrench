@@ -23,7 +23,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
             var recordKey = entity.UserId;
 
             // Filter work order materials for any new entries where matusetransid is null
-            var Worklogs = ((IEnumerable<CrudOperationData>)entity.GetRelationship("worklog")).ToArray();
+            var Worklogs = ((IEnumerable<CrudOperationData>)entity.GetRelationship("worklog")).Where(w => w.GetAttribute("modifydate") == null).ToArray();
             WsUtil.CloneArray(Worklogs, rootObject, "WORKLOG", delegate(object integrationObject, CrudOperationData crudData) {
                 WsUtil.SetValueIfNull(integrationObject, "worklogid", -1);
                 WsUtil.SetValue(integrationObject, "recordkey", recordKey);
