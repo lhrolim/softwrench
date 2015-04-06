@@ -35,7 +35,7 @@ app.factory('checkpointService', function (contextService, searchService, schema
         /// 
         /// </param>
         createGridCheckpoint: function (schema, searchDTO) {
-            var applicationKey = schemaService.buildApplicationKey(schema);
+            var applicationKey = schema.applicationName + "." + schema.schemaId;
 
             var checkpointData = {
                 listContext: searchDTO,
