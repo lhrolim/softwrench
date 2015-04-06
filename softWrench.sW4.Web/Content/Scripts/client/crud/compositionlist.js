@@ -414,7 +414,11 @@ app.directive('compositionList', function (contextService, formatService) {
             $scope.hasModified = function (key, displayables) {
                 for (var index = 0; index < displayables.length; index++) {
                     var attribute = displayables[index].attribute;
-                    if ($scope.clonedData[key].data[attribute] != $scope.detailData[key].data[attribute]) {
+
+                    if ($scope.clonedData[key] == null) {
+                        return false;
+                    }
+                    else if ($scope.clonedData[key].data[attribute] != $scope.detailData[key].data[attribute]) {
                         return true;
                     }
                 }
