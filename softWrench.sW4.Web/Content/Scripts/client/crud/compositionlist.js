@@ -489,7 +489,7 @@ app.directive('compositionList', function (contextService, formatService) {
 
                 $scope.$emit("sw_submitdata", {
                     successCbk: function (data) {
-                        var updatedArray = data.resultObject.fields[$scope.relationship];
+                        var updatedArray = data.resultObject != null ? data.resultObject.fields[$scope.relationship] : null;
                         if (alwaysrefresh || updatedArray == null || updatedArray.length == 0) {
                             window.location.reload();
                             return;
