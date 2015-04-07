@@ -1,7 +1,8 @@
-﻿mobileServices.factory('swdbProxy', function () {
+﻿var entities = {};
+mobileServices.factory('swdbDAO', function ($q) {
 
     //creating namespace for the entities, to avoid eventaul collisions
-    var entities = {};
+  
   
 
     return {
@@ -62,16 +63,44 @@
 
         },
 
-        findById:function(entity, id) {
+        findById:function(entity, id,cbk) {
             if (!entities[entity]) {
                 throw new Error("entity {0} not found".format(entity));
             }
             var filter = entities[entity].all().filter("id", '=', id);
-            var resultItem;
             filter.list(null,function(result) {
-                resultItem = result;
+                //single result expected
+                cbk(result[0]);
             });
-            return resultItem;
+        },
+
+         findAll:function(entity,cbk) {
+            if (!entities[entity]) {
+                throw new Error("entity {0} not found".format(entity));
+            }
+            var filter = entities[entity].all();
+            filter.list(null,function(result) {
+                //single result expected
+                cbk(result);
+            });
+        },
+
+        save:function(obj,cbk,tx) {
+            persistence.add(obj);
+            if (!cbk) {
+                persistence.flush();
+                return;
+            }
+            if (tx) {
+                persistence.flush(tx, function() {
+                    cbk();
+                });
+            } else {
+                persistence.flush(function() {
+                    cbk();
+                });
+            }
+
         }
 
     };

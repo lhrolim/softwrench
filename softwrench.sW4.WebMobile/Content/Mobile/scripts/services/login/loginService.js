@@ -3,7 +3,7 @@
     return {
 
         checkCookieCredentials: function () {
-            return true;
+            return false;
         },
 
         login: function (userName,password) {

@@ -1,4 +1,6 @@
-﻿<ion-view view-title="Login" name="login-view">
+﻿<link href="/Content/Mobile/styles/login.css" rel="stylesheet" />
+
+<ion-view view-title="Login" name="login-view">
     <ion-content class="padding">
         <div class="list list-inset">
             <label class="item item-input">
@@ -7,8 +9,10 @@
             <label class="item item-input">
                 <input type="password" placeholder="Password" ng-model="data.password">
             </label>
+            <button class="button button-calm button-block login-button" ng-click="login()">Login</button>
+            <a class="button button-icon icon ion-gear-a login-settings" ng-click="settings()"></a>
         </div>
-        <button class="button button-block button-calm" ng-click="login()">Login</button>
+
     </ion-content>
 </ion-view>
 

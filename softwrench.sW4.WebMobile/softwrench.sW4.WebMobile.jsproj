@@ -115,13 +115,16 @@
     <Folder Include="images\" />
     <Content Include="bower.json" />
     <Content Include="Content\Mobile\scripts\controllers\homecontroller.js" />
+    <Content Include="Content\Mobile\scripts\controllers\settingscontroller.js" />
     <Content Include="Content\Mobile\scripts\controllers\maincontroller.js" />
     <Content Include="Content\Mobile\scripts\controllers\logincontroller.js" />
     <Content Include="Content\Mobile\scripts\mobile_bootstrap.js" />
-    <Content Include="Content\Mobile\scripts\services\db\swdbProxy.js" />
+    <Content Include="Content\Mobile\scripts\services\db\swdbDAO.js" />
     <Content Include="Content\Mobile\scripts\services\login\loginService.js" />
     <Content Include="Content\Mobile\scripts\utils\mobileutils.js" />
+    <Content Include="Content\Mobile\styles\login.css" />
     <Content Include="Content\Mobile\templates\home.html" />
+    <Content Include="Content\Mobile\templates\settings.html" />
     <Content Include="Content\Mobile\templates\main.html" />
     <Content Include="Content\Mobile\templates\login.html" />
     <Content Include="Content\Shared\activitystream\scripts\activitystream.js" />
@@ -204,6 +207,7 @@
     <Content Include="Content\Shared\webcommons\scripts\softwrench\util\responsive.js" />
     <Content Include="Content\Shared\webcommons\templates\swlabel.html" />
     <Content Include="Content\Vendor\downloadedvendor\persistence.store.cordovasql.js" />
+    <Content Include="css\login.css" />
     <Content Include="Gruntfile.js" />
     <Content Include="layout.html" />
     <Content Include="merges\android\scripts\android2.3-jscompat.js" />

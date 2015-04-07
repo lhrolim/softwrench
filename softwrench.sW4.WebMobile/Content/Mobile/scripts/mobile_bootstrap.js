@@ -1,9 +1,9 @@
 ﻿var swdb;
 
-window.ionic.Platform.ready(function () {
-    //initing the softwrench application programatically instead of using ng-app for the sake of persistence.js ripple/device compatibility
-    angular.bootstrap(document, ['softwrench']);
-});
+//window.ionic.Platform.ready(function () {
+//    //initing the softwrench application programatically instead of using ng-app for the sake of persistence.js ripple/device compatibility
+//    angular.bootstrap(document, ['softwrench']);
+//});
 
 
 var mobileServices = angular.module('sw_mobile_services', []);
@@ -11,7 +11,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
 
 
 
-.run(function ($ionicPlatform, swdbProxy, loginService,contextService, $state) {
+.run(function ($ionicPlatform, swdbDAO, loginService, contextService, $state) {
 
    
 
@@ -35,11 +35,19 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
 
 
     function initContext() {
-        swdbProxy.init();
-        var settings = swdbProxy.findById("Settings", 1);
-        if (settings != null) {
-            contextService.insertIntoContext("settings", settings);
-        }
+        swdbDAO.init();
+        swdbDAO.findAll("Settings", function(settings) {
+            if (settings.length == 0) {
+                var ob = entities.Settings;
+                swdbDAO.save(new ob(), function() {
+                    contextService.insertIntoContext("settings", settings);
+                });
+            } else {
+                contextService.insertIntoContext("settings", settings[0]);
+            }
+            
+        });
+        
     }
 
     function initCordovaPlugins() {
@@ -68,6 +76,12 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
             url: '/login',
             templateUrl: 'Content/Mobile/templates/login.html',
             controller: 'LoginController'
+        })
+
+        .state('settings', {
+            url: '/settings',
+            templateUrl: 'Content/Mobile/templates/settings.html',
+            controller: 'SettingsController'
         })
 
         // setup an abstract state for the tabs directive

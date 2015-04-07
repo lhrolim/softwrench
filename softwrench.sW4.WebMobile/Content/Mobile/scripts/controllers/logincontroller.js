@@ -12,4 +12,9 @@
             });
         });
     }
+
+
+    $scope.settings = function () {
+        $state.go('settings');
+    }
 })
