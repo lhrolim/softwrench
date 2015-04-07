@@ -67,8 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\swgas\readme.txt" />
-    <Content Include="web_content\swgas\images\logo-client.png" />
-    <Content Include="web_content\swgas\styles\branding.css" />
+    <Content Include="web_content\swgas\images\logo-byline.png" />
+    <Content Include="web_content\swgas\images\logo-main.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="metadata\swgas\statuscolors.json">
@@ -82,6 +82,7 @@
     <Folder Include="classes\com\cts\%24changecustomername%24\migration\" />
     <Folder Include="web_content\swgas\htmls\" />
     <Folder Include="web_content\swgas\scripts\" />
+    <Folder Include="web_content\swgas\styles\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="customer.placeholder" />

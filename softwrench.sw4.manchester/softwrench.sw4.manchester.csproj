@@ -82,6 +82,7 @@
     <Content Include="web_content\manchester\images\branding.png" />
     <Content Include="web_content\manchester\images\divider.png" />
     <Content Include="web_content\manchester\images\header.jpg" />
+    <Content Include="web_content\manchester\images\logo-byline.png" />
     <Content Include="web_content\manchester\images\logo-main.png" />
     <Content Include="web_content\manchester\images\signin-branding.png" />
     <Content Include="web_content\manchester\images\signin.jpg" />
