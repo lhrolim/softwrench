@@ -1,5 +1,6 @@
 ﻿DECLARE @ORGID varchar
 DECLARE @SITEID varchar
+DECLARE @USERPROFILE varchar
 
 SET @ORGID  = 'DPWORG'
 SET @SITEID = 'DPW'
@@ -8,6 +9,8 @@ SET @SITEID = 'DPW'
 IF NOT EXISTS (SELECT 1 FROM dbo.SW_USERPROFILE WHERE NAME = 'Laborers')
 BEGIN
 INSERT INTO [dbo].[SW_USERPROFILE] ([name], [deletable], [description]) VALUES (N'Laborers', 0, N'Laborers')
+
+SELECT @USERPROFILE = @@IDENTITY;
 END
 
 -- Create user 'swadmin'
@@ -17,20 +20,34 @@ INSERT INTO [dbo].[SW_USER2] (username, password, firstname, lastname, isactive,
 VALUES ('swadmin', '16193128416889160822141461911951451401273111117118200', 'admin', 'admin', 1, @ORGID, @SITEID, '1-800-433-7300', 'EN')
 END
 
-DECLARE @USERID int
-SELECT  @USERID = id FROM dbo.SW_USER2 WHERE USERNAME = 'swadmin'
-
--- Define Dashboard if not exist
-IF NOT EXISTS (SELECT 1 FROM dbo.DASH_DASHBOARD WHERE TITLE = 'SRs and WOs')
-BEGIN
-
 -- Assign all user with default orgid and siteid
 UPDATE SW_USER2
 SET ORGID = @ORGID, SITEID = @SITEID
 
+-- Assign all user with default password - "password"
+UPDATE SW_USER2
+SET PASSWORD = '91170972282011856363613037111082485127126230143216'
+WHERE username not in ('swadmin', 'swjobuser')
+
+-- Assign all user with default user_profile of "laborer"
+INSERT INTO SW_USER_USERPROFILE (user_id, profile_id)  
+SELECT ID as user_id, @USERPROFILE as profile_id FROM SW_USER2
+WHERE ID NOT IN (SELECT USER_ID FROM SW_USER_USERPROFILE) AND username NOT IN ('swadmin', 'swjobuser')
+
+
+DECLARE @USERID int
+
+-- Get swadmin from user table
+SELECT  @USERID = id FROM dbo.SW_USER2 WHERE USERNAME = 'swadmin'
+
 DECLARE @DASHBOARDID int
 DECLARE @WO int
 DECLARE @SR int
+
+
+-- Define Dashboard if not exist
+IF NOT EXISTS (SELECT 1 FROM dbo.DASH_DASHBOARD WHERE TITLE = 'SRs and WOs')
+BEGIN
 
 INSERT INTO [dbo].[DASH_DASHBOARD] (layout, title, createdby, creationdate, updatedate)
 VALUES ('1,1', 'SRs and WOs', @USERID, GETDATE(), GETDATE());
