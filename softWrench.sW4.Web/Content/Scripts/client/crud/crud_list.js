@@ -251,6 +251,7 @@ app.directive('crudList', function (contextService) {
                     $scope.searchSort = $scope.searchSort || {};
 
                     if (data.pageResultDto && data.pageResultDto.searchParams) {
+                        //TODO: make sure searchSort follows the same logic of building from the server response, then clear the sw_gridchanged event
                         var result = searchService.buildSearchDataAndOperations(data.pageResultDto.searchParams, data.pageResultDto.searchValues);
                         $scope.searchData = result.searchData;
                         $scope.searchOperator = result.searchOperator;
