@@ -13,6 +13,10 @@ if (typeof String.prototype.startsWith != 'function') {
     };
 }
 
+function isString(o) {
+    return typeof o == "string" || (typeof o == "object" && o.constructor === String);
+}
+
 String.prototype.format = String.prototype.f = function () {
     var s = this,
     i = arguments.length;

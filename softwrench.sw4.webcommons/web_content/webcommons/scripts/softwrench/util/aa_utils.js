@@ -251,9 +251,7 @@ $.extend({
     }
 });
 
-function isString(o) {
-    return typeof o == "string" || (typeof o == "object" && o.constructor === String);
-}
+
 
 function nullOrUndef(obj) {
     return obj === undefined || obj == null;

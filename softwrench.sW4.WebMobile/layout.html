@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -23,16 +23,29 @@
 
     <script src="Content/Vendor/scripts/ionic-angular.min.js"></script>
     <script src="Content/Vendor/scripts/ng-cordova.min.js"></script>
+    <script src="Content/Vendor/scripts/persistence.js"></script>
+    <script src="Content/Vendor/scripts/persistence.store.sql.js"></script>
+    <script src="Content/Vendor/scripts/persistence.store.websql.js"></script>
+    <script src="Content/Vendor/downloadedvendor/persistence.store.cordovasql.js"></script>
     <script src="cordova.js"></script>
 
     <script src="Content/Mobile/scripts/mobile_bootstrap.js"></script>
     <!--    <script src="scripts/mobile_angular.js"></script>-->
+    
+    
+    <!-- start shared auto template tags, grunt will generate it for dev environment, do not remove this -->
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/aa_stringutils.js"></script>
+<!--    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/aa_utils.js"></script>-->
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/context_service.js"></script>
+    
+    <!-- end auto template tags -->
+
+    
     <!-- start auto template tags, grunt will generate it for dev environment, do not remove this -->
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/homecontroller.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/logincontroller.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/controllers/maincontroller.js"></script>
-    <script type="text/javascript" src="Content/Mobile/scripts/services/db/html5DBDao.js"></script>
-    <script type="text/javascript" src="Content/Mobile/scripts/services/db/sqlLiteDBDAO.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/services/db/swdbProxy.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/services/login/loginService.js"></script>
     <script type="text/javascript" src="Content/Mobile/scripts/utils/mobileutils.js"></script>
@@ -43,7 +56,7 @@
 
 
 </head>
-<body ng-app="softwrench">
+<body>
 
     <ion-nav-bar class="bar-stable">
         <ion-nav-back-button>

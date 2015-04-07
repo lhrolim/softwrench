@@ -55,6 +55,14 @@ module.exports = function(grunt) {
   		     }
   		 },
 
+  		 persistence: {
+  		     files: {
+  		         'persistence.js': 'persistence/lib/persistence.js',
+  		         'persistence.store.sql.js': 'persistence/lib/persistence.store.sql.js',
+  		         'persistence.store.websql.js': 'persistence/lib/persistence.store.websql.js',
+  		     }
+  		 },
+
   		 ionic_css: {
 
   		     options: {
@@ -77,6 +85,8 @@ module.exports = function(grunt) {
   		         'ionicons.woff': 'ionic/release/fonts/ionicons.woff',
   		     }
   		 },
+
+       
          
 //         angular: {
 //             files: {

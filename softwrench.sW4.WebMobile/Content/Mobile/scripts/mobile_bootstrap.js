@@ -1,13 +1,49 @@
 ﻿var swdb;
+
+window.ionic.Platform.ready(function () {
+    //initing the softwrench application programatically instead of using ng-app for the sake of persistence.js ripple/device compatibility
+    angular.bootstrap(document, ['softwrench']);
+});
+
+
 var mobileServices = angular.module('sw_mobile_services', []);
-var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_services'])
+var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_services', 'webcommons_services'])
 
 
 
-.run(function ($ionicPlatform, swdbProxy, loginService, $state) {
+.run(function ($ionicPlatform, swdbProxy, loginService,contextService, $state) {
+
+   
+
+    $ionicPlatform.ready(function () {
+
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            WebView.setWebContentsDebuggingEnabled(true);
+//        }
+
+        initCordovaPlugins();
+        initContext();
+
+        var isCookieAuthenticated = loginService.checkCookieCredentials();
+        if (isCookieAuthenticated) {
+            $state.go('main.home');
+            return;
+        }
+        $state.go('login');
+    });
+
+
+    function initContext() {
+        swdbProxy.init();
+        var settings = swdbProxy.findById("Settings", 1);
+        if (settings != null) {
+            contextService.insertIntoContext("settings", settings);
+        }
+    }
 
     function initCordovaPlugins() {
-        swdbProxy.init();
+        
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
         if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -19,20 +55,6 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
         //        }
     };
 
-    $ionicPlatform.ready(function () {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            WebView.setWebContentsDebuggingEnabled(true);
-//        }
-
-        initCordovaPlugins();
-
-        var isCookieAuthenticated = loginService.checkCookieCredentials();
-        if (isCookieAuthenticated) {
-            $state.go('main.home');
-            return;
-        }
-        $state.go('login');
-    });
 })
 
 .config(function ($stateProvider, $urlRouterProvider) {
@@ -67,60 +89,8 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
             }
         })
 
-    //
-    //    // Each tab has its own nav history stack:
-    //
-    
-    //
-    //    .state('tab.chats', {
-    //        url: '/chats',
-    //        views: {
-    //            'tab-chats': {
-    //                templateUrl: 'templates/tab-chats.html',
-    //                controller: 'ChatsCtrl'
-    //            }
-    //        }
-    //    })
-    //      .state('tab.chat-detail', {
-    //          url: '/chats/:chatId',
-    //          views: {
-    //              'tab-chats': {
-    //                  templateUrl: 'templates/chat-detail.html',
-    //                  controller: 'ChatDetailCtrl'
-    //              }
-    //          }
-    //      })
-    //
-    //    .state('tab.friends', {
-    //        url: '/friends',
-    //        views: {
-    //            'tab-friends': {
-    //                templateUrl: 'templates/tab-friends.html',
-    //                controller: 'FriendsCtrl'
-    //            }
-    //        }
-    //    })
-    //      .state('tab.friend-detail', {
-    //          url: '/friend/:friendId',
-    //          views: {
-    //              'tab-friends': {
-    //                  templateUrl: 'templates/friend-detail.html',
-    //                  controller: 'FriendDetailCtrl'
-    //              }
-    //          }
-    //      })
-    //
-    //    .state('tab.account', {
-    //        url: '/account',
-    //        views: {
-    //            'tab-account': {
-    //                templateUrl: 'templates/tab-account.html',
-    //                controller: 'AccountCtrl'
-    //            }
-    //        }
-    //    });
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/login');
+    $urlRouterProvider.otherwise('/main/home');
 
 });
