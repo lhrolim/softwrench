@@ -26,7 +26,7 @@ app.directive('menu', function (contextService) {
         scope: {
             menu: '='
         },
-        controller: function ($scope, $rootScope) {
+        controller: function ($scope, $rootScope, $timeout) {
 
             $scope.level = -1;
 
@@ -44,6 +44,12 @@ app.directive('menu', function (contextService) {
                             if ($(this).children()[0] === event.target) {
                                 $(this).data('closable', true);
                             }
+
+                            //reinit scrollpane after menu item opens/closes
+                            $timeout(function () {
+                                var api = $('.vertical-menu .menu-primary').jScrollPane({ maintainPosition: true }).data('jsp');
+                                api.reinitialise();
+                            }, 250);
                         },
                         "hide.bs.dropdown": function (event) {
                             if ($(this)[0] === event.target) {
