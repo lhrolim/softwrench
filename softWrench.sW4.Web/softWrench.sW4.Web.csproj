@@ -424,8 +424,7 @@
     <Content Include="Content\Images\icon-combobox.png" />
     <Content Include="Content\Images\icon-opendetails.png" />
     <Content Include="Content\Images\logo-main.png" />
-    <Content Include="Content\Images\byline-cts.png" />
-    <Content Include="Content\Images\byline-softwrench.png" />
+    <Content Include="Content\Images\name-cts.png" />
     <Content Include="Content\Images\pagination-first.png" />
     <Content Include="Content\Images\pagination-last.png" />
     <Content Include="Content\Images\pagination-next.png" />
@@ -434,6 +433,7 @@
     <Content Include="Content\Images\signin.jpg" />
     <Content Include="Content\Images\southern\branding.png" />
     <Content Include="Content\Images\southern\logo-main.png" />
+    <Content Include="Content\Images\southern\name-softwrench.png" />
     <Content Include="Content\Images\tree-leaf.png" />
     <Content Include="Content\Images\tree-node-collapsed.png" />
     <Content Include="Content\Images\tree-node-expanded.png" />
@@ -441,6 +441,7 @@
     <Content Include="Content\Images\tva\header.jpg" />
     <Content Include="Content\Images\tva\logo-main.png" />
     <Content Include="Content\Images\tva\signin.jpg" />
+    <Content Include="Content\Images\yavapai\logo-main.png" />
     <Content Include="Content\Scripts\client\adminresources\password.js" />
     <Content Include="Content\Scripts\client\crud\compositionlist.js" />
     <Content Include="Content\Scripts\client\crud\crud_tbody.js" />
@@ -541,7 +542,6 @@
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.js" />
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.min.js" />
     <Content Include="Content\Scripts\vendor\angular\bindonce.js" />
-    <Content Include="Content\styles\default\buttons.css" />
     <Content Include="Content\styles\default\xeditable.css" />
     <Content Include="Content\Scripts\vendor\angular\components\xeditable-min.js" />
     <Content Include="Content\Scripts\vendor\jquery\jquery-ui-1.10.3.js" />
@@ -656,7 +656,8 @@
     <Content Include="Content\styles\scottsdale\site.css" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
     <Content Include="Content\styles\southern\branding.css" />
-    <Content Include="Content\styles\tva\branding.css" />
+    <Content Include="Content\styles\tva\signin.css" />
+    <Content Include="Content\styles\tva\site.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
     <Content Include="Content\Templates\batches\emailreport.html" />
     <Content Include="Content\Templates\commands\batches\batches.html" />
@@ -756,6 +757,7 @@
     <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\font-awesome-4.1.0\fonts\FontAwesome.otf" />
+    <Content Include="Content\Images\tva\Thumbs.db" />
     <Content Include="Content\Shared\readme.txt" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
