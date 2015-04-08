@@ -139,7 +139,7 @@
                                                       data-original-title="{{getOperator(column.attribute).tooltip}}">{{getSearchIcon(column.attribute)}}</span>
                                                 <ul class="dropdown-menu">
                                                     <li ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
-                                                        ng-show="operation.renderType.indexOf(column.rendererType) > -1 || column.rendererType == null"
+                                                        ng-show="shouldShowFilter(operation,column)"
                                                         ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
                                                         <a href="#">{{operation.title}}</a>
                                                     </li>
@@ -157,7 +157,7 @@
                                                       data-original-title="{{getOperator(column.attribute).tooltip}}">{{getSearchIcon(column.attribute)}}</span>
                                                 <ul class="dropdown-menu">
                                                     <li ng-repeat="operation in searchOperations()" ng-click="selectOperator(column.attribute,operation)"
-                                                        ng-show="operation.renderType.indexOf(column.rendererType) > -1 || column.rendererType == null"
+                                                        ng-show="shouldShowFilter(operation,column)"
                                                         ng-class="{'active' : searchOperator[column.attribute].id == operation.id}">
                                                         <a href="#">{{operation.title}}</a>
                                                     </li>

@@ -86,6 +86,13 @@ namespace softWrench.sW4.Data.Search {
             }
         }
 
+        public bool IsBlankNumber { get { return IsNumber && SearchOperator.BLANK == SearchOperator; }}
+
+        public bool IsBlankDate
+        {
+            get { return IsDate && SearchOperator.BLANK == SearchOperator; }
+        }
+
         public bool IsEqualOrNotEqual() {
             return SearchOperator == SearchOperator.EQ || SearchOperator == SearchOperator.NOTEQ;
         }

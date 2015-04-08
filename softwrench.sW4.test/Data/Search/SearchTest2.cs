@@ -28,5 +28,14 @@ namespace softwrench.sW4.test.Data.Search {
             Assert.IsTrue(parametersMap.Count == 1);
             Assert.IsTrue(parametersMap["curbal"].Equals(20));
         }
+
+        [TestMethod]
+        public void NumberBlankTest() {
+            var searchRequestDto = new PaginatedSearchRequestDto(100, PaginatedSearchRequestDto.DefaultPaginationOptions);
+            searchRequestDto.SetFromSearchString(_schema, "curbal".Split(','), "!@BLANK");
+            Assert.AreEqual("( invbalances.curbal IS NULL )", SearchUtils.GetWhere(searchRequestDto, "invbalances"));
+            var parametersMap = SearchUtils.GetParameters(searchRequestDto);
+            Assert.AreEqual(0,parametersMap.Count);
+        }
     }
 }

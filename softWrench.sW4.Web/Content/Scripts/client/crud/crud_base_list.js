@@ -35,6 +35,10 @@ function BaseList($scope, formatService, expressionService, searchService, field
         return searchService.searchOperations();
     };
 
+    $scope.shouldShowFilter = function (operation,column) {
+        return (column.rendererType == null || operation.renderType.indexOf(column.rendererType) > -1) && (column.dataType == null || operation.datatype.indexOf(column.dataType) > -1);
+    };
+
     $scope.getDefaultOperator = function () {
         return searchService.defaultSearchOperation();
     };

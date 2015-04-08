@@ -68,7 +68,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                     default: {
 
                             if (entity != null) {
-                                var attr = entity.Schema.Attributes.FirstOrDefault(a => a.Name == targetName);
+                                var attr = entity.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(targetName));
                                 if (attr != null && attr.Type == "timestamp") {
                                     return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), null, targetName);
                                 }
@@ -134,8 +134,26 @@ namespace softWrench.sW4.Metadata.Parsing {
             var enableExpression = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAttribute).ValueOrDefault("true");
             var enableDefault = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableDefaultAttribute).ValueOrDefault("true");
             var evalExpression = field.Attribute(XmlBaseSchemaConstants.BaseDisplayableEvalExpressionAttribute).ValueOrDefault((string)null);
-            return new ApplicationFieldDefinition(applicationName, attribute, label, requiredExpression, isReadOnly, isHidden, renderer,
+
+            var datatype = ParseDataType(entityMetadata, attribute);
+
+
+            return new ApplicationFieldDefinition(applicationName, attribute, datatype, label, requiredExpression, isReadOnly, isHidden, renderer,
                 ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault, defaultExpression);
+        }
+
+        private static string ParseDataType(EntityMetadata entityMetadata, string attribute)
+        {
+            string datatype = null;
+            if (entityMetadata != null)
+            {
+                var attr = entityMetadata.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(attribute));
+                if (attr != null)
+                {
+                    datatype = attr.Type;
+                }
+            }
+            return datatype;
         }
 
         private static ISet<ApplicationEvent> ParseEvents(XElement element) {
@@ -222,7 +240,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         private static IApplicationDisplayable ParseCustomization(string applicationName, XElement customizationElement, EntityMetadata entityMetadata) {
             var position = customizationElement.Attribute(XmlMetadataSchema.CustomizationPositionAttribute).ValueOrDefault((string)null);
             var displayables = ParseDisplayables(applicationName, customizationElement, entityMetadata.Name);
-            return new ApplicationSchemaCustomization(position,displayables);
+            return new ApplicationSchemaCustomization(position, displayables);
         }
 
         private static ApplicationHeader ParseHeader(XContainer schema) {
@@ -303,7 +321,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var orderbyfield = association.Attribute(XmlMetadataSchema.ApplicationAssociationOrderByField).ValueOrDefault((String)null);
             var valueField = association.Attribute(XmlMetadataSchema.ApplicationAssociationValueField).ValueOrDefault((string)null);
 
-            return ApplicationAssociationFactory.GetInstance(applicationName, labelData, target, qualifier, ParseAssociationSchema(association, target), showExpression, tooltip, requiredExpression, ParseEvents(association), defaultValue, hideDescription, orderbyfield,defaultExpression, extraProjectionFields, enableExpression, forceDistinctOptions, valueField);
+            return ApplicationAssociationFactory.GetInstance(applicationName, labelData, target, qualifier, ParseAssociationSchema(association, target), showExpression, tooltip, requiredExpression, ParseEvents(association), defaultValue, hideDescription, orderbyfield, defaultExpression, extraProjectionFields, enableExpression, forceDistinctOptions, valueField);
         }
 
         private static ApplicationAssociationSchemaDefinition ParseAssociationSchema(XElement association, string targetName) {
@@ -451,7 +469,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                     }
                 }
                 var displayables = ParseDisplayables(applicationName, xElement, entityName);
-                var schemaProperties = ParseProperties(xElement,id);
+                var schemaProperties = ParseProperties(xElement, id);
                 ApplicationSchemaDefinition parentSchema = null;
                 if (parentSchemaValue != null) {
                     parentSchema = LookupParentSchema(id, applicationName, parentSchemaValue, platform, resultDictionary, displayables);
@@ -464,7 +482,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 }
                 ApplicationCommandSchema applicationCommandSchema = ParseCommandSchema(xElement);
                 resultDictionary.Add(new ApplicationMetadataSchemaKey(id, modeAttr, platformAttr),
-                    ApplicationSchemaFactory.GetInstance(applicationName, title, id,redeclaring, stereotype, mode, platform,
+                    ApplicationSchemaFactory.GetInstance(applicationName, title, id, redeclaring, stereotype, mode, platform,
                     isAbstract, displayables, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName, userIdFieldName, unionSchema, ParseEvents(xElement)));
             }
             return resultDictionary;
@@ -474,35 +492,33 @@ namespace softWrench.sW4.Metadata.Parsing {
         XElement application) {
             var notificationsElement = application.Elements().FirstOrDefault(f => f.Name.LocalName == XmlNotificationMetadataSchema.NotificationsElement);
             var resultDictionary = new Dictionary<ApplicationNotificationKey, ApplicationNotificationDefinition>();
-            if (notificationsElement != null)
-            {
+            if (notificationsElement != null) {
                 var xElements = notificationsElement.Elements();
-                foreach (var xElement in xElements)
-                {
+                foreach (var xElement in xElements) {
                     var notificationId =
                         xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeId)
-                            .ValueOrDefault((string) null);
+                            .ValueOrDefault((string)null);
                     var label =
                         xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeLabel)
-                            .ValueOrDefault((string) null);
+                            .ValueOrDefault((string)null);
                     var type =
                         xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeType)
-                            .ValueOrDefault((string) null);
+                            .ValueOrDefault((string)null);
                     var role =
                         xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeRole)
-                            .ValueOrDefault((string) null);
+                            .ValueOrDefault((string)null);
                     var icon =
                         xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeIcon)
-                            .ValueOrDefault((string) null);
+                            .ValueOrDefault((string)null);
                     var targetSchema =
                         xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeTargetSchema)
-                            .ValueOrDefault((string) null);
+                            .ValueOrDefault((string)null);
                     var targetApplication =
                         xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeTargetApplication)
-                            .ValueOrDefault((string) null);
+                            .ValueOrDefault((string)null);
                     var whereClause =
                         xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeWhereClause)
-                            .ValueOrDefault((string) null);
+                            .ValueOrDefault((string)null);
 
                     var stereotype = SchemaStereotype.Notification;
                     var notificationType = type == "ActivityStream"
@@ -526,12 +542,11 @@ namespace softWrench.sW4.Metadata.Parsing {
             var attributesElement = notification.Elements().First();
 
             if (attributesElement.Name.LocalName == XmlNotificationMetadataSchema.NotificationAttributesElement) {
-                foreach (var xElement in attributesElement.Elements())
-                {
+                foreach (var xElement in attributesElement.Elements()) {
                     var xName = xElement.Name.LocalName;
 
-                    if (xName == XmlNotificationMetadataSchema.NotificationAttributeSummaryElement || 
-                        xName ==  XmlNotificationMetadataSchema.NotificationAttributeCreateDateElement || 
+                    if (xName == XmlNotificationMetadataSchema.NotificationAttributeSummaryElement ||
+                        xName == XmlNotificationMetadataSchema.NotificationAttributeCreateDateElement ||
                         xName == XmlNotificationMetadataSchema.NotificationAttributeUIdElement ||
                         xName == XmlNotificationMetadataSchema.NotificationAttributeChangeByElement) {
                         displayables.Add(new ApplicationFieldDefinition(applicationName, xElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeElementAttribute)
@@ -540,12 +555,11 @@ namespace softWrench.sW4.Metadata.Parsing {
                             ));
                     }
 
-                    if (xName == XmlNotificationMetadataSchema.NotificationParentAttributesElement)
-                    {
+                    if (xName == XmlNotificationMetadataSchema.NotificationParentAttributesElement) {
                         foreach (var parentXElement in xElement.Elements()) {
                             displayables.Add(new ApplicationFieldDefinition(applicationName,
                                 parentXElement.Attribute(XmlNotificationMetadataSchema.NotificationAttributeElementAttribute)
-                                    .Value, parentXElement.Name.LocalName));    
+                                    .Value, parentXElement.Name.LocalName));
                         }
                     }
 
@@ -558,9 +572,9 @@ namespace softWrench.sW4.Metadata.Parsing {
                         }
                     }
 
-                }    
+                }
             }
-            
+
             return displayables;
         }
 
@@ -658,7 +672,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             return new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, userIdFieldName, properties, ParseSchemas(name, entity, application, idFieldName, userIdFieldName), ParseComponents(name, entity, application, idFieldName), service, ParseNotifications(name, title, entity, application));
         }
 
-        
+
 
         private static IEnumerable<DisplayableComponent> ParseComponents(string name, string entity, XElement application, string idFieldName) {
             IList<DisplayableComponent> resultList = new List<DisplayableComponent>();
@@ -711,9 +725,9 @@ namespace softWrench.sW4.Metadata.Parsing {
             return null;
         }
 
-     
 
-        private static IDictionary<string, string> ParseProperties(XElement xElement,string schemaId) {
+
+        private static IDictionary<string, string> ParseProperties(XElement xElement, string schemaId) {
             IDictionary<string, string> propertiesDictionary = new Dictionary<string, string>();
             var properties = xElement.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.ApplicationPropertiesElement);
             if (properties == null) {
@@ -722,7 +736,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             foreach (var property in properties.Elements()) {
                 var key = property.Attribute(XmlMetadataSchema.ApplicationPropertyKeyAttribute).Value;
                 if (propertiesDictionary.ContainsKey(key)) {
-                    throw new InvalidOperationException("property {0} already present for application/schema {1}".Fmt(key,schemaId));
+                    throw new InvalidOperationException("property {0} already present for application/schema {1}".Fmt(key, schemaId));
                 }
                 propertiesDictionary.Add(key, property.Attribute(XmlMetadataSchema.ApplicationPropertyValueAttribute).Value);
             }
