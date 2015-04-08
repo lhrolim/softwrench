@@ -123,6 +123,7 @@ namespace softWrench.sW4.Data.Search {
 
                 var searchParameter = searchParameters[param];
                 var parameterData = GetParameterData(entityName, searchParameter, param);
+                searchParameter.IsNumber = parameterData.Item2 == ParameterType.Number;
                 var operatorPrefix = searchParameter.SearchOperator.OperatorPrefix();
 
                 if (searchParameter.SearchOperator == SearchOperator.BETWEEN) {
@@ -145,8 +146,13 @@ namespace softWrench.sW4.Data.Search {
                         statement.Append(" )");
                     }
 
-                } else {
-                    searchParameter.IsNumber = parameterData.Item2 == ParameterType.Number;
+                } else if (searchParameter.IsBlankNumber || searchParameter.IsBlankDate) {
+                    //https://controltechnologysolutions.atlassian.net/browse/YGSI-15
+                    statement.Append("( " + parameterData.Item1 + " IS NULL )");
+                }
+                
+                else {
+                    
 
                     statement.Append("( " + parameterData.Item1);
 
@@ -180,6 +186,11 @@ namespace softWrench.sW4.Data.Search {
             if (searchParameters != null) {
                 foreach (var searchParameter in searchParameters) {
                     var parameter = searchParameter.Value;
+                    if (parameter.IsBlankNumber || parameter.IsBlankDate) {
+                        //this will reflect in only a ISNULL comparison
+                        continue;
+                    }
+
                     if (parameter.IsDate && !parameter.HasHour) {
                         var dt = parameter.GetAsDate;
                         if (parameter.IsEqualOrNotEqual()) {

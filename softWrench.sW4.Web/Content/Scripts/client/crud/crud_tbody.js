@@ -15,7 +15,7 @@ function defaultAppending(formattedText,updatable, rowst, column) {
     if (updatable) {
         st += "<div swcontenteditable ng-model=\"{0}.fields['{1}']\">".format(rowst, column.attribute);
     }
-    else if (formattedText) {
+    else if (formattedText!=null) {
         st += "<div>";
         //else to avoid appending "null"
         st += formattedText;
