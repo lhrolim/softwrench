@@ -44,6 +44,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
                 });
             } else {
                 contextService.insertIntoContext("settings", settings[0]);
+                contextService.insertIntoContext("serverurl", settings[0].serverurl);
             }
             
         });

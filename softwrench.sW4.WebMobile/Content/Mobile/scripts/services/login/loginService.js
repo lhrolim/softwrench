@@ -1,29 +1,26 @@
-﻿mobileServices.factory('loginService', function ($q) {
+﻿mobileServices.factory('loginService', function ($http, $q, routeService, dispatcherService) {
 
     return {
 
         checkCookieCredentials: function () {
-            return false;
+            return true;
         },
 
-        login: function (userName,password) {
-            var deferred = $q.defer();
+        login: function (userName, password) {
+            var deferred = dispatcherService.loadBaseDeferred();
             var promise = deferred.promise;
 
-            //use rest service later
-            if (userName == 'swadmin' && password == 'sw@dm1n') {
-                deferred.resolve('Welcome ' + name + '!');
-            } else {
-                deferred.reject('Wrong credentials.');
-            }
-            promise.success = function (fn) {
-                promise.then(fn);
-                return promise;
-            }
-            promise.error = function (fn) {
-                promise.then(null, fn);
-                return promise;
-            }
+            //this was setted during bootstrap of the application, or on settingscontroller.js (settings screen)
+            var loginUrl = routeService.loginURL(userName, password);
+            $http.post(loginUrl).success(function(userdata) {
+                if (userdata.Found) {
+                    deferred.resolve();
+                } else {
+                    deferred.reject();
+                }
+            }).error(function(errorData) {
+                deferred.reject();
+            });
             return promise;
         }
 

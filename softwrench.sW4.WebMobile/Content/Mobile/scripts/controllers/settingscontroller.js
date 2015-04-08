@@ -9,9 +9,13 @@
 
 
     $scope.save = function () {
+        //TODO: handle settings method correctly, appending http, testing, etc...
+        //SWML-39
+
         swdbDAO.instantiate("Settings", $scope.settings).success(function(settingsToSave) {
             swdbDAO.save(settingsToSave);
             contextService.insertIntoContext("settings", $scope.settings);
+            contextService.insertIntoContext("serverurl", $scope.settings.serverurl);
             $state.go("login");
         });
     }

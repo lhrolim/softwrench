@@ -1,17 +1,16 @@
-﻿softwrench.controller('HomeController', function($scope, $ionicPopup, $state) {
+﻿softwrench.controller('HomeController', function ($scope, routeService, $http, $ionicPopup) {
     $scope.data = {};
 
-    $scope.login = function () {
+    $scope.fullSynchronize = function () {
+        $http.get(routeService.syncURL()).success(function(metadatasResult) {
+            var menus = metadatasResult.MenuJson;
+            var metadatas = metadatasResult.MetadatasJSON;
+        }).error(function(errordata) {
+            var alertPopup = $ionicPopup.alert({
+                title: 'Error downloading Metadata',
+                template: 'Error downloading Metadata'
+            });
+        });
 
-
-        $state.go('tab.dash');
-//        LoginService.loginUser($scope.data.username, $scope.data.password).success(function(data) {
-//            
-//        }).error(function(data) {
-//            var alertPopup = $ionicPopup.alert({
-//                title: 'Login failed!',
-//                template: 'Please check your credentials!'
-//            });
-//        });
     }
 })
