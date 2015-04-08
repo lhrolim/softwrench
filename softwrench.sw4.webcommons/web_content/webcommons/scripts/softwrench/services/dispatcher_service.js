@@ -37,7 +37,12 @@
             }
         },
 
-        loadBaseDeferred:function() {
+        /// <summary>
+        /// use to create a default instance of the deferred/promise instance, useful for transforming sync methods into async ones, and for chaining them.
+        /// </summary>
+        /// <returns type="">a deferred object</returns>
+        loadBaseDeferred: function () {
+            
             var deferred = $q.defer();
             var promise = deferred.promise;
 

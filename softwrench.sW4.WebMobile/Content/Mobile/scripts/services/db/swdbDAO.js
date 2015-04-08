@@ -76,26 +76,32 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 throw new Error("entity {0} not found".format(entity));
             }
 
+            if (memoryObject == undefined) {
+                throw new Error("memory object parameter is mandatory");
+            }
+
             var deferred = dispatcherService.loadBaseDeferred();
 
 
             var ob = entities[entity];
             if (memoryObject.id == null) {
+                //if the memory object doesn´t contain an id, then we don´t need to check on persistence cache, 
+                //just instantiate a new one
                 var transientEntity = new ob();
                 deferred.resolve(mergeObjects(memoryObject, transientEntity));
                 return deferred.promise;
             }
 
-            if (memoryObject.id) {
-                //since it has an id, there´s a chance it´s present on session cache
-                ob.load(memoryObject.id, function (loadedObject) {
-                    if (!loadedObject) {
-                        //if not found in cache, let´s instantiate a new one
-                        loadedObject = new ob();
-                    }
-                    deferred.resolve(mergeObjects(memoryObject, loadedObject));
-                });
-            }
+
+            //since it has an id, there´s a chance it´s present on session cache
+            ob.load(memoryObject.id, function (loadedObject) {
+                if (!loadedObject) {
+                    //if not found in cache, let´s instantiate a new one anyway
+                    loadedObject = new ob();
+                }
+                deferred.resolve(mergeObjects(memoryObject, loadedObject));
+            });
+
             return deferred.promise;;
         },
 
