@@ -9,9 +9,11 @@
 
 
     $scope.save = function () {
-        swdbDAO.save($scope.settings);
-        contextService.insertIntoContext("settings", $scope.settings);
-        $state.go("login");
+        swdbDAO.instantiate("Settings", $scope.settings).success(function(settingsToSave) {
+            swdbDAO.save(settingsToSave);
+            contextService.insertIntoContext("settings", $scope.settings);
+            $state.go("login");
+        });
     }
 
     init();

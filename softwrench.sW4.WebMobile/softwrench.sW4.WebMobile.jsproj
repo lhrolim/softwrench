@@ -204,6 +204,7 @@
     <Content Include="Content\Shared\webcommons\scripts\softwrench\util\angular_namespacer.js" />
     <Content Include="Content\Shared\webcommons\scripts\softwrench\util\clientawareserviceprovider.js" />
     <Content Include="Content\Shared\webcommons\scripts\softwrench\util\log_enhacer.js" />
+    <Content Include="Content\Shared\webcommons\scripts\softwrench\util\object_util.js" />
     <Content Include="Content\Shared\webcommons\scripts\softwrench\util\responsive.js" />
     <Content Include="Content\Shared\webcommons\templates\swlabel.html" />
     <Content Include="Content\Vendor\downloadedvendor\persistence.store.cordovasql.js" />

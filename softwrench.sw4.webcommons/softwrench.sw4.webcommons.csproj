@@ -80,6 +80,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\readme.txt" />
     <Content Include="web_content\webcommons\scripts\softwrench\sharedservices_module.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\aa_dateutils.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\util\object_util.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\aa_stringutils.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\aa_utils.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\util\angular_namespacer.js" />

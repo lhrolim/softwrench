@@ -1,8 +1,4 @@
-﻿/*
- */
-var app = angular.module('sw_layout');
-
-app.factory('dispatcherService', function ($injector, $log) {
+﻿modules.webcommons.factory('dispatcherService', function ($injector, $log,$q) {
     var loadService = function(service, method) {
         var log = $log.getInstance('dispatcherService#loadService');
 
@@ -39,6 +35,21 @@ app.factory('dispatcherService', function ($injector, $log) {
                 }
                 return fn.apply(this, args);
             }
+        },
+
+        loadBaseDeferred:function() {
+            var deferred = $q.defer();
+            var promise = deferred.promise;
+
+            promise.success = function (fn) {
+                promise.then(fn);
+                return promise;
+            }
+            promise.error = function (fn) {
+                promise.then(null, fn);
+                return promise;
+            }
+            return deferred;
         }
     };
 
