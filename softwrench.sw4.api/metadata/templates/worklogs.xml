@@ -15,6 +15,7 @@
           <field attribute="recordkey" label="Record Key" hidden="true" />
           <field attribute="class" label="Class" hidden="true" />
           <field attribute="createby" label="Created By" />
+          <field attribute="createdate" label="Date" hidden="true"/>
           <field attribute="modifydate" label="Last Changed Date" qualifier="subtitle">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
