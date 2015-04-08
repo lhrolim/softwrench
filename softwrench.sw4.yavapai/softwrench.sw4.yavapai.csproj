@@ -73,12 +73,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="customer.placeholder" />
+    <EmbeddedResource Include="metadata\yavapai\statuscolors.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\yavapai\readme.txt" />
     <Content Include="web_content\yavapai\images\branding.png" />
     <Content Include="web_content\yavapai\images\header.jpg" />
     <Content Include="web_content\yavapai\images\logo-main.png" />
+    <Content Include="web_content\yavapai\images\logo-byline.png" />
     <Content Include="web_content\yavapai\images\signin.jpg" />
     <Content Include="web_content\yavapai\styles\branding.css" />
   </ItemGroup>

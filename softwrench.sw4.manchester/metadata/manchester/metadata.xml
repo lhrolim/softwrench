@@ -167,7 +167,7 @@
   </entities>
 
   <applications>
-    <!--Request complete custom layout for service request.  Please review before making customization-->
+    <!--Request to have a custom layout for service request.  Please review before making customization-->
     <application entity="SR" name="servicerequest" title="Service Request">
       <schemas>
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
@@ -305,42 +305,173 @@
       </schemas>
     </application>
     
+    <!--Request to have a custom layout for workorder.  Please review before making customization-->
     <application name="workorder" title="Work Order" entity="workorder">      
       <schemas>
-        <schema id="editdetail" platform="web" redeclaring="false">
-          <customization position="+wonum">
-            <association label="Division:" target="division" labelfield="division_.description" requiredexpression="true">
-              <renderer type="lookup"/>
-            </association>
-          </customization>
-          <customization position="classstructureid">
-            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" requiredexpression="true">
-              <renderer type="autocompleteclient" />
-            </optionfield>
-          </customization>
-          <customization position="glaccount">
-            <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext">
-              <renderer type="lookup"/>
-            </association>
-          </customization>
+         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web">
+
+           <field attribute="workorderid" hidden="true"/>
+           <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
+           <field attribute="siteid"  requiredexpression="true" readonly="true" hidden="true"/>
+           <field attribute="woclass" hidden="true"/>
+           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
+           <field attribute="wonum" label="WO No:" readonly="true"/>
+
+           <field attribute="description" label="Summary:"/>
+           
+           <field label="Details:" attribute="longdescription_.ldtext" >
+             <renderer type="richtext"/>
+           </field>
+          
+           <section id ="siteidsection"/>
+
+           <association label="Division:" target="division" labelfield="division_.description" requiredexpression="true">
+             <renderer type="lookup"/>
+           </association>
+           
+           <section id="statussection"/>
+          
+          <association label="Location:" target="location" labelfield="location_.description" >
+            <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
+            <!--renderer type="lookup"/-->
+          </association>
+
+           <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
+            <dataprovider prefilterfunction="FilterAssets"/>
+            <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
+          </association>
+
+           <!--COMSW-2-->
+           <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" requiredexpression="true">
+             <renderer type="autocompleteclient" />
+           </optionfield>
+
+           <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext">
+             <renderer type="lookup"/>
+           </association>
+           
+           <association label="Work Type:" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc">
+             <renderer type="lookup"/>
+           </association>
+
+           <association label="Failure Class:" target="failurecode" labelfield="failurelist_.failurecode" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
+             <!--renderer type="lookup"/-->
+           </association>
+           <field hidden="true" attribute="failurelist_.failurelist"/>
+           
+           <association label="Problem Code:" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.failurecode">
+             <renderer type="lookup"/>
+             <dataprovider prefilterfunction="FilterProblemCodes"/>
+           </association>
+
+           <field label="Job Plan:" attribute="jpnum" readonly="true" />
+           
+           <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
+             <renderer type="autocompleteclient"/>
+           </optionfield>
+           
+           <field label="Reported By:" attribute="reportedby" default="@username" readonly="true"/>
+
+           <field label="Reported Date &amp; Time:" attribute="reportdate" readonly="true" default="@currentdatetime">
+             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+           </field>
+           
+           <association label ="On Behalf of:" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
+             <renderer type="lookup"/>
+           </association>
+           
+           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
+             <renderer type="lookup"/>
+             <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
+           </association>
+           
+           <!-- Added the Owner Group field-->
+           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
+             <renderer type="lookup"/>
+             <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
+           </association>
+
+           <!-- Adding target start finish date-->
+           <field attribute="targstartdate" hidden="true"/>
+           <field attribute="targcompdate" hidden="true"/>
+           <field attribute="actstart" hidden="true"/>
+           <field attribute="actfinish" hidden="true"/>
+
+           <section id="targstartdate" resourcepath="/Content/Templates/samelinepickers.html"
+                          parameters="joinattribute=targstartdate;">
+              <header label="Target Start Date:" displacement="sameline"/>
+           </section>
+
+           <section id="targcompdate" resourcepath="/Content/Templates/samelinepickers.html"
+                          parameters="joinattribute=targcompdate;">
+              <header label="Target Finish Date:" displacement="sameline"/>
+           </section>
+
+           <section id="actstart" resourcepath="/Content/Templates/samelinepickers.html"
+                          parameters="joinattribute=actstart;">
+              <header label="Actual Start Date:" displacement="sameline"/>
+           </section>
+
+           <section id="actfinish" resourcepath="/Content/Templates/samelinepickers.html"
+                          parameters="joinattribute=actfinish;">
+              <header label="Actual Finish Date:" displacement="sameline"/>
+           </section>
+
+           <!-- Code added from gric metadata.xml SWWEB 173-->
+           <section id="attachmentsection" />
+           <section id="compositions"/>
         </schema>
-        
-        <schema id="newdetail" platform="web" redeclaring="false">
-          <customization position="+wonum">
-            <association label="Division:" target="division" labelfield="division_.description" requiredexpression="true">
+
+        <schema parentschema="adetail" title="New Work Order" id="newdetail" platform="web">
+          <section id="siteidsection">
+            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
               <renderer type="lookup"/>
             </association>
-          </customization>
-          <customization position="classstructureid">
-            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_WOClassStructureType" requiredexpression="true">
-              <renderer type="autocompleteclient" />
-            </optionfield>
-          </customization>
-          <customization position="glaccount">
-            <association label="GL Account:" target="glaccount" labelfield="glcomponents_.comptext">
+          </section>
+          <section id="statussection">
+            <field label="Status:" attribute="status" readonly="true" default="WAPPR" hidden="true"/>
+          </section>
+          <!--SSWEB 173-->
+          <section id="attachmentsection">
+            <field label="Attachment:" attribute="newattachment" >
+              <renderer type="upload"/>
+            </field>
+          </section>
+        </schema>
+
+        <schema parentschema="adetail" id="editdetail" title="Work Order Details" platform="web">
+          <section id="siteidsection">
+            <field label="Site:" attribute="siteid" readonly="true"/>
+          </section>
+          <section id="statussection">
+            <association label="Status" target="status" hideDescription="true" labelfield="synstatus.description">
+              <dataprovider prefilterfunction="FilterStatusCodes"/>
               <renderer type="lookup"/>
             </association>
-          </customization>
+          </section>          
+          <section id="compositions">
+            <composition relationship="worklog" label="Work Logs">
+              <collectionproperties allowupdate="true" allowcreation="@status!='CLOSED'" />
+            </composition>
+            <composition relationship="woactivity" label="WO Tasks">
+              <collectionproperties allowupdate="false" allowcreation="false"  />
+            </composition>
+            <composition relationship="matusetrans" label="Materials">
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'"  />
+            </composition>
+            <composition relationship="labtrans" label="Labor">
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+            </composition>
+            <composition relationship="tooltrans" label="Tools">
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+            </composition>
+            <composition relationship="attachment" label="Attachments" >
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
+            </composition>
+          </section>
+          <event type="beforesubmit.prevalidation" service="genericTicketService" method="validateCloseStatus"/>
+          <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
         </schema>
       </schemas>
     </application>

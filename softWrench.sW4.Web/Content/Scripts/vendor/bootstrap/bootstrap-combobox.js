@@ -144,11 +144,12 @@
                 height = maxHeight;
             }
 
-            if (this.$element.offset().top + height > document.body.scrollHeight) {
+            //SWWEB-1133 if the combobox is near the bootom of the screen, place the dropdown above the input
+            if ((this.$element.offset().top + height > document.body.scrollHeight) || (this.$element.offset().top + height + 50 - $(window).scrollTop() > $(window).height())) {
                 //https://controltechnologysolutions.atlassian.net/browse/HAP-847
                 //if the menu would cause a scrollbar expansion open it on top instead
                 //12 stands for padding, margin, etc
-                return -height - 12;
+                return -height - 15;
             }
 
             return position.top + position.height;
