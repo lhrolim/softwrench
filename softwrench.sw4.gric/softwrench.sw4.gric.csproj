@@ -99,6 +99,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <Content Include="web_content\gric\images\branding.png" />
+    <Content Include="web_content\gric\images\logo-byline.png" />
     <Content Include="web_content\gric\images\logo-main.png" />
     <Content Include="web_content\gric\scripts\sr_service.js" />
     <Content Include="web_content\gric\styles\branding.css" />

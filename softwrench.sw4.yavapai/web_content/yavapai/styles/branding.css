@@ -10,10 +10,6 @@
         background-color: rgba(1, 62, 91, 0.6);
     }
 
-        .page-signin .form-signin .logo img {
-            content: url(../images/logo-main.png);
-        }
-
 .container header {
     background: #34a7e0 url(../images/header.jpg) no-repeat top left;
     -webkit-background-size: cover;
@@ -29,11 +25,3 @@
     .container header .branding {
         background: url(../images/branding.png) no-repeat top left;
     }
-
-        .container header .branding .logo img {
-            content: url(../images/logo-main.png);
-        }
-
-.page-signin .form-signin .byline img {
-    content: url(../../../images/byline-softwrench.png);
-}

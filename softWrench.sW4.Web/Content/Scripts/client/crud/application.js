@@ -89,7 +89,8 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         //we need this because the crud_list.js may not be rendered it when this event is dispatched, in that case it should from here when it starts
 
         contextService.insertIntoContext("grid_refreshdata",{ data: data, panelid: null }, true);
-        scope.$broadcast("sw_gridrefreshed", data,null);
+        scope.$broadcast("sw_gridrefreshed", data, null);
+        scope.$broadcast("sw_gridchanged");
         switchMode(false, scope);
     };
 

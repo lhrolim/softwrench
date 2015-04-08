@@ -1,16 +1,7 @@
-﻿.page-signin .form-signin .logo img {
-    content: url(../../images/southern/logo-main.png);
+﻿.page-signin .form-signin img.logo {
     max-width: 90%;
 }
 
 .container header .branding {
-    background: url(../../images/southern/branding.png) no-repeat top left;
-}
-
-    .container header .branding .logo img {
-        content: url(../../images/southern/logo-main.png);
-    }
-
-.page-signin .form-signin .byline img {
-    content: url(../../images/byline-softwrench.png);
+    background: url(../../Images/southern/branding.png) no-repeat top left;
 }

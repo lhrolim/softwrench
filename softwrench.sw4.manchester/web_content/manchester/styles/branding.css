@@ -1,6 +1,6 @@
 ﻿
 .page-signin {
-    background: #0061cc url(../images/signin.jpg) no-repeat center top fixed;
+    background: #0061cc url(../Images/signin.jpg) no-repeat center top fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -13,8 +13,7 @@
         border: 2px solid #4eaad9;
     }
 
-        .page-signin .form-signin .logo img {
-            content: url(../images/logo-main.png);
+        .page-signin .form-signin .logo {
             margin-top: 20px;
             padding: 0;
             box-shadow: 0 0 80px 20px rgba(255, 255, 255, 1.0);
@@ -22,7 +21,7 @@
         }
 
         .page-signin .form-signin .branding {
-            background: url(../images/signin-branding.png) no-repeat center center;
+            background: url(../Images/signin-branding.png) no-repeat center center;
             height: 50px;
             width: 340px;
             margin-top: 40px;
@@ -30,6 +29,7 @@
 
         .page-signin .form-signin button[type="submit"] {
             background: #fff;
+            /*border: none;*/
             color: #0061cc;
         }
 
@@ -39,16 +39,11 @@
 
         .page-signin .form-signin .divider.bottom {
             height: 80px;
-            background: url(../images/divider.png) no-repeat center center;
+            background: url(../Images/divider.png) no-repeat center center;
         }
-
-        .page-signin .form-signin .byline img {
-            content: url(../../../images/byline-softwrench.png);
-        }
-
 
 .container header {
-    background: #0061cc url(../images/header.jpg) no-repeat top left;
+    background: #0061cc url(../Images/header.jpg) no-repeat top left;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -60,11 +55,10 @@
     }
 
     .container header .branding {
-        background: url(../images/branding.png) no-repeat center left;
+        background: url(../Images/branding.png) no-repeat center left;
     }
 
-        .container header .branding .logo img {
-            content: url(../images/logo-main.png);
+        .container header .branding .logo {
             height: 120px;
             width: 120px;
         }
@@ -83,6 +77,6 @@
 
 @media all and (min-width: 1px) {
     .container header .menu-grid .menu-expand {
-        border-top: 1px solid #fff;
+         border-top: 1px solid #fff;
     }
 }

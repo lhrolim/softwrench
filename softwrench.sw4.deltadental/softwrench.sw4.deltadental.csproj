@@ -67,7 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\deltadental\readme.txt" />
-    <Content Include="web_content\deltadental\images\logo-client.png" />
+    <Content Include="web_content\deltadental\images\logo-byline.png" />
+    <Content Include="web_content\deltadental\images\logo-main.png" />
     <Content Include="web_content\deltadental\styles\branding.css" />
   </ItemGroup>
   <ItemGroup>

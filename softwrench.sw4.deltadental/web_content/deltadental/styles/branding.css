@@ -1,15 +1,3 @@
-﻿.page-signin .form-signin .logo img {
-    content: url(../images/logo-client.png);
-}
-
-.container header .branding .logo {
-    margin-top: 15px;
-}
-
-    .container header .branding .logo img {
-        content: url(../images/logo-client.png);
-    }
-
-.page-signin .form-signin .byline img {
-    content: url(../../../images/byline-softwrench.png);
+﻿.container header .branding .logo {
+    margin-top: 7px;
 }

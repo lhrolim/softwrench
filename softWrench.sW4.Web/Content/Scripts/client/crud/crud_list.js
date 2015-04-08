@@ -212,7 +212,10 @@ app.directive('crudList', function (contextService) {
                 $scope.gridRefreshed(data, panelId);
             });
 
-
+            // When changing grids the search sort should be cleared
+            $scope.$on('sw_gridchanged', function(event) {
+                $scope.searchSort = {};
+            });
 
             $scope.gridRefreshed = function (data, panelId) {
                 if ($scope.panelid != panelId) {
@@ -243,11 +246,12 @@ app.directive('crudList', function (contextService) {
                         $scope.paginationData = contextService.fetchFromContext("crud_context", true).paginationData;
                     }
 
-                    $scope.searchData = $scope.searchData || {};
-                    $scope.searchOperator = $scope.searchOperator || {};
+                    $scope.searchData = {};
+                    $scope.searchOperator = {};
                     $scope.searchSort = $scope.searchSort || {};
 
                     if (data.pageResultDto && data.pageResultDto.searchParams) {
+                        //TODO: make sure searchSort follows the same logic of building from the server response, then clear the sw_gridchanged event
                         var result = searchService.buildSearchDataAndOperations(data.pageResultDto.searchParams, data.pageResultDto.searchValues);
                         $scope.searchData = result.searchData;
                         $scope.searchOperator = result.searchOperator;

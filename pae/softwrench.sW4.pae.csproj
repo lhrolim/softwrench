@@ -67,8 +67,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\pae\readme.txt" />
-    <Content Include="web_content\pae\images\logo-client.png" />
-    <Content Include="web_content\pae\styles\branding.css" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="metadata\pae\statuscolors.json">
@@ -84,7 +82,9 @@
     <Folder Include="classes\com\cts\%24changecustomername%24\dataset\" />
     <Folder Include="classes\com\cts\%24changecustomername%24\migration\" />
     <Folder Include="web_content\pae\htmls\" />
+    <Folder Include="web_content\pae\images\" />
     <Folder Include="web_content\pae\scripts\" />
+    <Folder Include="web_content\pae\styles\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
