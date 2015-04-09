@@ -36,6 +36,14 @@ namespace softWrench.sW4.Util {
             return obj.ToString().EqualsIc(other);
         }
 
+        public static bool EqualsAny(this object obj, params string[] strings) {
+            if (obj == null) {
+                return false;
+            }
+
+            return obj.ToString().EqualsAny(strings);
+        }
+
         public static bool StartsWithIc(this object obj, string other) {
             if (obj == null) {
                 return other == null;

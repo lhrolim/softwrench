@@ -47,13 +47,13 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 var approvalGroup = (String)approval[c.ApproverGroupColumn];
                 //non customer approvals
                 if (approvalGroup != null && !approvalGroup.StartsWith("C-")) {
-                    var hasAction = HandleNonCustomerApprovers(user, wfassignment, approvalGroup, approval, wftransactions, rejectedTransaction);
-                    if (hasAction) {
+                    var needsApproval = HandleNonCustomerApprovers(user, wfassignment, approvalGroup, approval, wftransactions, rejectedTransaction);
+                    if (needsApproval) {
                         numberOfActions++;
                     }
                 } else {
-                    var hasAction = HandleCustomerApprovers(user, result, approvalGroup, worklogs, approval,wostatus);
-                    if (hasAction) {
+                    var needsApproval = HandleCustomerApprovers(user, result, approvalGroup, worklogs, approval, wostatus);
+                    if (needsApproval) {
                         numberOfActions++;
                     }
                 }
@@ -67,7 +67,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             var assignment = wfassignment.FirstOrDefault(f => f[c.RoleIdColumn].ToString().EqualsIc(approvalGroup));
             approval["#shouldshowaction"] = user.HasPersonGroup(approvalGroup);
             if (assignment == null) {
-                return (Boolean)approval["#shouldshowaction"];
+                //nothing has been done, so it needs approval still
+                return true;
             }
             var wfid = assignment[c.WfIdColumn];
             var txs = wftransactions.Where(tx => tx[c.WfIdColumn].ToString().Equals(wfid));
@@ -79,7 +80,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 approval[c.StatusColumn] = GetStatusForPart1(rejectedTransaction, txToUse);
             }
             Log.DebugFormat("non customer approval handled " + string.Join(", ", approval.Select(m => m.Key + ":" + m.Value).ToArray()));
-            return (Boolean)approval["#shouldshowaction"];
+            //TODO: is this logic correct? if the status of the approvergroup is already rejected why should we give the user any chance to change it?
+            return !approval.ContainsKey(c.StatusColumn) || !approval[c.StatusColumn].EqualsAny(c.ApprovedStatus, c.RejectedStatus);
         }
 
         private Boolean HandleCustomerApprovers(InMemoryUser user, DataMap result, string approvalGroup, IEnumerable<Dictionary<string, object>> worklogs, IDictionary<string, object> approval,
@@ -130,7 +132,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 approval["#shouldshowaction"] = false;
             }
             Log.DebugFormat("customer approval handled " + string.Join(", ", approval.Select(m => m.Key + ":" + m.Value).ToArray()));
-            return (bool)approval["#shouldshowaction"];
+            //if this group has not yet been approved or rejectd, it will still require some action (maybe not by this user)
+            return !approval.ContainsKey(c.StatusColumn)|| !approval[c.StatusColumn].EqualsAny(c.ApprovedStatus,c.RejectedStatus);
         }
 
         private IEnumerable<Dictionary<string, object>> FilterWorkLogsOlderThanLatestAuth(IEnumerable<Dictionary<string, object>> worklogs, DateTime? latestAuthStatusDate) {

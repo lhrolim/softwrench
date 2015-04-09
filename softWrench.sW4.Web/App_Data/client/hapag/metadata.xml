@@ -1364,6 +1364,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                 <renderer type="label"/>
               </field>
             <optionfield label="Are you getting the authorisation page?" attribute="authpageseen">
+              <renderer type="COMBO" params="setdefaultvalue=false"/>
               <option label="YES" value="YES"/>
               <option label="NO" value="NO"/>
             </optionfield>
