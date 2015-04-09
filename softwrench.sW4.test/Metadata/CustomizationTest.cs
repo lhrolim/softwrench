@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Metadata {
@@ -12,6 +13,8 @@ namespace softwrench.sW4.test.Metadata {
     public class CustomizationTest {
 
         private static IList<ApplicationFieldDefinition> _baseWorklogDisplayables;
+
+        private static List<IApplicationDisplayable> _baseIssueDisplayables;
 
         [ClassInitialize]
         public static void Init(TestContext testContext) {
@@ -21,7 +24,14 @@ namespace softwrench.sW4.test.Metadata {
             /* Temporarily used in TestAfterAndBefore1() Method */
             var app = MetadataProvider.Application("worklog");
             var listSchema = app.Schema(new ApplicationMetadataSchemaKey("list"));
+
             _baseWorklogDisplayables = listSchema.Fields;
+
+            app = MetadataProvider.Application("invissue");
+            var newInvSchema = app.Schema(new ApplicationMetadataSchemaKey("newInvIssueDetail"));
+            _baseIssueDisplayables = newInvSchema.Displayables;
+
+            
             //TODO: Add the ability to access the base schema so that we can count the base displayables directly from a test method
 
             ApplicationConfiguration.TestclientName = "test_only";
@@ -93,6 +103,22 @@ namespace softwrench.sW4.test.Metadata {
 
             var optionFields =detailSchema.OptionFields;
             Assert.IsNull(optionFields.FirstOrDefault(c => c.Attribute == "classstructureid"));
+        }
+
+
+
+        [TestMethod]
+        public void TestReplaceRendererOfAssociationInsideSection() {
+
+            var app = MetadataProvider.Application("invissue");
+            var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("newInvIssueDetail"));
+            
+            var associations = detailSchema.Associations;
+            var issueTo = associations.FirstOrDefault(c => c.Attribute == "issueto");
+            Assert.IsNotNull(issueTo);
+            Assert.AreNotEqual("lookup",issueTo.RendererType);
+            Assert.AreEqual(_baseIssueDisplayables.Count,detailSchema.Displayables.Count);
+            
         }
 
     }
