@@ -62,5 +62,15 @@
         </detail>
       </schemas>
     </application>
+    <application name="invissue" title="Issue Inventory" entity="invissue">
+      <schemas>
+        <schema id="newInvIssueDetail" mode="input" stereotype="detail">
+          <customization position="issueto">
+            <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'" showexpression="true">
+            </association>
+          </customization>
+        </schema>
+      </schemas>
+    </application>
   </applications>
 </metadata>
