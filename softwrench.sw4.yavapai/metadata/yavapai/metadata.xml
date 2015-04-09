@@ -66,7 +66,7 @@
       <schemas>
         <schema id="newInvIssueDetail" mode="input" stereotype="detail">
           <customization position="issueto">
-            <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'" showexpression="true">
+            <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
             </association>
           </customization>
         </schema>
