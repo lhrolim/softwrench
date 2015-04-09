@@ -122,9 +122,21 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             }
             var filter = entities[entity].all();
             filter.list(null, function (result) {
-                //single result expected
                 cbk(result);
             });
+        },
+
+        findUnique: function (entity) {
+            var deferred = dispatcherService.loadBaseDeferred();
+            var promise = deferred.promise;
+            this.findAll(entity, function (result) {
+                if (result.length == 0) {
+                    deferred.resolve(null);
+                } else {
+                    deferred.resolve(result[0]);
+                }
+            });
+            return promise;
         },
 
         save: function (obj, cbk, tx) {

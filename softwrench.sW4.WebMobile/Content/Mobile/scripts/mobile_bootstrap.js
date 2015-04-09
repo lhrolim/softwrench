@@ -13,7 +13,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
 
 .run(function ($ionicPlatform, swdbDAO, loginService, contextService, $state) {
 
-   
+    initContext();
 
     $ionicPlatform.ready(function () {
 
@@ -23,7 +23,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
 //        }
 
         initCordovaPlugins();
-        initContext();
+      
 
         var isCookieAuthenticated = loginService.checkCookieCredentials();
         if (isCookieAuthenticated) {
@@ -103,6 +103,16 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
                 }
             }
         })
+
+       .state('main.settings', {
+           url: '/settings',
+           views: {
+               'main': {
+                   templateUrl: 'Content/Mobile/templates/settings.html',
+                   controller: 'SettingsController'
+               }
+           }
+       })
 
 
     // if none of the above states are matched, use this as the fallback

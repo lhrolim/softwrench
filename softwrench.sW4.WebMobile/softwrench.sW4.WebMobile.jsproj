@@ -110,7 +110,6 @@
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Content\Customers\" />
     <Folder Include="Content\Shared\webcommons\scripts\vendor\" />
     <Folder Include="images\" />
     <Content Include="bower.json" />
@@ -140,6 +139,7 @@
     <Content Include="Content\Shared\dashboard\templates\Dashboard.html" />
     <Content Include="Content\Shared\dashboard\templates\dashboarddirective.html" />
     <Content Include="Content\Shared\dashboard\templates\dashboardgridpanel.html" />
+    <Content Include="Content\Shared\readme.txt" />
     <Content Include="Content\Shared\webcommons\scripts\softwrench\components\autocompleteclient.js" />
     <Content Include="Content\Shared\webcommons\scripts\softwrench\components\autocompleteserver.js" />
     <Content Include="Content\Shared\webcommons\scripts\softwrench\components\combodropdown.js" />
