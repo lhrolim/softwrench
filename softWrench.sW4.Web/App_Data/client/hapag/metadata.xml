@@ -104,7 +104,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="hlagpluspcustomer" type="varchar" required="false" query="ref:pluspcustomer"/>
         <attribute name="hlagswd" type="varchar" required="false" query="CASE WHEN assetloccommswd_.commodity = 'HLC-0007' THEN 'Yes' ELSE 'No' END"/>
         <attribute name="hlagscanclient" type="varchar" required="false" query="CASE WHEN assetloccommscanclient_.commodity = 'HLC-0006' THEN 'Yes' ELSE 'No' END"/>
-        <attribute name="ownedby" type="varchar" query="(select case when comm_.description is null then null else SUBSTR(comm_.description, 17) end from commodities as comm_ inner join assetloccomm as alclistreport_ on (alclistreport_.commodity = comm_.commodity and alclistreport_.itemsetid = comm_.itemsetid and (comm_.description like 'Asset owened by%')) where asset.assetnum = alclistreport_.assetnum and asset.siteid = alclistreport_.siteid)"/>
+        <attribute name="ownedby" type="varchar" required="false" query="@assetReportControlWhereClauseProvider.GetCommodityOwnedByWhere"/>
 
         <attribute name="assetcategory" type="varchar" query="COALESCE(classstructure_category_.description,'')" />
         <attribute name="assetregion" type="varchar" query="COALESCE(aucisnotowner_person_.department,'')" />
@@ -161,6 +161,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <relationship to="assetloccomm" qualifier="alclistreport">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="commodity" query="@assetReportControlWhereClauseProvider.GetCommodityOwnedByJoin"/>
         </relationship>
         <relationship to="ticket" collection="true">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
@@ -1325,6 +1326,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                 <renderer type="textarea"/>
               </field>
               <optionfield label="Does the problem affect a single internet page or all pages?" attribute="affectedpages">
+                <renderer type="COMBO" params="setdefaultvalue=false"/>
                 <option label="Single" value="single"/>
                 <option label="All" value="all"/>
               </optionfield>
@@ -1342,6 +1344,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
                 <renderer type="numericinput"/>
                 </field>
               <optionfield label="Connection of the client:" attribute="clientconnection">
+                <renderer type="COMBO" params="setdefaultvalue=false"/>
                  <option label="LAN" value="lan"/>
                  <option label="WLAN" value="wlan"/>
                  <option label="LAN/WLAN" value="lan/wlan"/>
@@ -2820,6 +2823,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Billable" attribute="warrantyasset_warrantyview_.description">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
+
+          <field label="Owned by" attribute="alclistreport_.siteid" hidden="true"/>
+            
           <field label="Owned by" attribute="ownedby">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>

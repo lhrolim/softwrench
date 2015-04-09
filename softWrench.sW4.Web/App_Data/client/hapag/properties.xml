@@ -30,6 +30,7 @@
   <property key="faqusefullinksPath" value="C:\ServiceIT\config\SR_FAQ.txt"/>
   <property key="serviceItLoginPath" value="C:\ServiceIT\config\ServiceITLogin.properties"/>
   <property key="businessmatrixPath" value="C:\ServiceIT\config\businessmatrix"/>
+  <property key="ownedbycommoditydescriptionsfile" value="C:\ServiceIT\config\OWNED_BY_COMMODITIES_DESCRIPTIONS.txt"/>
   <property key="ssoServicesQueryPath" value="C:\ServiceIT\config\SSO_SERVICES_QUERY.txt"/>
   <property key="tuiServicesQueryPath" value="C:\ServiceIT\config\TUI_SERVICES_QUERY.txt"/>
   <property key="loginErrorMessage" value="Ungültiger Username oder falsches Passwort \n Invalid Username or Bad Password \n No válido Nombre de usuario o contraseña incorreta"/>

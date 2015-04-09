@@ -24,19 +24,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
 
                 if (null != attribute.Query) {
                     var query = attribute.GetQueryReplacingMarkers(association.Qualifier);
-                    if (query.StartsWith("@")) {
-                        //removing leading @
-                        query = query.Substring(1);
-                        var split = query.Split('.');
-                        var ob = SimpleInjectorGenericFactory.Instance.GetObject<object>(split[0]);
-                        if (ob != null) {
-                            var result = ReflectionUtil.Invoke(ob, split[1], new object[] { });
-                            if (!(result is String)) {
-                                throw ExceptionUtil.InvalidOperation("method need to return string for join whereclause");
-                            }
-                            query = result.ToString();
-                        }
-                    }
+                    query = BaseQueryUtil.EvaluateServiceQuery(query);
                     sb.Append(query + suffix);
 
                 } else if (null != attribute.From) {

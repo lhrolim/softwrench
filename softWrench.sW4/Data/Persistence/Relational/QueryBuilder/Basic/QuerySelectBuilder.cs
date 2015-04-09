@@ -103,8 +103,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
 
         private static string AliasAttribute(EntityMetadata entityMetadata, string alias, EntityAttribute attribute, string context) {
             var contextToUse = context ?? entityMetadata.Name;
-            var qualifiedName = attribute.GetQueryReplacingMarkers(contextToUse);
-            return string.Format("{0} as {1}", qualifiedName, alias);
+            var query = attribute.GetQueryReplacingMarkers(contextToUse);
+            query = BaseQueryUtil.EvaluateServiceQuery(query);
+            return string.Format("{0} as {1}", query, alias);
         }
 
         private static string AliasAttribute(EntityMetadata entityMetadata, ProjectionField projectionField) {
