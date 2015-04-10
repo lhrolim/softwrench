@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <templates>
+    <!--WorkOrder-->
+    <template path="@workorder.xml"/>
+    <!--<template path="workorderbatch.xml"/>-->
+
+    <!--ServiceRequest-->
+    <template path="@servicerequest.xml"/>
+
+    <!--Incident-->
+    <template path="@incident.xml"/>
+
+    <!--Inventory-->
+    <template path="@inventory_maximo7.1.xml"/>
+
+    <!--Changes-->
+    <template path="@wochange.xml"/>
+
+    <!--Purchasing-->
+    <template path="@receiving.xml"/>
+    <template path="@purchasing.xml"/>
+  </templates>
+
+  <entities>
+  </entities>
+
+  <applications>
+    <application entity="SR" name="servicerequest" title="Service Request">
+      <schemas>
+        <schema id="newdetail" platform="web" redeclaring="false">
+          <customization position="classstructureid"></customization>
+          <customization position="saddresscode"></customization>
+        </schema>
+        <schema id="editdetail" platform="web" redeclaring="false">
+          <customization position="classstructureid"></customization>
+          <customization position="saddresscode"></customization>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>
