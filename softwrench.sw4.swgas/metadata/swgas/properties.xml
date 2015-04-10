@@ -12,9 +12,9 @@
   <property key="maxScreenshotSize" value="5"/>
   <!--in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
-  <property key="defaultOrgId" value="EAGLENA"/>
-  <property key="defaultSiteId" value="BEDFORD"/>
-  <property key="defaultStoreloc" value="CENTRAL"/>
+  <property key="defaultOrgId" value="SWGORG"/>
+  <property key="defaultSiteId" value="SWGSITE"/>
+  <property key="defaultStoreloc" value="HQ"/>
   <property key="sourcemapping" value="maximo7.5"/>
   <!--
       maximoutc property set to the full name of the timezone the maximo 
