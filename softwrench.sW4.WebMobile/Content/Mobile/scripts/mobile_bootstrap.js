@@ -39,7 +39,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
         swdbDAO.findAll("Settings", function(settings) {
             if (settings.length == 0) {
                 var ob = entities.Settings;
-                swdbDAO.save(new ob(), function() {
+                swdbDAO.save(new ob()).success(function() {
                     contextService.insertIntoContext("settings", settings);
                 });
             } else {

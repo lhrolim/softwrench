@@ -8,7 +8,7 @@
                 //this will get populated upon first synchronization
                 var ob = entities.Menu;
                 var menu = new ob();
-                swdbDAO.save(menu, function () {
+                swdbDAO.save(menu).success(function () {
                     $scope.menu = menu;
                 });
             } else {

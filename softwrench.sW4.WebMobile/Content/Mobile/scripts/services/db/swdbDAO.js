@@ -29,7 +29,10 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 schema: "JSON"
             });
 
-
+            ///
+            /// Holds both Parent entities and compositions data.
+            /// This Entries needs to be reevaluated on every sync, since chances are that they do not needed to be present on client side after execution.
+            ///
             entities.DataEntry = persistence.define('DataEntry', {
                 application: 'TEXT',
                 datamap: 'JSON',
@@ -45,8 +48,64 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 problemReason: "TEXT"
             });
 
+            //this entity stores the Data which will be used as support of the main entities.
+            //It cannot be created locally. Hence Synchronization should use rowstamp caching capabilities by default
+            entities.AssociationData = persistence.define('AssociationData', {
+                application: 'TEXT',
+                label: 'TEXT',
+                value: 'TEXT',
+                projectionfields: 'JSON',
+            });
+
+            
+            entities.WhereClause = persistence.define("WhereClause", {
+                ///
+                /// This should get populated only if, there are multiple whereclauses present for a given association.
+                /// Ex: Asset has one WC for the SR, and another one for the WO. If a intersection (fallback condition exists) it should be registered on the asset application alone, though, or via the metadata.
+                /// The framework will bring all Assets that match the base whereclause (only once) and match the specific whereclauses entries locally, so that the amount of data transported is minimized.
+                ///
+                application: "TEXT",
+                parentApplication: "TEXT",
+                metadataid:"TEXT",
+                //the whereclause it self
+                data: "TEXT",
+            });
+
+
+            entities.AssociationCache = persistence.define('AssociationCache', {
+                ///Holds an object that for each application will have properties that will help the framework to understaand how to proceed upon synchronization:
+                /// <ul>
+                ///     <li>maximorowstamp --> the rowstamp of the last data fetched from maximo of this application</li>
+                ///     <li>whereclausehash--> the md5 hash of the latest applied whereclause used to pick this data, or null, if none present
+                ///             The framework will compare to see if the wc has changed, invalidating the entire cache in that case.</li>
+                ///     <li>syncschemahash --> the hash of the sync schema used for last synchronization. It could have changed due to a presence of a new projection field, for instance</li>
+                /// </ul>
+                ///ex:
+                /// {
+                ///    location:{
+                ///       maximorowstamp: 1000
+                ///       whereclausehash:'abasacvsava'
+                ///       syncschemahash:'asadfasdfasdfasdfasdfadsfasdfasdfamlmlmlsdafsadfassfdafa'
+                ///    }
+                /// 
+                ///
+
+                ///    asset:{
+                ///       maximorowstamp: 12500
+                ///       whereclausehash:'hashoflatestappliedwhereclause'
+                ///       syncschemahash:baadfasdfasdfa
+                ///    }
+                //        .
+                //        .
+                //        .
+                // }
+                data: "JSON"
+            });
+
             entities.DataEntry.index(['application', 'remoteid'], { unique: true });
             entities.DataEntry.index(['application', 'parentId']);
+
+            entities.AssociationData.index(['application', 'value']);
 
             entities.Menu = persistence.define('Menu', {
                 data: "JSON"
@@ -139,21 +198,21 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             return promise;
         },
 
-        save: function (obj, cbk, tx) {
+        save: function (obj, tx) {
             persistence.add(obj);
-            if (!cbk) {
-                persistence.flush();
-                return;
-            }
+
+            var deferred = dispatcherService.loadBaseDeferred();
+            var promise = deferred.promise;
             if (tx) {
                 persistence.flush(tx, function () {
-                    cbk();
+                    deferred.resolve();
                 });
             } else {
                 persistence.flush(function () {
-                    cbk();
+                    deferred.resolve();
                 });
             }
+            return promise;
 
         }
 

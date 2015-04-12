@@ -1,8 +1,11 @@
-﻿softwrench.controller('HomeController', function ($scope, routeService,swdbDAO, $http, $ionicPopup) {
+﻿/// <reference path="maincontroller.js" />
+softwrench.controller('HomeController', function ($scope, routeService,swdbDAO, $http, $ionicPopup) {
     $scope.data = {};
 
     $scope.fullSynchronize = function () {
-        $http.get(routeService.syncURL()).success(function(metadatasResult) {
+
+
+        $http.get(routeService.downloadMetadataURL()).success(function (metadatasResult) {
             var menus = JSON.parse(metadatasResult.menuJson);
             $scope.menu.data = menus;
             swdbDAO.instantiate('Menu', $scope.menu).success(function (menuToSave) {

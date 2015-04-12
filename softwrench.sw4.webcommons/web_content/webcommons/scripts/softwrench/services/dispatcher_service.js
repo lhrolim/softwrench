@@ -39,6 +39,9 @@
 
         /// <summary>
         /// use to create a default instance of the deferred/promise instance, useful for transforming sync methods into async ones, and for chaining them.
+        /// 
+        /// Add success/error methods on top of the promise, to make it more uniform along with other jquery/angular services (such as $http)
+        /// 
         /// </summary>
         /// <returns type="">a deferred object</returns>
         loadBaseDeferred: function () {
@@ -51,7 +54,7 @@
                 return promise;
             }
             promise.error = function (fn) {
-                promise.then(null, fn);
+                promise.catch(fn);
                 return promise;
             }
             return deferred;
