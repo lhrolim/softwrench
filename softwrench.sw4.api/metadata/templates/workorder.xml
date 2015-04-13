@@ -286,7 +286,7 @@
             <composition relationship="tooltrans" label="Tools">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
-            <composition relationship="attachment" label="Attachments" >
+            <composition relationship="attachment" label="Attachments" printenabled="false">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
           </section>
