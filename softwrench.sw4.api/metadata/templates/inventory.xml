@@ -1116,7 +1116,7 @@
       </schemas>
     </application>
 
-    <!--<application entity="invuse" name="invuse" title="Inventory Transfer">
+    <application entity="invuse" name="invuse" title="Inventory Transfer">
       <schemas>
         <schema id="newdetail" stereotype="detail" mode="input">
           <properties>
@@ -1143,8 +1143,8 @@
           <association target="invuseline_.rotassetnum" label="Rotating Asset" labelfield="asset_.description" requiredexpression="false" extraprojectionvalues="binnum,lotnum" enableexpression="@inventory_!=undefined &amp;&amp; @inventory_.item_.rotating==1">
             <renderer type="lookup" />
           </association>
-          --><!--<field label="Rotating" target="inventory_.item_.rotating"/>--><!--
-          --><!--<field label="Kit" target="inventory_.item_.iskit"/>--><!--
+          <!--<field label="Rotating" target="inventory_.item_.rotating"/>-->
+          <!--<field label="Kit" target="inventory_.item_.iskit"/>-->
           <association label="From Bin" target="invuseline_.frombin" forcedistinctoptions="false" labelfield="frominvbalance_.binnum" hideDescription="true" extraprojectionvalues="curbal,lotnum,binnum">
             <renderer type="lookup" params="application=invbalances;schemaId=binLookupList;"/>
             <event type="afterchange" service="inventoryService" method="invUseAfterChangeFromBin"/>
@@ -1179,7 +1179,7 @@
           <event type="onload" service="scannerdetectionService" method="initInvuseTransferDetailListener"/>
         </schema>
       </schemas>
-    </application>-->
+    </application>
 
     <application entity="invcost" name="invcost" title="invcost">
       <schemas>
