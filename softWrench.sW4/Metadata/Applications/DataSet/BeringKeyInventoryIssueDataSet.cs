@@ -30,7 +30,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
         public override string ClientFilter() {
-            return "bering_inv";
+            return "bering";
         }
     }
 }
