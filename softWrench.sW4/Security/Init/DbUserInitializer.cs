@@ -76,13 +76,15 @@ namespace softWrench.sW4.Security.Init {
                 var role = _dao.FindSingleByQuery<Role>(Role.RoleByName, sysRole);
                 if (role == null) {
                     role = _dao.Save(new Role {
-                        Name = sysRole
+                        Name = sysRole,
+                        Active = true
                     });
                 }
                 var role2 = _dao.FindSingleByQuery<Role>(Role.RoleByName, clientRole);
                 if (role2 == null) {
                     role2 = _dao.Save(new Role {
-                        Name = clientRole
+                        Name = clientRole,
+                        Active = true
                     });
                 }
                 var userCustomRoles = new HashedSet<UserCustomRole>
