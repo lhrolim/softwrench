@@ -57,11 +57,15 @@ app.factory('cmplookup', function ($rootScope, $timeout, $log, associationServic
         },
 
         
-        updateLookupObject: function (scope, fieldMetadata) {
+        updateLookupObject: function (scope, fieldMetadata, clearFilter) {
             if (scope.lookupObj == null) {
                 scope.lookupObj = {};
             }
-            var code = scope.lookupAssociationsCode[fieldMetadata.attribute];
+
+            var code = '';
+            if (clearFilter != true) {
+                code = scope.lookupAssociationsCode[fieldMetadata.attribute];
+            }
             scope.lookupObj.code = code;
             scope.lookupObj.fieldMetadata = fieldMetadata;
             scope.lookupObj.application = fieldMetadata.schema.rendererParameters["application"];

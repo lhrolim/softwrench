@@ -109,16 +109,10 @@ app.directive('lookupModal', function (contextService) {
                 if ($scope.selectedOption == null &&
                     $scope.datamap[fieldMetadata.attribute] != $scope.lookupAssociationsCode[fieldMetadata.attribute]) {
                     if ($scope.modalCanceled == true) {
-                        $scope.datamap[fieldMetadata.target] = null;
-                        $scope.lookupAssociationsCode[fieldMetadata.attribute] = null;
-                        $scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
-                        associationService.updateUnderlyingAssociationObject(fieldMetadata, null, $scope);
+                        $scope.lookupAssociationsCode[fieldMetadata.attribute] = $scope.datamap[fieldMetadata.attribute];
                     } else {
                         $scope.$apply(function () {
-                            $scope.datamap[fieldMetadata.target] = null;
-                            $scope.lookupAssociationsCode[fieldMetadata.attribute] = null;
-                            $scope.lookupAssociationsDescription[fieldMetadata.attribute] = null;
-                            associationService.updateUnderlyingAssociationObject(fieldMetadata, null, $scope);
+                            $scope.lookupAssociationsCode[fieldMetadata.attribute] = $scope.datamap[fieldMetadata.attribute];
                         });
                     }
                 }

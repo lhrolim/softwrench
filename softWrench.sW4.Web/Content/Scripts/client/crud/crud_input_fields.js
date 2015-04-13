@@ -365,12 +365,12 @@ app.directive('crudInputFields', function (contextService, eventService) {
 
             /* LOOKUP functions */
 
-            $scope.showLookupModal = function(fieldMetadata) {
+            $scope.showLookupModal = function(fieldMetadata, clearFilter) {
                 if (!$scope.isSelectEnabled(fieldMetadata)) {
                     return;
                 }
                 $scope.lookupObj.element = $element;
-                cmplookup.updateLookupObject($scope, fieldMetadata);
+                cmplookup.updateLookupObject($scope, fieldMetadata, clearFilter);
             };
 
             $scope.showCustomModal = function (fieldMetadata, schema, datamap) {
