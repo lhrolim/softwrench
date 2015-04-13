@@ -365,12 +365,18 @@ app.directive('crudInputFields', function (contextService, eventService) {
 
             /* LOOKUP functions */
 
-            $scope.showLookupModal = function(fieldMetadata, clearFilter) {
+            $scope.showLookupModal = function(fieldMetadata) {
                 if (!$scope.isSelectEnabled(fieldMetadata)) {
                     return;
                 }
+
+                var code = '';
+                if ($scope.lookupAssociationsCode[fieldMetadata.attribute] != $scope.datamap[fieldMetadata.attribute]) {
+                    code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
+                }
+
                 $scope.lookupObj.element = $element;
-                cmplookup.updateLookupObject($scope, fieldMetadata, clearFilter);
+                cmplookup.updateLookupObject($scope, fieldMetadata, code);
             };
 
             $scope.showCustomModal = function (fieldMetadata, schema, datamap) {
