@@ -22,7 +22,6 @@
 
     /* COMBOBOX PUBLIC CLASS DEFINITION
      * ================================ */
-
     var Combobox = function (element, options) {
         this.loading = true;
         this.options = $.extend({}, $.fn.combobox.defaults, options);
@@ -69,8 +68,6 @@
             this.$container.removeClass('combobox-disabled');
         },
 
-
-
         parse: function () {
             var that = this
               , map = {}
@@ -95,7 +92,7 @@
             if (selected) {
                 this.$element.val(selected);
                 this.$target.val(selectedValue);
-                //            this.$container.addClass('combobox-selected');
+                //this.$container.addClass('combobox-selected');
                 this.selected = true;
             }
             return source.sort();
@@ -124,7 +121,7 @@
         this.$element.val(this.updater(val)).trigger('change');
         this.$target.val(this.map[val]).trigger('change');
         this.$source.val(this.map[val]).trigger('change');
-        //        this.$container.addClass('combobox-selected');
+        //sthis.$container.addClass('combobox-selected');
         this.selected = true;
         return this.hide();
     }
@@ -189,11 +186,27 @@
         return this;
     }
 
-    , lookup: function (event, initialPage) {
+    , lookup: function (event, initialPage, options) {
         initialPage = initialPage || 0;
+
+        //get options
+        var lookupall = false;
+        if (typeof options != 'undefined') {
+            if (typeof options.lookupall != 'undefined') {
+                lookupall = options.lookupall;
+            }
+        }
+
         var val = this.$element.val();
         if (val.length >= this.options.minLength || val == '') {
-            this.query = this.$element.val();
+
+            if (!lookupall) {
+                //filter list based on user input
+                this.query = this.$element.val();
+            } else {
+                //don't filter the list
+                this.query = '';
+            }
             this.currentPage = initialPage;
             if (this.idxShown == undefined) {
                 this.idxShown = [];
@@ -222,8 +235,6 @@
             }
         }
 
-
-
         foundItems = this.sorter(foundItems);
 
         if (!foundItems.length) {
@@ -231,7 +242,7 @@
                 //if we´re not on current page, let´s avoid calling hide whenever the scroll reaches the end
                 this.$target.val(this.previousTarget);
                 this.$source.val(this.previousTarget);
-                //                this.$element.val(this.previousTarget);
+                // this.$element.val(this.previousTarget);
                 this.refresh();
                 if (this.shown) {
                     return this.hide();
@@ -344,13 +355,11 @@
             if (this.shown) {
                 this.hide();
             } else {
-                this.clearTarget();
-                this.clearElement();
-                this.lookup();
+                //don't clear the contents, just show the whole list
+                this.lookup(null, null, {lookupall: true});
             }
         }
     },
-
 
         scrollSafety: function (e) {
             if (e.target.tagName == 'UL') {
@@ -378,7 +387,7 @@
     , clearTarget: function () {
         this.$source.val('');
         this.$target.val('');
-        //        this.$container.removeClass('combobox-selected');
+        //this.$container.removeClass('combobox-selected');
         this.selected = false;
     }
 
@@ -398,10 +407,13 @@
 
     , listen: function () {
         this.$element
-          .on('focus', $.proxy(this.focus, this))
-          .on('blur', $.proxy(this.blur, this))
-          .on('keypress', $.proxy(this.keypress, this))
-          .on('keyup', $.proxy(this.keyup, this));
+            .on('focus', $.proxy(this.focus, this))
+            .on('blur', $.proxy(this.blur, this))
+            .on('keypress', $.proxy(this.keypress, this))
+            .on('keyup', $.proxy(this.keyup, this))
+
+            //display the dropdown when clicked
+            .on('click', $.proxy(this.toggle, this));
 
         if (this.eventSupported('keydown')) {
             this.$element.on('keydown', $.proxy(this.keydown, this));
@@ -418,10 +430,11 @@
               }
           }, this))
             .on('mouseenter', 'li', $.proxy(this.mouseenter, this))
-          .on('mouseleave', 'li', $.proxy(this.mouseleave, this));;
+            .on('mouseleave', 'li', $.proxy(this.mouseleave, this));;
 
         this.$button
-          .on('click', $.proxy(this.toggle, this));
+            //clear the contents then display the dropdown
+            .on('click', $.proxy(this.toggle, this));
     }
 
     , eventSupported: function (eventName) {
@@ -510,8 +523,10 @@
                     this.previousTarget = this.$target.val()
                 }
                 this.clearTarget();
-                this.lookup();
         }
+
+        //always display the dropdown
+        this.lookup();
 
         e.stopPropagation();
         e.preventDefault();
@@ -553,7 +568,6 @@
 
     /* COMBOBOX PLUGIN DEFINITION
      * =========================== */
-
     $.fn.combobox = function (option) {
         return this.each(function () {
             var $this = $(this)
