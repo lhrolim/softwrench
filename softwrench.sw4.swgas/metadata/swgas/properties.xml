@@ -36,7 +36,7 @@
   <environment key="prod">
     <property key="basewsURL" value="http://10.50.100.106/meaweb/wsdl/" />
     <property key="maximo_DB_url" value="Data Source=10.50.100.40;Initial Catalog=SWG75MAX;User Id=MAXIMO;password=Max7506;" />
-    <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_SWG75MAX;User Id=sw;password=$0ftWr3nch;" />
+    <property key="swdb_url" value="Data Source=10.50.100.40;Initial Catalog=SWDB_SWG75MAX;User Id=sw;password=$0ftWr3nch;" />
   </environment>
 </Properties>
 
