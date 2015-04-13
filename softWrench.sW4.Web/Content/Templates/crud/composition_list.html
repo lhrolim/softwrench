@@ -34,7 +34,7 @@
             </tr>
         </thead>
         <tbody ng-show="clonedCompositionData.length > 0">
-            <tr ng-repeat-start="compositionitem in clonedCompositionData" ng-show="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)">
+            <tr ng-repeat-start="compositionitem in clonedCompositionData" ng-show="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)" ng-click="toggleDetails(compositionitem,column)">
                 <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'multiple'" style="text-align: center;">
                     <!--Multiselect-->
                     <!-- TODO: Move style to css -->
@@ -63,14 +63,11 @@
                                     <i class="fa" ng-class="loadIcon(compositionitem[column.attribute],column)"></i>
                                 </div>
                                 <div ng-switch-when="datetime">
-                                    <a style="color: black; cursor: pointer; word-break:break-all;"
-                                       ng-click="toggleDetails(compositionitem,column)">
+                                    <a>
                                         {{getFormattedValue(compositionitem[column.attribute],column,clonedCompositionData)}}
                                     </a>
                                 </div>
-                                <a style="color: black; cursor: pointer; word-break:break-all;"
-                                   ng-switch-default
-                                   ng-click="toggleDetails(compositionitem,column)">
+                                <a ng-switch-default>
                                     {{getFormattedValue(compositionitem[column.attribute],column,clonedCompositionData)}}
                                 </a>
                             </ng-switch>
