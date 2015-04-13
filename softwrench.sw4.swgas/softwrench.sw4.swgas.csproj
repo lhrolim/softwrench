@@ -76,10 +76,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\com\cts\%24changecustomername%24\configuration\" />
-    <Folder Include="classes\com\cts\%24changecustomername%24\connector\" />
-    <Folder Include="classes\com\cts\%24changecustomername%24\dataset\" />
-    <Folder Include="classes\com\cts\%24changecustomername%24\migration\" />
+    <Folder Include="classes\swgas\cts\swgas\configuration\" />
+    <Folder Include="classes\swgas\cts\swgas\connector\" />
+    <Folder Include="classes\swgas\cts\swgas\dataset\" />
+    <Folder Include="classes\swgas\cts\swgas\migration\" />
     <Folder Include="web_content\swgas\htmls\" />
     <Folder Include="web_content\swgas\scripts\" />
     <Folder Include="web_content\swgas\styles\" />
