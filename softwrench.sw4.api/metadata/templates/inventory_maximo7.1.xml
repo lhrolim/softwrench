@@ -1116,6 +1116,8 @@
       </schemas>
     </application>
 
+    <!-- TRANSFERS NEEDS TO BE REWRITTEN FOR 7.1. INVUSE TABLE/INTEGRATION OBJECT DOES NOT EXIST IN THIS VERSION -->
+    
     <!--<application entity="invuse" name="invuse" title="Inventory Transfer">
       <schemas>
         <schema id="newdetail" stereotype="detail" mode="input">
