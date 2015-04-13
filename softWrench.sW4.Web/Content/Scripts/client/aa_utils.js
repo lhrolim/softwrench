@@ -434,6 +434,8 @@ function getCurrentDate() {
     var dd = today.getDate();
     var mm = today.getMonth() + 1; //January is 0!
     var yyyy = today.getFullYear();
+    var HH = today.getHours();
+    var mins = today.getMinutes();
 
     if (dd < 10) {
         dd = '0' + dd
@@ -443,7 +445,7 @@ function getCurrentDate() {
         mm = '0' + mm
     }
 
-    today = mm + '/' + dd + '/' + yyyy;
+    today = mm + '/' + dd + '/' + yyyy + " " + HH + ":" + mins;
     return today;
 }
 

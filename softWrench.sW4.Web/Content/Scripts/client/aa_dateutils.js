@@ -235,5 +235,5 @@ Date.now = function () { return new Date(); }; Date.today = function () { return
 
 
 function getDateFormat() {    
-    return 'MM/dd/yyyy';
+    return 'MM/dd/yyyy HH:mm';
 }

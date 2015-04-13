@@ -6,9 +6,9 @@ app.factory('reportservice', function ($http, alertService, fieldService, search
         var defaultValue = null;
         if (displayable.filter.default == '@MIN_DATE') {
             try {
-                defaultValue = new Date(1970, 0, 1).toString(displayable.rendererParameters.format);
+                defaultValue = new Date(1970, 0, 1, 0, 0).toString(displayable.rendererParameters.format);
             } catch (e) {
-                defaultValue = new Date(1970, 0, 1).toString(getDateFormat());
+                defaultValue = new Date(1970, 0, 1, 0, 0).toString(getDateFormat());
             }
         } else if (displayable.filter.default == '@CURR_DATE') {
             try {
@@ -110,7 +110,7 @@ app.factory('reportservice', function ($http, alertService, fieldService, search
 
             //Setting Default Start Date and End Date
             if (datamap.reportdate___start == null || datamap.reportdate___start == '') {
-                datamap.reportdate___start = '01/01/1970';
+                datamap.reportdate___start = '01/01/1970 00:00';
             }
             if (datamap.reportdate___end == null || datamap.reportdate___end == '') {
                 datamap.reportdate___end = getCurrentDate();

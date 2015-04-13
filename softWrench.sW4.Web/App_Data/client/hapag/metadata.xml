@@ -663,10 +663,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=110px;manwidth=110px" />
           </field>
           <field label="Open Date" attribute="affecteddate">
-            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=110px;manwidth=110px"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=110px;manwidth=110px"/>
           </field>
           <field label="Last-Action Date" attribute="lastworklog_.createdate">
-            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=110px;manwidth=110px"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=110px;manwidth=110px"/>
           </field>
           <field label="Last-Action Worklog" attribute="lastworklog_.description"/>
           <field label="Owner Group" attribute="ownergroup" hidden="true">
@@ -688,11 +688,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <filter operation="contains"/>
           </field>
           <field label="Start Date" attribute="reportdate___start">
-            <renderer type="datetime" params="format=dd/MM/yyyy"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
             <filter operation="btw" default="@MIN_DATE"/>
           </field>
           <field label="End Date" attribute="reportdate___end">
-            <renderer type="datetime" params="format=dd/MM/yyyy"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
             <filter operation="btw" default="@CURR_DATE" />
           </field>
           <reference id="Location"/>
@@ -741,11 +741,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="nextschema.schemaid" value="hardwarerepair"/>
           </properties>
           <field label="Start Date" attribute="reportdate___start">
-            <renderer type="datetime" params="format=dd/MM/yyyy"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
             <filter operation="btw" default="@MIN_DATE"/>
           </field>
           <field label="End Date" attribute="reportdate___end">
-            <renderer type="datetime" params="format=dd/MM/yyyy"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
             <filter operation="btw" default="@CURR_DATE" />
           </field>
           <reference id="Location"/>
@@ -1935,7 +1935,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=120px;maxwidth=120px;excelwidth=20" />
           </field>
           <field attribute="reportdate" label="Date &amp; Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=false" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=true" />
           </field>
           <field attribute="hlagpluspcustomer" label="Location">
             <renderer type="default" params="minwidth=80px;maxwidth=80px" />
