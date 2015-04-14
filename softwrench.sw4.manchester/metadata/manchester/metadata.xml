@@ -190,7 +190,7 @@
           <field attribute="sraddress_.staddrsttype" attributeToServer="#tkstaddrsttype" hidden="true" />
           <field attribute="sraddress_.formattedaddress" attributeToServer="#tkformattedaddress" hidden="true" />
           <!--COMSW 24 association field used for lazy lookup-->
-          <association label="Service Address" target="saddresscode" labelfield="sraddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" >
+          <association label="Service Address" target="saddresscode" labelfield="sraddress_.description" extraprojectionvalues="description, staddrnumber, staddrstreet, staddrsttype, formattedaddress" requiredexpression="@location == null">
             <renderer type="lookup" />
           </association>
           <!-- SWWEB 173-->
@@ -215,7 +215,7 @@
             <event type="afterchange" service="srService" method="afterChangeAsset"/>
           </association>
 
-          <association label="Location:" target="location" labelfield="location_.description" >
+          <association label="Location:" target="location" labelfield="location_.description" requiredexpression="@saddresscode == null" >
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             <renderer type="lookup"/>
           </association>
@@ -367,7 +367,7 @@
 
            <field label="Job Plan:" attribute="jpnum" readonly="true" />
            
-           <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType">
+           <optionfield attribute="wopriority" label="Priority:" providerattribute="_WOPriorityType" requiredexpression="true">
              <renderer type="autocompleteclient"/>
            </optionfield>
            
