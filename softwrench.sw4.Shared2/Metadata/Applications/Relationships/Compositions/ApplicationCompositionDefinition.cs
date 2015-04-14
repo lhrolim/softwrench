@@ -13,6 +13,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
         private String _relationship;
         public bool isHidden { get; set; }
+        public bool isPrintEnabled { get; set; }
         private ApplicationCompositionSchema _schema;
         public ApplicationHeader Header { get; set; }
 
@@ -20,12 +21,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
         }
 
-        public ApplicationCompositionDefinition(string @from, string relationship, string label, ApplicationCompositionSchema schema, string showExpression, string toolTip, bool hidden, ApplicationHeader header)
+        public ApplicationCompositionDefinition(string @from, string relationship, string label, ApplicationCompositionSchema schema, string showExpression, string toolTip, bool hidden, bool printEnabled, ApplicationHeader header)
             : base(from, label, showExpression, toolTip) {
             if (relationship == null) throw new ArgumentNullException("relationship");
             _relationship = relationship;
             _schema = schema;
             isHidden = hidden;
+            isPrintEnabled = printEnabled;
             Header = header;
             if (isHidden) {
                 //if hidden then the detail schema can be marked as empty

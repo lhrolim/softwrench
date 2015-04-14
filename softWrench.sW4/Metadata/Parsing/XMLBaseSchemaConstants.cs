@@ -18,6 +18,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string BaseDisplayableEnableDefaultAttribute = "enabledefault";
         public const string BaseDisplayableToolTipAttribute = "tooltip";
         public const string BaseDisplayableHiddenAttribute = "hidden";
+        public const string BaseDisplayablePrintEnabledAttribute = "printenabled";
         public const string BaseDisplayableLabelAttribute = "label";
         public const string BaseDisplayableIdAttribute = "id";
         public const string BaseDisplayableRequiredExpressionAttribute = "requiredexpression";

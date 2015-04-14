@@ -95,6 +95,27 @@ app.factory('tabsService', function (fieldService,i18NService) {
             return resultList;
         },
 
+        tabsPrintDisplayables: function(schema) {
+            var resultList = [];
+            var idxArray = [];
+
+            idxArray = idxArray.concat(schema.nonInlineCompositionIdxs);
+            idxArray = idxArray.concat(schema.tabsIdxs);
+            idxArray.sort(function (a, b) {
+                return a - b;
+            });
+
+            for (var i = 0; i < idxArray.length; i++) {
+                var idx = idxArray[i];
+                var displayable = schema.displayables[idx];
+                if (!displayable.isHidden && displayable.isPrintEnabled) {
+                    resultList.push(displayable);
+                }
+            }
+
+            return resultList;
+        },
+
         nonInlineCompositionsDict: function (schema) {
             return nonInlineCompositionsDict(schema);
         },
