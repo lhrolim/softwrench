@@ -57,12 +57,12 @@ app.factory('cmplookup', function ($rootScope, $timeout, $log, associationServic
         },
 
         
-        updateLookupObject: function (scope, fieldMetadata) {
+        updateLookupObject: function (scope, fieldMetadata, searchValue) {
             if (scope.lookupObj == null) {
                 scope.lookupObj = {};
             }
-            var code = scope.lookupAssociationsCode[fieldMetadata.attribute];
-            scope.lookupObj.code = code;
+
+            scope.lookupObj.code = searchValue;
             scope.lookupObj.fieldMetadata = fieldMetadata;
             scope.lookupObj.application = fieldMetadata.schema.rendererParameters["application"];
             scope.lookupObj.schemaId = fieldMetadata.schema.rendererParameters["schemaId"];
@@ -70,9 +70,9 @@ app.factory('cmplookup', function ($rootScope, $timeout, $log, associationServic
             var searchObj = {};
             var lookupAttribute = fieldMetadata.schema.rendererParameters["attribute"];
             if (lookupAttribute != null) {
-                searchObj[lookupAttribute] = code;
+                searchObj[lookupAttribute] = searchValue;
             } else if (fieldMetadata.target != null) {
-                searchObj[fieldMetadata.target] = code;
+                searchObj[fieldMetadata.target] = searchValue;
             }
 
             associationService.updateDependentAssociationValues(scope, scope.datamap, scope.lookupObj, this.handleMultipleLookupOptionsFn, searchObj);

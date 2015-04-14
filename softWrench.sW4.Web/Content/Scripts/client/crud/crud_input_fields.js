@@ -369,8 +369,14 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 if (!$scope.isSelectEnabled(fieldMetadata)) {
                     return;
                 }
+
+                var code = '';
+                if ($scope.lookupAssociationsCode[fieldMetadata.attribute] != $scope.datamap[fieldMetadata.attribute]) {
+                    code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
+                }
+
                 $scope.lookupObj.element = $element;
-                cmplookup.updateLookupObject($scope, fieldMetadata);
+                cmplookup.updateLookupObject($scope, fieldMetadata, code);
             };
 
             $scope.showCustomModal = function (fieldMetadata, schema, datamap) {
