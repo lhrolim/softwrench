@@ -121,6 +121,9 @@
     <Content Include="Content\Mobile\scripts\services\db\swdbDAO.js" />
     <Content Include="Content\Mobile\scripts\services\login\loginService.js" />
     <Content Include="Content\Mobile\scripts\services\routesService.js" />
+    <Content Include="Content\Mobile\scripts\services\synchronization\associationDataSynchronizationService.js" />
+    <Content Include="Content\Mobile\scripts\services\synchronization\metadataSynchronizationService.js" />
+    <Content Include="Content\Mobile\scripts\services\synchronization\dataSynchronizationService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\synchronizationFacade.js" />
     <Content Include="Content\Mobile\scripts\utils\mobileutils.js" />
     <Content Include="Content\Mobile\styles\login.css" />
