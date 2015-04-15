@@ -6,10 +6,11 @@ using softWrench.sW4.Metadata.Entities;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Exceptions;
 
 namespace softWrench.sW4.Metadata.Validator {
     class MetadataMerger {
-
+        private const string CustomizeAndRedeclare = "schemas using customizations must have redeclaring=false";
 
         public static IEnumerable<TR> Merge<TR>(IEnumerable<TR> sourceItems, IEnumerable<TR> overridenItems) {
             var enumerable = overridenItems as IList<TR> ?? overridenItems.ToList();
@@ -58,9 +59,12 @@ namespace softWrench.sW4.Metadata.Validator {
                 } else {
                     if (!overridenSchema.RedeclaringSchema) {
                         //if we´re not redeclaring, then we need to first add the original one and merge the customizations on top of it
-                    resultSchemas.Add(schema.Key, schema.Value);
+                        resultSchemas.Add(schema.Key, schema.Value);
                         SchemaMerger.MergeSchemas(schema.Value, overridenSchema, resultComponents);
                     } else {
+                        if (SchemaMerger.IsCustomized(overridenSchema)) {
+                            throw new MetadataException(CustomizeAndRedeclare);
+                        }
                         //if redeclaring though, we need to ignore the old one and just insert the new one
                         resultSchemas.Add(schema.Key, overridenSchema);
                     }
