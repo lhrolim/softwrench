@@ -221,7 +221,7 @@ var isArrayNullOrEmpty = function (arr) {
     return nullOrUndef(arr) || arr.length == 0;
 };
 
-var safePush = function(baseObject, propertyName, item) {
+var safePush = function (baseObject, propertyName, item) {
     if (!baseObject[propertyName]) {
         baseObject[propertyName] = [];
     }
@@ -285,9 +285,9 @@ function lockCommandBars() {
                 //lets disable only those who aren´t already disabled
                 button.attr('disabled', 'disabled');
                 button.attr('forceddisable', 'disabled');
-            }            
+            }
         }
-        
+
     });
 }
 
@@ -375,6 +375,11 @@ function loadScript(baseurl, callback) {
 }
 
 function url(path) {
+    if (angular.mock) {
+        //this means we´re running under test scenarios
+        return path;
+    }
+
     if (path == null) {
         return null;
     }
@@ -389,6 +394,8 @@ function url(path) {
     if (path && path[0] != "/") {
         path = "/" + path;
     }
+
+
     var value = $(routes_basecontext)[0].value;
     if (value == "/") {
         return path;

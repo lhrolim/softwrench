@@ -70,6 +70,10 @@ app.factory('contextService', function ($rootScope) {
             if (localStorage.mocknonlocal || sessionStorage.mocknonlocal) {
                 return false;
             }
+            if (angular.mock) {
+                //unit tests should be considerered local too
+                return true;
+            }
 
             var contextValue = this.retrieveFromContext('isLocal');
 
