@@ -147,6 +147,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Persistence\WS\Commons\BaseAssetCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\LocationHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\KongsbergIncidentCrudConnector.cs" />
     <Compile Include="Metadata\Applications\DataSet\BeringKeyInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\Notification\ApplicationNotificationFactory.cs" />

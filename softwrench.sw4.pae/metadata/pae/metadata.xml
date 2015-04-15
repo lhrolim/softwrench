@@ -39,5 +39,66 @@
         </schema>
       </schemas>
     </application>
+
+    <application name="asset" title="Asset" entity="asset" id="00000000-0000-0000-0000-000000000001" >
+      <properties>
+        <property key="mobile.fetchlimit" value="30"/>
+        <property key="mobile.userInteractionEnabled" value="false"/>
+      </properties>
+      <schemas>
+        <list>
+          <field attribute="assetid" hidden="true"/>
+          <field attribute="assetnum" label="Asset" qualifier="title"/>
+          <field attribute="status" label="Status" qualifier="status"/>
+          <field attribute="location" label="Location" qualifier="subtitle"/>
+          <field attribute="siteid" label="Site" qualifier="siteid" default="@siteid"/>
+          <field attribute="vendor" label="Vendor"  qualifier="featured"/>
+          <event type="onload" service="scannerdetectionService" method="initAssetGridListener"/>
+        </list>
+        <detail>
+          <field attribute="purchaseprice" hidden="true"/>
+          <field attribute="replacecost" hidden="true"/>
+          <field attribute="totalcost" hidden="true"/>
+          <field attribute="ytdcost" hidden="true"/>
+          <field attribute="budgetcost" hidden="true"/>
+          <field attribute="unchargedcost" hidden="true"/>
+          <field attribute="totunchargedcost" hidden="true"/>
+          <field attribute="invcost" hidden="true"/>
+          <field attribute="location_.locationsid" hidden="true"/>
+          <field attribute="assetid" hidden="true" />
+          
+          <field attribute="assetnum" label="Barcode Number"  readonly="true" />
+          <field attribute="status" label="Status" readonly="true"/>
+          <association target="assettype" label="Asset Type" labelfield="assettype_.value">
+            <renderer type="lookup" />
+          </association>
+          <field attribute="description" label="Description" readonly="true"  />
+          <field attribute="location_.description" label="Location Info" />
+          <!--<association target="model" label="Model" labelfield="assettype_.value">
+            <renderer type="lookup"/>
+          </association>-->
+          <!--<association target="partnum" label="Part Number" labelfield="assettype_.value">
+            <renderer type="lookup"/>
+          </association>--> 
+          <field attribute="PLUSTMODEL" label="Model" />
+          <field attribute="PARTNUMBER" label="Part Number" />
+          <association target="manufacturer" label="Manufacturer" labelfield="companies_.name">
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="serialnum" label="Serial Number"/>
+          <field attribute="location" readonly="true" label="Location"/>
+          <event type="beforesubmit.postvalidation" service="submitService" method="submitConfirmation"/>
+        </detail>
+        <schema id="assetLookupList" stereotype="list" >
+          <field attribute="assetnum" label="Asset"/>
+          <field attribute="description" label="Description">
+            <renderer type="default" params="minwidth=300px" />
+          </field>
+          <field attribute="location" label="Location"/>
+          <field attribute="siteid"  label="Site"/>
+          <field attribute="status" label="Status"/>
+        </schema>
+      </schemas>
+    </application>
   </applications>
 </metadata>

@@ -199,5 +199,35 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
             });
         },
 
+        initAssetGridListener: function (scope, schema, datamap, parameters) {
+            var searchData = parameters.searchData;
+
+            // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
+            $(document).scannerDetection({
+                avgTimeByChar: timeBetweenCharacters,
+                onComplete: function (data) {
+                    var user = contextService.getUserData();
+                    var searchData = {
+                        siteid: user.siteId,
+                        orgid: user.orgId,
+                        assetnum: data
+                    };
+                    searchService.searchWithData("asset", searchData).success(function (resultData) {
+                        
+                        var resultObject = resultData.resultObject;
+                        var assetId = resultObject[0]['fields']['assetid'];
+                        var param = {};
+                        param.id = assetId;
+                        var application = 'asset';
+                        var detail = 'detail';
+                        var mode = 'input';
+
+                        redirectService.goToApplicationView(application, detail, mode, null, param, null);
+                    });
+
+                },
+            });
+        }
+
     };
 });
