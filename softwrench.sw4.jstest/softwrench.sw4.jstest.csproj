@@ -1437,6 +1437,7 @@
     <Content Include="node_modules\karma\static\debug.html" />
     <Content Include="node_modules\karma\static\karma.js" />
     <Content Include="templates\fake.html" />
+    <Content Include="tests\controllers\application_test.js" />
     <Content Include="tests\controllers\crud_list_test.js" />
     <Content Include="tests\controllers\grid_filter_test.js" />
     <Content Include="tests\HelloWorldKarma.js" />
