@@ -105,7 +105,7 @@
           <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
-        </relationship>w
+        </relationship>
         <relationship to="DOCLINKS" qualifier="attachment" collection="true">
           <relationshipAttribute from="workorderid" to="ownerid" primary="true"/>
           <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>

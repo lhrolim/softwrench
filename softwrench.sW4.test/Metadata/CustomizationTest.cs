@@ -47,10 +47,8 @@ namespace softwrench.sW4.test.Metadata {
             var displayables = listSchema.Fields;
 
             //Add 2 for customized fields that were added on top of the base worklog (xxx and yyy)
-            //Subtract 1 field that will be automatically added to OTB's base worklog from having a relationship from SR -> Worklog
-            //(test_only does not include servicerequests, and therefore does not have a relationship from SR -> Worklog)
             //TODO: Identify and calculate the number of displayables that will automatically get added from the sr -> worklog relationship
-            Assert.AreEqual(displayables.Count, _baseWorklogDisplayables.Count + 2 - 1);
+            Assert.AreEqual(displayables.Count, _baseWorklogDisplayables.Count + 2);
 
 
             var description = displayables.FirstOrDefault(f => f.Attribute.Equals("description"));

@@ -168,9 +168,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                                 _displayables.Add(displayable);
                             }
                         }
+                        _lazyFksResolved = true;
                     }
 
-                    _lazyFksResolved = true;
+                    
                 }
 
                 if (!_referencesResolved && ComponentDisplayableResolver != null) {
