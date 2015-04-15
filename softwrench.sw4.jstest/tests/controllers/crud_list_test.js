@@ -43,7 +43,6 @@
             resultObject: [{fields: { id: "100" } }, { fields: { id: "200" } }],
             schema:{idFieldName:"id",displayables:[],properties: {} }
         }
-        debugger;
         //real call
         mockScope.gridRefreshed(serverdata, null);
 

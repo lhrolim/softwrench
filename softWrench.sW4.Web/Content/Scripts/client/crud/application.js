@@ -221,7 +221,8 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout,
             } else {*/
             $scope.previousschema = $scope.schema;
             //}
-            $scope.previousdata = contextService.fetchFromContext("crud_context", true).previousData;
+            var crudContext = contextService.fetchFromContext("crud_context", true);
+            $scope.previousdata = crudContext == null ? {} : crudContext.previousData;
         }
         var scope = isModal ? $scope.modal : $scope;
         scope.schema = result.schema;
@@ -421,7 +422,9 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout,
             $scope.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
         });
         window.onbeforeunload = function () {
-            spin.stop();
+            if (spin) {
+                spin.stop();
+            }
         };
 
         doInit();
