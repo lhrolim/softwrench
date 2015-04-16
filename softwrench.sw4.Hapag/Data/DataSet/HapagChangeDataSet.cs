@@ -58,6 +58,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                     }
                 }
             }
+            Log.DebugFormat("Number of Actions {0}",numberOfActions);
             result.SetAttribute("#numberofapprovalactions", numberOfActions);
         }
 

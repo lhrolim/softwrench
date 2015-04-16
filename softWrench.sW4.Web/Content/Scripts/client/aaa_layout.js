@@ -13,6 +13,12 @@ app.filter('linebreak', function () {
     };
 });
 
+app.filter('html', ['$sce', function ($sce) {
+        return function (text) {
+            return $sce.trustAsHtml(text);
+        };
+}]);
+
 
 
 app.directive('onFinishRender', function ($timeout) {
