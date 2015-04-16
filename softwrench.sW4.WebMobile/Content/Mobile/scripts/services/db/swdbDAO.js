@@ -112,7 +112,8 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             });
 
             entities.SyncStatus = persistence.define('SyncStatus', {
-                lastsynced: "DATE"
+                lastsynced: "DATE",
+                lastsyncServerVersion:"TEXT"
             });
 
 
@@ -131,14 +132,14 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         /// <returns type="promise">returns a promise that will pass the loaded instance to the chain</returns>
         instantiate: function (entity, memoryObject) {
 
+            
+
             if (!entities[entity]) {
                 throw new Error("entity {0} not found".format(entity));
             }
 
-            if (memoryObject == undefined) {
-                throw new Error("memory object parameter is mandatory");
-            }
-
+            memoryObject = memoryObject || {};
+            
             var deferred = dispatcherService.loadBaseDeferred();
 
 
@@ -176,19 +177,21 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         },
 
         findAll: function (entity, cbk) {
+            var deferred = dispatcherService.loadBaseDeferred();
             if (!entities[entity]) {
                 throw new Error("entity {0} not found".format(entity));
             }
             var filter = entities[entity].all();
             filter.list(null, function (result) {
-                cbk(result);
+                deferred.resolve(result);
             });
+            return deferred.promise;
         },
 
         findUnique: function (entity) {
             var deferred = dispatcherService.loadBaseDeferred();
             var promise = deferred.promise;
-            this.findAll(entity, function (result) {
+            this.findAll(entity).success(function(result) {
                 if (result.length == 0) {
                     deferred.resolve(null);
                 } else {

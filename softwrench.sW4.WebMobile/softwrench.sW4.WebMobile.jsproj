@@ -110,8 +110,12 @@
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Content\Mobile\scripts\services\menu\menuModelService.js" />
+    <Content Include="Content\Mobile\scripts\services\metadata\metadataModelService.js" />
+    <Content Include="tests\services\dashboardaux_service_test.js" />
     <Folder Include="Content\Shared\webcommons\scripts\vendor\" />
     <Folder Include="images\" />
+    <Content Include="angular_mock.js" />
     <Content Include="bower.json" />
     <Content Include="Content\Mobile\scripts\controllers\homecontroller.js" />
     <Content Include="Content\Mobile\scripts\controllers\settingscontroller.js" />
@@ -215,6 +219,7 @@
     <Content Include="Content\Vendor\downloadedvendor\persistence.store.cordovasql.js" />
     <Content Include="css\login.css" />
     <Content Include="Gruntfile.js" />
+    <Content Include="karma.conf.js" />
     <Content Include="layout.html" />
     <Content Include="merges\android\scripts\android2.3-jscompat.js" />
     <Content Include="merges\android\scripts\platformOverrides.js" />
@@ -230,6 +235,7 @@
     <Folder Include="res\screens\ios\" />
     <Folder Include="res\screens\windows\" />
     <Folder Include="res\screens\wp8\" />
+    <Folder Include="tests\controller\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="config.xml">

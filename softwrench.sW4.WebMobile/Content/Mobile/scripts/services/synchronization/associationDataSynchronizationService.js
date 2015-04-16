@@ -3,6 +3,7 @@
 
         syncData: function () {
             var deferred = dispatcherService.loadBaseDeferred();
+            deferred.resolve();
             return deferred.promise;
         }
     }

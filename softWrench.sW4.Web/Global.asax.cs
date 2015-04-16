@@ -154,9 +154,8 @@ namespace softWrench.sW4.Web {
                     //already marked as forbidden, let´s not mess the messages
                     Context.Response.RedirectLocation += "&timeout=true";
                 }
-
-
             }
+            Context.Response.AddHeader("Access-Control-Allow-Origin", "*");
 
         }
 

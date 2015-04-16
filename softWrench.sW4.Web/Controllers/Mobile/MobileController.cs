@@ -29,9 +29,9 @@ namespace softWrench.sW4.Web.Controllers.Mobile {
 
         private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
 
-//        readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings() {
-//            TypeNameHandling = TypeNameHandling.Objects
-//        };
+        readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings() {
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
+        };
 
         /// <summary>
         /// The main purpose here is to retrieve all the metadata information 
@@ -49,7 +49,7 @@ namespace softWrench.sW4.Web.Controllers.Mobile {
 
             var response = new MobileMetadataDownloadResponseDefinition {
                 MetadatasJSON = JsonConvert.SerializeObject(securedMetadatas, Newtonsoft.Json.Formatting.None),
-                MenuJson = JsonConvert.SerializeObject(securedMenu, Newtonsoft.Json.Formatting.None)
+                MenuJson = JsonConvert.SerializeObject(securedMenu, Newtonsoft.Json.Formatting.None,_jsonSerializerSettings)
             };
             return response;
         }

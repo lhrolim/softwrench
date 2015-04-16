@@ -33,10 +33,10 @@
             <div class="title">Applications</div>
         </header>
         <ion-content has-header="true">
-            <ul class="list">
-                <a ui-sref="entry" class="item">Back To Entry Page</a>
-                <a ui-sref="main.home" class="item" ng-click="toggleMenu()">Home</a>
-                <a ui-sref="main.tabs" class="item" ng-click="toggleMenu()">Tabs</a>
+            <ul class="list" >
+                <a ui-sref="entry" class="item" ng-repeat="leaf in menuleafs()">{{leaf.title}}</a>
+                <!--<a ui-sref="main.home" class="item" ng-click="toggleMenu()">Home</a>
+                <a ui-sref="main.tabs" class="item" ng-click="toggleMenu()">Tabs</a>-->
             </ul>
         </ion-content>
     </ion-side-menu>

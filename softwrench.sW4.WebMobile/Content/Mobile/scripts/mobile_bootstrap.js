@@ -11,7 +11,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
 
 
 
-.run(function ($ionicPlatform, swdbDAO, loginService, contextService, $state) {
+.run(function ($ionicPlatform, swdbDAO, loginService, contextService,menuModelService,metadataModelService, $state) {
 
     initContext();
 
@@ -34,9 +34,12 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
     });
 
 
+
     function initContext() {
         swdbDAO.init();
-        swdbDAO.findAll("Settings", function(settings) {
+        menuModelService.initAndCacheFromDB();
+        metadataModelService.initAndCacheFromDB();
+        swdbDAO.findAll("Settings").success(function(settings) {
             if (settings.length == 0) {
                 var ob = entities.Settings;
                 swdbDAO.save(new ob()).success(function() {

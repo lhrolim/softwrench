@@ -6,9 +6,9 @@
 
             var syncDataPromise = dataSynchronizationService.syncData();
             
-            var metadataDownloadedPromise = metadataSynchronizationService.syncData(currentData.serverVersion, currentData.menu);
+            var metadataDownloadedPromise = metadataSynchronizationService.syncData("1.0");
 
-            var associationDataDownloadPromise = associationDataSynchronizationService.syncData(currentData.rowstampmap);
+            var associationDataDownloadPromise = associationDataSynchronizationService.syncData();
 
             return $q.all([syncDataPromise, metadataDownloadedPromise, associationDataDownloadPromise]).then(function (results) {
                 var dataSyncResult = results[0];

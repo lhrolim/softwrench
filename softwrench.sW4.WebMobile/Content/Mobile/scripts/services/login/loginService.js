@@ -3,6 +3,7 @@
     return {
 
         checkCookieCredentials: function () {
+            //todo:implement
             return true;
         },
 

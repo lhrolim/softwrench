@@ -1,25 +1,25 @@
-﻿mobileServices.factory('metadataSynchronizationService', function ($http, routeService, swdbDAO,dispatcherService) {
+﻿mobileServices.factory('metadataSynchronizationService', function ($http, $q, routeService, menuModelService, metadataModelService) {
     return {
 
         syncData: function (currentServerVersion) {
-            var deferred = dispatcherService.loadBaseDeferred();
 
+            var defer = $q.defer();
 
-            $http.get(routeService.downloadMetadataURL(currentServerVersion)).success(function (metadatasResult) {
-                var menus = JSON.parse(metadatasResult.menuJson);
-                currentMenu.data = menus;
-                swdbDAO.instantiate('Menu', currentMenu).success(function (menuToSave) {
-                    swdbDAO.save(menuToSave).success(function () {
-                        deferred.resolve();
-                    });
+            var httpPromise = $http.get(routeService.downloadMetadataURL(currentServerVersion));
+            
+            httpPromise.then(function (metadatasResult) {
+                var serverMenu = JSON.parse(metadatasResult.data.menuJson);
+                var serverMetadata = JSON.parse(metadatasResult.data.metadatasJSON);
+                var menuPromise = menuModelService.updateMenu(serverMenu);
+                var metadataPromise = metadataModelService.updateMetadata(serverMetadata);
+                return $q.all([menuPromise, metadataPromise]).then(function(results) {
+                    defer.resolve();
                 });
-
-                var metadatas = JSON.parse(metadatasResult.metadatasJSON);
-            }).error(function (errordata) {
-                deferred.reject();
+            }).catch(function (errordata) {
+                defer.reject();
             });
 
-            return deferred.promise;
+            return defer.promise;
         }
     }
  });
