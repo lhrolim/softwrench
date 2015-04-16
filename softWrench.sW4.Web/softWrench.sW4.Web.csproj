@@ -1328,6 +1328,10 @@
       <Project>{bb222b54-5670-4853-acf9-64bb36094021}</Project>
       <Name>softwrench.sw4.dashboard</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.deltadental\softwrench.sw4.deltadental.csproj">
+      <Project>{a89dc757-b0bd-4ba0-9436-e4ae87f31bf1}</Project>
+      <Name>softwrench.sw4.deltadental</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.gric\softwrench.sw4.gric.csproj">
       <Project>{3b4ed6c6-ba78-45cd-8af9-964f3dc409e6}</Project>
       <Name>softwrench.sw4.gric</Name>
@@ -1344,9 +1348,17 @@
       <Project>{75C4B153-E741-4D16-9F10-96B2F6335331}</Project>
       <Name>softwrench.sw4.manchester</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.pae\softwrench.sw4.pae.csproj">
+      <Project>{8248b6ce-335f-4611-89d2-1a79da5192c2}</Project>
+      <Name>softwrench.sw4.pae</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.swgas\softwrench.sw4.swgas.csproj">
+      <Project>{f55ca327-e991-4caa-afc7-ada7285308e9}</Project>
+      <Name>softwrench.sw4.swgas</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.webcommons\softwrench.sw4.webcommons.csproj">
       <Project>{76afe652-82d1-43d4-977b-60546fa9a713}</Project>

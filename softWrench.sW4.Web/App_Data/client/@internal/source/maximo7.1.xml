@@ -673,7 +673,7 @@
         <attribute name="assettype" type="varchar" required="false" />
         <attribute name="usage" type="varchar" required="false" />
         <attribute name="status" type="varchar" required="false" />
-        <attribute name="mainthierchy" type="smallint" required="true" />
+        <attribute name="mainthierchy" type="smallint" required="true" />as
         <attribute name="assetid" type="int" required="true" />
         <attribute name="moved" type="smallint" required="true" />
         <attribute name="assetuid" type="int" required="true" />
@@ -700,12 +700,12 @@
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute to="isprimary" literal="1" quoteLiteral="false"/>
         </relationship>
-        <relationship to="synonymdomain" qualifier="assettype">
+        <!--<relationship to="synonymdomain" qualifier="assettype">
           <relationshipAttribute from="assettype" to="value" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
           <relationshipAttribute from="orgid" to="orgid"/>
           <relationshipAttribute to="domainid" literal="ASSETTYPE" quoteLiteral="true"/>
-        </relationship>
+        </relationship>-->
         <relationship to="AssetUserCust" qualifier="assetcustodian" collection="true">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid"/>
@@ -778,6 +778,21 @@
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="assetloccomm" />
+      </connectorParameters>
+    </entity>
+    
+    <entity name="alndomain" idAttribute="alndomainid">
+      <attributes>
+        <attribute name="domainid" type="varchar" required="true" />
+        <attribute name="value" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="alndomainid" type="int" required="true" />
+        <attribute name="valueid" type="varchar" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="alndomain" />
       </connectorParameters>
     </entity>
 

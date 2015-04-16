@@ -70,10 +70,10 @@ namespace softWrench.sW4.Data.Offline {
 
         private static string TimestampAttributeType() {
             if (ApplicationConfiguration.IsMSSQL(DBType.Maximo)) {
-                return "int";
+                return "bigint";
             }
             if (ApplicationConfiguration.IsDB2(DBType.Maximo)) {
-                return "int";
+                return "bigint";
             }
             throw new NotImplementedException("not implemented for oracle database yet");
         }
