@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using softWrench.sW4.Security.Services;
 using softwrench.sw4.Shared2.Util;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
@@ -234,7 +235,7 @@ namespace softWrench.sW4.Data.Search {
                     }
                     resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, DateUtil.BeginOfDay(dt));
                 } else {
-                    resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, dt);
+                    resultDictionary.Add(searchParameter.Key + DateSearchParamBegin, dt.FromUserToMaximo(SecurityFacade.CurrentUser()));
                 }
             } else if (parameter.IsLtOrLte()) {
                 if (!parameter.HasHour) {
@@ -244,7 +245,7 @@ namespace softWrench.sW4.Data.Search {
                     }
                     resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, DateUtil.EndOfDay(dt));
                 } else {
-                    resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, dt);
+                    resultDictionary.Add(searchParameter.Key + DateSearchParamEnd, dt.FromUserToMaximo(SecurityFacade.CurrentUser()));
                 }
             }
         }
