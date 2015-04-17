@@ -204,7 +204,7 @@ namespace softWrench.sW4.Web.Controllers {
                     applicationMetadata.Name,
                     operationDataRequest.Id,
                     json.ToString(),
-                    user.UserId.ToString(),
+                    user.Login,
                     DateTime.Now.FromServerToRightKind());
             }
 
