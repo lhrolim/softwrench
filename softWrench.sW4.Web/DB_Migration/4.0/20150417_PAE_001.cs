@@ -13,10 +13,10 @@ namespace softWrench.sW4.Web.DB_Migration._4._0
     {
         public override void Up()
         {
-            Create.Table("SW_AUDITENTRY")
+            Create.Table("AUDIT_ENTRY")
                 .WithColumn("Id").AsInt64().PrimaryKey().Identity()
                 .WithColumn("Action").AsString().NotNullable()
-                .WithColumn("RefEntity").AsString().NotNullable()
+                .WithColumn("RefApplication").AsString().NotNullable()
                 .WithColumn("RefId").AsInt64().NotNullable()
                 .WithColumn("Data").AsString().NotNullable()
                 .WithColumn("CreatedBy").AsString().NotNullable()
@@ -33,7 +33,7 @@ namespace softWrench.sW4.Web.DB_Migration._4._0
 
         public override void Down()
         {
-            Delete.Table("SW_AUDITENTRY");
+            Delete.Table("AUDIT_ENTRY");
             //Delete.Table("SW_AUDITEVENT");
         }
     }
