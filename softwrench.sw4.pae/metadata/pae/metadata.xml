@@ -23,7 +23,7 @@
   </templates>
 
   <entities>
-    <entity name="asset" idAttribute="assetid" useridAttribute="assetnum">
+    <entity name="asset" idAttribute="assetid" useridAttribute="assetnum" whereclause="recordtype = 'PROP' and propcondition = 1">
       <attributes>
         <attribute name="assetid" type="bigint" required="true"/>
         <attribute name="locinfo" type="varchar" required="false" />
@@ -32,19 +32,17 @@
         <attribute name="partnum" type="varchar" required="false" />
         <attribute name="proptype" type="varchar" required="false" />
         <attribute name="propmanuf" type="varchar" required="false" />
+        <attribute name="description" type="varchar" required="true"/>
       </attributes>
       <relationships>
-        <relationship to="assettype" ignoreprimary="true">
+        <relationship to="alndomain" qualifier="assettype">
+            <relationshipAttribute from="assettype" to="value" primary="true"/>
             <relationshipAttribute from="siteid" to="siteid"/>
             <relationshipAttribute from="orgid" to="orgid" />
+            <relationshipAttribute to="domainid" literal="PROPTYPE" quoteLiteral="true"/>
           </relationship>
       </relationships>
     </entity>
-
-    <entity name="assettype" idAttribute="alndomainid" parententity="alndomain" whereclause="domainid like 'PROPTYPE'">
-      
-    </entity>
-  
   </entities>
 
   <applications>
@@ -86,7 +84,7 @@
           
           <field attribute="assetnum" label="Barcode Number"  readonly="true" />
           <field attribute="status" label="Status" readonly="true"/>
-          <association target="proptype" label="Asset Type" valuefield="value" labelfield="assettype_.value">
+          <association target="proptype" label="Asset Type" labelfield="assettype_.description">
             <renderer type="lookup" />
           </association>
           <field attribute="description" label="Description" readonly="true"  />
