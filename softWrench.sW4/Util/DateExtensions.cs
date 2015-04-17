@@ -58,7 +58,7 @@ namespace softWrench.sW4.Util {
             var kind = ApplicationConfiguration.IsISM() ? DateTimeKind.Utc : DateTimeKind.Local;
 //            date = DateTime.SpecifyKind(date, kind);
             if (kind.Equals(DateTimeKind.Utc)) {
-                return FromServerToMaximo(date, 0);
+                return date.ToUniversalTime();
             }
             return FromServerToMaximo(date);
         }
