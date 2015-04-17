@@ -1,6 +1,9 @@
 ﻿using System;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
+using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
+using softWrench.sW4.Util;
 
 namespace softwrench.sW4.audit.classes.Model {
     [Class(Table = "audit_entry", Lazy = false)]
@@ -15,12 +18,19 @@ namespace softwrench.sW4.audit.classes.Model {
         public virtual string RefApplication { get; set; }
         [Property]
         public virtual string RefId { get; set; }
-        [Property]
-        public virtual string Data { get; set; }
+        [Property(Type = "BinaryBlob")]
+        [JsonIgnore]
+        public virtual byte[] Data { get; set; }
         [Property]
         public virtual string CreatedBy { get; set; }
         [Property]
         public virtual DateTime CreatedDate { get; set; }
+
+        public virtual string DataStringValue
+        {
+            get { return StringExtensions.GetString(CompressionUtil.Decompress(Data)); }
+            set { Data = CompressionUtil.Compress(value.GetBytes()); }
+        }
 
         public AuditEntry()
         {
@@ -32,7 +42,7 @@ namespace softwrench.sW4.audit.classes.Model {
             Action = action;
             RefApplication = refApplication;
             RefId = refId;
-            Data = data;
+            DataStringValue = data;
             CreatedBy = createdBy;
             CreatedDate = createdDate;
         }
