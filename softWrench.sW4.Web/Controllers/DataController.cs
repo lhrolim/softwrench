@@ -77,6 +77,11 @@ namespace softWrench.sW4.Web.Controllers {
             response.Title = _i18NResolver.I18NSchemaTitle(response.Schema);
             var schemaMode = request.Key.Mode ?? response.Schema.Mode;
             response.Mode = schemaMode.ToString().ToLower();
+
+            if (applicationMetadata.AuditFlag) {
+                
+            }
+
             return response;
         }
 
