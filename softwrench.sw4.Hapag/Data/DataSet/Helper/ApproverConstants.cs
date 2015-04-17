@@ -11,11 +11,15 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
         public const string ChangeOpenApprovalsDashQuery = @"
         wochange.status = 'AUTH'
         and dashapprovals_.wonum is not null 
-        and (dashapprovals_apprwo_.worklogid is null or dashapprovals_apprwo_.ITDCREATEDATE <= (select max(changedate) from wostatus s where status = 'AUTH' and s.wonum = wochange.wonum )
+        and not exists (
+		        select 1 from worklog apprwo where apprwo.class = 'CHANGE' and apprwo.RECORDKEY = wochange.WONUM
+	        and apprwo.ITDCREATEDATE > (select max(changedate) from wostatus s where status = 'AUTH' and s.wonum = wochange.wonum )
+	        and (apprwo.logtype = 'APPROVAL OBTAINED' and DESCRIPTION in ('Approved by group ' || dashapprovals_.approvergroup)  )
+	    )
         and not exists (
         select 1 from worklog apprwo where apprwo.class = 'CHANGE' and apprwo.RECORDKEY = wochange.WONUM
         and apprwo.ITDCREATEDATE > (select max(changedate) from wostatus s where status = 'AUTH' and s.wonum = wochange.wonum )
-        and (apprwo.logtype = 'REASON REJECTING' and DESCRIPTION in ({0})  )))";
+        and (apprwo.logtype = 'REASON REJECTING' and DESCRIPTION in ({0})  ))";
 
 
         public const string ChangeByColumn = "#changeby";

@@ -55,11 +55,11 @@ namespace softwrench.sw4.Hapag.Data {
             return ChangeOpenTasksViewAll.Fmt(user.GetPersonGroupsForQuery());
         }
 
-        public string GetWorkLogJoinQuery() {
-            return
-                @"(dashapprovals_apprwo_.logtype = 'APPROVAL OBTAINED' and dashapprovals_apprwo_.DESCRIPTION = 'Approved by group ' 
-                || dashapprovals_.approvergroup )";
-        }
+//        public string GetWorkLogJoinQuery() {
+//            return
+//                @"(dashapprovals_apprwo_.logtype = 'APPROVAL OBTAINED' and dashapprovals_apprwo_.DESCRIPTION = 'Approved by group ' 
+//                || dashapprovals_.approvergroup )";
+//        }
 
         public string GetPersonGroupsForQuery() {
             var user = SecurityFacade.CurrentUser();

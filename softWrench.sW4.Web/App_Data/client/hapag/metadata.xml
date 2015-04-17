@@ -331,13 +331,6 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </entity>
 
     <entity name="pmchgotherapprovers" idAttribute="pmchgotherapproversid">
-      <relationships>
-        <relationship to="worklog" qualifier="apprwo" collection="true">
-          <relationshipAttribute from="WONUM" to="RECORDKEY" primary="true"/>
-          <relationshipAttribute to="class" literal="CHANGE"/>
-          <relationshipAttribute query="@changeWhereClauseProvider.GetWorkLogJoinQuery"/>
-        </relationship>
-      </relationships>
     </entity>
 
     <entity name="wochange" idAttribute="wonum">
@@ -1483,7 +1476,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </field>
           </section>
           <section id="extrafields">
-            <field attribute="dashapprovals_apprwo_.recordkey" hidden="true"/>
+            <field attribute="dashapprovals_.wonum" hidden="true"/>
           </section>
 
           <properties>
@@ -1532,7 +1525,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="dashapprovals_.approvergroup" label="Approver Group">
             <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
-          <field attribute="dashapprovals_apprwo_.recordkey" hidden="true"/>
+          <!--<field attribute="dashapprovals_apprwo_.recordkey" hidden="true"/>-->
           <field attribute="status" label="Status">
             <renderer type="default" params="minwidth=100px;maxwidth=100px" />
           </field>
