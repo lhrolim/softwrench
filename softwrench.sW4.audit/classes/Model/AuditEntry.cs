@@ -1,26 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using cts.commons.persistence;
+using NHibernate.Mapping.Attributes;
 
 namespace softwrench.sW4.audit.classes.Model {
-    public class AuditEntry
+    [Class(Table = "audit_entry", Lazy = false)]
+    public class AuditEntry : IBaseEntity
     {
-        private readonly long _id;
-        private readonly string _action;
-        private readonly string _refApplication;
-        private readonly long _refId;
-        private readonly string _data;
-        private readonly string _createBy;
-        private readonly DateTime _createDate;
+        [Id(0, Name = "Id")]
+        [Generator(1, Class = "native")]
+        public virtual int? Id { get; set; }
+        [Property]
+        public virtual string Action { get; set; }
+        [Property]
+        public virtual string RefApplication { get; set; }
+        [Property]
+        public virtual string RefId { get; set; }
+        [Property]
+        public virtual string Data { get; set; }
+        [Property]
+        public virtual string CreatedBy { get; set; }
+        [Property]
+        public virtual DateTime CreatedDate { get; set; }
 
-        public long Id { get { return _id; } }
-        public string Action { get { return _action; } }
-        public string RefApplication { get { return _refApplication; } }
-        public long RefId { get { return _refId; } }
-        public string Data { get { return _data; } }
-        public string CreateBy { get { return _createBy; } }
-        public DateTime CreateDate { get { return _createDate; } }
+        public AuditEntry(string action, string refApplication, string refId, string data, string createdBy, DateTime createdDate)
+        {
+            Action = action;
+            RefApplication = refApplication;
+            RefId = refId;
+            Data = data;
+            CreatedBy = createdBy;
+            CreatedDate = createdDate;
+        }
     }
 }
