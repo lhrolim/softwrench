@@ -22,6 +22,11 @@ namespace softwrench.sW4.audit.classes.Model {
         [Property]
         public virtual DateTime CreatedDate { get; set; }
 
+        public AuditEntry()
+        {
+            
+        }
+
         public AuditEntry(string action, string refApplication, string refId, string data, string createdBy, DateTime createdDate)
         {
             Action = action;

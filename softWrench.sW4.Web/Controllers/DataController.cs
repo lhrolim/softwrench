@@ -197,15 +197,15 @@ namespace softWrench.sW4.Web.Controllers {
             response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.UserId,
                 operation);
 
-            if (applicationMetadata.AuditFlag) {
-                AuditEntry auditEntry = new AuditEntry(
-                    operationDataRequest.Operation, 
-                    applicationMetadata.Name, 
-                    operationDataRequest.Id, 
-                    json.ToString(), 
-                    user.UserId.ToString(), 
+            if (applicationMetadata.AuditFlag)
+            {
+                AuditManager.CreateAuditEntry(
+                    operationDataRequest.Operation,
+                    applicationMetadata.Name,
+                    operationDataRequest.Id,
+                    json.ToString(),
+                    user.UserId.ToString(),
                     DateTime.Now.FromServerToRightKind());
-                AuditManager.SaveAuditEntry(auditEntry);
             }
 
             return response;
