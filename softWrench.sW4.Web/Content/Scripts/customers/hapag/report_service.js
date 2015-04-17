@@ -113,7 +113,7 @@ app.factory('reportservice', function ($http, alertService, fieldService, search
                 datamap.reportdate___start = '01/01/1970 00:00';
             }
             if (datamap.reportdate___end == null || datamap.reportdate___end == '') {
-                datamap.reportdate___end = getCurrentDate();
+                datamap.reportdate___end = new Date().toString("dd/MM/yyyy HH:mm");
             }
 
             var defaultOperator = {};
