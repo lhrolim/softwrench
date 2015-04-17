@@ -51,10 +51,12 @@
           <field attribute="invcost" hidden="true"/>
           <field attribute="location_.locationsid" hidden="true"/>
           <field attribute="assetid" hidden="true" />
+          <field attribute="totdowntime" hidden="true"/>
           
           <field attribute="assetnum" label="Barcode Number"  readonly="true" />
           <field attribute="status" label="Status" readonly="true"/>
           <field attribute="description" label="Description" readonly="true"  />
+          <field attribute="location" label="Location" readonly="true"/>
           <field attribute="serialnum" label="Serial Number"/>
           <event type="beforesubmit.postvalidation" service="submitService" method="submitConfirmation"/>
           <event type="onload" service="scannerdetectionService" method="initAssetDetailListener"/>

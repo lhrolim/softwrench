@@ -37,7 +37,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
             var asset = maximoTemplateData.IntegrationObject;
 
             var crudData = (CrudOperationData)maximoTemplateData.OperationData;
-            LocationHandler.HandleLocation(crudData, asset);
+            //LocationHandler.HandleLocation(crudData, asset);
         }
     }
 }

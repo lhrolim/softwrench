@@ -82,7 +82,13 @@ namespace softWrench.sW4.Web.Controllers {
             response.Mode = schemaMode.ToString().ToLower();
 
             if (applicationMetadata.AuditFlag) {
-                
+                AuditManager.CreateAuditEntry(
+                    transactionType ?? "crud_read",
+                    applicationMetadata.Name,
+                    request.Id,
+                    null,
+                    user.UserId.ToString(),
+                    DateTime.Now.FromServerToRightKind());
             }
 
             return response;
@@ -197,8 +203,7 @@ namespace softWrench.sW4.Web.Controllers {
             response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.UserId,
                 operation);
 
-            if (applicationMetadata.AuditFlag)
-            {
+            if (applicationMetadata.AuditFlag) {
                 AuditManager.CreateAuditEntry(
                     operationDataRequest.Operation,
                     applicationMetadata.Name,
