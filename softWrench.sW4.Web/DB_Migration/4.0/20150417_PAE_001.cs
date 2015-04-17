@@ -17,7 +17,7 @@ namespace softWrench.sW4.Web.DB_Migration._4._0
                 .WithColumn("Action").AsString().NotNullable()
                 .WithColumn("RefApplication").AsString().NotNullable()
                 .WithColumn("RefId").AsInt64().NotNullable()
-                .WithColumn("Data").AsString(MigrationUtil.StringLarge).Nullable()
+                .WithColumn("Data").AsBinary().Nullable()
                 .WithColumn("CreatedBy").AsString().NotNullable()
                 .WithColumn("CreatedDate").AsDateTime().NotNullable();
 
