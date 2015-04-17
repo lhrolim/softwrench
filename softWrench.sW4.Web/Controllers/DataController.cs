@@ -60,7 +60,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// <param name="request"></param>
         /// <returns></returns>
         [NotNull]
-        public IApplicationResponse Get(string application, [FromUri] DataRequestAdapter request) {
+        public IApplicationResponse Get(string application, [FromUri] DataRequestAdapter request, string transactionType = null) {
             var user = SecurityFacade.CurrentUser();
             if (null == user) {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);

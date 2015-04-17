@@ -24,7 +24,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
 
 
 
-    var getApplicationUrl = function (applicationName, schemaId, mode, title, parameters, jsonData) {
+    var getApplicationUrl = function (applicationName, schemaId, mode, title, parameters, jsonData, type) {
         if (parameters === undefined || parameters == null) {
             parameters = {};
         }
@@ -40,6 +40,9 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
         }
         if (title != null && title.trim() != "") {
             parameters.title = title;
+        }
+        if (type != null) {
+            parameters.type = type;
         }
         if (jsonData == undefined) {
             return url("/api/data/" + applicationName + "?" + $.param(parameters));
@@ -155,7 +158,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
                 });
         },
 
-        goToApplicationView: function (applicationName, schemaId, mode, title, parameters, jsonData, afterRedirectHook) {
+        goToApplicationView: function (applicationName, schemaId, mode, title, parameters, jsonData, afterRedirectHook, type) {
             var log = $log.getInstance('redirectService#goToApplication');
 
             if (parameters === undefined || parameters == null) {
@@ -163,7 +166,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
             }
             $rootScope.$broadcast('sw_applicationredirected', parameters);
 
-            var redirectURL = getApplicationUrl(applicationName, schemaId, mode, title, parameters, jsonData);
+            var redirectURL = getApplicationUrl(applicationName, schemaId, mode, title, parameters, jsonData, type);
             var popupMode = parameters.popupmode;
             if (popupMode == "report") {
                 //does not popup any window for incident detail report
