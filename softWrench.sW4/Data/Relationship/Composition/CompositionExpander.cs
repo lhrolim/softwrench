@@ -11,6 +11,7 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
+using softWrench.sW4.Security.Context;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Util;
@@ -23,19 +24,28 @@ namespace softWrench.sW4.Data.Relationship.Composition {
 
         private readonly EntityRepository _entityRepository = new EntityRepository();
 
+        private IContextLookuper _contextLookuper;
+
+        public CompositionExpander(IContextLookuper contextLookuper) {
+            _contextLookuper = contextLookuper;
+        }
+
         public IGenericResponseResult Expand(InMemoryUser user, IDictionary<string, ApplicationCompositionSchema> compositionSchemas, CompositionExpanderHelper.CompositionExpansionOptions options) {
             var resultDict = new Dictionary<string, IEnumerable<IDictionary<string, object>>>();
             var result = CompositionExpanderHelper.ParseDictionary(options.CompositionsToExpand);
-
+            var printMode = _contextLookuper.LookupContext().PrintMode;
             foreach (var toExpand in result.DetailsToExpand) {
                 var name = toExpand.Key;
                 var compositionSchema = compositionSchemas[name];
-                var printSchema = compositionSchema.Schemas.Print;
+                var schema = compositionSchema.Schemas.Detail;
+                if (printMode) {
+                    schema = compositionSchema.Schemas.Print;
+                }
                 var applicationMetadata = MetadataProvider.Application(EntityUtil.GetApplicationName(name))
-                    .ApplyPolicies(printSchema.GetSchemaKey(), user, ClientPlatform.Web);
+                    .ApplyPolicies(schema.GetSchemaKey(), user, ClientPlatform.Web);
                 var slicedEntityMetadata = MetadataProvider.SlicedEntityMetadata(applicationMetadata);
                 var searchDTO = new SearchRequestDto();
-                searchDTO.AppendSearchParam(printSchema.IdFieldName);
+                searchDTO.AppendSearchParam(schema.IdFieldName);
                 searchDTO.AppendSearchValue(toExpand.Value);
                 var compositionExpanded = _entityRepository.GetAsRawDictionary(slicedEntityMetadata, searchDTO);
                 resultDict.Add(name, compositionExpanded);
@@ -44,8 +54,8 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             return new GenericResponseResult<Dictionary<string, IEnumerable<IDictionary<string, object>>>>(resultDict);
         }
 
-       
+
     }
 
- 
+
 }
