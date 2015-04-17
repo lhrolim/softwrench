@@ -39,13 +39,14 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly NextSchemaRouter _nextSchemaRouter = new NextSchemaRouter();
         protected readonly DataSetProvider DataSetProvider = DataSetProvider.GetInstance();
         private readonly SuccessMessageHandler _successMessageHandler = new SuccessMessageHandler();
-        protected readonly CompositionExpander COMPOSITIONExpander = new CompositionExpander();
+        protected readonly CompositionExpander COMPOSITIONExpander;
         private readonly I18NResolver _i18NResolver;
         private readonly IContextLookuper _contextLookuper;
 
-        public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper) {
+        public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper,CompositionExpander compositionExpander) {
             _i18NResolver = i18NResolver;
             _contextLookuper = contextLookuper;
+            COMPOSITIONExpander = compositionExpander;
         }
 
         private const string MockingMaximoKey = "%%mockmaximo";

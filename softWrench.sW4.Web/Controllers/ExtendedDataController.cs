@@ -19,8 +19,8 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Web.Controllers {
 
     public class ExtendedDataController : DataController {
-        public ExtendedDataController(I18NResolver i18NResolver, IContextLookuper lookuper)
-            : base(i18NResolver, lookuper) {
+        public ExtendedDataController(I18NResolver i18NResolver, IContextLookuper lookuper,CompositionExpander expander)
+            : base(i18NResolver, lookuper, expander) {
         }
 
         /// <summary>
