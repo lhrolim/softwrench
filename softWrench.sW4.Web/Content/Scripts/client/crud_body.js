@@ -261,7 +261,7 @@ app.directive('crudBody', function (contextService) {
                     var fn = dispatcherService.loadService(serviceSt.split(".")[0], serviceSt.split(".")[1]);
                     fn(
                         {
-                            "datamap": $scope.datamap.fields,
+                            "datamap": fields,
                             "schema": $scope.schema,
                             "associationOptions": $scope.associationOptions,
                         })
