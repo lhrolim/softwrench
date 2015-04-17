@@ -14,8 +14,8 @@ namespace softWrench.sW4.Metadata.Applications {
 
 
         public ApplicationMetadata(Guid? id, [NotNull] string name, [NotNull] string title, [NotNull] string entity,
-            [NotNull] string idFieldName, [NotNull] ApplicationSchemaDefinition schema, string service)
-            : base(id, name, title, entity, idFieldName, schema, service) {
+            [NotNull] string idFieldName, [NotNull] ApplicationSchemaDefinition schema, string service, bool auditFlag)
+            : base(id, name, title, entity, idFieldName, schema, service, auditFlag) {
         }
 
         //        public bool IsUserInteractionEnabled {
@@ -39,7 +39,8 @@ namespace softWrench.sW4.Metadata.Applications {
                 application.Entity,
                 application.IdFieldName,
                 securedSchema,
-                application.Service
+                application.Service,
+                application.AuditFlag
                 );
         }
 

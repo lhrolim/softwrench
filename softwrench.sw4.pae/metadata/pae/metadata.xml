@@ -1,27 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
-  <templates>
-    <!--WorkOrder-->
-    <template path="@workorder.xml"/>
-    <!--<template path="workorderbatch.xml"/>-->
-
-    <!--ServiceRequest-->
-    <template path="@servicerequest.xml"/>
-
-    <!--Incident-->
-    <template path="@incident.xml"/>
-
-    <!--Inventory-->
-    <template path="@inventory_maximo7.1.xml"/>
-
-    <!--Changes-->
-    <template path="@wochange.xml"/>
-
-    <!--Purchasing-->
-    <template path="@receiving.xml"/>
-    <template path="@purchasing.xml"/>
-  </templates>
-
   <entities>
     <entity name="asset" idAttribute="assetid" useridAttribute="assetnum" whereclause="recordtype = 'PROP' and propcondition = 1">
       <attributes>
@@ -59,7 +37,7 @@
       </schemas>
     </application>
 
-    <application name="asset" title="Asset" entity="asset" >
+    <application name="asset" title="Asset" entity="asset" audit="true">
       <schemas>
         <list>
           <field attribute="assetid" hidden="true"/>

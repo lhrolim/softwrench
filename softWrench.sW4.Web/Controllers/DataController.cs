@@ -181,11 +181,18 @@ namespace softWrench.sW4.Web.Controllers {
                 return null;
             }
 
+
+
             var routerParameters = new RouterParameters(applicationMetadata, platform, operationDataRequest.RouteParametersDTO, operation, mockMaximo, maximoResult, user, resolvedNextSchema);
 
             var response = _nextSchemaRouter.RedirectToNextSchema(routerParameters);
             response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.UserId,
                 operation);
+
+            if (applicationMetadata.AuditFlag) {
+                
+            }
+
             return response;
 
         }

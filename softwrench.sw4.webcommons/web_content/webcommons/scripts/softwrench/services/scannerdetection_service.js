@@ -2,7 +2,7 @@
 
 app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, restService, searchService, redirectService,
                                                  contextService, alertService, associationService, modalService,
-                                                 fieldService, submitService, validationService) {
+                                                 fieldService, submitService, validationService, auditService) {
     var timeBetweenCharacters = isMobile() ? 35 : 14; // Used by the jQuery scanner detection plug in to differentiate scanned data and data input from the keyboard
 
     var validateAssocationLookupFn = function (result, searchObj) {
@@ -263,6 +263,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                             };
                             var urlToUse = url("/api/data/asset/" + datamap["assetid"] + "?" + $.param(httpParameters));
                             $http.put(urlToUse, jsonString).success(function () {
+                                auditService.insertAuditEntry("asset", datamap["assetid"], "SCAN", datamap);
                                 // navigate to the asset which had been scanned
                                 navigateToAsset(data);
                             }).error(function () {
