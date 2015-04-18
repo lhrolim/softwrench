@@ -257,11 +257,14 @@ app.directive('compositionList', function (contextService) {
 
                 $scope.isReadOnly = !updating;
                 var compositionId = item[$scope.compositionlistschema.idFieldName];
-                var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
-                if (!needServerFetching) {
+                if (!$scope.fetchfromserver) {
                     doToggle(compositionId, item);
                     return;
+                }else if ($scope.detailData[compositionId] != undefined) {
+                    doToggle(compositionId, $scope.detailData[compositionId].data);
+                    return;
                 }
+
                 var compositiondetailschema = $scope.compositiondetailschema;
                 var applicationName = compositiondetailschema.applicationName;
                 var parameters = {};
@@ -339,7 +342,7 @@ app.directive('compositionList', function (contextService) {
                 if (!$scope.collectionproperties.autoCommit) {
                     return;
                 }
-                
+
                 var alwaysrefresh = $scope.compositiondetailschema.properties && "true" == $scope.compositiondetailschema.properties['compositions.alwaysrefresh'];
                 if (alwaysrefresh) {
                     //this will disable success message, since we know we´ll need to refresh the screen
@@ -347,13 +350,13 @@ app.directive('compositionList', function (contextService) {
                 }
                 $scope.$parent.$parent.save(null, {
                     successCbk: function (data) {
-                            
+
                         if (alwaysrefresh) {
                             window.location.reload();
                             return;
                         }
                         var updatedArray = data.resultObject.fields[$scope.relationship];
-                        if (updatedArray == null||updatedArray.length == 0) {
+                        if (updatedArray == null || updatedArray.length == 0) {
                             window.location.reload();
                             return;
                         }
@@ -407,7 +410,7 @@ app.directive('compositionList', function (contextService) {
                 //                var compositionsToExpand = { 'worklog_': true };
 
                 params.options.compositionsToExpand = tabsService.buildCompositionsToExpand(compositionsToExpand, parentSchema,
-                    $scope.parentdata, $scope.compositiondetailschema.schemaId,[],false);
+                    $scope.parentdata, $scope.compositiondetailschema.schemaId, [], false);
                 params.options.printMode = true;
                 return params;
             }
