@@ -1,4 +1,4 @@
-﻿softwrench.controller('MainController', function ($scope, menuModelService) {
+﻿softwrench.controller('MainController', function ($scope, $ionicSideMenuDelegate,menuModelService) {
     $scope.data = {};
 
     function init() {
@@ -9,17 +9,12 @@
         return menuModelService.getMenuItens();
     }
 
+    $scope.toggleLeft = function() {
+        $ionicSideMenuDelegate.toggleLeft();
+    }
+
     init();
 
-
-
-
-    $scope.leftButtons = [{
-        type: 'button-icon icon ion-navicon',
-        tap: function (e) {
-            $scope.sideMenuController.toggleLeft();
-        }
-    }];
 
 
 })
