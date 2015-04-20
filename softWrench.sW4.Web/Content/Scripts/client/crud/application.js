@@ -341,7 +341,7 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout,
                 //check crud_list#gridRefreshed
                 resultObject: $scope.datamap,
                 schema: schema,
-                pageResultDto: checkPointData ? checkPointData[0].listContext : {},
+                pageResultDto: (checkPointData && checkPointData.length>0)? checkPointData[0].listContext : {},
             }
             $scope.toList(data);
         }

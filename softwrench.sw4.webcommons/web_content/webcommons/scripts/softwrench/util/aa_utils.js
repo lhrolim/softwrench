@@ -404,6 +404,11 @@ function url(path) {
 }
 
 function GetPopUpMode() {
+    if (angular.mock) {
+        //TODO: extract a service
+        return "none";
+    }
+
     var popupMode = $(hddn_popupmode)[0].value;
     if (popupMode === undefined || popupMode == 'null' || popupMode == "") {
         popupMode = 'none';
