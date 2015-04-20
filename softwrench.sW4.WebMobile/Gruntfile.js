@@ -21,21 +21,7 @@ module.exports = function (grunt) {
 
 
             dev: {
-                files: {
-                    'angular.js': 'angular/angular.min.js',
-                    'angular-sanitize.js': 'angular-sanitize/angular-sanitize.min.js',
-                    'angular-ui-router.js': 'angular-ui-router/release/angular-ui-router.min.js',
-                    'angular-animate.js': 'angular-animate/angular-animate.min.js',
 
-                    'jquery.js': 'jquery/dist/jquery.min.js',
-                    'ng-cordova.js': 'ngCordova/dist/ng-cordova.js',
-                    'persistence.js': 'persistence/lib/persistence.js',
-                    'persistence.store.sql.js': 'persistence/lib/persistence.store.sql.js',
-                    'persistence.store.websql.js': 'persistence/lib/persistence.store.websql.js',
-                }
-            },
-
-            prod: {
                 files: {
                     'angular-sanitize.js': 'angular-sanitize/angular-sanitize.js',
                     'angular-ui-router.js': 'angular-ui-router/release/angular-ui-router.js',
@@ -48,10 +34,25 @@ module.exports = function (grunt) {
                     'persistence.store.sql.js': 'persistence/lib/persistence.store.sql.js',
                     'persistence.store.websql.js': 'persistence/lib/persistence.store.websql.js',
                 }
+            },
+
+            prod: {
+                files: {
+                    'angular.js': 'angular/angular.min.js',
+                    'angular-sanitize.js': 'angular-sanitize/angular-sanitize.min.js',
+                    'angular-ui-router.js': 'angular-ui-router/release/angular-ui-router.min.js',
+                    'angular-animate.js': 'angular-animate/angular-animate.min.js',
+
+                    'jquery.js': 'jquery/dist/jquery.min.js',
+                    'ng-cordova.js': 'ngCordova/dist/ng-cordova.min.js',
+                    'persistence.js': 'persistence/lib/persistence.js',
+                    'persistence.store.sql.js': 'persistence/lib/persistence.store.sql.js',
+                    'persistence.store.websql.js': 'persistence/lib/persistence.store.websql.js',
+                }
             }
 
 
-    
+
         },
 
 
@@ -88,10 +89,10 @@ module.exports = function (grunt) {
     //grunt.option('jssuffix', 'js');
 
 
-    
+
 
     // Default task(s).
-    
+
     grunt.registerTask('prod', ['clean', 'bowercopy:prod', 'uglify']);
 
     grunt.registerTask('fulldev', ['clean', 'bowercopy:dev', 'tags']);
