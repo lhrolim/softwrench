@@ -37,9 +37,8 @@ namespace softwrench.sW4.audit.classes.Model {
             
         }
 
-        public AuditEntry(int Id, string action, string refApplication, string refId, string data, string createdBy, DateTime createdDate)
+        public AuditEntry(string action, string refApplication, string refId, string data, string createdBy, DateTime createdDate)
         {
-            this.Id = Id;
             Action = action;
             RefApplication = refApplication;
             RefId = refId;
@@ -50,11 +49,14 @@ namespace softwrench.sW4.audit.classes.Model {
 
         public AuditEntry(int id, string action, string refApplication, string refId, string data, string createdBy, DateTime createdDate)
         {
+            System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
+            byte[] bytes = encoding.GetBytes(data);
+
             Id = id;
             Action = action;
             RefApplication = refApplication;
             RefId = refId;
-            DataStringValue = data;
+            DataStringValue = StringExtensions.GetString(CompressionUtil.Decompress(bytes));
             CreatedBy = createdBy;
             CreatedDate = createdDate;
         }
