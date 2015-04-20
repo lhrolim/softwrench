@@ -296,7 +296,24 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             });
             return promise;
 
+        },
+
+        executeQuery: function (query) {
+            var deferred = dispatcherService.loadBaseDeferred();
+            var promise = deferred.promise;
+            persistence.transaction(function (tx) {
+                var queries = [];
+                var queryTuple = [];
+                queryTuple.push(query);
+                queries.push(queryTuple);
+                persistence.executeQueriesSeq(tx, queries, function () {
+                    deferred.resolve();
+                });
+            });
+            return promise;
         }
+
+
 
     };
 
