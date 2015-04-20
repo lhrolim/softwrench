@@ -158,11 +158,12 @@
     padding: 10px 15px;
     border-bottom: 1px solid #e5e5e5;
     line-height: normal;
-}
-
-#activitystream .message {
     background: #fff;
 }
+
+    #activitystream .message.even {
+        background: none;
+    }
 
     #activitystream .message:first-child {
         border-top: 1px solid #e5e5e5;

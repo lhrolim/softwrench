@@ -134,7 +134,12 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 for (var i = 0; i < datamap.length; i++) {
                     var rowst = "datamap[{0}]".format(i);
 
-                    html += "<tr style='cursor: {0}' listtablerendered rel='hideRow'>".format(cursortype);
+                    var rowClass = 'odd';
+                    if (i % 2 == 0) {
+                        rowClass = 'even';
+                    } 
+
+                    html += "<tr class='{0}' style='cursor: {1}' listtablerendered rel='hideRow'>".format(rowClass, cursortype);
                     needsWatchers = hasMultipleSelector;
 
                     html += "<td class='select-multiple' {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');
