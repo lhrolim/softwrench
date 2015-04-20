@@ -11,19 +11,19 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
 
 
 
-.run(function ($ionicPlatform, swdbDAO, loginService, contextService,menuModelService,metadataModelService, $state) {
+.run(function ($ionicPlatform, swdbDAO, loginService, contextService, menuModelService, metadataModelService, $state) {
 
     initContext();
 
     $ionicPlatform.ready(function () {
 
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            WebView.setWebContentsDebuggingEnabled(true);
-//        }
+        //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        //            WebView.setWebContentsDebuggingEnabled(true);
+        //        }
 
         initCordovaPlugins();
-      
+
 
         var isCookieAuthenticated = loginService.checkCookieCredentials();
         if (isCookieAuthenticated) {
@@ -39,23 +39,23 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
         swdbDAO.init();
         menuModelService.initAndCacheFromDB();
         metadataModelService.initAndCacheFromDB();
-        swdbDAO.findAll("Settings").success(function(settings) {
+        swdbDAO.findAll("Settings").success(function (settings) {
             if (settings.length == 0) {
                 var ob = entities.Settings;
-                swdbDAO.save(new ob()).success(function() {
+                swdbDAO.save(new ob()).success(function () {
                     contextService.insertIntoContext("settings", settings);
                 });
             } else {
                 contextService.insertIntoContext("settings", settings[0]);
                 contextService.insertIntoContext("serverurl", settings[0].serverurl);
             }
-            
+
         });
-        
+
     }
 
     function initCordovaPlugins() {
-        
+
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
         if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -92,7 +92,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
           .state('main', {
               url: "/main",
               templateUrl: "Content/Mobile/templates/main.html",
-              abstract: true,
+              //abstract: true,
               controller: 'MainController'
           })
 
@@ -107,6 +107,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
             }
         })
 
+
        .state('main.settings', {
            url: '/settings',
            views: {
@@ -116,6 +117,18 @@ var softwrench = angular.module('softwrench', ['ionic', 'ngCordova', 'sw_mobile_
                }
            }
        })
+
+    .state('main.crudlist', {
+        url: "/crudlist",
+        views: {
+            'main': {
+                templateUrl: "Content/Mobile/templates/crudlist.html",
+                controller: 'CrudListController'
+            }
+        }
+    })
+
+    
 
 
     // if none of the above states are matched, use this as the fallback

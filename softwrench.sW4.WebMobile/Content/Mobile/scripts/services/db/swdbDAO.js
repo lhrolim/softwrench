@@ -176,12 +176,32 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             });
         },
 
-        findAll: function (entity, cbk) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="options">
+        /// 
+        ///  pagesize: number of items per page. if undefined, it will bring all the results
+        ///  pagenumber: page to fetch. if undefined, no limit will 
+        /// 
+        /// </param>
+        /// <returns type=""></returns>
+        findAll: function (entity, options) {
+            options = options || {};
+            var pageNumber = options.pageNumber || 1;
+            var pageSize = options.pagesize;
+
             var deferred = dispatcherService.loadBaseDeferred();
             if (!entities[entity]) {
                 throw new Error("entity {0} not found".format(entity));
             }
             var filter = entities[entity].all();
+            if (pageSize) {
+                filter =filter.limit(pageSize);
+                filter = filter.skip((pageSize * (pageNumber - 1)));
+            }
+
             filter.list(null, function (result) {
                 deferred.resolve(result);
             });

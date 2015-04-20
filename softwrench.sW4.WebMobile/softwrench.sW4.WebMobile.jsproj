@@ -110,8 +110,11 @@
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Content\Mobile\scripts\controllers\crudlist.js" />
+    <Content Include="Content\Mobile\scripts\services\crud\crudContextService.js" />
     <Content Include="Content\Mobile\scripts\services\menu\menuModelService.js" />
     <Content Include="Content\Mobile\scripts\services\metadata\metadataModelService.js" />
+    <Content Include="Content\Mobile\templates\crudlist.html" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\css\ionic.css" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\css\ionic.min.css" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\fonts\ionicons.eot" />

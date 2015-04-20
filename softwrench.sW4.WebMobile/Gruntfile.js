@@ -1,3 +1,4 @@
+/// <vs AfterBuild='quick_dev_wrapper' />
 module.exports = function (grunt) {
 
     // Project configuration.
@@ -33,7 +34,7 @@ module.exports = function (grunt) {
                     'angular.min.js.map': 'angular/angular.min.js.map',
                     'angular-sanitize.min.js': 'angular-sanitize/angular-sanitize.min.js',
                     'angular-sanitize.min.js.map': 'angular-sanitize/angular-sanitize.min.js.map',
-                    'angular-ui-router.min.js': 'angular-ui-router/release/angular-ui-router.min.js',
+                    'angular-ui-router.min.js': 'angular-ui-router/release/angular-ui-router.js',
                     'angular-animate.min.js': 'angular-animate/angular-animate.min.js',
                     'angular-animate.min.js.map': 'angular-animate/angular-animate.min.js.map',
                     'angular.js': 'angular/angular.js',
@@ -47,15 +48,6 @@ module.exports = function (grunt) {
                 }
             },
 
-            ionic: {
-                files: {
-                    'ionic.min.js': 'ionic/release/js/ionic.min.js',
-                    'ionic-angular.min.js': 'ionic/release/js/ionic-angular.min.js',
-                    //  		         'ionic.min.js': 'ionic/release/js/ionic.js',
-                    //  		         'ionic-angular.min.js': 'ionic/release/js/ionic-angular.js',
-                    //  		         'ionic.bundle.min.js': 'ionic/release/js/ionic.bundle.min.js',
-                }
-            },
 
             persistence: {
                 files: {
@@ -65,59 +57,31 @@ module.exports = function (grunt) {
                 }
             },
 
-            ionic_css: {
+            //ionic_css: {
 
-                options: {
-                    destPrefix: 'Content/Vendor/styles'
-                },
+            //    options: {
+            //        destPrefix: 'Content/Vendor/styles'
+            //    },
 
-                files: {
-                    'ionic.min.css': 'ionic/release/css/ionic.min.css',
-                }
-            },
+            //    files: {
+            //        'ionic.min.css': 'ionic/release/css/ionic.min.css',
+            //    }
+            //},
 
-            ionic_fonts: {
+            //ionic_fonts: {
 
-                options: {
-                    destPrefix: 'Content/Vendor/fonts'
-                },
+            //    options: {
+            //        destPrefix: 'Content/Vendor/fonts'
+            //    },
 
-                files: {
-                    'ionicons.ttf': 'ionic/release/fonts/ionicons.ttf',
-                    'ionicons.woff': 'ionic/release/fonts/ionicons.woff',
-                }
-            },
+            //    files: {
+            //        'ionicons.ttf': 'ionic/release/fonts/ionicons.ttf',
+            //        'ionicons.woff': 'ionic/release/fonts/ionicons.woff',
+            //    }
+            //},
 
 
-
-            //         angular: {
-            //             files: {
-            //                 'angular.js': 'angular/angular.min.js',
-            //             }
-            //         },
-            //         
-            //         
-            //         fontawesome: {
-            //        	 options:{
-            //        		 destPrefix: 'Content/Vendor/styles/'
-            //        	 },
-            //        	 
-            //             files: {
-            //                 'fontawesome.min.css': 'components-font-awesome/css/font-awesome.min.css'
-            //             }
-            //         },
-
-            //         folders: {
-            //
-            //             options: {
-            //                 destPrefix: 'src/main/webapp/resources/'
-            //             },
-            //
-            //             files: {
-            //                 // Note: when copying folders, the destination (key) will be used as the location for the folder 
-            //                 'fonts': 'components-font-awesome/fonts/',
-            //             }
-            //         },
+    
         },
 
 
@@ -149,8 +113,24 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-bowercopy');
     grunt.loadNpmTasks('grunt-script-link-tags');
 
+    grunt.option('jssuffix', 'min.js');
+
+    //grunt.option('jssuffix', 'js');
+
+
+    
+
     // Default task(s).
     grunt.registerTask('defaultdev', ['clean', 'bowercopy', 'tags']);
     grunt.registerTask('default', ['clean', 'bowercopy', 'uglify']);
+
+    grunt.registerTask('quick_dev_wrapper', ['quick_dev']);
+
+    grunt.registerTask('quick_dev', 'Build with production options', function () {
+        //grunt.global.jssuffix = "min.js";
+        grunt.task.run('bowercopy');
+    });
+
+    grunt.registerTask('quick_dev_wrapper', ['quick_dev']);
 
 };
