@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('expressionService', function ($rootScope, restService) {
+app.factory('auditService', function ($rootScope, restService) {
 
     return {
         insertAuditEntry: function (application, id, action, datamap) {
