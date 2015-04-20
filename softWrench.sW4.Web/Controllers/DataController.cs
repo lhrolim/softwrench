@@ -91,7 +91,7 @@ namespace softWrench.sW4.Web.Controllers {
                     applicationMetadata.Name,
                     request.Id,
                     data,
-                    user.UserId.ToString(),
+                    user.Login,
                     DateTime.Now.FromServerToRightKind());
             }
 

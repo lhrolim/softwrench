@@ -43,6 +43,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
             var application = 'asset';
             var detail = 'detail';
             var mode = 'input';
+            param.transactionType = "scan";
 
             redirectService.goToApplicationView(application, detail, mode, null, param, null);
         });
@@ -199,7 +200,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                             isComposition: false,
                             selecteditem: scope.datamap
                        });
-                        return
+                        return;
                     }
                     var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
                     var scanOrder = scanOrderString.split(",");
@@ -263,7 +264,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                             };
                             var urlToUse = url("/api/data/asset/" + datamap["assetid"] + "?" + $.param(httpParameters));
                             $http.put(urlToUse, jsonString).success(function () {
-                                auditService.insertAuditEntry("asset", datamap["assetid"], "SCAN", datamap);
+                                //auditService.insertAuditEntry("asset", datamap["assetid"], "SCAN", datamap);
                                 // navigate to the asset which had been scanned
                                 navigateToAsset(data);
                             }).error(function () {
