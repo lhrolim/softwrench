@@ -38,26 +38,26 @@ namespace softWrench.sW4.Web.Controllers.Audit {
         [HttpGet]
         public GenericResponseResult<AuditEntryDto> List(bool refreshData = true)
         {
-            var auditEntries = dao.FindByNativeQuery("select Id,Action,RefApplication,RefId,Data,CreatedBy,CreatedDate from AUDIT_ENTRY");
+            var auditEntries = dao.FindByQuery<AuditEntry>("from AuditEntry");
             var list = new List<AuditEntry>();
-            foreach (var auditEntry in auditEntries)
-            {
+            //foreach (var auditEntry in auditEntries)
+            //{
 
-                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
-                byte[] bytes = encoding.GetBytes(auditEntry["Data"]);
+            //    System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
+            //    byte[] bytes = encoding.GetBytes(auditEntry["Data"]);
 
 
-                var newAudit = new AuditEntry(
-                    Int32.Parse(auditEntry["Id"]),
-                    auditEntry["Action"],
-                    auditEntry["RefApplication"],
-                    auditEntry["RefId"],
-                    auditEntry["Data"],
-                    auditEntry["CreatedBy"],
-                    DateTime.Parse(auditEntry["CreatedDate"]));
+            //    var newAudit = new AuditEntry(
+            //        Int32.Parse(auditEntry["Id"]),
+            //        auditEntry["Action"],
+            //        auditEntry["RefApplication"],
+            //        auditEntry["RefId"],
+            //        auditEntry["Data"],
+            //        auditEntry["CreatedBy"],
+            //        DateTime.Parse(auditEntry["CreatedDate"]));
 
-                list.Add(newAudit);
-            }
+            //    list.Add(newAudit);
+            //}
             return new GenericResponseResult<AuditEntryDto>(new AuditEntryDto { AuditEntries = list });
         }
 

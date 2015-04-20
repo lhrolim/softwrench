@@ -8,6 +8,7 @@
         <attribute name="wocount" type="int" query="@woBatchWhereClauseProvider.WoCountQuery"/>
       </attributes>
     </entity>
+    
 
   </entities>
 
@@ -40,6 +41,35 @@
             <property key="associationstoprefetch" value="#none"/>
           </properties>
         </schema>
+      </schemas>
+    </application>
+
+    <application entity="AuditEntry" name="audit" title="Audit Trail">
+      <schemas>
+        <schema id="auditList" stereotype="list">
+          <field attribute="id" label="Id"/>
+          <field attribute="action" label="Action"/>
+          <field attribute="refApplication" label="Action"/>
+          <field attribute="action" label="Action"/>
+          <field attribute="action" label="Action"/>
+          <field attribute="action" label="Action"/>
+          <field attribute="action" label="Action"/>
+          
+        </schema>
+          
+          <!--<schema id="auditDetail" stereotype="detail">
+            <field attribute="title" label="Title"/>
+            <section showexpression="@canCreateBoth">
+              <optionfield attribute="policy" label="Policy">
+                <option label="Personal" value="personal"/>
+                <option label="Shared" value="shared"/>
+              </optionfield>
+              <optionfield attribute="profiles" providerattribute="profiles" showexpression="@policy=='shared'">
+                <renderer type="checkbox"/>
+              </optionfield>
+            </section>
+
+          </schema>-->
       </schemas>
     </application>
 
