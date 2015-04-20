@@ -21,5 +21,11 @@ namespace softwrench.sW4.audit.classes.Services {
         public static AuditEntry SaveAuditEntry(AuditEntry auditEntry) {
             return DAO.Save(auditEntry);
         }
+
+        public static AuditEntry FindById(int auditId)
+        {
+            AuditEntry auditEntry = DAO.FindByPK<AuditEntry>(typeof(AuditEntry), auditId);
+            return auditEntry;
+        }
     }
 }
