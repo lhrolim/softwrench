@@ -51,10 +51,10 @@
                 //}
             }
 
-            for (var j = 0; j < metadataModel.applications; j++) {
+            for (var j = 0; j < metadataModel.applications.length; j++) {
                 var entity = metadataModel.applications[j];
                 var serverInstance = $.findFirst(serverMetadatas, function (el) {
-                    return el.applicationName = entity;
+                    return el.applicationName == entity.application;
                 });
                 if (!serverInstance) {
                     //this means that this entry was not returned from the server, and hence needs to be deleted
