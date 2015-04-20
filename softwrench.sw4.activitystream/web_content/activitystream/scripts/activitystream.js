@@ -318,30 +318,24 @@ app.directive('activitystream', function(contextService) {
 
 $(window).resize(function () {
     var activityWidth = 0;
-    var gridPadding = 0;
 
     //if pane is open get width
     if ($('#activitystream').hasClass('open')) {
         activityWidth = $('#activitystream').width();
     }
 
-    //if the header is fixed (desktop), add additional offset
-    if ($('.site-header').css('position') == 'fixed') {
-        gridPadding = 40;
-    }
-
-    var gridOffset = activityWidth + gridPadding;
-    var headerOffset = activityWidth;
+    //var gridOffset = activityWidth + gridPadding;
+    //var headerOffset = activityWidth;
 
     //update widths
-    $('.site-header').width($('.site-header').css('width', 'calc(100% - ' + headerOffset + 'px)'));
+    $('.site-header').width($('.site-header').css('width', 'calc(100% - ' + activityWidth + 'px)'));
 
     if ($('.site-header').css('position') == 'fixed') {
-        $('#affixpagination').width($('#affixpagination').css('width', 'calc(100% - ' + gridOffset + 'px)'));
+        $('#affixpagination').width($('#affixpagination').css('width', 'calc(100% - ' + activityWidth + 'px)'));
     } else {
         $('#affixpagination').width($('#affixpagination').css('width', '100%'));
     }
 
-    $('.listgrid-thead').width($('.listgrid-thead').css('width', 'calc(100% - ' + gridOffset + 'px)'));
-    $('.content').width($('.content').css('width', 'calc(100% - ' + gridOffset + 'px)'));
+    $('.listgrid-thead').width($('.listgrid-thead').css('width', 'calc(100% - ' + activityWidth + 'px)'));
+    $('.content').width($('.content').css('width', 'calc(100% - ' + activityWidth + 'px)'));
 });
