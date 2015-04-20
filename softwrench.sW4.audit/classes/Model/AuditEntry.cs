@@ -37,8 +37,9 @@ namespace softwrench.sW4.audit.classes.Model {
             
         }
 
-        public AuditEntry(string action, string refApplication, string refId, string data, string createdBy, DateTime createdDate)
+        public AuditEntry(int Id, string action, string refApplication, string refId, string data, string createdBy, DateTime createdDate)
         {
+            this.Id = Id;
             Action = action;
             RefApplication = refApplication;
             RefId = refId;
