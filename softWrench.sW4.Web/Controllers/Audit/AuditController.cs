@@ -42,7 +42,10 @@ namespace softWrench.sW4.Web.Controllers.Audit {
             var list = new List<AuditEntry>();
             foreach (var auditEntry in auditEntries)
             {
-                var dataString = auditEntry["Data"].GetBytes();
+
+                System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding();
+                byte[] bytes = encoding.GetBytes(auditEntry["Data"]);
+
 
                 var newAudit = new AuditEntry(
                     Int32.Parse(auditEntry["Id"]),
