@@ -24,10 +24,10 @@ input.ng-dirty.ng-invalid {
     z-index: 9999;
 }
 
-
 .container {
     padding: 0;
     width: 100%;
+        max-width: none;
 }
 
 .content .container {
