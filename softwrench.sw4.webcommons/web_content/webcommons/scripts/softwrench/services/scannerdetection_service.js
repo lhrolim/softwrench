@@ -248,7 +248,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
             $(document).scannerDetection({
                 avgTimeByChar: timeBetweenCharacters,
                 onComplete: function (data) {
-                    if (!validationService.isDirty()) {
+                    if (!validationService.getDirty()) {
                         navigateToAsset(data);
                         return;
                     }
