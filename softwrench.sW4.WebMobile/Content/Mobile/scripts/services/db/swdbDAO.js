@@ -3,7 +3,28 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
     //creating namespace for the entities, to avoid eventaul collisions
 
+    function createFilter(entity, queryString, queryoptions) {
+        queryoptions = queryoptions || {};
+        var pageNumber = queryoptions.pageNumber || 1;
+        var pageSize = queryoptions.pagesize;
 
+        if (!entities[entity]) {
+            throw new Error("entity {0} not found".format(entity));
+        }
+        var filter = entities[entity].all();
+        if (pageSize) {
+            filter = filter.limit(pageSize);
+            filter = filter.skip((pageSize * (pageNumber - 1)));
+        }
+        if (queryString) {
+            filter._additionalWhereSqls.push(queryString);
+        }
+
+
+
+        return filter;
+
+    }
 
     return {
 
@@ -23,10 +44,9 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             });
 
 
-            entities.Schema = persistence.define('Schema', {
+            entities.Application = persistence.define('Application', {
                 application: 'TEXT',
-                key: 'TEXT',
-                schema: "JSON"
+                data: "JSON"
             });
 
             ///
@@ -57,7 +77,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 projectionfields: 'JSON',
             });
 
-            
+
             entities.WhereClause = persistence.define("WhereClause", {
                 ///
                 /// This should get populated only if, there are multiple whereclauses present for a given association.
@@ -66,7 +86,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 ///
                 application: "TEXT",
                 parentApplication: "TEXT",
-                metadataid:"TEXT",
+                metadataid: "TEXT",
                 //the whereclause it self
                 data: "TEXT",
             });
@@ -113,7 +133,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
             entities.SyncStatus = persistence.define('SyncStatus', {
                 lastsynced: "DATE",
-                lastsyncServerVersion:"TEXT"
+                lastsyncServerVersion: "TEXT"
             });
 
 
@@ -123,6 +143,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
         },
 
+
         /// <summary>
         /// 
         /// </summary>
@@ -130,16 +151,16 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         /// <param name="memoryObject">the object to take as a parameter, so that if it contains an id, that will be used to try to load the persistent instance from cache,
         ///  otherwise a fresh new copy will be used, with all its properties merged into the persistent instance.</param>
         /// <returns type="promise">returns a promise that will pass the loaded instance to the chain</returns>
-        instantiate: function (entity, memoryObject) {
+        instantiate: function (entity, memoryObject,mergingFunction) {
 
-            
+
 
             if (!entities[entity]) {
                 throw new Error("entity {0} not found".format(entity));
             }
 
             memoryObject = memoryObject || {};
-            
+
             var deferred = dispatcherService.loadBaseDeferred();
 
 
@@ -148,7 +169,11 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 //if the memory object doesn´t contain an id, then we don´t need to check on persistence cache, 
                 //just instantiate a new one
                 var transientEntity = new ob();
-                deferred.resolve(mergeObjects(memoryObject, transientEntity));
+                if (mergingFunction) {
+                    deferred.resolve(mergingFunction(memoryObject, transientEntity));
+                } else {
+                    deferred.resolve(mergeObjects(memoryObject, transientEntity));
+                }
                 return deferred.promise;
             }
 
@@ -159,7 +184,11 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                     //if not found in cache, let´s instantiate a new one anyway
                     loadedObject = new ob();
                 }
-                deferred.resolve(mergeObjects(memoryObject, loadedObject));
+                if (mergingFunction) {
+                    deferred.resolve(mergingFunction(memoryObject, loadedObject));
+                } else {
+                    deferred.resolve(mergeObjects(memoryObject, loadedObject));
+                }
             });
 
             return deferred.promise;;
@@ -188,19 +217,18 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         /// </param>
         /// <returns type=""></returns>
         findAll: function (entity, options) {
-            options = options || {};
-            var pageNumber = options.pageNumber || 1;
-            var pageSize = options.pagesize;
-
             var deferred = dispatcherService.loadBaseDeferred();
-            if (!entities[entity]) {
-                throw new Error("entity {0} not found".format(entity));
-            }
-            var filter = entities[entity].all();
-            if (pageSize) {
-                filter =filter.limit(pageSize);
-                filter = filter.skip((pageSize * (pageNumber - 1)));
-            }
+            var filter = createFilter(entity, null, options);
+
+            filter.list(null, function (result) {
+                deferred.resolve(result);
+            });
+            return deferred.promise;
+        },
+
+        findByQuery: function (entity, queryString, options) {
+            var deferred = dispatcherService.loadBaseDeferred();
+            var filter = createFilter(entity, queryString, options);
 
             filter.list(null, function (result) {
                 deferred.resolve(result);
@@ -211,7 +239,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         findUnique: function (entity) {
             var deferred = dispatcherService.loadBaseDeferred();
             var promise = deferred.promise;
-            this.findAll(entity).success(function(result) {
+            this.findAll(entity).success(function (result) {
                 if (result.length == 0) {
                     deferred.resolve(null);
                 } else {
@@ -235,6 +263,37 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                     deferred.resolve();
                 });
             }
+            return promise;
+
+        },
+
+
+        bulkSave: function (objArray) {
+            for (var i = 0; i < objArray.length; i++) {
+                persistence.add(objArray[i]);
+            }
+            var deferred = dispatcherService.loadBaseDeferred();
+            var promise = deferred.promise;
+            persistence.flush(function () {
+                deferred.resolve();
+            });
+            return promise;
+
+        },
+
+        bulkDelete: function (objArray) {
+            var deferred = dispatcherService.loadBaseDeferred();
+            var promise = deferred.promise;
+            if (!objArray || objArray.length == 0) {
+                deferred.resolve();
+                return promise;
+            }
+            for (var i = 0; i < objArray.length; i++) {
+                persistence.remove(objArray[i]);
+            }
+            persistence.flush(function () {
+                deferred.resolve();
+            });
             return promise;
 
         }

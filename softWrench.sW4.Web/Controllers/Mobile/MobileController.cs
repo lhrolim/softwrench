@@ -48,7 +48,7 @@ namespace softWrench.sW4.Web.Controllers.Mobile {
             var securedMenu = user.Menu(ClientPlatform.Mobile,out fromCache);
 
             var response = new MobileMetadataDownloadResponseDefinition {
-                MetadatasJSON = JsonConvert.SerializeObject(securedMetadatas, Newtonsoft.Json.Formatting.None),
+                MetadatasJSON = JsonConvert.SerializeObject(securedMetadatas, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
                 MenuJson = JsonConvert.SerializeObject(securedMenu, Newtonsoft.Json.Formatting.None,_jsonSerializerSettings)
             };
             return response;

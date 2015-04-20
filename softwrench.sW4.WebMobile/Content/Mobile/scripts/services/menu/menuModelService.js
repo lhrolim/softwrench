@@ -20,7 +20,7 @@
             swdbDAO.instantiate("Menu", menuModel.dbData).success(function(menu) {
                 menu.data = serverMenu;
                 swdbDAO.save(menu).success(function(item) {
-                    menuModel.dbData = serverMenu;
+                    menuModel.dbData.data = serverMenu;
                     menuModel.listItems = serverMenu.explodedLeafs;
                     defer.resolve();
                 });
@@ -38,6 +38,7 @@
                     swdbDAO.save(menu);
                 }
                 menuModel.dbData = menu;
+                menuModel.listItems = menu.data.explodedLeafs;
                 defer.resolve();
             });
             return defer.promise;
