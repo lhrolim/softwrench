@@ -47,11 +47,24 @@
         var data = [{ fields: { id: "100" } }, { fields: { id: "200" } }];
         var schema ={idFieldName:"id",displayables:[],properties: {} }
         
+        spyOn(mockScope, "$broadcast");
+
         mockScope.toListSchema(data,schema);
 
         expect(mockScope.datamap).toEqual(data);
         expect(mockScope.schema).toEqual(schema);
         expect(mockScope.isList).toBeTruthy();
+        expect(mockScope.$broadcast).toHaveBeenCalledWith("sw_gridchanged");
+
+        var eventData = {
+            //here we have to reproduce that the request is coming from the server, so use resultObject as the name.
+            //check crud_list#gridRefreshed
+            resultObject: data,
+            schema: schema,
+            pageResultDto: {},
+        }
+
+        expect(mockScope.$broadcast).toHaveBeenCalledWith("sw_gridrefreshed", eventData, null);
         
     });
 
