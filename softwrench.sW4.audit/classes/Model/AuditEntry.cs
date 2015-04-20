@@ -46,5 +46,16 @@ namespace softwrench.sW4.audit.classes.Model {
             CreatedBy = createdBy;
             CreatedDate = createdDate;
         }
+
+        public AuditEntry(int id, string action, string refApplication, string refId, string data, string createdBy, DateTime createdDate)
+        {
+            Id = id;
+            Action = action;
+            RefApplication = refApplication;
+            RefId = refId;
+            DataStringValue = data;
+            CreatedBy = createdBy;
+            CreatedDate = createdDate;
+        }
     }
 }

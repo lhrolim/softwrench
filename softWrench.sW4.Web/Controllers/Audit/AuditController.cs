@@ -37,8 +37,20 @@ namespace softWrench.sW4.Web.Controllers.Audit {
         [HttpGet]
         public GenericResponseResult<AuditEntryDto> List(bool refreshData = true)
         {
-            var auditEntries = dao.FindByNativeQuery<AuditEntry>("select Id,Action,RefApplication,RefId,Data,CreatedBy,CreatedDate from Audit_Entry");
-            return new GenericResponseResult<AuditEntryDto>(new AuditEntryDto { AuditEntries = auditEntries });
+            var auditEntries = dao.FindByNativeQuery("select Id,Action,RefApplication,RefId,Data,CreatedBy,CreatedDate from AUDIT_ENTRY");
+            var list = new List<AuditEntry>();
+            foreach (var auditEntry in auditEntries)
+            {
+                list.Add(new AuditEntry(
+                    Int32.Parse(auditEntry["Id"]), 
+                    auditEntry["Action"], 
+                    auditEntry["RefApplication"], 
+                    auditEntry["RefId"], 
+                    auditEntry["Data"], 
+                    auditEntry["CreatedBy"], 
+                    DateTime.Parse(auditEntry["CreatedDate"])));
+            }
+            return new GenericResponseResult<AuditEntryDto>(new AuditEntryDto { AuditEntries = list });
         }
 
         public class AuditEntryDto {
