@@ -98,21 +98,13 @@
     cursor: pointer;
 }
 
-#listgrid tbody tr.even, #compositionlistgrid tbody tr.even {
-    background: #f5f5f5;
-}
+    #listgrid tbody tr.odd, #compositionlistgrid tbody tr.odd {
+        background: #ebebeb;
+    }
 
-#listgrid tbody tr:hover, #compositionlistgrid tbody tr:hover {
-    background: #f00;
+.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
+    background-color: #d6d6d6;
 }
-
-.table > tbody > tr:hover {
-  /*background-color: #0f0;*/
-}
-
-/*#listgrid th, #listgrid td, #compositionlistgrid th, #compositionlistgrid td {
-    font-size: 13px;
-}*/
 
 #listgrid th {
     word-break: break-word;
