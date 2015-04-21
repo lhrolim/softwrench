@@ -13,6 +13,7 @@ using System.IO;
 using System.Reflection;
 using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector.Events;
+using softWrench.sW4.Data.Entities;
 
 namespace softWrench.sW4.Util {
     public class ApplicationConfiguration : ISWEventListener<ClearCacheEvent> {
@@ -24,6 +25,8 @@ namespace softWrench.sW4.Util {
 
         private static string _clientName;
         private static string _environment;
+
+        private static MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
 
         public static String SystemVersion {
             get { return ConfigurationManager.AppSettings["version"]; }
@@ -275,10 +278,14 @@ namespace softWrench.sW4.Util {
 
         public static string[] AllowedFilesExtensions {
             get {
-                var ext = MetadataProvider.GlobalProperty("allowedAttachmentExtensions");
+                // SWWEB-1091 to extract the vbalue out from MAXIMO
+                // var ext = MetadataProvider.GlobalProperty("allowedAttachmentExtensions");
+                var ext = _maxPropValueDao.GetValue("mxe.doclink.doctypes.allowedFileExtensions");
+
                 if (!String.IsNullOrWhiteSpace(ext)) {
                     return ext.Split(',');
                 }
+
                 return new[] { "pdf", "zip", "txt", "jpg", "bmp", "doc", "docx", "dwg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "html", "rtf" };
             }
         }
