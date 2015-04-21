@@ -1,6 +1,4 @@
-﻿var app = angular.module('sw_layout');
-
-app.factory('restService', function ($http,$log) {
+﻿modules.webcommons.factory('restService', function ($http,$log) {
 
 
     return {

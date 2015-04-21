@@ -30,7 +30,7 @@ namespace softWrench.sW4.Web.Controllers.Mobile {
         private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
 
         readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings() {
-            TypeNameHandling = TypeNameHandling.Objects
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace softWrench.sW4.Web.Controllers.Mobile {
 
             var response = new MobileMetadataDownloadResponseDefinition {
                 MetadatasJSON = JsonConvert.SerializeObject(securedMetadatas, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
-                MenuJson = JsonConvert.SerializeObject(securedMenu, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings)
+                MenuJson = JsonConvert.SerializeObject(securedMenu, Newtonsoft.Json.Formatting.None,_jsonSerializerSettings)
             };
             return response;
         }
