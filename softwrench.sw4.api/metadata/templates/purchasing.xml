@@ -296,7 +296,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%" />
           </field>
           <field attribute="requireddate" label="Required Date">
-            <renderer type="datetime" params="widthXS=-1%;widthSM=30%;widthMD=20%;format=dd/MM/yyyy HH:mm;showtime=false" />
+            <renderer type="datetime" params="widthXS=-1%;widthSM=30%;widthMD=20%;format=MM/dd/yyyy HH:mm;showtime=false" />
           </field>
           <field attribute="vendor" label="Vendor">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;" />

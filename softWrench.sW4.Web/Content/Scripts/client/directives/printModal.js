@@ -34,7 +34,7 @@ app.directive('printModal', function ($log, contextService) {
             };
 
             $scope.nonInlineCompositions = function(schema) {
-                return tabsService.tabsDisplayables(schema);
+                return tabsService.tabsPrintDisplayables(schema);
             };
             
             $scope.$on('sw_hideprintmodal', function (event) {

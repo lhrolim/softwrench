@@ -9,7 +9,7 @@
 }
 
 .dash-header {
-    padding-top: 20px;
+    padding: 20px 20px 0;
 }
 
 .tab-pane .tab-header {
@@ -44,7 +44,7 @@
             -webkit-border-bottom-right-radius: 5px;
             border-bottom-left-radius: 5px;
             border-bottom-right-radius: 5px;
-            min-height: 425px;
+            min-height: 460px;
             overflow: hidden;
         }
 

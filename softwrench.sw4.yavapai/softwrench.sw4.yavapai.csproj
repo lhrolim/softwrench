@@ -42,10 +42,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\com\cts\%24changecustomername%24\configuration\" />
-    <Folder Include="classes\com\cts\%24changecustomername%24\connector\" />
-    <Folder Include="classes\com\cts\%24changecustomername%24\dataset\" />
-    <Folder Include="classes\com\cts\%24changecustomername%24\migration\" />
+    <Folder Include="classes\com\cts\yavapai\configuration\" />
+    <Folder Include="classes\com\cts\yavapai\connector\" />
+    <Folder Include="classes\com\cts\yavapai\dataset\" />
+    <Folder Include="classes\com\cts\yavapai\migration\" />
     <Folder Include="web_content\yavapai\htmls\" />
     <Folder Include="web_content\yavapai\scripts\" />
   </ItemGroup>
@@ -73,13 +73,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="customer.placeholder" />
+    <EmbeddedResource Include="metadata\yavapai\statuscolors.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\yavapai\readme.txt" />
     <Content Include="web_content\yavapai\images\branding.png" />
     <Content Include="web_content\yavapai\images\header.jpg" />
     <Content Include="web_content\yavapai\images\logo-main.png" />
-    <Content Include="web_content\yavapai\images\name-softwrench.png" />
+    <Content Include="web_content\yavapai\images\logo-byline.png" />
     <Content Include="web_content\yavapai\images\signin.jpg" />
     <Content Include="web_content\yavapai\styles\branding.css" />
   </ItemGroup>

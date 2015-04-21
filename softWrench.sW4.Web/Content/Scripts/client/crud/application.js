@@ -51,7 +51,10 @@ app.directive('filterrowrendered', function ($timeout) {
     };
 });
 
-function ApplicationController($scope, $http, $log, $templateCache, $timeout, fixHeaderService, $rootScope, associationService, validationService, contextService, searchService, alertService, schemaService) {
+function ApplicationController($scope, $http, $log, $templateCache, $timeout,
+    fixHeaderService, $rootScope, associationService, validationService,
+    contextService, searchService, alertService, schemaService,
+    checkpointService) {
     $scope.$name = 'applicationController';
 
     function switchMode(mode, scope) {
@@ -89,7 +92,8 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
         //we need this because the crud_list.js may not be rendered it when this event is dispatched, in that case it should from here when it starts
 
         contextService.insertIntoContext("grid_refreshdata",{ data: data, panelid: null }, true);
-        scope.$broadcast("sw_gridrefreshed", data,null);
+        scope.$broadcast("sw_gridrefreshed", data, null);
+        scope.$broadcast("sw_gridchanged");
         switchMode(false, scope);
     };
 
@@ -217,7 +221,8 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
             } else {*/
             $scope.previousschema = $scope.schema;
             //}
-            $scope.previousdata = $scope.datamap;
+            var crudContext = contextService.fetchFromContext("crud_context", true);
+            $scope.previousdata = crudContext == null ? {} : crudContext.previousData;
         }
         var scope = isModal ? $scope.modal : $scope;
         scope.schema = result.schema;
@@ -330,7 +335,15 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
                 $scope.$emit('sw_titlechanged', schema.title);
             }
             log.debug('rendering list view with previous data');
-            $scope.toList(null);
+            var checkPointData = checkpointService.fetchCheckpoint();
+            data = {
+                //here we have to reproduce that the request is coming from the server, so use resultObject as the name.
+                //check crud_list#gridRefreshed
+                resultObject: $scope.datamap,
+                schema: schema,
+                pageResultDto: (checkPointData && checkPointData.length>0)? checkPointData[0].listContext : {},
+            }
+            $scope.toList(data);
         }
         //}
     };
@@ -409,7 +422,9 @@ function ApplicationController($scope, $http, $log, $templateCache, $timeout, fi
             $scope.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
         });
         window.onbeforeunload = function () {
-            spin.stop();
+            if (spin) {
+                spin.stop();
+            }
         };
 
         doInit();

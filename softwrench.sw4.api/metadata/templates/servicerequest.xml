@@ -56,11 +56,11 @@
           <field attribute="reportedby" label="Reported By">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=-1%;widthLG=15%" />
           </field>
-          <field attribute="status" label="Status">
-            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=15%;widthLG=15%" />
-          </field>
           <field attribute="owner" label="Owner">
             <renderer type="default" params="widthXS=-1%;widthSM=-1%;widthMD=15%;widthLG=15%" />
+          </field>
+          <field attribute="status" label="Status">
+            <renderer type="default" params="widthXS=-1%;widthSM=25%;widthMD=15%;widthLG=15%" />
           </field>
           <field attribute="#color" label="">
             <renderer type="color" params="width=4%;grid=servicerequest;column=status"/>
@@ -71,12 +71,13 @@
           </properties>
         </list>
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
+          <field attribute="ticketid" label="SR No:" readonly="true"/>
           <field attribute="description" label="Summary:" requiredexpression="true"/>
           <field label="Details:" attribute="longdescription_.ldtext">
             <renderer type="richtext"/>
           </field>
           <section id ="siteidsection"/>
-          <field attribute="ticketid" label="SR No:" readonly="true"/>
+          
           <field attribute="ticketuid" label="SR No:" hidden="true"/>
           <field attribute="class" label="" hidden="true"/>
           <field attribute="actlabcost" hidden="true" />
@@ -85,7 +86,7 @@
           <field attribute="orgid" hidden="true"/>
           <field attribute="createby" hidden="true"/>
 
-          <association label="Location:" target="location" labelfield="location_.description" >
+          <association label="Location:" target="location" labelfield="location_.description" dependantfields="siteid" >
             <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             <!--renderer type="lookup"/-->
           </association>
@@ -204,7 +205,7 @@
               <event type="onviewdetail" service="commlogService" method="updatereadflag"/>
             </composition>
 
-            <composition relationship="attachment" label="Attachments">
+            <composition relationship="attachment" label="Attachments" printenabled="false">
               <collectionproperties allowcreation="@status!='CLOSED'" allowupdate="false" prefilterfunction="AppendCommlogDoclinks"/>
               
             </composition>

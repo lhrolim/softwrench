@@ -144,7 +144,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var fields = resultObject[0].fields;
             var costtype = fields['costtype'];
             parameters['fields']['inventory_.costtype'] = costtype;
-            var locationFieldName = "";
             doUpdateUnitCostFromInventoryCost(parameters, "unitcost", storelocation);
         });
     };
@@ -169,6 +168,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             message = message + " (Bin: " + binnum + ")";
         }
         return alertService.confirm(null, null, function () {
+            returnTransformation(event, datamap);
             parameters.continue();
         }, message);
     };
@@ -231,7 +231,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var dm = parameters.datamap;
             if (dm != undefined) {
                 if (dm.fields != undefined) {
-                    var dm = parameters.datamap.fields;
+                    dm = parameters.datamap.fields;
                 }
             }
             return formatQtyReturned(dm, value, column);
@@ -243,7 +243,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var dm = parameters.datamap;
             if (dm != undefined) {
                 if (dm.fields != undefined) {
-                    var dm = parameters.datamap.fields;
+                    dm = parameters.datamap.fields;
                 }
             }
             return formatQty(dm, value, column);
@@ -255,7 +255,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var dm = parameters.datamap;
             if (dm != undefined) {
                 if (dm.fields != undefined) {
-                    var dm = parameters.datamap.fields;
+                    dm = parameters.datamap.fields;
                 }
                 var formattedValue = formatQtyReturned(dm, value, column);
                 dm[column.attribute] = formattedValue;
@@ -270,7 +270,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var dm = parameters.datamap;
             if (dm != undefined) {
                 if (dm.fields != undefined) {
-                    var dm = parameters.datamap.fields;
+                    dm = parameters.datamap.fields;
                 }
                 var formattedValue = formatQty(dm, value, column);
                 dm[column.attribute] = formattedValue;
@@ -280,11 +280,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         submitReturnConfirmation: function (event, datamap, parameters) {
-            returnConfirmation(event, datamap, parameters);
-        },
-
-        submitReturnTransformation: function (event, datamap) {
-            returnTransformation(event, datamap);
+            return returnConfirmation(event, datamap, parameters);
         },
 
         invissuelistclick: function(datamap, schema) {
@@ -319,7 +315,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                         var originalDatamap = {
                             fields: datamap,
                         };
-                        sessionStorage.mockclientvalidation = true;
                         returnConfirmation(null, transformedData, {
                             continue: function () {
                                 $rootScope.$broadcast('sw_submitdata', {
@@ -328,7 +323,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                                         $rootScope.$broadcast('sw_refreshgrid');
                                     },
                                     failureCbk: function (data) {
-                                        var test = data;
                                         sessionStorage.mockclientvalidation = false;
                                     },
                                     isComposition: false,
@@ -336,9 +330,9 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                                     selecteditem: transformedData,
                                     originalDatamap: originalDatamap,
                                 });
-                              },
+                            },
                         });
-                        
+
                         return;
                     } else {
                         detail = 'editinvissuedetail';
@@ -385,7 +379,6 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                         var originalDatamap = {
                             fields: datamap,
                         };
-                        sessionStorage.mockclientvalidation = true;
                         returnConfirmation(null, transformedData, {
                             continue: function () {
                                 $rootScope.$broadcast('sw_submitdata', {
@@ -487,7 +480,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             itemDatamap['storeloc'] = parentdatamap['#storeloc'];
             itemDatamap['gldebitacct'] = parentdatamap['#gldebitacct'];
 
-            modalService.show(compositionschema, itemDatamap, {}, null,null, parentdatamap, parentschema);
+            modalService.show(compositionschema, itemDatamap, {}, null, null, parentdatamap, parentschema);
         },
 
         hideNewIssueModal: function (parameters) {
@@ -671,10 +664,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 parameters['fields']['unitcost'] = null;
                 parameters['fields']['inventory_.issueunit'] = null;
                 parameters['fields']['inventory_.itemtype'] = null;
-                
+
                 return;
             }
-            
+
             if (parameters['fields']['inventory_.binnum'] == null) {
                 parameters['fields']['binnum'] = "";
             } else {
@@ -782,6 +775,10 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             getBinQuantity(searchData, parameters, '#curbal', binnum, lotnum);
         },
 
+        invUseAfterChangeFromStoreLoc: function(parameters) {
+            parameters['fields']['invuseline_.fromstoreloc'] = parameters['fields']['fromstoreloc'];
+        },
+
         invUseAfterChangeFromBin: function(parameters) {
             parameters['fields']['invuseline_.fromlot'] = parameters['fields']['frominvbalance_.lotnum'];
             parameters['fields']['invuseline_.tolot'] = parameters['fields']['frominvbalance_.lotnum'];
@@ -792,7 +789,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         invUseAfterChangeSite: function(parameters) {
 
             if (parameters['fields']['invuseline_.siteid'] == null ||
-                parameters['fields']['invuseline_.siteid'].trim() == "") {
+                parameters['fields']['invuseline_.siteid'].trim() === "") {
                 parameters['fields']['itemnum'] = null;
                 parameters['fields']['fromstoreloc'] = null;
                 parameters['fields']['invuseline_.frombin'] = null;
@@ -807,8 +804,11 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var itemnum = parameters['fields']['itemnum'];
             parameters['fields']['invuseline_.itemnum'] = itemnum;
             parameters['fields']['binnum'] = null;
+            parameters['fields']['invuseline_.binnum'] = null;
             parameters['fields']['lotnum'] = null;
-            parameters['fields']['binbalances_.curbal'] = null;
+            parameters['fields']['invuseline_.lotnum'] = null;
+            parameters['fields']['#curbal'] = null;
+            parameters['fields']['frominvbalance_.curbal'] = null;
             if (nullOrEmpty(itemnum)) {
                 parameters['fields']['invuseline_.itemnum'] = null;
                 parameters['fields']['unitcost'] = null;
@@ -825,17 +825,46 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 itemsetid: parameters['fields']['itemsetid']
             };
 
-            searchService.searchWithData("inventory", searchData).success(function (data) {
-                var resultObject = data.resultObject;
-                var fields = resultObject[0].fields;
-                var costtype = fields['costtype'];
-                parameters['fields']['inventory_.costtype'] = costtype;
-                var locationFieldName = "";
-                if (parameters['fields'].fromstoreloc != undefined) {
-                    locationFieldName = "fromstoreloc";
-                }
-                doUpdateUnitCostFromInventoryCost(parameters, "invuseline_.unitcost", locationFieldName);
-            });
+            searchService.searchWithData("inventory", searchData)
+                .success(function(data) {
+                    var resultObject = data.resultObject;
+                    var fields = resultObject[0].fields;
+                    var costtype = fields['costtype'];
+                    parameters['fields']['inventory_.costtype'] = costtype;
+                    var locationFieldName = "";
+                    if (parameters['fields'].fromstoreloc != undefined) {
+                        locationFieldName = "fromstoreloc";
+                    }
+                    doUpdateUnitCostFromInventoryCost(parameters,
+                        "invuseline_.unitcost", locationFieldName);
+                });
+
+            // Check if there is a single invbalance record for the item in the
+            // given location. If there is, use it as the from bin, from lot 
+            // and curbal.
+            var searchOperators = {
+                itemnum: searchService.getSearchOperator("="),
+                location: searchService.getSearchOperator("="),
+                siteid: searchService.getSearchOperator("=")
+            }
+            searchService.searchWithData("invbalances", searchData,
+                "binLookupList", { searchOperators: searchOperators }).success(function (data) {
+                    var resultObject = data.resultObject;
+                    if (resultObject.length === 1) {
+                        parameters["fields"]["binnum"] =
+                            resultObject[0].fields.binnum;
+                        parameters["fields"]["invuseline_.frombin"] =
+                            resultObject[0].fields.binnum;
+                        parameters["fields"]["lotnum"] =
+                            resultObject[0].fields.lotnum;
+                        parameters["fields"]["invuseline_.lotnum"] =
+                            resultObject[0].fields.lotnum;
+                        parameters["fields"]["#curbal"] =
+                            resultObject[0].fields.curbal;
+                        parameters["fields"]["frominvbalance_.curbal"] =
+                            resultObject[0].fields.curbal;
+                    }
+                });
         },
 
         validateInvIssue: function(schema, datamap) {
@@ -844,13 +873,24 @@ app.factory('inventoryService', function ($http, contextService, redirectService
             var location = datamap['location'];
             var assetnum = datamap['assetnum'];
             var gldebitacct = datamap['gldebitacct'];
-            var itemtype = datamap['inventory_.item_.itemtype'];             
+            var itemtype = datamap['inventory_.item_.itemtype'];
             if (itemtype == 'ITEM' &&
                 nullOrEmpty(refwo) &&
                 nullOrEmpty(location) &&
                 nullOrEmpty(assetnum) &&
                 nullOrEmpty(gldebitacct)) {
                 errors.push("Either a Workorder, Location, Asset, or GL Debit Account is required.");
+            }
+            return errors;
+        },
+
+        validateReturn: function (schema, datamap) {
+            var errors = [];
+            var quantityAdj = parseInt(datamap['#quantityadj']);
+            var quantity = datamap['quantity'];
+            var qtyReturned = parseInt(datamap['qtyreturned']);
+            if (quantity - (quantityAdj + qtyReturned) < 0) {
+                errors.push("The quantity being returned cannot be greater than the quantity that was issued.");
             }
             return errors;
         },
@@ -864,6 +904,18 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                 alertService.alert("The quantity being transferred cannot be greater than the current balance of the From Bin.");
                 event.scope.datamap['invuseline_.quantity'] = event.fields['#curbal'];
             }
+        },
+
+        afterChangeTransferFromLocation: function(event) {
+            event.fields['itemnum'] = "";
+            event.fields['inventory_.item_.itemtype'] = "";
+            event.fields['invuseline_.frombin'] = "";
+            event.fields['invuseline_.fromblot'] = "";
+            event.fields['lotnum'] = "";
+            event.fields['inventory_.issueunit'] = "";
+            event.fields['#curbal'] = "";
+            event.fields['invuseline_.unitcost'] = "";
+            event.fields['invuseline_.costtype'] = "";
         },
 
         overrideGlAccount: function(event) {
@@ -978,7 +1030,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         afterChangeInvreserveAsset: function(parameters) {
-            if (parameters['fields']['asset_.binnum']) {
+            if (parameters['fields']['asset_.binnum'] && !nullOrEmpty(parameters['fields']['asset_.binnum'])) {
                 parameters['fields']['invbalances_.binnum'] = parameters['fields']['asset_.binnum'];
             }
         },

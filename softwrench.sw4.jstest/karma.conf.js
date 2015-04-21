@@ -24,11 +24,12 @@ module.exports = function (config) {
             '..//softWrench.sW4.Web//Content//Scripts//client/crud/**/*.js',
             '..//softWrench.sW4.Web//Content//Scripts//client/**/*.js',
             '..//softWrench.sW4.Web//Content//Templates/**/*.js',
+            '..//softWrench.sW4.Web//Content//Templates/**/*.html',
             '..//softWrench.sW4.Web//Content//Scripts//customers/**/*.js',
             '..//softWrench.sW4.Webcommons//web_content//webcommons//scripts//softwrench/**/*.js',
             '..//softWrench.sW4.dashboard//web_content//dashboard//scripts//**/*.js',
             'angular_mock.js',
-          'tests//**/*.js'
+            'tests//**/*.js',
         ],
 
 
@@ -40,8 +41,17 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
+            '..//softWrench.sW4.Web//Content//Templates/**/*.html': ['ng-html2js']
         },
 
+        ngHtml2JsPreprocessor: {
+            // If your build process changes the path to your TEMPLATES,
+            // use stripPrefix and prependPrefix to adjust it.
+            stripPrefix: "(.*)softWrench.sW4.Web",
+
+            // the name of the Angular module to create
+            moduleName: "sw.templates"
+        },
 
         // test results reporter to use
         // possible values: 'dots', 'progress'

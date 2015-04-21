@@ -369,8 +369,14 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 if (!$scope.isSelectEnabled(fieldMetadata)) {
                     return;
                 }
+
+                var code = '';
+                if ($scope.lookupAssociationsCode[fieldMetadata.attribute] != $scope.datamap[fieldMetadata.attribute]) {
+                    code = $scope.lookupAssociationsCode[fieldMetadata.attribute];
+                }
+
                 $scope.lookupObj.element = $element;
-                cmplookup.updateLookupObject($scope, fieldMetadata);
+                cmplookup.updateLookupObject($scope, fieldMetadata, code);
             };
 
             $scope.showCustomModal = function (fieldMetadata, schema, datamap) {
@@ -780,9 +786,14 @@ app.directive('crudInputFields', function (contextService, eventService) {
         }
     }
 });
+
 app.directive('numberSpinner', function () {
     return {
         restrict: 'A',
+        scope: {
+            //Binds the ngModel attribute from the element which has the number-spinner tag
+            ngModel: '=ngModel'
+        },
         link: function (scope, element, attr) {
             $(element).spinner({
                 change: function (event, ui) {
@@ -790,6 +801,21 @@ app.directive('numberSpinner', function () {
                 },
                 min: attr.min,
                 max: attr.max
+            });
+            //Binds the mousewheel event to the below function.
+            $(element).bind("mousewheel", function (event, delta) {
+                if (delta > 0) {
+                    /*Updates the ngModel, which is bound as an attribute to 
+                    the crud_input_field's input element for number-spinners*/
+                    scope.ngModel = parseInt(this.value);
+                } else {
+                    if (parseInt(this.value) > 0) {
+                        scope.ngModel = parseInt(this.value);
+                    }
+                }
+                scope.$digest();
+
+                return false;
             });
         }
     }

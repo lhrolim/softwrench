@@ -12,9 +12,9 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Metadata.Applications.Association {
     class ApplicationCompositionFactory {
 
-        public static ApplicationCompositionDefinition GetInstance([NotNull] string @from, [NotNull] string relationship, string label, ApplicationCompositionSchema schema, string showExpression, string toolTip, bool hidden, ApplicationHeader header) {
+        public static ApplicationCompositionDefinition GetInstance([NotNull] string @from, [NotNull] string relationship, string label, ApplicationCompositionSchema schema, string showExpression, string toolTip, bool hidden, bool printEnabled, ApplicationHeader header) {
             var composition = new ApplicationCompositionDefinition(from, relationship, label, schema, showExpression,
-                toolTip, hidden, header);
+                toolTip, hidden, printEnabled, header);
             composition.SetLazyResolver(new Lazy<EntityAssociation>(
                     () => {
                         var metadata = MetadataProvider.Application(@from);

@@ -410,6 +410,13 @@ app.directive('crudBody', function (contextService) {
                     }
                 }
 
+                if ("true" == sessionStorage.logJSON) {
+                    $log.info(jsonString);
+                }
+
+                $log.getInstance("crud_body#submit").debug(jsonString);
+
+
                 var urlToUse = url("/api/data/" + applicationName + "/?" + $.param(submissionParameters));
                 var command = id == null ? $http.post : $http.put;
 

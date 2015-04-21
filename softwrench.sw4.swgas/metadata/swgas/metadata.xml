@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <templates>
+    <!--ServiceRequest-->
+    <template path="@servicerequest.xml"/>
+    
+    <!--WorkOrder-->
+    <template path="@workorder.xml"/>
+
+    <template path="@tooltrans.xml"/>
+    <template path="@materials.xml"/>
+    <template path="@labtrans.xml"/>
+    <template path="@woactivity.xml"/>
+  </templates>
+
+  <entities>
+    <entity name="ALNDOMAIN" idAttribute="domainid">
+      <attributes>
+        <attribute name="domainid" type="varchar" required="true" />
+        <attribute name="value" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="alndomainid" type="bigint" required="true" />
+        <attribute name="valueid" type="varchar" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="ALNDOMAIN" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="workorder" idAttribute="wonum">
+      <relationships>
+        <relationship to="ALNDOMAIN" qualifier="division">
+          <relationshipAttribute from="division" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="DIVISION" quoteLiteral="true" />
+        </relationship>
+        <relationship to="worklog" collection="true">
+          <relationshipAttribute from="wonum" to="recordkey" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="class" literal="WORKORDER" quoteLiteral="true" />
+        </relationship>
+        <relationship to="matusetrans" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="labtrans" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="location" >
+          <relationshipAttribute from="location" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="asset" >
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="failurecode" >
+          <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="worktype" >
+          <relationshipAttribute from="worktype" to="worktype" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="glcomponents">
+          <relationshipAttribute from="glaccount" to="compvalue" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
+        </relationship>
+        <!--COMSW 51 Reverse Lookup of Service Address (Lazy Fetch)-->
+        <relationship to="woaddress" reverselookupattribute="addresscode" >
+          <relationshipAttribute from="wonum" to="woserviceaddress_.wonum" primary="true"/>
+        </relationship>
+        <relationship to="woserviceaddress">
+          <relationshipAttribute from="wonum" to="wonum" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+        <relationship to="synonymdomain" qualifier="synstatus">
+          <relationshipAttribute from="status" to="value" primary="true"/>
+          <relationshipAttribute to="domainid" literal="WOSTATUS" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" >
+          <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+        <relationship to="DOCLINKS" qualifier="attachment" collection="true">
+          <relationshipAttribute from="workorderid" to="ownerid" primary="true"/>
+          <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="tooltrans" collection="true">
+          <relationshipAttribute from="wonum" to="refwo" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWWO" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseWorkOrderCrudConnector" />
+      </connectorParameters>
+    </entity>
+
+    <entity name="labtrans" idAttribute="labtransid">
+      <relationships>
+        <relationship to="labor">
+          <relationshipAttribute from="laborcode" to="laborcode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+        <relationship to="laborcraftrate">
+          <relationshipAttribute from="craft" to="craft" primary="true"/>
+          <relationshipAttribute from="laborcode" to="laborcode"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="glcomponents">
+          <relationshipAttribute from="gldebitacct" to="compvalue" primary="true"/>
+          <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+    <entity name="matusetrans" idAttribute="matusetransid" >
+      <relationships>
+        <relationship to="inventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="status" literal="ACTIVE"/>
+        </relationship>
+        <relationship to="item">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute to="itemtype" literal="ITEM" quoteLiteral="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="location" qualifier="storeroom">
+          <relationshipAttribute from="siteid" to="siteid" primary="true" />
+          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
+        </relationship>
+        <relationship to="invbalances" qualifier="invbal" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true" />
+          <relationshipAttribute from="location" to="location" />
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="glcomponents">
+          <relationshipAttribute from="gldebitacct" to="compvalue" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+    <entity name="tooltrans" idAttribute="tooltransid">
+      <relationships>
+        <relationship to="toolitem" qualifier="tool" >
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true" />
+          <relationshipAttribute from="itemsetid" to="itemsetid" />
+        </relationship>
+        <relationship to="glcomponents">
+          <relationshipAttribute from="gldebitacct" to="compvalue" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+  </entities>
+
+  <applications>
+    <application entity="SR" name="servicerequest" title="Service Request">
+      <schemas>
+        <schema id="newdetail" platform="web" redeclaring="false">
+          <!--<customization position="classstructureid"></customization>-->
+          <customization position="saddresscode"></customization>
+        </schema>
+        <schema id="editdetail" platform="web" redeclaring="false">
+          <!--<customization position="classstructureid"></customization>-->
+          <customization position="saddresscode"></customization>
+        </schema>
+      </schemas>
+    </application>
+    <application entity="workorder" name="workorder" title="Work Order">
+      <schemas>
+        <schema id="newdetail" platform="web" redeclaring="false">
+          <!--<customization position="classstructureid"></customization>-->
+          <customization position="failurecode"></customization>
+          <customization position="problemcode"></customization>
+          <customization position="glaccount"></customization>
+        </schema>
+        <schema id="editdetail" platform="web" redeclaring="false">
+          <!--<customization position="classstructureid"></customization>-->
+          <customization position="failurecode"></customization>
+          <customization position="problemcode"></customization>
+          <customization position="glaccount"></customization>
+        </schema>
+      </schemas>
+    </application>
+    <application name="labtrans" entity="labtrans" title="Labor">
+      <schemas>
+        <detail platform="web" redeclaring="false" >
+          <customization position="starttime"></customization>
+          <customization position="finishdate"></customization>
+          <customization position="finishtime"></customization>
+          <customization position="gldebitacct">
+            <field label="GL Debit Account:" attribute="gldebitacct" default="0000-000-000-00000" hidden="true" />
+          </customization>
+        </detail>
+      </schemas>
+    </application>
+    <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
+      <schemas>
+        <detail platform="web" redeclaring="false">
+          <customization position="gldebitacct">
+            <field label="GL Debit Account:" attribute="gldebitacct" default="0000-000-000-00000" hidden="true" />
+          </customization>
+        </detail>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

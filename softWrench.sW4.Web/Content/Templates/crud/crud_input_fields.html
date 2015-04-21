@@ -57,7 +57,9 @@
                             ng-model="datamap[fieldMetadata.target]"
                             ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                             ng-enabled="isSelectEnabled(fieldMetadata)"
-                            ng-init="initField(fieldMetadata)" />
+                            ng-init="initField(fieldMetadata)">
+                        <option value=""></option>
+                    </select>
                 </div>
                 <div ng-switch-when="checkbox">
                     <table ng-if="fieldMetadata.type == 'OptionField'" style="min-width: 200px;">
@@ -96,7 +98,9 @@
                                             ng-model="datamap[fieldMetadata.target]"
                                             ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                                             ng-enabled="isSelectEnabled(fieldMetadata)"
-                                            data-associationkey="{{fieldMetadata.associationKey}}" />
+                                            data-associationkey="{{fieldMetadata.associationKey}}">
+                                        <option value=""></option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-xs-6 autocompleteclientopendetails">
@@ -107,7 +111,9 @@
                                             ng-model="datamap[fieldMetadata.target]"
                                             ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
                                             ng-enabled="isSelectEnabled(fieldMetadata)"
-                                            data-associationkey="{{fieldMetadata.associationKey}}" />
+                                            data-associationkey="{{fieldMetadata.associationKey}}">
+                                        <option value=""></option>
+                                    </select>
                                 </div>
                             </div>
                             <div>
@@ -124,7 +130,9 @@
                                         ng-model="datamap[fieldMetadata.target]"
                                         ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
-                                        data-associationkey="{{fieldMetadata.associationKey}}" />
+                                        data-associationkey="{{fieldMetadata.associationKey}}">
+                                    <option value=""></option>
+                                </select>
                             </div>
                             <div ng-switch-default>
                                 <select id="{{formatId(fieldMetadata.target)}}"
@@ -133,7 +141,9 @@
                                         ng-model="datamap[fieldMetadata.target]"
                                         ng-options="option.value as option.label for option in associationOptions[fieldMetadata.associationKey]"
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
-                                        data-associationkey="{{fieldMetadata.associationKey}}" />
+                                        data-associationkey="{{fieldMetadata.associationKey}}">
+                                    <option value=""></option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -223,7 +233,8 @@
                 </div>
                 <div ng-switch-when="richtext">
                     <div class="richtext image-holder"
-                         text-angular="text-angular" name="{{fieldMetadata.attribute}}" ng-model="datamap[fieldMetadata.attribute]" ng-init="initRichtextField(fieldMetadata)" ta-disabled="!isSelectEnabled(fieldMetadata)"></div>
+                         text-angular="text-angular" ng-model="datamap[fieldMetadata.attribute]" 
+                         ng-init="initRichtextField(fieldMetadata)" ta-disabled="!isSelectEnabled(fieldMetadata)"></div>
                 </div>
                 <div ng-switch-when="upload">
                     <div class="input-group" id="{{fieldMetadata.attribute}}">
@@ -274,7 +285,9 @@
                                 ng-model="datamap[fieldMetadata.target]"
                                 ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                                 ng-enabled="isSelectEnabled(fieldMetadata)"
-                                custombuttontext="" />
+                                custombuttontext="">
+                            <option value=""></option>
+                        </select>
                         <div ng-if="fieldMetadata.rendererParameters['showvaluesbelow'] == 'true'">
                             <table>
                                 <tbody>

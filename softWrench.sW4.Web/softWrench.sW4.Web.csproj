@@ -324,6 +324,10 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_Data\Client\%40internal\target\maximo7.1.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_Data\Client\%40internal\target\smartcloud7.5.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -423,8 +427,8 @@
     <Content Include="Content\Images\icon-background-select.png" />
     <Content Include="Content\Images\icon-combobox.png" />
     <Content Include="Content\Images\icon-opendetails.png" />
+    <Content Include="Content\Images\logo-byline.png" />
     <Content Include="Content\Images\logo-main.png" />
-    <Content Include="Content\Images\name-cts.png" />
     <Content Include="Content\Images\pagination-first.png" />
     <Content Include="Content\Images\pagination-last.png" />
     <Content Include="Content\Images\pagination-next.png" />
@@ -432,16 +436,16 @@
     <Content Include="Content\Images\scottsdale\scottsdale.png" />
     <Content Include="Content\Images\signin.jpg" />
     <Content Include="Content\Images\southern\branding.png" />
+    <Content Include="Content\Images\southern\logo-byline.png" />
     <Content Include="Content\Images\southern\logo-main.png" />
-    <Content Include="Content\Images\southern\name-softwrench.png" />
     <Content Include="Content\Images\tree-leaf.png" />
     <Content Include="Content\Images\tree-node-collapsed.png" />
     <Content Include="Content\Images\tree-node-expanded.png" />
     <Content Include="Content\Images\tva\branding.png" />
     <Content Include="Content\Images\tva\header.jpg" />
+    <Content Include="Content\Images\tva\logo-byline.png" />
     <Content Include="Content\Images\tva\logo-main.png" />
     <Content Include="Content\Images\tva\signin.jpg" />
-    <Content Include="Content\Images\yavapai\logo-main.png" />
     <Content Include="Content\Scripts\client\adminresources\password.js" />
     <Content Include="Content\Scripts\client\crud\compositionlist.js" />
     <Content Include="Content\Scripts\client\crud\crud_tbody.js" />
@@ -599,7 +603,6 @@
     <Content Include="Content\styles\default\grid.css" />
     <Content Include="Content\styles\default\header.css" />
     <Content Include="Content\styles\default\jscrollpane.css" />
-    <Content Include="Content\styles\default\media\max-width.css" />
     <Content Include="Content\styles\default\media\screen.css" />
     <Content Include="Content\styles\default\modal.css" />
     <Content Include="Content\styles\default\page-admin.css" />
@@ -757,7 +760,6 @@
     <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\font-awesome-4.1.0\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\font-awesome-4.1.0\fonts\FontAwesome.otf" />
-    <Content Include="Content\Images\tva\Thumbs.db" />
     <Content Include="Content\Shared\readme.txt" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>

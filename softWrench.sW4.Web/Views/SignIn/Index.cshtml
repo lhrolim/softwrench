@@ -74,13 +74,22 @@
                                         i++;
                                     }
                                 }
-                            } else if (Model.Inactivity) {
-                                <script>
-                                    $(document).ready(function () {
-                                        alert('You have been automatically logged out due to inactivity. \n');
+                            }
+                            
+                            
+                            
+                            //else if (Model.Inactivity) {
+                                @*<script>*@
+                                  @*  $(document).ready(function () {
+                                        alert('Logged out \n');
                                     });
-                                </script>
-                            } else if (Model.Forbidden) {
+                                </script>*@
+                          @*  }*@
+                            
+                            
+                            
+                             
+                            else if (Model.Forbidden) {
                                 <script>
                                     $(document).ready(function () {
                                         alert("You do not have permission to use this application. Please contact your System Administrator.");
@@ -118,16 +127,17 @@
                     <div class="row divider bottom"></div>
                     <div class="row text-center">
                         <div class="col-sm-offset-1 col-sm-10">
-                            @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/name-softwrench.png"))) {
-                                <img class="cts-name" src="~/Content/Images/@Model.ClientName/name-softwrench.png">
-                            }
-                            else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/name-softwrench.png")))
+                            @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-byline.png")))
                             {
-                                <img class="cts-name" src="~/Content/Customers/@Model.ClientName/images/name-softwrench.png">
+                                <img class="cts-name" src="~/Content/Images/@Model.ClientName/logo-byline.png">
+                            }
+                            else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-byline.png")))
+                            {
+                                <img class="cts-name" src="~/Content/Customers/@Model.ClientName/images/logo-byline.png">
                             }
                             else
                             {
-                                <img class="cts-name" src="~/Content/Images/name-cts.png">
+                                <img class="cts-name" src="~/Content/Images/logo-byline.png">
                             }
                         </div>
                     </div>

@@ -40,7 +40,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public delegate IEnumerable<IApplicationDisplayable> LazyComponentDisplayableResolver(ReferenceDisplayable reference, ApplicationSchemaDefinition schema, IEnumerable<DisplayableComponent> components);
 
         [JsonIgnore]
-        public LazyFkResolverDelegate FkLazyFieldsResolver;
+        public ApplicationSchemaDefinition.LazyFkResolverDelegate FkLazyFieldsResolver;
 
         [JsonIgnore]
         public LazyComponentDisplayableResolver ComponentDisplayableResolver;

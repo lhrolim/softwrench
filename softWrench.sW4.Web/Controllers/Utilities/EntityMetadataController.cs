@@ -138,7 +138,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
 
             task.Wait();
             new MetadataProvider().SaveColor(task.Result);
-            //new StatusColorResolver().ClearCache();
+            Refresh();
         }
 
         [HttpPut]

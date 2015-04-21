@@ -208,13 +208,16 @@ app.directive('crudList', function (contextService) {
                 }
             });
 
-            $scope.$on('sw_gridrefreshed', function (event, data,panelId) {
+            $scope.$on('sw_gridrefreshed', function (event, data, panelId) {
                 $scope.gridRefreshed(data, panelId);
             });
 
+            // When changing grids the search sort should be cleared
+            $scope.$on('sw_gridchanged', function(event) {
+                $scope.searchSort = {};
+            });
 
-
-            $scope.gridRefreshed = function (data,panelId) {
+            $scope.gridRefreshed = function (data, panelId) {
                 if ($scope.panelid != panelId) {
                     //none of my business --> another dashboard event
                     return;
@@ -225,25 +228,30 @@ app.directive('crudList', function (contextService) {
                 $scope.selectAllChecked = false;
                 if ($rootScope.printRequested !== true) {
                     //if its a printing operation, then leave the pagination data intact
-                    //this code needs to be here because the crud_list.js might not yet be included in the page while this is running, so the even would be lost... 
-                    //TODO: rethink about it
-                    $scope.paginationData = {};
-                    $scope.searchValues = data.searchValues;
-                    $scope.paginationData.pagesToShow = data.pagesToShow;
-                    $scope.paginationData.pageNumber = data.pageNumber;
-                    $scope.paginationData.selectedPage = data.pageNumber;
-                    $scope.paginationData.pageCount = data.pageCount;
-                    $scope.paginationData.pageSize = data.pageSize;
-                    $scope.paginationData.paginationOptions = data.paginationOptions;
-                    $scope.paginationData.totalCount = data.totalCount;
-                    $scope.paginationData.hasPrevious = data.hasPrevious;
-                    $scope.paginationData.hasNext = data.hasNext;
-                    $scope.paginationData.filterFixedWhereClause = data.filterFixedWhereClause;
-                    $scope.searchData = $scope.searchData ||  {};
-                    $scope.searchOperator = $scope.searchOperator || {};
+                    if (data.paginationOptions) {
+                        $scope.paginationData = {};
+                        $scope.searchValues = data.searchValues;
+                        $scope.paginationData.pagesToShow = data.pagesToShow;
+                        $scope.paginationData.pageNumber = data.pageNumber;
+                        $scope.paginationData.selectedPage = data.pageNumber;
+                        $scope.paginationData.pageCount = data.pageCount;
+                        $scope.paginationData.pageSize = data.pageSize;
+                        $scope.paginationData.paginationOptions = data.paginationOptions;
+                        $scope.paginationData.totalCount = data.totalCount;
+                        $scope.paginationData.hasPrevious = data.hasPrevious;
+                        $scope.paginationData.hasNext = data.hasNext;
+                        $scope.paginationData.filterFixedWhereClause = data.filterFixedWhereClause;
+                    } else {
+                        //if the data is not coming from the server, let´s restore the latest, this is due to a cancel click
+                        $scope.paginationData = contextService.fetchFromContext("crud_context", true).paginationData;
+                    }
+
+                    $scope.searchData = {};
+                    $scope.searchOperator = {};
                     $scope.searchSort = $scope.searchSort || {};
 
                     if (data.pageResultDto && data.pageResultDto.searchParams) {
+                        //TODO: make sure searchSort follows the same logic of building from the server response, then clear the sw_gridchanged event
                         var result = searchService.buildSearchDataAndOperations(data.pageResultDto.searchParams, data.pageResultDto.searchValues);
                         $scope.searchData = result.searchData;
                         $scope.searchOperator = result.searchOperator;
@@ -262,14 +270,16 @@ app.directive('crudList', function (contextService) {
                 var crudContext = {
                     list_elements: elements,
                     detail_next: "0",
-                    detail_previous: "-1"
+                    detail_previous: "-1",
+                    paginationData: $scope.paginationData,
+                    previousData: $scope.datamap
                 };
                 contextService.insertIntoContext("crud_context", crudContext);
             }
 
 
             $scope.refreshGridRequested = function (searchData, extraparameters) {
-              
+
 
                 /// <summary>
                 ///  implementation of searchService#refreshgrid see there for details
@@ -280,7 +290,7 @@ app.directive('crudList', function (contextService) {
                     return;
                 }
 
-                contextService.deleteFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid:""));
+                contextService.deleteFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid : ""));
                 $scope.paginationData = $scope.paginationData || {};
                 $scope.searchData = $scope.searchData || {};
                 $scope.metadataid = extraparameters.metadataid;
@@ -433,7 +443,7 @@ app.directive('crudList', function (contextService) {
                 });
 
                 searchPromise.success(function (data) {
-                    $scope.gridRefreshed(data,$scope.panelid);
+                    $scope.gridRefreshed(data, $scope.panelid);
                 });
 
             };
@@ -542,7 +552,7 @@ app.directive('crudList', function (contextService) {
         },
 
         link: function (scope, element, attrs) {
-            scope.isDashboard = function(element, panelid) {
+            scope.isDashboard = function (element, panelid) {
                 if (panelid != null) {
                     return "width: 100%;";
                 } else {

@@ -13,9 +13,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private FieldRenderer _renderer;
         private FieldFilter _filter;
+
+        //TODO: remove this, since it´s Xamarin legacy code
         private IWidgetDefinition _widgetDefinition;
 
-        private ISet<ApplicationEvent> _eventsSet = new HashSet<ApplicationEvent>();
+        private readonly ISet<ApplicationEvent> _eventsSet = new HashSet<ApplicationEvent>();
         public string EvalExpression { get; set; }
         public string EnableDefault { get; set; }
 
@@ -28,17 +30,18 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         }
 
-        public ApplicationFieldDefinition(string applicationName,string attributeName,String label,string requiredExpression,Boolean isReadOnly,bool isHidden,FieldRenderer renderer
-            ,IWidgetDefinition widget,string defaultValue, string tooltip):this(applicationName, attributeName, label, requiredExpression, isReadOnly, isHidden, renderer, null, widget, defaultValue, null, null, tooltip, null, null, null, null, null, null){
+        public ApplicationFieldDefinition(string applicationName, string attributeName,string datatype, String label, string requiredExpression, Boolean isReadOnly, bool isHidden, FieldRenderer renderer
+            , IWidgetDefinition widget, string defaultValue, string tooltip)
+            : this(applicationName, attributeName,datatype, label, requiredExpression, isReadOnly, isHidden, renderer, null, widget, defaultValue, null, null, tooltip, null, null, null, null, null, null) {
         }
 
-        public ApplicationFieldDefinition(string applicationName,string attributeName,String label) {
+        public ApplicationFieldDefinition(string applicationName, string attributeName, String label) {
             ApplicationName = applicationName;
             Attribute = attributeName;
             Label = label;
         }
 
-        public ApplicationFieldDefinition(string applicationName, string attribute, string label, string requiredExpression, bool isReadOnly, bool isIsHidden,
+        public ApplicationFieldDefinition(string applicationName, string attribute,string datatype, string label, string requiredExpression, bool isReadOnly, bool isIsHidden,
              FieldRenderer renderer, FieldFilter filter, IWidgetDefinition widgetDefinition, string defaultValue, string qualifier, string showExpression, string toolTip,
              string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression, string enableDefault, string defaultExpression)
             : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, defaultExpression) {
@@ -46,6 +49,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             _widgetDefinition = widgetDefinition;
             _renderer = renderer;
             _filter = filter;
+            DataType = datatype;
             IsHidden = isIsHidden;
             if (renderer == null || String.IsNullOrEmpty(renderer.RendererType)) {
                 var newRenderer = BuildFromWidget();
@@ -57,13 +61,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             EvalExpression = evalExpression;
             EnableDefault = enableDefault;
             DefaultExpression = defaultExpression;
-            }
+        }
         //TODO: choose one of the modes?
         private FieldRenderer BuildFromWidget() {
             if (_widgetDefinition is DateWidgetDefinition) {
                 var dateWidget = ((DateWidgetDefinition)_widgetDefinition);
                 return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), String.Format("time={0};format={1}", dateWidget.Time, dateWidget.Format), Attribute);
-            } else if (_widgetDefinition is NumberWidgetDefinition) {
+            }
+            if (_widgetDefinition is NumberWidgetDefinition) {
                 var numberWidget = ((NumberWidgetDefinition)_widgetDefinition);
                 return new FieldRenderer(FieldRenderer.BaseRendererType.NUMERICINPUT.ToString().ToLower(), String.Format("min={0};max={1};decimals={2}", numberWidget.Min, numberWidget.Max, numberWidget.Decimals), Attribute);
             }
@@ -72,6 +77,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
 
         public bool IsHidden { get; set; }
+
+        public string DataType { get; set; }
 
         public FieldRenderer Renderer {
             get { return _renderer; }
@@ -126,17 +133,17 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public object Clone() {
-            return new ApplicationFieldDefinition(ApplicationName, Attribute, Label, RequiredExpression, IsReadOnly, IsHidden,
-                Renderer, Filter, WidgetDefinition, DefaultValue, Qualifier, ShowExpression, ToolTip, AttributeToServer, _eventsSet, EnableExpression,EvalExpression, EnableDefault, DefaultExpression);
+            return new ApplicationFieldDefinition(ApplicationName, Attribute,DataType, Label, RequiredExpression, IsReadOnly, IsHidden,
+                Renderer, Filter, WidgetDefinition, DefaultValue, Qualifier, ShowExpression, ToolTip, AttributeToServer, _eventsSet, EnableExpression, EvalExpression, EnableDefault, DefaultExpression);
         }
 
         public static ApplicationFieldDefinition HiddenInstance(string applicationName, string attributeName) {
-            return new ApplicationFieldDefinition(applicationName, attributeName, "", "false", false, true,
-                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null,null, null, null);
+            return new ApplicationFieldDefinition(applicationName, attributeName,null, "", "false", false, true,
+                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null, null, null, null);
         }
 
-        public static ApplicationFieldDefinition DefaultColumnInstance(string applicationName, string attributeName,string label) {
-            return new ApplicationFieldDefinition(applicationName, attributeName, label, "false", false, false,
+        public static ApplicationFieldDefinition DefaultColumnInstance(string applicationName, string attributeName, string label) {
+            return new ApplicationFieldDefinition(applicationName, attributeName,null, label, "false", false, false,
                         new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null, null, null, null);
         }
     }

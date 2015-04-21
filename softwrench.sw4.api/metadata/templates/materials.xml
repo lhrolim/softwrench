@@ -132,7 +132,21 @@
           <field attribute="itemnum" label="item"/>
           <field attribute="location" label="location"/>
           <field attribute="siteid" label="siteid"/>
+          <field attribute="orgid" label="orgid"/>
+          <!--Extract Data-->
+          <field attribute="itemsetid" label="itemsetid"/>
           <field attribute="costtype" label="costtype"/>
+        </schema>
+      </schemas>
+    </application>
+
+    <application entity="item" name="itemlookup" title="itemlookup">
+      <schemas>
+        <schema id="list" title="item" stereotype="list">
+          <field attribute="itemnum" label="item"/>
+          <field attribute="itemsetid" label="itemsetid"/>
+          <!--Extract Data-->
+          <field attribute="commoditygroup" label="commoditygroup"/>
         </schema>
       </schemas>
     </application>
@@ -142,9 +156,10 @@
         <schema id="list" title="item" stereotype="list">
           <field attribute="itemnum" label="item"/>
           <field attribute="location" label="location"/>
-          <field attribute="siteid" label="siteid"/>
           <field attribute="conditioncode" label="conditioncode"/>
-          <field attribute="condrate" label="condrate"/>
+          <field attribute="siteid" label="siteid"/>
+          <field attribute="orgid" label="orgid"/>
+          <!--Extract Data-->
           <field attribute="stdcost" label="stdcost"/>
           <field attribute="avgcost" label="avgcost"/>
           <field attribute="lastcost" label="lastcost"/>
@@ -157,11 +172,14 @@
         <schema id="list" title="item" stereotype="list">
           <field attribute="itemnum" label="item"/>
           <field attribute="location" label="location"/>
-          <field attribute="siteid" label="siteid"/>
           <field attribute="conditioncode" label="conditioncode"/>
+          <field attribute="siteid" label="siteid"/>
+          <field attribute="orgid" label="orgid"/>
           <field attribute="binnum" label="binnum"/>
           <field attribute="lotnum" label="lotnum"/>
+          <!--Extract Data-->
           <field attribute="curbal" label="balance"/>
+          <field attribute="physcnt" label="physical"/>
         </schema>
       </schemas>
     </application>
@@ -205,13 +223,17 @@
           </association>
           <association label="Storeroom:" target="storeloc" labelfield="0invbal_.location" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
             <dataprovider postfilterfunction="filterStoreLoc"/>
-            <event type="afterchange" service="matusetranService" method="afterstorelocchange"/>
+            <event type="afterchange" service="matusetranService" method="afterchange"/>
           </association>
           <association label="Bin:" target="binnum" labelfield="1invbal_.binnum" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
             <dataprovider postfilterfunction="filterBinnum"/>
             <event type="afterchange" service="matusetranService" method="afterchange"/>
           </association>
           <association label="Lot:" target="lotnum" labelfield="2invbal_.lotnum" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
+            <dataprovider postfilterfunction="filterLotnum"/>
+            <event type="afterchange" service="matusetranService" method="afterchange"/>
+          </association>
+          <association label="Condition:" target="conditioncode" labelfield="3invbal_.conditioncode" dependantfields="itemnum" showexpression="@linetype == 'ITEM'">
             <dataprovider postfilterfunction="filterLotnum"/>
             <event type="afterchange" service="matusetranService" method="afterchange"/>
           </association>

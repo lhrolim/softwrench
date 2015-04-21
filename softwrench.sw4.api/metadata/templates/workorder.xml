@@ -78,7 +78,6 @@
       </properties>
       <schemas>
         <list title="Work Order Grid" platform="web">
-          
           <field attribute="wonum" label="WO No" >
             <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
           </field>
@@ -103,6 +102,12 @@
             <!--<property key="list.click.mode" value="@status == 'CLOSE' ? 'output' : 'input'"/>-->
           </properties>
         </list>
+        
+        <schema id="wonumlookup" title="item" stereotype="list">
+          <field attribute="wonum"/>
+          <field attribute="workorderid"/>
+          <field attribute="siteid"/>
+        </schema>
 
         <schema id="ahiddendetails" title="schemaForHoldingHiddensOnly" abstract="true" stereotype="detail" platform="web">
           <field attribute="estdur"            hidden="true"/>
@@ -169,7 +174,7 @@
             <dataprovider prefilterfunction="FilterProblemCodes"/>
           </association>
           <field label="Job Plan:" attribute="jpnum" readonly="true" />
-          <association label="Location:" target="location" labelfield="location_.description" >
+          <association label="Location:" target="location" labelfield="location_.description"  dependantfields="siteid" >
             <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
             <!--renderer type="lookup"/-->
           </association>
@@ -281,7 +286,7 @@
             <composition relationship="tooltrans" label="Tools">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
-            <composition relationship="attachment" label="Attachments" >
+            <composition relationship="attachment" label="Attachments" printenabled="false">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSED'" />
             </composition>
           </section>

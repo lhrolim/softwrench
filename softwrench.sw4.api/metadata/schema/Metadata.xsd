@@ -539,6 +539,13 @@
             <attribute name="hideexistingdata" type="boolean" use="optional"/>
             <attribute name="orderbyfield" type="string" use="optional"/>
             <attribute name="prefilterfunction" type="string" use="optional"/>
+            <attribute name="printenabled" type="boolean" use="optional">
+              <annotation>
+                <documentation>
+                  Enable/disable the print section.                  
+                </documentation>
+              </annotation>
+            </attribute>
           </complexType>
         </element>
         <element name="event" type="tns:schemaEvent" minOccurs="0"

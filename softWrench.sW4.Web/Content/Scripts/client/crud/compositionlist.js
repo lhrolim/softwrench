@@ -206,7 +206,8 @@ app.directive('compositionList', function (contextService, formatService) {
                 $scope.isNoRecords = $scope.clonedCompositionData.length > 0 ? false : true;
 
                 $scope.detailData = {};
-                
+                $scope.clonedData = {};
+
                 $scope.noupdateallowed = !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
                 $scope.expanded = false;
                 $scope.wasExpandedBefore = false;
@@ -326,13 +327,16 @@ app.directive('compositionList', function (contextService, formatService) {
             }
 
             var doToggle = function (id, item, originalListItem, forcedState) {
+                if ($scope.clonedData[id] == undefined) {
+                    $scope.clonedData[id] = {};
+                    $scope.clonedData[id].data = formatService.doContentStringConversion(jQuery.extend(true, {}, item));
+                }
+
                 if ($scope.detailData[id] == undefined) {
                     $scope.detailData[id] = {};
                     $scope.detailData[id].expanded = false;
+                    $scope.detailData[id].data = formatService.doContentStringConversion(item);
                 }
-
-                // TODO: Allow comparsion of values with different data type (e.g. int and string).  
-                $scope.detailData[id].data = formatService.doContentStringConversion(item);
 
                 var newState = forcedState != undefined ? forcedState : !$scope.detailData[id].expanded;
                 $scope.detailData[id].expanded = newState;
@@ -368,6 +372,16 @@ app.directive('compositionList', function (contextService, formatService) {
                 }
 
                 $scope.isReadOnly = !updating;
+
+                $scope.newDetail = false;
+                $scope.selecteditem = null;
+
+                // Need to disable all other rich text box for viewable real estate
+                for (var detailkey in $scope.detailData) {
+                    $scope.detailData[detailkey].expanded = false;
+                }
+
+
                 var compositionId = item[$scope.compositionlistschema.idFieldName];
                 var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
                 if (!needServerFetching) {
@@ -407,10 +421,14 @@ app.directive('compositionList', function (contextService, formatService) {
                 return expressionService.evaluate(value, $scope.parentdata) && $scope.inline;
             };
 
-            $scope.hasModified = function (key, dictionary, displayables) {
+            $scope.hasModified = function (key, displayables) {
                 for (var index = 0; index < displayables.length; index++) {
                     var attribute = displayables[index].attribute;
-                    if (dictionary[key].data[attribute] != $scope.detailData[key].data[attribute]) {
+
+                    if ($scope.clonedData[key] == null) {
+                        return false;
+                    }
+                    else if ($scope.clonedData[key].data[attribute] != $scope.detailData[key].data[attribute]) {
                         return true;
                     }
                 }
@@ -443,17 +461,9 @@ app.directive('compositionList', function (contextService, formatService) {
                 }
 
                 var updatedCompositionData = [];
-                if ($scope.collectionproperties.allowUpdate == "true") {
-                    // create a dictionary to start the comparison process
-                    var idFieldName = $scope.compositiondetailschema.idFieldName;
-                    var compositionDictionary = {};
-                    for (var index = 0; index < $scope.compositiondata.length; index++) {
-                        compositionDictionary[$scope.compositiondata[index][idFieldName]] = {};
-                        compositionDictionary[$scope.compositiondata[index][idFieldName]].data = $scope.compositiondata[index];
-                    }
-
+                if ($scope.collectionproperties.allowUpdate === "true") {
                     for (var key in $scope.detailData) {
-                        if ($scope.detailData.hasOwnProperty(key) && $scope.hasModified(key, compositionDictionary, detailSchema.displayables)) {
+                        if ($scope.detailData.hasOwnProperty(key) && $scope.hasModified(key, detailSchema.displayables)) {
                             updatedCompositionData.push($scope.detailData[key].data);
 
                             validationErrors = validationService.validate(detailSchema, detailSchema.displayables, $scope.detailData[key].data);
@@ -491,13 +501,14 @@ app.directive('compositionList', function (contextService, formatService) {
 
                 $scope.$emit("sw_submitdata", {
                     successCbk: function (data) {
-                        var updatedArray = data.resultObject.fields[$scope.relationship];
+                        var updatedArray = data.resultObject != null ? data.resultObject.fields[$scope.relationship] : null;
                         if (alwaysrefresh || updatedArray == null || updatedArray.length == 0) {
                             window.location.reload();
                             return;
                         }
                         //we need to clone it again here, to avoid binding, otherwise the data would be shown in the list before submission confirms on server side
                         $scope.clonedCompositionData = JSON.parse(JSON.stringify(updatedArray));
+                        $scope.clonedData = {};
                         $scope.compositiondata = updatedArray;
                         $scope.newDetail = false;
                         $scope.isReadonly = !$scope.collectionproperties.allowUpdate;

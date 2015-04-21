@@ -169,7 +169,7 @@ namespace softWrench.sW4.Web.Controllers {
             var mockMaximo = operationDataRequest.MockMaximo;
 
             //mocked instance by default
-            var maximoResult = new TargetResult(null, null,null);
+            var maximoResult = new TargetResult(null,null,null);
             var operation = operationDataRequest.Operation;
 
             if (!mockMaximo) {

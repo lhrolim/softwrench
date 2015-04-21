@@ -1,34 +1,67 @@
 var app = angular.module('sw_layout');
 
 app.factory('matusetranService', function ($http, contextService, redirectService, modalService, restService, searchService, alertService, validationService) {
-    var doUpdateItemCosttype = function (parameters) {
+
+    var doCommodityGroupAssociation = function (parameters) {
         var searchData = {
             itemnum: parameters['fields']['itemnum'],
-            location: parameters['fields']['storeloc'],
-            siteid: parameters['fields']['siteid']
+            itemsetid: parameters['fields']['itemsetid']
         };
 
-        searchService.searchWithData('invlookup', searchData).success(function (data) {
+        searchService.searchWithData('itemlookup', searchData).success(function (data) {
             var resultObject = data.resultObject;
 
-            if (resultObject[0] != undefined && resultObject.length == 1) {
-                parameters.fields['costtype'] = resultObject[0].fields['costtype'];
-                doUpdateItemCost(parameters); 
+            if (resultObject.length > 0) {
+                parameters.fields['commoditygroup'] = resultObject[0].fields['commoditygroup'];
             }
         });
-    };
+    }
 
-    var doUpdateItemCost = function (parameters) {
+    var doItemBalanceAssociation = function (parameters) {
         var searchData = {
             itemnum: parameters['fields']['itemnum'],
             location: parameters['fields']['storeloc'],
-            siteid: parameters['fields']['siteid']
+            siteid: parameters['fields']['siteid'],
+            orgid: parameters['fields']['orgid'],
+            binnum: parameters['fields']['binnum'],
+            lotnum: parameters['fields']['lotnum'],
+            conditioncode: parameters['fields']['conditioncode']
         };
+
+        parameters['fields']['curbal'] = 0.00;
+        parameters['fields']['physcnt'] = 0.00;
+
+        searchService.searchWithData('invbalookup', searchData).success(function (data) {
+            var resultObject = data.resultObject;
+
+            if (resultObject.length === 1) {
+                parameters.fields['binnum'] = resultObject[0].fields['binnum'];
+                parameters.fields['lotnum'] = resultObject[0].fields['lotnum'];
+                
+                parameters.fields['curbal'] = resultObject[0].fields['curbal'];
+                parameters.fields['physcnt'] = resultObject[0].fields['physcnt'];
+            } else if (resultObject.length <= 0) {
+                // no inventory item found, display error message
+                alertService.alert('This material is not available for use; please make another selection.');
+            }
+        });
+    }
+
+    var doItemCostAssociation = function (parameters) {
+        var searchData = {
+            itemnum: parameters['fields']['itemnum'],
+            location: parameters['fields']['storeloc'],
+            conditioncode: parameters['fields']['conditioncode'],
+            siteid: parameters['fields']['siteid'],
+            orgid: parameters['fields']['orgid']
+        };
+
+        parameters['fields']['unitcost'] = 0.00;
 
         searchService.searchWithData('invcostlookup', searchData).success(function (data) {
             var resultObject = data.resultObject;
 
-            if (resultObject.length == 1) {
+            if (resultObject.length === 1) {
                 var fields = resultObject[0].fields;
                 var costtype = parameters.fields['costtype'];
 
@@ -39,90 +72,63 @@ app.factory('matusetranService', function ($http, contextService, redirectServic
                 } else if (costtype === 'FIFO') {
                     parameters.fields['unitcost'] = fields.lastcost;
                 }
-
-                parameters.fields['conditioncode'] = fields.conditioncode;
-                doUpdateItemBalance(parameters);
-            }
-            else {
-                for (index = 0; index < resultObject.length; index++) {
-                    var fields = resultObject[index].fields;
-
-                    if (fields.condrate == 100) {
-                        var costtype = parameters.fields['costtype'];
-
-                        if (costtype === 'STANDARD') {
-                            parameters.fields['unitcost'] = fields.stdcost;
-                        } else if (costtype === 'AVERAGE') {
-                            parameters.fields['unitcost'] = fields.avgcost;
-                        } else if (costtype === 'FIFO') {
-                            parameters.fields['unitcost'] = fields.lastcost;
-                        }
-
-                        parameters.fields['conditioncode'] = fields.conditioncode;
-                        doUpdateItemBalance(parameters);
-                    }
-                }
             }
         });
     };
 
-    var doUpdateItemBalance = function (parameters) {
+    var doItemAssociation = function(parameters) {
+        doItemCostAssociation(parameters);
+        doItemBalanceAssociation(parameters);
+    }
+
+    var doItemLookup = function (parameters) {
         var searchData = {
             itemnum: parameters['fields']['itemnum'],
             location: parameters['fields']['storeloc'],
-            siteid: parameters['fields']['siteid'],
-            binnum: parameters['fields']['binnum'],
-            lotnum: parameters['fields']['lotnum'],
-            conditioncode: parameters['fields']['conditioncode']
+            siteid: parameters['fields']['siteid']
         };
 
-        searchService.searchWithData('invbalookup', searchData).success(function (data) {
+        searchService.searchWithData('invlookup', searchData).success(function (data) {
             var resultObject = data.resultObject;
 
-            if (resultObject[0] != undefined) {
-                parameters.fields['curbal'] = resultObject[0].fields['curbal'];
-                parameters.fields['binnum'] = resultObject[0].fields['binnum'];
-                parameters.fields['lotnum'] = resultObject[0].fields['lotnum'];
-            }
-            else {
-                parameters.fields['curbal'] = 0.00;
+            if (resultObject.length > 0) {
+                parameters.fields['costtype'] = resultObject[0].fields['costtype'];
+                parameters.fields['itemsetid'] = resultObject[0].fields['itemsetid'];
+
+                doCommodityGroupAssociation(parameters);
+                doItemAssociation(parameters);
+            } else {
+                // no inventory item found, display error message
+                alertService.alert('This material is not available for use; please make another selection.');
             }
         });
-    }
+    };
 
     return {
         afterlinetypechange: function (event) {
-            event.fields["itemnum"] = null;
-            event.fields["description"] = "";
+            event.fields['itemnum'] = null;
+            event.fields['description'] = '';
 
-            event.fields["storeloc"] = null;
-            event.fields["binnum"] = null;
-            event.fields["lotnum"] = null;
-            event.fields["itemsetid"] = null;
-            event.fields["location"] = null;
+            event.fields['storeloc'] = null;
+            event.fields['binnum'] = null;
+            event.fields['lotnum'] = null;
+            event.fields['itemsetid'] = null;
+            event.fields['location'] = null;
+            event.fields['conditioncode'] = null;
 
-            event.fields["linecost"] = 0.00;
-            event.fields["unitcost"] = 0.00;
-            event.fields["curbal"] = 0.00; 
-            event.fields["quantity"] = 1;
+            event.fields['unitcost'] = 0.00;
+            event.fields['curbal'] = 0.00; 
+            event.fields['quantity'] = 1;
         },
 
         afteritemchange: function (event) {
-            event.fields["#description"] = event.fields["item_.description"]; 
+            event.fields['#description'] = event.fields['item_.description'];
 
-            event.fields["linecost"] = 0.00;
-            event.fields["unitcost"] = 0.00;
-            event.fields["curbal"] = 0.00;
-        },
-
-        afterstorelocchange: function (event) {
-            event.fields["unitcost"] = 0.00;
-
-            doUpdateItemCosttype(event);
+            doItemLookup(event);
         },
 
         afterchange: function (event) {
-            doUpdateItemBalance(event);
+            doItemAssociation(event);
         }
     }
 });

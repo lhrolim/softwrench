@@ -84,8 +84,8 @@
     </EmbeddedResource>
     <Content Include="metadata\bering\readme.txt" />
     <Content Include="web_content\bering\images\header.jpg" />
+    <Content Include="web_content\bering\images\logo-byline.png" />
     <Content Include="web_content\bering\images\logo-main.png" />
-    <Content Include="web_content\bering\images\name-softwrench.png" />
     <Content Include="web_content\bering\images\signin.jpg" />
     <Content Include="web_content\bering\styles\branding.css" />
   </ItemGroup>

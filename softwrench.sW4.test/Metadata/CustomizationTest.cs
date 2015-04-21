@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Metadata {
@@ -12,6 +13,8 @@ namespace softwrench.sW4.test.Metadata {
     public class CustomizationTest {
 
         private static IList<ApplicationFieldDefinition> _baseWorklogDisplayables;
+
+        private static List<IApplicationDisplayable> _baseIssueDisplayables;
 
         [ClassInitialize]
         public static void Init(TestContext testContext) {
@@ -21,7 +24,14 @@ namespace softwrench.sW4.test.Metadata {
             /* Temporarily used in TestAfterAndBefore1() Method */
             var app = MetadataProvider.Application("worklog");
             var listSchema = app.Schema(new ApplicationMetadataSchemaKey("list"));
+
             _baseWorklogDisplayables = listSchema.Fields;
+
+            app = MetadataProvider.Application("invissue");
+            var newInvSchema = app.Schema(new ApplicationMetadataSchemaKey("newInvIssueDetail"));
+            _baseIssueDisplayables = newInvSchema.Displayables;
+
+            
             //TODO: Add the ability to access the base schema so that we can count the base displayables directly from a test method
 
             ApplicationConfiguration.TestclientName = "test_only";
@@ -37,10 +47,8 @@ namespace softwrench.sW4.test.Metadata {
             var displayables = listSchema.Fields;
 
             //Add 2 for customized fields that were added on top of the base worklog (xxx and yyy)
-            //Subtract 1 field that will be automatically added to OTB's base worklog from having a relationship from SR -> Worklog
-            //(test_only does not include servicerequests, and therefore does not have a relationship from SR -> Worklog)
             //TODO: Identify and calculate the number of displayables that will automatically get added from the sr -> worklog relationship
-            Assert.AreEqual(displayables.Count, _baseWorklogDisplayables.Count + 2 - 1);
+            Assert.AreEqual(displayables.Count, _baseWorklogDisplayables.Count + 2);
 
 
             var description = displayables.FirstOrDefault(f => f.Attribute.Equals("description"));
@@ -61,7 +69,7 @@ namespace softwrench.sW4.test.Metadata {
             var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("detail"));
             var displayables = detailSchema.Fields;
             //parent fields=3 (auto-generated); customizations=2
-            Assert.AreEqual(6, displayables.Count);
+            Assert.AreEqual(5, displayables.Count);
 
             Assert.IsNull(displayables.FirstOrDefault(f => f.Attribute.Equals("description")));
 
@@ -93,6 +101,22 @@ namespace softwrench.sW4.test.Metadata {
 
             var optionFields =detailSchema.OptionFields;
             Assert.IsNull(optionFields.FirstOrDefault(c => c.Attribute == "classstructureid"));
+        }
+
+
+
+        [TestMethod]
+        public void TestReplaceRendererOfAssociationInsideSection() {
+
+            var app = MetadataProvider.Application("invissue");
+            var detailSchema = app.Schema(new ApplicationMetadataSchemaKey("newInvIssueDetail"));
+            
+            var associations = detailSchema.Associations;
+            var issueTo = associations.FirstOrDefault(c => c.Attribute == "issueto");
+            Assert.IsNotNull(issueTo);
+            Assert.AreNotEqual("lookup",issueTo.RendererType);
+            Assert.AreEqual(_baseIssueDisplayables.Count,detailSchema.Displayables.Count);
+            
         }
 
     }

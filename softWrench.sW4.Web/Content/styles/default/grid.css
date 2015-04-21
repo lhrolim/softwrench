@@ -43,13 +43,13 @@
     width: 100%;
 }
 
-.filter-row .input-group .dropdown {
-    padding: 0;
-}
+    .filter-row .input-group .dropdown {
+        padding: 0;
+    }
 
-.filter-row .input-group .dropdown .dropdown-toggle {
-    padding: 8px;
-}
+        .filter-row .input-group .dropdown .dropdown-toggle {
+            padding: 8px;
+        }
 
 #listgrid {
     color: #000;
@@ -60,22 +60,22 @@
     margin-bottom: 0;
 }
 
-#listgrid thead {
-    background-color: #fff;
-}
+    #listgrid thead {
+        background-color: #fff;
+    }
 
-#listgrid thead tr.header-row {
-    background-color: #fff;
-    color: #000;
-    border: none;
-}
+        #listgrid thead tr.header-row {
+            background-color: #fff;
+            color: #000;
+            border: none;
+        }
 
-#listgrid thead tr.header-row:after, #listgrid thead tr.filter-row:after {
-    content: " ";
-}
+            #listgrid thead tr.header-row:after, #listgrid thead tr.filter-row:after {
+                content: " ";
+            }
 
 /*SWWEB-841 ~ fix header width for Firefox*/
-@-moz-document url-prefix() {            
+@-moz-document url-prefix() {
     #listgrid thead tr.filter-row .input-group-sm > .form-control {
         font-size: 14px;
     }
@@ -90,13 +90,21 @@
     color: #000;
 }
 
-#listgrid tbody tr {
+.table tbody > tr > td {
+    border-top: none;
+}
+
+#listgrid tbody tr, #compositionlistgrid tbody tr {
     cursor: pointer;
 }
 
-/*#listgrid th, #listgrid td, #compositionlistgrid th, #compositionlistgrid td {
-    font-size: 13px;
-}*/
+    #listgrid tbody tr.odd, #compositionlistgrid tbody tr.odd {
+        background: #ebebeb;
+    }
+
+.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
+    background-color: #d6d6d6;
+}
 
 #listgrid th {
     word-break: break-word;
@@ -105,15 +113,16 @@
 #listgrid td, #compositionlistgrid td {
     word-break: break-all;
     word-break: break-word;
+    padding: 10px 8px 6px;
 }
 
-#listgrid td .input-group, #listgrid td .input-group .glyphicon {
-    position: initial;
-}
+    #listgrid td .input-group, #listgrid td .input-group .glyphicon {
+        position: initial;
+    }
 
-#listgrid td.select-multiple {
-    text-align: center;
-}
+    #listgrid td.select-multiple {
+        text-align: center;
+    }
 
 .gridcolumnvalue {
     color: black;
@@ -157,3 +166,15 @@
 table .detaildata {
     display: table-cell !important;
 }
+
+#compositionlistgrid tbody tr:hover {
+    background: #f5f5f5;
+}
+
+#compositionlistgrid tbody tr a {
+    color: #000;
+}
+
+    #compositionlistgrid tbody tr a:hover {
+        text-decoration: none;
+    }

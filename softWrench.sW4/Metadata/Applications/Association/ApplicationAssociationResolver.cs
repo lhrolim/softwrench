@@ -14,6 +14,7 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sw4.Shared2.Util;
 using cts.commons.simpleinjector;
+using NHibernate.Util;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Security.Services;
@@ -78,6 +79,16 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 }
             }
 
+            // Sorting Precedence 
+            // 1. Sort by orderbyfield - if defined
+            // 2. Sort by value - if defined
+            // 3. Sort by the first projection field - if defined
+            // 4. Sort by the first column in the SQL query
+            // 5. Sort by prefilter function - if defined
+
+            // Set projections
+            var numberOfLabels = BuildProjections(associationFilter, association);
+
             //Set the orderbyfield if any
             var orderByField = association.OrderByField;
             if (orderByField != null) {
@@ -85,13 +96,17 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 associationFilter.SearchAscending = !orderByField.EndsWith("desc");
             }
             else {
-                // Applying 1 will cause the query to order by the first column
-                associationFilter.SearchSort = "1";
+                if (associationFilter.ProjectionFields.Any(f => f.Alias == "value")) {
+                    associationFilter.SearchSort = "value";
+                }
+                else {
+                    // Applying 1 will cause the query to order by the first column
+                    associationFilter.SearchSort = associationFilter.ProjectionFields.Any() ? associationFilter.ProjectionFields.FirstOrDefault().Alias : "1";
+                }
                 associationFilter.SearchAscending = true;
             }
 
-            // Set projections and pre filter functions
-            var numberOfLabels = BuildProjections(associationFilter, association);
+            // Set pre-filter functions
             var prefilterFunctionName = association.Schema.DataProvider.PreFilterFunctionName;
             if (prefilterFunctionName != null) {
                 var preFilterParam = new AssociationPreFilterFunctionParameters(applicationMetadata, associationFilter, association, originalEntity);

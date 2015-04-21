@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Persistence\WS\Commons\KongsbergIncidentCrudConnector.cs" />
+    <Compile Include="Metadata\Applications\DataSet\BeringKeyInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\Notification\ApplicationNotificationFactory.cs" />
     <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />
     <Compile Include="Audit\AuditTrail.cs" />
@@ -240,7 +241,6 @@
     <Compile Include="Data\Persistence\WS\Ism\Entities\SR\IsmSRCrudConnectorDecorator.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Base\ISMConstants.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Base\ISMCrudConnector.cs" />
-    <Compile Include="Data\Persistence\WS\Manchester\ComServiceRequestCrudConnector.cs" />
     <Compile Include="Data\SWDBDatamapBuilder.cs" />
     <Compile Include="Exceptions\MetadataException.cs" />
     <Compile Include="Exceptions\InvalidAttachmentException.cs" />
@@ -814,6 +814,7 @@
   <ItemGroup>
     <Folder Include="Data\Entities\Attachment\" />
     <Folder Include="Data\Persistence\WS\Gric\" />
+    <Folder Include="Data\Persistence\WS\Manchester\" />
     <Folder Include="Data\Persistence\WS\Mea\Entities\" />
     <Folder Include="Data\Persistence\WS\Mif\Entities\" />
     <Folder Include="Metadata\API\" />

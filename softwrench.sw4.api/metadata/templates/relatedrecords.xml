@@ -1,17 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
-  <applications>
-    <application entity="workorder" name="wonumlookup" title="wonumlookup">
-      <schemas>
-        <schema id="list" title="item" stereotype="list">
-          <field attribute="wonum"/>
-          <field attribute="workorderid"/>
-          <field attribute="siteid"/>
-        </schema>
-      </schemas>
-    </application>
-    
+  <applications>    
     <application name="relatedrecord" title="Related Records" entity="relatedrecord" id="00000000-0000-0000-0000-000000000008" >
       <properties>
         <property key ="icon.composition.tab" value="fa fa-tags"/>

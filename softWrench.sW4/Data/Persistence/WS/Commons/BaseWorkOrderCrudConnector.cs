@@ -162,6 +162,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 WsUtil.SetValueIfNull(integrationObject, "ENTERDATE", DateTime.Now.FromServerToRightKind(), true);
                 WsUtil.SetValueIfNull(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
                 WsUtil.SetValueIfNull(integrationObject, "PAYRATE", 0.0); 
+                
+                // Maximo 7.6 Changes
+                var STARTDATEENTERED = new DateTime();
+                if (crudData.GetAttribute("startdate") != null && DateTime.TryParse(crudData.GetAttribute("startdate").ToString(), out STARTDATEENTERED)) {
+                    WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", STARTDATEENTERED.FromServerToRightKind(), true);
+                }
 
                 ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
             });
@@ -198,14 +204,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                     WsUtil.SetValue(integrationObject, "DESCRIPTION", crudData.UnmappedAttributes["#description"]);
                 }
 
+                WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0.0);                
+                WsUtil.SetValueIfNull(integrationObject, "DESCRIPTION", "");  
+                WsUtil.SetValueIfNull(integrationObject, "CONVERSION", 1.0);
                 WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
                 WsUtil.SetValue(integrationObject, "ACTUALDATE", DateTime.Now.FromServerToRightKind(), true);
+                WsUtil.SetValue(integrationObject, "ACTUALCOST", unitcost);
                 WsUtil.SetValue(integrationObject, "QUANTITY", -1 * quantity);
-                WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0);
+                WsUtil.SetValue(integrationObject, "LINECOST", quantity * unitcost);
                 WsUtil.SetValue(integrationObject, "ENTERBY", user.Login);
-                WsUtil.SetValueIfNull(integrationObject, "DESCRIPTION", "");
+
                 WsUtil.SetValue(integrationObject, "ORGID", entity.GetAttribute("orgid"));
                 WsUtil.SetValue(integrationObject, "SITEID", entity.GetAttribute("siteid"));
+                WsUtil.SetValue(integrationObject, "TOSITEID", entity.GetAttribute("siteid"));
                 WsUtil.SetValue(integrationObject, "REFWO", recordKey);
 
                 WsUtil.SetValueIfNull(integrationObject, "ISSUETYPE", "ISSUE");
@@ -254,48 +265,52 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         }
 
         protected virtual void HandleServiceAddress(CrudOperationData entity, object wo) {
-            // Use to obtain security information from current user
-            var user = SecurityFacade.CurrentUser();
+            var svcaddressExists = entity.GetAttribute("WOSERVICEADDRESS") != null;
 
-            // Create a new WOSERVICEADDRESS instance created
-            var woserviceaddress = ReflectionUtil.InstantiateSingleElementFromArray(wo, "WOSERVICEADDRESS");
+            if(svcaddressExists) {
+                // Use to obtain security information from current user
+                var user = SecurityFacade.CurrentUser();
+
+                // Create a new WOSERVICEADDRESS instance created
+                var woserviceaddress = ReflectionUtil.InstantiateSingleElementFromArray(wo, "WOSERVICEADDRESS");
             
-            // Extract data from unmapped attribute
-            var json = entity.GetUnMappedAttribute("#woaddress_");
+                // Extract data from unmapped attribute
+                var json = entity.GetUnMappedAttribute("#woaddress_");
 
-            // If empty, we assume there's no selected data.  
-            if (json != null) {
-                dynamic woaddress = JsonConvert.DeserializeObject(json);
+                // If empty, we assume there's no selected data.  
+                if (json != null) {
+                    dynamic woaddress = JsonConvert.DeserializeObject(json);
 
-                String addresscode = woaddress.addresscode;
-                String desc = woaddress.description;
-                String straddrnumber = woaddress.staddrnumber;
-                String straddrstreet = woaddress.staddrstreet;
-                String straddrtype = woaddress.staddrtype;
+                    String addresscode = woaddress.addresscode;
+                    String desc = woaddress.description;
+                    String straddrnumber = woaddress.staddrnumber;
+                    String straddrstreet = woaddress.staddrstreet;
+                    String straddrtype = woaddress.staddrtype;
 
-                WsUtil.SetValue(woserviceaddress, "SADDRESSCODE", addresscode);
-                WsUtil.SetValue(woserviceaddress, "DESCRIPTION", desc);
-                WsUtil.SetValue(woserviceaddress, "STADDRNUMBER", straddrnumber);
-                WsUtil.SetValue(woserviceaddress, "STADDRSTREET", straddrstreet);
-                WsUtil.SetValue(woserviceaddress, "STADDRSTTYPE", straddrtype);
+                    WsUtil.SetValue(woserviceaddress, "SADDRESSCODE", addresscode);
+                    WsUtil.SetValue(woserviceaddress, "DESCRIPTION", desc);
+                    WsUtil.SetValue(woserviceaddress, "STADDRNUMBER", straddrnumber);
+                    WsUtil.SetValue(woserviceaddress, "STADDRSTREET", straddrstreet);
+                    WsUtil.SetValue(woserviceaddress, "STADDRSTTYPE", straddrtype);
+                }
+                else {
+                    WsUtil.SetValueIfNull(woserviceaddress, "STADDRNUMBER", "");
+                    WsUtil.SetValueIfNull(woserviceaddress, "STADDRSTREET", "");
+                    WsUtil.SetValueIfNull(woserviceaddress, "STADDRSTTYPE", "");
+                }
+
+                var prevWOServiceAddress = entity.GetRelationship("woserviceaddress");
+
+                if (prevWOServiceAddress != null) {
+                    WsUtil.SetValue(woserviceaddress, "FORMATTEDADDRESS", ((CrudOperationData)prevWOServiceAddress).GetAttribute("formattedaddress") ?? "");
+                }
+
+                //WsUtil.SetValueIfNull(woserviceaddress, "WOSERVICEADDRESSID", -1);          
+                WsUtil.SetValue(woserviceaddress, "ORGID", user.OrgId);
+                WsUtil.SetValue(woserviceaddress, "SITEID", user.SiteId);
+
+                ReflectionUtil.SetProperty(woserviceaddress, "action", OperationType.AddChange.ToString());
             }
-            else {
-                WsUtil.SetValueIfNull(woserviceaddress, "STADDRNUMBER", "");
-                WsUtil.SetValueIfNull(woserviceaddress, "STADDRSTREET", "");
-                WsUtil.SetValueIfNull(woserviceaddress, "STADDRSTTYPE", "");
-            }
-
-            var prevWOServiceAddress = entity.GetRelationship("woserviceaddress");
-
-            if (prevWOServiceAddress != null) {
-                WsUtil.SetValue(woserviceaddress, "FORMATTEDADDRESS", ((CrudOperationData)prevWOServiceAddress).GetAttribute("formattedaddress") ?? "");
-            }
-
-            //WsUtil.SetValueIfNull(woserviceaddress, "WOSERVICEADDRESSID", -1);          
-            WsUtil.SetValue(woserviceaddress, "ORGID", user.OrgId);
-            WsUtil.SetValue(woserviceaddress, "SITEID", user.SiteId);
-
-            ReflectionUtil.SetProperty(woserviceaddress, "action", OperationType.AddChange.ToString());
         }
     }
 }
