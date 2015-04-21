@@ -35,8 +35,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
         private static readonly AttachmentDao AttachmentDao = new AttachmentDao();
 
-        private static readonly string[] AllowedFiles = { "pdf", "zip", "txt", "jpg", "bmp", "doc", "docx", "dwg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "html", "rtf" };
-
         /// <summary>
         /// url specifying where the attachments could be downloaded from maximo in the http mode
         /// </summary>
@@ -121,6 +119,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
                 attachment.Data = Convert.ToBase64String(bytes);
                 attachment.Path = attachment.Path.Substring(0, attachment.Path.Length - 3) + "doc";
             }
+
             // Exit function - if attachment size exceed specification
             if (!Validate(attachment.Path, attachment.Data)) {
                 return;
