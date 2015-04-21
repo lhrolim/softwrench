@@ -4,6 +4,7 @@ using NHibernate.Transform;
 using NHibernate.Type;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Properties;
+using softWrench.sW4.Security.Services;
 using softwrench.sw4.Shared2.Util;
 using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
@@ -106,12 +107,27 @@ namespace softWrench.sW4.Data.Persistence {
                         }
 
                     } else {
+                        var startDateString = parameter.Value.ToString().Split(new[] { "___" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                        var startDate = DateUtil.Parse(startDateString);
+                        var inMemoryUser = SecurityFacade.CurrentUser();
+                        if (startDate.HasValue) {
+                            startDate = startDate.Value.FromUserToRightKind(inMemoryUser);
+                            if (!startDateString.Contains(":")) {
+                                startDate = DateUtil.BeginOfDay(startDate.Value);
+                            }
+                        }
+                        var endDateString = parameter.Value.ToString().Split(new[] { "___" }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        var endDate = DateUtil.Parse(endDateString);
+                        if (endDate.HasValue) {
+                            endDate = endDate.Value.FromUserToRightKind(inMemoryUser);
+                            if (!endDateString.Contains(":")) {
+                                endDate = DateUtil.BeginOfDay(endDate.Value);
+                            }
+                        }
+                        
 
-                        var startDate = DateUtil.Parse(parameter.Value.ToString().Split(new string[] { "___" }, StringSplitOptions.RemoveEmptyEntries)[0]);
-                        var endDate = DateUtil.Parse(parameter.Value.ToString().Split(new string[] { "___" }, StringSplitOptions.RemoveEmptyEntries)[1]);
-
-                        query.SetParameter(parameter.Key + "_start", DateUtil.BeginOfDay(startDate.Value));
-                        query.SetParameter(parameter.Key + "_end", DateUtil.EndOfDay(endDate.Value));
+                        query.SetParameter(parameter.Key + "_start", startDate);
+                        query.SetParameter(parameter.Key + "_end", endDate);
                     }
                 }
             }

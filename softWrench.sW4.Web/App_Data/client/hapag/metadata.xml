@@ -878,7 +878,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <renderer type="default" params="minwidth=70px;maxwidth=70px" />
           </field>
           <field label="Affected Date and Time" attribute="reportdate">
-            <renderer type="datetime" params="format=dd/MM/yyyy;minwidth=90px;maxwidth=90px"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=90px;maxwidth=90px"/>
           </field>
           <field label="Ownergroup" attribute="ownergroup">
             <renderer type="default" params="minwidth=80px;maxwidth=80px" />
