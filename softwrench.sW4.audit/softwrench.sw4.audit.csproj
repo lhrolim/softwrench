@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="classes\Services\AuditManager.cs" />
     <Compile Include="classes\Model\AuditEntry.cs" />
+    <Compile Include="Interfaces\IAuditManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using softwrench.sW4.audit.classes.Services;
-using softwrench.sW4.audit.classes.Model;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -29,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
+using softwrench.sW4.audit.Interfaces;
 using softWrench.sW4.Web.Util;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -45,12 +45,13 @@ namespace softWrench.sW4.Web.Controllers {
         protected readonly CompositionExpander CompositionExpander;
         private readonly I18NResolver _i18NResolver;
         protected readonly IContextLookuper ContextLookuper;
-        private AuditManager AuditManager;
+        private readonly IAuditManager _auditManager;
 
-        public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper, CompositionExpander expander) {
+        public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper, CompositionExpander expander, IAuditManager auditManager) {
             _i18NResolver = i18NResolver;
             ContextLookuper = contextLookuper;
             CompositionExpander = expander;
+            _auditManager = auditManager;
         }
 
         private const string MockingMaximoKey = "%%mockmaximo";
@@ -86,13 +87,13 @@ namespace softWrench.sW4.Web.Controllers {
             {
                 var fields = ((ApplicationDetailResult) response).ResultObject.Fields;
                 var data = JsonConvert.SerializeObject(fields);
-                AuditManager.CreateAuditEntry(
+                _auditManager.CreateAuditEntry(
                     transactionType ?? "crud_read",
                     applicationMetadata.Name,
                     request.Id,
                     data,
-                    user.Login,
                     DateTime.Now.FromServerToRightKind());
+
             }
 
             return response;
@@ -208,12 +209,11 @@ namespace softWrench.sW4.Web.Controllers {
                 operation);
 
             if (applicationMetadata.AuditFlag) {
-                AuditManager.CreateAuditEntry(
+                _auditManager.CreateAuditEntry(
                     operationDataRequest.Operation,
                     applicationMetadata.Name,
                     operationDataRequest.Id,
                     json.ToString(),
-                    user.Login,
                     DateTime.Now.FromServerToRightKind());
             }
 
