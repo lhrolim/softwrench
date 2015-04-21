@@ -32,8 +32,16 @@
         },
 
         updateMetadata: function (serverMetadatas) {
+            /// <summary>
+            /// Receives a list of metadas from the server, and update the memory instance and the database, 
+            /// so that next time the customer has the updated data.
+            /// 
+            /// 
+            /// </summary>
+            /// <param name="serverMetadatas"></param>
+            /// <returns type=""></returns>
             var defer = $q.defer();
-            if (!serverMetadatas) {
+            if (isArrayNullOrEmpty(serverMetadatas)) {
                 defer.resolve();
                 return defer.promise;
             }
@@ -42,13 +50,8 @@
             var instancesToDelete = [];
 
             for (var i = 0; i < serverMetadatas.length; i++) {
-                //server return a list of CompleteApplicationMetadata, but we're saving each schema individually
                 var applicationMetadata = serverMetadatas[i];
                 instancesToSavePromises.push(loadEntityInstance(applicationMetadata));
-                //var schemaList = applicationMetadata.schemaList;
-                //for (var j = 0; j < schemaList.length; j++) {
-
-                //}
             }
 
             for (var j = 0; j < metadataModel.applications.length; j++) {
@@ -61,16 +64,16 @@
                     instancesToDelete.push(entity);
                 }
             }
-            return swdbDAO.bulkDelete(instancesToDelete).then(function () {
-                $q.all(instancesToSavePromises)
-                    .then(function (instancesToSave) {
-                        swdbDAO.bulkSave(instancesToSave).success(function () {
-                            //updating the model, only if save is actually performed
-                            metadataModel.applications = instancesToSave;
-                            defer.resolve();
-                        });
-                    });
-            });
+
+            return $q.all(instancesToSavePromises)
+                .then(function (results) {
+                    
+
+                }).then(function (savedInstances) {
+                    //updating the model, only if save is actually performed
+                    metadataModel.applications = savedInstances[0];
+                    defer.resolve();
+                });
         },
 
         initAndCacheFromDB: function () {

@@ -275,7 +275,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             var deferred = dispatcherService.loadBaseDeferred();
             var promise = deferred.promise;
             persistence.flush(function () {
-                deferred.resolve();
+                deferred.resolve(objArray);
             });
             return promise;
 
