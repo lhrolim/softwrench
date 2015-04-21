@@ -160,6 +160,7 @@ input.ng-dirty.ng-invalid {
     messagesection .alerts {
         position: relative;
         z-index: 1000;
+        width: 100%;
     }
 
     messagesection .alert {
