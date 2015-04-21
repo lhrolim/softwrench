@@ -64,7 +64,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// <param name="request"></param>
         /// <returns></returns>
         [NotNull]
-        public IApplicationResponse Get(string application, [FromUri] DataRequestAdapter request, string transactionType = null) {
+        public IApplicationResponse Get(string application, [FromUri] DataRequestAdapter request) {
             var user = SecurityFacade.CurrentUser();
             if (null == user) {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
@@ -88,7 +88,7 @@ namespace softWrench.sW4.Web.Controllers {
                 var fields = ((ApplicationDetailResult) response).ResultObject.Fields;
                 var data = JsonConvert.SerializeObject(fields);
                 _auditManager.CreateAuditEntry(
-                    transactionType ?? "crud_read",
+                    request.TransactionType ?? "crud_read",
                     applicationMetadata.Name,
                     request.Id,
                     data,
