@@ -156,6 +156,7 @@ namespace softWrench.sW4.Web {
                 }
             }
             
+            // TODO: This is commented out because it is causing an issue with SWWEB. Consider placing it in web.config? 
             // Context.Response.AddHeader("Access-Control-Allow-Origin", "*");
 
         }
