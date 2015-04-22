@@ -82,20 +82,6 @@ namespace softWrench.sW4.Web.Controllers {
             var schemaMode = request.Key.Mode ?? response.Schema.Mode;
             response.Mode = schemaMode.ToString().ToLower();
 
-            
-            if (applicationMetadata.AuditFlag && applicationMetadata.Schema.Stereotype == SchemaStereotype.Detail)
-            {
-                var fields = ((ApplicationDetailResult) response).ResultObject.Fields;
-                var data = JsonConvert.SerializeObject(fields);
-                _auditManager.CreateAuditEntry(
-                    request.TransactionType ?? "crud_read",
-                    applicationMetadata.Name,
-                    request.Id,
-                    data,
-                    DateTime.Now.FromServerToRightKind());
-
-            }
-
             return response;
         }
 

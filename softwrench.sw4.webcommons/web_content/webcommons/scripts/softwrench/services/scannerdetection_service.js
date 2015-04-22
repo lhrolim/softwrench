@@ -43,7 +43,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
             var application = 'asset';
             var detail = 'detail';
             var mode = 'input';
-            param.transactionType = "scan";
+            param.scanmode = true;
 
             redirectService.goToApplicationView(application, detail, mode, null, param, null);
         });
@@ -260,7 +260,8 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                             var httpParameters = {
                                 application: "asset",
                                 currentSchemaKey: "detail.input.web",
-                                platform: "web"
+                                platform: "web",
+                                scanmode: true
                             };
                             var urlToUse = url("/api/data/asset/" + datamap["assetid"] + "?" + $.param(httpParameters));
                             $http.put(urlToUse, jsonString).success(function () {

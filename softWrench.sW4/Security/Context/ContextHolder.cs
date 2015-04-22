@@ -22,6 +22,10 @@ namespace softWrench.sW4.Security.Context {
 
         public string Module { get; set; }
 
+        public bool PrintMode { get; set; }
+
+        public bool ScanMode { get; set; }
+
         public ApplicationLookupContext ApplicationLookupContext { get; set; }
 
         public ConditionMatch ProfileMatches(int? storedProfile) {
