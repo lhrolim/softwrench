@@ -155,7 +155,8 @@ namespace softWrench.sW4.Web {
                     Context.Response.RedirectLocation += "&timeout=true";
                 }
             }
-            Context.Response.AddHeader("Access-Control-Allow-Origin", "*");
+            
+            // Context.Response.AddHeader("Access-Control-Allow-Origin", "*");
 
         }
 
