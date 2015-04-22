@@ -170,11 +170,11 @@
     <application entity="SR" name="servicerequest" title="Service Request">
       <schemas>
         <schema id="newdetail" platform="web" redeclaring="false">
-          <!--<customization position="classstructureid"></customization>-->
+          <customization position="classstructureid"></customization>
           <customization position="saddresscode"></customization>
         </schema>
         <schema id="editdetail" platform="web" redeclaring="false">
-          <!--<customization position="classstructureid"></customization>-->
+          <customization position="classstructureid"></customization>
           <customization position="saddresscode"></customization>
         </schema>
       </schemas>
