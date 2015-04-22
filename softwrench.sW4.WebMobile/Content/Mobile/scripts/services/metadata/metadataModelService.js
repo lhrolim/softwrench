@@ -67,9 +67,8 @@
 
             return $q.all(instancesToSavePromises)
                 .then(function (results) {
-                    
-
-                }).then(function (savedInstances) {
+                return $q.all([swdbDAO.bulkSave(results), swdbDAO.bulkDelete(instancesToDelete)]);
+            }).then(function (savedInstances) {
                     //updating the model, only if save is actually performed
                     metadataModel.applications = savedInstances[0];
                     defer.resolve();
