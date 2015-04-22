@@ -134,7 +134,7 @@
         <attribute name="class"  type="varchar" required="true" />
       </attributes>
       <relationships>
-        <relationship to="longdescription" >
+        <relationship to="longdescription" qualifier="worklogdesc">
           <relationshipAttribute from="worklogid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKLOG" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
@@ -651,7 +651,7 @@
         </list>
         <detail redeclaring="false">
           <customization position="description"/>
-          <customization position="longdescription_.ldtext">
+          <customization position="worklogdesc_.ldtext">
             <field attribute="zzz" hidden="true"/>
             <reference id="test4"/>
           </customization>

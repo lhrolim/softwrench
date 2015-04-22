@@ -37,7 +37,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         ///  public delegate byte[] Base64Delegate(string attachmentData);
         public delegate IList<IApplicationAttributeDisplayable> LazyFkResolverDelegate(ApplicationSchemaDefinition definition);
 
-        public delegate IEnumerable<IApplicationDisplayable> LazyComponentDisplayableResolver(ReferenceDisplayable reference, ApplicationSchemaDefinition schema,IEnumerable<DisplayableComponent> components);
+        public delegate IEnumerable<IApplicationDisplayable> LazyComponentDisplayableResolver(ReferenceDisplayable reference, ApplicationSchemaDefinition schema, IEnumerable<DisplayableComponent> components);
 
         [JsonIgnore]
         public ApplicationSchemaDefinition.LazyFkResolverDelegate FkLazyFieldsResolver;
@@ -74,7 +74,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private IDictionary<string, ISet<string>> _depandantFields = new Dictionary<string, ISet<string>>();
 
-        private IDictionary<string, string> _properties = new Dictionary<string, string>();
+        private readonly IDictionary<string, string> _properties = new Dictionary<string, string>();
 
 
         public ICollection<string> _fieldWhichHaveDeps = new HashSet<string>();
@@ -105,7 +105,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             SchemaMode? mode, ClientPlatform? platform, bool @abstract,
             List<IApplicationDisplayable> displayables, IDictionary<string, string> schemaProperties,
             ApplicationSchemaDefinition parentSchema, ApplicationSchemaDefinition printSchema, ApplicationCommandSchema commandSchema,
-            string idFieldName, string userIdFieldName, string unionSchema, ISet<ApplicationEvent> events = null) {
+            string idFieldName, string userIdFieldName, string unionSchema, IEnumerable<ApplicationEvent> events = null) {
             if (displayables == null) throw new ArgumentNullException("displayables");
 
             ApplicationName = applicationName;
@@ -120,7 +120,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             Mode = mode;
             CommandSchema = commandSchema;
             Title = title;
-            _properties = schemaProperties;
+            if (schemaProperties != null) {
+                _properties = schemaProperties;
+            }
+
             IdFieldName = idFieldName;
             UserIdFieldName = userIdFieldName;
             UnionSchema = unionSchema;

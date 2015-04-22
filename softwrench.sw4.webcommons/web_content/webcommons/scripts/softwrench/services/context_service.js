@@ -1,6 +1,4 @@
-﻿var app = angular.module('sw_layout');
-
-app.factory('contextService', function ($rootScope) {
+﻿modules.webcommons.factory('contextService', function ($rootScope) {
 
     return {
         //using sessionstorage instead of rootscope, as the later would be lost upon F5.

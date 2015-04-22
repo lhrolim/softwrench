@@ -13,7 +13,7 @@
   <!--in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
   <property key="defaultOrgId" value="SWGORG"/>
-  <property key="defaultSiteId" value="SWGSITE"/>
+  <property key="defaultSiteId" value="CORP"/>
   <property key="defaultStoreloc" value="HQ"/>
   <property key="sourcemapping" value="maximo7.5"/>
   <!--
@@ -27,8 +27,8 @@
   <property key="email.stmp.enableSSL" value="false"/>
   <property key="notifications.activityStream.enabled" value="true"/>
 
-  <environment key="dev">
-    <property key="basewsURL" value="http://10.50.100.153/meaweb/wsdl/" />
+  <environment key="uat">
+    <property key="basewsURL" value="http://10.50.100.155/meaweb/wsdl/" />
     <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=SWG75DEV;User Id=MAXIMO;password=MAXIMO;" />
     <property key="swdb_url" value="Data Source=10.50.100.51;Initial Catalog=SWDB_SWG75DEV;User Id=sw;password=softwrench;" />   
   </environment>
