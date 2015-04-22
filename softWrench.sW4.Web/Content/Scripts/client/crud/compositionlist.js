@@ -373,6 +373,7 @@ app.directive('compositionList', function (contextService, formatService) {
 
                 $scope.isReadOnly = !updating;
 
+                // Remove new entries from being added
                 $scope.newDetail = false;
                 $scope.selecteditem = null;
 
@@ -380,7 +381,6 @@ app.directive('compositionList', function (contextService, formatService) {
                 for (var detailkey in $scope.detailData) {
                     $scope.detailData[detailkey].expanded = false;
                 }
-
 
                 var compositionId = item[$scope.compositionlistschema.idFieldName];
                 var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;

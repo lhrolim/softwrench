@@ -22,7 +22,10 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
                 }
 
                 imgHolder.bind('paste', function (event) {
-                    fn.handleImgHolderPaste(this, event.originalEvent, isRichTextBox);
+                    if ($rootScope.screenshotTimestamp == null || $rootScope.screenshotTimestamp !== event.originalEvent.timeStamp) {
+                        $rootScope.screenshotTimestamp = event.originalEvent.timeStamp;
+                        fn.handleImgHolderPaste(this, event.originalEvent, isRichTextBox);
+                    }
                 });
 
                 imgHolder.bind('blur', function (event) {
