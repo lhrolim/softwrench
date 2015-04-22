@@ -138,6 +138,15 @@
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\js\ionic.js" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\js\ionic.min.js" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\version.json" />
+    <Content Include="Content\Vendor\scripts\angular-animate.js" />
+    <Content Include="Content\Vendor\scripts\angular-sanitize.js" />
+    <Content Include="Content\Vendor\scripts\angular-ui-router.js" />
+    <Content Include="Content\Vendor\scripts\angular.js" />
+    <Content Include="Content\Vendor\scripts\jquery.js" />
+    <Content Include="Content\Vendor\scripts\ng-cordova.js" />
+    <Content Include="Content\Vendor\scripts\persistence.js" />
+    <Content Include="Content\Vendor\scripts\persistence.store.sql.js" />
+    <Content Include="Content\Vendor\scripts\persistence.store.websql.js" />
     <Content Include="tests\services\dashboardaux_service_test.js" />
     <Folder Include="Content\Shared\webcommons\scripts\vendor\" />
     <Folder Include="images\" />
