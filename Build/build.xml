@@ -55,7 +55,7 @@
 
   
 
-  <target name="fulldeploy" depends="compile,copydlls,deploy"/>
+  <target name="fulldeploy" depends="compile,copydlls,copylinkedfolders,deploy"/>
 
   <target name="fullbuildlocal" depends="compile,zip"/>
 
