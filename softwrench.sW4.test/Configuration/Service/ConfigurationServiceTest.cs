@@ -51,10 +51,49 @@ namespace softwrench.sW4.test.Configuration.Service {
             };
 
         private readonly IEnumerable<PropertyValue> _list1ProfileNoModule = new List<PropertyValue>
-            {
-                new PropertyValue {Value = "1",UserProfile = 2},
-            };
+        {
+            new PropertyValue {Value = "1", UserProfile = 2},
+        };
 
+        [TestMethod]
+        public void _OnlineConditionsOnly()
+        {
+            var context = new ContextHolder { ApplicationLookupContext = new ApplicationLookupContext { OfflineOnly = false } };
+            IEnumerable<PropertyValue> offlineModeValues = new List<PropertyValue>
+            {
+                new PropertyValue {Value = "1", Condition = new WhereClauseCondition{AppContext = new ApplicationLookupContext{OfflineOnly = true}}},
+                new PropertyValue {Value = "2", Condition = new WhereClauseCondition{AppContext = new ApplicationLookupContext{Schema = "detail", OfflineOnly = true}}},
+                new PropertyValue {Value = "3", Condition = new WhereClauseCondition{AppContext = new ApplicationLookupContext{MetadataId = "zzz", OfflineOnly = true}}}
+            };
+            var result = ConfigurationService.BuildResultValues<string>(offlineModeValues, context);
+            Assert.IsFalse(result.Any());
+        }
+
+        [TestMethod]
+        public void _OfflinePartialMatch()
+        {
+            var context = new ContextHolder { ApplicationLookupContext = new ApplicationLookupContext { OfflineOnly = true } };
+            IEnumerable<PropertyValue> offlineModeValues = new List<PropertyValue>
+            {
+                new PropertyValue {Value = "1", Condition = new WhereClauseCondition{AppContext = new ApplicationLookupContext{ OfflineOnly = false}}},
+            };
+            var result = ConfigurationService.BuildResultValues<string>(offlineModeValues, context);
+            Assert.AreEqual("1", result.First().Value.Value);
+        }
+
+        [TestMethod]
+        public void _MostCorrectCondition()
+        {
+            var context = new ContextHolder { ApplicationLookupContext = new ApplicationLookupContext { MetadataId = "zzz", OfflineOnly = true } };
+            IEnumerable<PropertyValue> values = new List<PropertyValue>
+            {
+                new PropertyValue {Value = "1", Condition = new WhereClauseCondition{AppContext = new ApplicationLookupContext{MetadataId = "zzz", OfflineOnly = false}}},
+                new PropertyValue {Value = "2", Condition = new WhereClauseCondition{AppContext = new ApplicationLookupContext{MetadataId = "zzz", OfflineOnly = true}}}
+            };
+            var result = ConfigurationService.BuildResultValues<string>(values, context);
+            Assert.AreEqual("2", result.First().Value.Value);
+        }
+            
         [TestMethod]
         public void _2ConditionsOneWithModuleAnotherWithout_returnDefault() {
             var context = new ContextHolder();
@@ -222,6 +261,20 @@ namespace softwrench.sW4.test.Configuration.Service {
             var context = new ContextHolder();
             var result = ConfigurationService.BuildResultValues<string>(_list2NoDefault, context);
             Assert.IsFalse(result.Any());
+        }
+
+        [TestMethod]
+        public void GlobalCondition()
+        {
+            var context = new ContextHolder { ApplicationLookupContext = new ApplicationLookupContext { OfflineOnly = true} };
+            IEnumerable<PropertyValue> offlineModeValues = new List<PropertyValue>
+            {
+                new PropertyValue {Value = "1", Condition = new WhereClauseCondition{ AppContext = new ApplicationLookupContext{OfflineOnly = false}}},
+                new PropertyValue {Value = "2", Condition = new WhereClauseCondition{ Global = true, AppContext = new ApplicationLookupContext{OfflineOnly = true}}}
+                
+            };
+            var result = ConfigurationService.BuildResultValues<string>(offlineModeValues, context);
+            Assert.AreEqual("2", result.First().Value.Value);
         }
     }
 }

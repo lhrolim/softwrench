@@ -37,7 +37,7 @@ app.directive('conditionmodal', function (contextService) {
 
             $scope.title = function() {
                 var creating = $scope.condition.id == null;
-                return creating ? "Crete Condition" :"Edit Condition";
+                return creating ? "Create Condition" :"Edit Condition";
             }
 
             $scope.init = function () {
