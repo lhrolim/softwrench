@@ -90,7 +90,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
 
         private static IEnumerable<User> GetUserFromMaximoUsers(IEnumerable<AttributeHolder> maximoUsers) {
             return maximoUsers.Select(maximoUser => new User {
-                UserName = (string)maximoUser.GetAttribute("maxuser_.loginid"),
+                UserName = (string)maximoUser.GetAttribute("maxuser_.loginid") ?? (string)maximoUser.GetAttribute("personid"),
                 Password = null,
                 FirstName = (string)maximoUser.GetAttribute("firstname"),
                 LastName = (string)maximoUser.GetAttribute("lastname"),
@@ -127,7 +127,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         }
 
         private static bool IsValidUser(User.UserNameEqualityUser user) {
-            if (user.user.UserName == "swadmin") {
+            if (user.user.UserName == "swadmin" || user.user.UserName == "swjobuser") {
                 return false;
             }
             var userToIntegrate = user.user;
