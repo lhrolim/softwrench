@@ -3,6 +3,8 @@
   <!--kongsberg-->
   <templates>
     <template path="@worklogs.xml"/>
+
+    <template path="@solution.xml"/>
   </templates>
   <entities>
     <entity name="SR" idAttribute="ticketid">

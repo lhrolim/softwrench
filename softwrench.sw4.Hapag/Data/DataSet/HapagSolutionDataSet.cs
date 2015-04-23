@@ -37,6 +37,11 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             ((ApplicationDetailResult)dataResponse).ResultObject.Attributes["attachment_"] = attachments;
         }
 
+        public override string ClientFilter()
+        {
+            return "hapag";
+        }
+
         public override string ApplicationName() {
             return "solution";
         }
