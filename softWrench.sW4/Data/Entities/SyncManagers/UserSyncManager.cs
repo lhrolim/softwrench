@@ -35,7 +35,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             }
             var usersToSave = ConvertMaximoUsersToUserEntity(attributeHolders);
             SaveOrUpdateUsers(usersToSave);
-            SetRowstampIfBigger(ConfigurationConstants.UserRowstampKey, GetLastRowstamp(attributeHolders), rowstamp);
+            SetRowstampIfBigger(ConfigurationConstants.UserRowstampKey, GetLastRowstamp(attributeHolders, new[] { "rowstamp", "maxuser_.rowstamp","email_.rowstamp","phone_.rowstamp" }), rowstamp);
         }
 
         public static User GetUserFromMaximoByUserName([NotNull] string userName) {
@@ -71,6 +71,10 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             dto.AppendProjectionField(ProjectionField.Default("personid"));
             dto.AppendProjectionField(ProjectionField.Default("maxuser_.defsite"));
             dto.AppendProjectionField(ProjectionField.Default("maxuser_.loginid"));
+            dto.AppendProjectionField(ProjectionField.Default("rowstamp"));
+            dto.AppendProjectionField(ProjectionField.Default("maxuser_.rowstamp"));
+            dto.AppendProjectionField(ProjectionField.Default("email_.rowstamp"));
+            dto.AppendProjectionField(ProjectionField.Default("phone_.rowstamp"));
             return dto;
         }
 
