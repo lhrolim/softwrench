@@ -19,12 +19,21 @@
                     <div class="form-group">
                         <swlabel text="Global?" i18nkey="configuration.condition.global" classes="col-md-5" helptext="
                                  If True this condition could be applied to any where clauses, regardless of the application.
-                                 Only certain fields are available under this mode." />
+                                 Only certain fields are available under this mode."/>
                         <div class="col-md-7">
-                            <input type="checkbox" ng-model="condition.global" ng-change="changeGlobal()" />
+                            <input type="checkbox" ng-model="condition.global" ng-change="changeGlobal()"/>
                         </div>
                     </div>
-                    
+
+                    <div class="form-group">
+                        <swlabel text="Offline Only?" i18nkey="configuration.condition.offlineonly" classes="col-md-5" helptext="
+                                 If True this condition will only be applied in offline mode.
+                                 If false this condition will be applied in both offline and online." />
+                        <div class="col-md-7">
+                            <input type="checkbox" ng-model="condition.appContext.offlineOnly" />
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <swlabel text="Metadata Id" i18nkey="configuration.condition.appContext.metadataid" classes="col-md-5" helptext="This is an optional identifier of the condition that could be used to refer to it later anywhere in the code" />
                         <div class="col-md-7">
@@ -83,13 +92,13 @@
 <!--                            </div>-->
 <!--                        </div>-->
 
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <swlabel text="Attribute" i18nkey="configuration.condition.attribute" classes="col-md-5"
                                      helptext="Apply this whereclause only if the query relates to a given attribute on screen. EX: 2 different associations to assets, apply whereclause only in one of them" />
                             <div class="col-md-7">
                                 <input class="form-control" ng-model="condition.appContext.attribute" />
                             </div>
-                        </div>
+                        </div>-->
 
                     </div>
 
