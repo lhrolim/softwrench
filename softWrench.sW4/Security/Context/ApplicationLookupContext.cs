@@ -46,6 +46,7 @@ namespace softWrench.sW4.Security.Context {
                 .Append(con.Calculate(ParentSchema, c.ParentSchema))
                 .Append(con.Calculate(ParentMode, c.ParentMode))
                 .Append(con.Calculate(AttributeName, c.AttributeName))
+                // OfflineOnly == false means that the condition should be avilable to both online and offline modes.
                 .Append(con.Calculate(OfflineOnly ? OfflineOnly.ToString() : null, c.OfflineOnly.ToString()));
         }
 
