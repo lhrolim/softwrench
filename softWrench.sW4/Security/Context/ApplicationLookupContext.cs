@@ -31,8 +31,7 @@ namespace softWrench.sW4.Security.Context {
         [Property]
         public virtual string MetadataId { get; set; }
 
-        [Property(TypeType = typeof(BooleanToIntUserType))]
-        public bool OfflineOnly { get; set; }
+       
 
         public ConditionMatchResult MatchesCondition(ConditionMatchResult result, ContextHolder context) {
             var c = context.ApplicationLookupContext;
@@ -45,20 +44,21 @@ namespace softWrench.sW4.Security.Context {
                 .Append(con.Calculate(ParentApplication, c.ParentApplication))
                 .Append(con.Calculate(ParentSchema, c.ParentSchema))
                 .Append(con.Calculate(ParentMode, c.ParentMode))
-                .Append(con.Calculate(AttributeName, c.AttributeName))
-                // OfflineOnly == false means that the condition should be avilable to both online and offline modes.
-                .Append(con.Calculate(OfflineOnly ? OfflineOnly.ToString() : null, c.OfflineOnly.ToString()));
+                .Append(con.Calculate(AttributeName, c.AttributeName));
+            // OfflineOnly == false means that the condition should be avilable to both online and offline modes.
+            //.Append(con.Calculate(OfflineOnly ? OfflineOnly.ToString() : null, c.OfflineOnly.ToString()));
         }
 
         private bool NullOrEqual(string conditionString, string contextString) {
             return conditionString == null || conditionString == contextString;
         }
 
-        protected bool Equals(ApplicationLookupContext other) {
+        protected bool Equals(ApplicationLookupContext other)
+        {
             return string.Equals(Mode, other.Mode) && string.Equals(Schema, other.Schema)
-                && string.Equals(ParentApplication, other.ParentApplication) && string.Equals(ParentSchema, other.ParentSchema)
-                && string.Equals(AttributeName, other.AttributeName) && string.Equals(ParentMode, other.ParentMode)
-                && string.Equals(MetadataId, other.MetadataId) && string.Equals(OfflineOnly, other.OfflineOnly);
+                   && string.Equals(ParentApplication, other.ParentApplication) &&
+                   string.Equals(ParentSchema, other.ParentSchema)
+                   && string.Equals(AttributeName, other.AttributeName) && string.Equals(ParentMode, other.ParentMode);
         }
 
         public override bool Equals(object obj) {
@@ -76,7 +76,6 @@ namespace softWrench.sW4.Security.Context {
                 hashCode = (hashCode * 397) ^ (ParentSchema != null ? ParentSchema.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (AttributeName != null ? AttributeName.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (ParentMode != null ? ParentMode.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (OfflineOnly.GetHashCode());
                 hashCode = (hashCode * 397) ^ (MetadataId != null ? MetadataId.GetHashCode() : 0);
                 return hashCode;
             }
@@ -84,7 +83,7 @@ namespace softWrench.sW4.Security.Context {
 
         public override string ToString() {
             return string.Format("Mode: {0}, Schema: {1}, ParentApplication: {2}, ParentSchema: {3}, ParentMode: {4}, AttributeName: {5}, MetadataId: {6}, OfflineOnly: {7}",
-                Mode, Schema, ParentApplication, ParentSchema, ParentMode, AttributeName, MetadataId, OfflineOnly);
+                Mode, Schema, ParentApplication, ParentSchema, ParentMode, AttributeName, MetadataId);
         }
 
         //        private bool NullContext(ApplicationLookupContext c) {

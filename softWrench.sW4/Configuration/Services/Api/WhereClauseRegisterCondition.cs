@@ -10,7 +10,7 @@ namespace softWrench.sW4.Configuration.Services.Api {
     public class WhereClauseRegisterCondition : WhereClauseCondition {
         public String Module { get; set; }
         public String UserProfile { get; set; }
-
+        
         public Condition RealCondition {
             get {
                 if (Alias == null) {
