@@ -130,7 +130,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             var syncOk = DoSync(attributeHolders, users, groups);
 
             //If the sync was not ok, try it again later
-            SetRowstampIfBigger(ConfigurationConstants.PersonGroupAssociationRowstampKey, syncOk ? GetLastRowstamp(attributeHolders) : null, rowstamp);
+            SetRowstampIfBigger(ConfigurationConstants.PersonGroupAssociationRowstampKey, syncOk ? GetLastRowstamp(attributeHolders, new[] { "rowstamp","rowstamp1" }) : null, rowstamp);
         }
 
         private static SearchRequestDto GetPersonGroupSearchDTO() {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
@@ -35,7 +36,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             }
             var usersToSave = ConvertMaximoUsersToUserEntity(attributeHolders);
             SaveOrUpdateUsers(usersToSave);
-            SetRowstampIfBigger(ConfigurationConstants.UserRowstampKey, GetLastRowstamp(attributeHolders), rowstamp);
+            SetRowstampIfBigger(ConfigurationConstants.UserRowstampKey, GetLastRowstamp(attributeHolders, new[] { "rowstamp", "maxuser_.rowstamp", "email_.rowstamp", "phone_.rowstamp" }), rowstamp);
         }
 
         public static User GetUserFromMaximoByUserName([NotNull] string userName) {
@@ -71,6 +72,10 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             dto.AppendProjectionField(ProjectionField.Default("personid"));
             dto.AppendProjectionField(ProjectionField.Default("maxuser_.defsite"));
             dto.AppendProjectionField(ProjectionField.Default("maxuser_.loginid"));
+            dto.AppendProjectionField(ProjectionField.Default("rowstamp"));
+            dto.AppendProjectionField(ProjectionField.Default("maxuser_.rowstamp"));
+            dto.AppendProjectionField(ProjectionField.Default("email_.rowstamp"));
+            dto.AppendProjectionField(ProjectionField.Default("phone_.rowstamp"));
             return dto;
         }
 
@@ -90,7 +95,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
 
         private static IEnumerable<User> GetUserFromMaximoUsers(IEnumerable<AttributeHolder> maximoUsers) {
             return maximoUsers.Select(maximoUser => new User {
-                UserName = (string)maximoUser.GetAttribute("maxuser_.loginid"),
+                UserName = (string)maximoUser.GetAttribute("maxuser_.loginid") ?? (string)maximoUser.GetAttribute("personid"),
                 Password = null,
                 FirstName = (string)maximoUser.GetAttribute("firstname"),
                 LastName = (string)maximoUser.GetAttribute("lastname"),
@@ -127,9 +132,10 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         }
 
         private static bool IsValidUser(User.UserNameEqualityUser user) {
-            if (user.user.UserName == "swadmin") {
+            if (user.user.UserName.EqualsAny("swadmin", "swjobuser")) {
                 return false;
             }
+
             var userToIntegrate = user.user;
             // todo: remove temporary validation solution
             if (string.IsNullOrEmpty(userToIntegrate.FirstName)) {
@@ -145,6 +151,9 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                     !string.IsNullOrEmpty(userToIntegrate.LastName) &&
                     !string.IsNullOrEmpty(userToIntegrate.MaximoPersonId)
                 );
+            if (!isValid) {
+                Log.DebugFormat("ignoring person {0}", userToIntegrate.MaximoPersonId);
+            }
             return isValid;
         }
 

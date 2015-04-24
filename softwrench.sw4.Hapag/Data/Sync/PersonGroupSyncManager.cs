@@ -39,7 +39,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             var personGroupToSave = ConvertMaximoPersonGroupToPersonGroupEntity(attributeHolders);
             var resultList = SaveOrUpdatePersonGroup(personGroupToSave);
             _hlagLocationManager.UpdateCache(resultList);
-            SetRowstampIfBigger(ConfigurationConstants.PersonGroupRowstampKey, GetLastRowstamp(attributeHolders), rowstamp);
+            SetRowstampIfBigger(ConfigurationConstants.PersonGroupRowstampKey, GetLastRowstamp(attributeHolders,new[]{"rowstamp"}), rowstamp);
         }
 
 
