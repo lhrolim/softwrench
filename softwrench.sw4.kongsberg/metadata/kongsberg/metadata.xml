@@ -3,7 +3,6 @@
   <!--kongsberg-->
   <templates>
     <template path="@worklogs.xml"/>
-
     <template path="@solution.xml"/>
   </templates>
   <entities>
@@ -2242,26 +2241,6 @@
           <field attribute="personid" label="Labor:"  requiredexpression="true" />
           <field hidden="true" label="Person:" attribute="person_.displayname" />
           <association label="Person:" target="personid" labelfield="person.displayname" />
-        </detail>
-      </schemas>
-    </application>
-
-    <application name="solution" title="solution" entity="solution">
-      <properties>
-        <property key ="icon.composition.tab" value="fa fa-book"/>
-      </properties>
-      <schemas>
-        <schema id="list" stereotype="compositionlist" >
-          <field attribute="solution" label="Solution No"/>
-          <field attribute="description" label="Description"/>
-
-        </schema>
-        <detail stereotype="compositiondetail">
-          <field attribute="solution" label="Solution No" readonly="true"/>
-          <field attribute="problemcode" label="Symptom:" />
-          <field attribute="fr1code" label="Cause:" />
-          <field attribute="fr2code" label="Resolution:" />
-
         </detail>
       </schemas>
     </application>
