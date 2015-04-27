@@ -19,17 +19,16 @@
       server is set to, refer to the maximoutc.txt in the doc folder for 
       a list of accepted values
   -->
-  <property key="maximoutc" value="US Mountain Standard Time"/>
+  <property key="maximoutc" value="Mountain Standard Time"/>
   <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>
   <!--property key="email.smtp.port" value="587"/-->
   <property key="email.stmp.enableSSL" value="false"/>
   <property key="notifications.activityStream.enabled" value="true"/>
 
-  <!--Needs to be updated when information is available-->
   <environment key="uat">
     <property key="basewsURL" value="http://10.50.100.125:9080/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=10.50.100.125;Initial Catalog=SWMAX;User Id=MAXIMO;password=MAXIMO;" />
-    <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX_Cmt;User Id=sw;password=softwrench;" />
+    <property key="swdb_url" value="Data Source=10.50.100.54;Initial Catalog=SWDB_ENT75MAX;User Id=sw;password=softwrench;" />
+    <property key="maximo_DB_url" value="Data Source=10.50.100.54;Initial Catalog=ENT75MAX;User Id=MAXIMO;password=MAXIMO;" />
   </environment>
 
   <environment key="prod">
