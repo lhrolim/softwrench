@@ -11,7 +11,29 @@
 
     <!--Inventory-->
     <template path="@inventory.xml"/>
-
+    
   </templates>
 
+  <applications>
+    <application entity="SR" name="servicerequest" title="Service Request">
+      <schemas>
+        <schema id="newdetail" platform="web" redeclaring="false">
+          <customization position="classstructureid"></customization>
+        </schema>
+        <schema id="editdetail" platform="web" redeclaring="false">
+          <customization position="classstructureid"></customization>
+        </schema>
+      </schemas>
+    </application>
+    <application entity="workorder" name="workorder" title="Work Order">
+      <schemas>
+        <schema id="newdetail" platform="web" redeclaring="false">
+          <customization position="classstructureid"></customization>
+        </schema>
+        <schema id="editdetail" platform="web" redeclaring="false">
+          <customization position="classstructureid"></customization>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
 </metadata>
