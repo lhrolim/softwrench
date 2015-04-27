@@ -31,7 +31,7 @@ namespace softWrench.sW4.Metadata.Menu {
             var menuElement = document.Root;
             if (null == menuElement) throw new InvalidDataException();
 
-            var displacement = menuElement.Attribute(XmlMenuMetadataSchema.MenuDisplacementAttribute).ValueOrDefault("vertical");
+            var displacement = menuElement.Attribute(XmlMenuMetadataSchema.MenuDisplacementAttribute).ValueOrDefault("horizontal");
             var indexItem = menuElement.Attribute(XmlMenuMetadataSchema.MenuIndexItemAttribute).ValueOrDefault((string)null);
             var childs = menuElement.Elements();
             var leafs = new List<MenuBaseDefinition>();
