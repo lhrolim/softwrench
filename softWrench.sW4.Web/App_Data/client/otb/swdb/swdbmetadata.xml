@@ -186,7 +186,7 @@
       </schemas>
     </application>
 
-    <application name="ProblemItens" entity="BatchItemProblem" title="Batch Problems">
+    <application name="ProblemItems" entity="BatchItemProblem" title="Batch Problems">
       <schemas>
         <schema id="list" stereotype="compositionlist">
           <field attribute="itemid" label="Item Id"/>
@@ -194,6 +194,30 @@
         </schema>
       </schemas>
     </application>
+    
+  <application name="SoftwrenchError" entity="Problem" title="Softwrench Error">
+    <schemas>
+      <schema id="list" stereotype="list">
+        <field attribute="Id" hidden="true"/>
+        <field attribute="RecordType" label="Error Type"/>
+        <field attribute="RecordId" label="Record ID"/>
+        <field attribute="Description" label="Description"/>
+        <field attribute="CreatedDate" label="Error Date"/>
+        <field attribute="CreatedBy" label="Created By"/>
+        <field attribute="Assignee" label="Assignee"/>
+        <field attribute="Priority" label="Priority"/>
+        <field attribute="Status" label="Status"/>
+      </schema>
+    
+      <schema id="detail" stereotype="detail">
+        <field attribute="Id" hidden="true"/>
+        <field attribute="RecordType" label="Error Type"/>
+        <field attribute="RecordId" label="Record ID"/>
+        <field attribute="Description" label="Description"/>
+        <field attribute="Data" label="Data"/>
+      </schema>
+    </schemas>
+  </application>
 
   </applications>
 </metadata>

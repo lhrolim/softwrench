@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Persistence.Relational;
@@ -13,15 +14,18 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Entities;
 using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Util;
+using softwrench.sw4.problem.classes;
 
 namespace softWrench.sW4.Data.Entities.SyncManagers {
     public class UserSyncManager : AMaximoRowstampManager, IUserSyncManager {
 
         private const string EntityName = "person";
+        private static IProblemManager _problemManager;
 
-
-        public UserSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade, EntityRepository repository)
-            : base(dao, facade, repository) {
+        public UserSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade, EntityRepository repository, IProblemManager ProblemManager)
+            : base(dao, facade, repository)
+        {
+            _problemManager = ProblemManager;
         }
 
         [CanBeNull]
@@ -151,7 +155,12 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                     !string.IsNullOrEmpty(userToIntegrate.LastName) &&
                     !string.IsNullOrEmpty(userToIntegrate.MaximoPersonId)
                 );
-            if (!isValid) {
+            if (!isValid)
+            {
+                var jsonUser = JsonConvert.SerializeObject(userToIntegrate);
+                _problemManager.Register("UserSync", "", jsonUser, DateTime.Now, 
+                    "SWADMIN", "", 1, "", "Error syncing user", "", "", "OPEN");
+
                 Log.DebugFormat("ignoring person {0}", userToIntegrate.MaximoPersonId);
             }
             return isValid;
