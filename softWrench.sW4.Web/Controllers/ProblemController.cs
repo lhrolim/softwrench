@@ -27,4 +27,14 @@ namespace softWrench.sW4.Web.Controllers {
         } 
 
     }
+
+    public class ProblemDto {
+        private ICollection<Problem> _problems;
+
+        public ICollection<Problem> Problems {
+            get { return _problems; }
+            set { _problems = value; }
+        }
+
+    }
 }

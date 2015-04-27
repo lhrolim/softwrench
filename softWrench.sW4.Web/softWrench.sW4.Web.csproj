@@ -267,6 +267,7 @@
     <Compile Include="Controllers\ExtendedDataController.cs" />
     <Compile Include="Controllers\Log\LogAdminController.cs" />
     <Compile Include="Controllers\MenuHelper\MenuHelper.cs" />
+    <Compile Include="Controllers\ProblemController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ReportFilterController.cs" />
     <Compile Include="Controllers\Routing\RouterParameters.cs" />
@@ -1343,6 +1344,10 @@
     <ProjectReference Include="..\softwrench.sw4.manchester\softwrench.sw4.manchester.csproj">
       <Project>{75C4B153-E741-4D16-9F10-96B2F6335331}</Project>
       <Name>softwrench.sw4.manchester</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.problem\softwrench.sw4.problem.csproj">
+      <Project>{8062dce9-1422-4ca7-8004-ffa7794a6516}</Project>
+      <Name>softwrench.sw4.problem</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
