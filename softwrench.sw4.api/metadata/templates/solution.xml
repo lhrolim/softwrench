@@ -2,12 +2,33 @@
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
   <entities>
-    <entity name="solution" idAttribute="solution">
+    <entity name="solution" idAttribute="solutionid" useridAttribute="solution">
       <relationships>
-        <relationship to="classstructure" qualifier="classstructure">
-          <relationshipAttribute from="classstructureid" to ="classstructureid" primary="true"/>
+        <relationship to="longdescription" qualifier="symptom">
+          <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="SOLUTION" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="PROBLEMCODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="cause">
+          <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="SOLUTION" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR1CODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="longdescription" qualifier="resolution">
+          <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="SOLUTION" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="FR2CODE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="DOCLINKS" qualifier="attachment" collection="true">
+          <relationshipAttribute from="solutionid" to="ownerid" primary="true"/>
+          <relationshipAttribute to="ownertable" literal="SOLUTION" quoteLiteral="true"/>
         </relationship>
       </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="solution" />
+        <connectorParameter key="integration_interface" value="SWSOLUTION" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseSolutionCrudConnector" />
+      </connectorParameters>
     </entity>
   </entities>
 
@@ -47,11 +68,15 @@
 
         <schema id="editdetail" stereotype="detail" platform="web">
           <field attribute="solution" label="Solution No" readonly="true"/>
-          <field attribute="problemcode" label="Symptom:" />
-          <field attribute="fr1code" label="Cause:">
+          <field attribute="status" label="Status"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="symptom_.ldtext" label="Symptom:">
             <renderer type="richtext"/>
           </field>
-          <field attribute="fr2code" label="Resolution:">
+          <field attribute="cause_.ldtext" label="Cause:">
+            <renderer type="richtext"/>
+          </field>
+          <field attribute="resolution_.ldtext" label="Resolution:">
             <renderer type="richtext"/>
           </field>
         </schema>
