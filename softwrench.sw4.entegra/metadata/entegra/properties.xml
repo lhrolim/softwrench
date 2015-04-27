@@ -10,9 +10,9 @@
   <property key="maxScreenshotSize" value="5"/>
   <!-- in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
-  <property key="defaultOrgId" value="EAGLENA"/>
-  <property key="defaultSiteId" value="BEDFORD"/>
-  <property key="defaultStoreloc" value="CENTRAL"/>
+  <property key="defaultOrgId" value="ENTEGRA"/>
+  <property key="defaultSiteId" value="CORP"/>
+  <property key="defaultStoreloc" value="UNIONCS"/>
   <property key="sourcemapping" value="maximo7.5"/>
   <!--
       maximoutc property set to the full name of the timezone the maximo 
@@ -25,6 +25,7 @@
   <property key="email.stmp.enableSSL" value="false"/>
   <property key="notifications.activityStream.enabled" value="true"/>
 
+  <!--Needs to be updated when information is available-->
   <environment key="uat">
     <property key="basewsURL" value="http://10.50.100.125:9080/meaweb/wsdl/" />
     <property key="maximo_DB_url" value="Data Source=10.50.100.125;Initial Catalog=SWMAX;User Id=MAXIMO;password=MAXIMO;" />
@@ -32,9 +33,9 @@
   </environment>
 
   <environment key="prod">
-    <property key="basewsURL" value="http://10.50.100.125:9080/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=10.111.10.93;Initial Catalog=MAXPRD75;User Id=MAXIMO;password=maximo75;" />
-    <property key="swdb_url" value="Data Source=10.111.10.93;Initial Catalog=SWDB_MAXPRD75;User Id=sw;password=:$0ftWr3nch;" />
+    <property key="basewsURL" value="http://10.111.10.93:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=10.11.10.94;Initial Catalog=MAXPRD75;User Id=MAXIMO;password=M@ximo14;" />
+    <property key="swdb_url" value="Data Source=10.11.10.94;Initial Catalog=SWDB_MAXPRD75;User Id=sw;password=:$0ftWr3nch;" />
   </environment>
 
 </Properties>
