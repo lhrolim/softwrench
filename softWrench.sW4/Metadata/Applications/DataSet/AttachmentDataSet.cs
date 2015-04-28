@@ -19,7 +19,8 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
 
         public override SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData) {
-            return Engine().Sync(applicationMetadata, applicationSyncData,AttachmentSyncDelegate);
+            return Engine().
+                Sync(applicationMetadata, applicationSyncData,AttachmentSyncDelegate);
         }
 
         public override string ApplicationName() {

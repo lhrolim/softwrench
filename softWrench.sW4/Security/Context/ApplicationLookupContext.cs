@@ -82,7 +82,7 @@ namespace softWrench.sW4.Security.Context {
         }
 
         public override string ToString() {
-            return string.Format("Mode: {0}, Schema: {1}, ParentApplication: {2}, ParentSchema: {3}, ParentMode: {4}, AttributeName: {5}, MetadataId: {6}, OfflineOnly: {7}",
+            return string.Format("Mode: {0}, Schema: {1}, ParentApplication: {2}, ParentSchema: {3}, ParentMode: {4}, AttributeName: {5}, MetadataId: {6}",
                 Mode, Schema, ParentApplication, ParentSchema, ParentMode, AttributeName, MetadataId);
         }
 

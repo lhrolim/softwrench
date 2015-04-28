@@ -61,7 +61,7 @@ namespace softWrench.sW4.Data.Persistence.Sync {
             //            HandleRelationships(appMetadata, entitiesDictionary);
             var resultingRowstamps = new Rowstamps(rowStamps.First().ToString(CultureInfo.InvariantCulture), rowStamps.Last().ToString(CultureInfo.InvariantCulture));
             var synchronizationData = new SynchronizationApplicationData(appMetadata, dataMaps, entityMetadata.ListAssociations(), resultingRowstamps);
-            synchronizationData.DeletedRecordIds = deletedRecordsId;
+            //synchronizationData.DeletedRecordIds = deletedRecordsId;
             return synchronizationData;
         }
 

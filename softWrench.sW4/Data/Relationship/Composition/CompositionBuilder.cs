@@ -41,6 +41,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             if (composition.Collection && applicationCompositionSchema is ApplicationCompositionCollectionSchema) {
                 compositionResult.List = GetListSchema(applicationCompositionSchema, compositionApplication);
                 compositionResult.Print = GetPrintSchema(applicationCompositionSchema, compositionApplication);
+                compositionResult.Sync = GetSyncSchema(applicationCompositionSchema, compositionApplication);
                 var collSchema = (ApplicationCompositionCollectionSchema)applicationCompositionSchema;
                 collSchema.FetchFromServer = ShouldFetchFromServer(compositionResult.Detail, compositionResult.List);
             }
@@ -57,6 +58,21 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             }
             applicationCompositionSchema.Schemas = compositionResult;
             return applicationCompositionSchema;
+        }
+
+        private static ApplicationSchemaDefinition GetSyncSchema(ApplicationCompositionSchema compositionSchema,
+            CompleteApplicationMetadataDefinition compositionApplication) {
+            if (!MetadataProvider.isMobileEnabled()) {
+                return null;
+            }
+
+
+            var applicationSchemaDefinitions = compositionApplication.Schemas();
+            var syncKey = new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.SyncSchema, compositionSchema.RenderMode, ClientPlatform.Web);
+            if (applicationSchemaDefinitions.ContainsKey(syncKey)) {
+                return applicationSchemaDefinitions[syncKey];
+            }
+            return GetDetailSchema(compositionApplication, compositionSchema);
         }
 
         /// <summary>
