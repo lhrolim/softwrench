@@ -127,7 +127,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Incidents" role="itcsearch"
 					 params="id=incidentsearch;application=incident;label=Incident Search;searchFields=ticketid,description" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search Assets" role="itcsearch"
-					 params="id=assetmenusearch;application=asset;label=Asset Search;searchFields=hlagdescription,serialnum,computername" />
+					 params="id=assetmenusearch;application=asset;label=Asset Search;searchFields=assetnum,hlagdescription,serialnum,computername" />
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" tooltip="Search IMACS" role="itcsearch"
 					 params="id=imacsearch;application=imac;label=IMAC Search;searchFields=ticketid,hlagsummary"/>
     <!-- Finish ITC Search -->
@@ -164,7 +164,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<application title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />
 		<divider/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=assetmenusearchcontrol;application=asset;label=Asset Search;
-                 searchFields=hlagdescription,serialnum,computername" tooltip="Search Assets"/>
+                 searchFields=assetnum,hlagdescription,serialnum,computername" tooltip="Search Assets"/>
 	</container>
 
 	<divider role="assetramcontrol"/>
@@ -173,7 +173,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<application title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />
 		<divider/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html"
-							 params="id=assetrammenusearchcontrolram;application=asset;label=Asset Search;searchFields=hlagdescription,serialnum,computername"
+							 params="id=assetrammenusearchcontrolram;application=asset;label=Asset Search;searchFields=assetnum,hlagdescription,serialnum,computername"
 								 tooltip="Search Assets"/>
 	</container>
 
@@ -190,7 +190,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=incidentsearchpur;application=incident;label=Incident Search;
                  searchFields=ticketid,description" tooltip="Search Incidents"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=assetmenusearchpur;application=asset;label=Asset Search;
-                 searchFields=hlagdescription,serialnum,computername" tooltip="Search Assets"/>
+                 searchFields=assetnum,hlagdescription,serialnum,computername" tooltip="Search Assets"/>
 
 	</container>
 
@@ -256,7 +256,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=incidentsearchxitc;application=incident;label=Incident Search;
                  searchFields=ticketid,description" tooltip="Search Incidents"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=assetmenusearchxitc;application=asset;label=Asset Search;
-                 searchFields=hlagdescription,serialnum,computername" tooltip="Search Assets"/>
+                 searchFields=assetnum,hlagdescription,serialnum,computername" tooltip="Search Assets"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=imacsearch_xitc;application=imac;label=IMAC Search;
                  searchFields=ticketid,hlagsummary" tooltip="Search IMACS"/>
 	</container>
@@ -313,7 +313,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchtom;application=problem;label=Problem Search;
                  searchFields=ticketid,description" tooltip="Search Problems"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=assetmenusearchtom;application=asset;label=Asset Search;
-                 searchFields=hlagdescription,serialnum,computername" tooltip="Search Assets"/>
+                 searchFields=assetnum,hlagdescription,serialnum,computername" tooltip="Search Assets"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=imacsearch_tom;application=imac;label=IMAC Search;
                  searchFields=ticketid,hlagsummary" tooltip="Search IMACS"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchtom;application=change;label=Change Search;
@@ -365,7 +365,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=problemsearchitom;application=problem;label=Problem Search;
                  searchFields=ticketid,description" tooltip="Search Problems"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=assetmenusearchitom;application=asset;label=Asset Search;
-                 searchFields=hlagdescription,serialnum,computername" tooltip="Search Assets"/>
+                 searchFields=assetnum,hlagdescription,serialnum,computername" tooltip="Search Assets"/>
     <resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=imacsearchitom;application=imac;label=IMAC Search;
                  searchFields=ticketid,hlagsummary" tooltip="Search IMACS"/>
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html" params="id=changesearchitom;application=change;label=Change Search;
