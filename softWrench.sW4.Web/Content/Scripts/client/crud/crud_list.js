@@ -224,6 +224,7 @@ app.directive('crudList', function (contextService) {
                 }
 
                 $scope.schema = data.schema;
+                $scope.schema.printMode = $scope.printMode;
                 $scope.datamap = data.resultObject;
                 $scope.selectAllChecked = false;
                 if ($rootScope.printRequested !== true) {
@@ -433,6 +434,8 @@ app.directive('crudList', function (contextService) {
                     //if we have a list schema already declared, keep it
                     listSchema = $scope.schema.schemaId;
                 }
+
+                $scope.printMode = printMode;
 
                 var searchPromise = searchService.searchWithData($scope.schema.applicationName, $scope.searchData, listSchema,
                 {
