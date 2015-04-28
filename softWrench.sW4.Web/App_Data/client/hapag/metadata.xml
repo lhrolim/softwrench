@@ -2621,7 +2621,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Asset Details" attribute="description"/>
           <field label="Asset Status" attribute="status"/>
           <field label="Asset Serial Number" attribute="serialnum"/>
-          <section id="assetremarks" resourcepath="/Content/Templates/hapag/assetremarks.html">
+          <section id="assetremarks" resourcepath="/Content/Templates/hapag/assetremarks.html" showexpression="!ctx:InModule(['assetcontrol','assetramcontrol','purchase'])" >
             <header label="Asset Remarks" />
           </section>
           <field label="Purchase Order Number" attribute="assettrans_.ponum"/>
