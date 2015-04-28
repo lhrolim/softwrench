@@ -217,8 +217,14 @@
           <field attribute="data" hidden="true"/>
           <field attribute="#dataasstring" label="Data">
             <renderer type="textarea"/>
-            
           </field>
+          <commandbars>
+            <commandgroup position="detailform" removeundeclared="true">
+              <command id="submit" label="Submit" position="&lt;cancel"/>
+              <command id="resolve" label="Resolve" position="&lt;cancel"/>
+              <command id="cancel" label="Cancel" stereotype="cancel"/>
+            </commandgroup>
+          </commandbars>
         </schema>
       </schemas>
     </application>

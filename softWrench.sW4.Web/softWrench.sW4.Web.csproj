@@ -267,7 +267,6 @@
     <Compile Include="Controllers\ExtendedDataController.cs" />
     <Compile Include="Controllers\Log\LogAdminController.cs" />
     <Compile Include="Controllers\MenuHelper\MenuHelper.cs" />
-    <Compile Include="Controllers\ProblemController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ReportFilterController.cs" />
     <Compile Include="Controllers\Routing\RouterParameters.cs" />
