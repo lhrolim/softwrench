@@ -10,38 +10,29 @@ using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Util;
 using System.Diagnostics;
 using System.Linq;
+using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities;
 
 namespace softwrench.sW4.test.Metadata.Entities {
     
     [TestClass]
-    public class OtbSlicedEntityMetadataBuilderTest {
+    public class SwSlicedEntityMetadataBuilderTest {
         
         private static ApplicationSchemaDefinition _schema;
+
+        private Batch batch;
 
         [ClassInitialize]
         public static void Init(TestContext testContext) {
             ApplicationConfiguration.TestclientName = "otb";
             MetadataProvider.StubReset();
-            var schemas = MetadataProvider.Application("incident").Schemas();
+            var schemas = MetadataProvider.Application("_SoftwrenchError").Schemas();
             _schema = schemas[new ApplicationMetadataSchemaKey("detail", "input", "web")];
         }
 
         [TestMethod]
-        public void TestSelect() {
-            var sliced =SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("incident"),_schema);
-            var select = QuerySelectBuilder.BuildSelectAttributesClause(sliced, QueryCacheKey.QueryMode.Detail);
-            Debug.Write(select);
-            Assert.IsFalse(select.Contains("person_.langcode"));
-            Assert.IsTrue(select.Contains("person_.displayname"));
-        }
-
-        [TestMethod]
-        public void TestFrom() {
-            var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("incident"), _schema);
-            var from = QueryFromBuilder.Build(sliced);
-            Debug.Write(from);
-            //assert that the relationships are not being duplicated
-            Assert.AreEqual(1, from.GetNumberOfItems("solution_.solution"));
+        public void TestSWDBSlicedEntity() {
+            var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("_Problem"), _schema);
+            Assert.AreNotEqual(sliced, null);
         }
         
     }

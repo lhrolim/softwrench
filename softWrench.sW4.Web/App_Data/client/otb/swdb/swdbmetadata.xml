@@ -195,29 +195,33 @@
       </schemas>
     </application>
     
-  <application name="SoftwrenchError" entity="Problem" title="Softwrench Error">
-    <schemas>
-      <schema id="list" stereotype="list">
-        <field attribute="Id" hidden="true"/>
-        <field attribute="RecordType" label="Error Type"/>
-        <field attribute="RecordId" label="Record ID"/>
-        <field attribute="Description" label="Description"/>
-        <field attribute="CreatedDate" label="Error Date"/>
-        <field attribute="CreatedBy" label="Created By"/>
-        <field attribute="Assignee" label="Assignee"/>
-        <field attribute="Priority" label="Priority"/>
-        <field attribute="Status" label="Status"/>
-      </schema>
+    <application name="SoftwrenchError" entity="Problem" title="Softwrench Error">
+      <schemas>
+        <schema id="list" stereotype="list" title="Softwrench Error Detail">
+          <field attribute="id" hidden="true"/>
+          <field attribute="recordtype" label="Error Type"/>
+          <field attribute="recordid" label="Record ID"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="createddate" label="Error Date"/>
+          <field attribute="createdby" label="Created By"/>
+          <field attribute="assignee" label="Assignee"/>
+          <field attribute="priority" label="Priority"/>
+          <field attribute="status" label="Status"/>
+        </schema>
     
-      <schema id="detail" stereotype="detail">
-        <field attribute="Id" hidden="true"/>
-        <field attribute="RecordType" label="Error Type"/>
-        <field attribute="RecordId" label="Record ID"/>
-        <field attribute="Description" label="Description"/>
-        <field attribute="Data" label="Data"/>
-      </schema>
-    </schemas>
-  </application>
+        <schema id="detail" stereotype="detail" mode="input" title="Softwrench Error Detail">
+          <field attribute="id" hidden="true"/>
+          <field attribute="recordtype" label="Error Type" readonly="true"/>
+          <field attribute="recordid" label="Record ID" readonly="true"/>
+          <field attribute="description" label="Description" readonly="true"/>
+          <field attribute="data" hidden="true"/>
+          <field attribute="#dataasstring" label="Data">
+            <renderer type="textarea"/>
+            
+          </field>
+        </schema>
+      </schemas>
+    </application>
 
   </applications>
 </metadata>

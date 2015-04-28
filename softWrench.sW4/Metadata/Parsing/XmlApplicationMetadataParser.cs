@@ -142,14 +142,11 @@ namespace softWrench.sW4.Metadata.Parsing {
                 ParseFilterNew(filterElement, attribute), widget, defaultValue, qualifier, showExpression, toolTip, attributeToServer, events, enableExpression, evalExpression, enableDefault, defaultExpression);
         }
 
-        private static string ParseDataType(EntityMetadata entityMetadata, string attribute)
-        {
+        private static string ParseDataType(EntityMetadata entityMetadata, string attribute) {
             string datatype = null;
-            if (entityMetadata != null)
-            {
+            if (entityMetadata != null) {
                 var attr = entityMetadata.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(attribute));
-                if (attr != null)
-                {
+                if (attr != null) {
                     datatype = attr.Type;
                 }
             }
@@ -659,7 +656,16 @@ namespace softWrench.sW4.Metadata.Parsing {
                 entity = "_" + entity;
             }
             var service = application.Attribute(XmlMetadataSchema.ApplicationServiceAttribute).ValueOrDefault((String)null);
-            var metadata = entityMetadata.FirstWithException(e => e.Name == entity, "entity {0} not found", entity);
+            var metadata = entityMetadata.FirstOrDefault(e => e.Name == entity);
+            if (metadata == null) {
+                if (!entity.StartsWith("_")) {
+                    throw new InvalidOperationException("entity {0} not found".Fmt(entity));
+                } else {
+                    LoggingUtil.DefaultLog.WarnFormat("entity {0} not found. Are you missing a dll reference?", entity);
+                    return null;
+                }
+            }
+
             var idFieldName = metadata
                 .Schema
                 .IdAttribute
@@ -784,8 +790,13 @@ namespace softWrench.sW4.Metadata.Parsing {
             }
 
             var applicationElements = applications.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.ApplicationElement);
-            var overridenApplications = (from applicationEl in applicationElements select ParseApplication(applicationEl, _entityMetadata)).ToList();
-
+            var overridenApplications = new List<CompleteApplicationMetadataDefinition>();
+            foreach (var applicationEl in applicationElements) {
+                var application = ParseApplication(applicationEl, _entityMetadata);
+                if (application != null) {
+                    overridenApplications.Add(application);
+                }
+            }
             var resultApplications = MetadataMerger.MergeApplications(result, overridenApplications);
 
 
