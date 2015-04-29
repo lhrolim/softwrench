@@ -157,9 +157,9 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                 );
             if (!isValid)
             {
-                var jsonUser = JsonConvert.SerializeObject(userToIntegrate);
-                _problemManager.Register("UserSync", "", jsonUser, DateTime.Now, 
-                    "SWADMIN", "", 1, "", "Error syncing user", "", "", "OPEN");
+                //var jsonUser = JsonConvert.SerializeObject(userToIntegrate);
+                //_problemManager.Register("UserSync", "", jsonUser, DateTime.Now, 
+                //    "SWADMIN", "", 1, "", "Error syncing user", "", "", "OPEN");
 
                 Log.DebugFormat("ignoring person {0}", userToIntegrate.MaximoPersonId);
             }
