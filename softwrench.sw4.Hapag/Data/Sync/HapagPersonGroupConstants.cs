@@ -14,7 +14,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
         //Location groups, like areas, regions and location itself
         internal const string BaseHapagLocationPrefix = "C-HLC-WW-LC-";
         internal const string BaseHapagRegionPrefix = "C-HLC-WW-RG";
-        internal const string HapagRegionAmerica = "C-HLC-WW-RG-AMERICA";
+        internal const string HapagRegionAmerica = "C-HLC-WW-RG-NAMERICA";
         internal const string BaseHapagAreaPrefix = "C-HLC-WW-AR";
         //this one gives access to all the region groups
         internal const string HapagWWGroup = "C-HLC-WW-AR-WW";
