@@ -20,14 +20,11 @@
     <!--Purchasing-->
     <template path="@receiving.xml"/>
     <template path="@purchasing.xml"/>
-  </templates>y
+  </templates>
   
   <entities>
-    
   </entities>
   
   <applications>
-    
   </applications>
-
 </metadata>
