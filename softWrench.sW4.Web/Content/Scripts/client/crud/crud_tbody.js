@@ -232,7 +232,7 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 if (!$rootScope.printRequested && (hasSection || needsWatchers)) {
                     $compile(element.contents())(scope);
                 }
-                if (schema.printMode != null && schema.printMode) {
+                if ($rootScope.printRequested != null && $rootScope.printRequested) {
                     printService.doPrint();
                 }
                 var t1 = new Date().getTime();
