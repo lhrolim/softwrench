@@ -696,7 +696,9 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 						if(scope._bUpdateSelectedStyles) $timeout(scope.updateSelectedStyles, 200);
 					};
 					// start updating on keydown
-					_keydown = function(){
+					_keydown = function () {
+                        //Luiz: disabled this code here, since it seems to be not really needed to update the style here
+
 						/* istanbul ignore else: don't run if already running */
 						//if(!scope._bUpdateSelectedStyles){
 						//	scope._bUpdateSelectedStyles = true;
@@ -716,7 +718,9 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 					// stop updating on key up and update the display/model
 					_keypress = function(event, eventData){
 						/* istanbul ignore else: this is for catching the jqLite testing*/
-						if(eventData) angular.extend(event, eventData);
+					    if (eventData) angular.extend(event, eventData);
+					    //Luiz: disabled this code here, since it seems to be not really needed to update the style here
+
 						//scope.$apply(function(){
 						//	if(_toolbars.sendKeyCommand(event)){
 						//		/* istanbul ignore else: don't run if already running */
@@ -1079,6 +1083,9 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 									element[0].innerHTML = _defaultVal;
 									taSelection.setSelectionToElementStart(element.children()[0]);
 								}
+
+							    //Luiz: this was causing the main issue since the ng-sanitize would be evaluated upon the whole image.
+
 								//_setViewValue(val);
 							}
 						});
