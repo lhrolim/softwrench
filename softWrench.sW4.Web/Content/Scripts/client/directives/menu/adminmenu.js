@@ -16,6 +16,10 @@
                 redirectService.redirectToAction(title, controller, action, parameters);
             };
 
+            scope.loadApplication = function (applicationName, schemaId) {
+                redirectService.goToApplicationView(applicationName, schemaId, null, null, null, null);
+            };
+
             scope.i18N = function (key, defaultValue, paramArray) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);
             };

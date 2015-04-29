@@ -16,7 +16,8 @@ namespace softWrench.sW4.Metadata.Validator {
 
 
         protected override IEnumerable<EntityMetadata> InitializeEntityInternalMetadata() {
-            var findTypesAnnotattedWith = AttributeUtil.FindTypesAnnotattedWith(typeof(ClassAttribute), typeof(JoinedSubclassAttribute));
+            var findTypesAnnotattedWith = AttributeUtil.FindTypesAnnotattedWith(typeof(ClassAttribute), 
+                typeof(JoinedSubclassAttribute));
             var resultEntities = findTypesAnnotattedWith.Select(Convert).ToList();
 
             //            var subEntities = AttributeUtil.FindTypesAnnotattedWith(typeof(JoinedSubclassAttribute));
@@ -59,6 +60,7 @@ namespace softWrench.sW4.Metadata.Validator {
                     && memberInfo.PropertyType != typeof(long?)
                     && memberInfo.PropertyType != typeof(int)
                     && memberInfo.PropertyType != typeof(long)
+                    && memberInfo.PropertyType != typeof(byte[])
                     && !memberInfo.PropertyType.IsEnum
                     ) {
                     //TODO: components embeddables
