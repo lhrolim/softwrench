@@ -547,6 +547,7 @@
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.js" />
     <Content Include="Content\Scripts\vendor\angular\angular-sanitize.min.js" />
     <Content Include="Content\Scripts\vendor\angular\bindonce.js" />
+    <Content Include="Content\Scripts\vendor\other\textAngular-setup.js" />
     <Content Include="Content\styles\default\xeditable.css" />
     <Content Include="Content\Scripts\vendor\angular\components\xeditable-min.js" />
     <Content Include="Content\Scripts\vendor\jquery\jquery-ui-1.10.3.js" />
@@ -1343,6 +1344,10 @@
     <ProjectReference Include="..\softwrench.sw4.manchester\softwrench.sw4.manchester.csproj">
       <Project>{75C4B153-E741-4D16-9F10-96B2F6335331}</Project>
       <Name>softwrench.sw4.manchester</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.problem\softwrench.sw4.problem.csproj">
+      <Project>{8062dce9-1422-4ca7-8004-ffa7794a6516}</Project>
+      <Name>softwrench.sw4.problem</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>

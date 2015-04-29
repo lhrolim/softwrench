@@ -5,8 +5,7 @@ using cts.commons.portable.Util;
 using cts.commons.Util;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
-using softWrench.sW4.Security.Interfaces;
-using softWrench.sW4.Util;
+using CompressionUtil = cts.commons.Util.CompressionUtil;
 
 namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.entities {
 

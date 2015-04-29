@@ -149,6 +149,7 @@
     <Compile Include="Data\Offline\SynchronizationManager.cs" />
     <Compile Include="Data\Persistence\WS\Commons\KongsbergIncidentCrudConnector.cs" />
     <Compile Include="Metadata\Applications\DataSet\BeringKeyInventoryIssueDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\BaseProblemDataSet.cs" />
     <Compile Include="Metadata\Applications\Notification\ApplicationNotificationFactory.cs" />
     <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />
     <Compile Include="Audit\AuditTrail.cs" />
@@ -865,6 +866,10 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.problem\softwrench.sw4.problem.csproj">
+      <Project>{8062dce9-1422-4ca7-8004-ffa7794a6516}</Project>
+      <Name>softwrench.sw4.problem</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>

@@ -86,9 +86,7 @@ namespace softWrench.sW4.Metadata {
                 _metadataXmlInitializer = new MetadataXmlSourceInitializer();
                 _metadataXmlInitializer.Validate(_commandBars);
                 _swdbmetadataXmlInitializer = new SWDBMetadataXmlSourceInitializer();
-                if (!ApplicationConfiguration.IsUnitTest) {
-                    _swdbmetadataXmlInitializer.Validate(_commandBars);
-                }
+                _swdbmetadataXmlInitializer.Validate(_commandBars);
 
                 _menus = new MenuXmlInitializer().Initialize();
                 FillFields();
