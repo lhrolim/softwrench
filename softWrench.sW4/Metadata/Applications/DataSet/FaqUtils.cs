@@ -134,9 +134,9 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             dto.AppendProjectionField(ProjectionField.Default("solutionid"));
             dto.AppendProjectionField(ProjectionField.Default("description"));
             var result = EntityRepository.GetAsRawDictionary(MetadataProvider.Entity("solution"), dto);
-            Log.DebugFormat("db size {0}", result.Count());
+            Log.DebugFormat("db size {0}", result.ResultList.Count());
             var treeDataList = new List<FaqData>();
-            foreach (var attributeHolder in result) {
+            foreach (var attributeHolder in result.ResultList) {
                 var solutionId = (int)attributeHolder["solutionid"];
                 var description = (string)attributeHolder["description"];
                 treeDataList.Add(new FaqData(solutionId, description));

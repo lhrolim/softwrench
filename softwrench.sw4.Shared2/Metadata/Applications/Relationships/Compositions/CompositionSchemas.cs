@@ -17,5 +17,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
         public ApplicationSchemaDefinition Print { get; set; }
 
+        public ApplicationSchemaDefinition Sync { get; set; }
+
     }
 }

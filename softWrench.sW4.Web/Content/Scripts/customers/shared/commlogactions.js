@@ -14,7 +14,7 @@
         var origSendTo = clonedItem['sendto'] == null ? "" : clonedItem['sendto'];
         var origCc = clonedItem['cc'] == null ? "" : clonedItem['cc'];
         var origSubject = clonedItem['subject'] == null ? "" : clonedItem['subject'];
-        var origMessage = clonedItem['message'];
+        var origMessage = clonedItem['message'] == null ? "" : clonedItem['message'];
         clonedItem['sendto'] = clonedItem['cc'] = clonedItem['commloguid']= null;
         clonedItem['sendfrom'] = $rootScope.defaultEmail;
         clonedItem['subject'] = "Fw: " + clonedItem['subject'];
@@ -30,7 +30,7 @@
         var origSendTo = clonedItem['sendto'] == null ? "" : clonedItem['sendto'];
         var origCc = clonedItem['cc'] == null ? "" : clonedItem['cc'];
         var origSubject = clonedItem['subject'] == null ? "" : clonedItem['subject'];
-        var origMessage = clonedItem['message'];
+        var origMessage = clonedItem['message'] == null ? "" : clonedItem['message'];
         clonedItem['sendto'] = clonedItem['sendfrom'];
         clonedItem['sendfrom'] = contextService.getUserData().email;
         clonedItem['cc'] = "";
@@ -48,7 +48,7 @@
         var origSendTo = clonedItem['sendto'] == null ? "" : clonedItem['sendto'];
         var origCc = clonedItem['cc'] == null ? "" : clonedItem['cc'];
         var origSubject = clonedItem['subject'] == null ? "" : clonedItem['subject'];
-        var origMessage = clonedItem['message'];
+        var origMessage = clonedItem['message'] == null ? "" : clonedItem['message'];
         clonedItem['commloguid'] = null;
         if (origCc != "") {
             clonedItem['sendto'] = clonedItem['sendfrom'] + "," + origCc;

@@ -19,6 +19,7 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Exception;
+using softwrench.sW4.Shared2.Metadata.Menu;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
 using softwrench.sw4.Shared2.Metadata.Modules;
 using softWrench.sW4.Util;
@@ -102,9 +103,8 @@ namespace softWrench.sW4.Metadata {
         }
 
 
-        private static void BuildSlicedMetadataCache()
-        {
-            var watch =Stopwatch.StartNew();
+        private static void BuildSlicedMetadataCache() {
+            var watch = Stopwatch.StartNew();
             SlicedEntityMetadataCache.Clear();
             IEnumerable<CompleteApplicationMetadataDefinition> apps = _applicationMetadata;
             if (_swdbapplicationMetadata != null) {
@@ -115,7 +115,7 @@ namespace softWrench.sW4.Metadata {
                 var entityMetadata = Entity(entityName);
                 if (app.IsMobileSupported()) {
                     app.Schemas().Add(ApplicationMetadataSchemaKey.GetSyncInstance(),
-                        ApplicationSchemaFactory.GetSyncInstance(app.ApplicationName, app.IdFieldName,app.UserIdFieldName));
+                        ApplicationSchemaFactory.GetSyncInstance(app.ApplicationName, app.IdFieldName, app.UserIdFieldName));
                 }
                 foreach (var webSchema in app.Schemas()) {
                     var schema = webSchema.Value;
@@ -130,23 +130,22 @@ namespace softWrench.sW4.Metadata {
                         }
                     }
                 }
-                LoggingUtil.DefaultLog.DebugFormat("finished registering metadata {0}",app.ApplicationName);
+                LoggingUtil.DefaultLog.DebugFormat("finished registering metadata {0}", app.ApplicationName);
             }
-            LoggingUtil.DefaultLog.InfoFormat("Sliced metadata cache built in {0}",LoggingUtil.MsDelta(watch));
+            LoggingUtil.DefaultLog.InfoFormat("Sliced metadata cache built in {0}", LoggingUtil.MsDelta(watch));
         }
 
-        public static IList<SlicedEntityMetadata> GetSlicedMetadataNotificationEntities()
-        {
+        public static IList<SlicedEntityMetadata> GetSlicedMetadataNotificationEntities() {
             var applicationsWithNotifications = (from a in _applicationMetadata
-                where a.Notifications.Count > 0
-                select a).ToList<CompleteApplicationMetadataDefinition>();
+                                                 where a.Notifications.Count > 0
+                                                 select a).ToList<CompleteApplicationMetadataDefinition>();
 
             var resultList = new List<SlicedEntityMetadata>();
             if (applicationsWithNotifications.Any()) {
-                resultList.AddRange(from app in applicationsWithNotifications 
-                                    let entityName = app.Entity 
-                                    let entityMetadata = Entity(entityName) 
-                                    from notification in app.Notifications 
+                resultList.AddRange(from app in applicationsWithNotifications
+                                    let entityName = app.Entity
+                                    let entityMetadata = Entity(entityName)
+                                    from notification in app.Notifications
                                     select SlicedEntityMetadataBuilder.GetInstance(entityMetadata, notification.Value, app.FetchLimit));
             }
             return resultList;
@@ -267,6 +266,10 @@ namespace softWrench.sW4.Metadata {
             return _menus.ContainsKey(platform) ? _menus[platform] : null;
         }
 
+        public static bool isMobileEnabled() {
+            return _menus.ContainsKey(ClientPlatform.Mobile);
+
+        }
 
         [NotNull]
         public static SlicedEntityMetadata SlicedEntityMetadata(ApplicationMetadata applicationMetadata) {
@@ -384,6 +387,20 @@ namespace softWrench.sW4.Metadata {
             var association = entity.Associations.FirstWithException(f => f.Qualifier == relationship, "could not locate relationship with qualifier {0}", relationship);
             var realName = association.To;
             return Application(realName);
+        }
+
+
+        public static IEnumerable<CompleteApplicationMetadataDefinition> FetchTopLevelApps(ClientPlatform platform) {
+            var result = new HashSet<CompleteApplicationMetadataDefinition>();
+            var menu = Menu(platform);
+            var leafs = menu.ExplodedLeafs;
+            foreach (var menuBaseDefinition in leafs) {
+                if (menuBaseDefinition is ApplicationMenuItemDefinition) {
+                    result.Add(Application((menuBaseDefinition as ApplicationMenuItemDefinition).Application));
+                }
+            }
+            //TODO: add hidden menu items
+            return result;
         }
     }
 }

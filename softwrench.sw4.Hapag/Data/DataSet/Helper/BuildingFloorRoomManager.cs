@@ -38,7 +38,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
             dto.IgnoreWhereClause = true;
             var result = EntityRepository.GetAsRawDictionary(entityMetadata, dto);
             var options = new HashSet<IAssociationOption>();
-            foreach (var attributeHolder in result) {
+            foreach (var attributeHolder in result.ResultList) {
                 options.Add(delegateToUse.Invoke(attributeHolder));
             }
             return options;

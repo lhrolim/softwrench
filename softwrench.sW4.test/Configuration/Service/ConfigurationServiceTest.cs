@@ -56,44 +56,41 @@ namespace softwrench.sW4.test.Configuration.Service {
         };
 
         [TestMethod]
-        public void _OnlineConditionsOnly()
-        {
-            var context = new ContextHolder { ApplicationLookupContext = new ApplicationLookupContext { OfflineOnly = false } };
+        public void _OnlineConditionsOnly() {
+            var context = new ContextHolder { OfflineMode = false };
             IEnumerable<PropertyValue> offlineModeValues = new List<PropertyValue>
             {
-                new PropertyValue {Value = "1", Condition = new WhereClauseCondition{AppContext = new ApplicationLookupContext{OfflineOnly = true}}},
-                new PropertyValue {Value = "2", Condition = new WhereClauseCondition{AppContext = new ApplicationLookupContext{Schema = "detail", OfflineOnly = true}}},
-                new PropertyValue {Value = "3", Condition = new WhereClauseCondition{AppContext = new ApplicationLookupContext{MetadataId = "zzz", OfflineOnly = true}}}
+                new PropertyValue {Value = "1", Condition = new WhereClauseCondition{OfflineOnly = true}},
+                new PropertyValue {Value = "2", Condition = new WhereClauseCondition{OfflineOnly = true,AppContext = new ApplicationLookupContext{Schema = "detail"}}},
+                new PropertyValue {Value = "3", Condition = new WhereClauseCondition{OfflineOnly = true,AppContext = new ApplicationLookupContext{MetadataId = "zzz"}}}
             };
             var result = ConfigurationService.BuildResultValues<string>(offlineModeValues, context);
             Assert.IsFalse(result.Any());
         }
 
         [TestMethod]
-        public void _OfflinePartialMatch()
-        {
-            var context = new ContextHolder { ApplicationLookupContext = new ApplicationLookupContext { OfflineOnly = true } };
+        public void _OfflinePartialMatch() {
+            var context = new ContextHolder { OfflineMode = true };
             IEnumerable<PropertyValue> offlineModeValues = new List<PropertyValue>
             {
-                new PropertyValue {Value = "1", Condition = new WhereClauseCondition{AppContext = new ApplicationLookupContext{ OfflineOnly = false}}},
+                new PropertyValue {Value = "1", Condition = new WhereClauseCondition{OfflineOnly = false}},
             };
             var result = ConfigurationService.BuildResultValues<string>(offlineModeValues, context);
             Assert.AreEqual("1", result.First().Value.Value);
         }
 
         [TestMethod]
-        public void _MostCorrectCondition()
-        {
-            var context = new ContextHolder { ApplicationLookupContext = new ApplicationLookupContext { MetadataId = "zzz", OfflineOnly = true } };
+        public void _MostCorrectCondition() {
+            var context = new ContextHolder { OfflineMode = true,ApplicationLookupContext = new ApplicationLookupContext { MetadataId = "zzz" } };
             IEnumerable<PropertyValue> values = new List<PropertyValue>
             {
-                new PropertyValue {Value = "1", Condition = new WhereClauseCondition{AppContext = new ApplicationLookupContext{MetadataId = "zzz", OfflineOnly = false}}},
-                new PropertyValue {Value = "2", Condition = new WhereClauseCondition{AppContext = new ApplicationLookupContext{MetadataId = "zzz", OfflineOnly = true}}}
+                new PropertyValue {Value = "1", Condition = new WhereClauseCondition{OfflineOnly = false,AppContext = new ApplicationLookupContext{MetadataId = "zzz", }}},
+                new PropertyValue {Value = "2", Condition = new WhereClauseCondition{OfflineOnly = true,AppContext = new ApplicationLookupContext{MetadataId = "zzz"}}}
             };
             var result = ConfigurationService.BuildResultValues<string>(values, context);
             Assert.AreEqual("2", result.First().Value.Value);
         }
-            
+
         [TestMethod]
         public void _2ConditionsOneWithModuleAnotherWithout_returnDefault() {
             var context = new ContextHolder();
@@ -264,13 +261,14 @@ namespace softwrench.sW4.test.Configuration.Service {
         }
 
         [TestMethod]
-        public void GlobalCondition()
-        {
-            var context = new ContextHolder { ApplicationLookupContext = new ApplicationLookupContext { OfflineOnly = true} };
+        public void GlobalCondition() {
+            var context = new ContextHolder { OfflineMode = true };
+
+
             IEnumerable<PropertyValue> offlineModeValues = new List<PropertyValue>
             {
-                new PropertyValue {Value = "1", Condition = new WhereClauseCondition{ AppContext = new ApplicationLookupContext{OfflineOnly = false}}},
-                new PropertyValue {Value = "2", Condition = new WhereClauseCondition{ Global = true, AppContext = new ApplicationLookupContext{OfflineOnly = true}}}
+                new PropertyValue {Value = "1", Condition = new WhereClauseCondition{ OfflineOnly = false}},
+                new PropertyValue {Value = "2", Condition = new WhereClauseCondition{ Global = true,OfflineOnly = true}}
                 
             };
             var result = ConfigurationService.BuildResultValues<string>(offlineModeValues, context);
