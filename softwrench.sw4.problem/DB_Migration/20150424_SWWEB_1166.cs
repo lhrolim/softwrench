@@ -27,6 +27,16 @@ namespace softWrench.sW4.Web.DB_Migration._4._2._0 {
                 .WithColumn("ProblemId").AsInt64().NotNullable()
                 .WithColumn("Position").AsInt32().NotNullable()
                 .WithColumn("Data").AsBinary().NotNullable();
+
+            Create.Index("PROB_PROBLEM_ASSIGNEE").OnTable("PROB_PROBLEM")
+                .OnColumn("Assignee");
+
+            Create.Index("PROB_PROBLEM_TYPE").OnTable("PROB_PROBLEM")
+                .OnColumn("RecordType");
+
+            Create.ForeignKey("FK_PROBLEM").FromTable("PROB_ADDITIONALARGS")
+                .ForeignColumn("ProblemId").ToTable("PROB_PROBLEM")
+                .PrimaryColumn("Id");
         }
 
         public override void Down() {
