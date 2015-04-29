@@ -68,7 +68,26 @@
 
         <schema id="editdetail" stereotype="detail" platform="web">
           <field attribute="solution" label="Solution No" readonly="true"/>
-          <field attribute="status" label="Status"/>
+          <optionfield attribute="status" label="Status" requiredexpression="true">
+            <renderer type="combo"/>
+            <option label="DRAFT" value="DRAFT"/>
+            <option label="ACTIVE" value="ACTIVE"/>
+            <option label="INACTIVE" value="INACTIVE"/>
+          </optionfield>
+          <field attribute="description" label="Description" requiredexpression="true"/>
+          <field attribute="symptom_.ldtext" label="Symptom:">
+            <renderer type="richtext"/>
+          </field>
+          <field attribute="cause_.ldtext" label="Cause:">
+            <renderer type="richtext"/>
+          </field>
+          <field attribute="resolution_.ldtext" label="Resolution:">
+            <renderer type="richtext"/>
+          </field>
+          <event type="beforesubmit.prevalidation" service="solutionService" method="validateStatus"/>
+        </schema>
+
+        <schema id="newdetail" stereotype="detail" platform="web">
           <field attribute="description" label="Description"/>
           <field attribute="symptom_.ldtext" label="Symptom:">
             <renderer type="richtext"/>

@@ -17,7 +17,7 @@
   </container>
   <container title="Solutions" icon="fa fa-book" role="solution" id="solution">
     <application id="SOL" title="Solution Grid" ref="solution" schema="list" tooltip="Click to view solution"/>
-    <!--<application id="SOLNEW" title="New Change" ref="solution" schema="newdetail" tooltip="Click to Create a New Changes"/>-->
+    <application id="SOLNEW" title="New Solution" ref="solution" schema="newdetail" tooltip="Click to Create a New Solution"/>
   </container>
 <!--  <container title="Changes" role="changes" id="change" icon="fa fa-random" >-->
 <!--    <application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>-->
