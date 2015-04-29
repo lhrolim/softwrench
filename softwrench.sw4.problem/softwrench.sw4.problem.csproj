@@ -53,6 +53,7 @@
     <Compile Include="classes\IProblemManager.cs" />
     <Compile Include="classes\Problem.cs" />
     <Compile Include="classes\ProblemManager.cs" />
+    <Compile Include="DB_Migration\20150429_SWWEB_1166.cs" />
     <Compile Include="DB_Migration\20150424_SWWEB_1166.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

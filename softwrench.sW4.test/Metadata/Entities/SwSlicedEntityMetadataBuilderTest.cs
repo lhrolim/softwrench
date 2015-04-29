@@ -32,6 +32,8 @@ namespace softwrench.sW4.test.Metadata.Entities {
         [TestMethod]
         public void TestSWDBSlicedEntity() {
             var sliced = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("_Problem"), _schema);
+
+            Assert.IsFalse(sliced.AppSchema.Displayables.Contains(null));
             Assert.AreNotEqual(sliced, null);
         }
         
