@@ -1,77 +1,33 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <templates>
+    <!--WorkOrder-->
+    <template path="@workorder.xml"/>
+    <!--<template path="workorderbatch.xml"/>-->
+
+    <!--ServiceRequest-->
+    <template path="@servicerequest.xml"/>
+
+    <!--Incident-->
+    <template path="@incident.xml"/>
+
+    <!--Inventory-->
+    <template path="@inventory.xml"/>
+
+    <!--Changes-->
+    <template path="@wochange.xml"/>
+
+    <!--Purchasing-->
+    <template path="@receiving.xml"/>
+    <template path="@purchasing.xml"/>
+  </templates>y
+  
   <entities>
-    <entity name="asset" idAttribute="assetid" useridAttribute="assetnum">
-      <attributes>
-        <attribute name="assetid" type="bigint" required="true"/>
-        <attribute name="locinfo" type="varchar" required="false" />
-        <attribute name="plustmodel" type="varchar" required="false" />
-        <attribute name="prophr" type="varchar" required="false" />
-        <attribute name="partnum" type="varchar" required="false" />
-        <attribute name="proptype" type="varchar" required="false" />
-        <attribute name="propmanuf" type="varchar" required="false" />
-        <attribute name="description" type="varchar" required="true"/>
-      </attributes>
-     
-    </entity>
+    
   </entities>
   
   <applications>
-    <application name="companies" entity="companies" title="Companies">
-      <schemas>
-        <schema id="companiesLookupList" stereotype="list">
-          <field attribute="company" label="Company"/>
-          <field attribute="name" label="Name">
-            <renderer type="default" params="minwidth=300px" />
-          </field>
-          <field attribute="type" label="Type"/>
-          <field attribute="orgid"  label="Organization"/>
-        </schema>
-      </schemas>
-    </application>
-
-    <application name="asset" title="Asset" entity="asset" audit="true">
-      <schemas>
-        <list>
-          <field attribute="assetid" hidden="true"/>
-          <field attribute="assetnum" label="Asset" qualifier="title"/>
-          <field attribute="location" label="Location" qualifier="subtitle"/>
-          <field attribute="status" label="Status" qualifier="status"/>
-          <!--<field attribute="siteid" label="Site" qualifier="siteid" />-->
-          <event type="onload" service="scannerdetectionService" method="initAssetGridListener"/>
-        </list>
-        <detail>
-          <field attribute="purchaseprice" hidden="true"/>
-          <field attribute="replacecost" hidden="true"/>
-          <field attribute="totalcost" hidden="true"/>
-          <field attribute="ytdcost" hidden="true"/>
-          <field attribute="budgetcost" hidden="true"/>
-          <field attribute="unchargedcost" hidden="true"/>
-          <field attribute="totunchargedcost" hidden="true"/>
-          <field attribute="invcost" hidden="true"/>
-          <field attribute="location_.locationsid" hidden="true"/>
-          <field attribute="assetid" hidden="true" />
-          <field attribute="totdowntime" hidden="true"/>
-          
-          <field attribute="assetnum" label="Barcode Number"  readonly="true" />
-          <field attribute="status" label="Status" readonly="true"/>
-          <field attribute="description" label="Description" readonly="true"  />
-          <field attribute="location" label="Location" readonly="true"/>
-          <field attribute="serialnum" label="Serial Number"/>
-          <event type="beforesubmit.postvalidation" service="submitService" method="submitConfirmation"/>
-          <event type="onload" service="scannerdetectionService" method="initAssetDetailListener"/>
-        </detail>
-        <schema id="assetLookupList" stereotype="list" >
-          <field attribute="assetnum" label="Asset"/>
-          <field attribute="description" label="Description">
-            <renderer type="default" params="minwidth=300px" />
-          </field>
-          <field attribute="location" label="Location"/>
-          <field attribute="siteid"  label="Site"/>
-          <field attribute="status" label="Status"/>
-        </schema>
-      </schemas>
-    </application>
+    
   </applications>
 
 </metadata>
