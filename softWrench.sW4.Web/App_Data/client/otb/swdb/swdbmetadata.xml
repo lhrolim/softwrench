@@ -55,19 +55,22 @@
           <field attribute="createddate" label="Audit Date"/>
         </schema>
           
-          <!--<schema id="auditDetail" stereotype="detail">
-            <field attribute="title" label="Title"/>
-            <section showexpression="@canCreateBoth">
-              <optionfield attribute="policy" label="Policy">
-                <option label="Personal" value="personal"/>
-                <option label="Shared" value="shared"/>
-              </optionfield>
-              <optionfield attribute="profiles" providerattribute="profiles" showexpression="@policy=='shared'">
-                <renderer type="checkbox"/>
-              </optionfield>
-            </section>
-
-          </schema>-->
+        <schema id="auditDetail" stereotype="detail">
+          <field attribute="action" label="Action" readonly="true"/>
+          <field attribute="refapplication" label="Application" readonly="true"/>
+          <field attribute="refid" label="Record Id" readonly="true"/>
+          <field attribute="createdby" label="Created By" readonly="true"/>
+          <field attribute="createddate" label="Audit Date" readonly="true"/>
+          <!--<section showexpression="@canCreateBoth">
+            <optionfield attribute="policy" label="Policy">
+              <option label="Personal" value="personal"/>
+              <option label="Shared" value="shared"/>
+            </optionfield>
+            <optionfield attribute="profiles" providerattribute="profiles" showexpression="@policy=='shared'">
+              <renderer type="checkbox"/>
+            </optionfield>
+          </section>-->
+        </schema>
       </schemas>
     </application>
 
