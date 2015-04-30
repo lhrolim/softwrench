@@ -234,6 +234,7 @@
         </relationship>
         <relationship to ="solution" qualifier="solution" >
           <relationshipAttribute from="solution" to ="solution" primary="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
         </relationship>
         <relationship to="longdescription" qualifier="symptom">
           <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
@@ -802,6 +803,7 @@
         </relationship>
         <relationship to ="solution" qualifier="solution" >
           <relationshipAttribute from="solution" to ="solution" primary="true"/>
+          <relationshipAttribute to="status" literal="active" quoteLiteral="true"/>
         </relationship>
         <relationship to="longdescription" qualifier="symptom">
           <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
@@ -968,9 +970,15 @@
           <relationshipAttribute from="solutionid" to="ownerid" primary="true"/>
           <relationshipAttribute to="ownertable" literal="SOLUTION" quoteLiteral="true"/>
         </relationship>
-        <relationship to="SITE">
+        <relationship to="site">
           <relationshipAttribute from="siteid" to ="siteid" primary="true"/>
-          <relationshipAttribute to="active" quoteLiteral="1"/>
+          <relationshipAttribute to="active" literal="1" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
+        <relationship to="asset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true" />
         </relationship>
       </relationships>
       <connectorParameters>
@@ -2023,8 +2031,6 @@
       </schemas>
     </application>
 
-
-
     <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
       <properties>
         <property key="mobile.userInteractionEnabled" value="false"/>
@@ -2747,13 +2753,27 @@
       <schemas>
         <list title="Solution Grid" platform="web">
           <field attribute="solution" label="Solution No" >
-            <renderer type="default" params="widthXS=30%;widthSM=20%;widthMD=15%;widthLG=10%" />
+            <renderer type="default"/>
           </field>
           <field attribute="description" label="Description">
-            <renderer type="default" params="excelwidth=50" />
+            <renderer type="default"/>
+          </field>
+          <optionfield attribute="selfservaccess" label="Self-Service">
+            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
+            <option label="Yes" value="1"/>
+            <option label="No" value="0"/>
+          </optionfield>
+          <field attribute="assetnum" label="Asset">
+            <renderer type="default"/>
+          </field>
+          <field attribute="classstructure_.classificationid" label="Classification">
+            <renderer type="default"/>
+          </field>
+          <field attribute="siteid" label="Site">
+            <renderer type="default"/>
           </field>
           <field attribute="status" label="Status" >
-            <renderer type="default" params="widthXS=20%;widthSM=20%;widthMD=15%;widthLG=10%" />
+            <renderer type="default"/>
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
@@ -2781,6 +2801,12 @@
             <option label="ACTIVE" value="ACTIVE"/>
             <option label="INACTIVE" value="INACTIVE"/>
           </optionfield>
+          <association label="Site" target="siteid" labelfield="site_.description">
+            <renderer type="lookup"/>            
+          </association>
+          <association label="Asset" target="assetnum" labelfield="asset_.description">
+            <renderer type="lookup"/>
+          </association>
           <field attribute="description" label="Description" requiredexpression="true"/>
           <field attribute="symptom_.ldtext" label="Symptom:">
             <renderer type="richtext"/>
@@ -2791,10 +2817,21 @@
           <field attribute="resolution_.ldtext" label="Resolution:">
             <renderer type="richtext"/>
           </field>
+          
+          <composition relationship="attachment" label="Attachments">
+            <collectionproperties allowcreation="@status!='ACTIVE'" allowupdate="false"/>
+          </composition>
+          
           <event type="beforesubmit.prevalidation" service="solutionService" method="validateStatus"/>
         </schema>
 
         <schema id="newdetail" stereotype="detail" platform="web">
+          <association label="Site" target="siteid" labelfield="site_.description">
+            <renderer type="lookup"/>            
+          </association>
+          <association label="Asset" target="assetnum" labelfield="asset_.description">
+            <renderer type="lookup"/>
+          </association>
           <field attribute="description" label="Description" requiredexpression="true"/>
           <field attribute="symptom_.ldtext" label="Symptom:">
             <renderer type="richtext"/>
