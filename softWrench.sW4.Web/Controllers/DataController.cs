@@ -193,7 +193,7 @@ namespace softWrench.sW4.Web.Controllers {
             var response = _nextSchemaRouter.RedirectToNextSchema(routerParameters);
             response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.UserId,
                 operation);
-
+            // TODO: Implement some sort of interception
             if (applicationMetadata.AuditEnabled) {
                 _auditManager.CreateAuditEntry(
                     operationDataRequest.Operation,
