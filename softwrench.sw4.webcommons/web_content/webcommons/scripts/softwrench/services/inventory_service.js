@@ -1030,7 +1030,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
         },
 
         afterChangeInvreserveAsset: function(parameters) {
-            if (parameters['fields']['asset_.binnum']) {
+            if (parameters['fields']['asset_.binnum'] && !nullOrEmpty(parameters['fields']['asset_.binnum'])) {
                 parameters['fields']['invbalances_.binnum'] = parameters['fields']['asset_.binnum'];
             }
         },

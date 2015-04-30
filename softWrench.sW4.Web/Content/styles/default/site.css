@@ -13,6 +13,11 @@ body {
     clear: both;
 }
 
+.btn:focus {
+    outline: none;
+    outline-style: none;
+}
+
 input.ng-dirty.ng-invalid {
     border-color: red
 }
@@ -24,10 +29,10 @@ input.ng-dirty.ng-invalid {
     z-index: 9999;
 }
 
-
 .container {
     padding: 0;
     width: 100%;
+        max-width: none;
 }
 
 .content .container {
@@ -155,6 +160,7 @@ input.ng-dirty.ng-invalid {
     messagesection .alerts {
         position: relative;
         z-index: 1000;
+        width: 100%;
     }
 
     messagesection .alert {

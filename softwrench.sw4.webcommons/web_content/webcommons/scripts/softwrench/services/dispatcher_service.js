@@ -1,8 +1,4 @@
-﻿/*
- */
-var app = angular.module('sw_layout');
-
-app.factory('dispatcherService', function ($injector, $log) {
+﻿modules.webcommons.factory('dispatcherService', function ($injector, $log,$q) {
     var loadService = function(service, method) {
         var log = $log.getInstance('dispatcherService#loadService');
 
@@ -39,6 +35,29 @@ app.factory('dispatcherService', function ($injector, $log) {
                 }
                 return fn.apply(this, args);
             }
+        },
+
+        /// <summary>
+        /// use to create a default instance of the deferred/promise instance, useful for transforming sync methods into async ones, and for chaining them.
+        /// 
+        /// Add success/error methods on top of the promise, to make it more uniform along with other jquery/angular services (such as $http)
+        /// 
+        /// </summary>
+        /// <returns type="">a deferred object</returns>
+        loadBaseDeferred: function () {
+            
+            var deferred = $q.defer();
+            var promise = deferred.promise;
+
+            promise.success = function (fn) {
+                promise.then(fn);
+                return promise;
+            }
+            promise.error = function (fn) {
+                promise.catch(fn);
+                return promise;
+            }
+            return deferred;
         }
     };
 

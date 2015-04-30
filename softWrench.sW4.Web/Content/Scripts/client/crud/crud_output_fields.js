@@ -129,7 +129,7 @@ app.directive('crudOutputFields', function (contextService) {
                 }
 
                 if ($scope.hasSameLineLabel(fieldMetadata)) {
-                    cssclass += ' col-sm-9';
+                    cssclass += ' col-sm-3';
                     return cssclass;
                 }
 

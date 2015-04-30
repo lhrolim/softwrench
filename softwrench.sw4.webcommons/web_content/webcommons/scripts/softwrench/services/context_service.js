@@ -1,6 +1,4 @@
-﻿var app = angular.module('sw_layout');
-
-app.factory('contextService', function ($rootScope) {
+﻿modules.webcommons.factory('contextService', function ($rootScope) {
 
     return {
         //using sessionstorage instead of rootscope, as the later would be lost upon F5.
@@ -69,6 +67,10 @@ app.factory('contextService', function ($rootScope) {
         isLocal: function () {
             if (localStorage.mocknonlocal || sessionStorage.mocknonlocal) {
                 return false;
+            }
+            if (angular.mock) {
+                //unit tests should be considerered local too
+                return true;
             }
 
             var contextValue = this.retrieveFromContext('isLocal');

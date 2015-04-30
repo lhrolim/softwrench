@@ -195,6 +195,8 @@ app.factory('printService', function ($rootScope, $http, $timeout, $log, tabsSer
                 }
             });
 
+            parameters.printmode = true;
+
             var getDetailsUrl = redirectService.getApplicationUrl(applicationName, printSchemaId, '', '', parameters);
 
             var shouldPageBreak = printOptions == undefined ? true : printOptions.shouldPageBreak;

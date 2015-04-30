@@ -17,7 +17,7 @@ app.directive('columnWidths', function ($log, $timeout) {
                 //log.debug(scope.schema.displayables);
 
                 $timeout(function () {
-                    if (typeof scope.schema.displayables == 'undefined') {
+                    if (typeof scope.schema == 'undefined' || typeof scope.schema.displayables == 'undefined') {
                         //for dashboards the data is lazy-loaded
                         log.debug('return');
                         return;

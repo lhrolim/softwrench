@@ -897,7 +897,7 @@
         <attribute name="assignmentid" type="bigint" required="false" />
       </attributes>
       <relationships>
-        <relationship to="longdescription" >
+        <relationship to="longdescription" qualifier="worklogdesc" >
           <relationshipAttribute from="worklogid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKLOG" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />

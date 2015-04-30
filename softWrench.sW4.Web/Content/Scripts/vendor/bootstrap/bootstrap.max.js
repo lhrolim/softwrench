@@ -724,6 +724,12 @@ if (!jQuery) { throw new Error("Bootstrap requires jQuery") }
         .toggleClass('open')
         .trigger('shown.bs.dropdown')
 
+      //calc dropdown position and width, if clipped on the right, reposition
+      var $dropdown = $this.siblings('.dropdown-menu');
+      if (($dropdown.offset().left + $dropdown.width()) > $(window).width()) {
+          $dropdown.css('left', 'initial').css('right', '-1px');
+      }
+
       $this.focus()
     }
 

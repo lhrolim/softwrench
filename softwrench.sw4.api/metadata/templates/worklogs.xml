@@ -25,8 +25,8 @@
 
         <detail stereotype="compositiondetail">
           <field attribute="description" label="Summary:" requiredexpression="true" />
-          <field attribute="longdescription_.ldtext" label="Details:" >
-            <renderer type="textarea"/>
+          <field attribute="worklogdesc_.ldtext" label="Details:" >
+          <renderer type="richtext"/>
           </field>
           <optionfield attribute="logtype" label="Log Type:" default="CLIENTNOTE">
             <option label="Appointment Note" value="APPTNOTE"/>

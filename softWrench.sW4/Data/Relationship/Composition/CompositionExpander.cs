@@ -44,7 +44,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
                 searchDTO.AppendSearchParam(printSchema.IdFieldName);
                 searchDTO.AppendSearchValue(toExpand.Value);
                 var compositionExpanded = _entityRepository.GetAsRawDictionary(slicedEntityMetadata, searchDTO);
-                resultDict.Add(name, compositionExpanded);
+                resultDict.Add(name, compositionExpanded.ResultList);
             }
 
             return new GenericResponseResult<Dictionary<string, IEnumerable<IDictionary<string, object>>>>(resultDict);

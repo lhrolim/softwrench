@@ -73,17 +73,54 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
         }
 
+
+        public class SearchEntityResult {
+            public IList<Dictionary<string, object>> ResultList;
+            public long? MaxRowstampReturned;
+        }
+
+
+
         //needed to avoid "Fields" nesting in collectionData
-        public IList<Dictionary<string, object>> GetAsRawDictionary([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {
+        public SearchEntityResult GetAsRawDictionary([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto, Boolean fetchMaxRowstamp = false) {
             if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
             if (searchDto == null) throw new ArgumentNullException("searchDto");
             var query = new EntityQueryBuilder().AllRows(entityMetadata, searchDto);
             var rows = Query(entityMetadata, query, searchDto);
-            Log.DebugFormat("returning {0} rows", rows.Count());
-            return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
-               .Select(r => r.ToDictionary(pair => FixKey(pair.Key,entityMetadata), pair => pair.Value)).ToList();
+            var enumerable = rows as dynamic[] ?? rows.ToArray();
+            Log.DebugFormat("returning {0} rows", enumerable.Count());
+            long? maxRowstamp = 0;
+
+            IList<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
+            
+            foreach (var row in enumerable) {
+                var dict = (IDictionary<string, object>)row;
+                var item = new Dictionary<string, object>();
+                if (fetchMaxRowstamp) {
+                    
+                    if (dict.ContainsKey(RowStampUtil.RowstampColumnName)) {
+                        var rowstamp = RowStampUtil.Convert(dict[RowStampUtil.RowstampColumnName]);
+                        if (rowstamp > maxRowstamp) {
+                            maxRowstamp = rowstamp;
+                        }
+                    }
+                }
+
+                foreach (var column in dict) {
+                    item[FixKey(column.Key, entityMetadata)] = column.Value;
+                }
+                list.Add(item);
+            }
+
+            return new SearchEntityResult {
+                MaxRowstampReturned = maxRowstamp == 0 ? null : maxRowstamp,
+                ResultList = list
+            };
+
+
 
         }
+
 
         private IEnumerable<dynamic> Query(EntityMetadata entityMetadata, BindedEntityQuery query, SearchRequestDto searchDTO) {
             //TODO: hack to avoid garbage data and limit size of list queries.

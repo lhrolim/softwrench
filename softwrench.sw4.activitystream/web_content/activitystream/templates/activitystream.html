@@ -1,4 +1,4 @@
-﻿<div id="activitystream" class="clearfix {{deciveType()}}" ng-if="activityStreamEnabled(activities)">
+﻿<div id="activitystream" class="clearfix {{deciveType()}} hiddenonprint" ng-if="activityStreamEnabled(activities)">
     <div class="handle" ng-click="toggleActivityStream()"><i class="fa fa-rss-square"></i>&ensp;Activity Stream</div>
     <div class="unread" ng-if="activities.length && activities.length !== readCount"><span class="badge">{{activities.length - readCount}}</span></div>
     <div class="pane">
@@ -22,16 +22,23 @@
         </header>
         <div class="scroll">
             <div class="messages">
-                <div class="message clearfix" ng-repeat="activity in activities | filter:$parent.filterText" ng-class="activity.isRead ? 'is-read' : 'not-read'" ng-show="displayHidden(activity)">
+                <div class="message clearfix"
+                     ng-repeat="activity in activities | filter:$parent.filterText"
+                     ng-class="activity.isRead ? 'is-read' : 'not-read'"
+                     ng-class-odd="'odd'" ng-class-even="'even'"
+                     ng-show="displayHidden(activity)">
                     <div class="read pull-left"><i class="fa" ng-class="activity.isRead ? '' : 'fa-circle'"></i></div>
                     <div class="icon pull-left"><i class="fa" ng-class="activity.icon"></i></div>
                     <div class="text pull-left">
-                        <div class="info" ng-if="activity.parentUId < 0">
-                            <span class="by">{{activity.createBy}}</span> {{activity.flag | lowercase}} {{activity.label | lowercase}} <a href="" ng-click="openLink(activity)">{{activity.id}}</a>
-                        </div>
-                        <div class="info" ng-if="activity.parentUId > 0">
-                            <span class="by">{{activity.createBy}}</span> {{activity.flag | lowercase}} <a href="" ng-click="openLink(activity)">{{activity.label | lowercase}}</a>
-                            for {{activity.parentLabel | lowercase}} <a href="" ng-click="openLink(activity, 'true')">{{activity.parentId}}</a>
+                        <div class="info">
+                            <span class="by" ng-if="activity.createBy">{{activity.createBy}}</span><span class="by" ng-if="!activity.createBy">SOMEBODY</span> {{activity.flag | lowercase}}
+                            <span ng-if="activity.parentUId < 0">
+                                {{activity.label | lowercase}} <a href="" ng-click="openLink(activity)">{{activity.id}}</a>
+                            </span>
+                            <span ng-if="activity.parentUId > 0">
+                                <a href="" ng-click="openLink(activity)">{{activity.label | lowercase}}</a>
+                                for {{activity.parentLabel | lowercase}} <a href="" ng-click="openLink(activity, 'true')">{{activity.parentId}}</a>
+                            </span>
                         </div>
                         <div class="date">{{formatDate(activity.notificationDate)}}</div>
                     </div>

@@ -271,8 +271,8 @@ app.directive('crudList', function (contextService) {
                     list_elements: elements,
                     detail_next: "0",
                     detail_previous: "-1",
-                    paginationData: $scope.paginationData
-
+                    paginationData: $scope.paginationData,
+                    previousData: $scope.datamap
                 };
                 contextService.insertIntoContext("crud_context", crudContext);
             }

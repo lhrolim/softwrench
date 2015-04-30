@@ -17,9 +17,7 @@
             };
 
             scope.loadApplication = function (applicationName, schemaId) {
-                //menuService.setActiveLeaf(target);
                 redirectService.goToApplicationView(applicationName, schemaId, null, null, null, null);
-               
             };
 
             scope.i18N = function (key, defaultValue, paramArray) {

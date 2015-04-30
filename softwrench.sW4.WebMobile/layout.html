@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>softwrench.sW4.WebMobile</title>
+
+    <!-- softwrench.sW4.WebMobile references -->
+    <link href="css/index.css" rel="stylesheet" />
+    <link href="Content/Vendor/downloadedvendor/ionic-v1.0.0-rc.3/css/ionic.min.css" rel="stylesheet">
+
+    <!-- Cordova reference, this is added to your app when it's built. -->
+    <!--For some reason Ripple doesnt like enclosed <script/> tags-->
+
+    <script src="scripts/platformOverrides.js"></script>
+
+    <script src="scripts/index.js"></script>
+    <script src="Content/Vendor/scripts/jquery.js"></script>
+    <script src="Content/Vendor/scripts/angular.js"></script>
+    <script src="Content/Vendor/scripts/angular-ui-router.js"></script>
+    <script src="Content/Vendor/scripts/angular-sanitize.js"></script>
+    <script src="Content/Vendor/scripts/angular-animate.js"></script>
+    <script src="Content/Vendor/downloadedvendor/ionic-v1.0.0-rc.3/js/ionic.min.js"></script>
+    <script src="Content/Vendor/downloadedvendor/ionic-v1.0.0-rc.3/js/ionic-angular.min.js"></script>
+
+    <script src="Content/Vendor/scripts/ng-cordova.js"></script>
+    <script src="Content/Vendor/scripts/persistence.js"></script>
+    <script src="Content/Vendor/scripts/persistence.store.sql.js"></script>
+    <script src="Content/Vendor/scripts/persistence.store.websql.js"></script>
+    <script src="Content/Vendor/downloadedvendor/persistence.store.cordovasql.js"></script>
+    <script src="cordova.js"></script>
+
+    <script src="Content/Mobile/scripts/mobile_bootstrap.js"></script>
+    <!--    <script src="scripts/mobile_angular.js"></script>-->
+    
+    
+    <!-- start shared auto template tags, grunt will generate it for dev environment, do not remove this -->
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/aa_stringutils.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/aa_utils.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/object_util.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/context_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/services/dispatcher_service.js"></script>
+    <script type="text/javascript" src="Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js"></script>
+    
+    <!-- end shared auto template tags -->
+
+    
+    <!-- start auto template tags, grunt will generate it for dev environment, do not remove this -->
+        <script type="text/javascript" src="Content/Mobile/scripts/controllers/crudlist.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/controllers/homecontroller.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/controllers/logincontroller.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/controllers/maincontroller.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/controllers/settingscontroller.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/services/crud/crudContextService.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/services/db/swdbDAO.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/services/login/loginService.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/services/menu/menuModelService.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/services/metadata/metadataModelService.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/services/routesService.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/utils/mobileajaxinterceptor.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/associationDataSynchronizationService.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/dataSynchronizationService.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/metadataSynchronizationService.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/services/synchronization/synchronizationFacade.js"></script>
+        <script type="text/javascript" src="Content/Mobile/scripts/utils/mobileutils.js"></script>
+        <!-- end auto template tags -->
+
+
+
+
+
+</head>
+<body ng-app="softwrench">
+
+<!--    <ion-nav-bar class="bar-stable">-->
+<!--        <ion-nav-back-button>-->
+<!--        </ion-nav-back-button>-->
+<!--    </ion-nav-bar>-->
+    <!--
+      The views will be rendered in the <ion-nav-view> directive below
+      Templates are in the /templates folder (but you could also
+      have templates inline in this html file if you'd like).
+    -->
+    <ion-nav-view></ion-nav-view>
+
+</body>
+</html>

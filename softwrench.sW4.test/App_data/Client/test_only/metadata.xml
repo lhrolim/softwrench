@@ -4,6 +4,7 @@
   <templates>
     <template path="@worklogs.xml"/>
     <template path="@incident.xml"/>
+    <template path="@inventory.xml"/>
   </templates>
   
   <entities>
@@ -104,7 +105,7 @@
           <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
-        </relationship>w
+        </relationship>
         <relationship to="DOCLINKS" qualifier="attachment" collection="true">
           <relationshipAttribute from="workorderid" to="ownerid" primary="true"/>
           <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
@@ -133,7 +134,7 @@
         <attribute name="class"  type="varchar" required="true" />
       </attributes>
       <relationships>
-        <relationship to="longdescription" >
+        <relationship to="longdescription" qualifier="worklogdesc">
           <relationshipAttribute from="worklogid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKLOG" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
@@ -650,7 +651,7 @@
         </list>
         <detail redeclaring="false">
           <customization position="description"/>
-          <customization position="longdescription_.ldtext">
+          <customization position="worklogdesc_.ldtext">
             <field attribute="zzz" hidden="true"/>
             <reference id="test4"/>
           </customization>
@@ -815,6 +816,18 @@
           <field attribute="personid" label="Labor"  requiredexpression="true" />
           <association label="Person" target="personid" labelfield="person.displayname" />
         </detail>
+      </schemas>
+    </application>
+
+    <!--YGSI-28-->
+    <application name="invissue" title="Issue Inventory" entity="invissue">
+      <schemas>
+        <schema id="newInvIssueDetail" mode="input" stereotype="detail" redeclaring="false">
+          <customization position="issueto">
+            <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
+            </association>
+          </customization>
+        </schema>
       </schemas>
     </application>
 

@@ -34,7 +34,10 @@
             </tr>
         </thead>
         <tbody ng-show="clonedCompositionData.length > 0">
-            <tr ng-repeat-start="compositionitem in clonedCompositionData" ng-show="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)" ng-click="toggleDetails(compositionitem,column)">
+            <tr ng-repeat-start="compositionitem in clonedCompositionData"
+                ng-show="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)"
+                ng-click="toggleDetails(compositionitem,column)"
+                ng-class="$odd ? 'odd' : 'even'">
                 <td ng-if="compositionlistschema.properties['list.selectionstyle'] == 'multiple'" style="text-align: center;">
                     <!--Multiselect-->
                     <!-- TODO: Move style to css -->

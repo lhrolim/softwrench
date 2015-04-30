@@ -3,6 +3,7 @@ using System.Net;
 using System.Web.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata;
@@ -30,7 +31,7 @@ namespace softWrench.sW4.Web.Controllers.Mobile {
         private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
 
         readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings() {
-            TypeNameHandling = TypeNameHandling.Objects
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace softWrench.sW4.Web.Controllers.Mobile {
 
             var response = new MobileMetadataDownloadResponseDefinition {
                 MetadatasJSON = JsonConvert.SerializeObject(securedMetadatas, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
-                MenuJson = JsonConvert.SerializeObject(securedMenu, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings)
+                MenuJson = JsonConvert.SerializeObject(securedMenu, Newtonsoft.Json.Formatting.None,_jsonSerializerSettings)
             };
             return response;
         }
@@ -69,10 +70,9 @@ namespace softWrench.sW4.Web.Controllers.Mobile {
             }
             var syncResult = new SynchronizationResultDto();
             foreach (var application in synchronizationRequest.Applications) {
-                var applicationMetadata = MetadataProvider
-                    .Application(application.appName)
+                var applicationMetadata = MetadataProvider.Application(application.AppName)
                     .ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(), user, ClientPlatform.Mobile);
-                var syncAppData = _dataSetProvider.LookupDataSet(application.appName,applicationMetadata.Schema.SchemaId)
+                var syncAppData = _dataSetProvider.LookupDataSet(application.AppName, applicationMetadata.Schema.SchemaId)
                     .Sync(applicationMetadata, application);
                 if (!application.FetchMetadata) {
                     //used to reduce the amount of data sent

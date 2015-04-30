@@ -372,6 +372,10 @@ app.directive('compositionList', function (contextService, formatService) {
                 }
 
                 $scope.isReadOnly = !updating;
+
+                // Need to disable all other rich text box for viewable real estate
+                $scope.collapseAll();
+
                 var compositionId = item[$scope.compositionlistschema.idFieldName];
                 var needServerFetching = $scope.fetchfromserver && $scope.detailData[compositionId] == undefined;
                 if (!needServerFetching) {

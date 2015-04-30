@@ -25,6 +25,7 @@
         </schema>
       </schemas>
     </application>
+    
     <application entity="workorder" name="workorder" title="Work Order">
       <schemas>
         <schema id="newdetail" platform="web" redeclaring="false">
@@ -60,6 +61,16 @@
             <field label="GL Debit Account:" attribute="gldebitacct" default="0000-000-000-00000" hidden="true" />
           </customization>
         </detail>
+      </schemas>
+    </application>
+    <application name="invissue" title="Issue Inventory" entity="invissue">
+      <schemas>
+        <schema id="newInvIssueDetail" mode="input" stereotype="detail" redeclaring="false">
+          <customization position="issueto">
+            <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
+            </association>
+          </customization>
+        </schema>
       </schemas>
     </application>
   </applications>

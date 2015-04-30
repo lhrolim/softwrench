@@ -14,6 +14,14 @@ softWrench.sW4.Web/Content/Customers/
 softWrench.sW4.Web/Content/Shared/
 softWrench.sW4.Web/Content/Scripts/softwrench/shared
 
+softWrench.sW4.WebMobile/Content/Customers/
+softWrench.sW4.WebMobile/Content/Shared/
+softWrench.sW4.WebMobile/Content/Vendor/scripts
+softWrench.sW4.WebMobile/Content/Vendor/fonts
+
+softWrench.sW4.WebMobile/bld/
+softWrench.sW4.WebMobile/bower_components/
+
 Build/jenkinstest-results.xml
 Build/test-results.testxml
 Build/TestResults.trx
@@ -32,3 +40,4 @@ TestResults
 # 3rd-party stuff copied during build
 /packages
 GitTfs/git2.*
+*.DS_Store

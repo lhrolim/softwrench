@@ -23,7 +23,6 @@
     /* COMBOBOX PUBLIC CLASS DEFINITION
      * ================================ */
     var Combobox = function (element, options) {
-        this.loading = true;
         this.options = $.extend({}, $.fn.combobox.defaults, options);
         this.options.pageSize = this.options.pageSize || 30000;
         this.$source = $(element);
@@ -40,7 +39,6 @@
         this.refresh();
         this.transferAttributes();
         this.listen();
-        this.loading = false;
     };
 
     Combobox.prototype = {
@@ -376,12 +374,8 @@
         },
 
         clearElement: function () {
-            //don't autofocus until the combobox loads
-            if (this.loading) {
-                this.$element.val('');
-            } else {
-                this.$element.val('').focus();
-            }
+            //don't autofocus via the combobox, removed .focus()
+            this.$element.val('');
         }
 
     , clearTarget: function () {

@@ -1,8 +1,6 @@
-﻿using System;
-using cts.commons.portable.Util;
-using cts.commons.Util;
+﻿using cts.commons.portable.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using softWrench.sW4.Util;
+using CompressionUtil = cts.commons.Util.CompressionUtil;
 
 namespace softwrench.sW4.test.Util {
 

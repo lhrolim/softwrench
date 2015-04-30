@@ -4,11 +4,11 @@
          style="width: 100%;"
          ng-show="!isFieldHidden(schema,fieldMetadata)"
          ng-class="getSectionClass(fieldMetadata)"
-         ng-style="getSectionStyle(fieldMetadata)">
-        <label class="control-label detail-output {{"getLabelClass(fieldMetadata)}}"
+         ng-style="getSectionStyle(fieldMetadata)"
+         ng-if="datamap[fieldMetadata.attribute]">
+        <label class="control-label detail-output {{getLabelClass(fieldMetadata)}}"
                ng-style="getHeaderStyle(fieldMetadata)"
-               ng-if="hasLabelOrHeader(fieldMetadata)"
-               ng-class="{'col-sm-3' : hasSameLineLabel(fieldMetadata), 'col-sm-12' : !hasSameLineLabel(fieldMetadata)}">
+               ng-if="hasLabelOrHeader(fieldMetadata)">
             {{i18NLabel(fieldMetadata)}}<span ng-show="i18NLabel(fieldMetadata)!='' && hasSameLineLabel(fieldMetadata)">:</span>
         </label>
         <div class="field" ng-class="getInputClass(fieldMetadata)">

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sw4.Shared2.Metadata.Applications.Notification;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -32,6 +33,7 @@ namespace softwrench.sW4.Shared2.Metadata {
 
         public IEnumerable<DisplayableComponent> DisplayableComponents = new List<DisplayableComponent>();
 
+        [JsonIgnore]
         public IDictionary<ApplicationNotificationKey, ApplicationNotificationDefinition> Notifications { get; set; }
 
 

@@ -37,14 +37,12 @@ namespace softWrench.sW4.Web.SPF.Filters {
             var printMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, PrintMode));
             var scanMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, ScanMode));
             var offlineMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, OfflineMode));
-
             ApplicationLookupContext appCtx = null;
             if (currentMetadataId != null) {
                 appCtx = new ApplicationLookupContext { MetadataId = currentMetadataId };
             }
             var instance = ContextLookuper.GetInstance();
             instance.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx, PrintMode = printMode, ScanMode = scanMode, OfflineMode = offlineMode }, true);
-//            instance.RegisterHttpContext(actionContext);
 
             base.OnActionExecuting(actionContext);
         }
