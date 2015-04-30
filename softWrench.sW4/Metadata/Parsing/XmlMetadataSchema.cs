@@ -162,6 +162,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ApplicationDataSetAttribute = "dataset";
         public const string ApplicationNameAttribute = "name";
         public const string ApplicationTitleAttribute = "title";
+        public const string ApplicationAuditFlagAttribute = "audit";
         public const string ApplicationFetchLimitAttribute = "fetchlimit";
         public const string ApplicationEntityMirrorAttribute = "entitymirror";
         public const string ApplicationEntityAttribute = "entity";

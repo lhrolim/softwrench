@@ -36,6 +36,8 @@ namespace softWrench.sW4.Data.API {
         //TODO: this is wrong, pick from current user
         public string Lang { get; set; }
 
+        public string TransactionType { get; set; }
+
         public DataRequestAdapter() {
         }
 

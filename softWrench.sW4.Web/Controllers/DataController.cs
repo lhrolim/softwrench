@@ -5,6 +5,7 @@ using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using softwrench.sW4.audit.classes.Services;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -27,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
+using softwrench.sW4.audit.Interfaces;
 using softWrench.sW4.Web.Util;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -43,11 +45,13 @@ namespace softWrench.sW4.Web.Controllers {
         protected readonly CompositionExpander CompositionExpander;
         private readonly I18NResolver _i18NResolver;
         protected readonly IContextLookuper ContextLookuper;
+        private readonly IAuditManager _auditManager;
 
-        public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper, CompositionExpander expander) {
+        public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper, CompositionExpander expander, IAuditManager auditManager) {
             _i18NResolver = i18NResolver;
             ContextLookuper = contextLookuper;
             CompositionExpander = expander;
+            _auditManager = auditManager;
         }
 
         private const string MockingMaximoKey = "%%mockmaximo";
@@ -77,6 +81,7 @@ namespace softWrench.sW4.Web.Controllers {
             response.Title = _i18NResolver.I18NSchemaTitle(response.Schema);
             var schemaMode = request.Key.Mode ?? response.Schema.Mode;
             response.Mode = schemaMode.ToString().ToLower();
+
             return response;
         }
 
@@ -181,11 +186,23 @@ namespace softWrench.sW4.Web.Controllers {
                 return null;
             }
 
+
+
             var routerParameters = new RouterParameters(applicationMetadata, platform, operationDataRequest.RouteParametersDTO, operation, mockMaximo, maximoResult, user, resolvedNextSchema);
 
             var response = _nextSchemaRouter.RedirectToNextSchema(routerParameters);
             response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.UserId,
                 operation);
+            // TODO: Implement some sort of interception
+            if (applicationMetadata.AuditEnabled) {
+                _auditManager.CreateAuditEntry(
+                    operationDataRequest.Operation,
+                    applicationMetadata.Name,
+                    operationDataRequest.Id,
+                    json.ToString(),
+                    DateTime.Now.FromServerToRightKind());
+            }
+
             return response;
 
         }

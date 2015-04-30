@@ -594,18 +594,18 @@
         <attribute name="vendor" type="varchar" required="false" />
         <attribute name="failurecode" type="varchar" required="false" />
         <attribute name="manufacturer" type="varchar" required="false" />
-        <attribute name="purchaseprice" type="decimal" required="true" />
-        <attribute name="replacecost" type="decimal" required="true" />
+        <attribute name="purchaseprice" type="double" required="true" />
+        <attribute name="replacecost" type="double" required="true" />
         <attribute name="installdate" type="datetime" required="false" />
         <attribute name="warrantyexpdate" type="datetime" required="false" />
-        <attribute name="totalcost" type="decimal" required="true" />
-        <attribute name="ytdcost" type="decimal" required="true" />
-        <attribute name="budgetcost" type="decimal" required="true" />
+        <attribute name="totalcost" type="double" required="true" />
+        <attribute name="ytdcost" type="double" required="true" />
+        <attribute name="budgetcost" type="double" required="true" />
         <attribute name="calnum" type="varchar" required="false" />
         <attribute name="isrunning" type="smallint" required="true" />
         <attribute name="itemnum" type="varchar" required="false" />
-        <attribute name="unchargedcost" type="decimal" required="true" />
-        <attribute name="totunchargedcost" type="decimal" required="true" />
+        <attribute name="unchargedcost" type="double" required="true" />
+        <attribute name="totunchargedcost" type="double" required="true" />
         <attribute name="totdowntime" type="float" required="true" />
         <attribute name="statusdate" type="datetime" required="false" />
         <attribute name="changedate" type="datetime" required="true" />
@@ -625,7 +625,7 @@
         <attribute name="eq23" type="datetime" required="false" />
         <attribute name="eq24" type="decimal" required="false" />
         <attribute name="priority" type="int" required="false" />
-        <attribute name="invcost" type="decimal" required="true" />
+        <attribute name="invcost" type="double" required="true" />
         <attribute name="glaccount" type="varchar" required="false" />
         <attribute name="rotsuspacct" type="varchar" required="false" />
         <attribute name="children" type="smallint" required="true" />
@@ -657,8 +657,8 @@
         <attribute name="toolcontrolaccount" type="varchar" required="false" />
         <attribute name="hasld" type="smallint" required="true" />
         <attribute name="direction" type="varchar" required="false" />
-        <attribute name="startmeasure" type="decimal" required="false" />
-        <attribute name="endmeasure" type="decimal" required="false" />
+        <attribute name="startmeasure" type="double" required="false" />
+        <attribute name="endmeasure" type="double" required="false" />
         <attribute name="islinear" type="smallint" required="true" />
         <attribute name="enddescription" type="varchar" required="false" />
         <attribute name="startdescription" type="varchar" required="false" />
@@ -744,7 +744,9 @@
         </relationship>
       </relationships>
       <connectorParameters>
-        <connectorParameter key="integration_interface" value="MXSW3Asset" />
+        <connectorParameter key="dbtable" value="asset" />
+        <connectorParameter key="integration_interface" value="SWASSET" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseAssetCrudConnector" />
       </connectorParameters>
     </entity>
 

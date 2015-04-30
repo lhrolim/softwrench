@@ -22,9 +22,11 @@ namespace softWrench.sW4.Security.Context {
 
         public string Module { get; set; }
 
-        public Boolean PrintMode { get; set; }
+        public bool PrintMode { get; set; }
 
-        public Boolean OfflineMode { get; set; }
+        public bool ScanMode { get; set; }
+
+        public bool OfflineMode { get; set; }
 
         public ApplicationLookupContext ApplicationLookupContext { get; set; }
 
@@ -53,6 +55,7 @@ namespace softWrench.sW4.Security.Context {
                             string.Equals(User, other.User) &&
                             string.Equals(OfflineMode, other.OfflineMode) &&
                             string.Equals(PrintMode, other.PrintMode) &&
+                            string.Equals(ScanMode, other.ScanMode) &&
                             string.Equals(Module, other.Module);
             if (!baseEqual) {
                 return false;
@@ -80,6 +83,7 @@ namespace softWrench.sW4.Security.Context {
                 hashCode = (hashCode * 397) ^ (Platform != null ? Platform.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (PrintMode.GetHashCode());
                 hashCode = (hashCode * 397) ^ (OfflineMode.GetHashCode());
+                hashCode = (hashCode * 397) ^ (ScanMode.GetHashCode());
                 hashCode = (hashCode * 397) ^ (Environment != null ? Environment.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Module != null ? Module.GetHashCode() : 0);
                 return hashCode;
