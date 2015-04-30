@@ -410,7 +410,6 @@
     <Content Include="Content\bootstrap\css\bootstrap-multiselect.css" />
     <Content Include="Content\bootstrap\css\typeahead.js-bootstrap.css" />
     <Content Include="Content\Controller\About.html" />
-    <Content Include="Content\Controller\Audit.html" />
     <Content Include="Content\Controller\MakeSWAdmin.html" />
     <Content Include="Content\Controller\LogAdmin.html" />
     <Content Include="Content\Controller\ReportFilter.html" />
@@ -449,7 +448,6 @@
     <Content Include="Content\Images\tva\logo-byline.png" />
     <Content Include="Content\Images\tva\logo-main.png" />
     <Content Include="Content\Images\tva\signin.jpg" />
-    <Content Include="Content\Scripts\client\adminresources\audit.js" />
     <Content Include="Content\Scripts\client\adminresources\password.js" />
     <Content Include="Content\Scripts\client\crud\compositionlist.js" />
     <Content Include="Content\Scripts\client\crud\crud_tbody.js" />

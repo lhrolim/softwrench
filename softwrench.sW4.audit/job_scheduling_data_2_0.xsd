@@ -343,19 +343,4 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="interval-unitType">
-    <xs:annotation>
-      <xs:documentation>Interval Units</xs:documentation>
-    </xs:annotation>
-    <xs:restriction base="xs:string">
-      <xs:pattern value="Day" />
-      <xs:pattern value="Hour" />
-      <xs:pattern value="Minute" />
-      <xs:pattern value="Month" />
-      <xs:pattern value="Second" />
-      <xs:pattern value="Week" />
-      <xs:pattern value="Year" />
-    </xs:restriction>
-  </xs:simpleType>
-
 </xs:schema>

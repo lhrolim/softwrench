@@ -47,14 +47,12 @@
     <application entity="AuditEntry" name="audit" title="Audit Trail">
       <schemas>
         <schema id="auditList" stereotype="list">
-          <field attribute="id" label="Id"/>
+          <field attribute="id" label="Audit Id"/>
           <field attribute="action" label="Action"/>
-          <field attribute="refApplication" label="Action"/>
-          <field attribute="action" label="Action"/>
-          <field attribute="action" label="Action"/>
-          <field attribute="action" label="Action"/>
-          <field attribute="action" label="Action"/>
-          
+          <field attribute="refapplication" label="Application"/>
+          <field attribute="refid" label="Record Id"/>
+          <field attribute="createdby" label="Created By"/>
+          <field attribute="createddate" label="Audit Date"/>
         </schema>
           
           <!--<schema id="auditDetail" stereotype="detail">

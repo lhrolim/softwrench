@@ -24,7 +24,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
 
 
 
-    var getApplicationUrl = function (applicationName, schemaId, mode, title, parameters, jsonData, type) {
+    var getApplicationUrl = function (applicationName, schemaId, mode, title, parameters, jsonData) {
         if (parameters === undefined || parameters == null) {
             parameters = {};
         }
@@ -40,9 +40,6 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
         }
         if (title != null && title.trim() != "") {
             parameters.title = title;
-        }
-        if (type != null) {
-            parameters.type = type;
         }
         if (jsonData == undefined) {
             return url("/api/data/" + applicationName + "?" + $.param(parameters));
