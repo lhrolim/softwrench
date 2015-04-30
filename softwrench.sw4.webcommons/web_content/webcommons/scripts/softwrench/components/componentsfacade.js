@@ -70,9 +70,12 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             log.debug('change focus to {0}'.format(attribute));
 
             //TODO: test will all render types
-            //works with: default, lookup, autocompleteclient
+            //works with: default, autocompleteclient
+            //not working with: richtext, lookup (works with direct call)
             var selector = '[data-field="' + attribute + '"]';
-            $(selector).find('input,textarea,select').focus();
+            var targetField = $(selector).find('input,textarea,select').focus();
+
+            log.debug($(selector), targetField);
         },
 
         refresh: function (displayable, scope, fromDigestAndRefresh) {

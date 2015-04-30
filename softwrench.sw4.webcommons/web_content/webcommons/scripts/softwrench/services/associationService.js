@@ -300,11 +300,20 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
         // This would only affect the eager associations, not the lookups, because they would be fetched at the time the user opens it.
         // Ex: An asset could be filtered by the location, so if a user changes the location field, the asset should be refetched.
         updateAssociations: function (association, scope, options) {
+            var log = $log.getInstance('sw4.associationservice#updateAssociations');
+
             var triggerFieldName = association.attribute;
             var schema = scope.schema;
             if (triggerFieldName != "#eagerassociations" && $.inArray(triggerFieldName, schema.fieldWhichHaveDeps) == -1) {
                 //no other asociation depends upon this first association, return here.
                 //false is to indicate that no value has been updated
+                log.debug('No associated dependants for {0}'.format(triggerFieldName));
+
+                //move input focus to the next field
+                //TODO: not working with lookups, e.g. updating SR Asset resultes in two updateAssociations, the first for asset
+                //the second for location, cause the asset to remain in focus
+                scope.$broadcast('sw_move_focus', triggerFieldName);
+
                 return false;
             }
             var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
@@ -334,7 +343,7 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
             var fieldsTosubmit = submitService.removeExtraFields(fields, true, scope.schema);
             var urlToUse = url("/api/generic/ExtendedData/UpdateAssociation?" + $.param(parameters));
             var jsonString = angular.toJson(fieldsTosubmit);
-            var log = $log.getInstance('sw4.associationservice#updateAssociations');
+
             log.info('going to server for dependent associations of {0}'.format(triggerFieldName));
             log.debug('Content: \n {0}'.format(jsonString));
             $http.post(urlToUse, jsonString).success(function (data) {
@@ -351,6 +360,10 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                     }, 100, false);
                     $rootScope.avoidspin = false;
                     scope.$broadcast("sw_associationsupdated", scope.associationOptions);
+
+                    //TODO: Is this needed, I couldn't find where it's used, I was not able to test if needed
+                    //move input focus to the next field
+                    //scope.$broadcast('sw_move_focus', triggerFieldName);
                 }
             }).error(
             function data() {
