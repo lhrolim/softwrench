@@ -32,10 +32,27 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
         return !expressionService.evaluate(fieldMetadata.showExpression, datamap);
     };
 
+    var isFieldReadOnly = function (datamap, application, fieldMetadata) {
+
+        //test the metadata read-only property
+        var isReadOnly = fieldMetadata.isReadOnly;
+
+        //check if field is diable via other means
+        if (!isReadOnly) {
+            //TODO: test the current enabled/read-only status of the field
+        }
+
+        return isReadOnly
+    };
+
 
     return {
         isFieldHidden: function (datamap, application, fieldMetadata) {
             return isFieldHidden(datamap, application, fieldMetadata);
+        },
+
+        isFieldReadOnly: function (datamap, application, fieldMetadata) {
+            return isFieldReadOnly(datamap, application, fieldMetadata);
         },
 
         nonTabFields: function (displayables) {
@@ -158,6 +175,28 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
             for (var i = 0; i < displayables.length; i++) {
                 if (!this.isFieldHidden(datamap, schema, displayables[i])) {
                     result.push(displayables[i]);
+                }
+            }
+            return result;
+        },
+
+        getNextVisibleDisplayable: function (datamap, schema, key) {
+            var displayables = schema.displayables;
+            var result;
+            var getNext = false;
+
+            for (var i = 0; i < displayables.length; i++) {
+                //is this the current field?
+                if (displayables[i].attribute && displayables[i].attribute == key) {
+                    getNext = true;
+                    continue;
+                }
+
+                //if the current field is found, get the next visible and editable field
+                if (getNext && !this.isFieldHidden(datamap, schema, displayables[i]) && !this.isFieldReadOnly(datamap, schema, displayables[i])) {
+                    result = displayables[i];
+                    console.log('found', displayables[i].attribute, displayables[i]);
+                    break;
                 }
             }
             return result;

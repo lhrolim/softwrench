@@ -63,6 +63,18 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             }
         },
 
+        focus: function (displayable) {
+            var log = $log.getInstance('cmpfacade#focus');
+
+            var attribute = displayable.attribute;
+            log.debug('change focus to {0}'.format(attribute));
+
+            //TODO: test will all render types
+            //works with: default, lookup, autocompleteclient
+            var selector = '[data-field="' + attribute + '"]';
+            $(selector).find('input,textarea,select').focus();
+        },
+
         refresh: function (displayable, scope, fromDigestAndRefresh) {
             var attribute = displayable.attribute;
 

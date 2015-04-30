@@ -131,7 +131,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
 
         },
 
-        controller: function ($scope, $http, $element, $injector, $timeout,
+        controller: function ($scope, $http, $element, $injector, $timeout, $log,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
             cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService, cmplookup) {
@@ -152,6 +152,21 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 });
                 return title;
             };
+
+            $scope.$on('sw_move_focus', function (event, args) {
+                var log = $log.getInstance('crud_input_fields#on_sw_move_focus');
+
+                var nextField = fieldService.getNextVisibleDisplayable($scope.datamap, $scope.schema, args)
+                if (nextField) {
+                    //log.debug('displayables', $scope.schema.displayables);
+
+                    log.debug('call cmpfacade.focus', nextField);
+                    cmpfacade.focus(nextField);
+
+                } else {
+                    console.log('next input not found');
+                }
+            });
 
             $scope.$on('sw_block_association', function (event, association) {
                 $scope.blockedassociations[association] = true;
