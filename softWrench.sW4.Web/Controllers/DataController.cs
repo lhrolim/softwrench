@@ -194,7 +194,7 @@ namespace softWrench.sW4.Web.Controllers {
             response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult.UserId,
                 operation);
 
-            if (applicationMetadata.AuditFlag) {
+            if (applicationMetadata.AuditEnabled) {
                 _auditManager.CreateAuditEntry(
                     operationDataRequest.Operation,
                     applicationMetadata.Name,

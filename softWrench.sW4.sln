@@ -93,9 +93,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.audit", "softwrench.sW4.audit\softwrench.sw4.audit.csproj", "{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}"
 EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = softWrench.sW4.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Android = Ad-Hoc|Android
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
@@ -3355,7 +3352,7 @@ Global
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.SingleImage|Windows-ARM.ActiveCfg = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.SingleImage|Windows-x64.ActiveCfg = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
-                {A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Ad-Hoc|Android.ActiveCfg = Debug|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Ad-Hoc|iOS.ActiveCfg = Release|Any CPU
@@ -3470,6 +3467,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = softWrench.sW4.vsmdi
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = softWrench.sW4.vsmdi
