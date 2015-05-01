@@ -26,6 +26,7 @@
                 return config || $q.when(config);
             },
 
+
             // optional method
             'response': function (response) {
                 endedok(response);

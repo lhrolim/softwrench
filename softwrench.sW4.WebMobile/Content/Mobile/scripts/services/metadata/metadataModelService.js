@@ -28,7 +28,19 @@
     return {
 
         getMetadatas: function () {
-            return metadataModel.schemas;
+            return metadataModel.applications;
+        },
+
+        getApplicationNames: function () {
+            var appNames = [];
+            var metadatas = this.getMetadatas();
+            if (!metadatas) {
+                return appNames;
+            }
+            for (var i = 0; i < metadatas.length; i++) {
+                appNames.push(metadatas[i].application);
+            }
+            return appNames;
         },
 
         updateMetadata: function (serverMetadatas) {

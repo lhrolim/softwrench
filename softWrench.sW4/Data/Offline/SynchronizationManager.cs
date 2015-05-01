@@ -5,7 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cts.commons.simpleinjector;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.Persistence.Relational;
+using softWrench.sW4.Data.Persistence.Relational.Collection;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Data.Sync;
@@ -18,18 +21,18 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Data.Offline {
-    class SynchronizationManager : ISingletonComponent {
+    public class SynchronizationManager : ISingletonComponent {
 
-        private readonly CollectionResolver _resolver;
+        private readonly OffLineCollectionResolver _resolver;
         private readonly EntityRepository _repository;
 
-        public SynchronizationManager(CollectionResolver resolver, EntityRepository respository) {
+        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository) {
             _resolver = resolver;
             _repository = respository;
         }
 
 
-        public SynchronizationResultDto GetData(SynchronizationRequestDto request, InMemoryUser user) {
+        public SynchronizationResultDto GetData(SynchronizationRequestDto request, InMemoryUser user, JObject rowstampMap) {
             var topLevelApps = GetTopLevelAppsToCollect(request);
 
 
@@ -38,46 +41,50 @@ namespace softWrench.sW4.Data.Offline {
             IDictionary<CompleteApplicationMetadataDefinition, List<CompleteApplicationMetadataDefinition>> reverseCompositionMap
                 = new Dictionary<CompleteApplicationMetadataDefinition, List<CompleteApplicationMetadataDefinition>>();
 
-
             foreach (var topLevelApp in topLevelApps) {
-                ResolveApplication(request, user, topLevelApp, result);
+                ResolveApplication(request, user, topLevelApp, result, rowstampMap);
             }
+
 
             return result;
         }
 
-        private void ResolveApplication(SynchronizationRequestDto request, InMemoryUser user,
-            CompleteApplicationMetadataDefinition topLevelApp, SynchronizationResultDto result) {
+        private void ResolveApplication(SynchronizationRequestDto request, InMemoryUser user, CompleteApplicationMetadataDefinition topLevelApp, SynchronizationResultDto result, JObject rowstampMap) {
             //this will return sync schema
-            var userAppMetadata = topLevelApp.ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(), user,ClientPlatform.Mobile);
+            var userAppMetadata = topLevelApp.ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(), user, ClientPlatform.Mobile);
 
-            var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(userAppMetadata.Schema);
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(userAppMetadata);
             var topLevelAppData = FetchData(entityMetadata, userAppMetadata);
-            var applicationSyncData = request.Applications.FirstOrDefault(f => f.AppName.Equals(topLevelApp.ApplicationName));
-            _resolver.ResolveCollections(entityMetadata, applicationCompositionSchemas, topLevelAppData);
-            var filteredResults = FilterData(topLevelAppData, applicationSyncData);
-            var appResultData = new SynchronizationApplicationData(topLevelApp.ApplicationName, 
-                filteredResults.changedData,filteredResults.deletedIds);
 
-            result.SynchronizationData.Add(appResultData);
+            var parameters = new CollectionResolverParameters() {
+                ApplicationMetadata = userAppMetadata,
+                ParentEntities = topLevelAppData
+
+            };
+            _resolver.ResolveCollections(parameters);
+            var filteredResults = FilterData(topLevelAppData, rowstampMap);
+            var appResultData = new SynchronizationApplicationData(topLevelApp.ApplicationName,
+                filteredResults.changedData, filteredResults.deletedIds);
+
+            result.TopApplicationData.Add(appResultData);
         }
 
         private IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request) {
-            var topLevelApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile);
-            if (request.ReturnNewApps) {
-                return topLevelApps;
+            if (request.ApplicationName == null) {
+                //no application in special was requested, lets return them all.
+                return MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile);
             }
 
-            return topLevelApps;
+            return new List<CompleteApplicationMetadataDefinition> { MetadataProvider.Application(request.ApplicationName) };
+
         }
 
 
 
 
         private ApplicationSyncResult FilterData(List<DataMap> topLevelAppData,
-            SynchronizationRequestDto.ApplicationSyncData clientCurrentData) {
-            if (clientCurrentData.IdRowstampMapJson == null) {
+            JObject rowstampMap) {
+            if (rowstampMap == null) {
 
                 return new ApplicationSyncResult() {
                     changedData = topLevelAppData

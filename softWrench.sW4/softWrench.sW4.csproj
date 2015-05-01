@@ -147,6 +147,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Offline\SynchronizationManager.cs" />
+    <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
+    <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
+    <Compile Include="Data\Persistence\Relational\Collection\OffLineCollectionResolver.cs" />
     <Compile Include="Data\Persistence\WS\Commons\KongsbergIncidentCrudConnector.cs" />
     <Compile Include="Metadata\Applications\DataSet\BeringKeyInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseProblemDataSet.cs" />
@@ -333,7 +336,7 @@
     <Compile Include="Data\Entities\ServiceRequest\PrinterLocationEnum.cs" />
     <Compile Include="Data\Entities\MaxPropValueDao.cs" />
     <Compile Include="Data\Persistence\DefaultValuesBuilder.cs" />
-    <Compile Include="Data\Persistence\Relational\CollectionResolver.cs" />
+    <Compile Include="Data\Persistence\Relational\Collection\CollectionResolver.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\BaseQueryUtil.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryFromBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryJoinBuilder.cs" />

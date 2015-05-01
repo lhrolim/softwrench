@@ -2,6 +2,7 @@
 using System.Net;
 using System.Web.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
@@ -25,14 +26,20 @@ namespace softWrench.sW4.Web.Controllers.Mobile {
     ///  delegating to the inner tiers of the application</para>
     /// 
     /// </summary>
-//    [Authorize]
+    //    [Authorize]
     public class MobileController : ApiController {
 
         private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
 
-        readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings() {
+        private readonly SynchronizationManager _syncManager;
+
+        readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
+
+        public MobileController(SynchronizationManager syncManager) {
+            this._syncManager = syncManager;
+        }
 
         /// <summary>
         /// The main purpose here is to retrieve all the metadata information 
@@ -46,42 +53,20 @@ namespace softWrench.sW4.Web.Controllers.Mobile {
             var metadatas = MetadataProvider.Applications(ClientPlatform.Mobile);
             var securedMetadatas = metadatas.Select(metadata => metadata.CloneSecuring(user)).ToList();
             bool fromCache;
-            var securedMenu = user.Menu(ClientPlatform.Mobile,out fromCache);
+            var securedMenu = user.Menu(ClientPlatform.Mobile, out fromCache);
 
             var response = new MobileMetadataDownloadResponseDefinition {
                 MetadatasJSON = JsonConvert.SerializeObject(securedMetadatas, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
-                MenuJson = JsonConvert.SerializeObject(securedMenu, Newtonsoft.Json.Formatting.None,_jsonSerializerSettings)
+                MenuJson = JsonConvert.SerializeObject(securedMenu, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings)
             };
             return response;
         }
 
         [HttpPost]
-        public SynchronizationResultDto SyncData(SynchronizationRequestDto synchronizationRequest) {
-
-
-            //TODO> the method should return only the fields
-            //specified in the metadata, and not all entities
-            //attributes.
-
-            var user = SecurityFacade.CurrentUser();
-
-            if (null == user) {
-                throw new HttpResponseException(HttpStatusCode.Unauthorized);
-            }
-            var syncResult = new SynchronizationResultDto();
-            foreach (var application in synchronizationRequest.Applications) {
-                var applicationMetadata = MetadataProvider.Application(application.AppName)
-                    .ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(), user, ClientPlatform.Mobile);
-                var syncAppData = _dataSetProvider.LookupDataSet(application.AppName, applicationMetadata.Schema.SchemaId)
-                    .Sync(applicationMetadata, application);
-                if (!application.FetchMetadata) {
-                    //used to reduce the amount of data sent
-                    syncAppData.Metadata = null;
-                }
-                syncResult.SynchronizationData.Add(syncAppData);
-            }
-            return syncResult;
+        public SynchronizationResultDto PullNewData([FromUri]SynchronizationRequestDto synchronizationRequest, JObject rowstampMap) {
+            return _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser(), rowstampMap);
         }
+
 
     }
 }

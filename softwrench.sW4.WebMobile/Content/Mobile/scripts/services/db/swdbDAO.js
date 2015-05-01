@@ -72,9 +72,30 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
                 isDirty: 'BOOL',
                 rowstamp: 'DATE',
-                problem: 'BOOL',
-                problemReason: "TEXT"
+                problemId: 'TEXT',
             });
+
+            entities.Batch = persistence.define('Batch', {
+                application: 'TEXT',
+                sentDate: 'TEXT',
+                completionDate: 'TEXT',
+                lastChecked: 'TEXT'
+            });
+
+            entities.BatchItem = persistence.define('BatchItem', {
+                application: 'TEXT',
+                datamap: 'JSON',
+                 //The id of this entry in maximo, it will be null when it´s created locally
+                remoteId: 'TEXT',
+                //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
+                rowstamp: 'DATE',
+                //either pending, or completed
+                status:'TEXT',
+                problemId: 'TEXT',
+                batchId:'TEXT'
+            });
+
+
 
             //this entity stores the Data which will be used as support of the main entities.
             //It cannot be created locally. Hence Synchronization should use rowstamp caching capabilities by default
@@ -159,7 +180,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         /// <param name="memoryObject">the object to take as a parameter, so that if it contains an id, that will be used to try to load the persistent instance from cache,
         ///  otherwise a fresh new copy will be used, with all its properties merged into the persistent instance.</param>
         /// <returns type="promise">returns a promise that will pass the loaded instance to the chain</returns>
-        instantiate: function (entity, memoryObject,mergingFunction) {
+        instantiate: function (entity, memoryObject, mergingFunction) {
 
 
 

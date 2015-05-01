@@ -1,27 +1,25 @@
-using cts.commons.Util;
-using log4net;
-using softWrench.sW4.Data.Offline;
-using softWrench.sW4.Data.Persistence.Dataset.Commons;
-using softWrench.sW4.Data.Relationship.Composition;
-using softWrench.sW4.Metadata.Applications;
-using softWrench.sW4.Metadata.Applications.DataSet.Filter;
-using softwrench.sW4.Shared2.Data;
-using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
-using softwrench.sW4.Shared2.Metadata.Entity.Association;
-using softWrench.sW4.Data.Search;
-using softWrench.sW4.Metadata;
-using softWrench.sW4.Metadata.Entities;
-using softWrench.sW4.Metadata.Entities.Sliced;
-using softWrench.sW4.Security.Context;
-using cts.commons.simpleinjector;
-using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using cts.commons.simpleinjector;
+using cts.commons.Util;
+using log4net;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softWrench.sW4.Data.Relationship.Composition;
+using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Metadata.Applications.DataSet.Filter;
+using softWrench.sW4.Metadata.Entities.Sliced;
+using softWrench.sW4.Security.Context;
+using softwrench.sW4.Shared2.Data;
+using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
+using softwrench.sW4.Shared2.Metadata.Entity.Association;
+using softWrench.sW4.Util;
 
-namespace softWrench.sW4.Data.Persistence.Relational {
+namespace softWrench.sW4.Data.Persistence.Relational.Collection {
     public class CollectionResolver : ISingletonComponent {
 
         private EntityRepository.EntityRepository _repository;
@@ -51,20 +49,48 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             }
         }
 
-        public void ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
-            AttributeHolder mainEntity) {
-            ResolveCollections(entityMetadata, compositionSchemas, new List<AttributeHolder> { mainEntity });
+        public void ResolveCollections(ApplicationMetadata metadata, AttributeHolder mainEntity) {
+            var parameters = new CollectionResolverParameters {
+                ApplicationMetadata = metadata,
+                ParentEntities = new List<AttributeHolder> { mainEntity }
+            };
+            ResolveCollections(parameters);
+        }
+
+        public void ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema>
+            compositionSchemas, IEnumerable<AttributeHolder> attributeHolders) {
+
+            DoResolveCollections(compositionSchemas, entityMetadata, attributeHolders);
+        }
+
+        public void ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema>
+            compositionSchemas, AttributeHolder attributeHolders) {
+            DoResolveCollections(compositionSchemas, entityMetadata, new List<AttributeHolder> { attributeHolders });
         }
 
 
+        public void ResolveCollections(CollectionResolverParameters parameters) {
+
+            var application = parameters.ApplicationMetadata;
+
+            var compositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
+            var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
+            var attributeHolders = parameters.ParentEntities;
 
 
-        public void ResolveCollections(SlicedEntityMetadata entityMetadata,
-            IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
-            IReadOnlyList<AttributeHolder> entitiesList) {
+            DoResolveCollections(compositionSchemas, entityMetadata, attributeHolders, parameters.RowstampMap);
+        }
+
+        private void DoResolveCollections(IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
+            SlicedEntityMetadata entityMetadata,
+            IEnumerable<AttributeHolder> attributeHolders, IDictionary<string, long?> compositionRowstamps = null) {
             if (!compositionSchemas.Any()) {
                 return;
             }
+            if (compositionRowstamps == null) {
+                compositionRowstamps = new Dictionary<string, long?>();
+            }
+
             var before = Stopwatch.StartNew();
             _log.DebugFormat("Init Collection Resolving for {0} Collections", String.Join(",", compositionSchemas.Keys));
 
@@ -79,9 +105,21 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var ctx = ContextLookuper.LookupContext();
             var results = new Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult>();
             foreach (var collectionAssociation in collectionAssociations) {
-                var association = collectionAssociation;
-                tasks[i++] = Task.Factory.NewThread(() => 
-                    FetchAsync(entityMetadata, association, compositionSchemas, entitiesList, ctx, results));
+                long? rowstamp = null;
+                if (compositionRowstamps.ContainsKey(collectionAssociation.Qualifier)) {
+                    rowstamp = compositionRowstamps[collectionAssociation.Qualifier];
+                }
+
+                var internalParameter = new InternalCollectionResolverParameter {
+                    EntityMetadata = entityMetadata,
+                    CollectionAssociation = collectionAssociation,
+                    CompositionSchemas = compositionSchemas,
+                    EntitiesList = attributeHolders,
+                    Ctx = ctx,
+                    Results = results,
+                    Rowstamp = rowstamp
+                };
+                tasks[i++] = Task.Factory.NewThread(() => FetchAsync(internalParameter));
             }
             Task.WaitAll(tasks);
             _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections",
@@ -89,32 +127,27 @@ namespace softWrench.sW4.Data.Persistence.Relational {
         }
 
 
+        private void FetchAsync(InternalCollectionResolverParameter parameter) {
 
+            var entityMetadata = parameter.EntityMetadata;
 
+            Quartz.Util.LogicalThreadContext.SetData("context", parameter.Ctx);
+            var collectionAssociation = parameter.CollectionAssociation;
 
-        private void FetchAsync(SlicedEntityMetadata entityMetadata, EntityAssociation collectionAssociation,
-            IDictionary<string, ApplicationCompositionSchema> compositionSchemas, IEnumerable<AttributeHolder> entitiesList,
-            ContextHolder ctx, IDictionary<string, EntityRepository.EntityRepository.SearchEntityResult> results) {
-
-            Quartz.Util.LogicalThreadContext.SetData("context", ctx);
-            var lookupAttributes = collectionAssociation.Attributes;
             var collectionEntityMetadata = MetadataProvider.Entity(collectionAssociation.To);
             var targetCollectionAttribute = EntityUtil.GetRelationshipName(collectionAssociation.Qualifier);
-            var applicationCompositionSchema = compositionSchemas[collectionAssociation.Qualifier] as ApplicationCompositionCollectionSchema;
-            if (applicationCompositionSchema == null) {
-                throw ExceptionUtil.InvalidOperation("collection schema {0} not found", collectionAssociation.Qualifier);
-            }
+
+            var applicationCompositionSchema = parameter.CompositionSchema;
+
+            var attributeHolders = parameter.EntitiesList as AttributeHolder[] ?? parameter.EntitiesList.ToArray();
+
+            var offLineMode = parameter.Ctx.OfflineMode;
 
 
-            var lookupattributes = lookupAttributes as EntityAssociationAttribute[] ?? lookupAttributes.ToArray();
-            var attributeHolders = entitiesList as AttributeHolder[] ?? entitiesList.ToArray();
 
-            var offLineMode = ctx.OfflineMode;
+            var matchingResultWrapper = GetResultWrapper();
 
-            var matchingResultWrapper = offLineMode ? new OffLineMatchResultWrapper() : new CollectionMatchingResultWrapper();
-
-            var searchRequestDto = BuildSearchRequestDto(applicationCompositionSchema, lookupattributes,
-                matchingResultWrapper, attributeHolders, collectionEntityMetadata);
+            var searchRequestDto = BuildSearchRequestDto(parameter, matchingResultWrapper);
 
             var firstAttributeHolder = attributeHolders.First();
             if (applicationCompositionSchema.PrefilterFunction != null) {
@@ -131,7 +164,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
             if (offLineMode) {
                 //If on offline mode, we don´t need to match the collections back, we´ll simply return the plain list
-                results.Add(collectionAssociation.Qualifier, queryResult);
+                parameter.Results.Add(collectionAssociation.Qualifier, queryResult);
                 return;
             }
 
@@ -144,11 +177,19 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             MatchResults(queryResult, matchingResultWrapper, targetCollectionAttribute);
         }
 
+        protected virtual CollectionMatchingResultWrapper GetResultWrapper() {
+            return new CollectionMatchingResultWrapper();
+        }
 
 
-        private SearchRequestDto BuildSearchRequestDto(ApplicationCompositionCollectionSchema applicationCompositionSchema,
-            IEnumerable<EntityAssociationAttribute> lookupattributes, CollectionMatchingResultWrapper matchingResultWrapper,
-            AttributeHolder[] attributeHolders, EntityMetadata collectionEntityMetadata) {
+        protected virtual SearchRequestDto BuildSearchRequestDto(InternalCollectionResolverParameter parameter,
+            CollectionMatchingResultWrapper matchingResultWrapper) {
+            var collectionAssociation = parameter.CollectionAssociation;
+
+
+            var lookupAttributes = collectionAssociation.Attributes;
+
+            var attributeHolders = parameter.EntitiesList;
 
             var searchRequestDto = new SearchRequestDto();
 
@@ -156,9 +197,9 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             var printMode = lookupContext.PrintMode;
             var offLineMode = lookupContext.OfflineMode;
 
-            searchRequestDto.BuildProjection(applicationCompositionSchema, printMode, offLineMode);
+            searchRequestDto.BuildProjection(parameter.CompositionSchema, printMode, offLineMode);
 
-            foreach (var lookupAttribute in lookupattributes) {
+            foreach (var lookupAttribute in lookupAttributes) {
                 if (lookupAttribute.From != null) {
                     matchingResultWrapper.AddKey(lookupAttribute.To);
                     var searchValues = new List<string>();
@@ -177,11 +218,11 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                     //if the from is a literal, don´t bother with the entities values
                     searchRequestDto.AppendSearchEntry(lookupAttribute.To, lookupAttribute.Literal);
                 } else if (lookupAttribute.Query != null) {
-                    searchRequestDto.AppendWhereClause(lookupAttribute.GetQueryReplacingMarkers(collectionEntityMetadata.Name));
+                    searchRequestDto.AppendWhereClause(lookupAttribute.GetQueryReplacingMarkers(parameter.EntityMetadata.Name));
                 }
             }
 
-            var orderByField = applicationCompositionSchema.CollectionProperties.OrderByField;
+            var orderByField = parameter.CompositionSchema.CollectionProperties.OrderByField;
             if (orderByField != null) {
                 searchRequestDto.SearchSort = orderByField;
                 searchRequestDto.SearchAscending = !orderByField.EndsWith("desc");
@@ -189,7 +230,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             return searchRequestDto;
         }
 
-        private void MatchResults(EntityRepository.EntityRepository.SearchEntityResult resultCollections, 
+        private void MatchResults(EntityRepository.EntityRepository.SearchEntityResult resultCollections,
             CollectionMatchingResultWrapper matchingResultWrapper, string targetCollectionAttribute) {
             foreach (var resultCollection in resultCollections.ResultList) {
                 var resultkey = new CollectionMatchingResultKey();
@@ -211,7 +252,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
         #region matching Helper classes
 
-        class CollectionMatchingResultWrapper {
+        protected class CollectionMatchingResultWrapper {
 
             readonly IDictionary<AttributeHolder, CollectionMatchingResultKey> _inverseDict = new Dictionary<AttributeHolder, CollectionMatchingResultKey>();
 
@@ -220,10 +261,6 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
             internal void AddKey(string key) {
                 Keys.Add(key);
-            }
-
-            internal void AppendEntry(CollectionMatchingResultKey key, AttributeHolder value) {
-                _matchingDict[key] = value;
             }
 
             virtual internal CollectionMatchingResultKey FetchKey(AttributeHolder entity) {
@@ -241,15 +278,10 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             }
         }
 
-        class OffLineMatchResultWrapper : CollectionMatchingResultWrapper {
-            internal override CollectionMatchingResultKey FetchKey(AttributeHolder entity) {
-                //doesnt matter for offline
-                return new CollectionMatchingResultKey();
-            }
-        }
 
 
-        class CollectionMatchingResultKey {
+
+        protected class CollectionMatchingResultKey {
             //holds for each attribute used in the relationship the value, so it can be matched later
             readonly IDictionary<string, string> _pairs = new Dictionary<string, string>();
 
@@ -260,7 +292,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             public override bool Equals(object obj) {
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != this.GetType()) return false;
+                if (obj.GetType() != GetType()) return false;
                 return Equals((CollectionMatchingResultKey)obj);
             }
 
