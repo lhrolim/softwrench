@@ -11,7 +11,7 @@
     <form id="crudbodyform"
           name="crudbodyform"
           class="form-horizontal" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" method="post" enctype="multipart/form-data" ng-if="isDetail">
-        <div ng-init="setForm(crudbodyform)"/>
+        <div ng-init="setForm(crudbodyform)" />
         <ng-switch on="hasTabs(schema)">
             <div ng-if="isEditDetail(datamap,schema)">
                 <div class="ticketid_spacer"></div>

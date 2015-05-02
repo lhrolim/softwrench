@@ -42,9 +42,11 @@ app.directive('lookupModal', function (contextService) {
         },
 
         controller: function ($injector, $scope, $http, $element, searchService, i18NService, associationService,
-                              formatService, expressionService) {
+                              formatService, expressionService,focusService) {
 
             $scope.lookupModalSearch = function (pageNumber) {
+                focusService.resetFocusToCurrent($scope.schema,$scope.lookupObj.fieldMetadata.attribute);
+
                 associationService.getAssociationOptions($scope, $scope.lookupObj, pageNumber, $scope.searchObj).success(function(data) {
                     var result = data.resultObject;
                     $scope.populateModal(result);

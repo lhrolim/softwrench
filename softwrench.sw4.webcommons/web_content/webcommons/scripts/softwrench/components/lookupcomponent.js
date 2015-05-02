@@ -1,6 +1,6 @@
 var app = angular.module('sw_layout');
 
-app.factory('cmplookup', function ($rootScope, $timeout, $log, associationService) {
+app.factory('cmplookup', function ($rootScope, $timeout, $log, associationService,focusService) {
 
     var showModal = function (element) {
         var modals = $('[data-class="lookupModal"]', element);
@@ -76,7 +76,7 @@ app.factory('cmplookup', function ($rootScope, $timeout, $log, associationServic
             }
 
             associationService.updateDependentAssociationValues(scope, scope.datamap, scope.lookupObj, this.handleMultipleLookupOptionsFn, searchObj);
-
+            focusService.resetFocusToCurrent(scope.schema, fieldMetadata.attribute);
         },
 
         handleMultipleLookupOptionsFn: function (result, lookupObj, scope, datamap) {

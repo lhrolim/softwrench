@@ -83,14 +83,14 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
                     if (displayables[key].evalExpression != null) {
                         expressionResult = expressionService.evaluate(displayables[key].evalExpression, datamap, scope);
                         datamap[target] = expressionResult;
-                    } else if(displayables[key].defaultExpression != null) {
+                    } else if (displayables[key].defaultExpression != null) {
                         expressionResult = expressionService.evaluate(displayables[key].defaultExpression, datamap, scope);
                         datamap[target] = expressionResult;
                     }
                     if (expressionResult == null && value.defaultValue != null) {
                         //TODO: extract a service here, to be able to use @user, @person, @date, etc...
                         datamap[target] = value.defaultValue;
-                   }
+                    }
                 }
             });
             return datamap;
@@ -180,26 +180,79 @@ app.factory('fieldService', function ($injector, $log, expressionService, eventS
             return result;
         },
 
-        getNextVisibleDisplayable: function (datamap, schema, key) {
+        getDisplayableIndexByKey: function (schema, key) {
             var displayables = schema.displayables;
-            var result;
-            var getNext = false;
-
             for (var i = 0; i < displayables.length; i++) {
                 //is this the current field?
-                if (displayables[i].attribute && displayables[i].attribute == key) {
-                    getNext = true;
-                    continue;
-                }
+                var fieldMetadata = displayables[i];
 
-                //if the current field is found, get the next visible and editable field
-                if (getNext && !this.isFieldHidden(datamap, schema, displayables[i]) && !this.isFieldReadOnly(datamap, schema, displayables[i])) {
-                    result = displayables[i];
-                    console.log('found', displayables[i].attribute, displayables[i]);
-                    break;
+                if (fieldMetadata.attribute && fieldMetadata.attribute == key) {
+                    return i;
                 }
             }
+            return -1;
+        },
+
+        getDisplayableIdxByKey: function (schema, attribute) {
+            schema.jscache = schema.jscache || {};
+            var results = this.getLinearDisplayables(schema);
+            for (var i = 0; i < results.length; i++) {
+                if (results[i].attribute == attribute) {
+                    return i;
+                }
+            }
+            return -1;
+        },
+
+        getLinearDisplayables: function (container) {
+            /// <summary>
+            /// gets a list of all the displayables of the current schema/section in a linear mode, excluding any sections/tabs itselves.
+            /// </summary>
+            /// <param name="container">either a schema or a section</param>
+            /// <returns type=""></returns>
+            container.jscache = container.jscache || {};
+            if (container.jscache.alldisplayables) {
+                return container.jscache.alldisplayables;
+            }
+            var displayables = container.displayables;
+            var result = [];
+            for (var i = 0; i < displayables.length; i++) {
+                var displayable = displayables[i];
+                if (displayable.displayables) {
+                    //at this point displayable is a section, calling recursively
+                    result.concat(this.getLinearDisplayables(displayable));
+                } else {
+                    result.push(displayable);
+                }
+            }
+            container.jscache.alldisplayables = result;
             return result;
+        },
+
+        
+
+        getNextVisibleDisplayableIdx: function (datamap, schema, key) {
+
+            //all fields, regardless of sections
+            var displayables = this.getLinearDisplayables(schema);
+            var fieldIdx = this.getDisplayableIdxByKey(schema,key);
+            if (fieldIdx == -1 || fieldIdx == displayables.length) {
+                //no such field, or last field
+                return -1;
+            }
+
+            for (var i = fieldIdx +1; i < displayables.length; i++) {
+                //is this the current field?
+                var fieldMetadata = displayables[i];
+
+                //if the current field is found, get the next visible and editable field
+                if (!this.isFieldHidden(datamap, schema, fieldMetadata) && !this.isFieldReadOnly(datamap, schema, fieldMetadata)) {
+                    $log.getInstance("fieldService#getNextVisibleDisplayable").debug('found', fieldMetadata.attribute, fieldMetadata);
+                    return i;
+
+                }
+            }
+            return -1;
         },
 
         getRequiredDisplayables: function (schema) {

@@ -67,15 +67,27 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmplookup, 
             var log = $log.getInstance('cmpfacade#focus');
 
             var attribute = displayable.attribute;
-            log.debug('change focus to {0}'.format(attribute));
-
+            var associationKey = displayable.associationKey;
+            var rendererType = displayable.rendererType;
             //TODO: test will all render types
             //works with: default, autocompleteclient
             //not working with: richtext, lookup (works with direct call)
-            var selector = '[data-field="' + attribute + '"]';
-            var targetField = $(selector).find('input,textarea,select').focus();
+            if (rendererType == 'autocompleteclient') {
+                cmpAutocompleteClient.focus(displayable);
+            }else if (rendererType == "lookup") {
+                //TODO:    
+            } else if (rendererType == "combo") {
+                var selector = '[data-field="' + associationKey + '"]';
+                $(selector).focus();
+            }
 
-            log.debug($(selector), targetField);
+            else {
+                //default case
+                var selector = '[data-field="' + attribute + '"]';
+                $(selector).find('input,textarea,select').focus();
+            }
+
+            log.debug('change focus to {0}'.format(attribute));
         },
 
         refresh: function (displayable, scope, fromDigestAndRefresh) {

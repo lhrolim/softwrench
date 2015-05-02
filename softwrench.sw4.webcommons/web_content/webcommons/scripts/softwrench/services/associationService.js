@@ -312,7 +312,7 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
                 //move input focus to the next field
                 //TODO: not working with lookups, e.g. updating SR Asset resultes in two updateAssociations, the first for asset
                 //the second for location, cause the asset to remain in focus
-                scope.$broadcast('sw_move_focus', triggerFieldName);
+                scope.$broadcast('sw_move_focus', { attribute: triggerFieldName });
 
                 return false;
             }
@@ -363,7 +363,7 @@ app.factory('associationService', function (dispatcherService, $http, $timeout, 
 
                     //TODO: Is this needed, I couldn't find where it's used, I was not able to test if needed
                     //move input focus to the next field
-                    //scope.$broadcast('sw_move_focus', triggerFieldName);
+                    scope.$broadcast('sw_move_focus', triggerFieldName);
                 }
             }).error(
             function data() {

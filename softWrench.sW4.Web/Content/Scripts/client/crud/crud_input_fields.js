@@ -153,20 +153,10 @@ app.directive('crudInputFields', function (contextService, eventService) {
                 return title;
             };
 
-            $scope.$on('sw_move_focus', function (event, args) {
-                var log = $log.getInstance('crud_input_fields#on_sw_move_focus');
+            $scope.setForm = function (form) {
+                $scope.crudform = form;
+            };
 
-                var nextField = fieldService.getNextVisibleDisplayable($scope.datamap, $scope.schema, args)
-                if (nextField) {
-                    //log.debug('displayables', $scope.schema.displayables);
-
-                    log.debug('call cmpfacade.focus', nextField);
-                    cmpfacade.focus(nextField);
-
-                } else {
-                    console.log('next input not found');
-                }
-            });
 
             $scope.$on('sw_block_association', function (event, association) {
                 $scope.blockedassociations[association] = true;
@@ -221,6 +211,39 @@ app.directive('crudInputFields', function (contextService, eventService) {
                     $scope.configureAssociationChangeEvents();
                     $scope.configureFieldChangeEvents();
 
+                    $scope.$on('sw_reset_focus', function (event, idx) {
+                        $scope.currentFocusedIdx = idx;
+                    });
+
+                    $scope.$on('sw_move_focus', function (event, params) {
+                        /// <summary>
+                        /// 
+                        /// </summary>
+                        /// <param name="event"></param>
+                        /// <param name="params">
+                        /// An object containing:
+                        /// attribute => the name of the attribute to go torwards
+                        /// allowmovingbackward => if false, or undefined, if will only be allowed to move forward
+                        /// 
+                        /// </param>
+                        var log = $log.getInstance('crud_input_fields#on_sw_move_focus');
+                        var attribute = params.attribute;
+                        var allowmovingbackward = params.allowmovingbackward;
+
+                        var nextFieldIdx = fieldService.getNextVisibleDisplayableIdx($scope.datamap, $scope.schema, attribute);
+                        if (nextFieldIdx == -1) {
+                            return;
+                        }
+                        var movingForward = !$scope.currentFocusedIdx || (nextFieldIdx >= $scope.currentFocusedIdx);
+
+                        if (movingForward || allowmovingbackward) {
+                            var nextField = fieldService.getLinearDisplayables($scope.schema)[nextFieldIdx];
+                            log.debug('call cmpfacade.focus', nextField);
+                            cmpfacade.focus(nextField);
+                            $scope.currentFocusedIdx = nextFieldIdx;
+                        }
+
+                    });
                     $scope.configureDirtyWatcher();
                 }
                 $('.datetimereadonly').datepicker("remove");

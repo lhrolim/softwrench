@@ -1,4 +1,5 @@
 <section id="{{elementid}}">
+    <div ng-init="setForm(crudbodyform)" />
     <div>
         <fieldset ng-repeat="fieldMetadata in nonTabFields(displayables)"
                   class="form-group {{getFieldClass(fieldMetadata)}}"
@@ -47,7 +48,7 @@
                        value="{{getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap)}}" />
             </div>
             <!--SM - 09-24 - SWWEB-441 Change column class
-            ng-class="getValueColumnClass(fieldMetadata)"-->
+                ng-class="getValueColumnClass(fieldMetadata)"-->
             <div ng-if="!fieldMetadata.isReadOnly"
                  ng-show="fieldMetadata.attribute!=schema.idFieldName"
                  ng-switch on="fieldMetadata.rendererType"
@@ -57,7 +58,8 @@
                             ng-model="datamap[fieldMetadata.target]"
                             ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                             ng-enabled="isSelectEnabled(fieldMetadata)"
-                            ng-init="initField(fieldMetadata)">
+                            ng-init="initField(fieldMetadata)"
+                            data-field="{{fieldMetadata.associationKey}}">
                         <option value=""></option>
                     </select>
                 </div>
