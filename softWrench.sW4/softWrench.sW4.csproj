@@ -153,6 +153,8 @@
     <Compile Include="Data\Persistence\WS\Commons\KongsbergIncidentCrudConnector.cs" />
     <Compile Include="Metadata\Applications\DataSet\BeringKeyInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseProblemDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\KongsbergIncidentDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\KongsbergServiceRequestDataSet.cs" />
     <Compile Include="Metadata\Applications\Notification\ApplicationNotificationFactory.cs" />
     <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />
     <Compile Include="Audit\AuditTrail.cs" />
