@@ -7,9 +7,10 @@ using cts.commons.simpleinjector;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata.Applications.DataSet;
+using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Metadata.Applications.Classification {
-    internal class Classification : ISingletonComponent
+    internal class ClassificationDataSet : ISingletonComponent
     {
         public enum ClassStructureType { 
             Asset = 0, 
@@ -21,6 +22,7 @@ namespace softWrench.sW4.Metadata.Applications.Classification {
 
         public static IEnumerable<IAssociationOption> GetClassStructureType(ClassStructureType type, OptionFieldProviderParameters parameters) {
             var maxDAO = SimpleInjectorGenericFactory.Instance.GetObject<MaximoHibernateDAO>(typeof(MaximoHibernateDAO));
+            var user = SecurityFacade.CurrentUser();
 
             var query = string.Format(@"SELECT c.classstructureid AS ID,
                                                p3.classificationid AS CLASS_5,
@@ -41,8 +43,8 @@ namespace softWrench.sW4.Metadata.Applications.Classification {
                                         from classusewith
                                         where classusewith.classstructureid=c.classstructureid
                                         and objectname= '{2}')",
-                                        parameters.OriginalEntity.Attributes["orgid"],
-                                        parameters.OriginalEntity.Attributes["siteid"],
+                                        parameters.OriginalEntity.GetAttribute("orgid") ?? user.OrgId,
+                                        parameters.OriginalEntity.GetAttribute("siteid") ?? user.SiteId,
                                         type.ToString().ToUpper());
 
             var result = maxDAO.FindByNativeQuery(query, null);

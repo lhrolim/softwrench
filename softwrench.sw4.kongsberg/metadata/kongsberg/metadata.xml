@@ -950,6 +950,51 @@
     </entity>
 
     <entity name="solution" idAttribute="solutionid" useridAttribute="solution">
+      <attributes>
+        <attribute name="solutionid" type="bigint" required="true" />
+        <attribute name="solution" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="statusdate" type="datetime" required="false" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="selfservaccess" type="smallint" required="true" />
+        <attribute name="classstructureid" type="varchar" required="false" />
+        <attribute name="problemcode" type="varchar" required="false" />
+        <attribute name="fr1code" type="varchar" required="false" />
+        <attribute name="fr2code" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="failurecode" type="varchar" required="false" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="type" type="varchar" required="false" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="pluspinsertcustomer" type="varchar" required="false" />
+        <attribute name="assignedownergroup" type="varchar" required="false" />
+        <attribute name="expdate" type="datetime" required="false" />
+        <attribute name="solnauthor" type="varchar" required="false" />
+        <attribute name="extsolnid" type="varchar" required="false" />
+        <attribute name="lastviewdate" type="datetime" required="false" />
+        <attribute name="keywords" type="varchar" required="false" />
+        <attribute name="numtimesapplied" type="int" required="false" />
+        <attribute name="numtimesappliedss" type="int" required="false" />
+        <attribute name="avgranking" type="int" required="false" />
+        <attribute name="cinum" type="varchar" required="false" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="assetsiteid" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="rtsymptom" type="varchar" required="false" />
+        <attribute name="rtcause" type="varchar" required="false" />
+        <attribute name="rtresoln" type="varchar" required="false" />
+        <attribute name="rtsymptomlbl" type="varchar" required="false" />
+        <attribute name="rtcauselbl" type="varchar" required="false" />
+        <attribute name="rtresolnlbl" type="varchar" required="false" />
+        <attribute name="owner" type="varchar" required="false" />
+        <attribute name="ownergroup" type="varchar" required="false" />
+        <attribute name="pmsoleffscore" type="int" required="false" />
+        <attribute name="pmsolsuccessbysd" type="int" required="false" />
+        <attribute name="pmsolpriority" type="int" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+      </attributes>
       <relationships>
         <relationship to="longdescription" qualifier="symptom">
           <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
@@ -983,7 +1028,7 @@
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="solution" />
-        <connectorParameter key="integration_interface" value="SWSOLUTION" />
+        <connectorParameter key="integration_interface" value="SWSOLUTIONS" />
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseSolutionCrudConnector" />
       </connectorParameters>
     </entity>
@@ -2807,6 +2852,9 @@
           <association label="Asset" target="assetnum" labelfield="asset_.description">
             <renderer type="lookup"/>
           </association>
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SlnClassStructureType">
+            <renderer type="autocompleteclient" />
+          </optionfield>
           <field attribute="description" label="Description" requiredexpression="true"/>
           <field attribute="symptom_.ldtext" label="Symptom:">
             <renderer type="richtext"/>
@@ -2832,6 +2880,9 @@
           <association label="Asset" target="assetnum" labelfield="asset_.description">
             <renderer type="lookup"/>
           </association>
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SlnClassStructureType">
+            <renderer type="autocompleteclient" />
+          </optionfield>
           <field attribute="description" label="Description" requiredexpression="true"/>
           <field attribute="symptom_.ldtext" label="Symptom:">
             <renderer type="richtext"/>
