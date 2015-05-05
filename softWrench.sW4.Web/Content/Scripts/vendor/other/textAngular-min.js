@@ -1057,7 +1057,17 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 								else{
 									$document[0].execCommand('insertText', false, text);
 								}
-								_setViewValue();
+								var val = _compileHtml();
+								if (_defaultVal !== '' && val.trim() === '') {
+								    element[0].innerHTML = _defaultVal;
+								    taSelection.setSelectionToElementStart(element.children()[0]);
+								}
+
+							    //Luiz: this was causing the main issue since the ng-sanitize would be evaluated upon the whole image.
+
+							    _setViewValue(val);
+
+//								_setViewValue();
 							}
 						});
 
