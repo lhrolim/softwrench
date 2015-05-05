@@ -129,7 +129,7 @@ app.directive('crudBody', function (contextService) {
                 window.scrollTo(0, 0);
 
                 //SWWEB-960 - set focus to the first input, on new creations
-                if (!$scope.isEditDetail($scope.datamap,$scope.schema)) {
+                if (!$scope.isEditDetail($scope.datamap, $scope.schema)) {
                     log.debug('set input focus');
                     $('#crudInputMainFields').find('input,textarea,select').filter(':visible:first').focus();
                 }
@@ -195,7 +195,7 @@ app.directive('crudBody', function (contextService) {
                     if (data.type == 'ActionRedirectResponse') {
                         //we´ll not do a crud action on this case, so totally different workflow needed
                         redirectService.redirectToAction(null, data.controller, data.action, data.parameters);
-                    } else {
+                    } else if (data.type != 'BlankApplicationResponse') {
                         var nextSchema = data.schema;
                         $scope.$parent.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
                     }
@@ -316,7 +316,7 @@ app.directive('crudBody', function (contextService) {
 
                 var eventParameters = {
                     originaldatamap: originalDatamap.fields,
-                    'continue':function () {
+                    'continue': function () {
                         $scope.validateSubmission(selecteditem, parameters, transformedFields, schemaToSave);
                     }
                 };
@@ -328,7 +328,7 @@ app.directive('crudBody', function (contextService) {
                     return;
                 }
 
-                $scope.validateSubmission(selecteditem, parameters, transformedFields,schemaToSave);
+                $scope.validateSubmission(selecteditem, parameters, transformedFields, schemaToSave);
             };
 
             $scope.validateSubmission = function (selecteditem, parameters, transformedFields, schemaToSave) {
@@ -350,13 +350,13 @@ app.directive('crudBody', function (contextService) {
                 }
 
                 var eventParameters = {
-                    originaldatamap : originalDatamap.fields,
+                    originaldatamap: originalDatamap.fields,
                     'continue': function () {
-                        $scope.submitToServer(selecteditem, parameters, transformedFields,schemaToSave);
+                        $scope.submitToServer(selecteditem, parameters, transformedFields, schemaToSave);
                     }
                 }
 
-                var eventResult = eventService.beforesubmit_postvalidation(schemaToSave, transformedFields,eventParameters);
+                var eventResult = eventService.beforesubmit_postvalidation(schemaToSave, transformedFields, eventParameters);
                 if (eventResult == false) {
                     //this means that the custom postvalidator should call the continue method
                     log.debug('waiting on custom postvalidator to invoke the continue function');
@@ -422,8 +422,14 @@ app.directive('crudBody', function (contextService) {
 
                 command(urlToUse, jsonString)
                     .success(function (data) {
-                        //datamap should always be updated
-                        $scope.datamap = data.resultObject;
+                        if (data.type != 'BlankApplicationResponse') {
+                            $scope.datamap = data.resultObject;
+                        }
+                        if (data.id) {
+                            //updating the id, useful when it´s a creation and we need to update value return from the server side
+                            $scope.datamap.fields[$scope.schema.idFieldName] = data.id;
+                        }
+
                         if (successCbk == null || applyDefaultSuccess) {
                             defaultSuccessFunction(data);
                         }

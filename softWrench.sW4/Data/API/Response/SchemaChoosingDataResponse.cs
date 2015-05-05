@@ -1,9 +1,9 @@
-﻿using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
-namespace softWrench.sW4.Data.API {
+namespace softWrench.sW4.Data.API.Response {
     public class SchemaChoosingDataResponse : IApplicationResponse {
         private string _mode;
         public string Type { get { return null; } }
@@ -27,6 +27,7 @@ namespace softWrench.sW4.Data.API {
         public string PlaceHolder { get; set; }
 
         public string ApplicationName { get { return Schemas.First().ApplicationName; } }
+        public string Id { get; private set; }
 
         public IList<ApplicationSchemaDefinition> Schemas { get; set; }
         public string RedirectURL { get; set; }

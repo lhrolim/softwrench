@@ -8,6 +8,7 @@ using NHibernate.Hql.Ast.ANTLR;
 using NHibernate.Linq;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence;

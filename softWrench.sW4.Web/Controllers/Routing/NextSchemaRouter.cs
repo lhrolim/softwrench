@@ -2,6 +2,7 @@
 using log4net;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata;
@@ -35,7 +36,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
                 return new ApplicationMetadataSchemaKey(SchemaStereotype.Detail.ToString().ToLower(), SchemaMode.input, ClientPlatform.Mobile);
             }
             if (schema == null) {
-                return null;    
+                return null;
             }
             var key = schema.Value.ToObject(typeof(ApplicationMetadataSchemaKey));
             json.Remove(keytouse);
@@ -54,7 +55,9 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             if (routerParameter.NoApplicationRedirectDetected) {
                 if (routerParameter.NextAction == null) {
                     Log.DebugFormat("No redirect needed");
-                    return new BlankApplicationResponse();
+                    return new BlankApplicationResponse{
+                        Id = routerParameter.TargetResult.Id
+                    };
                 }
 
                 Log.DebugFormat("redirecting to custom controller/action {0}/{1} ", routerParameter.NextController, routerParameter.NextAction);

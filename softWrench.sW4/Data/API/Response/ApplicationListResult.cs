@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.Pagination;
-using softWrench.sW4.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
-namespace softWrench.sW4.Data.API {
+namespace softWrench.sW4.Data.API.Response {
     public class ApplicationListResult : GenericResponseResult<IEnumerable<AttributeHolder>>, IApplicationResponse {
 
         private readonly ApplicationSchemaDefinition _schema;
@@ -40,6 +39,7 @@ namespace softWrench.sW4.Data.API {
         }
 
         public string ApplicationName { get { return Schema.ApplicationName; } }
+        public string Id { get; private set; }
 
         public string Type {
             get { return GetType().Name; }

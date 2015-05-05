@@ -1,7 +1,7 @@
-﻿using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using System;
+﻿using System;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
-namespace softWrench.sW4.Data.API {
+namespace softWrench.sW4.Data.API.Response {
     public class ActionRedirectResponse : IApplicationResponse {
 
         public string Action { get; set; }
@@ -26,6 +26,8 @@ namespace softWrench.sW4.Data.API {
         public ApplicationSchemaDefinition Schema { get; private set; }
         public string Mode { get; set; }
         public string ApplicationName { get; private set; }
+        public string Id { get; private set; }
+
         #endregion
     }
 }
