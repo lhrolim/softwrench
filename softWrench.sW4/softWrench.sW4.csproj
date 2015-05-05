@@ -149,6 +149,7 @@
   <ItemGroup>
     <Compile Include="Data\Persistence\WS\Commons\BaseSolutionCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\KongsbergIncidentCrudConnector.cs" />
+    <Compile Include="Metadata\Applications\Classification\Classification.cs" />
     <Compile Include="Metadata\Applications\DataSet\BeringKeyInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\Notification\ApplicationNotificationFactory.cs" />
     <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />
