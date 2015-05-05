@@ -1156,6 +1156,7 @@
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="sr.classificationid, sr.changedate"/>
           </properties>
         </schema>
 
@@ -1185,6 +1186,7 @@
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="sr.classificationid, sr.changedate"/>
           </properties>
         </schema>
 
@@ -1214,6 +1216,7 @@
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="sr.classificationid, sr.changedate"/>
           </properties>
         </schema>
 
