@@ -198,7 +198,7 @@ namespace softWrench.sW4.Web.Controllers {
                 _auditManager.CreateAuditEntry(
                     operationDataRequest.Operation,
                     applicationMetadata.Name,
-                    operationDataRequest.Id,
+                    maximoResult.Id,
                     json.ToString(),
                     DateTime.Now.FromServerToRightKind());
             }

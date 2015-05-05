@@ -41,7 +41,7 @@
   </entities>
 
   <applications>
-    <application entity="SR" name="servicerequest" title="Service Request" audit="true">
+    <application entity="SR" name="servicerequest" title="Service Request">
       <properties>
         <property key="mobile.disabled" value="true"/>
       </properties>
