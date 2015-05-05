@@ -1235,6 +1235,7 @@
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
           </association>
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
+            <dataprovider prefilterfunction="FilterByPersonGroup"/>
             <renderer type="lookup"/>
             <event type="afterchange" service="generalsrService" method="afterchangeownergroup"/>
           </association>
@@ -1589,6 +1590,7 @@
           </association>
           <!-- Added the Owner Group field-->
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
+            <dataprovider prefilterfunction="FilterByPersonGroup"/>
             <renderer type="lookup"/>
           </association>
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
@@ -1706,6 +1708,7 @@
           </association>
           <!-- Added the Owner Group field-->
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
+            <dataprovider prefilterfunction="FilterByPersonGroup"/>
             <renderer type="lookup"/>
           </association>
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>

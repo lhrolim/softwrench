@@ -1,28 +1,33 @@
-﻿using softWrench.sW4.Data.API;
+﻿using softwrench.sw4.Shared2.Data.Association;
+using softWrench.sW4.Data;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
-using softWrench.sW4.Metadata.Security;
-using softwrench.sw4.Shared2.Data.Association;
-using cts.commons.simpleinjector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace softWrench.sW4.Metadata.Applications.DataSet{
-    class BaseIncidentDataSet : MaximoApplicationDataSet{
+namespace softWrench.sW4.Metadata.Applications.DataSet {
+    internal class KongsbergIncidentDataSet : MaximoApplicationDataSet
+    {
+        public SearchRequestDto FilterByPersonGroup(AssociationPreFilterFunctionParameters parameters) {
+            var filter = parameters.BASEDto;
 
-        public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters){
+            filter.AppendWhereClauseFormat("(persongroup.persongroup in ('BP - GOM','FSE','testsup','supp24l2','fsepetro','fsebpwa','fsebaku','fsestato','kogtdev','kogtqa','kspicesu','lfbrazil','lfdb','lfinstal','lflicens','lfmodel','lfmultif','lfparam','lfpm','lfscript','lftrain','lfui','petrobra','rigmgrl1','rigmgrl2','rigmgrl3','supp24l1','supp24l3','wlrtdev','wlrtprod','fsebaku'))");
+
+            return filter;
+        }
+
+        public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
             return AssetFilterBySiteFunction(parameters);
         }
 
-        public SearchRequestDto AssetFilterBySiteFunction(AssociationPreFilterFunctionParameters parameters){
+        public SearchRequestDto AssetFilterBySiteFunction(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             var location = (string)parameters.OriginalEntity.GetAttribute("location");
-            if (location == null){
+            if (location == null) {
                 return filter;
             }
             filter.AppendSearchEntry("asset.location", location.ToUpper());
@@ -58,7 +63,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet{
             var result = MaxDAO.FindByNativeQuery(query, null);
             var list = new List<AssociationOption>();
 
-            foreach (var record in result){
+            foreach (var record in result) {
                 list.Add(new AssociationOption(record["ID"],
                          String.Format("{0}{1}{2}{3}{4}",
                                         record["CLASS_5"] == null ? "" : record["CLASS_5"] + "/",
@@ -72,12 +77,12 @@ namespace softWrench.sW4.Metadata.Applications.DataSet{
             return list;
         }
 
-        public override string ApplicationName(){
+        public override string ApplicationName() {
             return "incident";
         }
 
-        public override string ClientFilter(){
-            return "otb,manchester";
+        public override string ClientFilter() {
+            return "kongsberg";
         }
     }
 }

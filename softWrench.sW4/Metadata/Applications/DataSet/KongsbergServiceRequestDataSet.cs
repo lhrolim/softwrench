@@ -1,22 +1,22 @@
+﻿using cts.commons.simpleinjector;
+using softWrench.sW4.Data;
+using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
+using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Metadata.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using softWrench.sW4.Data;
-using softWrench.sW4.Data.API;
-using softWrench.sW4.Data.Entities;
-using softWrench.sW4.Data.Persistence;
-using softWrench.sW4.Data.Persistence.SWDB;
-using softWrench.sW4.Data.Relationship.Composition;
-using softWrench.sW4.Data.Search;
-using softWrench.sW4.Data.Persistence.Dataset.Commons;
-using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Security.Services;
-using cts.commons.simpleinjector;
+using System.Text;
+using System.Threading.Tasks;
 using softwrench.sw4.Shared2.Data.Association;
+using softWrench.sW4.Data.Entities;
+using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
+using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Metadata.Applications.DataSet {
-    class OtbServiceRequestDataSet : MaximoApplicationDataSet {
+    class KongsbergServiceRequestDataSet : MaximoApplicationDataSet {
         /* Need to add this prefilter function for the problem codes !! 
         public SearchRequestDto FilterProblemCodes(AssociationPreFilterFunctionParameters parameters)
         {
@@ -63,6 +63,14 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             }
         }
 
+        public SearchRequestDto FilterByPersonGroup(AssociationPreFilterFunctionParameters parameters) {
+            var filter = parameters.BASEDto;
+
+            filter.AppendWhereClauseFormat("(persongroup.persongroup in ('BP - GOM','FSE','testsup','supp24l2','fsepetro','fsebpwa','fsebaku','fsestato','kogtdev','kogtqa','kspicesu','lfbrazil','lfdb','lfinstal','lflicens','lfmodel','lfmultif','lfparam','lfpm','lfscript','lftrain','lfui','petrobra','rigmgrl1','rigmgrl2','rigmgrl3','supp24l1','supp24l3','wlrtdev','wlrtprod','fsebaku'))");
+
+            return filter; 
+        }
+
         public SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
             return AssetFilterBySiteFunction(parameters);
         }
@@ -76,7 +84,6 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             filter.AppendSearchEntry("asset.location", location.ToUpper());
             return filter;
         }
-
 
         public SearchRequestDto AppendCommlogDoclinks(CompositionPreFilterFunctionParameters preFilter) {
             var dto = preFilter.BASEDto;
@@ -137,7 +144,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         }
 
         public override string ClientFilter() {
-            return "otb,manchester";
+            return "kongsberg";
         }
     }
 }
