@@ -2866,9 +2866,9 @@
             <renderer type="richtext"/>
           </field>
           
-          <composition relationship="attachment" label="Attachments">
+          <!--<composition relationship="attachment" label="Attachments">
             <collectionproperties allowcreation="@status!='ACTIVE'" allowupdate="false"/>
-          </composition>
+          </composition>-->
           
           <event type="beforesubmit.prevalidation" service="solutionService" method="validateStatus"/>
         </schema>
