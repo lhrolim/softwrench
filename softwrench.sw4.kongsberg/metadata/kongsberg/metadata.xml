@@ -3,6 +3,7 @@
   <!--kongsberg-->
   <templates>
     <template path="@worklogs.xml"/>
+    <template path="@solution.xml"/>
   </templates>
   <entities>
     <entity name="SR" idAttribute="ticketid">
@@ -233,6 +234,7 @@
         </relationship>
         <relationship to ="solution" qualifier="solution" >
           <relationshipAttribute from="solution" to ="solution" primary="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
         </relationship>
         <relationship to="longdescription" qualifier="symptom">
           <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
@@ -801,6 +803,7 @@
         </relationship>
         <relationship to ="solution" qualifier="solution" >
           <relationshipAttribute from="solution" to ="solution" primary="true"/>
+          <relationshipAttribute to="status" literal="active" quoteLiteral="true"/>
         </relationship>
         <relationship to="longdescription" qualifier="symptom">
           <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
@@ -946,11 +949,53 @@
       </relationships>
     </entity>
 
-    <entity name="solution" idAttribute="solution" whereclause="status like 'ACTIVE'">
+    <entity name="solution" idAttribute="solutionid" useridAttribute="solution">
+      <attributes>
+        <attribute name="solutionid" type="bigint" required="true" />
+        <attribute name="solution" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="statusdate" type="datetime" required="false" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="selfservaccess" type="smallint" required="true" />
+        <attribute name="classstructureid" type="varchar" required="false" />
+        <attribute name="problemcode" type="varchar" required="false" />
+        <attribute name="fr1code" type="varchar" required="false" />
+        <attribute name="fr2code" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="failurecode" type="varchar" required="false" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="type" type="varchar" required="false" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="pluspinsertcustomer" type="varchar" required="false" />
+        <attribute name="assignedownergroup" type="varchar" required="false" />
+        <attribute name="expdate" type="datetime" required="false" />
+        <attribute name="solnauthor" type="varchar" required="false" />
+        <attribute name="extsolnid" type="varchar" required="false" />
+        <attribute name="lastviewdate" type="datetime" required="false" />
+        <attribute name="keywords" type="varchar" required="false" />
+        <attribute name="numtimesapplied" type="int" required="false" />
+        <attribute name="numtimesappliedss" type="int" required="false" />
+        <attribute name="avgranking" type="int" required="false" />
+        <attribute name="cinum" type="varchar" required="false" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="assetsiteid" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="rtsymptom" type="varchar" required="false" />
+        <attribute name="rtcause" type="varchar" required="false" />
+        <attribute name="rtresoln" type="varchar" required="false" />
+        <attribute name="rtsymptomlbl" type="varchar" required="false" />
+        <attribute name="rtcauselbl" type="varchar" required="false" />
+        <attribute name="rtresolnlbl" type="varchar" required="false" />
+        <attribute name="owner" type="varchar" required="false" />
+        <attribute name="ownergroup" type="varchar" required="false" />
+        <attribute name="pmsoleffscore" type="int" required="false" />
+        <attribute name="pmsolsuccessbysd" type="int" required="false" />
+        <attribute name="pmsolpriority" type="int" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+      </attributes>
       <relationships>
-        <relationship to="classstructure" qualifier="classstructure">
-          <relationshipAttribute from="classstructureid" to ="classstructureid" primary="true"/>
-        </relationship>
         <relationship to="longdescription" qualifier="symptom">
           <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="SOLUTION" quoteLiteral="true" />
@@ -970,7 +1015,22 @@
           <relationshipAttribute from="solutionid" to="ownerid" primary="true"/>
           <relationshipAttribute to="ownertable" literal="SOLUTION" quoteLiteral="true"/>
         </relationship>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to ="siteid" primary="true"/>
+          <relationshipAttribute to="active" literal="1" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
+        <relationship to="asset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true" />
+        </relationship>
       </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="solution" />
+        <connectorParameter key="integration_interface" value="SWSOLUTIONS" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseSolutionCrudConnector" />
+      </connectorParameters>
     </entity>
 
     <entity name="inboundcomm" idAttribute="inboundcommid">
@@ -2022,8 +2082,6 @@
       </schemas>
     </application>
 
-
-
     <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
       <properties>
         <property key="mobile.userInteractionEnabled" value="false"/>
@@ -2246,26 +2304,6 @@
           <field attribute="personid" label="Labor:"  requiredexpression="true" />
           <field hidden="true" label="Person:" attribute="person_.displayname" />
           <association label="Person:" target="personid" labelfield="person.displayname" />
-        </detail>
-      </schemas>
-    </application>
-
-    <application name="solution" title="solution" entity="solution">
-      <properties>
-        <property key ="icon.composition.tab" value="fa fa-book"/>
-      </properties>
-      <schemas>
-        <schema id="list" stereotype="compositionlist" >
-          <field attribute="solution" label="Solution No"/>
-          <field attribute="description" label="Description"/>
-
-        </schema>
-        <detail stereotype="compositiondetail">
-          <field attribute="solution" label="Solution No" readonly="true"/>
-          <field attribute="problemcode" label="Symptom:" />
-          <field attribute="fr1code" label="Cause:" />
-          <field attribute="fr2code" label="Resolution:" />
-
         </detail>
       </schemas>
     </application>
@@ -2759,5 +2797,110 @@
       </schemas>
     </application>
 
+    <application name="solution" title="solution" entity="solution">
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-book"/>
+      </properties>
+      <schemas>
+        <list title="Solution Grid" platform="web">
+          <field attribute="solution" label="Solution No" >
+            <renderer type="default"/>
+          </field>
+          <field attribute="description" label="Description">
+            <renderer type="default"/>
+          </field>
+          <optionfield attribute="selfservaccess" label="Self-Service">
+            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
+            <option label="Yes" value="1"/>
+            <option label="No" value="0"/>
+          </optionfield>
+          <field attribute="assetnum" label="Asset">
+            <renderer type="default"/>
+          </field>
+          <field attribute="classstructure_.classificationid" label="Classification">
+            <renderer type="default"/>
+          </field>
+          <field attribute="siteid" label="Site">
+            <renderer type="default"/>
+          </field>
+          <field attribute="status" label="Status" >
+            <renderer type="default"/>
+          </field>
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+            <!--<property key="list.defaultorderby" value="workorder.statusdate desc"/>-->
+          </properties>
+        </list>
+
+        <schema id="complist" stereotype="compositionlist" >
+          <field attribute="solution" label="Solution No"/>
+          <field attribute="description" label="Description"/>
+        </schema>
+
+        <detail stereotype="compositiondetail">
+          <field attribute="solution" label="Solution No" readonly="true"/>
+          <field attribute="problemcode" label="Symptom:" />
+          <field attribute="fr1code" label="Cause:" />
+          <field attribute="fr2code" label="Resolution:" />
+        </detail>
+
+        <schema id="editdetail" stereotype="detail" platform="web">
+          <field attribute="solution" label="Solution No" readonly="true"/>
+          <optionfield attribute="status" label="Status" requiredexpression="true">
+            <renderer type="combo"/>
+            <option label="DRAFT" value="DRAFT"/>
+            <option label="ACTIVE" value="ACTIVE"/>
+            <option label="INACTIVE" value="INACTIVE"/>
+          </optionfield>
+          <association label="Site" target="siteid" labelfield="site_.description">
+            <renderer type="lookup"/>            
+          </association>
+          <association label="Asset" target="assetnum" labelfield="asset_.description">
+            <renderer type="lookup"/>
+          </association>
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SlnClassStructureType">
+            <renderer type="autocompleteclient" />
+          </optionfield>
+          <field attribute="description" label="Description" requiredexpression="true"/>
+          <field attribute="symptom_.ldtext" label="Symptom:">
+            <renderer type="richtext"/>
+          </field>
+          <field attribute="cause_.ldtext" label="Cause:">
+            <renderer type="richtext"/>
+          </field>
+          <field attribute="resolution_.ldtext" label="Resolution:">
+            <renderer type="richtext"/>
+          </field>
+          
+          <!--<composition relationship="attachment" label="Attachments">
+            <collectionproperties allowcreation="@status!='ACTIVE'" allowupdate="false"/>
+          </composition>-->
+          
+          <event type="beforesubmit.prevalidation" service="solutionService" method="validateStatus"/>
+        </schema>
+
+        <schema id="newdetail" stereotype="detail" platform="web">
+          <association label="Site" target="siteid" labelfield="site_.description">
+            <renderer type="lookup"/>            
+          </association>
+          <association label="Asset" target="assetnum" labelfield="asset_.description">
+            <renderer type="lookup"/>
+          </association>
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SlnClassStructureType">
+            <renderer type="autocompleteclient" />
+          </optionfield>
+          <field attribute="description" label="Description" requiredexpression="true"/>
+          <field attribute="symptom_.ldtext" label="Symptom:">
+            <renderer type="richtext"/>
+          </field>
+          <field attribute="cause_.ldtext" label="Cause:">
+            <renderer type="richtext"/>
+          </field>
+          <field attribute="resolution_.ldtext" label="Resolution:">
+            <renderer type="richtext"/>
+          </field>
+        </schema>
+      </schemas>
+    </application>
   </applications>
 </metadata>

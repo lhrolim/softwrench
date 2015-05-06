@@ -20,6 +20,9 @@
     <!--Purchasing-->
     <template path="@receiving.xml"/>
     <template path="@purchasing.xml"/>
+    
+    <!--Solution-->
+    <template path="@solution.xml"/>
   </templates>
   
   <entities>
