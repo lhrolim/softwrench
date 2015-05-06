@@ -219,5 +219,10 @@ namespace softWrench.sW4.Metadata.Entities {
         public override int GetHashCode() {
             return (_name != null ? _name.GetHashCode() : 0);
         }
+
+        public bool SWEntity()
+        {
+            return this._name.StartsWith("_");
+        }
     }
 }

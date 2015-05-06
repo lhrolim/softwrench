@@ -16,7 +16,7 @@ using System.Reflection;
 
 namespace softWrench.sW4.Data.Persistence.SWDB {
 
-    public class SWDBHibernateDAO : BaseHibernateDAO {
+    public class SWDBHibernateDAO : BaseHibernateDAO, ISWDBHibernateDAO {
 
         private static readonly ILog Log = LogManager.GetLogger(SwConstants.SQLDB_LOG);
 

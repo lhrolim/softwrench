@@ -4,7 +4,7 @@
 
         checkCookieCredentials: function () {
             //todo:implement
-            return true;
+            return false;
         },
 
         login: function (userName, password) {

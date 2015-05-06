@@ -196,6 +196,7 @@
     </choice>
     <attribute name="name" type="string" use="required"></attribute>
     <attribute name="title" type="string" use="required"></attribute>
+    <attribute name="audit" type="boolean" use="optional" default="false"></attribute>
     <attribute name="entity" type="string" use="required"></attribute>
     <attribute name="id" type="string"></attribute>
     <attribute name="service" type="string"></attribute>

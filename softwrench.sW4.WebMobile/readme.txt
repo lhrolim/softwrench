@@ -4,7 +4,8 @@ Installs:
 2) Task Runner Explorer https://www.google.com.br/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=visual%20studio%20grunt
 3) Install cordova-cli npm install cordova -g
 4) Install grunt npm install grunt -g
-5) Install bower npm install bower -g
+5) Install grunt-cli npm install grunt-cli -g
+6) Install bower npm install bower -g
 
 
 

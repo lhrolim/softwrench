@@ -7,6 +7,7 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Connectors;
 using softWrench.sW4.Metadata.Entities.Schema;
+using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Util;
 
@@ -44,7 +45,17 @@ namespace softWrench.sW4.Data.Offline {
             return String.Format("select {0} from {1} where rowstamp >= @rowstamp", entityMetadata.Schema.IdAttribute.Name, audittable);
         }
 
-
+        public static void UpdateMaximoRowstamp(AttributeHolder firstAttributeHolder, Persistence.Relational.EntityRepository.EntityRepository.SearchEntityResult listOfCollections) {
+            if (!firstAttributeHolder.Attributes.ContainsKey(RowstampColumnName)) {
+                firstAttributeHolder.Attributes[RowstampColumnName] =
+                    listOfCollections.MaxRowstampReturned;
+            } else {
+                if (listOfCollections.MaxRowstampReturned >
+                    (long?)firstAttributeHolder.GetAttribute(RowstampColumnName)) {
+                    firstAttributeHolder.Attributes[RowstampColumnName] = listOfCollections.MaxRowstampReturned;
+                }
+            }
+        }
 
         public static string RowstampWhereCondition(EntityMetadata entityMetadata, long rowstamp, SearchRequestDto searchDto) {
             var extraRowstamps = entityMetadata.Schema.Attributes.Where(s => s.Name.StartsWith("rowstamp") && !s.Name.Equals("rowstamp"));
@@ -70,10 +81,10 @@ namespace softWrench.sW4.Data.Offline {
 
         private static string TimestampAttributeType() {
             if (ApplicationConfiguration.IsMSSQL(DBType.Maximo)) {
-                return "int";
+                return "bigint";
             }
             if (ApplicationConfiguration.IsDB2(DBType.Maximo)) {
-                return "int";
+                return "bigint";
             }
             throw new NotImplementedException("not implemented for oracle database yet");
         }

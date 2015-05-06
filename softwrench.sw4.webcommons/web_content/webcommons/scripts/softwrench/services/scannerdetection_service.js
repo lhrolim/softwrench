@@ -2,7 +2,7 @@
 
 app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, restService, searchService, redirectService,
                                                  contextService, alertService, associationService, modalService,
-                                                 fieldService) {
+                                                 fieldService, submitService, validationService) {
     var timeBetweenCharacters = isMobile() ? 35 : 14; // Used by the jQuery scanner detection plug in to differentiate scanned data and data input from the keyboard
 
     var validateAssocationLookupFn = function (result, searchObj) {
@@ -15,6 +15,39 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
         }
         return true;
     };
+
+    var navigateToAsset = function(data) {
+        var user = contextService.getUserData();
+        var searchData = {
+            siteid: user.siteId,
+            orgid: user.orgId,
+            assetnum: data
+        };
+        searchService.searchWithData("asset", searchData).success(function (resultData) {
+
+            var resultObject = resultData.resultObject;
+
+            if (resultObject.length == 0) {
+                alertService.alert("Asset record not found. Please contact your System Administrator.");
+                return;
+            }
+
+            if (resultObject.length > 1) {
+                alertService.alert("More than one asset found. Please contact your System Administrator.");
+                return;
+            }
+
+            var assetId = resultObject[0]['fields']['assetid'];
+            var param = {};
+            param.id = assetId;
+            var application = 'asset';
+            var detail = 'detail';
+            var mode = 'input';
+            param.scanmode = true;
+
+            redirectService.goToApplicationView(application, detail, mode, null, param, null);
+        });
+    }
 
     return {
         initInventoryGridListener: function (scope, schema, datamap, parameters) {
@@ -167,7 +200,7 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                             isComposition: false,
                             selecteditem: scope.datamap
                        });
-                        return
+                        return;
                     }
                     var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
                     var scanOrder = scanOrderString.split(",");
@@ -195,9 +228,53 @@ app.factory('scannerdetectionService', function ($http, $rootScope, $timeout, re
                             break;
                         }
                     };
-                },
+                }
             });
         },
 
+        initAssetGridListener: function (scope, schema, datamap, parameters) {
+
+            // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
+            $(document).scannerDetection({
+                avgTimeByChar: timeBetweenCharacters,
+                onComplete: function (data) {
+                    navigateToAsset(data);
+                }
+            });
+        },
+
+        initAssetDetailListener: function (scope, schema, datamap, parameters) {
+            
+            // Set the avgTimeByChar to the correct value depending on if using mobile or desktop
+            $(document).scannerDetection({
+                avgTimeByChar: timeBetweenCharacters,
+                onComplete: function (data) {
+                    if (!validationService.getDirty()) {
+                        navigateToAsset(data);
+                        return;
+                    }
+
+                    var parameters = {
+                        continue: function () {
+                            var jsonString = angular.toJson(datamap);
+                            var httpParameters = {
+                                application: "asset",
+                                currentSchemaKey: "detail.input.web",
+                                platform: "web",
+                                scanmode: true
+                            };
+                            var urlToUse = url("/api/data/asset/" + datamap["assetid"] + "?" + $.param(httpParameters));
+                            $http.put(urlToUse, jsonString).success(function () {
+                                // navigate to the asset which had been scanned
+                                navigateToAsset(data);
+                            }).error(function () {
+                                // Failed to update the asset
+                            });
+                        }
+                    };
+                    submitService.submitConfirmation(null, datamap, parameters);
+                }
+            });
+        }
     };
 });

@@ -46,7 +46,15 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
             entities.Application = persistence.define('Application', {
                 application: 'TEXT',
+                supportApp: 'BOOL',
                 data: "JSON"
+            });
+
+            entities.Attachments = persistence.define('Attachment', {
+                rootentryRemoteId: 'TEXT',
+                rootApplication: 'TEXT',
+                doclinkId: 'TEXT',
+                path: 'TEXT',
             });
 
             ///

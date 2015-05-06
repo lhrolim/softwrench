@@ -26,18 +26,23 @@ namespace softWrench.sW4.Web.SPF.Filters {
 
         private const string CurrentModuleKey = "currentmodule";
         private const string CurrentMetadataKey = "currentmetadata";
+        private const string PrintMode = "printmode";
+        private const string ScanMode = "scanmode";
+        private const string OfflineMode = "offlinemode";
 
         public override void OnActionExecuting(HttpActionContext actionContext) {
 
             var currentModule = RequestUtil.GetValue(actionContext.Request, CurrentModuleKey);
             var currentMetadataId = RequestUtil.GetValue(actionContext.Request, CurrentMetadataKey);
+            var printMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, PrintMode));
+            var scanMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, ScanMode));
+            var offlineMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, OfflineMode));
             ApplicationLookupContext appCtx = null;
             if (currentMetadataId != null) {
                 appCtx = new ApplicationLookupContext { MetadataId = currentMetadataId };
             }
             var instance = ContextLookuper.GetInstance();
-            instance.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx }, true);
-//            instance.RegisterHttpContext(actionContext);
+            instance.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx, PrintMode = printMode, ScanMode = scanMode, OfflineMode = offlineMode }, true);
 
             base.OnActionExecuting(actionContext);
         }

@@ -7,7 +7,7 @@
          ng-style="getSectionStyle(fieldMetadata)"
          ng-if="datamap[fieldMetadata.attribute]">
         <label class="control-label detail-output {{getLabelClass(fieldMetadata)}}"
-               ng-style="getheaderstyle(fieldmetadata)"
+               ng-style="getHeaderStyle(fieldMetadata)"
                ng-if="hasLabelOrHeader(fieldMetadata)">
             {{i18NLabel(fieldMetadata)}}<span ng-show="i18NLabel(fieldMetadata)!='' && hasSameLineLabel(fieldMetadata)">:</span>
         </label>

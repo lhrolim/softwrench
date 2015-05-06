@@ -1,7 +1,7 @@
 ﻿//base idea: http://blog.projectnibble.org/2013/12/23/enhance-logging-in-angularjs-the-simple-way/
 
-var app = angular.module('sw_layout');
-app.run(['$log', 'contextService', enhanceAngularLog]);
+//var app = angular.module('sw_layout');
+modules.webcommons.run(['$log', 'contextService', enhanceAngularLog]);
 
 function ltEnabledLevel(currLevel, enabledLevel) {
     if (enabledLevel == "none") {

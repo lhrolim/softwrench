@@ -42,6 +42,7 @@
         </schema>
       </schemas>
     </application>
+    
     <application name="labtrans" entity="labtrans" title="Labor">
       <schemas>
         <detail platform="web" redeclaring="false" >
@@ -54,6 +55,7 @@
         </detail>
       </schemas>
     </application>
+    
     <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
       <schemas>
         <detail platform="web" redeclaring="false">
@@ -63,6 +65,7 @@
         </detail>
       </schemas>
     </application>
+    
     <application name="invissue" title="Issue Inventory" entity="invissue">
       <schemas>
         <schema id="newInvIssueDetail" mode="input" stereotype="detail" redeclaring="false">
@@ -70,8 +73,11 @@
             <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname" requiredexpression="@inventory_.item_.itemtype == 'TOOL'">
             </association>
           </customization>
+          <customization position="gldebitacct">
+            <field label="GL Debit Account:" attribute="gldebitacct" default="0000-000-000-00000" hidden="true" />
+          </customization>
         </schema>
       </schemas>
-    </application>
+    </application>    
   </applications>
 </metadata>

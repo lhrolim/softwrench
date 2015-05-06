@@ -45,7 +45,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
 
 
             usedAttributes.Add(entityMetadata.Schema.IdAttribute);
-            if (!isUnionSchema) {
+            if (!isUnionSchema && !entityMetadata.SWEntity()) {
                 usedAttributes.Add(entityMetadata.Schema.RowstampAttribute);
             }
 
@@ -56,7 +56,8 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
             var result = SlicedRelationshipBuilderHelper.HandleRelationshipFields(appSchema.RelationshipFields.Select(r => r.Attribute), entityMetadata);
 
             usedRelationships.UnionWith(result.DirectRelationships);
-            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, entityMetadata.Schema.UserIdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity, entityMetadata.Schema.MappingType, !isUnionSchema);
+            // When should the rowstamp be excluded
+            var schema = new EntitySchema(entityMetadata.Name, usedAttributes, entityMetadata.Schema.IdAttribute.Name, entityMetadata.Schema.UserIdAttribute.Name, false, false, entityMetadata.Schema.WhereClause, entityMetadata.Schema.ParentEntity, entityMetadata.Schema.MappingType, (!isUnionSchema && !entityMetadata.SWEntity()));
             SlicedEntityMetadata unionSchema = null;
             if (appSchema.UnionSchema != null) {
                 unionSchema = GetUnionInstance(appSchema.UnionSchema);

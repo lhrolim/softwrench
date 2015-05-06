@@ -47,27 +47,20 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
 
 
         [CanBeNull]
-        protected long? GetLastRowstamp(IEnumerable<AttributeHolder> attributeHolders) {
-            Boolean hasRowstamp1 = false;
+        protected long? GetLastRowstamp(IEnumerable<AttributeHolder> attributeHolders,String[] rowstampFields) {
+            
             var enumerable = attributeHolders as AttributeHolder[] ?? attributeHolders.ToArray();
             if (!enumerable.Any()) {
                 return null;
             }
-            var firstElement = enumerable.First();
-            if (firstElement.Attributes.ContainsKey("rowstamp1")) {
-                hasRowstamp1 = true;
+            var maxArray = new List<Int64>();
+            foreach (var rowstampField in rowstampFields){
+                var maxRowstampSt =enumerable.Max(x => x.GetAttribute(rowstampField));
+                maxArray.Add(Convert.ToInt64(maxRowstampSt));
             }
-            var lastRowstampString = enumerable.Max(x => x.GetAttribute("rowstamp"));
-            var lastRowstamp = Convert.ToInt64(lastRowstampString);
-            if (hasRowstamp1) {
-                var lastRowtampString1 = enumerable.Max(x => x.GetAttribute("rowstamp1"));
-                var lastRowstamp1 = Convert.ToInt64(lastRowtampString1);
-                if (lastRowstamp == 0 && lastRowstamp1 == 0) {
-                    return null;
-                }
-                return Math.Max(lastRowstamp, lastRowstamp1);
-            }
-            return (lastRowstamp == 0 ? (long?)null : lastRowstamp);
+            var maxValue =maxArray.Max();
+            return maxValue == 0 ? (long?)null : maxArray.Max();
+            
         }
     }
 }

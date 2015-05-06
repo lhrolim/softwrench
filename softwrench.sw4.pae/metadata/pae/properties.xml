@@ -5,7 +5,7 @@
   <property key="wsprovider" value="mif" />
   <property key="basewsURL" value="http://10.50.100.146:9080/meaweb/wsdl/" />
   <!-- <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=BS7116;User Id=MAXIMO;password=MAXIMO;" /> /-->
-  <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=Max7115Tst;User Id=MAXIMO;password=MAXIMO;" />
+  <property key="maximo_DB_url" value="Data Source=10.50.100.51;Initial Catalog=PAE71DEV;User Id=MAXIMO;password=MAXIMO;" />
   <property key="maximo_DB_provider" value="System.Data.SQL"/>
   <property key="swdb_provider" value="System.Data.SQL"/>
   <property key="maxAttachmentSize" value="10"/>
@@ -13,8 +13,8 @@
   <property key="maxScreenshotSize" value="5"/>
   <!-- in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
-  <property key="defaultOrgId" value="EAGLENA"/>
-  <property key="defaultSiteId" value="BEDFORD"/>
+  <property key="defaultOrgId" value="RSS"/>
+  <property key="defaultSiteId" value="RSSOPS"/>
   <property key="defaultStoreloc" value="CENTRAL"/>
   <property key="sourcemapping" value="maximo7.1"/>
   <property key="email.smtp.host" value="mail.softwrenchsolutions.com"/>

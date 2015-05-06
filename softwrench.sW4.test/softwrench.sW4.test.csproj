@@ -99,6 +99,7 @@
     <Compile Include="Metadata\Applications\Command\ApplicationCommandUtilsTest.cs" />
     <Compile Include="Metadata\Association\DependencyBuilderTest.cs" />
     <Compile Include="Metadata\Association\AssociationHelperTest.cs" />
+    <Compile Include="Metadata\Entities\SwSlicedEntityMetadataBuilderTest.cs" />
     <Compile Include="Metadata\Entities\OtbSlicedEntityMetadataBuilderTest.cs" />
     <Compile Include="Metadata\Entities\HapagSlicedEntityMetadataBuilderTest.cs" />
     <Compile Include="Metadata\Entities\ParentEntityTest.cs" />
@@ -238,6 +239,10 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sW4.batches\softwrench.sW4.batches.csproj">
+      <Project>{653d15fd-96ca-4e5d-b147-39ad01e59006}</Project>
+      <Name>softwrench.sW4.batches</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.gric\softwrench.sw4.gric.csproj">
       <Project>{3b4ed6c6-ba78-45cd-8af9-964f3dc409e6}</Project>

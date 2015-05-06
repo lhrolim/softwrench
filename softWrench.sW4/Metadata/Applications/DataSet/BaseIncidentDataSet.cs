@@ -77,7 +77,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet{
         }
 
         public override string ClientFilter(){
-            return "otb,kongsberg,manchester";
+            return "otb,manchester";
         }
     }
 }

@@ -47,9 +47,7 @@
     <Folder Include="classes\com\cts\entegra\dataset\" />
     <Folder Include="classes\com\cts\entegra\migration\" />
     <Folder Include="web_content\entegra\htmls\" />
-    <Folder Include="web_content\entegra\images\" />
     <Folder Include="web_content\entegra\scripts\" />
-    <Folder Include="web_content\entegra\styles\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="metadata\entegra\deploy.xml" />
@@ -81,6 +79,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\entegra\readme.txt" />
+    <Content Include="web_content\entegra\images\logo-byline.png" />
+    <Content Include="web_content\entegra\images\logo-main.png" />
+    <Content Include="web_content\entegra\styles\branding.css" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

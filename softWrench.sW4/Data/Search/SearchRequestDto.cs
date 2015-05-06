@@ -67,8 +67,15 @@ namespace softWrench.sW4.Data.Search {
         }
 
 
-        internal void BuildProjection(ApplicationCompositionSchema schema, bool printMode = false) {
-            var schemaToUse = printMode ? schema.Schemas.Print : schema.Schemas.List;
+        internal void BuildProjection(ApplicationCompositionSchema schema, bool printMode = false, bool offLineMode = false) {
+            var schemaToUse = schema.Schemas.List;
+
+            if (printMode) {
+                schemaToUse = schema.Schemas.Print;
+            } else if (offLineMode) {
+                schemaToUse = schema.Schemas.Sync;
+            }
+
             var columns = schemaToUse.Displayables;
             foreach (var column in columns) {
                 var displayable = column as IApplicationAttributeDisplayable;
@@ -275,7 +282,7 @@ namespace softWrench.sW4.Data.Search {
             }
         }
 
-       
+
 
 
     }

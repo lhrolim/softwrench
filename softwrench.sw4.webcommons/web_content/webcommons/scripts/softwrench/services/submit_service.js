@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('submitService', function ($rootScope, fieldService, contextService,checkpointService) {
+app.factory('submitService', function ($rootScope, fieldService, contextService,checkpointService, alertService) {
 
     function addSchemaDataToParameters(parameters, schema, nextSchema) {
         parameters["currentSchemaKey"] = schema.schemaId + "." + schema.mode + "." + platform();
@@ -139,6 +139,13 @@ app.factory('submitService', function ($rootScope, fieldService, contextService,
                     datamap[key] = " ";
                 }
             }
+        },
+
+        submitConfirmation: function (event, datamap, parameters) {
+            var message = "Are you sure you want to save changes to this record?";
+            return alertService.confirm(null, null, function() {
+                parameters.continue();
+            }, message);
         }
 
     };
