@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('solutionService', function (redirectService) {
+app.factory('solutionService', function (redirectService, alertService) {
 
     return {
 
@@ -20,10 +20,24 @@ app.factory('solutionService', function (redirectService) {
             fields["resolution_.ldtext"] = solutionResolution;
         },
 
-        
+        validateStatus: function (schema, datamap, originalDatamap, parameters) {
+            var status = originalDatamap.originaldatamap['status'];
 
+            if (status.equalIc('DRAFT') && datamap.status.equalIc('INACTIVE')) {
+                alertService.alert("You can only update the status of this solution to active");
+                return false;
+            }
 
+            if (status.equalIc('ACTIVE') && datamap.status.equalIc('DRAFT')) {
+                alertService.alert("You can only update the status of this solution to inactive");
+                return false;
+            }
 
+            if (status.equalIc('ACTIVE') && !datamap.status.equalIc("INACTIVE")) {
+                alertService.alert("You cannot update this solution because it is active");
+                return false;
+            }
+        },
     };
 
 });

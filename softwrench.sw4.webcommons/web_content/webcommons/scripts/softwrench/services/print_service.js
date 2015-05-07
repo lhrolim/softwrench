@@ -38,6 +38,7 @@ app.factory('printService', function ($rootScope, $http, $timeout, $log, tabsSer
     return {
         doPrint: function () {
             innerDoPrint();
+            $rootScope.printRequested = null; 
         },
 
         printList: function (paginationData, schema) {

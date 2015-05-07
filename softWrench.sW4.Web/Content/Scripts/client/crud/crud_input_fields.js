@@ -596,6 +596,28 @@ app.directive('crudInputFields', function (contextService, eventService) {
                     }
                 }
 
+                if (fieldMetadata.rendererParameters != null && fieldMetadata.header != null) {
+                    cssclass += 'hasheader';
+                }
+
+                if (fieldMetadata.rendererParameters != null) {
+                    //make sure the fieldset is the correct width
+                    switch (fieldMetadata.rendererParameters['inputsize']) {
+                        case 'xsmall':
+                            cssclass += ' col-xs-12 col-sm-6 col-md-3';
+                            break;
+                        case 'small':
+                            cssclass += ' col-xs-12 col-sm-6 col-md-4';
+                            break;
+                        case 'medium':
+                            cssclass += ' col-xs-12 col-sm-6';
+                            break;
+                        default:
+                            cssclass += ' col-xs-12';
+                    }
+                }
+                cssclass += ' row';
+
                 return cssclass;
             }
             $scope.getLabelClass = function (fieldMetadata) {
@@ -616,16 +638,34 @@ app.directive('crudInputFields', function (contextService, eventService) {
                     return cssclass;
                 }
 
-                var returnClass = $scope.hasSameLineLabel(fieldMetadata) ? 'col-sm-3 col-md-2' : 'col-xs-12';
+                var returnClass = '';
+
+                if ($scope.hasSameLineLabel(fieldMetadata)) {
+                    switch (fieldMetadata.rendererParameters['inputsize']) {
+                        case 'xsmall':
+                            returnClass += 'col-sm-8';
+                            break;
+                        case 'small':
+                            returnClass += 'col-sm-6';
+                            break;
+                        case 'medium':
+                            returnClass += 'col-sm-6 col-md-4';
+                            break;
+                        default:
+                            returnClass += 'col-sm-3 col-md-2';
+                    }
+                } else {
+                    returnClass += 'col-xs-12';
+                }
 
                 //fix SWWEB-732, blank lable adding extra space
-                if (returnClass === 'col-xs-12' && fieldMetadata.label === null) {
+                if (returnClass == 'col-xs-12' && fieldMetadata.label === null) {
                     returnClass = cssclass + ' ' + returnClass + ' ng-hide';
                 }
 
-                //console.log(fieldMetadata);
                 return cssclass + ' ' + returnClass;
             }
+
             $scope.getInputClass = function (fieldMetadata) {
                 var cssclass = "";
 
@@ -644,9 +684,36 @@ app.directive('crudInputFields', function (contextService, eventService) {
                     return cssclass;
                 }
 
-                cssclass += $scope.hasSameLineLabel(fieldMetadata) ? ' col-sm-9 col-md-10' : ' col-xs-12';
+                //cssclass += $scope.hasSameLineLabel(fieldMetadata) ? ' col-sm-9 col-md-10' : ' col-xs-12';
+
+                //cssclass += ' ' + fieldMetadata.rendererParameters['inputsize']
+
+
+                if ($scope.hasSameLineLabel(fieldMetadata)) {
+                    switch (fieldMetadata.rendererParameters['inputsize']) {
+                        case 'xsmall':
+                            cssclass += ' col-sm-4';
+                            break;
+                        case 'small':
+                            cssclass += ' col-sm-6';
+                            break;
+                        case 'medium':
+                            cssclass += ' col-sm-6 col-md-8';
+                            break;
+                        default:
+                            cssclass += ' col-sm-9 col-md-10';
+                    }
+                } else {
+                    cssclass +=  ' col-xs-12';
+                }
+
                 return cssclass;
             }
+
+           
+
+
+
             $scope.showLabelTooltip = function (fieldMetadata) {
                 if (fieldMetadata.label !== fieldMetadata.toolTip) {
                     return 'tooltip';
@@ -825,7 +892,7 @@ app.directive('selectCombo', function () {
         restrict: 'A',
         link: function (scope, element, attr) {
             $(element).on('click', 'input', function (e) {
-                console.log('click');
+                //console.log('click');
                 $(element).find('[data-dropdown="dropdown"]').click();
                 //return false;
                 //e.stopPropagation();
