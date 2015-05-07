@@ -80,7 +80,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             base.AfterUpdate(maximoTemplateData);
 
             ((CrudOperationData)maximoTemplateData.OperationData).Fields["wonum"] = maximoTemplateData.ResultObject.UserId;
-            maximoTemplateData.OperationData.Id = maximoTemplateData.ResultObject.UserId;
             maximoTemplateData.OperationData.OperationType = Internal.OperationType.AddChange;
 
             // Resubmitting MIF for ServiceAddress Update

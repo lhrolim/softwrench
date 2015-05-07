@@ -48,7 +48,7 @@ function parseBooleanValue(attrValue) {
 
 
 app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,
-    fieldService, commandService, statuscolorService, $injector, $timeout, $log, searchService, iconService) {
+    fieldService, commandService, statuscolorService, printService, $injector, $timeout, $log, searchService, iconService) {
     return {
         restrict: 'A',
         replace: false,
@@ -231,6 +231,9 @@ app.directive('crudtbody', function (contextService, $rootScope, $compile, $pars
                 element.html(html);
                 if (!$rootScope.printRequested && (hasSection || needsWatchers)) {
                     $compile(element.contents())(scope);
+                }
+                if ($rootScope.printRequested != null && $rootScope.printRequested) {
+                    printService.doPrint();
                 }
                 var t1 = new Date().getTime();
                 $log.getInstance('crudtbody#link').debug('grid compilation took {0} ms'.format(t1 - t0));

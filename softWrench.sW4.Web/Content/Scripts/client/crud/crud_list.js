@@ -434,6 +434,8 @@ app.directive('crudList', function (contextService) {
                     listSchema = $scope.schema.schemaId;
                 }
 
+                $rootScope.printRequested = printMode;
+
                 var searchPromise = searchService.searchWithData($scope.schema.applicationName, $scope.searchData, listSchema,
                 {
                     searchDTO: searchDTO,
