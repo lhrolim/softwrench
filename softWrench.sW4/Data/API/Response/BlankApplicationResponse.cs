@@ -1,5 +1,6 @@
 ﻿using System;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.API.Response {
 
@@ -18,5 +19,9 @@ namespace softWrench.sW4.Data.API.Response {
         public string Mode { get; set; }
         public string ApplicationName { get; private set; }
         public string Id { get; set; }
+
+        public BlankApplicationResponse() {
+            TimeStamp = DateTime.Now.FromServerToRightKind();
+        }
     }
 }
