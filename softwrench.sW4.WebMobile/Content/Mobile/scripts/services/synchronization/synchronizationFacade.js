@@ -23,7 +23,7 @@
                     var associationDataDownloadPromise = associationDataSynchronizationService.syncData();
                     return $q.all([batchSubmissionPromise, syncDataPromise, metadataDownloadedPromise, associationDataDownloadPromise]);
                 }).catch(function (err) {
-                    return false;
+                    return $q.reject(false);
                 }).then(function (results) {
                     var dataSyncResult = results[0];
                     if (dataSyncResult.error) {

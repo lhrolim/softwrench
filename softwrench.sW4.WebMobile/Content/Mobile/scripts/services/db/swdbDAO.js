@@ -209,7 +209,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
 
             var ob = entities[entity];
-            if (memoryObject.id == null || memoryObject.type != entity) {
+            if (memoryObject.id == null || (memoryObject.type && memoryObject.type != entity)) {
                 //if the memory object doesn´t contain an id, then we don´t need to check on persistence cache, 
                 //just instantiate a new one
                 var transientEntity = new ob();
