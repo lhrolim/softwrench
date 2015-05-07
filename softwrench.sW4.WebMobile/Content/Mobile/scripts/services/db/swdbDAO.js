@@ -46,7 +46,8 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
             entities.Application = persistence.define('Application', {
                 application: 'TEXT',
-                supportApp: 'BOOL',
+                association: 'BOOL',
+                composition: 'BOOL',
                 data: "JSON"
             });
 
@@ -64,6 +65,16 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             entities.DataEntry = persistence.define('DataEntry', {
                 application: 'TEXT',
                 datamap: 'JSON',
+                //The id of this entry in maximo, it will be null when it´s created locally
+                remoteId: 'TEXT',
+                //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
+                isDirty: 'BOOL',
+                rowstamp: 'TEXT',
+            });
+
+            entities.CompositionDataEntry = persistence.define('CompositionDataEntry', {
+                application: 'TEXT',
+                datamap: 'JSON',
                 //used for composition matching, when data comes from the server, it will be on a tabular format (e.g all worklogs); 
                 //composite applications (root), however, will have this as null
                 parentId: 'TEXT',
@@ -71,29 +82,33 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 remoteId: 'TEXT',
                 //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
                 isDirty: 'BOOL',
-                rowstamp: 'DATE',
-                problemId: 'TEXT',
+                rowstamp: 'TEXT',
             });
+
+
 
             entities.Batch = persistence.define('Batch', {
                 application: 'TEXT',
-                sentDate: 'TEXT',
-                completionDate: 'TEXT',
-                lastChecked: 'TEXT'
+                sentDate: 'DATE',
+                completionDate: 'DATE',
+                lastChecked: 'DATE'
             });
+
+
 
             entities.BatchItem = persistence.define('BatchItem', {
                 application: 'TEXT',
                 datamap: 'JSON',
-                 //The id of this entry in maximo, it will be null when it´s created locally
+                //The id of this entry in maximo, it will be null when it´s created locally
                 remoteId: 'TEXT',
                 //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
-                rowstamp: 'DATE',
+                rowstamp: 'TEXT',
                 //either pending, or completed
-                status:'TEXT',
+                status: 'TEXT',
                 problemId: 'TEXT',
-                batchId:'TEXT'
             });
+
+            entities.Batch.hasMany('items', entities.BatchItem, 'batch');
 
 
 
@@ -194,7 +209,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
 
             var ob = entities[entity];
-            if (memoryObject.id == null) {
+            if (memoryObject.id == null || memoryObject.type != entity) {
                 //if the memory object doesn´t contain an id, then we don´t need to check on persistence cache, 
                 //just instantiate a new one
                 var transientEntity = new ob();
@@ -284,9 +299,9 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             var deferred = dispatcherService.loadBaseDeferred();
             var promise = deferred.promise;
             if (tx) {
-                persistence.flush(tx, function () {
-                    deferred.resolve();
-                });
+                //flush has to be called from the outside
+                deferred.resolve();
+                return promise;
             } else {
                 persistence.flush(function () {
                     deferred.resolve();
@@ -297,12 +312,25 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         },
 
 
-        bulkSave: function (objArray) {
+        createTx: function () {
+            var deferred = dispatcherService.loadBaseDeferred();
+            persistence.transaction(function (tx) {
+                deferred.resolve(tx);
+            });
+            return deferred.promise;
+        },
+
+        bulkSave: function (objArray, tx) {
             for (var i = 0; i < objArray.length; i++) {
                 persistence.add(objArray[i]);
             }
             var deferred = dispatcherService.loadBaseDeferred();
             var promise = deferred.promise;
+            if (tx) {
+                //flush has to be called from the outside
+                deferred.resolve(objArray);
+                return promise;
+            }
             persistence.flush(function () {
                 deferred.resolve(objArray);
             });
@@ -310,7 +338,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
         },
 
-        bulkDelete: function (objArray) {
+        bulkDelete: function (objArray, tx) {
             var deferred = dispatcherService.loadBaseDeferred();
             var promise = deferred.promise;
             if (!objArray || objArray.length == 0) {
@@ -319,6 +347,11 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             }
             for (var i = 0; i < objArray.length; i++) {
                 persistence.remove(objArray[i]);
+            }
+            if (tx) {
+                //flush has to be called from the outside
+                deferred.resolve(objArray);
+                return promise;
             }
             persistence.flush(function () {
                 deferred.resolve();

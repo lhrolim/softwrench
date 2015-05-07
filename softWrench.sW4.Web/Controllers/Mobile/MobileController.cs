@@ -1,6 +1,10 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Web.Http;
+using cts.commons.Util;
+using FluentMigrator.Runner;
+using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -29,6 +33,8 @@ namespace softWrench.sW4.Web.Controllers.Mobile {
     //    [Authorize]
     public class MobileController : ApiController {
 
+        private static readonly ILog Log = LogManager.GetLogger(typeof(MobileController));
+
         private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
 
         private readonly SynchronizationManager _syncManager;
@@ -49,22 +55,40 @@ namespace softWrench.sW4.Web.Controllers.Mobile {
         /// <returns></returns>
         [HttpGet]
         public MobileMetadataDownloadResponseDefinition DownloadMetadatas() {
+            var watch = Stopwatch.StartNew();
             var user = SecurityFacade.CurrentUser();
-            var metadatas = MetadataProvider.Applications(ClientPlatform.Mobile);
-            var securedMetadatas = metadatas.Select(metadata => metadata.CloneSecuring(user)).ToList();
+            var topLevel = OffLineMetadataProvider.FetchTopLevelApps();
+            //apply any user role constraints that would avoid bringing unwanted fields for that specific user.
+            var securedMetadatas = topLevel.Select(metadata => metadata.CloneSecuring(user)).ToList();
+
+            var associationApps = OffLineMetadataProvider.FetchAssociationApps(user);
+            var compositonApps = OffLineMetadataProvider.FetchCompositionApps(user);
+
+
             bool fromCache;
             var securedMenu = user.Menu(ClientPlatform.Mobile, out fromCache);
 
+
+
             var response = new MobileMetadataDownloadResponseDefinition {
-                MetadatasJSON = JsonConvert.SerializeObject(securedMetadatas, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
+                TopLevelMetadatasJson = JsonConvert.SerializeObject(securedMetadatas, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
+                AssociationMetadatasJson = JsonConvert.SerializeObject(associationApps, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
+                CompositionMetadatasJson = JsonConvert.SerializeObject(compositonApps, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
                 MenuJson = JsonConvert.SerializeObject(securedMenu, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings)
             };
+
+            Log.InfoFormat("Download Metadata executed in {0}", LoggingUtil.MsDelta(watch));
             return response;
         }
 
         [HttpPost]
         public SynchronizationResultDto PullNewData([FromUri]SynchronizationRequestDto synchronizationRequest, JObject rowstampMap) {
             return _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser(), rowstampMap);
+        }
+
+        [HttpPost]
+        public void SubmitBatch(JObject batchContent) {
+            //TODO: implement
         }
 
 

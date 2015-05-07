@@ -1,7 +1,7 @@
 ﻿mobileServices.factory('dataSynchronizationService', function ($http, $q, dispatcherService, restService, metadataModelService) {
     return {
 
-        syncData: function () {
+        syncData: function (workbatchs) {
             var deferred = dispatcherService.loadBaseDeferred();
 
             var currentApps = metadataModelService.getApplicationNames();

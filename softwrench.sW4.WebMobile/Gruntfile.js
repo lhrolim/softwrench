@@ -33,6 +33,7 @@ module.exports = function (grunt) {
                     'persistence.js': 'persistence/lib/persistence.js',
                     'persistence.store.sql.js': 'persistence/lib/persistence.store.sql.js',
                     'persistence.store.websql.js': 'persistence/lib/persistence.store.websql.js',
+                    'moment.js': 'moment/moment.js',
                 }
             },
 
@@ -48,6 +49,7 @@ module.exports = function (grunt) {
                     'persistence.js': 'persistence/lib/persistence.js',
                     'persistence.store.sql.js': 'persistence/lib/persistence.store.sql.js',
                     'persistence.store.websql.js': 'persistence/lib/persistence.store.websql.js',
+                    'moment.js': 'moment/min/moment.min.js',
                 }
             }
 

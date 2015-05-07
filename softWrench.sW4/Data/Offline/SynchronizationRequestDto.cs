@@ -13,6 +13,11 @@ namespace softWrench.sW4.Data.Offline {
 
         public String ApplicationName { get; set; }
 
+        /// <summary>
+        /// List of ids that should be ignored on the query since they are currently part of a batch being submitted to the server
+        /// </summary>
+        public List<String> BatchItemsIds { get; set; }
+
 
         /// <summary>
         /// Comma sepparated list of current top level apps that the client has. To be used in conjuction with ReturnNewApps flag, where if true, it would be neededd to bring any extra applications besides the one being requested.

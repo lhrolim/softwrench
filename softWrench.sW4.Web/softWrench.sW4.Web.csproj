@@ -345,14 +345,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="App_Data\Client\entegra\menu.mobile.xml" />
-    <Content Include="App_Data\Client\entegra\menu.web.xml" />
-    <Content Include="App_Data\Client\entegra\properties.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="App_Data\Client\entegra\metadata.xml">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="App_Data\Client\hapag\deploy.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -722,9 +714,6 @@
     </Content>
     <Content Include="Dependencies\softWrench.sW4.Controls.ActiveX.dll" />
     <Content Include="App_Data\Client\hapag\i18n\de\labels.json" />
-    <Content Include="App_Data\Client\entegra\deploy.xml">
-      <SubType>Designer</SubType>
-    </Content>
     <None Include="App_Data\Client\hapag\i18n\en\labels.json" />
     <Content Include="Doc\scanner.txt" />
     <Content Include="IBM.Data.DB2.dll" />

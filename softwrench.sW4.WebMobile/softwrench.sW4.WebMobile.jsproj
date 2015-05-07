@@ -114,6 +114,7 @@
     <Content Include="Content\Mobile\scripts\services\crud\crudContextService.js" />
     <Content Include="Content\Mobile\scripts\services\menu\menuModelService.js" />
     <Content Include="Content\Mobile\scripts\services\metadata\metadataModelService.js" />
+    <Content Include="Content\Mobile\scripts\services\synchronization\batchService.js" />
     <Content Include="Content\Mobile\scripts\utils\mobileajaxinterceptor.js" />
     <Content Include="Content\Mobile\templates\crudlist.html" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\css\ionic.css" />
@@ -149,6 +150,7 @@
     <Content Include="Content\Vendor\scripts\persistence.store.sql.js" />
     <Content Include="Content\Vendor\scripts\persistence.store.websql.js" />
     <Content Include="tests\services\dashboardaux_service_test.js" />
+    <Folder Include="bower_components\" />
     <Folder Include="Content\Shared\webcommons\scripts\vendor\" />
     <Folder Include="images\" />
     <Content Include="angular_mock.js" />

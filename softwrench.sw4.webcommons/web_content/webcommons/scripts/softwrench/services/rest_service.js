@@ -1,4 +1,4 @@
-﻿modules.webcommons.factory('restService', function ($http, $log) {
+﻿modules.webcommons.factory('restService', function ($http, $log, contextService) {
 
 
     return {
@@ -6,11 +6,15 @@
         getActionUrl: function (controller, action, parameters) {
             action = (action === undefined || action == null) ? 'get' : action;
             var params = parameters == null ? {} : parameters;
+            var serverUrl = contextService.getFromContext("serverurl");
+            if (serverUrl) {
+                return serverUrl + "/api/generic/" + controller + "/" + action + "?" + $.param(params);
+            }
             return url("/api/generic/" + controller + "/" + action + "?" + $.param(params));
         },
 
         invokePost: function (controller, action, queryParameters, json, successCbk, failureCbk) {
-            this.postPromise(controller,action,queryParameters,json)
+            this.postPromise(controller, action, queryParameters, json)
                 .success(function (data) {
                     if (successCbk != null) {
                         successCbk(data);

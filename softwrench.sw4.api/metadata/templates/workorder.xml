@@ -9,8 +9,14 @@
     <template path="@tooltrans.xml"/>
     <template path="@woactivity.xml"/>
     <template path="@asset.xml"/>
+    
     <template path="@glcomponents.xml"/>
     <template path="@failurecode.xml"/>
+
+    <!--Applications required, temporarily for mobile, remove later-->
+    <template path="@location.xml"/>
+    <template path="@worktype.xml"/>
+    <template path="@synstatus.xml"/>
   </templates>
 
   <entities>

@@ -72,7 +72,7 @@ namespace softWrench.sW4.Data.Offline {
         private IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request) {
             if (request.ApplicationName == null) {
                 //no application in special was requested, lets return them all.
-                return MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile);
+                return OffLineMetadataProvider.FetchTopLevelApps();
             }
 
             return new List<CompleteApplicationMetadataDefinition> { MetadataProvider.Application(request.ApplicationName) };

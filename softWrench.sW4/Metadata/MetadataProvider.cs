@@ -17,6 +17,7 @@ using softWrench.sW4.Metadata.Validator;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
+using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Exception;
 using softwrench.sW4.Shared2.Metadata.Menu;
@@ -50,6 +51,7 @@ namespace softWrench.sW4.Metadata {
 
         public static MetadataProviderInternalCache InternalCache { get; set; }
 
+       
 
         private const string Metadata = "metadata.xml";
         private const string StatusColor = "statuscolors.json";
@@ -376,6 +378,7 @@ namespace softWrench.sW4.Metadata {
         public static IDictionary<string, CommandBarDefinition> CommandBars() {
             return _commandBars;
         }
+
         public static CompleteApplicationMetadataDefinition GetCompositionApplication(ApplicationSchemaDefinition schema, string relationship) {
             var application = Application(EntityUtil.GetApplicationName(relationship), false);
             if (application != null) {
@@ -390,17 +393,7 @@ namespace softWrench.sW4.Metadata {
         }
 
 
-        public static IEnumerable<CompleteApplicationMetadataDefinition> FetchTopLevelApps(ClientPlatform platform) {
-            var result = new HashSet<CompleteApplicationMetadataDefinition>();
-            var menu = Menu(platform);
-            var leafs = menu.ExplodedLeafs;
-            foreach (var menuBaseDefinition in leafs) {
-                if (menuBaseDefinition is ApplicationMenuItemDefinition) {
-                    result.Add(Application((menuBaseDefinition as ApplicationMenuItemDefinition).Application));
-                }
-            }
-            //TODO: add hidden menu items
-            return result;
-        }
+
+
     }
 }

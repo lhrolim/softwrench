@@ -375,6 +375,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             return ClientPlatform.Web == Platform || (ParentSchema != null && ParentSchema.IsWebPlatform());
         }
 
+        public Boolean IsMobilePlatform() {
+            return SchemaId != ApplicationMetadataConstants.SyncSchema &&
+                ClientPlatform.Mobile == Platform || (ParentSchema != null && ParentSchema.IsMobilePlatform());
+        }
+
 
         public void DepandantFields(IDictionary<string, ISet<string>> fields) {
             _depandantFields = fields;
