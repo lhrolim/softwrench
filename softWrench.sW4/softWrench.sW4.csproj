@@ -385,6 +385,7 @@
     <Compile Include="Scheduler\SimpleInjectorJobFactory.cs" />
     <Compile Include="Security\Context\ContextHolder.cs" />
     <Compile Include="Security\Context\IContextLookuper.cs" />
+    <Compile Include="Security\Entities\Person.cs" />
     <Compile Include="Security\Entities\PersonGroupAssociation.cs" />
     <Compile Include="Security\Entities\PersonGroup.cs" />
     <Compile Include="Security\Entities\RoleWithErrorMessage.cs" />

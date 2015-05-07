@@ -148,6 +148,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="metadata\templates\User.xml" />
     <EmbeddedResource Include="metadata\templates\failurecode.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

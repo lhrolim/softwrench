@@ -32,7 +32,7 @@ namespace softWrench.sW4.Security.Services {
                     personid += HlagPrefix;
                 }
             }
-            var user = UserSyncManager.GetUserFromMaximoByUserName(personid);
+            var user = UserSyncManager.GetUserFromMaximoByUserName(personid, null);
             if (user == null) {
                 //if the user does not exist on maximo, then we should not create it on softwrench either
                 return null;
@@ -55,7 +55,7 @@ namespace softWrench.sW4.Security.Services {
                 return existingUser;
             }
 
-            var user = UserSyncManager.GetUserFromMaximoByUserName(existingUser.MaximoPersonId);
+            var user = UserSyncManager.GetUserFromMaximoByUserName(existingUser.MaximoPersonId, existingUser.Id);
             if (user == null) {
                 return existingUser;
             }

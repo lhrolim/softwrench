@@ -15,10 +15,10 @@
                         </tr>
                     </thead>
                     <tbody id="gvUsers">
-                        <tr ng-repeat="user in listObjects" ng-click="edit(user.id)" style="cursor: pointer">
+                        <tr ng-repeat="user in listObjects" ng-click="edit(user.userName, user.id)" style="cursor: pointer">
                             <td><a>{{user.userName}}</a></td>
-                            <td><a>{{user.firstName}}</a></td>
-                            <td><a>{{user.lastName}}</a></td>
+                            <td><a>{{user.person.firstName}}</a></td>
+                            <td><a>{{user.person.lastName}}</a></td>
                             <td><a>{{user.isActive}}</a></td>
                         </tr>
                     </tbody>
@@ -54,56 +54,56 @@
             <div class="form-group">
                 <label class="control-label col-lg-2"><span style="font-family: Arial Round">* </span><span>{{i18N('general.firstname','First Name')}}</span></label>
                 <div class="col-lg-10">
-                    <input type="text" ng-model="user.firstName" placeholder="{{i18N('placeholder.required.firstname','First name is required')}}!" class="form-control" />
+                    <input type="text" ng-model="user.person.firstName" placeholder="{{i18N('placeholder.required.firstname','First name is required')}}!" class="form-control" />
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-lg-2"><span style="font-family: Arial Round">* </span><span>{{i18N('general.lastname','Last Name')}}</span></label>
                 <div class="col-lg-10">
-                    <input type="text" ng-model="user.lastName" placeholder="{{i18N('placeholder.required.lastname','Last name is required')}}!" class="form-control" />
+                    <input type="text" ng-model="user.person.lastName" placeholder="{{i18N('placeholder.required.lastname','Last name is required')}}!" class="form-control" />
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-lg-2"><span style="font-family: Arial Round"></span><span>ORGID</span></label>
                 <div class="col-lg-10">
-                    <input type="text" ng-model="user.orgId" placeholder="{{i18N('placeholder.warn.orgid','Default OrgId Value')}}" class="form-control" />
+                    <input type="text" ng-model="user.person.orgId" placeholder="{{i18N('placeholder.warn.orgid','Default OrgId Value')}}" class="form-control" />
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-lg-2"><span style="font-family: Arial Round"></span><span>SiteId</span></label>
                 <div class="col-lg-10">
-                    <input type="text" ng-model="user.siteId" placeholder="{{i18N('placeholder.warn.siteid','Default SiteId Value')}}" class="form-control" />
+                    <input type="text" ng-model="user.person.siteId" placeholder="{{i18N('placeholder.warn.siteid','Default SiteId Value')}}" class="form-control" />
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-lg-2"><span style="font-family: Arial Round"></span><span>Storeroom</span></label>
                 <div class="col-lg-10">
-                    <input type="text" ng-model="user.storeloc" placeholder="{{i18N('placeholder.warn.storeloc','Default Storeroom Value')}}" class="form-control" />
+                    <input type="text" ng-model="user.person.storeloc" placeholder="{{i18N('placeholder.warn.storeloc','Default Storeroom Value')}}" class="form-control" />
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-lg-2"><span style="font-family: Arial Round"></span><span>{{i18N('general.email','Email')}}</span></label>
                 <div class="col-lg-10">
-                    <input type="email" ng-model="user.email" placeholder="{{i18N('general.email','Email')}}" class="form-control" />
+                    <input type="email" ng-model="user.person.email" placeholder="{{i18N('general.email','Email')}}" class="form-control" />
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-lg-2"><span style="font-family: Arial Round"></span><span>{{i18N('general.department','Department')}}</span></label>
                 <div class="col-lg-10">
-                    <input type="text" ng-model="user.department" placeholder="{{i18N('general.department','Department')}}" class="form-control" />
+                    <input type="text" ng-model="user.person.department" placeholder="{{i18N('general.department','Department')}}" class="form-control" />
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="control-label col-lg-2"><span style="font-family: Arial Round"></span><span>{{i18N('general.phone','Phone')}}</span></label>
                 <div class="col-lg-10">
-                    <input type="text" ng-model="user.phone" placeholder="{{i18N('general.phone','Phone')}}" class="form-control" />
+                    <input type="text" ng-model="user.person.phone" placeholder="{{i18N('general.phone','Phone')}}" class="form-control" />
                 </div>
             </div>
 
@@ -112,7 +112,7 @@
                 <div class="col-lg-2">
                     <!--input type="text" ng-model="user.language" placeholder="{{i18N('general.language','Language')}}" class="form-control" /-->
 
-                    <select id="userLanguage" ng-model="user.language" class="form-control">
+                    <select id="userLanguage" ng-model="user.person.language" class="form-control">
                         <option value="EN">{{i18N('language.english','English')}}</option>
                         <option value="DE">{{i18N('language.german','German')}}</option>
                         <option value="ES">{{i18N('language.spanish','Spanish')}}</option>

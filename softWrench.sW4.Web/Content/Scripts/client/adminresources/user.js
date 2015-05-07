@@ -53,7 +53,7 @@ function UserController($scope, $http, $templateCache, pwdenforceService, i18NSe
 
     }
 
-    $scope.edit = function (id) {
+    $scope.edit = function (username, id) {
         $http({
             method: "GET",
             url: url("api/security/User/" + id),

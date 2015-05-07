@@ -15,6 +15,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Security.Principal;
+using softWrench.sW4.Data.Entities.SyncManagers;
 using LogicalThreadContext = Quartz.Util.LogicalThreadContext;
 
 
@@ -55,6 +56,7 @@ namespace softWrench.sW4.Security.Services {
             if (dbUser == null || !MatchPassword(dbUser, typedPassword)) {
                 return null;
             }
+            dbUser = UserSyncManager.GetUserFromMaximoByUserName(dbUser.UserName, dbUser.Id);
             return UserFound(dbUser, userTimezoneOffset);
         }
 
@@ -65,6 +67,8 @@ namespace softWrench.sW4.Security.Services {
             if (dbUser == null || !MatchPassword(dbUser, password)) {
                 return null;
             }
+
+            dbUser = UserSyncManager.GetUserFromMaximoByUserName(userName, dbUser.Id);
 
             return UserFound(dbUser, userTimezoneOffset);
         }
@@ -150,10 +154,12 @@ namespace softWrench.sW4.Security.Services {
             }
             //cookie authenticated already 
             //TODO: remove this in prod?
-            var dbUser = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(User.UserByUserName, currLogin);
-            if (dbUser == null) {
+            var swUser = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(User.UserByUserName, currLogin);
+            if (swUser == null) {
                 throw new InvalidOperationException("user should exist at DB");
             }
+            var fullUser = UserSyncManager.GetUserFromMaximoByUserName(currLogin, swUser.Id);
+            fullUser.Id = swUser.Id;
 
             var formsIdentity = CurrentPrincipal.Identity as System.Web.Security.FormsIdentity;
             var timezone = String.Empty;
@@ -161,7 +167,7 @@ namespace softWrench.sW4.Security.Services {
                 var userData = PropertyUtil.ConvertToDictionary(formsIdentity.Ticket.UserData);
                 timezone = userData["userTimezoneOffset"] as string;
             }
-            UserFound(dbUser, timezone);
+            UserFound(fullUser, timezone);
             return _users[currLogin];
         }
 
@@ -220,8 +226,10 @@ namespace softWrench.sW4.Security.Services {
             SWDBHibernateDAO.GetInstance().Delete(user);
         }
 
-        public User FetchUser(int id) {
-            return SWDBHibernateDAO.GetInstance().FindByPK<User>(typeof(User), id, "Profiles", "CustomRoles", "CustomConstraints");
+        public User FetchUser(string username, int id)
+        {
+            return UserSyncManager.GetUserFromMaximoByUserName(username, id);
+            //return SWDBHibernateDAO.GetInstance().FindByPK<User>(typeof(User), id, "Profiles", "CustomRoles", "CustomConstraints");
         }
     }
 }
