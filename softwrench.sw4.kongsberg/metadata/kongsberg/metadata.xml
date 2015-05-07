@@ -1439,14 +1439,9 @@
         </schema>
         
         <schema parentschema="adetail" title="New Service Request" id="newdetail">
-          
           <section id="srsection">
             <field attribute="ticketid" label="SR No:" hidden="true" />
             <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true" />
-            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
-              <!-- removed default='@usersite' from the above association label-->
-              <renderer type="combo"/>
-            </association>
           </section>
           <!--SSWEB 173-->
           <section id="attachmentsection">
