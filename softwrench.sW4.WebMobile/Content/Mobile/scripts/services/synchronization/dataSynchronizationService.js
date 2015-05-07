@@ -26,7 +26,12 @@
                         clientCurrentTopLevelApps: currentApps,
                         returnNewApps: i==0
                     }
-                    httpPromises.push(restService.postPromise("Mobile", "PullNewData", params, rowstampMap));
+                    var promise = restService.postPromise("Mobile", "PullNewData", params, rowstampMap).then(function(result) {
+                        var topApplicationData = result.topApplicationData;
+                        var compositionData = result.compositionData;
+                        return result;
+                    });
+                    httpPromises.push(promise);
                 }
             }
 

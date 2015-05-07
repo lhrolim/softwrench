@@ -16,7 +16,7 @@ namespace softWrench.sW4.Configuration.Services.Api {
                 if (Alias == null) {
                     return null;
                 }
-                if (AppContext == null) {
+                if (AppContext == null && !OfflineOnly) {
                     return (Condition)ReflectionUtil.Clone(new Condition(), this);
                 }
                 var whereClauseCondition = (WhereClauseCondition)ReflectionUtil.Clone(new WhereClauseCondition(), this);

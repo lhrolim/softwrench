@@ -69,7 +69,7 @@ namespace softWrench.sW4.Data.Offline {
             result.AddTopApplicationData(appResultData);
             foreach (var compositionDict in compositionData) {
                 var dict = compositionDict;
-                result.AddCompositionData(new SynchronizationApplicationData(compositionDict.Key, compositionDict.Value.ResultList.Select(s => new DataMap(dict.Key, s))));
+                result.AddCompositionData(new SynchronizationApplicationData(compositionDict.Key, compositionDict.Value.ResultList.Select(s => new DataMap(dict.Key, s,dict.Value.IdFieldName))));
             }
         }
 
