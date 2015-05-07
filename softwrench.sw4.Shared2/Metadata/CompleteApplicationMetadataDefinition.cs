@@ -69,7 +69,7 @@ namespace softwrench.sW4.Shared2.Metadata {
             DisplayableComponents = components;
             Notifications = notifications;
             //            _mobileSchema = BuildMobileSchema();
-            }
+        }
 
         private void MergeSchemaPropertiesWithApplicationProperties(ApplicationSchemaDefinition schema, IDictionary<string, string> parameters) {
             if (parameters == null || !parameters.Any()) {
@@ -95,6 +95,22 @@ namespace softwrench.sW4.Shared2.Metadata {
             get { return _schemasList; }
         }
 
+        public IEnumerable<ApplicationSchemaDefinition> MobileSchemas() {
+            var resultSchemas = new Dictionary<string, ApplicationSchemaDefinition>();
+            var mobileDeclaredSchemas = _schemasList.Where(s => s.IsMobilePlatform());
+            foreach (var schema in mobileDeclaredSchemas) {
+                //first add the one which are explicitely marked as mobile schemas
+                resultSchemas.Add(schema.SchemaId, schema);
+            }
+            var nonWebSchemas = _schemasList.Where(s => !s.IsWebPlatform());
+            foreach (var schema in nonWebSchemas) {
+                //then, adding possible "none-declared" schemas, so that if the same is declared the mobile one stands
+                if (!resultSchemas.ContainsKey(schema.SchemaId)) {
+                    resultSchemas.Add(schema.SchemaId, schema);
+                }
+            }
+            return resultSchemas.Values;
+        }
 
 
 
@@ -153,5 +169,7 @@ namespace softwrench.sW4.Shared2.Metadata {
             }
             return null;
         }
+
+
     }
 }

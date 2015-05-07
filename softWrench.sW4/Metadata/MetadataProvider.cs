@@ -51,7 +51,7 @@ namespace softWrench.sW4.Metadata {
 
         public static MetadataProviderInternalCache InternalCache { get; set; }
 
-       
+
 
         private const string Metadata = "metadata.xml";
         private const string StatusColor = "statuscolors.json";
@@ -115,7 +115,7 @@ namespace softWrench.sW4.Metadata {
             foreach (var app in apps) {
                 var entityName = app.Entity;
                 var entityMetadata = Entity(entityName);
-                if (app.IsMobileSupported()) {
+                if (isMobileEnabled() && app.IsMobileSupported()) {
                     app.Schemas().Add(ApplicationMetadataSchemaKey.GetSyncInstance(),
                         ApplicationSchemaFactory.GetSyncInstance(app.ApplicationName, app.IdFieldName, app.UserIdFieldName));
                 }

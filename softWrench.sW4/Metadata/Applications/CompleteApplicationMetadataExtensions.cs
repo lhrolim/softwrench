@@ -45,6 +45,8 @@ namespace softWrench.sW4.Metadata.Applications {
         }
 
         public static bool IsMobileSupported(this CompleteApplicationMetadataDefinition metadata) {
+
+
             if (metadata.Parameters.ContainsKey(ApplicationMetadataConstants.MobileDisabled)) {
                 return false;
             }

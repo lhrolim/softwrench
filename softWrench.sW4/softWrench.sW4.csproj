@@ -573,7 +573,6 @@
     <Compile Include="Util\ConversionUtil.cs" />
     <Compile Include="Util\DateExtensions.cs" />
     <Compile Include="Util\DBConnectionResult.cs" />
-    <Compile Include="Util\JsonDateTimeConverter.cs" />
     <Compile Include="Util\DictionaryExtensions.cs" />
     <Compile Include="Util\EntityUtil.cs" />
     <Compile Include="Util\ExceptionUtil.cs" />

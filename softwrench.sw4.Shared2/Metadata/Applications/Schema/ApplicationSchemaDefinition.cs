@@ -1,6 +1,5 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Schema;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications.Command;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
@@ -35,7 +34,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// 
         /// 
         ///  public delegate byte[] Base64Delegate(string attachmentData);
-        public delegate IList<IApplicationAttributeDisplayable> LazyFkResolverDelegate(ApplicationSchemaDefinition definition);
+        public delegate IList<IApplicationDisplayable> LazyFkResolverDelegate(ApplicationSchemaDefinition definition);
 
         public delegate IEnumerable<IApplicationDisplayable> LazyComponentDisplayableResolver(ReferenceDisplayable reference, ApplicationSchemaDefinition schema, IEnumerable<DisplayableComponent> components);
 

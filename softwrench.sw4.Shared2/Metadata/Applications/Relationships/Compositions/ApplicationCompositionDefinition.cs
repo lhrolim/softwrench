@@ -51,7 +51,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             get { return From + "." + Relationship; }
         }
 
-        public override string Attribute { get { return _relationship; } set {  } }
+        public override string Attribute { get { return _relationship; } set { } }
 
 
         public ApplicationCompositionSchema Schema {
@@ -72,6 +72,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         public ISet<string> DependantFields {
             get { return _schema.DependantFields; }
         }
+
 
         public string AssociationKey { get { return Relationship; } }
     }

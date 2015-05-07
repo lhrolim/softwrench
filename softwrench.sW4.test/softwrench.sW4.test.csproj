@@ -110,6 +110,7 @@
     <Compile Include="Metadata\MetadataPropertiesTest.cs" />
     <Compile Include="Metadata\MenuParsingTest.cs" />
     <Compile Include="Metadata\CustomizationTest.cs" />
+    <Compile Include="Metadata\SyncSchemaTest.cs" />
     <Compile Include="Resources\MifSRSample.cs" />
     <Compile Include="ToStringELParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -141,6 +142,10 @@
     </Content>
     <Content Include="App_data\Client\test2\metadata.xml" />
     <Content Include="App_data\Client\test2\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_data\Client\test_only\menu.mobile.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

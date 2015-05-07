@@ -17,20 +17,20 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 if (!MetadataProvider.FinishedParsing) {
                     return null;
                 }
+                Log.DebugFormat("resolving lazy sync fields for application {0}",definition.ApplicationName);
                 var app = MetadataProvider.Application(definition.ApplicationName);
-                var schemas = app.Schemas();
-                var resultSet =
-                    new HashSet<IApplicationAttributeDisplayable>();
-                foreach (var schema in schemas.Values) {
+                var schemas = app.MobileSchemas();
+                var resultSet =new HashSet<IApplicationDisplayable>();
+                foreach (var schema in schemas) {
                     if (Equals(schema.GetSchemaKey(), definition.GetSchemaKey()) || schema.IsWebPlatform()) {
                         continue;
                     }
-                    var fields = schema.Fields;
+                    var fields = schema.Displayables;
                     foreach (var applicationFieldDefinition in fields) {
                         resultSet.Add(applicationFieldDefinition);
                     }
                 }
-                return new List<IApplicationAttributeDisplayable>(resultSet);
+                return new List<IApplicationDisplayable>(resultSet);
             };
 
 
@@ -42,9 +42,9 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             if (definition.Stereotype != SchemaStereotype.List &&
                 definition.Stereotype != SchemaStereotype.CompositionList) {
                 //blank list in order to consider it done
-                return new List<IApplicationAttributeDisplayable>();
+                    return new List<IApplicationDisplayable>();
             }
-            var resultList = new List<IApplicationAttributeDisplayable>();
+            var resultList = new List<IApplicationDisplayable>();
             resultList.AddRange(DirectFKsFields(definition));
             resultList.AddRange(InverseFKsFields(definition));
             Log.DebugFormat("finished LazyFkResolverDelegate took {0} ", watch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture));

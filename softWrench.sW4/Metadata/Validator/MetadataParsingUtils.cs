@@ -86,8 +86,8 @@ namespace softWrench.sW4.Metadata.Validator {
         }
 
 
-        public static StreamReader GetStream(Stream streamValidator, String path) {
-            return streamValidator == null ? GetStreamImpl(path) : new StreamReader(StreamUtils.CopyStream(streamValidator));
+        public static StreamReader GetStream(Stream streamValidator, String path, Boolean fallbackToDefaultImpl = true) {
+            return GetStreamImpl(path, streamValidator, fallbackToDefaultImpl);
         }
 
         public static StreamReader DoGetStream(string path) {
@@ -119,7 +119,7 @@ namespace softWrench.sW4.Metadata.Validator {
             return DoGetStream(realPath);
         }
 
-        public static StreamReader GetStreamImpl(string resource, Stream streamValidator = null) {
+        public static StreamReader GetStreamImpl(string resource, Stream streamValidator = null, bool fallbackToDefaultImpl = true) {
             if (streamValidator != null) {
                 return new StreamReader(StreamUtils.CopyStream(streamValidator));
             }
@@ -142,6 +142,10 @@ namespace softWrench.sW4.Metadata.Validator {
                         return new StreamReader(stream);
                     }
                 }
+                if (!fallbackToDefaultImpl) {
+                    return null;
+                }
+
                 Log.InfoFormat("getting file {0} from otb default implementation", path);
                 path = GetPath(resource, false, true);
                 if (!File.Exists(path)) {
