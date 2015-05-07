@@ -61,12 +61,16 @@ namespace softWrench.sW4.Data.Offline {
                 ParentEntities = topLevelAppData
 
             };
-            _resolver.ResolveCollections(parameters);
+            var compositionData = _resolver.ResolveCollections(parameters);
             var filteredResults = FilterData(topLevelAppData, rowstampMap);
             var appResultData = new SynchronizationApplicationData(topLevelApp.ApplicationName,
                 filteredResults.changedData, filteredResults.deletedIds);
 
-            result.TopApplicationData.Add(appResultData);
+            result.AddTopApplicationData(appResultData);
+            foreach (var compositionDict in compositionData) {
+                var dict = compositionDict;
+                result.AddCompositionData(new SynchronizationApplicationData(compositionDict.Key, compositionDict.Value.ResultList.Select(s => new DataMap(dict.Key, s))));
+            }
         }
 
         private IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request) {
@@ -82,15 +86,16 @@ namespace softWrench.sW4.Data.Offline {
 
 
 
-        private ApplicationSyncResult FilterData(List<DataMap> topLevelAppData,
-            JObject rowstampMap) {
+        private ApplicationSyncResult FilterData(List<DataMap> topLevelAppData, JObject rowstampMap) {
             if (rowstampMap == null) {
 
                 return new ApplicationSyncResult() {
                     changedData = topLevelAppData
                 };
             }
-            return null;
+            return new ApplicationSyncResult() {
+                changedData = topLevelAppData
+            }; ;
         }
 
         private List<DataMap> FetchData(SlicedEntityMetadata entityMetadata, ApplicationMetadata appMetadata) {

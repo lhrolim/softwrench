@@ -3,8 +3,6 @@
 
         syncData: function (currentServerVersion) {
 
-            var defer = $q.defer();
-
             var httpPromise = $http.get(routeService.downloadMetadataURL(currentServerVersion));
 
             httpPromise.then(function (metadatasResult) {
@@ -15,18 +13,18 @@
 
                 var menuPromise = menuModelService.updateMenu(serverMenu);
                 var topLevelPromise = metadataModelService.updateTopLevelMetadata(topLevelMetadatas);
-                var associationPromise = metadataModelService.updateTopLevelMetadata(associationMetadatasJson);
-                var compositionPromise = metadataModelService.updateTopLevelMetadata(compositionMetadatasJson);
+                var associationPromise = metadataModelService.updateAssociationMetadata(associationMetadatasJson);
+                var compositionPromise = metadataModelService.updateCompositionMetadata(compositionMetadatasJson);
 
 
                 return $q.all([menuPromise, topLevelPromise, associationPromise, compositionPromise]).then(function (results) {
-                    defer.resolve();
+                    $q.when();
                 });
             }).catch(function (errordata) {
-                defer.reject();
+                $q.reject();
             });
 
-            return defer.promise;
+            return httpPromise;
         }
     }
 });

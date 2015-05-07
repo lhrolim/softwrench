@@ -33,7 +33,7 @@
 
 
 
-            return httpPromise;
+            return httpPromises;
         }
     }
 });

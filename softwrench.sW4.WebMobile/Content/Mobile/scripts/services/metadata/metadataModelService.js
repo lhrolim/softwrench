@@ -1,4 +1,4 @@
-﻿mobileServices.factory('metadataModelService', function ($q, swdbDAO, dispatcherService) {
+﻿mobileServices.factory('metadataModelService', function ($q, $log, swdbDAO, dispatcherService) {
 
     var metadataModel = {
         topLevelApplications: [],
@@ -6,11 +6,10 @@
         associationApplications: [],
     };
 
-    function loadEntityInstance(serverMetadata, mergefunctionCBK) {
+    function loadEntityInstance(serverMetadata, memoryArrayName, mergefunctionCBK) {
 
         var applicationName = serverMetadata.applicationName;
-
-        var applications = metadataModel.topLevelApplications;
+        var applications = metadataModel[memoryArrayName];
         var loadedEntity = $.findFirst(applications, function (el) {
             return el.application == applicationName;
         });
@@ -28,7 +27,7 @@
     }
 
 
-    function doUpdateMetadata(serverMetadatas, memoryArray, mergefunctionCbk) {
+    function doUpdateMetadata(serverMetadatas, memoryArrayName, mergefunctionCbk) {
         /// <summary>
         /// Receives a list of metadas from the server, and update the memory instance and the database, 
         /// so that next time the customer has the updated data.
@@ -39,6 +38,7 @@
         /// <param name="memoryArray">which memory array to use</param>
         /// <returns type="promise"></returns>
         var defer = $q.defer();
+        var memoryArray = metadataModel[memoryArrayName];
         if (isArrayNullOrEmpty(serverMetadatas)) {
             defer.resolve();
             return defer.promise;
@@ -49,7 +49,7 @@
 
         for (var i = 0; i < serverMetadatas.length; i++) {
             var applicationMetadata = serverMetadatas[i];
-            instancesToSavePromises.push(loadEntityInstance(applicationMetadata, mergefunctionCbk));
+            instancesToSavePromises.push(loadEntityInstance(applicationMetadata, memoryArrayName, mergefunctionCbk));
         }
 
         for (var j = 0; j < memoryArray.length; j++) {
@@ -68,7 +68,7 @@
                 return $q.all([swdbDAO.bulkSave(results), swdbDAO.bulkDelete(instancesToDelete)]);
             }).then(function (savedInstances) {
                 //updating the model, only if save is actually performed
-                memoryArray = savedInstances[0];
+                metadataModel[memoryArrayName] = savedInstances[0];
                 defer.resolve();
             });
     };
@@ -93,7 +93,7 @@
         },
 
         updateTopLevelMetadata: function (serverMetadatas) {
-            return this.doUpdateMetadata(serverMetadatas, metadataModel.associationApplications,
+            return doUpdateMetadata(serverMetadatas, 'topLevelApplications',
                 function (memoryObject, entity) {
                     entity.association = false;
                     entity.composition = false;
@@ -102,7 +102,7 @@
         },
 
         updateCompositionMetadata: function (serverMetadatas) {
-            return this.doUpdateMetadata(serverMetadatas, metadataModel.associationApplications,
+            return doUpdateMetadata(serverMetadatas, 'compositionApplications',
                 function (memoryObject, entity) {
                     entity.association = false;
                     entity.composition = true;
@@ -111,7 +111,7 @@
         },
 
         updateAssociationMetadata: function (serverMetadatas) {
-            return this.doUpdateMetadata(serverMetadatas, metadataModel.topLevelApplications,
+            return doUpdateMetadata(serverMetadatas, 'associationApplications',
                 function (memoryObject, entity) {
                     entity.association = true;
                     entity.composition = false;
@@ -122,9 +122,23 @@
 
 
         initAndCacheFromDB: function () {
+            var log = $log.getInstance("metadataModelService#initAndCacheFromDB");
             var defer = $q.defer();
             swdbDAO.findAll("Application").success(function (applications) {
-                metadataModel.topLevelApplications = applications;
+                for (var i = 0; i < applications.length; i++) {
+                    var application = applications[i];
+                    if (application.association) {
+                        log.info("caching association {0}".format(application.application));
+                        metadataModel.associationApplications.push(application);
+                    } else if (application.composition) {
+                        log.info("caching composition {0}".format(application.application));
+                        metadataModel.compositionApplications.push(application);
+                    } else {
+                        log.info("caching topLevel App {0}".format(application.application));
+                        metadataModel.topLevelApplications.push(application);
+                    }
+                }
+
             });
             return defer.promise;
 

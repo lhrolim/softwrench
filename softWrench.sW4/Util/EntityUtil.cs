@@ -33,6 +33,10 @@
             return relationship.EndsWith("_") ? relationship.Trim('\'') : relationship.Trim('\'') + "_";
         }
 
+        public static string GetQueryReplacingMarker(string query, string entityName) {
+            return query.Replace("!@", entityName + ".");
+        }
+
 
         public static string GetApplicationName(string relationship) {
             if (!relationship.EndsWith("_")) {

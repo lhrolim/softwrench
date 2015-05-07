@@ -9,7 +9,7 @@ namespace softWrench.sW4.Data.Offline {
     public class SynchronizationApplicationData {
 
         private readonly string _applicationName;
-        private readonly ICollection<DataMap> _dataMaps;
+        private readonly IEnumerable<DataMap> _dataMaps;
         private readonly string _upperLimitRowstamp;
         private readonly string _lowerLimitRowstamp;
         public IList<string> DeletedRecordIds { get; set; }
@@ -28,8 +28,7 @@ namespace softWrench.sW4.Data.Offline {
         }
 
 
-        public SynchronizationApplicationData(String applicationName,
-          ICollection<DataMap> dataMaps, IList<string> deletedRecords = null) {
+        public SynchronizationApplicationData(String applicationName,IEnumerable<DataMap> dataMaps, IList<string> deletedRecords = null) {
             _applicationName = applicationName;
             _dataMaps = dataMaps;
             DeletedRecordIds = deletedRecords ?? new List<string>();
@@ -47,7 +46,7 @@ namespace softWrench.sW4.Data.Offline {
             get { return _lowerLimitRowstamp; }
         }
 
-        public ICollection<DataMap> DataMaps {
+        public IEnumerable<DataMap> DataMaps {
             get { return _dataMaps; }
         }
 

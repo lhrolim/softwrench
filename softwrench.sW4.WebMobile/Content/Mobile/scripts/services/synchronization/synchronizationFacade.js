@@ -5,6 +5,8 @@
 
         fullSync: function (currentData) {
 
+            var log = $log.get("synchronizationFacade#fullSync");
+
             var applications = metadataModelService.getApplicationNames();
 
             //one per application
@@ -17,11 +19,18 @@
 
             return $q.all(batchPromises)
                 .then(function (batches) {
+                    log.info('batches created locally');
                     var batchSubmissionPromise = batchService.submitBatches(batches);
                     var syncDataPromise = dataSynchronizationService.syncData(batches);
                     var metadataDownloadedPromise = metadataSynchronizationService.syncData("1.0");
                     var associationDataDownloadPromise = associationDataSynchronizationService.syncData();
-                    return $q.all([batchSubmissionPromise, syncDataPromise, metadataDownloadedPromise, associationDataDownloadPromise]);
+                    var httpPromises = [];
+                    httpPromises.push(batchSubmissionPromise);
+                    httpPromises.push(metadataDownloadedPromise);
+                    httpPromises.push(associationDataDownloadPromise);
+                    httpPromises=httpPromises.concat(syncDataPromise);
+
+                    return $q.all(httpPromises);
                 }).catch(function (err) {
                     return $q.reject(false);
                 }).then(function (results) {

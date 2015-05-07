@@ -69,7 +69,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
         }
 
 
-        public void ResolveCollections(CollectionResolverParameters parameters) {
+        public Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> ResolveCollections(CollectionResolverParameters parameters) {
 
             var application = parameters.ApplicationMetadata;
 
@@ -78,14 +78,14 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             var attributeHolders = parameters.ParentEntities;
 
 
-            DoResolveCollections(compositionSchemas, entityMetadata, attributeHolders, parameters.RowstampMap);
+            return DoResolveCollections(compositionSchemas, entityMetadata, attributeHolders, parameters.RowstampMap);
         }
 
-        private void DoResolveCollections(IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
+        private Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> DoResolveCollections(IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
             SlicedEntityMetadata entityMetadata,
             IEnumerable<AttributeHolder> attributeHolders, IDictionary<string, long?> compositionRowstamps = null) {
             if (!compositionSchemas.Any()) {
-                return;
+                return new Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult>();
             }
             if (compositionRowstamps == null) {
                 compositionRowstamps = new Dictionary<string, long?>();
@@ -124,6 +124,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             Task.WaitAll(tasks);
             _log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections",
                 String.Join(",", compositionSchemas.Keys)));
+            return results;
         }
 
 

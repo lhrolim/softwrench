@@ -274,9 +274,13 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             var deferred = dispatcherService.loadBaseDeferred();
             var filter = createFilter(entity, queryString, options);
 
-            filter.list(null, function (result) {
-                deferred.resolve(result);
-            });
+            try {
+                filter.list(null, function(result) {
+                    deferred.resolve(result);
+                });
+            } catch (err) {
+                deferred.reject(err);
+            }
             return deferred.promise;
         },
 
