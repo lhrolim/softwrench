@@ -1,4 +1,4 @@
-﻿var app = angular.module('sw_layout', ['pasvaz.bindonce', 'ngSanitize', 'textAngular', 'angularFileUpload', "xeditable",'webcommons_services']);
+﻿var app = angular.module('sw_layout', ['pasvaz.bindonce', 'angularTreeview', 'ngSanitize', 'textAngular', 'angularFileUpload', "xeditable", 'webcommons_services']);
 
 //angular 1.3 migration reference
 //app.config(['$controllerProvider', function ($controllerProvider) {
