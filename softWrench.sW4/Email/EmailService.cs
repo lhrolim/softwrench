@@ -46,14 +46,22 @@ namespace softWrench.sW4.Email {
             var objsmtpClient = ConfiguredSmtpClient();
            
             // Send the email message
-            var email = new MailMessage(emailData.SendFrom ?? MetadataProvider.GlobalProperty("defaultEmail"), emailData.SendTo) {
-               Subject = emailData.Subject,
+            var email = new MailMessage() {
+                From = new MailAddress(emailData.SendFrom ?? MetadataProvider.GlobalProperty("defaultEmail")),
+                Subject = emailData.Subject,
                 Body = emailData.Message,
                 IsBodyHtml = true
             };
+
+            if (!string.IsNullOrEmpty((emailData.SendTo))) {
+                foreach (var emailaddress in emailData.SendTo.Split(new char[]{' ', ',', ';'}, StringSplitOptions.RemoveEmptyEntries)) {
+                    email.To.Add(emailaddress.Trim());
+                }
+            }
+
             if (!string.IsNullOrEmpty(emailData.Cc)) {
-                foreach (var ccemail in emailData.Cc.Split(' ', ',', ';')) {
-                    email.CC.Add(ccemail);
+                foreach (var emailaddress in emailData.Cc.Split(new char[]{' ', ',', ';'}, StringSplitOptions.RemoveEmptyEntries)) {
+                    email.CC.Add(emailaddress.Trim());
                 }
             }
             email.IsBodyHtml = true;
