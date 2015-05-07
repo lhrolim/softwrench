@@ -1475,13 +1475,21 @@
           </section>
           <section id="compositions">
             <tab label="Solution" id="solution">
-
-            <field attribute="solution" hidden="true"/>
-            <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
-              <renderer type="lookup"/>
-              <event type="afterchange" service="solutionService" method="setsolutiondata"/>
-            </association>
-            <field attribute="solution_.description" label="Description:" readonly="true" hidden="true"/>
+              <field attribute="solution" hidden="true"/>
+              <association label="Solution:" target="solution" labelfield="solution_.description" extraprojectionvalues="symptom_.ldtext,cause_.ldtext,resolution_.ldtext">
+                <renderer type="lookup"/>
+                <event type="afterchange" service="solutionService" method="setsolutiondata"/>
+              </association>
+              <optionfield attribute="pmcosolstatus" label="Solution Status:">
+                <renderer type="combo" params="inputsize=medium" />
+                <option label="Under Consideration" value="CONSIDER" />
+                <option label="Solution Failed" value="FAIL" />
+                <option label="Solution Successful" value="SUCCESS" />
+              </optionfield>
+              <field attribute="selfservsolaccess" label="Slef-Service Access?">
+                <renderer type="checkbox" params="inputsize=medium" />
+              </field>
+              <field attribute="solution_.description" label="Description:" readonly="true" hidden="true"/>
             <field attribute="symptom_.ldtext" label="Symptom:">
               <renderer type="richtext"/>
             </field>
