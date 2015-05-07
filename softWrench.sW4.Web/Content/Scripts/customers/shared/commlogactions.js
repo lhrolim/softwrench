@@ -50,11 +50,12 @@
         var origSubject = clonedItem['subject'] == null ? "" : clonedItem['subject'];
         var origMessage = clonedItem['message'] == null ? "" : clonedItem['message'];
         clonedItem['commloguid'] = null;
-        if (origCc != "") {
-            clonedItem['sendto'] = clonedItem['sendfrom'] + "," + origCc;
-        } else {
-            clonedItem['sendto'] = clonedItem['sendfrom'];
-        }
+        clonedItem['sendto'] = clonedItem['sendfrom'];
+        //if (origCc != "") {
+        //    clonedItem['sendto'] = clonedItem['sendfrom'] + "," + origCc;
+        //} else {
+        //    clonedItem['sendto'] = clonedItem['sendfrom'];
+        //}
 
         clonedItem['sendfrom'] = contextService.getUserData().email;
         clonedItem['subject'] = "Re: " + clonedItem['subject'];
