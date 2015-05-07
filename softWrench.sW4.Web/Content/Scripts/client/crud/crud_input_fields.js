@@ -596,8 +596,11 @@ app.directive('crudInputFields', function (contextService, eventService) {
                     }
                 }
 
-                if (fieldMetadata.rendererParameters != null) {
+                if (fieldMetadata.rendererParameters != null && fieldMetadata.header != null) {
+                    cssclass += 'hasheader';
+                }
 
+                if (fieldMetadata.rendererParameters != null) {
                     //make sure the fieldset is the correct width
                     switch (fieldMetadata.rendererParameters['inputsize']) {
                         case 'xsmall':
@@ -613,7 +616,7 @@ app.directive('crudInputFields', function (contextService, eventService) {
                             cssclass += ' col-xs-12';
                     }
                 }
-                cssclass += ' row inputsize';
+                cssclass += ' row';
 
                 return cssclass;
             }
@@ -660,16 +663,10 @@ app.directive('crudInputFields', function (contextService, eventService) {
                     returnClass = cssclass + ' ' + returnClass + ' ng-hide';
                 }
 
-                //console.log(fieldMetadata);
                 return cssclass + ' ' + returnClass;
             }
 
-
-
-
             $scope.getInputClass = function (fieldMetadata) {
-                console.log(fieldMetadata);
-
                 var cssclass = "";
 
                 if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['inputclass'] != null) {
@@ -895,7 +892,7 @@ app.directive('selectCombo', function () {
         restrict: 'A',
         link: function (scope, element, attr) {
             $(element).on('click', 'input', function (e) {
-                console.log('click');
+                //console.log('click');
                 $(element).find('[data-dropdown="dropdown"]').click();
                 //return false;
                 //e.stopPropagation();

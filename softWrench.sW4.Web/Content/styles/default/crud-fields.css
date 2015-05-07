@@ -4,6 +4,10 @@
     margin-left: 0;
 }
 
+fieldset.hasheader {
+    clear: both;
+}
+
 .form-horizontal .form-group {
     margin-right: 0;
     margin-left: 0;

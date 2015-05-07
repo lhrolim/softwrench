@@ -1298,16 +1298,17 @@
           <field attribute="createby" hidden="true"/>
           <field attribute="changeby" default="@username" hidden="true"/>
 
-          <!--<section>-->
-            <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" hideDescription="true">
-              <renderer type="lookup" params="inputsize=medium"/>
-              <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
-            </association>
-            <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" hideDescription="true">
-              <dataprovider prefilterfunction="FilterByPersonGroup"/>
-              <renderer type="lookup" params="inputsize=medium"/>
-              <event type="afterchange" service="generalsrService" method="afterchangeownergroup"/>
-            </association>
+
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" hideDescription="true">
+            <renderer type="lookup" params="inputsize=medium"/>
+            <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
+          </association>
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" hideDescription="true">
+            <dataprovider prefilterfunction="FilterByPersonGroup"/>
+            <renderer type="lookup" params="inputsize=medium"/>
+            <event type="afterchange" service="generalsrService" method="afterchangeownergroup"/>
+          </association>
+
 
           <section>
             <header displacement="ontop" label="User Information" params="fieldset=true"/>
