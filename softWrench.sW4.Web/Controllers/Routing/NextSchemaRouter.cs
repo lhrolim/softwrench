@@ -10,6 +10,7 @@ using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;
 
 namespace softWrench.sW4.Web.Controllers.Routing {
@@ -56,7 +57,8 @@ namespace softWrench.sW4.Web.Controllers.Routing {
                 if (routerParameter.NextAction == null) {
                     Log.DebugFormat("No redirect needed");
                     return new BlankApplicationResponse{
-                        Id = routerParameter.TargetResult.Id
+                        Id = routerParameter.TargetResult.Id,
+                        TimeStamp = DateTime.Now.FromServerToRightKind()
                     };
                 }
 
