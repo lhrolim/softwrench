@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <entities>
+    <entity name="localPerson" parententity="person" idAttribute="personuid" useridAttribute="personid">
+      <attributes>
+        <attribute name="email" type="varchar" query="(select email.emailaddress from email where email.personid = !@personid)"/>
+        <attribute name="phone" type="varchar" query="(select phone.phonenum from phone where phone.personid = !@personid)"/>
+      </attributes>
+    </entity>
+  </entities>
+
+  <applications>
+    <application name="person" title="Person" entity="localPerson">
+      <schemas>
+        <schema id="detail" stereotype="detail" title="Person Detail">
+          <field attribute="personid" hidden="true"/>
+          <field attribute="firstName" label="First Name" requiredexpression="true"/>
+          <field attribute="lastName" label="Last Name" requiredexpression="true"/>
+          <field attribute="locationorg" label="Org ID"/>
+          <field attribute="locationsite" label="Site ID"/>
+          <field attribute="storeroom" label="Storeroom"/>
+          <field attribute="email" label="Email"/>
+          <field attribute="department" label="Department"/>
+          <field attribute="phone" label="Phone"/>
+          <field attribute="langcode" label="Language"/>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

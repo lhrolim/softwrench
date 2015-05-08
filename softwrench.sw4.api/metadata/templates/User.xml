@@ -1,1 +1,39 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <entities>
+    
+  </entities>
+
+  <applications>
+    <application name="user" title="User" entity="User">
+      <schemas>
+        <schema id="list" stereotype="list" title="User List">
+          <field attribute="username" label="Username"/>
+          <field attribute="#firstName" label="First Name"/>
+          <field attribute="#lastName" label="Last Name"/>
+          <field attribute="isActive" label="Active"/>
+          <field attribute="maximoPersonId" hidden="true"/>
+        </schema>
+
+        <schema id="detail" stereotype="detail" title="User Detail">
+          <field attribute="username" label="Username" requiredexpression="true"/>
+          <field attribute="password" label="Password" requiredexpression="true"/>
+          <field attribute="#password" label="Retype Password" requiredexpression="true"/>
+          <field attribute="#firstName" label="First Name" requiredexpression="true"/>
+          <field attribute="#lastName" label="Last Name" requiredexpression="true"/>
+          <field attribute="#orgId" label="ORGID"/>
+          <field attribute="#siteId" label="Site ID"/>
+          <field attribute="#storeroom" label="Storeroom"/>
+          <field attribute="#email" label="Email"/>
+          <field attribute="#department" label="Department"/>
+          <field attribute="#phone" label="Phone"/>
+          <field attribute="#language" label="Language"/>
+          <field attribute="isActive" label="Active">
+            <renderer type="checkbox"/>
+          </field>
+          <field attribute="maximoPersonId" hidden="true"/>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

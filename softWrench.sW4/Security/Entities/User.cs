@@ -9,6 +9,7 @@ using softWrench.sW4.Security.Interfaces;
 using softWrench.sW4.Util;
 using System;
 using System.Linq;
+using softWrench.sW4.Data.Persistence;
 
 
 namespace softWrench.sW4.Security.Entities {
@@ -19,23 +20,6 @@ namespace softWrench.sW4.Security.Entities {
         public const string UserByUserName = "from User where lower(userName) = lower(?)";
         public const string UserByMaximoPersonIds = "from User where MaximoPersonId in (:p0)";
         public const string UserByMaximoPersonId = "from User where lower(MaximoPersonId) = lower(?)";
-
-        //public static string UserByMaximoPersonIdsWhereIn(List<string> maximoPersonIdsList) {
-        //    const string where = "from User where MaximoPersonId in";
-        //    var maximoPersonIds = string.Empty;
-        //    var i = 1;
-        //    foreach (var maximoPersonId in maximoPersonIdsList) {
-        //        if (i == maximoPersonIdsList.Count) {
-        //            maximoPersonIds += "'" + maximoPersonId + "'";
-        //        }
-        //        else {
-        //            maximoPersonIds += "'" + maximoPersonId + "'" + ",";
-        //        }
-        //        i++;
-        //    }
-        //    var query = where + " (" + maximoPersonIds + ")";
-        //    return query;
-        //}
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
@@ -51,40 +35,16 @@ namespace softWrench.sW4.Security.Entities {
             }
         }
 
-        private string _language;
+        private Person _person;
 
-        [Property]
-        public virtual string Password { get; set; }
-
-        [Property]
-        public virtual string FirstName { get; set; }
-        [Property]
-        public virtual string LastName { get; set; }
-
-        [Property]
-        public virtual string Email { get; set; }
-
-        [Property]
-        public virtual string SiteId { get; set; }
-        [Property]
-        public virtual string OrgId { get; set; }
+        public Person Person
+        {
+            get {return _person;} 
+            set { _person = value; }
+        }
+        
         [Property(TypeType = typeof(BooleanToIntUserType))]
         public virtual Boolean IsActive { get; set; }
-
-        [Property]
-        public virtual string Department { get; set; }
-
-        [Property]
-        public virtual string Phone { get; set; }
-
-        [Property]
-        public virtual string Storeloc { get; set; }
-
-        [Property]
-        public virtual string Language {
-            get { return _language == null ? null : _language.Trim().ToUpper(); }
-            set { _language = value; }
-        }
 
         [Property]
         public virtual string CriptoProperties { get; set; }
@@ -92,6 +52,8 @@ namespace softWrench.sW4.Security.Entities {
         [Property]
         public virtual string MaximoPersonId { get; set; }
 
+        [Property]
+        public virtual string Password { get; set; }
 
         [JsonIgnore]
         [Set(0, Table = "SEC_PERSONGROUPASSOCIATION",
@@ -119,27 +81,24 @@ namespace softWrench.sW4.Security.Entities {
         [OneToMany(2, ClassType = typeof(UserCustomConstraint))]
         public virtual Iesi.Collections.Generic.ISet<UserCustomConstraint> CustomConstraints { get; set; }
 
-        public string DisplayName {
-            get { return FirstName + " " + LastName; }
-        }
+        //public string DisplayName {
+        //    get { return Person.FirstName + " " + Person.LastName; }
+        //}
 
 
-        public User() {
-
+        public User()
+        {
+            Person = new Person();
         }
         /// <summary>
         /// used for nhibernate to generate a "view" of user entity to list screen
         /// </summary>
         /// <param name="id"></param>
         /// <param name="userName"></param>
-        /// <param name="firstName"></param>
-        /// <param name="lastName"></param>
         /// <param name="isActive"></param>
-        public User(int? id, string userName, string firstName, string lastName, bool isActive) {
+        public User(int? id, string userName, bool isActive) {
             Id = id;
             UserName = userName;
-            FirstName = firstName;
-            LastName = lastName;
             IsActive = isActive;
             CustomConstraints = new HashedSet<UserCustomConstraint>();
             CustomRoles = new HashedSet<UserCustomRole>();
@@ -148,16 +107,16 @@ namespace softWrench.sW4.Security.Entities {
 
         public User(string userName, string firstName, string lastName, string siteId, string orgId, string department, string phone, string language, string password, string storeloc) {
             UserName = userName;
-            FirstName = firstName;
-            LastName = lastName;
-            SiteId = siteId;
-            OrgId = orgId;
+            Person.FirstName = firstName;
+            Person.LastName = lastName;
+            Person.SiteId = siteId;
+            Person.OrgId = orgId;
             IsActive = true;
-            Department = department;
-            Phone = phone;
-            Language = language;
-            Password = !string.IsNullOrEmpty(password) ? AuthUtils.GetSha1HashData(password) : null;
-            Storeloc = storeloc;
+            Person.Department = department;
+            Person.Phone = phone;
+            Person.Language = language;
+            Person.Password = !string.IsNullOrEmpty(password) ? AuthUtils.GetSha1HashData(password) : null;
+            Person.Storeloc = storeloc;
         }
 
         public void MergeFromDBUser(User dbUSer) {
@@ -171,12 +130,12 @@ namespace softWrench.sW4.Security.Entities {
         }
 
         public void MergeMaximoWithNewUser(User newUser) {
-            LastName = UpdateIfNotNull(LastName, newUser.LastName);
-            FirstName = UpdateIfNotNull(FirstName, newUser.FirstName);
-            Department = UpdateIfNotNull(Department, newUser.Department);
-            Language = UpdateIfNotNull(Language, newUser.Language);
-            Phone = UpdateIfNotNull(Phone, newUser.Phone);
-            Email = UpdateIfNotNull(Email, newUser.Email);
+            Person.LastName = UpdateIfNotNull(Person.LastName, newUser.Person.LastName);
+            Person.FirstName = UpdateIfNotNull(Person.FirstName, newUser.Person.FirstName);
+            Person.Department = UpdateIfNotNull(Person.Department, newUser.Person.Department);
+            Person.Language = UpdateIfNotNull(Person.Language, newUser.Person.Language);
+            Person.Phone = UpdateIfNotNull(Person.Phone, newUser.Person.Phone);
+            Person.Email = UpdateIfNotNull(Person.Email, newUser.Person.Email);
             Password = UpdateIfNotNull(Password, newUser.Password);
             MaximoPersonId = UpdateIfNotNull(MaximoPersonId, newUser.MaximoPersonId);
         }
@@ -222,19 +181,19 @@ namespace softWrench.sW4.Security.Entities {
                 }
             }
 
-            //fixme: find a better solution, maybe 2 jsons from client
+            //TODO: find a better solution, maybe 2 jsons from client
             user.UserName = (String)jObject["userName"];
-            user.FirstName = (String)jObject["firstName"];
-            user.LastName = (String)jObject["lastName"];
-            user.OrgId = (String)jObject["orgId"];
-            user.SiteId = (String)jObject["siteId"];
+            user.Person.FirstName = (String)jObject["person"]["firstName"];
+            user.Person.LastName = (String)jObject["person"]["lastName"];
+            user.Person.OrgId = (String)jObject["person"]["orgId"];
+            user.Person.SiteId = (String)jObject["person"]["siteId"];
             user.IsActive = (bool)jObject["isActive"];
             user.Id = (int?)jObject["id"];
-            user.Email = (String)jObject["email"];
-            user.Department = (String)jObject["department"];
-            user.Phone = (String)jObject["phone"];
-            user.Language = (String)jObject["language"];
-            user.Storeloc = (String)jObject["storeloc"];
+            user.Person.Email = (String)jObject["person"]["email"];
+            user.Person.Department = (String)jObject["person"]["department"];
+            user.Person.Phone = (String)jObject["person"]["phone"];
+            user.Person.Language = (String)jObject["person"]["language"];
+            user.Person.Storeloc = (String)jObject["person"]["storeloc"];
             var inputPassword = (String)jObject["password"];
             if (inputPassword != null) {
                 user.Password = AuthUtils.GetSha1HashData(inputPassword);

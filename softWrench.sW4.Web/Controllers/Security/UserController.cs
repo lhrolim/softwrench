@@ -34,8 +34,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         private ISWDBHibernateDAO dao;
 
-        public UserController(ISWDBHibernateDAO dao)
-        {
+        public UserController(ISWDBHibernateDAO dao) {
             this.dao = dao;
         }
 
@@ -43,7 +42,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
         [HttpGet]
         public GenericResponseResult<UserListDto> List(bool refreshData = true) {
             var partialUsers = dao.FindByQuery<User>("select new User(id,UserName,IsActive) from User order by UserName");
-            var users = partialUsers.Select(user => UserSyncManager.GetUserFromMaximoByUserName(user.UserName, user.Id)).ToList();
+            var users = partialUsers.Select(user => UserSyncManager.GetUserFromMaximoBySwUser(user)).ToList();
             users.RemoveAll(user => user == null);
             ICollection<UserProfile> profiles = new List<UserProfile>();
             IList<Role> roles = new List<Role>();

@@ -62,6 +62,29 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             return user;
         }
 
+        public static User GetUserFromMaximoBySwUser(User swUser) {
+            if (swUser == null) throw new ArgumentNullException("swUser");
+            User fullUser = null;
+            var dto = new SearchRequestDto {
+                WhereClause = (" person.personid = '" + swUser.UserName + "'").ToUpper()
+            };
+            dto = BuildDTO(dto);
+            var entityMetadata = MetadataProvider.Entity(EntityName);
+            var maximoUsers = EntityRepository.Get(entityMetadata, dto);
+            var attributeHolders = maximoUsers as AttributeHolder[] ?? maximoUsers.ToArray();
+            if (!attributeHolders.Any()) {
+                return null;
+            }
+            var userFromMaximo = GetUserFromMaximoUsers(attributeHolders);
+            fullUser = userFromMaximo.FirstOrDefault();
+            fullUser.Id = swUser.Id;
+            fullUser.Profiles = swUser.Profiles;
+            fullUser.CustomRoles = swUser.CustomRoles;
+            fullUser.PersonGroups = swUser.PersonGroups;
+            fullUser.CustomConstraints = swUser.CustomConstraints;
+            return fullUser;
+        }
+
         private static SearchRequestDto BuildDTO(SearchRequestDto dto = null) {
             if (dto == null) {
                 dto = new SearchRequestDto();

@@ -22,7 +22,13 @@ namespace softWrench.sW4.Security.Services {
                 user.MergeFromDBUser(dbuser);
 
             }
+            user.Person.Save();
             return DAO.Save(user);
+        }
+
+        public static User GetUserById(int id)
+        {
+            return SWDBHibernateDAO.GetInstance().FindByPK<User>(typeof(User), id, "Profiles", "CustomRoles", "CustomConstraints");
         }
 
         public static User CreateMissingDBUser(string userName, bool save = true) {

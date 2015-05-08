@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
+  <templates>
+    <!--User-->
+    <template path="@user.xml"/>
+  </templates>
+  
   <entities>
     <!--This is a batch only for workorders-->
     <entity name="WOBatch"  whereclause="Application = 'WORKORDER' " idAttribute="Id" parententity="Batch">
@@ -259,6 +264,5 @@
         </schema>
       </schemas>
     </application>
-
   </applications>
 </metadata>

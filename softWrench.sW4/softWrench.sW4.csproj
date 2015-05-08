@@ -147,6 +147,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Metadata\Applications\DataSet\BaseUserDataSet.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseSolutionCrudConnector.cs" />
     <Compile Include="Data\Offline\SynchronizationManager.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseAssetCrudConnector.cs" />

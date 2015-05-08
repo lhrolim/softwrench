@@ -160,6 +160,10 @@ namespace softWrench.sW4.Security.Services {
             }
             var fullUser = UserSyncManager.GetUserFromMaximoByUserName(currLogin, swUser.Id);
             fullUser.Id = swUser.Id;
+            fullUser.Profiles = swUser.Profiles;
+            fullUser.CustomRoles = swUser.CustomRoles;
+            fullUser.PersonGroups = swUser.PersonGroups;
+            fullUser.CustomConstraints = swUser.CustomConstraints;
 
             var formsIdentity = CurrentPrincipal.Identity as System.Web.Security.FormsIdentity;
             var timezone = String.Empty;
@@ -228,8 +232,8 @@ namespace softWrench.sW4.Security.Services {
 
         public User FetchUser(string username, int id)
         {
-            return UserSyncManager.GetUserFromMaximoByUserName(username, id);
-            //return SWDBHibernateDAO.GetInstance().FindByPK<User>(typeof(User), id, "Profiles", "CustomRoles", "CustomConstraints");
+            User swUSer = UserManager.GetUserById(id);
+            return UserSyncManager.GetUserFromMaximoBySwUser(swUSer);
         }
     }
 }
