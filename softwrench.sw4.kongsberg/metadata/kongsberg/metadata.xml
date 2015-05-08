@@ -964,6 +964,7 @@
 
     <entity name="solution" idAttribute="solutionid" useridAttribute="solution">
       <attributes>
+        <!--<attribute name="allkeywords" type="varchar" required="true" />-->
         <attribute name="solutionid" type="bigint" required="true" />
         <attribute name="solution" type="varchar" required="true" />
         <attribute name="description" type="varchar" required="false" />
@@ -2831,62 +2832,61 @@
           <field attribute="fr1code" label="Cause:" />
           <field attribute="fr2code" label="Resolution:" />
         </detail>
-
-        <schema id="editdetail" stereotype="detail" platform="web">
-          <field attribute="solution" label="Solution No" readonly="true"/>
-          <optionfield attribute="status" label="Status" requiredexpression="true">
-            <renderer type="combo"/>
-            <option label="DRAFT" value="DRAFT"/>
-            <option label="ACTIVE" value="ACTIVE"/>
-            <option label="INACTIVE" value="INACTIVE"/>
-          </optionfield>
-          <association label="Site" target="siteid" labelfield="site_.description">
-            <renderer type="lookup"/>
-          </association>
-          <association label="Asset" target="assetnum" labelfield="asset_.description">
-            <renderer type="lookup"/>
-          </association>
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SlnClassStructureType">
-            <renderer type="autocompleteclient" />
-          </optionfield>
-          <field attribute="description" label="Description" requiredexpression="true"/>
+        <schema id="adetail" abstract="true" stereotype="detail" title="Solution Details">
+          <section id="idsection" />
+          <field attribute="description" label="Description" requiredexpression="true">
+            <renderer type="default" params="inputsize=medium" />
+          </field>
+          <section id="statussection" />
+          <field label="Include on Slef-Service Center?" attribute="selfservaccess">
+            <renderer type="checkbox" params="inputsize=medium" />
+          </field>
+          <section>
+            <field label="% Effectiveness Score" attribute="pmsoleffscore">
+              <renderer type="numericinput" params="min=1;max=100;inputsize=medium" />
+            </field>
+          </section>
+          <section>
+            <header displacement="ontop" label="Solution Details" params="fieldset=true" />
+            <association label="Site" target="siteid" labelfield="site_.description" hideDescription="true">
+              <renderer type="lookup" params="inputsize=medium" />
+            </association>
+            <association label="Asset" target="assetnum" labelfield="asset_.description" hideDescription="true">
+              <renderer type="lookup" params="inputsize=medium" />
+            </association>
+            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SlnClassStructureType">
+              <renderer type="autocompleteclient" params="inputsize=medium" />
+            </optionfield>
+            <field label="Keywords" attribute="allkeywords">
+              <renderer type="default" params="inputsize=medium" />
+            </field>
+          </section>
           <field attribute="symptom_.ldtext" label="Symptom:">
-            <renderer type="richtext"/>
+            <renderer type="richtext" />
           </field>
           <field attribute="cause_.ldtext" label="Cause:">
-            <renderer type="richtext"/>
+            <renderer type="richtext" />
           </field>
           <field attribute="resolution_.ldtext" label="Resolution:">
-            <renderer type="richtext"/>
+            <renderer type="richtext" />
           </field>
-
-          <!--<composition relationship="attachment" label="Attachments">
-            <collectionproperties allowcreation="@status!='ACTIVE'" allowupdate="false"/>
-          </composition>-->
-
-          <event type="beforesubmit.prevalidation" service="solutionService" method="validateStatus"/>
         </schema>
-
-        <schema id="newdetail" stereotype="detail" platform="web">
-          <association label="Site" target="siteid" labelfield="site_.description">
-            <renderer type="lookup"/>
-          </association>
-          <association label="Asset" target="assetnum" labelfield="asset_.description">
-            <renderer type="lookup"/>
-          </association>
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SlnClassStructureType">
-            <renderer type="autocompleteclient" />
-          </optionfield>
-          <field attribute="description" label="Description" requiredexpression="true"/>
-          <field attribute="symptom_.ldtext" label="Symptom:">
-            <renderer type="richtext"/>
-          </field>
-          <field attribute="cause_.ldtext" label="Cause:">
-            <renderer type="richtext"/>
-          </field>
-          <field attribute="resolution_.ldtext" label="Resolution:">
-            <renderer type="richtext"/>
-          </field>
+        <schema id="newdetail" parentschema="adetail" title="Solution Incident">
+        </schema>
+        <schema id="editdetail" parentschema="adetail" title="Solution Details">
+          <section id="idsection">
+            <field attribute="solution" label="Solution No" readonly="true">
+              <renderer type="default" params="inputsize=medium" />
+            </field>
+          </section>
+          <section id="statussection">
+            <optionfield attribute="status" label="Status" requiredexpression="true">
+              <renderer type="combo" params="inputsize=medium" />
+              <option label="DRAFT" value="DRAFT" />
+              <option label="ACTIVE" value="ACTIVE" />
+              <option label="INACTIVE" value="INACTIVE" />
+            </optionfield>
+          </section>
         </schema>
       </schemas>
     </application>
