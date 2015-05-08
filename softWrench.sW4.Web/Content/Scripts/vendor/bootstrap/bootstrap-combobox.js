@@ -139,12 +139,18 @@
                 height = maxHeight;
             }
 
+            var elementTop = this.$element.offset().top;
+            var scrollTop = $(window).scrollTop()
+
             //SWWEB-1133 if the combobox is near the bootom of the screen, place the dropdown above the input
-            if ((this.$element.offset().top + height > document.body.scrollHeight) || (this.$element.offset().top + height + 50 - $(window).scrollTop() > $(window).height())) {
-                //https://controltechnologysolutions.atlassian.net/browse/HAP-847
-                //if the menu would cause a scrollbar expansion open it on top instead
-                //12 stands for padding, margin, etc
-                return -height - 15;
+            if ((elementTop + height > document.body.scrollHeight) || (elementTop + height + 50 - scrollTop > $(window).height())) {
+                //if the adjsted top doesn't extend past the top of the window 
+                if (elementTop - scrollTop > height + 15) {
+                    //https://controltechnologysolutions.atlassian.net/browse/HAP-847
+                    //if the menu would cause a scrollbar expansion open it on top instead
+                    //12 stands for padding, margin, etc
+                    return -height - 15;
+                }
             }
 
             return position.top + position.height;
@@ -156,14 +162,10 @@
             height: this.$element[0].offsetHeight
         });
         var top = this.determineTop(pos);
-
-
         this.$menu
           .insertAfter(this.$element)
           .css({
-              top: top
-          , left: pos.left,
-              width: pos.width
+              top: top, left: pos.left, width: pos.width, 'z-index': 9999
           })
           .show();
         $('.dropdown-menu').on('mousedown', $.proxy(this.scrollSafety, this));
