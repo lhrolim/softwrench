@@ -82,7 +82,7 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
             if (currentModule != null) {
                 parameters.module = currentModule;
             }
-            searchDTO.pageNumber = paginationData.pageNumber;
+            searchDTO.pageNumber = 0;
             searchDTO.totalCount = paginationData.totalCount;
             searchDTO.pageSize = paginationData.pageSize;
 

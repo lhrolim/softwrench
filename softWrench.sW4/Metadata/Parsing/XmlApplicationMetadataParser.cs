@@ -652,6 +652,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var title = application.Attribute(XmlMetadataSchema.ApplicationTitleAttribute).Value;
             var properties = ParseProperties(application, name);
             var entity = application.Attribute(XmlMetadataSchema.ApplicationEntityAttribute).Value;
+            var auditFlag = application.Attribute(XmlMetadataSchema.ApplicationAuditFlagAttribute).ValueOrDefault(false);
             if (_isSWDB) {
                 entity = "_" + entity;
             }
@@ -676,7 +677,7 @@ namespace softWrench.sW4.Metadata.Parsing {
              .Name;
 
 
-            return new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, userIdFieldName, properties, ParseSchemas(name, entity, application, idFieldName, userIdFieldName), ParseComponents(name, entity, application, idFieldName), service, ParseNotifications(name, title, entity, application));
+            return new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, userIdFieldName, properties, ParseSchemas(name, entity, application, idFieldName, userIdFieldName), ParseComponents(name, entity, application, idFieldName), service, ParseNotifications(name, title, entity, application), auditFlag);
         }
 
 

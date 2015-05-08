@@ -9,9 +9,11 @@ using cts.commons.Util;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using softwrench.sW4.audit.Interfaces;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.API.Composition;
+using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -25,8 +27,8 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Web.Controllers {
 
     public class ExtendedDataController : DataController {
-        public ExtendedDataController(I18NResolver i18NResolver, IContextLookuper lookuper,CompositionExpander compositionExpander)
-            : base(i18NResolver, lookuper, compositionExpander) {
+        public ExtendedDataController(I18NResolver i18NResolver, IContextLookuper lookuper,CompositionExpander compositionExpander, IAuditManager auditManager)
+            : base(i18NResolver, lookuper, compositionExpander, auditManager) {
         }
 
         /// <summary>

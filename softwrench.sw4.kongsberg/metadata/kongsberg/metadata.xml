@@ -3,11 +3,13 @@
   <!--kongsberg-->
   <templates>
     <template path="@worklogs.xml"/>
+    <template path="@solution.xml"/>
   </templates>
   <entities>
     <entity name="SR" idAttribute="ticketid">
       <attributes>
         <attribute name="accumulatedholdtime" type="float" required="false" />
+        <attribute name="accumulateslaholdtime" type="smallint" required="false" query="(select COALESCE(slahold, 0) from slarecords sla inner join pluspservagree on sanum = sla.slanum where ownertable = 'TICKET' and ownerid = !@ticketuid)" />
         <attribute name="actlabcost" type="decimal" required="true" />
         <attribute name="actlabhrs" type="float" required="true" />
         <attribute name="actualcontactdate" type="datetime" required="false" />
@@ -121,6 +123,7 @@
         <attribute name="problemcode" type="varchar" required="false" />
         <attribute name="problemtype" type="varchar" required="false" />
         <attribute name="proposedversion" type="varchar" required="false" />
+        <attribute name="region" type="varchar" required="false" />
         <attribute name="relatedtoglobal" type="smallint" required="true" />
         <attribute name="replacedowner" type="varchar" required="false" />
         <attribute name="reportdate" type="datetime" required="false" />
@@ -130,10 +133,13 @@
         <attribute name="reportedpriority" type="int" required="false" />
         <attribute name="reportedversion" type="varchar" required="false" />
         <attribute name="responseslo" type="smallint" required="true" />
+        <attribute name="rigname" type="varchar" required="false" />
         <attribute name="rowstamp" type="timestamp" required="true" />
         <attribute name="selfservsolaccess" type="smallint" required="true" />
+        <attribute name="servicecompanytype" type="varchar" required="false" />
         <attribute name="siteid" type="varchar" required="false" />
         <attribute name="sitevisit" type="smallint" required="true" />
+        <attribute name="slaapplied" type="smallint" required="flase" query="(select Case COUNT(OWNERID) when 0 then 0 else 1 end from slarecords where slarecords.ownertable = 'TICKET' and slarecords.ownerid = !@ticketuid )" />
         <attribute name="slaapproachingindicator" type="varchar" required="false" />
         <attribute name="slamet" type="smallint" required="true" />
         <attribute name="solution" type="varchar" required="false" />
@@ -154,6 +160,7 @@
         <attribute name="urgency" type="int" required="false" />
         <attribute name="vendor" type="varchar" required="false" />
         <attribute name="virtualenv" type="smallint" required="false" />
+        <attribute name="wellname" type="varchar" required="false" />
       </attributes>
       <relationships>
         <relationship to="asset">
@@ -233,6 +240,7 @@
         </relationship>
         <relationship to ="solution" qualifier="solution" >
           <relationshipAttribute from="solution" to ="solution" primary="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
         </relationship>
         <relationship to="longdescription" qualifier="symptom">
           <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
@@ -801,6 +809,7 @@
         </relationship>
         <relationship to ="solution" qualifier="solution" >
           <relationshipAttribute from="solution" to ="solution" primary="true"/>
+          <relationshipAttribute to="status" literal="active" quoteLiteral="true"/>
         </relationship>
         <relationship to="longdescription" qualifier="symptom">
           <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
@@ -946,11 +955,53 @@
       </relationships>
     </entity>
 
-    <entity name="solution" idAttribute="solution" whereclause="status like 'ACTIVE'">
+    <entity name="solution" idAttribute="solutionid" useridAttribute="solution">
+      <attributes>
+        <attribute name="solutionid" type="bigint" required="true" />
+        <attribute name="solution" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="statusdate" type="datetime" required="false" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="selfservaccess" type="smallint" required="true" />
+        <attribute name="classstructureid" type="varchar" required="false" />
+        <attribute name="problemcode" type="varchar" required="false" />
+        <attribute name="fr1code" type="varchar" required="false" />
+        <attribute name="fr2code" type="varchar" required="false" />
+        <attribute name="orgid" type="varchar" required="false" />
+        <attribute name="failurecode" type="varchar" required="false" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="type" type="varchar" required="false" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="pluspinsertcustomer" type="varchar" required="false" />
+        <attribute name="assignedownergroup" type="varchar" required="false" />
+        <attribute name="expdate" type="datetime" required="false" />
+        <attribute name="solnauthor" type="varchar" required="false" />
+        <attribute name="extsolnid" type="varchar" required="false" />
+        <attribute name="lastviewdate" type="datetime" required="false" />
+        <attribute name="keywords" type="varchar" required="false" />
+        <attribute name="numtimesapplied" type="int" required="false" />
+        <attribute name="numtimesappliedss" type="int" required="false" />
+        <attribute name="avgranking" type="int" required="false" />
+        <attribute name="cinum" type="varchar" required="false" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="assetsiteid" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="rtsymptom" type="varchar" required="false" />
+        <attribute name="rtcause" type="varchar" required="false" />
+        <attribute name="rtresoln" type="varchar" required="false" />
+        <attribute name="rtsymptomlbl" type="varchar" required="false" />
+        <attribute name="rtcauselbl" type="varchar" required="false" />
+        <attribute name="rtresolnlbl" type="varchar" required="false" />
+        <attribute name="owner" type="varchar" required="false" />
+        <attribute name="ownergroup" type="varchar" required="false" />
+        <attribute name="pmsoleffscore" type="int" required="false" />
+        <attribute name="pmsolsuccessbysd" type="int" required="false" />
+        <attribute name="pmsolpriority" type="int" required="false" />
+        <attribute name="siteid" type="varchar" required="false" />
+      </attributes>
       <relationships>
-        <relationship to="classstructure" qualifier="classstructure">
-          <relationshipAttribute from="classstructureid" to ="classstructureid" primary="true"/>
-        </relationship>
         <relationship to="longdescription" qualifier="symptom">
           <relationshipAttribute from="solutionid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="SOLUTION" quoteLiteral="true" />
@@ -970,7 +1021,22 @@
           <relationshipAttribute from="solutionid" to="ownerid" primary="true"/>
           <relationshipAttribute to="ownertable" literal="SOLUTION" quoteLiteral="true"/>
         </relationship>
+        <relationship to="site">
+          <relationshipAttribute from="siteid" to ="siteid" primary="true"/>
+          <relationshipAttribute to="active" literal="1" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
+        <relationship to="asset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true" />
+        </relationship>
       </relationships>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="solution" />
+        <connectorParameter key="integration_interface" value="SWSOLUTIONS" />
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.BaseSolutionCrudConnector" />
+      </connectorParameters>
     </entity>
 
     <entity name="inboundcomm" idAttribute="inboundcommid">
@@ -1156,6 +1222,7 @@
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="sr.classificationid, sr.changedate"/>
           </properties>
         </schema>
 
@@ -1185,6 +1252,7 @@
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="sr.classificationid, sr.changedate"/>
           </properties>
         </schema>
 
@@ -1214,12 +1282,12 @@
           </field>
           <properties>
             <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="sr.classificationid, sr.changedate"/>
           </properties>
         </schema>
 
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail">
-
-          <section id ="siteidsection"/>
+          <section id="srsection" />
           <field attribute="ticketid" label="Reference ID:" readonly="true"/>
           <field attribute="ticketuid" label="Unique ID:" hidden="true"/>
           <field attribute="class" label="" hidden="true"/>
@@ -1228,105 +1296,157 @@
           <field attribute="siteid" hidden="true" />
           <field attribute="orgid" hidden="true"/>
           <field attribute="createby" hidden="true"/>
-          <section id="statussection"/>
           <field attribute="changeby" default="@username" hidden="true"/>
-          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true">
-            <renderer type="lookup"/>
+
+
+          <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" hideDescription="true">
+            <renderer type="lookup" params="inputsize=medium"/>
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
           </association>
-          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
-            <renderer type="lookup"/>
+          <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" hideDescription="true">
+            <dataprovider prefilterfunction="FilterByPersonGroup"/>
+            <renderer type="lookup" params="inputsize=medium"/>
             <event type="afterchange" service="generalsrService" method="afterchangeownergroup"/>
           </association>
-          <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
-          <association label="Affected Person:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc">
-            <renderer type="lookup" params="columnlabel=Name"/>
+
+
+          <section>
+            <header displacement="ontop" label="User Information" params="fieldset=true"/>
+            <field attribute="reportedby" label="Reported By:" default="@username" readonly="true">
+              <renderer type="default" params="inputsize=medium"/>
+            </field>
+            <association label="Affected By:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" hideDescription="true">
+              <renderer type="lookup" params="columnlabel=Name;inputsize=medium"/>
+            </association>
+          </section>
+          <section>
+            <header displacement="ontop" label="Service Request Details" params="fieldset=true"/>
+            <field attribute="description" label="Summary:" requiredexpression="true">
+              <renderer type="default" />
+            </field>
+            <field label="Details:" attribute="longdescription_.ldtext">
+              <renderer type="richtext" />
+            </field>
+            <field label="Reported Date:" attribute="reportdate" readonly="true" default="@currentdatetime">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=medium"/>
+            </field>
+          </section>
+          
+          <section>
+          <header displacement="ontop" label="Project Details" params="fieldset=true"/>
+            <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid" requiredexpression="true">
+              <renderer type="autocompleteclient" params="inputsize=small"/>
+            </optionfield>
+            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
+              <!-- removed default='@usersite' from the above association label-->
+              <renderer type="combo" params="inputsize=small" />
+            </association>
+            <field label="TFS#:" attribute="tfsnumber">
+              <renderer type="default" params="inputsize=small" />
+            </field>
+          </section>
+
+          <section>
+            <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true" orderbyfield="value asc" hideDescription="true">
+              <renderer type="lookup" params="inputsize=small" />
+            </association>
+            <association label ="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description" hideDescription="true">
+              <renderer type="lookup" params="inputsize=small"/>
+            </association>
+            <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description" requiredexpression="@feature_request == 1" hideDescription="true">
+              <renderer type="lookup" params="inputsize=small" />
+            </association>
+          </section>
+          
+          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true" orderbyfield="value asc" hideDescription="true">
+            <renderer type="lookup" params="inputsize=small" />
           </association>
-          <!--          <association label="Project Classification:" target="classificationid" labelfield="classification_.description">-->
-          <!--            <renderer type="lookup"/>-->
-          <!--          </association>-->
-          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid" requiredexpression="true">
-            <renderer type="autocompleteclient" />
-          </optionfield>
-          <!--Adding Area and ProblemType field for Kongsberg-->
-          <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true" orderbyfield="value asc">
-            <renderer type="lookup"/>
+          <association label ="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description" hideDescription="true">
+            <renderer type="lookup" params="inputsize=small" />
           </association>
-          <association label="Problem Type:" target="problemtype" labelfield="problemtype_.description" requiredexpression="true" orderbyfield="value asc">
-            <renderer type="lookup"/>
+          <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description" hideDescription="true">
+            <renderer type="lookup" params="inputsize=small" />
           </association>
-          <!--Adding Internal Priority and Reported Priority fields for Kongsberg-->
-          <association label ="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description">
-            <renderer type="lookup"/>
-          </association>
-          <!--field label="Reported Priority:" attribute="reportedpriority">
-            <renderer type="default" params="placeholder=Enter a numeric value"/>
-          </field-->
-          <association label ="Reported Priority:" target="reportedpriority" labelfield="reportedpriority_.description">
-            <renderer type="lookup"/>
-          </association>
-          <field label="TFS#:" attribute="tfsnumber"/>
-          <field label="Feature Request:" attribute="feature_request"  >
-            <renderer type="checkbox"/>
+          <field label="Region:" attribute="region">
+            <renderer type="default" params="inputsize=small" />
           </field>
-          <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description" requiredexpression="@feature_request == 1">
-            <renderer type="lookup"/>
+          <field label="Service Group:" attribute="commoditygroup">
+            <renderer type="default" params="inputsize=small" />
+          </field>
+          <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description" hideDescription="true">
+            <renderer type="lookup" params="inputsize=small" />
           </association>
-          <association label ="Proposed Version:" target="proposedversion" labelfield="proposedversion_.description">
-            <renderer type="lookup"/>
-          </association>
-          <association label ="Target Version:" target="targetversion" labelfield="targetversion_.description">
-            <renderer type="lookup"/>
-          </association>
-          <field label="Reported Date:" attribute="reportdate" readonly="true" default="@currentdatetime">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          <field label="Rig Name:" attribute="rigname">
+            <renderer type="default" params="inputsize=small" />
+          </field>
+          <field label="Service:" attribute="commodity">
+            <renderer type="default" params="inputsize=small" />
+          </field>
+          <field label="Feature Request?" attribute="feature_request">
+            <renderer type="checkbox" params="inputsize=small"/>
           </field>
 
-          <field label="Target Start Date:" attribute="targetstart" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-          </field>
-          <field label="Target End Date:" attribute="targetfinish" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-          </field>
-          <field label="Actual Start Date:" attribute="actualstart" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-          </field>
-          <field label="Actual End Date:" attribute="actualfinish" readonly="true">
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
-          </field>
+          <section>
+            <field label="Well Name:" attribute="wellname">
+              <renderer type="default" params="inputsize=small" />
+            </field>
+            <field label="Service Company Type:" attribute="servicecompanytype">
+              <renderer type="default" params="inputsize=small" />
+            </field>
+          </section>
+          <section>
+          <header displacement="ontop" label="Key Dates" params="fieldset=true"/>
+            <field label="Target Start:" attribute="targetstart" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
+            </field>
+            <field label="SLA Applied?" attribute="slaapplied" enableexpression="false">
+              <renderer type="checkbox" params="inputsize=small"/>
+            </field>
+            <field label="Adjusted Start:" attribute="adjustedtargetresponsetime" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
+            </field>
+            <field label="Target Finish:" attribute="targetfinish" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
+            </field>       
+            <field label="SLA Hold Enabled?" attribute="accumulateslaholdtime" enableexpression="false">
+              <renderer type="checkbox" params="inputsize=small"/>
+            </field>
+            <field label="Adjusted Finish:" attribute="adjustedtargetresolutiontime" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
+            </field>          
+            <field label="Actual Start Date:" attribute="actualstart" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
+            </field>
+            <field label="SLA Met?" attribute="slamet">
+              <renderer type="checkbox" params="inputsize=small"/>
+            </field>
+            <field label="Accumulated Hold Time(HH:MM):" attribute="accumulatedholdtime" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
+            </field>
+            <field label="Actual End Date:" attribute="actualfinish" readonly="true">
+              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
+            </field>
+            <field label="Response SLO?" attribute="responseslo">
+              <renderer type="checkbox" params="inputsize=small"/>
+            </field>
+            <field label="Proactive?" attribute="proactive">
+              <renderer type="checkbox" params="inputsize=small"/>
+            </field>
+          </section>
           
-          <field attribute="description" label="Summary:" requiredexpression="true"/>
-          <field label="Details:" attribute="longdescription_.ldtext">
-            <renderer type="richtext"/>
-          </field>
-          <!-- Code added from gric metadata.xml SWWEB 173-->
           <section id="attachmentsection" />
-          <!-- SWWEB 173-->
-          <!-- SWWEB 172: Changed the location and asset to make them look similar to gric-->
-          <!-- Kongsberg wont require location and asset fields 
-          <association label="Location:" target="location" labelfield="location_.description" >
-            <event type="beforechange" service="generalsrService" method="beforeChangeLocation"/>
-            renderer type="lookup"/
-          </association>
-          <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
-            <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
-            <dataprovider prefilterfunction="FilterAssets"/>
-            <event type="afterchange" service="generalsrService" method="afterChangeAsset"/>
-          </association>
-          -->
           <section id="compositions"/>
         </schema>
         
         <schema parentschema="adetail" title="New Service Request" id="newdetail">
-          <section id="siteidsection">
-            <field attribute="ticketid" label="SR No:" hidden="true"/>
+          
+          <section id="srsection">
+            <field attribute="ticketid" label="SR No:" hidden="true" />
+            <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true" />
             <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
               <!-- removed default='@usersite' from the above association label-->
               <renderer type="combo"/>
             </association>
-          </section>
-          <section id="statussection">
-            <field label="Status:" attribute="status" readonly="true" default="NEW" hidden="true"/>
           </section>
           <!--SSWEB 173-->
           <section id="attachmentsection">
@@ -1335,23 +1455,17 @@
             </field>
           </section>
         </schema>
-
         <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
-          <section id="siteidsection">
-            <field attribute="ticketid" label="SR No:" readonly="true" requiredexpression="true"/>
-            <!--KSW-68 Updated field to combo-->
-            <association label="Site:" target="siteid" labelfield="site_.description" requiredexpression="true">
-              <!-- removed default='@usersite' from the above association label-->
-              <renderer type="combo"/>
-            </association>
-          </section>
-          <section id="statussection">
+          <section id="srsection">
+            <field attribute="ticketid" label="SR No:" readonly="true" requiredexpression="true">
+              <renderer type="default" params="inputsize=medium" />
+            </field>
             <!--<association label="Status:" target="status" labelfield="synstatus.description" requiredexpression="true">
               <renderer type="combo" />
             </association>-->
             <!--Request to refine the list-->
             <optionfield label="Status:" attribute="status">
-              <renderer type="combo"/>
+              <renderer type="combo" params="inputsize=medium" />
               <option label="Duplicate" value="DUPLICATE"/>
               <option label="Closed" value="CLOSED"/>
               <option label="Edited in History" value="HISTEDIT"/>
@@ -1589,6 +1703,7 @@
           </association>
           <!-- Added the Owner Group field-->
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
+            <dataprovider prefilterfunction="FilterByPersonGroup"/>
             <renderer type="lookup"/>
           </association>
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
@@ -1706,6 +1821,7 @@
           </association>
           <!-- Added the Owner Group field-->
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true">
+            <dataprovider prefilterfunction="FilterByPersonGroup"/>
             <renderer type="lookup"/>
           </association>
           <field attribute="reportedby" label="Reported By:" default="@username" readonly="true"/>
@@ -2016,8 +2132,6 @@
       </schemas>
     </application>
 
-
-
     <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
       <properties>
         <property key="mobile.userInteractionEnabled" value="false"/>
@@ -2240,26 +2354,6 @@
           <field attribute="personid" label="Labor:"  requiredexpression="true" />
           <field hidden="true" label="Person:" attribute="person_.displayname" />
           <association label="Person:" target="personid" labelfield="person.displayname" />
-        </detail>
-      </schemas>
-    </application>
-
-    <application name="solution" title="solution" entity="solution">
-      <properties>
-        <property key ="icon.composition.tab" value="fa fa-book"/>
-      </properties>
-      <schemas>
-        <schema id="list" stereotype="compositionlist" >
-          <field attribute="solution" label="Solution No"/>
-          <field attribute="description" label="Description"/>
-
-        </schema>
-        <detail stereotype="compositiondetail">
-          <field attribute="solution" label="Solution No" readonly="true"/>
-          <field attribute="problemcode" label="Symptom:" />
-          <field attribute="fr1code" label="Cause:" />
-          <field attribute="fr2code" label="Resolution:" />
-
         </detail>
       </schemas>
     </application>
@@ -2753,5 +2847,110 @@
       </schemas>
     </application>
 
+    <application name="solution" title="solution" entity="solution">
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-book"/>
+      </properties>
+      <schemas>
+        <list title="Solution Grid" platform="web">
+          <field attribute="solution" label="Solution No" >
+            <renderer type="default"/>
+          </field>
+          <field attribute="description" label="Description">
+            <renderer type="default"/>
+          </field>
+          <optionfield attribute="selfservaccess" label="Self-Service">
+            <renderer type="combo" params="filteronly=true;formatter=numberToBoolean"/>
+            <option label="Yes" value="1"/>
+            <option label="No" value="0"/>
+          </optionfield>
+          <field attribute="assetnum" label="Asset">
+            <renderer type="default"/>
+          </field>
+          <field attribute="classstructure_.classificationid" label="Classification">
+            <renderer type="default"/>
+          </field>
+          <field attribute="siteid" label="Site">
+            <renderer type="default"/>
+          </field>
+          <field attribute="status" label="Status" >
+            <renderer type="default"/>
+          </field>
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+            <!--<property key="list.defaultorderby" value="workorder.statusdate desc"/>-->
+          </properties>
+        </list>
+
+        <schema id="complist" stereotype="compositionlist" >
+          <field attribute="solution" label="Solution No"/>
+          <field attribute="description" label="Description"/>
+        </schema>
+
+        <detail stereotype="compositiondetail">
+          <field attribute="solution" label="Solution No" readonly="true"/>
+          <field attribute="problemcode" label="Symptom:" />
+          <field attribute="fr1code" label="Cause:" />
+          <field attribute="fr2code" label="Resolution:" />
+        </detail>
+
+        <schema id="editdetail" stereotype="detail" platform="web">
+          <field attribute="solution" label="Solution No" readonly="true"/>
+          <optionfield attribute="status" label="Status" requiredexpression="true">
+            <renderer type="combo"/>
+            <option label="DRAFT" value="DRAFT"/>
+            <option label="ACTIVE" value="ACTIVE"/>
+            <option label="INACTIVE" value="INACTIVE"/>
+          </optionfield>
+          <association label="Site" target="siteid" labelfield="site_.description">
+            <renderer type="lookup"/>            
+          </association>
+          <association label="Asset" target="assetnum" labelfield="asset_.description">
+            <renderer type="lookup"/>
+          </association>
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SlnClassStructureType">
+            <renderer type="autocompleteclient" />
+          </optionfield>
+          <field attribute="description" label="Description" requiredexpression="true"/>
+          <field attribute="symptom_.ldtext" label="Symptom:">
+            <renderer type="richtext"/>
+          </field>
+          <field attribute="cause_.ldtext" label="Cause:">
+            <renderer type="richtext"/>
+          </field>
+          <field attribute="resolution_.ldtext" label="Resolution:">
+            <renderer type="richtext"/>
+          </field>
+          
+          <!--<composition relationship="attachment" label="Attachments">
+            <collectionproperties allowcreation="@status!='ACTIVE'" allowupdate="false"/>
+          </composition>-->
+          
+          <event type="beforesubmit.prevalidation" service="solutionService" method="validateStatus"/>
+        </schema>
+
+        <schema id="newdetail" stereotype="detail" platform="web">
+          <association label="Site" target="siteid" labelfield="site_.description">
+            <renderer type="lookup"/>            
+          </association>
+          <association label="Asset" target="assetnum" labelfield="asset_.description">
+            <renderer type="lookup"/>
+          </association>
+          <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SlnClassStructureType">
+            <renderer type="autocompleteclient" />
+          </optionfield>
+          <field attribute="description" label="Description" requiredexpression="true"/>
+          <field attribute="symptom_.ldtext" label="Symptom:">
+            <renderer type="richtext"/>
+          </field>
+          <field attribute="cause_.ldtext" label="Cause:">
+            <renderer type="richtext"/>
+          </field>
+          <field attribute="resolution_.ldtext" label="Resolution:">
+            <renderer type="richtext"/>
+          </field>
+        </schema>
+      </schemas>
+    </application>
   </applications>
 </metadata>

@@ -1,8 +1,7 @@
-﻿using softWrench.sW4.Metadata.Applications.Schema;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+﻿using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.SPF;
 
-namespace softWrench.sW4.Data.API {
+namespace softWrench.sW4.Data.API.Response {
     public interface IApplicationResponse :IGenericResponseResult {
         string Type { get; }
         ApplicationSchemaDefinition Schema { get; }
@@ -10,6 +9,8 @@ namespace softWrench.sW4.Data.API {
         string Mode { get; set; }
 
         string ApplicationName { get; }
+
+        string Id { get; }
 
        
     }

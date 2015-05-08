@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using softWrench.sW4.Data.API.Association;
-using softWrench.sW4.Data.Relationship.Composition;
-using softWrench.sW4.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
-namespace softWrench.sW4.Data.API {
+namespace softWrench.sW4.Data.API.Response {
     public class ApplicationDetailResult : GenericResponseResult<DataMap>, IApplicationResponse {
         private readonly string _id;
         private readonly ApplicationSchemaDefinition _main;

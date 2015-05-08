@@ -1,41 +1,89 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
-
-  <templates>
-    <!--WorkOrder-->
-    <template path="@workorder.xml"/>
-    <!--<template path="workorderbatch.xml"/>-->
-
-    <!--ServiceRequest-->
-    <template path="@servicerequest.xml"/>
-
-    <!--Incident-->
-    <template path="@incident.xml"/>
-
-    <!--Inventory-->
-    <template path="@inventory_maximo7.1.xml"/>
-
-    <!--Changes-->
-    <template path="@wochange.xml"/>
-
-    <!--Purchasing-->
-    <template path="@receiving.xml"/>
-    <template path="@purchasing.xml"/>
-  </templates>
-
   <entities>
+    <entity name="asset" idAttribute="assetid" useridAttribute="assetnum" whereclause="recordtype = 'PROP' and propcondition = 1">
+      <attributes>
+        <attribute name="assetid" type="bigint" required="true"/>
+        <attribute name="locinfo" type="varchar" required="false" />
+        <attribute name="plustmodel" type="varchar" required="false" />
+        <attribute name="prophr" type="varchar" required="false" />
+        <attribute name="partnum" type="varchar" required="false" />
+        <attribute name="proptype" type="varchar" required="false" />
+        <attribute name="propmanuf" type="varchar" required="false" />
+        <attribute name="description" type="varchar" required="true"/>
+      </attributes>
+      <relationships>
+        <relationship to="alndomain" qualifier="assettype">
+            <relationshipAttribute from="assettype" to="value" primary="true"/>
+            <relationshipAttribute from="siteid" to="siteid"/>
+            <relationshipAttribute from="orgid" to="orgid" />
+            <relationshipAttribute to="domainid" literal="PROPTYPE" quoteLiteral="true"/>
+          </relationship>
+      </relationships>
+    </entity>
   </entities>
 
   <applications>
-    <application entity="SR" name="servicerequest" title="Service Request">
+    <application name="companies" entity="companies" title="Companies">
       <schemas>
-        <schema id="newdetail" platform="web" redeclaring="false">
-          <customization position="classstructureid"></customization>
-          <customization position="saddresscode"></customization>
+        <schema id="companiesLookupList" stereotype="list">
+          <field attribute="company" label="Company"/>
+          <field attribute="name" label="Name">
+            <renderer type="default" params="minwidth=300px" />
+          </field>
+          <field attribute="type" label="Type"/>
+          <field attribute="orgid"  label="Organization"/>
         </schema>
-        <schema id="editdetail" platform="web" redeclaring="false">
-          <customization position="classstructureid"></customization>
-          <customization position="saddresscode"></customization>
+      </schemas>
+    </application>
+
+    <application name="asset" title="Asset" entity="asset" audit="true">
+      <schemas>
+        <list>
+          <field attribute="assetid" hidden="true"/>
+          <field attribute="assetnum" label="Asset" qualifier="title"/>
+          <field attribute="location" label="Location" qualifier="subtitle"/>
+          <field attribute="status" label="Status" qualifier="status"/>
+          <!--<field attribute="siteid" label="Site" qualifier="siteid" />-->
+          <field attribute="propmanuf" label="Manufacturer"  qualifier="featured"/>
+          <event type="onload" service="scannerdetectionService" method="initAssetGridListener"/>
+        </list>
+        <detail>
+          <field attribute="purchaseprice" hidden="true"/>
+          <field attribute="replacecost" hidden="true"/>
+          <field attribute="totalcost" hidden="true"/>
+          <field attribute="ytdcost" hidden="true"/>
+          <field attribute="budgetcost" hidden="true"/>
+          <field attribute="unchargedcost" hidden="true"/>
+          <field attribute="totunchargedcost" hidden="true"/>
+          <field attribute="invcost" hidden="true"/>
+          <field attribute="location_.locationsid" hidden="true"/>
+          <field attribute="assetid" hidden="true" />
+          
+          <field attribute="assetnum" label="Barcode Number"  readonly="true" />
+          <field attribute="status" label="Status" readonly="true"/>
+          <association target="proptype" label="Asset Type" labelfield="assettype_.description">
+            <renderer type="lookup" />
+          </association>
+          <field attribute="description" label="Description" readonly="true"  />
+          <field attribute="locinfo" label="Location Info" />
+          <field attribute="plustmodel" label="Model" />
+          <field attribute="partnum" label="Part Number" />
+          <field attribute="propmanuf" label="Manufacturer"/>
+          <field attribute="serialnum" label="Serial Number"/>
+          <field attribute="location" readonly="true" label="Location"/>
+          <field attribute="prophr" label="Hand Receipt No." readonly="true"/>
+          <event type="beforesubmit.postvalidation" service="submitService" method="submitConfirmation"/>
+          <event type="onload" service="scannerdetectionService" method="initAssetDetailListener"/>
+        </detail>
+        <schema id="assetLookupList" stereotype="list" >
+          <field attribute="assetnum" label="Asset"/>
+          <field attribute="description" label="Description">
+            <renderer type="default" params="minwidth=300px" />
+          </field>
+          <field attribute="location" label="Location"/>
+          <field attribute="siteid"  label="Site"/>
+          <field attribute="status" label="Status"/>
         </schema>
       </schemas>
     </application>

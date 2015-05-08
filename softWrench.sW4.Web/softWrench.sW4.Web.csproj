@@ -262,6 +262,7 @@
     <Compile Include="Common\TestProxy.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\WebAPIUtil.cs" />
+    <Compile Include="Controllers\Audit\AuditController.cs" />
     <Compile Include="Controllers\CommLogController.cs" />
     <Compile Include="Controllers\ExcelController.cs" />
     <Compile Include="Controllers\ExtendedDataController.cs" />
@@ -290,6 +291,7 @@
     <Compile Include="DB_Migration\4.0\20141002_SWWEB_478.cs" />
     <Compile Include="DB_Migration\4.0\20141215_SWWEB_787.cs" />
     <Compile Include="DB_Migration\4.0\20150205_SWWEB_889.cs" />
+    <Compile Include="DB_Migration\4.0\20150417_PAE_001.cs" />
     <Compile Include="DB_Migration\4.2.0\20150422_SWWEB_1163.cs" />
     <Compile Include="DB_Migration\4.2.0\20141215_SWWEB_787.cs" />
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
@@ -596,6 +598,7 @@
     <Content Include="Content\styles\default\grid.css" />
     <Content Include="Content\styles\default\header.css" />
     <Content Include="Content\styles\default\jscrollpane.css" />
+    <Content Include="Content\styles\default\media\max-width.css" />
     <Content Include="Content\styles\default\media\screen.css" />
     <Content Include="Content\styles\default\modal.css" />
     <Content Include="Content\styles\default\page-admin.css" />
@@ -1306,6 +1309,10 @@
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sW4.audit\softwrench.sw4.audit.csproj">
+      <Project>{a5e4cb59-33c1-4072-8d97-2cee10c4f964}</Project>
+      <Name>softwrench.sw4.audit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sW4.batches\softwrench.sW4.batches.csproj">
       <Project>{653d15fd-96ca-4e5d-b147-39ad01e59006}</Project>
       <Name>softwrench.sW4.batches</Name>
@@ -1342,9 +1349,17 @@
       <Project>{8062dce9-1422-4ca7-8004-ffa7794a6516}</Project>
       <Name>softwrench.sw4.problem</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.pae\softwrench.sw4.pae.csproj">
+      <Project>{8248b6ce-335f-4611-89d2-1a79da5192c2}</Project>
+      <Name>softwrench.sw4.pae</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.swgas\softwrench.sw4.swgas.csproj">
+      <Project>{f55ca327-e991-4caa-afc7-ada7285308e9}</Project>
+      <Name>softwrench.sw4.swgas</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.webcommons\softwrench.sw4.webcommons.csproj">
       <Project>{76afe652-82d1-43d4-977b-60546fa9a713}</Project>

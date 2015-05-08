@@ -18,6 +18,7 @@ namespace softwrench.sW4.Shared2.Metadata {
         public string Entity { get; set; }
         public string Title { get; set; }
         public string IdFieldName { get; set; }
+        public bool AuditFlag { get; set; }
 
         public string UserIdFieldName { get; set; }
 
@@ -42,7 +43,8 @@ namespace softwrench.sW4.Shared2.Metadata {
             IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> schemas,
             IEnumerable<DisplayableComponent> components,
             string service,
-            IDictionary<ApplicationNotificationKey, ApplicationNotificationDefinition> notifications
+            IDictionary<ApplicationNotificationKey, ApplicationNotificationDefinition> notifications,
+            bool auditFlag = false
             ) {
             if (applicationName == null) throw new ArgumentNullException("name");
             if (title == null) throw new ArgumentNullException("title");
@@ -68,6 +70,7 @@ namespace softwrench.sW4.Shared2.Metadata {
             _schemasList = _schemas.Values;
             DisplayableComponents = components;
             Notifications = notifications;
+            AuditFlag = auditFlag;
             //            _mobileSchema = BuildMobileSchema();
         }
 

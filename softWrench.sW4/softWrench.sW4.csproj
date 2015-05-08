@@ -146,6 +146,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\API\Response\ActionRedirectResponse.cs" />
+    <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
+    <Compile Include="Data\API\Response\ApplicationListResult.cs" />
+    <Compile Include="Data\API\Response\BlankApplicationResponse.cs" />
+    <Compile Include="Data\API\Response\GenericResponseResult.cs" />
+    <Compile Include="Data\API\Response\IApplicationResponse.cs" />
+    <Compile Include="Data\API\Response\SchemaChoosingDataResponse.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\OffLineCollectionResolver.cs" />
@@ -174,14 +181,12 @@
     <Compile Include="Configuration\Definitions\WhereClause\WhereClauseResult.cs" />
     <Compile Include="Configuration\Services\Api\IWhereClauseFacade.cs" />
     <Compile Include="Configuration\Services\WhereClauseFacade.cs" />
-    <Compile Include="Data\API\ActionRedirectResponse.cs" />
     <Compile Include="Data\API\Association\IAssociationPrefetcherRequest.cs" />
     <Compile Include="Data\API\Association\ListOptionsPrefetchRequest.cs" />
     <Compile Include="Data\API\AttachmentRequest.cs" />
     <Compile Include="Data\API\CheckPointCrudContext.cs" />
     <Compile Include="Data\API\Composition\CompositionFetchRequest.cs" />
     <Compile Include="Data\API\Composition\CompositionFetchResult.cs" />
-    <Compile Include="Data\API\BlankApplicationResponse.cs" />
     <Compile Include="Data\API\OperationDataRequest.cs" />
     <Compile Include="Data\API\ReportRequest.cs" />
     <Compile Include="Data\API\RouterParametersDTO.cs" />
@@ -319,8 +324,6 @@
     <Compile Include="Data\API\Association\AssociationUpdateRequest.cs" />
     <Compile Include="Data\API\Association\LookupAssociationUpdateResult.cs" />
     <Compile Include="Data\API\Association\BaseAssociationUpdateResult.cs" />
-    <Compile Include="Data\API\GenericResponseResult.cs" />
-    <Compile Include="Data\API\SchemaChoosingDataResponse.cs" />
     <Compile Include="Data\Configuration\ConfigurationConstants.cs" />
     <Compile Include="Data\Configuration\ConfigurationRegistry.cs" />
     <Compile Include="Data\Entities\AttachmentDao.cs" />
@@ -350,8 +353,6 @@
     <Compile Include="Data\API\DataRequestAdapter.cs" />
     <Compile Include="Data\API\DetailRequest.cs" />
     <Compile Include="Data\API\IDataRequest.cs" />
-    <Compile Include="Data\API\IApplicationResponse.cs" />
-    <Compile Include="Data\API\ApplicationListResult.cs" />
     <Compile Include="Data\Entities\EntityBuilder.cs" />
     <Compile Include="Data\Pagination\PaginatedSearchRequestDto.cs" />
     <Compile Include="Data\Persistence\WS\Mea\MeaAttachmentHandler.cs" />
@@ -487,7 +488,6 @@
     <Compile Include="Data\EL\ToString\ToStringExpression.cs" />
     <Compile Include="Data\DataMap.cs" />
     <Compile Include="Data\DataMapExtensions.cs" />
-    <Compile Include="Data\API\ApplicationDetailResult.cs" />
     <Compile Include="Data\Entities\Entity.cs" />
     <Compile Include="Metadata\Entities\Schema\EntityAttribute.cs" />
     <Compile Include="Metadata\Entities\Schema\EntitySchema.cs" />

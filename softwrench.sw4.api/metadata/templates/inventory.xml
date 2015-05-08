@@ -626,7 +626,7 @@
           <association label="Issued To" target="issueto" labelfield="issuetoperson_.displayname">
             <renderer type="lookup"/>
           </association>
-          <association label="Location" target="location" labelfield="location_.location" dependantfields="siteid">
+          <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid">
             <renderer type="lookup"/>
             <!--<event type="afterchange" service="inventoryService" method="invIssue_afterChangeLocation"/>-->
           </association>
@@ -710,7 +710,7 @@
               <dataprovider prefilterfunction="FilterWorkorders"/>
               <renderer type="lookup"/>
             </association>
-            <association label="Location" target="location" labelfield="location_.location" dependantfields="siteid">
+            <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid">
               <renderer type="lookup"/>
             </association>
             <association label="Asset" target="assetnum" labelfield="asset_.description" dependantfields="siteid">

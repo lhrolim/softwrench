@@ -1,9 +1,9 @@
-﻿using softwrench.sW4.Shared2.Data;
-using softWrench.sW4.SPF;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.SPF;
 
-namespace softWrench.sW4.Data.API {
+namespace softWrench.sW4.Data.API.Response {
     public class GenericResponseResult<T> : IGenericResponseResult {
 
         /// <summary>
