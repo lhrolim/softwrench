@@ -53,7 +53,7 @@ app.controller('GridFilterController', ['$scope', '$http', 'userPreferenceServic
             $scope.refreshGrid = function () {
                 this.clearFilter();
                 contextService.insertIntoContext("filter_basicmode", $scope.basicMode, true);
-                searchService.refreshGrid();
+//                searchService.refreshGrid();
             };
 
             $scope.saveFilter = function() {

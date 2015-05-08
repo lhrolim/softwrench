@@ -9,12 +9,18 @@
     <template path="@tooltrans.xml"/>
     <template path="@woactivity.xml"/>
     <template path="@asset.xml"/>
+    
     <template path="@glcomponents.xml"/>
     <template path="@failurecode.xml"/>
+
+    <!--Applications required, temporarily for mobile, remove later-->
+    <template path="@location.xml"/>
+    <template path="@worktype.xml"/>
+    <template path="@synstatus.xml"/>
   </templates>
 
   <entities>
-    <entity name="workorder" idAttribute="wonum" whereclause="woclass like 'WORKORDER'">
+    <entity name="workorder" idAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
       <relationships>
         <relationship to="failurelistonly" qualifier="failurelist">
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>

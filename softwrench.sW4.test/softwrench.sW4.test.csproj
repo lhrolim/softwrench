@@ -110,6 +110,8 @@
     <Compile Include="Metadata\MetadataPropertiesTest.cs" />
     <Compile Include="Metadata\MenuParsingTest.cs" />
     <Compile Include="Metadata\CustomizationTest.cs" />
+    <Compile Include="Metadata\SyncSchemaTest.cs" />
+    <Compile Include="offline\SynchronizationManagerTest.cs" />
     <Compile Include="Resources\MifSRSample.cs" />
     <Compile Include="ToStringELParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -141,6 +143,10 @@
     </Content>
     <Content Include="App_data\Client\test2\metadata.xml" />
     <Content Include="App_data\Client\test2\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_data\Client\test_only\menu.mobile.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -251,6 +257,10 @@
     <ProjectReference Include="..\softwrench.sw4.Hapag\softwrench.sw4.Hapag.csproj">
       <Project>{22d901fc-310e-4f14-9506-d9433cf192cf}</Project>
       <Name>softwrench.sw4.Hapag</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.offlineserver\softwrench.sw4.offlineserver.csproj">
+      <Project>{1a476897-dd39-49eb-8ab1-f1eed8ce9ab2}</Project>
+      <Name>softwrench.sw4.offlineserver</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>

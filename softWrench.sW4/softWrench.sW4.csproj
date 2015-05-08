@@ -93,7 +93,6 @@
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate">
@@ -147,18 +146,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Persistence\WS\Commons\BaseSolutionCrudConnector.cs" />
-    <Compile Include="Data\Offline\SynchronizationManager.cs" />
-    <Compile Include="Data\Persistence\WS\Commons\BaseAssetCrudConnector.cs" />
-    <Compile Include="Data\Persistence\WS\Commons\LocationHandler.cs" />
+    <Compile Include="Data\API\Response\ActionRedirectResponse.cs" />
+    <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
+    <Compile Include="Data\API\Response\ApplicationListResult.cs" />
+    <Compile Include="Data\API\Response\BlankApplicationResponse.cs" />
+    <Compile Include="Data\API\Response\GenericResponseResult.cs" />
+    <Compile Include="Data\API\Response\IApplicationResponse.cs" />
+    <Compile Include="Data\API\Response\SchemaChoosingDataResponse.cs" />
+    <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
+    <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
+    <Compile Include="Data\Persistence\Relational\Collection\OffLineCollectionResolver.cs" />
     <Compile Include="Data\Persistence\WS\Commons\KongsbergIncidentCrudConnector.cs" />
-    <Compile Include="Metadata\Applications\Classification\ClassificationDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BeringKeyInventoryIssueDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\KongsbergSolutionDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseProblemDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\KongsbergIncidentDataSet.cs" />
-    <Compile Include="Metadata\Applications\DataSet\KongsbergServiceRequestDataSet.cs" />
     <Compile Include="Metadata\Applications\Notification\ApplicationNotificationFactory.cs" />
+    <Compile Include="Metadata\OffLineMetadataProvider.cs" />
     <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />
     <Compile Include="Audit\AuditTrail.cs" />
     <Compile Include="Audit\ISMAuditTrail.cs" />
@@ -179,14 +181,12 @@
     <Compile Include="Configuration\Definitions\WhereClause\WhereClauseResult.cs" />
     <Compile Include="Configuration\Services\Api\IWhereClauseFacade.cs" />
     <Compile Include="Configuration\Services\WhereClauseFacade.cs" />
-    <Compile Include="Data\API\Response\ActionRedirectResponse.cs" />
     <Compile Include="Data\API\Association\IAssociationPrefetcherRequest.cs" />
     <Compile Include="Data\API\Association\ListOptionsPrefetchRequest.cs" />
     <Compile Include="Data\API\AttachmentRequest.cs" />
     <Compile Include="Data\API\CheckPointCrudContext.cs" />
     <Compile Include="Data\API\Composition\CompositionFetchRequest.cs" />
     <Compile Include="Data\API\Composition\CompositionFetchResult.cs" />
-    <Compile Include="Data\API\Response\BlankApplicationResponse.cs" />
     <Compile Include="Data\API\OperationDataRequest.cs" />
     <Compile Include="Data\API\ReportRequest.cs" />
     <Compile Include="Data\API\RouterParametersDTO.cs" />
@@ -324,8 +324,6 @@
     <Compile Include="Data\API\Association\AssociationUpdateRequest.cs" />
     <Compile Include="Data\API\Association\LookupAssociationUpdateResult.cs" />
     <Compile Include="Data\API\Association\BaseAssociationUpdateResult.cs" />
-    <Compile Include="Data\API\Response\GenericResponseResult.cs" />
-    <Compile Include="Data\API\Response\SchemaChoosingDataResponse.cs" />
     <Compile Include="Data\Configuration\ConfigurationConstants.cs" />
     <Compile Include="Data\Configuration\ConfigurationRegistry.cs" />
     <Compile Include="Data\Entities\AttachmentDao.cs" />
@@ -341,11 +339,10 @@
     <Compile Include="Data\Entities\ServiceRequest\PrinterLocationEnum.cs" />
     <Compile Include="Data\Entities\MaxPropValueDao.cs" />
     <Compile Include="Data\Persistence\DefaultValuesBuilder.cs" />
-    <Compile Include="Data\Persistence\Relational\CollectionResolver.cs" />
+    <Compile Include="Data\Persistence\Relational\Collection\CollectionResolver.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\BaseQueryUtil.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryFromBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryJoinBuilder.cs" />
-    <Compile Include="Data\Persistence\Sync\SyncItemHandler.cs" />
     <Compile Include="Data\Persistence\WS\API\MaximoResult.cs" />
     <Compile Include="Data\Persistence\WS\Commons\AttachmentHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseServiceRequestCrudConnector.cs" />
@@ -356,8 +353,6 @@
     <Compile Include="Data\API\DataRequestAdapter.cs" />
     <Compile Include="Data\API\DetailRequest.cs" />
     <Compile Include="Data\API\IDataRequest.cs" />
-    <Compile Include="Data\API\Response\IApplicationResponse.cs" />
-    <Compile Include="Data\API\Response\ApplicationListResult.cs" />
     <Compile Include="Data\Entities\EntityBuilder.cs" />
     <Compile Include="Data\Pagination\PaginatedSearchRequestDto.cs" />
     <Compile Include="Data\Persistence\WS\Mea\MeaAttachmentHandler.cs" />
@@ -454,9 +449,6 @@
     <Compile Include="Data\Search\SearchParameter.cs" />
     <Compile Include="Data\Offline\Rowstamps.cs" />
     <Compile Include="Data\Offline\RowStampUtil.cs" />
-    <Compile Include="Data\Offline\SynchronizationApplicationData.cs" />
-    <Compile Include="Data\Offline\SynchronizationRequestDto.cs" />
-    <Compile Include="Data\Offline\SynchronizationResultDto.cs" />
     <Compile Include="Metadata\Applications\Association\DependencyBuilder.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\AssociationPreFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\FaqUtils.cs" />
@@ -496,7 +488,6 @@
     <Compile Include="Data\EL\ToString\ToStringExpression.cs" />
     <Compile Include="Data\DataMap.cs" />
     <Compile Include="Data\DataMapExtensions.cs" />
-    <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
     <Compile Include="Data\Entities\Entity.cs" />
     <Compile Include="Metadata\Entities\Schema\EntityAttribute.cs" />
     <Compile Include="Metadata\Entities\Schema\EntitySchema.cs" />
@@ -577,7 +568,6 @@
     <Compile Include="Util\ConversionUtil.cs" />
     <Compile Include="Util\DateExtensions.cs" />
     <Compile Include="Util\DBConnectionResult.cs" />
-    <Compile Include="Util\JsonDateTimeConverter.cs" />
     <Compile Include="Util\DictionaryExtensions.cs" />
     <Compile Include="Util\EntityUtil.cs" />
     <Compile Include="Util\ExceptionUtil.cs" />
@@ -593,7 +583,6 @@
     <Compile Include="Util\StreamUtils.cs" />
     <Compile Include="Util\SwConstants.cs" />
     <Compile Include="Util\TaskFactoryExtensions.cs" />
-    <Compile Include="Util\TransactionConstants.cs" />
     <Compile Include="Util\Validate.cs" />
     <Compile Include="Web References\wsAsset\Reference.cs">
       <AutoGen>True</AutoGen>

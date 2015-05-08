@@ -52,6 +52,22 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         }
 
 
+        protected bool Equals(ApplicationRelationshipDefinition other) {
+            return string.Equals(Role, other.Role);
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ApplicationRelationshipDefinition)obj);
+        }
+
+        public override int GetHashCode() {
+            return (Role != null ? Role.GetHashCode() : 0);
+        }
+
+
         public abstract string Attribute { get; set; }
     }
 }
