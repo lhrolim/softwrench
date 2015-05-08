@@ -312,9 +312,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
 
 
-        public virtual SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData) {
-            return Engine().Sync(applicationMetadata, applicationSyncData);
-        }
+//        public virtual SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData) {
+//            return Engine().Sync(applicationMetadata, applicationSyncData);
+//        }
 
         public TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);

@@ -115,6 +115,7 @@
     <Content Include="Content\Mobile\scripts\services\menu\menuModelService.js" />
     <Content Include="Content\Mobile\scripts\services\metadata\metadataModelService.js" />
     <Content Include="Content\Mobile\scripts\services\synchronization\batchService.js" />
+    <Content Include="Content\Mobile\scripts\services\synchronization\rowstampService.js" />
     <Content Include="Content\Mobile\scripts\utils\mobileajaxinterceptor.js" />
     <Content Include="Content\Mobile\templates\crudlist.html" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\css\ionic.css" />
@@ -140,6 +141,7 @@
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\js\ionic.js" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\js\ionic.min.js" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\version.json" />
+    <Content Include="Content\Vendor\downloadedvendor\persistence.store.sql.js" />
     <Content Include="Content\Vendor\scripts\angular-animate.js" />
     <Content Include="Content\Vendor\scripts\angular-sanitize.js" />
     <Content Include="Content\Vendor\scripts\angular-ui-router.js" />

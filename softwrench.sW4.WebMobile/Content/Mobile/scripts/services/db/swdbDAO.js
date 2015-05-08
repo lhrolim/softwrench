@@ -3,21 +3,30 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
     //creating namespace for the entities, to avoid eventaul collisions
 
+    function getInstance(entity) {
+        if (!entities[entity]) {
+            throw new Error("entity {0} not found".format(entity));
+        }
+        return persistence.define(entity);
+    }
+
     function createFilter(entity, queryString, queryoptions) {
         queryoptions = queryoptions || {};
         var pageNumber = queryoptions.pageNumber || 1;
         var pageSize = queryoptions.pagesize;
-
-        if (!entities[entity]) {
-            throw new Error("entity {0} not found".format(entity));
-        }
-        var filter = entities[entity].all();
+        var projectionFields = queryoptions.projectionFields || [];
+        var filter = getInstance(entity).all();
+        filter._additionalWhereSqls = [];
+        filter._projectionFields = [];
         if (pageSize) {
             filter = filter.limit(pageSize);
             filter = filter.skip((pageSize * (pageNumber - 1)));
         }
         if (queryString) {
             filter._additionalWhereSqls.push(queryString);
+        }
+        if (projectionFields.length > 0) {
+            filter._projectionFields = projectionFields;
         }
 
 
@@ -252,7 +261,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="entity">The name of the table to lookup</param>
         /// <param name="options">
         /// 
         ///  pagesize: number of items per page. if undefined, it will bring all the results
@@ -275,7 +284,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             var filter = createFilter(entity, queryString, options);
 
             try {
-                filter.list(null, function(result) {
+                filter.list(null, function (result) {
                     deferred.resolve(result);
                 });
             } catch (err) {
@@ -316,10 +325,14 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         },
 
 
-        createTx: function () {
+        createTx: function (args) {
             var deferred = dispatcherService.loadBaseDeferred();
             persistence.transaction(function (tx) {
-                deferred.resolve(tx);
+                if (args) {
+                    deferred.resolve([tx, args]);
+                } else {
+                    deferred.resolve([tx]);
+                }
             });
             return deferred.promise;
         },

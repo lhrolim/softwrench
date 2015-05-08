@@ -146,7 +146,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Offline\SynchronizationManager.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\OffLineCollectionResolver.cs" />
@@ -341,7 +340,6 @@
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\BaseQueryUtil.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryFromBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryJoinBuilder.cs" />
-    <Compile Include="Data\Persistence\Sync\SyncItemHandler.cs" />
     <Compile Include="Data\Persistence\WS\API\MaximoResult.cs" />
     <Compile Include="Data\Persistence\WS\Commons\AttachmentHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BaseServiceRequestCrudConnector.cs" />
@@ -450,9 +448,6 @@
     <Compile Include="Data\Search\SearchParameter.cs" />
     <Compile Include="Data\Offline\Rowstamps.cs" />
     <Compile Include="Data\Offline\RowStampUtil.cs" />
-    <Compile Include="Data\Offline\SynchronizationApplicationData.cs" />
-    <Compile Include="Data\Offline\SynchronizationRequestDto.cs" />
-    <Compile Include="Data\Offline\SynchronizationResultDto.cs" />
     <Compile Include="Metadata\Applications\Association\DependencyBuilder.cs" />
     <Compile Include="Metadata\Applications\DataSet\Filter\AssociationPreFilterFunctionParameters.cs" />
     <Compile Include="Metadata\Applications\DataSet\FaqUtils.cs" />

@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Web.Http;
 using cts.commons.Util;
-using FluentMigrator.Runner;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -13,14 +11,13 @@ using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
-using softWrench.sW4.Metadata.Applications.DataSet;
+using softwrench.sw4.offlineserver.dto;
+using softwrench.sw4.offlineserver.services;
 using softWrench.sW4.Security.Services;
-using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Offline;
 
-namespace softWrench.sW4.Web.Controllers.Mobile {
+namespace softwrench.sw4.offlineserver.controller {
 
     /// <summary>
     /// <para>This controller is a front facade for handling all operations that comes from a mobile device.</para>
