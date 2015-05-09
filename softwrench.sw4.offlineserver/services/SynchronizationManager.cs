@@ -45,15 +45,17 @@ namespace softwrench.sw4.offlineserver.services {
             IDictionary<CompleteApplicationMetadataDefinition, List<CompleteApplicationMetadataDefinition>> reverseCompositionMap
                 = new Dictionary<CompleteApplicationMetadataDefinition, List<CompleteApplicationMetadataDefinition>>();
 
+            var compositionMap = GetCompositionRowstampsDict(rowstampMap);
             foreach (var topLevelApp in topLevelApps) {
-                ResolveApplication(request, user, topLevelApp, result, rowstampMap);
+                ResolveApplication(request, user, topLevelApp, result, rowstampMap, compositionMap);
             }
 
 
             return result;
         }
 
-        private void ResolveApplication(SynchronizationRequestDto request, InMemoryUser user, CompleteApplicationMetadataDefinition topLevelApp, SynchronizationResultDto result, JObject rowstampMap) {
+        private void ResolveApplication(SynchronizationRequestDto request, InMemoryUser user, CompleteApplicationMetadataDefinition topLevelApp, SynchronizationResultDto result, JObject rowstampMap,
+            IDictionary<string, long?> compositionMap) {
             //this will return sync schema
             var userAppMetadata = topLevelApp.ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(), user, ClientPlatform.Mobile);
 
@@ -62,8 +64,8 @@ namespace softwrench.sw4.offlineserver.services {
 
             var parameters = new CollectionResolverParameters() {
                 ApplicationMetadata = userAppMetadata,
-                ParentEntities = topLevelAppData
-
+                ParentEntities = topLevelAppData,
+                RowstampMap = compositionMap
             };
             var compositionData = _resolver.ResolveCollections(parameters);
             var filteredResults = FilterData(topLevelApp.ApplicationName, topLevelAppData, rowstampMap);
@@ -141,6 +143,9 @@ namespace softwrench.sw4.offlineserver.services {
         }
 
         public static IDictionary<string, string> ConvertJSONToDict(JObject rowstampMap) {
+            if (rowstampMap == null || !rowstampMap.HasValues) {
+                return new Dictionary<string, string>();
+            }
             var result = new Dictionary<string, string>();
             dynamic obj = rowstampMap;
             //Loop over the array
@@ -148,6 +153,20 @@ namespace softwrench.sw4.offlineserver.services {
                 var id = row.id;
                 var rowstamp = row.rowstamp;
                 result.Add(id.Value, rowstamp.Value);
+            }
+            return result;
+        }
+
+        public static IDictionary<string, long?> GetCompositionRowstampsDict(JObject rowstampMap) {
+            if (rowstampMap == null || !rowstampMap.HasValues) {
+                return new Dictionary<string, long?>();
+            }
+            var result = new Dictionary<string, long?>();
+            dynamic obj = rowstampMap;
+            //Loop over the array
+            foreach (dynamic row in obj.compositionmap) {
+                var application = row.Name;
+                result.Add(application, Convert.ToInt64(row.Value.Value));
             }
             return result;
         }

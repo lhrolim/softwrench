@@ -11,7 +11,7 @@
 
 mobileServices.factory('dataSynchronizationService', function ($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService) {
 
-    function createAppSyncPromise(firstInLoop, app, currentApps) {
+    function createAppSyncPromise(firstInLoop, app, currentApps, compositionMap) {
         var log = $log.get("dataSynchronizationService#createAppSyncPromise");
 
         var params = {
@@ -20,6 +20,8 @@ mobileServices.factory('dataSynchronizationService', function ($http, $q, $log, 
             returnNewApps: firstInLoop
         }
         return rowstampService.generateRowstampMap(app).then(function (rowstampMap) {
+            //see samplerequest.json
+            rowstampMap.compositionmap = compositionMap;
             log.debug("invoking service to get new data");
             return restService.postPromise("Mobile", "PullNewData", params, rowstampMap);
         }).then(function (result) {
@@ -42,7 +44,7 @@ mobileServices.factory('dataSynchronizationService', function ($http, $q, $log, 
                 var deletedIds = application.deletedRecordIds;
                 log.debug("{0} topleveldata: inserting:{1} | updating:{2} | deleting: {3}".format(application.applicationName, newDataMaps.length, updatedDataMaps.length, deletedIds.length));
                 for (var j = 0; j < newDataMaps.length; j++) {
-                    
+
                     var datamap = newDataMaps[j];
                     var id = persistence.createUUID();
                     var query = entities.DataEntry.insertionQueryPattern.format(datamap.application, JSON.stringify(datamap.fields), datamap.id, '' + datamap.approwstamp, id);
@@ -53,7 +55,7 @@ mobileServices.factory('dataSynchronizationService', function ($http, $q, $log, 
                     query = entities.DataEntry.updateQueryPattern.format(JSON.stringify(datamap.fields), '' + datamap.approwstamp, datamap.id, datamap.application);
                     queryArray.push(query);
                 }
-                
+
                 if (deletedIds.length > 0) {
                     query = entities.DataEntry.deleteQueryPattern.format(buildIdsString(deletedIds), application.applicationName);
                     queryArray.push(query);
@@ -109,13 +111,17 @@ mobileServices.factory('dataSynchronizationService', function ($http, $q, $log, 
                 return restService.postPromise("Mobile", "PullNewData", params);
             }
 
-            var httpPromises = [];
-            for (var i = 0; i < currentApps.length; i++) {
-                var promise = createAppSyncPromise(i == 0, currentApps[i], currentApps);
-                httpPromises.push(promise);
-            }
+            return rowstampService.generateCompositionRowstampMap()
+                .then(function (compositionMap) {
+                    var httpPromises = [];
+                    for (var i = 0; i < currentApps.length; i++) {
+                        var promise = createAppSyncPromise(i == 0, currentApps[i], currentApps, compositionMap);
+                        httpPromises.push(promise);
+                    }
+                    return httpPromises;
+                });
 
-            return httpPromises;
+
         }
     }
 });

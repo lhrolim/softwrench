@@ -6,6 +6,11 @@ namespace softwrench.sw4.offlineserver.dto {
 
     public class SynchronizationResultDto {
 
+        public SynchronizationResultDto() {
+            CompositionData = new List<SynchronizationApplicationResultData>();
+            TopApplicationData = new List<SynchronizationApplicationResultData>();
+        }
+
         public IList<SynchronizationApplicationResultData> TopApplicationData { get; set; }
 
         public IList<SynchronizationApplicationResultData> CompositionData { get; set; }

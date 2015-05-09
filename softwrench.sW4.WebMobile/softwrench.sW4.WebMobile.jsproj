@@ -153,8 +153,9 @@
     <Content Include="Content\Vendor\scripts\persistence.js" />
     <Content Include="Content\Vendor\scripts\persistence.store.sql.js" />
     <Content Include="Content\Vendor\scripts\persistence.store.websql.js" />
+    <Content Include="tests\resources\jsons\syncdata\samplerequest.json" />
     <Content Include="tests\resources\jsons\syncdata\sql_utils.txt" />
-    <Content Include="tests\resources\jsons\syncdata\sample.json" />
+    <Content Include="tests\resources\jsons\syncdata\sampleresponse.json" />
     <Content Include="tests\services\dashboardaux_service_test.js" />
     <Folder Include="bower_components\" />
     <Folder Include="Content\Shared\webcommons\scripts\vendor\" />

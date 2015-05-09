@@ -6,10 +6,6 @@ using cts.commons.portable.Util;
 namespace softwrench.sw4.offlineserver.dto {
     public class SynchronizationRequestDto {
 
-        public SynchronizationRequestDto() {
-            Applications = new List<ApplicationSyncData>();
-        }
-
         public String ApplicationName { get; set; }
 
         /// <summary>
@@ -28,46 +24,8 @@ namespace softwrench.sw4.offlineserver.dto {
         public Boolean ReturnNewApps { get; set; }
 
 
-        public List<ApplicationSyncData> Applications { get; set; }
-
-        public ApplicationSyncData GetApplicationData(string applicationName) {
-            if (Applications == null) {
-                return null;
-            }
-            return Applications.FirstOrDefault(f => f.AppName.Equals(applicationName));
-        }
-
-        public IDictionary<string, long?> GetCompositionRowstampMap(ISet<string> compositionApplicationNames) {
-            var result = new Dictionary<string, long?>();
-            foreach (var compositionApplicationName in compositionApplicationNames) {
-                var name = compositionApplicationName;
-                var appData = Applications.FirstOrDefault(f => f.AppName.EqualsIc(name));
-                if (appData != null) {
-                    result.Add(name, Convert.ToInt64(appData.UpperLimitRowstamp));
-                }
-            }
-            return result;
-        }
 
 
-        public class ApplicationSyncData {
 
-
-            public string AppName { get; set; }
-
-
-            [Obsolete]
-            public bool FetchMetadata { get; set; }
-
-            public ApplicationSyncData() {
-                FetchMetadata = false;
-            }
-
-            //            public string schemaId { get; set; }
-            public string UpperLimitRowstamp { get; set; }
-            public string LowerLimitRowstamp { get; set; }
-
-
-        }
     }
 }

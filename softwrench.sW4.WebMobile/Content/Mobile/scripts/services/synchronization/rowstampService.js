@@ -23,7 +23,24 @@
                     deferred.resolve(rowstampMap);
                 });
             return deferred.promise;
+        },
+
+        generateCompositionRowstampMap: function () {
+            var log = $log.get("rowstampService#generateCompositionRowstampMap");
+            var deferred = $q.defer();
+            swdbDAO.findByQuery('CompositionDataEntry', null, { fullquery: entities.CompositionDataEntry.maxRowstampQueries })
+                .then(function (queryResults) {
+                    var resultItems = {};
+                    for (var i = 0; i < queryResults.length; i++) {
+                        var item = queryResults[i];
+                        resultItems[item.application] = item.rowstamp;
+                    }
+                    deferred.resolve(resultItems);
+                });
+            return deferred.promise;
         }
+
+
 
     }
 });

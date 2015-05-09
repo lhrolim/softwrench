@@ -475,6 +475,7 @@ function config(persistence, dialect) {
         c._additionalJoinSqls = this._additionalJoinSqls.slice(0);
         c._additionalWhereSqls = this._additionalWhereSqls.slice(0);
         c._projectionFields = this._projectionFields.slice(0);
+        c._querytoUse = this._querytoUse;
         c._additionalGroupSqls = this._additionalGroupSqls.slice(0);
         c._manyToManyFetch = this._manyToManyFetch;
         return c;
@@ -489,6 +490,7 @@ function config(persistence, dialect) {
         this._additionalWhereSqls = [];
         this._additionalGroupSqls = [];
         this._projectionFields = [];
+        this._querytoUse = null;
     };
 
     var oldQCToUniqueString = persistence.QueryCollection.prototype.toUniqueString;
@@ -711,6 +713,12 @@ function config(persistence, dialect) {
         if (this._skip > 0) {
             sql += " OFFSET " + this._skip;
         }
+
+        if (this._querytoUse) {
+            sql = this._querytoUse;
+            mainPrefix = "";
+        } 
+
         session.flush(tx, function () {
             tx.executeSql(sql, args, function (rows) {
                 var results = [];

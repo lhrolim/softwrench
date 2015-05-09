@@ -18,5 +18,8 @@ entities.CompositionDataEntry = persistence.define('CompositionDataEntry', {
 });
 
 entities.CompositionDataEntry.insertionQueryPattern = "insert into CompositionDataEntry (application,datamap,isDirty,remoteId,rowstamp,id) values ('{0}','{1}',0,'{2}','{3}','{4}')";
-//entities.DataEntry.updateQueryPattern = "update DataEntry set datamap='{0}' rowstamp='{1}' where remoteId='{2}' and applicaton='{3}'";
+entities.CompositionDataEntry.updateQueryPattern = "update CompositionDataEntry set datamap='{0}' rowstamp='{1}' where remoteId='{2}' and applicaton='{3}'";
 //entities.DataEntry.deleteQueryPattern = "delete from DataEntry where remoteId in({0}) and application='{1}'";
+
+
+entities.CompositionDataEntry.maxRowstampQueries = "select max(rowstamp) as rowstamp,application,id from CompositionDataEntry  group by application";

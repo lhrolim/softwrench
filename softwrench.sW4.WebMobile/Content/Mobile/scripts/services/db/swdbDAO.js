@@ -15,9 +15,13 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         var pageNumber = queryoptions.pageNumber || 1;
         var pageSize = queryoptions.pagesize;
         var projectionFields = queryoptions.projectionFields || [];
+        var queryToUse = queryoptions.fullquery;
+
         var filter = getInstance(entity).all();
         filter._additionalWhereSqls = [];
         filter._projectionFields = [];
+        filter._querytoUse = null;
+
         if (pageSize) {
             filter = filter.limit(pageSize);
             filter = filter.skip((pageSize * (pageNumber - 1)));
@@ -28,9 +32,9 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         if (projectionFields.length > 0) {
             filter._projectionFields = projectionFields;
         }
-
-
-
+        if (queryToUse) {
+            filter._querytoUse = queryToUse;
+        }
         return filter;
 
     }
@@ -65,21 +69,6 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 rootApplication: 'TEXT',
                 doclinkId: 'TEXT',
                 path: 'TEXT',
-            });
-
-
-
-            entities.CompositionDataEntry = persistence.define('CompositionDataEntry', {
-                application: 'TEXT',
-                datamap: 'JSON',
-                //used for composition matching, when data comes from the server, it will be on a tabular format (e.g all worklogs); 
-                //composite applications (root), however, will have this as null
-                parentId: 'TEXT',
-                //The id of this entry in maximo, it will be null when it´s created locally
-                remoteId: 'TEXT',
-                //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
-                isDirty: 'BOOL',
-                rowstamp: 'TEXT',
             });
 
 
