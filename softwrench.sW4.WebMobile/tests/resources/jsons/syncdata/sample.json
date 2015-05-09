@@ -8,6 +8,7 @@
             "upperLimitRowstamp": null,
             "applicationName": "workorder",
             "lowerLimitRowstamp": null,
+            "isEmpty": false,
             "newdataMaps": [
                 {
                     "application": "workorder",
@@ -202,6 +203,7 @@
             "upperLimitRowstamp": null,
             "applicationName": "attachment_",
             "lowerLimitRowstamp": null,
+            "isEmpty": false,
             "newdataMaps": [
                 {
                     "application": "attachment_",

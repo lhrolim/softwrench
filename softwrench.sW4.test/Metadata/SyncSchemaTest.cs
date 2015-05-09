@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
+using cts.commons.portable.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Metadata;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -25,6 +28,13 @@ namespace softwrench.sW4.test.Metadata {
             Assert.IsTrue(syncSchema.Displayables.Count >= detailSchema.Displayables.Count);
             Assert.AreEqual(detailSchema.Compositions.Count, syncSchema.Compositions.Count);
 
+        }
+
+        [TestMethod]
+        public void TestComposition() {
+            var woApp = MetadataProvider.Application("worklog");
+            var syncSchema = woApp.Schema(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.SyncSchema));
+            Assert.IsTrue(syncSchema.Fields.Any(f => f.Attribute.EqualsIc(RowStampUtil.RowstampColumnName)));
         }
     }
 }

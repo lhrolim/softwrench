@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace softwrench.sw4.offlineserver.dto {
 
@@ -22,6 +24,9 @@ namespace softwrench.sw4.offlineserver.dto {
             CompositionData.Add(newResultData);
         }
 
+        public Boolean IsEmpty {
+            get { return TopApplicationData.Union(CompositionData).All(data => data.IsEmpty); }
+        }
 
     }
 }

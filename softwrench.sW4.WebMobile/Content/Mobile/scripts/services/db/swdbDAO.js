@@ -1,4 +1,4 @@
-﻿var entities = {};
+﻿var entities = entities || {};
 mobileServices.factory('swdbDAO', function (dispatcherService) {
 
     //creating namespace for the entities, to avoid eventaul collisions
@@ -67,19 +67,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 path: 'TEXT',
             });
 
-            ///
-            /// Holds both Parent entities and compositions data.
-            /// This Entries needs to be reevaluated on every sync, since chances are that they do not needed to be present on client side after execution.
-            ///
-            entities.DataEntry = persistence.define('DataEntry', {
-                application: 'TEXT',
-                datamap: 'JSON',
-                //The id of this entry in maximo, it will be null when it´s created locally
-                remoteId: 'TEXT',
-                //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
-                isDirty: 'BOOL',
-                rowstamp: 'TEXT',
-            });
+
 
             entities.CompositionDataEntry = persistence.define('CompositionDataEntry', {
                 application: 'TEXT',
@@ -377,20 +365,35 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
         },
 
-        executeQuery: function (query) {
+        executeQuery: function (query, tx) {
+            return this.executeQueries([query], tx);
+
+        },
+
+        executeQueries: function (queriesToExecute, tx) {
             var deferred = dispatcherService.loadBaseDeferred();
             var promise = deferred.promise;
-            persistence.transaction(function (tx) {
-                var queries = [];
+            var queries = [];
+            for (var i = 0; i < queriesToExecute.length; i++) {
+                var query = queriesToExecute[i];
                 var queryTuple = [];
                 queryTuple.push(query);
                 queries.push(queryTuple);
+            }
+            if (!tx) {
+                persistence.transaction(function (closureTx) {
+                    persistence.executeQueriesSeq(closureTx, queries, function () {
+                        deferred.resolve();
+                    });
+                });
+            } else {
                 persistence.executeQueriesSeq(tx, queries, function () {
                     deferred.resolve();
                 });
-            });
+            }
             return promise;
-        }
+        },
+
 
 
 

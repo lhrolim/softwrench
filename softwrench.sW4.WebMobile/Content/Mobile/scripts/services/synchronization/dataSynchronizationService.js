@@ -1,6 +1,17 @@
-﻿mobileServices.factory('dataSynchronizationService', function ($http, $q,$log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService) {
+﻿var buildIdsString = function (deletedRecordIds) {
+    var ids = "";
+    for (var i = 0; i < deletedRecordIds.length; i++) {
+        ids += "'" + deletedRecordIds[i] + "'";
+        if (i != deletedRecordIds.length - 1) {
+            ids += ",";
+        }
+    }
+    return ids;
+};
 
-    function createAppSyncPromise(firstInLoop,app, currentApps) {
+mobileServices.factory('dataSynchronizationService', function ($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService) {
+
+    function createAppSyncPromise(firstInLoop, app, currentApps) {
         var log = $log.get("dataSynchronizationService#createAppSyncPromise");
 
         var params = {
@@ -12,23 +23,58 @@
             log.debug("invoking service to get new data");
             return restService.postPromise("Mobile", "PullNewData", params, rowstampMap);
         }).then(function (result) {
-            log.info("receiving new topLevel data from the server");
-            var topApplicationData = result.topApplicationData;
-            var compositionData = result.compositionData;
-            if (topApplicationData.length == 0 && compositionData.length == 0) {
+
+            var topApplicationData = result.data.topApplicationData;
+            var compositionData = result.data.compositionData;
+            if (result.data.isEmpty) {
+                log.info("no new data returned from the server");
                 //interrupting async calls
                 return $q.reject();
             }
-            return swdbDAO.createTx(result);
-        }).then(function (txArray) {
-            var tx = txArray[0];
-            var serverResult = txArray[1];
-            var topApplicationData = serverResult.topApplicationData;
-            var compositionData = serverResult.compositionData;
 
-            for (var i = 0; i < topApplicationData.dataMaps; i++) {
-
+            log.info("receiving new topLevel data from the server");
+            var queryArray = [];
+            for (var i = 0; i < topApplicationData.length; i++) {
+                //multiple applications can be returned on a limit scenario where it´s the first sync, or on a server update.
+                var application = topApplicationData[i];
+                var newDataMaps = application.newdataMaps;
+                var updatedDataMaps = application.updatedDataMaps;
+                var deletedIds = application.deletedRecordIds;
+                log.debug("{0} topleveldata: inserting:{1} | updating:{2} | deleting: {3}".format(application.applicationName, newDataMaps.length, updatedDataMaps.length, deletedIds.length));
+                for (var j = 0; j < newDataMaps.length; j++) {
+                    
+                    var datamap = newDataMaps[j];
+                    var id = persistence.createUUID();
+                    var query = entities.DataEntry.insertionQueryPattern.format(datamap.application, JSON.stringify(datamap.fields), datamap.id, '' + datamap.approwstamp, id);
+                    queryArray.push(query);
+                }
+                for (j = 0; j < updatedDataMaps.length; j++) {
+                    datamap = updatedDataMaps[j];
+                    query = entities.DataEntry.updateQueryPattern.format(JSON.stringify(datamap.fields), '' + datamap.approwstamp, datamap.id, datamap.application);
+                    queryArray.push(query);
+                }
+                
+                if (deletedIds.length > 0) {
+                    query = entities.DataEntry.deleteQueryPattern.format(buildIdsString(deletedIds), application.applicationName);
+                    queryArray.push(query);
+                }
             }
+
+            for (i = 0; i < compositionData.length; i++) {
+                application = compositionData[i];
+                newDataMaps = application.newdataMaps;
+                log.debug("inserting {0} new compositions".format(newDataMaps.length));
+                for (j = 0; j < newDataMaps.length; j++) {
+                    datamap = newDataMaps[j];
+                    id = persistence.createUUID();
+                    query = entities.CompositionDataEntry.insertionQueryPattern.format(datamap.application, JSON.stringify(datamap.fields), datamap.id, '' + datamap.approwstamp, id);
+                    queryArray.push(query);
+                }
+            }
+
+            persistence.transaction(function (tx) {
+                return swdbDAO.executeQueries(queryArray, tx);
+            });
         }).catch(function (err) {
             if (!err) {
                 //normal interruption
@@ -65,7 +111,7 @@
 
             var httpPromises = [];
             for (var i = 0; i < currentApps.length; i++) {
-                var promise = createAppSyncPromise(i==0,currentApps[i], currentApps);
+                var promise = createAppSyncPromise(i == 0, currentApps[i], currentApps);
                 httpPromises.push(promise);
             }
 

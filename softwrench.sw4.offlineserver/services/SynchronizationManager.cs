@@ -73,7 +73,12 @@ namespace softwrench.sw4.offlineserver.services {
             foreach (var compositionDict in compositionData) {
                 var dict = compositionDict;
                 //lets assume no compositions can be updated, for the sake of simplicity
-                result.AddCompositionData(new SynchronizationApplicationResultData(compositionDict.Key, compositionDict.Value.ResultList.Select(s => new DataMap(dict.Key, s, dict.Value.IdFieldName)), null));
+                var newDataMaps = new List<DataMap>();
+                foreach (var list in compositionDict.Value.ResultList) {
+                    newDataMaps.Add(new DataMap(dict.Key, list, dict.Value.IdFieldName));
+                }
+
+                result.AddCompositionData(SynchronizationApplicationResultData.CompositionRecords(topLevelApp.ApplicationName, newDataMaps, dict.Value.MaxRowstampReturned));
             }
         }
 

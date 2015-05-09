@@ -68,7 +68,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
 
 
             var applicationSchemaDefinitions = compositionApplication.Schemas();
-            var syncKey = new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.SyncSchema, compositionSchema.RenderMode, ClientPlatform.Web);
+            var syncKey = ApplicationMetadataSchemaKey.GetSyncInstance();
             if (applicationSchemaDefinitions.ContainsKey(syncKey)) {
                 return applicationSchemaDefinitions[syncKey];
             }
