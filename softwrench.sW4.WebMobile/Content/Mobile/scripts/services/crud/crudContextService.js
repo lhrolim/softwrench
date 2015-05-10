@@ -15,11 +15,15 @@
             return crudContext.currentTitle;
         },
 
+        itemlist: function () {
+            return crudContext.itemlist;
+        },
+
         loadApplication: function (applicationName, applicationTitle, schema) {
             crudContext.currentApplication = applicationName;
             crudContext.currentSchema = schema;
             crudContext.currentTitle = applicationTitle;
-            swdbDAO.findByQuery("DataEntry", "application = {0}".format(applicationName), { pagesize: 10, pagenumber: 1 })
+            swdbDAO.findByQuery("DataEntry", "application = '{0}'".format(applicationName), { pagesize: 10, pagenumber: 1 })
                 .success(function (results) {
                 crudContext.itemlist = results;
             });

@@ -112,6 +112,7 @@
   <ItemGroup>
     <Content Include="Content\Mobile\scripts\controllers\crudlist.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudContextService.js" />
+    <Content Include="Content\Mobile\scripts\services\data\offlineCompositionService.js" />
     <Content Include="Content\Mobile\scripts\services\db\CompositionDataEntry.js" />
     <Content Include="Content\Mobile\scripts\services\db\DataEntry.js" />
     <Content Include="Content\Mobile\scripts\services\menu\menuModelService.js" />

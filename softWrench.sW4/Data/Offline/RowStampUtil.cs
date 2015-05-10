@@ -12,8 +12,7 @@ using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Offline {
-
-    class RowStampUtil {
+    public class RowStampUtil {
 
         public const string RowstampColumnName = "rowstamp";
 

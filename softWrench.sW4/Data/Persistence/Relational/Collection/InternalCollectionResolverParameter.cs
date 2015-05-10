@@ -12,16 +12,24 @@ using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.Collection {
     public class InternalCollectionResolverParameter {
+        public CollectionResolverParameters ExternalParameters { get; set; }
 
-        internal SlicedEntityMetadata EntityMetadata { get; set; }
         internal EntityAssociation CollectionAssociation { get; set; }
-        internal IDictionary<string, ApplicationCompositionSchema> CompositionSchemas { private get; set; }
-        internal IEnumerable<AttributeHolder> EntitiesList { get; set; }
+
+        internal SlicedEntityMetadata EntityMetadata { get { return ExternalParameters.SlicedEntity; } }
+
+        internal IDictionary<string, ApplicationCompositionSchema> CompositionSchemas {
+            get {
+                return ExternalParameters.CompositionSchemas;
+            }
+        }
+
+        internal IEnumerable<AttributeHolder> EntitiesList { get { return ExternalParameters.ParentEntities; } }
+
         internal ContextHolder Ctx { get; set; }
         internal IDictionary<string, EntityRepository.EntityRepository.SearchEntityResult> Results { get; set; }
-        internal long? Rowstamp { get; set; }
+        public long? Rowstamp { get; set; }
 
-        
 
 
         public ApplicationCompositionCollectionSchema CompositionSchema {
@@ -36,6 +44,6 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             }
         }
 
-        
+
     }
 }

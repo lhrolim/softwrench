@@ -338,9 +338,9 @@ function config(persistence, dialect) {
      */
     function rowToEntity(session, entityName, row, prefix) {
         prefix = prefix || '';
-        if (session.trackedObjects[row[prefix + "id"]]) { // Cached version
-            return session.trackedObjects[row[prefix + "id"]];
-        }
+//        if (session.trackedObjects[row[prefix + "id"]]) { // Cached version
+//            return session.trackedObjects[row[prefix + "id"]];
+//        }
         var tm = persistence.typeMapper;
         var rowMeta = persistence.getMeta(entityName);
         var ent = persistence.define(entityName); // Get entity

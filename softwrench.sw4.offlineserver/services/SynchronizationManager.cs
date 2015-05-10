@@ -45,33 +45,55 @@ namespace softwrench.sw4.offlineserver.services {
             IDictionary<CompleteApplicationMetadataDefinition, List<CompleteApplicationMetadataDefinition>> reverseCompositionMap
                 = new Dictionary<CompleteApplicationMetadataDefinition, List<CompleteApplicationMetadataDefinition>>();
 
-            var compositionMap = GetCompositionRowstampsDict(rowstampMap);
             foreach (var topLevelApp in topLevelApps) {
-                ResolveApplication(request, user, topLevelApp, result, rowstampMap, compositionMap);
+                ResolveApplication(request, user, topLevelApp, result, rowstampMap);
             }
 
 
             return result;
         }
 
-        private void ResolveApplication(SynchronizationRequestDto request, InMemoryUser user, CompleteApplicationMetadataDefinition topLevelApp, SynchronizationResultDto result, JObject rowstampMap,
-            IDictionary<string, long?> compositionMap) {
+        private void ResolveApplication(SynchronizationRequestDto request, InMemoryUser user, CompleteApplicationMetadataDefinition topLevelApp, SynchronizationResultDto result, JObject rowstampMap) {
+            var watch = Stopwatch.StartNew();
             //this will return sync schema
             var userAppMetadata = topLevelApp.ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(), user, ClientPlatform.Mobile);
 
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(userAppMetadata);
             var topLevelAppData = FetchData(entityMetadata, userAppMetadata);
 
-            var parameters = new CollectionResolverParameters() {
-                ApplicationMetadata = userAppMetadata,
-                ParentEntities = topLevelAppData,
-                RowstampMap = compositionMap
-            };
-            var compositionData = _resolver.ResolveCollections(parameters);
-            var filteredResults = FilterData(topLevelApp.ApplicationName, topLevelAppData, rowstampMap);
-            var appResultData = new SynchronizationApplicationResultData(topLevelApp.ApplicationName, filteredResults.NewData, filteredResults.ChangedData, filteredResults.DeletedIds);
 
+
+            var appResultData = FilterData(topLevelApp.ApplicationName, topLevelAppData, rowstampMap);
             result.AddTopApplicationData(appResultData);
+            Log.DebugFormat("SYNC:Finished handling top level app. Ellapsed {0}", LoggingUtil.MsDelta(watch));
+
+            HandleCompositions(userAppMetadata, appResultData, result, rowstampMap);
+        }
+
+        /// <summary>
+        /// Brings all composition data related to the main application passed as parameter (i.e only the ones whose parent entites are fetched).
+        /// 
+        /// If there´s no new parent entity, we can safely bring only compositions greater than the max rowstamp cached in the client side; 
+        /// 
+        /// If new entries appeared, however, for the sake of simplicity we won´t use this strategy since the whereclause might have changed in the process, causing loss of data
+        /// 
+        ///
+        /// </summary>
+        /// <param name="topLevelApp"></param>
+        /// <param name="appResultData"></param>
+        /// <param name="result"></param>
+        /// <param name="rowstampMap"></param>
+        private void HandleCompositions(ApplicationMetadata topLevelApp, SynchronizationApplicationResultData appResultData, SynchronizationResultDto result, JObject rowstampMap)
+        {
+            var watch =Stopwatch.StartNew();
+            
+            var compositionMap = GetCompositionRowstampsDict(rowstampMap);
+
+            var parameters = new OffLineCollectionResolver.OfflineCollectionResolverParameters(topLevelApp, appResultData.AllData, compositionMap, appResultData.NewdataMaps, appResultData.AlreadyExistingDatamaps);
+            var compositionData = _resolver.ResolveCollections(parameters);
+            
+
+
             foreach (var compositionDict in compositionData) {
                 var dict = compositionDict;
                 //lets assume no compositions can be updated, for the sake of simplicity
@@ -80,8 +102,10 @@ namespace softwrench.sw4.offlineserver.services {
                     newDataMaps.Add(new DataMap(dict.Key, list, dict.Value.IdFieldName));
                 }
 
-                result.AddCompositionData(SynchronizationApplicationResultData.CompositionRecords(topLevelApp.ApplicationName, newDataMaps, dict.Value.MaxRowstampReturned));
+                result.AddCompositionData(new SynchronizationApplicationResultData(dict.Key, newDataMaps, null));
             }
+            Log.DebugFormat("SYNC:Finished handling compositions. Ellapsed {0}", LoggingUtil.MsDelta(watch));
+
         }
 
         private IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request) {
@@ -108,14 +132,16 @@ namespace softwrench.sw4.offlineserver.services {
 
 
 
-        private ApplicationSyncResult FilterData(string applicationName, List<DataMap> topLevelAppData, JObject rowstampMap) {
+        private SynchronizationApplicationResultData FilterData(string applicationName, ICollection<DataMap> topLevelAppData, JObject rowstampMap) {
             var watch = Stopwatch.StartNew();
-            var result = new ApplicationSyncResult {
+
+            var result = new SynchronizationApplicationResultData {
                 AllData = topLevelAppData
             };
 
             if (rowstampMap == null || rowstampMap.Count == 0) {
                 //this should happen for first synchronization, of for "full-forced-synchronization"
+                result.NewdataMaps = topLevelAppData;
                 return result;
             }
             var idRowstampDict = ConvertJSONToDict(rowstampMap);
@@ -123,20 +149,21 @@ namespace softwrench.sw4.offlineserver.services {
                 var id = dataMap.Id;
                 if (!idRowstampDict.ContainsKey(id)) {
                     Log.DebugFormat("sync: adding inserteable item {0} for application {1}", dataMap.Id, applicationName);
-                    result.NewData.Add(dataMap);
+                    result.NewdataMaps.Add(dataMap);
                 } else {
+                    result.AlreadyExistingDatamaps.Add(dataMap);
                     var rowstamp = idRowstampDict[id];
-                    if (!Convert.ToInt64(rowstamp).Equals(dataMap.Approwstamp)) {
+                    if (!rowstamp.Equals(dataMap.Approwstamp.ToString())) {
                         Log.DebugFormat("sync: adding updateable item {0} for application {1}", dataMap.Id, applicationName);
-                        result.ChangedData.Add(dataMap);
+                        result.UpdatedDataMaps.Add(dataMap);
                     }
                     //removing so that the remaining items are the deleted ids --> avoid an extra loop
                     idRowstampDict.Remove(id);
                 }
             }
 
-            Log.DebugFormat("sync: {0} items to delete for application {1}", result.DeletedIds.Count(), applicationName);
-            result.DeletedIds = idRowstampDict.Keys;
+            Log.DebugFormat("sync: {0} items to delete for application {1}", result.DeletedRecordIds.Count(), applicationName);
+            result.DeletedRecordIds = idRowstampDict.Keys;
 
             Log.DebugFormat("sync: filter data for {0} ellapsed {1}", applicationName, LoggingUtil.MsDelta(watch));
             return result;
@@ -166,7 +193,7 @@ namespace softwrench.sw4.offlineserver.services {
             //Loop over the array
             foreach (dynamic row in obj.compositionmap) {
                 var application = row.Name;
-                result.Add(application, Convert.ToInt64(row.Value.Value));
+                result.Add(application, Int64.Parse(row.Value.Value));
             }
             return result;
         }
@@ -184,15 +211,6 @@ namespace softwrench.sw4.offlineserver.services {
             return dataMaps;
         }
 
-        class ApplicationSyncResult {
 
-
-
-            internal List<DataMap> ChangedData = new List<DataMap>();
-            internal readonly List<DataMap> NewData = new List<DataMap>();
-            internal IEnumerable<String> DeletedIds = new List<string>();
-            internal List<DataMap> AllData = new List<DataMap>();
-
-        }
     }
 }

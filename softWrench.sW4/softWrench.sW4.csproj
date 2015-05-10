@@ -155,7 +155,6 @@
     <Compile Include="Data\API\Response\SchemaChoosingDataResponse.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
     <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
-    <Compile Include="Data\Persistence\Relational\Collection\OffLineCollectionResolver.cs" />
     <Compile Include="Data\Persistence\WS\Commons\KongsbergIncidentCrudConnector.cs" />
     <Compile Include="Metadata\Applications\DataSet\BeringKeyInventoryIssueDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\BaseProblemDataSet.cs" />

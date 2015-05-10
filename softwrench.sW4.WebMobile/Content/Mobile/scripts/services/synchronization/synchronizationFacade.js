@@ -8,6 +8,7 @@
             var log = $log.get("synchronizationFacade#fullSync");
 
             log.info("init full synchronization process");
+            var start = new Date().getTime();
 
             var applications = metadataModelService.getApplicationNames();
 
@@ -36,7 +37,8 @@
                 }).catch(function (err) {
                     return $q.reject(false);
                 }).then(function (results) {
-                    log.info("finished full synchronization process");
+                    var end = new Date().getTime();
+                    log.info("finished full synchronization process. Ellapsed {0}".format(end-start));
                 });
 
         },

@@ -52,6 +52,7 @@
     <Compile Include="controller\MobileController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="dto\SynchronizationApplicationResultData.cs" />
+    <Compile Include="services\OffLineCollectionResolver.cs" />
     <Compile Include="services\SynchronizationManager.cs" />
     <Compile Include="dto\SynchronizationRequestDto.cs" />
     <Compile Include="dto\SynchronizationResultDto.cs" />

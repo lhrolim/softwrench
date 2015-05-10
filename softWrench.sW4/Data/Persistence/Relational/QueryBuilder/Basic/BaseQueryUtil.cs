@@ -1,9 +1,13 @@
-﻿using softWrench.sW4.Metadata;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Schema;
+using softwrench.sW4.Shared2.Data;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
-    class BaseQueryUtil {
+    public class BaseQueryUtil {
 
         public const string LiteralDelimiter = "'";
 
@@ -18,6 +22,29 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             return attribute.IsAssociated
                 ? attribute.Name
                 : string.Format("{0}.{1}", entityMetadata.Name, attribute.Name);
+        }
+
+        public static string GenerateInString(IEnumerable<string> items) {
+            var sb = new StringBuilder();
+            foreach (var item in items) {
+                sb.Append("'").Append(item).Append("'");
+                sb.Append(",");
+            }
+            return sb.ToString(0, sb.Length - 1);
+        }
+
+        public static string GenerateInString(IEnumerable<DataMap> items) {
+            var dataMaps = items as DataMap[] ?? items.ToArray();
+            if (items== null || !dataMaps.Any()) {
+                return null;
+            }
+
+            var sb = new StringBuilder();
+            foreach (var item in dataMaps) {
+                sb.Append("'").Append(item.Id).Append("'");
+                sb.Append(",");
+            }
+            return sb.ToString(0, sb.Length - 1);
         }
 
     }

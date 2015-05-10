@@ -23,3 +23,4 @@ entities.CompositionDataEntry.updateQueryPattern = "update CompositionDataEntry 
 
 
 entities.CompositionDataEntry.maxRowstampQueries = "select max(rowstamp) as rowstamp,application,id from CompositionDataEntry  group by application";
+entities.CompositionDataEntry.syncdeletionQuery = "delete from CompositionDataEntry where remoteId in ({0})";

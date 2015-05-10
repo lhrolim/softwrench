@@ -11,18 +11,21 @@ namespace softwrench.sW4.test.offline {
 
         public static string RowstampMapJson = @"{
             'items': 
-             [{
+             [
+               {
                     'id': '100',
                     rowstamp: '1000'
-                },{
+                },
+                {
                     'id': '101',
                     rowstamp: '1001'
                 }
              ],
             compositionmap: {
-                'worklog': '1000',
-                'attachments': '1001'
+               'worklog': '1000',
+                'attachments': '1001',
             }
+    
           }"
             ;
 

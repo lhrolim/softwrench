@@ -9,7 +9,7 @@
     return ids;
 };
 
-mobileServices.factory('dataSynchronizationService', function ($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService) {
+mobileServices.factory('dataSynchronizationService', function ($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService) {
 
     function createAppSyncPromise(firstInLoop, app, currentApps, compositionMap) {
         var log = $log.get("dataSynchronizationService#createAppSyncPromise");
@@ -61,19 +61,7 @@ mobileServices.factory('dataSynchronizationService', function ($http, $q, $log, 
                     queryArray.push(query);
                 }
             }
-
-            for (i = 0; i < compositionData.length; i++) {
-                application = compositionData[i];
-                newDataMaps = application.newdataMaps;
-                log.debug("inserting {0} new compositions".format(newDataMaps.length));
-                for (j = 0; j < newDataMaps.length; j++) {
-                    datamap = newDataMaps[j];
-                    id = persistence.createUUID();
-                    query = entities.CompositionDataEntry.insertionQueryPattern.format(datamap.application, JSON.stringify(datamap.fields), datamap.id, '' + datamap.approwstamp, id);
-                    queryArray.push(query);
-                }
-            }
-
+            queryArray = queryArray.concat(offlineCompositionService.generateSyncQueryArrays(compositionData));
             persistence.transaction(function (tx) {
                 return swdbDAO.executeQueries(queryArray, tx);
             });
@@ -118,7 +106,7 @@ mobileServices.factory('dataSynchronizationService', function ($http, $q, $log, 
                         var promise = createAppSyncPromise(i == 0, currentApps[i], currentApps, compositionMap);
                         httpPromises.push(promise);
                     }
-                    return httpPromises;
+                    return $q.all(httpPromises);
                 });
 
 

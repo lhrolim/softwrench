@@ -168,7 +168,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
 
 
-            persistence.debug = true;
+            persistence.debug = "true" == sessionStorage["sqldebug"];
             persistence.schemaSync();
 
         },
@@ -376,6 +376,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                     });
                 });
             } else {
+
                 persistence.executeQueriesSeq(tx, queries, function () {
                     deferred.resolve();
                 });

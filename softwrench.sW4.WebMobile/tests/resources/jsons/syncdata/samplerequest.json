@@ -9,6 +9,8 @@
             rowstamp: '1001'
         }
     ],
+
+
     compositionmap: {
         'worklog': "1000",
         'attachments': "1001",

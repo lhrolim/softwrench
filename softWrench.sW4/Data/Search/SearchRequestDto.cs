@@ -143,7 +143,7 @@ namespace softWrench.sW4.Data.Search {
             return this;
         }
 
-        public SearchRequestDto AppendSearchEntry(string searchParam, List<string> searchValue) {
+        public SearchRequestDto AppendSearchEntry(string searchParam, IEnumerable<string> searchValue) {
             return AppendSearchEntry(searchParam, searchValue.ToArray());
         }
 

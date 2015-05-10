@@ -49,41 +49,27 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             }
         }
 
-        public void ResolveCollections(ApplicationMetadata metadata, AttributeHolder mainEntity) {
-            var parameters = new CollectionResolverParameters {
-                ApplicationMetadata = metadata,
-                ParentEntities = new List<AttributeHolder> { mainEntity }
-            };
-            ResolveCollections(parameters);
-        }
 
         public void ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema>
             compositionSchemas, IEnumerable<AttributeHolder> attributeHolders) {
-
-            DoResolveCollections(compositionSchemas, entityMetadata, attributeHolders);
+            DoResolveCollections(new CollectionResolverParameters(compositionSchemas, entityMetadata, attributeHolders));
         }
 
         public void ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema>
             compositionSchemas, AttributeHolder attributeHolders) {
-            DoResolveCollections(compositionSchemas, entityMetadata, new List<AttributeHolder> { attributeHolders });
+            DoResolveCollections(new CollectionResolverParameters(compositionSchemas, entityMetadata, new List<AttributeHolder> { attributeHolders }));
         }
 
 
         public Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> ResolveCollections(CollectionResolverParameters parameters) {
-
-            var application = parameters.ApplicationMetadata;
-
-            var compositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
-            var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
-            var attributeHolders = parameters.ParentEntities;
-
-
-            return DoResolveCollections(compositionSchemas, entityMetadata, attributeHolders, parameters.RowstampMap);
+            return DoResolveCollections(parameters);
         }
 
-        private Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> DoResolveCollections(IDictionary<string, ApplicationCompositionSchema> compositionSchemas,
-            SlicedEntityMetadata entityMetadata,
-            IEnumerable<AttributeHolder> attributeHolders, IDictionary<string, long?> compositionRowstamps = null) {
+        private Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult> DoResolveCollections(CollectionResolverParameters parameters) {
+            var compositionSchemas = parameters.CompositionSchemas;
+            var compositionRowstamps = parameters.RowstampMap;
+            var entityMetadata = parameters.SlicedEntity;
+
             if (!compositionSchemas.Any()) {
                 return new Dictionary<string, EntityRepository.EntityRepository.SearchEntityResult>();
             }
@@ -111,10 +97,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 }
 
                 var internalParameter = new InternalCollectionResolverParameter {
-                    EntityMetadata = entityMetadata,
+                    ExternalParameters = parameters,
                     CollectionAssociation = collectionAssociation,
-                    CompositionSchemas = compositionSchemas,
-                    EntitiesList = attributeHolders,
                     Ctx = ctx,
                     Results = results,
                     Rowstamp = rowstamp
@@ -189,9 +173,6 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
 
 
             var lookupAttributes = collectionAssociation.Attributes;
-
-            var attributeHolders = parameter.EntitiesList;
-
             var searchRequestDto = new SearchRequestDto();
 
             var lookupContext = ContextLookuper.LookupContext();
@@ -203,18 +184,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             foreach (var lookupAttribute in lookupAttributes) {
                 if (lookupAttribute.From != null) {
                     matchingResultWrapper.AddKey(lookupAttribute.To);
-                    var searchValues = new List<string>();
-                    foreach (var entity in attributeHolders) {
-                        var key = matchingResultWrapper.FetchKey(entity);
-                        var searchValue = SearchUtils.GetSearchValue(lookupAttribute, entity);
-                        if (!String.IsNullOrWhiteSpace(searchValue) && lookupAttribute.To != null) {
-                            searchValues.Add(searchValue);
-                            key.AppendEntry(lookupAttribute.To, searchValue);
-                        }
-                    }
-                    if (searchValues.Any()) {
-                        searchRequestDto.AppendSearchEntry(lookupAttribute.To, searchValues);
-                    }
+
+                    BuildParentQueryConstraint(matchingResultWrapper, parameter, lookupAttribute, searchRequestDto);
                 } else if (lookupAttribute.Literal != null) {
                     //if the from is a literal, don´t bother with the entities values
                     searchRequestDto.AppendSearchEntry(lookupAttribute.To, lookupAttribute.Literal);
@@ -229,6 +200,23 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 searchRequestDto.SearchAscending = !orderByField.EndsWith("desc");
             }
             return searchRequestDto;
+        }
+
+        protected virtual void BuildParentQueryConstraint(CollectionMatchingResultWrapper matchingResultWrapper, InternalCollectionResolverParameter parameter, EntityAssociationAttribute lookupAttribute,
+            SearchRequestDto searchRequestDto) {
+            var searchValues = new HashSet<string>();
+            var attributeHolders = parameter.EntitiesList;
+            foreach (var entity in attributeHolders) {
+                var key = matchingResultWrapper.FetchKey(entity);
+                var searchValue = SearchUtils.GetSearchValue(lookupAttribute, entity);
+                if (!String.IsNullOrWhiteSpace(searchValue) && lookupAttribute.To != null) {
+                    searchValues.Add(searchValue);
+                    key.AppendEntry(lookupAttribute.To, searchValue);
+                }
+            }
+            if (searchValues.Any()) {
+                searchRequestDto.AppendSearchEntry(lookupAttribute.To, searchValues);
+            }
         }
 
         private void MatchResults(EntityRepository.EntityRepository.SearchEntityResult resultCollections,
