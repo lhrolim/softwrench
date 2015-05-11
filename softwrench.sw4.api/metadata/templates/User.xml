@@ -19,19 +19,23 @@
           <field attribute="username" label="Username" requiredexpression="true"/>
           <field attribute="password" label="Password" requiredexpression="true"/>
           <field attribute="#password" label="Retype Password" requiredexpression="true"/>
-          <field attribute="#firstName" label="First Name" requiredexpression="true"/>
-          <field attribute="#lastName" label="Last Name" requiredexpression="true"/>
-          <field attribute="#orgId" label="ORGID"/>
-          <field attribute="#siteId" label="Site ID"/>
+          <field attribute="#firstname" label="First Name" requiredexpression="true"/>
+          <field attribute="#lastname" label="Last Name" requiredexpression="true"/>
+          <field attribute="#orgid" label="ORGID"/>
+          <field attribute="#siteid" label="Site ID"/>
           <field attribute="#storeroom" label="Storeroom"/>
+          <field attribute="#emailid" hidden="true"/>
           <field attribute="#email" label="Email"/>
           <field attribute="#department" label="Department"/>
+          <field attribute="#phoneid" hidden="true"/>
           <field attribute="#phone" label="Phone"/>
           <field attribute="#language" label="Language"/>
-          <field attribute="isActive" label="Active">
+          <field attribute="isactive" label="Active">
             <renderer type="checkbox"/>
           </field>
           <field attribute="maximoPersonId" hidden="true"/>
+          <field attribute="#personid" hidden="true"/>
+          <field attribute="#personuid" hidden="true"/>
         </schema>
       </schemas>
     </application>

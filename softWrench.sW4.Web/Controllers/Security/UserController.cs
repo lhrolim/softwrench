@@ -118,8 +118,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
             }
         }
 
-        public User Get(string username, int id) {
-            User fetchUser = _facade.FetchUser(username, id);
+        public User Get(int id) {
+            User fetchUser = _facade.FetchUser(id);
             return fetchUser;
         }
 

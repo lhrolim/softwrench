@@ -230,7 +230,7 @@ namespace softWrench.sW4.Security.Services {
             SWDBHibernateDAO.GetInstance().Delete(user);
         }
 
-        public User FetchUser(string username, int id)
+        public User FetchUser(int id)
         {
             User swUSer = UserManager.GetUserById(id);
             return UserSyncManager.GetUserFromMaximoBySwUser(swUSer);

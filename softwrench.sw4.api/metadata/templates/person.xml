@@ -1,27 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
   <entities>
-    <entity name="localPerson" parententity="person" idAttribute="personuid" useridAttribute="personid">
+    <!--<entity name="localPerson" parententity="person" idAttribute="personuid" useridAttribute="personid">
       <attributes>
-        <attribute name="email" type="varchar" query="(select email.emailaddress from email where email.personid = !@personid)"/>
-        <attribute name="phone" type="varchar" query="(select phone.phonenum from phone where phone.personid = !@personid)"/>
+        <attribute name="emailid" type="bigint" query="(select email.emailid from email where email.personid = !@personid and isprimary = 1)"/>
+        <attribute name="email" type="varchar" query="(select email.emailaddress from email where email.personid = !@personid and isprimary = 1)"/>
+        <attribute name="phoneid" type="bigint" query="(select phone.phoneid from phone where phone.personid = !@personid and isprimary = 1)"/>
+        <attribute name="phone" type="varchar" query="(select phone.phonenum from phone where phone.personid = !@personid and isprimary = 1)"/>
       </attributes>
-    </entity>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWPERSON" />
+      </connectorParameters>
+    </entity>-->
   </entities>
 
   <applications>
-    <application name="person" title="Person" entity="localPerson">
+    <application name="person" title="Person" entity="person">
       <schemas>
         <schema id="detail" stereotype="detail" title="Person Detail">
           <field attribute="personid" hidden="true"/>
-          <field attribute="firstName" label="First Name" requiredexpression="true"/>
-          <field attribute="lastName" label="Last Name" requiredexpression="true"/>
+          <field attribute="personuid" hidden="true"/>
+          <field attribute="firstname" label="First Name" requiredexpression="true"/>
+          <field attribute="lastname" label="Last Name" requiredexpression="true"/>
           <field attribute="locationorg" label="Org ID"/>
           <field attribute="locationsite" label="Site ID"/>
           <field attribute="storeroom" label="Storeroom"/>
-          <field attribute="email" label="Email"/>
+          <field attribute="email_.emailid" hidden="true"/>
+          <field attribute="email_.emailaddress" label="Email"/>
           <field attribute="department" label="Department"/>
-          <field attribute="phone" label="Phone"/>
+          <field attribute="phone_.phoneid" hidden="true"/>
+          <field attribute="phone_.phonenum" label="Phone"/>
           <field attribute="langcode" label="Language"/>
         </schema>
       </schemas>

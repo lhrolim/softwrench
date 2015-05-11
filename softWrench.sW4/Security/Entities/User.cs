@@ -181,24 +181,15 @@ namespace softWrench.sW4.Security.Entities {
                 }
             }
 
-            //TODO: find a better solution, maybe 2 jsons from client
-            user.UserName = (String)jObject["userName"];
-            user.Person.FirstName = (String)jObject["person"]["firstName"];
-            user.Person.LastName = (String)jObject["person"]["lastName"];
-            user.Person.OrgId = (String)jObject["person"]["orgId"];
-            user.Person.SiteId = (String)jObject["person"]["siteId"];
-            user.IsActive = (bool)jObject["isActive"];
             user.Id = (int?)jObject["id"];
-            user.Person.Email = (String)jObject["person"]["email"];
-            user.Person.Department = (String)jObject["person"]["department"];
-            user.Person.Phone = (String)jObject["person"]["phone"];
-            user.Person.Language = (String)jObject["person"]["language"];
-            user.Person.Storeloc = (String)jObject["person"]["storeloc"];
+            user.UserName = (String)jObject["username"];
+            user.MaximoPersonId = (String)jObject["maximopersonid"];
+            user.IsActive = (bool)jObject["isactive"];
             var inputPassword = (String)jObject["password"];
             if (inputPassword != null) {
                 user.Password = AuthUtils.GetSha1HashData(inputPassword);
             }
-            user.MaximoPersonId = (String)jObject["maximopersonid"];
+            
 
             return user;
         }

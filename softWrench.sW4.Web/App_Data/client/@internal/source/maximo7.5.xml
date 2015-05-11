@@ -230,6 +230,7 @@
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="person" />
+        <connectorParameter key="integration_interface" value="SWPERSON" />
       </connectorParameters>
 
     </entity>
