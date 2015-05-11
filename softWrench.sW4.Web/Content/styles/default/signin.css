@@ -10,7 +10,7 @@
 
 .page-signin .form-signin {
     padding: 40px 15px;
-    background-color: rgba(1, 62, 91, 0.3);
+    background-color: rgba(1, 62, 91, 0.5);
 }
 
     .page-signin .form-signin .divider {
@@ -54,6 +54,11 @@
 
     .page-signin .form-signin .branding {
         margin: 0 auto;
+    }
+
+    .page-signin .form-signin .user-links {
+        font-size: 14px;
+        line-height: 1.5;
     }
 
     .page-signin .form-signin .cts-name {

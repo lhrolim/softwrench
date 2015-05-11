@@ -111,12 +111,22 @@
                                     <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset" />
                                 </div>
                                 <div class="user-links col-sm-6">
-                                    @*Use the following credentials to log in<br />
-                                        <b>End User: </b>enduser\password<br />
-                                        <b>Supervisor: </b>supervisor\password<br />
-                                        <b>Administrator: </b>administrator\password<br />*@
-                                    @*<a href="">Forgot Password?</a><br />
-                                        <a href="">Register Now</a>*@
+                                    @if (@Model.ClientName == "demo")
+                                    {
+                                        <div>
+                                            Use the following credentials to login:<br>
+                                            End User: <b>enduser\password</b><br>
+                                            Supervisor: <b>supervisor\password</b><br>
+                                            Administrator: <b>administrator\password</b>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        @*<div>
+                                            <a href="">Forgot Password?</a><br />
+                                            <a href="">Register Now</a>
+                                        </div>*@
+                                    }
                                 </div>
                             </div>
                             <div class="row">
