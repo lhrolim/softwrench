@@ -967,7 +967,7 @@
 
     <entity name="solution" idAttribute="solutionid" useridAttribute="solution">
       <attributes>
-        <!--<attribute name="allkeywords" type="varchar" required="true" />-->
+        <attribute name="allkeywords" type="varchar" required="false" query="(SELECT keyworddesc + ',' AS 'data()' FROM solnkeyword INNER JOIN keyword ON solnkeyword.keyword = keyword.keyword WHERE solnkeyword.solution = !@solution FOR XML PATH(''))" />
         <attribute name="solutionid" type="bigint" required="true" />
         <attribute name="solution" type="varchar" required="true" />
         <attribute name="description" type="varchar" required="false" />
@@ -2830,7 +2830,7 @@
         </schema>
 
         <detail stereotype="compositiondetail">
-          <field attribute="solution" label="Solution No" readonly="true"/>
+          <field attribute="solution" label="Solution No" readonly="true" />
           <field attribute="problemcode" label="Symptom:" />
           <field attribute="fr1code" label="Cause:" />
           <field attribute="fr2code" label="Resolution:" />
@@ -2841,7 +2841,7 @@
             <renderer type="default" params="inputsize=medium" />
           </field>
           <section id="statussection" />
-          <field label="Include on Slef-Service Center?" attribute="selfservaccess">
+          <field label="Self-Service Center?" attribute="selfservaccess">
             <renderer type="checkbox" params="inputsize=medium" />
           </field>
           <section>
@@ -2860,7 +2860,7 @@
             <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SlnClassStructureType">
               <renderer type="autocompleteclient" params="inputsize=medium" />
             </optionfield>
-            <field label="Keywords" attribute="allkeywords">
+            <field label="Keywords" attribute="allkeywords" readonly="true">
               <renderer type="default" params="inputsize=medium" />
             </field>
           </section>
