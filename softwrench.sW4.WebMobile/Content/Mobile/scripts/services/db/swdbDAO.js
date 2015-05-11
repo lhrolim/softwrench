@@ -56,6 +56,11 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 siteid: 'TEXT',
             });
 
+            entities.Configuration = persistence.define('Configuration', {
+                key: 'TEXT',
+                value: 'JSON',
+            });
+
 
             entities.Application = persistence.define('Application', {
                 application: 'TEXT',
@@ -153,7 +158,6 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             });
 
             entities.DataEntry.index(['application', 'remoteid'], { unique: true });
-            entities.DataEntry.index(['application', 'parentId']);
 
             entities.AssociationData.index(['application', 'value']);
 

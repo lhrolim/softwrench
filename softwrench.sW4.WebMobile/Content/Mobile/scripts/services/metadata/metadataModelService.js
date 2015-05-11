@@ -80,6 +80,17 @@
             return metadataModel.topLevelApplications;
         },
 
+        getApplicationByName: function (applicationName) {
+            var metadatas = this.getMetadatas();
+            for (var i = 0; i < metadatas.length; i++) {
+                var metadata = metadatas[i];
+                if (metadata.application == applicationName) {
+                    return metadata;
+                }
+            }
+            return null;
+        },
+
         getApplicationNames: function () {
             var appNames = [];
             var metadatas = this.getMetadatas();
@@ -118,6 +129,8 @@
                     return entity;
                 });
         },
+
+
 
 
 

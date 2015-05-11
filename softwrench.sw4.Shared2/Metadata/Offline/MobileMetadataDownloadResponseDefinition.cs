@@ -11,6 +11,8 @@ namespace softwrench.sW4.Shared2.Metadata.Offline {
 
         public String AssociationMetadatasJson { get; set; }
 
+        public String StatusColorsJSON { get; set; } 
+
 
     }
 }

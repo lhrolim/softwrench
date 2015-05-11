@@ -98,7 +98,7 @@ module.exports = function (grunt) {
     grunt.registerTask('prod', ['clean', 'bowercopy:prod', 'uglify']);
 
     grunt.registerTask('fulldev', ['clean', 'bowercopy:dev', 'tags']);
-    grunt.registerTask('quick_dev', ['bowercopy:dev']);
+    grunt.registerTask('quick_dev', ['bowercopy:dev','tags']);
 
 
 };

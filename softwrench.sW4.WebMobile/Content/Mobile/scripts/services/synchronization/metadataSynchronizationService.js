@@ -1,4 +1,4 @@
-﻿mobileServices.factory('metadataSynchronizationService', function ($http, $q, routeService, menuModelService, metadataModelService) {
+﻿mobileServices.factory('metadataSynchronizationService', function ($http, $q, routeService, menuModelService, metadataModelService,configurationService) {
     return {
 
         syncData: function (currentServerVersion) {
@@ -8,6 +8,7 @@
             httpPromise.then(function (metadatasResult) {
                 var serverMenu = JSON.parse(metadatasResult.data.menuJson);
                 var topLevelMetadatas = JSON.parse(metadatasResult.data.topLevelMetadatasJson);
+                var statusColorJson = JSON.parse(metadatasResult.data.statusColorsJSON);
                 var associationMetadatasJson = JSON.parse(metadatasResult.data.associationMetadatasJson);
                 var compositionMetadatasJson = JSON.parse(metadatasResult.data.compositionMetadatasJson);
 
@@ -15,9 +16,9 @@
                 var topLevelPromise = metadataModelService.updateTopLevelMetadata(topLevelMetadatas);
                 var associationPromise = metadataModelService.updateAssociationMetadata(associationMetadatasJson);
                 var compositionPromise = metadataModelService.updateCompositionMetadata(compositionMetadatasJson);
-
-
-                return $q.all([menuPromise, topLevelPromise, associationPromise, compositionPromise]).then(function (results) {
+                //TODO: server return a whole list of configs
+                var configServicePromise = configurationService.saveConfigs([{ key: 'statuscolor', value: statusColorJson }]);
+                return $q.all([menuPromise, topLevelPromise, associationPromise, compositionPromise, configServicePromise]).then(function (results) {
                     $q.when();
                 });
             }).catch(function (errordata) {

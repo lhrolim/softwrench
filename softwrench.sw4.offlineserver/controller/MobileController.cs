@@ -16,6 +16,7 @@ using softwrench.sw4.offlineserver.services;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Offline;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.offlineserver.controller {
 
@@ -36,12 +37,16 @@ namespace softwrench.sw4.offlineserver.controller {
 
         private readonly SynchronizationManager _syncManager;
 
+        private readonly StatusColorResolver _statusColorResolver;
+
         readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
-        public MobileController(SynchronizationManager syncManager) {
+        public MobileController(SynchronizationManager syncManager, StatusColorResolver statusColorResolver)
+        {
             this._syncManager = syncManager;
+            _statusColorResolver = statusColorResolver;
         }
 
         /// <summary>
@@ -65,13 +70,19 @@ namespace softwrench.sw4.offlineserver.controller {
             bool fromCache;
             var securedMenu = user.Menu(ClientPlatform.Mobile, out fromCache);
 
+            var statusColorJSONString="";
 
+            var statusColorJson = _statusColorResolver.FetchCatalogs();
+            if (statusColorJson != null) {
+                statusColorJSONString = statusColorJson.ToString(Newtonsoft.Json.Formatting.Indented);
+            }
 
             var response = new MobileMetadataDownloadResponseDefinition {
                 TopLevelMetadatasJson = JsonConvert.SerializeObject(securedMetadatas, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
                 AssociationMetadatasJson = JsonConvert.SerializeObject(associationApps, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
                 CompositionMetadatasJson = JsonConvert.SerializeObject(compositonApps, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
-                MenuJson = JsonConvert.SerializeObject(securedMenu, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings)
+                MenuJson = JsonConvert.SerializeObject(securedMenu, Newtonsoft.Json.Formatting.None, _jsonSerializerSettings),
+                StatusColorsJSON = statusColorJSONString
             };
 
             Log.InfoFormat("Download Metadata executed in {0}", LoggingUtil.MsDelta(watch));
