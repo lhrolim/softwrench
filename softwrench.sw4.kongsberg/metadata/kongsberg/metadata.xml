@@ -776,6 +776,9 @@
           <relationshipAttribute from="ticketuid" to="ownerid" primary="true"/>
           <relationshipAttribute to="ownertable" literal="INCIDENT" quoteLiteral="true"/>
         </relationship>
+        <relationship to="person" qualifier="reportedbyperson">
+          <relationshipAttribute from="reportedby" to="personid" primary="true"/>
+        </relationship>
         <relationship to="person" qualifier="affectedperson">
           <relationshipAttribute from="affectedperson" to="personid" primary="true"/>
         </relationship>
@@ -1306,7 +1309,6 @@
           <field attribute="createby" hidden="true"/>
           <field attribute="changeby" default="@username" hidden="true"/>
 
-
           <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" requiredexpression="true" hideDescription="true">
             <renderer type="lookup" params="inputsize=medium"/>
             <event type="afterchange" service="generalsrService" method="afterchangeowner"/>
@@ -1317,12 +1319,11 @@
             <event type="afterchange" service="generalsrService" method="afterchangeownergroup"/>
           </association>
 
-
           <section>
             <header displacement="ontop" label="User Information" params="fieldset=true"/>
-            <field attribute="reportedby" label="Reported By:" default="@username" readonly="true">
-              <renderer type="default" params="inputsize=medium"/>
-            </field>
+            <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" hideDescription="true">
+              <renderer type="lookup" params="columnlabel=Name;inputsize=medium"/>
+            </association>            
             <association label="Affected By:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc" hideDescription="true">
               <renderer type="lookup" params="columnlabel=Name;inputsize=medium"/>
             </association>
@@ -1425,7 +1426,7 @@
           <field label="Actual Start Date:" attribute="actualstart" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
           </field>
-          <field label="SLA Met?" attribute="slamet">
+          <field label="SLA Met?" attribute="slamet" enableexpression="false">
             <renderer type="checkbox" params="inputsize=small"/>
           </field>
           <field label="Accumulated Hold Time(HH:MM):" attribute="accumulatedholdtime" readonly="true">
@@ -1434,7 +1435,7 @@
           <field label="Actual End Date:" attribute="actualfinish" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small"/>
           </field>
-          <field label="Response SLO?" attribute="responseslo">
+          <field label="Response SLO?" attribute="responseslo" enableexpression="false">
             <renderer type="checkbox" params="inputsize=small"/>
           </field>
           <field label="Proactive?" attribute="proactive">
@@ -1693,9 +1694,11 @@
           </association>
           <section>
             <header displacement="ontop" label="User Information" params="fieldset=true" />
-            <field attribute="reportedby" label="Reported By:" default="@username" readonly="true">
-              <renderer type="default" params="inputsize=medium" />
-            </field>
+            
+            <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" hideDescription="true">
+              <renderer type="lookup" params="columnlabel=Name;inputsize=medium"/>
+            </association>
+            
             <association label="Affected By:" target="affectedperson" labelfield="person_.displayname" default="@username" hideDescription="true">
               <renderer type="lookup" params="inputsize=medium" />
             </association>
@@ -1791,7 +1794,7 @@
           <field label="Actual Start Date:" attribute="actualstart" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small" />
           </field>
-          <field label="SLA Met?" attribute="slamet">
+          <field label="SLA Met?" attribute="slamet" enableexpression="false">
             <renderer type="checkbox" params="inputsize=small" />
           </field>
           <field label="Accumulated Hold Time(HH:MM):" attribute="accumulatedholdtime" readonly="true">
@@ -1800,7 +1803,7 @@
           <field label="Actual End Date:" attribute="actualfinish" readonly="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;inputsize=small" />
           </field>
-          <field label="Response SLO?" attribute="responseslo">
+          <field label="Response SLO?" attribute="responseslo" enableexpression="false">
             <renderer type="checkbox" params="inputsize=small" />
           </field>
           <field label="Proactive?" attribute="proactive">
