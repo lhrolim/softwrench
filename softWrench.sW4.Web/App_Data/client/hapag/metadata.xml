@@ -1020,6 +1020,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section orientation="vertical">
             <header label="Platzierung im Netzwerk"/>
             <optionfield label="Soll der Server aus dem Internet erreichbar sein?" attribute="hasinternet">
+              <renderer type="RADIO"/>
               <option label="Yes" value="yes"/>
               <option label="No" value="No"/>
             </optionfield>
