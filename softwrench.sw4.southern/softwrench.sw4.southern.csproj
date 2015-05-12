@@ -7,8 +7,8 @@
     <ProjectGuid>{9A8C761C-3B9E-4C2C-AF3D-A3676010919B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>softwrench.sw4.deltadental</RootNamespace>
-    <AssemblyName>softwrench.sw4.deltadental</AssemblyName>
+    <RootNamespace>softwrench.sw4.southern</RootNamespace>
+    <AssemblyName>softwrench.sw4.southern</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
