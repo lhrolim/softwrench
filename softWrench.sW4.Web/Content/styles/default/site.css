@@ -13,13 +13,10 @@ body {
     clear: both;
 }
 
-.btn:focus {
-    outline: none;
-    outline-style: none;
-}
-
-input.ng-dirty.ng-invalid {
-    border-color: red
+input.ng-dirty.ng-invalid, .not-found:focus {
+    border-color: rgba(0, 0, 0, 0.45);
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);
 }
 
 .spinner {
@@ -29,10 +26,10 @@ input.ng-dirty.ng-invalid {
     z-index: 9999;
 }
 
+
 .container {
     padding: 0;
     width: 100%;
-        max-width: none;
 }
 
 .content .container {
@@ -160,7 +157,6 @@ input.ng-dirty.ng-invalid {
     messagesection .alerts {
         position: relative;
         z-index: 1000;
-        width: 100%;
     }
 
     messagesection .alert {
@@ -254,7 +250,7 @@ input.ng-dirty.ng-invalid {
 }
 
 .fa-question-circle {
-  color: #3276b1;
+    color: #3276b1;
 }
 /*JV - 10/08 - SWWEB-472 - Add yellow color CSS that can be used for icons*/
 
