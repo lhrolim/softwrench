@@ -9,6 +9,11 @@ body {
     font-size: 13px;
 }
 
+    .btn:focus {
+        outline: none;
+        outline-style: none;
+    }
+
 .clear {
     clear: both;
 }
@@ -26,10 +31,10 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     z-index: 9999;
 }
 
-
 .container {
     padding: 0;
     width: 100%;
+    max-width: none;
 }
 
 .content .container {
@@ -157,6 +162,7 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     messagesection .alerts {
         position: relative;
         z-index: 1000;
+        width: 100%;
     }
 
     messagesection .alert {
@@ -253,4 +259,3 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     color: #3276b1;
 }
 /*JV - 10/08 - SWWEB-472 - Add yellow color CSS that can be used for icons*/
-
