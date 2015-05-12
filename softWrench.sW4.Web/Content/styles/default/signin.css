@@ -13,6 +13,16 @@
     background-color: rgba(1, 62, 91, 0.5);
 }
 
+    .page-signin .form-signin .logo {
+        text-align: center;
+    }
+
+        .page-signin .form-signin .logo img {
+            max-width: 100%;
+            height: auto;
+            width: auto;
+        }
+
     .page-signin .form-signin .divider {
         height: 60px;
         width: 600px;
@@ -28,7 +38,7 @@
         border: #fff 2px solid;
         color: #fff;
         border-radius: 40px;
-        margin-left: 20px;
+        /*margin-left: 20px;*/
     }
 
         .page-signin .form-signin button[type="submit"]:hover {
@@ -48,7 +58,7 @@
             color: #fff;
         }
 
-    .page-signin .form-signin .logo {
+    .page-signin .form-signin .logo .main {
         padding: 0 20px;
     }
 
@@ -61,14 +71,8 @@
         line-height: 1.5;
     }
 
-    .page-signin .form-signin .cts-name {
+    .page-signin .form-signin .logo .byline {
         padding: 0 5px;
-    }
-
-    .page-signin .form-signin img.logo, .page-signin .form-signin img.cts-name {
-        max-width: 100%;
-        height: auto;
-        width: auto;
     }
 
     .page-signin .form-signin .text-danger {
@@ -95,7 +99,7 @@
         padding-top: 40px;
     }
 
-        .page-signin .logo {
+        .page-signin .logo .main {
             padding: 0;
         }
 

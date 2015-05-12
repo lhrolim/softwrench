@@ -32,16 +32,19 @@
     <div class="container">
         <div class="shadow">
             <div class="form-signin">
-                <div class="row text-center">
+                <div class="row logo">
                     <div class="col-sm-offset-1 col-sm-10">
-                        @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-main.png"))) {
-                            <img class="logo" src="~/Content/Images/@Model.ClientName/logo-main.png">
-                        } else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-main.png")))
+                        @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-main.png")))
                         {
-                            <img class="logo" src="~/Content/Customers/@Model.ClientName/images/logo-main.png">
+                            <img class="main" src="~/Content/Images/@Model.ClientName/logo-main.png">
                         }
-                        else {
-                            <img class="logo" src="~/Content/Images/logo-main.png">
+                        else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-main.png")))
+                        {
+                            <img class="main" src="~/Content/Customers/@Model.ClientName/images/logo-main.png">
+                        }
+                        else
+                        {
+                            <img class="main" src="~/Content/Images/logo-main.png">
                         }
                     </div>
                 </div>
@@ -75,20 +78,6 @@
                                     }
                                 }
                             }
-                            
-                            
-                            
-                            //else if (Model.Inactivity) {
-                                @*<script>*@
-                                  @*  $(document).ready(function () {
-                                        alert('Logged out \n');
-                                    });
-                                </script>*@
-                          @*  }*@
-                            
-                            
-                            
-                             
                             else if (Model.Forbidden) {
                                 <script>
                                     $(document).ready(function () {
@@ -96,7 +85,7 @@
                                     });
                                 </script>
                             }
-                            <div class="row">
+                            <div class="row login">
                                 <div class="col-sm-6">
                                     <input id="userName" name="userName" type="text" class="form-control" placeholder="Username" autocapitalize="off" autocorrect="off" autofocus>
                                     <div id="userNameMessage" class="alert alert-warning hapag-login-validation" style="display: none;">
@@ -129,25 +118,25 @@
                                     }
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row submit-button">
                                 <button class="btn col-sm-2" type="submit" id="btnLogin"><span class="glyphicon glyphicon-log-in "></span>&emsp;Login</button>
                             </div>
                         </form>
                     </div>
                     <div class="row divider bottom"></div>
-                    <div class="row text-center">
+                    <div class="row logo">
                         <div class="col-sm-offset-1 col-sm-10">
                             @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-byline.png")))
                             {
-                                <img class="cts-name" src="~/Content/Images/@Model.ClientName/logo-byline.png">
+                                <img class="byline" src="~/Content/Images/@Model.ClientName/logo-byline.png">
                             }
                             else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-byline.png")))
                             {
-                                <img class="cts-name" src="~/Content/Customers/@Model.ClientName/images/logo-byline.png">
+                                <img class="byline" src="~/Content/Customers/@Model.ClientName/images/logo-byline.png">
                             }
                             else
                             {
-                                <img class="cts-name" src="~/Content/Images/logo-byline.png">
+                                <img class="byline" src="~/Content/Images/logo-byline.png">
                             }
                         </div>
                     </div>

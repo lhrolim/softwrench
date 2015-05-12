@@ -1,4 +1,13 @@
-﻿.page-signin .form-signin .logo img {
+﻿.page-signin .shadow {
+    border: 3px #fff solid;
+    border-radius: 5px;
+}
+
+.page-signin .form-signin {
+  border-radius: 5px;
+}
+
+.page-signin .form-signin .logo img {
     max-width: 90%;
 }
 
