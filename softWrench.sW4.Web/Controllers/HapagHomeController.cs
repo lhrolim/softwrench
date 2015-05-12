@@ -62,6 +62,13 @@ namespace softWrench.sW4.Web.Controllers {
             _i18Nresolver.I18NValue("dashboard.actionrequiredopenrequests_tooltip",
                 c.GetDefaultI18NValue(key, true)));
 
+
+            _dashboards[c.ActionRequiredForOpenRequestsOffering] = DashboardDefinition.Get5ElementsInstance(
+           key, "offering", "dashboardList",
+           _i18Nresolver.I18NValue("dashboard.actionrequiredopenrequests", c.GetDefaultI18NValue(key)),
+           _i18Nresolver.I18NValue("dashboard.actionrequiredopenrequests_tooltip",
+               c.GetDefaultI18NValue(key, true)));
+
             key = c.EUOpenRequests;
             _dashboards[key] = DashboardDefinition.Get5ElementsInstance(
                  key, "servicerequest", "dashboardList",
@@ -116,6 +123,11 @@ namespace softWrench.sW4.Web.Controllers {
         [HttpGet]
         public GenericResponseResult<IList<DashboardDefinition>> XITCHome() {
             return GetFromDict(c.ActionRequiredForOpenRequests, c.ActionRequiredForOpenIncidents, c.OpenImacs);
+        }
+
+        [HttpGet]
+        public GenericResponseResult<IList<DashboardDefinition>> OfferingHome() {
+            return GetFromDict(c.ActionRequiredForOpenRequestsOffering);
         }
 
         [HttpGet]

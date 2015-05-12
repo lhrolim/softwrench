@@ -81,6 +81,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             resultDict[HapagPersonGroupConstants.Tom] = FindRole(FunctionalRole.Tom);
             resultDict[HapagPersonGroupConstants.Itom] = FindRole(FunctionalRole.Itom);
             resultDict[HapagPersonGroupConstants.Change] = FindRole(FunctionalRole.Change);
+            resultDict[HapagPersonGroupConstants.Offering] = FindRole(FunctionalRole.Offering);
             resultDict[HapagPersonGroupConstants.SSO] = FindRole(FunctionalRole.Sso);
             resultDict[HapagPersonGroupConstants.Tui] = FindRole(FunctionalRole.Tui);
             return resultDict;

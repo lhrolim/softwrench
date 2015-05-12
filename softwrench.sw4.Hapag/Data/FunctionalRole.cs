@@ -8,6 +8,7 @@
         Itom,
         Ad,
         Change,
+        Offering,
         Sso,
         Tui
     }

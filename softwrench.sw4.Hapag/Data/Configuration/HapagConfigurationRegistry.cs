@@ -34,6 +34,7 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
             _dao.ExecuteSql("delete from conf_propertyvalue where definition_id = '/_whereclauses/imac/whereclause' and module = 'tom,itom'");
             CreateBaseWhereClauses();
             CreateEndUserWhereClause();
+            CreateOfferingWhereClause();
             CreateLocalITCWhereClauses();
             CreateXITCWhereClauses();
             CreateTomAndITomWhereClauses();
@@ -48,7 +49,9 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
 
         }
 
-
+        private void CreateOfferingWhereClause() {
+            _wcFacade.Register("offering", qc.OfferingITCDashboard(), MetadataId(dc.ActionRequiredForOpenRequestsOffering));
+        }
 
 
         private void CreateBaseWhereClauses() {
@@ -118,7 +121,7 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
             _wcFacade.Register("servicerequest", qc.SrITCDashboard(), MetadataIdForModules(dc.ActionRequiredForOpenRequests, fr.Tom, fr.Itom));
             _wcFacade.Register("incident", qc.IncidentITCDashboard(), MetadataIdForModules(dc.ActionRequiredForOpenIncidents, fr.Tom, fr.Itom));
             _wcFacade.Register("imac", qc.ImacsForTomITOM(), ForModules(fr.Tom));
-            
+
         }
 
 
@@ -201,7 +204,7 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
                 Module = "xitc"
             };
             _wcFacade.Register("incident", "@reportWhereClauseProvider.HardwareRepairReportWhereClauseWithR17", HardwareReportCondition);
-                        
+
             HardwareReportCondition = new WhereClauseRegisterCondition {
                 Alias = "hardwarerepair",
                 AppContext = new ApplicationLookupContext { Schema = "hardwarerepair" },
@@ -253,7 +256,7 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
                 Module = Conditions.AnyCondition
             };
             _wcFacade.Register("persongroupview", qc.DefaultITCReportQuery, ITCReportCondition);
-            
+
             var ITCReportComplementCondition = new WhereClauseRegisterCondition {
                 Alias = "itcreportregionandarea",
                 AppContext = new ApplicationLookupContext { Schema = "itcreportregionandarea" },

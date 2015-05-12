@@ -28,8 +28,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </attributes>
     </entity>
 
+    <entity name="offering" idAttribute="ticketid" parententity="sr" whereclause="(offering.classificationid is null or offering.classificationid not like '8151%') and (offering.TEMPLATEID = 'HLCDEO')"></entity>
+
     <entity name="SR" idAttribute="ticketid" whereclause="((sr.classificationid is null or sr.classificationid not like '8151%') and (SR.TEMPLATEID is null or 
-            (SR.TEMPLATEID not in ('HLCDECHG','HLCDECHTUI','HLCDECHSSO') )))">
+            (SR.TEMPLATEID not in ('HLCDECHG','HLCDECHTUI','HLCDECHSSO','HLCDEO') )))">
       <attributes>
         <attribute name="hlagpluspcustomer" type="varchar" required="false" query="ref:pluspcustomer"/>
         <attribute name="hlagaffectedperson" type="varchar" required="false" query="ref:affectedpersoncustom"/>
@@ -918,6 +920,166 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </schemas>
     </application>
 
+    <application entity="offering" name="offering" title="Offering">
+      <schemas>
+        <list>
+          <field attribute="ticketid" label="Request#">
+            <renderer type="default" params="minwidth=80px;maxwidth=80px" />
+          </field>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="minwidth=151px;maxwidth=151px;excelwidth=50" />
+          </field>
+          <field attribute="asset_.description" label="Asset">
+            <renderer type="default" params="minwidth=160px;maxwidth=160px;excelwidth=25" />
+          </field>
+          <field attribute="reportdate" label="Reported Date &amp; Time">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=true;exporttoexcel=false" />
+          </field>
+          <field attribute="#2reportdate" label="Reported Date" hidden="true">
+            <renderer type="datetime" params="format=dd/MM/yyyy;showtime=false;exporttoexcel=true;excelwidth=20" />
+          </field>
+          <field attribute="#3reportdate" label="Reported Time" hidden="true">
+            <renderer type="datetime" params="format=HH:mm;showtime=false;exporttoexcel=true;excelwidth=20" />
+          </field>
+          <field attribute="hlagpluspcustomer" label="Site Id">
+            <renderer type="default" params="minwidth=80px;maxwidth=80px;excelwidth=15" />
+          </field>
+          <field attribute="hlagaffectedperson" label="Affected Person">
+            <renderer type="default" params="minwidth=110px;maxwidth=110px;excelwidth=20" />
+          </field>
+          <field attribute="status" label="Status">
+            <renderer type="default" params="minwidth=100px;maxwidth=100px;excelwidth=15" />
+          </field>
+          <field attribute="#color" label="">
+            <renderer type="color" params="grid=servicerequest;column=status"/>
+          </field>
+          <properties>
+            <property key="list.click.service" value="oferringservice.openDetail"/>
+          </properties>
+        </list>
+
+        <schema abstract="true" id="server" stereotype="detail" title="New OFFERING REQUEST - Server">
+          <properties>
+            <property key="nextschema.schemaid" value="creationSummary"/>
+            <property key="addassociationlabels" value="true"/>
+            <property key="popup.window.headertitle" value="New OFFERING REQUEST - Server"/>
+          </properties>
+          <field label="Gewünschter Produktionstermin" attribute="startdate">
+            <renderer type="datetime"/>
+          </field>
+          <field label="Geplantes Produktionsende" attribute="enddate">
+            <renderer type="datetime"/>
+          </field>
+          <optionfield label="Betriebsart / LPAR-Typ" attribute="lpartype">
+            <option label="Production 7x24" value="prod247"/>
+            <option label="Production5x12" value="prod125"/>
+            <option label="Test 5x12" value="test125"/>
+          </optionfield>
+
+          <optionfield label="CPU" attribute="cpu">
+            <option label="1" value="1"/>
+            <option label="2" value="2"/>
+            <option label="3" value="3"/>
+            <option label="4" value="4"/>
+            <option label="5" value="5"/>
+            <option label="6" value="6"/>
+            <option label="7" value="7"/>
+            <option label="8" value="8"/>
+          </optionfield>
+
+          <optionfield label="Memory" attribute="memory">
+            <option label="1" value="1"/>
+            <option label="2" value="2"/>
+            <option label="3" value="3"/>
+            <option label="4" value="4"/>
+            <option label="5" value="5"/>
+            <option label="6" value="6"/>
+            <option label="7" value="7"/>
+            <option label="8" value="8"/>
+            <option label="9" value="9"/>
+            <option label="10" value="10"/>
+            <option label="11" value="11"/>
+            <option label="12" value="12"/>
+            <option label="13" value="13"/>
+            <option label="14" value="14"/>
+            <option label="15" value="15"/>
+            <option label="16" value="16"/>
+          </optionfield>
+
+          <field label="Disk Size für Applikationen (zusätzlich zur Grundinstallation auf Partiton C)" attribute="disksizec"/>
+          <field label="Disk (E:)" attribute="disksizee"/>
+          <field label="HostName" attribute="hostname"/>
+          <section id="specificdata"/>
+          <optionfield label="K-Fall Kategorie" attribute="kfallcat">
+            <option label="Testsystem - nicht K-Fall relevant" value="none"/>
+            <option label="2" value="2"/>
+            <option label="3" value="3"/>
+            <option label="4" value="4"/>
+          </optionfield>
+
+          <section orientation="vertical">
+            <header label="Platzierung im Netzwerk"/>
+            <optionfield label="Soll der Server aus dem Internet erreichbar sein?" attribute="hasinternet">
+              <option label="Yes" value="yes"/>
+              <option label="No" value="No"/>
+            </optionfield>
+
+            <section resourcepath="/Content/templates/hapag/embeddedpdfoffering.html" showexpression="hasinternet!=null"/>
+            <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="hasinternet!=null"/>
+            <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="hasinternet!=null"/>
+            <field attribute="comments" label="Weitere Anmerkungen:" default="Falls Sie weiter allgemeine Anmerkungen haben, tragen Sie diese bitte hier ein." showexpression="hasinternet!=null">
+              <renderer type="textarea"/>
+            </field>
+
+          </section>
+
+
+        </schema>
+
+
+        <schema id="serverwindows" parentschema="server" stereotype="detail" title="Windows">
+          <section id="specificdata">
+            <optionfield label="OS" attribute="os">
+              <option label="Windows Server 2008 Standard Edition" value="2008se"/>
+              <option label="Windows Server 2008 Enterprise Edition" value="2008ee"/>
+              <option label="Windows Server 2012 Standard Edition" value="2012se"/>
+            </optionfield>
+            <optionfield label="IIS" attribute="iis">
+              <option label="Yes" value="yes"/>
+              <option label="No" value="no"/>
+            </optionfield>
+          </section>
+
+        </schema>
+        <schema id="serverlinux" parentschema="server" stereotype="detail" title="Linux">
+
+          <section id="specificdata">
+            <optionfield label="OS" attribute="os">
+              <option label="SUSE Linux Enterprise Server 11" value="suse11"/>
+            </optionfield>
+          </section>
+        </schema>
+
+
+        <schema id="dashboardList">
+          <field attribute="reportdate" label="Creation Date &amp; Time">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
+          </field>
+          <field attribute="ticketid" label="Request #"/>
+          <field attribute="description" label="Summary"/>
+          <field attribute="affectedperson_.personid" hidden="true"/>
+          <field attribute="affectedperson_personglaccount_.glaccount" hidden="true"/>
+          <field attribute="asset_assetglaccount_.glaccount" hidden="true"/>
+          <properties>
+            <property key="list.click.mode" value="output"/>
+            <property key="list.click.popup" value="browserwindow"/>
+          </properties>
+        </schema>
+
+
+      </schemas>
+    </application>
+
     <application entity="SR" name="servicerequest" title="Service Request">
       <components>
         <componentdisplayable id="generaloutlookassetsection">
@@ -1299,7 +1461,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <properties>
             <property key="oncrudloadevent.detail" value="srnetworkservice.onload"/>
           </properties>
-          
+
           <section id="abstractSection">
             <reference id="generaloutlookassetsection"/>
             <field attribute="#crosstestresult" label="Crosstest result (if applicable):">
@@ -1327,7 +1489,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <field label="Used proxy ('ping proxy' on the user\'s PC will show this):" attribute="#usedproxy"/>
               <field label="Do you receive any error messages? If so please provide an example:" attribute="#errormessages"/>
             </section>
-            
+
             <section id="network_lan">
               <header displacement="ontop" label="LAN issue" params="fieldset=true"/>
               <field label="One or more clients do not have connection to the network: " attribute="#network_lan_label" readonly="true">
@@ -1335,12 +1497,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               </field>
               <field label="How many clients are affected?" attribute="#clientsaffected">
                 <renderer type="numericinput"/>
-                </field>
+              </field>
               <optionfield label="Connection of the client:" attribute="clientconnection">
                 <renderer type="COMBO" params="setdefaultvalue=false"/>
-                 <option label="LAN" value="lan"/>
-                 <option label="WLAN" value="wlan"/>
-                 <option label="LAN/WLAN" value="lan/wlan"/>
+                <option label="LAN" value="lan"/>
+                <option label="WLAN" value="wlan"/>
+                <option label="LAN/WLAN" value="lan/wlan"/>
               </optionfield>
               <optionfield label="Do the clients have an IP address?" attribute="isaddressavailable">
                 <renderer type="COMBO" params="setdefaultvalue=false"/>
@@ -1349,26 +1511,26 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               </optionfield>
               <field label="Please give some examples:" attribute="#clientipaddress" showexpression="@isaddressavailable == 'YES'"/>
             </section>
-          
-        
-          <section id="network_vpn">
-            <header displacement="ontop" label="VPN issue" params="fieldset=true"/>
-            <field label="Did the user try to connect via VPN: " attribute="#network_vpn_label" readonly="true">
+
+
+            <section id="network_vpn">
+              <header displacement="ontop" label="VPN issue" params="fieldset=true"/>
+              <field label="Did the user try to connect via VPN: " attribute="#network_vpn_label" readonly="true">
                 <renderer type="label"/>
               </field>
-            <optionfield label="Are you getting the authorisation page?" attribute="authpageseen">
-              <renderer type="COMBO" params="setdefaultvalue=false"/>
-              <option label="YES" value="YES"/>
-              <option label="NO" value="NO"/>
-            </optionfield>
-            <optionfield label="Is the login successful?" attribute="loginsuccess">
+              <optionfield label="Are you getting the authorisation page?" attribute="authpageseen">
                 <renderer type="COMBO" params="setdefaultvalue=false"/>
-              <option label="YES" value="YES"/>
-              <option label="NO" value="NO"/>
-            </optionfield>
+                <option label="YES" value="YES"/>
+                <option label="NO" value="NO"/>
+              </optionfield>
+              <optionfield label="Is the login successful?" attribute="loginsuccess">
+                <renderer type="COMBO" params="setdefaultvalue=false"/>
+                <option label="YES" value="YES"/>
+                <option label="NO" value="NO"/>
+              </optionfield>
               <field label="Do you receive any error messages? If so please provide an example:" enableexpression="@loginsuccess == 'YES'" attribute="#vpnerrormessage"/>
-          </section>
             </section>
+          </section>
         </schema>
 
 
@@ -1869,8 +2031,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <field hidden="true" attribute="buildingOriginal" label="Building"/>
             <field hidden="true" attribute="floorOriginal" label="Floor"/>
             <field hidden="true" attribute="roomOriginal" label="Room"/>
-            
-            
+
+
             <optionfield label="Building" attribute="building" providerattribute="buildingFromLocation" dependantfields="fromlocation" qualifier="buildingOriginal_new"/>
             <optionfield label="Floor" attribute="floor" providerattribute="floorFromLocation" dependantfields="building" qualifier="floorOriginal_new"/>
             <optionfield label="Room" attribute="room" providerattribute="roomFromLocation" dependantfields="floor" qualifier="roomOriginal_new"/>
@@ -1899,7 +2061,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <field hidden="true" attribute="buildingOriginal" label="Building"/>
             <field hidden="true" attribute="floorOriginal" label="Floor"/>
             <field hidden="true" attribute="roomOriginal" label="Room"/>
-            
+
             <optionfield label="Building" attribute="building" providerattribute="buildingToLocation" dependantfields="toitc" qualifier="buildingOriginal_new"/>
             <optionfield label="Floor" attribute="floor" providerattribute="floorToLocation" dependantfields="building" qualifier="floorOriginal_new"/>
             <optionfield label="Room" attribute="room" providerattribute="roomToLocation" dependantfields="floor" qualifier="roomOriginal_new"/>
@@ -2819,7 +2981,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </field>
 
           <field label="Owned by" attribute="alclistreport_.siteid" hidden="true"/>
-            
+
           <field label="Owned by" attribute="ownedby">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
@@ -3482,7 +3644,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <schema id="detail" stereotype="compositiondetail">
           <field label="Description" attribute="longdescription_.ldtext"/>
         </schema>
-        
+
       </schemas>
     </application>
 
