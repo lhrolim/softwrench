@@ -13,7 +13,7 @@
         border: 2px solid #4eaad9;
     }
 
-        .page-signin .form-signin .logo {
+        .page-signin .form-signin .logo.main img {
             margin-top: 20px;
             padding: 0;
             box-shadow: 0 0 80px 20px rgba(255, 255, 255, 1.0);

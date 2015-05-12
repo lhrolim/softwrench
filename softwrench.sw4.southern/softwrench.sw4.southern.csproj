@@ -42,7 +42,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web_content\southern\images\branding.png" />
     <Content Include="web_content\southern\images\logo-byline.png" />
     <Content Include="web_content\southern\images\logo-main.png" />
     <Content Include="web_content\southern\styles\branding.css" />

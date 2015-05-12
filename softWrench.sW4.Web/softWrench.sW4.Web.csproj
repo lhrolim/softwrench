@@ -430,9 +430,6 @@
     <Content Include="Content\Images\pagination-previous.png" />
     <Content Include="Content\Images\scottsdale\scottsdale.png" />
     <Content Include="Content\Images\signin.jpg" />
-    <Content Include="Content\Images\southern\branding.png" />
-    <Content Include="Content\Images\southern\logo-byline.png" />
-    <Content Include="Content\Images\southern\logo-main.png" />
     <Content Include="Content\Images\tree-leaf.png" />
     <Content Include="Content\Images\tree-node-collapsed.png" />
     <Content Include="Content\Images\tree-node-expanded.png" />
@@ -654,7 +651,6 @@
     <Content Include="Content\styles\scottsdale\signin.css" />
     <Content Include="Content\styles\scottsdale\site.css" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
-    <Content Include="Content\styles\southern\branding.css" />
     <Content Include="Content\styles\tva\signin.css" />
     <Content Include="Content\styles\tva\site.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />

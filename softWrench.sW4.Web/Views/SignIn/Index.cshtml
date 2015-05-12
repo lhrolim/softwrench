@@ -32,19 +32,19 @@
     <div class="container">
         <div class="shadow">
             <div class="form-signin">
-                <div class="row logo">
+                <div class="row logo main">
                     <div class="col-sm-offset-1 col-sm-10">
                         @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-main.png")))
                         {
-                            <img class="main" src="~/Content/Images/@Model.ClientName/logo-main.png">
+                            <img src="~/Content/Images/@Model.ClientName/logo-main.png">
                         }
                         else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-main.png")))
                         {
-                            <img class="main" src="~/Content/Customers/@Model.ClientName/images/logo-main.png">
+                            <img src="~/Content/Customers/@Model.ClientName/images/logo-main.png">
                         }
                         else
                         {
-                            <img class="main" src="~/Content/Images/logo-main.png">
+                            <img src="~/Content/Images/logo-main.png">
                         }
                     </div>
                 </div>
@@ -124,19 +124,19 @@
                         </form>
                     </div>
                     <div class="row divider bottom"></div>
-                    <div class="row logo">
+                    <div class="row logo byline">
                         <div class="col-sm-offset-1 col-sm-10">
                             @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-byline.png")))
                             {
-                                <img class="byline" src="~/Content/Images/@Model.ClientName/logo-byline.png">
+                                <img src="~/Content/Images/@Model.ClientName/logo-byline.png">
                             }
                             else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-byline.png")))
                             {
-                                <img class="byline" src="~/Content/Customers/@Model.ClientName/images/logo-byline.png">
+                                <img src="~/Content/Customers/@Model.ClientName/images/logo-byline.png">
                             }
                             else
                             {
-                                <img class="byline" src="~/Content/Images/logo-byline.png">
+                                <img src="~/Content/Images/logo-byline.png">
                             }
                         </div>
                     </div>

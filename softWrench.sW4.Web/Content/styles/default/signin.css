@@ -58,7 +58,7 @@
             color: #fff;
         }
 
-    .page-signin .form-signin .logo .main {
+    .page-signin .form-signin .logo.main img {
         padding: 0 20px;
     }
 
@@ -71,7 +71,7 @@
         line-height: 1.5;
     }
 
-    .page-signin .form-signin .logo .byline {
+    .page-signin .form-signin .logo.byline img {
         padding: 0 5px;
     }
 
@@ -99,7 +99,7 @@
         padding-top: 40px;
     }
 
-        .page-signin .logo .main {
+        .page-signin .logo.main img {
             padding: 0;
         }
 
