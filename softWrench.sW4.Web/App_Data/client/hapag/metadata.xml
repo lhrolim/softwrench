@@ -964,15 +964,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="addassociationlabels" value="true"/>
             <property key="popup.window.headertitle" value="New OFFERING REQUEST - Server"/>
           </properties>
-          <field label="Gewünschter Produktionstermin" attribute="startdate">
+          <field label="Requested production date" attribute="startdate">
             <renderer type="datetime"/>
           </field>
-          <field label="Geplantes Produktionsende" attribute="enddate">
+          <field label="Planned production end date" attribute="enddate">
             <renderer type="datetime"/>
           </field>
-          <optionfield label="Betriebsart / LPAR-Typ" attribute="lpartype">
+          <optionfield label="Mode of Operation / LPAR-Type" attribute="lpartype">
             <option label="Production 7x24" value="prod247"/>
-            <option label="Production5x12" value="prod125"/>
+            <option label="Production 5x12" value="prod125"/>
             <option label="Test 5x12" value="test125"/>
           </optionfield>
 
@@ -1006,20 +1006,20 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <option label="16" value="16"/>
           </optionfield>
 
-          <field label="Disk Size für Applikationen (zusätzlich zur Grundinstallation auf Partiton C)" attribute="disksizec"/>
+          <field label="Disk Size for applicationen (in addition to the basic installation on partition C)" attribute="disksizec"/>
           <field label="Disk (E:)" attribute="disksizee"/>
-          <field label="HostName" attribute="hostname"/>
+          <field label="Host Name" attribute="hostname"/>
           <section id="specificdata"/>
-          <optionfield label="K-Fall Kategorie" attribute="kfallcat">
-            <option label="Testsystem - nicht K-Fall relevant" value="none"/>
+          <optionfield label="Disaster Recovery Category" attribute="kfallcat">
+            <option label="Test system - not relevant for disaster recovery" value="none"/>
             <option label="2" value="2"/>
             <option label="3" value="3"/>
             <option label="4" value="4"/>
           </optionfield>
 
           <section orientation="vertical">
-            <header label="Platzierung im Netzwerk"/>
-            <optionfield label="Soll der Server aus dem Internet erreichbar sein?" attribute="hasinternet">
+            <header label="Location in network"/>
+            <optionfield label="Should the server be reachable from the Internet?" attribute="hasinternet">
               <renderer type="RADIO" params="setdefaultvalue=false"/>
               <option label="Yes" value="yes"/>
               <option label="No" value="No"/>
@@ -1028,7 +1028,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <section resourcepath="/Content/templates/hapag/embeddedpdfoffering.html" showexpression="@hasinternet!=null"/>
             <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="@hasinternet!=null"/>
             <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="@hasinternet!=null"/>
-            <field attribute="comments" label="Weitere Anmerkungen:" default="Falls Sie weiter allgemeine Anmerkungen haben, tragen Sie diese bitte hier ein." showexpression="@hasinternet!=null">
+            <field attribute="comments" label="Additional comments:" default="If you have general comments please note them here?" showexpression="@hasinternet!=null">
               <renderer type="textarea"/>
             </field>
 
