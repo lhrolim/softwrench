@@ -1020,15 +1020,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section orientation="vertical">
             <header label="Platzierung im Netzwerk"/>
             <optionfield label="Soll der Server aus dem Internet erreichbar sein?" attribute="hasinternet">
-              <renderer type="RADIO"/>
+              <renderer type="RADIO" params="setdefaultvalue=false"/>
               <option label="Yes" value="yes"/>
               <option label="No" value="No"/>
             </optionfield>
 
-            <section resourcepath="/Content/templates/hapag/embeddedpdfoffering.html" showexpression="hasinternet!=null"/>
-            <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="hasinternet!=null"/>
-            <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="hasinternet!=null"/>
-            <field attribute="comments" label="Weitere Anmerkungen:" default="Falls Sie weiter allgemeine Anmerkungen haben, tragen Sie diese bitte hier ein." showexpression="hasinternet!=null">
+            <section resourcepath="/Content/templates/hapag/embeddedpdfoffering.html" showexpression="@hasinternet!=null"/>
+            <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="@hasinternet!=null"/>
+            <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="@hasinternet!=null"/>
+            <field attribute="comments" label="Weitere Anmerkungen:" default="Falls Sie weiter allgemeine Anmerkungen haben, tragen Sie diese bitte hier ein." showexpression="@hasinternet!=null">
               <renderer type="textarea"/>
             </field>
 
