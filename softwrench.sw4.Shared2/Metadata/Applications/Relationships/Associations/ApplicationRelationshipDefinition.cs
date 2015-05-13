@@ -11,6 +11,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         public string From { get; set; }
         public string Label { get; set; }
         public virtual string RendererType { get; set; }
+        public abstract IDictionary<string, string> RendererParameters { get; }
         public string Type { get { return GetType().Name; } }
         public abstract string Role { get; }
         public string ShowExpression { get; set; }

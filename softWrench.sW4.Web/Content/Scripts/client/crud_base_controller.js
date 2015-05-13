@@ -80,8 +80,11 @@ function BaseController($scope, i18NService, fieldService,commandService) {
         if (!$scope.isVerticalOrientation()) {
             return false;
         }
-        if (fieldMetadata.rendererType == "TABLE" || fieldMetadata.rendererType == "label") {
+        if (fieldMetadata.rendererType == "TABLE") {
             //workaround because compositions are appending "" as default label values, but we dont want it!
+            return false;
+        }
+        if (fieldMetadata.rendererType == "label" && "true" == fieldMetadata.rendererParameters["overflow"]) {
             return false;
         }
         return fieldMetadata.label !=null || (fieldMetadata.header != null && fieldMetadata.header.displacement != 'ontop');

@@ -46,6 +46,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             set { _renderer = value; }
         }
 
+
+
         public ApplicationSection() {
 
         }
@@ -84,6 +86,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public string RendererType { get { return null; } }
+        public IDictionary<string, string> RendererParameters { get { return Renderer.ParametersAsDictionary(); } }
         public string Type { get { return GetType().Name; } }
         public string Orientation { get { return OrientationEnum.ToString().ToLower(); } }
         public string Role { get { return ApplicationName + "." + Id; } }

@@ -926,6 +926,14 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
     </application>
 
     <application entity="offering" name="offering" title="Offering">
+
+      <components>
+        <componentdisplayable id="servicelabel">
+          <field attribute="#service" label="Service" default="@prop:servicename" readonly="true" qualifier="nodescription">
+            <renderer type="label" />
+          </field>
+        </componentdisplayable>
+      </components>
       <schemas>
         <list>
           <field attribute="ticketid" label="Request#">
@@ -970,66 +978,72 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="popup.window.headertitle" value="New OFFERING REQUEST - Server"/>
             <property key="optionfield.donotusefirstoptionasdefault" value="true"/>
           </properties>
-          <field label="Requested production date" attribute="startdate" required="true">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;mindateexpression=@minstartdate"/>
-          </field>
-          <field label="Planned production end date" attribute="enddate" required="true">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;mindateexpression=@startdate"/>
-          </field>
-          <optionfield label="Mode of Operation / LPAR-Type" attribute="lpartype">
-            <option label="Production 7x24" value="prod247"/>
-            <option label="Production 5x12" value="prod125"/>
-            <option label="Test 5x12" value="test125"/>
-          </optionfield>
 
-          <optionfield label="CPU" attribute="cpu">
-            <renderer type="COMBO" params="append=vCPU"/>
-            <option label="1" value="1"/>
-            <option label="2" value="2"/>
-            <option label="3" value="3"/>
-            <option label="4" value="4"/>
-            <option label="5" value="5"/>
-            <option label="6" value="6"/>
-            <option label="7" value="7"/>
-            <option label="8" value="8"/>
-          </optionfield>
+          <section id="requestdetails" parameters="detaildescription=">
 
-          <optionfield label="Memory" attribute="memory">
-            <renderer type="COMBO" params="append=GB"/>
-            <option label="1" value="1"/>
-            <option label="2" value="2"/>
-            <option label="3" value="3"/>
-            <option label="4" value="4"/>
-            <option label="5" value="5"/>
-            <option label="6" value="6"/>
-            <option label="7" value="7"/>
-            <option label="8" value="8"/>
-            <option label="9" value="9"/>
-            <option label="10" value="10"/>
-            <option label="11" value="11"/>
-            <option label="12" value="12"/>
-            <option label="13" value="13"/>
-            <option label="14" value="14"/>
-            <option label="15" value="15"/>
-            <option label="16" value="16"/>
-          </optionfield>
+            <reference id="servicelabel"/>
 
-          <field label="Disk Size for applicationen (in addition to the basic installation on partition C)" attribute="disksizec">
-            <renderer type="default" params="append=GB"/>
-          </field>
-          <field label="Disk (E:)" attribute="disksizee">
-            <renderer type="default" params="append=GB"/>
-          </field>
-          <field label="Host Name" attribute="hostname" required="true" >
-            <renderer type="default" params="prepend=KFDC;maxlength=4"/>
-          </field>
-          <section id="specificdata"/>
-          <optionfield label="Disaster Recovery Category" attribute="kfallcat">
-            <option label="Test system - not relevant for disaster recovery" value="none"/>
-            <option label="2" value="2"/>
-            <option label="3" value="3"/>
-            <option label="4" value="4"/>
-          </optionfield>
+            <field label="Requested production date" attribute="startdate" required="true">
+              <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;mindateexpression=@minstartdate"/>
+            </field>
+            <field label="Planned production end date" attribute="enddate" required="true">
+              <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;mindateexpression=@startdate"/>
+            </field>
+            <optionfield label="Mode of Operation / LPAR-Type" attribute="lpartype">
+              <option label="Production 7x24" value="prod247"/>
+              <option label="Production 5x12" value="prod125"/>
+              <option label="Test 5x12" value="test125"/>
+            </optionfield>
+
+            <optionfield label="CPU" attribute="cpu">
+              <renderer type="COMBO" params="append=vCPU"/>
+              <option label="1" value="1"/>
+              <option label="2" value="2"/>
+              <option label="3" value="3"/>
+              <option label="4" value="4"/>
+              <option label="5" value="5"/>
+              <option label="6" value="6"/>
+              <option label="7" value="7"/>
+              <option label="8" value="8"/>
+            </optionfield>
+
+            <optionfield label="Memory" attribute="memory">
+              <renderer type="COMBO" params="append=GB"/>
+              <option label="1" value="1"/>
+              <option label="2" value="2"/>
+              <option label="3" value="3"/>
+              <option label="4" value="4"/>
+              <option label="5" value="5"/>
+              <option label="6" value="6"/>
+              <option label="7" value="7"/>
+              <option label="8" value="8"/>
+              <option label="9" value="9"/>
+              <option label="10" value="10"/>
+              <option label="11" value="11"/>
+              <option label="12" value="12"/>
+              <option label="13" value="13"/>
+              <option label="14" value="14"/>
+              <option label="15" value="15"/>
+              <option label="16" value="16"/>
+            </optionfield>
+
+            <field label="Disk Size for applicationen (in addition to the basic installation on partition C)" attribute="disksizec">
+              <renderer type="default" params="append=GB"/>
+            </field>
+            <field label="Disk (E:)" attribute="disksizee">
+              <renderer type="default" params="append=GB"/>
+            </field>
+            <field label="Host Name" attribute="hostname" required="true" >
+              <renderer type="default" params="prepend=KFDC;maxlength=4"/>
+            </field>
+            <section id="specificdata"/>
+            <optionfield label="Disaster Recovery Category" attribute="kfallcat">
+              <option label="Test system - not relevant for disaster recovery" value="none"/>
+              <option label="2" value="2"/>
+              <option label="3" value="3"/>
+              <option label="4" value="4"/>
+            </optionfield>
+          </section>
 
           <section orientation="vertical" id="networklocationdata">
             <header label="Location in network"/>
@@ -1045,7 +1059,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <renderer type="textarea"/>
             </field>
 
-            <field attribute="explanation" label="Information: Folgende Leistungen sind im Factory-Ansatz enthalten:"  showexpression="@hasinternet!=null" readonly="true">
+            <field attribute="explanation" label="Information: Folgende Leistungen sind im Factory-Ansatz enthalten:"  showexpression="@hasinternet!=null" readonly="true" qualifier="nodescription">
               <renderer type="textarea" params="color=red"/>
             </field>
 
@@ -1056,6 +1070,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
 
         <schema id="serverwindows" parentschema="server" stereotype="detail" title="Windows">
+          <properties>
+            <property key="servicename" value="Windows"/>
+          </properties>
           <section id="specificdata">
             <optionfield label="OS" attribute="os">
               <option label="Windows Server 2008 Standard Edition" value="2008se"/>
@@ -1070,7 +1087,9 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
         </schema>
         <schema id="serverlinux" parentschema="server" stereotype="detail" title="Linux">
-
+          <properties>
+            <property key="servicename" value="Linux"/>
+          </properties>
           <section id="specificdata">
             <optionfield label="OS" attribute="os">
               <option label="SUSE Linux Enterprise Server 11" value="suse11"/>
@@ -1493,7 +1512,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <section id="network_wan">
               <header displacement="ontop" params="fieldset=true" label="WAN issue"/>
               <field label="In case of Internet issues answer the following:" attribute="#network_wan_label" readonly="true">
-                <renderer type="label"/>
+                <renderer type="label" params="overflow=true"/>
               </field>
               <field label="Is the internet access slow or down? (time loading specific URL)" attribute="#internetslowdown">
                 <renderer type="textarea"/>
@@ -1511,7 +1530,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <section id="network_lan">
               <header displacement="ontop" label="LAN issue" params="fieldset=true"/>
               <field label="One or more clients do not have connection to the network: " attribute="#network_lan_label" readonly="true">
-                <renderer type="label"/>
+                <renderer type="label" params="overflow=true"/>
               </field>
               <field label="How many clients are affected?" attribute="#clientsaffected">
                 <renderer type="numericinput"/>
@@ -1534,7 +1553,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <section id="network_vpn">
               <header displacement="ontop" label="VPN issue" params="fieldset=true"/>
               <field label="Did the user try to connect via VPN: " attribute="#network_vpn_label" readonly="true">
-                <renderer type="label"/>
+                <renderer type="label" params="overflow=true"/>
               </field>
               <optionfield label="Are you getting the authorisation page?" attribute="authpageseen">
                 <renderer type="COMBO" params="setdefaultvalue=false"/>

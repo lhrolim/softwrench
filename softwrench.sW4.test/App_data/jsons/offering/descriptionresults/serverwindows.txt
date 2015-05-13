@@ -1,0 +1,18 @@
+﻿
+=====================================================================
+Requested production date:   20/05/2015 10:30
+Planned production end date:   28/05/2015 22:50
+Mode of Operation / LPAR-Type:   Production 7x24
+CPU:   1vCPU
+Memory:   2GB
+Disk Size for applicationen (in addition to the basic installation on partition C):   111GB
+Disk (E:):   120GB
+Host Name:   KFDCtest
+Disaster Recovery Category:   Test system - not relevant for disaster recovery
+=====================================================================
+Location in network
+
+Should the server be reachable from the Internet?:   Yes
+Location in network (VLAN)::   test
+Additional comments::   If you have general comments please note them here?
+=====================================================================

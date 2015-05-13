@@ -84,6 +84,7 @@
     <Compile Include="Data\Persistence\Relational\DataConstraintWhereBuilderTest.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryFromBuilderTest.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QuerySelectBuilderTest.cs" />
+    <Compile Include="Data\Persistence\WS\Ism\OfferingDescriptionHandlerTest.cs" />
     <Compile Include="Data\Persistence\WS\Ism\ImacDescriptionHandlerTest.cs" />
     <Compile Include="Data\Relationship\CompositionExpanderHelperTest.cs" />
     <Compile Include="Data\Search\ApplicationSearchTest.cs" />
@@ -166,6 +167,9 @@
     <Content Include="App_data\jsons\imac\descriptionresults\move_other_location.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_data\jsons\offering\descriptionresults\serverwindows.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="App_data\jsons\workorder\test1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -237,6 +241,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="App_data\jsons\imac\update_asset_data.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="App_data\jsons\offering\serverwindows.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />

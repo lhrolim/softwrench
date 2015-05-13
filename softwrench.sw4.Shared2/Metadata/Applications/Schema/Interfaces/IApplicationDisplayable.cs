@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces {
     /// <summary>
@@ -9,6 +10,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces {
         string ToString();
 
         string RendererType { get; }
+
+        IDictionary<string, string> RendererParameters { get; }
 
         string Type { get; }
         string Role { get; }

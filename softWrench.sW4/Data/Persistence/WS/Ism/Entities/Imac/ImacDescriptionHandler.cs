@@ -71,7 +71,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
                     continue;
                 }
 
-                if (!jsonObject.ContainsAttribute(attributeDisplayable.Attribute) && !jsonObject.ContainsAttribute("#" +attributeDisplayable.Attribute + "_label")) {
+                if (!jsonObject.ContainsAttribute(attributeDisplayable.Attribute) && !jsonObject.ContainsAttribute("#" + attributeDisplayable.Attribute + "_label")) {
                     continue;
                 }
 
@@ -84,14 +84,18 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
 
 
                 if (attributeDisplayable.Attribute == "assetCommodities") {
-                    HandleAssetCommodities(sb, (string)jsonObject.GetAttribute("#"+attributeDisplayable.Attribute+"_label"),
+                    HandleAssetCommodities(sb, (string)jsonObject.GetAttribute("#" + attributeDisplayable.Attribute + "_label"),
                         attributeDisplayable);
                     continue;
                 }
 
+
                 var oldValue = GetValue(jsonObject, attributeDisplayable);
+                oldValue = HandlePrePend(oldValue as string, attributeDisplayable);
 
                 var newValue = LocateNewValue(attributeDisplayable.Attribute, jsonObject, displayables);
+                newValue = HandlePrePend(newValue as string, attributeDisplayable);
+
 
                 if (attributeDisplayable.Qualifier != null &&
                     attributeDisplayable.Qualifier.EndsWith(NewDescriptionQualifier)) {
@@ -103,6 +107,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
                 sb.AppendLine(AppendField(attributeDisplayable.Label, oldValue, newValue));
             }
             return sb.ToString();
+        }
+
+        private static string HandlePrePend(string value, IApplicationAttributeDisplayable attributeDisplayable) {
+            if (value == null) {
+                return value;
+            }
+            if (attributeDisplayable.RendererParameters.ContainsKey("prepend")) {
+                value = attributeDisplayable.RendererParameters["prepend"] + value;
+            }
+            if (attributeDisplayable.RendererParameters.ContainsKey("append")) {
+                value = value + attributeDisplayable.RendererParameters["append"];
+            }
+            return value;
         }
 
         private static object GetValue(CrudOperationData jsonObject, IApplicationAttributeDisplayable attributeDisplayable) {

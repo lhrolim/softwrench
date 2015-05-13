@@ -19,7 +19,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
         }
 
         protected override string HandleTitle(ServiceIncident webServiceObject, CrudOperationData jsonObject, string schemaId) {
-            var kfdc = "kfdc"+jsonObject.GetAttribute("hostname");
+            var kfdc = "kfdc" + jsonObject.GetAttribute("hostname");
             if (IsWindowsTemplate(jsonObject)) {
                 return "Offering new virtual Windows Server " + kfdc;
             }
@@ -31,7 +31,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
 
         protected override void HandleLongDescription(ServiceIncident webServiceObject, CrudOperationData entity, ApplicationMetadata metadata, bool update) {
             var problem = webServiceObject.Problem;
-            problem.Description = HapagOfferingLongDescriptionHandler.ParseSchemaBasedLongDescription(entity, metadata.Schema.SchemaId);
+            problem.Description = HapagOfferingLongDescriptionHandler.ParseSchemaBasedLongDescription(entity);
         }
 
         protected override string GetAffectedPerson(CrudOperationData entity) {

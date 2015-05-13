@@ -45,6 +45,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             }
         }
 
+        public override IDictionary<string, string> RendererParameters { get { return new Dictionary<string, string>(); } }
+
         public override string Role {
             get { return From + "." + Relationship; }
         }

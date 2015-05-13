@@ -25,6 +25,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
 
 
         public string RendererType { get { return null; } }
+        public IDictionary<string, string> RendererParameters { get { return new Dictionary<string, string>(); } }
         public string Type { get { return typeof(ApplicationTabDefinition).Name; } }
         public string Role { get { return ApplicationName + "." + Id; } }
         public string ShowExpression { get; set; }

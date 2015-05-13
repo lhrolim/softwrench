@@ -28,7 +28,7 @@
             </legend>
 
 
-            <div ng-class="getFieldClass(fieldMetadata)" ng-if="fieldMetadata.isReadOnly && fieldMetadata.rendererType !='label'" ng-switch on="fieldMetadata.rendererType">
+            <div ng-class="getFieldClass(fieldMetadata)" ng-if="fieldMetadata.isReadOnly" ng-switch on="fieldMetadata.rendererType">
 
                 <input type="text" ng-switch-when="datetime"
                        ng-model="datamap[fieldMetadata.attribute]"
