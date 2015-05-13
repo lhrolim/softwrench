@@ -1025,7 +1025,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <option label="4" value="4"/>
           </optionfield>
 
-          <section orientation="vertical">
+          <section orientation="vertical" id="networklocationdata">
             <header label="Location in network"/>
             <optionfield label="Should the server be reachable from the Internet?" attribute="hasinternet">
               <renderer type="RADIO" params="setdefaultvalue=false"/>
@@ -1034,8 +1034,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             </optionfield>
 
             <section resourcepath="/Content/templates/hapag/embeddedofferingpdf.html" showexpression="@hasinternet!=null"/>
-            <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="@hasinternet!=null"/>
-            <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="@hasinternet!=null"/>
+            <field attribute="networkvlan" label="Location in network (VLAN):" showexpression="@hasinternet!=null"/>
             <field attribute="comments" label="Additional comments:" default="If you have general comments please note them here?" showexpression="@hasinternet!=null">
               <renderer type="textarea"/>
             </field>

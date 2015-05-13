@@ -948,5 +948,29 @@ combodropdown:{
 	selected:ausgewählt
 }
 
-
-
+offering: {
+	startdate:Gewünschter Produktionstermin,
+	enddate:Geplantes Produktionsende,
+	lpartype: {
+		_label:Betriebsart / LPAR-Typ,
+		prod247:Produktionssystem 7x24,
+		prod247:Produktionssystem 5x12,
+		test125:Testsystem 5x12
+	},
+	disksizec:Disk Size für Applikationen (zusätzlich zur Grundinstallation auf Partiton C),
+	hostname:Hostname,
+	kfallcat: {
+		_label:K-Fall Kategorie,
+		none:Testsystem - not K-Fall relevant
+	},
+	networklocationdata: {
+		_header:Platzierung im Netzwerk
+	},
+	hasinternet: {
+		_label:Soll der Server aus dem Internet erreichbar sein?,
+		yes:Ja,
+		No:Nein
+	},
+	networkvlan:Netzwerkplatzierung (VLAN),
+	comments:Weitere Anmerkungen
+}
