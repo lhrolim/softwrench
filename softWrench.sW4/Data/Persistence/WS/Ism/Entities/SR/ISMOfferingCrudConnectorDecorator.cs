@@ -12,46 +12,10 @@ using System;
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
     class IsmOfferingCrudConnectorDecorator : BaseISMTicketDecorator {
 
-        public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
-            base.BeforeCreation(maximoTemplateData);
-            var jsonObject = (CrudOperationData)maximoTemplateData.OperationData;
-            var webServiceObject = (ServiceIncident)maximoTemplateData.IntegrationObject;
-        }
+
 
         private Boolean IsWindowsTemplate(CrudOperationData data) {
             return "serverwindows".Equals(data.ApplicationMetadata.Schema.SchemaId);
-        }
-
-
-
-        protected override Metrics PopulateMetrics(ServiceIncident webServiceObject, CrudOperationData jsonObject) {
-            var metrics = base.PopulateMetrics(webServiceObject, jsonObject);
-            metrics.ProblemOccurredDateTime = (DateTime)jsonObject.GetAttribute("affecteddate");
-            return metrics;
-        }
-
-
-
-
-
-
-        protected override ISMServiceEntities.Problem PopulateProblem(CrudOperationData jsonObject, ServiceIncident webServiceObject,
-            string entityName, Boolean update, string schemaId) {
-            var problem = base.PopulateProblem(jsonObject, webServiceObject, entityName, update, schemaId);
-
-            var customer = jsonObject.GetAttribute("asset_.pluspcustomer") as string;
-            if (customer == null) {
-                //for general and outlook templates, there might be only an itc asset selected
-                //lets fallback to this
-                customer = jsonObject.GetAttribute("2asset_.pluspcustomer") as string;
-            }
-            if (customer == null) {
-                //if no asset was selected, get the customer attribute from the Affected Person
-                customer = jsonObject.GetAttribute("person_.pluspcustomer") as string;
-            }
-            problem.CustomerID = customer;
-
-            return problem;
         }
 
         protected override string HandleTitle(ServiceIncident webServiceObject, CrudOperationData jsonObject, string schemaId) {
