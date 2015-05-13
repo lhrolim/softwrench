@@ -324,7 +324,6 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
         private WhereClauseRegisterCondition MetadataIdForModules(String metadataId, params FunctionalRole[] modules) {
             return new WhereClauseRegisterCondition {
                 Alias = metadataId,
-                UserProfile = ProfileType.Itc.GetName(),
                 AppContext = new ApplicationLookupContext { MetadataId = metadataId },
                 Module = String.Join(",", modules.Select(m => m.GetName()))
             };
