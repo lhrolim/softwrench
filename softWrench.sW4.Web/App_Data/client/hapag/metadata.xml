@@ -965,10 +965,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="popup.window.headertitle" value="New OFFERING REQUEST - Server"/>
           </properties>
           <field label="Gewünschter Produktionstermin" attribute="startdate">
-            <renderer type="datetime"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;mindateexpression=@minstartdate"/>
           </field>
           <field label="Geplantes Produktionsende" attribute="enddate">
-            <renderer type="datetime"/>
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;mindateexpression=@startdate"/>
           </field>
           <optionfield label="Betriebsart / LPAR-Typ" attribute="lpartype">
             <option label="Production 7x24" value="prod247"/>
@@ -1025,7 +1025,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <option label="No" value="No"/>
             </optionfield>
 
-            <section resourcepath="/Content/templates/hapag/embeddedpdfoffering.html" showexpression="@hasinternet!=null"/>
+            <section resourcepath="/Content/templates/hapag/embeddedofferingpdf.html" showexpression="@hasinternet!=null"/>
             <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="@hasinternet!=null"/>
             <field attribute="networkvlan" label="Netzwerkplatzierung (VLAN):" showexpression="@hasinternet!=null"/>
             <field attribute="comments" label="Weitere Anmerkungen:" default="Falls Sie weiter allgemeine Anmerkungen haben, tragen Sie diese bitte hier ein." showexpression="@hasinternet!=null">

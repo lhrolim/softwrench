@@ -261,6 +261,7 @@
     <Compile Include="Controllers\ExcelController.cs" />
     <Compile Include="Controllers\ExtendedDataController.cs" />
     <Compile Include="Controllers\Log\LogAdminController.cs" />
+    <Compile Include="Controllers\Offering\OfferingController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ReportFilterController.cs" />
     <Compile Include="Controllers\Security\MakeSWAdminController.cs" />
@@ -724,6 +725,7 @@
     <Content Include="Content\Templates\crud\crud_input_fields.html" />
     <Content Include="Content\Templates\crud\crud_output_fields.html" />
     <Content Include="Content\Templates\directives\printSection.html" />
+    <Content Include="Content\Templates\hapag\embeddedofferingpdf.html" />
     <Content Include="Content\Templates\hapag\embeddedpdf.html" />
     <Content Include="Content\Templates\hapag\Actionentry.html" />
     <Content Include="Content\Templates\hapag\createfromasset.html" />

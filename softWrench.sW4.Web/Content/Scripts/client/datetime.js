@@ -1,6 +1,6 @@
 var app = angular.module('sw_layout');
 
-app.directive('dateTime', function ($timeout, formatService) {
+app.directive('dateTime', function ($timeout, formatService, expressionService) {
 
     function parseBooleanValue(attrValue) {
         return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() == "true";
@@ -10,6 +10,25 @@ app.directive('dateTime', function ($timeout, formatService) {
         return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() == "true";
     }
 
+    function evaluateMinStartDate(attrs, scope, element) {
+        var datamap = scope.datamap;
+        var allowpast = parseBooleanValue(attrs.allowPast);
+        var minStartDateExpression = attrs.mindateexpression;
+        if (minStartDateExpression != null) {
+            var startdate = expressionService.evaluate(minStartDateExpression, datamap);
+            var variablesToWatch = expressionService.getVariablesForWatch(minStartDateExpression);
+            $scope.$watchCollection(variablesToWatch, function (newVal, oldVal) {
+                if (newVal != oldVal) {
+                    element.datepicker().startdate = expressionService.evaluate(minStartDateExpression, datamap);
+                }
+            });
+            return startdate;
+        } else {
+            return allowpast ? -Infinity : '+0d';
+        }
+    }
+
+
     return {
         restrict: 'A',
         require: '?ngModel',
@@ -17,7 +36,7 @@ app.directive('dateTime', function ($timeout, formatService) {
 
 
             if (!ngModel) {
-//                console.log('no model, returning');
+                //                console.log('no model, returning');
                 return;
             }
 
@@ -29,7 +48,7 @@ app.directive('dateTime', function ($timeout, formatService) {
             var showMeridian = attrs.showAmpm == undefined ? undefined : attrs.showAmpm.toLowerCase() == "true";
             var istimeOnly = showTime && !showDate;
             var isReadOnly = attrs.readonly == undefined ? false : (attrs.readonly);
-
+            var datamap = scope.datamap;
             datetimeclassHandler(istimeOnly);
 
             $timeout(function () {
@@ -40,10 +59,10 @@ app.directive('dateTime', function ($timeout, formatService) {
                     element.val(value);
                     if (originalAttribute != undefined) {
                         //this is useful on sections, like samelinepickers.html
-                        scope.datamap[originalAttribute] = value;
+                        datamap[originalAttribute] = value;
                     }
-                    else if (scope.datamap != undefined && scope.fieldMetadata != undefined) {
-                        scope.datamap[scope.fieldMetadata.attribute] = value;
+                    else if (datamap != undefined && scope.fieldMetadata != undefined) {
+                        datamap[scope.fieldMetadata.attribute] = value;
                     }
                     ngModel.$render();
                 }
@@ -51,6 +70,13 @@ app.directive('dateTime', function ($timeout, formatService) {
             });
 
             if (dateFormat != '' && dateFormat != undefined) {
+
+                var allowfuture = parseBooleanValue(attrs.allowFuture);
+                var allowpast = parseBooleanValue(attrs.allowPast);
+                var startDate = allowpast ? -Infinity : '+0d';
+                var endDate = allowfuture ? Infinity : '+0d';
+                var minStartDateExpression = attrs.minDateexpression;
+
                 if (showTime) {
                     var futureOnly = (attrs.futureOnly != undefined && attrs.futureOnly.toLowerCase() == "true");
                     //                attrs.startDate = futureOnly ? '+0d' : -Infinity;
@@ -60,24 +86,47 @@ app.directive('dateTime', function ($timeout, formatService) {
                         showMeridian = dateFormat.startsWith('MM');
                     }
 
+                    if (minStartDateExpression != null) {
+                        startDate = expressionService.evaluate(minStartDateExpression, datamap);
+                        startDate = Date.parse(formatService.formatDate(startDate, attrs.dateFormat));
+                        variablesToWatch = expressionService.getVariablesForWatch(minStartDateExpression);
+                        scope.$watchCollection(variablesToWatch, function (newVal, oldVal) {
+                            if (newVal != oldVal) {
+                                startDate = expressionService.evaluate(minStartDateExpression, datamap);
+                                startDate = formatService.formatDate(startDate, attrs.dateFormat);
+                                element.data('datetimepicker').startDate= Date.parse(startDate);
+                            }
+                        });
+                    }
+
                     element.datetimepicker({
                         format: dateFormat,
                         autoclose: true,
                         language: attrs.language,
                         todayBtn: false,
                         showMeridian: showMeridian,
-                        startDate: attrs.startDate,
+                        startDate: startDate,
                         formatViewType: 'time',
                         startView: istimeOnly ? 1 : 2,
                         maxView: istimeOnly ? 1 : 3,
                         readonly: isReadOnly
-                });
+                    });
                 }
                 else {
-                    var allowpast = parseBooleanValue(attrs.allowPast);
-                    var allowfuture = parseBooleanValue(attrs.allowFuture);
-                    var startDate = allowpast ? -Infinity : '+0d';
-                    var endDate = allowfuture ? Infinity : '+0d';
+
+                    
+                    if (minStartDateExpression != null) {
+                        startDate = expressionService.evaluate(minStartDateExpression, datamap);
+                        var variablesToWatch = expressionService.getVariablesForWatch(minStartDateExpression);
+                        scope.$watchCollection(variablesToWatch, function (newVal, oldVal) {
+                            if (newVal != oldVal) {
+                                startDate = expressionService.evaluate(minStartDateExpression, datamap);
+                                //recreating component
+                                element.data('datepicker').startDate = Date.parse(startDate);
+                            }
+                        });
+                    }
+
                     element.datepicker({
                         startDate: startDate,
                         endDate: endDate,
