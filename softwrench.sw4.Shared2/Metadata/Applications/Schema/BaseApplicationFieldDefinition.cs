@@ -26,6 +26,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
         public abstract string RendererType { get; }
+
+        public abstract IDictionary<string, string> RendererParameters { get; }
+
         public string Type { get { return GetType().Name; } }
         public string Role {
             get { return ApplicationName + "." + Attribute; }

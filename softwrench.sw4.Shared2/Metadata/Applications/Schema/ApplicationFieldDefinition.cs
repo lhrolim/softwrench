@@ -81,7 +81,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get { return _renderer.RendererType; }
         }
 
-        public IDictionary<string, string> RendererParameters {
+        public override IDictionary<string, string> RendererParameters {
             get { return _renderer == null ? new Dictionary<string, string>() : _renderer.ParametersAsDictionary(); }
         }
         public IDictionary<string, string> FilterParameters {

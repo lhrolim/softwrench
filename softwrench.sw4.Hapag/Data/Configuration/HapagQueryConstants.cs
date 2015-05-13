@@ -58,6 +58,10 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
             return ITCActionRequired("sr");
         }
 
+        public static string OfferingITCDashboard() {
+            return ITCActionRequired("offering");
+        }
+
         public static string IncidentITCDashboard() {
             return ITCActionRequired("incident");
         }

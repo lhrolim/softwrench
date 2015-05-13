@@ -9,7 +9,7 @@
             $scope.$emit('sw_titlechanged', i18NService.get18nValue('general.profiledetails', 'Profile Details'));
             $scope.isMyProfile = true;
             $scope.isHapag = $rootScope.clientName == 'hapag' ? true : false;
-            $scope.canChangeLanguage = $scope.isHapag && data.canChangeLanguage;
+            $scope.canChangeLanguage = "true" == sessionStorage.mocklanguagechange || ($scope.isHapag && data.canChangeLanguage);
             fillRestrictions(data);
             fillLanguage();
         }

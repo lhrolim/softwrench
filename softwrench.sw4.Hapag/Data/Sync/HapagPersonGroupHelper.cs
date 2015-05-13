@@ -81,6 +81,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             resultDict[HapagPersonGroupConstants.Tom] = FindRole(FunctionalRole.Tom);
             resultDict[HapagPersonGroupConstants.Itom] = FindRole(FunctionalRole.Itom);
             resultDict[HapagPersonGroupConstants.Change] = FindRole(FunctionalRole.Change);
+            resultDict[HapagPersonGroupConstants.Offering] = FindRole(FunctionalRole.Offering);
             resultDict[HapagPersonGroupConstants.SSO] = FindRole(FunctionalRole.Sso);
             resultDict[HapagPersonGroupConstants.Tui] = FindRole(FunctionalRole.Tui);
             return resultDict;
@@ -132,6 +133,8 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                     profilesToremove.Add(_hapagProfiles[profile]);
                 }
             }
+
+
 
             if (!rolesToRemove.Any() && !profilesToremove.Any()) {
                 return user;
@@ -193,6 +196,10 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                 }
             }
 
+            if (user.IsInRole(FunctionalRole.Offering.ToString()) && !(user.IsInRole(FunctionalRole.Tom.ToString()) || user.IsInRole(FunctionalRole.Itom.ToString()))) {
+                //offering require either tom or itom, as due to thomas email comments
+                user.Roles.First(r => r.Name.EqualsIc(FunctionalRole.Offering.ToString())).Active = false;
+            }
 
 
 

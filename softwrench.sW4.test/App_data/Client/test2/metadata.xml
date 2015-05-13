@@ -3,6 +3,15 @@
 xsi:schemaLocation="http://www.example.org/metadata Metadata.xsd ">
 
   <entities>
+
+    <entity name="offering" idAttribute="ticketid" parententity="sr" whereclause="(offering.classificationid is null or offering.classificationid not like '8151%') and (offering.TEMPLATEID = 'HLCDEO')">
+      <connectorParameters>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.HapagServiceRequestCrudConnector" />
+      </connectorParameters>
+
+    </entity>
+    
+    
     <entity name="change" idAttribute="ticketid" parententity="SR" whereclause="change.templateid = 'HLCDECHG'">
       <attributes>
         <attribute name="hlagchangesummary" type="varchar" required="false" query="CASE WHEN wochange_.wonum IS NULL THEN !@DESCRIPTION ELSE wochange_.description END" />

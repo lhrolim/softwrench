@@ -26,7 +26,7 @@ namespace softWrench.sW4.Metadata.Security {
         private readonly string _language;
         private readonly string _maximoPersonId;
         private readonly int? _timezoneOffset;
-        
+
         private readonly IList<Role> _roles;
         private readonly ICollection<UserProfile> _profiles;
         private readonly Iesi.Collections.Generic.ISet<PersonGroupAssociation> _personGroups;
@@ -218,6 +218,11 @@ namespace softWrench.sW4.Metadata.Security {
         public bool IsInRole(string role) {
             return _roles.Contains(new Role() { Name = role });
         }
+
+        public bool IsInGroup(string groupName) {
+            return _personGroups.Any(g => g.GroupName.Equals(groupName));
+        }
+
         [JsonIgnore]
         public IIdentity Identity { get; private set; }
 

@@ -74,5 +74,10 @@
         /// </summary>
         public static string ShowPrintCommandStrategy = "show.printcommand";
 
+
+        public static string DoNotUseFirstOptionAsDefault = "optionfield.donotusefirstoptionasdefault";
+
+
+
     }
 }

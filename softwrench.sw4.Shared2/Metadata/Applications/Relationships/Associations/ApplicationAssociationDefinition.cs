@@ -158,7 +158,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             get { return base.RendererType ?? _applicationAssociationSchema.Renderer.RendererType.ToLower(); }        
         }
 
-        public IDictionary<string, string> RendererParameters {
+        public override IDictionary<string, string> RendererParameters {
             get { return _applicationAssociationSchema.Renderer == null ? new Dictionary<string, string>() : _applicationAssociationSchema.Renderer.ParametersAsDictionary(); }
         }
 

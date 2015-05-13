@@ -25,6 +25,8 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
 
         public IDictionary<string, string> Properties { get; set; }
 
+        public IDictionary<string, string> RendererParameters { get { return new Dictionary<string, string>(); } }
+
         public string PropertiesString {
             set { Properties = PropertyUtil.ConvertToDictionary(value); }
         }

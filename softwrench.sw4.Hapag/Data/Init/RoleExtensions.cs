@@ -50,6 +50,8 @@ namespace softwrench.sw4.Hapag.Data.Init {
                     return HapagPersonGroupConstants.Ad;
                 case FunctionalRole.Change:
                     return HapagPersonGroupConstants.Change;
+                case FunctionalRole.Offering:
+                    return HapagPersonGroupConstants.Offering;
                 case FunctionalRole.Sso:
                     return HapagPersonGroupConstants.SSO;
                 case FunctionalRole.Tui:

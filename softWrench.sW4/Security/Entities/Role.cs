@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NHibernate.Mapping.Attributes;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Security.Entities {
     [Class(Table = "SW_ROLE")]
@@ -46,7 +47,7 @@ namespace softWrench.sW4.Security.Entities {
         public virtual Boolean Active { get; set; }
 
         protected bool Equals(Role other) {
-            return string.Equals(Name, other.Name);
+            return Name.EqualsIc(other.Name);
         }
 
         public override bool Equals(object obj) {
