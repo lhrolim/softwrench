@@ -22,9 +22,10 @@ namespace softWrench.sW4.Metadata.Validator {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MetadataParsingUtils));
 
-        internal MenuDefinition InitializeMenu(ClientPlatform platform, Stream streamValidator = null) {
+        internal MenuDefinition InitializeMenu(ClientPlatform platform, Stream streamValidator = null,Boolean fallbackToDefault=true) {
             try {
-                using (var stream = MetadataParsingUtils.GetStream(streamValidator, String.Format(MenuPattern, platform.ToString().ToLower()))) {
+                var menuName = String.Format(MenuPattern, platform.ToString().ToLower());
+                using (var stream = MetadataParsingUtils.GetStream(streamValidator, menuName, fallbackToDefault)) {
                     return stream == null ? null : new XmlMenuMetadataParser().Parse(stream);
                 }
             } catch (Exception) {
@@ -36,7 +37,7 @@ namespace softWrench.sW4.Metadata.Validator {
         internal Dictionary<ClientPlatform, MenuDefinition> Initialize(Stream streamValidator = null) {
             var menus = new Dictionary<ClientPlatform, MenuDefinition>();
             foreach (ClientPlatform platform in Enum.GetValues(typeof(ClientPlatform))) {
-                var menu = InitializeMenu(platform, streamValidator);
+                var menu = InitializeMenu(platform, streamValidator,!platform.Equals(ClientPlatform.Mobile));
                 if (menu != null) {
                     menus.Add(platform, menu);
                 }

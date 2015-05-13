@@ -11,7 +11,7 @@
         },
 
         syncURL: function () {
-            return contextService.getFromContext("serverurl") + "/api/mobile/SyncData";
+            return contextService.getFromContext("serverurl") + "/api/mobile/PullNewData";
         }
 
     };

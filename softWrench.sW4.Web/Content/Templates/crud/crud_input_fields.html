@@ -38,7 +38,7 @@
                 <label ng-switch-when="label" class="control-label"
                        ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}">
                     {{datamap[fieldMetadata.attribute]}}
-                </label>
+                </label>                
                 <input type="text"
                        class="form-control"
                        ng-readonly="true"
@@ -84,7 +84,7 @@
                                id="checkbox"
                                ng-model="datamap[fieldMetadata.attribute]"
                                ng-init="initCheckbox(fieldMetadata)"
-                               ng-enabled="isSelectEnabled(fieldMetadata)"
+                               ng-enabled="isModifiableEnabled(fieldMetadata)"
                                ng-true-value="1" ng-false-value="0" />
                     </div>
                 </div>

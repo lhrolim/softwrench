@@ -147,6 +147,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\API\Response\ActionRedirectResponse.cs" />
+    <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
+    <Compile Include="Data\API\Response\ApplicationListResult.cs" />
+    <Compile Include="Data\API\Response\BlankApplicationResponse.cs" />
+    <Compile Include="Data\API\Response\GenericResponseResult.cs" />
+    <Compile Include="Data\API\Response\IApplicationResponse.cs" />
+    <Compile Include="Data\API\Response\SchemaChoosingDataResponse.cs" />
+    <Compile Include="Data\Persistence\Relational\Collection\CollectionResolverParameters.cs" />
+    <Compile Include="Data\Persistence\Relational\Collection\InternalCollectionResolverParameter.cs" />
     <Compile Include="Data\Persistence\WS\Commons\BasePersonCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Commons\PhoneNumberHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\EmailAddressHandler.cs" />
@@ -163,7 +172,9 @@
     <Compile Include="Metadata\Applications\DataSet\BaseProblemDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\KongsbergIncidentDataSet.cs" />
     <Compile Include="Metadata\Applications\DataSet\KongsbergServiceRequestDataSet.cs" />
+    <Compile Include="Metadata\Applications\DataSet\KongsbergSolutionDataSet.cs" />
     <Compile Include="Metadata\Applications\Notification\ApplicationNotificationFactory.cs" />
+    <Compile Include="Metadata\OffLineMetadataProvider.cs" />
     <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />
     <Compile Include="Audit\AuditTrail.cs" />
     <Compile Include="Audit\ISMAuditTrail.cs" />
@@ -346,7 +357,7 @@
     <Compile Include="Data\Entities\ServiceRequest\PrinterLocationEnum.cs" />
     <Compile Include="Data\Entities\MaxPropValueDao.cs" />
     <Compile Include="Data\Persistence\DefaultValuesBuilder.cs" />
-    <Compile Include="Data\Persistence\Relational\CollectionResolver.cs" />
+    <Compile Include="Data\Persistence\Relational\Collection\CollectionResolver.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\BaseQueryUtil.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryFromBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QueryJoinBuilder.cs" />
@@ -834,6 +845,7 @@
     <Folder Include="Data\Persistence\WS\Mea\Entities\" />
     <Folder Include="Data\Persistence\WS\Mif\Entities\" />
     <Folder Include="Metadata\API\" />
+    <Folder Include="Metadata\Applications\Relationship\Composition\" />
     <Folder Include="Metadata\Offline\" />
   </ItemGroup>
   <ItemGroup>

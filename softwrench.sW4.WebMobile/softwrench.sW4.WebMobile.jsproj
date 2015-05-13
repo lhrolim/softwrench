@@ -111,10 +111,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Content\Mobile\scripts\controllers\crudlist.js" />
+    <Content Include="Content\Mobile\scripts\services\configuration\configurationService.js" />
     <Content Include="Content\Mobile\scripts\services\crud\crudContextService.js" />
+    <Content Include="Content\Mobile\scripts\services\data\offlineCompositionService.js" />
+    <Content Include="Content\Mobile\scripts\services\db\CompositionDataEntry.js" />
+    <Content Include="Content\Mobile\scripts\services\db\DataEntry.js" />
     <Content Include="Content\Mobile\scripts\services\menu\menuModelService.js" />
     <Content Include="Content\Mobile\scripts\services\metadata\metadataModelService.js" />
+    <Content Include="Content\Mobile\scripts\services\metadata\offlineSchemaService.js" />
+    <Content Include="Content\Mobile\scripts\services\synchronization\batchService.js" />
+    <Content Include="Content\Mobile\scripts\services\synchronization\rowstampService.js" />
     <Content Include="Content\Mobile\scripts\utils\mobileajaxinterceptor.js" />
+    <Content Include="Content\Mobile\styles\list.css" />
     <Content Include="Content\Mobile\templates\crudlist.html" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\css\ionic.css" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\css\ionic.min.css" />
@@ -139,6 +147,7 @@
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\js\ionic.js" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\js\ionic.min.js" />
     <Content Include="Content\Vendor\downloadedvendor\ionic-v1.0.0-rc.3\version.json" />
+    <Content Include="Content\Vendor\downloadedvendor\persistence.store.sql.js" />
     <Content Include="Content\Vendor\scripts\angular-animate.js" />
     <Content Include="Content\Vendor\scripts\angular-sanitize.js" />
     <Content Include="Content\Vendor\scripts\angular-ui-router.js" />
@@ -148,7 +157,11 @@
     <Content Include="Content\Vendor\scripts\persistence.js" />
     <Content Include="Content\Vendor\scripts\persistence.store.sql.js" />
     <Content Include="Content\Vendor\scripts\persistence.store.websql.js" />
+    <Content Include="tests\resources\jsons\syncdata\samplerequest.json" />
+    <Content Include="tests\resources\jsons\syncdata\sql_utils.txt" />
+    <Content Include="tests\resources\jsons\syncdata\sampleresponse.json" />
     <Content Include="tests\services\dashboardaux_service_test.js" />
+    <Folder Include="bower_components\" />
     <Folder Include="Content\Shared\webcommons\scripts\vendor\" />
     <Folder Include="images\" />
     <Content Include="angular_mock.js" />

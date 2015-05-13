@@ -14,7 +14,7 @@
     }
 
     $scope.loadApplication = function (menuleaf) {
-        crudContextService.loadApplication(menuleaf.application,menuleaf.title, menuleaf.schema);
+        crudContextService.loadApplicationGrid(menuleaf.application,menuleaf.title, menuleaf.schema);
         $ionicSideMenuDelegate.toggleLeft();
     }
 

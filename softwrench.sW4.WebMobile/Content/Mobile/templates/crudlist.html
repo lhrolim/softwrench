@@ -1,18 +1,50 @@
-﻿<ion-view title="{{title()}}">
-    
+﻿<link href="/Content/Mobile/styles/list.css" rel="stylesheet" />
+
+<ion-view title="{{title()}}">
+
     <ion-nav-buttons side="left">
         <button class="button-icon icon ion-navicon" menu-toggle="left"></button>
     </ion-nav-buttons>
     
-    <ion-list>
+    <ion-nav-buttons side="right">
+        <button class="button-icon ion-navicon ion-search"></button>
+    </ion-nav-buttons>
 
-        <ion-item ng-repeat="item in items"
-                  item="item"
-                  href="#/item/{{item.id}}">
-            Item {{ item.id }}
-        </ion-item>
+    <ion-content has-header="true">
 
-    </ion-list>
+        <ion-list class="has-header">
 
-    <ion-infinite-scroll ng-if="!noMoreItemsAvailable" on-infinite="loadMore()" distance="10%"></ion-infinite-scroll>
+            <ion-item ng-repeat="item in list()"
+                      item="item">
+
+
+                <div class="row">
+                    <div class="col-25">
+                        <button class="button button-status" ng-style="{background:getStatusColor(item),color:getTextColor(item)}">{{getStatusText(item)}}</button>
+                    </div>
+                    <div class="col-75">
+                        <ul>
+                            <li>{{itemTitle(item)}} {{itemFeatured(item)}}</li>
+                            <li>{{itemSubTitle(item)}}</li>
+                            <li>{{itemExcerpt(item)}}</li>
+                        </ul>
+                    </div>
+                </div>
+
+
+            </ion-item>
+
+        </ion-list>
+
+        <ion-infinite-scroll ng-if="!noMoreItemsAvailable" on-infinite="loadMore()" distance="10%"></ion-infinite-scroll>
+
+
+
+    </ion-content>
+
+    <button class="button button-float">
+        <i class="icon ion-plus"></i>
+    </button>
+
+
 </ion-view>

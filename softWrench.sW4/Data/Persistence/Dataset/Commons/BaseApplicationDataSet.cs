@@ -19,6 +19,7 @@ using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational;
+using softWrench.sW4.Data.Persistence.Relational.Collection;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Data.Search;
@@ -312,9 +313,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
 
 
-        public virtual SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData) {
-            return Engine().Sync(applicationMetadata, applicationSyncData);
-        }
+//        public virtual SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData) {
+//            return Engine().Sync(applicationMetadata, applicationSyncData);
+//        }
 
         public virtual TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);

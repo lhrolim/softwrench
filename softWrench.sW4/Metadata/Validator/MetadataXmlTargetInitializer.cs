@@ -23,7 +23,7 @@ namespace softWrench.sW4.Metadata.Validator {
             try {
                 var internalTargets = new XmlEntityTargetMetadataParser().Parse(MetadataParsingUtils.GetInternalStreamImpl(false, data));
                 try {
-                    var streamReader = MetadataParsingUtils.GetStreamImpl(Target, data);
+                    var streamReader = MetadataParsingUtils.GetStreamImpl(Target, streamValidator: data);
                     if (streamReader != null) {
                         var targets = new XmlEntityTargetMetadataParser().Parse(streamReader);
                         MergeTargets(internalTargets, targets);

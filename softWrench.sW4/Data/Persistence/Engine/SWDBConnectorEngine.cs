@@ -16,11 +16,11 @@ namespace softWrench.sW4.Data.Persistence.Engine {
 
         public SWDBConnectorEngine(EntityRepository entityRepository) : base(entityRepository) { }
 
-        public override SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata,
-            SynchronizationRequestDto.ApplicationSyncData applicationSyncData,
-            SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null) {
-            throw new NotImplementedException();
-        }
+//        public override SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata,
+//            SynchronizationRequestDto.ApplicationSyncData applicationSyncData,
+//            SyncItemHandler.SyncedItemHandlerDelegate syncItemHandlerDelegate = null) {
+//            throw new NotImplementedException();
+//        }
 
         public override TargetResult Execute(OperationWrapper operationWrapper) {
             throw new NotImplementedException();

@@ -1,17 +1,27 @@
-﻿var entities = {};
+﻿var entities = entities || {};
 mobileServices.factory('swdbDAO', function (dispatcherService) {
 
     //creating namespace for the entities, to avoid eventaul collisions
+
+    function getInstance(entity) {
+        if (!entities[entity]) {
+            throw new Error("entity {0} not found".format(entity));
+        }
+        return persistence.define(entity);
+    }
 
     function createFilter(entity, queryString, queryoptions) {
         queryoptions = queryoptions || {};
         var pageNumber = queryoptions.pageNumber || 1;
         var pageSize = queryoptions.pagesize;
+        var projectionFields = queryoptions.projectionFields || [];
+        var queryToUse = queryoptions.fullquery;
 
-        if (!entities[entity]) {
-            throw new Error("entity {0} not found".format(entity));
-        }
-        var filter = entities[entity].all();
+        var filter = getInstance(entity).all();
+        filter._additionalWhereSqls = [];
+        filter._projectionFields = [];
+        filter._querytoUse = null;
+
         if (pageSize) {
             filter = filter.limit(pageSize);
             filter = filter.skip((pageSize * (pageNumber - 1)));
@@ -19,9 +29,12 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         if (queryString) {
             filter._additionalWhereSqls.push(queryString);
         }
-
-
-
+        if (projectionFields.length > 0) {
+            filter._projectionFields = projectionFields;
+        }
+        if (queryToUse) {
+            filter._querytoUse = queryToUse;
+        }
         return filter;
 
     }
@@ -43,10 +56,16 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 siteid: 'TEXT',
             });
 
+            entities.Configuration = persistence.define('Configuration', {
+                key: 'TEXT',
+                value: 'JSON',
+            });
+
 
             entities.Application = persistence.define('Application', {
                 application: 'TEXT',
-                supportApp: 'BOOL',
+                association: 'BOOL',
+                composition: 'BOOL',
                 data: "JSON"
             });
 
@@ -57,24 +76,32 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
                 path: 'TEXT',
             });
 
-            ///
-            /// Holds both Parent entities and compositions data.
-            /// This Entries needs to be reevaluated on every sync, since chances are that they do not needed to be present on client side after execution.
-            ///
-            entities.DataEntry = persistence.define('DataEntry', {
+
+
+            entities.Batch = persistence.define('Batch', {
+                application: 'TEXT',
+                sentDate: 'DATE',
+                completionDate: 'DATE',
+                lastChecked: 'DATE'
+            });
+
+
+
+            entities.BatchItem = persistence.define('BatchItem', {
                 application: 'TEXT',
                 datamap: 'JSON',
-                //used for composition matching, when data comes from the server, it will be on a tabular format (e.g all worklogs); 
-                //composite applications (root), however, will have this as null
-                parentId: 'TEXT',
                 //The id of this entry in maximo, it will be null when it´s created locally
                 remoteId: 'TEXT',
                 //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
-                isDirty: 'BOOL',
-                rowstamp: 'DATE',
-                problem: 'BOOL',
-                problemReason: "TEXT"
+                rowstamp: 'TEXT',
+                //either pending, or completed
+                status: 'TEXT',
+                problemId: 'TEXT',
             });
+
+            entities.Batch.hasMany('items', entities.BatchItem, 'batch');
+
+
 
             //this entity stores the Data which will be used as support of the main entities.
             //It cannot be created locally. Hence Synchronization should use rowstamp caching capabilities by default
@@ -131,7 +158,6 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             });
 
             entities.DataEntry.index(['application', 'remoteid'], { unique: true });
-            entities.DataEntry.index(['application', 'parentId']);
 
             entities.AssociationData.index(['application', 'value']);
 
@@ -146,7 +172,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
 
 
-            persistence.debug = true;
+            persistence.debug = "true" == sessionStorage["sqldebug"];
             persistence.schemaSync();
 
         },
@@ -159,7 +185,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         /// <param name="memoryObject">the object to take as a parameter, so that if it contains an id, that will be used to try to load the persistent instance from cache,
         ///  otherwise a fresh new copy will be used, with all its properties merged into the persistent instance.</param>
         /// <returns type="promise">returns a promise that will pass the loaded instance to the chain</returns>
-        instantiate: function (entity, memoryObject,mergingFunction) {
+        instantiate: function (entity, memoryObject, mergingFunction) {
 
 
 
@@ -173,7 +199,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
 
             var ob = entities[entity];
-            if (memoryObject.id == null) {
+            if (memoryObject.id == null || (memoryObject.type && memoryObject.type != entity)) {
                 //if the memory object doesn´t contain an id, then we don´t need to check on persistence cache, 
                 //just instantiate a new one
                 var transientEntity = new ob();
@@ -216,7 +242,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="entity">The name of the table to lookup</param>
         /// <param name="options">
         /// 
         ///  pagesize: number of items per page. if undefined, it will bring all the results
@@ -238,9 +264,13 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             var deferred = dispatcherService.loadBaseDeferred();
             var filter = createFilter(entity, queryString, options);
 
-            filter.list(null, function (result) {
-                deferred.resolve(result);
-            });
+            try {
+                filter.list(null, function (result) {
+                    deferred.resolve(result);
+                });
+            } catch (err) {
+                deferred.reject(err);
+            }
             return deferred.promise;
         },
 
@@ -263,9 +293,9 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             var deferred = dispatcherService.loadBaseDeferred();
             var promise = deferred.promise;
             if (tx) {
-                persistence.flush(tx, function () {
-                    deferred.resolve();
-                });
+                //flush has to be called from the outside
+                deferred.resolve();
+                return promise;
             } else {
                 persistence.flush(function () {
                     deferred.resolve();
@@ -276,12 +306,29 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
         },
 
 
-        bulkSave: function (objArray) {
+        createTx: function (args) {
+            var deferred = dispatcherService.loadBaseDeferred();
+            persistence.transaction(function (tx) {
+                if (args) {
+                    deferred.resolve([tx, args]);
+                } else {
+                    deferred.resolve([tx]);
+                }
+            });
+            return deferred.promise;
+        },
+
+        bulkSave: function (objArray, tx) {
             for (var i = 0; i < objArray.length; i++) {
                 persistence.add(objArray[i]);
             }
             var deferred = dispatcherService.loadBaseDeferred();
             var promise = deferred.promise;
+            if (tx) {
+                //flush has to be called from the outside
+                deferred.resolve(objArray);
+                return promise;
+            }
             persistence.flush(function () {
                 deferred.resolve(objArray);
             });
@@ -289,7 +336,7 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
         },
 
-        bulkDelete: function (objArray) {
+        bulkDelete: function (objArray, tx) {
             var deferred = dispatcherService.loadBaseDeferred();
             var promise = deferred.promise;
             if (!objArray || objArray.length == 0) {
@@ -299,6 +346,11 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
             for (var i = 0; i < objArray.length; i++) {
                 persistence.remove(objArray[i]);
             }
+            if (tx) {
+                //flush has to be called from the outside
+                deferred.resolve(objArray);
+                return promise;
+            }
             persistence.flush(function () {
                 deferred.resolve();
             });
@@ -306,20 +358,36 @@ mobileServices.factory('swdbDAO', function (dispatcherService) {
 
         },
 
-        executeQuery: function (query) {
+        executeQuery: function (query, tx) {
+            return this.executeQueries([query], tx);
+
+        },
+
+        executeQueries: function (queriesToExecute, tx) {
             var deferred = dispatcherService.loadBaseDeferred();
             var promise = deferred.promise;
-            persistence.transaction(function (tx) {
-                var queries = [];
+            var queries = [];
+            for (var i = 0; i < queriesToExecute.length; i++) {
+                var query = queriesToExecute[i];
                 var queryTuple = [];
                 queryTuple.push(query);
                 queries.push(queryTuple);
+            }
+            if (!tx) {
+                persistence.transaction(function (closureTx) {
+                    persistence.executeQueriesSeq(closureTx, queries, function () {
+                        deferred.resolve();
+                    });
+                });
+            } else {
+
                 persistence.executeQueriesSeq(tx, queries, function () {
                     deferred.resolve();
                 });
-            });
+            }
             return promise;
-        }
+        },
+
 
 
 
