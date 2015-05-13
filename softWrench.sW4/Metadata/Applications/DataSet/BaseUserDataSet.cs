@@ -118,9 +118,9 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
             userJson.Add("password", json.Value<string>("password"));
             userJson.Add("maximoPersonId", json.Value<string>("maximoPersonId"));
             // Handle associated values
-            HandlePerson(json, operation);
-            HandleEmail(json, operation);
-            HandlePhone(json, operation);
+            //HandlePerson(json, operation);
+            //HandleEmail(json, operation);
+            //HandlePhone(json, operation);
 
             return new TargetResult("", "", SecurityFacade.GetInstance().SaveUser(User.fromJson(userJson)));
         }

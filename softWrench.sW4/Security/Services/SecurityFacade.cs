@@ -232,8 +232,14 @@ namespace softWrench.sW4.Security.Services {
 
         public User FetchUser(int id)
         {
-            User swUSer = UserManager.GetUserById(id);
-            return UserSyncManager.GetUserFromMaximoBySwUser(swUSer);
+            User swUser = UserManager.GetUserById(id);
+            return UserSyncManager.GetUserFromMaximoBySwUser(swUser);
+        }
+
+        public User FetchUser(string maximopersonid)
+        {
+            User swUser = UserManager.GetUserByUsername(maximopersonid);
+            return UserSyncManager.GetUserFromMaximoBySwUser(swUser);
         }
     }
 }

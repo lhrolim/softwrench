@@ -78,6 +78,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             var userFromMaximo = GetUserFromMaximoUsers(attributeHolders);
             fullUser = userFromMaximo.FirstOrDefault();
             fullUser.Id = swUser.Id;
+            fullUser.IsActive = swUser.IsActive;
             fullUser.Profiles = swUser.Profiles;
             fullUser.CustomRoles = swUser.CustomRoles;
             fullUser.PersonGroups = swUser.PersonGroups;

@@ -4,12 +4,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.AUTH;
-using softWrench.sW4.Preferences;
-using softWrench.sW4.Security.Interfaces;
 using softWrench.sW4.Util;
 using System;
 using System.Linq;
-using softWrench.sW4.Data.Persistence;
 
 
 namespace softWrench.sW4.Security.Entities {

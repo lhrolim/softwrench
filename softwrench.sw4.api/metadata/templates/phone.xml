@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <entities>
+
+  </entities>
+
+  <applications>
+    <application name="phone" title="Phone" entity="phone">
+      <properties>
+        <property key ="icon.composition.tab" value="fa fa-phone"/>
+      </properties>
+      <schemas>
+        <schema id="list" stereotype="compositionlist" title="Phone list">
+          <field attribute="personid" hidden="true"/>
+          <field attribute="phoneid" hidden="true"/>
+          <field attribute="phonenum" label="Phone #"/>
+          <field attribute="type" label="Type"/>
+          <field attribute="isprimary" label="Primary"/>
+        </schema>
+
+        <schema id="detail" stereotype="compositiondetail" title="Phone Detail">
+          <field attribute="personid" hidden="true"/>
+          <field attribute="phoneid" hidden="true"/>
+          <field attribute="phonenum" label="Phone #"/>
+          <field attribute="type" label="Type"/>
+          <field attribute="isprimary" label="Primary">
+            <renderer type="checkbox"/>
+          </field>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

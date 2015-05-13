@@ -26,6 +26,12 @@
 
     <!--Person-->
     <template path="@person.xml"/>
+    
+    <!--Email-->
+    <template path="@email.xml"/>
+    
+    <!--Phone-->
+    <template path="@phone.xml"/>
   </templates>
   
   <entities>

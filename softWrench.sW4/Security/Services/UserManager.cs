@@ -16,19 +16,27 @@ namespace softWrench.sW4.Security.Services {
             }
         }
 
-        public static User SaveUser(User user) {
+        public static User SaveUser(User user, bool updateMaximo = false) {
             if (user.Id != null) {
                 var dbuser = DAO.FindByPK<User>(typeof(User), (int)user.Id);
                 user.MergeFromDBUser(dbuser);
 
             }
-            user.Person.Save();
+            if (updateMaximo)
+            {
+                user.Person.Save();
+            }
             return DAO.Save(user);
         }
 
         public static User GetUserById(int id)
         {
             return SWDBHibernateDAO.GetInstance().FindByPK<User>(typeof(User), id, "Profiles", "CustomRoles", "CustomConstraints");
+        }
+
+        public static User GetUserByUsername(string username)
+        {
+            return SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(User.UserByUserName, username);
         }
 
         public static User CreateMissingDBUser(string userName, bool save = true) {

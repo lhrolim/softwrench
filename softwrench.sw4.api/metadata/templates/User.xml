@@ -16,9 +16,13 @@
         </schema>
 
         <schema id="detail" stereotype="detail" title="User Detail">
+          <field attribute="isactive" label="Active">
+            <renderer type="checkbox"/>
+          </field>
           <field attribute="username" label="Username" requiredexpression="true"/>
           <field attribute="password" label="Password" requiredexpression="true"/>
           <field attribute="#password" label="Retype Password" requiredexpression="true"/>
+          <field attribute="maximoPersonId" hidden="true"/>
           <field attribute="#firstname" label="First Name" requiredexpression="true"/>
           <field attribute="#lastname" label="Last Name" requiredexpression="true"/>
           <field attribute="#orgid" label="ORGID"/>
@@ -30,10 +34,6 @@
           <field attribute="#phoneid" hidden="true"/>
           <field attribute="#phone" label="Phone"/>
           <field attribute="#language" label="Language"/>
-          <field attribute="isactive" label="Active">
-            <renderer type="checkbox"/>
-          </field>
-          <field attribute="maximoPersonId" hidden="true"/>
           <field attribute="#personid" hidden="true"/>
           <field attribute="#personuid" hidden="true"/>
         </schema>

@@ -56,7 +56,7 @@ function UserController($scope, $http, $templateCache, pwdenforceService, i18NSe
     $scope.edit = function (username, id) {
         var param = {};
         param.id = id;
-        redirectService.goToApplicationView("_User", "detail", "Input", null, param, null);
+        redirectService.goToApplicationView("Person", "detail", "Input", null, param, null);
     };
     
     $scope.i18N = function (key, defaultValue, paramArray) {
