@@ -30,6 +30,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
                 entityMetadata.Name.Equals("INCIDENT", StringComparison.CurrentCultureIgnoreCase) ||
                 entityMetadata.Name.Equals("PROBLEM", StringComparison.CurrentCultureIgnoreCase) ||
                 entityMetadata.Name.Equals("IMAC", StringComparison.CurrentCultureIgnoreCase) ||
+                entityMetadata.Name.Equals("OFFERING", StringComparison.CurrentCultureIgnoreCase) ||
                 entityMetadata.Name.Equals("NEWCHANGE", StringComparison.CurrentCultureIgnoreCase)) {
                 return new ServiceIncident() {
                     Transaction = new Transaction()

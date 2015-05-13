@@ -195,6 +195,7 @@
     <Compile Include="Data\Persistence\WS\Commons\ScreenshotHandler.cs" />
     <Compile Include="Data\Persistence\WS\Commons\SubmitactionCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Gric\GricServiceRequestCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Commons\HapagOfferingLongDescriptionHandler.cs" />
     <Compile Include="Data\Persistence\WS\Internal\TargetAttributesHandler.cs" />
     <Compile Include="Data\Persistence\WS\Internal\TargetConstantHandler.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Base\BaseISMTicketDecorator.cs" />
@@ -212,6 +213,7 @@
     <Compile Include="Data\Persistence\WS\Ism\Base\ISMExecutionContext.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\Imac\IsmImacCrudConnectorDecorator.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\Problem\ISMProblemCrudConnector.cs" />
+    <Compile Include="Data\Persistence\WS\Ism\Entities\SR\ISMOfferingCrudConnectorDecorator.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Entities\SR\IsmSRCrudConnectorDecorator.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Base\ISMConstants.cs" />
     <Compile Include="Data\Persistence\WS\Ism\Base\ISMCrudConnector.cs" />

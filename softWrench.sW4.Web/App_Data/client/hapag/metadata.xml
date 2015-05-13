@@ -28,7 +28,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </attributes>
     </entity>
 
-    <entity name="offering" idAttribute="ticketid" parententity="sr" whereclause="(offering.classificationid is null or offering.classificationid not like '8151%') and (offering.TEMPLATEID = 'HLCDEO')"></entity>
+    <entity name="offering" idAttribute="ticketid" parententity="sr" whereclause="(offering.classificationid is null or offering.classificationid not like '8151%') and (offering.TEMPLATEID = 'HLCDEO')">
+      <connectorParameters>
+        <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.HapagServiceRequestCrudConnector" />
+      </connectorParameters>
+
+    </entity>
 
     <entity name="SR" idAttribute="ticketid" whereclause="((sr.classificationid is null or sr.classificationid not like '8151%') and (SR.TEMPLATEID is null or 
             (SR.TEMPLATEID not in ('HLCDECHG','HLCDECHTUI','HLCDECHSSO','HLCDEO') )))">
@@ -963,11 +968,12 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <property key="nextschema.schemaid" value="creationSummary"/>
             <property key="addassociationlabels" value="true"/>
             <property key="popup.window.headertitle" value="New OFFERING REQUEST - Server"/>
+            <property key="optionfield.donotusefirstoptionasdefault" value="true"/>
           </properties>
-          <field label="Requested production date" attribute="startdate">
+          <field label="Requested production date" attribute="startdate" required="true">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;mindateexpression=@minstartdate"/>
           </field>
-          <field label="Planned production end date" attribute="enddate">
+          <field label="Planned production end date" attribute="enddate" required="true">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;mindateexpression=@startdate"/>
           </field>
           <optionfield label="Mode of Operation / LPAR-Type" attribute="lpartype">
@@ -1014,8 +1020,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field label="Disk (E:)" attribute="disksizee">
             <renderer type="default" params="append=GB"/>
           </field>
-          <field label="Host Name" attribute="hostname">
-            <renderer type="default" params="prepend=KFDC"/>
+          <field label="Host Name" attribute="hostname" required="true" >
+            <renderer type="default" params="prepend=KFDC;maxlength=4"/>
           </field>
           <section id="specificdata"/>
           <optionfield label="Disaster Recovery Category" attribute="kfallcat">
@@ -1027,8 +1033,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
 
           <section orientation="vertical" id="networklocationdata">
             <header label="Location in network"/>
-            <optionfield label="Should the server be reachable from the Internet?" attribute="hasinternet">
-              <renderer type="RADIO" params="setdefaultvalue=false"/>
+            <optionfield label="Should the server be reachable from the Internet?" attribute="hasinternet" required="true">
+              <renderer type="RADIO" />
               <option label="Yes" value="yes"/>
               <option label="No" value="No"/>
             </optionfield>
@@ -1037,6 +1043,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <field attribute="networkvlan" label="Location in network (VLAN):" showexpression="@hasinternet!=null"/>
             <field attribute="comments" label="Additional comments:" default="If you have general comments please note them here?" showexpression="@hasinternet!=null">
               <renderer type="textarea"/>
+            </field>
+
+            <field attribute="explanation" label="Information: Folgende Leistungen sind im Factory-Ansatz enthalten:"  showexpression="@hasinternet!=null" readonly="true">
+              <renderer type="textarea" params="color=red"/>
             </field>
 
           </section>

@@ -2,7 +2,7 @@
 <TargetEntities xmlns="http://www.example.org/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Target.xsd ">
 
-	<!-- The following items still need to be mapped for all ticket entities. Looking at the JSON being submitted by softwrench, 
+  <!-- The following items still need to be mapped for all ticket entities. Looking at the JSON being submitted by softwrench, 
   it is not yet clear which softwrench fields map to the below ISM fields
   
     -ProviderPriority
@@ -20,85 +20,102 @@
   
   -->
 
-	<entity name="SR">
+  <entity name="offering">
 
-		<attributes>
-			<const targetpath="Transaction/TransactionRouting" value="MX::HLCINC"/>
-<!--			<const targetpath="Problem/ProviderAssignedGroup/Group/GroupID" value="I-EUS-DE-CSC-SDK-HLCFRONTDESKI"/>-->
-			<const targetpath="Problem/ProviderAssignedGroup/Group/Address/OrganizationID" value="ITD-ESS6"/>
-			<const targetpath="Problem/ProviderAssignedGroup/Group/Address/LocationID" value="ESS6"/>
-			<const targetpath="Problem/System" value="21030000" />
+    <attributes>
+      <const targetpath="Transaction/TransactionRouting" value="MX::HLCINC"/>
+      <const targetpath="Problem/ProviderAssignedGroup/Group/GroupID" value="I-SM-DE-TAT-TPS-PROJECTMANAG"/>
+      <const targetpath="Problem/ProviderAssignedGroup/Group/Address/OrganizationID" value="ITD-ESS6"/>
+      <const targetpath="Problem/ProviderAssignedGroup/Group/Address/LocationID" value="ESS6"/>
+      <const targetpath="Problem/System" value="21390000" />
+      <const targetpath="Problem/CustomerID" value="HLC-00"/>
+    </attributes>
+
+    <connectorParameters>
+      <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR.IsmOfferingCrudConnectorDecorator" />
+    </connectorParameters>
+  </entity>
 
 
-			<attribute name="ticketid" targetpath="RequesterID" type="varchar" required="false"/>
-			<attribute name="status" targetpath="WorkflowStatus" type="varchar" required="false"/>
-			<attribute name="class" targetpath="Problem/ProblemType" type="varchar" required="false"/>
-			<attribute name="description" targetpath="Problem/Abstract" type="varchar" required="false" />
-			<attribute name="reportdate" targetpath="Metrics/TicketOpenedDateTime" type="datetime" required="false"/>
-			<attribute name="attachment_.newattachment" targetpath="Attachment/Attachment" type="varchar" required="false"/>
-			<attribute name="attachment_.newattachment_path" targetpath="Attachment/AttachmentName" type="varchar" required="false"/>
-			<attribute name="asset_.assetid" targetpath="Asset/AssetID" type="varchar" required="false"/>
-		</attributes>
+  <entity name="SR">
 
-		<connectorParameters>
-			<connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR.IsmSRCrudConnectorDecorator" />
-		</connectorParameters>
-		<relationships>
-			<relationship targetpath="Activity" attribute="worklog_">
-				<const targetpath="ActionType" value="workLog"/>
-				<attribute name="longdescription_.ldtext" targetpath="ActionLog" type="varchar" required="false"/>
-				<attribute name="description" targetpath="ActionLogSummary" type="varchar" required="false"/>
-				<attribute name="createdate" targetpath="LogDateTime" type="datetime" required="false"/>
-				<attribute name="createby" targetpath="UserID" type="varchar" required="false"/>
-			</relationship>
-			<relationship targetpath="ServiceProvider/Person" attribute="affectedperson">
-				<const targetpath="Role" value="ReportedBy"/>
-				<const targetpath="RoleSpecified" value="true"/>
-				<!--        <attribute name="@affectedperson" targetpath="ContactId" type="varchar" required="false"/>-->
-			</relationship>
-		</relationships>
-	</entity>
+    <attributes>
+      <const targetpath="Transaction/TransactionRouting" value="MX::HLCINC"/>
+      <!--			<const targetpath="Problem/ProviderAssignedGroup/Group/GroupID" value="I-EUS-DE-CSC-SDK-HLCFRONTDESKI"/>-->
+      <const targetpath="Problem/ProviderAssignedGroup/Group/Address/OrganizationID" value="ITD-ESS6"/>
+      <const targetpath="Problem/ProviderAssignedGroup/Group/Address/LocationID" value="ESS6"/>
+      <const targetpath="Problem/System" value="21030000" />
 
-	<entity name="IMAC" parententity="SR">
-		<attributes>
-			<const targetpath="Transaction/TransactionRouting" value="MX::HLCINC"/>
-			<const targetpath="Problem/ProviderAssignedGroup/Group/GroupID" value="I-EUS-DE-CSC-IMC-HLCIMAC"/>
-			<const targetpath="Problem/ProviderAssignedGroup/Group/Address/OrganizationID" value="ITD-ESS6"/>
-			<const targetpath="Problem/ProviderAssignedGroup/Group/Address/LocationID" value="ESS6"/>
-			<attribute targetpath="Problem/Abstract" name="titleoforder" type="string"/>
+
       <attribute name="ticketid" targetpath="RequesterID" type="varchar" required="false"/>
-		</attributes>
-		<connectorParameters>
-			<connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac.IsmImacCrudConnectorDecorator" />
-    <connectorParameter key="completeaction_customconnector" value="softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac.ImacCompleteActionCustomConnector" />
-		</connectorParameters>
-	</entity>
+      <attribute name="status" targetpath="WorkflowStatus" type="varchar" required="false"/>
+      <attribute name="class" targetpath="Problem/ProblemType" type="varchar" required="false"/>
+      <attribute name="description" targetpath="Problem/Abstract" type="varchar" required="false" />
+      <attribute name="reportdate" targetpath="Metrics/TicketOpenedDateTime" type="datetime" required="false"/>
+      <attribute name="attachment_.newattachment" targetpath="Attachment/Attachment" type="varchar" required="false"/>
+      <attribute name="attachment_.newattachment_path" targetpath="Attachment/AttachmentName" type="varchar" required="false"/>
+      <attribute name="asset_.assetid" targetpath="Asset/AssetID" type="varchar" required="false"/>
+    </attributes>
 
-	<entity name="NEWCHANGE">
-		<attributes>
-			<attribute name="reportedby" targetpath="ServiceProvider/Person/ContactID" PersonRole="ReportedBy" Domain="@HLAG.COM" type="varchar" required="false"/>
-			<attribute name="affectedperson" targetpath="ServiceProvider/Person/ContactID" PersonRole="AffectedUser" Domain="@HLAG.COM" type="varchar" required="false"/>
-		</attributes>
-		<connectorParameters>
-			<connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change.IsmNewChangeCrudConnectorDecorator" />
-		</connectorParameters>
-	</entity>
+    <connectorParameters>
+      <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR.IsmSRCrudConnectorDecorator" />
+    </connectorParameters>
+    <relationships>
+      <relationship targetpath="Activity" attribute="worklog_">
+        <const targetpath="ActionType" value="workLog"/>
+        <attribute name="longdescription_.ldtext" targetpath="ActionLog" type="varchar" required="false"/>
+        <attribute name="description" targetpath="ActionLogSummary" type="varchar" required="false"/>
+        <attribute name="createdate" targetpath="LogDateTime" type="datetime" required="false"/>
+        <attribute name="createby" targetpath="UserID" type="varchar" required="false"/>
+      </relationship>
+      <relationship targetpath="ServiceProvider/Person" attribute="affectedperson">
+        <const targetpath="Role" value="ReportedBy"/>
+        <const targetpath="RoleSpecified" value="true"/>
+        <!--        <attribute name="@affectedperson" targetpath="ContactId" type="varchar" required="false"/>-->
+      </relationship>
+    </relationships>
+  </entity>
 
-	<entity name="WOCHANGE">
-		<attributes>
-			<const targetpath="Change/CustomerID" value="HLC-00"/>
+  <entity name="IMAC" parententity="SR">
+    <attributes>
+      <const targetpath="Transaction/TransactionRouting" value="MX::HLCINC"/>
+      <const targetpath="Problem/ProviderAssignedGroup/Group/GroupID" value="I-EUS-DE-CSC-IMC-HLCIMAC"/>
+      <const targetpath="Problem/ProviderAssignedGroup/Group/Address/OrganizationID" value="ITD-ESS6"/>
+      <const targetpath="Problem/ProviderAssignedGroup/Group/Address/LocationID" value="ESS6"/>
+      <attribute targetpath="Problem/Abstract" name="titleoforder" type="string"/>
+      <attribute name="ticketid" targetpath="RequesterID" type="varchar" required="false"/>
+    </attributes>
+    <connectorParameters>
+      <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac.IsmImacCrudConnectorDecorator" />
+      <connectorParameter key="completeaction_customconnector" value="softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac.ImacCompleteActionCustomConnector" />
+    </connectorParameters>
+  </entity>
 
-		</attributes>
-		<connectorParameters>
+  <entity name="NEWCHANGE">
+    <attributes>
+      <attribute name="reportedby" targetpath="ServiceProvider/Person/ContactID" PersonRole="ReportedBy" Domain="@HLAG.COM" type="varchar" required="false"/>
+      <attribute name="affectedperson" targetpath="ServiceProvider/Person/ContactID" PersonRole="AffectedUser" Domain="@HLAG.COM" type="varchar" required="false"/>
+    </attributes>
+    <connectorParameters>
+      <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change.IsmNewChangeCrudConnectorDecorator" />
+    </connectorParameters>
+  </entity>
+
+  <entity name="WOCHANGE">
+    <attributes>
+      <const targetpath="Change/CustomerID" value="HLC-00"/>
+
+    </attributes>
+    <connectorParameters>
       <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change.IsmChangeCrudConnector" />
       <connectorParameter key="completeaction_customconnector" value="softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change.ChangeCompleteActionCustomConnector" />
       <connectorParameter key="approvalaction_customconnector" value="softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change.ChangeApprovalActionCustomConnector" />
-		</connectorParameters>
-	</entity>
+    </connectorParameters>
+  </entity>
 
-  
+
   <entity name="PROBLEM">
-		<attributes>
+    <attributes>
 
 
       <const targetpath="Transaction/TransactionRouting" value="MX::HLCINC"/>
@@ -106,22 +123,22 @@
       <const targetpath="Problem/ProviderAssignedGroup/Group/Address/OrganizationID" value="ITD-ESS6"/>
       <const targetpath="Problem/ProviderAssignedGroup/Group/Address/LocationID" value="ESS6"/>
       <const targetpath="Problem/System" value="21030000" />
-			<const targetpath="Problem/ProblemType" value="PROBLEM"/>
+      <const targetpath="Problem/ProblemType" value="PROBLEM"/>
       <attribute name="ticketid" targetpath="RequesterID" type="varchar" required="false"/>
-			
 
-		</attributes>
-		<connectorParameters>
-			<connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Ism.Entities.Problem.IsmProblemCrudConnector" />
-		</connectorParameters>
-	</entity>
+
+    </attributes>
+    <connectorParameters>
+      <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Ism.Entities.Problem.IsmProblemCrudConnector" />
+    </connectorParameters>
+  </entity>
 
   <entity name="INCIDENT">
     <attributes>
 
 
       <const targetpath="Transaction/TransactionRouting" value="MX::HLCINC"/>
-<!--      <const targetpath="Problem/ProviderAssignedGroup/Group/GroupID" value="I-EUS-DE-CSC-SDK-HLCFRONTDESK"/>-->
+      <!--      <const targetpath="Problem/ProviderAssignedGroup/Group/GroupID" value="I-EUS-DE-CSC-SDK-HLCFRONTDESK"/>-->
       <const targetpath="Problem/ProviderAssignedGroup/Group/Address/OrganizationID" value="ITD-ESS6"/>
       <const targetpath="Problem/ProviderAssignedGroup/Group/Address/LocationID" value="ESS6"/>
       <const targetpath="Problem/System" value="21030000" />
