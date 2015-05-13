@@ -45,12 +45,12 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         public override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             // get is active for each of the users
             var result = base.GetList(application, searchDto);
+            var usernames = result.ResultObject.Select(str => str.GetAttribute("personid").ToString()).ToList();
+            var swusers = UserManager.GetUsersByUsername(usernames);
             foreach (var record in result.ResultObject)
             {
-                User swUser = SecurityFacade.GetInstance().FetchUser(record.GetAttribute("personid").ToString());
-                //var isActive = swUser.IsActive ? "1" : "0";
-                //record.Attributes.Add("#isactive", isActive);
-                record.Attributes.Add("#isactive", swUser.IsActive);
+                var swuser = swusers.Where(user => user.MaximoPersonId == record.GetAttribute("personid").ToString());
+                record.Attributes.Add("#isactive", swuser.First().IsActive);
             }
             return result;
         }

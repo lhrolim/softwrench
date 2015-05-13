@@ -1,8 +1,13 @@
-﻿using Iesi.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Iesi.Collections.Generic;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Security.Entities;
 using cts.commons.simpleinjector;
+using Quartz.Util;
+using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Security.Services {
@@ -37,6 +42,14 @@ namespace softWrench.sW4.Security.Services {
         public static User GetUserByUsername(string username)
         {
             return SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(User.UserByUserName, username);
+        }
+
+        public static IEnumerable<User> GetUsersByUsername(List<string> usernames)
+        {
+            var param = BaseQueryUtil.GenerateInString(usernames);
+            var querystring = string.Format("from User where lower(userName) in ({0})", param);
+            return SWDBHibernateDAO.GetInstance()
+                .FindByQuery<User>(querystring);
         }
 
         public static User CreateMissingDBUser(string userName, bool save = true) {
