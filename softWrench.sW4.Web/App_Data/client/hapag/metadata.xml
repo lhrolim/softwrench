@@ -977,6 +977,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </optionfield>
 
           <optionfield label="CPU" attribute="cpu">
+            <renderer type="COMBO" params="append=vCPU"/>
             <option label="1" value="1"/>
             <option label="2" value="2"/>
             <option label="3" value="3"/>
@@ -988,6 +989,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           </optionfield>
 
           <optionfield label="Memory" attribute="memory">
+            <renderer type="COMBO" params="append=GB"/>
             <option label="1" value="1"/>
             <option label="2" value="2"/>
             <option label="3" value="3"/>
@@ -1006,9 +1008,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
             <option label="16" value="16"/>
           </optionfield>
 
-          <field label="Disk Size for applicationen (in addition to the basic installation on partition C)" attribute="disksizec"/>
-          <field label="Disk (E:)" attribute="disksizee"/>
-          <field label="Host Name" attribute="hostname"/>
+          <field label="Disk Size for applicationen (in addition to the basic installation on partition C)" attribute="disksizec">
+            <renderer type="default" params="append=GB"/>
+          </field>
+          <field label="Disk (E:)" attribute="disksizee">
+            <renderer type="default" params="append=GB"/>
+          </field>
+          <field label="Host Name" attribute="hostname">
+            <renderer type="default" params="prepend=KFDC"/>
+          </field>
           <section id="specificdata"/>
           <optionfield label="Disaster Recovery Category" attribute="kfallcat">
             <option label="Test system - not relevant for disaster recovery" value="none"/>

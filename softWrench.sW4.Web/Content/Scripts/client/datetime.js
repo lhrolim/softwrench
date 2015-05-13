@@ -86,7 +86,7 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
                         showMeridian = dateFormat.startsWith('MM');
                     }
 
-                    if (minStartDateExpression != null) {
+                    if (minStartDateExpression != null && minStartDateExpression != "") {
                         startDate = expressionService.evaluate(minStartDateExpression, datamap);
                         startDate = Date.parse(formatService.formatDate(startDate, attrs.dateFormat));
                         variablesToWatch = expressionService.getVariablesForWatch(minStartDateExpression);
@@ -115,7 +115,7 @@ app.directive('dateTime', function ($timeout, formatService, expressionService) 
                 else {
 
                     
-                    if (minStartDateExpression != null) {
+                    if (minStartDateExpression != null && minStartDateExpression!="") {
                         startDate = expressionService.evaluate(minStartDateExpression, datamap);
                         var variablesToWatch = expressionService.getVariablesForWatch(minStartDateExpression);
                         scope.$watchCollection(variablesToWatch, function (newVal, oldVal) {

@@ -55,11 +55,18 @@
                  ng-class="getValueColumnClass(fieldMetadata)">
 
                 <div ng-switch-when="combo" class="sw-combobox-container">
-                    <select class="hidden-phone form-control combobox"
-                            ng-model="datamap[fieldMetadata.target]"
-                            ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
-                            ng-enabled="isSelectEnabled(fieldMetadata)"
-                            data-comboassociationkey="{{fieldMetadata.associationKey}}" />
+
+                    <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">
+                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{fieldMetadata.rendererParameters['prepend']}}</span>
+                        <select class="hidden-phone form-control combobox"
+                                ng-model="datamap[fieldMetadata.target]"
+                                ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
+                                ng-enabled="isSelectEnabled(fieldMetadata)"
+                                data-comboassociationkey="{{fieldMetadata.associationKey}}" />
+                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['append']!=null">{{fieldMetadata.rendererParameters['append']}}</span>
+                    </div>
+
+
                     <!--<div class="arrow"></div>-->
                 </div>
 
@@ -310,15 +317,20 @@
                                     <input type="hidden" ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control" />
                                 </div>
                                 <div ng-switch-default>
-                                    <input type="text"
-                                           ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control"
-                                           ng-enabled="isModifiableEnabled(fieldMetadata)"
-                                           data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
-                                           maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
-                                           ng-init="bindEvalExpression(fieldMetadata)" />
+                                    <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }">
+                                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{fieldMetadata.rendererParameters['prepend']}}</span>
+                                        <input type="text"
+                                               ng-model="datamap[fieldMetadata.attribute]" class="hidden-phone form-control"
+                                               ng-enabled="isModifiableEnabled(fieldMetadata)"
+                                               data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
+                                               maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
+                                               ng-init="bindEvalExpression(fieldMetadata)" />
+                                        <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['append']!=null">{{fieldMetadata.rendererParameters['append']}}</span>
+                                    </div>
+
+
                                 </div>
                             </div>
-                        </div>
                     </ng-switch>
                 </div>
 
