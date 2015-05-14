@@ -31,6 +31,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
        string entityName, Boolean update, string schemaId) {
             var problem = base.PopulateProblem(jsonObject, webServiceObject, entityName, update, schemaId);
             problem.CustomerID = "HLC-00";
+            problem.System = "21390000";
             return problem;
         }
 
