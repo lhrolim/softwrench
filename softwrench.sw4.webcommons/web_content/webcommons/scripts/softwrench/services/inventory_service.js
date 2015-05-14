@@ -317,6 +317,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                         };
                         returnConfirmation(null, transformedData, {
                             continue: function () {
+                                sessionStorage.mockclientvalidation = true;
                                 $rootScope.$broadcast('sw_submitdata', {
                                     successCbk: function (data) {
                                         sessionStorage.mockclientvalidation = false;
@@ -381,6 +382,7 @@ app.factory('inventoryService', function ($http, contextService, redirectService
                         };
                         returnConfirmation(null, transformedData, {
                             continue: function () {
+                                sessionStorage.mockclientvalidation = true;
                                 $rootScope.$broadcast('sw_submitdata', {
                                     successCbk: function (data) {
                                         sessionStorage.mockclientvalidation = false;
