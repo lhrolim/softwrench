@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using softwrench.sW4.Shared2.Util;
 using ContextLookuper = softWrench.sW4.Web.Security.ContextLookuper;
 
 namespace softWrench.sW4.Web.SPF.Filters {
@@ -15,6 +16,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
 
         private const string CurrentModuleKey = "currentmodule";
         private const string CurrentMetadataKey = "currentmetadata";
+        private const string CurrentMetadataParameterKey = "currentmetadataparameter";
 
         public void OnActionExecuting(ActionExecutingContext actionContext) {
             if (!actionContext.HttpContext.User.Identity.IsAuthenticated) {
@@ -23,11 +25,12 @@ namespace softWrench.sW4.Web.SPF.Filters {
             IEnumerable<String> modules;
             var currentModule = GetValue(actionContext, CurrentModuleKey);
             var currentMetadataId = GetValue(actionContext, CurrentMetadataKey);
+            var currentMetadataParameter = GetValue(actionContext, CurrentMetadataParameterKey);
             ApplicationLookupContext appCtx = null;
             if (currentMetadataId != null) {
                 appCtx = new ApplicationLookupContext { MetadataId = currentMetadataId };
             }
-            ContextLookuper.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx }, true);
+            ContextLookuper.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx,MetadataParameters= PropertyUtil.ConvertToDictionary(currentMetadataParameter)}, true);
         }
 
         private static string GetValue(ActionExecutingContext actionContext, string key) {

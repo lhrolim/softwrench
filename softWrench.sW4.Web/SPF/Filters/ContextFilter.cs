@@ -6,6 +6,7 @@ using System.Web.Http;
 using log4net;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Security.Context;
+using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;
@@ -26,18 +27,20 @@ namespace softWrench.sW4.Web.SPF.Filters {
 
         private const string CurrentModuleKey = "currentmodule";
         private const string CurrentMetadataKey = "currentmetadata";
+        private const string CurrentMetadataParameterKey = "currentmetadataparameter";
         private const string PrintMode = "printmode";
 
         public override void OnActionExecuting(HttpActionContext actionContext) {
             
             var currentModule = RequestUtil.GetValue(actionContext.Request, CurrentModuleKey);
             var currentMetadataId = RequestUtil.GetValue(actionContext.Request, CurrentMetadataKey);
+            var currentMetadataParameter = RequestUtil.GetValue(actionContext.Request, CurrentMetadataParameterKey);
             var printMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, PrintMode));
             ApplicationLookupContext appCtx = null;
             if (currentMetadataId != null) {
                 appCtx = new ApplicationLookupContext { MetadataId = currentMetadataId };
             }
-            ContextLookuper.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx,PrintMode = printMode}, true);
+            ContextLookuper.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx, PrintMode = printMode, MetadataParameters = PropertyUtil.ConvertToDictionary(currentMetadataParameter) }, true);
             base.OnActionExecuting(actionContext);
         }
 

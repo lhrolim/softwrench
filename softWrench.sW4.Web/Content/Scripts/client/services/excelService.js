@@ -2,15 +2,19 @@
 
 //var PRINTMODAL_$_KEY = '[data-class="printModal"]';
 
+
+
 app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService,
     i18NService,
-    redirectService, searchService, contextService, fileService,alertService) {
+    redirectService, searchService, contextService, fileService, alertService) {
 
     return {
-        showModalExportToExcel: function (fn,schema, searchData, searchSort, searchOperator, paginationData) {
+        showModalExportToExcel: function (fn, schema, searchData, searchSort, searchOperator, paginationData) {
             //TODO: fix this crap
-            var modalTitle = i18NService.get18nValue('_exportotoexcel.export', 'Export') + " " + schema.applicationName+
+            var modalTitle = i18NService.get18nValue('_exportotoexcel.export', 'Export') + " " + schema.applicationName +
                 " " + i18NService.get18nValue('_exportotoexcel.toexcel', 'to excel');
+            var selectRegionText = i18NService.get18nValue('_exportotoexcel.selectregion', 'Select Region');
+
             var selectText = i18NService.get18nValue('_exportotoexcel.selectexportmode', 'Select export mode');
             var exportModeGridOnlyText = i18NService.get18nValue('_exportotoexcel.gridonly', 'Grid only');
             var exportModeAllTheColumnsText = i18NService.get18nValue('_exportotoexcel.allthecolumns', 'Asset List');
@@ -26,7 +30,7 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
                     "<label class='control-label' for='allthecolumnsid'>" +
                     "<input type='radio' name='exportMode' id='allthecolumnsid' value='assetlistreport' /> "
                     + exportModeAllTheColumnsText +
-                    "</label>"+
+                    "</label>" +
                     "</form>",
                 title: modalTitle,
                 buttons: {
@@ -34,8 +38,17 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
                         label: i18NService.get18nValue('_exportotoexcel.export', 'Export'),
                         className: "btn-primary",
                         callback: function (result) {
+
+
+
                             if (result) {
                                 var exportModeSelected = $('input[name=exportMode]:checked', '#infos').val();
+                                if (exportModeSelected == "assetlistreport") {
+                                    //HAP-944
+                                    handleAssetListReportRegionFilter(fn);
+                                    return;
+                                }
+
                                 fn(schema, searchData, searchSort, searchOperator, paginationData, exportModeSelected);
                             }
                         }
@@ -47,14 +60,71 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
                             return null;
                         }
                     }
-                   
+
                 },
                 className: "hapag-modal-exporttoexcel"
             });
+
+            function handleAssetListReportRegionFilter(finalCbk) {
+
+
+
+                bootbox.dialog({
+                    message: "<form id='region' action=''>" +
+                        "<label class='control-label'>" + selectRegionText + ":</label><br>" +
+                        "<label class='control-label' for='gridonlyid'>" +
+                        "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-NAMERICA'  /> "
+                            + "Region North America" +
+                        "</label><br>" +
+                        "<label class='control-label' for='gridonlyid'>" +
+                        "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-SAMERICA' /> "
+                            + "Region South America" +
+                        "</label><br>" +
+                        "<label class='control-label' for='gridonlyid'>" +
+                        "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-EUROPE'  /> "
+                            + "Region Europe" +
+                        "</label><br>" +
+                         "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-EUROPE' /> "
+                            + "Region Europe" +
+                        "</label><br>" +
+                          "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-ASIA'  /> "
+                            + "Region Asia" +
+                        "</label><br>" +
+                          "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-HQ'  /> "
+                            + "Region HeadQuarters" +
+                        "</label><br>" +
+                        "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-GSC'  /> "
+                            + "Region GSC" +
+                        "</label><br>" +
+                        "</form>",
+                    title: selectRegionText,
+                    buttons: {
+                        main: {
+                            label: i18NService.get18nValue('_exportotoexcel.export', 'Export'),
+                            className: "btn-primary",
+                            callback: function (result) {
+                                if (result) {
+                                    var region = $('input[name=region]:checked', '#region').val();
+                                    finalCbk(schema, searchData, searchSort, searchOperator, paginationData, 'assetlistreport', "region={0}".format(region));
+                                }
+                            }
+                        },
+                        cancel: {
+                            label: i18NService.get18nValue('_exportotoexcel.cancel', 'Cancel'),
+                            className: "btn btn-default",
+                            callback: function () {
+                                return null;
+                            }
+                        }
+
+                    },
+                    className: "hapag-modal-exporttoexcel"
+                });
+            }
         },
 
 
-        exporttoexcel: function (schema, searchData, searchSort, searchOperator, paginationData,schemaSelected) {
+        exporttoexcel: function (schema, searchData, searchSort, searchOperator, paginationData, schemaSelected, parameterQuery) {
             var application = schema.applicationName;
             if (contextService.isClient("hapag") && application == "asset" && !schemaSelected) {
                 var fn = this.exporttoexcel;
@@ -71,15 +141,16 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
             parameters.application = application;
             parameters.currentmodule = contextService.retrieveFromContext('currentmodule');
             parameters.currentmetadata = contextService.retrieveFromContext('currentmetadata');
+            parameters.currentmetadataparameter = parameterQuery;
             var searchDTO;
             var reportDto = contextService.retrieveReportSearchDTO(schema.schemaId);
             if (reportDto != null) {
                 reportDto = $.parseJSON(reportDto);
                 searchDTO = searchService.buildReportSearchDTO(reportDto, searchData, searchSort, searchOperator, paginationData.filterFixedWhereClause);
             } else {
-                searchDTO=  searchService.buildSearchDTO(searchData, searchSort, searchOperator, paginationData.filterFixedWhereClause);
+                searchDTO = searchService.buildSearchDTO(searchData, searchSort, searchOperator, paginationData.filterFixedWhereClause);
             }
-            
+
             var currentModule = contextService.currentModule();
             if (currentModule != null) {
                 parameters.module = currentModule;
@@ -90,7 +161,7 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
 
             parameters.searchDTO = searchDTO;
             fileService.download(url("/Excel/Export" + "?" + $.param(parameters)), function (html, url) { }, function (html, url) {
-                alertService.alert("Error generating the {0}.{1} report. Please contact your administrator".format(application,schemaToUse));
+                alertService.alert("Error generating the {0}.{1} report. Please contact your administrator".format(application, schemaToUse));
             });
         }
     }

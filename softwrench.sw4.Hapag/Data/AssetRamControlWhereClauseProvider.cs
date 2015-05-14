@@ -32,6 +32,14 @@ namespace softwrench.sw4.Hapag.Data {
             return AssetWhereClauseFromLocations(locations.ToArray());
         }
 
+        public string AssetWhereClauseForRegion(String regionName){
+            var locations = _locationManager.FindLocationsOfParentLocation(new PersonGroup { Name = regionName });
+            if (locations == null) {
+                return null;
+            }
+            return AssetWhereClauseFromLocations(locations.ToArray());
+        }
+
         public string AssetWhereClauseFromLocations(HlagGroupedLocation[] locations) {
             var sb = new StringBuilder();
             var allCostCenters = new List<string>();
