@@ -27,7 +27,7 @@
         
         <schema id="detail" stereotype="detail" title="Person Detail">
           <field attribute="personuid" label="Person ID" showexpression="false"/>
-          <field attribute="personid" label="Username" requiredexpression="true" showexpression="true"/>
+          <field attribute="personid" label="Username" requiredexpression="true" readonly="true"/>
           <field attribute="#password" label="Password" requiredexpression="true"/>
           <field attribute="#retypepassword" label="Retype Password" requiredexpression="true"/>
           <field attribute="firstname" label="First Name" requiredexpression="true"/>
