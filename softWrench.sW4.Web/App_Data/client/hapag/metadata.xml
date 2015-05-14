@@ -1101,6 +1101,24 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </schema>
 
 
+        <schema id="creationSummary" mode="output" stereotype="detail" title="Change Request Detail">
+          <field attribute="ticketuid" hidden="true"/>
+          <field label="Request#:" attribute="ticketid"/>
+          <field label="Date and Time:" attribute="reportdate">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
+          </field>
+          <field label="Details:" attribute="longdescription_.ldtext">
+            <renderer type="textarea"/>
+          </field>
+          <commands>
+            <command id="print" label="Print" stereotype="print" service="crudextraService" method="printDetail" parameters="schema,datamap"/>
+            <command id="cancel" label="Close" stereotype="cancel" service="srsummaryService" method="redirectToHapagHome" />
+          </commands>
+          <properties>
+            <property key="detail.cancel.lbl" value="Close"/>
+          </properties>
+        </schema>
+        
         <schema id="dashboardList">
           <field attribute="reportdate" label="Creation Date &amp; Time">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
