@@ -32,7 +32,7 @@
             <property key="detail.titleid" value="wonum"/>
           </properties>
           <field attribute="workorderid" hidden="true"/>
-          <field attribute="wonum" hidden="true" label="WoNum"/>
+          <field attribute="wonum" hidden="true" label="Task"/>
           <field attribute="status" readonly="true" label="Current Status"/>
           <!--          <optionfield providerattribute="availablestatus" attribute="newstatus" label="New Status" requiredexpression="true"/>-->
           <association label="New Status" target="newstatus" hideDescription="true" labelfield="synstatus.description">
@@ -42,7 +42,7 @@
           <field attribute="statusdate" requiredexpression="true" label="Status Date">
             <renderer type="datetime"/>
           </field>
-          <field attribute="memo">
+          <field attribute="memo" label="Memo">
             <renderer type="textArea"/>
           </field>
         </schema>

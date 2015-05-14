@@ -6,33 +6,33 @@ SET @ORGID  = 'DPWORG'
 SET @SITEID = 'DPW'
 
 -- Create user profile 'laborers'
-IF NOT EXISTS (SELECT 1 FROM dbo.SW_USERPROFILE WHERE NAME = 'Laborers')
-BEGIN
-INSERT INTO [dbo].[SW_USERPROFILE] ([name], [deletable], [description]) VALUES (N'Laborers', 0, N'Laborers')
+--IF NOT EXISTS (SELECT 1 FROM dbo.SW_USERPROFILE WHERE NAME = 'Laborers')
+--BEGIN
+--INSERT INTO [dbo].[SW_USERPROFILE] ([name], [deletable], [description]) VALUES (N'Laborers', 0, N'Laborers')
 
-SELECT @USERPROFILE = @@IDENTITY;
-END
+--SELECT @USERPROFILE = @@IDENTITY;
+--END
 
 -- Create user 'swadmin'
-IF NOT EXISTS (SELECT 1 FROM dbo.SW_USER2 WHERE USERNAME = 'swadmin')
-BEGIN
-INSERT INTO [dbo].[SW_USER2] (username, password, firstname, lastname, isactive, orgid, siteid, phone, language)
-VALUES ('swadmin', '16193128416889160822141461911951451401273111117118200', 'admin', 'admin', 1, @ORGID, @SITEID, '1-800-433-7300', 'EN')
-END
+--IF NOT EXISTS (SELECT 1 FROM dbo.SW_USER2 WHERE USERNAME = 'swadmin')
+--BEGIN
+--INSERT INTO [dbo].[SW_USER2] (username, password, firstname, lastname, isactive, orgid, siteid, phone, language)
+--VALUES ('swadmin', '16193128416889160822141461911951451401273111117118200', 'admin', 'admin', 1, @ORGID, @SITEID, '1-800-433-7300', 'EN')
+--END
 
 -- Assign all user with default orgid and siteid
-UPDATE SW_USER2
-SET ORGID = @ORGID, SITEID = @SITEID
+--UPDATE SW_USER2
+--SET ORGID = @ORGID, SITEID = @SITEID
 
 -- Assign all user with default password - "password"
-UPDATE SW_USER2
-SET PASSWORD = '91170972282011856363613037111082485127126230143216'
-WHERE username not in ('swadmin', 'swjobuser')
+--UPDATE SW_USER2
+--SET PASSWORD = '91170972282011856363613037111082485127126230143216'
+--WHERE username not in ('swadmin', 'swjobuser')
 
 -- Assign all user with default user_profile of "laborer"
-INSERT INTO SW_USER_USERPROFILE (user_id, profile_id)  
-SELECT ID as user_id, @USERPROFILE as profile_id FROM SW_USER2
-WHERE ID NOT IN (SELECT USER_ID FROM SW_USER_USERPROFILE) AND username NOT IN ('swadmin', 'swjobuser')
+--INSERT INTO SW_USER_USERPROFILE (user_id, profile_id)  
+--SELECT ID as user_id, @USERPROFILE as profile_id FROM SW_USER2
+--WHERE ID NOT IN (SELECT USER_ID FROM SW_USER_USERPROFILE) AND username NOT IN ('swadmin', 'swjobuser')
 
 
 DECLARE @USERID int

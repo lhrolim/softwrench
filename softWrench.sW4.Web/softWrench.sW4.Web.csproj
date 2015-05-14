@@ -431,9 +431,6 @@
     <Content Include="Content\Images\pagination-previous.png" />
     <Content Include="Content\Images\scottsdale\scottsdale.png" />
     <Content Include="Content\Images\signin.jpg" />
-    <Content Include="Content\Images\southern\branding.png" />
-    <Content Include="Content\Images\southern\logo-byline.png" />
-    <Content Include="Content\Images\southern\logo-main.png" />
     <Content Include="Content\Images\tree-leaf.png" />
     <Content Include="Content\Images\tree-node-collapsed.png" />
     <Content Include="Content\Images\tree-node-expanded.png" />
@@ -656,7 +653,6 @@
     <Content Include="Content\styles\scottsdale\signin.css" />
     <Content Include="Content\styles\scottsdale\site.css" />
     <Content Include="Content\bootstrap\css\textAngular-min.css" />
-    <Content Include="Content\styles\southern\branding.css" />
     <Content Include="Content\styles\tva\signin.css" />
     <Content Include="Content\styles\tva\site.css" />
     <Content Include="Content\Templates\batches\dynamiccomposition.html" />
@@ -1359,6 +1355,10 @@
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.southern\softwrench.sw4.southern.csproj">
+      <Project>{9a8c761c-3b9e-4c2c-af3d-a3676010919b}</Project>
+      <Name>softwrench.sw4.southern</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.swgas\softwrench.sw4.swgas.csproj">
       <Project>{f55ca327-e991-4caa-afc7-ada7285308e9}</Project>
