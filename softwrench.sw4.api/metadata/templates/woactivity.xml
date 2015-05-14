@@ -40,10 +40,10 @@
             <renderer type="combo"/>
           </association>
           <field attribute="statusdate" requiredexpression="true" label="Status Date">
-            <renderer type="datetime"/>
+            <renderer type="datetime" params="dateformat=MM/dd/yyyy hh:mm"/>
           </field>
           <field attribute="memo" label="Memo">
-            <renderer type="textArea"/>
+            <renderer type="textarea"/>
           </field>
         </schema>
 
