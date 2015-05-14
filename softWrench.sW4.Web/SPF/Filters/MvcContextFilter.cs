@@ -1,4 +1,5 @@
-﻿using softWrench.sW4.Security.Context;
+﻿using cts.commons.portable.Util;
+using softWrench.sW4.Security.Context;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
 
         private const string CurrentModuleKey = "currentmodule";
         private const string CurrentMetadataKey = "currentmetadata";
+        private const string CurrentMetadataParameterKey = "currentmetadataparameter";
 
         public void OnActionExecuting(ActionExecutingContext actionContext) {
             if (!actionContext.HttpContext.User.Identity.IsAuthenticated) {
@@ -23,12 +25,13 @@ namespace softWrench.sW4.Web.SPF.Filters {
             IEnumerable<String> modules;
             var currentModule = GetValue(actionContext, CurrentModuleKey);
             var currentMetadataId = GetValue(actionContext, CurrentMetadataKey);
+            var currentMetadataParameter = GetValue(actionContext, CurrentMetadataParameterKey);
             ApplicationLookupContext appCtx = null;
             if (currentMetadataId != null) {
                 appCtx = new ApplicationLookupContext { MetadataId = currentMetadataId };
             }
             var instance = ContextLookuper.GetInstance();
-            instance.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx }, true);
+            instance.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx, MetadataParameters= PropertyUtil.ConvertToDictionary(currentMetadataParameter)},true);
 //            instance.RegisterHttpContext(actionContext.HttpContext.re);
         }
 

@@ -18,6 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
+using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.Schema {
@@ -48,7 +50,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 @abstract, displayables, schemaProperties, parentSchema, printSchema, commandSchema, idFieldName, userIdFieldName, unionSchema, events);
 
             if (schema.ParentSchema != null) {
-                schema.Displayables = MergeParentSchemaDisplayables(schema);
+                schema.Displayables = MergeParentSchemaDisplayables(schema,schema.ParentSchema);
                 schema.Mode = schema.Mode == null || schema.Mode == SchemaMode.None ? schema.ParentSchema.Mode : schema.Mode;
                 schema.Stereotype = schema.Stereotype == SchemaStereotype.None ? schema.ParentSchema.Stereotype : schema.Stereotype;
                 MergeWithParentProperties(schema);
@@ -112,41 +114,37 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             schema.CommandSchema.ApplicationCommands = ApplicationCommandMerger.MergeCommands(childDefinition, parentDefinitions);
         }
 
-        private static List<IApplicationDisplayable> MergeParentSchemaDisplayables(ApplicationSchemaDefinition schema) {
+        private static List<IApplicationDisplayable> MergeParentSchemaDisplayables(ApplicationSchemaDefinition childSchema, IApplicationDisplayableContainer parentContainer) {
             var resultingDisplayables = new List<IApplicationDisplayable>();
-            var parentDisplayables = schema.ParentSchema.Displayables;
-            var sections = schema.GetDisplayable<ApplicationSection>(typeof(ApplicationSection));
-            foreach (var parentDisplayable in parentDisplayables) {
-                var section = parentDisplayable as ApplicationSection;
-                if (section != null) {
-                    var concreteSection = sections.FirstOrDefault(s => s.Id == section.Id);
-                    if (concreteSection == null) {
-                        //put the abstract anyway so that eventual subclasses of this can use it as well
-                        var cloneable = parentDisplayable as IPCLCloneable;
-                        if (cloneable != null) {
-                            resultingDisplayables.Add((IApplicationDisplayable)cloneable.Clone());
-                        } else {
-                            resultingDisplayables.Add(parentDisplayable);
-                        }
+            var parentDisplayables = parentContainer.Displayables;
+            var childSections = DisplayableUtil.GetDisplayable<ApplicationSection>(typeof(ApplicationSection), childSchema.Displayables);
+            foreach (var dis in parentDisplayables) {
+                var parentSection = dis as ApplicationSection;
+                if (parentSection == null) {
+                    //just adding the non-section displayable, on the child schema
+                    resultingDisplayables.Add(dis);
+                    continue;
+                }
 
-
-                    } else {
-                        if (concreteSection.OrientationEnum == ApplicationSectionOrientation.horizontal) {
-                            resultingDisplayables.Add(concreteSection);
-                        } else if (concreteSection.OrientationEnum == ApplicationSectionOrientation.vertical) {
-                            foreach (var sectionDisplayable in concreteSection.Displayables) {
-                                resultingDisplayables.Add(sectionDisplayable);
-                            }
-                        }
-
-                    }
+                var concreteSection = childSections.FirstOrDefault(s => s.Id == parentSection.Id);
+                if (concreteSection == null) {
+                    //put the abstract anyway so that eventual subclasses of this can use it as well
+                    var cloneable = dis as IPCLCloneable;
+                    var clonedSection = (ApplicationSection)cloneable.Clone();
+                    var resultDisplayables = MergeParentSchemaDisplayables(childSchema, clonedSection);
+                    clonedSection.Displayables = resultDisplayables;
+                    resultingDisplayables.Add(clonedSection);
                 } else {
-                    var originalAttribute = resultingDisplayables.FirstOrDefault(a => a.Role == parentDisplayable.Role);
-                    if (originalAttribute == null) {
-                        resultingDisplayables.Add(parentDisplayable);
+                    if (concreteSection.OrientationEnum == ApplicationSectionOrientation.horizontal) {
+                        resultingDisplayables.Add(concreteSection);
+                    } else if (concreteSection.OrientationEnum == ApplicationSectionOrientation.vertical) {
+                        foreach (var sectionDisplayable in concreteSection.Displayables) {
+                            resultingDisplayables.Add(sectionDisplayable);
+                        }
                     }
 
                 }
+
             }
             return resultingDisplayables;
         }
